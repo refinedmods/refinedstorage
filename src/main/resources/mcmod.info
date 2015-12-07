@@ -1,0 +1,16 @@
+[
+    {
+      "modid": "storagecraft",
+      "name": "StorageCraft",
+      "description": "",
+      "version": "${version}",
+      "mcversion": "${mcversion}",
+      "url": "",
+      "updateUrl": "",
+      "authorList": ["raoulvdberge"],
+      "credits": "Raoul",
+      "logoFile": "",
+      "screenshots": [],
+      "dependencies": []
+    }
+]

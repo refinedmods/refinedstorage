@@ -1,0 +1,11 @@
+.gradle/
+.nb-gradle/
+.settings/
+build/
+eclipse/
+gradle/
+.classpath
+.nb-gradle-properties
+.project
+gradlew
+gradlew.bat

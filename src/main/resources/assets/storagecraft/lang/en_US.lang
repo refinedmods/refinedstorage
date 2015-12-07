@@ -1,0 +1,4 @@
+itemGroup.storagecraft=StorageCraft
+
+block.storagecraft:controller.name=Controller
+block.storagecraft:cable.name=Cable
