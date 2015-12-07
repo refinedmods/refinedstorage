@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL11;
 import storagecraft.render.model.CableModel;
 import storagecraft.tile.TileCable;
 
-public class CableRenderer extends TileEntitySpecialRenderer {
+public class BlockCableRenderer extends TileEntitySpecialRenderer {
 	public static final ResourceLocation CABLE_RESOURCE = new ResourceLocation("storagecraft:textures/blocks/cable.png");
 
 	@Override
@@ -20,8 +20,11 @@ public class CableRenderer extends TileEntitySpecialRenderer {
 
 		{
 			GL11.glPushMatrix();
+
 			Minecraft.getMinecraft().renderEngine.bindTexture(CABLE_RESOURCE);
+
 			model.render(null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
+
 			GL11.glPopMatrix();
 		}
 

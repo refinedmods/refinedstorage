@@ -53,28 +53,33 @@ public class CableModel extends ModelBase {
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
 		core.render(f5);
 
-		if (cable.hasConnection(ForgeDirection.UP)) {
-			up.render(f5);
-		}
+		if (cable != null) {
+			if (cable.hasConnection(ForgeDirection.UP)) {
+				up.render(f5);
+			}
 
-		if (cable.hasConnection(ForgeDirection.DOWN)) {
-			down.render(f5);
-		}
+			if (cable.hasConnection(ForgeDirection.DOWN)) {
+				down.render(f5);
+			}
 
-		if (cable.hasConnection(ForgeDirection.NORTH)) {
+			if (cable.hasConnection(ForgeDirection.NORTH)) {
+				north.render(f5);
+			}
+
+			if (cable.hasConnection(ForgeDirection.EAST)) {
+				east.render(f5);
+			}
+
+			if (cable.hasConnection(ForgeDirection.SOUTH)) {
+				south.render(f5);
+			}
+
+			if (cable.hasConnection(ForgeDirection.WEST)) {
+				west.render(f5);
+			}
+		} else {
 			north.render(f5);
-		}
-
-		if (cable.hasConnection(ForgeDirection.EAST)) {
-			east.render(f5);
-		}
-
-		if (cable.hasConnection(ForgeDirection.SOUTH)) {
 			south.render(f5);
-		}
-
-		if (cable.hasConnection(ForgeDirection.WEST)) {
-			west.render(f5);
 		}
 	}
 }
