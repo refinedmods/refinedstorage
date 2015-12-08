@@ -5,21 +5,24 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
-import static storagecraft.SC.NETWORK;
+import storagecraft.SC;
 import storagecraft.SCBlocks;
 import storagecraft.network.MessageTileUpdate;
 import storagecraft.tile.TileCable;
 import storagecraft.tile.TileController;
+import storagecraft.tile.TileGrid;
 
 public class CommonProxy {
 	public void preInit(FMLPreInitializationEvent e) {
-		NETWORK.registerMessage(MessageTileUpdate.class, MessageTileUpdate.class, 0, Side.CLIENT);
+		SC.NETWORK.registerMessage(MessageTileUpdate.class, MessageTileUpdate.class, 0, Side.CLIENT);
 
 		GameRegistry.registerTileEntity(TileController.class, "controller");
 		GameRegistry.registerTileEntity(TileCable.class, "cable");
+		GameRegistry.registerTileEntity(TileGrid.class, "grid");
 
 		GameRegistry.registerBlock(SCBlocks.CONTROLLER, "controller");
 		GameRegistry.registerBlock(SCBlocks.CABLE, "cable");
+		GameRegistry.registerBlock(SCBlocks.GRID, "grid");
 	}
 
 	public void init(FMLInitializationEvent e) {
