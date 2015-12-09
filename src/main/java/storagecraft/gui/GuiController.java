@@ -34,7 +34,7 @@ public class GuiController extends GuiContainer {
 		drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
 
 		int barWidth = 16;
-		int barHeight = 59;
+		int barHeight = 58;
 		int barX = x + 17;
 		int barY = y + 25;
 

@@ -61,6 +61,8 @@ public class TileController extends TileSC implements IEnergyHandler, INetworkTi
 			}
 
 			storage.extractEnergy(energyUsage, false);
+		} else {
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 	}
 
