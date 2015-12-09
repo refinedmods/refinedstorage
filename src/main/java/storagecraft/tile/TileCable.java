@@ -27,15 +27,17 @@ public class TileCable extends TileSC {
 	}
 
 	public List<IMachine> findMachines(TileController controller) {
-		return findMachines(new ArrayList(), controller);
-	}
-
-	private List<IMachine> findMachines(List<Vec3> visited, TileController controller) {
 		List<IMachine> machines = new ArrayList<IMachine>();
 
+		findMachinesInternal(new ArrayList<Vec3>(), machines, controller);
+
+		return machines;
+	}
+
+	private void findMachinesInternal(List<Vec3> visited, List<IMachine> machines, TileController controller) {
 		for (Vec3 visitedBlock : visited) {
 			if (visitedBlock.xCoord == xCoord && visitedBlock.yCoord == yCoord && visitedBlock.zCoord == zCoord) {
-				return machines;
+				return;
 			}
 		}
 
@@ -65,12 +67,10 @@ public class TileCable extends TileSC {
 
 				visited.add(Vec3.createVectorHelper(x, y, z));
 			} else if (tile instanceof TileCable) {
-				machines.addAll(((TileCable) tile).findMachines(visited, controller));
+				((TileCable) tile).findMachinesInternal(visited, machines, controller);
 			} else if (tile instanceof TileController && (x != controller.xCoord || y != controller.yCoord || z != controller.zCoord)) {
 				worldObj.createExplosion(null, x, y, z, 4.5f, true);
 			}
 		}
-
-		return machines;
 	}
 }

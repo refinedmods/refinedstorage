@@ -41,9 +41,9 @@ public class GuiController extends GuiContainer {
 		int energy = controller.getEnergyStored(null);
 		int maxEnergy = controller.getMaxEnergyStored(null);
 
-		int height = (int) ((float) energy / (float) maxEnergy * (float) barHeight);
+		int newBarHeight = (int) ((float) energy / (float) maxEnergy * (float) barHeight);
 
-		drawTexturedModalRect(barX, barY + barHeight - height, 178, 0, barWidth, height);
+		drawTexturedModalRect(barX, barY + barHeight - newBarHeight, 178, 0, barWidth, newBarHeight);
 
 		fontRendererObj.drawString("Controller", x + 7, y + 7, 4210752);
 		fontRendererObj.drawString("Inventory", x + 7, y + 96, 4210752);

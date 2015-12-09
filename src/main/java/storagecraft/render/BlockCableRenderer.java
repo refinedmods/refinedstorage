@@ -9,12 +9,11 @@ import storagecraft.render.model.CableModel;
 import storagecraft.tile.TileCable;
 
 public class BlockCableRenderer extends TileEntitySpecialRenderer {
+	public static final CableModel CABLE_MODEL = new CableModel();
 	public static final ResourceLocation CABLE_RESOURCE = new ResourceLocation("storagecraft:textures/blocks/cable.png");
 
 	@Override
 	public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float scale) {
-		CableModel model = new CableModel((TileCable) tile);
-
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x, (float) y, (float) z);
 
@@ -23,7 +22,7 @@ public class BlockCableRenderer extends TileEntitySpecialRenderer {
 
 			Minecraft.getMinecraft().renderEngine.bindTexture(CABLE_RESOURCE);
 
-			model.render(null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
+			CABLE_MODEL.render((TileCable) tile, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
 
 			GL11.glPopMatrix();
 		}

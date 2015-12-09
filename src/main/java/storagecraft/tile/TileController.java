@@ -59,9 +59,9 @@ public class TileController extends TileSC implements IEnergyHandler, INetworkTi
 			for (IMachine machine : connectedMachines) {
 				energyUsage += machine.getEnergyUsage();
 			}
-		}
 
-		storage.extractEnergy(getEnergyUsage(), false);
+			storage.extractEnergy(energyUsage, false);
+		}
 	}
 
 	public void onDestroyed() {
@@ -74,6 +74,10 @@ public class TileController extends TileSC implements IEnergyHandler, INetworkTi
 		}
 
 		connectedMachines.clear();
+	}
+
+	public List<IMachine> getMachines() {
+		return connectedMachines;
 	}
 
 	@Override
