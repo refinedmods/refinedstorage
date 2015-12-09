@@ -8,4 +8,9 @@ public class TileGrid extends TileSC implements IMachine {
 	@Override
 	public void onDisconnected() {
 	}
+
+	@Override
+	public int getEnergyUsage() {
+		return 10;
+	}
 }
