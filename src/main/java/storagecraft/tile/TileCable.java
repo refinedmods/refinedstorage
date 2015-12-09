@@ -26,11 +26,11 @@ public class TileCable extends TileSC {
 		return true;
 	}
 
-	public List<IMachine> findMachines() {
-		return findMachines(new ArrayList(), true);
+	public List<IMachine> findMachines(TileController controller) {
+		return findMachines(new ArrayList(), controller);
 	}
 
-	private List<IMachine> findMachines(List<Vec3> visited, boolean ignoreController) {
+	private List<IMachine> findMachines(List<Vec3> visited, TileController controller) {
 		List<IMachine> machines = new ArrayList<IMachine>();
 
 		for (Vec3 visitedCable : visited) {
@@ -47,9 +47,9 @@ public class TileCable extends TileSC {
 			if (tile instanceof IMachine) {
 				machines.add((IMachine) tile);
 			} else if (tile instanceof TileCable) {
-				machines.addAll(((TileCable) tile).findMachines(visited, false));
-			} else if (tile instanceof TileController && !ignoreController) {
-				worldObj.createExplosion(null, xCoord, yCoord, zCoord, 4.5f, true);
+				machines.addAll(((TileCable) tile).findMachines(visited, controller));
+			} else if (tile instanceof TileController && (tile.xCoord != controller.xCoord || tile.yCoord != controller.yCoord || tile.zCoord != controller.zCoord)) {
+				worldObj.createExplosion(null, tile.xCoord, tile.yCoord, tile.zCoord, 4.5f, true);
 			}
 		}
 

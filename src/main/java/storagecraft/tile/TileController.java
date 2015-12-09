@@ -34,7 +34,7 @@ public class TileController extends TileSC implements IEnergyHandler, INetworkTi
 						TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
 
 						if (tile instanceof TileCable) {
-							machines.addAll(((TileCable) tile).findMachines());
+							machines.addAll(((TileCable) tile).findMachines(this));
 						}
 					}
 
