@@ -3,8 +3,8 @@ package storagecraft.block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
+import storagecraft.SC;
 import storagecraft.tile.TileController;
 
 public class BlockController extends BlockSC implements ITileEntityProvider {
@@ -20,10 +20,7 @@ public class BlockController extends BlockSC implements ITileEntityProvider {
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
 		if (!world.isRemote) {
-			TileController controller = (TileController) world.getTileEntity(x, y, z);
-
-			player.addChatComponentMessage(new ChatComponentText("RF stored: " + controller.getEnergyStored(null)));
-			player.addChatComponentMessage(new ChatComponentText("RF/t usage: " + controller.getEnergyUsage()));
+			player.openGui(SC.INSTANCE, SC.GUI.CONTROLLER, world, x, y, z);
 		}
 
 		return true;

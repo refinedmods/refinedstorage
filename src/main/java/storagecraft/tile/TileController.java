@@ -2,15 +2,17 @@ package storagecraft.tile;
 
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyHandler;
+import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileController extends TileSC implements IEnergyHandler {
+public class TileController extends TileSC implements IEnergyHandler, INetworkTile {
 	public static final int BASE_ENERGY_USAGE = 100;
 
+	private int energyUsage;
 	private EnergyStorage storage = new EnergyStorage(32000);
 	private List<IMachine> connectedMachines = new ArrayList<IMachine>();
 	private int ticks = 0;
@@ -50,6 +52,12 @@ public class TileController extends TileSC implements IEnergyHandler {
 
 					connectedMachines = machines;
 				}
+			}
+
+			energyUsage = BASE_ENERGY_USAGE;
+
+			for (IMachine machine : connectedMachines) {
+				energyUsage += machine.getEnergyUsage();
 			}
 		}
 
@@ -103,12 +111,6 @@ public class TileController extends TileSC implements IEnergyHandler {
 	}
 
 	public int getEnergyUsage() {
-		int energyUsage = BASE_ENERGY_USAGE;
-
-		for (IMachine machine : connectedMachines) {
-			energyUsage += machine.getEnergyUsage();
-		}
-
 		return energyUsage;
 	}
 
@@ -119,5 +121,17 @@ public class TileController extends TileSC implements IEnergyHandler {
 
 	public boolean isActive() {
 		return storage.getEnergyStored() >= getEnergyUsage();
+	}
+
+	@Override
+	public void fromBytes(ByteBuf buf) {
+		storage.setEnergyStored(buf.readInt());
+		energyUsage = buf.readInt();
+	}
+
+	@Override
+	public void toBytes(ByteBuf buf) {
+		buf.writeInt(storage.getEnergyStored());
+		buf.writeInt(energyUsage);
 	}
 }

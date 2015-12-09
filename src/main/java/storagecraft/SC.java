@@ -2,6 +2,7 @@ package storagecraft;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -15,6 +16,10 @@ import storagecraft.proxy.CommonProxy;
 
 @Mod(modid = SC.ID, version = SC.VERSION)
 public class SC {
+	public static class GUI {
+		public static final int CONTROLLER = 0;
+	}
+
 	public static final String ID = "storagecraft";
 	public static final String VERSION = "1.0";
 	public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(ID);
@@ -26,6 +31,8 @@ public class SC {
 	};
 	@SidedProxy(clientSide = "storagecraft.proxy.ClientProxy", serverSide = "storagecraft.proxy.ServerProxy")
 	public static CommonProxy PROXY;
+	@Instance
+	public static SC INSTANCE;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
