@@ -33,8 +33,8 @@ public class TileCable extends TileSC {
 	private List<IMachine> findMachines(List<Vec3> visited, TileController controller) {
 		List<IMachine> machines = new ArrayList<IMachine>();
 
-		for (Vec3 visitedCable : visited) {
-			if (visitedCable.xCoord == xCoord && visitedCable.yCoord == yCoord && visitedCable.zCoord == zCoord) {
+		for (Vec3 visitedBlock : visited) {
+			if (visitedBlock.xCoord == xCoord && visitedBlock.yCoord == yCoord && visitedBlock.zCoord == zCoord) {
 				return machines;
 			}
 		}
@@ -42,14 +42,32 @@ public class TileCable extends TileSC {
 		visited.add(Vec3.createVectorHelper(xCoord, yCoord, zCoord));
 
 		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-			TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
+			int x = xCoord + dir.offsetX;
+			int y = yCoord + dir.offsetY;
+			int z = zCoord + dir.offsetZ;
+
+			boolean found = false;
+
+			for (Vec3 visitedBlock : visited) {
+				if (visitedBlock.xCoord == x && visitedBlock.yCoord == y && visitedBlock.zCoord == z) {
+					found = true;
+				}
+			}
+
+			if (found) {
+				continue;
+			}
+
+			TileEntity tile = worldObj.getTileEntity(x, y, z);
 
 			if (tile instanceof IMachine) {
 				machines.add((IMachine) tile);
+
+				visited.add(Vec3.createVectorHelper(x, y, z));
 			} else if (tile instanceof TileCable) {
 				machines.addAll(((TileCable) tile).findMachines(visited, controller));
-			} else if (tile instanceof TileController && (tile.xCoord != controller.xCoord || tile.yCoord != controller.yCoord || tile.zCoord != controller.zCoord)) {
-				worldObj.createExplosion(null, tile.xCoord, tile.yCoord, tile.zCoord, 4.5f, true);
+			} else if (tile instanceof TileController && (x != controller.xCoord || y != controller.yCoord || z != controller.zCoord)) {
+				worldObj.createExplosion(null, x, y, z, 4.5f, true);
 			}
 		}
 
