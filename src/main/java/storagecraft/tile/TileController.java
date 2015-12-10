@@ -12,73 +12,81 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class TileController extends TileSC implements IEnergyHandler, INetworkTile {
 	public static final int BASE_ENERGY_USAGE = 100;
 
-	private int energyUsage;
+	private boolean destroyed = false;
+
 	private EnergyStorage storage = new EnergyStorage(32000);
-	private List<IMachine> connectedMachines = new ArrayList<IMachine>();
+	private int energyUsage;
+
+	private List<TileMachine> connectedMachines = new ArrayList<TileMachine>();
+
 	private int ticks = 0;
 
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
 
-		if (!worldObj.isRemote) {
-			ticks++;
+		if (!destroyed) {
+			if (!worldObj.isRemote) {
+				ticks++;
 
-			if (ticks % 40 == 0) {
-				if (!isActive()) {
-					disconnectAll();
-				} else {
-					List<IMachine> machines = new ArrayList<IMachine>();
+				if (ticks % 40 == 0) {
+					if (!isActive()) {
+						disconnectAll();
+					} else {
+						List<TileMachine> machines = new ArrayList<TileMachine>();
 
-					for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-						TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
+						for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+							TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
 
-						if (tile instanceof TileCable) {
-							machines.addAll(((TileCable) tile).findMachines(this));
+							if (tile instanceof TileCable) {
+								machines.addAll(((TileCable) tile).findMachines(this));
+							}
 						}
-					}
 
-					for (IMachine machine : connectedMachines) {
-						if (!machines.contains(machine)) {
-							machine.onDisconnected();
+						for (TileMachine machine : connectedMachines) {
+							if (!machines.contains(machine)) {
+								machine.onDisconnected();
+							}
 						}
-					}
 
-					for (IMachine machine : machines) {
-						if (!connectedMachines.contains(machine)) {
-							machine.onConnected(this);
+						for (TileMachine machine : machines) {
+							if (!connectedMachines.contains(machine)) {
+								machine.onConnected(this);
+							}
 						}
-					}
 
-					connectedMachines = machines;
+						connectedMachines = machines;
+					}
 				}
+
+				energyUsage = BASE_ENERGY_USAGE;
+
+				for (TileMachine machine : connectedMachines) {
+					energyUsage += machine.getEnergyUsage();
+				}
+
+				storage.extractEnergy(energyUsage, false);
+			} else {
+				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			}
-
-			energyUsage = BASE_ENERGY_USAGE;
-
-			for (IMachine machine : connectedMachines) {
-				energyUsage += machine.getEnergyUsage();
-			}
-
-			storage.extractEnergy(energyUsage, false);
-		} else {
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 	}
 
 	public void onDestroyed() {
 		disconnectAll();
+
+		destroyed = true;
 	}
 
 	private void disconnectAll() {
-		for (IMachine machine : connectedMachines) {
+		for (TileMachine machine : connectedMachines) {
 			machine.onDisconnected();
 		}
 
 		connectedMachines.clear();
 	}
 
-	public List<IMachine> getMachines() {
+	public List<TileMachine> getMachines() {
 		return connectedMachines;
 	}
 

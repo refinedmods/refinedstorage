@@ -10,7 +10,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import storagecraft.proxy.CommonProxy;
 
@@ -19,31 +18,31 @@ public class SC {
 	public static class GUI {
 		public static final int CONTROLLER = 0;
 	}
-
+	
 	public static final String ID = "storagecraft";
 	public static final String VERSION = "1.0";
 	public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(ID);
 	public static final CreativeTabs TAB = new CreativeTabs(ID) {
 		@Override
 		public Item getTabIconItem() {
-			return Items.emerald;
+			return Item.getItemFromBlock(SCBlocks.CONTROLLER);
 		}
 	};
 	@SidedProxy(clientSide = "storagecraft.proxy.ClientProxy", serverSide = "storagecraft.proxy.ServerProxy")
 	public static CommonProxy PROXY;
 	@Instance
 	public static SC INSTANCE;
-
+	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
 		PROXY.preInit(e);
 	}
-
+	
 	@EventHandler
 	public void init(FMLInitializationEvent e) {
 		PROXY.init(e);
 	}
-
+	
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent e) {
 		PROXY.postInit(e);

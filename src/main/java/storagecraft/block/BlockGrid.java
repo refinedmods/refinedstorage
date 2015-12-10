@@ -7,11 +7,11 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import storagecraft.tile.TileGrid;
-import storagecraft.tile.TileSC;
 
 public class BlockGrid extends BlockSC implements ITileEntityProvider {
 	private IIcon sideIcon;
-	private IIcon icon;
+	private IIcon iconConnected;
+	private IIcon iconDisconnected;
 
 	public BlockGrid() {
 		super("grid");
@@ -24,16 +24,17 @@ public class BlockGrid extends BlockSC implements ITileEntityProvider {
 
 	@Override
 	public void registerBlockIcons(IIconRegister register) {
-		icon = register.registerIcon("storagecraft:grid");
+		iconConnected = register.registerIcon("storagecraft:gridConnected");
+		iconDisconnected = register.registerIcon("storagecraft:gridDisconnected");
 		sideIcon = register.registerIcon("storagecraft:generic");
 	}
 
 	@Override
 	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) {
-		TileSC tile = (TileSC) world.getTileEntity(x, y, z);
+		TileGrid tile = (TileGrid) world.getTileEntity(x, y, z);
 
 		if (side == tile.getDirection().getOpposite().ordinal()) {
-			return icon;
+			return tile.isConnected() ? iconConnected : iconDisconnected;
 		}
 
 		return sideIcon;
@@ -42,7 +43,7 @@ public class BlockGrid extends BlockSC implements ITileEntityProvider {
 	@Override
 	public IIcon getIcon(int side, int meta) {
 		if (side == 3) {
-			return icon;
+			return iconDisconnected;
 		}
 
 		return sideIcon;

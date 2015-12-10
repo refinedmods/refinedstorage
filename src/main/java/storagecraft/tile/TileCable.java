@@ -20,21 +20,21 @@ public class TileCable extends TileSC {
 		if (!isCable(worldObj, xCoord, yCoord, zCoord, dir)) {
 			TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
 
-			return tile instanceof IMachine || tile instanceof TileController;
+			return tile instanceof TileMachine || tile instanceof TileController;
 		}
 
 		return true;
 	}
 
-	public List<IMachine> findMachines(TileController controller) {
-		List<IMachine> machines = new ArrayList<IMachine>();
+	public List<TileMachine> findMachines(TileController controller) {
+		List<TileMachine> machines = new ArrayList<TileMachine>();
 
 		findMachinesInternal(new ArrayList<Vec3>(), machines, controller);
 
 		return machines;
 	}
 
-	private void findMachinesInternal(List<Vec3> visited, List<IMachine> machines, TileController controller) {
+	private void findMachinesInternal(List<Vec3> visited, List<TileMachine> machines, TileController controller) {
 		for (Vec3 visitedBlock : visited) {
 			if (visitedBlock.xCoord == xCoord && visitedBlock.yCoord == yCoord && visitedBlock.zCoord == zCoord) {
 				return;
@@ -62,8 +62,8 @@ public class TileCable extends TileSC {
 
 			TileEntity tile = worldObj.getTileEntity(x, y, z);
 
-			if (tile instanceof IMachine) {
-				machines.add((IMachine) tile);
+			if (tile instanceof TileMachine) {
+				machines.add((TileMachine) tile);
 
 				visited.add(Vec3.createVectorHelper(x, y, z));
 			} else if (tile instanceof TileCable) {
