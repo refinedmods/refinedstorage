@@ -5,16 +5,21 @@ import cofh.api.energy.IEnergyHandler;
 import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
+import storagecraft.storage.Storage;
 
 public class TileController extends TileSC implements IEnergyHandler, INetworkTile {
 	public static final int BASE_ENERGY_USAGE = 100;
 
+	private Storage storage = new Storage();
+
 	private boolean destroyed = false;
 
-	private EnergyStorage storage = new EnergyStorage(32000);
+	private EnergyStorage energy = new EnergyStorage(32000);
 	private int energyUsage;
 
 	private List<TileMachine> connectedMachines = new ArrayList<TileMachine>();
@@ -26,37 +31,37 @@ public class TileController extends TileSC implements IEnergyHandler, INetworkTi
 		super.updateEntity();
 
 		if (!destroyed) {
-			if (!worldObj.isRemote) {
-				ticks++;
+			++ticks;
 
-				if (ticks % 40 == 0) {
-					if (!isActive()) {
-						disconnectAll();
-					} else {
-						List<TileMachine> machines = new ArrayList<TileMachine>();
+			if (!worldObj.isRemote && ticks % 40 == 0) {
+				storage.push(new ItemStack(worldObj.rand.nextBoolean() ? Items.diamond : Items.apple, 10 + worldObj.rand.nextInt(40)));
 
-						for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-							TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
+				if (!isActive()) {
+					disconnectAll();
+				} else {
+					List<TileMachine> machines = new ArrayList<TileMachine>();
 
-							if (tile instanceof TileCable) {
-								machines.addAll(((TileCable) tile).findMachines(this));
-							}
+					for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+						TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
+
+						if (tile instanceof TileCable) {
+							machines.addAll(((TileCable) tile).findMachines(this));
 						}
-
-						for (TileMachine machine : connectedMachines) {
-							if (!machines.contains(machine)) {
-								machine.onDisconnected();
-							}
-						}
-
-						for (TileMachine machine : machines) {
-							if (!connectedMachines.contains(machine)) {
-								machine.onConnected(this);
-							}
-						}
-
-						connectedMachines = machines;
 					}
+
+					for (TileMachine machine : connectedMachines) {
+						if (!machines.contains(machine)) {
+							machine.onDisconnected();
+						}
+					}
+
+					for (TileMachine machine : machines) {
+						if (!connectedMachines.contains(machine)) {
+							machine.onConnected(this);
+						}
+					}
+
+					connectedMachines = machines;
 				}
 
 				energyUsage = BASE_ENERGY_USAGE;
@@ -65,7 +70,7 @@ public class TileController extends TileSC implements IEnergyHandler, INetworkTi
 					energyUsage += machine.getEnergyUsage();
 				}
 
-				storage.extractEnergy(energyUsage, false);
+				energy.extractEnergy(energyUsage, false);
 			} else {
 				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			}
@@ -86,6 +91,10 @@ public class TileController extends TileSC implements IEnergyHandler, INetworkTi
 		connectedMachines.clear();
 	}
 
+	public Storage getStorage() {
+		return storage;
+	}
+
 	public List<TileMachine> getMachines() {
 		return connectedMachines;
 	}
@@ -94,34 +103,34 @@ public class TileController extends TileSC implements IEnergyHandler, INetworkTi
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 
-		storage.readFromNBT(nbt);
+		energy.readFromNBT(nbt);
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 
-		storage.writeToNBT(nbt);
+		energy.writeToNBT(nbt);
 	}
 
 	@Override
 	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
-		return storage.receiveEnergy(maxReceive, simulate);
+		return energy.receiveEnergy(maxReceive, simulate);
 	}
 
 	@Override
 	public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate) {
-		return storage.extractEnergy(maxExtract, simulate);
+		return energy.extractEnergy(maxExtract, simulate);
 	}
 
 	@Override
 	public int getEnergyStored(ForgeDirection from) {
-		return storage.getEnergyStored();
+		return energy.getEnergyStored();
 	}
 
 	@Override
 	public int getMaxEnergyStored(ForgeDirection from) {
-		return storage.getMaxEnergyStored();
+		return energy.getMaxEnergyStored();
 	}
 
 	public int getEnergyUsage() {
@@ -134,18 +143,22 @@ public class TileController extends TileSC implements IEnergyHandler, INetworkTi
 	}
 
 	public boolean isActive() {
-		return storage.getEnergyStored() >= getEnergyUsage();
+		return energy.getEnergyStored() >= getEnergyUsage();
 	}
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		storage.setEnergyStored(buf.readInt());
+		energy.setEnergyStored(buf.readInt());
 		energyUsage = buf.readInt();
+
+		storage.fromBytes(buf);
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-		buf.writeInt(storage.getEnergyStored());
+		buf.writeInt(energy.getEnergyStored());
 		buf.writeInt(energyUsage);
+
+		storage.toBytes(buf);
 	}
 }

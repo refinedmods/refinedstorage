@@ -7,13 +7,17 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import storagecraft.SC;
 import storagecraft.inventory.ContainerController;
+import storagecraft.inventory.ContainerGrid;
 import storagecraft.tile.TileController;
+import storagecraft.tile.TileGrid;
 
 public class GuiHandler implements IGuiHandler {
 	private Container getContainer(int ID, EntityPlayer player) {
 		switch (ID) {
 			case SC.GUI.CONTROLLER:
 				return new ContainerController(player);
+			case SC.GUI.GRID:
+				return new ContainerGrid(player);
 			default:
 				return null;
 		}
@@ -31,6 +35,8 @@ public class GuiHandler implements IGuiHandler {
 		switch (ID) {
 			case SC.GUI.CONTROLLER:
 				return new GuiController(getContainer(ID, player), (TileController) tile);
+			case SC.GUI.GRID:
+				return new GuiGrid(getContainer(ID, player), (TileGrid) tile);
 			default:
 				return null;
 		}
