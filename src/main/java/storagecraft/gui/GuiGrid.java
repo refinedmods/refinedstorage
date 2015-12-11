@@ -42,15 +42,32 @@ public class GuiGrid extends GuiContainer {
 			int xx = getGridXStart();
 			int yy = getGridYStart();
 
-			for (int i = 0; i < grid.getController().getStorage().all().size(); ++i) {
-				StorageItem item = grid.getController().getStorage().all().get(i);
+			for (int i = 0; i < 9 * 4; ++i) {
+				if (i < grid.getController().getStorage().all().size()) {
+					StorageItem item = grid.getController().getStorage().all().get(i);
 
-				ItemStack stack = new ItemStack(item.getType(), item.getQuantity(), item.getMeta());
+					ItemStack stack = new ItemStack(item.getType(), item.getQuantity(), item.getMeta());
 
-				itemRender.renderItemIntoGUI(fontRendererObj, mc.getTextureManager(), stack, xx, yy);
-				itemRender.renderItemOverlayIntoGUI(fontRendererObj, mc.getTextureManager(), stack, xx, yy);
+					itemRender.renderItemAndEffectIntoGUI(fontRendererObj, mc.getTextureManager(), stack, xx, yy);
+					itemRender.renderItemOverlayIntoGUI(fontRendererObj, mc.getTextureManager(), stack, xx, yy);
+				}
+
+				if (mouseX > xx && mouseX < xx + 16 && mouseY > yy && mouseY < yy + 16) {
+					GL11.glDisable(GL11.GL_LIGHTING);
+					GL11.glDisable(GL11.GL_DEPTH_TEST);
+					GL11.glColorMask(true, true, true, false);
+					drawGradientRect(xx, yy, xx + 16, yy + 16, -2130706433, -2130706433);
+					GL11.glColorMask(true, true, true, true);
+					GL11.glEnable(GL11.GL_LIGHTING);
+					GL11.glEnable(GL11.GL_DEPTH_TEST);
+				}
 
 				xx += 18;
+
+				if ((i + 1) % 9 == 0) {
+					xx = getGridXStart();
+					yy += 18;
+				}
 			}
 		}
 	}
@@ -75,7 +92,7 @@ public class GuiGrid extends GuiContainer {
 	public void mouseClicked(int mouseX, int mouseY, int clickedButton) {
 		super.mouseClicked(mouseX, mouseY, clickedButton);
 
-		if (clickedButton == 0) {
+		if (clickedButton == 0 && grid.isConnected()) {
 			if (mouseX > getGridXStart() && mouseX < getGridXEnd() && mouseY > getGridYStart() && mouseY < getGridYEnd()) {
 				SC.NETWORK.sendToServer(new MessagePushToStorage(grid.getController()));
 			}

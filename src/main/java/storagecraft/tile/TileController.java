@@ -5,8 +5,6 @@ import cofh.api.energy.IEnergyHandler;
 import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -34,8 +32,6 @@ public class TileController extends TileSC implements IEnergyHandler, INetworkTi
 			++ticks;
 
 			if (!worldObj.isRemote && ticks % 40 == 0) {
-				storage.push(new ItemStack(worldObj.rand.nextBoolean() ? Items.diamond : Items.apple, 10 + worldObj.rand.nextInt(40)));
-
 				if (!isActive()) {
 					disconnectAll();
 				} else {
