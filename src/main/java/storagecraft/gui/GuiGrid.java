@@ -1,23 +1,28 @@
 package storagecraft.gui;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import storagecraft.SC;
+import storagecraft.inventory.ContainerGrid;
 import storagecraft.network.MessagePushToStorage;
 import storagecraft.storage.StorageItem;
+import storagecraft.tile.TileController;
 import storagecraft.tile.TileGrid;
 
 public class GuiGrid extends GuiContainer {
 	public static final ResourceLocation GRID_RESOURCE = new ResourceLocation("storagecraft:textures/gui/grid.png");
 
+	private ContainerGrid container;
 	private TileGrid grid;
 
-	public GuiGrid(Container container, TileGrid grid) {
+	public GuiGrid(ContainerGrid container, TileGrid grid) {
 		super(container);
 
+		this.container = container;
 		this.grid = grid;
 
 		this.xSize = 176;
@@ -38,36 +43,36 @@ public class GuiGrid extends GuiContainer {
 		fontRendererObj.drawString("Grid", x + 7, y + 7, 4210752);
 		fontRendererObj.drawString("Inventory", x + 7, y + 96, 4210752);
 
-		if (grid.isConnected()) {
-			int xx = getGridXStart();
-			int yy = getGridYStart();
+		int xx = getGridXStart();
+		int yy = getGridYStart();
 
-			for (int i = 0; i < 9 * 4; ++i) {
-				if (i < grid.getController().getStorage().all().size()) {
-					StorageItem item = grid.getController().getStorage().all().get(i);
+		for (int i = 0; i < 9 * 4; ++i) {
+			if (grid.isConnected() && i < grid.getController().getStorage().all().size()) {
+				StorageItem item = grid.getController().getStorage().all().get(i);
 
-					ItemStack stack = new ItemStack(item.getType(), item.getQuantity(), item.getMeta());
+				ItemStack stack = new ItemStack(item.getType(), item.getQuantity(), item.getMeta());
 
-					itemRender.renderItemAndEffectIntoGUI(fontRendererObj, mc.getTextureManager(), stack, xx, yy);
-					itemRender.renderItemOverlayIntoGUI(fontRendererObj, mc.getTextureManager(), stack, xx, yy);
-				}
+				itemRender.renderItemAndEffectIntoGUI(fontRendererObj, mc.getTextureManager(), stack, xx, yy);
+				itemRender.renderItemOverlayIntoGUI(fontRendererObj, mc.getTextureManager(), stack, xx, yy);
+			}
 
-				if (mouseX > xx && mouseX < xx + 16 && mouseY > yy && mouseY < yy + 16) {
-					GL11.glDisable(GL11.GL_LIGHTING);
-					GL11.glDisable(GL11.GL_DEPTH_TEST);
-					GL11.glColorMask(true, true, true, false);
-					drawGradientRect(xx, yy, xx + 16, yy + 16, -2130706433, -2130706433);
-					GL11.glColorMask(true, true, true, true);
-					GL11.glEnable(GL11.GL_LIGHTING);
-					GL11.glEnable(GL11.GL_DEPTH_TEST);
-				}
+			if ((mouseX > xx && mouseX < xx + 16 && mouseY > yy && mouseY < yy + 16) || !grid.isConnected()) {
+				int color = grid.isConnected() ? -2130706433 : 0xFF5B5B5B;
 
-				xx += 18;
+				GL11.glDisable(GL11.GL_LIGHTING);
+				GL11.glDisable(GL11.GL_DEPTH_TEST);
+				GL11.glColorMask(true, true, true, false);
+				drawGradientRect(xx, yy, xx + 16, yy + 16, color, color);
+				GL11.glColorMask(true, true, true, true);
+				GL11.glEnable(GL11.GL_LIGHTING);
+				GL11.glEnable(GL11.GL_DEPTH_TEST);
+			}
 
-				if ((i + 1) % 9 == 0) {
-					xx = getGridXStart();
-					yy += 18;
-				}
+			xx += 18;
+
+			if ((i + 1) % 9 == 0) {
+				xx = getGridXStart();
+				yy += 18;
 			}
 		}
 	}
@@ -92,9 +97,21 @@ public class GuiGrid extends GuiContainer {
 	public void mouseClicked(int mouseX, int mouseY, int clickedButton) {
 		super.mouseClicked(mouseX, mouseY, clickedButton);
 
-		if (clickedButton == 0 && grid.isConnected()) {
+		if (grid.isConnected()) {
+			TileController controller = grid.getController();
+
 			if (mouseX > getGridXStart() && mouseX < getGridXEnd() && mouseY > getGridYStart() && mouseY < getGridYEnd()) {
-				SC.NETWORK.sendToServer(new MessagePushToStorage(grid.getController()));
+				if (container.getPlayer().inventory.getItemStack() != null) {
+					SC.NETWORK.sendToServer(new MessagePushToStorage(controller.xCoord, controller.yCoord, controller.zCoord, -1));
+				}
+			} else {
+				for (Object slot : container.inventorySlots) {
+					if (func_146978_c(((Slot) slot).xDisplayPosition, ((Slot) slot).yDisplayPosition, 16, 16, mouseX, mouseY)) {
+						if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+							SC.NETWORK.sendToServer(new MessagePushToStorage(controller.xCoord, controller.yCoord, controller.zCoord, ((Slot) slot).slotNumber));
+						}
+					}
+				}
 			}
 		}
 	}

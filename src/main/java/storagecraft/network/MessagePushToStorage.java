@@ -10,17 +10,19 @@ import net.minecraft.tileentity.TileEntity;
 import storagecraft.tile.TileController;
 
 public class MessagePushToStorage implements IMessage, IMessageHandler<MessagePushToStorage, IMessage> {
-	private TileController controller;
-
 	private int x;
 	private int y;
 	private int z;
+	private int slot;
 
 	public MessagePushToStorage() {
 	}
 
-	public MessagePushToStorage(TileController controller) {
-		this.controller = controller;
+	public MessagePushToStorage(int x, int y, int z, int slot) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.slot = slot;
 	}
 
 	@Override
@@ -28,13 +30,15 @@ public class MessagePushToStorage implements IMessage, IMessageHandler<MessagePu
 		x = buf.readInt();
 		y = buf.readInt();
 		z = buf.readInt();
+		slot = buf.readInt();
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-		buf.writeInt(controller.xCoord);
-		buf.writeInt(controller.yCoord);
-		buf.writeInt(controller.zCoord);
+		buf.writeInt(x);
+		buf.writeInt(y);
+		buf.writeInt(z);
+		buf.writeInt(slot);
 	}
 
 	@Override
@@ -44,15 +48,19 @@ public class MessagePushToStorage implements IMessage, IMessageHandler<MessagePu
 		TileEntity tile = player.worldObj.getTileEntity(message.x, message.y, message.z);
 
 		if (tile instanceof TileController) {
-			controller = (TileController) tile;
+			TileController controller = (TileController) tile;
 
-			ItemStack stack = player.inventory.getItemStack();
+			ItemStack stack = message.slot == -1 ? player.inventory.getItemStack() : player.inventory.getStackInSlot(message.slot);
 
 			if (stack != null) {
 				controller.getStorage().push(stack);
 
-				player.inventory.setItemStack(null);
-				player.updateHeldItem();
+				if (message.slot == -1) {
+					player.inventory.setItemStack(null);
+					player.updateHeldItem();
+				} else {
+					player.inventory.setInventorySlotContents(message.slot, null);
+				}
 			}
 		}
 

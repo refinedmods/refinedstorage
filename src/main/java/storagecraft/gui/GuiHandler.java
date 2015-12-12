@@ -34,9 +34,9 @@ public class GuiHandler implements IGuiHandler {
 
 		switch (ID) {
 			case SC.GUI.CONTROLLER:
-				return new GuiController(getContainer(ID, player), (TileController) tile);
+				return new GuiController((ContainerController) getContainer(ID, player), (TileController) tile);
 			case SC.GUI.GRID:
-				return new GuiGrid(getContainer(ID, player), (TileGrid) tile);
+				return new GuiGrid((ContainerGrid) getContainer(ID, player), (TileGrid) tile);
 			default:
 				return null;
 		}

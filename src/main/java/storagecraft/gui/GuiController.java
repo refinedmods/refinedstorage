@@ -3,9 +3,9 @@ package storagecraft.gui;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
+import storagecraft.inventory.ContainerController;
 import storagecraft.tile.TileController;
 
 public class GuiController extends GuiContainer {
@@ -13,7 +13,7 @@ public class GuiController extends GuiContainer {
 
 	private TileController controller;
 
-	public GuiController(Container container, TileController controller) {
+	public GuiController(ContainerController container, TileController controller) {
 		super(container);
 
 		this.controller = controller;

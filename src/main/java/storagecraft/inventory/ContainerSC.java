@@ -12,6 +12,10 @@ public class ContainerSC extends Container {
 		this.player = player;
 	}
 
+	public EntityPlayer getPlayer() {
+		return player;
+	}
+
 	protected void addPlayerInventory(int xInventory, int yInventory) {
 		int id = 0;
 
