@@ -48,10 +48,12 @@ public class GuiGrid extends GuiContainer {
 		int yy = getGridYStart();
 
 		for (int i = 0; i < 9 * 4; ++i) {
+			ItemStack stack = null;
+
 			if (grid.isConnected() && i < grid.getController().getStorage().all().size()) {
 				StorageItem item = grid.getController().getStorage().all().get(i);
 
-				ItemStack stack = new ItemStack(item.getType(), item.getQuantity(), item.getMeta());
+				stack = new ItemStack(item.getType(), item.getQuantity(), item.getMeta());
 
 				itemRender.renderItemAndEffectIntoGUI(fontRendererObj, mc.getTextureManager(), stack, xx, yy);
 				itemRender.renderItemOverlayIntoGUI(fontRendererObj, mc.getTextureManager(), stack, xx, yy);
@@ -67,6 +69,10 @@ public class GuiGrid extends GuiContainer {
 				GL11.glColorMask(true, true, true, true);
 				GL11.glEnable(GL11.GL_LIGHTING);
 				GL11.glEnable(GL11.GL_DEPTH_TEST);
+
+				if (stack != null) {
+					renderToolTip(stack, mouseX, mouseY);
+				}
 			}
 
 			xx += 18;
