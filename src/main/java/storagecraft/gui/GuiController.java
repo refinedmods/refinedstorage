@@ -48,7 +48,7 @@ public class GuiController extends GuiContainer {
 
 		fontRendererObj.drawString(StatCollector.translateToLocal("gui.storagecraft:controller"), x + 7, y + 7, 4210752);
 		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), x + 7, y + 96, 4210752);
-		fontRendererObj.drawString(String.format(StatCollector.translateToLocal("gui.storagecraft:controller.energyUsage"), controller.getEnergyUsage()), x + 45, y + 24, 4210752);
+		fontRendererObj.drawString(String.format(StatCollector.translateToLocal("misc.storagecraft:energyUsage"), controller.getEnergyUsage()), x + 45, y + 24, 4210752);
 
 		if (mouseX >= barX && mouseX <= barX + barWidth && mouseY >= barY && mouseY <= barY + barHeight) {
 			List<String> lines = new ArrayList<String>();

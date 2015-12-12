@@ -1,11 +1,11 @@
 itemGroup.storagecraft=StorageCraft
 
 gui.storagecraft:controller=Controller
-gui.storagecraft:controller.energyUsage=Energy Usage: %d RF/t
 gui.storagecraft:grid=Grid
 gui.storagecraft:drive=Drive
 
 misc.storagecraft:energyStored=%d / %d RF
+misc.storagecraft:energyUsage=Energy Usage: %d RF/t
 
 block.storagecraft:controller.name=Controller
 block.storagecraft:cable.name=Cable
