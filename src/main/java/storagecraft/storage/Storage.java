@@ -37,24 +37,24 @@ public class Storage {
 		}
 	}
 
-	public boolean take(ItemStack stack) {
-		if (has(stack)) {
-			StorageItem item = get(stack);
+	public ItemStack take(Item type, int quantity, int meta) {
+		for (StorageItem item : items) {
+			if (item.getType() == type && item.getMeta() == meta) {
+				if (item.getQuantity() < quantity) {
+					quantity = item.getQuantity();
+				}
 
-			if (item.getQuantity() < stack.stackSize) {
-				return false;
+				item.setQuantity(item.getQuantity() - quantity);
+
+				if (item.getQuantity() == 0) {
+					items.remove(item);
+				}
+
+				return new ItemStack(type, quantity, meta);
 			}
-
-			item.setQuantity(item.getQuantity() - stack.stackSize);
-
-			if (item.getQuantity() == 0) {
-				items.remove(get(stack));
-			}
-
-			return true;
 		}
 
-		return false;
+		return null;
 	}
 
 	public void fromBytes(ByteBuf buf) {

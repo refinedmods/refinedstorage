@@ -8,6 +8,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import storagecraft.SC;
 import storagecraft.inventory.ContainerGrid;
+import storagecraft.network.MessagePullFromStorage;
 import storagecraft.network.MessagePushToStorage;
 import storagecraft.storage.StorageItem;
 import storagecraft.tile.TileController;
@@ -56,7 +57,7 @@ public class GuiGrid extends GuiContainer {
 				itemRender.renderItemOverlayIntoGUI(fontRendererObj, mc.getTextureManager(), stack, xx, yy);
 			}
 
-			if ((mouseX > xx && mouseX < xx + 16 && mouseY > yy && mouseY < yy + 16) || !grid.isConnected()) {
+			if ((mouseX >= xx && mouseX <= xx + 16 && mouseY >= yy && mouseY <= yy + 16) || !grid.isConnected()) {
 				int color = grid.isConnected() ? -2130706433 : 0xFF5B5B5B;
 
 				GL11.glDisable(GL11.GL_LIGHTING);
@@ -100,12 +101,20 @@ public class GuiGrid extends GuiContainer {
 		if (grid.isConnected()) {
 			TileController controller = grid.getController();
 
-			if (mouseX > getGridXStart() && mouseX < getGridXEnd() && mouseY > getGridYStart() && mouseY < getGridYEnd()) {
+			if (mouseX >= getGridXStart() && mouseX <= getGridXEnd() && mouseY >= getGridYStart() && mouseY <= getGridYEnd()) {
 				if (container.getPlayer().inventory.getItemStack() != null) {
 					SC.NETWORK.sendToServer(new MessagePushToStorage(controller.xCoord, controller.yCoord, controller.zCoord, -1));
+				} else {
+					int slotX = ((mouseX - getGridXStart()) / 18) + 1;
+					int slotY = ((mouseY - getGridYStart()) / 18) + 1;
+					int slotId = (slotX * slotY) - 1;
+
+					SC.NETWORK.sendToServer(new MessagePullFromStorage(controller.xCoord, controller.yCoord, controller.zCoord, slotId, clickedButton == 1, Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)));
 				}
 			} else {
-				for (Object slot : container.inventorySlots) {
+				for (int i = 0; i < container.inventorySlots.size(); ++i) {
+					Slot slot = (Slot) container.inventorySlots.get(i);
+
 					if (func_146978_c(((Slot) slot).xDisplayPosition, ((Slot) slot).yDisplayPosition, 16, 16, mouseX, mouseY)) {
 						if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
 							SC.NETWORK.sendToServer(new MessagePushToStorage(controller.xCoord, controller.yCoord, controller.zCoord, ((Slot) slot).slotNumber));
