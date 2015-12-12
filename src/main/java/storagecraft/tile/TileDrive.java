@@ -5,10 +5,10 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import storagecraft.SC;
-import storagecraft.inventory.InventoryBasic;
+import storagecraft.inventory.InventorySC;
 
 public class TileDrive extends TileMachine implements IInventory {
-	private InventoryBasic inventory = new InventoryBasic("drive", 8);
+	private InventorySC inventory = new InventorySC("drive", 8);
 	
 	@Override
 	public int getEnergyUsage() {
