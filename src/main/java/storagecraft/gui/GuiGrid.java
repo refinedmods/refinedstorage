@@ -122,9 +122,9 @@ public class GuiGrid extends GuiContainer {
 				for (int i = 0; i < container.inventorySlots.size(); ++i) {
 					Slot slot = (Slot) container.inventorySlots.get(i);
 
-					if (func_146978_c(((Slot) slot).xDisplayPosition, ((Slot) slot).yDisplayPosition, 16, 16, mouseX, mouseY)) {
+					if (func_146978_c(slot.xDisplayPosition, slot.yDisplayPosition, 16, 16, mouseX, mouseY)) {
 						if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-							SC.NETWORK.sendToServer(new MessagePushToStorage(controller.xCoord, controller.yCoord, controller.zCoord, ((Slot) slot).slotNumber));
+							SC.NETWORK.sendToServer(new MessagePushToStorage(controller.xCoord, controller.yCoord, controller.zCoord, slot.slotNumber));
 						}
 					}
 				}
