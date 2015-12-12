@@ -1,7 +1,7 @@
 package storagecraft.tile;
 
 import cofh.api.energy.EnergyStorage;
-import cofh.api.energy.IEnergyHandler;
+import cofh.api.energy.IEnergyReceiver;
 import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import storagecraft.storage.Storage;
 
-public class TileController extends TileSC implements IEnergyHandler, INetworkTile {
+public class TileController extends TileSC implements IEnergyReceiver, INetworkTile {
 	public static final int BASE_ENERGY_USAGE = 100;
 
 	private Storage storage = new Storage();
@@ -31,39 +31,41 @@ public class TileController extends TileSC implements IEnergyHandler, INetworkTi
 		if (!destroyed) {
 			++ticks;
 
-			if (!worldObj.isRemote && ticks % 40 == 0) {
-				if (!isActive()) {
-					disconnectAll();
-				} else {
-					List<TileMachine> machines = new ArrayList<TileMachine>();
+			if (!worldObj.isRemote) {
+				if (ticks % 40 == 0) {
+					if (!isActive()) {
+						disconnectAll();
+					} else {
+						List<TileMachine> machines = new ArrayList<TileMachine>();
 
-					for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-						TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
+						for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+							TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
 
-						if (tile instanceof TileCable) {
-							machines.addAll(((TileCable) tile).findMachines(this));
+							if (tile instanceof TileCable) {
+								machines.addAll(((TileCable) tile).findMachines(this));
+							}
 						}
+
+						for (TileMachine machine : connectedMachines) {
+							if (!machines.contains(machine)) {
+								machine.onDisconnected();
+							}
+						}
+
+						for (TileMachine machine : machines) {
+							if (!connectedMachines.contains(machine)) {
+								machine.onConnected(this);
+							}
+						}
+
+						connectedMachines = machines;
 					}
+
+					energyUsage = BASE_ENERGY_USAGE;
 
 					for (TileMachine machine : connectedMachines) {
-						if (!machines.contains(machine)) {
-							machine.onDisconnected();
-						}
+						energyUsage += machine.getEnergyUsage();
 					}
-
-					for (TileMachine machine : machines) {
-						if (!connectedMachines.contains(machine)) {
-							machine.onConnected(this);
-						}
-					}
-
-					connectedMachines = machines;
-				}
-
-				energyUsage = BASE_ENERGY_USAGE;
-
-				for (TileMachine machine : connectedMachines) {
-					energyUsage += machine.getEnergyUsage();
 				}
 
 				energy.extractEnergy(energyUsage, false);
@@ -112,11 +114,6 @@ public class TileController extends TileSC implements IEnergyHandler, INetworkTi
 	@Override
 	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
 		return energy.receiveEnergy(maxReceive, simulate);
-	}
-
-	@Override
-	public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate) {
-		return energy.extractEnergy(maxExtract, simulate);
 	}
 
 	@Override
