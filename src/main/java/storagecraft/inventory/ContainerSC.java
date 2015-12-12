@@ -21,12 +21,14 @@ public class ContainerSC extends Container {
 
 		for (int i = 0; i < 9; i++) {
 			addSlotToContainer(new Slot(player.inventory, id, xInventory + i * 18, yInventory + 4 + (3 * 18)));
+
 			id++;
 		}
 
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 9; x++) {
 				addSlotToContainer(new Slot(player.inventory, id, xInventory + x * 18, yInventory + y * 18));
+
 				id++;
 			}
 		}

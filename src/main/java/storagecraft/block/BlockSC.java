@@ -3,7 +3,9 @@ package storagecraft.block;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -31,8 +33,10 @@ public class BlockSC extends Block {
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack itemStack) {
 		super.onBlockPlacedBy(world, x, y, z, entityLiving, itemStack);
 
-		if (world.getTileEntity(x, y, z) instanceof TileSC) {
-			ForgeDirection direction = ForgeDirection.UNKNOWN;
+		TileEntity tile = world.getTileEntity(x, y, z);
+
+		if (tile instanceof TileSC) {
+			ForgeDirection direction = null;
 
 			int facing = MathHelper.floor_double(entityLiving.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
 
@@ -51,7 +55,18 @@ public class BlockSC extends Block {
 					break;
 			}
 
-			((TileSC) world.getTileEntity(x, y, z)).setDirection(direction);
+			((TileSC) tile).setDirection(direction);
 		}
+	}
+
+	@Override
+	public void onBlockPreDestroy(World world, int x, int y, int z, int meta) {
+		TileEntity tile = world.getTileEntity(x, y, z);
+
+		if (tile instanceof IInventory) {
+			SC.dropInventoryContent(world, (IInventory) tile, x, y, z, 0);
+		}
+
+		super.onBlockPreDestroy(world, x, y, z, meta);
 	}
 }

@@ -7,17 +7,21 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import storagecraft.SC;
 import storagecraft.inventory.ContainerController;
+import storagecraft.inventory.ContainerDrive;
 import storagecraft.inventory.ContainerGrid;
 import storagecraft.tile.TileController;
+import storagecraft.tile.TileDrive;
 import storagecraft.tile.TileGrid;
 
 public class GuiHandler implements IGuiHandler {
-	private Container getContainer(int ID, EntityPlayer player) {
+	private Container getContainer(int ID, EntityPlayer player, TileEntity tile) {
 		switch (ID) {
 			case SC.GUI.CONTROLLER:
 				return new ContainerController(player);
 			case SC.GUI.GRID:
 				return new ContainerGrid(player);
+			case SC.GUI.DRIVE:
+				return new ContainerDrive(player, (TileDrive) tile);
 			default:
 				return null;
 		}
@@ -25,7 +29,7 @@ public class GuiHandler implements IGuiHandler {
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		return getContainer(ID, player);
+		return getContainer(ID, player, world.getTileEntity(x, y, z));
 	}
 
 	@Override
@@ -34,9 +38,11 @@ public class GuiHandler implements IGuiHandler {
 
 		switch (ID) {
 			case SC.GUI.CONTROLLER:
-				return new GuiController((ContainerController) getContainer(ID, player), (TileController) tile);
+				return new GuiController((ContainerController) getContainer(ID, player, tile), (TileController) tile);
 			case SC.GUI.GRID:
-				return new GuiGrid((ContainerGrid) getContainer(ID, player), (TileGrid) tile);
+				return new GuiGrid((ContainerGrid) getContainer(ID, player, tile), (TileGrid) tile);
+			case SC.GUI.DRIVE:
+				return new GuiDrive((ContainerDrive) getContainer(ID, player, tile));
 			default:
 				return null;
 		}

@@ -9,8 +9,16 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import java.util.Random;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 import storagecraft.proxy.CommonProxy;
 
 @Mod(modid = SC.ID, version = SC.VERSION)
@@ -18,6 +26,7 @@ public class SC {
 	public static class GUI {
 		public static final int CONTROLLER = 0;
 		public static final int GRID = 1;
+		public static final int DRIVE = 2;
 	}
 
 	public static final String ID = "storagecraft";
@@ -47,5 +56,79 @@ public class SC {
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent e) {
 		PROXY.postInit(e);
+	}
+
+	public static void saveInventory(IInventory inventory, NBTTagCompound nbt) {
+		NBTTagList tagList = new NBTTagList();
+
+		for (int i = 0; i < inventory.getSizeInventory(); i++) {
+			if (inventory.getStackInSlot(i) != null) {
+				NBTTagCompound compoundTag = new NBTTagCompound();
+
+				compoundTag.setInteger("Slot", i);
+
+				inventory.getStackInSlot(i).writeToNBT(compoundTag);
+
+				tagList.appendTag(compoundTag);
+			}
+		}
+
+		nbt.setTag("Inventory", tagList);
+	}
+
+	public static void restoreInventory(IInventory inventory, NBTTagCompound nbt) {
+		if (nbt.hasKey("Inventory")) {
+			NBTTagList tagList = nbt.getTagList("Inventory", Constants.NBT.TAG_COMPOUND);
+
+			for (int i = 0; i < tagList.tagCount(); i++) {
+				int slot = tagList.getCompoundTagAt(i).getInteger("Slot");
+
+				ItemStack stack = ItemStack.loadItemStackFromNBT(tagList.getCompoundTagAt(i));
+
+				inventory.setInventorySlotContents(slot, stack);
+			}
+		}
+	}
+
+	/**
+	 * @author cpw
+	 * @see https://github.com/cpw/ironchest/blob/master/src/main/java/cpw/mods/ironchest/BlockIronChest.java#L195
+	 */
+	public static void dropInventoryContent(World world, IInventory inventory, int xCoord, int yCoord, int zCoord, int newSize) {
+		Random random = world.rand;
+
+		for (int i = newSize; i < inventory.getSizeInventory(); ++i) {
+			ItemStack stack = inventory.getStackInSlot(i);
+
+			if (stack == null) {
+				continue;
+			}
+
+			float f = random.nextFloat() * 0.8F + 0.1F;
+			float f1 = random.nextFloat() * 0.8F + 0.1F;
+			float f2 = random.nextFloat() * 0.8F + 0.1F;
+
+			while (stack.stackSize > 0) {
+				int i1 = random.nextInt(21) + 10;
+
+				if (i1 > stack.stackSize) {
+					i1 = stack.stackSize;
+				}
+
+				stack.stackSize -= i1;
+
+				EntityItem entityItem = new EntityItem(world, (float) xCoord + f, (float) yCoord + (newSize > 0 ? 1 : 0) + f1, (float) zCoord + f2, new ItemStack(stack.getItem(), i1, stack.getItemDamage()));
+
+				entityItem.motionX = (float) random.nextGaussian() * 0.05F;
+				entityItem.motionY = (float) random.nextGaussian() * 0.05F + 0.2F;
+				entityItem.motionZ = (float) random.nextGaussian() * 0.05F;
+
+				if (stack.hasTagCompound()) {
+					entityItem.getEntityItem().setTagCompound((NBTTagCompound) stack.getTagCompound().copy());
+				}
+
+				world.spawnEntityInWorld(entityItem);
+			}
+		}
 	}
 }

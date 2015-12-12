@@ -8,12 +8,14 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import storagecraft.SC;
 import storagecraft.SCBlocks;
+import storagecraft.SCItems;
 import storagecraft.gui.GuiHandler;
 import storagecraft.network.MessagePullFromStorage;
 import storagecraft.network.MessagePushToStorage;
 import storagecraft.network.MessageTileUpdate;
 import storagecraft.tile.TileCable;
 import storagecraft.tile.TileController;
+import storagecraft.tile.TileDrive;
 import storagecraft.tile.TileGrid;
 
 public class CommonProxy {
@@ -27,10 +29,14 @@ public class CommonProxy {
 		GameRegistry.registerTileEntity(TileController.class, "controller");
 		GameRegistry.registerTileEntity(TileCable.class, "cable");
 		GameRegistry.registerTileEntity(TileGrid.class, "grid");
+		GameRegistry.registerTileEntity(TileDrive.class, "drive");
 
 		GameRegistry.registerBlock(SCBlocks.CONTROLLER, "controller");
 		GameRegistry.registerBlock(SCBlocks.CABLE, "cable");
 		GameRegistry.registerBlock(SCBlocks.GRID, "grid");
+		GameRegistry.registerBlock(SCBlocks.DRIVE, "drive");
+
+		GameRegistry.registerItem(SCItems.STORAGE_CELL, "storageCell");
 	}
 
 	public void init(FMLInitializationEvent e) {

@@ -3,3 +3,6 @@ itemGroup.storagecraft=StorageCraft
 block.storagecraft:controller.name=Controller
 block.storagecraft:cable.name=Cable
 block.storagecraft:grid.name=Grid
+block.storagecraft:drive.name=Drive
+
+item.storagecraft:storageCell.name=Storage Cell

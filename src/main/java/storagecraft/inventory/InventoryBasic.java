@@ -6,22 +6,18 @@ import net.minecraft.item.ItemStack;
 
 public class InventoryBasic implements IInventory {
 	private ItemStack[] inventory;
-	private int inventorySize;
+	private int size;
 	private String name;
 
 	public InventoryBasic(String name, int size) {
 		this.name = name;
-		this.inventorySize = size;
-		this.inventory = new ItemStack[inventorySize];
-	}
-
-	public void setInventoryStack(ItemStack[] stack) {
-		this.inventory = stack;
+		this.size = size;
+		this.inventory = new ItemStack[size];
 	}
 
 	@Override
 	public int getSizeInventory() {
-		return inventory.length;
+		return size;
 	}
 
 	@Override
@@ -30,38 +26,42 @@ public class InventoryBasic implements IInventory {
 	}
 
 	@Override
-	public ItemStack decrStackSize(int slotIndex, int decrementAmount) {
-		ItemStack itemStack = getStackInSlot(slotIndex);
-		if (itemStack != null) {
-			if (itemStack.stackSize <= decrementAmount) {
-				setInventorySlotContents(slotIndex, null);
-			} else {
-				itemStack = itemStack.splitStack(decrementAmount);
+	public ItemStack decrStackSize(int slot, int amount) {
+		ItemStack stack = getStackInSlot(slot);
 
-				if (itemStack.stackSize == 0) {
-					setInventorySlotContents(slotIndex, null);
+		if (stack != null) {
+			if (stack.stackSize <= amount) {
+				setInventorySlotContents(slot, null);
+			} else {
+				stack = stack.splitStack(amount);
+
+				if (stack.stackSize == 0) {
+					setInventorySlotContents(slot, null);
 				}
 			}
 		}
-		return itemStack;
+
+		return stack;
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int slotIndex) {
-		ItemStack itemStack = getStackInSlot(slotIndex);
-		if (itemStack != null) {
-			setInventorySlotContents(slotIndex, null);
+	public ItemStack getStackInSlotOnClosing(int slot) {
+		ItemStack stack = getStackInSlot(slot);
+
+		if (stack != null) {
+			setInventorySlotContents(slot, null);
 		}
-		return itemStack;
+
+		return stack;
 	}
 
 	@Override
-	public void setInventorySlotContents(int slotIndex, ItemStack itemStack) {
-		if (itemStack != null && itemStack.stackSize > getInventoryStackLimit()) {
-			itemStack.stackSize = getInventoryStackLimit();
+	public void setInventorySlotContents(int slot, ItemStack stack) {
+		if (stack != null && stack.stackSize > getInventoryStackLimit()) {
+			stack.stackSize = getInventoryStackLimit();
 		}
 
-		inventory[slotIndex] = itemStack;
+		inventory[slot] = stack;
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public class InventoryBasic implements IInventory {
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer var1) {
+	public boolean isUseableByPlayer(EntityPlayer player) {
 		return true;
 	}
 
@@ -93,7 +93,7 @@ public class InventoryBasic implements IInventory {
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int var1, ItemStack var2) {
+	public boolean isItemValidForSlot(int slot, ItemStack stack) {
 		return true;
 	}
 

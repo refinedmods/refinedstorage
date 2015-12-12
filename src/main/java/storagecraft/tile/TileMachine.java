@@ -4,7 +4,10 @@ import io.netty.buffer.ByteBuf;
 
 public abstract class TileMachine extends TileSC implements INetworkTile {
 	protected boolean connected = false;
-	private int xController, yController, zController;
+
+	private int xController;
+	private int yController;
+	private int zController;
 
 	public void onConnected(TileController controller) {
 		this.connected = true;
