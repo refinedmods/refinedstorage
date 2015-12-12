@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
 import storagecraft.inventory.ContainerController;
 import storagecraft.tile.TileController;
@@ -45,14 +46,14 @@ public class GuiController extends GuiContainer {
 
 		drawTexturedModalRect(barX, barY + barHeight - newBarHeight, 178, 0, barWidth, newBarHeight);
 
-		fontRendererObj.drawString("Controller", x + 7, y + 7, 4210752);
-		fontRendererObj.drawString("Inventory", x + 7, y + 96, 4210752);
-		fontRendererObj.drawString("Energy usage: " + controller.getEnergyUsage() + " RF/t", x + 45, y + 24, 4210752);
+		fontRendererObj.drawString(StatCollector.translateToLocal("gui.storagecraft:controller"), x + 7, y + 7, 4210752);
+		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), x + 7, y + 96, 4210752);
+		fontRendererObj.drawString(String.format(StatCollector.translateToLocal("gui.storagecraft:controller.energyUsage"), controller.getEnergyUsage()), x + 45, y + 24, 4210752);
 
 		if (mouseX >= barX && mouseX <= barX + barWidth && mouseY >= barY && mouseY <= barY + barHeight) {
 			List<String> lines = new ArrayList<String>();
 
-			lines.add(energy + " / " + maxEnergy + " RF");
+			lines.add(String.format(StatCollector.translateToLocal("misc.storagecraft:energyStored"), energy, maxEnergy));
 
 			drawHoveringText(lines, mouseX, mouseY, fontRendererObj);
 		}

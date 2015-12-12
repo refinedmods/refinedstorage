@@ -64,7 +64,7 @@ public class BlockSC extends Block {
 		TileEntity tile = world.getTileEntity(x, y, z);
 
 		if (tile instanceof IInventory) {
-			SC.dropInventoryContent(world, (IInventory) tile, x, y, z, 0);
+			SC.dropInventory(world, (IInventory) tile, x, y, z, 0);
 		}
 
 		super.onBlockPreDestroy(world, x, y, z, meta);

@@ -2,6 +2,7 @@ package storagecraft.gui;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
 import storagecraft.inventory.ContainerDrive;
 
@@ -26,7 +27,7 @@ public class GuiDrive extends GuiContainer {
 
 		drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
 
-		fontRendererObj.drawString("Drive", x + 7, y + 7, 4210752);
-		fontRendererObj.drawString("Inventory", x + 7, y + 96, 4210752);
+		fontRendererObj.drawString(StatCollector.translateToLocal("gui.storagecraft:drive"), x + 7, y + 7, 4210752);
+		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), x + 7, y + 96, 4210752);
 	}
 }

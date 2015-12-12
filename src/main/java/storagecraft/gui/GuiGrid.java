@@ -4,6 +4,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import storagecraft.SC;
@@ -41,8 +42,8 @@ public class GuiGrid extends GuiContainer {
 
 		drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
 
-		fontRendererObj.drawString("Grid", x + 7, y + 7, 4210752);
-		fontRendererObj.drawString("Inventory", x + 7, y + 96, 4210752);
+		fontRendererObj.drawString(StatCollector.translateToLocal("gui.storagecraft:grid"), x + 7, y + 7, 4210752);
+		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), x + 7, y + 96, 4210752);
 
 		int xx = getGridXStart();
 		int yy = getGridYStart();

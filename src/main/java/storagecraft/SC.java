@@ -23,7 +23,7 @@ import storagecraft.proxy.CommonProxy;
 
 @Mod(modid = SC.ID, version = SC.VERSION)
 public class SC {
-	public static class GUI {
+	public static final class GUI {
 		public static final int CONTROLLER = 0;
 		public static final int GRID = 1;
 		public static final int DRIVE = 2;
@@ -90,11 +90,8 @@ public class SC {
 		}
 	}
 
-	/**
-	 * @author cpw
-	 * @see https://github.com/cpw/ironchest/blob/master/src/main/java/cpw/mods/ironchest/BlockIronChest.java#L195
-	 */
-	public static void dropInventoryContent(World world, IInventory inventory, int xCoord, int yCoord, int zCoord, int newSize) {
+	// https://github.com/cpw/ironchest/blob/master/src/main/java/cpw/mods/ironchest/BlockIronChest.java#L200
+	public static void dropInventory(World world, IInventory inventory, int x, int y, int z, int newSize) {
 		Random random = world.rand;
 
 		for (int i = newSize; i < inventory.getSizeInventory(); ++i) {
@@ -104,30 +101,30 @@ public class SC {
 				continue;
 			}
 
-			float f = random.nextFloat() * 0.8F + 0.1F;
-			float f1 = random.nextFloat() * 0.8F + 0.1F;
-			float f2 = random.nextFloat() * 0.8F + 0.1F;
+			float xx = random.nextFloat() * 0.8F + 0.1F;
+			float yy = random.nextFloat() * 0.8F + 0.1F;
+			float zz = random.nextFloat() * 0.8F + 0.1F;
 
 			while (stack.stackSize > 0) {
-				int i1 = random.nextInt(21) + 10;
+				int amount = random.nextInt(21) + 10;
 
-				if (i1 > stack.stackSize) {
-					i1 = stack.stackSize;
+				if (amount > stack.stackSize) {
+					amount = stack.stackSize;
 				}
 
-				stack.stackSize -= i1;
+				stack.stackSize -= amount;
 
-				EntityItem entityItem = new EntityItem(world, (float) xCoord + f, (float) yCoord + (newSize > 0 ? 1 : 0) + f1, (float) zCoord + f2, new ItemStack(stack.getItem(), i1, stack.getItemDamage()));
+				EntityItem entity = new EntityItem(world, (float) x + xx, (float) y + (newSize > 0 ? 1 : 0) + yy, (float) z + zz, new ItemStack(stack.getItem(), amount, stack.getItemDamage()));
 
-				entityItem.motionX = (float) random.nextGaussian() * 0.05F;
-				entityItem.motionY = (float) random.nextGaussian() * 0.05F + 0.2F;
-				entityItem.motionZ = (float) random.nextGaussian() * 0.05F;
+				entity.motionX = (float) random.nextGaussian() * 0.05F;
+				entity.motionY = (float) random.nextGaussian() * 0.05F + 0.2F;
+				entity.motionZ = (float) random.nextGaussian() * 0.05F;
 
 				if (stack.hasTagCompound()) {
-					entityItem.getEntityItem().setTagCompound((NBTTagCompound) stack.getTagCompound().copy());
+					entity.getEntityItem().setTagCompound((NBTTagCompound) stack.getTagCompound().copy());
 				}
 
-				world.spawnEntityInWorld(entityItem);
+				world.spawnEntityInWorld(entity);
 			}
 		}
 	}
