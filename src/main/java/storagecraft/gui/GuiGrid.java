@@ -48,6 +48,8 @@ public class GuiGrid extends GuiContainer {
 		int xx = getGridXStart();
 		int yy = getGridYStart();
 
+		ItemStack toolTip = null;
+
 		for (int i = 0; i < 9 * 4; ++i) {
 			ItemStack stack = null;
 
@@ -72,7 +74,7 @@ public class GuiGrid extends GuiContainer {
 				GL11.glEnable(GL11.GL_DEPTH_TEST);
 
 				if (stack != null) {
-					renderToolTip(stack, mouseX, mouseY);
+					toolTip = stack;
 				}
 			}
 
@@ -82,6 +84,10 @@ public class GuiGrid extends GuiContainer {
 				xx = getGridXStart();
 				yy += 18;
 			}
+		}
+
+		if (toolTip != null) {
+			renderToolTip(toolTip, mouseX, mouseY);
 		}
 	}
 
