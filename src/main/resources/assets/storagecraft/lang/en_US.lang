@@ -6,7 +6,9 @@ gui.storagecraft:drive=Drive
 
 misc.storagecraft:energyStored=%d / %d RF
 misc.storagecraft:energyUsage=Energy Usage: %d RF/t
-misc.storagecraft:storageCellStored=Stored: %d / %d
+
+misc.storagecraft:storageCellStored=Stored: %d
+misc.storagecraft:storageCellStoredWithCapacity=Stored: %d / %d
 
 block.storagecraft:controller.name=Controller
 block.storagecraft:cable.name=Cable
@@ -18,3 +20,4 @@ item.storagecraft:storageCell.0.name=1k Storage Cell
 item.storagecraft:storageCell.1.name=4k Storage Cell
 item.storagecraft:storageCell.2.name=16k Storage Cell
 item.storagecraft:storageCell.3.name=64k Storage Cell
+item.storagecraft:storageCell.4.name=Creative Storage Cell

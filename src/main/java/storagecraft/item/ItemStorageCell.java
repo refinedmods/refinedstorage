@@ -30,18 +30,18 @@ public class ItemStorageCell extends ItemSC {
 
 	@Override
 	public void getSubItems(Item item, CreativeTabs tab, List list) {
-		for (int i = 0; i < 4; ++i) {
-			ItemStack cell = new ItemStack(item, 1, i);
-
-			init(cell);
-
-			list.add(cell);
+		for (int i = 0; i < 5; ++i) {
+			list.add(init(new ItemStack(item, 1, i)));
 		}
 	}
 
 	@Override
 	public void addInformation(ItemStack cell, EntityPlayer player, List list, boolean b) {
-		list.add(String.format(StatCollector.translateToLocal("misc.storagecraft:storageCellStored"), getStored(cell), getCapacity(cell)));
+		if (getCapacity(cell) == -1) {
+			list.add(String.format(StatCollector.translateToLocal("misc.storagecraft:storageCellStored"), getStored(cell)));
+		} else {
+			list.add(String.format(StatCollector.translateToLocal("misc.storagecraft:storageCellStoredWithCapacity"), getStored(cell), getCapacity(cell)));
+		}
 	}
 
 	@Override
@@ -67,10 +67,12 @@ public class ItemStorageCell extends ItemSC {
 		return items;
 	}
 
-	public static void init(ItemStack cell) {
+	public static ItemStack init(ItemStack cell) {
 		cell.stackTagCompound = new NBTTagCompound();
 		cell.stackTagCompound.setTag(NBT_ITEMS, new NBTTagList());
 		cell.stackTagCompound.setInteger(NBT_STORED, 0);
+
+		return cell;
 	}
 
 	public static void push(ItemStack cell, ItemStack stack) {
@@ -128,6 +130,10 @@ public class ItemStorageCell extends ItemSC {
 	}
 
 	public static boolean hasSpace(ItemStack cell, ItemStack stack) {
+		if (getCapacity(cell) == -1) {
+			return true;
+		}
+
 		return (getStored(cell) + stack.stackSize) <= getCapacity(cell);
 	}
 
@@ -145,6 +151,8 @@ public class ItemStorageCell extends ItemSC {
 				return 16000;
 			case 3:
 				return 64000;
+			case 4:
+				return -1;
 		}
 
 		return 0;
