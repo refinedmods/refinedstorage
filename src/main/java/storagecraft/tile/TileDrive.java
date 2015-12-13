@@ -94,10 +94,10 @@ public class TileDrive extends TileMachine implements IInventory, IStorageProvid
 	}
 
 	@Override
-	public void addStorages(List<IStorage> providers) {
+	public void addStorages(List<IStorage> storages) {
 		for (int i = 0; i < getSizeInventory(); ++i) {
 			if (getStackInSlot(i) != null) {
-				providers.add(new CellStorage(getStackInSlot(i)));
+				storages.add(new CellStorage(getStackInSlot(i)));
 			}
 		}
 	}
