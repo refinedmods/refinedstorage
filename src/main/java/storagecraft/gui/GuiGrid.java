@@ -11,7 +11,6 @@ import storagecraft.SC;
 import storagecraft.inventory.ContainerGrid;
 import storagecraft.network.MessagePullFromStorage;
 import storagecraft.network.MessagePushToStorage;
-import storagecraft.storage.StorageItem;
 import storagecraft.tile.TileController;
 import storagecraft.tile.TileGrid;
 
@@ -54,9 +53,7 @@ public class GuiGrid extends GuiContainer {
 			ItemStack stack = null;
 
 			if (grid.isConnected() && i < grid.getController().getItems().size()) {
-				StorageItem item = grid.getController().getItems().get(i);
-
-				stack = new ItemStack(item.getType(), item.getQuantity(), item.getMeta());
+				stack = grid.getController().getItems().get(i).toItemStack();
 
 				itemRender.renderItemAndEffectIntoGUI(fontRendererObj, mc.getTextureManager(), stack, xx, yy);
 				itemRender.renderItemOverlayIntoGUI(fontRendererObj, mc.getTextureManager(), stack, xx, yy);

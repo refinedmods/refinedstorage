@@ -14,6 +14,7 @@ public class CellStorage implements IStorage {
 	public static final String NBT_ITEM_TYPE = "Type";
 	public static final String NBT_ITEM_QUANTITY = "Quantity";
 	public static final String NBT_ITEM_META = "Meta";
+	public static final String NBT_ITEM_NBT = "NBT";
 
 	private ItemStack cell;
 
@@ -22,7 +23,7 @@ public class CellStorage implements IStorage {
 	}
 
 	private StorageItem createItemFromNBT(NBTTagCompound tag) {
-		return new StorageItem(Item.getItemById(tag.getInteger(NBT_ITEM_TYPE)), tag.getInteger(NBT_ITEM_QUANTITY), tag.getInteger(NBT_ITEM_META));
+		return new StorageItem(Item.getItemById(tag.getInteger(NBT_ITEM_TYPE)), tag.getInteger(NBT_ITEM_QUANTITY), tag.getInteger(NBT_ITEM_META), tag.hasKey(NBT_ITEM_NBT) ? ((NBTTagCompound) tag.getTag(NBT_ITEM_NBT)) : null);
 	}
 
 	@Override
@@ -50,6 +51,10 @@ public class CellStorage implements IStorage {
 			StorageItem item = createItemFromNBT(tag);
 
 			if (item.getType() == stack.getItem() && item.getMeta() == stack.getItemDamage()) {
+				if (item.getTag() != null && !item.getTag().equals(stack.stackTagCompound)) {
+					continue;
+				}
+
 				tag.setInteger(NBT_ITEM_QUANTITY, item.getQuantity() + stack.stackSize);
 
 				return;
@@ -62,11 +67,17 @@ public class CellStorage implements IStorage {
 		tag.setInteger(NBT_ITEM_QUANTITY, stack.stackSize);
 		tag.setInteger(NBT_ITEM_META, stack.getItemDamage());
 
+		if (stack.stackTagCompound != null) {
+			tag.setTag(NBT_ITEM_NBT, stack.stackTagCompound);
+		}
+
 		list.appendTag(tag);
 	}
 
 	@Override
-	public int take(Item type, int quantity, int meta) {
+	public int take(ItemStack stack) {
+		int quantity = stack.stackSize;
+
 		NBTTagList list = (NBTTagList) cell.stackTagCompound.getTag(NBT_ITEMS);
 
 		for (int i = 0; i < list.tagCount(); ++i) {
@@ -74,7 +85,11 @@ public class CellStorage implements IStorage {
 
 			StorageItem item = createItemFromNBT(tag);
 
-			if (item.getType() == type && item.getMeta() == meta) {
+			if (item.getType() == stack.getItem() && item.getMeta() == stack.getItemDamage()) {
+				if (item.getTag() != null && !item.getTag().equals(stack.stackTagCompound)) {
+					continue;
+				}
+
 				if (quantity > item.getQuantity()) {
 					quantity = item.getQuantity();
 				}

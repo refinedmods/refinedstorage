@@ -1,7 +1,6 @@
 package storagecraft.storage;
 
 import java.util.List;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 public interface IStorage {
@@ -9,7 +8,7 @@ public interface IStorage {
 
 	public void push(ItemStack stack);
 
-	public int take(Item type, int quantity, int meta);
+	public int take(ItemStack stack);
 
 	public boolean canPush(ItemStack stack);
 }

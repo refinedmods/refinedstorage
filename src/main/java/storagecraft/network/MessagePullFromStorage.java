@@ -69,7 +69,7 @@ public class MessagePullFromStorage implements IMessage, IMessageHandler<Message
 					quantity = item.getQuantity() / 2;
 				}
 
-				ItemStack stack = controller.take(item.getType(), quantity, item.getMeta());
+				ItemStack stack = controller.take(item.copy(quantity).toItemStack());
 
 				if (message.shift) {
 					// @TODO: This doesn't work

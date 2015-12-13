@@ -24,7 +24,7 @@ public class SlotDrive extends SlotItemFilter {
 		super.onSlotChanged();
 
 		if (drive.isConnected()) {
-			drive.getController().storageSync();
+			drive.getController().syncStorage();
 		}
 	}
 }

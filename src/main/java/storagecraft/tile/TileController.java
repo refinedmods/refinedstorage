@@ -2,6 +2,7 @@ package storagecraft.tile;
 
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyReceiver;
+import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +67,7 @@ public class TileController extends TileSC implements IEnergyReceiver, INetworkT
 
 					connectedMachines = machines;
 
-					storageSync();
+					syncStorage();
 				}
 
 				energyUsage = BASE_ENERGY_USAGE;
@@ -104,7 +105,7 @@ public class TileController extends TileSC implements IEnergyReceiver, INetworkT
 		return items;
 	}
 
-	public void storageSync() {
+	public void syncStorage() {
 		storages.clear();
 
 		for (TileMachine machine : connectedMachines) {
@@ -113,10 +114,10 @@ public class TileController extends TileSC implements IEnergyReceiver, INetworkT
 			}
 		}
 
-		storageItemsSync();
+		syncStorageItems();
 	}
 
-	private void storageItemsSync() {
+	private void syncStorageItems() {
 		items.clear();
 
 		for (IStorage storage : storages) {
@@ -125,41 +126,46 @@ public class TileController extends TileSC implements IEnergyReceiver, INetworkT
 	}
 
 	public boolean push(ItemStack stack) {
-		IStorage storageThatCanPush = null;
+		IStorage foundStorage = null;
 
 		for (IStorage storage : storages) {
 			if (storage.canPush(stack)) {
-				storageThatCanPush = storage;
+				foundStorage = storage;
 
 				break;
 			}
 		}
 
-		if (storageThatCanPush == null) {
+		if (foundStorage == null) {
 			return false;
 		}
 
-		storageThatCanPush.push(stack);
+		foundStorage.push(stack);
 
-		storageItemsSync();
+		syncStorageItems();
 
 		return true;
 	}
 
-	public ItemStack take(Item type, int quantity, int meta) {
+	public ItemStack take(ItemStack stack) {
+		int needed = stack.stackSize;
 		int took = 0;
 
 		for (IStorage storage : storages) {
-			took += storage.take(type, quantity, meta);
+			took += storage.take(stack);
 
-			if (took == quantity) {
+			if (took == needed) {
 				break;
 			}
 		}
 
-		storageItemsSync();
+		syncStorageItems();
 
-		return new ItemStack(type, took, meta);
+		ItemStack newStack = stack.copy();
+
+		newStack.stackSize = took;
+
+		return newStack;
 	}
 
 	@Override
@@ -217,8 +223,13 @@ public class TileController extends TileSC implements IEnergyReceiver, INetworkT
 			Item type = Item.getItemById(buf.readInt());
 			int quantity = buf.readInt();
 			int meta = buf.readInt();
+			NBTTagCompound tag = null;
 
-			items.add(new StorageItem(type, quantity, meta));
+			if (buf.readBoolean()) {
+				tag = ByteBufUtils.readTag(buf);
+			}
+
+			items.add(new StorageItem(type, quantity, meta, tag));
 		}
 	}
 
@@ -233,6 +244,11 @@ public class TileController extends TileSC implements IEnergyReceiver, INetworkT
 			buf.writeInt(Item.getIdFromItem(item.getType()));
 			buf.writeInt(item.getQuantity());
 			buf.writeInt(item.getMeta());
+			buf.writeBoolean(item.getTag() != null);
+
+			if (item.getTag() != null) {
+				ByteBufUtils.writeTag(buf, item.getTag());
+			}
 		}
 	}
 }
