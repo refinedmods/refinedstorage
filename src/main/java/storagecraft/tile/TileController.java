@@ -10,7 +10,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import storagecraft.SCItems;
-import storagecraft.item.ItemStorageCell;
 import storagecraft.storage.IStorageCellProvider;
 import storagecraft.storage.Storage;
 
@@ -108,14 +107,7 @@ public class TileController extends TileSC implements IEnergyReceiver, INetworkT
 
 				for (int i = 0; i < drive.getSizeInventory(); ++i) {
 					if (drive.getStackInSlot(i) != null && drive.getStackInSlot(i).getItem() == SCItems.STORAGE_CELL) {
-						ItemStack cell = drive.getStackInSlot(i);
-
-						// @TODO: find out why this isn't working
-						if (cell.stackTagCompound == null) {
-							((ItemStorageCell) cell.getItem()).onCreated(cell, worldObj, null);
-						}
-
-						stacks.add(cell);
+						stacks.add(drive.getStackInSlot(i));
 					}
 				}
 			}

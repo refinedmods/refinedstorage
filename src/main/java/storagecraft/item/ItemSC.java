@@ -21,6 +21,10 @@ public class ItemSC extends Item {
 
 	@Override
 	public String getUnlocalizedName(ItemStack stack) {
+		if (getHasSubtypes()) {
+			return getUnlocalizedName() + "." + stack.getItemDamage();
+		}
+
 		return getUnlocalizedName();
 	}
 }

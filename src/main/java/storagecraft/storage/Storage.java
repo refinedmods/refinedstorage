@@ -24,6 +24,7 @@ public class Storage {
 	public void sync() {
 		items.clear();
 
+		// @TODO: merge stored items with others..
 		for (ItemStack cell : provider.getStorageCells()) {
 			items.addAll(ItemStorageCell.getStoredItems(cell));
 		}
@@ -44,7 +45,7 @@ public class Storage {
 			return false;
 		}
 
-		ItemStorageCell.store(cellWithSpace, stack);
+		ItemStorageCell.push(cellWithSpace, stack);
 
 		sync();
 
