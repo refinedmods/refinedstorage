@@ -53,8 +53,8 @@ public class GuiGrid extends GuiContainer {
 		for (int i = 0; i < 9 * 4; ++i) {
 			ItemStack stack = null;
 
-			if (grid.isConnected() && i < grid.getController().getStorage().all().size()) {
-				StorageItem item = grid.getController().getStorage().all().get(i);
+			if (grid.isConnected() && i < grid.getController().getStorage().getItems().size()) {
+				StorageItem item = grid.getController().getStorage().getItems().get(i);
 
 				stack = new ItemStack(item.getType(), item.getQuantity(), item.getMeta());
 

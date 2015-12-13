@@ -5,56 +5,66 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import storagecraft.item.ItemStorageCell;
 
 public class Storage {
+	private IStorageCellProvider provider;
 	private List<StorageItem> items = new ArrayList<StorageItem>();
 
-	public List<StorageItem> all() {
+	public Storage(IStorageCellProvider provider) {
+		this.provider = provider;
+
+		sync();
+	}
+
+	public List<StorageItem> getItems() {
 		return items;
 	}
 
-	public StorageItem get(ItemStack stack) {
-		for (StorageItem item : items) {
-			if (item.getType() == stack.getItem() && item.getMeta() == stack.getItemDamage()) {
-				return item;
+	public void sync() {
+		items.clear();
+
+		for (ItemStack cell : provider.getStorageCells()) {
+			items.addAll(ItemStorageCell.getStoredItems(cell));
+		}
+	}
+
+	public boolean push(ItemStack stack) {
+		ItemStack cellWithSpace = null;
+
+		for (ItemStack cell : provider.getStorageCells()) {
+			if (ItemStorageCell.hasSpace(cell, stack)) {
+				cellWithSpace = cell;
+
+				break;
 			}
 		}
 
-		return null;
-	}
-
-	public boolean has(ItemStack stack) {
-		return get(stack) != null;
-	}
-
-	public void push(ItemStack stack) {
-		if (has(stack)) {
-			StorageItem item = get(stack);
-
-			item.setQuantity(item.getQuantity() + stack.stackSize);
-		} else {
-			items.add(new StorageItem(stack.getItem(), stack.stackSize, stack.getItemDamage()));
+		if (cellWithSpace == null) {
+			return false;
 		}
+
+		ItemStorageCell.store(cellWithSpace, stack);
+
+		sync();
+
+		return true;
 	}
 
 	public ItemStack take(Item type, int quantity, int meta) {
-		for (StorageItem item : items) {
-			if (item.getType() == type && item.getMeta() == meta) {
-				if (item.getQuantity() < quantity) {
-					quantity = item.getQuantity();
-				}
+		int took = 0;
 
-				item.setQuantity(item.getQuantity() - quantity);
+		for (ItemStack cell : provider.getStorageCells()) {
+			took += ItemStorageCell.take(cell, type, quantity, meta);
 
-				if (item.getQuantity() == 0) {
-					items.remove(item);
-				}
-
-				return new ItemStack(type, quantity, meta);
+			if (took == quantity) {
+				break;
 			}
 		}
 
-		return null;
+		sync();
+
+		return new ItemStack(type, took, meta);
 	}
 
 	public void fromBytes(ByteBuf buf) {

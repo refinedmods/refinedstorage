@@ -14,6 +14,7 @@ public class MessagePullFromStorage implements IMessage, IMessageHandler<Message
 	private int x;
 	private int y;
 	private int z;
+	// @TODO: this won't work when sorting
 	private int slot;
 	private boolean half;
 	private boolean shift;
@@ -59,8 +60,8 @@ public class MessagePullFromStorage implements IMessage, IMessageHandler<Message
 		if (tile instanceof TileController) {
 			TileController controller = (TileController) tile;
 
-			if (message.slot < controller.getStorage().all().size()) {
-				StorageItem item = controller.getStorage().all().get(message.slot);
+			if (message.slot < controller.getStorage().getItems().size()) {
+				StorageItem item = controller.getStorage().getItems().get(message.slot);
 
 				int quantity = 64;
 

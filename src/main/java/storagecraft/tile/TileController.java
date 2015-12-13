@@ -5,73 +5,78 @@ import cofh.api.energy.IEnergyReceiver;
 import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
+import storagecraft.SCItems;
+import storagecraft.item.ItemStorageCell;
+import storagecraft.storage.IStorageCellProvider;
 import storagecraft.storage.Storage;
 
-public class TileController extends TileSC implements IEnergyReceiver, INetworkTile {
+public class TileController extends TileSC implements IEnergyReceiver, INetworkTile, IStorageCellProvider {
 	public static final int BASE_ENERGY_USAGE = 100;
 
-	private Storage storage = new Storage();
-
-	private boolean destroyed = false;
+	private List<TileMachine> connectedMachines = new ArrayList<TileMachine>();
 
 	private EnergyStorage energy = new EnergyStorage(32000);
 	private int energyUsage;
 
-	private List<TileMachine> connectedMachines = new ArrayList<TileMachine>();
+	private Storage storage = new Storage(this);
 
+	private boolean destroyed = false;
 	private int ticks = 0;
 
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
 
-		if (!destroyed) {
-			++ticks;
+		if (destroyed) {
+			return;
+		}
 
-			if (!worldObj.isRemote) {
-				if (ticks % 40 == 0) {
-					if (!isActive()) {
-						disconnectAll();
-					} else {
-						List<TileMachine> machines = new ArrayList<TileMachine>();
+		++ticks;
 
-						for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-							TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
+		if (!worldObj.isRemote) {
+			if (ticks % 40 == 0) {
+				if (!isActive()) {
+					disconnectAll();
+				} else {
+					List<TileMachine> machines = new ArrayList<TileMachine>();
 
-							if (tile instanceof TileCable) {
-								machines.addAll(((TileCable) tile).findMachines(this));
-							}
+					for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+						TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
+
+						if (tile instanceof TileCable) {
+							machines.addAll(((TileCable) tile).findMachines(this));
 						}
-
-						for (TileMachine machine : connectedMachines) {
-							if (!machines.contains(machine)) {
-								machine.onDisconnected();
-							}
-						}
-
-						for (TileMachine machine : machines) {
-							if (!connectedMachines.contains(machine)) {
-								machine.onConnected(this);
-							}
-						}
-
-						connectedMachines = machines;
 					}
-
-					energyUsage = BASE_ENERGY_USAGE;
 
 					for (TileMachine machine : connectedMachines) {
-						energyUsage += machine.getEnergyUsage();
+						if (!machines.contains(machine)) {
+							machine.onDisconnected();
+						}
 					}
+
+					for (TileMachine machine : machines) {
+						if (!connectedMachines.contains(machine)) {
+							machine.onConnected(this);
+						}
+					}
+
+					connectedMachines = machines;
 				}
 
-				energy.extractEnergy(energyUsage, false);
-			} else {
-				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+				energyUsage = BASE_ENERGY_USAGE;
+
+				for (TileMachine machine : connectedMachines) {
+					energyUsage += machine.getEnergyUsage();
+				}
 			}
+
+			energy.extractEnergy(energyUsage, false);
+		} else {
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 	}
 
@@ -91,6 +96,32 @@ public class TileController extends TileSC implements IEnergyReceiver, INetworkT
 
 	public Storage getStorage() {
 		return storage;
+	}
+
+	@Override
+	public List<ItemStack> getStorageCells() {
+		List<ItemStack> stacks = new ArrayList<ItemStack>();
+
+		for (TileMachine machine : connectedMachines) {
+			if (machine instanceof TileDrive) {
+				TileDrive drive = (TileDrive) machine;
+
+				for (int i = 0; i < drive.getSizeInventory(); ++i) {
+					if (drive.getStackInSlot(i) != null && drive.getStackInSlot(i).getItem() == SCItems.STORAGE_CELL) {
+						ItemStack cell = drive.getStackInSlot(i);
+
+						// @TODO: find out why this isn't working
+						if (cell.stackTagCompound == null) {
+							((ItemStorageCell) cell.getItem()).onCreated(cell, worldObj, null);
+						}
+
+						stacks.add(cell);
+					}
+				}
+			}
+		}
+
+		return stacks;
 	}
 
 	public List<TileMachine> getMachines() {
