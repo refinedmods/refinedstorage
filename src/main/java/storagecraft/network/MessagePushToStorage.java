@@ -53,7 +53,7 @@ public class MessagePushToStorage implements IMessage, IMessageHandler<MessagePu
 			ItemStack stack = message.slot == -1 ? player.inventory.getItemStack() : player.inventory.getStackInSlot(message.slot);
 
 			if (stack != null) {
-				boolean success = controller.getStorage().push(stack);
+				boolean success = controller.push(stack);
 
 				if (success) {
 					if (message.slot == -1) {

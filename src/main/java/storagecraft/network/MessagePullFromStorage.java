@@ -60,8 +60,8 @@ public class MessagePullFromStorage implements IMessage, IMessageHandler<Message
 		if (tile instanceof TileController) {
 			TileController controller = (TileController) tile;
 
-			if (message.slot < controller.getStorage().getItems().size()) {
-				StorageItem item = controller.getStorage().getItems().get(message.slot);
+			if (message.slot < controller.getItems().size()) {
+				StorageItem item = controller.getItems().get(message.slot);
 
 				int quantity = 64;
 
@@ -69,12 +69,12 @@ public class MessagePullFromStorage implements IMessage, IMessageHandler<Message
 					quantity = item.getQuantity() / 2;
 				}
 
-				ItemStack stack = controller.getStorage().take(item.getType(), quantity, item.getMeta());
+				ItemStack stack = controller.take(item.getType(), quantity, item.getMeta());
 
 				if (message.shift) {
 					// @TODO: This doesn't work
 					if (!player.inventory.addItemStackToInventory(stack.copy())) {
-						controller.getStorage().push(stack);
+						controller.push(stack);
 					}
 				} else {
 					player.inventory.setItemStack(stack);

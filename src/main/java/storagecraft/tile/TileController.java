@@ -5,23 +5,24 @@ import cofh.api.energy.IEnergyReceiver;
 import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
-import storagecraft.SCItems;
-import storagecraft.storage.IStorageCellProvider;
-import storagecraft.storage.Storage;
+import storagecraft.storage.IStorage;
+import storagecraft.storage.IStorageProvider;
+import storagecraft.storage.StorageItem;
 
-public class TileController extends TileSC implements IEnergyReceiver, INetworkTile, IStorageCellProvider {
+public class TileController extends TileSC implements IEnergyReceiver, INetworkTile {
 	public static final int BASE_ENERGY_USAGE = 100;
 
+	private List<StorageItem> items = new ArrayList<StorageItem>();
+	private List<IStorage> storages = new ArrayList<IStorage>();
 	private List<TileMachine> connectedMachines = new ArrayList<TileMachine>();
 
 	private EnergyStorage energy = new EnergyStorage(32000);
 	private int energyUsage;
-
-	private Storage storage = new Storage(this);
 
 	private boolean destroyed = false;
 	private int ticks = 0;
@@ -64,6 +65,8 @@ public class TileController extends TileSC implements IEnergyReceiver, INetworkT
 					}
 
 					connectedMachines = machines;
+
+					storageSync();
 				}
 
 				energyUsage = BASE_ENERGY_USAGE;
@@ -93,31 +96,70 @@ public class TileController extends TileSC implements IEnergyReceiver, INetworkT
 		connectedMachines.clear();
 	}
 
-	public Storage getStorage() {
-		return storage;
+	public List<TileMachine> getMachines() {
+		return connectedMachines;
 	}
 
-	@Override
-	public List<ItemStack> getStorageCells() {
-		List<ItemStack> stacks = new ArrayList<ItemStack>();
+	public List<StorageItem> getItems() {
+		return items;
+	}
+
+	public void storageSync() {
+		storages.clear();
 
 		for (TileMachine machine : connectedMachines) {
-			if (machine instanceof TileDrive) {
-				TileDrive drive = (TileDrive) machine;
-
-				for (int i = 0; i < drive.getSizeInventory(); ++i) {
-					if (drive.getStackInSlot(i) != null && drive.getStackInSlot(i).getItem() == SCItems.STORAGE_CELL) {
-						stacks.add(drive.getStackInSlot(i));
-					}
-				}
+			if (machine instanceof IStorageProvider) {
+				((IStorageProvider) machine).addStorages(storages);
 			}
 		}
 
-		return stacks;
+		storageItemsSync();
 	}
 
-	public List<TileMachine> getMachines() {
-		return connectedMachines;
+	private void storageItemsSync() {
+		items.clear();
+
+		for (IStorage storage : storages) {
+			items.addAll(storage.getAll());
+		}
+	}
+
+	public boolean push(ItemStack stack) {
+		IStorage storageThatCanPush = null;
+
+		for (IStorage storage : storages) {
+			if (storage.canPush(stack)) {
+				storageThatCanPush = storage;
+
+				break;
+			}
+		}
+
+		if (storageThatCanPush == null) {
+			return false;
+		}
+
+		storageThatCanPush.push(stack);
+
+		storageItemsSync();
+
+		return true;
+	}
+
+	public ItemStack take(Item type, int quantity, int meta) {
+		int took = 0;
+
+		for (IStorage storage : storages) {
+			took += storage.take(type, quantity, meta);
+
+			if (took == quantity) {
+				break;
+			}
+		}
+
+		storageItemsSync();
+
+		return new ItemStack(type, took, meta);
 	}
 
 	@Override
@@ -167,7 +209,17 @@ public class TileController extends TileSC implements IEnergyReceiver, INetworkT
 		energy.setEnergyStored(buf.readInt());
 		energyUsage = buf.readInt();
 
-		storage.fromBytes(buf);
+		items.clear();
+
+		int size = buf.readInt();
+
+		for (int i = 0; i < size; ++i) {
+			Item type = Item.getItemById(buf.readInt());
+			int quantity = buf.readInt();
+			int meta = buf.readInt();
+
+			items.add(new StorageItem(type, quantity, meta));
+		}
 	}
 
 	@Override
@@ -175,6 +227,12 @@ public class TileController extends TileSC implements IEnergyReceiver, INetworkT
 		buf.writeInt(energy.getEnergyStored());
 		buf.writeInt(energyUsage);
 
-		storage.toBytes(buf);
+		buf.writeInt(items.size());
+
+		for (StorageItem item : items) {
+			buf.writeInt(Item.getIdFromItem(item.getType()));
+			buf.writeInt(item.getQuantity());
+			buf.writeInt(item.getMeta());
+		}
 	}
 }

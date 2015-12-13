@@ -1,13 +1,17 @@
 package storagecraft.tile;
 
+import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import storagecraft.SC;
 import storagecraft.inventory.InventorySC;
+import storagecraft.storage.CellStorage;
+import storagecraft.storage.IStorage;
+import storagecraft.storage.IStorageProvider;
 
-public class TileDrive extends TileMachine implements IInventory {
+public class TileDrive extends TileMachine implements IInventory, IStorageProvider {
 	private InventorySC inventory = new InventorySC("drive", 8);
 
 	@Override
@@ -87,5 +91,14 @@ public class TileDrive extends TileMachine implements IInventory {
 		super.writeToNBT(nbt);
 
 		SC.saveInventory(this, nbt);
+	}
+
+	@Override
+	public void addStorages(List<IStorage> providers) {
+		for (int i = 0; i < getSizeInventory(); ++i) {
+			if (getStackInSlot(i) != null) {
+				providers.add(new CellStorage(getStackInSlot(i)));
+			}
+		}
 	}
 }
