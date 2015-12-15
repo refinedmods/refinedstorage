@@ -1,6 +1,5 @@
 package storagecraft.tile;
 
-import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
@@ -26,11 +25,7 @@ public class TileCable extends TileSC {
 		return true;
 	}
 
-	public void addMachines(List<TileMachine> machines, TileController controller) {
-		addMachines(new ArrayList<Vec3>(), machines, controller);
-	}
-
-	private void addMachines(List<Vec3> visited, List<TileMachine> machines, TileController controller) {
+	public void addMachines(List<Vec3> visited, List<TileMachine> machines, TileController controller) {
 		for (Vec3 visitedBlock : visited) {
 			if (visitedBlock.xCoord == xCoord && visitedBlock.yCoord == yCoord && visitedBlock.zCoord == zCoord) {
 				return;

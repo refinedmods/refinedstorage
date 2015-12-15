@@ -10,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
 import storagecraft.storage.IStorage;
 import storagecraft.storage.IStorageProvider;
@@ -20,6 +21,8 @@ public class TileController extends TileSC implements IEnergyReceiver, INetworkT
 	private List<IStorage> storages = new ArrayList<IStorage>();
 
 	private List<TileMachine> machines = new ArrayList<TileMachine>();
+
+	private List<Vec3> visitedCables = new ArrayList<Vec3>();
 
 	private EnergyStorage energy = new EnergyStorage(32000);
 	private int energyUsage;
@@ -39,13 +42,15 @@ public class TileController extends TileSC implements IEnergyReceiver, INetworkT
 				if (!isActive()) {
 					disconnectAll();
 				} else {
+					visitedCables.clear();
+
 					List<TileMachine> newMachines = new ArrayList<TileMachine>();
 
 					for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
 						TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
 
 						if (tile instanceof TileCable) {
-							((TileCable) tile).addMachines(newMachines, this);
+							((TileCable) tile).addMachines(visitedCables, newMachines, this);
 						}
 					}
 
