@@ -16,7 +16,6 @@ block.storagecraft:grid.name=Grid
 block.storagecraft:drive.name=Drive
 block.storagecraft:storageProxy.name=Storage Proxy
 
-item.storagecraft:storageCell.name=Storage Cell
 item.storagecraft:storageCell.0.name=1k Storage Cell
 item.storagecraft:storageCell.1.name=4k Storage Cell
 item.storagecraft:storageCell.2.name=16k Storage Cell

@@ -1,0 +1,23 @@
+itemGroup.storagecraft=StorageCraft
+
+gui.storagecraft:controller=Controleur
+gui.storagecraft:grid=Rooster
+gui.storagecraft:drive=Schijf
+
+misc.storagecraft:energyStored=%d / %d RF
+misc.storagecraft:energyUsage=Energie Verbruik: %d RF/t
+
+misc.storagecraft:storageCellStored=Opgeslagen: %d
+misc.storagecraft:storageCellStoredWithCapacity=Opgeslagen: %d / %d
+
+block.storagecraft:controller.name=Controleur
+block.storagecraft:cable.name=Kabel
+block.storagecraft:grid.name=Rooster
+block.storagecraft:drive.name=Schijf
+block.storagecraft:storageProxy.name=Opslag Proxy
+
+item.storagecraft:storageCell.0.name=1k Opslagcel
+item.storagecraft:storageCell.1.name=4k Opslagcel
+item.storagecraft:storageCell.2.name=16k Opslagcel
+item.storagecraft:storageCell.3.name=64k Opslagcel
+item.storagecraft:storageCell.4.name=Creative Opslagcel
