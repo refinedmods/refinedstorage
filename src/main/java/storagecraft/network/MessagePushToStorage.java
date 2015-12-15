@@ -14,15 +14,17 @@ public class MessagePushToStorage implements IMessage, IMessageHandler<MessagePu
 	private int y;
 	private int z;
 	private int slot;
+	private boolean one;
 
 	public MessagePushToStorage() {
 	}
 
-	public MessagePushToStorage(int x, int y, int z, int slot) {
+	public MessagePushToStorage(int x, int y, int z, int slot, boolean one) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		this.slot = slot;
+		this.one = one;
 	}
 
 	@Override
@@ -31,6 +33,7 @@ public class MessagePushToStorage implements IMessage, IMessageHandler<MessagePu
 		y = buf.readInt();
 		z = buf.readInt();
 		slot = buf.readInt();
+		one = buf.readBoolean();
 	}
 
 	@Override
@@ -39,6 +42,7 @@ public class MessagePushToStorage implements IMessage, IMessageHandler<MessagePu
 		buf.writeInt(y);
 		buf.writeInt(z);
 		buf.writeInt(slot);
+		buf.writeBoolean(one);
 	}
 
 	@Override
@@ -50,14 +54,33 @@ public class MessagePushToStorage implements IMessage, IMessageHandler<MessagePu
 		if (tile instanceof TileController) {
 			TileController controller = (TileController) tile;
 
-			ItemStack stack = message.slot == -1 ? player.inventory.getItemStack() : player.inventory.getStackInSlot(message.slot);
+			ItemStack stack;
+
+			if (message.slot == -1) {
+				stack = player.inventory.getItemStack().copy();
+
+				if (message.one) {
+					stack.stackSize = 1;
+				}
+			} else {
+				stack = player.inventory.getStackInSlot(message.slot);
+			}
 
 			if (stack != null) {
 				boolean success = controller.push(stack);
 
 				if (success) {
 					if (message.slot == -1) {
-						player.inventory.setItemStack(null);
+						if (message.one) {
+							player.inventory.getItemStack().stackSize--;
+
+							if (player.inventory.getItemStack().stackSize == 0) {
+								player.inventory.setItemStack(null);
+							}
+						} else {
+							player.inventory.setItemStack(null);
+						}
+
 						player.updateHeldItem();
 					} else {
 						player.inventory.setInventorySlotContents(message.slot, null);

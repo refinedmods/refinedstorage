@@ -1,6 +1,5 @@
 package storagecraft.storage;
 
-import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -27,16 +26,12 @@ public class CellStorage implements IStorage {
 	}
 
 	@Override
-	public List<StorageItem> getAll() {
-		List<StorageItem> items = new ArrayList<StorageItem>();
-
+	public void addItems(List<StorageItem> items) {
 		NBTTagList list = (NBTTagList) cell.stackTagCompound.getTag(NBT_ITEMS);
 
 		for (int i = 0; i < list.tagCount(); ++i) {
 			items.add(createItemFromNBT(list.getCompoundTagAt(i)));
 		}
-
-		return items;
 	}
 
 	@Override
@@ -50,11 +45,7 @@ public class CellStorage implements IStorage {
 
 			StorageItem item = createItemFromNBT(tag);
 
-			if (item.getType() == stack.getItem() && item.getMeta() == stack.getItemDamage()) {
-				if (item.getTag() != null && !item.getTag().equals(stack.stackTagCompound)) {
-					continue;
-				}
-
+			if (item.equalsIgnoreQuantity(stack)) {
 				tag.setInteger(NBT_ITEM_QUANTITY, item.getQuantity() + stack.stackSize);
 
 				return;
@@ -85,11 +76,7 @@ public class CellStorage implements IStorage {
 
 			StorageItem item = createItemFromNBT(tag);
 
-			if (item.getType() == stack.getItem() && item.getMeta() == stack.getItemDamage()) {
-				if (item.getTag() != null && !item.getTag().equals(stack.stackTagCompound)) {
-					continue;
-				}
-
+			if (item.equalsIgnoreQuantity(stack)) {
 				if (quantity > item.getQuantity()) {
 					quantity = item.getQuantity();
 				}

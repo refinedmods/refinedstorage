@@ -2,7 +2,7 @@ package storagecraft.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
 import storagecraft.SCItems;
-import storagecraft.inventory.slot.SlotDrive;
+import storagecraft.inventory.slot.SlotItemFilter;
 import storagecraft.tile.TileDrive;
 
 public class ContainerDrive extends ContainerSC {
@@ -15,7 +15,7 @@ public class ContainerDrive extends ContainerSC {
 		int y = 20;
 
 		for (int i = 0; i < 8; ++i) {
-			addSlotToContainer(new SlotDrive(drive, i, x, y, SCItems.STORAGE_CELL, drive));
+			addSlotToContainer(new SlotItemFilter(drive, i, x, y, SCItems.STORAGE_CELL));
 
 			if ((i + 1) % 2 == 0) {
 				x = 71;

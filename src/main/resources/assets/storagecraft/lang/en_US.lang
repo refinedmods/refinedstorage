@@ -14,6 +14,7 @@ block.storagecraft:controller.name=Controller
 block.storagecraft:cable.name=Cable
 block.storagecraft:grid.name=Grid
 block.storagecraft:drive.name=Drive
+block.storagecraft:storageProxy.name=Storage Proxy
 
 item.storagecraft:storageCell.name=Storage Cell
 item.storagecraft:storageCell.0.name=1k Storage Cell

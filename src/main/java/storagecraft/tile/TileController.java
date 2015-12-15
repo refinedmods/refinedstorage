@@ -16,17 +16,15 @@ import storagecraft.storage.IStorageProvider;
 import storagecraft.storage.StorageItem;
 
 public class TileController extends TileSC implements IEnergyReceiver, INetworkTile {
-	public static final int BASE_ENERGY_USAGE = 100;
-
 	private List<StorageItem> items = new ArrayList<StorageItem>();
 	private List<IStorage> storages = new ArrayList<IStorage>();
-	private List<TileMachine> connectedMachines = new ArrayList<TileMachine>();
+
+	private List<TileMachine> machines = new ArrayList<TileMachine>();
 
 	private EnergyStorage energy = new EnergyStorage(32000);
 	private int energyUsage;
 
 	private boolean destroyed = false;
-	private int ticks = 0;
 
 	@Override
 	public void updateEntity() {
@@ -36,43 +34,49 @@ public class TileController extends TileSC implements IEnergyReceiver, INetworkT
 			return;
 		}
 
-		++ticks;
-
 		if (!worldObj.isRemote) {
 			if (ticks % 40 == 0) {
 				if (!isActive()) {
 					disconnectAll();
 				} else {
-					List<TileMachine> machines = new ArrayList<TileMachine>();
+					List<TileMachine> newMachines = new ArrayList<TileMachine>();
 
 					for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
 						TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
 
 						if (tile instanceof TileCable) {
-							machines.addAll(((TileCable) tile).findMachines(this));
-						}
-					}
-
-					for (TileMachine machine : connectedMachines) {
-						if (!machines.contains(machine)) {
-							machine.onDisconnected();
+							((TileCable) tile).addMachines(newMachines, this);
 						}
 					}
 
 					for (TileMachine machine : machines) {
-						if (!connectedMachines.contains(machine)) {
+						if (!newMachines.contains(machine)) {
+							machine.onDisconnected();
+						}
+					}
+
+					for (TileMachine machine : newMachines) {
+						if (!machines.contains(machine)) {
 							machine.onConnected(this);
 						}
 					}
 
-					connectedMachines = machines;
+					machines = newMachines;
 
-					syncStorage();
+					storages.clear();
+
+					for (TileMachine machine : machines) {
+						if (machine instanceof IStorageProvider) {
+							((IStorageProvider) machine).addStorages(storages);
+						}
+					}
+
+					syncItems();
 				}
 
-				energyUsage = BASE_ENERGY_USAGE;
+				energyUsage = 10;
 
-				for (TileMachine machine : connectedMachines) {
+				for (TileMachine machine : machines) {
 					energyUsage += machine.getEnergyUsage();
 				}
 			}
@@ -90,39 +94,63 @@ public class TileController extends TileSC implements IEnergyReceiver, INetworkT
 	}
 
 	private void disconnectAll() {
-		for (TileMachine machine : connectedMachines) {
+		for (TileMachine machine : machines) {
 			machine.onDisconnected();
 		}
 
-		connectedMachines.clear();
+		machines.clear();
 	}
 
 	public List<TileMachine> getMachines() {
-		return connectedMachines;
+		return machines;
 	}
 
 	public List<StorageItem> getItems() {
 		return items;
 	}
 
-	public void syncStorage() {
-		storages.clear();
-
-		for (TileMachine machine : connectedMachines) {
-			if (machine instanceof IStorageProvider) {
-				((IStorageProvider) machine).addStorages(storages);
-			}
-		}
-
-		syncStorageItems();
-	}
-
-	private void syncStorageItems() {
+	private void syncItems() {
 		items.clear();
 
 		for (IStorage storage : storages) {
-			items.addAll(storage.getAll());
+			storage.addItems(items);
 		}
+
+		combineItems();
+	}
+
+	private void combineItems() {
+		List<Integer> markedIndexes = new ArrayList<Integer>();
+
+		for (int i = 0; i < items.size(); ++i) {
+			if (markedIndexes.contains(i)) {
+				continue;
+			}
+
+			StorageItem item = items.get(i);
+
+			for (int j = i + 1; j < items.size(); ++j) {
+				if (markedIndexes.contains(j)) {
+					continue;
+				}
+
+				StorageItem other = items.get(j);
+
+				if (item.equalsIgnoreQuantity(other)) {
+					item.setQuantity(item.getQuantity() + other.getQuantity());
+
+					markedIndexes.add(j);
+				}
+			}
+		}
+
+		List<StorageItem> markedItems = new ArrayList<StorageItem>();
+
+		for (int i : markedIndexes) {
+			markedItems.add(items.get(i));
+		}
+
+		items.removeAll(markedItems);
 	}
 
 	public boolean push(ItemStack stack) {
@@ -142,7 +170,7 @@ public class TileController extends TileSC implements IEnergyReceiver, INetworkT
 
 		foundStorage.push(stack);
 
-		syncStorageItems();
+		syncItems();
 
 		return true;
 	}
@@ -159,7 +187,7 @@ public class TileController extends TileSC implements IEnergyReceiver, INetworkT
 			}
 		}
 
-		syncStorageItems();
+		syncItems();
 
 		ItemStack newStack = stack.copy();
 
@@ -223,11 +251,7 @@ public class TileController extends TileSC implements IEnergyReceiver, INetworkT
 			Item type = Item.getItemById(buf.readInt());
 			int quantity = buf.readInt();
 			int meta = buf.readInt();
-			NBTTagCompound tag = null;
-
-			if (buf.readBoolean()) {
-				tag = ByteBufUtils.readTag(buf);
-			}
+			NBTTagCompound tag = buf.readBoolean() ? ByteBufUtils.readTag(buf) : null;
 
 			items.add(new StorageItem(type, quantity, meta, tag));
 		}

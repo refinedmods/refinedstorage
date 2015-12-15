@@ -16,7 +16,15 @@ public class TileDrive extends TileMachine implements IInventory, IStorageProvid
 
 	@Override
 	public int getEnergyUsage() {
-		return 5;
+		int base = 5;
+
+		for (int i = 0; i < getSizeInventory(); ++i) {
+			if (getStackInSlot(i) != null) {
+				base += 2;
+			}
+		}
+
+		return base;
 	}
 
 	@Override

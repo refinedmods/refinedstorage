@@ -17,6 +17,7 @@ import storagecraft.tile.TileCable;
 import storagecraft.tile.TileController;
 import storagecraft.tile.TileDrive;
 import storagecraft.tile.TileGrid;
+import storagecraft.tile.TileStorageProxy;
 
 public class CommonProxy {
 	public void preInit(FMLPreInitializationEvent e) {
@@ -30,11 +31,13 @@ public class CommonProxy {
 		GameRegistry.registerTileEntity(TileCable.class, "cable");
 		GameRegistry.registerTileEntity(TileGrid.class, "grid");
 		GameRegistry.registerTileEntity(TileDrive.class, "drive");
+		GameRegistry.registerTileEntity(TileStorageProxy.class, "storageProxy");
 
 		GameRegistry.registerBlock(SCBlocks.CONTROLLER, "controller");
 		GameRegistry.registerBlock(SCBlocks.CABLE, "cable");
 		GameRegistry.registerBlock(SCBlocks.GRID, "grid");
 		GameRegistry.registerBlock(SCBlocks.DRIVE, "drive");
+		GameRegistry.registerBlock(SCBlocks.STORAGE_PROXY, "storageProxy");
 
 		GameRegistry.registerItem(SCItems.STORAGE_CELL, "storageCell");
 	}

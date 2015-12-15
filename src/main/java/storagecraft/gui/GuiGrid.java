@@ -113,7 +113,7 @@ public class GuiGrid extends GuiContainer {
 
 			if (mouseX >= getGridXStart() && mouseX <= getGridXEnd() && mouseY >= getGridYStart() && mouseY <= getGridYEnd()) {
 				if (container.getPlayer().inventory.getItemStack() != null) {
-					SC.NETWORK.sendToServer(new MessagePushToStorage(controller.xCoord, controller.yCoord, controller.zCoord, -1));
+					SC.NETWORK.sendToServer(new MessagePushToStorage(controller.xCoord, controller.yCoord, controller.zCoord, -1, clickedButton == 1));
 				} else {
 					int slotX = ((mouseX - getGridXStart()) / 18) + 1;
 					int slotY = ((mouseY - getGridYStart()) / 18) + 1;
@@ -127,7 +127,7 @@ public class GuiGrid extends GuiContainer {
 
 					if (func_146978_c(slot.xDisplayPosition, slot.yDisplayPosition, 16, 16, mouseX, mouseY)) {
 						if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-							SC.NETWORK.sendToServer(new MessagePushToStorage(controller.xCoord, controller.yCoord, controller.zCoord, slot.slotNumber));
+							SC.NETWORK.sendToServer(new MessagePushToStorage(controller.xCoord, controller.yCoord, controller.zCoord, slot.slotNumber, clickedButton == 1));
 						}
 					}
 				}

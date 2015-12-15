@@ -17,10 +17,8 @@ public class StorageItem {
 		this.tag = tag;
 	}
 
-	public StorageItem(Item type) {
-		this.type = type;
-		this.meta = 0;
-		this.quantity = 1;
+	public StorageItem(ItemStack stack) {
+		this(stack.getItem(), stack.stackSize, stack.getItemDamage(), stack.stackTagCompound);
 	}
 
 	public Item getType() {
@@ -69,5 +67,33 @@ public class StorageItem {
 		stack.stackTagCompound = tag;
 
 		return stack;
+	}
+
+	public boolean equalsIgnoreQuantity(ItemStack other) {
+		if (tag != null && !tag.equals(other.stackTagCompound)) {
+			return false;
+		}
+
+		return type == other.getItem() && meta == other.getItemDamage();
+	}
+
+	public boolean equalsIgnoreQuantity(StorageItem other) {
+		if (tag != null && !tag.equals(other.getTag())) {
+			return false;
+		}
+
+		return type == other.getType() && meta == other.getMeta();
+	}
+
+	public static boolean equalsIgnoreQuantity(ItemStack first, ItemStack second) {
+		if (first.stackTagCompound != null && !first.stackTagCompound.equals(second.stackTagCompound)) {
+			return false;
+		}
+
+		return first.getItem() == second.getItem() && first.getItemDamage() == second.getItemDamage();
+	}
+
+	public boolean equals(StorageItem other) {
+		return other.getQuantity() == quantity && equalsIgnoreQuantity(other);
 	}
 }

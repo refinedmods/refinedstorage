@@ -15,9 +15,13 @@ public class TileSC extends TileEntity {
 
 	private ForgeDirection direction;
 
+	protected int ticks;
+
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
+
+		++ticks;
 
 		if (!worldObj.isRemote) {
 			if (this instanceof INetworkTile) {

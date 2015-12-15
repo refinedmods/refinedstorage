@@ -71,14 +71,16 @@ public class MessagePullFromStorage implements IMessage, IMessageHandler<Message
 
 				ItemStack stack = controller.take(item.copy(quantity).toItemStack());
 
-				if (message.shift) {
-					// @TODO: This doesn't work
-					if (!player.inventory.addItemStackToInventory(stack.copy())) {
-						controller.push(stack);
+				if (stack.stackSize > 0) {
+					if (message.shift) {
+						// @TODO: This doesn't work
+						if (!player.inventory.addItemStackToInventory(stack.copy())) {
+							controller.push(stack);
+						}
+					} else {
+						player.inventory.setItemStack(stack);
+						player.updateHeldItem();
 					}
-				} else {
-					player.inventory.setItemStack(stack);
-					player.updateHeldItem();
 				}
 			}
 		}

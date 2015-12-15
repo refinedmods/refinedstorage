@@ -101,9 +101,9 @@ public class SC {
 				continue;
 			}
 
-			float xx = random.nextFloat() * 0.8F + 0.1F;
-			float yy = random.nextFloat() * 0.8F + 0.1F;
-			float zz = random.nextFloat() * 0.8F + 0.1F;
+			float xo = random.nextFloat() * 0.8F + 0.1F;
+			float yo = random.nextFloat() * 0.8F + 0.1F;
+			float zo = random.nextFloat() * 0.8F + 0.1F;
 
 			while (stack.stackSize > 0) {
 				int amount = random.nextInt(21) + 10;
@@ -114,7 +114,7 @@ public class SC {
 
 				stack.stackSize -= amount;
 
-				EntityItem entity = new EntityItem(world, (float) x + xx, (float) y + (newSize > 0 ? 1 : 0) + yy, (float) z + zz, new ItemStack(stack.getItem(), amount, stack.getItemDamage()));
+				EntityItem entity = new EntityItem(world, (float) x + xo, (float) y + (newSize > 0 ? 1 : 0) + yo, (float) z + zo, new ItemStack(stack.getItem(), amount, stack.getItemDamage()));
 
 				entity.motionX = (float) random.nextGaussian() * 0.05F;
 				entity.motionY = (float) random.nextGaussian() * 0.05F + 0.2F;
