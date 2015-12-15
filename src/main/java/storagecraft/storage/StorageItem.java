@@ -5,28 +5,25 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class StorageItem {
-	private Item type;
+	private StorageItemMeta meta;
 	private int quantity;
-	private int meta;
-	private NBTTagCompound tag;
 
-	public StorageItem(Item type, int quantity, int meta, NBTTagCompound tag) {
-		this.type = type;
+	public StorageItem(StorageItemMeta meta, int quantity) {
 		this.meta = meta;
 		this.quantity = quantity;
-		this.tag = tag;
+	}
+
+	public StorageItem(Item type, int quantity, int damage, NBTTagCompound tag) {
+		this.meta = new StorageItemMeta(type, damage, tag);
+		this.quantity = quantity;
 	}
 
 	public StorageItem(ItemStack stack) {
 		this(stack.getItem(), stack.stackSize, stack.getItemDamage(), stack.stackTagCompound);
 	}
 
-	public Item getType() {
-		return type;
-	}
-
-	public void setType(Item type) {
-		this.type = type;
+	public StorageItemMeta getMeta() {
+		return meta;
 	}
 
 	public int getQuantity() {
@@ -37,63 +34,23 @@ public class StorageItem {
 		this.quantity = quantity;
 	}
 
-	public int getMeta() {
-		return meta;
-	}
-
-	public void setMeta(int meta) {
-		this.meta = meta;
-	}
-
-	public NBTTagCompound getTag() {
-		return tag;
-	}
-
-	public void setTag(NBTTagCompound tag) {
-		this.tag = tag;
-	}
-
 	public StorageItem copy() {
 		return copy(quantity);
 	}
 
 	public StorageItem copy(int newQuantity) {
-		return new StorageItem(type, newQuantity, meta, tag);
+		return new StorageItem(meta, newQuantity);
 	}
 
 	public ItemStack toItemStack() {
-		ItemStack stack = new ItemStack(type, quantity, meta);
+		ItemStack stack = new ItemStack(meta.getType(), quantity, meta.getDamage());
 
-		stack.stackTagCompound = tag;
+		stack.stackTagCompound = meta.getTag();
 
 		return stack;
 	}
 
-	public boolean equalsIgnoreQuantity(ItemStack other) {
-		if (tag != null && !tag.equals(other.stackTagCompound)) {
-			return false;
-		}
-
-		return type == other.getItem() && meta == other.getItemDamage();
-	}
-
-	public boolean equalsIgnoreQuantity(StorageItem other) {
-		if (tag != null && !tag.equals(other.getTag())) {
-			return false;
-		}
-
-		return type == other.getType() && meta == other.getMeta();
-	}
-
-	public static boolean equalsIgnoreQuantity(ItemStack first, ItemStack second) {
-		if (first.stackTagCompound != null && !first.stackTagCompound.equals(second.stackTagCompound)) {
-			return false;
-		}
-
-		return first.getItem() == second.getItem() && first.getItemDamage() == second.getItemDamage();
-	}
-
 	public boolean equals(StorageItem other) {
-		return other.getQuantity() == quantity && equalsIgnoreQuantity(other);
+		return other.getQuantity() == quantity && other.getMeta().equals(meta);
 	}
 }

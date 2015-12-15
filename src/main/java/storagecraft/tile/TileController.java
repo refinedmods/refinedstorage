@@ -141,7 +141,7 @@ public class TileController extends TileSC implements IEnergyReceiver, INetworkT
 
 				StorageItem other = items.get(j);
 
-				if (item.equalsIgnoreQuantity(other)) {
+				if (item.getMeta().equals(other.getMeta())) {
 					item.setQuantity(item.getQuantity() + other.getQuantity());
 
 					markedIndexes.add(j);
@@ -255,10 +255,10 @@ public class TileController extends TileSC implements IEnergyReceiver, INetworkT
 		for (int i = 0; i < size; ++i) {
 			Item type = Item.getItemById(buf.readInt());
 			int quantity = buf.readInt();
-			int meta = buf.readInt();
+			int damage = buf.readInt();
 			NBTTagCompound tag = buf.readBoolean() ? ByteBufUtils.readTag(buf) : null;
 
-			items.add(new StorageItem(type, quantity, meta, tag));
+			items.add(new StorageItem(type, quantity, damage, tag));
 		}
 	}
 
@@ -270,13 +270,13 @@ public class TileController extends TileSC implements IEnergyReceiver, INetworkT
 		buf.writeInt(items.size());
 
 		for (StorageItem item : items) {
-			buf.writeInt(Item.getIdFromItem(item.getType()));
+			buf.writeInt(Item.getIdFromItem(item.getMeta().getType()));
 			buf.writeInt(item.getQuantity());
-			buf.writeInt(item.getMeta());
-			buf.writeBoolean(item.getTag() != null);
+			buf.writeInt(item.getMeta().getDamage());
+			buf.writeBoolean(item.getMeta().getTag() != null);
 
-			if (item.getTag() != null) {
-				ByteBufUtils.writeTag(buf, item.getTag());
+			if (item.getMeta().getTag() != null) {
+				ByteBufUtils.writeTag(buf, item.getMeta().getTag());
 			}
 		}
 	}

@@ -5,11 +5,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import storagecraft.SC;
 import storagecraft.inventory.InventorySC;
 import storagecraft.storage.CellStorage;
 import storagecraft.storage.IStorage;
 import storagecraft.storage.IStorageProvider;
+import storagecraft.util.InventoryUtil;
 
 public class TileDrive extends TileMachine implements IInventory, IStorageProvider {
 	private InventorySC inventory = new InventorySC("drive", 8);
@@ -91,14 +91,14 @@ public class TileDrive extends TileMachine implements IInventory, IStorageProvid
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 
-		SC.restoreInventory(this, nbt);
+		InventoryUtil.restoreInventory(this, nbt);
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 
-		SC.saveInventory(this, nbt);
+		InventoryUtil.saveInventory(this, nbt);
 	}
 
 	@Override

@@ -52,7 +52,7 @@ public class BlockGrid extends BlockSC implements ITileEntityProvider {
 	}
 
 	@Override
-	public IIcon getIcon(int side, int meta) {
+	public IIcon getIcon(int side, int damage) {
 		if (side == 3) {
 			return disconnectedIcon;
 		}
