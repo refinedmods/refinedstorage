@@ -1,13 +1,19 @@
 package storagecraft.block;
 
 import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import storagecraft.SC;
 import storagecraft.tile.TileDrive;
 
 public class BlockDrive extends BlockSC implements ITileEntityProvider {
+	private IIcon frontIcon;
+	private IIcon sideIcon;
+
 	public BlockDrive() {
 		super("drive");
 	}
@@ -24,5 +30,31 @@ public class BlockDrive extends BlockSC implements ITileEntityProvider {
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
 		return new TileDrive();
+	}
+
+	@Override
+	public void registerBlockIcons(IIconRegister register) {
+		frontIcon = register.registerIcon("storagecraft:drive");
+		sideIcon = register.registerIcon("storagecraft:generic");
+	}
+
+	@Override
+	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) {
+		TileDrive tile = (TileDrive) world.getTileEntity(x, y, z);
+
+		if (side == tile.getDirection().getOpposite().ordinal()) {
+			return frontIcon;
+		}
+
+		return sideIcon;
+	}
+
+	@Override
+	public IIcon getIcon(int side, int meta) {
+		if (side == 3) {
+			return frontIcon;
+		}
+
+		return sideIcon;
 	}
 }

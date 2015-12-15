@@ -12,8 +12,8 @@ import storagecraft.tile.TileGrid;
 
 public class BlockGrid extends BlockSC implements ITileEntityProvider {
 	private IIcon sideIcon;
-	private IIcon iconConnected;
-	private IIcon iconDisconnected;
+	private IIcon connectedIcon;
+	private IIcon disconnectedIcon;
 
 	public BlockGrid() {
 		super("grid");
@@ -35,8 +35,8 @@ public class BlockGrid extends BlockSC implements ITileEntityProvider {
 
 	@Override
 	public void registerBlockIcons(IIconRegister register) {
-		iconConnected = register.registerIcon("storagecraft:gridConnected");
-		iconDisconnected = register.registerIcon("storagecraft:gridDisconnected");
+		connectedIcon = register.registerIcon("storagecraft:gridConnected");
+		disconnectedIcon = register.registerIcon("storagecraft:gridDisconnected");
 		sideIcon = register.registerIcon("storagecraft:generic");
 	}
 
@@ -45,7 +45,7 @@ public class BlockGrid extends BlockSC implements ITileEntityProvider {
 		TileGrid tile = (TileGrid) world.getTileEntity(x, y, z);
 
 		if (side == tile.getDirection().getOpposite().ordinal()) {
-			return tile.isConnected() ? iconConnected : iconDisconnected;
+			return tile.isConnected() ? connectedIcon : disconnectedIcon;
 		}
 
 		return sideIcon;
@@ -54,7 +54,7 @@ public class BlockGrid extends BlockSC implements ITileEntityProvider {
 	@Override
 	public IIcon getIcon(int side, int meta) {
 		if (side == 3) {
-			return iconDisconnected;
+			return disconnectedIcon;
 		}
 
 		return sideIcon;
