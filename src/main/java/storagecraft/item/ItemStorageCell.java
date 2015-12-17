@@ -6,6 +6,8 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
@@ -25,16 +27,16 @@ public class ItemStorageCell extends ItemSC {
 	@Override
 	public void getSubItems(Item item, CreativeTabs tab, List list) {
 		for (int i = 0; i < 5; ++i) {
-			list.add(CellStorage.init(new ItemStack(item, 1, i)));
+			list.add(initNBT(new ItemStack(item, 1, i)));
 		}
 	}
 
 	@Override
 	public void addInformation(ItemStack cell, EntityPlayer player, List list, boolean b) {
-		if (CellStorage.getCapacity(cell) == -1) {
-			list.add(String.format(StatCollector.translateToLocal("misc.storagecraft:storageCellStored"), CellStorage.getStored(cell)));
+		if (getCapacity(cell) == -1) {
+			list.add(String.format(StatCollector.translateToLocal("misc.storagecraft:storageCellStored"), getStored(cell)));
 		} else {
-			list.add(String.format(StatCollector.translateToLocal("misc.storagecraft:storageCellStoredWithCapacity"), CellStorage.getStored(cell), CellStorage.getCapacity(cell)));
+			list.add(String.format(StatCollector.translateToLocal("misc.storagecraft:storageCellStoredWithCapacity"), getStored(cell), getCapacity(cell)));
 		}
 	}
 
@@ -42,7 +44,7 @@ public class ItemStorageCell extends ItemSC {
 	public void onCreated(ItemStack stack, World world, EntityPlayer player) {
 		super.onCreated(stack, world, player);
 
-		CellStorage.init(stack);
+		initNBT(stack);
 	}
 
 	@Override
@@ -55,5 +57,34 @@ public class ItemStorageCell extends ItemSC {
 	@Override
 	public IIcon getIconFromDamage(int damage) {
 		return icons[damage];
+	}
+
+	private ItemStack initNBT(ItemStack cell) {
+		cell.stackTagCompound = new NBTTagCompound();
+		cell.stackTagCompound.setTag(CellStorage.NBT_ITEMS, new NBTTagList());
+		cell.stackTagCompound.setInteger(CellStorage.NBT_STORED, 0);
+
+		return cell;
+	}
+
+	public static int getStored(ItemStack cell) {
+		return cell.stackTagCompound.getInteger(CellStorage.NBT_STORED);
+	}
+
+	public static int getCapacity(ItemStack cell) {
+		switch (cell.getItemDamage()) {
+			case 0:
+				return 1000;
+			case 1:
+				return 4000;
+			case 2:
+				return 16000;
+			case 3:
+				return 64000;
+			case 4:
+				return -1;
+		}
+
+		return 0;
 	}
 }
