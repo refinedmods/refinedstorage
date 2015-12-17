@@ -1,12 +1,12 @@
 package storagecraft.block;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import storagecraft.SC;
@@ -37,26 +37,7 @@ public class BlockSC extends Block {
 		TileEntity tile = world.getTileEntity(x, y, z);
 
 		if (tile instanceof TileSC) {
-			ForgeDirection direction = null;
-
-			int facing = MathHelper.floor_double(entityLiving.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
-
-			switch (facing) {
-				case 0:
-					direction = ForgeDirection.SOUTH;
-					break;
-				case 1:
-					direction = ForgeDirection.WEST;
-					break;
-				case 2:
-					direction = ForgeDirection.NORTH;
-					break;
-				case 3:
-					direction = ForgeDirection.EAST;
-					break;
-			}
-
-			((TileSC) tile).setDirection(direction);
+			((TileSC) tile).setDirection(ForgeDirection.getOrientation(BlockPistonBase.determineOrientation(world, x, y, z, entityLiving)));
 		}
 	}
 

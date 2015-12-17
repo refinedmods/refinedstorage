@@ -31,7 +31,7 @@ public class BlockStorageProxy extends BlockSC implements ITileEntityProvider {
 	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) {
 		TileStorageProxy tile = (TileStorageProxy) world.getTileEntity(x, y, z);
 
-		if (side == tile.getDirection().getOpposite().ordinal()) {
+		if (side == tile.getDirection().ordinal()) {
 			return frontIcon;
 		}
 

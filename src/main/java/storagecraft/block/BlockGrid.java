@@ -44,7 +44,7 @@ public class BlockGrid extends BlockSC implements ITileEntityProvider {
 	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) {
 		TileGrid tile = (TileGrid) world.getTileEntity(x, y, z);
 
-		if (side == tile.getDirection().getOpposite().ordinal()) {
+		if (side == tile.getDirection().ordinal()) {
 			return tile.isConnected() ? connectedIcon : disconnectedIcon;
 		}
 

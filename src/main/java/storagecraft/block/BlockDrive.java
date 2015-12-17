@@ -42,7 +42,7 @@ public class BlockDrive extends BlockSC implements ITileEntityProvider {
 	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) {
 		TileDrive tile = (TileDrive) world.getTileEntity(x, y, z);
 
-		if (side == tile.getDirection().getOpposite().ordinal()) {
+		if (side == tile.getDirection().ordinal()) {
 			return frontIcon;
 		}
 

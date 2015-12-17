@@ -17,7 +17,7 @@ public class TileStorageProxy extends TileMachine implements IStorageProvider, I
 		super.updateEntity();
 
 		if (!worldObj.isRemote && isConnected()) {
-			TileEntity tile = worldObj.getTileEntity(xCoord + getDirection().getOpposite().offsetX, yCoord + getDirection().getOpposite().offsetY, zCoord + getDirection().getOpposite().offsetZ);
+			TileEntity tile = worldObj.getTileEntity(xCoord + getDirection().offsetX, yCoord + getDirection().offsetY, zCoord + getDirection().offsetZ);
 
 			if (tile instanceof IInventory) {
 				inventory = (IInventory) tile;
