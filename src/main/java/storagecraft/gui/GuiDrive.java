@@ -22,12 +22,12 @@ public class GuiDrive extends GuiContainer {
 
 		mc.getTextureManager().bindTexture(DRIVE_RESOURCE);
 
-		int x = (this.width - xSize) / 2;
-		int y = (this.height - ySize) / 2;
+		drawTexturedModalRect((this.width - xSize) / 2, (this.height - ySize) / 2, 0, 0, xSize, ySize);
+	}
 
-		drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
-
-		fontRendererObj.drawString(StatCollector.translateToLocal("gui.storagecraft:drive"), x + 7, y + 7, 4210752);
-		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), x + 7, y + 96, 4210752);
+	@Override
+	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+		fontRendererObj.drawString(StatCollector.translateToLocal("gui.storagecraft:drive"), 7, 7, 4210752);
+		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 7, 96, 4210752);
 	}
 }

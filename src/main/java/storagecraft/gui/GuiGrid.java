@@ -20,6 +20,8 @@ public class GuiGrid extends GuiContainer {
 	private ContainerGrid container;
 	private TileGrid grid;
 
+	private int hoveringSlot;
+
 	public GuiGrid(ContainerGrid container, TileGrid grid) {
 		super(container);
 
@@ -36,72 +38,57 @@ public class GuiGrid extends GuiContainer {
 
 		mc.getTextureManager().bindTexture(GRID_RESOURCE);
 
-		int x = (this.width - xSize) / 2;
-		int y = (this.height - ySize) / 2;
+		drawTexturedModalRect((this.width - xSize) / 2, (this.height - ySize) / 2, 0, 0, xSize, ySize);
+	}
 
-		drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
+	@Override
+	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+		fontRendererObj.drawString(StatCollector.translateToLocal("gui.storagecraft:grid"), 7, 7, 4210752);
+		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 7, 96, 4210752);
 
-		fontRendererObj.drawString(StatCollector.translateToLocal("gui.storagecraft:grid"), x + 7, y + 7, 4210752);
-		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), x + 7, y + 96, 4210752);
+		int mx = mouseX - ((this.width - xSize) / 2);
+		int my = mouseY - ((this.height - ySize) / 2);
 
-		int xx = getGridXStart();
-		int yy = getGridYStart();
+		int x = 8;
+		int y = 20;
 
-		ItemStack toolTip = null;
+		hoveringSlot = -1;
 
 		for (int i = 0; i < 9 * 4; ++i) {
-			ItemStack stack = null;
-
 			if (grid.isConnected() && i < grid.getController().getItems().size()) {
-				stack = grid.getController().getItems().get(i).toItemStack();
+				ItemStack stack = grid.getController().getItems().get(i).toItemStack();
 
-				itemRender.renderItemAndEffectIntoGUI(fontRendererObj, mc.getTextureManager(), stack, xx, yy);
-				itemRender.renderItemOverlayIntoGUI(fontRendererObj, mc.getTextureManager(), stack, xx, yy);
+				itemRender.renderItemAndEffectIntoGUI(fontRendererObj, mc.getTextureManager(), stack, x, y);
+				itemRender.renderItemOverlayIntoGUI(fontRendererObj, mc.getTextureManager(), stack, x, y);
 			}
 
-			if ((mouseX >= xx && mouseX <= xx + 16 && mouseY >= yy && mouseY <= yy + 16) || !grid.isConnected()) {
+			if ((mx >= x && mx <= x + 16 && my >= y && my <= y + 16) || !grid.isConnected()) {
+				hoveringSlot = i;
+
 				int color = grid.isConnected() ? -2130706433 : 0xFF5B5B5B;
 
-				GL11.glDisable(GL11.GL_LIGHTING);
-				GL11.glDisable(GL11.GL_DEPTH_TEST);
-				GL11.glColorMask(true, true, true, false);
-				drawGradientRect(xx, yy, xx + 16, yy + 16, color, color);
-				GL11.glColorMask(true, true, true, true);
-				GL11.glEnable(GL11.GL_LIGHTING);
-				GL11.glEnable(GL11.GL_DEPTH_TEST);
-
-				if (stack != null) {
-					toolTip = stack;
-				}
+				drawGradientRect(x, y, x + 16, y + 16, color, color);
 			}
 
-			xx += 18;
+			x += 18;
 
 			if ((i + 1) % 9 == 0) {
-				xx = getGridXStart();
-				yy += 18;
+				x = 8;
+				y += 18;
 			}
 		}
 
-		if (toolTip != null) {
-			renderToolTip(toolTip, mouseX, mouseY);
+		if (isHoveringOverValidSlot()) {
+			renderToolTip(grid.getController().getItems().get(hoveringSlot).toItemStack(), mx, my);
 		}
 	}
 
-	private int getGridXStart() {
-		return ((this.width - xSize) / 2) + 8;
+	private boolean isHoveringOverValidSlot() {
+		return grid.isConnected() && isHoveringOverSlot() && hoveringSlot < grid.getController().getItems().size();
 	}
 
-	private int getGridXEnd() {
-		return getGridXStart() + (18 * 9);
-	}
-
-	private int getGridYStart() {
-		return ((this.height - ySize) / 2) + 20;
-	}
-
-	private int getGridYEnd() {
-		return getGridYStart() + (18 * 4);
+	private boolean isHoveringOverSlot() {
+		return hoveringSlot >= 0;
 	}
 
 	@Override
@@ -111,16 +98,10 @@ public class GuiGrid extends GuiContainer {
 		if (grid.isConnected()) {
 			TileController controller = grid.getController();
 
-			if (mouseX >= getGridXStart() && mouseX <= getGridXEnd() && mouseY >= getGridYStart() && mouseY <= getGridYEnd()) {
-				if (container.getPlayer().inventory.getItemStack() != null) {
-					SC.NETWORK.sendToServer(new MessagePushToStorage(controller.xCoord, controller.yCoord, controller.zCoord, -1, clickedButton == 1));
-				} else {
-					int slotX = ((mouseX - getGridXStart()) / 18) + 1;
-					int slotY = ((mouseY - getGridYStart()) / 18) + 1;
-					int slotId = (slotX * slotY) - 1;
-
-					SC.NETWORK.sendToServer(new MessagePullFromStorage(controller.xCoord, controller.yCoord, controller.zCoord, slotId, clickedButton == 1, Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)));
-				}
+			if (isHoveringOverSlot() && container.getPlayer().inventory.getItemStack() != null) {
+				SC.NETWORK.sendToServer(new MessagePushToStorage(controller.xCoord, controller.yCoord, controller.zCoord, -1, clickedButton == 1));
+			} else if (isHoveringOverValidSlot() && container.getPlayer().inventory.getItemStack() == null) {
+				SC.NETWORK.sendToServer(new MessagePullFromStorage(controller.xCoord, controller.yCoord, controller.zCoord, hoveringSlot, clickedButton == 1, Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)));
 			} else {
 				for (int i = 0; i < container.inventorySlots.size(); ++i) {
 					Slot slot = (Slot) container.inventorySlots.get(i);

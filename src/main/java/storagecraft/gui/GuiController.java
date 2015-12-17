@@ -29,15 +29,19 @@ public class GuiController extends GuiContainer {
 
 		mc.getTextureManager().bindTexture(CONTROLLER_RESOURCE);
 
-		int x = (this.width - xSize) / 2;
-		int y = (this.height - ySize) / 2;
+		drawTexturedModalRect((this.width - xSize) / 2, (this.height - ySize) / 2, 0, 0, xSize, ySize);
+	}
 
-		drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
+	@Override
+	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+		int mx = mouseX - ((this.width - xSize) / 2);
+		int my = mouseY - ((this.height - ySize) / 2);
 
 		int barWidth = 16;
 		int barHeight = 58;
-		int barX = x + 17;
-		int barY = y + 25;
+
+		int barX = 17;
+		int barY = 25;
 
 		int energy = controller.getEnergyStored(null);
 		int maxEnergy = controller.getMaxEnergyStored(null);
@@ -46,16 +50,16 @@ public class GuiController extends GuiContainer {
 
 		drawTexturedModalRect(barX, barY + barHeight - newBarHeight, 178, 0, barWidth, newBarHeight);
 
-		fontRendererObj.drawString(StatCollector.translateToLocal("gui.storagecraft:controller"), x + 7, y + 7, 4210752);
-		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), x + 7, y + 96, 4210752);
-		fontRendererObj.drawString(String.format(StatCollector.translateToLocal("misc.storagecraft:energyUsage"), controller.getEnergyUsage()), x + 45, y + 24, 4210752);
+		fontRendererObj.drawString(StatCollector.translateToLocal("gui.storagecraft:controller"), 7, 7, 4210752);
+		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 7, 96, 4210752);
+		fontRendererObj.drawString(String.format(StatCollector.translateToLocal("misc.storagecraft:energyUsage"), controller.getEnergyUsage()), 45, 24, 4210752);
 
-		if (mouseX >= barX && mouseX <= barX + barWidth && mouseY >= barY && mouseY <= barY + barHeight) {
+		if (mx >= barX && mx <= barX + barWidth && my >= barY && my <= barY + barHeight) {
 			List<String> lines = new ArrayList<String>();
 
 			lines.add(String.format(StatCollector.translateToLocal("misc.storagecraft:energyStored"), energy, maxEnergy));
 
-			drawHoveringText(lines, mouseX, mouseY, fontRendererObj);
+			drawHoveringText(lines, mx, my, fontRendererObj);
 		}
 	}
 }

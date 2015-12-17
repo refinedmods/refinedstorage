@@ -27,10 +27,12 @@ public class MessageTileUpdate implements IMessage, IMessageHandler<MessageTileU
 		y = buf.readInt();
 		z = buf.readInt();
 
-		tile = Minecraft.getMinecraft().theWorld.getTileEntity(x, y, z);
+		if (Minecraft.getMinecraft().theWorld != null) {
+			tile = Minecraft.getMinecraft().theWorld.getTileEntity(x, y, z);
 
-		if (tile instanceof INetworkTile) {
-			((INetworkTile) tile).fromBytes(buf);
+			if (tile instanceof INetworkTile) {
+				((INetworkTile) tile).fromBytes(buf);
+			}
 		}
 	}
 
