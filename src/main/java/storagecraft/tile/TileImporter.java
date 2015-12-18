@@ -10,12 +10,9 @@ import storagecraft.inventory.InventorySC;
 import storagecraft.util.InventoryUtils;
 
 public class TileImporter extends TileMachine implements IInventory {
-	public static final int DEFAULT_COMPARE_FLAGS = InventoryUtils.COMPARE_NBT | InventoryUtils.COMPARE_DAMAGE;
-
 	private InventorySC inventory = new InventorySC("importer", 9);
-	private IInventory connectedInventory;
 
-	private int compareFlags = DEFAULT_COMPARE_FLAGS;
+	private int compareFlags = InventoryUtils.COMPARE_NBT | InventoryUtils.COMPARE_DAMAGE;
 
 	private int currentSlot = 0;
 
@@ -27,12 +24,18 @@ public class TileImporter extends TileMachine implements IInventory {
 			TileEntity tile = worldObj.getTileEntity(xCoord + getDirection().offsetX, yCoord + getDirection().offsetY, zCoord + getDirection().offsetZ);
 
 			if (tile instanceof IInventory) {
-				connectedInventory = (IInventory) tile;
-			}
+				IInventory connectedInventory = (IInventory) tile;
 
-			if (connectedInventory != null) {
 				if (ticks % 5 == 0) {
-					ItemStack slot = connectedInventory.getStackInSlot(currentSlot);
+					ItemStack slot;
+
+					while ((slot = connectedInventory.getStackInSlot(currentSlot)) == null) {
+						currentSlot++;
+
+						if (currentSlot > connectedInventory.getSizeInventory() - 1) {
+							break;
+						}
+					}
 
 					if (slot != null && canImport(slot)) {
 						if (getController().push(slot.copy())) {
@@ -47,8 +50,6 @@ public class TileImporter extends TileMachine implements IInventory {
 					}
 				}
 			}
-		} else {
-			connectedInventory = null;
 		}
 	}
 
@@ -61,7 +62,7 @@ public class TileImporter extends TileMachine implements IInventory {
 			if (slot != null) {
 				slots++;
 
-				if (InventoryUtils.compareStack(slot, stack, compareFlags)) {
+				if (InventoryUtils.compareStack(stack, slot, compareFlags)) {
 					return true;
 				}
 			}
@@ -147,12 +148,18 @@ public class TileImporter extends TileMachine implements IInventory {
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 
+		if (nbt.hasKey("CompareFlags")) {
+			compareFlags = nbt.getInteger("CompareFlags");
+		}
+
 		InventoryUtils.restoreInventory(this, nbt);
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
+
+		nbt.setInteger("CompareFlags", compareFlags);
 
 		InventoryUtils.saveInventory(this, nbt);
 	}

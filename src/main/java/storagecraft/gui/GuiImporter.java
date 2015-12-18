@@ -7,7 +7,7 @@ import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
 import storagecraft.SC;
 import storagecraft.inventory.ContainerImporter;
-import storagecraft.network.MessageImporterSettingsUpdate;
+import storagecraft.network.MessageImporterUpdate;
 import storagecraft.tile.TileImporter;
 import storagecraft.util.InventoryUtils;
 
@@ -37,8 +37,8 @@ public class GuiImporter extends GuiContainer {
 		int x = (this.width - xSize) / 2;
 		int y = (this.height - ySize) / 2;
 
-		buttonList.add(compareNBT = new GuiButton(0, x + 7, y + 40, 100, 20, "..."));
-		buttonList.add(compareDamage = new GuiButton(1, x + 7, y + 64, 120, 20, "..."));
+		buttonList.add(compareNBT = new GuiButton(0, x + 7, y + 41, 100, 20, "..."));
+		buttonList.add(compareDamage = new GuiButton(1, x + 7, y + 63, 120, 20, "..."));
 	}
 
 	@Override
@@ -82,6 +82,6 @@ public class GuiImporter extends GuiContainer {
 				break;
 		}
 
-		SC.NETWORK.sendToServer(new MessageImporterSettingsUpdate(importer.xCoord, importer.yCoord, importer.zCoord, flags));
+		SC.NETWORK.sendToServer(new MessageImporterUpdate(importer.xCoord, importer.yCoord, importer.zCoord, flags));
 	}
 }

@@ -10,9 +10,9 @@ import storagecraft.SC;
 import storagecraft.SCBlocks;
 import storagecraft.SCItems;
 import storagecraft.gui.GuiHandler;
-import storagecraft.network.MessageImporterSettingsUpdate;
-import storagecraft.network.MessagePullFromStorage;
-import storagecraft.network.MessagePushToStorage;
+import storagecraft.network.MessageImporterUpdate;
+import storagecraft.network.MessageStoragePull;
+import storagecraft.network.MessageStoragePush;
 import storagecraft.network.MessageTileUpdate;
 import storagecraft.tile.TileCable;
 import storagecraft.tile.TileController;
@@ -24,9 +24,9 @@ import storagecraft.tile.TileStorageProxy;
 public class CommonProxy {
 	public void preInit(FMLPreInitializationEvent e) {
 		SC.NETWORK.registerMessage(MessageTileUpdate.class, MessageTileUpdate.class, 0, Side.CLIENT);
-		SC.NETWORK.registerMessage(MessagePushToStorage.class, MessagePushToStorage.class, 1, Side.SERVER);
-		SC.NETWORK.registerMessage(MessagePullFromStorage.class, MessagePullFromStorage.class, 2, Side.SERVER);
-		SC.NETWORK.registerMessage(MessageImporterSettingsUpdate.class, MessageImporterSettingsUpdate.class, 3, Side.SERVER);
+		SC.NETWORK.registerMessage(MessageStoragePush.class, MessageStoragePush.class, 1, Side.SERVER);
+		SC.NETWORK.registerMessage(MessageStoragePull.class, MessageStoragePull.class, 2, Side.SERVER);
+		SC.NETWORK.registerMessage(MessageImporterUpdate.class, MessageImporterUpdate.class, 3, Side.SERVER);
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(SC.INSTANCE, new GuiHandler());
 

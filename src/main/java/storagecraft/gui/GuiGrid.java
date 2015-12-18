@@ -9,8 +9,8 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import storagecraft.SC;
 import storagecraft.inventory.ContainerGrid;
-import storagecraft.network.MessagePullFromStorage;
-import storagecraft.network.MessagePushToStorage;
+import storagecraft.network.MessageStoragePull;
+import storagecraft.network.MessageStoragePush;
 import storagecraft.tile.TileController;
 import storagecraft.tile.TileGrid;
 
@@ -99,16 +99,16 @@ public class GuiGrid extends GuiContainer {
 			TileController controller = grid.getController();
 
 			if (isHoveringOverSlot() && container.getPlayer().inventory.getItemStack() != null) {
-				SC.NETWORK.sendToServer(new MessagePushToStorage(controller.xCoord, controller.yCoord, controller.zCoord, -1, clickedButton == 1));
+				SC.NETWORK.sendToServer(new MessageStoragePush(controller.xCoord, controller.yCoord, controller.zCoord, -1, clickedButton == 1));
 			} else if (isHoveringOverValidSlot() && container.getPlayer().inventory.getItemStack() == null) {
-				SC.NETWORK.sendToServer(new MessagePullFromStorage(controller.xCoord, controller.yCoord, controller.zCoord, hoveringSlot, clickedButton == 1, Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)));
+				SC.NETWORK.sendToServer(new MessageStoragePull(controller.xCoord, controller.yCoord, controller.zCoord, hoveringSlot, clickedButton == 1, Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)));
 			} else {
 				for (int i = 0; i < container.inventorySlots.size(); ++i) {
 					Slot slot = (Slot) container.inventorySlots.get(i);
 
 					if (func_146978_c(slot.xDisplayPosition, slot.yDisplayPosition, 16, 16, mouseX, mouseY)) {
 						if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-							SC.NETWORK.sendToServer(new MessagePushToStorage(controller.xCoord, controller.yCoord, controller.zCoord, slot.slotNumber, clickedButton == 1));
+							SC.NETWORK.sendToServer(new MessageStoragePush(controller.xCoord, controller.yCoord, controller.zCoord, slot.slotNumber, clickedButton == 1));
 						}
 					}
 				}

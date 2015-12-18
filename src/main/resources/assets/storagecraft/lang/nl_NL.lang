@@ -14,8 +14,8 @@ misc.storagecraft:storageCellStoredWithCapacity=Opgeslagen: %d / %d
 misc.storagecraft:compareNBT=NBT vergelijken
 misc.storagecraft:compareDamage=Damage vergelijken
 
-misc.storagecraft.on=Aan
-misc.storagecraft.off=Uit
+misc.storagecraft:on=Aan
+misc.storagecraft:off=Uit
 
 block.storagecraft:controller.name=Controleur
 block.storagecraft:cable.name=Kabel

@@ -8,16 +8,16 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import storagecraft.tile.TileImporter;
 
-public class MessageImporterSettingsUpdate implements IMessage, IMessageHandler<MessageImporterSettingsUpdate, IMessage> {
+public class MessageImporterUpdate implements IMessage, IMessageHandler<MessageImporterUpdate, IMessage> {
 	private int x;
 	private int y;
 	private int z;
 	private int compareFlags;
 
-	public MessageImporterSettingsUpdate() {
+	public MessageImporterUpdate() {
 	}
 
-	public MessageImporterSettingsUpdate(int x, int y, int z, int compareFlags) {
+	public MessageImporterUpdate(int x, int y, int z, int compareFlags) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -41,7 +41,7 @@ public class MessageImporterSettingsUpdate implements IMessage, IMessageHandler<
 	}
 
 	@Override
-	public IMessage onMessage(MessageImporterSettingsUpdate message, MessageContext context) {
+	public IMessage onMessage(MessageImporterUpdate message, MessageContext context) {
 		EntityPlayerMP player = context.getServerHandler().playerEntity;
 
 		TileEntity tile = player.worldObj.getTileEntity(message.x, message.y, message.z);

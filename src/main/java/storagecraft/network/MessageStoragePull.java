@@ -7,24 +7,28 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import storagecraft.storage.StorageItem;
 import storagecraft.tile.TileController;
 
-public class MessagePushToStorage implements IMessage, IMessageHandler<MessagePushToStorage, IMessage> {
+public class MessageStoragePull implements IMessage, IMessageHandler<MessageStoragePull, IMessage> {
 	private int x;
 	private int y;
 	private int z;
+	// @TODO: this won't work when sorting
 	private int slot;
-	private boolean one;
+	private boolean half;
+	private boolean shift;
 
-	public MessagePushToStorage() {
+	public MessageStoragePull() {
 	}
 
-	public MessagePushToStorage(int x, int y, int z, int slot, boolean one) {
+	public MessageStoragePull(int x, int y, int z, int slot, boolean half, boolean shift) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		this.slot = slot;
-		this.one = one;
+		this.half = half;
+		this.shift = shift;
 	}
 
 	@Override
@@ -33,7 +37,8 @@ public class MessagePushToStorage implements IMessage, IMessageHandler<MessagePu
 		y = buf.readInt();
 		z = buf.readInt();
 		slot = buf.readInt();
-		one = buf.readBoolean();
+		half = buf.readBoolean();
+		shift = buf.readBoolean();
 	}
 
 	@Override
@@ -42,11 +47,12 @@ public class MessagePushToStorage implements IMessage, IMessageHandler<MessagePu
 		buf.writeInt(y);
 		buf.writeInt(z);
 		buf.writeInt(slot);
-		buf.writeBoolean(one);
+		buf.writeBoolean(half);
+		buf.writeBoolean(shift);
 	}
 
 	@Override
-	public IMessage onMessage(MessagePushToStorage message, MessageContext context) {
+	public IMessage onMessage(MessageStoragePull message, MessageContext context) {
 		EntityPlayerMP player = context.getServerHandler().playerEntity;
 
 		TileEntity tile = player.worldObj.getTileEntity(message.x, message.y, message.z);
@@ -54,36 +60,26 @@ public class MessagePushToStorage implements IMessage, IMessageHandler<MessagePu
 		if (tile instanceof TileController) {
 			TileController controller = (TileController) tile;
 
-			ItemStack stack;
+			if (message.slot < controller.getItems().size()) {
+				StorageItem item = controller.getItems().get(message.slot);
 
-			if (message.slot == -1) {
-				stack = player.inventory.getItemStack().copy();
+				int quantity = 64;
 
-				if (message.one) {
-					stack.stackSize = 1;
+				if (message.half && item.getQuantity() > 1) {
+					quantity = item.getQuantity() / 2;
 				}
-			} else {
-				stack = player.inventory.getStackInSlot(message.slot);
-			}
 
-			if (stack != null) {
-				boolean success = controller.push(stack);
+				ItemStack stack = controller.take(item.copy(quantity).toItemStack());
 
-				if (success) {
-					if (message.slot == -1) {
-						if (message.one) {
-							player.inventory.getItemStack().stackSize--;
-
-							if (player.inventory.getItemStack().stackSize == 0) {
-								player.inventory.setItemStack(null);
-							}
-						} else {
-							player.inventory.setItemStack(null);
+				if (stack.stackSize > 0) {
+					if (message.shift) {
+						// @TODO: This doesn't work
+						if (!player.inventory.addItemStackToInventory(stack.copy())) {
+							controller.push(stack);
 						}
-
-						player.updateHeldItem();
 					} else {
-						player.inventory.setInventorySlotContents(message.slot, null);
+						player.inventory.setItemStack(stack);
+						player.updateHeldItem();
 					}
 				}
 			}
