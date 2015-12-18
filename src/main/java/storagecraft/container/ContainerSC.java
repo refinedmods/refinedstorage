@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import storagecraft.container.slot.SlotSpecimen;
 
 public class ContainerSC extends Container {
 	private EntityPlayer player;
@@ -32,6 +33,23 @@ public class ContainerSC extends Container {
 				id++;
 			}
 		}
+	}
+
+	@Override
+	public ItemStack slotClick(int id, int clickedButton, int mode, EntityPlayer player) {
+		Slot slot = id >= 0 ? getSlot(id) : null;
+
+		if (slot instanceof SlotSpecimen) {
+			if (clickedButton == 2) {
+				slot.putStack(null);
+			} else {
+				slot.putStack(player.inventory.getItemStack() == null ? null : player.inventory.getItemStack().copy());
+			}
+
+			return player.inventory.getItemStack();
+		}
+
+		return super.slotClick(id, clickedButton, mode, player);
 	}
 
 	@Override

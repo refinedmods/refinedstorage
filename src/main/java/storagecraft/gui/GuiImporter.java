@@ -47,11 +47,23 @@ public class GuiImporter extends GuiContainer {
 
 		compareFlags = importer.getCompareFlags();
 
-		compareNBT.displayString = StatCollector.translateToLocal("misc.storagecraft:compareNBT") + ": ";
-		compareNBT.displayString += ((compareFlags & InventoryUtils.COMPARE_NBT) == InventoryUtils.COMPARE_NBT) ? StatCollector.translateToLocal("misc.storagecraft:on") : StatCollector.translateToLocal("misc.storagecraft:off");
+		compareNBT.displayString = getTextForCompareToggle("NBT", InventoryUtils.COMPARE_NBT);
+		compareDamage.displayString = getTextForCompareToggle("Damage", InventoryUtils.COMPARE_DAMAGE);
+	}
 
-		compareDamage.displayString = StatCollector.translateToLocal("misc.storagecraft:compareDamage") + ": ";
-		compareDamage.displayString += ((compareFlags & InventoryUtils.COMPARE_DAMAGE) == InventoryUtils.COMPARE_DAMAGE) ? StatCollector.translateToLocal("misc.storagecraft:on") : StatCollector.translateToLocal("misc.storagecraft:off");
+	private String getTextForCompareToggle(String which, int flag) {
+		StringBuilder builder = new StringBuilder();
+
+		builder.append(StatCollector.translateToLocal("misc.storagecraft:compare" + which));
+		builder.append(": ");
+
+		if ((compareFlags & flag) == flag) {
+			builder.append(StatCollector.translateToLocal("misc.storagecraft:on"));
+		} else {
+			builder.append(StatCollector.translateToLocal("misc.storagecraft:off"));
+		}
+
+		return builder.toString();
 	}
 
 	@Override
@@ -66,20 +78,17 @@ public class GuiImporter extends GuiContainer {
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		fontRendererObj.drawString(StatCollector.translateToLocal("gui.storagecraft:importer"), 7, 7, 4210752);
-		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 7, 87, 4210752);
+		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 7, 89, 4210752);
 	}
 
 	@Override
 	protected void actionPerformed(GuiButton button) {
 		int flags = compareFlags;
 
-		switch (button.id) {
-			case 0:
-				flags ^= InventoryUtils.COMPARE_NBT;
-				break;
-			case 1:
-				flags ^= InventoryUtils.COMPARE_DAMAGE;
-				break;
+		if (button.id == compareNBT.id) {
+			flags ^= InventoryUtils.COMPARE_NBT;
+		} else if (button.id == compareDamage.id) {
+			flags ^= InventoryUtils.COMPARE_DAMAGE;
 		}
 
 		SC.NETWORK.sendToServer(new MessageImporterUpdate(importer.xCoord, importer.yCoord, importer.zCoord, flags));

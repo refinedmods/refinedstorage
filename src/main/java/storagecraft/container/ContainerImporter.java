@@ -1,7 +1,7 @@
 package storagecraft.container;
 
 import net.minecraft.entity.player.EntityPlayer;
-import storagecraft.inventory.slot.SlotSpecimen;
+import storagecraft.container.slot.SlotSpecimen;
 import storagecraft.tile.TileImporter;
 
 public class ContainerImporter extends ContainerSC {

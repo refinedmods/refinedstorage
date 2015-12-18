@@ -2,7 +2,7 @@ package storagecraft.container;
 
 import net.minecraft.entity.player.EntityPlayer;
 import storagecraft.SCItems;
-import storagecraft.inventory.slot.SlotItemFilter;
+import storagecraft.container.slot.SlotItemFilter;
 import storagecraft.tile.TileDrive;
 
 public class ContainerDrive extends ContainerSC {

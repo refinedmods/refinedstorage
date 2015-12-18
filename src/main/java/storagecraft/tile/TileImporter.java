@@ -40,6 +40,7 @@ public class TileImporter extends TileMachine implements IInventory {
 					if (slot != null && canImport(slot)) {
 						if (getController().push(slot.copy())) {
 							connectedInventory.setInventorySlotContents(currentSlot, null);
+							connectedInventory.markDirty();
 						}
 					}
 

@@ -1,4 +1,4 @@
-package storagecraft.inventory.slot;
+package storagecraft.container.slot;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
