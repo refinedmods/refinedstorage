@@ -13,8 +13,8 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import storagecraft.proxy.CommonProxy;
 
-@Mod(modid = SC.ID, version = SC.VERSION)
-public class SC {
+@Mod(modid = StorageCraft.ID, version = StorageCraft.VERSION)
+public class StorageCraft {
 	public static final class GUI {
 		public static final int CONTROLLER = 0;
 		public static final int GRID = 1;
@@ -28,13 +28,13 @@ public class SC {
 	public static final CreativeTabs TAB = new CreativeTabs(ID) {
 		@Override
 		public Item getTabIconItem() {
-			return Item.getItemFromBlock(SCBlocks.CONTROLLER);
+			return Item.getItemFromBlock(StorageCraftBlocks.CONTROLLER);
 		}
 	};
 	@SidedProxy(clientSide = "storagecraft.proxy.ClientProxy", serverSide = "storagecraft.proxy.ServerProxy")
 	public static CommonProxy PROXY;
 	@Instance
-	public static SC INSTANCE;
+	public static StorageCraft INSTANCE;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {

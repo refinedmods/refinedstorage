@@ -6,9 +6,9 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
-import storagecraft.SC;
-import storagecraft.SCBlocks;
-import storagecraft.SCItems;
+import storagecraft.StorageCraft;
+import storagecraft.StorageCraftBlocks;
+import storagecraft.StorageCraftItems;
 import storagecraft.gui.GuiHandler;
 import storagecraft.network.MessageImporterUpdate;
 import storagecraft.network.MessageStoragePull;
@@ -23,12 +23,12 @@ import storagecraft.tile.TileStorageProxy;
 
 public class CommonProxy {
 	public void preInit(FMLPreInitializationEvent e) {
-		SC.NETWORK.registerMessage(MessageTileUpdate.class, MessageTileUpdate.class, 0, Side.CLIENT);
-		SC.NETWORK.registerMessage(MessageStoragePush.class, MessageStoragePush.class, 1, Side.SERVER);
-		SC.NETWORK.registerMessage(MessageStoragePull.class, MessageStoragePull.class, 2, Side.SERVER);
-		SC.NETWORK.registerMessage(MessageImporterUpdate.class, MessageImporterUpdate.class, 3, Side.SERVER);
+		StorageCraft.NETWORK.registerMessage(MessageTileUpdate.class, MessageTileUpdate.class, 0, Side.CLIENT);
+		StorageCraft.NETWORK.registerMessage(MessageStoragePush.class, MessageStoragePush.class, 1, Side.SERVER);
+		StorageCraft.NETWORK.registerMessage(MessageStoragePull.class, MessageStoragePull.class, 2, Side.SERVER);
+		StorageCraft.NETWORK.registerMessage(MessageImporterUpdate.class, MessageImporterUpdate.class, 3, Side.SERVER);
 
-		NetworkRegistry.INSTANCE.registerGuiHandler(SC.INSTANCE, new GuiHandler());
+		NetworkRegistry.INSTANCE.registerGuiHandler(StorageCraft.INSTANCE, new GuiHandler());
 
 		GameRegistry.registerTileEntity(TileController.class, "controller");
 		GameRegistry.registerTileEntity(TileCable.class, "cable");
@@ -37,14 +37,14 @@ public class CommonProxy {
 		GameRegistry.registerTileEntity(TileStorageProxy.class, "storageProxy");
 		GameRegistry.registerTileEntity(TileImporter.class, "importer");
 
-		GameRegistry.registerBlock(SCBlocks.CONTROLLER, "controller");
-		GameRegistry.registerBlock(SCBlocks.CABLE, "cable");
-		GameRegistry.registerBlock(SCBlocks.GRID, "grid");
-		GameRegistry.registerBlock(SCBlocks.DRIVE, "drive");
-		GameRegistry.registerBlock(SCBlocks.STORAGE_PROXY, "storageProxy");
-		GameRegistry.registerBlock(SCBlocks.IMPORTER, "importer");
+		GameRegistry.registerBlock(StorageCraftBlocks.CONTROLLER, "controller");
+		GameRegistry.registerBlock(StorageCraftBlocks.CABLE, "cable");
+		GameRegistry.registerBlock(StorageCraftBlocks.GRID, "grid");
+		GameRegistry.registerBlock(StorageCraftBlocks.DRIVE, "drive");
+		GameRegistry.registerBlock(StorageCraftBlocks.STORAGE_PROXY, "storageProxy");
+		GameRegistry.registerBlock(StorageCraftBlocks.IMPORTER, "importer");
 
-		GameRegistry.registerItem(SCItems.STORAGE_CELL, "storageCell");
+		GameRegistry.registerItem(StorageCraftItems.STORAGE_CELL, "storageCell");
 	}
 
 	public void init(FMLInitializationEvent e) {

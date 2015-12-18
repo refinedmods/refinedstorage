@@ -5,7 +5,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import storagecraft.tile.TileCable;
 
-public class BlockCable extends BlockSC implements ITileEntityProvider {
+public class BlockCable extends BlockBase implements ITileEntityProvider {
 	public BlockCable() {
 		super("cable");
 	}

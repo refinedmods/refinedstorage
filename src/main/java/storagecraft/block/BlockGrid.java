@@ -7,10 +7,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import storagecraft.SC;
+import storagecraft.StorageCraft;
 import storagecraft.tile.TileGrid;
 
-public class BlockGrid extends BlockSC implements ITileEntityProvider {
+public class BlockGrid extends BlockBase implements ITileEntityProvider {
 	private IIcon sideIcon;
 	private IIcon connectedIcon;
 	private IIcon disconnectedIcon;
@@ -27,7 +27,7 @@ public class BlockGrid extends BlockSC implements ITileEntityProvider {
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
 		if (!world.isRemote) {
-			player.openGui(SC.INSTANCE, SC.GUI.GRID, world, x, y, z);
+			player.openGui(StorageCraft.INSTANCE, StorageCraft.GUI.GRID, world, x, y, z);
 		}
 
 		return true;

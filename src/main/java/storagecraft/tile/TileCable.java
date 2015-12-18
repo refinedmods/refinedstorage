@@ -8,7 +8,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import storagecraft.block.BlockCable;
 
-public class TileCable extends TileSC {
+public class TileCable extends TileBase {
 	public static boolean isCable(World world, int x, int y, int z, ForgeDirection dir) {
 		Block block = world.getBlock(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ);
 

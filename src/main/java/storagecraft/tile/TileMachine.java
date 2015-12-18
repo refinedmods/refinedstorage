@@ -2,7 +2,7 @@ package storagecraft.tile;
 
 import io.netty.buffer.ByteBuf;
 
-public abstract class TileMachine extends TileSC implements INetworkTile {
+public abstract class TileMachine extends TileBase implements INetworkTile {
 	protected boolean connected = false;
 
 	private int xController;

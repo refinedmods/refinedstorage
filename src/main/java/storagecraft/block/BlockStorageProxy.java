@@ -8,7 +8,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import storagecraft.tile.TileStorageProxy;
 
-public class BlockStorageProxy extends BlockSC implements ITileEntityProvider {
+public class BlockStorageProxy extends BlockBase implements ITileEntityProvider {
 	private IIcon frontIcon;
 	private IIcon sideIcon;
 

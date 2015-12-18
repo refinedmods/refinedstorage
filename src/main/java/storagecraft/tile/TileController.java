@@ -16,7 +16,7 @@ import storagecraft.storage.IStorage;
 import storagecraft.storage.IStorageProvider;
 import storagecraft.storage.StorageItem;
 
-public class TileController extends TileSC implements IEnergyReceiver, INetworkTile {
+public class TileController extends TileBase implements IEnergyReceiver, INetworkTile {
 	private List<StorageItem> items = new ArrayList<StorageItem>();
 	private List<IStorage> storages = new ArrayList<IStorage>();
 

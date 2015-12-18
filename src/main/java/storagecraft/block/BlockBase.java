@@ -9,25 +9,25 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import storagecraft.SC;
-import storagecraft.tile.TileSC;
+import storagecraft.StorageCraft;
+import storagecraft.tile.TileBase;
 import storagecraft.util.InventoryUtils;
 
-public class BlockSC extends Block {
+public class BlockBase extends Block {
 	private String name;
 
-	public BlockSC(String name) {
+	public BlockBase(String name) {
 		super(Material.rock);
 
 		this.name = name;
 
-		setCreativeTab(SC.TAB);
+		setCreativeTab(StorageCraft.TAB);
 		setBlockTextureName("storagecraft:" + name);
 	}
 
 	@Override
 	public String getUnlocalizedName() {
-		return "block." + SC.ID + ":" + name;
+		return "block." + StorageCraft.ID + ":" + name;
 	}
 
 	@Override
@@ -36,8 +36,8 @@ public class BlockSC extends Block {
 
 		TileEntity tile = world.getTileEntity(x, y, z);
 
-		if (tile instanceof TileSC) {
-			((TileSC) tile).setDirection(ForgeDirection.getOrientation(BlockPistonBase.determineOrientation(world, x, y, z, entityLiving)));
+		if (tile instanceof TileBase) {
+			((TileBase) tile).setDirection(ForgeDirection.getOrientation(BlockPistonBase.determineOrientation(world, x, y, z, entityLiving)));
 		}
 	}
 

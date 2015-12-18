@@ -2,7 +2,7 @@ package storagecraft.container;
 
 import net.minecraft.entity.player.EntityPlayer;
 
-public class ContainerController extends ContainerSC {
+public class ContainerController extends ContainerBase {
 	public ContainerController(EntityPlayer player) {
 		super(player);
 

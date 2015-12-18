@@ -5,7 +5,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
-import storagecraft.SC;
+import storagecraft.StorageCraft;
 import storagecraft.container.ContainerImporter;
 import storagecraft.network.MessageImporterUpdate;
 import storagecraft.tile.TileImporter;
@@ -91,6 +91,6 @@ public class GuiImporter extends GuiContainer {
 			flags ^= InventoryUtils.COMPARE_DAMAGE;
 		}
 
-		SC.NETWORK.sendToServer(new MessageImporterUpdate(importer.xCoord, importer.yCoord, importer.zCoord, flags));
+		StorageCraft.NETWORK.sendToServer(new MessageImporterUpdate(importer.xCoord, importer.yCoord, importer.zCoord, flags));
 	}
 }

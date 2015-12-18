@@ -6,11 +6,11 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import storagecraft.inventory.InventorySC;
+import storagecraft.inventory.InventorySimple;
 import storagecraft.util.InventoryUtils;
 
 public class TileImporter extends TileMachine implements IInventory {
-	private InventorySC inventory = new InventorySC("importer", 9);
+	private InventorySimple inventory = new InventorySimple("importer", 9);
 
 	private int compareFlags = InventoryUtils.COMPARE_NBT | InventoryUtils.COMPARE_DAMAGE;
 

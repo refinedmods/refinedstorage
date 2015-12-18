@@ -5,14 +5,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import storagecraft.inventory.InventorySC;
+import storagecraft.inventory.InventorySimple;
 import storagecraft.storage.CellStorage;
 import storagecraft.storage.IStorage;
 import storagecraft.storage.IStorageProvider;
 import storagecraft.util.InventoryUtils;
 
 public class TileDrive extends TileMachine implements IInventory, IStorageProvider {
-	private InventorySC inventory = new InventorySC("drive", 8);
+	private InventorySimple inventory = new InventorySimple("drive", 8);
 
 	@Override
 	public int getEnergyUsage() {

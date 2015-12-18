@@ -7,10 +7,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import storagecraft.SC;
+import storagecraft.StorageCraft;
 import storagecraft.tile.TileImporter;
 
-public class BlockImporter extends BlockSC implements ITileEntityProvider {
+public class BlockImporter extends BlockBase implements ITileEntityProvider {
 	private IIcon frontIcon;
 	private IIcon sideIcon;
 
@@ -26,7 +26,7 @@ public class BlockImporter extends BlockSC implements ITileEntityProvider {
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
 		if (!world.isRemote) {
-			player.openGui(SC.INSTANCE, SC.GUI.IMPORTER, world, x, y, z);
+			player.openGui(StorageCraft.INSTANCE, StorageCraft.GUI.IMPORTER, world, x, y, z);
 		}
 
 		return true;

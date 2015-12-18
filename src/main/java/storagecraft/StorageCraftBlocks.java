@@ -7,7 +7,7 @@ import storagecraft.block.BlockGrid;
 import storagecraft.block.BlockImporter;
 import storagecraft.block.BlockStorageProxy;
 
-public class SCBlocks {
+public class StorageCraftBlocks {
 	public static final BlockController CONTROLLER = new BlockController();
 	public static final BlockCable CABLE = new BlockCable();
 	public static final BlockGrid GRID = new BlockGrid();

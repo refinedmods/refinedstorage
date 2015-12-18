@@ -7,10 +7,10 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
-import storagecraft.SC;
+import storagecraft.StorageCraft;
 import storagecraft.network.MessageTileUpdate;
 
-public class TileSC extends TileEntity {
+public class TileBase extends TileEntity {
 	public static final int UPDATE_RANGE = 64;
 
 	private ForgeDirection direction;
@@ -27,7 +27,7 @@ public class TileSC extends TileEntity {
 			if (this instanceof INetworkTile) {
 				TargetPoint target = new TargetPoint(worldObj.provider.dimensionId, xCoord, yCoord, zCoord, UPDATE_RANGE);
 
-				SC.NETWORK.sendToAllAround(new MessageTileUpdate(this), target);
+				StorageCraft.NETWORK.sendToAllAround(new MessageTileUpdate(this), target);
 			}
 		}
 	}

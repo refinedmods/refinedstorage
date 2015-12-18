@@ -6,10 +6,10 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import storagecraft.container.slot.SlotSpecimen;
 
-public class ContainerSC extends Container {
+public class ContainerBase extends Container {
 	private EntityPlayer player;
 
-	public ContainerSC(EntityPlayer player) {
+	public ContainerBase(EntityPlayer player) {
 		this.player = player;
 	}
 

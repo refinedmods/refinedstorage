@@ -5,7 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import storagecraft.SC;
+import storagecraft.StorageCraft;
 import storagecraft.container.ContainerController;
 import storagecraft.container.ContainerDrive;
 import storagecraft.container.ContainerGrid;
@@ -18,13 +18,13 @@ import storagecraft.tile.TileImporter;
 public class GuiHandler implements IGuiHandler {
 	private Container getContainer(int ID, EntityPlayer player, TileEntity tile) {
 		switch (ID) {
-			case SC.GUI.CONTROLLER:
+			case StorageCraft.GUI.CONTROLLER:
 				return new ContainerController(player);
-			case SC.GUI.GRID:
+			case StorageCraft.GUI.GRID:
 				return new ContainerGrid(player);
-			case SC.GUI.DRIVE:
+			case StorageCraft.GUI.DRIVE:
 				return new ContainerDrive(player, (TileDrive) tile);
-			case SC.GUI.IMPORTER:
+			case StorageCraft.GUI.IMPORTER:
 				return new ContainerImporter(player, (TileImporter) tile);
 			default:
 				return null;
@@ -41,13 +41,13 @@ public class GuiHandler implements IGuiHandler {
 		TileEntity tile = world.getTileEntity(x, y, z);
 
 		switch (ID) {
-			case SC.GUI.CONTROLLER:
+			case StorageCraft.GUI.CONTROLLER:
 				return new GuiController((ContainerController) getContainer(ID, player, tile), (TileController) tile);
-			case SC.GUI.GRID:
+			case StorageCraft.GUI.GRID:
 				return new GuiGrid((ContainerGrid) getContainer(ID, player, tile), (TileGrid) tile);
-			case SC.GUI.DRIVE:
+			case StorageCraft.GUI.DRIVE:
 				return new GuiDrive((ContainerDrive) getContainer(ID, player, tile));
-			case SC.GUI.IMPORTER:
+			case StorageCraft.GUI.IMPORTER:
 				return new GuiImporter((ContainerImporter) getContainer(ID, player, tile), (TileImporter) tile);
 			default:
 				return null;

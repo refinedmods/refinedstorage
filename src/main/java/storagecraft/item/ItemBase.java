@@ -2,21 +2,21 @@ package storagecraft.item;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import storagecraft.SC;
+import storagecraft.StorageCraft;
 
-public class ItemSC extends Item {
+public class ItemBase extends Item {
 	private String name;
 
-	public ItemSC(String name) {
+	public ItemBase(String name) {
 		this.name = name;
 
-		setCreativeTab(SC.TAB);
+		setCreativeTab(StorageCraft.TAB);
 		setTextureName("storagecraft:" + name);
 	}
 
 	@Override
 	public String getUnlocalizedName() {
-		return "item." + SC.ID + ":" + name;
+		return "item." + StorageCraft.ID + ":" + name;
 	}
 
 	@Override

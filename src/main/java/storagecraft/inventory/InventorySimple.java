@@ -4,12 +4,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
-public class InventorySC implements IInventory {
+public class InventorySimple implements IInventory {
 	private ItemStack[] inventory;
 	private int size;
 	private String name;
 
-	public InventorySC(String name, int size) {
+	public InventorySimple(String name, int size) {
 		this.name = name;
 		this.size = size;
 		this.inventory = new ItemStack[size];

@@ -13,7 +13,7 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import storagecraft.storage.CellStorage;
 
-public class ItemStorageCell extends ItemSC {
+public class ItemStorageCell extends ItemBase {
 	private IIcon[] icons = new IIcon[5];
 
 	public ItemStorageCell() {
