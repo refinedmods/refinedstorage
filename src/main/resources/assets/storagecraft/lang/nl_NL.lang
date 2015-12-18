@@ -5,6 +5,7 @@ gui.storagecraft:grid=Rooster
 gui.storagecraft:drive=Schijf
 gui.storagecraft:storageProxy=Opslag Proxy
 gui.storagecraft:importer=Importeur
+gui.storagecraft:exporter=Exporteur
 
 misc.storagecraft:energyStored=%d / %d RF
 misc.storagecraft:energyUsage=Verbruik: %d RF/t
@@ -31,6 +32,7 @@ block.storagecraft:grid.name=Rooster
 block.storagecraft:drive.name=Schijf
 block.storagecraft:storageProxy.name=Opslag Proxy
 block.storagecraft:importer.name=Importeur
+block.storagecraft:exporter.name=Exporteur
 
 item.storagecraft:storageCell.0.name=1k Opslagcel
 item.storagecraft:storageCell.1.name=4k Opslagcel

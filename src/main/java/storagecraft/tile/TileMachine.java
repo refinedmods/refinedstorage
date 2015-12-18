@@ -98,7 +98,9 @@ public abstract class TileMachine extends TileBase implements INetworkTile {
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 
-		redstoneMode = RedstoneMode.getById(nbt.getInteger(NBT_REDSTONE_MODE));
+		if (nbt.hasKey(NBT_REDSTONE_MODE)) {
+			redstoneMode = RedstoneMode.getById(nbt.getInteger(NBT_REDSTONE_MODE));
+		}
 	}
 
 	@Override

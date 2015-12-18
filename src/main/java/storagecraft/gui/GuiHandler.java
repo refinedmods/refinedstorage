@@ -8,11 +8,13 @@ import net.minecraft.world.World;
 import storagecraft.StorageCraft;
 import storagecraft.container.ContainerController;
 import storagecraft.container.ContainerDrive;
+import storagecraft.container.ContainerExporter;
 import storagecraft.container.ContainerGrid;
 import storagecraft.container.ContainerImporter;
 import storagecraft.container.ContainerStorageProxy;
 import storagecraft.tile.TileController;
 import storagecraft.tile.TileDrive;
+import storagecraft.tile.TileExporter;
 import storagecraft.tile.TileGrid;
 import storagecraft.tile.TileImporter;
 import storagecraft.tile.TileStorageProxy;
@@ -30,6 +32,8 @@ public class GuiHandler implements IGuiHandler {
 				return new ContainerStorageProxy(player);
 			case StorageCraft.GUI.IMPORTER:
 				return new ContainerImporter(player, (TileImporter) tile);
+			case StorageCraft.GUI.EXPORTER:
+				return new ContainerExporter(player, (TileExporter) tile);
 			default:
 				return null;
 		}
@@ -55,6 +59,8 @@ public class GuiHandler implements IGuiHandler {
 				return new GuiStorageProxy((ContainerStorageProxy) getContainer(ID, player, tile), (TileStorageProxy) tile);
 			case StorageCraft.GUI.IMPORTER:
 				return new GuiImporter((ContainerImporter) getContainer(ID, player, tile), (TileImporter) tile);
+			case StorageCraft.GUI.EXPORTER:
+				return new GuiExporter((ContainerExporter) getContainer(ID, player, tile), (TileExporter) tile);
 			default:
 				return null;
 		}

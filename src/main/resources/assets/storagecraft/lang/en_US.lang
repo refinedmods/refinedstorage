@@ -5,6 +5,7 @@ gui.storagecraft:grid=Grid
 gui.storagecraft:drive=Drive
 gui.storagecraft:storageProxy=Storage Proxy
 gui.storagecraft:importer=Importer
+gui.storagecraft:exporter=Exporter
 
 misc.storagecraft:energyStored=%d / %d RF
 misc.storagecraft:energyUsage=Usage: %d RF/t
@@ -31,6 +32,7 @@ block.storagecraft:grid.name=Grid
 block.storagecraft:drive.name=Drive
 block.storagecraft:storageProxy.name=Storage Proxy
 block.storagecraft:importer.name=Importer
+block.storagecraft:exporter.name=Exporter
 
 item.storagecraft:storageCell.0.name=1k Storage Cell
 item.storagecraft:storageCell.1.name=4k Storage Cell
