@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import storagecraft.SC;
 import storagecraft.tile.TileSC;
-import storagecraft.util.InventoryUtil;
+import storagecraft.util.InventoryUtils;
 
 public class BlockSC extends Block {
 	private String name;
@@ -46,7 +46,7 @@ public class BlockSC extends Block {
 		TileEntity tile = world.getTileEntity(x, y, z);
 
 		if (tile instanceof IInventory) {
-			InventoryUtil.dropInventory(world, (IInventory) tile, x, y, z, 0);
+			InventoryUtils.dropInventory(world, (IInventory) tile, x, y, z);
 		}
 
 		super.onBlockPreDestroy(world, x, y, z, meta);

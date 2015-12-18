@@ -10,6 +10,7 @@ import storagecraft.SC;
 import storagecraft.SCBlocks;
 import storagecraft.SCItems;
 import storagecraft.gui.GuiHandler;
+import storagecraft.network.MessageImporterSettingsUpdate;
 import storagecraft.network.MessagePullFromStorage;
 import storagecraft.network.MessagePushToStorage;
 import storagecraft.network.MessageTileUpdate;
@@ -17,6 +18,7 @@ import storagecraft.tile.TileCable;
 import storagecraft.tile.TileController;
 import storagecraft.tile.TileDrive;
 import storagecraft.tile.TileGrid;
+import storagecraft.tile.TileImporter;
 import storagecraft.tile.TileStorageProxy;
 
 public class CommonProxy {
@@ -24,6 +26,7 @@ public class CommonProxy {
 		SC.NETWORK.registerMessage(MessageTileUpdate.class, MessageTileUpdate.class, 0, Side.CLIENT);
 		SC.NETWORK.registerMessage(MessagePushToStorage.class, MessagePushToStorage.class, 1, Side.SERVER);
 		SC.NETWORK.registerMessage(MessagePullFromStorage.class, MessagePullFromStorage.class, 2, Side.SERVER);
+		SC.NETWORK.registerMessage(MessageImporterSettingsUpdate.class, MessageImporterSettingsUpdate.class, 3, Side.SERVER);
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(SC.INSTANCE, new GuiHandler());
 
@@ -32,12 +35,14 @@ public class CommonProxy {
 		GameRegistry.registerTileEntity(TileGrid.class, "grid");
 		GameRegistry.registerTileEntity(TileDrive.class, "drive");
 		GameRegistry.registerTileEntity(TileStorageProxy.class, "storageProxy");
+		GameRegistry.registerTileEntity(TileImporter.class, "importer");
 
 		GameRegistry.registerBlock(SCBlocks.CONTROLLER, "controller");
 		GameRegistry.registerBlock(SCBlocks.CABLE, "cable");
 		GameRegistry.registerBlock(SCBlocks.GRID, "grid");
 		GameRegistry.registerBlock(SCBlocks.DRIVE, "drive");
 		GameRegistry.registerBlock(SCBlocks.STORAGE_PROXY, "storageProxy");
+		GameRegistry.registerBlock(SCBlocks.IMPORTER, "importer");
 
 		GameRegistry.registerItem(SCItems.STORAGE_CELL, "storageCell");
 	}

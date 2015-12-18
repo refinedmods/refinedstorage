@@ -9,7 +9,7 @@ import storagecraft.inventory.InventorySC;
 import storagecraft.storage.CellStorage;
 import storagecraft.storage.IStorage;
 import storagecraft.storage.IStorageProvider;
-import storagecraft.util.InventoryUtil;
+import storagecraft.util.InventoryUtils;
 
 public class TileDrive extends TileMachine implements IInventory, IStorageProvider {
 	private InventorySC inventory = new InventorySC("drive", 8);
@@ -91,14 +91,14 @@ public class TileDrive extends TileMachine implements IInventory, IStorageProvid
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 
-		InventoryUtil.restoreInventory(this, nbt);
+		InventoryUtils.restoreInventory(this, nbt);
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 
-		InventoryUtil.saveInventory(this, nbt);
+		InventoryUtils.saveInventory(this, nbt);
 	}
 
 	@Override

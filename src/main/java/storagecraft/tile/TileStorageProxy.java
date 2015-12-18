@@ -7,7 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 import storagecraft.storage.IStorage;
 import storagecraft.storage.IStorageProvider;
 import storagecraft.storage.StorageItem;
-import storagecraft.util.InventoryUtil;
+import storagecraft.util.InventoryUtils;
 
 public class TileStorageProxy extends TileMachine implements IStorageProvider, IStorage {
 	private IInventory inventory;
@@ -58,7 +58,7 @@ public class TileStorageProxy extends TileMachine implements IStorageProvider, I
 				inventory.setInventorySlotContents(i, stack);
 
 				return;
-			} else if (InventoryUtil.equalsIgnoreQuantity(slot, stack)) {
+			} else if (InventoryUtils.compareStackNoQuantity(slot, stack)) {
 				int toAdd = toGo;
 
 				if (slot.stackSize + toAdd > slot.getMaxStackSize()) {
@@ -87,7 +87,7 @@ public class TileStorageProxy extends TileMachine implements IStorageProvider, I
 		for (int i = 0; i < inventory.getSizeInventory(); ++i) {
 			ItemStack slot = inventory.getStackInSlot(i);
 
-			if (slot != null && InventoryUtil.equalsIgnoreQuantity(slot, stack)) {
+			if (slot != null && InventoryUtils.compareStackNoQuantity(slot, stack)) {
 				if (quantity > slot.stackSize) {
 					quantity = slot.stackSize;
 				}
@@ -118,7 +118,7 @@ public class TileStorageProxy extends TileMachine implements IStorageProvider, I
 
 			if (slot == null) {
 				return true;
-			} else if (InventoryUtil.equalsIgnoreQuantity(slot, stack)) {
+			} else if (InventoryUtils.compareStackNoQuantity(slot, stack)) {
 				int toAdd = toGo;
 
 				if (slot.stackSize + toAdd > slot.getMaxStackSize()) {

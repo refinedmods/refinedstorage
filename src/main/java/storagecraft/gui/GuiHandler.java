@@ -9,9 +9,11 @@ import storagecraft.SC;
 import storagecraft.inventory.ContainerController;
 import storagecraft.inventory.ContainerDrive;
 import storagecraft.inventory.ContainerGrid;
+import storagecraft.inventory.ContainerImporter;
 import storagecraft.tile.TileController;
 import storagecraft.tile.TileDrive;
 import storagecraft.tile.TileGrid;
+import storagecraft.tile.TileImporter;
 
 public class GuiHandler implements IGuiHandler {
 	private Container getContainer(int ID, EntityPlayer player, TileEntity tile) {
@@ -22,6 +24,8 @@ public class GuiHandler implements IGuiHandler {
 				return new ContainerGrid(player);
 			case SC.GUI.DRIVE:
 				return new ContainerDrive(player, (TileDrive) tile);
+			case SC.GUI.IMPORTER:
+				return new ContainerImporter(player, (TileImporter) tile);
 			default:
 				return null;
 		}
@@ -43,6 +47,8 @@ public class GuiHandler implements IGuiHandler {
 				return new GuiGrid((ContainerGrid) getContainer(ID, player, tile), (TileGrid) tile);
 			case SC.GUI.DRIVE:
 				return new GuiDrive((ContainerDrive) getContainer(ID, player, tile));
+			case SC.GUI.IMPORTER:
+				return new GuiImporter((ContainerImporter) getContainer(ID, player, tile), (TileImporter) tile);
 			default:
 				return null;
 		}

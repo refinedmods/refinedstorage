@@ -9,7 +9,14 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
-public class InventoryUtil {
+public class InventoryUtils {
+	public static final String NBT_INVENTORY = "Inventory";
+	public static final String NBT_SLOT = "Slot";
+
+	public static final int COMPARE_DAMAGE = 1;
+	public static final int COMPARE_NBT = 2;
+	public static final int COMPARE_QUANTITY = 4;
+
 	public static void saveInventory(IInventory inventory, NBTTagCompound nbt) {
 		NBTTagList tagList = new NBTTagList();
 
@@ -17,7 +24,7 @@ public class InventoryUtil {
 			if (inventory.getStackInSlot(i) != null) {
 				NBTTagCompound compoundTag = new NBTTagCompound();
 
-				compoundTag.setInteger("Slot", i);
+				compoundTag.setInteger(NBT_SLOT, i);
 
 				inventory.getStackInSlot(i).writeToNBT(compoundTag);
 
@@ -25,15 +32,15 @@ public class InventoryUtil {
 			}
 		}
 
-		nbt.setTag("Inventory", tagList);
+		nbt.setTag(NBT_INVENTORY, tagList);
 	}
 
 	public static void restoreInventory(IInventory inventory, NBTTagCompound nbt) {
-		if (nbt.hasKey("Inventory")) {
-			NBTTagList tagList = nbt.getTagList("Inventory", Constants.NBT.TAG_COMPOUND);
+		if (nbt.hasKey(NBT_INVENTORY)) {
+			NBTTagList tagList = nbt.getTagList(NBT_INVENTORY, Constants.NBT.TAG_COMPOUND);
 
 			for (int i = 0; i < tagList.tagCount(); i++) {
-				int slot = tagList.getCompoundTagAt(i).getInteger("Slot");
+				int slot = tagList.getCompoundTagAt(i).getInteger(NBT_SLOT);
 
 				ItemStack stack = ItemStack.loadItemStackFromNBT(tagList.getCompoundTagAt(i));
 
@@ -43,10 +50,10 @@ public class InventoryUtil {
 	}
 
 	// https://github.com/cpw/ironchest/blob/master/src/main/java/cpw/mods/ironchest/BlockIronChest.java#L200
-	public static void dropInventory(World world, IInventory inventory, int x, int y, int z, int newSize) {
+	public static void dropInventory(World world, IInventory inventory, int x, int y, int z) {
 		Random random = world.rand;
 
-		for (int i = newSize; i < inventory.getSizeInventory(); ++i) {
+		for (int i = 0; i < inventory.getSizeInventory(); ++i) {
 			ItemStack stack = inventory.getStackInSlot(i);
 
 			if (stack == null) {
@@ -66,7 +73,7 @@ public class InventoryUtil {
 
 				stack.stackSize -= amount;
 
-				EntityItem entity = new EntityItem(world, (float) x + xo, (float) y + (newSize > 0 ? 1 : 0) + yo, (float) z + zo, new ItemStack(stack.getItem(), amount, stack.getItemDamage()));
+				EntityItem entity = new EntityItem(world, (float) x + xo, (float) y + yo, (float) z + zo, new ItemStack(stack.getItem(), amount, stack.getItemDamage()));
 
 				entity.motionX = (float) random.nextGaussian() * 0.05F;
 				entity.motionY = (float) random.nextGaussian() * 0.05F + 0.2F;
@@ -81,11 +88,33 @@ public class InventoryUtil {
 		}
 	}
 
-	public static boolean equalsIgnoreQuantity(ItemStack first, ItemStack second) {
-		if (first.stackTagCompound != null && !first.stackTagCompound.equals(second.stackTagCompound)) {
-			return false;
+	public static boolean compareStackNoQuantity(ItemStack first, ItemStack second) {
+		return compareStack(first, second, COMPARE_NBT | COMPARE_DAMAGE);
+	}
+
+	public static boolean compareStack(ItemStack first, ItemStack second) {
+		return compareStack(first, second, COMPARE_NBT | COMPARE_DAMAGE | COMPARE_QUANTITY);
+	}
+
+	public static boolean compareStack(ItemStack first, ItemStack second, int flags) {
+		if ((flags & COMPARE_NBT) == COMPARE_NBT) {
+			if (first.stackTagCompound != null && !first.stackTagCompound.equals(second.stackTagCompound)) {
+				return false;
+			}
 		}
 
-		return first.getItem() == second.getItem() && first.getItemDamage() == second.getItemDamage();
+		if ((flags & COMPARE_DAMAGE) == COMPARE_DAMAGE) {
+			if (first.getItemDamage() != second.getItemDamage()) {
+				return false;
+			}
+		}
+
+		if ((flags & COMPARE_QUANTITY) == COMPARE_QUANTITY) {
+			if (first.stackSize != second.stackSize) {
+				return false;
+			}
+		}
+
+		return first.getItem() == second.getItem();
 	}
 }
