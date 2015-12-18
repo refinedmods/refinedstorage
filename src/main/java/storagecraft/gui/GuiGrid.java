@@ -8,7 +8,7 @@ import net.minecraft.util.StatCollector;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import storagecraft.SC;
-import storagecraft.inventory.ContainerGrid;
+import storagecraft.container.ContainerGrid;
 import storagecraft.network.MessageStoragePull;
 import storagecraft.network.MessageStoragePush;
 import storagecraft.tile.TileController;

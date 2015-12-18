@@ -1,4 +1,4 @@
-package storagecraft.inventory;
+package storagecraft.container;
 
 import net.minecraft.entity.player.EntityPlayer;
 import storagecraft.inventory.slot.SlotSpecimen;

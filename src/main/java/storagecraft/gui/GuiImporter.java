@@ -6,7 +6,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
 import storagecraft.SC;
-import storagecraft.inventory.ContainerImporter;
+import storagecraft.container.ContainerImporter;
 import storagecraft.network.MessageImporterUpdate;
 import storagecraft.tile.TileImporter;
 import storagecraft.util.InventoryUtils;

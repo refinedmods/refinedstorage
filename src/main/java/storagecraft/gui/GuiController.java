@@ -6,7 +6,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
-import storagecraft.inventory.ContainerController;
+import storagecraft.container.ContainerController;
 import storagecraft.tile.TileController;
 
 public class GuiController extends GuiContainer {

@@ -4,7 +4,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
-import storagecraft.inventory.ContainerDrive;
+import storagecraft.container.ContainerDrive;
 
 public class GuiDrive extends GuiContainer {
 	public static final ResourceLocation DRIVE_RESOURCE = new ResourceLocation("storagecraft:textures/gui/drive.png");
