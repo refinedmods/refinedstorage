@@ -8,7 +8,9 @@ public class ContainerExporter extends ContainerBase {
 	public ContainerExporter(EntityPlayer player, TileExporter exporter) {
 		super(player);
 
-		addSlotToContainer(new SlotSpecimen(exporter, 0, 80, 20));
+		for (int i = 0; i < 9; ++i) {
+			addSlotToContainer(new SlotSpecimen(exporter, i, 8 + (18 * i), 20));
+		}
 
 		addPlayerInventory(8, 104);
 	}

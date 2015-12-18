@@ -12,7 +12,7 @@ import storagecraft.util.InventoryUtils;
 public class TileExporter extends TileMachine implements IInventory {
 	public static final String NBT_COMPARE_FLAGS = "CompareFlags";
 
-	private InventorySimple inventory = new InventorySimple("exporter", 1);
+	private InventorySimple inventory = new InventorySimple("exporter", 9);
 
 	private int compareFlags = 0;
 
