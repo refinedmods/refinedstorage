@@ -88,8 +88,58 @@ public class InventoryUtils {
 		}
 	}
 
-	public static boolean compareStackNoQuantity(ItemStack first, ItemStack second) {
-		return compareStack(first, second, COMPARE_NBT | COMPARE_DAMAGE);
+	public static void pushToInventory(IInventory inventory, ItemStack stack) {
+		int toGo = stack.stackSize;
+
+		for (int i = 0; i < inventory.getSizeInventory(); ++i) {
+			ItemStack slot = inventory.getStackInSlot(i);
+
+			if (slot == null) {
+				inventory.setInventorySlotContents(i, stack);
+
+				return;
+			} else if (compareStackNoQuantity(slot, stack)) {
+				int toAdd = toGo;
+
+				if (slot.stackSize + toAdd > slot.getMaxStackSize()) {
+					toAdd = slot.getMaxStackSize() - slot.stackSize;
+				}
+
+				slot.stackSize += toAdd;
+
+				toGo -= toAdd;
+
+				if (toGo == 0) {
+					return;
+				}
+			}
+		}
+	}
+
+	public static boolean canPushToInventory(IInventory inventory, ItemStack stack) {
+		int toGo = stack.stackSize;
+
+		for (int i = 0; i < inventory.getSizeInventory(); ++i) {
+			ItemStack slot = inventory.getStackInSlot(i);
+
+			if (slot == null) {
+				return true;
+			} else if (compareStackNoQuantity(slot, stack)) {
+				int toAdd = toGo;
+
+				if (slot.stackSize + toAdd > slot.getMaxStackSize()) {
+					toAdd = slot.getMaxStackSize() - slot.stackSize;
+				}
+
+				toGo -= toAdd;
+
+				if (toGo == 0) {
+					break;
+				}
+			}
+		}
+
+		return toGo == 0;
 	}
 
 	public static boolean compareStack(ItemStack first, ItemStack second) {
@@ -116,5 +166,9 @@ public class InventoryUtils {
 		}
 
 		return first.getItem() == second.getItem();
+	}
+
+	public static boolean compareStackNoQuantity(ItemStack first, ItemStack second) {
+		return compareStack(first, second, COMPARE_NBT | COMPARE_DAMAGE);
 	}
 }

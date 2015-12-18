@@ -50,31 +50,7 @@ public class TileStorageProxy extends TileMachine implements IStorageProvider, I
 			return;
 		}
 
-		int toGo = stack.stackSize;
-
-		for (int i = 0; i < inventory.getSizeInventory(); ++i) {
-			ItemStack slot = inventory.getStackInSlot(i);
-
-			if (slot == null) {
-				inventory.setInventorySlotContents(i, stack);
-
-				return;
-			} else if (InventoryUtils.compareStackNoQuantity(slot, stack)) {
-				int toAdd = toGo;
-
-				if (slot.stackSize + toAdd > slot.getMaxStackSize()) {
-					toAdd = slot.getMaxStackSize() - slot.stackSize;
-				}
-
-				slot.stackSize += toAdd;
-
-				toGo -= toAdd;
-
-				if (toGo == 0) {
-					return;
-				}
-			}
-		}
+		InventoryUtils.pushToInventory(inventory, stack);
 	}
 
 	@Override
@@ -116,29 +92,7 @@ public class TileStorageProxy extends TileMachine implements IStorageProvider, I
 			return false;
 		}
 
-		int toGo = stack.stackSize;
-
-		for (int i = 0; i < inventory.getSizeInventory(); ++i) {
-			ItemStack slot = inventory.getStackInSlot(i);
-
-			if (slot == null) {
-				return true;
-			} else if (InventoryUtils.compareStackNoQuantity(slot, stack)) {
-				int toAdd = toGo;
-
-				if (slot.stackSize + toAdd > slot.getMaxStackSize()) {
-					toAdd = slot.getMaxStackSize() - slot.stackSize;
-				}
-
-				toGo -= toAdd;
-
-				if (toGo == 0) {
-					break;
-				}
-			}
-		}
-
-		return toGo == 0;
+		return InventoryUtils.canPushToInventory(inventory, stack);
 	}
 
 	@Override
