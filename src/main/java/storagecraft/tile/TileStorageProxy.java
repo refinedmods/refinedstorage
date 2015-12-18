@@ -10,30 +10,29 @@ import storagecraft.storage.StorageItem;
 import storagecraft.util.InventoryUtils;
 
 public class TileStorageProxy extends TileMachine implements IStorageProvider, IStorage {
-	private IInventory inventory;
+	public IInventory getInventory() {
+		TileEntity tile = worldObj.getTileEntity(xCoord + getDirection().offsetX, yCoord + getDirection().offsetY, zCoord + getDirection().offsetZ);
 
-	@Override
-	public void updateEntity() {
-		super.updateEntity();
-
-		if (!worldObj.isRemote && isConnected()) {
-			TileEntity tile = worldObj.getTileEntity(xCoord + getDirection().offsetX, yCoord + getDirection().offsetY, zCoord + getDirection().offsetZ);
-
-			if (tile instanceof IInventory) {
-				inventory = (IInventory) tile;
-			}
-		} else {
-			inventory = null;
+		if (tile instanceof IInventory) {
+			return (IInventory) tile;
 		}
+
+		return null;
 	}
 
 	@Override
 	public int getEnergyUsage() {
-		return 5;
+		return 2;
+	}
+
+	@Override
+	public void updateMachine() {
 	}
 
 	@Override
 	public void addItems(List<StorageItem> items) {
+		IInventory inventory = getInventory();
+
 		if (inventory != null) {
 			for (int i = 0; i < inventory.getSizeInventory(); ++i) {
 				if (inventory.getStackInSlot(i) != null) {
@@ -45,6 +44,8 @@ public class TileStorageProxy extends TileMachine implements IStorageProvider, I
 
 	@Override
 	public void push(ItemStack stack) {
+		IInventory inventory = getInventory();
+
 		if (inventory == null) {
 			return;
 		}
@@ -78,6 +79,8 @@ public class TileStorageProxy extends TileMachine implements IStorageProvider, I
 
 	@Override
 	public int take(ItemStack stack) {
+		IInventory inventory = getInventory();
+
 		if (inventory == null) {
 			return 0;
 		}
@@ -107,6 +110,8 @@ public class TileStorageProxy extends TileMachine implements IStorageProvider, I
 
 	@Override
 	public boolean canPush(ItemStack stack) {
+		IInventory inventory = getInventory();
+
 		if (inventory == null) {
 			return false;
 		}

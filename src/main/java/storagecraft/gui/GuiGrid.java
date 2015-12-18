@@ -1,6 +1,5 @@
 package storagecraft.gui;
 
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -14,7 +13,7 @@ import storagecraft.network.MessageStoragePush;
 import storagecraft.tile.TileController;
 import storagecraft.tile.TileGrid;
 
-public class GuiGrid extends GuiContainer {
+public class GuiGrid extends GuiMachine {
 	public static final ResourceLocation GRID_RESOURCE = new ResourceLocation("storagecraft:textures/gui/grid.png");
 
 	private ContainerGrid container;
@@ -23,7 +22,7 @@ public class GuiGrid extends GuiContainer {
 	private int hoveringSlot;
 
 	public GuiGrid(ContainerGrid container, TileGrid grid) {
-		super(container);
+		super(container, grid);
 
 		this.container = container;
 		this.grid = grid;
@@ -43,6 +42,8 @@ public class GuiGrid extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
+
 		fontRendererObj.drawString(StatCollector.translateToLocal("gui.storagecraft:grid"), 7, 7, 4210752);
 		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 7, 96, 4210752);
 

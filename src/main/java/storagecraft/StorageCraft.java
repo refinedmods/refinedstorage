@@ -19,7 +19,8 @@ public class StorageCraft {
 		public static final int CONTROLLER = 0;
 		public static final int GRID = 1;
 		public static final int DRIVE = 2;
-		public static final int IMPORTER = 3;
+		public static final int STORAGE_PROXY = 3;
+		public static final int IMPORTER = 4;
 	}
 
 	public static final String ID = "storagecraft";

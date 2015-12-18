@@ -28,6 +28,10 @@ public class TileDrive extends TileMachine implements IInventory, IStorageProvid
 	}
 
 	@Override
+	public void updateMachine() {
+	}
+
+	@Override
 	public int getSizeInventory() {
 		return inventory.getSizeInventory();
 	}

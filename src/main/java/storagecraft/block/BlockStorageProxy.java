@@ -2,10 +2,12 @@ package storagecraft.block;
 
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import storagecraft.StorageCraft;
 import storagecraft.tile.TileStorageProxy;
 
 public class BlockStorageProxy extends BlockBase implements ITileEntityProvider {
@@ -19,6 +21,15 @@ public class BlockStorageProxy extends BlockBase implements ITileEntityProvider 
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
 		return new TileStorageProxy();
+	}
+
+	@Override
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
+		if (!world.isRemote) {
+			player.openGui(StorageCraft.INSTANCE, StorageCraft.GUI.STORAGE_PROXY, world, x, y, z);
+		}
+
+		return true;
 	}
 
 	@Override

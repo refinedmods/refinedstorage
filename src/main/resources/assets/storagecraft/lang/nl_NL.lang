@@ -3,6 +3,7 @@ itemGroup.storagecraft=StorageCraft
 gui.storagecraft:controller=Controleur
 gui.storagecraft:grid=Rooster
 gui.storagecraft:drive=Schijf
+gui.storagecraft:storageProxy=Opslag Proxy
 gui.storagecraft:importer=Importeur
 
 misc.storagecraft:energyStored=%d / %d RF
@@ -16,6 +17,10 @@ misc.storagecraft:compareDamage=Damage vergelijken
 
 misc.storagecraft:on=Aan
 misc.storagecraft:off=Uit
+
+misc.storagecraft:redstoneMode.0=Negeren
+misc.storagecraft:redstoneMode.1=Hoog
+misc.storagecraft:redstoneMode.2=Laag
 
 block.storagecraft:controller.name=Controleur
 block.storagecraft:cable.name=Kabel

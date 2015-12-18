@@ -10,6 +10,8 @@ import storagecraft.inventory.InventorySimple;
 import storagecraft.util.InventoryUtils;
 
 public class TileImporter extends TileMachine implements IInventory {
+	public static final String NBT_COMPARE_FLAGS = "CompareFlags";
+
 	private InventorySimple inventory = new InventorySimple("importer", 9);
 
 	private int compareFlags = InventoryUtils.COMPARE_NBT | InventoryUtils.COMPARE_DAMAGE;
@@ -17,38 +19,39 @@ public class TileImporter extends TileMachine implements IInventory {
 	private int currentSlot = 0;
 
 	@Override
-	public void updateEntity() {
-		super.updateEntity();
+	public int getEnergyUsage() {
+		return 2;
+	}
 
-		if (!worldObj.isRemote && isConnected()) {
-			TileEntity tile = worldObj.getTileEntity(xCoord + getDirection().offsetX, yCoord + getDirection().offsetY, zCoord + getDirection().offsetZ);
+	@Override
+	public void updateMachine() {
+		TileEntity tile = worldObj.getTileEntity(xCoord + getDirection().offsetX, yCoord + getDirection().offsetY, zCoord + getDirection().offsetZ);
 
-			if (tile instanceof IInventory) {
-				IInventory connectedInventory = (IInventory) tile;
+		if (tile instanceof IInventory) {
+			IInventory connectedInventory = (IInventory) tile;
 
-				if (ticks % 5 == 0) {
-					ItemStack slot;
+			if (ticks % 5 == 0) {
+				ItemStack slot;
 
-					while ((slot = connectedInventory.getStackInSlot(currentSlot)) == null) {
-						currentSlot++;
-
-						if (currentSlot > connectedInventory.getSizeInventory() - 1) {
-							break;
-						}
-					}
-
-					if (slot != null && canImport(slot)) {
-						if (getController().push(slot.copy())) {
-							connectedInventory.setInventorySlotContents(currentSlot, null);
-							connectedInventory.markDirty();
-						}
-					}
-
+				while ((slot = connectedInventory.getStackInSlot(currentSlot)) == null) {
 					currentSlot++;
 
 					if (currentSlot > connectedInventory.getSizeInventory() - 1) {
-						currentSlot = 0;
+						break;
 					}
+				}
+
+				if (slot != null && canImport(slot)) {
+					if (getController().push(slot.copy())) {
+						connectedInventory.setInventorySlotContents(currentSlot, null);
+						connectedInventory.markDirty();
+					}
+				}
+
+				currentSlot++;
+
+				if (currentSlot > connectedInventory.getSizeInventory() - 1) {
+					currentSlot = 0;
 				}
 			}
 		}
@@ -78,11 +81,6 @@ public class TileImporter extends TileMachine implements IInventory {
 
 	public void setCompareFlags(int flags) {
 		this.compareFlags = flags;
-	}
-
-	@Override
-	public int getEnergyUsage() {
-		return 3;
 	}
 
 	@Override
@@ -149,8 +147,8 @@ public class TileImporter extends TileMachine implements IInventory {
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 
-		if (nbt.hasKey("CompareFlags")) {
-			compareFlags = nbt.getInteger("CompareFlags");
+		if (nbt.hasKey(NBT_COMPARE_FLAGS)) {
+			compareFlags = nbt.getInteger(NBT_COMPARE_FLAGS);
 		}
 
 		InventoryUtils.restoreInventory(this, nbt);
@@ -160,7 +158,7 @@ public class TileImporter extends TileMachine implements IInventory {
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 
-		nbt.setInteger("CompareFlags", compareFlags);
+		nbt.setInteger(NBT_COMPARE_FLAGS, compareFlags);
 
 		InventoryUtils.saveInventory(this, nbt);
 	}

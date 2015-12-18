@@ -1,7 +1,6 @@
 package storagecraft.gui;
 
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
@@ -11,7 +10,7 @@ import storagecraft.network.MessageImporterUpdate;
 import storagecraft.tile.TileImporter;
 import storagecraft.util.InventoryUtils;
 
-public class GuiImporter extends GuiContainer {
+public class GuiImporter extends GuiMachine {
 	public static final ResourceLocation IMPORTER_RESOURCE = new ResourceLocation("storagecraft:textures/gui/importer.png");
 
 	private TileImporter importer;
@@ -22,7 +21,7 @@ public class GuiImporter extends GuiContainer {
 	private GuiButton compareDamage;
 
 	public GuiImporter(ContainerImporter container, TileImporter importer) {
-		super(container);
+		super(container, importer);
 
 		this.xSize = 176;
 		this.ySize = 182;
@@ -37,8 +36,8 @@ public class GuiImporter extends GuiContainer {
 		int x = (this.width - xSize) / 2;
 		int y = (this.height - ySize) / 2;
 
-		buttonList.add(compareNBT = new GuiButton(0, x + 7, y + 41, 100, 20, "..."));
-		buttonList.add(compareDamage = new GuiButton(1, x + 7, y + 63, 120, 20, "..."));
+		buttonList.add(compareNBT = new GuiButton(1, x + 7, y + 41, 100, 20, "..."));
+		buttonList.add(compareDamage = new GuiButton(2, x + 7, y + 63, 120, 20, "..."));
 	}
 
 	@Override
@@ -77,12 +76,16 @@ public class GuiImporter extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
+
 		fontRendererObj.drawString(StatCollector.translateToLocal("gui.storagecraft:importer"), 7, 7, 4210752);
 		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 7, 89, 4210752);
 	}
 
 	@Override
 	protected void actionPerformed(GuiButton button) {
+		super.actionPerformed(button);
+
 		int flags = compareFlags;
 
 		if (button.id == compareNBT.id) {

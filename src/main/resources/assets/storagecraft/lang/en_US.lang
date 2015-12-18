@@ -3,6 +3,7 @@ itemGroup.storagecraft=StorageCraft
 gui.storagecraft:controller=Controller
 gui.storagecraft:grid=Grid
 gui.storagecraft:drive=Drive
+gui.storagecraft:storageProxy=Storage Proxy
 gui.storagecraft:importer=Importer
 
 misc.storagecraft:energyStored=%d / %d RF
@@ -16,6 +17,10 @@ misc.storagecraft:compareDamage=Compare Damage
 
 misc.storagecraft:on=On
 misc.storagecraft:off=Off
+
+misc.storagecraft:redstoneMode.0=Ignore
+misc.storagecraft:redstoneMode.1=High
+misc.storagecraft:redstoneMode.2=Low
 
 block.storagecraft:controller.name=Controller
 block.storagecraft:cable.name=Cable

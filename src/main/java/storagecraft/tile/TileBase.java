@@ -21,7 +21,7 @@ public class TileBase extends TileEntity {
 	public void updateEntity() {
 		super.updateEntity();
 
-		++ticks;
+		ticks++;
 
 		if (!worldObj.isRemote) {
 			if (this instanceof INetworkTile) {

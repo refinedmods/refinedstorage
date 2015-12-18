@@ -10,10 +10,12 @@ import storagecraft.container.ContainerController;
 import storagecraft.container.ContainerDrive;
 import storagecraft.container.ContainerGrid;
 import storagecraft.container.ContainerImporter;
+import storagecraft.container.ContainerStorageProxy;
 import storagecraft.tile.TileController;
 import storagecraft.tile.TileDrive;
 import storagecraft.tile.TileGrid;
 import storagecraft.tile.TileImporter;
+import storagecraft.tile.TileStorageProxy;
 
 public class GuiHandler implements IGuiHandler {
 	private Container getContainer(int ID, EntityPlayer player, TileEntity tile) {
@@ -24,6 +26,8 @@ public class GuiHandler implements IGuiHandler {
 				return new ContainerGrid(player);
 			case StorageCraft.GUI.DRIVE:
 				return new ContainerDrive(player, (TileDrive) tile);
+			case StorageCraft.GUI.STORAGE_PROXY:
+				return new ContainerStorageProxy(player);
 			case StorageCraft.GUI.IMPORTER:
 				return new ContainerImporter(player, (TileImporter) tile);
 			default:
@@ -46,7 +50,9 @@ public class GuiHandler implements IGuiHandler {
 			case StorageCraft.GUI.GRID:
 				return new GuiGrid((ContainerGrid) getContainer(ID, player, tile), (TileGrid) tile);
 			case StorageCraft.GUI.DRIVE:
-				return new GuiDrive((ContainerDrive) getContainer(ID, player, tile));
+				return new GuiDrive((ContainerDrive) getContainer(ID, player, tile), (TileDrive) tile);
+			case StorageCraft.GUI.STORAGE_PROXY:
+				return new GuiStorageProxy((ContainerStorageProxy) getContainer(ID, player, tile), (TileStorageProxy) tile);
 			case StorageCraft.GUI.IMPORTER:
 				return new GuiImporter((ContainerImporter) getContainer(ID, player, tile), (TileImporter) tile);
 			default:

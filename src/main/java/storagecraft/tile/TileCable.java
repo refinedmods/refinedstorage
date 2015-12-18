@@ -53,7 +53,7 @@ public class TileCable extends TileBase {
 
 			TileEntity tile = worldObj.getTileEntity(x, y, z);
 
-			if (tile instanceof TileMachine) {
+			if (tile instanceof TileMachine && ((TileMachine) tile).isEnabled()) {
 				machines.add((TileMachine) tile);
 
 				visited.add(Vec3.createVectorHelper(x, y, z));
