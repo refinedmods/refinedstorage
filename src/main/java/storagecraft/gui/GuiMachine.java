@@ -46,7 +46,7 @@ public abstract class GuiMachine extends GuiContainer {
 
 			lines.add(StatCollector.translateToLocal("misc.storagecraft:redstoneMode." + machine.getRedstoneMode().id));
 
-			this.drawHoveringText(lines, mx, my, fontRendererObj);
+			drawHoveringText(lines, mx, my, fontRendererObj);
 		}
 	}
 

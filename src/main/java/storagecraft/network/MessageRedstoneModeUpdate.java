@@ -6,7 +6,6 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
-import storagecraft.tile.RedstoneMode;
 import storagecraft.tile.TileMachine;
 
 public class MessageRedstoneModeUpdate implements IMessage, IMessageHandler<MessageRedstoneModeUpdate, IMessage> {
@@ -46,13 +45,7 @@ public class MessageRedstoneModeUpdate implements IMessage, IMessageHandler<Mess
 		if (tile instanceof TileMachine) {
 			TileMachine machine = (TileMachine) tile;
 
-			int id = machine.getRedstoneMode().id + 1;
-
-			if (RedstoneMode.getById(id) == null) {
-				id = 0;
-			}
-
-			machine.setRedstoneMode(RedstoneMode.getById(id));
+			machine.setRedstoneMode(machine.getRedstoneMode().next());
 		}
 
 		return null;

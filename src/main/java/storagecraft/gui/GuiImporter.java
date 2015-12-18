@@ -15,16 +15,15 @@ public class GuiImporter extends GuiMachine {
 
 	private TileImporter importer;
 
-	private int compareFlags;
-
 	private GuiButton compareNBT;
 	private GuiButton compareDamage;
+	private GuiButton mode;
 
 	public GuiImporter(ContainerImporter container, TileImporter importer) {
 		super(container, importer);
 
 		this.xSize = 176;
-		this.ySize = 182;
+		this.ySize = 201;
 
 		this.importer = importer;
 	}
@@ -36,18 +35,18 @@ public class GuiImporter extends GuiMachine {
 		int x = (this.width - xSize) / 2;
 		int y = (this.height - ySize) / 2;
 
-		buttonList.add(compareNBT = new GuiButton(1, x + 7, y + 41, 100, 20, "..."));
-		buttonList.add(compareDamage = new GuiButton(2, x + 7, y + 63, 120, 20, "..."));
+		buttonList.add(compareNBT = new GuiButton(1, x + 7, y + 41, 100, 20, ""));
+		buttonList.add(compareDamage = new GuiButton(2, x + 7, y + 63, 120, 20, ""));
+		buttonList.add(mode = new GuiButton(3, x + 7, y + 85, 80, 20, ""));
 	}
 
 	@Override
 	public void updateScreen() {
 		super.updateScreen();
 
-		compareFlags = importer.getCompareFlags();
-
 		compareNBT.displayString = getTextForCompareToggle("NBT", InventoryUtils.COMPARE_NBT);
 		compareDamage.displayString = getTextForCompareToggle("Damage", InventoryUtils.COMPARE_DAMAGE);
+		mode.displayString = StatCollector.translateToLocal("misc.storagecraft:importer.mode." + importer.getMode().id);
 	}
 
 	private String getTextForCompareToggle(String which, int flag) {
@@ -56,7 +55,7 @@ public class GuiImporter extends GuiMachine {
 		builder.append(StatCollector.translateToLocal("misc.storagecraft:compare" + which));
 		builder.append(": ");
 
-		if ((compareFlags & flag) == flag) {
+		if ((importer.getCompareFlags() & flag) == flag) {
 			builder.append(StatCollector.translateToLocal("misc.storagecraft:on"));
 		} else {
 			builder.append(StatCollector.translateToLocal("misc.storagecraft:off"));
@@ -79,14 +78,14 @@ public class GuiImporter extends GuiMachine {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
 		fontRendererObj.drawString(StatCollector.translateToLocal("gui.storagecraft:importer"), 7, 7, 4210752);
-		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 7, 89, 4210752);
+		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 7, 108, 4210752);
 	}
 
 	@Override
 	protected void actionPerformed(GuiButton button) {
 		super.actionPerformed(button);
 
-		int flags = compareFlags;
+		int flags = importer.getCompareFlags();
 
 		if (button.id == compareNBT.id) {
 			flags ^= InventoryUtils.COMPARE_NBT;
@@ -94,6 +93,6 @@ public class GuiImporter extends GuiMachine {
 			flags ^= InventoryUtils.COMPARE_DAMAGE;
 		}
 
-		StorageCraft.NETWORK.sendToServer(new MessageImporterUpdate(importer.xCoord, importer.yCoord, importer.zCoord, flags));
+		StorageCraft.NETWORK.sendToServer(new MessageImporterUpdate(importer.xCoord, importer.yCoord, importer.zCoord, flags, button.id == mode.id));
 	}
 }

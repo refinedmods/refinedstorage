@@ -13,7 +13,7 @@ import storagecraft.network.MessageTileUpdate;
 public class TileBase extends TileEntity {
 	public static final int UPDATE_RANGE = 64;
 
-	private ForgeDirection direction;
+	private ForgeDirection direction = ForgeDirection.UNKNOWN;
 
 	protected int ticks;
 

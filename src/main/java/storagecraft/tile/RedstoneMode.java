@@ -11,6 +11,16 @@ public enum RedstoneMode {
 		this.id = id;
 	}
 
+	public RedstoneMode next() {
+		RedstoneMode next = getById(id + 1);
+
+		if (next == null) {
+			return getById(0);
+		}
+
+		return next;
+	}
+
 	public static RedstoneMode getById(int id) {
 		for (RedstoneMode control : values()) {
 			if (control.id == id) {

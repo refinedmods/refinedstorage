@@ -22,6 +22,9 @@ misc.storagecraft:redstoneMode.0=Negeren
 misc.storagecraft:redstoneMode.1=Hoog
 misc.storagecraft:redstoneMode.2=Laag
 
+misc.storagecraft:importer.mode.0=Whitelist
+misc.storagecraft:importer.mode.1=Blacklist
+
 block.storagecraft:controller.name=Controleur
 block.storagecraft:cable.name=Kabel
 block.storagecraft:grid.name=Rooster

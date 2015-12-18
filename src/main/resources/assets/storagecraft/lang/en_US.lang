@@ -22,6 +22,9 @@ misc.storagecraft:redstoneMode.0=Ignore
 misc.storagecraft:redstoneMode.1=High
 misc.storagecraft:redstoneMode.2=Low
 
+misc.storagecraft:importer.mode.0=Whitelist
+misc.storagecraft:importer.mode.1=Blacklist
+
 block.storagecraft:controller.name=Controller
 block.storagecraft:cable.name=Cable
 block.storagecraft:grid.name=Grid
