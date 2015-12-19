@@ -27,7 +27,8 @@ misc.storagecraft:importer.mode.0=Whitelist
 misc.storagecraft:importer.mode.1=Blacklist
 
 block.storagecraft:controller.name=Controller
-block.storagecraft:cable.name=Cable
+block.storagecraft:cable.0.name=Cable
+block.storagecraft:cable.1.name=Sensitive Cable
 block.storagecraft:grid.name=Grid
 block.storagecraft:drive.name=Drive
 block.storagecraft:storageProxy.name=Storage Proxy

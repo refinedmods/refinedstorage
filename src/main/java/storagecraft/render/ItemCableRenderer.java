@@ -2,9 +2,11 @@ package storagecraft.render;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
+import org.lwjgl.opengl.GL11;
+import storagecraft.render.model.CableModel;
 
 public class ItemCableRenderer implements IItemRenderer {
-	public static final BlockCableRenderer CABLE_RENDERER = new BlockCableRenderer();
+	public static final CableModel CABLE_MODEL = new CableModel();
 
 	@Override
 	public boolean handleRenderType(ItemStack item, ItemRenderType type) {
@@ -18,6 +20,10 @@ public class ItemCableRenderer implements IItemRenderer {
 
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
-		CABLE_RENDERER.renderTileEntityAt(null, 0, 0, 0, 0);
+		GL11.glPushMatrix();
+
+		CABLE_MODEL.render(item, 0.0625F);
+
+		GL11.glPopMatrix();
 	}
 }

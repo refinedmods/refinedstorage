@@ -27,7 +27,8 @@ misc.storagecraft:importer.mode.0=Whitelist
 misc.storagecraft:importer.mode.1=Blacklist
 
 block.storagecraft:controller.name=Controleur
-block.storagecraft:cable.name=Kabel
+block.storagecraft:cable.0.name=Kabel
+block.storagecraft:cable.1.name=Gevoelige Kabel
 block.storagecraft:grid.name=Rooster
 block.storagecraft:drive.name=Schijf
 block.storagecraft:storageProxy.name=Opslag Proxy

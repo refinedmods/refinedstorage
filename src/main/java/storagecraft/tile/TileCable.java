@@ -25,6 +25,14 @@ public class TileCable extends TileBase {
 		return true;
 	}
 
+	public boolean isPowered() {
+		return worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+	}
+
+	public boolean isSensitiveCable() {
+		return worldObj.getBlockMetadata(xCoord, yCoord, zCoord) == 1;
+	}
+
 	public void addMachines(List<Vec3> visited, List<TileMachine> machines, TileController controller) {
 		for (Vec3 visitedBlock : visited) {
 			if (visitedBlock.xCoord == xCoord && visitedBlock.yCoord == yCoord && visitedBlock.zCoord == zCoord) {
@@ -58,7 +66,11 @@ public class TileCable extends TileBase {
 
 				visited.add(Vec3.createVectorHelper(x, y, z));
 			} else if (tile instanceof TileCable) {
-				((TileCable) tile).addMachines(visited, machines, controller);
+				TileCable cable = (TileCable) tile;
+
+				if (!cable.isSensitiveCable() || (cable.isSensitiveCable() && !cable.isPowered())) {
+					((TileCable) tile).addMachines(visited, machines, controller);
+				}
 			} else if (tile instanceof TileController && (x != controller.xCoord || y != controller.yCoord || z != controller.zCoord)) {
 				worldObj.createExplosion(null, x, y, z, 4.5f, true);
 			}
