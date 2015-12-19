@@ -42,7 +42,7 @@ public class CellStorage implements IStorage {
 
 			StorageItem item = createItemFromNBT(tag);
 
-			if (item.getMeta().equals(stack)) {
+			if (item.compareNoQuantity(stack)) {
 				tag.setInteger(NBT_ITEM_QUANTITY, item.getQuantity() + stack.stackSize);
 
 				return;
@@ -63,7 +63,7 @@ public class CellStorage implements IStorage {
 	}
 
 	@Override
-	public int take(ItemStack stack) {
+	public ItemStack take(ItemStack stack, int flags) {
 		int quantity = stack.stackSize;
 
 		NBTTagList list = (NBTTagList) cell.stackTagCompound.getTag(NBT_ITEMS);
@@ -73,7 +73,7 @@ public class CellStorage implements IStorage {
 
 			StorageItem item = createItemFromNBT(tag);
 
-			if (item.getMeta().equals(stack)) {
+			if (item.compare(stack, flags)) {
 				if (quantity > item.getQuantity()) {
 					quantity = item.getQuantity();
 				}
@@ -86,11 +86,15 @@ public class CellStorage implements IStorage {
 
 				cell.stackTagCompound.setInteger(NBT_STORED, ItemStorageCell.getStored(cell) - quantity);
 
-				return quantity;
+				ItemStack newItem = item.toItemStack();
+
+				newItem.stackSize = quantity;
+
+				return newItem;
 			}
 		}
 
-		return 0;
+		return null;
 	}
 
 	@Override

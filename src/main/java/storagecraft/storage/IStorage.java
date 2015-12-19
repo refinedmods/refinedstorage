@@ -8,7 +8,7 @@ public interface IStorage {
 
 	public void push(ItemStack stack);
 
-	public int take(ItemStack stack);
+	public ItemStack take(ItemStack stack, int flags);
 
 	public boolean canPush(ItemStack stack);
 }

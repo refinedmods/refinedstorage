@@ -15,6 +15,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import storagecraft.storage.IStorage;
 import storagecraft.storage.IStorageProvider;
 import storagecraft.storage.StorageItem;
+import storagecraft.util.InventoryUtils;
 
 public class TileController extends TileBase implements IEnergyReceiver, INetworkTile {
 	private List<StorageItem> items = new ArrayList<StorageItem>();
@@ -141,7 +142,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
 				StorageItem other = items.get(j);
 
-				if (item.getMeta().equals(other.getMeta())) {
+				if (item.compareNoQuantity(other)) {
 					item.setQuantity(item.getQuantity() + other.getQuantity());
 
 					markedIndexes.add(j);
@@ -181,22 +182,34 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 	}
 
 	public ItemStack take(ItemStack stack) {
-		int needed = stack.stackSize;
-		int took = 0;
+		return take(stack, InventoryUtils.COMPARE_DAMAGE | InventoryUtils.COMPARE_NBT);
+	}
+
+	public ItemStack take(ItemStack stack, int flags) {
+		int requested = stack.stackSize;
+		int receiving = 0;
+
+		ItemStack newStack = null;
 
 		for (IStorage storage : storages) {
-			took += storage.take(stack);
+			ItemStack took = storage.take(stack, flags);
 
-			if (took == needed) {
+			if (took != null) {
+				if (newStack == null) {
+					newStack = took;
+				} else {
+					newStack.stackSize += took.stackSize;
+				}
+
+				receiving += took.stackSize;
+			}
+
+			if (requested == receiving) {
 				break;
 			}
 		}
 
 		syncItems();
-
-		ItemStack newStack = stack.copy();
-
-		newStack.stackSize = took;
 
 		return newStack;
 	}
@@ -270,13 +283,13 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 		buf.writeInt(items.size());
 
 		for (StorageItem item : items) {
-			buf.writeInt(Item.getIdFromItem(item.getMeta().getType()));
+			buf.writeInt(Item.getIdFromItem(item.getType()));
 			buf.writeInt(item.getQuantity());
-			buf.writeInt(item.getMeta().getDamage());
-			buf.writeBoolean(item.getMeta().getTag() != null);
+			buf.writeInt(item.getDamage());
+			buf.writeBoolean(item.getTag() != null);
 
-			if (item.getMeta().getTag() != null) {
-				ByteBufUtils.writeTag(buf, item.getMeta().getTag());
+			if (item.getTag() != null) {
+				ByteBufUtils.writeTag(buf, item.getTag());
 			}
 		}
 	}

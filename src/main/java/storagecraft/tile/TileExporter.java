@@ -29,7 +29,25 @@ public class TileExporter extends TileMachine implements IInventory {
 			IInventory connectedInventory = (IInventory) tile;
 
 			if (ticks % 5 == 0) {
-				// @TODO: ...
+				for (int i = 0; i < inventory.getSizeInventory(); ++i) {
+					ItemStack slot = inventory.getStackInSlot(i);
+
+					if (slot != null) {
+						ItemStack toTake = slot.copy();
+
+						toTake.stackSize = 64;
+
+						ItemStack took = getController().take(toTake, compareFlags);
+
+						if (took != null) {
+							if (InventoryUtils.canPushToInventory(connectedInventory, took)) {
+								InventoryUtils.pushToInventory(connectedInventory, took);
+							} else {
+								getController().push(took);
+							}
+						}
+					}
+				}
 			}
 		}
 	}

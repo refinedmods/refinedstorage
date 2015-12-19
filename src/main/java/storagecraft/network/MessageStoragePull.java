@@ -14,7 +14,7 @@ public class MessageStoragePull implements IMessage, IMessageHandler<MessageStor
 	private int x;
 	private int y;
 	private int z;
-	// @TODO: this won't work when sorting
+	// @TODO: This won't work when sorting
 	private int slot;
 	private boolean half;
 	private boolean shift;
@@ -67,18 +67,21 @@ public class MessageStoragePull implements IMessage, IMessageHandler<MessageStor
 
 				if (message.half && item.getQuantity() > 1) {
 					quantity = item.getQuantity() / 2;
+
+					if (quantity > 64) {
+						quantity = 64;
+					}
 				}
 
-				ItemStack stack = controller.take(item.copy(quantity).toItemStack());
+				ItemStack took = controller.take(item.copy(quantity).toItemStack());
 
-				if (stack.stackSize > 0) {
+				if (took != null) {
 					if (message.shift) {
-						// @TODO: This doesn't work
-						if (!player.inventory.addItemStackToInventory(stack.copy())) {
-							controller.push(stack);
+						if (!player.inventory.addItemStackToInventory(took.copy())) {
+							controller.push(took);
 						}
 					} else {
-						player.inventory.setItemStack(stack);
+						player.inventory.setItemStack(took);
 						player.updateHeldItem();
 					}
 				}

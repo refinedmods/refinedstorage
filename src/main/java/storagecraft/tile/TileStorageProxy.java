@@ -54,11 +54,11 @@ public class TileStorageProxy extends TileMachine implements IStorageProvider, I
 	}
 
 	@Override
-	public int take(ItemStack stack) {
+	public ItemStack take(ItemStack stack, int flags) {
 		IInventory inventory = getInventory();
 
 		if (inventory == null) {
-			return 0;
+			return null;
 		}
 
 		int quantity = stack.stackSize;
@@ -66,7 +66,7 @@ public class TileStorageProxy extends TileMachine implements IStorageProvider, I
 		for (int i = 0; i < inventory.getSizeInventory(); ++i) {
 			ItemStack slot = inventory.getStackInSlot(i);
 
-			if (slot != null && InventoryUtils.compareStackNoQuantity(slot, stack)) {
+			if (slot != null && InventoryUtils.compareStack(slot, stack, flags)) {
 				if (quantity > slot.stackSize) {
 					quantity = slot.stackSize;
 				}
@@ -77,11 +77,15 @@ public class TileStorageProxy extends TileMachine implements IStorageProvider, I
 					inventory.setInventorySlotContents(i, null);
 				}
 
-				return quantity;
+				ItemStack newItem = slot.copy();
+
+				newItem.stackSize = quantity;
+
+				return newItem;
 			}
 		}
 
-		return 0;
+		return null;
 	}
 
 	@Override
