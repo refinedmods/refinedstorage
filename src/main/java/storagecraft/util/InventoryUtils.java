@@ -88,6 +88,30 @@ public class InventoryUtils {
 		}
 	}
 
+	public static void pushToInventorySlot(IInventory inventory, int i, ItemStack stack) {
+		ItemStack slot = inventory.getStackInSlot(i);
+
+		if (slot == null) {
+			inventory.setInventorySlotContents(i, stack);
+		} else if (compareStackNoQuantity(slot, stack)) {
+			slot.stackSize += stack.stackSize;
+		}
+	}
+
+	public static boolean canPushToInventorySlot(IInventory inventory, int i, ItemStack stack) {
+		ItemStack slot = inventory.getStackInSlot(i);
+
+		if (slot == null) {
+			return true;
+		}
+
+		if (!compareStackNoQuantity(slot, stack)) {
+			return false;
+		}
+
+		return slot.stackSize + stack.stackSize < slot.getMaxStackSize();
+	}
+
 	public static void pushToInventory(IInventory inventory, ItemStack stack) {
 		int toGo = stack.stackSize;
 

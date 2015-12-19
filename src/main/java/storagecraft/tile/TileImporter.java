@@ -3,13 +3,14 @@ package storagecraft.tile;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import storagecraft.inventory.InventorySimple;
 import storagecraft.util.InventoryUtils;
 
-public class TileImporter extends TileMachine implements IInventory {
+public class TileImporter extends TileMachine implements IInventory, ISidedInventory {
 	public static final String NBT_COMPARE_FLAGS = "CompareFlags";
 	public static final String NBT_MODE = "Mode";
 
@@ -33,7 +34,7 @@ public class TileImporter extends TileMachine implements IInventory {
 			IInventory connectedInventory = (IInventory) tile;
 
 			if (ticks % 5 == 0) {
-				ItemStack slot;
+				ItemStack slot = connectedInventory.getStackInSlot(currentSlot);
 
 				while ((slot = connectedInventory.getStackInSlot(currentSlot)) == null) {
 					currentSlot++;
@@ -44,10 +45,19 @@ public class TileImporter extends TileMachine implements IInventory {
 				}
 
 				if (slot != null && canImport(slot)) {
-					if (getController().push(slot.copy())) {
+					if (connectedInventory instanceof ISidedInventory) {
+						ISidedInventory sided = (ISidedInventory) connectedInventory;
+
+						if (sided.canExtractItem(currentSlot, slot.copy(), getDirection().getOpposite().ordinal())) {
+							if (getController().push(slot.copy())) {
+								connectedInventory.setInventorySlotContents(currentSlot, null);
+							}
+						}
+					} else if (getController().push(slot.copy())) {
 						connectedInventory.setInventorySlotContents(currentSlot, null);
-						connectedInventory.markDirty();
 					}
+
+					connectedInventory.markDirty();
 				}
 
 				currentSlot++;
@@ -159,6 +169,21 @@ public class TileImporter extends TileMachine implements IInventory {
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
 		return inventory.isItemValidForSlot(slot, stack);
+	}
+
+	@Override
+	public int[] getAccessibleSlotsFromSide(int side) {
+		return new int[] {};
+	}
+
+	@Override
+	public boolean canInsertItem(int slot, ItemStack stack, int side) {
+		return false;
+	}
+
+	@Override
+	public boolean canExtractItem(int slot, ItemStack stack, int side) {
+		return false;
 	}
 
 	@Override
