@@ -51,7 +51,11 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 						TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
 
 						if (tile instanceof TileCable) {
-							((TileCable) tile).addMachines(visitedCables, newMachines, this);
+							TileCable cable = (TileCable) tile;
+
+							if (cable.isActive()) {
+								cable.addMachines(visitedCables, newMachines, this);
+							}
 						}
 					}
 
