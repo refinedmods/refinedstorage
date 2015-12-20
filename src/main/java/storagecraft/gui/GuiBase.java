@@ -25,28 +25,28 @@ public abstract class GuiBase extends GuiContainer {
 	public void initGui() {
 		super.initGui();
 
-		init(getRelativeX(), getRelativeY());
+		init(guiLeft, guiTop);
 	}
 
 	@Override
 	public void updateScreen() {
 		super.updateScreen();
 
-		update(getRelativeX(), getRelativeY());
+		update(guiLeft, guiTop);
 	}
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float renderPartialTicks, int mouseX, int mouseY) {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-		drawBackground(getRelativeX(), getRelativeY(), mouseX, mouseY);
+		drawBackground(guiLeft, guiTop, mouseX, mouseY);
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-		drawForeground(mouseX - ((this.width - xSize) / 2), mouseY - ((this.height - ySize) / 2));
+		drawForeground(mouseX - guiLeft, mouseY - guiTop);
 	}
 
 	public abstract void init(int x, int y);
@@ -57,12 +57,8 @@ public abstract class GuiBase extends GuiContainer {
 
 	public abstract void drawForeground(int mouseX, int mouseY);
 
-	private int getRelativeX() {
-		return (width - xSize) / 2;
-	}
-
-	private int getRelativeY() {
-		return (height - ySize) / 2;
+	protected boolean inBounds(int x, int y, int w, int h, int ox, int oy) {
+		return ox >= x && ox <= x + w && oy >= y && oy <= y + h;
 	}
 
 	protected void bindTexture(String file) {
@@ -73,7 +69,6 @@ public abstract class GuiBase extends GuiContainer {
 		mc.getTextureManager().bindTexture(new ResourceLocation(base, "textures/" + file));
 	}
 
-	// @TODO: inBounds(x, y, width, height, ox, oy)
 	protected void drawItem(int x, int y, ItemStack stack) {
 		drawItem(x, y, stack, false);
 	}
@@ -110,6 +105,7 @@ public abstract class GuiBase extends GuiContainer {
 		fontRendererObj.drawString(message, x, y, color);
 	}
 
+	// https://github.com/AppliedEnergistics/Applied-Energistics-2/blob/master/src/main/java/appeng/client/gui/AEBaseGui.java
 	protected void drawTooltip(int x, int y, String message) {
 		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
 

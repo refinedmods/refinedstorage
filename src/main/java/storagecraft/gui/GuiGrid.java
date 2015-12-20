@@ -93,7 +93,7 @@ public class GuiGrid extends GuiMachine {
 				drawItem(x, y, grid.getController().getItems().get(slot).toItemStack(), true);
 			}
 
-			if ((mouseX >= x && mouseX <= x + 16 && mouseY >= y && mouseY <= y + 16) || !grid.isConnected()) {
+			if (inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isConnected()) {
 				hoveringSlot = slot;
 
 				int color = grid.isConnected() ? -2130706433 : 0xFF5B5B5B;
@@ -133,7 +133,7 @@ public class GuiGrid extends GuiMachine {
 				for (int i = 0; i < container.inventorySlots.size(); ++i) {
 					Slot slot = (Slot) container.inventorySlots.get(i);
 
-					if (func_146978_c(slot.xDisplayPosition, slot.yDisplayPosition, 16, 16, mouseX, mouseY)) {
+					if (inBounds(slot.xDisplayPosition, slot.yDisplayPosition, 16, 16, mouseX - guiLeft, mouseY - guiTop)) {
 						if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
 							StorageCraft.NETWORK.sendToServer(new MessageStoragePush(controller.xCoord, controller.yCoord, controller.zCoord, slot.slotNumber, clickedButton == 1));
 						}

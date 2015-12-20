@@ -38,7 +38,7 @@ public abstract class GuiMachine extends GuiBase {
 	public void drawForeground(int mouseX, int mouseY) {
 		drawItem(redstoneModeX + 2, redstoneModeY + 1, REDSTONE_MODE_ITEM);
 
-		if (mouseX >= redstoneModeX && mouseX <= redstoneModeX + redstoneModeWidth && mouseY >= redstoneModeY && mouseY <= redstoneModeY + redstoneModeHeight) {
+		if (inBounds(redstoneModeX, redstoneModeY, redstoneModeWidth, redstoneModeHeight, mouseX, mouseY)) {
 			drawTooltip(mouseX, mouseY, t("misc.storagecraft:redstoneMode." + machine.getRedstoneMode().id));
 		}
 	}
