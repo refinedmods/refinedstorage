@@ -1,8 +1,6 @@
 package storagecraft.gui;
 
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
 import storagecraft.StorageCraft;
 import storagecraft.container.ContainerImporter;
 import storagecraft.network.MessageImporterUpdate;
@@ -10,8 +8,6 @@ import storagecraft.tile.TileImporter;
 import storagecraft.util.InventoryUtils;
 
 public class GuiImporter extends GuiMachine {
-	public static final ResourceLocation IMPORTER_RESOURCE = new ResourceLocation("storagecraft:textures/gui/importer.png");
-
 	private TileImporter importer;
 
 	private GuiButton compareNBT;
@@ -19,20 +15,14 @@ public class GuiImporter extends GuiMachine {
 	private GuiButton mode;
 
 	public GuiImporter(ContainerImporter container, TileImporter importer) {
-		super(container, importer);
-
-		this.xSize = 176;
-		this.ySize = 201;
+		super(container, 176, 201, importer);
 
 		this.importer = importer;
 	}
 
 	@Override
-	public void initGui() {
-		super.initGui();
-
-		int x = (this.width - xSize) / 2;
-		int y = (this.height - ySize) / 2;
+	public void init(int x, int y) {
+		super.init(x, y);
 
 		buttonList.add(compareNBT = new GuiButton(1, x + 7, y + 41, 100, 20, ""));
 		buttonList.add(compareDamage = new GuiButton(2, x + 7, y + 63, 120, 20, ""));
@@ -40,42 +30,31 @@ public class GuiImporter extends GuiMachine {
 	}
 
 	@Override
-	public void updateScreen() {
-		super.updateScreen();
+	public void update(int x, int y) {
+		super.update(x, y);
 
-		compareNBT.displayString = getTextForCompareToggle("NBT", InventoryUtils.COMPARE_NBT);
-		compareDamage.displayString = getTextForCompareToggle("Damage", InventoryUtils.COMPARE_DAMAGE);
-		mode.displayString = StatCollector.translateToLocal("misc.storagecraft:importer.mode." + importer.getMode().id);
-	}
+		compareNBT.displayString = t("misc.storagecraft:compareNBT") + ": ";
+		compareNBT.displayString += t("misc.storagecraft:" + ((importer.getCompareFlags() & InventoryUtils.COMPARE_NBT) == InventoryUtils.COMPARE_NBT ? "on" : "off"));
 
-	private String getTextForCompareToggle(String which, int flag) {
-		StringBuilder builder = new StringBuilder();
+		compareDamage.displayString = t("misc.storagecraft:compareDamage") + ": ";
+		compareDamage.displayString += t("misc.storagecraft:" + ((importer.getCompareFlags() & InventoryUtils.COMPARE_DAMAGE) == InventoryUtils.COMPARE_DAMAGE ? "on" : "off"));
 
-		builder.append(StatCollector.translateToLocal("misc.storagecraft:compare" + which));
-		builder.append(": ");
-
-		if ((importer.getCompareFlags() & flag) == flag) {
-			builder.append(StatCollector.translateToLocal("misc.storagecraft:on"));
-		} else {
-			builder.append(StatCollector.translateToLocal("misc.storagecraft:off"));
-		}
-
-		return builder.toString();
+		mode.displayString = t("misc.storagecraft:importer.mode." + importer.getMode().id);
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float renderPartialTicks, int mouseX, int mouseY) {
-		mc.getTextureManager().bindTexture(IMPORTER_RESOURCE);
+	public void drawBackground(int x, int y, int mouseX, int mouseY) {
+		bindTexture("gui/importer.png");
 
-		drawTexturedModalRect((this.width - xSize) / 2, (this.height - ySize) / 2, 0, 0, xSize, ySize);
+		drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
+	public void drawForeground(int mouseX, int mouseY) {
+		super.drawForeground(mouseX, mouseY);
 
-		fontRendererObj.drawString(StatCollector.translateToLocal("gui.storagecraft:importer"), 7, 7, 4210752);
-		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 7, 108, 4210752);
+		drawString(7, 7, t("gui.storagecraft:importer"));
+		drawString(7, 108, t("container.inventory"));
 	}
 
 	@Override

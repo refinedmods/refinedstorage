@@ -1,9 +1,6 @@
 package storagecraft.gui;
 
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import storagecraft.StorageCraft;
@@ -14,28 +11,22 @@ import storagecraft.tile.TileController;
 import storagecraft.tile.TileGrid;
 
 public class GuiGrid extends GuiMachine {
-	public static final ResourceLocation GRID_RESOURCE = new ResourceLocation("storagecraft:textures/gui/grid.png");
-
 	private ContainerGrid container;
 	private TileGrid grid;
 
+	private int hoveringSlot;
 	private int offset;
 
-	private int hoveringSlot;
-
 	public GuiGrid(ContainerGrid container, TileGrid grid) {
-		super(container, grid);
+		super(container, 176, 190, grid);
 
 		this.container = container;
 		this.grid = grid;
-
-		this.xSize = 176;
-		this.ySize = 190;
 	}
 
 	@Override
-	public void updateScreen() {
-		super.updateScreen();
+	public void update(int x, int y) {
+		super.update(x, y);
 
 		int wheel = Mouse.getDWheel();
 
@@ -50,7 +41,7 @@ public class GuiGrid extends GuiMachine {
 		}
 	}
 
-	public int getMaxOffset() {
+	private int getMaxOffset() {
 		if (!grid.isConnected()) {
 			return 0;
 		}
@@ -60,7 +51,7 @@ public class GuiGrid extends GuiMachine {
 		return max < 0 ? 0 : max;
 	}
 
-	public boolean canScroll(int delta) {
+	private boolean canScroll(int delta) {
 		if (offset + delta < 0) {
 			return false;
 		}
@@ -68,22 +59,27 @@ public class GuiGrid extends GuiMachine {
 		return offset + delta <= getMaxOffset();
 	}
 
-	@Override
-	protected void drawGuiContainerBackgroundLayer(float renderPartialTicks, int mouseX, int mouseY) {
-		mc.getTextureManager().bindTexture(GRID_RESOURCE);
+	private boolean isHoveringOverValidSlot() {
+		return grid.isConnected() && isHoveringOverSlot() && hoveringSlot < grid.getController().getItems().size();
+	}
 
-		drawTexturedModalRect((this.width - xSize) / 2, (this.height - ySize) / 2, 0, 0, xSize, ySize);
+	private boolean isHoveringOverSlot() {
+		return hoveringSlot >= 0;
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
+	public void drawBackground(int x, int y, int mouseX, int mouseY) {
+		bindTexture("gui/grid.png");
 
-		fontRendererObj.drawString(StatCollector.translateToLocal("gui.storagecraft:grid"), 7, 7, 4210752);
-		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 7, 96, 4210752);
+		drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
+	}
 
-		int mx = mouseX - ((this.width - xSize) / 2);
-		int my = mouseY - ((this.height - ySize) / 2);
+	@Override
+	public void drawForeground(int mouseX, int mouseY) {
+		super.drawForeground(mouseX, mouseY);
+
+		drawString(7, 7, t("gui.storagecraft:grid"));
+		drawString(7, 96, t("container.inventory"));
 
 		int x = 8;
 		int y = 20;
@@ -94,17 +90,15 @@ public class GuiGrid extends GuiMachine {
 
 		for (int i = 0; i < 9 * 4; ++i) {
 			if (grid.isConnected() && slot < grid.getController().getItems().size()) {
-				ItemStack stack = grid.getController().getItems().get(slot).toItemStack();
-
-				itemRender.renderItemAndEffectIntoGUI(fontRendererObj, mc.getTextureManager(), stack, x, y);
-				itemRender.renderItemOverlayIntoGUI(fontRendererObj, mc.getTextureManager(), stack, x, y);
+				drawItem(x, y, grid.getController().getItems().get(slot).toItemStack(), true);
 			}
 
-			if ((mx >= x && mx <= x + 16 && my >= y && my <= y + 16) || !grid.isConnected()) {
+			if ((mouseX >= x && mouseX <= x + 16 && mouseY >= y && mouseY <= y + 16) || !grid.isConnected()) {
 				hoveringSlot = slot;
 
 				int color = grid.isConnected() ? -2130706433 : 0xFF5B5B5B;
 
+				// @TODO: make it so it renders over the item
 				drawGradientRect(x, y, x + 16, y + 16, color, color);
 			}
 
@@ -119,16 +113,8 @@ public class GuiGrid extends GuiMachine {
 		}
 
 		if (isHoveringOverValidSlot()) {
-			renderToolTip(grid.getController().getItems().get(hoveringSlot).toItemStack(), mx, my);
+			drawTooltip(mouseX, mouseY, grid.getController().getItems().get(hoveringSlot).toItemStack());
 		}
-	}
-
-	private boolean isHoveringOverValidSlot() {
-		return grid.isConnected() && isHoveringOverSlot() && hoveringSlot < grid.getController().getItems().size();
-	}
-
-	private boolean isHoveringOverSlot() {
-		return hoveringSlot >= 0;
 	}
 
 	@Override

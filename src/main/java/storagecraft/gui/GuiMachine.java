@@ -1,52 +1,45 @@
 package storagecraft.gui;
 
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.StatCollector;
 import storagecraft.StorageCraft;
 import storagecraft.network.MessageRedstoneModeUpdate;
 import storagecraft.tile.TileMachine;
 
-public abstract class GuiMachine extends GuiContainer {
+public abstract class GuiMachine extends GuiBase {
 	private TileMachine machine;
 
-	private int bx;
-	private int by = 6;
-	private int bw = 20;
-	private int bh = 20;
+	public static final ItemStack REDSTONE_MODE_ITEM = new ItemStack(Items.redstone, 1);
 
-	public GuiMachine(Container container, TileMachine machine) {
-		super(container);
+	private int redstoneModeX;
+	private int redstoneModeY = 6;
+	private int redstoneModeWidth = 20;
+	private int redstoneModeHeight = 20;
 
-		this.bx = xSize - 1;
+	public GuiMachine(Container container, int w, int h, TileMachine machine) {
+		super(container, w, h);
+
+		this.redstoneModeX = w - 1;
 		this.machine = machine;
 	}
 
 	@Override
-	public void initGui() {
-		super.initGui();
-
-		buttonList.add(new GuiButton(0, ((this.width - xSize) / 2) + bx, ((this.height - ySize) / 2) + by, bw, bh, ""));
+	public void init(int x, int y) {
+		buttonList.add(new GuiButton(0, x + redstoneModeX, y + redstoneModeY, redstoneModeWidth, redstoneModeHeight, ""));
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		int mx = mouseX - ((this.width - xSize) / 2);
-		int my = mouseY - ((this.height - ySize) / 2);
+	public void update(int x, int y) {
+	}
 
-		itemRender.renderItemIntoGUI(fontRendererObj, mc.getTextureManager(), new ItemStack(Items.redstone, 1), bx + 2, by + 1);
+	@Override
+	public void drawForeground(int mouseX, int mouseY) {
+		drawItem(redstoneModeX + 2, redstoneModeY + 1, REDSTONE_MODE_ITEM);
 
-		if (mx >= bx && mx <= bx + bw && my >= by && my <= by + bh) {
-			List<String> lines = new ArrayList<String>();
-
-			lines.add(StatCollector.translateToLocal("misc.storagecraft:redstoneMode." + machine.getRedstoneMode().id));
-
-			drawHoveringText(lines, mx, my, fontRendererObj);
+		if (mouseX >= redstoneModeX && mouseX <= redstoneModeX + redstoneModeWidth && mouseY >= redstoneModeY && mouseY <= redstoneModeY + redstoneModeHeight) {
+			drawTooltip(mouseX, mouseY, t("misc.storagecraft:redstoneMode." + machine.getRedstoneMode().id));
 		}
 	}
 

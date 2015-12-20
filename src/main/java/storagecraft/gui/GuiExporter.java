@@ -1,8 +1,6 @@
 package storagecraft.gui;
 
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
 import storagecraft.StorageCraft;
 import storagecraft.container.ContainerExporter;
 import storagecraft.network.MessageExporterUpdate;
@@ -10,69 +8,49 @@ import storagecraft.tile.TileExporter;
 import storagecraft.util.InventoryUtils;
 
 public class GuiExporter extends GuiMachine {
-	public static final ResourceLocation EXPORTER_RESOURCE = new ResourceLocation("storagecraft:textures/gui/exporter.png");
-
 	private TileExporter exporter;
 
 	private GuiButton compareNBT;
 	private GuiButton compareDamage;
 
 	public GuiExporter(ContainerExporter container, TileExporter exporter) {
-		super(container, exporter);
-
-		this.xSize = 176;
-		this.ySize = 186;
+		super(container, 176, 186, exporter);
 
 		this.exporter = exporter;
 	}
 
 	@Override
-	public void initGui() {
-		super.initGui();
-
-		int x = (this.width - xSize) / 2;
-		int y = (this.height - ySize) / 2;
+	public void init(int x, int y) {
+		super.init(x, y);
 
 		buttonList.add(compareNBT = new GuiButton(1, x + 7, y + 41, 100, 20, ""));
 		buttonList.add(compareDamage = new GuiButton(2, x + 7, y + 63, 120, 20, ""));
 	}
 
 	@Override
-	public void updateScreen() {
-		super.updateScreen();
+	public void update(int x, int y) {
+		super.update(x, y);
 
-		compareNBT.displayString = getTextForCompareToggle("NBT", InventoryUtils.COMPARE_NBT);
-		compareDamage.displayString = getTextForCompareToggle("Damage", InventoryUtils.COMPARE_DAMAGE);
-	}
+		compareNBT.displayString = t("misc.storagecraft:compareNBT") + ": ";
+		compareNBT.displayString += t("misc.storagecraft:" + ((exporter.getCompareFlags() & InventoryUtils.COMPARE_NBT) == InventoryUtils.COMPARE_NBT ? "on" : "off"));
 
-	private String getTextForCompareToggle(String which, int flag) {
-		StringBuilder builder = new StringBuilder();
-
-		builder.append(StatCollector.translateToLocal("misc.storagecraft:compare" + which));
-		builder.append(": ");
-
-		if ((exporter.getCompareFlags() & flag) == flag) {
-			builder.append(StatCollector.translateToLocal("misc.storagecraft:on"));
-		} else {
-			builder.append(StatCollector.translateToLocal("misc.storagecraft:off"));
-		}
-
-		return builder.toString();
+		compareDamage.displayString = t("misc.storagecraft:compareDamage") + ": ";
+		compareDamage.displayString += t("misc.storagecraft:" + ((exporter.getCompareFlags() & InventoryUtils.COMPARE_DAMAGE) == InventoryUtils.COMPARE_DAMAGE ? "on" : "off"));
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float renderPartialTicks, int mouseX, int mouseY) {
-		mc.getTextureManager().bindTexture(EXPORTER_RESOURCE);
+	public void drawBackground(int x, int y, int mouseX, int mouseY) {
+		bindTexture("gui/exporter.png");
 
-		drawTexturedModalRect((this.width - xSize) / 2, (this.height - ySize) / 2, 0, 0, xSize, ySize);
+		drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
+	public void drawForeground(int mouseX, int mouseY) {
+		super.drawForeground(mouseX, mouseY);
 
-		fontRendererObj.drawString(StatCollector.translateToLocal("gui.storagecraft:exporter"), 7, 7, 4210752);
-		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 7, 93, 4210752);
+		drawString(7, 7, t("gui.storagecraft:exporter"));
+		drawString(7, 93, t("container.inventory"));
 	}
 
 	@Override

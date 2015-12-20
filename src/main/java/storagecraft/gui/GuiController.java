@@ -1,50 +1,47 @@
 package storagecraft.gui;
 
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
 import storagecraft.container.ContainerController;
 import storagecraft.tile.TileController;
 
-public class GuiController extends GuiContainer {
-	public static final ResourceLocation CONTROLLER_RESOURCE = new ResourceLocation("storagecraft:textures/gui/controller.png");
-
+public class GuiController extends GuiBase {
 	private TileController controller;
 
 	public GuiController(ContainerController container, TileController controller) {
-		super(container);
+		super(container, 176, 190);
 
 		this.controller = controller;
-
-		this.xSize = 176;
-		this.ySize = 190;
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float renderPartialTicks, int mouseX, int mouseY) {
-		mc.getTextureManager().bindTexture(CONTROLLER_RESOURCE);
+	public void init(int x, int y) {
+	}
 
-		int x = (this.width - xSize) / 2;
-		int y = (this.height - ySize) / 2;
+	@Override
+	public void update(int x, int y) {
+	}
+
+	@Override
+	public void drawBackground(int x, int y, int mouseX, int mouseY) {
+		bindTexture("gui/controller.png");
 
 		drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
 
-		int bx = 17;
-		int by = 25;
-		int bw = 16;
-		int bh = 58;
+		int barX = 17;
+		int barY = 25;
+		int barWidth = 16;
+		int barHeight = 58;
 
-		int nbh = (int) ((float) controller.getEnergyStored(null) / (float) controller.getMaxEnergyStored(null) * (float) bh);
+		int barHeightNew = (int) ((float) controller.getEnergyStored(null) / (float) controller.getMaxEnergyStored(null) * (float) barHeight);
 
-		drawTexturedModalRect(x + bx, y + by + bh - nbh, 178, 0, bw, nbh);
+		drawTexturedModalRect(x + barX, y + barY + barHeight - barHeightNew, 178, 0, barWidth, barHeightNew);
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		fontRendererObj.drawString(StatCollector.translateToLocal("gui.storagecraft:controller"), 7, 7, 4210752);
-		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 7, 96, 4210752);
+	public void drawForeground(int mouseX, int mouseY) {
+		drawString(7, 7, t("gui.storagecraft:controller"));
+		drawString(7, 96, t("container.inventory"));
 
-		fontRendererObj.drawString(String.format(StatCollector.translateToLocal("misc.storagecraft:energyStored"), controller.getEnergyStored(null), controller.getMaxEnergyStored(null)), 45, 24, 4210752);
-		fontRendererObj.drawString(String.format(StatCollector.translateToLocal("misc.storagecraft:energyUsage"), controller.getEnergyUsage()), 45, 44, 4210752);
+		drawString(45, 24, t("misc.storagecraft:energyStored", controller.getEnergyStored(null), controller.getMaxEnergyStored(null)));
+		drawString(45, 44, t("misc.storagecraft:energyUsage", controller.getEnergyUsage()));
 	}
 }

@@ -1,29 +1,25 @@
 package storagecraft.gui;
 
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
 import storagecraft.container.ContainerStorageProxy;
 import storagecraft.tile.TileStorageProxy;
 
 public class GuiStorageProxy extends GuiMachine {
-	public static final ResourceLocation STORAGE_PROXY_RESOURCE = new ResourceLocation("storagecraft:textures/gui/storageProxy.png");
-
 	public GuiStorageProxy(ContainerStorageProxy container, TileStorageProxy storageProxy) {
-		super(container, storageProxy);
+		super(container, 176, 131, storageProxy);
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float renderPartialTicks, int mouseX, int mouseY) {
-		mc.getTextureManager().bindTexture(STORAGE_PROXY_RESOURCE);
+	public void drawBackground(int x, int y, int mouseX, int mouseY) {
+		bindTexture("gui/storageProxy.png");
 
-		drawTexturedModalRect((this.width - xSize) / 2, (this.height - ySize) / 2, 0, 0, xSize, ySize);
+		drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
+	public void drawForeground(int mouseX, int mouseY) {
+		super.drawForeground(mouseX, mouseY);
 
-		fontRendererObj.drawString(StatCollector.translateToLocal("gui.storagecraft:storageProxy"), 7, 7, 4210752);
-		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 7, 39, 4210752);
+		drawString(7, 7, t("gui.storagecraft:storageProxy"));
+		drawString(7, 39, t("container.inventory"));
 	}
 }
