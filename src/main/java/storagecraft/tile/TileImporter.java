@@ -10,16 +10,16 @@ import net.minecraft.tileentity.TileEntity;
 import storagecraft.inventory.InventorySimple;
 import storagecraft.util.InventoryUtils;
 
-public class TileImporter extends TileMachine implements IInventory, ISidedInventory {
+public class TileImporter extends TileMachine implements IInventory, ISidedInventory, ICompareSetting {
 	public static final int MODE_WHITELIST = 0;
 	public static final int MODE_BLACKLIST = 1;
 
-	public static final String NBT_COMPARE_FLAGS = "CompareFlags";
+	public static final String NBT_COMPARE = "Compare";
 	public static final String NBT_MODE = "Mode";
 
 	private InventorySimple inventory = new InventorySimple("importer", 9);
 
-	private int compareFlags = 0;
+	private int compare = 0;
 	private int mode = MODE_WHITELIST;
 
 	private int currentSlot = 0;
@@ -81,7 +81,7 @@ public class TileImporter extends TileMachine implements IInventory, ISidedInven
 			if (slot != null) {
 				slots++;
 
-				if (InventoryUtils.compareStack(stack, slot, compareFlags)) {
+				if (InventoryUtils.compareStack(stack, slot, compare)) {
 					if (mode == MODE_WHITELIST) {
 						return true;
 					} else if (mode == MODE_BLACKLIST) {
@@ -98,12 +98,14 @@ public class TileImporter extends TileMachine implements IInventory, ISidedInven
 		return true;
 	}
 
-	public int getCompareFlags() {
-		return compareFlags;
+	@Override
+	public int getCompare() {
+		return compare;
 	}
 
-	public void setCompareFlags(int flags) {
-		this.compareFlags = flags;
+	@Override
+	public void setCompare(int flags) {
+		this.compare = flags;
 	}
 
 	public int getMode() {
@@ -193,8 +195,8 @@ public class TileImporter extends TileMachine implements IInventory, ISidedInven
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 
-		if (nbt.hasKey(NBT_COMPARE_FLAGS)) {
-			compareFlags = nbt.getInteger(NBT_COMPARE_FLAGS);
+		if (nbt.hasKey(NBT_COMPARE)) {
+			compare = nbt.getInteger(NBT_COMPARE);
 		}
 
 		if (nbt.hasKey(NBT_MODE)) {
@@ -208,7 +210,7 @@ public class TileImporter extends TileMachine implements IInventory, ISidedInven
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 
-		nbt.setInteger(NBT_COMPARE_FLAGS, compareFlags);
+		nbt.setInteger(NBT_COMPARE, compare);
 		nbt.setInteger(NBT_MODE, mode);
 
 		InventoryUtils.saveInventory(this, nbt);
@@ -218,7 +220,7 @@ public class TileImporter extends TileMachine implements IInventory, ISidedInven
 	public void fromBytes(ByteBuf buf) {
 		super.fromBytes(buf);
 
-		compareFlags = buf.readInt();
+		compare = buf.readInt();
 		mode = buf.readInt();
 	}
 
@@ -226,7 +228,7 @@ public class TileImporter extends TileMachine implements IInventory, ISidedInven
 	public void toBytes(ByteBuf buf) {
 		super.toBytes(buf);
 
-		buf.writeInt(compareFlags);
+		buf.writeInt(compare);
 		buf.writeInt(mode);
 	}
 }

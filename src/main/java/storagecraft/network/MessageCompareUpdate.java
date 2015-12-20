@@ -6,22 +6,22 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
-import storagecraft.tile.TileExporter;
+import storagecraft.tile.ICompareSetting;
 
-public class MessageExporterUpdate implements IMessage, IMessageHandler<MessageExporterUpdate, IMessage> {
+public class MessageCompareUpdate implements IMessage, IMessageHandler<MessageCompareUpdate, IMessage> {
 	private int x;
 	private int y;
 	private int z;
-	private int compareFlags;
+	private int compare;
 
-	public MessageExporterUpdate() {
+	public MessageCompareUpdate() {
 	}
 
-	public MessageExporterUpdate(int x, int y, int z, int compareFlags) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		this.compareFlags = compareFlags;
+	public MessageCompareUpdate(ICompareSetting setting, int compare) {
+		this.x = setting.getX();
+		this.y = setting.getY();
+		this.z = setting.getZ();
+		this.compare = compare;
 	}
 
 	@Override
@@ -29,7 +29,7 @@ public class MessageExporterUpdate implements IMessage, IMessageHandler<MessageE
 		x = buf.readInt();
 		y = buf.readInt();
 		z = buf.readInt();
-		compareFlags = buf.readInt();
+		compare = buf.readInt();
 	}
 
 	@Override
@@ -37,19 +37,17 @@ public class MessageExporterUpdate implements IMessage, IMessageHandler<MessageE
 		buf.writeInt(x);
 		buf.writeInt(y);
 		buf.writeInt(z);
-		buf.writeInt(compareFlags);
+		buf.writeInt(compare);
 	}
 
 	@Override
-	public IMessage onMessage(MessageExporterUpdate message, MessageContext context) {
+	public IMessage onMessage(MessageCompareUpdate message, MessageContext context) {
 		EntityPlayerMP player = context.getServerHandler().playerEntity;
 
 		TileEntity tile = player.worldObj.getTileEntity(message.x, message.y, message.z);
 
-		if (tile instanceof TileExporter) {
-			TileExporter exporter = (TileExporter) tile;
-
-			exporter.setCompareFlags(message.compareFlags);
+		if (tile instanceof ICompareSetting) {
+			((ICompareSetting) tile).setCompare(message.compare);
 		}
 
 		return null;

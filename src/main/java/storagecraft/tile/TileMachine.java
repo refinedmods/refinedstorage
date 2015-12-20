@@ -3,7 +3,7 @@ package storagecraft.tile;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 
-public abstract class TileMachine extends TileBase implements INetworkTile, IRedstoneControllable {
+public abstract class TileMachine extends TileBase implements INetworkTile, IRedstoneModeSetting {
 	protected boolean connected = false;
 
 	private RedstoneMode redstoneMode = RedstoneMode.LOW;

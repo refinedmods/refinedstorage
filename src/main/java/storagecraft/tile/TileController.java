@@ -15,7 +15,7 @@ import storagecraft.storage.IStorageProvider;
 import storagecraft.storage.StorageItem;
 import storagecraft.util.InventoryUtils;
 
-public class TileController extends TileBase implements IEnergyReceiver, INetworkTile, IRedstoneControllable {
+public class TileController extends TileBase implements IEnergyReceiver, INetworkTile, IRedstoneModeSetting {
 	private List<StorageItem> items = new ArrayList<StorageItem>();
 	private List<IStorage> storages = new ArrayList<IStorage>();
 

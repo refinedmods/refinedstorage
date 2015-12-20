@@ -1,21 +1,16 @@
 package storagecraft.gui;
 
-import net.minecraft.client.gui.GuiButton;
-import storagecraft.StorageCraft;
 import storagecraft.container.ContainerExporter;
+import storagecraft.gui.sidebutton.SideButtonCompare;
 import storagecraft.gui.sidebutton.SideButtonRedstoneMode;
-import storagecraft.network.MessageExporterUpdate;
 import storagecraft.tile.TileExporter;
 import storagecraft.util.InventoryUtils;
 
 public class GuiExporter extends GuiBase {
 	private TileExporter exporter;
 
-	private GuiButton compareNBTButton;
-	private GuiButton compareDamageButton;
-
 	public GuiExporter(ContainerExporter container, TileExporter exporter) {
-		super(container, 176, 186);
+		super(container, 176, 137);
 
 		this.exporter = exporter;
 	}
@@ -24,17 +19,12 @@ public class GuiExporter extends GuiBase {
 	public void init(int x, int y) {
 		addSideButton(new SideButtonRedstoneMode(exporter));
 
-		compareNBTButton = addButton(x + 7, y + 41, 100, 20);
-		compareDamageButton = addButton(x + 7, y + 63, 120, 20);
+		addSideButton(new SideButtonCompare(exporter, "NBT", InventoryUtils.COMPARE_NBT));
+		addSideButton(new SideButtonCompare(exporter, "Damage", InventoryUtils.COMPARE_DAMAGE));
 	}
 
 	@Override
 	public void update(int x, int y) {
-		compareNBTButton.displayString = t("misc.storagecraft:compareNBT") + ": ";
-		compareNBTButton.displayString += t("misc.storagecraft:" + ((exporter.getCompareFlags() & InventoryUtils.COMPARE_NBT) == InventoryUtils.COMPARE_NBT ? "on" : "off"));
-
-		compareDamageButton.displayString = t("misc.storagecraft:compareDamage") + ": ";
-		compareDamageButton.displayString += t("misc.storagecraft:" + ((exporter.getCompareFlags() & InventoryUtils.COMPARE_DAMAGE) == InventoryUtils.COMPARE_DAMAGE ? "on" : "off"));
 	}
 
 	@Override
@@ -47,21 +37,6 @@ public class GuiExporter extends GuiBase {
 	@Override
 	public void drawForeground(int mouseX, int mouseY) {
 		drawString(7, 7, t("gui.storagecraft:exporter"));
-		drawString(7, 93, t("container.inventory"));
-	}
-
-	@Override
-	protected void actionPerformed(GuiButton button) {
-		super.actionPerformed(button);
-
-		int flags = exporter.getCompareFlags();
-
-		if (button == compareNBTButton) {
-			flags ^= InventoryUtils.COMPARE_NBT;
-		} else if (button == compareDamageButton) {
-			flags ^= InventoryUtils.COMPARE_DAMAGE;
-		}
-
-		StorageCraft.NETWORK.sendToServer(new MessageExporterUpdate(exporter.xCoord, exporter.yCoord, exporter.zCoord, flags));
+		drawString(7, 43, t("container.inventory"));
 	}
 }

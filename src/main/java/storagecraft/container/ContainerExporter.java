@@ -12,6 +12,6 @@ public class ContainerExporter extends ContainerBase {
 			addSlotToContainer(new SlotSpecimen(exporter, i, 8 + (18 * i), 20));
 		}
 
-		addPlayerInventory(8, 104);
+		addPlayerInventory(8, 55);
 	}
 }

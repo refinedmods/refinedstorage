@@ -10,12 +10,12 @@ import net.minecraft.tileentity.TileEntity;
 import storagecraft.inventory.InventorySimple;
 import storagecraft.util.InventoryUtils;
 
-public class TileExporter extends TileMachine implements IInventory, ISidedInventory {
-	public static final String NBT_COMPARE_FLAGS = "CompareFlags";
+public class TileExporter extends TileMachine implements IInventory, ISidedInventory, ICompareSetting {
+	public static final String NBT_COMPARE = "Compare";
 
 	private InventorySimple inventory = new InventorySimple("exporter", 9);
 
-	private int compareFlags = 0;
+	private int compare = 0;
 
 	@Override
 	public int getEnergyUsage() {
@@ -38,7 +38,7 @@ public class TileExporter extends TileMachine implements IInventory, ISidedInven
 
 						toTake.stackSize = 64;
 
-						ItemStack took = getController().take(toTake, compareFlags);
+						ItemStack took = getController().take(toTake, compare);
 
 						if (took != null) {
 							if (connectedInventory instanceof ISidedInventory) {
@@ -73,12 +73,14 @@ public class TileExporter extends TileMachine implements IInventory, ISidedInven
 		}
 	}
 
-	public int getCompareFlags() {
-		return compareFlags;
+	@Override
+	public int getCompare() {
+		return compare;
 	}
 
-	public void setCompareFlags(int flags) {
-		this.compareFlags = flags;
+	@Override
+	public void setCompare(int flags) {
+		this.compare = flags;
 	}
 
 	@Override
@@ -160,8 +162,8 @@ public class TileExporter extends TileMachine implements IInventory, ISidedInven
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 
-		if (nbt.hasKey(NBT_COMPARE_FLAGS)) {
-			compareFlags = nbt.getInteger(NBT_COMPARE_FLAGS);
+		if (nbt.hasKey(NBT_COMPARE)) {
+			compare = nbt.getInteger(NBT_COMPARE);
 		}
 
 		InventoryUtils.restoreInventory(this, nbt);
@@ -171,7 +173,7 @@ public class TileExporter extends TileMachine implements IInventory, ISidedInven
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 
-		nbt.setInteger(NBT_COMPARE_FLAGS, compareFlags);
+		nbt.setInteger(NBT_COMPARE, compare);
 
 		InventoryUtils.saveInventory(this, nbt);
 	}
@@ -180,13 +182,13 @@ public class TileExporter extends TileMachine implements IInventory, ISidedInven
 	public void fromBytes(ByteBuf buf) {
 		super.fromBytes(buf);
 
-		compareFlags = buf.readInt();
+		compare = buf.readInt();
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
 		super.toBytes(buf);
 
-		buf.writeInt(compareFlags);
+		buf.writeInt(compare);
 	}
 }
