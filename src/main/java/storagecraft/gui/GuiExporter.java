@@ -19,8 +19,8 @@ public class GuiExporter extends GuiBase {
 	public void init(int x, int y) {
 		addSideButton(new SideButtonRedstoneMode(exporter));
 
-		addSideButton(new SideButtonCompare(exporter, "NBT", InventoryUtils.COMPARE_NBT));
-		addSideButton(new SideButtonCompare(exporter, "Damage", InventoryUtils.COMPARE_DAMAGE));
+		addSideButton(new SideButtonCompare(exporter, InventoryUtils.COMPARE_DAMAGE));
+		addSideButton(new SideButtonCompare(exporter, InventoryUtils.COMPARE_NBT));
 	}
 
 	@Override

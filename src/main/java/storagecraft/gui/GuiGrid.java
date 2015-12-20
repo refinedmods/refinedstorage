@@ -9,6 +9,8 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import storagecraft.StorageCraft;
 import storagecraft.container.ContainerGrid;
+import storagecraft.gui.sidebutton.SideButtonGridSortingDirection;
+import storagecraft.gui.sidebutton.SideButtonGridSortingType;
 import storagecraft.gui.sidebutton.SideButtonRedstoneMode;
 import storagecraft.network.MessageStoragePull;
 import storagecraft.network.MessageStoragePush;
@@ -17,6 +19,15 @@ import storagecraft.tile.TileController;
 import storagecraft.tile.TileGrid;
 
 public class GuiGrid extends GuiBase {
+	public static final int SORTING_DIRECTION_ASCENDING = 0;
+	public static final int SORTING_DIRECTION_DESCENDING = 1;
+
+	public static final int SORTING_TYPE_COUNT = 0;
+	public static final int SORTING_TYPE_NAME = 1;
+
+	public static int SORTING_DIRECTION = SORTING_DIRECTION_ASCENDING;
+	public static int SORTING_TYPE = SORTING_TYPE_COUNT;
+
 	private ContainerGrid container;
 	private TileGrid grid;
 
@@ -37,6 +48,9 @@ public class GuiGrid extends GuiBase {
 	@Override
 	public void init(int x, int y) {
 		addSideButton(new SideButtonRedstoneMode(grid));
+
+		addSideButton(new SideButtonGridSortingDirection());
+		addSideButton(new SideButtonGridSortingType());
 
 		searchField = new GuiTextField(fontRendererObj, x + 80 + 1, y + 6 + 1, 88 - 6, fontRendererObj.FONT_HEIGHT);
 		searchField.setEnableBackgroundDrawing(false);

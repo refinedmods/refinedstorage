@@ -17,9 +17,9 @@ public class SideButtonImporterMode extends SideButton {
 	public String getTooltip(GuiBase gui) {
 		StringBuilder builder = new StringBuilder();
 
-		builder.append(EnumChatFormatting.GREEN).append("Mode").append(EnumChatFormatting.RESET).append("\n");
+		builder.append(EnumChatFormatting.GREEN).append(gui.t("sidebutton.storagecraft:importer.mode")).append(EnumChatFormatting.RESET).append("\n");
 
-		builder.append(gui.t("misc.storagecraft:importer.mode." + importer.getMode()));
+		builder.append(gui.t("sidebutton.storagecraft:importer.mode." + importer.getMode()));
 
 		return builder.toString();
 	}

@@ -19,9 +19,9 @@ public class SideButtonRedstoneMode extends SideButton {
 	public String getTooltip(GuiBase gui) {
 		StringBuilder builder = new StringBuilder();
 
-		builder.append(EnumChatFormatting.RED).append("Redstone Mode").append(EnumChatFormatting.RESET).append("\n");
+		builder.append(EnumChatFormatting.RED).append(gui.t("sidebutton.storagecraft:redstoneMode")).append(EnumChatFormatting.RESET).append("\n");
 
-		builder.append(gui.t("misc.storagecraft:redstoneMode." + setting.getRedstoneMode().id));
+		builder.append(gui.t("sidebutton.storagecraft:redstoneMode." + setting.getRedstoneMode().id));
 
 		return builder.toString();
 	}

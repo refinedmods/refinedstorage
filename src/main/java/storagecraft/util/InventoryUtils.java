@@ -171,14 +171,14 @@ public class InventoryUtils {
 	}
 
 	public static boolean compareStack(ItemStack first, ItemStack second, int flags) {
-		if ((flags & COMPARE_NBT) == COMPARE_NBT) {
-			if (first.stackTagCompound != null && !first.stackTagCompound.equals(second.stackTagCompound)) {
+		if ((flags & COMPARE_DAMAGE) == COMPARE_DAMAGE) {
+			if (first.getItemDamage() != second.getItemDamage()) {
 				return false;
 			}
 		}
 
-		if ((flags & COMPARE_DAMAGE) == COMPARE_DAMAGE) {
-			if (first.getItemDamage() != second.getItemDamage()) {
+		if ((flags & COMPARE_NBT) == COMPARE_NBT) {
+			if (first.stackTagCompound != null && !first.stackTagCompound.equals(second.stackTagCompound)) {
 				return false;
 			}
 		}

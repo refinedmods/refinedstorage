@@ -8,12 +8,10 @@ import storagecraft.tile.ICompareSetting;
 
 public class SideButtonCompare extends SideButton {
 	private ICompareSetting setting;
-	private String name;
 	private int mask;
 
-	public SideButtonCompare(ICompareSetting setting, String name, int mask) {
+	public SideButtonCompare(ICompareSetting setting, int mask) {
 		this.setting = setting;
-		this.name = name;
 		this.mask = mask;
 	}
 
@@ -21,12 +19,12 @@ public class SideButtonCompare extends SideButton {
 	public String getTooltip(GuiBase gui) {
 		StringBuilder builder = new StringBuilder();
 
-		builder.append(EnumChatFormatting.YELLOW).append(gui.t("misc.storagecraft:compare" + name)).append(EnumChatFormatting.RESET).append("\n");
+		builder.append(EnumChatFormatting.YELLOW).append(gui.t("sidebutton.storagecraft:compare." + mask)).append(EnumChatFormatting.RESET).append("\n");
 
 		if ((setting.getCompare() & mask) == mask) {
-			builder.append(gui.t("misc.storagecraft:on"));
+			builder.append(gui.t("misc.storagecraft:yes"));
 		} else {
-			builder.append(gui.t("misc.storagecraft:off"));
+			builder.append(gui.t("misc.storagecraft:no"));
 		}
 
 		return builder.toString();

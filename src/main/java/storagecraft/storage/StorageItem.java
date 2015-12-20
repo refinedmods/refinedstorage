@@ -104,14 +104,14 @@ public class StorageItem {
 	}
 
 	public boolean compare(StorageItem other, int flags) {
-		if ((flags & InventoryUtils.COMPARE_NBT) == InventoryUtils.COMPARE_NBT) {
-			if (tag != null && !tag.equals(other.getTag())) {
+		if ((flags & InventoryUtils.COMPARE_DAMAGE) == InventoryUtils.COMPARE_DAMAGE) {
+			if (damage != other.getDamage()) {
 				return false;
 			}
 		}
 
-		if ((flags & InventoryUtils.COMPARE_DAMAGE) == InventoryUtils.COMPARE_DAMAGE) {
-			if (damage != other.getDamage()) {
+		if ((flags & InventoryUtils.COMPARE_NBT) == InventoryUtils.COMPARE_NBT) {
+			if (tag != null && !tag.equals(other.getTag())) {
 				return false;
 			}
 		}
@@ -126,14 +126,14 @@ public class StorageItem {
 	}
 
 	public boolean compare(ItemStack stack, int flags) {
-		if ((flags & InventoryUtils.COMPARE_NBT) == InventoryUtils.COMPARE_NBT) {
-			if (tag != null && !tag.equals(stack.stackTagCompound)) {
+		if ((flags & InventoryUtils.COMPARE_DAMAGE) == InventoryUtils.COMPARE_DAMAGE) {
+			if (damage != stack.getItemDamage()) {
 				return false;
 			}
 		}
 
-		if ((flags & InventoryUtils.COMPARE_DAMAGE) == InventoryUtils.COMPARE_DAMAGE) {
-			if (damage != stack.getItemDamage()) {
+		if ((flags & InventoryUtils.COMPARE_NBT) == InventoryUtils.COMPARE_NBT) {
+			if (tag != null && !tag.equals(stack.stackTagCompound)) {
 				return false;
 			}
 		}

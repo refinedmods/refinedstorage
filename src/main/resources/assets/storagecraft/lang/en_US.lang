@@ -13,18 +13,28 @@ misc.storagecraft:energyUsage=Usage: %d RF/t
 misc.storagecraft:storageCellStored=Stored: %d
 misc.storagecraft:storageCellStoredWithCapacity=Stored: %d / %d
 
-misc.storagecraft:compareNBT=Compare NBT
-misc.storagecraft:compareDamage=Compare Damage
+sidebutton.storagecraft:compare.1=Compare Damage
+sidebutton.storagecraft:compare.2=Compare NBT
 
-misc.storagecraft:on=On
-misc.storagecraft:off=Off
+sidebutton.storagecraft:redstoneMode=Redstone Mode
+sidebutton.storagecraft:redstoneMode.0=Ignore
+sidebutton.storagecraft:redstoneMode.1=High
+sidebutton.storagecraft:redstoneMode.2=Low
 
-misc.storagecraft:redstoneMode.0=Ignore
-misc.storagecraft:redstoneMode.1=High
-misc.storagecraft:redstoneMode.2=Low
+sidebutton.storagecraft:sorting.direction=Sorting Direction
+sidebutton.storagecraft:sorting.direction.0=Ascending
+sidebutton.storagecraft:sorting.direction.1=Descending
 
-misc.storagecraft:importer.mode.0=Whitelist
-misc.storagecraft:importer.mode.1=Blacklist
+sidebutton.storagecraft:sorting.type=Sorting Type
+sidebutton.storagecraft:sorting.type.0=Item Count
+sidebutton.storagecraft:sorting.type.1=Item Name
+
+sidebutton.storagecraft:importer.mode=Mode
+sidebutton.storagecraft:importer.mode.0=Whitelist
+sidebutton.storagecraft:importer.mode.1=Blacklist
+
+misc.storagecraft:yes=Yes
+misc.storagecraft:no=No
 
 block.storagecraft:controller.name=Controller
 block.storagecraft:cable.0.name=Cable
