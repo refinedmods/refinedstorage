@@ -13,7 +13,7 @@ import storagecraft.StorageCraft;
 import storagecraft.tile.TileBase;
 import storagecraft.util.InventoryUtils;
 
-public class BlockBase extends Block {
+public abstract class BlockBase extends Block {
 	private String name;
 
 	public BlockBase(String name) {

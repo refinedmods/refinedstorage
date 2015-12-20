@@ -10,8 +10,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 import storagecraft.StorageCraft;
 import storagecraft.network.MessageTileUpdate;
 
-public class TileBase extends TileEntity {
-	public static final int UPDATE_RANGE = 64;
+public abstract class TileBase extends TileEntity {
+	public static final int UPDATE_RANGE = 256;
 
 	private ForgeDirection direction = ForgeDirection.UNKNOWN;
 

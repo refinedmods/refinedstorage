@@ -39,7 +39,7 @@ public class GuiImporter extends GuiMachine {
 		compareDamage.displayString = t("misc.storagecraft:compareDamage") + ": ";
 		compareDamage.displayString += t("misc.storagecraft:" + ((importer.getCompareFlags() & InventoryUtils.COMPARE_DAMAGE) == InventoryUtils.COMPARE_DAMAGE ? "on" : "off"));
 
-		mode.displayString = t("misc.storagecraft:importer.mode." + importer.getMode().id);
+		mode.displayString = t("misc.storagecraft:importer.mode." + importer.getMode());
 	}
 
 	@Override

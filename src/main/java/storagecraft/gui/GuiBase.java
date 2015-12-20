@@ -49,14 +49,6 @@ public abstract class GuiBase extends GuiContainer {
 		drawForeground(mouseX - guiLeft, mouseY - guiTop);
 	}
 
-	public abstract void init(int x, int y);
-
-	public abstract void update(int x, int y);
-
-	public abstract void drawBackground(int x, int y, int mouseX, int mouseY);
-
-	public abstract void drawForeground(int mouseX, int mouseY);
-
 	protected boolean inBounds(int x, int y, int w, int h, int ox, int oy) {
 		return ox >= x && ox <= x + w && oy >= y && oy <= y + h;
 	}
@@ -204,4 +196,12 @@ public abstract class GuiBase extends GuiContainer {
 	protected String t(String name, Object... format) {
 		return StatCollector.translateToLocalFormatted(name, format);
 	}
+
+	public abstract void init(int x, int y);
+
+	public abstract void update(int x, int y);
+
+	public abstract void drawBackground(int x, int y, int mouseX, int mouseY);
+
+	public abstract void drawForeground(int mouseX, int mouseY);
 }

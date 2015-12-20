@@ -11,13 +11,16 @@ import storagecraft.inventory.InventorySimple;
 import storagecraft.util.InventoryUtils;
 
 public class TileImporter extends TileMachine implements IInventory, ISidedInventory {
+	public static final int MODE_WHITELIST = 0;
+	public static final int MODE_BLACKLIST = 1;
+
 	public static final String NBT_COMPARE_FLAGS = "CompareFlags";
 	public static final String NBT_MODE = "Mode";
 
 	private InventorySimple inventory = new InventorySimple("importer", 9);
 
 	private int compareFlags = 0;
-	private ImporterMode mode = ImporterMode.WHITELIST;
+	private int mode = MODE_WHITELIST;
 
 	private int currentSlot = 0;
 
@@ -79,16 +82,16 @@ public class TileImporter extends TileMachine implements IInventory, ISidedInven
 				slots++;
 
 				if (InventoryUtils.compareStack(stack, slot, compareFlags)) {
-					if (mode == ImporterMode.WHITELIST) {
+					if (mode == MODE_WHITELIST) {
 						return true;
-					} else if (mode == ImporterMode.BLACKLIST) {
+					} else if (mode == MODE_BLACKLIST) {
 						return false;
 					}
 				}
 			}
 		}
 
-		if (mode == ImporterMode.WHITELIST) {
+		if (mode == MODE_WHITELIST) {
 			return slots == 0;
 		}
 
@@ -103,11 +106,11 @@ public class TileImporter extends TileMachine implements IInventory, ISidedInven
 		this.compareFlags = flags;
 	}
 
-	public ImporterMode getMode() {
+	public int getMode() {
 		return mode;
 	}
 
-	public void setMode(ImporterMode mode) {
+	public void setMode(int mode) {
 		this.mode = mode;
 	}
 
@@ -195,7 +198,7 @@ public class TileImporter extends TileMachine implements IInventory, ISidedInven
 		}
 
 		if (nbt.hasKey(NBT_MODE)) {
-			mode = ImporterMode.getById(nbt.getInteger(NBT_MODE));
+			mode = nbt.getInteger(NBT_MODE);
 		}
 
 		InventoryUtils.restoreInventory(this, nbt);
@@ -206,7 +209,7 @@ public class TileImporter extends TileMachine implements IInventory, ISidedInven
 		super.writeToNBT(nbt);
 
 		nbt.setInteger(NBT_COMPARE_FLAGS, compareFlags);
-		nbt.setInteger(NBT_MODE, mode.id);
+		nbt.setInteger(NBT_MODE, mode);
 
 		InventoryUtils.saveInventory(this, nbt);
 	}
@@ -216,7 +219,7 @@ public class TileImporter extends TileMachine implements IInventory, ISidedInven
 		super.fromBytes(buf);
 
 		compareFlags = buf.readInt();
-		mode = ImporterMode.getById(buf.readInt());
+		mode = buf.readInt();
 	}
 
 	@Override
@@ -224,6 +227,6 @@ public class TileImporter extends TileMachine implements IInventory, ISidedInven
 		super.toBytes(buf);
 
 		buf.writeInt(compareFlags);
-		buf.writeInt(mode.id);
+		buf.writeInt(mode);
 	}
 }

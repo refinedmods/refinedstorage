@@ -56,7 +56,7 @@ public class MessageImporterUpdate implements IMessage, IMessageHandler<MessageI
 			importer.setCompareFlags(message.compareFlags);
 
 			if (message.nextMode) {
-				importer.setMode(importer.getMode().next());
+				importer.setMode(importer.getMode() == TileImporter.MODE_WHITELIST ? TileImporter.MODE_BLACKLIST : TileImporter.MODE_WHITELIST);
 			}
 		}
 
