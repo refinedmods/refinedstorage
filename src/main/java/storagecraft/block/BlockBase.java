@@ -31,6 +31,29 @@ public abstract class BlockBase extends Block {
 	}
 
 	@Override
+	public boolean rotateBlock(World world, int x, int y, int z, ForgeDirection axis) {
+		TileEntity tile = world.getTileEntity(x, y, z);
+
+		if (tile instanceof TileBase) {
+			ForgeDirection dir = ((TileBase) tile).getDirection();
+
+			int newDir = dir.ordinal() + 1;
+
+			if (newDir > ForgeDirection.VALID_DIRECTIONS.length - 1) {
+				newDir = 0;
+			}
+
+			((TileBase) tile).setDirection(ForgeDirection.getOrientation(newDir));
+
+			world.markBlockForUpdate(x, y, z);
+
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack itemStack) {
 		super.onBlockPlacedBy(world, x, y, z, entityLiving, itemStack);
 
