@@ -3,7 +3,6 @@ package storagecraft.gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-import org.lwjgl.opengl.GL11;
 import storagecraft.StorageCraft;
 import storagecraft.container.ContainerExporter;
 import storagecraft.network.MessageExporterUpdate;
@@ -63,8 +62,6 @@ public class GuiExporter extends GuiMachine {
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float renderPartialTicks, int mouseX, int mouseY) {
-		GL11.glColor3f(1.0F, 1.0F, 1.0F);
-
 		mc.getTextureManager().bindTexture(EXPORTER_RESOURCE);
 
 		drawTexturedModalRect((this.width - xSize) / 2, (this.height - ySize) / 2, 0, 0, xSize, ySize);

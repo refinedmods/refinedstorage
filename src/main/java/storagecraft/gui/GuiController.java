@@ -3,7 +3,6 @@ package storagecraft.gui;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-import org.lwjgl.opengl.GL11;
 import storagecraft.container.ContainerController;
 import storagecraft.tile.TileController;
 
@@ -23,8 +22,6 @@ public class GuiController extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float renderPartialTicks, int mouseX, int mouseY) {
-		GL11.glColor3f(1.0F, 1.0F, 1.0F);
-
 		mc.getTextureManager().bindTexture(CONTROLLER_RESOURCE);
 
 		int x = (this.width - xSize) / 2;

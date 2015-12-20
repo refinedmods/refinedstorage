@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.input.Mouse;
 import storagecraft.StorageCraft;
 import storagecraft.container.ContainerGrid;
 import storagecraft.network.MessageStoragePull;
@@ -18,6 +18,8 @@ public class GuiGrid extends GuiMachine {
 
 	private ContainerGrid container;
 	private TileGrid grid;
+
+	private int offset;
 
 	private int hoveringSlot;
 
@@ -32,9 +34,42 @@ public class GuiGrid extends GuiMachine {
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float renderPartialTicks, int mouseX, int mouseY) {
-		GL11.glColor3f(1.0F, 1.0F, 1.0F);
+	public void updateScreen() {
+		super.updateScreen();
 
+		int wheel = Mouse.getDWheel();
+
+		wheel = Math.max(Math.min(-wheel, 1), -1);
+
+		if (canScroll(wheel)) {
+			offset += wheel;
+		}
+
+		if (offset > getMaxOffset()) {
+			offset = getMaxOffset();
+		}
+	}
+
+	public int getMaxOffset() {
+		if (!grid.isConnected()) {
+			return 0;
+		}
+
+		int max = ((int) Math.ceil((float) grid.getController().getItems().size() / (float) 9)) - 4;
+
+		return max < 0 ? 0 : max;
+	}
+
+	public boolean canScroll(int delta) {
+		if (offset + delta < 0) {
+			return false;
+		}
+
+		return offset + delta <= getMaxOffset();
+	}
+
+	@Override
+	protected void drawGuiContainerBackgroundLayer(float renderPartialTicks, int mouseX, int mouseY) {
 		mc.getTextureManager().bindTexture(GRID_RESOURCE);
 
 		drawTexturedModalRect((this.width - xSize) / 2, (this.height - ySize) / 2, 0, 0, xSize, ySize);
@@ -55,21 +90,25 @@ public class GuiGrid extends GuiMachine {
 
 		hoveringSlot = -1;
 
+		int slot = offset * 9;
+
 		for (int i = 0; i < 9 * 4; ++i) {
-			if (grid.isConnected() && i < grid.getController().getItems().size()) {
-				ItemStack stack = grid.getController().getItems().get(i).toItemStack();
+			if (grid.isConnected() && slot < grid.getController().getItems().size()) {
+				ItemStack stack = grid.getController().getItems().get(slot).toItemStack();
 
 				itemRender.renderItemAndEffectIntoGUI(fontRendererObj, mc.getTextureManager(), stack, x, y);
 				itemRender.renderItemOverlayIntoGUI(fontRendererObj, mc.getTextureManager(), stack, x, y);
 			}
 
 			if ((mx >= x && mx <= x + 16 && my >= y && my <= y + 16) || !grid.isConnected()) {
-				hoveringSlot = i;
+				hoveringSlot = slot;
 
 				int color = grid.isConnected() ? -2130706433 : 0xFF5B5B5B;
 
 				drawGradientRect(x, y, x + 16, y + 16, color, color);
 			}
+
+			slot++;
 
 			x += 18;
 
