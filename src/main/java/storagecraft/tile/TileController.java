@@ -53,7 +53,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 						if (tile instanceof TileCable) {
 							TileCable cable = (TileCable) tile;
 
-							if (cable.isActive()) {
+							if (cable.isEnabled()) {
 								cable.addMachines(visitedCables, newMachines, this);
 							}
 						}

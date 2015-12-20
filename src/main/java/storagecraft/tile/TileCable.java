@@ -33,7 +33,7 @@ public class TileCable extends TileBase {
 		return worldObj.getBlockMetadata(xCoord, yCoord, zCoord) == 1;
 	}
 
-	public boolean isActive() {
+	public boolean isEnabled() {
 		if (isSensitiveCable()) {
 			return !isPowered();
 		}
@@ -73,12 +73,8 @@ public class TileCable extends TileBase {
 				machines.add((TileMachine) tile);
 
 				visited.add(Vec3.createVectorHelper(x, y, z));
-			} else if (tile instanceof TileCable) {
-				TileCable cable = (TileCable) tile;
-
-				if (cable.isActive()) {
-					((TileCable) tile).addMachines(visited, machines, controller);
-				}
+			} else if (tile instanceof TileCable && ((TileCable) tile).isEnabled()) {
+				((TileCable) tile).addMachines(visited, machines, controller);
 			} else if (tile instanceof TileController && (x != controller.xCoord || y != controller.yCoord || z != controller.zCoord)) {
 				worldObj.createExplosion(null, x, y, z, 4.5f, true);
 			}
