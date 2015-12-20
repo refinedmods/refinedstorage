@@ -98,8 +98,9 @@ public class GuiGrid extends GuiMachine {
 
 				int color = grid.isConnected() ? -2130706433 : 0xFF5B5B5B;
 
-				// @TODO: make it so it renders over the item
+				zLevel = 190;
 				drawGradientRect(x, y, x + 16, y + 16, color, color);
+				zLevel = 0;
 			}
 
 			slot++;

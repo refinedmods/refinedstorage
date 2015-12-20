@@ -79,8 +79,8 @@ public abstract class GuiBase extends GuiContainer {
 	}
 
 	protected void drawItem(int x, int y, ItemStack stack, boolean withOverlay) {
-		zLevel = 100.0F;
-		itemRender.zLevel = 100.0F;
+		zLevel = 100;
+		itemRender.zLevel = 100;
 
 		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
 
@@ -98,8 +98,8 @@ public abstract class GuiBase extends GuiContainer {
 
 		GL11.glPopAttrib();
 
-		itemRender.zLevel = 0.0F;
-		zLevel = 0.0F;
+		itemRender.zLevel = 0;
+		zLevel = 0;
 	}
 
 	protected void drawString(int x, int y, String message) {
