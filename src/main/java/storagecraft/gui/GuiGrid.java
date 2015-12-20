@@ -1,6 +1,7 @@
 package storagecraft.gui;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import net.minecraft.client.gui.GuiTextField;
@@ -179,6 +180,41 @@ public class GuiGrid extends GuiBase {
 					t.remove();
 				}
 			}
+		}
+
+		switch (SORTING_TYPE) {
+			case SORTING_TYPE_COUNT:
+				items.sort(new Comparator<StorageItem>() {
+					@Override
+					public int compare(StorageItem o1, StorageItem o2) {
+						switch (SORTING_DIRECTION) {
+							case SORTING_DIRECTION_ASCENDING:
+								return Integer.valueOf(o2.getQuantity()).compareTo(o1.getQuantity());
+							case SORTING_DIRECTION_DESCENDING:
+								return Integer.valueOf(o1.getQuantity()).compareTo(o2.getQuantity());
+							default:
+								return 0;
+						}
+					}
+				});
+
+				break;
+			case SORTING_TYPE_NAME:
+				items.sort(new Comparator<StorageItem>() {
+					@Override
+					public int compare(StorageItem o1, StorageItem o2) {
+						switch (SORTING_DIRECTION) {
+							case SORTING_DIRECTION_ASCENDING:
+								return o2.toItemStack().getDisplayName().compareTo(o1.toItemStack().getDisplayName());
+							case SORTING_DIRECTION_DESCENDING:
+								return o1.toItemStack().getDisplayName().compareTo(o2.toItemStack().getDisplayName());
+							default:
+								return 0;
+						}
+					}
+				});
+
+				break;
 		}
 
 		return items;
