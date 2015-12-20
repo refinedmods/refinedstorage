@@ -3,9 +3,7 @@ package storagecraft.tile;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 
-public abstract class TileMachine extends TileBase implements INetworkTile {
-	public static final String NBT_REDSTONE_MODE = "RedstoneMode";
-
+public abstract class TileMachine extends TileBase implements INetworkTile, IRedstoneControllable {
 	protected boolean connected = false;
 
 	private RedstoneMode redstoneMode = RedstoneMode.LOW;
@@ -43,25 +41,29 @@ public abstract class TileMachine extends TileBase implements INetworkTile {
 		return connected;
 	}
 
-	public boolean isEnabled() {
-		switch (redstoneMode) {
-			case IGNORE:
-				return true;
-			case HIGH:
-				return worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
-			case LOW:
-				return !worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
-		}
-
-		return false;
-	}
-
+	@Override
 	public RedstoneMode getRedstoneMode() {
 		return redstoneMode;
 	}
 
+	@Override
 	public void setRedstoneMode(RedstoneMode mode) {
 		this.redstoneMode = mode;
+	}
+
+	@Override
+	public int getX() {
+		return xCoord;
+	}
+
+	@Override
+	public int getY() {
+		return yCoord;
+	}
+
+	@Override
+	public int getZ() {
+		return zCoord;
 	}
 
 	public TileController getController() {
@@ -98,8 +100,8 @@ public abstract class TileMachine extends TileBase implements INetworkTile {
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 
-		if (nbt.hasKey(NBT_REDSTONE_MODE)) {
-			redstoneMode = RedstoneMode.getById(nbt.getInteger(NBT_REDSTONE_MODE));
+		if (nbt.hasKey(RedstoneMode.NBT)) {
+			redstoneMode = RedstoneMode.getById(nbt.getInteger(RedstoneMode.NBT));
 		}
 	}
 
@@ -107,7 +109,7 @@ public abstract class TileMachine extends TileBase implements INetworkTile {
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 
-		nbt.setInteger(NBT_REDSTONE_MODE, redstoneMode.id);
+		nbt.setInteger(RedstoneMode.NBT, redstoneMode.id);
 	}
 
 	public abstract int getEnergyUsage();

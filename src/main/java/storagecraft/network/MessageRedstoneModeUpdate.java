@@ -6,7 +6,7 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
-import storagecraft.tile.TileMachine;
+import storagecraft.tile.IRedstoneControllable;
 
 public class MessageRedstoneModeUpdate implements IMessage, IMessageHandler<MessageRedstoneModeUpdate, IMessage> {
 	private int x;
@@ -16,10 +16,10 @@ public class MessageRedstoneModeUpdate implements IMessage, IMessageHandler<Mess
 	public MessageRedstoneModeUpdate() {
 	}
 
-	public MessageRedstoneModeUpdate(int x, int y, int z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
+	public MessageRedstoneModeUpdate(IRedstoneControllable control) {
+		this.x = control.getX();
+		this.y = control.getY();
+		this.z = control.getZ();
 	}
 
 	@Override
@@ -42,10 +42,10 @@ public class MessageRedstoneModeUpdate implements IMessage, IMessageHandler<Mess
 
 		TileEntity tile = player.worldObj.getTileEntity(message.x, message.y, message.z);
 
-		if (tile instanceof TileMachine) {
-			TileMachine machine = (TileMachine) tile;
+		if (tile instanceof IRedstoneControllable) {
+			IRedstoneControllable control = (IRedstoneControllable) tile;
 
-			machine.setRedstoneMode(machine.getRedstoneMode().next());
+			control.setRedstoneMode(control.getRedstoneMode().next());
 		}
 
 		return null;

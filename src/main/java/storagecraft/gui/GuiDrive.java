@@ -1,11 +1,25 @@
 package storagecraft.gui;
 
 import storagecraft.container.ContainerDrive;
+import storagecraft.gui.sidebutton.SideButtonRedstoneMode;
 import storagecraft.tile.TileDrive;
 
-public class GuiDrive extends GuiMachine {
+public class GuiDrive extends GuiBase {
+	private TileDrive drive;
+
 	public GuiDrive(ContainerDrive container, TileDrive drive) {
-		super(container, 176, 190, drive);
+		super(container, 176, 190);
+
+		this.drive = drive;
+	}
+
+	@Override
+	public void init(int x, int y) {
+		addSideButton(new SideButtonRedstoneMode(drive));
+	}
+
+	@Override
+	public void update(int x, int y) {
 	}
 
 	@Override
@@ -17,8 +31,6 @@ public class GuiDrive extends GuiMachine {
 
 	@Override
 	public void drawForeground(int mouseX, int mouseY) {
-		super.drawForeground(mouseX, mouseY);
-
 		drawString(7, 7, t("gui.storagecraft:drive"));
 		drawString(7, 96, t("container.inventory"));
 	}

@@ -17,9 +17,11 @@ import storagecraft.storage.IStorageProvider;
 import storagecraft.storage.StorageItem;
 import storagecraft.util.InventoryUtils;
 
-public class TileController extends TileBase implements IEnergyReceiver, INetworkTile {
+public class TileController extends TileBase implements IEnergyReceiver, INetworkTile, IRedstoneControllable {
 	private List<StorageItem> items = new ArrayList<StorageItem>();
 	private List<IStorage> storages = new ArrayList<IStorage>();
+
+	private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
 	private List<TileMachine> machines = new ArrayList<TileMachine>();
 
@@ -223,6 +225,10 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 		super.readFromNBT(nbt);
 
 		energy.readFromNBT(nbt);
+
+		if (nbt.hasKey(RedstoneMode.NBT)) {
+			redstoneMode = RedstoneMode.getById(nbt.getInteger(RedstoneMode.NBT));
+		}
 	}
 
 	@Override
@@ -230,6 +236,8 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 		super.writeToNBT(nbt);
 
 		energy.writeToNBT(nbt);
+
+		nbt.setInteger(RedstoneMode.NBT, redstoneMode.id);
 	}
 
 	@Override
@@ -257,13 +265,41 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 	}
 
 	public boolean isActive() {
-		return energy.getEnergyStored() >= getEnergyUsage();
+		return energy.getEnergyStored() >= getEnergyUsage() && redstoneMode.isEnabled(worldObj, xCoord, yCoord, zCoord);
 	}
 
+	@Override
+	public RedstoneMode getRedstoneMode() {
+		return redstoneMode;
+	}
+
+	@Override
+	public void setRedstoneMode(RedstoneMode mode) {
+		this.redstoneMode = mode;
+	}
+
+	@Override
+	public int getX() {
+		return xCoord;
+	}
+
+	@Override
+	public int getY() {
+		return yCoord;
+	}
+
+	@Override
+	public int getZ() {
+		return zCoord;
+	}
+
+	// @TODO: add helpers for sending redstone control + item storages over net
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		energy.setEnergyStored(buf.readInt());
 		energyUsage = buf.readInt();
+
+		redstoneMode = RedstoneMode.getById(buf.readInt());
 
 		items.clear();
 
@@ -284,6 +320,8 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 	public void toBytes(ByteBuf buf) {
 		buf.writeInt(energy.getEnergyStored());
 		buf.writeInt(energyUsage);
+
+		buf.writeInt(redstoneMode.id);
 
 		buf.writeInt(items.size());
 

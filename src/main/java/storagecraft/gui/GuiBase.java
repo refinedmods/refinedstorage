@@ -1,7 +1,9 @@
 package storagecraft.gui;
 
 import com.google.common.base.Joiner;
+import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.inventory.Container;
@@ -12,8 +14,17 @@ import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 import storagecraft.StorageCraft;
+import storagecraft.gui.sidebutton.SideButton;
 
 public abstract class GuiBase extends GuiContainer {
+	public static final int SIDE_BUTTON_WIDTH = 20;
+	public static final int SIDE_BUTTON_HEIGHT = 20;
+
+	private List<SideButton> sideButtons = new ArrayList<SideButton>();
+
+	private int lastButtonId = 0;
+	private int lastSideButtonY = 6;
+
 	public GuiBase(Container container, int w, int h) {
 		super(container);
 
@@ -46,26 +57,70 @@ public abstract class GuiBase extends GuiContainer {
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-		drawForeground(mouseX - guiLeft, mouseY - guiTop);
+		mouseX -= guiLeft;
+		mouseY -= guiTop;
+
+		for (SideButton sideButton : sideButtons) {
+			sideButton.draw(this, sideButton.getX() + 2, sideButton.getY() + 1);
+
+			if (inBounds(sideButton.getX(), sideButton.getY(), SIDE_BUTTON_WIDTH, SIDE_BUTTON_HEIGHT, mouseX, mouseY)) {
+				drawTooltip(mouseX, mouseY, sideButton.getTooltip(this));
+			}
+		}
+
+		drawForeground(mouseX, mouseY);
 	}
 
-	protected boolean inBounds(int x, int y, int w, int h, int ox, int oy) {
+	@Override
+	protected void actionPerformed(GuiButton button) {
+		super.actionPerformed(button);
+
+		for (SideButton sideButton : sideButtons) {
+			if (sideButton.getId() == button.id) {
+				sideButton.actionPerformed();
+			}
+		}
+	}
+
+	public GuiButton addButton(int x, int y, int w, int h) {
+		return addButton(x, y, w, h, "");
+	}
+
+	public GuiButton addButton(int x, int y, int w, int h, String text) {
+		GuiButton button = new GuiButton(lastButtonId++, x, y, w, h, text);
+
+		buttonList.add(button);
+
+		return button;
+	}
+
+	public void addSideButton(SideButton button) {
+		button.setX(xSize - 1);
+		button.setY(lastSideButtonY);
+		button.setId(addButton(guiLeft + button.getX(), guiTop + button.getY(), SIDE_BUTTON_WIDTH, SIDE_BUTTON_HEIGHT).id);
+
+		lastSideButtonY += SIDE_BUTTON_HEIGHT + 4;
+
+		sideButtons.add(button);
+	}
+
+	public boolean inBounds(int x, int y, int w, int h, int ox, int oy) {
 		return ox >= x && ox <= x + w && oy >= y && oy <= y + h;
 	}
 
-	protected void bindTexture(String file) {
+	public void bindTexture(String file) {
 		bindTexture(StorageCraft.ID, file);
 	}
 
-	protected void bindTexture(String base, String file) {
+	public void bindTexture(String base, String file) {
 		mc.getTextureManager().bindTexture(new ResourceLocation(base, "textures/" + file));
 	}
 
-	protected void drawItem(int x, int y, ItemStack stack) {
+	public void drawItem(int x, int y, ItemStack stack) {
 		drawItem(x, y, stack, false);
 	}
 
-	protected void drawItem(int x, int y, ItemStack stack, boolean withOverlay) {
+	public void drawItem(int x, int y, ItemStack stack, boolean withOverlay) {
 		zLevel = 100;
 		itemRender.zLevel = 100;
 
@@ -89,16 +144,16 @@ public abstract class GuiBase extends GuiContainer {
 		zLevel = 0;
 	}
 
-	protected void drawString(int x, int y, String message) {
+	public void drawString(int x, int y, String message) {
 		drawString(x, y, message, 4210752);
 	}
 
-	protected void drawString(int x, int y, String message, int color) {
+	public void drawString(int x, int y, String message, int color) {
 		fontRendererObj.drawString(message, x, y, color);
 	}
 
 	// https://github.com/AppliedEnergistics/Applied-Energistics-2/blob/master/src/main/java/appeng/client/gui/AEBaseGui.java
-	protected void drawTooltip(int x, int y, String message) {
+	public void drawTooltip(int x, int y, String message) {
 		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
 
 		GL11.glDisable(GL12.GL_RESCALE_NORMAL);
@@ -179,7 +234,7 @@ public abstract class GuiBase extends GuiContainer {
 		GL11.glPopAttrib();
 	}
 
-	protected void drawTooltip(int x, int y, ItemStack stack) {
+	public void drawTooltip(int x, int y, ItemStack stack) {
 		List list = stack.getTooltip(mc.thePlayer, mc.gameSettings.advancedItemTooltips);
 
 		for (int i = 0; i < list.size(); ++i) {
@@ -193,7 +248,7 @@ public abstract class GuiBase extends GuiContainer {
 		drawTooltip(x, y, Joiner.on("\n").join(list));
 	}
 
-	protected String t(String name, Object... format) {
+	public String t(String name, Object... format) {
 		return StatCollector.translateToLocalFormatted(name, format);
 	}
 

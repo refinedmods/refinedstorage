@@ -9,13 +9,14 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import storagecraft.StorageCraft;
 import storagecraft.container.ContainerGrid;
+import storagecraft.gui.sidebutton.SideButtonRedstoneMode;
 import storagecraft.network.MessageStoragePull;
 import storagecraft.network.MessageStoragePush;
 import storagecraft.storage.StorageItem;
 import storagecraft.tile.TileController;
 import storagecraft.tile.TileGrid;
 
-public class GuiGrid extends GuiMachine {
+public class GuiGrid extends GuiBase {
 	private ContainerGrid container;
 	private TileGrid grid;
 
@@ -27,7 +28,7 @@ public class GuiGrid extends GuiMachine {
 	private int offset;
 
 	public GuiGrid(ContainerGrid container, TileGrid grid) {
-		super(container, 176, 190, grid);
+		super(container, 176, 190);
 
 		this.container = container;
 		this.grid = grid;
@@ -35,9 +36,9 @@ public class GuiGrid extends GuiMachine {
 
 	@Override
 	public void init(int x, int y) {
-		super.init(x, y);
+		addSideButton(new SideButtonRedstoneMode(grid));
 
-		searchField = new GuiTextField(fontRendererObj, x + 80 + 2, y + 6 + 1, 88 - 6, fontRendererObj.FONT_HEIGHT);
+		searchField = new GuiTextField(fontRendererObj, x + 80 + 1, y + 6 + 1, 88 - 6, fontRendererObj.FONT_HEIGHT);
 		searchField.setEnableBackgroundDrawing(false);
 		searchField.setVisible(true);
 		searchField.setTextColor(16777215);
@@ -47,8 +48,6 @@ public class GuiGrid extends GuiMachine {
 
 	@Override
 	public void update(int x, int y) {
-		super.update(x, y);
-
 		int wheel = Mouse.getDWheel();
 
 		wheel = Math.max(Math.min(-wheel, 1), -1);
@@ -99,8 +98,6 @@ public class GuiGrid extends GuiMachine {
 
 	@Override
 	public void drawForeground(int mouseX, int mouseY) {
-		super.drawForeground(mouseX, mouseY);
-
 		drawString(7, 7, t("gui.storagecraft:grid"));
 		drawString(7, 96, t("container.inventory"));
 
@@ -149,6 +146,30 @@ public class GuiGrid extends GuiMachine {
 		}
 	}
 
+	public List<StorageItem> getItems() {
+		List<StorageItem> items = new ArrayList<StorageItem>();
+
+		if (!grid.isConnected()) {
+			return items;
+		}
+
+		items.addAll(grid.getController().getItems());
+
+		if (!searchField.getText().trim().isEmpty()) {
+			Iterator<StorageItem> t = items.iterator();
+
+			while (t.hasNext()) {
+				StorageItem item = t.next();
+
+				if (!item.toItemStack().getDisplayName().toLowerCase().contains(searchField.getText().toLowerCase())) {
+					t.remove();
+				}
+			}
+		}
+
+		return items;
+	}
+
 	@Override
 	public void mouseClicked(int mouseX, int mouseY, int clickedButton) {
 		super.mouseClicked(mouseX, mouseY, clickedButton);
@@ -180,29 +201,5 @@ public class GuiGrid extends GuiMachine {
 		} else {
 			super.keyTyped(character, keyCode);
 		}
-	}
-
-	public List<StorageItem> getItems() {
-		List<StorageItem> items = new ArrayList<StorageItem>();
-
-		if (!grid.isConnected()) {
-			return items;
-		}
-
-		items.addAll(grid.getController().getItems());
-
-		if (!searchField.getText().trim().isEmpty()) {
-			Iterator<StorageItem> t = items.iterator();
-
-			while (t.hasNext()) {
-				StorageItem item = t.next();
-
-				if (!item.toItemStack().getDisplayName().toLowerCase().contains(searchField.getText().toLowerCase())) {
-					t.remove();
-				}
-			}
-		}
-
-		return items;
 	}
 }

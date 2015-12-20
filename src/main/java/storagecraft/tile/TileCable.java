@@ -69,7 +69,7 @@ public class TileCable extends TileBase {
 
 			TileEntity tile = worldObj.getTileEntity(x, y, z);
 
-			if (tile instanceof TileMachine && ((TileMachine) tile).isEnabled()) {
+			if (tile instanceof TileMachine && ((TileMachine) tile).getRedstoneMode().isEnabled(worldObj, x, y, z)) {
 				machines.add((TileMachine) tile);
 
 				visited.add(Vec3.createVectorHelper(x, y, z));

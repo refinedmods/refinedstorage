@@ -1,6 +1,7 @@
 package storagecraft.gui;
 
 import storagecraft.container.ContainerController;
+import storagecraft.gui.sidebutton.SideButtonRedstoneMode;
 import storagecraft.tile.TileController;
 
 public class GuiController extends GuiBase {
@@ -14,6 +15,7 @@ public class GuiController extends GuiBase {
 
 	@Override
 	public void init(int x, int y) {
+		addSideButton(new SideButtonRedstoneMode(controller));
 	}
 
 	@Override
