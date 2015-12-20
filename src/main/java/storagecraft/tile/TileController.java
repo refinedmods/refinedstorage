@@ -270,12 +270,13 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 		int size = buf.readInt();
 
 		for (int i = 0; i < size; ++i) {
+			int id = buf.readInt();
 			Item type = Item.getItemById(buf.readInt());
 			int quantity = buf.readInt();
 			int damage = buf.readInt();
 			NBTTagCompound tag = buf.readBoolean() ? ByteBufUtils.readTag(buf) : null;
 
-			items.add(new StorageItem(type, quantity, damage, tag));
+			items.add(new StorageItem(type, quantity, damage, tag, id));
 		}
 	}
 
@@ -287,6 +288,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 		buf.writeInt(items.size());
 
 		for (StorageItem item : items) {
+			buf.writeInt(items.indexOf(item));
 			buf.writeInt(Item.getIdFromItem(item.getType()));
 			buf.writeInt(item.getQuantity());
 			buf.writeInt(item.getDamage());

@@ -14,19 +14,18 @@ public class MessageStoragePull implements IMessage, IMessageHandler<MessageStor
 	private int x;
 	private int y;
 	private int z;
-	// @TODO: This won't work when sorting
-	private int slot;
+	private int id;
 	private boolean half;
 	private boolean shift;
 
 	public MessageStoragePull() {
 	}
 
-	public MessageStoragePull(int x, int y, int z, int slot, boolean half, boolean shift) {
+	public MessageStoragePull(int x, int y, int z, int id, boolean half, boolean shift) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		this.slot = slot;
+		this.id = id;
 		this.half = half;
 		this.shift = shift;
 	}
@@ -36,7 +35,7 @@ public class MessageStoragePull implements IMessage, IMessageHandler<MessageStor
 		x = buf.readInt();
 		y = buf.readInt();
 		z = buf.readInt();
-		slot = buf.readInt();
+		id = buf.readInt();
 		half = buf.readBoolean();
 		shift = buf.readBoolean();
 	}
@@ -46,7 +45,7 @@ public class MessageStoragePull implements IMessage, IMessageHandler<MessageStor
 		buf.writeInt(x);
 		buf.writeInt(y);
 		buf.writeInt(z);
-		buf.writeInt(slot);
+		buf.writeInt(id);
 		buf.writeBoolean(half);
 		buf.writeBoolean(shift);
 	}
@@ -60,8 +59,8 @@ public class MessageStoragePull implements IMessage, IMessageHandler<MessageStor
 		if (tile instanceof TileController) {
 			TileController controller = (TileController) tile;
 
-			if (message.slot < controller.getItems().size()) {
-				StorageItem item = controller.getItems().get(message.slot);
+			if (message.id < controller.getItems().size()) {
+				StorageItem item = controller.getItems().get(message.id);
 
 				int quantity = 64;
 

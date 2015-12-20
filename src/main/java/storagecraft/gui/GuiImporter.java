@@ -10,9 +10,9 @@ import storagecraft.util.InventoryUtils;
 public class GuiImporter extends GuiMachine {
 	private TileImporter importer;
 
-	private GuiButton compareNBT;
-	private GuiButton compareDamage;
-	private GuiButton mode;
+	private GuiButton compareNBTButton;
+	private GuiButton compareDamageButton;
+	private GuiButton modeButton;
 
 	public GuiImporter(ContainerImporter container, TileImporter importer) {
 		super(container, 176, 201, importer);
@@ -24,22 +24,22 @@ public class GuiImporter extends GuiMachine {
 	public void init(int x, int y) {
 		super.init(x, y);
 
-		buttonList.add(compareNBT = new GuiButton(1, x + 7, y + 41, 100, 20, ""));
-		buttonList.add(compareDamage = new GuiButton(2, x + 7, y + 63, 120, 20, ""));
-		buttonList.add(mode = new GuiButton(3, x + 7, y + 85, 80, 20, ""));
+		buttonList.add(compareNBTButton = new GuiButton(1, x + 7, y + 41, 100, 20, ""));
+		buttonList.add(compareDamageButton = new GuiButton(2, x + 7, y + 63, 120, 20, ""));
+		buttonList.add(modeButton = new GuiButton(3, x + 7, y + 85, 80, 20, ""));
 	}
 
 	@Override
 	public void update(int x, int y) {
 		super.update(x, y);
 
-		compareNBT.displayString = t("misc.storagecraft:compareNBT") + ": ";
-		compareNBT.displayString += t("misc.storagecraft:" + ((importer.getCompareFlags() & InventoryUtils.COMPARE_NBT) == InventoryUtils.COMPARE_NBT ? "on" : "off"));
+		compareNBTButton.displayString = t("misc.storagecraft:compareNBT") + ": ";
+		compareNBTButton.displayString += t("misc.storagecraft:" + ((importer.getCompareFlags() & InventoryUtils.COMPARE_NBT) == InventoryUtils.COMPARE_NBT ? "on" : "off"));
 
-		compareDamage.displayString = t("misc.storagecraft:compareDamage") + ": ";
-		compareDamage.displayString += t("misc.storagecraft:" + ((importer.getCompareFlags() & InventoryUtils.COMPARE_DAMAGE) == InventoryUtils.COMPARE_DAMAGE ? "on" : "off"));
+		compareDamageButton.displayString = t("misc.storagecraft:compareDamage") + ": ";
+		compareDamageButton.displayString += t("misc.storagecraft:" + ((importer.getCompareFlags() & InventoryUtils.COMPARE_DAMAGE) == InventoryUtils.COMPARE_DAMAGE ? "on" : "off"));
 
-		mode.displayString = t("misc.storagecraft:importer.mode." + importer.getMode());
+		modeButton.displayString = t("misc.storagecraft:importer.mode." + importer.getMode());
 	}
 
 	@Override
@@ -63,12 +63,12 @@ public class GuiImporter extends GuiMachine {
 
 		int flags = importer.getCompareFlags();
 
-		if (button.id == compareNBT.id) {
+		if (button.id == compareNBTButton.id) {
 			flags ^= InventoryUtils.COMPARE_NBT;
-		} else if (button.id == compareDamage.id) {
+		} else if (button.id == compareDamageButton.id) {
 			flags ^= InventoryUtils.COMPARE_DAMAGE;
 		}
 
-		StorageCraft.NETWORK.sendToServer(new MessageImporterUpdate(importer.xCoord, importer.yCoord, importer.zCoord, flags, button.id == mode.id));
+		StorageCraft.NETWORK.sendToServer(new MessageImporterUpdate(importer.xCoord, importer.yCoord, importer.zCoord, flags, button.id == modeButton.id));
 	}
 }

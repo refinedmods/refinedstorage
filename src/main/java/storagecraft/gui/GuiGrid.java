@@ -1,5 +1,9 @@
 package storagecraft.gui;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.inventory.Slot;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -7,6 +11,7 @@ import storagecraft.StorageCraft;
 import storagecraft.container.ContainerGrid;
 import storagecraft.network.MessageStoragePull;
 import storagecraft.network.MessageStoragePush;
+import storagecraft.storage.StorageItem;
 import storagecraft.tile.TileController;
 import storagecraft.tile.TileGrid;
 
@@ -14,7 +19,11 @@ public class GuiGrid extends GuiMachine {
 	private ContainerGrid container;
 	private TileGrid grid;
 
-	private int hoveringSlot;
+	private GuiTextField searchField;
+
+	private int hoveringSlotId;
+	private int hoveringId;
+
 	private int offset;
 
 	public GuiGrid(ContainerGrid container, TileGrid grid) {
@@ -22,6 +31,18 @@ public class GuiGrid extends GuiMachine {
 
 		this.container = container;
 		this.grid = grid;
+	}
+
+	@Override
+	public void init(int x, int y) {
+		super.init(x, y);
+
+		searchField = new GuiTextField(fontRendererObj, x + 80 + 2, y + 6 + 1, 88 - 6, fontRendererObj.FONT_HEIGHT);
+		searchField.setEnableBackgroundDrawing(false);
+		searchField.setVisible(true);
+		searchField.setTextColor(16777215);
+		searchField.setCanLoseFocus(false);
+		searchField.setFocused(true);
 	}
 
 	@Override
@@ -46,7 +67,7 @@ public class GuiGrid extends GuiMachine {
 			return 0;
 		}
 
-		int max = ((int) Math.ceil((float) grid.getController().getItems().size() / (float) 9)) - 4;
+		int max = ((int) Math.ceil((float) getItems().size() / (float) 9)) - 4;
 
 		return max < 0 ? 0 : max;
 	}
@@ -60,11 +81,11 @@ public class GuiGrid extends GuiMachine {
 	}
 
 	private boolean isHoveringOverValidSlot() {
-		return grid.isConnected() && isHoveringOverSlot() && hoveringSlot < grid.getController().getItems().size();
+		return grid.isConnected() && isHoveringOverSlot() && hoveringSlotId < getItems().size();
 	}
 
 	private boolean isHoveringOverSlot() {
-		return hoveringSlot >= 0;
+		return hoveringSlotId >= 0;
 	}
 
 	@Override
@@ -72,6 +93,8 @@ public class GuiGrid extends GuiMachine {
 		bindTexture("gui/grid.png");
 
 		drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
+
+		searchField.drawTextBox();
 	}
 
 	@Override
@@ -84,17 +107,25 @@ public class GuiGrid extends GuiMachine {
 		int x = 8;
 		int y = 20;
 
-		hoveringSlot = -1;
+		List<StorageItem> items = getItems();
+
+		hoveringSlotId = -1;
 
 		int slot = offset * 9;
 
 		for (int i = 0; i < 9 * 4; ++i) {
-			if (grid.isConnected() && slot < grid.getController().getItems().size()) {
-				drawItem(x, y, grid.getController().getItems().get(slot).toItemStack(), true);
+			if (slot < items.size()) {
+				drawItem(x, y, items.get(slot).toItemStack(), true);
 			}
 
 			if (inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isConnected()) {
-				hoveringSlot = slot;
+				hoveringSlotId = slot;
+
+				if (slot < items.size()) {
+					// We need to use the ID, because if we filter, the client-side index will change
+					// while the serverside's index will still be the same.
+					hoveringId = items.get(slot).getId();
+				}
 
 				int color = grid.isConnected() ? -2130706433 : 0xFF5B5B5B;
 
@@ -114,7 +145,7 @@ public class GuiGrid extends GuiMachine {
 		}
 
 		if (isHoveringOverValidSlot()) {
-			drawTooltip(mouseX, mouseY, grid.getController().getItems().get(hoveringSlot).toItemStack());
+			drawTooltip(mouseX, mouseY, items.get(hoveringSlotId).toItemStack());
 		}
 	}
 
@@ -128,7 +159,7 @@ public class GuiGrid extends GuiMachine {
 			if (isHoveringOverSlot() && container.getPlayer().inventory.getItemStack() != null) {
 				StorageCraft.NETWORK.sendToServer(new MessageStoragePush(controller.xCoord, controller.yCoord, controller.zCoord, -1, clickedButton == 1));
 			} else if (isHoveringOverValidSlot() && container.getPlayer().inventory.getItemStack() == null) {
-				StorageCraft.NETWORK.sendToServer(new MessageStoragePull(controller.xCoord, controller.yCoord, controller.zCoord, hoveringSlot, clickedButton == 1, Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)));
+				StorageCraft.NETWORK.sendToServer(new MessageStoragePull(controller.xCoord, controller.yCoord, controller.zCoord, hoveringId, clickedButton == 1, Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)));
 			} else {
 				for (int i = 0; i < container.inventorySlots.size(); ++i) {
 					Slot slot = (Slot) container.inventorySlots.get(i);
@@ -141,5 +172,37 @@ public class GuiGrid extends GuiMachine {
 				}
 			}
 		}
+	}
+
+	@Override
+	protected void keyTyped(char character, int keyCode) {
+		if (!checkHotbarKeys(keyCode) && searchField.textboxKeyTyped(character, keyCode)) {
+		} else {
+			super.keyTyped(character, keyCode);
+		}
+	}
+
+	public List<StorageItem> getItems() {
+		List<StorageItem> items = new ArrayList<StorageItem>();
+
+		if (!grid.isConnected()) {
+			return items;
+		}
+
+		items.addAll(grid.getController().getItems());
+
+		if (!searchField.getText().trim().isEmpty()) {
+			Iterator<StorageItem> t = items.iterator();
+
+			while (t.hasNext()) {
+				StorageItem item = t.next();
+
+				if (!item.toItemStack().getDisplayName().toLowerCase().contains(searchField.getText().toLowerCase())) {
+					t.remove();
+				}
+			}
+		}
+
+		return items;
 	}
 }

@@ -1,5 +1,7 @@
 package storagecraft.storage;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,12 +12,20 @@ public class StorageItem {
 	private int quantity;
 	private int damage;
 	private NBTTagCompound tag;
+	@SideOnly(Side.CLIENT)
+	private int id;
 
 	public StorageItem(Item type, int quantity, int damage, NBTTagCompound tag) {
 		this.type = type;
 		this.quantity = quantity;
 		this.damage = damage;
 		this.tag = tag;
+	}
+
+	public StorageItem(Item type, int quantity, int damage, NBTTagCompound tag, int id) {
+		this(type, quantity, damage, tag);
+
+		this.id = id;
 	}
 
 	public StorageItem(ItemStack stack) {
@@ -48,6 +58,11 @@ public class StorageItem {
 
 	public void setTag(NBTTagCompound tag) {
 		this.tag = tag;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public int getId() {
+		return id;
 	}
 
 	public StorageItem copy() {
