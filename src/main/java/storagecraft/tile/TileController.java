@@ -2,11 +2,9 @@ package storagecraft.tile;
 
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyReceiver;
-import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -293,7 +291,6 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 		return zCoord;
 	}
 
-	// @TODO: add helpers for sending redstone control + item storages over net
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		energy.setEnergyStored(buf.readInt());
@@ -306,13 +303,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 		int size = buf.readInt();
 
 		for (int i = 0; i < size; ++i) {
-			int id = buf.readInt();
-			Item type = Item.getItemById(buf.readInt());
-			int quantity = buf.readInt();
-			int damage = buf.readInt();
-			NBTTagCompound tag = buf.readBoolean() ? ByteBufUtils.readTag(buf) : null;
-
-			items.add(new StorageItem(type, quantity, damage, tag, id));
+			items.add(new StorageItem(buf));
 		}
 	}
 
@@ -326,15 +317,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 		buf.writeInt(items.size());
 
 		for (StorageItem item : items) {
-			buf.writeInt(items.indexOf(item));
-			buf.writeInt(Item.getIdFromItem(item.getType()));
-			buf.writeInt(item.getQuantity());
-			buf.writeInt(item.getDamage());
-			buf.writeBoolean(item.getTag() != null);
-
-			if (item.getTag() != null) {
-				ByteBufUtils.writeTag(buf, item.getTag());
-			}
+			item.toBytes(buf, items.indexOf(item));
 		}
 	}
 }

@@ -1,7 +1,9 @@
 package storagecraft.storage;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,6 +16,14 @@ public class StorageItem {
 	private NBTTagCompound tag;
 	@SideOnly(Side.CLIENT)
 	private int id;
+
+	public StorageItem(ByteBuf buf) {
+		this.id = buf.readInt();
+		this.type = Item.getItemById(buf.readInt());
+		this.quantity = buf.readInt();
+		this.damage = buf.readInt();
+		this.tag = buf.readBoolean() ? ByteBufUtils.readTag(buf) : null;
+	}
 
 	public StorageItem(Item type, int quantity, int damage, NBTTagCompound tag) {
 		this.type = type;
@@ -30,6 +40,18 @@ public class StorageItem {
 
 	public StorageItem(ItemStack stack) {
 		this(stack.getItem(), stack.stackSize, stack.getItemDamage(), stack.stackTagCompound);
+	}
+
+	public void toBytes(ByteBuf buf, int id) {
+		buf.writeInt(id);
+		buf.writeInt(Item.getIdFromItem(type));
+		buf.writeInt(quantity);
+		buf.writeInt(damage);
+		buf.writeBoolean(tag != null);
+
+		if (tag != null) {
+			ByteBufUtils.writeTag(buf, tag);
+		}
 	}
 
 	public Item getType() {
