@@ -5,8 +5,9 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public abstract class TileMachine extends TileBase implements INetworkTile, IRedstoneModeSetting {
 	protected boolean connected = false;
+	protected boolean redstoneControlled = true;
 
-	private RedstoneMode redstoneMode = RedstoneMode.LOW;
+	private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
 	private int xController;
 	private int yController;
@@ -48,7 +49,9 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
 
 	@Override
 	public void setRedstoneMode(RedstoneMode mode) {
-		this.redstoneMode = mode;
+		if (redstoneControlled) {
+			this.redstoneMode = mode;
+		}
 	}
 
 	@Override

@@ -6,8 +6,7 @@ import storagecraft.StorageCraft;
 import storagecraft.container.ContainerDetector;
 import storagecraft.gui.sidebutton.SideButtonCompare;
 import storagecraft.gui.sidebutton.SideButtonDetectorMode;
-import storagecraft.gui.sidebutton.SideButtonRedstoneMode;
-import storagecraft.network.MessageDetectorModeUpdate;
+import storagecraft.network.MessageDetectorAmountUpdate;
 import storagecraft.tile.TileDetector;
 import storagecraft.util.InventoryUtils;
 
@@ -24,8 +23,6 @@ public class GuiDetector extends GuiBase {
 
 	@Override
 	public void init(int x, int y) {
-		addSideButton(new SideButtonRedstoneMode(detector));
-
 		addSideButton(new SideButtonCompare(detector, InventoryUtils.COMPARE_DAMAGE));
 		addSideButton(new SideButtonCompare(detector, InventoryUtils.COMPARE_NBT));
 
@@ -65,7 +62,7 @@ public class GuiDetector extends GuiBase {
 			Integer result = Ints.tryParse(amountField.getText());
 
 			if (result != null) {
-				StorageCraft.NETWORK.sendToServer(new MessageDetectorModeUpdate(detector, result));
+				StorageCraft.NETWORK.sendToServer(new MessageDetectorAmountUpdate(detector, result));
 			}
 		} else {
 			super.keyTyped(character, keyCode);

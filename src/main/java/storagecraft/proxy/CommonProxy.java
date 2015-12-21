@@ -12,6 +12,7 @@ import storagecraft.StorageCraftItems;
 import storagecraft.gui.GuiHandler;
 import storagecraft.item.ItemBlockCable;
 import storagecraft.network.MessageCompareUpdate;
+import storagecraft.network.MessageDetectorAmountUpdate;
 import storagecraft.network.MessageDetectorModeUpdate;
 import storagecraft.network.MessageImporterModeUpdate;
 import storagecraft.network.MessageRedstoneModeUpdate;
@@ -36,6 +37,7 @@ public class CommonProxy {
 		StorageCraft.NETWORK.registerMessage(MessageCompareUpdate.class, MessageCompareUpdate.class, 4, Side.SERVER);
 		StorageCraft.NETWORK.registerMessage(MessageImporterModeUpdate.class, MessageImporterModeUpdate.class, 5, Side.SERVER);
 		StorageCraft.NETWORK.registerMessage(MessageDetectorModeUpdate.class, MessageDetectorModeUpdate.class, 6, Side.SERVER);
+		StorageCraft.NETWORK.registerMessage(MessageDetectorAmountUpdate.class, MessageDetectorAmountUpdate.class, 7, Side.SERVER);
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(StorageCraft.INSTANCE, new GuiHandler());
 

@@ -8,18 +8,20 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import storagecraft.tile.TileDetector;
 
-public class MessageDetectorModeUpdate implements IMessage, IMessageHandler<MessageDetectorModeUpdate, IMessage> {
+public class MessageDetectorAmountUpdate implements IMessage, IMessageHandler<MessageDetectorAmountUpdate, IMessage> {
 	private int x;
 	private int y;
 	private int z;
+	private int amount;
 
-	public MessageDetectorModeUpdate() {
+	public MessageDetectorAmountUpdate() {
 	}
 
-	public MessageDetectorModeUpdate(TileDetector detector) {
+	public MessageDetectorAmountUpdate(TileDetector detector, int amount) {
 		this.x = detector.xCoord;
 		this.y = detector.yCoord;
 		this.z = detector.zCoord;
+		this.amount = amount;
 	}
 
 	@Override
@@ -27,6 +29,7 @@ public class MessageDetectorModeUpdate implements IMessage, IMessageHandler<Mess
 		x = buf.readInt();
 		y = buf.readInt();
 		z = buf.readInt();
+		amount = buf.readInt();
 	}
 
 	@Override
@@ -34,28 +37,17 @@ public class MessageDetectorModeUpdate implements IMessage, IMessageHandler<Mess
 		buf.writeInt(x);
 		buf.writeInt(y);
 		buf.writeInt(z);
+		buf.writeInt(amount);
 	}
 
 	@Override
-	public IMessage onMessage(MessageDetectorModeUpdate message, MessageContext context) {
+	public IMessage onMessage(MessageDetectorAmountUpdate message, MessageContext context) {
 		EntityPlayerMP player = context.getServerHandler().playerEntity;
 
 		TileEntity tile = player.worldObj.getTileEntity(message.x, message.y, message.z);
 
-		if (tile instanceof TileDetector) {
-			TileDetector detector = (TileDetector) tile;
-
-			switch (detector.getMode()) {
-				case TileDetector.MODE_UNDER:
-					detector.setMode(TileDetector.MODE_EQUAL);
-					break;
-				case TileDetector.MODE_EQUAL:
-					detector.setMode(TileDetector.MODE_ABOVE);
-					break;
-				case TileDetector.MODE_ABOVE:
-					detector.setMode(TileDetector.MODE_UNDER);
-					break;
-			}
+		if (tile instanceof TileDetector && message.amount >= 0) {
+			((TileDetector) tile).setAmount(message.amount);
 		}
 
 		return null;

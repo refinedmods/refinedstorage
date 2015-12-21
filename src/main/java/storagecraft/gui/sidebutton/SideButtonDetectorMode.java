@@ -30,6 +30,6 @@ public class SideButtonDetectorMode extends SideButton {
 
 	@Override
 	public void actionPerformed() {
-		StorageCraft.NETWORK.sendToServer(new MessageDetectorModeUpdate(detector, detector.getAmount()));
+		StorageCraft.NETWORK.sendToServer(new MessageDetectorModeUpdate(detector));
 	}
 }

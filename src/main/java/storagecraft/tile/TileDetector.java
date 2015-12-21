@@ -6,6 +6,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import storagecraft.StorageCraftBlocks;
 import storagecraft.inventory.InventorySimple;
 import storagecraft.storage.StorageItem;
 import storagecraft.util.InventoryUtils;
@@ -27,6 +28,10 @@ public class TileDetector extends TileMachine implements IInventory, ISidedInven
 
 	private boolean providesPower = false;
 
+	public TileDetector() {
+		this.redstoneControlled = false;
+	}
+
 	@Override
 	public int getEnergyUsage() {
 		return 4;
@@ -36,6 +41,8 @@ public class TileDetector extends TileMachine implements IInventory, ISidedInven
 	public void updateMachine() {
 		if (ticks % 5 == 0) {
 			ItemStack slot = inventory.getStackInSlot(0);
+
+			boolean lastProvidesPower = providesPower;
 
 			if (slot != null) {
 				boolean foundAny = false;
@@ -55,24 +62,27 @@ public class TileDetector extends TileMachine implements IInventory, ISidedInven
 								providesPower = item.getQuantity() > amount;
 								break;
 						}
+
+						break;
 					}
 				}
 
 				if (!foundAny) {
-					switch (mode) {
-						case MODE_UNDER:
-							providesPower = amount != 0;
-							break;
-						case MODE_EQUAL:
-							providesPower = amount == 0;
-							break;
-						default:
-							providesPower = false;
-							break;
+					if (mode == MODE_UNDER && amount != 0) {
+						providesPower = true;
+					} else if (mode == MODE_EQUAL && amount == 0) {
+						providesPower = true;
+					} else {
+						providesPower = false;
 					}
 				}
 			} else {
 				providesPower = false;
+			}
+
+			if (providesPower != lastProvidesPower) {
+				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+				worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, StorageCraftBlocks.DETECTOR);
 			}
 		}
 	}

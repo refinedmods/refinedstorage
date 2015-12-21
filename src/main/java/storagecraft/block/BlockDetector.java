@@ -34,12 +34,14 @@ public class BlockDetector extends BlockBase implements ITileEntityProvider {
 
 	@Override
 	public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side) {
-		return ((TileDetector) world.getTileEntity(x, y, z)).providesPower() ? 15 : 0;
+		return isProvidingStrongPower(world, x, y, z, side);
 	}
 
 	@Override
 	public int isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int side) {
-		return ((TileDetector) world.getTileEntity(x, y, z)).providesPower() ? 15 : 0;
+		TileDetector detector = (TileDetector) world.getTileEntity(x, y, z);
+
+		return detector.providesPower() ? 15 : 0;
 	}
 
 	@Override
