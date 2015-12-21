@@ -104,8 +104,8 @@ public class TileImporter extends TileMachine implements IInventory, ISidedInven
 	}
 
 	@Override
-	public void setCompare(int flags) {
-		this.compare = flags;
+	public void setCompare(int compare) {
+		this.compare = compare;
 	}
 
 	public int getMode() {

@@ -3,7 +3,7 @@ package storagecraft.tile;
 public interface ICompareSetting {
 	public int getCompare();
 
-	public void setCompare(int flags);
+	public void setCompare(int compare);
 
 	public int getX();
 

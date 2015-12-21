@@ -6,71 +6,79 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import storagecraft.inventory.InventorySimple;
+import storagecraft.storage.StorageItem;
 import storagecraft.util.InventoryUtils;
 
-public class TileExporter extends TileMachine implements IInventory, ISidedInventory, ICompareSetting {
-	public static final String NBT_COMPARE = "Compare";
+public class TileDetector extends TileMachine implements IInventory, ISidedInventory, ICompareSetting {
+	public static final int MODE_UNDER = 0;
+	public static final int MODE_EQUAL = 1;
+	public static final int MODE_ABOVE = 2;
 
-	private InventorySimple inventory = new InventorySimple("exporter", 9);
+	public static final String NBT_COMPARE = "Compare";
+	public static final String NBT_MODE = "Mode";
+	public static final String NBT_AMOUNT = "Amount";
+
+	private InventorySimple inventory = new InventorySimple("detector", 1);
 
 	private int compare = 0;
+	private int mode = MODE_EQUAL;
+	private int amount = 0;
+
+	private boolean providesPower = false;
 
 	@Override
 	public int getEnergyUsage() {
-		return 2;
+		return 4;
 	}
 
 	@Override
 	public void updateMachine() {
-		TileEntity tile = worldObj.getTileEntity(xCoord + getDirection().offsetX, yCoord + getDirection().offsetY, zCoord + getDirection().offsetZ);
+		if (ticks % 5 == 0) {
+			ItemStack slot = inventory.getStackInSlot(0);
 
-		if (tile instanceof IInventory) {
-			IInventory connectedInventory = (IInventory) tile;
+			if (slot != null) {
+				boolean foundAny = false;
 
-			if (ticks % 5 == 0) {
-				for (int i = 0; i < inventory.getSizeInventory(); ++i) {
-					ItemStack slot = inventory.getStackInSlot(i);
+				for (StorageItem item : getController().getItems()) {
+					if (item.compare(slot, compare)) {
+						foundAny = true;
 
-					if (slot != null) {
-						ItemStack toTake = slot.copy();
-
-						toTake.stackSize = 64;
-
-						ItemStack took = getController().take(toTake, compare);
-
-						if (took != null) {
-							if (connectedInventory instanceof ISidedInventory) {
-								ISidedInventory sided = (ISidedInventory) connectedInventory;
-
-								boolean pushedAny = false;
-
-								for (int si = 0; si < connectedInventory.getSizeInventory(); ++si) {
-									if (sided.canInsertItem(si, took, getDirection().getOpposite().ordinal())) { // @TODO: make more compact
-										if (InventoryUtils.canPushToInventorySlot(connectedInventory, si, took)) {
-											InventoryUtils.pushToInventorySlot(connectedInventory, si, took);
-
-											pushedAny = true;
-
-											break;
-										}
-									}
-								}
-
-								if (!pushedAny) {
-									getController().push(took);
-								}
-							} else if (InventoryUtils.canPushToInventory(connectedInventory, took)) {
-								InventoryUtils.pushToInventory(connectedInventory, took);
-							} else {
-								getController().push(took);
-							}
+						switch (mode) {
+							case MODE_UNDER:
+								providesPower = item.getQuantity() < amount;
+								break;
+							case MODE_EQUAL:
+								providesPower = item.getQuantity() == amount;
+								break;
+							case MODE_ABOVE:
+								providesPower = item.getQuantity() > amount;
+								break;
 						}
 					}
 				}
+
+				if (!foundAny) {
+					switch (mode) {
+						case MODE_UNDER:
+							providesPower = amount != 0;
+							break;
+						case MODE_EQUAL:
+							providesPower = amount == 0;
+							break;
+						default:
+							providesPower = false;
+							break;
+					}
+				}
+			} else {
+				providesPower = false;
 			}
 		}
+	}
+
+	public boolean providesPower() {
+		return providesPower;
 	}
 
 	@Override
@@ -81,6 +89,22 @@ public class TileExporter extends TileMachine implements IInventory, ISidedInven
 	@Override
 	public void setCompare(int compare) {
 		this.compare = compare;
+	}
+
+	public int getMode() {
+		return mode;
+	}
+
+	public void setMode(int mode) {
+		this.mode = mode;
+	}
+
+	public int getAmount() {
+		return amount;
+	}
+
+	public void setAmount(int amount) {
+		this.amount = amount;
 	}
 
 	@Override
@@ -166,6 +190,14 @@ public class TileExporter extends TileMachine implements IInventory, ISidedInven
 			compare = nbt.getInteger(NBT_COMPARE);
 		}
 
+		if (nbt.hasKey(NBT_MODE)) {
+			mode = nbt.getInteger(NBT_MODE);
+		}
+
+		if (nbt.hasKey(NBT_AMOUNT)) {
+			amount = nbt.getInteger(NBT_AMOUNT);
+		}
+
 		InventoryUtils.restoreInventory(this, nbt);
 	}
 
@@ -174,6 +206,8 @@ public class TileExporter extends TileMachine implements IInventory, ISidedInven
 		super.writeToNBT(nbt);
 
 		nbt.setInteger(NBT_COMPARE, compare);
+		nbt.setInteger(NBT_MODE, mode);
+		nbt.setInteger(NBT_AMOUNT, amount);
 
 		InventoryUtils.saveInventory(this, nbt);
 	}
@@ -183,6 +217,9 @@ public class TileExporter extends TileMachine implements IInventory, ISidedInven
 		super.fromBytes(buf);
 
 		compare = buf.readInt();
+		mode = buf.readInt();
+		amount = buf.readInt();
+		providesPower = buf.readBoolean();
 	}
 
 	@Override
@@ -190,5 +227,8 @@ public class TileExporter extends TileMachine implements IInventory, ISidedInven
 		super.toBytes(buf);
 
 		buf.writeInt(compare);
+		buf.writeInt(mode);
+		buf.writeInt(amount);
+		buf.writeBoolean(providesPower);
 	}
 }

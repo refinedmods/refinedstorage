@@ -2,6 +2,7 @@ package storagecraft;
 
 import storagecraft.block.BlockCable;
 import storagecraft.block.BlockController;
+import storagecraft.block.BlockDetector;
 import storagecraft.block.BlockDrive;
 import storagecraft.block.BlockExporter;
 import storagecraft.block.BlockGrid;
@@ -16,4 +17,5 @@ public class StorageCraftBlocks {
 	public static final BlockStorageProxy STORAGE_PROXY = new BlockStorageProxy();
 	public static final BlockImporter IMPORTER = new BlockImporter();
 	public static final BlockExporter EXPORTER = new BlockExporter();
+	public static final BlockDetector DETECTOR = new BlockDetector();
 }

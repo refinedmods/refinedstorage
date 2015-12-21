@@ -12,6 +12,7 @@ import storagecraft.StorageCraftItems;
 import storagecraft.gui.GuiHandler;
 import storagecraft.item.ItemBlockCable;
 import storagecraft.network.MessageCompareUpdate;
+import storagecraft.network.MessageDetectorModeUpdate;
 import storagecraft.network.MessageImporterModeUpdate;
 import storagecraft.network.MessageRedstoneModeUpdate;
 import storagecraft.network.MessageStoragePull;
@@ -19,6 +20,7 @@ import storagecraft.network.MessageStoragePush;
 import storagecraft.network.MessageTileUpdate;
 import storagecraft.tile.TileCable;
 import storagecraft.tile.TileController;
+import storagecraft.tile.TileDetector;
 import storagecraft.tile.TileDrive;
 import storagecraft.tile.TileExporter;
 import storagecraft.tile.TileGrid;
@@ -33,6 +35,7 @@ public class CommonProxy {
 		StorageCraft.NETWORK.registerMessage(MessageStoragePull.class, MessageStoragePull.class, 3, Side.SERVER);
 		StorageCraft.NETWORK.registerMessage(MessageCompareUpdate.class, MessageCompareUpdate.class, 4, Side.SERVER);
 		StorageCraft.NETWORK.registerMessage(MessageImporterModeUpdate.class, MessageImporterModeUpdate.class, 5, Side.SERVER);
+		StorageCraft.NETWORK.registerMessage(MessageDetectorModeUpdate.class, MessageDetectorModeUpdate.class, 6, Side.SERVER);
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(StorageCraft.INSTANCE, new GuiHandler());
 
@@ -43,6 +46,7 @@ public class CommonProxy {
 		GameRegistry.registerTileEntity(TileStorageProxy.class, "storageProxy");
 		GameRegistry.registerTileEntity(TileImporter.class, "importer");
 		GameRegistry.registerTileEntity(TileExporter.class, "exporter");
+		GameRegistry.registerTileEntity(TileDetector.class, "detector");
 
 		GameRegistry.registerBlock(StorageCraftBlocks.CONTROLLER, "controller");
 		GameRegistry.registerBlock(StorageCraftBlocks.CABLE, ItemBlockCable.class, "cable");
@@ -51,6 +55,7 @@ public class CommonProxy {
 		GameRegistry.registerBlock(StorageCraftBlocks.STORAGE_PROXY, "storageProxy");
 		GameRegistry.registerBlock(StorageCraftBlocks.IMPORTER, "importer");
 		GameRegistry.registerBlock(StorageCraftBlocks.EXPORTER, "exporter");
+		GameRegistry.registerBlock(StorageCraftBlocks.DETECTOR, "detector");
 
 		GameRegistry.registerItem(StorageCraftItems.STORAGE_CELL, "storageCell");
 	}

@@ -6,6 +6,7 @@ gui.storagecraft:drive=Drive
 gui.storagecraft:storageProxy=Storage Proxy
 gui.storagecraft:importer=Importer
 gui.storagecraft:exporter=Exporter
+gui.storagecraft:detector=Detector
 
 misc.storagecraft:energyStored=%d / %d RF
 misc.storagecraft:energyUsage=Usage: %d RF/t
@@ -33,6 +34,11 @@ sidebutton.storagecraft:importer.mode=Mode
 sidebutton.storagecraft:importer.mode.0=Whitelist
 sidebutton.storagecraft:importer.mode.1=Blacklist
 
+sidebutton.storagecraft:detector.mode=Mode
+sidebutton.storagecraft:detector.mode.0=Under the amount
+sidebutton.storagecraft:detector.mode.1=On the amount
+sidebutton.storagecraft:detector.mode.2=Above the amount
+
 misc.storagecraft:yes=Yes
 misc.storagecraft:no=No
 
@@ -44,6 +50,7 @@ block.storagecraft:drive.name=Drive
 block.storagecraft:storageProxy.name=Storage Proxy
 block.storagecraft:importer.name=Importer
 block.storagecraft:exporter.name=Exporter
+block.storagecraft:detector.name=Detector
 
 item.storagecraft:storageCell.0.name=1k Storage Cell
 item.storagecraft:storageCell.1.name=4k Storage Cell
