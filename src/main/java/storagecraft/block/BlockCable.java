@@ -27,11 +27,6 @@ public class BlockCable extends BlockBase implements ITileEntityProvider {
 	}
 
 	@Override
-	public int damageDropped(int meta) {
-		return meta;
-	}
-
-	@Override
 	public int getRenderType() {
 		return -1;
 	}
