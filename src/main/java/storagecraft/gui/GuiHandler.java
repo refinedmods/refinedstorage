@@ -30,7 +30,7 @@ public class GuiHandler implements IGuiHandler
 			case StorageCraft.GUI.CONTROLLER:
 				return new ContainerController(player);
 			case StorageCraft.GUI.GRID:
-				return new ContainerGrid(player);
+				return new ContainerGrid(player, (TileGrid) tile);
 			case StorageCraft.GUI.DRIVE:
 				return new ContainerDrive(player, (TileDrive) tile);
 			case StorageCraft.GUI.STORAGE_PROXY:

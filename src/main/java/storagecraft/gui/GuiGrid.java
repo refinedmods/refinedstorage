@@ -42,7 +42,7 @@ public class GuiGrid extends GuiBase
 
 	public GuiGrid(ContainerGrid container, TileGrid grid)
 	{
-		super(container, 176, 190);
+		super(container, 176, grid.isCrafting() ? 256 : 190);
 
 		this.container = container;
 		this.grid = grid;
@@ -117,7 +117,14 @@ public class GuiGrid extends GuiBase
 	@Override
 	public void drawBackground(int x, int y, int mouseX, int mouseY)
 	{
-		bindTexture("gui/grid.png");
+		if (grid.isCrafting())
+		{
+			bindTexture("gui/craftingGrid.png");
+		}
+		else
+		{
+			bindTexture("gui/grid.png");
+		}
 
 		drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
 
@@ -128,7 +135,13 @@ public class GuiGrid extends GuiBase
 	public void drawForeground(int mouseX, int mouseY)
 	{
 		drawString(7, 7, t("gui.storagecraft:grid"));
-		drawString(7, 96, t("container.inventory"));
+
+		if (grid.isCrafting())
+		{
+			drawString(7, 94, t("container.crafting"));
+		}
+
+		drawString(7, grid.isCrafting() ? 163 : 96, t("container.inventory"));
 
 		int x = 8;
 		int y = 20;

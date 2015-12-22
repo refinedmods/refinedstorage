@@ -11,6 +11,7 @@ import storagecraft.StorageCraftBlocks;
 import storagecraft.StorageCraftItems;
 import storagecraft.gui.GuiHandler;
 import storagecraft.item.ItemBlockCable;
+import storagecraft.item.ItemBlockGrid;
 import storagecraft.network.MessageCompareUpdate;
 import storagecraft.network.MessageDetectorAmountUpdate;
 import storagecraft.network.MessageDetectorModeUpdate;
@@ -54,7 +55,7 @@ public class CommonProxy
 
 		GameRegistry.registerBlock(StorageCraftBlocks.CONTROLLER, "controller");
 		GameRegistry.registerBlock(StorageCraftBlocks.CABLE, ItemBlockCable.class, "cable");
-		GameRegistry.registerBlock(StorageCraftBlocks.GRID, "grid");
+		GameRegistry.registerBlock(StorageCraftBlocks.GRID, ItemBlockGrid.class, "grid");
 		GameRegistry.registerBlock(StorageCraftBlocks.DRIVE, "drive");
 		GameRegistry.registerBlock(StorageCraftBlocks.STORAGE_PROXY, "storageProxy");
 		GameRegistry.registerBlock(StorageCraftBlocks.IMPORTER, "importer");

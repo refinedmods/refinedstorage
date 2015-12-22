@@ -1,8 +1,12 @@
 package storagecraft.block;
 
+import java.util.List;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
@@ -25,6 +29,15 @@ public class BlockGrid extends BlockBase implements ITileEntityProvider
 	public TileEntity createNewTileEntity(World world, int meta)
 	{
 		return new TileGrid();
+	}
+
+	@Override
+	public void getSubBlocks(Item item, CreativeTabs tab, List subItems)
+	{
+		for (int i = 0; i < 2; i++)
+		{
+			subItems.add(new ItemStack(item, 1, i));
+		}
 	}
 
 	@Override
