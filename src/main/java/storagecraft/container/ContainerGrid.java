@@ -15,7 +15,7 @@ public class ContainerGrid extends ContainerBase
 
 		if (grid.isCrafting())
 		{
-			int x = 44;
+			int x = 25;
 			int y = 106;
 
 			for (int i = 0; i < 9; ++i)
@@ -27,11 +27,11 @@ public class ContainerGrid extends ContainerBase
 				if ((i + 1) % 3 == 0)
 				{
 					y += 18;
-					x = 44;
+					x = 25;
 				}
 			}
 
-			addSlotToContainer(new SlotGridCraftingResult(player, grid.getCraftingMatrix(), grid.getCraftingResult(), grid, 0, 125, 124));
+			addSlotToContainer(new SlotGridCraftingResult(player, grid.getCraftingMatrix(), grid.getCraftingResult(), grid, 0, 137, 124));
 		}
 	}
 }

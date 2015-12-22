@@ -15,6 +15,7 @@ import storagecraft.item.ItemBlockGrid;
 import storagecraft.network.MessageCompareUpdate;
 import storagecraft.network.MessageDetectorAmountUpdate;
 import storagecraft.network.MessageDetectorModeUpdate;
+import storagecraft.network.MessageGridCraftingClear;
 import storagecraft.network.MessageGridCraftingUpdate;
 import storagecraft.network.MessageImporterModeUpdate;
 import storagecraft.network.MessageRedstoneModeUpdate;
@@ -43,6 +44,7 @@ public class CommonProxy
 		StorageCraft.NETWORK.registerMessage(MessageDetectorModeUpdate.class, MessageDetectorModeUpdate.class, 6, Side.SERVER);
 		StorageCraft.NETWORK.registerMessage(MessageDetectorAmountUpdate.class, MessageDetectorAmountUpdate.class, 7, Side.SERVER);
 		StorageCraft.NETWORK.registerMessage(MessageGridCraftingUpdate.class, MessageGridCraftingUpdate.class, 8, Side.CLIENT);
+		StorageCraft.NETWORK.registerMessage(MessageGridCraftingClear.class, MessageGridCraftingClear.class, 9, Side.SERVER);
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(StorageCraft.INSTANCE, new GuiHandler());
 

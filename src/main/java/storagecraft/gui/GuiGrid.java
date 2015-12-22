@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.inventory.Slot;
+import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import storagecraft.StorageCraft;
@@ -13,6 +15,7 @@ import storagecraft.container.ContainerGrid;
 import storagecraft.gui.sidebutton.SideButtonGridSortingDirection;
 import storagecraft.gui.sidebutton.SideButtonGridSortingType;
 import storagecraft.gui.sidebutton.SideButtonRedstoneMode;
+import storagecraft.network.MessageGridCraftingClear;
 import storagecraft.network.MessageStoragePull;
 import storagecraft.network.MessageStoragePush;
 import storagecraft.storage.StorageItem;
@@ -114,6 +117,11 @@ public class GuiGrid extends GuiBase
 		return hoveringSlotId >= 0;
 	}
 
+	public boolean isHoveringOverClear(int mouseX, int mouseY)
+	{
+		return mouseX >= 81 && mouseX <= 87 && mouseY >= 105 && mouseY <= 111;
+	}
+
 	@Override
 	public void drawBackground(int x, int y, int mouseX, int mouseY)
 	{
@@ -191,6 +199,11 @@ public class GuiGrid extends GuiBase
 		if (isHoveringOverValidSlot())
 		{
 			drawTooltip(mouseX, mouseY, items.get(hoveringSlotId).toItemStack());
+		}
+
+		if (grid.isCrafting() && isHoveringOverClear(mouseX, mouseY))
+		{
+			drawTooltip(mouseX, mouseY, t("misc.storagecraft:clear"));
 		}
 	}
 
@@ -281,6 +294,12 @@ public class GuiGrid extends GuiBase
 			else if (isHoveringOverValidSlot() && container.getPlayer().inventory.getItemStack() == null)
 			{
 				StorageCraft.NETWORK.sendToServer(new MessageStoragePull(controller.xCoord, controller.yCoord, controller.zCoord, hoveringId, clickedButton == 1, Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)));
+			}
+			else if (clickedButton == 0 && grid.isCrafting() && isHoveringOverClear(mouseX - guiLeft, mouseY - guiTop))
+			{
+				StorageCraft.NETWORK.sendToServer(new MessageGridCraftingClear(grid));
+
+				mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
 			}
 			else
 			{

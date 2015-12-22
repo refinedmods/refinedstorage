@@ -19,6 +19,8 @@ misc.storagecraft:wirelessGrid.notFound=Grid not found.
 misc.storagecraft:wirelessGrid.notSet=Grid not set yet.
 misc.storagecraft:wirelessGrid.outOfRange=Grid is out of range.
 
+misc.storagecraft:clear=Clear
+
 sidebutton.storagecraft:compare.1=Compare Damage
 sidebutton.storagecraft:compare.2=Compare NBT
 
