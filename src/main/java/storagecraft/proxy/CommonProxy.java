@@ -65,6 +65,7 @@ public class CommonProxy
 		GameRegistry.registerBlock(StorageCraftBlocks.DETECTOR, "detector");
 
 		GameRegistry.registerItem(StorageCraftItems.STORAGE_CELL, "storageCell");
+		GameRegistry.registerItem(StorageCraftItems.WIRELESS_GRID, "wirelessGrid");
 	}
 
 	public void init(FMLInitializationEvent e)

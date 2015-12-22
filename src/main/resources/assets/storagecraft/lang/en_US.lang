@@ -14,6 +14,11 @@ misc.storagecraft:energyUsage=Usage: %d RF/t
 misc.storagecraft:storageCellStored=Stored: %d
 misc.storagecraft:storageCellStoredWithCapacity=Stored: %d / %d
 
+misc.storagecraft:wirelessGrid.set=Grid set at %d, %d, %d.
+misc.storagecraft:wirelessGrid.notFound=Grid not found.
+misc.storagecraft:wirelessGrid.notSet=Grid not set yet.
+misc.storagecraft:wirelessGrid.outOfRange=Grid is out of range.
+
 sidebutton.storagecraft:compare.1=Compare Damage
 sidebutton.storagecraft:compare.2=Compare NBT
 
@@ -58,3 +63,4 @@ item.storagecraft:storageCell.1.name=4k Storage Cell
 item.storagecraft:storageCell.2.name=16k Storage Cell
 item.storagecraft:storageCell.3.name=64k Storage Cell
 item.storagecraft:storageCell.4.name=Creative Storage Cell
+item.storagecraft:wirelessGrid.name=Wireless Grid
