@@ -9,17 +9,20 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import storagecraft.tile.TileController;
 
-public class MessageStoragePush implements IMessage, IMessageHandler<MessageStoragePush, IMessage> {
+public class MessageStoragePush implements IMessage, IMessageHandler<MessageStoragePush, IMessage>
+{
 	private int x;
 	private int y;
 	private int z;
 	private int slot;
 	private boolean one;
 
-	public MessageStoragePush() {
+	public MessageStoragePush()
+	{
 	}
 
-	public MessageStoragePush(int x, int y, int z, int slot, boolean one) {
+	public MessageStoragePush(int x, int y, int z, int slot, boolean one)
+	{
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -28,7 +31,8 @@ public class MessageStoragePush implements IMessage, IMessageHandler<MessageStor
 	}
 
 	@Override
-	public void fromBytes(ByteBuf buf) {
+	public void fromBytes(ByteBuf buf)
+	{
 		x = buf.readInt();
 		y = buf.readInt();
 		z = buf.readInt();
@@ -37,7 +41,8 @@ public class MessageStoragePush implements IMessage, IMessageHandler<MessageStor
 	}
 
 	@Override
-	public void toBytes(ByteBuf buf) {
+	public void toBytes(ByteBuf buf)
+	{
 		buf.writeInt(x);
 		buf.writeInt(y);
 		buf.writeInt(z);
@@ -46,43 +51,58 @@ public class MessageStoragePush implements IMessage, IMessageHandler<MessageStor
 	}
 
 	@Override
-	public IMessage onMessage(MessageStoragePush message, MessageContext context) {
+	public IMessage onMessage(MessageStoragePush message, MessageContext context)
+	{
 		EntityPlayerMP player = context.getServerHandler().playerEntity;
 
 		TileEntity tile = player.worldObj.getTileEntity(message.x, message.y, message.z);
 
-		if (tile instanceof TileController) {
+		if (tile instanceof TileController)
+		{
 			TileController controller = (TileController) tile;
 
 			ItemStack stack;
 
-			if (message.slot == -1) {
+			if (message.slot == -1)
+			{
 				stack = player.inventory.getItemStack().copy();
 
-				if (message.one) {
+				if (message.one)
+				{
 					stack.stackSize = 1;
 				}
-			} else {
+			}
+			else
+			{
 				stack = player.inventory.getStackInSlot(message.slot);
 			}
 
-			if (stack != null) {
+			if (stack != null)
+			{
 				boolean success = controller.push(stack);
 
-				if (success) {
-					if (message.slot == -1) {
-						if (message.one) {
+				if (success)
+				{
+					if (message.slot == -1)
+					{
+						if (message.one)
+						{
 							player.inventory.getItemStack().stackSize--;
 
-							if (player.inventory.getItemStack().stackSize == 0) {
+							if (player.inventory.getItemStack().stackSize == 0)
+							{
 								player.inventory.setItemStack(null);
 							}
-						} else {
+						}
+						else
+						{
 							player.inventory.setItemStack(null);
 						}
 
 						player.updateHeldItem();
-					} else {
+					}
+					else
+					{
 						player.inventory.setInventorySlotContents(message.slot, null);
 					}
 				}

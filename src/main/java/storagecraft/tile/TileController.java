@@ -15,7 +15,8 @@ import storagecraft.storage.IStorageProvider;
 import storagecraft.storage.StorageItem;
 import storagecraft.util.InventoryUtils;
 
-public class TileController extends TileBase implements IEnergyReceiver, INetworkTile, IRedstoneModeSetting {
+public class TileController extends TileBase implements IEnergyReceiver, INetworkTile, IRedstoneModeSetting
+{
 	private List<StorageItem> items = new ArrayList<StorageItem>();
 	private List<IStorage> storages = new ArrayList<IStorage>();
 
@@ -31,42 +32,56 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 	private boolean destroyed = false;
 
 	@Override
-	public void updateEntity() {
+	public void updateEntity()
+	{
 		super.updateEntity();
 
-		if (destroyed) {
+		if (destroyed)
+		{
 			return;
 		}
 
-		if (!worldObj.isRemote) {
-			if (ticks % 40 == 0) {
-				if (!isActive()) {
+		if (!worldObj.isRemote)
+		{
+			if (ticks % 40 == 0)
+			{
+				if (!isActive())
+				{
 					disconnectAll();
-				} else {
+				}
+				else
+				{
 					visitedCables.clear();
 
 					List<TileMachine> newMachines = new ArrayList<TileMachine>();
 
-					for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+					for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+					{
 						TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
 
-						if (tile instanceof TileCable) {
+						if (tile instanceof TileCable)
+						{
 							TileCable cable = (TileCable) tile;
 
-							if (cable.isEnabled()) {
+							if (cable.isEnabled())
+							{
 								cable.addMachines(visitedCables, newMachines, this);
 							}
 						}
 					}
 
-					for (TileMachine machine : machines) {
-						if (!newMachines.contains(machine)) {
+					for (TileMachine machine : machines)
+					{
+						if (!newMachines.contains(machine))
+						{
 							machine.onDisconnected();
 						}
 					}
 
-					for (TileMachine machine : newMachines) {
-						if (!machines.contains(machine)) {
+					for (TileMachine machine : newMachines)
+					{
+						if (!machines.contains(machine))
+						{
 							machine.onConnected(this);
 						}
 					}
@@ -75,8 +90,10 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
 					storages.clear();
 
-					for (TileMachine machine : machines) {
-						if (machine instanceof IStorageProvider) {
+					for (TileMachine machine : machines)
+					{
+						if (machine instanceof IStorageProvider)
+						{
 							((IStorageProvider) machine).addStorages(storages);
 						}
 					}
@@ -86,67 +103,83 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
 				energyUsage = 10;
 
-				for (TileMachine machine : machines) {
+				for (TileMachine machine : machines)
+				{
 					energyUsage += machine.getEnergyUsage();
 				}
 			}
 
 			energy.extractEnergy(energyUsage, false);
-		} else {
+		}
+		else
+		{
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 	}
 
-	public void onDestroyed() {
+	public void onDestroyed()
+	{
 		disconnectAll();
 
 		destroyed = true;
 	}
 
-	private void disconnectAll() {
-		for (TileMachine machine : machines) {
+	private void disconnectAll()
+	{
+		for (TileMachine machine : machines)
+		{
 			machine.onDisconnected();
 		}
 
 		machines.clear();
 	}
 
-	public List<TileMachine> getMachines() {
+	public List<TileMachine> getMachines()
+	{
 		return machines;
 	}
 
-	public List<StorageItem> getItems() {
+	public List<StorageItem> getItems()
+	{
 		return items;
 	}
 
-	private void syncItems() {
+	private void syncItems()
+	{
 		items.clear();
 
-		for (IStorage storage : storages) {
+		for (IStorage storage : storages)
+		{
 			storage.addItems(items);
 		}
 
 		combineItems();
 	}
 
-	private void combineItems() {
+	private void combineItems()
+	{
 		List<Integer> markedIndexes = new ArrayList<Integer>();
 
-		for (int i = 0; i < items.size(); ++i) {
-			if (markedIndexes.contains(i)) {
+		for (int i = 0; i < items.size(); ++i)
+		{
+			if (markedIndexes.contains(i))
+			{
 				continue;
 			}
 
 			StorageItem item = items.get(i);
 
-			for (int j = i + 1; j < items.size(); ++j) {
-				if (markedIndexes.contains(j)) {
+			for (int j = i + 1; j < items.size(); ++j)
+			{
+				if (markedIndexes.contains(j))
+				{
 					continue;
 				}
 
 				StorageItem other = items.get(j);
 
-				if (item.compareNoQuantity(other)) {
+				if (item.compareNoQuantity(other))
+				{
 					item.setQuantity(item.getQuantity() + other.getQuantity());
 
 					markedIndexes.add(j);
@@ -156,25 +189,30 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
 		List<StorageItem> markedItems = new ArrayList<StorageItem>();
 
-		for (int i : markedIndexes) {
+		for (int i : markedIndexes)
+		{
 			markedItems.add(items.get(i));
 		}
 
 		items.removeAll(markedItems);
 	}
 
-	public boolean push(ItemStack stack) {
+	public boolean push(ItemStack stack)
+	{
 		IStorage foundStorage = null;
 
-		for (IStorage storage : storages) {
-			if (storage.canPush(stack)) {
+		for (IStorage storage : storages)
+		{
+			if (storage.canPush(stack))
+			{
 				foundStorage = storage;
 
 				break;
 			}
 		}
 
-		if (foundStorage == null) {
+		if (foundStorage == null)
+		{
 			return false;
 		}
 
@@ -185,30 +223,38 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 		return true;
 	}
 
-	public ItemStack take(ItemStack stack) {
+	public ItemStack take(ItemStack stack)
+	{
 		return take(stack, InventoryUtils.COMPARE_DAMAGE | InventoryUtils.COMPARE_NBT);
 	}
 
-	public ItemStack take(ItemStack stack, int flags) {
+	public ItemStack take(ItemStack stack, int flags)
+	{
 		int requested = stack.stackSize;
 		int receiving = 0;
 
 		ItemStack newStack = null;
 
-		for (IStorage storage : storages) {
+		for (IStorage storage : storages)
+		{
 			ItemStack took = storage.take(stack, flags);
 
-			if (took != null) {
-				if (newStack == null) {
+			if (took != null)
+			{
+				if (newStack == null)
+				{
 					newStack = took;
-				} else {
+				}
+				else
+				{
 					newStack.stackSize += took.stackSize;
 				}
 
 				receiving += took.stackSize;
 			}
 
-			if (requested == receiving) {
+			if (requested == receiving)
+			{
 				break;
 			}
 		}
@@ -219,18 +265,21 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
+	public void readFromNBT(NBTTagCompound nbt)
+	{
 		super.readFromNBT(nbt);
 
 		energy.readFromNBT(nbt);
 
-		if (nbt.hasKey(RedstoneMode.NBT)) {
+		if (nbt.hasKey(RedstoneMode.NBT))
+		{
 			redstoneMode = RedstoneMode.getById(nbt.getInteger(RedstoneMode.NBT));
 		}
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public void writeToNBT(NBTTagCompound nbt)
+	{
 		super.writeToNBT(nbt);
 
 		energy.writeToNBT(nbt);
@@ -239,60 +288,72 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 	}
 
 	@Override
-	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
+	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate)
+	{
 		return energy.receiveEnergy(maxReceive, simulate);
 	}
 
 	@Override
-	public int getEnergyStored(ForgeDirection from) {
+	public int getEnergyStored(ForgeDirection from)
+	{
 		return energy.getEnergyStored();
 	}
 
 	@Override
-	public int getMaxEnergyStored(ForgeDirection from) {
+	public int getMaxEnergyStored(ForgeDirection from)
+	{
 		return energy.getMaxEnergyStored();
 	}
 
-	public int getEnergyUsage() {
+	public int getEnergyUsage()
+	{
 		return energyUsage;
 	}
 
 	@Override
-	public boolean canConnectEnergy(ForgeDirection from) {
+	public boolean canConnectEnergy(ForgeDirection from)
+	{
 		return true;
 	}
 
-	public boolean isActive() {
+	public boolean isActive()
+	{
 		return energy.getEnergyStored() >= getEnergyUsage() && redstoneMode.isEnabled(worldObj, xCoord, yCoord, zCoord);
 	}
 
 	@Override
-	public RedstoneMode getRedstoneMode() {
+	public RedstoneMode getRedstoneMode()
+	{
 		return redstoneMode;
 	}
 
 	@Override
-	public void setRedstoneMode(RedstoneMode mode) {
+	public void setRedstoneMode(RedstoneMode mode)
+	{
 		this.redstoneMode = mode;
 	}
 
 	@Override
-	public int getX() {
+	public int getX()
+	{
 		return xCoord;
 	}
 
 	@Override
-	public int getY() {
+	public int getY()
+	{
 		return yCoord;
 	}
 
 	@Override
-	public int getZ() {
+	public int getZ()
+	{
 		return zCoord;
 	}
 
 	@Override
-	public void fromBytes(ByteBuf buf) {
+	public void fromBytes(ByteBuf buf)
+	{
 		energy.setEnergyStored(buf.readInt());
 		energyUsage = buf.readInt();
 
@@ -302,13 +363,15 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
 		int size = buf.readInt();
 
-		for (int i = 0; i < size; ++i) {
+		for (int i = 0; i < size; ++i)
+		{
 			items.add(new StorageItem(buf));
 		}
 	}
 
 	@Override
-	public void toBytes(ByteBuf buf) {
+	public void toBytes(ByteBuf buf)
+	{
 		buf.writeInt(energy.getEnergyStored());
 		buf.writeInt(energyUsage);
 
@@ -316,7 +379,8 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
 		buf.writeInt(items.size());
 
-		for (StorageItem item : items) {
+		for (StorageItem item : items)
+		{
 			item.toBytes(buf, items.indexOf(item));
 		}
 	}

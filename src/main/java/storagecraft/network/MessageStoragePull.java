@@ -10,7 +10,8 @@ import net.minecraft.tileentity.TileEntity;
 import storagecraft.storage.StorageItem;
 import storagecraft.tile.TileController;
 
-public class MessageStoragePull implements IMessage, IMessageHandler<MessageStoragePull, IMessage> {
+public class MessageStoragePull implements IMessage, IMessageHandler<MessageStoragePull, IMessage>
+{
 	private int x;
 	private int y;
 	private int z;
@@ -18,10 +19,12 @@ public class MessageStoragePull implements IMessage, IMessageHandler<MessageStor
 	private boolean half;
 	private boolean shift;
 
-	public MessageStoragePull() {
+	public MessageStoragePull()
+	{
 	}
 
-	public MessageStoragePull(int x, int y, int z, int id, boolean half, boolean shift) {
+	public MessageStoragePull(int x, int y, int z, int id, boolean half, boolean shift)
+	{
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -31,7 +34,8 @@ public class MessageStoragePull implements IMessage, IMessageHandler<MessageStor
 	}
 
 	@Override
-	public void fromBytes(ByteBuf buf) {
+	public void fromBytes(ByteBuf buf)
+	{
 		x = buf.readInt();
 		y = buf.readInt();
 		z = buf.readInt();
@@ -41,7 +45,8 @@ public class MessageStoragePull implements IMessage, IMessageHandler<MessageStor
 	}
 
 	@Override
-	public void toBytes(ByteBuf buf) {
+	public void toBytes(ByteBuf buf)
+	{
 		buf.writeInt(x);
 		buf.writeInt(y);
 		buf.writeInt(z);
@@ -51,35 +56,45 @@ public class MessageStoragePull implements IMessage, IMessageHandler<MessageStor
 	}
 
 	@Override
-	public IMessage onMessage(MessageStoragePull message, MessageContext context) {
+	public IMessage onMessage(MessageStoragePull message, MessageContext context)
+	{
 		EntityPlayerMP player = context.getServerHandler().playerEntity;
 
 		TileEntity tile = player.worldObj.getTileEntity(message.x, message.y, message.z);
 
-		if (tile instanceof TileController) {
+		if (tile instanceof TileController)
+		{
 			TileController controller = (TileController) tile;
 
-			if (message.id < controller.getItems().size()) {
+			if (message.id < controller.getItems().size())
+			{
 				StorageItem item = controller.getItems().get(message.id);
 
 				int quantity = 64;
 
-				if (message.half && item.getQuantity() > 1) {
+				if (message.half && item.getQuantity() > 1)
+				{
 					quantity = item.getQuantity() / 2;
 
-					if (quantity > 64) {
+					if (quantity > 64)
+					{
 						quantity = 64;
 					}
 				}
 
 				ItemStack took = controller.take(item.copy(quantity).toItemStack());
 
-				if (took != null) {
-					if (message.shift) {
-						if (!player.inventory.addItemStackToInventory(took.copy())) {
+				if (took != null)
+				{
+					if (message.shift)
+					{
+						if (!player.inventory.addItemStackToInventory(took.copy()))
+						{
 							controller.push(took);
 						}
-					} else {
+					}
+					else
+					{
 						player.inventory.setItemStack(took);
 						player.updateHeldItem();
 					}

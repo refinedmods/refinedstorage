@@ -10,7 +10,8 @@ import net.minecraft.tileentity.TileEntity;
 import storagecraft.inventory.InventorySimple;
 import storagecraft.util.InventoryUtils;
 
-public class TileImporter extends TileMachine implements IInventory, ISidedInventory, ICompareSetting {
+public class TileImporter extends TileMachine implements IInventory, ISidedInventory, ICompareSetting
+{
 	public static final int MODE_WHITELIST = 0;
 	public static final int MODE_BLACKLIST = 1;
 
@@ -25,38 +26,50 @@ public class TileImporter extends TileMachine implements IInventory, ISidedInven
 	private int currentSlot = 0;
 
 	@Override
-	public int getEnergyUsage() {
+	public int getEnergyUsage()
+	{
 		return 2;
 	}
 
 	@Override
-	public void updateMachine() {
+	public void updateMachine()
+	{
 		TileEntity tile = worldObj.getTileEntity(xCoord + getDirection().offsetX, yCoord + getDirection().offsetY, zCoord + getDirection().offsetZ);
 
-		if (tile instanceof IInventory) {
+		if (tile instanceof IInventory)
+		{
 			IInventory connectedInventory = (IInventory) tile;
 
-			if (ticks % 5 == 0) {
+			if (ticks % 5 == 0)
+			{
 				ItemStack slot = connectedInventory.getStackInSlot(currentSlot);
 
-				while ((slot = connectedInventory.getStackInSlot(currentSlot)) == null) {
+				while ((slot = connectedInventory.getStackInSlot(currentSlot)) == null)
+				{
 					currentSlot++;
 
-					if (currentSlot > connectedInventory.getSizeInventory() - 1) {
+					if (currentSlot > connectedInventory.getSizeInventory() - 1)
+					{
 						break;
 					}
 				}
 
-				if (slot != null && canImport(slot)) {
-					if (connectedInventory instanceof ISidedInventory) {
+				if (slot != null && canImport(slot))
+				{
+					if (connectedInventory instanceof ISidedInventory)
+					{
 						ISidedInventory sided = (ISidedInventory) connectedInventory;
 
-						if (sided.canExtractItem(currentSlot, slot.copy(), getDirection().getOpposite().ordinal())) {
-							if (getController().push(slot.copy())) {
+						if (sided.canExtractItem(currentSlot, slot.copy(), getDirection().getOpposite().ordinal()))
+						{
+							if (getController().push(slot.copy()))
+							{
 								connectedInventory.setInventorySlotContents(currentSlot, null);
 							}
 						}
-					} else if (getController().push(slot.copy())) {
+					}
+					else if (getController().push(slot.copy()))
+					{
 						connectedInventory.setInventorySlotContents(currentSlot, null);
 					}
 
@@ -65,33 +78,42 @@ public class TileImporter extends TileMachine implements IInventory, ISidedInven
 
 				currentSlot++;
 
-				if (currentSlot > connectedInventory.getSizeInventory() - 1) {
+				if (currentSlot > connectedInventory.getSizeInventory() - 1)
+				{
 					currentSlot = 0;
 				}
 			}
 		}
 	}
 
-	public boolean canImport(ItemStack stack) {
+	public boolean canImport(ItemStack stack)
+	{
 		int slots = 0;
 
-		for (int i = 0; i < inventory.getSizeInventory(); ++i) {
+		for (int i = 0; i < inventory.getSizeInventory(); ++i)
+		{
 			ItemStack slot = inventory.getStackInSlot(i);
 
-			if (slot != null) {
+			if (slot != null)
+			{
 				slots++;
 
-				if (InventoryUtils.compareStack(stack, slot, compare)) {
-					if (mode == MODE_WHITELIST) {
+				if (InventoryUtils.compareStack(stack, slot, compare))
+				{
+					if (mode == MODE_WHITELIST)
+					{
 						return true;
-					} else if (mode == MODE_BLACKLIST) {
+					}
+					else if (mode == MODE_BLACKLIST)
+					{
 						return false;
 					}
 				}
 			}
 		}
 
-		if (mode == MODE_WHITELIST) {
+		if (mode == MODE_WHITELIST)
+		{
 			return slots == 0;
 		}
 
@@ -99,107 +121,131 @@ public class TileImporter extends TileMachine implements IInventory, ISidedInven
 	}
 
 	@Override
-	public int getCompare() {
+	public int getCompare()
+	{
 		return compare;
 	}
 
 	@Override
-	public void setCompare(int compare) {
+	public void setCompare(int compare)
+	{
 		this.compare = compare;
 	}
 
-	public int getMode() {
+	public int getMode()
+	{
 		return mode;
 	}
 
-	public void setMode(int mode) {
+	public void setMode(int mode)
+	{
 		this.mode = mode;
 	}
 
 	@Override
-	public int getSizeInventory() {
+	public int getSizeInventory()
+	{
 		return inventory.getSizeInventory();
 	}
 
 	@Override
-	public ItemStack getStackInSlot(int slot) {
+	public ItemStack getStackInSlot(int slot)
+	{
 		return inventory.getStackInSlot(slot);
 	}
 
 	@Override
-	public ItemStack decrStackSize(int slot, int amount) {
+	public ItemStack decrStackSize(int slot, int amount)
+	{
 		return inventory.decrStackSize(slot, amount);
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int slot) {
+	public ItemStack getStackInSlotOnClosing(int slot)
+	{
 		return inventory.getStackInSlotOnClosing(slot);
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
+	public void setInventorySlotContents(int slot, ItemStack stack)
+	{
 		inventory.setInventorySlotContents(slot, stack);
 	}
 
 	@Override
-	public String getInventoryName() {
+	public String getInventoryName()
+	{
 		return inventory.getInventoryName();
 	}
 
 	@Override
-	public boolean hasCustomInventoryName() {
+	public boolean hasCustomInventoryName()
+	{
 		return inventory.hasCustomInventoryName();
 	}
 
 	@Override
-	public int getInventoryStackLimit() {
+	public int getInventoryStackLimit()
+	{
 		return inventory.getInventoryStackLimit();
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
+	public boolean isUseableByPlayer(EntityPlayer player)
+	{
 		return inventory.isUseableByPlayer(player);
 	}
 
 	@Override
-	public void openInventory() {
+	public void openInventory()
+	{
 		inventory.openInventory();
 	}
 
 	@Override
-	public void closeInventory() {
+	public void closeInventory()
+	{
 		inventory.closeInventory();
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack stack) {
+	public boolean isItemValidForSlot(int slot, ItemStack stack)
+	{
 		return inventory.isItemValidForSlot(slot, stack);
 	}
 
 	@Override
-	public int[] getAccessibleSlotsFromSide(int side) {
-		return new int[] {};
+	public int[] getAccessibleSlotsFromSide(int side)
+	{
+		return new int[]
+		{
+		};
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack stack, int side) {
+	public boolean canInsertItem(int slot, ItemStack stack, int side)
+	{
 		return false;
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack stack, int side) {
+	public boolean canExtractItem(int slot, ItemStack stack, int side)
+	{
 		return false;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
+	public void readFromNBT(NBTTagCompound nbt)
+	{
 		super.readFromNBT(nbt);
 
-		if (nbt.hasKey(NBT_COMPARE)) {
+		if (nbt.hasKey(NBT_COMPARE))
+		{
 			compare = nbt.getInteger(NBT_COMPARE);
 		}
 
-		if (nbt.hasKey(NBT_MODE)) {
+		if (nbt.hasKey(NBT_MODE))
+		{
 			mode = nbt.getInteger(NBT_MODE);
 		}
 
@@ -207,7 +253,8 @@ public class TileImporter extends TileMachine implements IInventory, ISidedInven
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public void writeToNBT(NBTTagCompound nbt)
+	{
 		super.writeToNBT(nbt);
 
 		nbt.setInteger(NBT_COMPARE, compare);
@@ -217,7 +264,8 @@ public class TileImporter extends TileMachine implements IInventory, ISidedInven
 	}
 
 	@Override
-	public void fromBytes(ByteBuf buf) {
+	public void fromBytes(ByteBuf buf)
+	{
 		super.fromBytes(buf);
 
 		compare = buf.readInt();
@@ -225,7 +273,8 @@ public class TileImporter extends TileMachine implements IInventory, ISidedInven
 	}
 
 	@Override
-	public void toBytes(ByteBuf buf) {
+	public void toBytes(ByteBuf buf)
+	{
 		super.toBytes(buf);
 
 		buf.writeInt(compare);

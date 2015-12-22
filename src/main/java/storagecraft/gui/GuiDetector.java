@@ -10,19 +10,22 @@ import storagecraft.network.MessageDetectorAmountUpdate;
 import storagecraft.tile.TileDetector;
 import storagecraft.util.InventoryUtils;
 
-public class GuiDetector extends GuiBase {
+public class GuiDetector extends GuiBase
+{
 	private TileDetector detector;
 
 	private GuiTextField amountField;
 
-	public GuiDetector(ContainerDetector container, TileDetector detector) {
+	public GuiDetector(ContainerDetector container, TileDetector detector)
+	{
 		super(container, 176, 137);
 
 		this.detector = detector;
 	}
 
 	@Override
-	public void init(int x, int y) {
+	public void init(int x, int y)
+	{
 		addSideButton(new SideButtonCompare(detector, InventoryUtils.COMPARE_DAMAGE));
 		addSideButton(new SideButtonCompare(detector, InventoryUtils.COMPARE_NBT));
 
@@ -38,11 +41,13 @@ public class GuiDetector extends GuiBase {
 	}
 
 	@Override
-	public void update(int x, int y) {
+	public void update(int x, int y)
+	{
 	}
 
 	@Override
-	public void drawBackground(int x, int y, int mouseX, int mouseY) {
+	public void drawBackground(int x, int y, int mouseX, int mouseY)
+	{
 		bindTexture("gui/detector.png");
 
 		drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
@@ -51,20 +56,26 @@ public class GuiDetector extends GuiBase {
 	}
 
 	@Override
-	public void drawForeground(int mouseX, int mouseY) {
+	public void drawForeground(int mouseX, int mouseY)
+	{
 		drawString(7, 7, t("gui.storagecraft:detector"));
 		drawString(7, 43, t("container.inventory"));
 	}
 
 	@Override
-	protected void keyTyped(char character, int keyCode) {
-		if (!checkHotbarKeys(keyCode) && amountField.textboxKeyTyped(character, keyCode)) {
+	protected void keyTyped(char character, int keyCode)
+	{
+		if (!checkHotbarKeys(keyCode) && amountField.textboxKeyTyped(character, keyCode))
+		{
 			Integer result = Ints.tryParse(amountField.getText());
 
-			if (result != null) {
+			if (result != null)
+			{
 				StorageCraft.NETWORK.sendToServer(new MessageDetectorAmountUpdate(detector, result));
 			}
-		} else {
+		}
+		else
+		{
 			super.keyTyped(character, keyCode);
 		}
 	}

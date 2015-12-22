@@ -9,9 +9,11 @@ import storagecraft.render.BlockCableRenderer;
 import storagecraft.render.ItemCableRenderer;
 import storagecraft.tile.TileCable;
 
-public class ClientProxy extends CommonProxy {
+public class ClientProxy extends CommonProxy
+{
 	@Override
-	public void preInit(FMLPreInitializationEvent e) {
+	public void preInit(FMLPreInitializationEvent e)
+	{
 		super.preInit(e);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCable.class, new BlockCableRenderer());

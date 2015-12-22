@@ -9,7 +9,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import storagecraft.util.InventoryUtils;
 
-public class StorageItem {
+public class StorageItem
+{
 	private Item type;
 	private int quantity;
 	private int damage;
@@ -17,7 +18,8 @@ public class StorageItem {
 	@SideOnly(Side.CLIENT)
 	private int id;
 
-	public StorageItem(ByteBuf buf) {
+	public StorageItem(ByteBuf buf)
+	{
 		this.id = buf.readInt();
 		this.type = Item.getItemById(buf.readInt());
 		this.quantity = buf.readInt();
@@ -25,77 +27,93 @@ public class StorageItem {
 		this.tag = buf.readBoolean() ? ByteBufUtils.readTag(buf) : null;
 	}
 
-	public StorageItem(Item type, int quantity, int damage, NBTTagCompound tag) {
+	public StorageItem(Item type, int quantity, int damage, NBTTagCompound tag)
+	{
 		this.type = type;
 		this.quantity = quantity;
 		this.damage = damage;
 		this.tag = tag;
 	}
 
-	public StorageItem(Item type, int quantity, int damage, NBTTagCompound tag, int id) {
+	public StorageItem(Item type, int quantity, int damage, NBTTagCompound tag, int id)
+	{
 		this(type, quantity, damage, tag);
 
 		this.id = id;
 	}
 
-	public StorageItem(ItemStack stack) {
+	public StorageItem(ItemStack stack)
+	{
 		this(stack.getItem(), stack.stackSize, stack.getItemDamage(), stack.stackTagCompound);
 	}
 
-	public void toBytes(ByteBuf buf, int id) {
+	public void toBytes(ByteBuf buf, int id)
+	{
 		buf.writeInt(id);
 		buf.writeInt(Item.getIdFromItem(type));
 		buf.writeInt(quantity);
 		buf.writeInt(damage);
 		buf.writeBoolean(tag != null);
 
-		if (tag != null) {
+		if (tag != null)
+		{
 			ByteBufUtils.writeTag(buf, tag);
 		}
 	}
 
-	public Item getType() {
+	public Item getType()
+	{
 		return type;
 	}
 
-	public int getQuantity() {
+	public int getQuantity()
+	{
 		return quantity;
 	}
 
-	public void setQuantity(int quantity) {
+	public void setQuantity(int quantity)
+	{
 		this.quantity = quantity;
 	}
 
-	public int getDamage() {
+	public int getDamage()
+	{
 		return damage;
 	}
 
-	public void setDamage(int damage) {
+	public void setDamage(int damage)
+	{
 		this.damage = damage;
 	}
 
-	public NBTTagCompound getTag() {
+	public NBTTagCompound getTag()
+	{
 		return tag;
 	}
 
-	public void setTag(NBTTagCompound tag) {
+	public void setTag(NBTTagCompound tag)
+	{
 		this.tag = tag;
 	}
 
 	@SideOnly(Side.CLIENT)
-	public int getId() {
+	public int getId()
+	{
 		return id;
 	}
 
-	public StorageItem copy() {
+	public StorageItem copy()
+	{
 		return copy(quantity);
 	}
 
-	public StorageItem copy(int newQuantity) {
+	public StorageItem copy(int newQuantity)
+	{
 		return new StorageItem(type, newQuantity, damage, tag);
 	}
 
-	public ItemStack toItemStack() {
+	public ItemStack toItemStack()
+	{
 		ItemStack stack = new ItemStack(type, quantity, damage);
 
 		stack.stackTagCompound = tag;
@@ -103,21 +121,28 @@ public class StorageItem {
 		return stack;
 	}
 
-	public boolean compare(StorageItem other, int flags) {
-		if ((flags & InventoryUtils.COMPARE_DAMAGE) == InventoryUtils.COMPARE_DAMAGE) {
-			if (damage != other.getDamage()) {
+	public boolean compare(StorageItem other, int flags)
+	{
+		if ((flags & InventoryUtils.COMPARE_DAMAGE) == InventoryUtils.COMPARE_DAMAGE)
+		{
+			if (damage != other.getDamage())
+			{
 				return false;
 			}
 		}
 
-		if ((flags & InventoryUtils.COMPARE_NBT) == InventoryUtils.COMPARE_NBT) {
-			if (tag != null && !tag.equals(other.getTag())) {
+		if ((flags & InventoryUtils.COMPARE_NBT) == InventoryUtils.COMPARE_NBT)
+		{
+			if (tag != null && !tag.equals(other.getTag()))
+			{
 				return false;
 			}
 		}
 
-		if ((flags & InventoryUtils.COMPARE_QUANTITY) == InventoryUtils.COMPARE_QUANTITY) {
-			if (quantity != other.getQuantity()) {
+		if ((flags & InventoryUtils.COMPARE_QUANTITY) == InventoryUtils.COMPARE_QUANTITY)
+		{
+			if (quantity != other.getQuantity())
+			{
 				return false;
 			}
 		}
@@ -125,21 +150,28 @@ public class StorageItem {
 		return type == other.getType();
 	}
 
-	public boolean compare(ItemStack stack, int flags) {
-		if ((flags & InventoryUtils.COMPARE_DAMAGE) == InventoryUtils.COMPARE_DAMAGE) {
-			if (damage != stack.getItemDamage()) {
+	public boolean compare(ItemStack stack, int flags)
+	{
+		if ((flags & InventoryUtils.COMPARE_DAMAGE) == InventoryUtils.COMPARE_DAMAGE)
+		{
+			if (damage != stack.getItemDamage())
+			{
 				return false;
 			}
 		}
 
-		if ((flags & InventoryUtils.COMPARE_NBT) == InventoryUtils.COMPARE_NBT) {
-			if (tag != null && !tag.equals(stack.stackTagCompound)) {
+		if ((flags & InventoryUtils.COMPARE_NBT) == InventoryUtils.COMPARE_NBT)
+		{
+			if (tag != null && !tag.equals(stack.stackTagCompound))
+			{
 				return false;
 			}
 		}
 
-		if ((flags & InventoryUtils.COMPARE_QUANTITY) == InventoryUtils.COMPARE_QUANTITY) {
-			if (quantity != stack.stackSize) {
+		if ((flags & InventoryUtils.COMPARE_QUANTITY) == InventoryUtils.COMPARE_QUANTITY)
+		{
+			if (quantity != stack.stackSize)
+			{
 				return false;
 			}
 		}
@@ -147,11 +179,13 @@ public class StorageItem {
 		return type == stack.getItem();
 	}
 
-	public boolean compareNoQuantity(StorageItem other) {
+	public boolean compareNoQuantity(StorageItem other)
+	{
 		return compare(other, InventoryUtils.COMPARE_NBT | InventoryUtils.COMPARE_DAMAGE);
 	}
 
-	public boolean compareNoQuantity(ItemStack stack) {
+	public boolean compareNoQuantity(ItemStack stack)
+	{
 		return compare(stack, InventoryUtils.COMPARE_NBT | InventoryUtils.COMPARE_DAMAGE);
 	}
 }

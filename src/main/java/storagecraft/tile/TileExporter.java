@@ -10,7 +10,8 @@ import net.minecraft.tileentity.TileEntity;
 import storagecraft.inventory.InventorySimple;
 import storagecraft.util.InventoryUtils;
 
-public class TileExporter extends TileMachine implements IInventory, ISidedInventory, ICompareSetting {
+public class TileExporter extends TileMachine implements IInventory, ISidedInventory, ICompareSetting
+{
 	public static final String NBT_COMPARE = "Compare";
 
 	private InventorySimple inventory = new InventorySimple("exporter", 9);
@@ -18,37 +19,48 @@ public class TileExporter extends TileMachine implements IInventory, ISidedInven
 	private int compare = 0;
 
 	@Override
-	public int getEnergyUsage() {
+	public int getEnergyUsage()
+	{
 		return 2;
 	}
 
 	@Override
-	public void updateMachine() {
+	public void updateMachine()
+	{
 		TileEntity tile = worldObj.getTileEntity(xCoord + getDirection().offsetX, yCoord + getDirection().offsetY, zCoord + getDirection().offsetZ);
 
-		if (tile instanceof IInventory) {
+		if (tile instanceof IInventory)
+		{
 			IInventory connectedInventory = (IInventory) tile;
 
-			if (ticks % 5 == 0) {
-				for (int i = 0; i < inventory.getSizeInventory(); ++i) {
+			if (ticks % 5 == 0)
+			{
+				for (int i = 0; i < inventory.getSizeInventory(); ++i)
+				{
 					ItemStack slot = inventory.getStackInSlot(i);
 
-					if (slot != null) {
+					if (slot != null)
+					{
 						ItemStack toTake = slot.copy();
 
 						toTake.stackSize = 64;
 
 						ItemStack took = getController().take(toTake, compare);
 
-						if (took != null) {
-							if (connectedInventory instanceof ISidedInventory) {
+						if (took != null)
+						{
+							if (connectedInventory instanceof ISidedInventory)
+							{
 								ISidedInventory sided = (ISidedInventory) connectedInventory;
 
 								boolean pushedAny = false;
 
-								for (int si = 0; si < connectedInventory.getSizeInventory(); ++si) {
-									if (sided.canInsertItem(si, took, getDirection().getOpposite().ordinal())) { // @TODO: make more compact
-										if (InventoryUtils.canPushToInventorySlot(connectedInventory, si, took)) {
+								for (int si = 0; si < connectedInventory.getSizeInventory(); ++si)
+								{
+									if (sided.canInsertItem(si, took, getDirection().getOpposite().ordinal()))
+									{ // @TODO: make more compact
+										if (InventoryUtils.canPushToInventorySlot(connectedInventory, si, took))
+										{
 											InventoryUtils.pushToInventorySlot(connectedInventory, si, took);
 
 											pushedAny = true;
@@ -58,12 +70,17 @@ public class TileExporter extends TileMachine implements IInventory, ISidedInven
 									}
 								}
 
-								if (!pushedAny) {
+								if (!pushedAny)
+								{
 									getController().push(took);
 								}
-							} else if (InventoryUtils.canPushToInventory(connectedInventory, took)) {
+							}
+							else if (InventoryUtils.canPushToInventory(connectedInventory, took))
+							{
 								InventoryUtils.pushToInventory(connectedInventory, took);
-							} else {
+							}
+							else
+							{
 								getController().push(took);
 							}
 						}
@@ -74,95 +91,116 @@ public class TileExporter extends TileMachine implements IInventory, ISidedInven
 	}
 
 	@Override
-	public int getCompare() {
+	public int getCompare()
+	{
 		return compare;
 	}
 
 	@Override
-	public void setCompare(int compare) {
+	public void setCompare(int compare)
+	{
 		this.compare = compare;
 	}
 
 	@Override
-	public int getSizeInventory() {
+	public int getSizeInventory()
+	{
 		return inventory.getSizeInventory();
 	}
 
 	@Override
-	public ItemStack getStackInSlot(int slot) {
+	public ItemStack getStackInSlot(int slot)
+	{
 		return inventory.getStackInSlot(slot);
 	}
 
 	@Override
-	public ItemStack decrStackSize(int slot, int amount) {
+	public ItemStack decrStackSize(int slot, int amount)
+	{
 		return inventory.decrStackSize(slot, amount);
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int slot) {
+	public ItemStack getStackInSlotOnClosing(int slot)
+	{
 		return inventory.getStackInSlotOnClosing(slot);
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
+	public void setInventorySlotContents(int slot, ItemStack stack)
+	{
 		inventory.setInventorySlotContents(slot, stack);
 	}
 
 	@Override
-	public String getInventoryName() {
+	public String getInventoryName()
+	{
 		return inventory.getInventoryName();
 	}
 
 	@Override
-	public boolean hasCustomInventoryName() {
+	public boolean hasCustomInventoryName()
+	{
 		return inventory.hasCustomInventoryName();
 	}
 
 	@Override
-	public int getInventoryStackLimit() {
+	public int getInventoryStackLimit()
+	{
 		return inventory.getInventoryStackLimit();
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
+	public boolean isUseableByPlayer(EntityPlayer player)
+	{
 		return inventory.isUseableByPlayer(player);
 	}
 
 	@Override
-	public void openInventory() {
+	public void openInventory()
+	{
 		inventory.openInventory();
 	}
 
 	@Override
-	public void closeInventory() {
+	public void closeInventory()
+	{
 		inventory.closeInventory();
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack stack) {
+	public boolean isItemValidForSlot(int slot, ItemStack stack)
+	{
 		return inventory.isItemValidForSlot(slot, stack);
 	}
 
 	@Override
-	public int[] getAccessibleSlotsFromSide(int side) {
-		return new int[] {};
+	public int[] getAccessibleSlotsFromSide(int side)
+	{
+		return new int[]
+		{
+		};
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack stack, int side) {
+	public boolean canInsertItem(int slot, ItemStack stack, int side)
+	{
 		return false;
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack stack, int side) {
+	public boolean canExtractItem(int slot, ItemStack stack, int side)
+	{
 		return false;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
+	public void readFromNBT(NBTTagCompound nbt)
+	{
 		super.readFromNBT(nbt);
 
-		if (nbt.hasKey(NBT_COMPARE)) {
+		if (nbt.hasKey(NBT_COMPARE))
+		{
 			compare = nbt.getInteger(NBT_COMPARE);
 		}
 
@@ -170,7 +208,8 @@ public class TileExporter extends TileMachine implements IInventory, ISidedInven
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public void writeToNBT(NBTTagCompound nbt)
+	{
 		super.writeToNBT(nbt);
 
 		nbt.setInteger(NBT_COMPARE, compare);
@@ -179,14 +218,16 @@ public class TileExporter extends TileMachine implements IInventory, ISidedInven
 	}
 
 	@Override
-	public void fromBytes(ByteBuf buf) {
+	public void fromBytes(ByteBuf buf)
+	{
 		super.fromBytes(buf);
 
 		compare = buf.readInt();
 	}
 
 	@Override
-	public void toBytes(ByteBuf buf) {
+	public void toBytes(ByteBuf buf)
+	{
 		super.toBytes(buf);
 
 		buf.writeInt(compare);

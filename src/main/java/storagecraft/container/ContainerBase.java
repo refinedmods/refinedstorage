@@ -6,28 +6,35 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import storagecraft.container.slot.SlotSpecimen;
 
-public abstract class ContainerBase extends Container {
+public abstract class ContainerBase extends Container
+{
 	private EntityPlayer player;
 
-	public ContainerBase(EntityPlayer player) {
+	public ContainerBase(EntityPlayer player)
+	{
 		this.player = player;
 	}
 
-	public EntityPlayer getPlayer() {
+	public EntityPlayer getPlayer()
+	{
 		return player;
 	}
 
-	protected void addPlayerInventory(int xInventory, int yInventory) {
+	protected void addPlayerInventory(int xInventory, int yInventory)
+	{
 		int id = 0;
 
-		for (int i = 0; i < 9; i++) {
+		for (int i = 0; i < 9; i++)
+		{
 			addSlotToContainer(new Slot(player.inventory, id, xInventory + i * 18, yInventory + 4 + (3 * 18)));
 
 			id++;
 		}
 
-		for (int y = 0; y < 3; y++) {
-			for (int x = 0; x < 9; x++) {
+		for (int y = 0; y < 3; y++)
+		{
+			for (int x = 0; x < 9; x++)
+			{
 				addSlotToContainer(new Slot(player.inventory, id, xInventory + x * 18, yInventory + y * 18));
 
 				id++;
@@ -36,13 +43,18 @@ public abstract class ContainerBase extends Container {
 	}
 
 	@Override
-	public ItemStack slotClick(int id, int clickedButton, int mode, EntityPlayer player) {
+	public ItemStack slotClick(int id, int clickedButton, int mode, EntityPlayer player)
+	{
 		Slot slot = id >= 0 ? getSlot(id) : null;
 
-		if (slot instanceof SlotSpecimen) {
-			if (clickedButton == 2) {
+		if (slot instanceof SlotSpecimen)
+		{
+			if (clickedButton == 2)
+			{
 				slot.putStack(null);
-			} else {
+			}
+			else
+			{
 				slot.putStack(player.inventory.getItemStack() == null ? null : player.inventory.getItemStack().copy());
 			}
 
@@ -53,12 +65,14 @@ public abstract class ContainerBase extends Container {
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) {
+	public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex)
+	{
 		return null;
 	}
 
 	@Override
-	public boolean canInteractWith(EntityPlayer player) {
+	public boolean canInteractWith(EntityPlayer player)
+	{
 		return true;
 	}
 }

@@ -6,15 +6,18 @@ import storagecraft.gui.GuiBase;
 import storagecraft.network.MessageImporterModeUpdate;
 import storagecraft.tile.TileImporter;
 
-public class SideButtonImporterMode extends SideButton {
+public class SideButtonImporterMode extends SideButton
+{
 	private TileImporter importer;
 
-	public SideButtonImporterMode(TileImporter importer) {
+	public SideButtonImporterMode(TileImporter importer)
+	{
 		this.importer = importer;
 	}
 
 	@Override
-	public String getTooltip(GuiBase gui) {
+	public String getTooltip(GuiBase gui)
+	{
 		StringBuilder builder = new StringBuilder();
 
 		builder.append(EnumChatFormatting.GREEN).append(gui.t("sidebutton.storagecraft:importer.mode")).append(EnumChatFormatting.RESET).append("\n");
@@ -25,11 +28,13 @@ public class SideButtonImporterMode extends SideButton {
 	}
 
 	@Override
-	public void draw(GuiBase gui, int x, int y) {
+	public void draw(GuiBase gui, int x, int y)
+	{
 	}
 
 	@Override
-	public void actionPerformed() {
+	public void actionPerformed()
+	{
 		StorageCraft.NETWORK.sendToServer(new MessageImporterModeUpdate(importer));
 	}
 }

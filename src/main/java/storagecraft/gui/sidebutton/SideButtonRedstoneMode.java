@@ -8,15 +8,18 @@ import storagecraft.gui.GuiBase;
 import storagecraft.network.MessageRedstoneModeUpdate;
 import storagecraft.tile.IRedstoneModeSetting;
 
-public class SideButtonRedstoneMode extends SideButton {
+public class SideButtonRedstoneMode extends SideButton
+{
 	private IRedstoneModeSetting setting;
 
-	public SideButtonRedstoneMode(IRedstoneModeSetting setting) {
+	public SideButtonRedstoneMode(IRedstoneModeSetting setting)
+	{
 		this.setting = setting;
 	}
 
 	@Override
-	public String getTooltip(GuiBase gui) {
+	public String getTooltip(GuiBase gui)
+	{
 		StringBuilder builder = new StringBuilder();
 
 		builder.append(EnumChatFormatting.RED).append(gui.t("sidebutton.storagecraft:redstoneMode")).append(EnumChatFormatting.RESET).append("\n");
@@ -27,12 +30,14 @@ public class SideButtonRedstoneMode extends SideButton {
 	}
 
 	@Override
-	public void draw(GuiBase gui, int x, int y) {
+	public void draw(GuiBase gui, int x, int y)
+	{
 		gui.drawItem(x, y, new ItemStack(Items.redstone, 1));
 	}
 
 	@Override
-	public void actionPerformed() {
+	public void actionPerformed()
+	{
 		StorageCraft.NETWORK.sendToServer(new MessageRedstoneModeUpdate(setting));
 	}
 }

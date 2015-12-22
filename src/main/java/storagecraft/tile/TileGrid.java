@@ -1,12 +1,15 @@
 package storagecraft.tile;
 
-public class TileGrid extends TileMachine {
+public class TileGrid extends TileMachine
+{
 	@Override
-	public int getEnergyUsage() {
+	public int getEnergyUsage()
+	{
 		return 5;
 	}
 
 	@Override
-	public void updateMachine() {
+	public void updateMachine()
+	{
 	}
 }

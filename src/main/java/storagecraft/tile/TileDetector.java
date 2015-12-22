@@ -11,7 +11,8 @@ import storagecraft.inventory.InventorySimple;
 import storagecraft.storage.StorageItem;
 import storagecraft.util.InventoryUtils;
 
-public class TileDetector extends TileMachine implements IInventory, ISidedInventory, ICompareSetting {
+public class TileDetector extends TileMachine implements IInventory, ISidedInventory, ICompareSetting
+{
 	public static final int MODE_UNDER = 0;
 	public static final int MODE_EQUAL = 1;
 	public static final int MODE_ABOVE = 2;
@@ -28,30 +29,38 @@ public class TileDetector extends TileMachine implements IInventory, ISidedInven
 
 	private boolean providesPower = false;
 
-	public TileDetector() {
+	public TileDetector()
+	{
 		this.redstoneControlled = false;
 	}
 
 	@Override
-	public int getEnergyUsage() {
+	public int getEnergyUsage()
+	{
 		return 4;
 	}
 
 	@Override
-	public void updateMachine() {
-		if (ticks % 5 == 0) {
+	public void updateMachine()
+	{
+		if (ticks % 5 == 0)
+		{
 			ItemStack slot = inventory.getStackInSlot(0);
 
 			boolean lastProvidesPower = providesPower;
 
-			if (slot != null) {
+			if (slot != null)
+			{
 				boolean foundAny = false;
 
-				for (StorageItem item : getController().getItems()) {
-					if (item.compare(slot, compare)) {
+				for (StorageItem item : getController().getItems())
+				{
+					if (item.compare(slot, compare))
+					{
 						foundAny = true;
 
-						switch (mode) {
+						switch (mode)
+						{
 							case MODE_UNDER:
 								providesPower = item.getQuantity() < amount;
 								break;
@@ -67,144 +76,181 @@ public class TileDetector extends TileMachine implements IInventory, ISidedInven
 					}
 				}
 
-				if (!foundAny) {
-					if (mode == MODE_UNDER && amount != 0) {
+				if (!foundAny)
+				{
+					if (mode == MODE_UNDER && amount != 0)
+					{
 						providesPower = true;
-					} else if (mode == MODE_EQUAL && amount == 0) {
+					}
+					else if (mode == MODE_EQUAL && amount == 0)
+					{
 						providesPower = true;
-					} else {
+					}
+					else
+					{
 						providesPower = false;
 					}
 				}
-			} else {
+			}
+			else
+			{
 				providesPower = false;
 			}
 
-			if (providesPower != lastProvidesPower) {
+			if (providesPower != lastProvidesPower)
+			{
 				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 				worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, StorageCraftBlocks.DETECTOR);
 			}
 		}
 	}
 
-	public boolean providesPower() {
+	public boolean providesPower()
+	{
 		return providesPower;
 	}
 
 	@Override
-	public int getCompare() {
+	public int getCompare()
+	{
 		return compare;
 	}
 
 	@Override
-	public void setCompare(int compare) {
+	public void setCompare(int compare)
+	{
 		this.compare = compare;
 	}
 
-	public int getMode() {
+	public int getMode()
+	{
 		return mode;
 	}
 
-	public void setMode(int mode) {
+	public void setMode(int mode)
+	{
 		this.mode = mode;
 	}
 
-	public int getAmount() {
+	public int getAmount()
+	{
 		return amount;
 	}
 
-	public void setAmount(int amount) {
+	public void setAmount(int amount)
+	{
 		this.amount = amount;
 	}
 
 	@Override
-	public int getSizeInventory() {
+	public int getSizeInventory()
+	{
 		return inventory.getSizeInventory();
 	}
 
 	@Override
-	public ItemStack getStackInSlot(int slot) {
+	public ItemStack getStackInSlot(int slot)
+	{
 		return inventory.getStackInSlot(slot);
 	}
 
 	@Override
-	public ItemStack decrStackSize(int slot, int amount) {
+	public ItemStack decrStackSize(int slot, int amount)
+	{
 		return inventory.decrStackSize(slot, amount);
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int slot) {
+	public ItemStack getStackInSlotOnClosing(int slot)
+	{
 		return inventory.getStackInSlotOnClosing(slot);
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
+	public void setInventorySlotContents(int slot, ItemStack stack)
+	{
 		inventory.setInventorySlotContents(slot, stack);
 	}
 
 	@Override
-	public String getInventoryName() {
+	public String getInventoryName()
+	{
 		return inventory.getInventoryName();
 	}
 
 	@Override
-	public boolean hasCustomInventoryName() {
+	public boolean hasCustomInventoryName()
+	{
 		return inventory.hasCustomInventoryName();
 	}
 
 	@Override
-	public int getInventoryStackLimit() {
+	public int getInventoryStackLimit()
+	{
 		return inventory.getInventoryStackLimit();
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
+	public boolean isUseableByPlayer(EntityPlayer player)
+	{
 		return inventory.isUseableByPlayer(player);
 	}
 
 	@Override
-	public void openInventory() {
+	public void openInventory()
+	{
 		inventory.openInventory();
 	}
 
 	@Override
-	public void closeInventory() {
+	public void closeInventory()
+	{
 		inventory.closeInventory();
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack stack) {
+	public boolean isItemValidForSlot(int slot, ItemStack stack)
+	{
 		return inventory.isItemValidForSlot(slot, stack);
 	}
 
 	@Override
-	public int[] getAccessibleSlotsFromSide(int side) {
-		return new int[] {};
+	public int[] getAccessibleSlotsFromSide(int side)
+	{
+		return new int[]
+		{
+		};
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack stack, int side) {
+	public boolean canInsertItem(int slot, ItemStack stack, int side)
+	{
 		return false;
 	}
 
 	@Override
-	public boolean canExtractItem(int slot, ItemStack stack, int side) {
+	public boolean canExtractItem(int slot, ItemStack stack, int side)
+	{
 		return false;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
+	public void readFromNBT(NBTTagCompound nbt)
+	{
 		super.readFromNBT(nbt);
 
-		if (nbt.hasKey(NBT_COMPARE)) {
+		if (nbt.hasKey(NBT_COMPARE))
+		{
 			compare = nbt.getInteger(NBT_COMPARE);
 		}
 
-		if (nbt.hasKey(NBT_MODE)) {
+		if (nbt.hasKey(NBT_MODE))
+		{
 			mode = nbt.getInteger(NBT_MODE);
 		}
 
-		if (nbt.hasKey(NBT_AMOUNT)) {
+		if (nbt.hasKey(NBT_AMOUNT))
+		{
 			amount = nbt.getInteger(NBT_AMOUNT);
 		}
 
@@ -212,7 +258,8 @@ public class TileDetector extends TileMachine implements IInventory, ISidedInven
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public void writeToNBT(NBTTagCompound nbt)
+	{
 		super.writeToNBT(nbt);
 
 		nbt.setInteger(NBT_COMPARE, compare);
@@ -223,7 +270,8 @@ public class TileDetector extends TileMachine implements IInventory, ISidedInven
 	}
 
 	@Override
-	public void fromBytes(ByteBuf buf) {
+	public void fromBytes(ByteBuf buf)
+	{
 		super.fromBytes(buf);
 
 		compare = buf.readInt();
@@ -233,7 +281,8 @@ public class TileDetector extends TileMachine implements IInventory, ISidedInven
 	}
 
 	@Override
-	public void toBytes(ByteBuf buf) {
+	public void toBytes(ByteBuf buf)
+	{
 		super.toBytes(buf);
 
 		buf.writeInt(compare);

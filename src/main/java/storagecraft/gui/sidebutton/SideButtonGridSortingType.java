@@ -4,9 +4,11 @@ import net.minecraft.util.EnumChatFormatting;
 import storagecraft.gui.GuiBase;
 import storagecraft.gui.GuiGrid;
 
-public class SideButtonGridSortingType extends SideButton {
+public class SideButtonGridSortingType extends SideButton
+{
 	@Override
-	public String getTooltip(GuiBase gui) {
+	public String getTooltip(GuiBase gui)
+	{
 		StringBuilder builder = new StringBuilder();
 
 		builder.append(EnumChatFormatting.YELLOW).append(gui.t("sidebutton.storagecraft:sorting.type")).append(EnumChatFormatting.RESET).append("\n");
@@ -17,11 +19,13 @@ public class SideButtonGridSortingType extends SideButton {
 	}
 
 	@Override
-	public void draw(GuiBase gui, int x, int y) {
+	public void draw(GuiBase gui, int x, int y)
+	{
 	}
 
 	@Override
-	public void actionPerformed() {
+	public void actionPerformed()
+	{
 		GuiGrid.SORTING_TYPE = GuiGrid.SORTING_TYPE == GuiGrid.SORTING_TYPE_COUNT ? GuiGrid.SORTING_TYPE_NAME : GuiGrid.SORTING_TYPE_COUNT;
 	}
 }

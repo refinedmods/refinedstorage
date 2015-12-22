@@ -8,16 +8,19 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import storagecraft.tile.ICompareSetting;
 
-public class MessageCompareUpdate implements IMessage, IMessageHandler<MessageCompareUpdate, IMessage> {
+public class MessageCompareUpdate implements IMessage, IMessageHandler<MessageCompareUpdate, IMessage>
+{
 	private int x;
 	private int y;
 	private int z;
 	private int compare;
 
-	public MessageCompareUpdate() {
+	public MessageCompareUpdate()
+	{
 	}
 
-	public MessageCompareUpdate(ICompareSetting setting, int compare) {
+	public MessageCompareUpdate(ICompareSetting setting, int compare)
+	{
 		this.x = setting.getX();
 		this.y = setting.getY();
 		this.z = setting.getZ();
@@ -25,7 +28,8 @@ public class MessageCompareUpdate implements IMessage, IMessageHandler<MessageCo
 	}
 
 	@Override
-	public void fromBytes(ByteBuf buf) {
+	public void fromBytes(ByteBuf buf)
+	{
 		x = buf.readInt();
 		y = buf.readInt();
 		z = buf.readInt();
@@ -33,7 +37,8 @@ public class MessageCompareUpdate implements IMessage, IMessageHandler<MessageCo
 	}
 
 	@Override
-	public void toBytes(ByteBuf buf) {
+	public void toBytes(ByteBuf buf)
+	{
 		buf.writeInt(x);
 		buf.writeInt(y);
 		buf.writeInt(z);
@@ -41,12 +46,14 @@ public class MessageCompareUpdate implements IMessage, IMessageHandler<MessageCo
 	}
 
 	@Override
-	public IMessage onMessage(MessageCompareUpdate message, MessageContext context) {
+	public IMessage onMessage(MessageCompareUpdate message, MessageContext context)
+	{
 		EntityPlayerMP player = context.getServerHandler().playerEntity;
 
 		TileEntity tile = player.worldObj.getTileEntity(message.x, message.y, message.z);
 
-		if (tile instanceof ICompareSetting) {
+		if (tile instanceof ICompareSetting)
+		{
 			((ICompareSetting) tile).setCompare(message.compare);
 		}
 

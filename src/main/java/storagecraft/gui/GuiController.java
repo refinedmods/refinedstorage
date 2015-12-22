@@ -4,26 +4,31 @@ import storagecraft.container.ContainerController;
 import storagecraft.gui.sidebutton.SideButtonRedstoneMode;
 import storagecraft.tile.TileController;
 
-public class GuiController extends GuiBase {
+public class GuiController extends GuiBase
+{
 	private TileController controller;
 
-	public GuiController(ContainerController container, TileController controller) {
+	public GuiController(ContainerController container, TileController controller)
+	{
 		super(container, 176, 190);
 
 		this.controller = controller;
 	}
 
 	@Override
-	public void init(int x, int y) {
+	public void init(int x, int y)
+	{
 		addSideButton(new SideButtonRedstoneMode(controller));
 	}
 
 	@Override
-	public void update(int x, int y) {
+	public void update(int x, int y)
+	{
 	}
 
 	@Override
-	public void drawBackground(int x, int y, int mouseX, int mouseY) {
+	public void drawBackground(int x, int y, int mouseX, int mouseY)
+	{
 		bindTexture("gui/controller.png");
 
 		drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
@@ -39,7 +44,8 @@ public class GuiController extends GuiBase {
 	}
 
 	@Override
-	public void drawForeground(int mouseX, int mouseY) {
+	public void drawForeground(int mouseX, int mouseY)
+	{
 		drawString(7, 7, t("gui.storagecraft:controller"));
 		drawString(7, 96, t("container.inventory"));
 

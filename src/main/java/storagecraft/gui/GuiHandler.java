@@ -21,9 +21,12 @@ import storagecraft.tile.TileGrid;
 import storagecraft.tile.TileImporter;
 import storagecraft.tile.TileStorageProxy;
 
-public class GuiHandler implements IGuiHandler {
-	private Container getContainer(int ID, EntityPlayer player, TileEntity tile) {
-		switch (ID) {
+public class GuiHandler implements IGuiHandler
+{
+	private Container getContainer(int ID, EntityPlayer player, TileEntity tile)
+	{
+		switch (ID)
+		{
 			case StorageCraft.GUI.CONTROLLER:
 				return new ContainerController(player);
 			case StorageCraft.GUI.GRID:
@@ -44,15 +47,18 @@ public class GuiHandler implements IGuiHandler {
 	}
 
 	@Override
-	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+	{
 		return getContainer(ID, player, world.getTileEntity(x, y, z));
 	}
 
 	@Override
-	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+	{
 		TileEntity tile = world.getTileEntity(x, y, z);
 
-		switch (ID) {
+		switch (ID)
+		{
 			case StorageCraft.GUI.CONTROLLER:
 				return new GuiController((ContainerController) getContainer(ID, player, tile), (TileController) tile);
 			case StorageCraft.GUI.GRID:

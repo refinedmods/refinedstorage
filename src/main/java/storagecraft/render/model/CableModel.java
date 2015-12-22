@@ -8,7 +8,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 import storagecraft.tile.TileCable;
 
-public class CableModel extends ModelBase {
+public class CableModel extends ModelBase
+{
 	public static final ResourceLocation CABLE_RESOURCE = new ResourceLocation("storagecraft:textures/blocks/cable.png");
 	public static final ResourceLocation CABLE_UNPOWERED_RESOURCE = new ResourceLocation("storagecraft:textures/blocks/cableUnpowered.png");
 	public static final ResourceLocation CABLE_POWERED_RESOURCE = new ResourceLocation("storagecraft:textures/blocks/cablePowered.png");
@@ -21,7 +22,8 @@ public class CableModel extends ModelBase {
 	private ModelRenderer south;
 	private ModelRenderer west;
 
-	public CableModel() {
+	public CableModel()
+	{
 		core = new ModelRenderer(this, 0, 0);
 		core.addBox(6F, 6F, 6F, 4, 4, 4);
 		core.setTextureSize(16, 16);
@@ -51,16 +53,21 @@ public class CableModel extends ModelBase {
 		west.setTextureSize(16, 16);
 	}
 
-	public void render(ItemStack cable, float x) {
-		if (cable.getItemDamage() == 1) {
+	public void render(ItemStack cable, float x)
+	{
+		if (cable.getItemDamage() == 1)
+		{
 			Minecraft.getMinecraft().renderEngine.bindTexture(CABLE_UNPOWERED_RESOURCE);
-		} else {
+		}
+		else
+		{
 			Minecraft.getMinecraft().renderEngine.bindTexture(CABLE_RESOURCE);
 		}
 
 		core.render(x);
 
-		if (cable.getItemDamage() == 1) {
+		if (cable.getItemDamage() == 1)
+		{
 			Minecraft.getMinecraft().renderEngine.bindTexture(CABLE_RESOURCE);
 		}
 
@@ -68,44 +75,58 @@ public class CableModel extends ModelBase {
 		south.render(x);
 	}
 
-	public void render(TileCable cable, float x) {
-		if (cable.isSensitiveCable()) {
-			if (cable.isPowered()) {
+	public void render(TileCable cable, float x)
+	{
+		if (cable.isSensitiveCable())
+		{
+			if (cable.isPowered())
+			{
 				Minecraft.getMinecraft().renderEngine.bindTexture(CABLE_POWERED_RESOURCE);
-			} else {
+			}
+			else
+			{
 				Minecraft.getMinecraft().renderEngine.bindTexture(CABLE_UNPOWERED_RESOURCE);
 			}
-		} else {
+		}
+		else
+		{
 			Minecraft.getMinecraft().renderEngine.bindTexture(CABLE_RESOURCE);
 		}
 
 		core.render(x);
 
-		if (cable.isSensitiveCable()) {
+		if (cable.isSensitiveCable())
+		{
 			Minecraft.getMinecraft().renderEngine.bindTexture(CABLE_RESOURCE);
 		}
 
-		if (cable.hasConnection(ForgeDirection.UP)) {
+		if (cable.hasConnection(ForgeDirection.UP))
+		{
 			up.render(x);
 		}
 
-		if (cable.hasConnection(ForgeDirection.DOWN)) {
+		if (cable.hasConnection(ForgeDirection.DOWN))
+		{
 			down.render(x);
 		}
 
-		if (cable.hasConnection(ForgeDirection.NORTH)) {
+		if (cable.hasConnection(ForgeDirection.NORTH))
+		{
 			north.render(x);
 		}
 
-		if (cable.hasConnection(ForgeDirection.EAST)) {
+		if (cable.hasConnection(ForgeDirection.EAST))
+		{
 			east.render(x);
 		}
 
-		if (cable.hasConnection(ForgeDirection.SOUTH)) {
+		if (cable.hasConnection(ForgeDirection.SOUTH))
+		{
 			south.render(x);
 		}
 
-		if (cable.hasConnection(ForgeDirection.WEST)) {
+		if (cable.hasConnection(ForgeDirection.WEST))
+		{
 			west.render(x);
 		}
 	}

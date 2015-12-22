@@ -8,41 +8,48 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import storagecraft.tile.IRedstoneModeSetting;
 
-public class MessageRedstoneModeUpdate implements IMessage, IMessageHandler<MessageRedstoneModeUpdate, IMessage> {
+public class MessageRedstoneModeUpdate implements IMessage, IMessageHandler<MessageRedstoneModeUpdate, IMessage>
+{
 	private int x;
 	private int y;
 	private int z;
 
-	public MessageRedstoneModeUpdate() {
+	public MessageRedstoneModeUpdate()
+	{
 	}
 
-	public MessageRedstoneModeUpdate(IRedstoneModeSetting setting) {
+	public MessageRedstoneModeUpdate(IRedstoneModeSetting setting)
+	{
 		this.x = setting.getX();
 		this.y = setting.getY();
 		this.z = setting.getZ();
 	}
 
 	@Override
-	public void fromBytes(ByteBuf buf) {
+	public void fromBytes(ByteBuf buf)
+	{
 		x = buf.readInt();
 		y = buf.readInt();
 		z = buf.readInt();
 	}
 
 	@Override
-	public void toBytes(ByteBuf buf) {
+	public void toBytes(ByteBuf buf)
+	{
 		buf.writeInt(x);
 		buf.writeInt(y);
 		buf.writeInt(z);
 	}
 
 	@Override
-	public IMessage onMessage(MessageRedstoneModeUpdate message, MessageContext context) {
+	public IMessage onMessage(MessageRedstoneModeUpdate message, MessageContext context)
+	{
 		EntityPlayerMP player = context.getServerHandler().playerEntity;
 
 		TileEntity tile = player.worldObj.getTileEntity(message.x, message.y, message.z);
 
-		if (tile instanceof IRedstoneModeSetting) {
+		if (tile instanceof IRedstoneModeSetting)
+		{
 			IRedstoneModeSetting setting = (IRedstoneModeSetting) tile;
 
 			setting.setRedstoneMode(setting.getRedstoneMode().next());

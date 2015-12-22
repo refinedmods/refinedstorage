@@ -28,8 +28,10 @@ import storagecraft.tile.TileGrid;
 import storagecraft.tile.TileImporter;
 import storagecraft.tile.TileStorageProxy;
 
-public class CommonProxy {
-	public void preInit(FMLPreInitializationEvent e) {
+public class CommonProxy
+{
+	public void preInit(FMLPreInitializationEvent e)
+	{
 		StorageCraft.NETWORK.registerMessage(MessageTileUpdate.class, MessageTileUpdate.class, 0, Side.CLIENT);
 		StorageCraft.NETWORK.registerMessage(MessageRedstoneModeUpdate.class, MessageRedstoneModeUpdate.class, 1, Side.SERVER);
 		StorageCraft.NETWORK.registerMessage(MessageStoragePush.class, MessageStoragePush.class, 2, Side.SERVER);
@@ -62,9 +64,11 @@ public class CommonProxy {
 		GameRegistry.registerItem(StorageCraftItems.STORAGE_CELL, "storageCell");
 	}
 
-	public void init(FMLInitializationEvent e) {
+	public void init(FMLInitializationEvent e)
+	{
 	}
 
-	public void postInit(FMLPostInitializationEvent e) {
+	public void postInit(FMLPostInitializationEvent e)
+	{
 	}
 }

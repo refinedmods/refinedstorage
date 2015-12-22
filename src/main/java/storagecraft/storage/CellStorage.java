@@ -7,7 +7,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import storagecraft.item.ItemStorageCell;
 
-public class CellStorage implements IStorage {
+public class CellStorage implements IStorage
+{
 	public static final String NBT_ITEMS = "Items";
 	public static final String NBT_STORED = "Stored";
 
@@ -18,31 +19,37 @@ public class CellStorage implements IStorage {
 
 	private ItemStack cell;
 
-	public CellStorage(ItemStack cell) {
+	public CellStorage(ItemStack cell)
+	{
 		this.cell = cell;
 	}
 
 	@Override
-	public void addItems(List<StorageItem> items) {
+	public void addItems(List<StorageItem> items)
+	{
 		NBTTagList list = (NBTTagList) cell.stackTagCompound.getTag(NBT_ITEMS);
 
-		for (int i = 0; i < list.tagCount(); ++i) {
+		for (int i = 0; i < list.tagCount(); ++i)
+		{
 			items.add(createItemFromNBT(list.getCompoundTagAt(i)));
 		}
 	}
 
 	@Override
-	public void push(ItemStack stack) {
+	public void push(ItemStack stack)
+	{
 		NBTTagList list = (NBTTagList) cell.stackTagCompound.getTag(NBT_ITEMS);
 
 		cell.stackTagCompound.setInteger(NBT_STORED, ItemStorageCell.getStored(cell) + stack.stackSize);
 
-		for (int i = 0; i < list.tagCount(); ++i) {
+		for (int i = 0; i < list.tagCount(); ++i)
+		{
 			NBTTagCompound tag = list.getCompoundTagAt(i);
 
 			StorageItem item = createItemFromNBT(tag);
 
-			if (item.compareNoQuantity(stack)) {
+			if (item.compareNoQuantity(stack))
+			{
 				tag.setInteger(NBT_ITEM_QUANTITY, item.getQuantity() + stack.stackSize);
 
 				return;
@@ -55,7 +62,8 @@ public class CellStorage implements IStorage {
 		tag.setInteger(NBT_ITEM_QUANTITY, stack.stackSize);
 		tag.setInteger(NBT_ITEM_DAMAGE, stack.getItemDamage());
 
-		if (stack.stackTagCompound != null) {
+		if (stack.stackTagCompound != null)
+		{
 			tag.setTag(NBT_ITEM_NBT, stack.stackTagCompound);
 		}
 
@@ -63,24 +71,29 @@ public class CellStorage implements IStorage {
 	}
 
 	@Override
-	public ItemStack take(ItemStack stack, int flags) {
+	public ItemStack take(ItemStack stack, int flags)
+	{
 		int quantity = stack.stackSize;
 
 		NBTTagList list = (NBTTagList) cell.stackTagCompound.getTag(NBT_ITEMS);
 
-		for (int i = 0; i < list.tagCount(); ++i) {
+		for (int i = 0; i < list.tagCount(); ++i)
+		{
 			NBTTagCompound tag = list.getCompoundTagAt(i);
 
 			StorageItem item = createItemFromNBT(tag);
 
-			if (item.compare(stack, flags)) {
-				if (quantity > item.getQuantity()) {
+			if (item.compare(stack, flags))
+			{
+				if (quantity > item.getQuantity())
+				{
 					quantity = item.getQuantity();
 				}
 
 				tag.setInteger(NBT_ITEM_QUANTITY, item.getQuantity() - quantity);
 
-				if (item.getQuantity() - quantity == 0) {
+				if (item.getQuantity() - quantity == 0)
+				{
 					list.removeTag(i);
 				}
 
@@ -98,15 +111,18 @@ public class CellStorage implements IStorage {
 	}
 
 	@Override
-	public boolean canPush(ItemStack stack) {
-		if (ItemStorageCell.getCapacity(cell) == -1) {
+	public boolean canPush(ItemStack stack)
+	{
+		if (ItemStorageCell.getCapacity(cell) == -1)
+		{
 			return true;
 		}
 
 		return (ItemStorageCell.getStored(cell) + stack.stackSize) <= ItemStorageCell.getCapacity(cell);
 	}
 
-	private StorageItem createItemFromNBT(NBTTagCompound tag) {
+	private StorageItem createItemFromNBT(NBTTagCompound tag)
+	{
 		return new StorageItem(Item.getItemById(tag.getInteger(NBT_ITEM_TYPE)), tag.getInteger(NBT_ITEM_QUANTITY), tag.getInteger(NBT_ITEM_DAMAGE), tag.hasKey(NBT_ITEM_NBT) ? ((NBTTagCompound) tag.getTag(NBT_ITEM_NBT)) : null);
 	}
 }

@@ -6,15 +6,18 @@ import storagecraft.gui.GuiBase;
 import storagecraft.network.MessageDetectorModeUpdate;
 import storagecraft.tile.TileDetector;
 
-public class SideButtonDetectorMode extends SideButton {
+public class SideButtonDetectorMode extends SideButton
+{
 	private TileDetector detector;
 
-	public SideButtonDetectorMode(TileDetector detector) {
+	public SideButtonDetectorMode(TileDetector detector)
+	{
 		this.detector = detector;
 	}
 
 	@Override
-	public String getTooltip(GuiBase gui) {
+	public String getTooltip(GuiBase gui)
+	{
 		StringBuilder builder = new StringBuilder();
 
 		builder.append(EnumChatFormatting.GREEN).append(gui.t("sidebutton.storagecraft:detector.mode")).append(EnumChatFormatting.RESET).append("\n");
@@ -25,11 +28,13 @@ public class SideButtonDetectorMode extends SideButton {
 	}
 
 	@Override
-	public void draw(GuiBase gui, int x, int y) {
+	public void draw(GuiBase gui, int x, int y)
+	{
 	}
 
 	@Override
-	public void actionPerformed() {
+	public void actionPerformed()
+	{
 		StorageCraft.NETWORK.sendToServer(new MessageDetectorModeUpdate(detector));
 	}
 }

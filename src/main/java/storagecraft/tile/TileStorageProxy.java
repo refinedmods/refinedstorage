@@ -9,11 +9,14 @@ import storagecraft.storage.IStorageProvider;
 import storagecraft.storage.StorageItem;
 import storagecraft.util.InventoryUtils;
 
-public class TileStorageProxy extends TileMachine implements IStorageProvider, IStorage {
-	public IInventory getInventory() {
+public class TileStorageProxy extends TileMachine implements IStorageProvider, IStorage
+{
+	public IInventory getInventory()
+	{
 		TileEntity tile = worldObj.getTileEntity(xCoord + getDirection().offsetX, yCoord + getDirection().offsetY, zCoord + getDirection().offsetZ);
 
-		if (tile instanceof IInventory) {
+		if (tile instanceof IInventory)
+		{
 			return (IInventory) tile;
 		}
 
@@ -21,21 +24,27 @@ public class TileStorageProxy extends TileMachine implements IStorageProvider, I
 	}
 
 	@Override
-	public int getEnergyUsage() {
+	public int getEnergyUsage()
+	{
 		return 2;
 	}
 
 	@Override
-	public void updateMachine() {
+	public void updateMachine()
+	{
 	}
 
 	@Override
-	public void addItems(List<StorageItem> items) {
+	public void addItems(List<StorageItem> items)
+	{
 		IInventory inventory = getInventory();
 
-		if (inventory != null) {
-			for (int i = 0; i < inventory.getSizeInventory(); ++i) {
-				if (inventory.getStackInSlot(i) != null) {
+		if (inventory != null)
+		{
+			for (int i = 0; i < inventory.getSizeInventory(); ++i)
+			{
+				if (inventory.getStackInSlot(i) != null)
+				{
 					items.add(new StorageItem(inventory.getStackInSlot(i)));
 				}
 			}
@@ -43,10 +52,12 @@ public class TileStorageProxy extends TileMachine implements IStorageProvider, I
 	}
 
 	@Override
-	public void push(ItemStack stack) {
+	public void push(ItemStack stack)
+	{
 		IInventory inventory = getInventory();
 
-		if (inventory == null) {
+		if (inventory == null)
+		{
 			return;
 		}
 
@@ -54,26 +65,32 @@ public class TileStorageProxy extends TileMachine implements IStorageProvider, I
 	}
 
 	@Override
-	public ItemStack take(ItemStack stack, int flags) {
+	public ItemStack take(ItemStack stack, int flags)
+	{
 		IInventory inventory = getInventory();
 
-		if (inventory == null) {
+		if (inventory == null)
+		{
 			return null;
 		}
 
 		int quantity = stack.stackSize;
 
-		for (int i = 0; i < inventory.getSizeInventory(); ++i) {
+		for (int i = 0; i < inventory.getSizeInventory(); ++i)
+		{
 			ItemStack slot = inventory.getStackInSlot(i);
 
-			if (slot != null && InventoryUtils.compareStack(slot, stack, flags)) {
-				if (quantity > slot.stackSize) {
+			if (slot != null && InventoryUtils.compareStack(slot, stack, flags))
+			{
+				if (quantity > slot.stackSize)
+				{
 					quantity = slot.stackSize;
 				}
 
 				slot.stackSize -= quantity;
 
-				if (slot.stackSize == 0) {
+				if (slot.stackSize == 0)
+				{
 					inventory.setInventorySlotContents(i, null);
 				}
 
@@ -89,10 +106,12 @@ public class TileStorageProxy extends TileMachine implements IStorageProvider, I
 	}
 
 	@Override
-	public boolean canPush(ItemStack stack) {
+	public boolean canPush(ItemStack stack)
+	{
 		IInventory inventory = getInventory();
 
-		if (inventory == null) {
+		if (inventory == null)
+		{
 			return false;
 		}
 
@@ -100,7 +119,8 @@ public class TileStorageProxy extends TileMachine implements IStorageProvider, I
 	}
 
 	@Override
-	public void addStorages(List<IStorage> storages) {
+	public void addStorages(List<IStorage> storages)
+	{
 		storages.add(this);
 	}
 }

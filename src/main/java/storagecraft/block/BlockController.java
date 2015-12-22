@@ -10,22 +10,27 @@ import net.minecraft.world.World;
 import storagecraft.StorageCraft;
 import storagecraft.tile.TileController;
 
-public class BlockController extends BlockBase implements ITileEntityProvider {
+public class BlockController extends BlockBase implements ITileEntityProvider
+{
 	private IIcon sideIcon;
 	private IIcon[] icons = new IIcon[6];
 
-	public BlockController() {
+	public BlockController()
+	{
 		super("controller");
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
+	public TileEntity createNewTileEntity(World world, int meta)
+	{
 		return new TileController();
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-		if (!world.isRemote) {
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
+	{
+		if (!world.isRemote)
+		{
 			player.openGui(StorageCraft.INSTANCE, StorageCraft.GUI.CONTROLLER, world, x, y, z);
 		}
 
@@ -33,15 +38,18 @@ public class BlockController extends BlockBase implements ITileEntityProvider {
 	}
 
 	@Override
-	public void onBlockPreDestroy(World world, int x, int y, int z, int meta) {
+	public void onBlockPreDestroy(World world, int x, int y, int z, int meta)
+	{
 		((TileController) world.getTileEntity(x, y, z)).onDestroyed();
 
 		super.onBlockPreDestroy(world, x, y, z, meta);
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister register) {
-		for (int i = 0; i <= 5; ++i) {
+	public void registerBlockIcons(IIconRegister register)
+	{
+		for (int i = 0; i <= 5; ++i)
+		{
 			icons[i] = register.registerIcon("storagecraft:controller" + i);
 		}
 
@@ -49,8 +57,10 @@ public class BlockController extends BlockBase implements ITileEntityProvider {
 	}
 
 	@Override
-	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) {
-		if (side == 0 || side == 1) {
+	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
+	{
+		if (side == 0 || side == 1)
+		{
 			return sideIcon;
 		}
 
@@ -60,8 +70,10 @@ public class BlockController extends BlockBase implements ITileEntityProvider {
 	}
 
 	@Override
-	public IIcon getIcon(int side, int meta) {
-		if (side == 0 || side == 1) {
+	public IIcon getIcon(int side, int meta)
+	{
+		if (side == 0 || side == 1)
+		{
 			return sideIcon;
 		}
 

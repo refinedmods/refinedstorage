@@ -1,6 +1,7 @@
 package storagecraft.tile;
 
-public interface ICompareSetting {
+public interface ICompareSetting
+{
 	public int getCompare();
 
 	public void setCompare(int compare);

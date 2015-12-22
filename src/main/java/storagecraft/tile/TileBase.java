@@ -10,7 +10,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 import storagecraft.StorageCraft;
 import storagecraft.network.MessageTileUpdate;
 
-public abstract class TileBase extends TileEntity {
+public abstract class TileBase extends TileEntity
+{
 	public static final int UPDATE_RANGE = 256;
 
 	private ForgeDirection direction = ForgeDirection.UNKNOWN;
@@ -18,13 +19,16 @@ public abstract class TileBase extends TileEntity {
 	protected int ticks;
 
 	@Override
-	public void updateEntity() {
+	public void updateEntity()
+	{
 		super.updateEntity();
 
 		ticks++;
 
-		if (!worldObj.isRemote) {
-			if (this instanceof INetworkTile) {
+		if (!worldObj.isRemote)
+		{
+			if (this instanceof INetworkTile)
+			{
 				TargetPoint target = new TargetPoint(worldObj.provider.dimensionId, xCoord, yCoord, zCoord, UPDATE_RANGE);
 
 				StorageCraft.NETWORK.sendToAllAround(new MessageTileUpdate(this), target);
@@ -32,30 +36,35 @@ public abstract class TileBase extends TileEntity {
 		}
 	}
 
-	public void setDirection(ForgeDirection direction) {
+	public void setDirection(ForgeDirection direction)
+	{
 		this.direction = direction;
 	}
 
-	public ForgeDirection getDirection() {
+	public ForgeDirection getDirection()
+	{
 		return direction;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
+	public void readFromNBT(NBTTagCompound nbt)
+	{
 		super.readFromNBT(nbt);
 
 		direction = ForgeDirection.getOrientation(nbt.getInteger("Direction"));
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public void writeToNBT(NBTTagCompound nbt)
+	{
 		super.writeToNBT(nbt);
 
 		nbt.setInteger("Direction", direction.ordinal());
 	}
 
 	@Override
-	public Packet getDescriptionPacket() {
+	public Packet getDescriptionPacket()
+	{
 		NBTTagCompound nbt = new NBTTagCompound();
 
 		nbt.setInteger("Direction", direction.ordinal());
@@ -64,7 +73,8 @@ public abstract class TileBase extends TileEntity {
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
+	{
 		direction = ForgeDirection.getOrientation(packet.func_148857_g().getInteger("Direction"));
 	}
 }

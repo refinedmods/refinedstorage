@@ -1,6 +1,7 @@
 package storagecraft.tile;
 
-public interface IRedstoneModeSetting {
+public interface IRedstoneModeSetting
+{
 	public RedstoneMode getRedstoneMode();
 
 	public void setRedstoneMode(RedstoneMode mode);

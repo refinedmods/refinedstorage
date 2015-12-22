@@ -6,17 +6,20 @@ import storagecraft.gui.sidebutton.SideButtonRedstoneMode;
 import storagecraft.tile.TileExporter;
 import storagecraft.util.InventoryUtils;
 
-public class GuiExporter extends GuiBase {
+public class GuiExporter extends GuiBase
+{
 	private TileExporter exporter;
 
-	public GuiExporter(ContainerExporter container, TileExporter exporter) {
+	public GuiExporter(ContainerExporter container, TileExporter exporter)
+	{
 		super(container, 176, 137);
 
 		this.exporter = exporter;
 	}
 
 	@Override
-	public void init(int x, int y) {
+	public void init(int x, int y)
+	{
 		addSideButton(new SideButtonRedstoneMode(exporter));
 
 		addSideButton(new SideButtonCompare(exporter, InventoryUtils.COMPARE_DAMAGE));
@@ -24,18 +27,21 @@ public class GuiExporter extends GuiBase {
 	}
 
 	@Override
-	public void update(int x, int y) {
+	public void update(int x, int y)
+	{
 	}
 
 	@Override
-	public void drawBackground(int x, int y, int mouseX, int mouseY) {
+	public void drawBackground(int x, int y, int mouseX, int mouseY)
+	{
 		bindTexture("gui/exporter.png");
 
 		drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
 	}
 
 	@Override
-	public void drawForeground(int mouseX, int mouseY) {
+	public void drawForeground(int mouseX, int mouseY)
+	{
 		drawString(7, 7, t("gui.storagecraft:exporter"));
 		drawString(7, 43, t("container.inventory"));
 	}

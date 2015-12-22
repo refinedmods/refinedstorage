@@ -9,35 +9,43 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import storagecraft.tile.TileCable;
 
-public class BlockCable extends BlockBase implements ITileEntityProvider {
-	public BlockCable() {
+public class BlockCable extends BlockBase implements ITileEntityProvider
+{
+	public BlockCable()
+	{
 		super("cable");
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
+	public TileEntity createNewTileEntity(World world, int meta)
+	{
 		return new TileCable();
 	}
 
 	@Override
-	public void getSubBlocks(Item item, CreativeTabs tab, List subItems) {
-		for (int i = 0; i < 2; i++) {
+	public void getSubBlocks(Item item, CreativeTabs tab, List subItems)
+	{
+		for (int i = 0; i < 2; i++)
+		{
 			subItems.add(new ItemStack(item, 1, i));
 		}
 	}
 
 	@Override
-	public int getRenderType() {
+	public int getRenderType()
+	{
 		return -1;
 	}
 
 	@Override
-	public boolean isOpaqueCube() {
+	public boolean isOpaqueCube()
+	{
 		return false;
 	}
 
 	@Override
-	public boolean renderAsNormalBlock() {
+	public boolean renderAsNormalBlock()
+	{
 		return false;
 	}
 }

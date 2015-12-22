@@ -4,10 +4,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import storagecraft.StorageCraft;
 
-public abstract class ItemBase extends Item {
+public abstract class ItemBase extends Item
+{
 	private String name;
 
-	public ItemBase(String name) {
+	public ItemBase(String name)
+	{
 		this.name = name;
 
 		setCreativeTab(StorageCraft.TAB);
@@ -15,13 +17,16 @@ public abstract class ItemBase extends Item {
 	}
 
 	@Override
-	public String getUnlocalizedName() {
+	public String getUnlocalizedName()
+	{
 		return "item." + StorageCraft.ID + ":" + name;
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack stack) {
-		if (getHasSubtypes()) {
+	public String getUnlocalizedName(ItemStack stack)
+	{
+		if (getHasSubtypes())
+		{
 			return getUnlocalizedName() + "." + stack.getItemDamage();
 		}
 
