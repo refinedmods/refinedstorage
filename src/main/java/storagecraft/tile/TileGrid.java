@@ -1,5 +1,6 @@
 package storagecraft.tile;
 
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
@@ -9,6 +10,7 @@ import storagecraft.container.ContainerGridCrafting;
 import storagecraft.inventory.InventorySimple;
 import storagecraft.network.MessageGridCraftingUpdate;
 import storagecraft.storage.StorageItem;
+import static storagecraft.tile.TileBase.UPDATE_RANGE;
 import storagecraft.util.InventoryUtils;
 
 public class TileGrid extends TileMachine
@@ -73,7 +75,9 @@ public class TileGrid extends TileMachine
 			onCraftingMatrixChanged();
 
 			// @TODO: HACK!
-			StorageCraft.NETWORK.sendToAll(new MessageGridCraftingUpdate(this));
+			TargetPoint target = new TargetPoint(worldObj.provider.dimensionId, xCoord, yCoord, zCoord, UPDATE_RANGE);
+
+			StorageCraft.NETWORK.sendToAllAround(new MessageGridCraftingUpdate(this), target);
 		}
 	}
 
