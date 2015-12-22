@@ -2,6 +2,7 @@ package storagecraft.container;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
+import storagecraft.container.slot.SlotGridCraftingResult;
 import storagecraft.tile.TileGrid;
 
 public class ContainerGrid extends ContainerBase
@@ -17,7 +18,7 @@ public class ContainerGrid extends ContainerBase
 
 			for (int i = 0; i < 9; ++i)
 			{
-				addSlotToContainer(new Slot(grid.getCraftingInventory(), i, x, y));
+				addSlotToContainer(new Slot(grid.getCraftingMatrix(), i, x, y));
 
 				x += 18;
 
@@ -28,7 +29,7 @@ public class ContainerGrid extends ContainerBase
 				}
 			}
 
-			addSlotToContainer(new Slot(grid.getCraftingInventory(), 9, 125, 124));
+			addSlotToContainer(new SlotGridCraftingResult(player, grid.getCraftingMatrix(), grid.getCraftingResult(), 0, 125, 124));
 		}
 
 		addPlayerInventory(8, grid.isCrafting() ? 174 : 108);

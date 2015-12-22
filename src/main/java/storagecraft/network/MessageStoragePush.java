@@ -74,6 +74,7 @@ public class MessageStoragePush implements IMessage, IMessageHandler<MessageStor
 			}
 			else
 			{
+				// @TODO: This crashes sometimes on shift??
 				stack = player.inventory.getStackInSlot(message.slot);
 			}
 
