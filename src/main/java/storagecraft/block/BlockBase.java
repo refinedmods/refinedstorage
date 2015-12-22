@@ -83,7 +83,7 @@ public abstract class BlockBase extends Block
 	{
 		TileEntity tile = world.getTileEntity(x, y, z);
 
-		if (tile instanceof IInventory)
+		if (tile instanceof IInventory && tile instanceof TileBase && ((TileBase) tile).canDropInventory())
 		{
 			InventoryUtils.dropInventory(world, (IInventory) tile, x, y, z);
 		}

@@ -77,4 +77,9 @@ public abstract class TileBase extends TileEntity
 	{
 		direction = ForgeDirection.getOrientation(packet.func_148857_g().getInteger("Direction"));
 	}
+
+	public boolean canDropInventory()
+	{
+		return true;
+	}
 }

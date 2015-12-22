@@ -280,4 +280,10 @@ public class TileImporter extends TileMachine implements IInventory, ISidedInven
 		buf.writeInt(compare);
 		buf.writeInt(mode);
 	}
+
+	@Override
+	public boolean canDropInventory()
+	{
+		return false;
+	}
 }

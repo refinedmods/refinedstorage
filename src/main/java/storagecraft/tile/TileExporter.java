@@ -232,4 +232,10 @@ public class TileExporter extends TileMachine implements IInventory, ISidedInven
 
 		buf.writeInt(compare);
 	}
+
+	@Override
+	public boolean canDropInventory()
+	{
+		return false;
+	}
 }
