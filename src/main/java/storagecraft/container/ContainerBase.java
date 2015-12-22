@@ -1,5 +1,7 @@
 package storagecraft.container;
 
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
@@ -9,6 +11,8 @@ import storagecraft.container.slot.SlotSpecimen;
 public abstract class ContainerBase extends Container
 {
 	private EntityPlayer player;
+
+	private List<Slot> playerInventorySlots = new ArrayList<Slot>();
 
 	public ContainerBase(EntityPlayer player)
 	{
@@ -26,7 +30,11 @@ public abstract class ContainerBase extends Container
 
 		for (int i = 0; i < 9; i++)
 		{
-			addSlotToContainer(new Slot(player.inventory, id, xInventory + i * 18, yInventory + 4 + (3 * 18)));
+			Slot slot = new Slot(player.inventory, id, xInventory + i * 18, yInventory + 4 + (3 * 18));
+
+			playerInventorySlots.add(slot);
+
+			addSlotToContainer(slot);
 
 			id++;
 		}
@@ -35,7 +43,11 @@ public abstract class ContainerBase extends Container
 		{
 			for (int x = 0; x < 9; x++)
 			{
-				addSlotToContainer(new Slot(player.inventory, id, xInventory + x * 18, yInventory + y * 18));
+				Slot slot = new Slot(player.inventory, id, xInventory + x * 18, yInventory + y * 18);
+
+				playerInventorySlots.add(slot);
+
+				addSlotToContainer(slot);
 
 				id++;
 			}
@@ -74,5 +86,10 @@ public abstract class ContainerBase extends Container
 	public boolean canInteractWith(EntityPlayer player)
 	{
 		return true;
+	}
+
+	public List<Slot> getPlayerInventorySlots()
+	{
+		return playerInventorySlots;
 	}
 }

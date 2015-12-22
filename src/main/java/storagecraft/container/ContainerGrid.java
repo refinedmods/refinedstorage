@@ -11,6 +11,8 @@ public class ContainerGrid extends ContainerBase
 	{
 		super(player);
 
+		addPlayerInventory(8, grid.isCrafting() ? 174 : 108);
+
 		if (grid.isCrafting())
 		{
 			int x = 44;
@@ -29,9 +31,7 @@ public class ContainerGrid extends ContainerBase
 				}
 			}
 
-			addSlotToContainer(new SlotGridCraftingResult(player, grid.getCraftingMatrix(), grid.getCraftingResult(), 0, 125, 124));
+			addSlotToContainer(new SlotGridCraftingResult(player, grid.getCraftingMatrix(), grid.getCraftingResult(), grid, 0, 125, 124));
 		}
-
-		addPlayerInventory(8, grid.isCrafting() ? 174 : 108);
 	}
 }

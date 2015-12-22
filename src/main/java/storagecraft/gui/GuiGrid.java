@@ -284,10 +284,8 @@ public class GuiGrid extends GuiBase
 			}
 			else
 			{
-				for (int i = 0; i < container.inventorySlots.size(); ++i)
+				for (Slot slot : container.getPlayerInventorySlots())
 				{
-					Slot slot = (Slot) container.inventorySlots.get(i);
-
 					if (inBounds(slot.xDisplayPosition, slot.yDisplayPosition, 16, 16, mouseX - guiLeft, mouseY - guiTop))
 					{
 						if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))

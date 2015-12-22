@@ -55,18 +55,15 @@ public class TileExporter extends TileMachine implements IInventory, ISidedInven
 
 								boolean pushedAny = false;
 
-								for (int si = 0; si < connectedInventory.getSizeInventory(); ++si)
+								for (int sidedSlot = 0; sidedSlot < connectedInventory.getSizeInventory(); ++sidedSlot)
 								{
-									if (sided.canInsertItem(si, took, getDirection().getOpposite().ordinal()))
-									{ // @TODO: make more compact
-										if (InventoryUtils.canPushToInventorySlot(connectedInventory, si, took))
-										{
-											InventoryUtils.pushToInventorySlot(connectedInventory, si, took);
+									if (sided.canInsertItem(sidedSlot, took, getDirection().getOpposite().ordinal()) && InventoryUtils.canPushToInventorySlot(connectedInventory, sidedSlot, took))
+									{
+										InventoryUtils.pushToInventorySlot(connectedInventory, sidedSlot, took);
 
-											pushedAny = true;
+										pushedAny = true;
 
-											break;
-										}
+										break;
 									}
 								}
 
