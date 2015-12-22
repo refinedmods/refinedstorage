@@ -10,7 +10,6 @@ import storagecraft.container.ContainerGridCrafting;
 import storagecraft.inventory.InventorySimple;
 import storagecraft.network.MessageGridCraftingUpdate;
 import storagecraft.storage.StorageItem;
-import static storagecraft.tile.TileBase.UPDATE_RANGE;
 import storagecraft.util.InventoryUtils;
 
 public class TileGrid extends TileMachine
