@@ -37,7 +37,7 @@ import storagecraft.tile.TileExporter;
 import storagecraft.tile.TileGrid;
 import storagecraft.tile.TileImporter;
 import storagecraft.tile.TileSolderer;
-import storagecraft.tile.TileStorageProxy;
+import storagecraft.tile.TileExternalStorage;
 import storagecraft.tile.solderer.SoldererRecipeCraftingGrid;
 import storagecraft.tile.solderer.SoldererRecipeDrive;
 import storagecraft.tile.solderer.SoldererRecipePrintedProcessor;
@@ -65,7 +65,7 @@ public class CommonProxy
 		GameRegistry.registerTileEntity(TileCable.class, "cable");
 		GameRegistry.registerTileEntity(TileGrid.class, "grid");
 		GameRegistry.registerTileEntity(TileDrive.class, "drive");
-		GameRegistry.registerTileEntity(TileStorageProxy.class, "storageProxy");
+		GameRegistry.registerTileEntity(TileExternalStorage.class, "externalStorage");
 		GameRegistry.registerTileEntity(TileImporter.class, "importer");
 		GameRegistry.registerTileEntity(TileExporter.class, "exporter");
 		GameRegistry.registerTileEntity(TileDetector.class, "detector");
@@ -75,7 +75,7 @@ public class CommonProxy
 		GameRegistry.registerBlock(StorageCraftBlocks.CABLE, ItemBlockCable.class, "cable");
 		GameRegistry.registerBlock(StorageCraftBlocks.GRID, ItemBlockGrid.class, "grid");
 		GameRegistry.registerBlock(StorageCraftBlocks.DRIVE, "drive");
-		GameRegistry.registerBlock(StorageCraftBlocks.STORAGE_PROXY, "storageProxy");
+		GameRegistry.registerBlock(StorageCraftBlocks.EXTERNAL_STORAGE, "externalStorage");
 		GameRegistry.registerBlock(StorageCraftBlocks.IMPORTER, "importer");
 		GameRegistry.registerBlock(StorageCraftBlocks.EXPORTER, "exporter");
 		GameRegistry.registerBlock(StorageCraftBlocks.DETECTOR, "detector");
@@ -198,8 +198,8 @@ public class CommonProxy
 			'A', new ItemStack(StorageCraftItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)
 		);
 
-		// Storage Proxy
-		GameRegistry.addRecipe(new ItemStack(StorageCraftBlocks.STORAGE_PROXY),
+		// External Storage
+		GameRegistry.addRecipe(new ItemStack(StorageCraftBlocks.EXTERNAL_STORAGE),
 			"CED",
 			"HMH",
 			"EPE",

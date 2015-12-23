@@ -13,7 +13,7 @@ import storagecraft.container.ContainerExporter;
 import storagecraft.container.ContainerGrid;
 import storagecraft.container.ContainerImporter;
 import storagecraft.container.ContainerSolderer;
-import storagecraft.container.ContainerStorageProxy;
+import storagecraft.container.ContainerExternalStorage;
 import storagecraft.tile.TileController;
 import storagecraft.tile.TileDetector;
 import storagecraft.tile.TileDrive;
@@ -21,7 +21,7 @@ import storagecraft.tile.TileExporter;
 import storagecraft.tile.TileGrid;
 import storagecraft.tile.TileImporter;
 import storagecraft.tile.TileSolderer;
-import storagecraft.tile.TileStorageProxy;
+import storagecraft.tile.TileExternalStorage;
 
 public class GuiHandler implements IGuiHandler
 {
@@ -35,8 +35,8 @@ public class GuiHandler implements IGuiHandler
 				return new ContainerGrid(player, (TileGrid) tile);
 			case StorageCraft.GUI.DRIVE:
 				return new ContainerDrive(player, (TileDrive) tile);
-			case StorageCraft.GUI.STORAGE_PROXY:
-				return new ContainerStorageProxy(player);
+			case StorageCraft.GUI.EXTERNAL_STORAGE:
+				return new ContainerExternalStorage(player);
 			case StorageCraft.GUI.IMPORTER:
 				return new ContainerImporter(player, (TileImporter) tile);
 			case StorageCraft.GUI.EXPORTER:
@@ -69,8 +69,8 @@ public class GuiHandler implements IGuiHandler
 				return new GuiGrid((ContainerGrid) getContainer(ID, player, tile), (TileGrid) tile);
 			case StorageCraft.GUI.DRIVE:
 				return new GuiDrive((ContainerDrive) getContainer(ID, player, tile), (TileDrive) tile);
-			case StorageCraft.GUI.STORAGE_PROXY:
-				return new GuiStorageProxy((ContainerStorageProxy) getContainer(ID, player, tile), (TileStorageProxy) tile);
+			case StorageCraft.GUI.EXTERNAL_STORAGE:
+				return new GuiExternalStorage((ContainerExternalStorage) getContainer(ID, player, tile), (TileExternalStorage) tile);
 			case StorageCraft.GUI.IMPORTER:
 				return new GuiImporter((ContainerImporter) getContainer(ID, player, tile), (TileImporter) tile);
 			case StorageCraft.GUI.EXPORTER:

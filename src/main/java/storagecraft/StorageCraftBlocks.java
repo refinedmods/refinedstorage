@@ -9,7 +9,7 @@ import storagecraft.block.BlockGrid;
 import storagecraft.block.BlockImporter;
 import storagecraft.block.BlockMachineCasing;
 import storagecraft.block.BlockSolderer;
-import storagecraft.block.BlockStorageProxy;
+import storagecraft.block.BlockExternalStorage;
 
 public class StorageCraftBlocks
 {
@@ -17,7 +17,7 @@ public class StorageCraftBlocks
 	public static final BlockCable CABLE = new BlockCable();
 	public static final BlockGrid GRID = new BlockGrid();
 	public static final BlockDrive DRIVE = new BlockDrive();
-	public static final BlockStorageProxy STORAGE_PROXY = new BlockStorageProxy();
+	public static final BlockExternalStorage EXTERNAL_STORAGE = new BlockExternalStorage();
 	public static final BlockImporter IMPORTER = new BlockImporter();
 	public static final BlockExporter EXPORTER = new BlockExporter();
 	public static final BlockDetector DETECTOR = new BlockDetector();

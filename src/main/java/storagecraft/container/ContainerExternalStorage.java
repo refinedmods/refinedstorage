@@ -2,9 +2,9 @@ package storagecraft.container;
 
 import net.minecraft.entity.player.EntityPlayer;
 
-public class ContainerStorageProxy extends ContainerBase
+public class ContainerExternalStorage extends ContainerBase
 {
-	public ContainerStorageProxy(EntityPlayer player)
+	public ContainerExternalStorage(EntityPlayer player)
 	{
 		super(player);
 

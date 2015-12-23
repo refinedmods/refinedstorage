@@ -9,7 +9,7 @@ import storagecraft.storage.IStorageProvider;
 import storagecraft.storage.StorageItem;
 import storagecraft.util.InventoryUtils;
 
-public class TileStorageProxy extends TileMachine implements IStorageProvider, IStorage
+public class TileExternalStorage extends TileMachine implements IStorageProvider, IStorage
 {
 	public IInventory getInventory()
 	{

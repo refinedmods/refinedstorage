@@ -8,22 +8,22 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import storagecraft.StorageCraft;
-import storagecraft.tile.TileStorageProxy;
+import storagecraft.tile.TileExternalStorage;
 
-public class BlockStorageProxy extends BlockBase implements ITileEntityProvider
+public class BlockExternalStorage extends BlockBase implements ITileEntityProvider
 {
 	private IIcon frontIcon;
 	private IIcon sideIcon;
 
-	public BlockStorageProxy()
+	public BlockExternalStorage()
 	{
-		super("storageProxy");
+		super("externalStorage");
 	}
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta)
 	{
-		return new TileStorageProxy();
+		return new TileExternalStorage();
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public class BlockStorageProxy extends BlockBase implements ITileEntityProvider
 	{
 		if (!world.isRemote)
 		{
-			player.openGui(StorageCraft.INSTANCE, StorageCraft.GUI.STORAGE_PROXY, world, x, y, z);
+			player.openGui(StorageCraft.INSTANCE, StorageCraft.GUI.EXTERNAL_STORAGE, world, x, y, z);
 		}
 
 		return true;
@@ -40,14 +40,14 @@ public class BlockStorageProxy extends BlockBase implements ITileEntityProvider
 	@Override
 	public void registerBlockIcons(IIconRegister register)
 	{
-		frontIcon = register.registerIcon("storagecraft:storageProxy");
+		frontIcon = register.registerIcon("storagecraft:externalStorage");
 		sideIcon = register.registerIcon("storagecraft:generic");
 	}
 
 	@Override
 	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
 	{
-		TileStorageProxy tile = (TileStorageProxy) world.getTileEntity(x, y, z);
+		TileExternalStorage tile = (TileExternalStorage) world.getTileEntity(x, y, z);
 
 		if (side == tile.getDirection().ordinal())
 		{

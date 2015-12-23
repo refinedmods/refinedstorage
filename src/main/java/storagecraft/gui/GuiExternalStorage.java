@@ -1,24 +1,24 @@
 package storagecraft.gui;
 
-import storagecraft.container.ContainerStorageProxy;
+import storagecraft.container.ContainerExternalStorage;
 import storagecraft.gui.sidebutton.SideButtonRedstoneMode;
-import storagecraft.tile.TileStorageProxy;
+import storagecraft.tile.TileExternalStorage;
 
-public class GuiStorageProxy extends GuiBase
+public class GuiExternalStorage extends GuiBase
 {
-	private TileStorageProxy storageProxy;
+	private TileExternalStorage externalStorage;
 
-	public GuiStorageProxy(ContainerStorageProxy container, TileStorageProxy storageProxy)
+	public GuiExternalStorage(ContainerExternalStorage container, TileExternalStorage externalStorage)
 	{
 		super(container, 176, 131);
 
-		this.storageProxy = storageProxy;
+		this.externalStorage = externalStorage;
 	}
 
 	@Override
 	public void init(int x, int y)
 	{
-		addSideButton(new SideButtonRedstoneMode(storageProxy));
+		addSideButton(new SideButtonRedstoneMode(externalStorage));
 	}
 
 	@Override
@@ -29,7 +29,7 @@ public class GuiStorageProxy extends GuiBase
 	@Override
 	public void drawBackground(int x, int y, int mouseX, int mouseY)
 	{
-		bindTexture("gui/storageProxy.png");
+		bindTexture("gui/externalStorage.png");
 
 		drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
 	}
@@ -37,7 +37,7 @@ public class GuiStorageProxy extends GuiBase
 	@Override
 	public void drawForeground(int mouseX, int mouseY)
 	{
-		drawString(7, 7, t("gui.storagecraft:storageProxy"));
+		drawString(7, 7, t("gui.storagecraft:externalStorage"));
 		drawString(7, 39, t("container.inventory"));
 	}
 }
