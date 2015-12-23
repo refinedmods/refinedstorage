@@ -16,20 +16,16 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
 
 	public void onConnected(TileController controller)
 	{
-		this.connected = true;
+		connected = true;
 
-		this.xController = controller.xCoord;
-		this.yController = controller.yCoord;
-		this.zController = controller.zCoord;
-
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		xController = controller.xCoord;
+		yController = controller.yCoord;
+		zController = controller.zCoord;
 	}
 
 	public void onDisconnected()
 	{
-		this.connected = false;
-
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		connected = false;
 	}
 
 	@Override
@@ -89,6 +85,8 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
 	@Override
 	public void fromBytes(ByteBuf buf)
 	{
+		boolean lastConnected = connected;
+
 		connected = buf.readBoolean();
 
 		if (connected)
@@ -99,6 +97,11 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
 		}
 
 		redstoneMode = RedstoneMode.getById(buf.readInt());
+
+		if (lastConnected != connected)
+		{
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		}
 	}
 
 	@Override
