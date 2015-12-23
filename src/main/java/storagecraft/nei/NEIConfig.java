@@ -11,7 +11,6 @@ public class NEIConfig implements IConfigureNEI
 	{
 		API.registerRecipeHandler(new CraftingHandlerSolderer());
 		API.registerUsageHandler(new CraftingHandlerSolderer());
-		// API.setGuiOffset(GuiSolderer.class, 0, 0);
 	}
 
 	@Override
