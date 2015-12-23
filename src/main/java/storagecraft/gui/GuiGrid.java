@@ -119,8 +119,7 @@ public class GuiGrid extends GuiBase
 
 	public boolean isHoveringOverClear(int mouseX, int mouseY)
 	{
-		// @TODO: Use inBounds
-		return mouseX >= 81 && mouseX <= 87 && mouseY >= 105 && mouseY <= 111;
+		return inBounds(81, 105, 7, 7, mouseX, mouseY);
 	}
 
 	@Override
@@ -284,6 +283,8 @@ public class GuiGrid extends GuiBase
 	{
 		super.mouseClicked(mouseX, mouseY, clickedButton);
 
+		boolean clickedClear = grid.isCrafting() && clickedButton == 0 && isHoveringOverClear(mouseX - guiLeft, mouseY - guiTop);
+
 		if (grid.isConnected())
 		{
 			TileController controller = grid.getController();
@@ -296,11 +297,9 @@ public class GuiGrid extends GuiBase
 			{
 				StorageCraft.NETWORK.sendToServer(new MessageStoragePull(controller.xCoord, controller.yCoord, controller.zCoord, hoveringId, clickedButton == 1, Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)));
 			}
-			else if (clickedButton == 0 && grid.isCrafting() && isHoveringOverClear(mouseX - guiLeft, mouseY - guiTop))
+			else if (clickedClear)
 			{
 				StorageCraft.NETWORK.sendToServer(new MessageGridCraftingClear(grid));
-
-				mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
 			}
 			else
 			{
@@ -315,6 +314,11 @@ public class GuiGrid extends GuiBase
 					}
 				}
 			}
+		}
+
+		if (clickedClear)
+		{
+			mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
 		}
 	}
 
