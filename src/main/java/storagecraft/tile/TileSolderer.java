@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import storagecraft.inventory.InventorySimple;
@@ -12,9 +13,11 @@ import storagecraft.tile.solderer.ISoldererRecipe;
 import storagecraft.tile.solderer.SoldererRegistry;
 import storagecraft.util.InventoryUtils;
 
-// @TODO: Write working and progress to NBT
-public class TileSolderer extends TileMachine implements IInventory
+public class TileSolderer extends TileMachine implements IInventory, ISidedInventory
 {
+	public static final String NBT_WORKING = "Working";
+	public static final String NBT_PROGRESS = "Progress";
+
 	private InventorySimple inventory = new InventorySimple("solderer", 4);
 	private ISoldererRecipe recipe;
 	private boolean working = false;
@@ -152,11 +155,56 @@ public class TileSolderer extends TileMachine implements IInventory
 	}
 
 	@Override
+	public int[] getAccessibleSlotsFromSide(int side)
+	{
+		// On all sides, but not the bottom we can reach the slots
+		if (side > 0)
+		{
+			return new int[]
+			{
+				0, 1, 2
+			};
+		}
+
+		// On the bottom we can only reach the output slot
+		return new int[]
+		{
+			3
+		};
+	}
+
+	@Override
+	public boolean canInsertItem(int slot, ItemStack stack, int side)
+	{
+		// We can insert in all slots, but not the output slot or via the output side
+		return side != 0 && slot != 3;
+	}
+
+	@Override
+	public boolean canExtractItem(int slot, ItemStack stack, int side)
+	{
+		// We can only extract from the buttom in the last slot
+		return side == 0 && slot == 3;
+	}
+
+	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
 
 		InventoryUtils.restoreInventory(this, nbt);
+
+		recipe = SoldererRegistry.getRecipe(inventory);
+
+		if (nbt.hasKey(NBT_WORKING))
+		{
+			working = nbt.getBoolean(NBT_WORKING);
+		}
+
+		if (nbt.hasKey(NBT_PROGRESS))
+		{
+			progress = nbt.getInteger(NBT_PROGRESS);
+		}
 	}
 
 	@Override
@@ -165,6 +213,9 @@ public class TileSolderer extends TileMachine implements IInventory
 		super.writeToNBT(nbt);
 
 		InventoryUtils.saveInventory(this, nbt);
+
+		nbt.setBoolean(NBT_WORKING, working);
+		nbt.setInteger(NBT_PROGRESS, progress);
 	}
 
 	@Override

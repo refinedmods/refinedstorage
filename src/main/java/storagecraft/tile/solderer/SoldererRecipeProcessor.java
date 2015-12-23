@@ -50,6 +50,16 @@ public class SoldererRecipeProcessor implements ISoldererRecipe
 	@Override
 	public int getDuration()
 	{
-		return 200;
+		switch (type)
+		{
+			case ItemProcessor.TYPE_BASIC:
+				return 250;
+			case ItemProcessor.TYPE_IMPROVED:
+				return 300;
+			case ItemProcessor.TYPE_ADVANCED:
+				return 350;
+		}
+
+		return 0;
 	}
 }

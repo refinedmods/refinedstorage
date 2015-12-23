@@ -44,6 +44,18 @@ public class SoldererRecipePrintedProcessor implements ISoldererRecipe
 	@Override
 	public int getDuration()
 	{
-		return 100;
+		switch (type)
+		{
+			case ItemProcessor.TYPE_PRINTED_BASIC:
+				return 100;
+			case ItemProcessor.TYPE_PRINTED_IMPROVED:
+				return 150;
+			case ItemProcessor.TYPE_PRINTED_ADVANCED:
+				return 200;
+			case ItemProcessor.TYPE_PRINTED_SILICON:
+				return 90;
+		}
+
+		return 0;
 	}
 }

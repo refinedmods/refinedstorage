@@ -36,6 +36,6 @@ public class SoldererRecipeDrive implements ISoldererRecipe
 	@Override
 	public int getDuration()
 	{
-		return 400;
+		return 500;
 	}
 }

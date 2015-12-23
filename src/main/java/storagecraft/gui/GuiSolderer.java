@@ -35,7 +35,7 @@ public class GuiSolderer extends GuiBase
 
 		if (solderer.isWorking())
 		{
-			drawTexturedModalRect(x + 83, y + 40 - 1, 177, 0, solderer.getProgressScaled(21), 14);
+			drawTexturedModalRect(x + 83, y + 40 - 1, 177, 0, solderer.getProgressScaled(22), 15);
 		}
 	}
 
