@@ -12,7 +12,8 @@ import storagecraft.tile.TileDetector;
 
 public class BlockDetector extends BlockBase implements ITileEntityProvider
 {
-	private IIcon frontIcon;
+	private IIcon poweredIcon;
+	private IIcon unpoweredIcon;
 	private IIcon sideIcon;
 
 	public BlockDetector()
@@ -60,31 +61,32 @@ public class BlockDetector extends BlockBase implements ITileEntityProvider
 	@Override
 	public void registerBlockIcons(IIconRegister register)
 	{
-		frontIcon = register.registerIcon("storagecraft:detector");
+		poweredIcon = register.registerIcon("storagecraft:detectorPowered");
+		unpoweredIcon = register.registerIcon("storagecraft:detectorUnpowered");
 		sideIcon = register.registerIcon("storagecraft:generic");
 	}
 
 	@Override
 	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
 	{
-		TileDetector tile = (TileDetector) world.getTileEntity(x, y, z);
-
-		if (side == tile.getDirection().ordinal())
+		if (side == 0 || side == 1)
 		{
-			return frontIcon;
+			return sideIcon;
 		}
 
-		return sideIcon;
+		TileDetector tile = (TileDetector) world.getTileEntity(x, y, z);
+
+		return tile.providesPower() ? poweredIcon : unpoweredIcon;
 	}
 
 	@Override
 	public IIcon getIcon(int side, int meta)
 	{
-		if (side == 3)
+		if (side == 0 || side == 1)
 		{
-			return frontIcon;
+			return sideIcon;
 		}
 
-		return sideIcon;
+		return unpoweredIcon;
 	}
 }

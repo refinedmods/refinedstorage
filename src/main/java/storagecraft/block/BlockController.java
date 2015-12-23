@@ -13,7 +13,7 @@ import storagecraft.tile.TileController;
 public class BlockController extends BlockBase implements ITileEntityProvider
 {
 	private IIcon sideIcon;
-	private IIcon[] icons = new IIcon[6];
+	private IIcon[] icons = new IIcon[8];
 
 	public BlockController()
 	{
@@ -48,7 +48,7 @@ public class BlockController extends BlockBase implements ITileEntityProvider
 	@Override
 	public void registerBlockIcons(IIconRegister register)
 	{
-		for (int i = 0; i <= 5; ++i)
+		for (int i = 0; i <= 7; ++i)
 		{
 			icons[i] = register.registerIcon("storagecraft:controller" + i);
 		}
@@ -66,7 +66,7 @@ public class BlockController extends BlockBase implements ITileEntityProvider
 
 		TileController controller = (TileController) world.getTileEntity(x, y, z);
 
-		return icons[(int) ((float) controller.getEnergyStored(null) / (float) controller.getMaxEnergyStored(null) * 5f)];
+		return icons[(int) ((float) controller.getEnergyStored(null) / (float) controller.getMaxEnergyStored(null) * 7f)];
 	}
 
 	@Override
