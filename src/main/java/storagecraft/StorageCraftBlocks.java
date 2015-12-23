@@ -7,6 +7,7 @@ import storagecraft.block.BlockDrive;
 import storagecraft.block.BlockExporter;
 import storagecraft.block.BlockGrid;
 import storagecraft.block.BlockImporter;
+import storagecraft.block.BlockMachineCasing;
 import storagecraft.block.BlockStorageProxy;
 
 public class StorageCraftBlocks
@@ -19,4 +20,5 @@ public class StorageCraftBlocks
 	public static final BlockImporter IMPORTER = new BlockImporter();
 	public static final BlockExporter EXPORTER = new BlockExporter();
 	public static final BlockDetector DETECTOR = new BlockDetector();
+	public static final BlockMachineCasing MACHINE_CASING = new BlockMachineCasing();
 }

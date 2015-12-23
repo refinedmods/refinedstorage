@@ -59,6 +59,7 @@ block.storagecraft:storageProxy.name=Storage Proxy
 block.storagecraft:importer.name=Importer
 block.storagecraft:exporter.name=Exporter
 block.storagecraft:detector.name=Detector
+block.storagecraft:machineCasing.name=Machine Casing
 
 item.storagecraft:storageCell.0.name=1k Storage Cell
 item.storagecraft:storageCell.1.name=4k Storage Cell
@@ -66,3 +67,6 @@ item.storagecraft:storageCell.2.name=16k Storage Cell
 item.storagecraft:storageCell.3.name=64k Storage Cell
 item.storagecraft:storageCell.4.name=Creative Storage Cell
 item.storagecraft:wirelessGrid.name=Wireless Grid
+item.storagecraft:storigiumIngot.name=Storigium Ingot
+item.storagecraft:core.0.name=Construction Core
+item.storagecraft:core.1.name=Destruction Core
