@@ -17,6 +17,8 @@ import storagecraft.item.ItemBlockCable;
 import storagecraft.item.ItemBlockGrid;
 import storagecraft.item.ItemCore;
 import storagecraft.item.ItemProcessor;
+import storagecraft.item.ItemStorageCell;
+import storagecraft.item.ItemStoragePart;
 import storagecraft.network.MessageCompareUpdate;
 import storagecraft.network.MessageDetectorAmountUpdate;
 import storagecraft.network.MessageDetectorModeUpdate;
@@ -86,6 +88,7 @@ public class CommonProxy
 		GameRegistry.registerItem(StorageCraftItems.CORE, "core");
 		GameRegistry.registerItem(StorageCraftItems.SILICON, "silicon");
 		GameRegistry.registerItem(StorageCraftItems.PROCESSOR, "processor");
+		GameRegistry.registerItem(StorageCraftItems.STORAGE_PART, "storagePart");
 
 		// Processors
 		SoldererRegistry.addRecipe(new SoldererRecipePrintedProcessor(ItemProcessor.TYPE_PRINTED_BASIC));
@@ -234,7 +237,87 @@ public class CommonProxy
 			'P', new ItemStack(StorageCraftItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
 		);
 
-		// @TODO: Recipe for storage cells
+		// Storage Cell Parts
+		GameRegistry.addRecipe(new ItemStack(StorageCraftItems.STORAGE_PART, 1, ItemStoragePart.TYPE_1K),
+			"EPE",
+			"SRS",
+			"ESE",
+			'R', new ItemStack(Items.redstone),
+			'E', new ItemStack(StorageCraftItems.QUARTZ_ENRICHED_IRON),
+			'P', new ItemStack(StorageCraftItems.SILICON),
+			'S', new ItemStack(Blocks.glass)
+		);
+
+		GameRegistry.addRecipe(new ItemStack(StorageCraftItems.STORAGE_PART, 1, ItemStoragePart.TYPE_4K),
+			"EPE",
+			"SRS",
+			"ESE",
+			'R', new ItemStack(Items.redstone),
+			'E', new ItemStack(StorageCraftItems.QUARTZ_ENRICHED_IRON),
+			'P', new ItemStack(StorageCraftItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
+			'S', new ItemStack(StorageCraftItems.STORAGE_PART, 1, ItemStoragePart.TYPE_1K)
+		);
+
+		GameRegistry.addRecipe(new ItemStack(StorageCraftItems.STORAGE_PART, 1, ItemStoragePart.TYPE_16K),
+			"EPE",
+			"SRS",
+			"ESE",
+			'R', new ItemStack(Items.redstone),
+			'E', new ItemStack(StorageCraftItems.QUARTZ_ENRICHED_IRON),
+			'P', new ItemStack(StorageCraftItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED),
+			'S', new ItemStack(StorageCraftItems.STORAGE_PART, 1, ItemStoragePart.TYPE_4K)
+		);
+
+		GameRegistry.addRecipe(new ItemStack(StorageCraftItems.STORAGE_PART, 1, ItemStoragePart.TYPE_64K),
+			"EPE",
+			"SRS",
+			"ESE",
+			'R', new ItemStack(Items.redstone),
+			'E', new ItemStack(StorageCraftItems.QUARTZ_ENRICHED_IRON),
+			'P', new ItemStack(StorageCraftItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
+			'S', new ItemStack(StorageCraftItems.STORAGE_PART, 1, ItemStoragePart.TYPE_16K)
+		);
+
+		// Storage Cells
+		GameRegistry.addRecipe(new ItemStack(StorageCraftItems.STORAGE_CELL, 1, ItemStorageCell.TYPE_1K),
+			"GRG",
+			"RPR",
+			"EEE",
+			'G', new ItemStack(Blocks.glass),
+			'R', new ItemStack(Items.redstone),
+			'P', new ItemStack(StorageCraftItems.STORAGE_PART, 1, ItemStoragePart.TYPE_1K),
+			'E', new ItemStack(StorageCraftItems.QUARTZ_ENRICHED_IRON)
+		);
+
+		GameRegistry.addRecipe(new ItemStack(StorageCraftItems.STORAGE_CELL, 1, ItemStorageCell.TYPE_4K),
+			"GRG",
+			"RPR",
+			"EEE",
+			'G', new ItemStack(Blocks.glass),
+			'R', new ItemStack(Items.redstone),
+			'P', new ItemStack(StorageCraftItems.STORAGE_PART, 1, ItemStoragePart.TYPE_4K),
+			'E', new ItemStack(StorageCraftItems.QUARTZ_ENRICHED_IRON)
+		);
+
+		GameRegistry.addRecipe(new ItemStack(StorageCraftItems.STORAGE_CELL, 1, ItemStorageCell.TYPE_16K),
+			"GRG",
+			"RPR",
+			"EEE",
+			'G', new ItemStack(Blocks.glass),
+			'R', new ItemStack(Items.redstone),
+			'P', new ItemStack(StorageCraftItems.STORAGE_PART, 1, ItemStoragePart.TYPE_16K),
+			'E', new ItemStack(StorageCraftItems.QUARTZ_ENRICHED_IRON)
+		);
+
+		GameRegistry.addRecipe(new ItemStack(StorageCraftItems.STORAGE_CELL, 1, ItemStorageCell.TYPE_64K),
+			"GRG",
+			"RPR",
+			"EEE",
+			'G', new ItemStack(Blocks.glass),
+			'R', new ItemStack(Items.redstone),
+			'P', new ItemStack(StorageCraftItems.STORAGE_PART, 1, ItemStoragePart.TYPE_64K),
+			'E', new ItemStack(StorageCraftItems.QUARTZ_ENRICHED_IRON)
+		);
 	}
 
 	public void init(FMLInitializationEvent e)

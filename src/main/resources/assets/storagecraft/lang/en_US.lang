@@ -80,3 +80,7 @@ item.storagecraft:processor.3.name=Basic Processor
 item.storagecraft:processor.4.name=Improved Processor
 item.storagecraft:processor.5.name=Advanced Processor
 item.storagecraft:processor.6.name=Printed Silicon
+item.storagecraft:storagePart.0.name=1k Storage Part
+item.storagecraft:storagePart.1.name=4k Storage Part
+item.storagecraft:storagePart.2.name=16k Storage Part
+item.storagecraft:storagePart.3.name=64k Storage Part

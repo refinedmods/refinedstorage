@@ -5,6 +5,7 @@ import storagecraft.item.ItemProcessor;
 import storagecraft.item.ItemSilicon;
 import storagecraft.item.ItemStorageCell;
 import storagecraft.item.ItemQuartzEnrichedIron;
+import storagecraft.item.ItemStoragePart;
 import storagecraft.item.ItemWirelessGrid;
 
 public class StorageCraftItems
@@ -15,4 +16,5 @@ public class StorageCraftItems
 	public static final ItemCore CORE = new ItemCore();
 	public static final ItemSilicon SILICON = new ItemSilicon();
 	public static final ItemProcessor PROCESSOR = new ItemProcessor();
+	public static final ItemStoragePart STORAGE_PART = new ItemStoragePart();
 }

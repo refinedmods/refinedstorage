@@ -15,6 +15,12 @@ import storagecraft.storage.CellStorage;
 
 public class ItemStorageCell extends ItemBase
 {
+	public static final int TYPE_1K = 0;
+	public static final int TYPE_4K = 1;
+	public static final int TYPE_16K = 2;
+	public static final int TYPE_64K = 3;
+	public static final int TYPE_CREATIVE = 4;
+
 	private IIcon[] icons = new IIcon[5];
 
 	public ItemStorageCell()
@@ -89,15 +95,15 @@ public class ItemStorageCell extends ItemBase
 	{
 		switch (cell.getItemDamage())
 		{
-			case 0:
+			case TYPE_1K:
 				return 1000;
-			case 1:
+			case TYPE_4K:
 				return 4000;
-			case 2:
+			case TYPE_16K:
 				return 16000;
-			case 3:
+			case TYPE_64K:
 				return 64000;
-			case 4:
+			case TYPE_CREATIVE:
 				return -1;
 		}
 
