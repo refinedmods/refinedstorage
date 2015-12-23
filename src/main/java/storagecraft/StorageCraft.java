@@ -15,7 +15,7 @@ import net.minecraft.item.ItemStack;
 import storagecraft.item.ItemStorageCell;
 import storagecraft.proxy.CommonProxy;
 
-@Mod(modid = StorageCraft.ID, version = StorageCraft.VERSION)
+@Mod(modid = StorageCraft.ID, version = StorageCraft.VERSION, dependencies = StorageCraft.DEPENDENCIES)
 public class StorageCraft
 {
 	public static final class GUI
@@ -32,6 +32,7 @@ public class StorageCraft
 
 	public static final String ID = "storagecraft";
 	public static final String VERSION = "1.0";
+	public static final String DEPENDENCIES = "after:NotEnoughItems";
 	public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(ID);
 	public static final CreativeTabs TAB = new CreativeTabs(ID)
 	{

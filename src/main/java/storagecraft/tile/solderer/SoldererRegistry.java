@@ -3,6 +3,7 @@ package storagecraft.tile.solderer;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import storagecraft.util.InventoryUtils;
 
 public class SoldererRegistry
@@ -37,6 +38,19 @@ public class SoldererRegistry
 			}
 
 			if (ok)
+			{
+				return recipe;
+			}
+		}
+
+		return null;
+	}
+
+	public static ISoldererRecipe getRecipe(ItemStack result)
+	{
+		for (ISoldererRecipe recipe : recipes)
+		{
+			if (InventoryUtils.compareStack(result, recipe.getResult()))
 			{
 				return recipe;
 			}
