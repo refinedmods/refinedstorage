@@ -46,6 +46,20 @@ public class BlockController extends BlockBase implements ITileEntityProvider
 	}
 
 	@Override
+	public boolean hasComparatorInputOverride()
+	{
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(World world, int x, int y, int z, int side)
+	{
+		TileController tile = (TileController) world.getTileEntity(x, y, z);
+
+		return tile.getEnergyScaled(15);
+	}
+
+	@Override
 	public void registerBlockIcons(IIconRegister register)
 	{
 		for (int i = 0; i <= 8; ++i)
@@ -63,7 +77,7 @@ public class BlockController extends BlockBase implements ITileEntityProvider
 
 		if (side == tile.getDirection().ordinal())
 		{
-			return icons[(int) ((float) tile.getEnergyStored(null) / (float) tile.getMaxEnergyStored(null) * 8f)];
+			return icons[tile.getEnergyScaled(8)];
 		}
 
 		return sideIcon;

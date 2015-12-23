@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
+import storagecraft.StorageCraftBlocks;
 import storagecraft.storage.IStorage;
 import storagecraft.storage.IStorageProvider;
 import storagecraft.storage.StorageItem;
@@ -43,6 +44,8 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
 		if (!worldObj.isRemote)
 		{
+			int lastEnergy = energy.getEnergyStored();
+
 			if (ticks % 40 == 0)
 			{
 				if (!isActive())
@@ -110,10 +113,12 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 			}
 
 			energy.extractEnergy(energyUsage, false);
-		}
-		else
-		{
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+
+			if (lastEnergy != energy.getEnergyStored())
+			{
+				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+				worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, StorageCraftBlocks.CONTROLLER);
+			}
 		}
 	}
 
@@ -297,6 +302,11 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 	public int getEnergyStored(ForgeDirection from)
 	{
 		return energy.getEnergyStored();
+	}
+
+	public int getEnergyScaled(int i)
+	{
+		return (int) ((float) energy.getEnergyStored() / (float) energy.getMaxEnergyStored() * (float) i);
 	}
 
 	@Override
