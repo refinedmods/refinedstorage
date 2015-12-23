@@ -11,6 +11,8 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import storagecraft.item.ItemStorageCell;
 import storagecraft.proxy.CommonProxy;
 
 @Mod(modid = StorageCraft.ID, version = StorageCraft.VERSION)
@@ -34,9 +36,15 @@ public class StorageCraft
 	public static final CreativeTabs TAB = new CreativeTabs(ID)
 	{
 		@Override
+		public ItemStack getIconItemStack()
+		{
+			return new ItemStack(StorageCraftItems.STORAGE_CELL, 1, ItemStorageCell.TYPE_1K);
+		}
+
+		@Override
 		public Item getTabIconItem()
 		{
-			return Item.getItemFromBlock(StorageCraftBlocks.CONTROLLER);
+			return null;
 		}
 	};
 	@SidedProxy(clientSide = "storagecraft.proxy.ClientProxy", serverSide = "storagecraft.proxy.ServerProxy")

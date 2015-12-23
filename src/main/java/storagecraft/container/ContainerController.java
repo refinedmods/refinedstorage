@@ -8,6 +8,6 @@ public class ContainerController extends ContainerBase
 	{
 		super(player);
 
-		addPlayerInventory(8, 108);
+		addPlayerInventory(8, 99);
 	}
 }

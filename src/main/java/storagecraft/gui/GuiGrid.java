@@ -119,6 +119,7 @@ public class GuiGrid extends GuiBase
 
 	public boolean isHoveringOverClear(int mouseX, int mouseY)
 	{
+		// @TODO: Use inBounds
 		return mouseX >= 81 && mouseX <= 87 && mouseY >= 105 && mouseY <= 111;
 	}
 

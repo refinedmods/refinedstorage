@@ -13,7 +13,7 @@ import storagecraft.tile.TileController;
 public class BlockController extends BlockBase implements ITileEntityProvider
 {
 	private IIcon sideIcon;
-	private IIcon[] icons = new IIcon[8];
+	private IIcon[] icons = new IIcon[9];
 
 	public BlockController()
 	{
@@ -48,7 +48,7 @@ public class BlockController extends BlockBase implements ITileEntityProvider
 	@Override
 	public void registerBlockIcons(IIconRegister register)
 	{
-		for (int i = 0; i <= 7; ++i)
+		for (int i = 0; i <= 8; ++i)
 		{
 			icons[i] = register.registerIcon("storagecraft:controller" + i);
 		}
@@ -59,24 +59,24 @@ public class BlockController extends BlockBase implements ITileEntityProvider
 	@Override
 	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
 	{
-		if (side == 0 || side == 1)
+		TileController tile = (TileController) world.getTileEntity(x, y, z);
+
+		if (side == tile.getDirection().ordinal())
 		{
-			return sideIcon;
+			return icons[(int) ((float) tile.getEnergyStored(null) / (float) tile.getMaxEnergyStored(null) * 8f)];
 		}
 
-		TileController controller = (TileController) world.getTileEntity(x, y, z);
-
-		return icons[(int) ((float) controller.getEnergyStored(null) / (float) controller.getMaxEnergyStored(null) * 7f)];
+		return sideIcon;
 	}
 
 	@Override
 	public IIcon getIcon(int side, int meta)
 	{
-		if (side == 0 || side == 1)
+		if (side == 3)
 		{
-			return sideIcon;
+			return icons[0];
 		}
 
-		return icons[0];
+		return sideIcon;
 	}
 }

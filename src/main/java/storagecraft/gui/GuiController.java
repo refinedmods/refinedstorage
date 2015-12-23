@@ -8,9 +8,14 @@ public class GuiController extends GuiBase
 {
 	private TileController controller;
 
+	private int barX = 8;
+	private int barY = 20;
+	private int barWidth = 16;
+	private int barHeight = 58;
+
 	public GuiController(ContainerController container, TileController controller)
 	{
-		super(container, 176, 190);
+		super(container, 176, 181);
 
 		this.controller = controller;
 	}
@@ -33,23 +38,22 @@ public class GuiController extends GuiBase
 
 		drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
 
-		int barX = 17;
-		int barY = 25;
-		int barWidth = 16;
-		int barHeight = 58;
-
 		int barHeightNew = (int) ((float) controller.getEnergyStored(null) / (float) controller.getMaxEnergyStored(null) * (float) barHeight);
 
-		drawTexturedModalRect(x + barX, y + barY + barHeight - barHeightNew, 178, 0, barWidth, barHeightNew);
+		drawTexturedModalRect(x + barX, y + barY + barHeight - barHeightNew, 178, 0 + (barHeight - barHeightNew), barWidth, barHeightNew);
 	}
 
 	@Override
 	public void drawForeground(int mouseX, int mouseY)
 	{
 		drawString(7, 7, t("gui.storagecraft:controller"));
-		drawString(7, 96, t("container.inventory"));
+		drawString(7, 87, t("container.inventory"));
 
-		drawString(45, 24, t("misc.storagecraft:energyStored", controller.getEnergyStored(null), controller.getMaxEnergyStored(null)));
-		drawString(45, 44, t("misc.storagecraft:energyUsage", controller.getEnergyUsage()));
+		drawString(31, 20, t("misc.storagecraft:energyUsage", controller.getEnergyUsage()));
+
+		if (inBounds(barX, barY, barWidth, barHeight, mouseX, mouseY))
+		{
+			drawTooltip(mouseX, mouseY, t("misc.storagecraft:energyStored", controller.getEnergyStored(null), controller.getMaxEnergyStored(null)));
+		}
 	}
 }
