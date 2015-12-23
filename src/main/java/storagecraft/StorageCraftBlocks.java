@@ -8,6 +8,7 @@ import storagecraft.block.BlockExporter;
 import storagecraft.block.BlockGrid;
 import storagecraft.block.BlockImporter;
 import storagecraft.block.BlockMachineCasing;
+import storagecraft.block.BlockSolderer;
 import storagecraft.block.BlockStorageProxy;
 
 public class StorageCraftBlocks
@@ -21,4 +22,5 @@ public class StorageCraftBlocks
 	public static final BlockExporter EXPORTER = new BlockExporter();
 	public static final BlockDetector DETECTOR = new BlockDetector();
 	public static final BlockMachineCasing MACHINE_CASING = new BlockMachineCasing();
+	public static final BlockSolderer SOLDERER = new BlockSolderer();
 }

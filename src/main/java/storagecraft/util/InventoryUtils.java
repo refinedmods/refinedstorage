@@ -207,6 +207,16 @@ public class InventoryUtils
 
 	public static boolean compareStack(ItemStack first, ItemStack second, int flags)
 	{
+		if (first == null && second == null)
+		{
+			return true;
+		}
+
+		if ((first == null && second != null) || (first != null && second == null))
+		{
+			return false;
+		}
+
 		if ((flags & COMPARE_DAMAGE) == COMPARE_DAMAGE)
 		{
 			if (first.getItemDamage() != second.getItemDamage())

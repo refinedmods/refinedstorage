@@ -12,6 +12,7 @@ import storagecraft.container.ContainerDrive;
 import storagecraft.container.ContainerExporter;
 import storagecraft.container.ContainerGrid;
 import storagecraft.container.ContainerImporter;
+import storagecraft.container.ContainerSolderer;
 import storagecraft.container.ContainerStorageProxy;
 import storagecraft.tile.TileController;
 import storagecraft.tile.TileDetector;
@@ -19,6 +20,7 @@ import storagecraft.tile.TileDrive;
 import storagecraft.tile.TileExporter;
 import storagecraft.tile.TileGrid;
 import storagecraft.tile.TileImporter;
+import storagecraft.tile.TileSolderer;
 import storagecraft.tile.TileStorageProxy;
 
 public class GuiHandler implements IGuiHandler
@@ -41,6 +43,8 @@ public class GuiHandler implements IGuiHandler
 				return new ContainerExporter(player, (TileExporter) tile);
 			case StorageCraft.GUI.DETECTOR:
 				return new ContainerDetector(player, (TileDetector) tile);
+			case StorageCraft.GUI.SOLDERER:
+				return new ContainerSolderer(player, (TileSolderer) tile);
 			default:
 				return null;
 		}
@@ -73,6 +77,8 @@ public class GuiHandler implements IGuiHandler
 				return new GuiExporter((ContainerExporter) getContainer(ID, player, tile), (TileExporter) tile);
 			case StorageCraft.GUI.DETECTOR:
 				return new GuiDetector((ContainerDetector) getContainer(ID, player, tile), (TileDetector) tile);
+			case StorageCraft.GUI.SOLDERER:
+				return new GuiSolderer((ContainerSolderer) getContainer(ID, player, tile), (TileSolderer) tile);
 			default:
 				return null;
 		}

@@ -25,6 +25,7 @@ public class StorageCraft
 		public static final int IMPORTER = 4;
 		public static final int EXPORTER = 5;
 		public static final int DETECTOR = 6;
+		public static final int SOLDERER = 7;
 	}
 
 	public static final String ID = "storagecraft";
