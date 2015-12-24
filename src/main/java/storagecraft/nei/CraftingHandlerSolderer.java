@@ -15,7 +15,7 @@ import storagecraft.tile.solderer.SoldererRegistry;
 
 public class CraftingHandlerSolderer extends TemplateRecipeHandler
 {
-	public class SoldererRecipe extends CachedRecipe
+	class SoldererRecipe extends CachedRecipe
 	{
 		private ArrayList<PositionedStack> ingredients = new ArrayList<PositionedStack>();
 		private PositionedStack result;

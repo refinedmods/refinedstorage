@@ -6,6 +6,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import storagecraft.StorageCraft;
+import storagecraft.container.ContainerConstructor;
 import storagecraft.container.ContainerController;
 import storagecraft.container.ContainerDestructor;
 import storagecraft.container.ContainerDetector;
@@ -16,6 +17,7 @@ import storagecraft.container.ContainerImporter;
 import storagecraft.container.ContainerSolderer;
 import storagecraft.container.ContainerExternalStorage;
 import storagecraft.container.ContainerWirelessTransmitter;
+import storagecraft.tile.TileConstructor;
 import storagecraft.tile.TileController;
 import storagecraft.tile.TileDestructor;
 import storagecraft.tile.TileDetector;
@@ -53,6 +55,8 @@ public class GuiHandler implements IGuiHandler
 				return new ContainerWirelessTransmitter(player, (TileWirelessTransmitter) tile);
 			case StorageCraft.GUI.DESTRUCTOR:
 				return new ContainerDestructor(player);
+			case StorageCraft.GUI.CONSTRUCTOR:
+				return new ContainerConstructor(player, (TileConstructor) tile);
 			default:
 				return null;
 		}
@@ -91,6 +95,8 @@ public class GuiHandler implements IGuiHandler
 				return new GuiWirelessTransmitter((ContainerWirelessTransmitter) getContainer(ID, player, tile), (TileWirelessTransmitter) tile);
 			case StorageCraft.GUI.DESTRUCTOR:
 				return new GuiDestructor((ContainerDestructor) getContainer(ID, player, tile), (TileDestructor) tile);
+			case StorageCraft.GUI.CONSTRUCTOR:
+				return new GuiConstructor((ContainerConstructor) getContainer(ID, player, tile), (TileConstructor) tile);
 			default:
 				return null;
 		}

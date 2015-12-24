@@ -30,6 +30,7 @@ import storagecraft.network.MessageStoragePull;
 import storagecraft.network.MessageStoragePush;
 import storagecraft.network.MessageTileUpdate;
 import storagecraft.tile.TileCable;
+import storagecraft.tile.TileConstructor;
 import storagecraft.tile.TileController;
 import storagecraft.tile.TileDestructor;
 import storagecraft.tile.TileDetector;
@@ -75,6 +76,7 @@ public class CommonProxy
 		GameRegistry.registerTileEntity(TileSolderer.class, "solderer");
 		GameRegistry.registerTileEntity(TileWirelessTransmitter.class, "wirelessTransmitter");
 		GameRegistry.registerTileEntity(TileDestructor.class, "destructor");
+		GameRegistry.registerTileEntity(TileConstructor.class, "constructor");
 
 		GameRegistry.registerBlock(StorageCraftBlocks.CONTROLLER, "controller");
 		GameRegistry.registerBlock(StorageCraftBlocks.CABLE, ItemBlockCable.class, "cable");
@@ -88,6 +90,7 @@ public class CommonProxy
 		GameRegistry.registerBlock(StorageCraftBlocks.SOLDERER, "solderer");
 		GameRegistry.registerBlock(StorageCraftBlocks.WIRELESS_TRANSMITTER, "wirelessTransmitter");
 		GameRegistry.registerBlock(StorageCraftBlocks.DESTRUCTOR, "destructor");
+		GameRegistry.registerBlock(StorageCraftBlocks.CONSTRUCTOR, "constructor");
 
 		GameRegistry.registerItem(StorageCraftItems.STORAGE_CELL, "storageCell");
 		GameRegistry.registerItem(StorageCraftItems.WIRELESS_GRID, "wirelessGrid");
@@ -141,7 +144,7 @@ public class CommonProxy
 			new ItemStack(Items.quartz)
 		);
 
-		// Constroller
+		// Controller
 		GameRegistry.addRecipe(new ItemStack(StorageCraftBlocks.CONTROLLER),
 			"EDE",
 			"SRS",
@@ -254,6 +257,18 @@ public class CommonProxy
 			"EIE",
 			'E', new ItemStack(StorageCraftItems.QUARTZ_ENRICHED_IRON),
 			'D', new ItemStack(StorageCraftItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
+			'R', new ItemStack(Items.redstone),
+			'M', new ItemStack(StorageCraftBlocks.MACHINE_CASING),
+			'I', new ItemStack(StorageCraftItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
+		);
+
+		// Constructor
+		GameRegistry.addShapedRecipe(new ItemStack(StorageCraftBlocks.CONSTRUCTOR),
+			"ECE",
+			"RMR",
+			"EIE",
+			'E', new ItemStack(StorageCraftItems.QUARTZ_ENRICHED_IRON),
+			'C', new ItemStack(StorageCraftItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
 			'R', new ItemStack(Items.redstone),
 			'M', new ItemStack(StorageCraftBlocks.MACHINE_CASING),
 			'I', new ItemStack(StorageCraftItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)

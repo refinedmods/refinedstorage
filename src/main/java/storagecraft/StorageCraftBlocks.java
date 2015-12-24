@@ -1,6 +1,7 @@
 package storagecraft;
 
 import storagecraft.block.BlockCable;
+import storagecraft.block.BlockConstructor;
 import storagecraft.block.BlockController;
 import storagecraft.block.BlockDestructor;
 import storagecraft.block.BlockDetector;
@@ -27,4 +28,5 @@ public class StorageCraftBlocks
 	public static final BlockSolderer SOLDERER = new BlockSolderer();
 	public static final BlockWirelessTransmitter WIRELESS_TRANSMITTER = new BlockWirelessTransmitter();
 	public static final BlockDestructor DESTRUCTOR = new BlockDestructor();
+	public static final BlockConstructor CONSTRUCTOR = new BlockConstructor();
 }
