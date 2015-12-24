@@ -14,6 +14,7 @@ import storagecraft.container.ContainerGrid;
 import storagecraft.container.ContainerImporter;
 import storagecraft.container.ContainerSolderer;
 import storagecraft.container.ContainerExternalStorage;
+import storagecraft.container.ContainerWirelessTransmitter;
 import storagecraft.tile.TileController;
 import storagecraft.tile.TileDetector;
 import storagecraft.tile.TileDrive;
@@ -22,6 +23,7 @@ import storagecraft.tile.TileGrid;
 import storagecraft.tile.TileImporter;
 import storagecraft.tile.TileSolderer;
 import storagecraft.tile.TileExternalStorage;
+import storagecraft.tile.TileWirelessTransmitter;
 
 public class GuiHandler implements IGuiHandler
 {
@@ -45,6 +47,8 @@ public class GuiHandler implements IGuiHandler
 				return new ContainerDetector(player, (TileDetector) tile);
 			case StorageCraft.GUI.SOLDERER:
 				return new ContainerSolderer(player, (TileSolderer) tile);
+			case StorageCraft.GUI.WIRELESS_TRANSMITTER:
+				return new ContainerWirelessTransmitter(player, (TileWirelessTransmitter) tile);
 			default:
 				return null;
 		}
@@ -79,6 +83,8 @@ public class GuiHandler implements IGuiHandler
 				return new GuiDetector((ContainerDetector) getContainer(ID, player, tile), (TileDetector) tile);
 			case StorageCraft.GUI.SOLDERER:
 				return new GuiSolderer((ContainerSolderer) getContainer(ID, player, tile), (TileSolderer) tile);
+			case StorageCraft.GUI.WIRELESS_TRANSMITTER:
+				return new GuiWirelessTransmitter((ContainerWirelessTransmitter) getContainer(ID, player, tile), (TileWirelessTransmitter) tile);
 			default:
 				return null;
 		}
