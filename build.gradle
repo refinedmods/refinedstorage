@@ -17,7 +17,7 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "1.0"
+version = "0.1"
 group = "storagecraft"
 archivesBaseName = "storagecraft"
 

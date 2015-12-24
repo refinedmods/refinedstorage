@@ -2,7 +2,7 @@
     {
       "modid": "storagecraft",
       "name": "StorageCraft",
-      "description": "",
+      "description": "A Minecraft mod all about storage.",
       "version": "${version}",
       "mcversion": "${mcversion}",
       "url": "",
