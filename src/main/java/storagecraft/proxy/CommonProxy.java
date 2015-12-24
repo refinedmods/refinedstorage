@@ -31,6 +31,7 @@ import storagecraft.network.MessageStoragePush;
 import storagecraft.network.MessageTileUpdate;
 import storagecraft.tile.TileCable;
 import storagecraft.tile.TileController;
+import storagecraft.tile.TileDestructor;
 import storagecraft.tile.TileDetector;
 import storagecraft.tile.TileDrive;
 import storagecraft.tile.TileExporter;
@@ -73,6 +74,7 @@ public class CommonProxy
 		GameRegistry.registerTileEntity(TileDetector.class, "detector");
 		GameRegistry.registerTileEntity(TileSolderer.class, "solderer");
 		GameRegistry.registerTileEntity(TileWirelessTransmitter.class, "wirelessTransmitter");
+		GameRegistry.registerTileEntity(TileDestructor.class, "destructor");
 
 		GameRegistry.registerBlock(StorageCraftBlocks.CONTROLLER, "controller");
 		GameRegistry.registerBlock(StorageCraftBlocks.CABLE, ItemBlockCable.class, "cable");
@@ -85,6 +87,7 @@ public class CommonProxy
 		GameRegistry.registerBlock(StorageCraftBlocks.MACHINE_CASING, "machineCasing");
 		GameRegistry.registerBlock(StorageCraftBlocks.SOLDERER, "solderer");
 		GameRegistry.registerBlock(StorageCraftBlocks.WIRELESS_TRANSMITTER, "wirelessTransmitter");
+		GameRegistry.registerBlock(StorageCraftBlocks.DESTRUCTOR, "destructor");
 
 		GameRegistry.registerItem(StorageCraftItems.STORAGE_CELL, "storageCell");
 		GameRegistry.registerItem(StorageCraftItems.WIRELESS_GRID, "wirelessGrid");
@@ -192,6 +195,17 @@ public class CommonProxy
 		// Crafting Grid
 		SoldererRegistry.addRecipe(new SoldererRecipeCraftingGrid());
 
+		// Wireless Transmitter
+		GameRegistry.addRecipe(new ItemStack(StorageCraftBlocks.WIRELESS_TRANSMITTER),
+			"EPE",
+			"EME",
+			"EAE",
+			'E', new ItemStack(StorageCraftItems.QUARTZ_ENRICHED_IRON),
+			'A', new ItemStack(StorageCraftItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
+			'P', new ItemStack(Items.ender_pearl),
+			'M', new ItemStack(StorageCraftBlocks.MACHINE_CASING)
+		);
+
 		// Wireless Grid Plate
 		GameRegistry.addRecipe(new ItemStack(StorageCraftItems.WIRELESS_GRID_PLATE),
 			" P ",
@@ -202,7 +216,6 @@ public class CommonProxy
 			'E', new ItemStack(StorageCraftItems.QUARTZ_ENRICHED_IRON)
 		);
 
-		// @TODO: Wireless Transmitter
 		// Wireless Grid
 		SoldererRegistry.addRecipe(new SoldererRecipeWirelessGrid(0));
 		SoldererRegistry.addRecipe(new SoldererRecipeWirelessGrid(1));
@@ -232,6 +245,18 @@ public class CommonProxy
 			new ItemStack(StorageCraftBlocks.MACHINE_CASING),
 			new ItemStack(StorageCraftItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
 			new ItemStack(StorageCraftItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC)
+		);
+
+		// Destructor
+		GameRegistry.addShapedRecipe(new ItemStack(StorageCraftBlocks.DESTRUCTOR),
+			"EDE",
+			"RMR",
+			"EIE",
+			'E', new ItemStack(StorageCraftItems.QUARTZ_ENRICHED_IRON),
+			'D', new ItemStack(StorageCraftItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
+			'R', new ItemStack(Items.redstone),
+			'M', new ItemStack(StorageCraftBlocks.MACHINE_CASING),
+			'I', new ItemStack(StorageCraftItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
 		);
 
 		// Detector
