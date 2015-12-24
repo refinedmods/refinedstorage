@@ -21,7 +21,7 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
 	private InventorySimple inventory = new InventorySimple("solderer", 4);
 	private ISoldererRecipe recipe;
 	private boolean working = false;
-	private int progress;
+	private int progress = 0;
 	@SideOnly(Side.CLIENT)
 	private int duration;
 

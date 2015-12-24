@@ -18,7 +18,7 @@ public class TileWirelessTransmitter extends TileMachine implements IInventory
 
 	private InventorySimple inventory = new InventorySimple("wirelessTransmitter", 3);
 
-	private boolean working;
+	private boolean working = false;
 	private int progress = 0;
 
 	@Override
@@ -212,8 +212,15 @@ public class TileWirelessTransmitter extends TileMachine implements IInventory
 	{
 		super.fromBytes(buf);
 
+		boolean lastWorking = working;
+
 		working = buf.readBoolean();
 		progress = buf.readInt();
+
+		if (lastWorking != working)
+		{
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		}
 	}
 
 	@Override
