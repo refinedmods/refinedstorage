@@ -19,7 +19,7 @@ misc.storagecraft:storageCellStored=Stored: %d
 misc.storagecraft:storageCellStoredWithCapacity=Stored: %d / %d
 
 misc.storagecraft:wirelessGrid.tooltip=Bound to %d, %d, %d.
-misc.storagecraft:wirelessGrid.notWorking=The Wireless Grid is out of fuel or disabled.
+misc.storagecraft:wirelessGrid.notWorking=The Wireless Grid is disabled or out of fuel.
 misc.storagecraft:wirelessGrid.notFound=The Wireless Transmitter is not found.
 misc.storagecraft:wirelessGrid.notSet.0=This Wireless Grid is not bound to a Wireless Transmitter yet.
 misc.storagecraft:wirelessGrid.notSet.1=This Wireless Crafting Grid is not bound to a Wireless Transmitter yet.
@@ -44,8 +44,8 @@ sidebutton.storagecraft:sorting.direction.0=Ascending
 sidebutton.storagecraft:sorting.direction.1=Descending
 
 sidebutton.storagecraft:sorting.type=Sorting Type
-sidebutton.storagecraft:sorting.type.0=Item Count
-sidebutton.storagecraft:sorting.type.1=Item Name
+sidebutton.storagecraft:sorting.type.0=Amount
+sidebutton.storagecraft:sorting.type.1=Name
 
 sidebutton.storagecraft:importer.mode=Mode
 sidebutton.storagecraft:importer.mode.0=Whitelist
