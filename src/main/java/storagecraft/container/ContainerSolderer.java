@@ -2,6 +2,7 @@ package storagecraft.container;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 import storagecraft.container.slot.SlotOutput;
 import storagecraft.tile.TileSolderer;
 
@@ -10,8 +11,6 @@ public class ContainerSolderer extends ContainerBase
 	public ContainerSolderer(EntityPlayer player, TileSolderer solderer)
 	{
 		super(player);
-
-		addPlayerInventory(8, 95);
 
 		int x = 44;
 		int y = 20;
@@ -24,5 +23,43 @@ public class ContainerSolderer extends ContainerBase
 		}
 
 		addSlotToContainer(new SlotOutput(solderer, 3, 134, 38));
+
+		addPlayerInventory(8, 95);
+	}
+
+	@Override
+	public ItemStack transferStackInSlot(EntityPlayer player, int index)
+	{
+		ItemStack stack = null;
+
+		Slot slot = getSlot(index);
+
+		if (slot != null && slot.getHasStack())
+		{
+			stack = slot.getStack().copy();
+
+			if (index < 3)
+			{
+				if (!mergeItemStack(stack, 3, inventorySlots.size(), true))
+				{
+					return null;
+				}
+			}
+			else if (!mergeItemStack(stack, 0, 3, false))
+			{
+				return null;
+			}
+
+			if (stack.stackSize == 0)
+			{
+				slot.putStack(null);
+			}
+			else
+			{
+				slot.onSlotChanged();
+			}
+		}
+
+		return stack;
 	}
 }
