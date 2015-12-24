@@ -290,10 +290,4 @@ public class TileDetector extends TileMachine implements IInventory, ISidedInven
 		buf.writeInt(amount);
 		buf.writeBoolean(providesPower);
 	}
-
-	@Override
-	public boolean canDropInventory()
-	{
-		return false;
-	}
 }

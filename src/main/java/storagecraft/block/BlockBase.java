@@ -4,7 +4,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -83,9 +82,9 @@ public abstract class BlockBase extends Block
 	{
 		TileEntity tile = world.getTileEntity(x, y, z);
 
-		if (tile instanceof IInventory && tile instanceof TileBase && ((TileBase) tile).canDropInventory())
+		if (tile instanceof TileBase && ((TileBase) tile).getDroppedInventory() != null)
 		{
-			InventoryUtils.dropInventory(world, (IInventory) tile, x, y, z);
+			InventoryUtils.dropInventory(world, ((TileBase) tile).getDroppedInventory(), x, y, z);
 		}
 
 		super.onBlockPreDestroy(world, x, y, z, meta);

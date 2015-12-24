@@ -224,4 +224,10 @@ public class TileWirelessTransmitter extends TileMachine implements IInventory
 		buf.writeBoolean(working);
 		buf.writeInt(progress);
 	}
+
+	@Override
+	public IInventory getDroppedInventory()
+	{
+		return inventory;
+	}
 }

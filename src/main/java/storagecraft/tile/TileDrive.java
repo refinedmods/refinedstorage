@@ -135,4 +135,10 @@ public class TileDrive extends TileMachine implements IInventory, IStorageProvid
 			}
 		}
 	}
+
+	@Override
+	public IInventory getDroppedInventory()
+	{
+		return inventory;
+	}
 }

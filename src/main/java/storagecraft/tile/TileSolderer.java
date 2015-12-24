@@ -259,4 +259,10 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
 	{
 		return duration;
 	}
+
+	@Override
+	public IInventory getDroppedInventory()
+	{
+		return inventory;
+	}
 }

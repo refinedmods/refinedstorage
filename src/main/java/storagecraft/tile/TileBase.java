@@ -1,6 +1,7 @@
 package storagecraft.tile;
 
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -78,8 +79,8 @@ public abstract class TileBase extends TileEntity
 		direction = ForgeDirection.getOrientation(packet.func_148857_g().getInteger("Direction"));
 	}
 
-	public boolean canDropInventory()
+	public IInventory getDroppedInventory()
 	{
-		return true;
+		return null;
 	}
 }

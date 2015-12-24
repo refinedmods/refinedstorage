@@ -1,6 +1,7 @@
 package storagecraft.tile;
 
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
@@ -99,5 +100,11 @@ public class TileGrid extends TileMachine
 		super.writeToNBT(nbt);
 
 		InventoryUtils.saveInventory(craftingMatrix, nbt);
+	}
+
+	@Override
+	public IInventory getDroppedInventory()
+	{
+		return craftingMatrix;
 	}
 }
