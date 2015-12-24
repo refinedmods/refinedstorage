@@ -1,6 +1,8 @@
 package storagecraft.container;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 import storagecraft.StorageCraftItems;
 import storagecraft.container.slot.SlotItemFilter;
 import storagecraft.tile.TileDrive;
@@ -10,8 +12,6 @@ public class ContainerDrive extends ContainerBase
 	public ContainerDrive(EntityPlayer player, TileDrive drive)
 	{
 		super(player);
-
-		addPlayerInventory(8, 108);
 
 		int x = 71;
 		int y = 20;
@@ -30,5 +30,43 @@ public class ContainerDrive extends ContainerBase
 				x += 18;
 			}
 		}
+
+		addPlayerInventory(8, 108);
+	}
+
+	@Override
+	public ItemStack transferStackInSlot(EntityPlayer player, int index)
+	{
+		ItemStack stack = null;
+
+		Slot slot = getSlot(index);
+
+		if (slot != null && slot.getHasStack())
+		{
+			stack = slot.getStack().copy();
+
+			if (index < 8)
+			{
+				if (!mergeItemStack(stack, 8, inventorySlots.size(), true))
+				{
+					return null;
+				}
+			}
+			else if (!mergeItemStack(stack, 0, 8, false))
+			{
+				return null;
+			}
+
+			if (stack.stackSize == 0)
+			{
+				slot.putStack(null);
+			}
+			else
+			{
+				slot.onSlotChanged();
+			}
+		}
+
+		return stack;
 	}
 }
