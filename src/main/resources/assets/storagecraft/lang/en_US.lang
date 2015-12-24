@@ -9,6 +9,7 @@ gui.storagecraft:exporter=Exporter
 gui.storagecraft:detector=Detector
 gui.storagecraft:solderer=Solderer
 gui.storagecraft:wirelessTransmitter=Wireless Transmitter
+gui.storagecraft:destructor=Destructor
 
 misc.storagecraft:energyStored=%d / %d RF
 misc.storagecraft:energyUsage=Usage: %d RF/t
@@ -67,6 +68,7 @@ block.storagecraft:detector.name=Detector
 block.storagecraft:machineCasing.name=Machine Casing
 block.storagecraft:solderer.name=Solderer
 block.storagecraft:wirelessTransmitter.name=Wireless Transmitter
+block.storagecraft:destructor.name=Destructor
 
 item.storagecraft:storageCell.0.name=1k Storage Cell
 item.storagecraft:storageCell.1.name=4k Storage Cell

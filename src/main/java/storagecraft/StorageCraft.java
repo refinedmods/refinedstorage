@@ -29,6 +29,7 @@ public class StorageCraft
 		public static final int DETECTOR = 6;
 		public static final int SOLDERER = 7;
 		public static final int WIRELESS_TRANSMITTER = 8;
+		public static final int DESTRUCTOR = 9;
 	}
 
 	public static final String ID = "storagecraft";

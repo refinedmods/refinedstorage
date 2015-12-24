@@ -1,6 +1,5 @@
 package storagecraft.util;
 
-import java.util.Random;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -56,48 +55,48 @@ public class InventoryUtils
 		}
 	}
 
-	// https://github.com/cpw/ironchest/blob/master/src/main/java/cpw/mods/ironchest/BlockIronChest.java#L200
 	public static void dropInventory(World world, IInventory inventory, int x, int y, int z)
 	{
-		Random random = world.rand;
-
 		for (int i = 0; i < inventory.getSizeInventory(); ++i)
 		{
 			ItemStack stack = inventory.getStackInSlot(i);
 
-			if (stack == null)
+			if (stack != null)
 			{
-				continue;
+				dropStack(world, stack, x, y, z);
+			}
+		}
+	}
+
+	public static void dropStack(World world, ItemStack stack, int x, int y, int z)
+	{
+		float xo = world.rand.nextFloat() * 0.8F + 0.1F;
+		float yo = world.rand.nextFloat() * 0.8F + 0.1F;
+		float zo = world.rand.nextFloat() * 0.8F + 0.1F;
+
+		while (stack.stackSize > 0)
+		{
+			int amount = world.rand.nextInt(21) + 10;
+
+			if (amount > stack.stackSize)
+			{
+				amount = stack.stackSize;
 			}
 
-			float xo = random.nextFloat() * 0.8F + 0.1F;
-			float yo = random.nextFloat() * 0.8F + 0.1F;
-			float zo = random.nextFloat() * 0.8F + 0.1F;
+			stack.stackSize -= amount;
 
-			while (stack.stackSize > 0)
+			EntityItem entity = new EntityItem(world, (float) x + xo, (float) y + yo, (float) z + zo, new ItemStack(stack.getItem(), amount, stack.getItemDamage()));
+
+			entity.motionX = (float) world.rand.nextGaussian() * 0.05F;
+			entity.motionY = (float) world.rand.nextGaussian() * 0.05F + 0.2F;
+			entity.motionZ = (float) world.rand.nextGaussian() * 0.05F;
+
+			if (stack.hasTagCompound())
 			{
-				int amount = random.nextInt(21) + 10;
-
-				if (amount > stack.stackSize)
-				{
-					amount = stack.stackSize;
-				}
-
-				stack.stackSize -= amount;
-
-				EntityItem entity = new EntityItem(world, (float) x + xo, (float) y + yo, (float) z + zo, new ItemStack(stack.getItem(), amount, stack.getItemDamage()));
-
-				entity.motionX = (float) random.nextGaussian() * 0.05F;
-				entity.motionY = (float) random.nextGaussian() * 0.05F + 0.2F;
-				entity.motionZ = (float) random.nextGaussian() * 0.05F;
-
-				if (stack.hasTagCompound())
-				{
-					entity.getEntityItem().setTagCompound((NBTTagCompound) stack.getTagCompound().copy());
-				}
-
-				world.spawnEntityInWorld(entity);
+				entity.getEntityItem().setTagCompound((NBTTagCompound) stack.getTagCompound().copy());
 			}
+
+			world.spawnEntityInWorld(entity);
 		}
 	}
 
