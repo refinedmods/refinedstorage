@@ -28,17 +28,20 @@ public class TileConstructor extends TileMachine implements IInventory, ISidedIn
 	@Override
 	public void updateMachine()
 	{
-		int frontX = xCoord + getDirection().offsetX;
-		int frontY = yCoord + getDirection().offsetY;
-		int frontZ = zCoord + getDirection().offsetZ;
-
-		if (worldObj.getBlock(frontX, frontY, frontZ) == Blocks.air && inventory.getStackInSlot(0) != null)
+		if (ticks % 10 == 0)
 		{
-			ItemStack took = getController().take(inventory.getStackInSlot(0).copy(), compare);
+			int frontX = xCoord + getDirection().offsetX;
+			int frontY = yCoord + getDirection().offsetY;
+			int frontZ = zCoord + getDirection().offsetZ;
 
-			if (took != null)
+			if (worldObj.getBlock(frontX, frontY, frontZ) == Blocks.air && inventory.getStackInSlot(0) != null)
 			{
-				worldObj.setBlock(frontX, frontY, frontZ, ((ItemBlock) took.getItem()).field_150939_a, took.getItemDamage(), 1 | 2);
+				ItemStack took = getController().take(inventory.getStackInSlot(0).copy(), compare);
+
+				if (took != null)
+				{
+					worldObj.setBlock(frontX, frontY, frontZ, ((ItemBlock) took.getItem()).field_150939_a, took.getItemDamage(), 1 | 2);
+				}
 			}
 		}
 	}
