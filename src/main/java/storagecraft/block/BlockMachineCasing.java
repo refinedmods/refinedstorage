@@ -16,7 +16,7 @@ public class BlockMachineCasing extends BlockBase
 	@Override
 	public void registerBlockIcons(IIconRegister register)
 	{
-		icon = register.registerIcon("storagecraft:generic");
+		icon = register.registerIcon("storagecraft:side");
 	}
 
 	@Override

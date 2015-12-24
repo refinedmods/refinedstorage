@@ -67,7 +67,7 @@ public class BlockController extends BlockBase implements ITileEntityProvider
 			icons[i] = register.registerIcon("storagecraft:controller" + i);
 		}
 
-		sideIcon = register.registerIcon("storagecraft:generic");
+		sideIcon = register.registerIcon("storagecraft:side");
 	}
 
 	@Override

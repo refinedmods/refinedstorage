@@ -63,7 +63,7 @@ public class BlockDetector extends BlockBase implements ITileEntityProvider
 	{
 		poweredIcon = register.registerIcon("storagecraft:detectorPowered");
 		unpoweredIcon = register.registerIcon("storagecraft:detectorUnpowered");
-		sideIcon = register.registerIcon("storagecraft:generic");
+		sideIcon = register.registerIcon("storagecraft:side");
 	}
 
 	@Override

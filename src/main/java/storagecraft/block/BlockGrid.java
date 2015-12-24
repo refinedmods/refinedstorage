@@ -56,7 +56,7 @@ public class BlockGrid extends BlockBase implements ITileEntityProvider
 	{
 		connectedIcon = register.registerIcon("storagecraft:gridConnected");
 		disconnectedIcon = register.registerIcon("storagecraft:gridDisconnected");
-		sideIcon = register.registerIcon("storagecraft:generic");
+		sideIcon = register.registerIcon("storagecraft:side");
 	}
 
 	@Override

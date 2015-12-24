@@ -41,7 +41,7 @@ public class BlockExporter extends BlockBase implements ITileEntityProvider
 	public void registerBlockIcons(IIconRegister register)
 	{
 		frontIcon = register.registerIcon("storagecraft:exporter");
-		sideIcon = register.registerIcon("storagecraft:generic");
+		sideIcon = register.registerIcon("storagecraft:side");
 	}
 
 	@Override

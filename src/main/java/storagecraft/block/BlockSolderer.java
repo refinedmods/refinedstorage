@@ -43,7 +43,7 @@ public class BlockSolderer extends BlockBase implements ITileEntityProvider
 	{
 		connectedIcon = register.registerIcon("storagecraft:soldererConnected");
 		disconnectedIcon = register.registerIcon("storagecraft:soldererDisconnected");
-		sideIcon = register.registerIcon("storagecraft:generic");
+		sideIcon = register.registerIcon("storagecraft:side");
 	}
 
 	@Override

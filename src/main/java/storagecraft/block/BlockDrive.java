@@ -41,7 +41,7 @@ public class BlockDrive extends BlockBase implements ITileEntityProvider
 	public void registerBlockIcons(IIconRegister register)
 	{
 		frontIcon = register.registerIcon("storagecraft:drive");
-		sideIcon = register.registerIcon("storagecraft:generic");
+		sideIcon = register.registerIcon("storagecraft:side");
 	}
 
 	@Override

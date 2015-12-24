@@ -41,7 +41,7 @@ public class BlockExternalStorage extends BlockBase implements ITileEntityProvid
 	public void registerBlockIcons(IIconRegister register)
 	{
 		frontIcon = register.registerIcon("storagecraft:externalStorage");
-		sideIcon = register.registerIcon("storagecraft:generic");
+		sideIcon = register.registerIcon("storagecraft:side");
 	}
 
 	@Override
