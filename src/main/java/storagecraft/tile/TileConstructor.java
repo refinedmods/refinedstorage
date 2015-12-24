@@ -2,8 +2,10 @@ package storagecraft.tile;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import storagecraft.inventory.InventorySimple;
@@ -26,7 +28,19 @@ public class TileConstructor extends TileMachine implements IInventory, ISidedIn
 	@Override
 	public void updateMachine()
 	{
-		// @TODO: ...
+		int frontX = xCoord + getDirection().offsetX;
+		int frontY = yCoord + getDirection().offsetY;
+		int frontZ = zCoord + getDirection().offsetZ;
+
+		if (worldObj.getBlock(frontX, frontY, frontZ) == Blocks.air && inventory.getStackInSlot(0) != null)
+		{
+			ItemStack took = getController().take(inventory.getStackInSlot(0).copy(), compare);
+
+			if (took != null)
+			{
+				worldObj.setBlock(frontX, frontY, frontZ, ((ItemBlock) took.getItem()).field_150939_a, took.getItemDamage(), 1 | 2);
+			}
+		}
 	}
 
 	@Override
