@@ -9,7 +9,7 @@ import storagecraft.item.ItemStoragePart;
 import storagecraft.item.ItemWirelessGrid;
 import storagecraft.item.ItemWirelessGridPlate;
 
-public class StorageCraftItems
+public final class StorageCraftItems
 {
 	public static final ItemStorageCell STORAGE_CELL = new ItemStorageCell();
 	public static final ItemWirelessGrid WIRELESS_GRID = new ItemWirelessGrid();

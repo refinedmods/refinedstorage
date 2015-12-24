@@ -8,6 +8,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import storagecraft.StorageCraft;
+import storagecraft.StorageCraftGUI;
 import storagecraft.tile.TileExporter;
 
 public class BlockExporter extends BlockBase implements ITileEntityProvider
@@ -31,7 +32,7 @@ public class BlockExporter extends BlockBase implements ITileEntityProvider
 	{
 		if (!world.isRemote)
 		{
-			player.openGui(StorageCraft.INSTANCE, StorageCraft.GUI.EXPORTER, world, x, y, z);
+			player.openGui(StorageCraft.INSTANCE, StorageCraftGUI.EXPORTER, world, x, y, z);
 		}
 
 		return true;

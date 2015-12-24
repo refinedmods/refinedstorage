@@ -5,7 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import storagecraft.StorageCraft;
+import storagecraft.StorageCraftGUI;
 import storagecraft.container.ContainerConstructor;
 import storagecraft.container.ContainerController;
 import storagecraft.container.ContainerDestructor;
@@ -35,27 +35,27 @@ public class GuiHandler implements IGuiHandler
 	{
 		switch (ID)
 		{
-			case StorageCraft.GUI.CONTROLLER:
+			case StorageCraftGUI.CONTROLLER:
 				return new ContainerController(player);
-			case StorageCraft.GUI.GRID:
+			case StorageCraftGUI.GRID:
 				return new ContainerGrid(player, (TileGrid) tile);
-			case StorageCraft.GUI.DRIVE:
+			case StorageCraftGUI.DRIVE:
 				return new ContainerDrive(player, (TileDrive) tile);
-			case StorageCraft.GUI.EXTERNAL_STORAGE:
+			case StorageCraftGUI.EXTERNAL_STORAGE:
 				return new ContainerExternalStorage(player);
-			case StorageCraft.GUI.IMPORTER:
+			case StorageCraftGUI.IMPORTER:
 				return new ContainerImporter(player, (TileImporter) tile);
-			case StorageCraft.GUI.EXPORTER:
+			case StorageCraftGUI.EXPORTER:
 				return new ContainerExporter(player, (TileExporter) tile);
-			case StorageCraft.GUI.DETECTOR:
+			case StorageCraftGUI.DETECTOR:
 				return new ContainerDetector(player, (TileDetector) tile);
-			case StorageCraft.GUI.SOLDERER:
+			case StorageCraftGUI.SOLDERER:
 				return new ContainerSolderer(player, (TileSolderer) tile);
-			case StorageCraft.GUI.WIRELESS_TRANSMITTER:
+			case StorageCraftGUI.WIRELESS_TRANSMITTER:
 				return new ContainerWirelessTransmitter(player, (TileWirelessTransmitter) tile);
-			case StorageCraft.GUI.DESTRUCTOR:
+			case StorageCraftGUI.DESTRUCTOR:
 				return new ContainerDestructor(player);
-			case StorageCraft.GUI.CONSTRUCTOR:
+			case StorageCraftGUI.CONSTRUCTOR:
 				return new ContainerConstructor(player, (TileConstructor) tile);
 			default:
 				return null;
@@ -75,27 +75,27 @@ public class GuiHandler implements IGuiHandler
 
 		switch (ID)
 		{
-			case StorageCraft.GUI.CONTROLLER:
+			case StorageCraftGUI.CONTROLLER:
 				return new GuiController((ContainerController) getContainer(ID, player, tile), (TileController) tile);
-			case StorageCraft.GUI.GRID:
+			case StorageCraftGUI.GRID:
 				return new GuiGrid((ContainerGrid) getContainer(ID, player, tile), (TileGrid) tile);
-			case StorageCraft.GUI.DRIVE:
+			case StorageCraftGUI.DRIVE:
 				return new GuiDrive((ContainerDrive) getContainer(ID, player, tile), (TileDrive) tile);
-			case StorageCraft.GUI.EXTERNAL_STORAGE:
+			case StorageCraftGUI.EXTERNAL_STORAGE:
 				return new GuiExternalStorage((ContainerExternalStorage) getContainer(ID, player, tile), (TileExternalStorage) tile);
-			case StorageCraft.GUI.IMPORTER:
+			case StorageCraftGUI.IMPORTER:
 				return new GuiImporter((ContainerImporter) getContainer(ID, player, tile), (TileImporter) tile);
-			case StorageCraft.GUI.EXPORTER:
+			case StorageCraftGUI.EXPORTER:
 				return new GuiExporter((ContainerExporter) getContainer(ID, player, tile), (TileExporter) tile);
-			case StorageCraft.GUI.DETECTOR:
+			case StorageCraftGUI.DETECTOR:
 				return new GuiDetector((ContainerDetector) getContainer(ID, player, tile), (TileDetector) tile);
-			case StorageCraft.GUI.SOLDERER:
+			case StorageCraftGUI.SOLDERER:
 				return new GuiSolderer((ContainerSolderer) getContainer(ID, player, tile), (TileSolderer) tile);
-			case StorageCraft.GUI.WIRELESS_TRANSMITTER:
+			case StorageCraftGUI.WIRELESS_TRANSMITTER:
 				return new GuiWirelessTransmitter((ContainerWirelessTransmitter) getContainer(ID, player, tile), (TileWirelessTransmitter) tile);
-			case StorageCraft.GUI.DESTRUCTOR:
+			case StorageCraftGUI.DESTRUCTOR:
 				return new GuiDestructor((ContainerDestructor) getContainer(ID, player, tile), (TileDestructor) tile);
-			case StorageCraft.GUI.CONSTRUCTOR:
+			case StorageCraftGUI.CONSTRUCTOR:
 				return new GuiConstructor((ContainerConstructor) getContainer(ID, player, tile), (TileConstructor) tile);
 			default:
 				return null;

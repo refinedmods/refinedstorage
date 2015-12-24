@@ -8,6 +8,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import storagecraft.StorageCraft;
+import storagecraft.StorageCraftGUI;
 import storagecraft.tile.TileWirelessTransmitter;
 
 public class BlockWirelessTransmitter extends BlockBase implements ITileEntityProvider
@@ -27,7 +28,7 @@ public class BlockWirelessTransmitter extends BlockBase implements ITileEntityPr
 	{
 		if (!world.isRemote)
 		{
-			player.openGui(StorageCraft.INSTANCE, StorageCraft.GUI.WIRELESS_TRANSMITTER, world, x, y, z);
+			player.openGui(StorageCraft.INSTANCE, StorageCraftGUI.WIRELESS_TRANSMITTER, world, x, y, z);
 		}
 
 		return true;

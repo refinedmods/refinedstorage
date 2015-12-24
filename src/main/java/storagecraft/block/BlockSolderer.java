@@ -8,6 +8,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import storagecraft.StorageCraft;
+import storagecraft.StorageCraftGUI;
 import storagecraft.tile.TileSolderer;
 
 public class BlockSolderer extends BlockBase implements ITileEntityProvider
@@ -32,7 +33,7 @@ public class BlockSolderer extends BlockBase implements ITileEntityProvider
 	{
 		if (!world.isRemote)
 		{
-			player.openGui(StorageCraft.INSTANCE, StorageCraft.GUI.SOLDERER, world, x, y, z);
+			player.openGui(StorageCraft.INSTANCE, StorageCraftGUI.SOLDERER, world, x, y, z);
 		}
 
 		return true;

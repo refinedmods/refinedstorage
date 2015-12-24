@@ -8,6 +8,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import storagecraft.StorageCraft;
+import storagecraft.StorageCraftGUI;
 import storagecraft.tile.TileDetector;
 
 public class BlockDetector extends BlockBase implements ITileEntityProvider
@@ -26,7 +27,7 @@ public class BlockDetector extends BlockBase implements ITileEntityProvider
 	{
 		if (!world.isRemote)
 		{
-			player.openGui(StorageCraft.INSTANCE, StorageCraft.GUI.DETECTOR, world, x, y, z);
+			player.openGui(StorageCraft.INSTANCE, StorageCraftGUI.DETECTOR, world, x, y, z);
 		}
 
 		return true;

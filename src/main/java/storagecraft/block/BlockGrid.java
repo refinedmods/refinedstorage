@@ -12,6 +12,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import storagecraft.StorageCraft;
+import storagecraft.StorageCraftGUI;
 import storagecraft.tile.TileGrid;
 
 public class BlockGrid extends BlockBase implements ITileEntityProvider
@@ -45,7 +46,7 @@ public class BlockGrid extends BlockBase implements ITileEntityProvider
 	{
 		if (!world.isRemote)
 		{
-			player.openGui(StorageCraft.INSTANCE, StorageCraft.GUI.GRID, world, x, y, z);
+			player.openGui(StorageCraft.INSTANCE, StorageCraftGUI.GRID, world, x, y, z);
 		}
 
 		return true;

@@ -12,6 +12,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import storagecraft.StorageCraft;
+import storagecraft.StorageCraftGUI;
 import storagecraft.tile.TileGrid;
 import storagecraft.tile.TileWirelessTransmitter;
 
@@ -80,7 +81,7 @@ public class ItemWirelessGrid extends ItemBase
 							}
 							else
 							{
-								player.openGui(StorageCraft.INSTANCE, StorageCraft.GUI.GRID, world, grid.xCoord, grid.yCoord, grid.zCoord);
+								player.openGui(StorageCraft.INSTANCE, StorageCraftGUI.GRID, world, grid.xCoord, grid.yCoord, grid.zCoord);
 							}
 						}
 						else

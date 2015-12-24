@@ -16,27 +16,14 @@ import storagecraft.item.ItemStorageCell;
 import storagecraft.proxy.CommonProxy;
 
 @Mod(modid = StorageCraft.ID, version = StorageCraft.VERSION, dependencies = StorageCraft.DEPENDENCIES)
-public class StorageCraft
+public final class StorageCraft
 {
-	public static final class GUI
-	{
-		public static final int CONTROLLER = 0;
-		public static final int GRID = 1;
-		public static final int DRIVE = 2;
-		public static final int EXTERNAL_STORAGE = 3;
-		public static final int IMPORTER = 4;
-		public static final int EXPORTER = 5;
-		public static final int DETECTOR = 6;
-		public static final int SOLDERER = 7;
-		public static final int WIRELESS_TRANSMITTER = 8;
-		public static final int DESTRUCTOR = 9;
-		public static final int CONSTRUCTOR = 10;
-	}
-
 	public static final String ID = "storagecraft";
 	public static final String VERSION = "1.0";
 	public static final String DEPENDENCIES = "after:NotEnoughItems";
+
 	public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(ID);
+
 	public static final CreativeTabs TAB = new CreativeTabs(ID)
 	{
 		@Override
@@ -51,8 +38,10 @@ public class StorageCraft
 			return null;
 		}
 	};
+
 	@SidedProxy(clientSide = "storagecraft.proxy.ClientProxy", serverSide = "storagecraft.proxy.ServerProxy")
 	public static CommonProxy PROXY;
+
 	@Instance
 	public static StorageCraft INSTANCE;
 

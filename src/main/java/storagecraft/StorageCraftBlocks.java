@@ -14,7 +14,7 @@ import storagecraft.block.BlockSolderer;
 import storagecraft.block.BlockExternalStorage;
 import storagecraft.block.BlockWirelessTransmitter;
 
-public class StorageCraftBlocks
+public final class StorageCraftBlocks
 {
 	public static final BlockController CONTROLLER = new BlockController();
 	public static final BlockCable CABLE = new BlockCable();

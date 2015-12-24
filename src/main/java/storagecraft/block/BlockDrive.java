@@ -8,6 +8,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import storagecraft.StorageCraft;
+import storagecraft.StorageCraftGUI;
 import storagecraft.tile.TileDrive;
 
 public class BlockDrive extends BlockBase implements ITileEntityProvider
@@ -25,7 +26,7 @@ public class BlockDrive extends BlockBase implements ITileEntityProvider
 	{
 		if (!world.isRemote)
 		{
-			player.openGui(StorageCraft.INSTANCE, StorageCraft.GUI.DRIVE, world, x, y, z);
+			player.openGui(StorageCraft.INSTANCE, StorageCraftGUI.DRIVE, world, x, y, z);
 		}
 
 		return true;

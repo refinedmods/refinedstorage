@@ -8,6 +8,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import storagecraft.StorageCraft;
+import storagecraft.StorageCraftGUI;
 import storagecraft.tile.TileExternalStorage;
 
 public class BlockExternalStorage extends BlockBase implements ITileEntityProvider
@@ -31,7 +32,7 @@ public class BlockExternalStorage extends BlockBase implements ITileEntityProvid
 	{
 		if (!world.isRemote)
 		{
-			player.openGui(StorageCraft.INSTANCE, StorageCraft.GUI.EXTERNAL_STORAGE, world, x, y, z);
+			player.openGui(StorageCraft.INSTANCE, StorageCraftGUI.EXTERNAL_STORAGE, world, x, y, z);
 		}
 
 		return true;
