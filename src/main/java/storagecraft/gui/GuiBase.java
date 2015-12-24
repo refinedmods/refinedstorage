@@ -39,6 +39,11 @@ public abstract class GuiBase extends GuiContainer
 	{
 		super.initGui();
 
+		sideButtons.clear();
+
+		lastButtonId = 0;
+		lastSideButtonY = 6;
+
 		init(guiLeft, guiTop);
 	}
 
