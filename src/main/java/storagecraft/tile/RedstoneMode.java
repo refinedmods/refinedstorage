@@ -1,5 +1,6 @@
 package storagecraft.tile;
 
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
 public enum RedstoneMode
@@ -29,16 +30,16 @@ public enum RedstoneMode
 		return next;
 	}
 
-	public boolean isEnabled(World world, int x, int y, int z)
+	public boolean isEnabled(World world, BlockPos pos)
 	{
 		switch (this)
 		{
 			case IGNORE:
 				return true;
 			case HIGH:
-				return world.isBlockIndirectlyGettingPowered(x, y, z);
+				return true; // @TODO: ...
 			case LOW:
-				return !world.isBlockIndirectlyGettingPowered(x, y, z);
+				return true;
 		}
 
 		return false;

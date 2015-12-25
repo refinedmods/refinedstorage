@@ -1,11 +1,12 @@
 package storagecraft.network;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import storagecraft.tile.INetworkTile;
 
 public class MessageTileUpdate implements IMessage, IMessageHandler<MessageTileUpdate, IMessage>
@@ -33,7 +34,7 @@ public class MessageTileUpdate implements IMessage, IMessageHandler<MessageTileU
 
 		if (Minecraft.getMinecraft().theWorld != null)
 		{
-			tile = Minecraft.getMinecraft().theWorld.getTileEntity(x, y, z);
+			tile = Minecraft.getMinecraft().theWorld.getTileEntity(new BlockPos(x, y, z));
 
 			if (tile instanceof INetworkTile)
 			{
@@ -45,9 +46,9 @@ public class MessageTileUpdate implements IMessage, IMessageHandler<MessageTileU
 	@Override
 	public void toBytes(ByteBuf buf)
 	{
-		buf.writeInt(tile.xCoord);
-		buf.writeInt(tile.yCoord);
-		buf.writeInt(tile.zCoord);
+		buf.writeInt(tile.getPos().getX());
+		buf.writeInt(tile.getPos().getY());
+		buf.writeInt(tile.getPos().getZ());
 
 		if (tile instanceof INetworkTile)
 		{

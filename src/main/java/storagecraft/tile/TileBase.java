@@ -1,48 +1,47 @@
 package storagecraft.tile;
 
-import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import storagecraft.StorageCraft;
 import storagecraft.network.MessageTileUpdate;
 
-public abstract class TileBase extends TileEntity
+public abstract class TileBase extends TileEntity implements IUpdatePlayerListBox
 {
 	public static final int UPDATE_RANGE = 256;
 
-	private ForgeDirection direction = ForgeDirection.UNKNOWN;
+	private EnumFacing direction;
 
 	protected int ticks;
 
 	@Override
-	public void updateEntity()
+	public void update()
 	{
-		super.updateEntity();
-
 		ticks++;
 
 		if (!worldObj.isRemote)
 		{
 			if (this instanceof INetworkTile)
 			{
-				TargetPoint target = new TargetPoint(worldObj.provider.dimensionId, xCoord, yCoord, zCoord, UPDATE_RANGE);
+				TargetPoint target = new TargetPoint(worldObj.provider.getDimensionId(), pos.getX(), pos.getY(), pos.getZ(), UPDATE_RANGE);
 
 				StorageCraft.NETWORK.sendToAllAround(new MessageTileUpdate(this), target);
 			}
 		}
 	}
 
-	public void setDirection(ForgeDirection direction)
+	public void setDirection(EnumFacing direction)
 	{
 		this.direction = direction;
 	}
 
-	public ForgeDirection getDirection()
+	public EnumFacing getDirection()
 	{
 		return direction;
 	}
@@ -52,7 +51,7 @@ public abstract class TileBase extends TileEntity
 	{
 		super.readFromNBT(nbt);
 
-		direction = ForgeDirection.getOrientation(nbt.getInteger("Direction"));
+		direction = EnumFacing.getFront(nbt.getInteger("Direction"));
 	}
 
 	@Override
@@ -70,13 +69,13 @@ public abstract class TileBase extends TileEntity
 
 		nbt.setInteger("Direction", direction.ordinal());
 
-		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, nbt);
+		return new S35PacketUpdateTileEntity(pos, 1, nbt);
 	}
 
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
 	{
-		direction = ForgeDirection.getOrientation(packet.func_148857_g().getInteger("Direction"));
+		direction = EnumFacing.getFront(packet.getNbtCompound().getInteger("Direction"));
 	}
 
 	public IInventory getDroppedInventory()

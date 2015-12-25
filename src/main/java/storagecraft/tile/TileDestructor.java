@@ -2,8 +2,8 @@ package storagecraft.tile;
 
 import java.util.List;
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
 import storagecraft.util.InventoryUtils;
 
 public class TileDestructor extends TileMachine
@@ -19,23 +19,21 @@ public class TileDestructor extends TileMachine
 	{
 		if (ticks % 10 == 0)
 		{
-			int frontX = xCoord + getDirection().offsetX;
-			int frontY = yCoord + getDirection().offsetY;
-			int frontZ = zCoord + getDirection().offsetZ;
+			BlockPos front = pos.offset(getDirection());
 
-			Block front = worldObj.getBlock(frontX, frontY, frontZ);
+			Block frontBlock = worldObj.getBlockState(front).getBlock();
 
-			if (front != Blocks.air)
+			if (!frontBlock.isAir(worldObj, front))
 			{
-				List<ItemStack> drops = front.getDrops(worldObj, frontX, frontY, frontZ, worldObj.getBlockMetadata(frontX, frontY, frontZ), 0);
+				List<ItemStack> drops = frontBlock.getDrops(worldObj, front, worldObj.getBlockState(front), 0);
 
-				worldObj.setBlockToAir(frontX, frontY, frontZ);
+				worldObj.setBlockToAir(front);
 
 				for (ItemStack drop : drops)
 				{
 					if (!getController().push(drop))
 					{
-						InventoryUtils.dropStack(worldObj, drop, frontX, frontY, frontZ);
+						InventoryUtils.dropStack(worldObj, drop, front.getX(), front.getY(), front.getZ());
 					}
 				}
 			}

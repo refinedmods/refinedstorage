@@ -1,14 +1,13 @@
 package storagecraft.item;
 
 import java.util.List;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import storagecraft.StorageCraft;
@@ -21,9 +20,6 @@ public class ItemWirelessGrid extends ItemBase
 	public static final String NBT_WIRELESS_TRANSMITTER_X = "WirelessTransmitterX";
 	public static final String NBT_WIRELESS_TRANSMITTER_Y = "WirelessTransmitterY";
 	public static final String NBT_WIRELESS_TRANSMITTER_Z = "WirelessTransmitterZ";
-
-	private IIcon iconConnected;
-	private IIcon iconDisconnected;
 
 	public ItemWirelessGrid()
 	{
@@ -65,7 +61,7 @@ public class ItemWirelessGrid extends ItemBase
 					int y = getY(stack);
 					int z = getZ(stack);
 
-					TileEntity tile = world.getTileEntity(x, y, z);
+					TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
 
 					if (tile instanceof TileWirelessTransmitter)
 					{
@@ -81,7 +77,7 @@ public class ItemWirelessGrid extends ItemBase
 							}
 							else
 							{
-								player.openGui(StorageCraft.INSTANCE, StorageCraftGUI.GRID, world, grid.xCoord, grid.yCoord, grid.zCoord);
+								player.openGui(StorageCraft.INSTANCE, StorageCraftGUI.GRID, world, grid.getPos().getX(), grid.getPos().getY(), grid.getPos().getZ());
 							}
 						}
 						else
@@ -115,17 +111,17 @@ public class ItemWirelessGrid extends ItemBase
 
 	public int getX(ItemStack stack)
 	{
-		return stack.stackTagCompound.getInteger(NBT_WIRELESS_TRANSMITTER_X);
+		return stack.getTagCompound().getInteger(NBT_WIRELESS_TRANSMITTER_X);
 	}
 
 	public int getY(ItemStack stack)
 	{
-		return stack.stackTagCompound.getInteger(NBT_WIRELESS_TRANSMITTER_Y);
+		return stack.getTagCompound().getInteger(NBT_WIRELESS_TRANSMITTER_Y);
 	}
 
 	public int getZ(ItemStack stack)
 	{
-		return stack.stackTagCompound.getInteger(NBT_WIRELESS_TRANSMITTER_Z);
+		return stack.getTagCompound().getInteger(NBT_WIRELESS_TRANSMITTER_Z);
 	}
 
 	public boolean isInRange(ItemStack stack, EntityPlayer player)
@@ -135,25 +131,6 @@ public class ItemWirelessGrid extends ItemBase
 
 	public boolean isValid(ItemStack stack)
 	{
-		return stack.stackTagCompound != null && stack.stackTagCompound.hasKey(NBT_WIRELESS_TRANSMITTER_X) && stack.stackTagCompound.hasKey(NBT_WIRELESS_TRANSMITTER_Y) && stack.stackTagCompound.hasKey(NBT_WIRELESS_TRANSMITTER_Z);
-	}
-
-	@Override
-	public void registerIcons(IIconRegister register)
-	{
-		iconConnected = register.registerIcon("storagecraft:wirelessGridConnected");
-		iconDisconnected = register.registerIcon("storagecraft:wirelessGridDisconnected");
-	}
-
-	@Override
-	public IIcon getIcon(ItemStack stack, int pass)
-	{
-		return getIconIndex(stack);
-	}
-
-	@Override
-	public IIcon getIconIndex(ItemStack stack)
-	{
-		return isValid(stack) ? iconConnected : iconDisconnected;
+		return stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_WIRELESS_TRANSMITTER_X) && stack.getTagCompound().hasKey(NBT_WIRELESS_TRANSMITTER_Y) && stack.getTagCompound().hasKey(NBT_WIRELESS_TRANSMITTER_Z);
 	}
 }

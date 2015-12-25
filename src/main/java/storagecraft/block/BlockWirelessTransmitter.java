@@ -1,37 +1,21 @@
 package storagecraft.block;
 
-import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import storagecraft.StorageCraft;
 import storagecraft.StorageCraftGUI;
 import storagecraft.tile.TileWirelessTransmitter;
 
-public class BlockWirelessTransmitter extends BlockBase implements ITileEntityProvider
+// @TODO: This texture behaves differently
+public class BlockWirelessTransmitter extends BlockMachine
 {
-	private IIcon icon;
-	private IIcon workingIcon;
-	private IIcon sideIcon;
-	private IIcon workingSideIcon;
-
 	public BlockWirelessTransmitter()
 	{
 		super("wirelessTransmitter");
-	}
-
-	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
-	{
-		if (!world.isRemote)
-		{
-			player.openGui(StorageCraft.INSTANCE, StorageCraftGUI.WIRELESS_TRANSMITTER, world, x, y, z);
-		}
-
-		return true;
 	}
 
 	@Override
@@ -41,35 +25,13 @@ public class BlockWirelessTransmitter extends BlockBase implements ITileEntityPr
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister register)
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
-		icon = register.registerIcon("storagecraft:wirelessTransmitter");
-		workingIcon = register.registerIcon("storagecraft:wirelessTransmitterWorking");
-		sideIcon = register.registerIcon("storagecraft:wirelessTransmitterSide");
-		workingSideIcon = register.registerIcon("storagecraft:wirelessTransmitterSideWorking");
-	}
-
-	@Override
-	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
-	{
-		TileWirelessTransmitter tile = (TileWirelessTransmitter) world.getTileEntity(x, y, z);
-
-		if (side == tile.getDirection().ordinal())
+		if (!world.isRemote)
 		{
-			return tile.isWorking() ? workingIcon : icon;
+			player.openGui(StorageCraft.INSTANCE, StorageCraftGUI.WIRELESS_TRANSMITTER, world, pos.getX(), pos.getY(), pos.getZ());
 		}
 
-		return tile.isWorking() ? workingSideIcon : sideIcon;
-	}
-
-	@Override
-	public IIcon getIcon(int side, int damage)
-	{
-		if (side == 3)
-		{
-			return icon;
-		}
-
-		return sideIcon;
+		return true;
 	}
 }

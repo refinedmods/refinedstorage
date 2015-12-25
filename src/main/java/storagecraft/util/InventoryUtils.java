@@ -68,7 +68,7 @@ public class InventoryUtils
 		}
 	}
 
-	public static void dropStack(World world, ItemStack stack, int x, int y, int z)
+	public static void dropStack(World world, ItemStack stack, int x, int y, int z) // @TODO: Take BlockPos here
 	{
 		float xo = world.rand.nextFloat() * 0.8F + 0.1F;
 		float yo = world.rand.nextFloat() * 0.8F + 0.1F;
@@ -226,7 +226,7 @@ public class InventoryUtils
 
 		if ((flags & COMPARE_NBT) == COMPARE_NBT)
 		{
-			if (first.stackTagCompound != null && !first.stackTagCompound.equals(second.stackTagCompound))
+			if (first.hasTagCompound() && !first.getTagCompound().equals(second.getTagCompound()))
 			{
 				return false;
 			}

@@ -1,11 +1,12 @@
 package storagecraft.network;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import storagecraft.tile.IRedstoneModeSetting;
 
 public class MessageRedstoneModeUpdate implements IMessage, IMessageHandler<MessageRedstoneModeUpdate, IMessage>
@@ -20,9 +21,9 @@ public class MessageRedstoneModeUpdate implements IMessage, IMessageHandler<Mess
 
 	public MessageRedstoneModeUpdate(IRedstoneModeSetting setting)
 	{
-		this.x = setting.getX();
-		this.y = setting.getY();
-		this.z = setting.getZ();
+		this.x = setting.getPos().getX();
+		this.y = setting.getPos().getY();
+		this.z = setting.getPos().getZ();
 	}
 
 	@Override
@@ -46,7 +47,7 @@ public class MessageRedstoneModeUpdate implements IMessage, IMessageHandler<Mess
 	{
 		EntityPlayerMP player = context.getServerHandler().playerEntity;
 
-		TileEntity tile = player.worldObj.getTileEntity(message.x, message.y, message.z);
+		TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.x, message.y, message.z));
 
 		if (tile instanceof IRedstoneModeSetting)
 		{

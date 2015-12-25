@@ -11,7 +11,7 @@ public class BlockCableRenderer extends TileEntitySpecialRenderer
 	public static final CableModel CABLE_MODEL = new CableModel();
 
 	@Override
-	public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float scale)
+	public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float scale, int a) // @TODO: Find out what a is
 	{
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x, (float) y, (float) z);

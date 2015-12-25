@@ -27,7 +27,7 @@ public class CellStorage implements IStorage
 	@Override
 	public void addItems(List<StorageItem> items)
 	{
-		NBTTagList list = (NBTTagList) cell.stackTagCompound.getTag(NBT_ITEMS);
+		NBTTagList list = (NBTTagList) cell.getTagCompound().getTag(NBT_ITEMS);
 
 		for (int i = 0; i < list.tagCount(); ++i)
 		{
@@ -38,9 +38,9 @@ public class CellStorage implements IStorage
 	@Override
 	public void push(ItemStack stack)
 	{
-		NBTTagList list = (NBTTagList) cell.stackTagCompound.getTag(NBT_ITEMS);
+		NBTTagList list = (NBTTagList) cell.getTagCompound().getTag(NBT_ITEMS);
 
-		cell.stackTagCompound.setInteger(NBT_STORED, ItemStorageCell.getStored(cell) + stack.stackSize);
+		cell.getTagCompound().setInteger(NBT_STORED, ItemStorageCell.getStored(cell) + stack.stackSize);
 
 		for (int i = 0; i < list.tagCount(); ++i)
 		{
@@ -62,9 +62,9 @@ public class CellStorage implements IStorage
 		tag.setInteger(NBT_ITEM_QUANTITY, stack.stackSize);
 		tag.setInteger(NBT_ITEM_DAMAGE, stack.getItemDamage());
 
-		if (stack.stackTagCompound != null)
+		if (stack.hasTagCompound())
 		{
-			tag.setTag(NBT_ITEM_NBT, stack.stackTagCompound);
+			tag.setTag(NBT_ITEM_NBT, stack.getTagCompound());
 		}
 
 		list.appendTag(tag);
@@ -75,7 +75,7 @@ public class CellStorage implements IStorage
 	{
 		int quantity = stack.stackSize;
 
-		NBTTagList list = (NBTTagList) cell.stackTagCompound.getTag(NBT_ITEMS);
+		NBTTagList list = (NBTTagList) cell.getTagCompound().getTag(NBT_ITEMS);
 
 		for (int i = 0; i < list.tagCount(); ++i)
 		{
@@ -97,7 +97,7 @@ public class CellStorage implements IStorage
 					list.removeTag(i);
 				}
 
-				cell.stackTagCompound.setInteger(NBT_STORED, ItemStorageCell.getStored(cell) - quantity);
+				cell.getTagCompound().setInteger(NBT_STORED, ItemStorageCell.getStored(cell) - quantity);
 
 				ItemStack newItem = item.toItemStack();
 

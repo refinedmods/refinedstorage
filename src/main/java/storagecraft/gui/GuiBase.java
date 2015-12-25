@@ -1,6 +1,7 @@
 package storagecraft.gui;
 
 import com.google.common.base.Joiner;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.gui.GuiButton;
@@ -85,7 +86,7 @@ public abstract class GuiBase extends GuiContainer
 	}
 
 	@Override
-	protected void actionPerformed(GuiButton button)
+	protected void actionPerformed(GuiButton button) throws IOException
 	{
 		super.actionPerformed(button);
 
@@ -156,11 +157,10 @@ public abstract class GuiBase extends GuiContainer
 
 		RenderHelper.enableGUIStandardItemLighting();
 
-		itemRender.renderItemAndEffectIntoGUI(fontRendererObj, mc.renderEngine, stack, x, y);
-
+		// @TODO: itemRender.renderItemAndEffectIntoGUI(fontRendererObj, mc.renderEngine, stack, x, y);
 		if (withOverlay)
 		{
-			itemRender.renderItemOverlayIntoGUI(fontRendererObj, mc.renderEngine, stack, x, y);
+			// @TODO: itemRender.renderItemOverlayIntoGUI(fontRendererObj, mc.renderEngine, stack, x, y);
 		}
 
 		GL11.glPopAttrib();
@@ -255,8 +255,7 @@ public abstract class GuiBase extends GuiContainer
 					var14 = "\u00a77" + var14;
 				}
 
-				fontRendererObj.drawStringWithShadow(var14, var6, var7, -1);
-
+				// @TODO: fontRendererObj.drawStringWithShadow(var14, var6, var7, -1);
 				if (var13 == 0)
 				{
 					var7 += 2;

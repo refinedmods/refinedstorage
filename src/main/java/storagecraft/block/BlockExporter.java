@@ -1,21 +1,17 @@
 package storagecraft.block;
 
-import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import storagecraft.StorageCraft;
 import storagecraft.StorageCraftGUI;
 import storagecraft.tile.TileExporter;
 
-public class BlockExporter extends BlockBase implements ITileEntityProvider
+public class BlockExporter extends BlockMachine
 {
-	private IIcon frontIcon;
-	private IIcon sideIcon;
-
 	public BlockExporter()
 	{
 		super("exporter");
@@ -28,44 +24,13 @@ public class BlockExporter extends BlockBase implements ITileEntityProvider
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		if (!world.isRemote)
 		{
-			player.openGui(StorageCraft.INSTANCE, StorageCraftGUI.EXPORTER, world, x, y, z);
+			player.openGui(StorageCraft.INSTANCE, StorageCraftGUI.EXPORTER, world, pos.getX(), pos.getY(), pos.getZ());
 		}
 
 		return true;
-	}
-
-	@Override
-	public void registerBlockIcons(IIconRegister register)
-	{
-		frontIcon = register.registerIcon("storagecraft:exporter");
-		sideIcon = register.registerIcon("storagecraft:side");
-	}
-
-	@Override
-	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
-	{
-		TileExporter tile = (TileExporter) world.getTileEntity(x, y, z);
-
-		if (side == tile.getDirection().ordinal())
-		{
-			return frontIcon;
-		}
-
-		return sideIcon;
-	}
-
-	@Override
-	public IIcon getIcon(int side, int meta)
-	{
-		if (side == 3)
-		{
-			return frontIcon;
-		}
-
-		return sideIcon;
 	}
 }

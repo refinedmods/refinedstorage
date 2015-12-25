@@ -13,7 +13,7 @@ public abstract class ItemBase extends Item
 		this.name = name;
 
 		setCreativeTab(StorageCraft.TAB);
-		setTextureName("storagecraft:" + name);
+		// @TODO: ... setTextureName("storagecraft:" + name);
 	}
 
 	@Override

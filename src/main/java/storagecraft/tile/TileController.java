@@ -8,8 +8,8 @@ import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Vec3;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import storagecraft.StorageCraftBlocks;
 import storagecraft.storage.IStorage;
 import storagecraft.storage.IStorageProvider;
@@ -25,7 +25,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
 	private List<TileMachine> machines = new ArrayList<TileMachine>();
 
-	private List<Vec3> visitedCables = new ArrayList<Vec3>();
+	private List<BlockPos> visitedCables = new ArrayList<BlockPos>();
 
 	private EnergyStorage energy = new EnergyStorage(32000);
 	private int energyUsage;
@@ -33,9 +33,9 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 	private boolean destroyed = false;
 
 	@Override
-	public void updateEntity()
+	public void update()
 	{
-		super.updateEntity();
+		super.update();
 
 		if (destroyed)
 		{
@@ -58,9 +58,9 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
 					List<TileMachine> newMachines = new ArrayList<TileMachine>();
 
-					for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+					for (EnumFacing dir : EnumFacing.VALUES)
 					{
-						TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
+						TileEntity tile = worldObj.getTileEntity(pos.offset(dir));
 
 						if (tile instanceof TileCable)
 						{
@@ -116,8 +116,8 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
 			if (lastEnergy != energy.getEnergyStored())
 			{
-				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-				worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, StorageCraftBlocks.CONTROLLER);
+				worldObj.markBlockForUpdate(pos);
+				worldObj.notifyNeighborsOfStateChange(pos, StorageCraftBlocks.CONTROLLER);
 			}
 		}
 	}
@@ -293,13 +293,13 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 	}
 
 	@Override
-	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate)
+	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate)
 	{
 		return energy.receiveEnergy(maxReceive, simulate);
 	}
 
 	@Override
-	public int getEnergyStored(ForgeDirection from)
+	public int getEnergyStored(EnumFacing from)
 	{
 		return energy.getEnergyStored();
 	}
@@ -310,7 +310,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 	}
 
 	@Override
-	public int getMaxEnergyStored(ForgeDirection from)
+	public int getMaxEnergyStored(EnumFacing from)
 	{
 		return energy.getMaxEnergyStored();
 	}
@@ -321,14 +321,14 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 	}
 
 	@Override
-	public boolean canConnectEnergy(ForgeDirection from)
+	public boolean canConnectEnergy(EnumFacing from)
 	{
 		return true;
 	}
 
 	public boolean isActive()
 	{
-		return energy.getEnergyStored() >= getEnergyUsage() && redstoneMode.isEnabled(worldObj, xCoord, yCoord, zCoord);
+		return energy.getEnergyStored() >= getEnergyUsage() && redstoneMode.isEnabled(worldObj, pos);
 	}
 
 	@Override
@@ -341,24 +341,6 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 	public void setRedstoneMode(RedstoneMode mode)
 	{
 		this.redstoneMode = mode;
-	}
-
-	@Override
-	public int getX()
-	{
-		return xCoord;
-	}
-
-	@Override
-	public int getY()
-	{
-		return yCoord;
-	}
-
-	@Override
-	public int getZ()
-	{
-		return zCoord;
 	}
 
 	@Override

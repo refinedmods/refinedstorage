@@ -22,7 +22,7 @@ group = "storagecraft"
 archivesBaseName = "storagecraft"
 
 minecraft {
-    version = "1.7.10-10.13.4.1566-1.7.10"
+    version = "1.8-11.14.1.1341"
     runDir = "eclipse"
 }
 
@@ -33,9 +33,9 @@ repositories {
     }
 }
 dependencies {
-    compile "codechicken:CodeChickenLib:1.7.10-1.1.3.140:dev"
-    compile "codechicken:CodeChickenCore:1.7.10-1.0.7.47:dev"
-    compile "codechicken:NotEnoughItems:1.7.10-1.0.5.118:dev"
+    compile "codechicken:CodeChickenLib:1.8-1.1.2.139:dev"
+    compile "codechicken:CodeChickenCore:1.8-1.0.5.36:dev"
+    compile "codechicken:NotEnoughItems:1.8-1.0.5.104:dev"
 }
 
 processResources {

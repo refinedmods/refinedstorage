@@ -1,11 +1,9 @@
 package storagecraft.item;
 
 import java.util.List;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 
 public class ItemProcessor extends ItemBase
 {
@@ -16,8 +14,6 @@ public class ItemProcessor extends ItemBase
 	public static final int TYPE_IMPROVED = 4;
 	public static final int TYPE_ADVANCED = 5;
 	public static final int TYPE_PRINTED_SILICON = 6;
-
-	private IIcon[] icons = new IIcon[7];
 
 	public ItemProcessor()
 	{
@@ -34,20 +30,5 @@ public class ItemProcessor extends ItemBase
 		{
 			list.add(new ItemStack(item, 1, i));
 		}
-	}
-
-	@Override
-	public void registerIcons(IIconRegister register)
-	{
-		for (int i = 0; i <= 6; ++i)
-		{
-			icons[i] = register.registerIcon("storagecraft:processor" + i);
-		}
-	}
-
-	@Override
-	public IIcon getIconFromDamage(int damage)
-	{
-		return icons[damage];
 	}
 }

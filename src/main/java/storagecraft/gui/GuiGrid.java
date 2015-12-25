@@ -1,5 +1,6 @@
 package storagecraft.gui;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -59,7 +60,7 @@ public class GuiGrid extends GuiBase
 		addSideButton(new SideButtonGridSortingDirection());
 		addSideButton(new SideButtonGridSortingType());
 
-		searchField = new GuiTextField(fontRendererObj, x + 80 + 1, y + 6 + 1, 88 - 6, fontRendererObj.FONT_HEIGHT);
+		searchField = new GuiTextField(0, fontRendererObj, x + 80 + 1, y + 6 + 1, 88 - 6, fontRendererObj.FONT_HEIGHT); // @TODO: Is this the right id?
 		searchField.setEnableBackgroundDrawing(false);
 		searchField.setVisible(true);
 		searchField.setTextColor(16777215);
@@ -279,7 +280,7 @@ public class GuiGrid extends GuiBase
 	}
 
 	@Override
-	public void mouseClicked(int mouseX, int mouseY, int clickedButton)
+	public void mouseClicked(int mouseX, int mouseY, int clickedButton) throws IOException
 	{
 		super.mouseClicked(mouseX, mouseY, clickedButton);
 
@@ -291,11 +292,11 @@ public class GuiGrid extends GuiBase
 
 			if (isHoveringOverSlot() && container.getPlayer().inventory.getItemStack() != null)
 			{
-				StorageCraft.NETWORK.sendToServer(new MessageStoragePush(controller.xCoord, controller.yCoord, controller.zCoord, -1, clickedButton == 1));
+				StorageCraft.NETWORK.sendToServer(new MessageStoragePush(controller.getPos().getX(), controller.getPos().getY(), controller.getPos().getZ(), -1, clickedButton == 1));
 			}
 			else if (isHoveringOverValidSlot() && container.getPlayer().inventory.getItemStack() == null)
 			{
-				StorageCraft.NETWORK.sendToServer(new MessageStoragePull(controller.xCoord, controller.yCoord, controller.zCoord, hoveringId, clickedButton == 1, Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)));
+				StorageCraft.NETWORK.sendToServer(new MessageStoragePull(controller.getPos().getX(), controller.getPos().getY(), controller.getPos().getZ(), hoveringId, clickedButton == 1, Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)));
 			}
 			else if (clickedClear)
 			{
@@ -309,7 +310,7 @@ public class GuiGrid extends GuiBase
 					{
 						if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
 						{
-							StorageCraft.NETWORK.sendToServer(new MessageStoragePush(controller.xCoord, controller.yCoord, controller.zCoord, slot.slotNumber, clickedButton == 1));
+							StorageCraft.NETWORK.sendToServer(new MessageStoragePush(controller.getPos().getX(), controller.getPos().getY(), controller.getPos().getZ(), slot.slotNumber, clickedButton == 1));
 						}
 					}
 				}
@@ -318,12 +319,12 @@ public class GuiGrid extends GuiBase
 
 		if (clickedClear)
 		{
-			mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
+			mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press"), 1.0F));
 		}
 	}
 
 	@Override
-	protected void keyTyped(char character, int keyCode)
+	protected void keyTyped(char character, int keyCode) throws IOException
 	{
 		if (!checkHotbarKeys(keyCode) && searchField.textboxKeyTyped(character, keyCode))
 		{

@@ -3,11 +3,13 @@ package storagecraft.block;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import storagecraft.StorageCraft;
 import storagecraft.tile.TileBase;
 import storagecraft.util.InventoryUtils;
@@ -23,7 +25,6 @@ public abstract class BlockBase extends Block
 		this.name = name;
 
 		setCreativeTab(StorageCraft.TAB);
-		setBlockTextureName("storagecraft:" + name);
 	}
 
 	@Override
@@ -33,24 +34,24 @@ public abstract class BlockBase extends Block
 	}
 
 	@Override
-	public boolean rotateBlock(World world, int x, int y, int z, ForgeDirection axis)
+	public boolean rotateBlock(World world, BlockPos pos, EnumFacing axis)
 	{
-		TileEntity tile = world.getTileEntity(x, y, z);
+		TileEntity tile = world.getTileEntity(pos);
 
 		if (tile instanceof TileBase)
 		{
-			ForgeDirection dir = ((TileBase) tile).getDirection();
+			EnumFacing dir = ((TileBase) tile).getDirection();
 
 			int newDir = dir.ordinal() + 1;
 
-			if (newDir > ForgeDirection.VALID_DIRECTIONS.length - 1)
+			if (newDir > EnumFacing.VALUES.length - 1)
 			{
 				newDir = 0;
 			}
 
-			((TileBase) tile).setDirection(ForgeDirection.getOrientation(newDir));
+			((TileBase) tile).setDirection(EnumFacing.getFront(newDir));
 
-			world.markBlockForUpdate(x, y, z);
+			world.markBlockForUpdate(pos);
 
 			return true;
 		}
@@ -59,34 +60,28 @@ public abstract class BlockBase extends Block
 	}
 
 	@Override
-	public int damageDropped(int meta)
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack itemStack)
 	{
-		return meta;
-	}
+		super.onBlockPlacedBy(world, pos, state, player, itemStack);
 
-	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack itemStack)
-	{
-		super.onBlockPlacedBy(world, x, y, z, entityLiving, itemStack);
-
-		TileEntity tile = world.getTileEntity(x, y, z);
+		TileEntity tile = world.getTileEntity(pos);
 
 		if (tile instanceof TileBase)
 		{
-			((TileBase) tile).setDirection(ForgeDirection.getOrientation(BlockPistonBase.determineOrientation(world, x, y, z, entityLiving)));
+			((TileBase) tile).setDirection(BlockPistonBase.func_180695_a(world, pos, player));
 		}
 	}
 
 	@Override
-	public void onBlockPreDestroy(World world, int x, int y, int z, int meta)
+	public void onBlockDestroyedByPlayer(World world, BlockPos pos, IBlockState state) // @TODO: Make this work all
 	{
-		TileEntity tile = world.getTileEntity(x, y, z);
+		TileEntity tile = world.getTileEntity(pos);
 
 		if (tile instanceof TileBase && ((TileBase) tile).getDroppedInventory() != null)
 		{
-			InventoryUtils.dropInventory(world, ((TileBase) tile).getDroppedInventory(), x, y, z);
+			InventoryUtils.dropInventory(world, ((TileBase) tile).getDroppedInventory(), pos.getX(), pos.getY(), pos.getZ());
 		}
 
-		super.onBlockPreDestroy(world, x, y, z, meta);
+		super.onBlockDestroyedByPlayer(world, pos, state);
 	}
 }

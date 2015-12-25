@@ -1,14 +1,16 @@
 package storagecraft.item;
 
 import net.minecraft.block.Block;
-import net.minecraft.item.ItemBlockWithMetadata;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
-public abstract class ItemBlockBase extends ItemBlockWithMetadata
+public abstract class ItemBlockBase extends ItemBlock
 {
 	public ItemBlockBase(Block block)
 	{
-		super(block, block);
+		super(block);
+
+		setHasSubtypes(true);
 	}
 
 	@Override

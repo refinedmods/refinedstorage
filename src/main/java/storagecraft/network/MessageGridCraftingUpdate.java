@@ -1,13 +1,14 @@
 package storagecraft.network;
 
-import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import storagecraft.tile.TileGrid;
 
 public class MessageGridCraftingUpdate implements IMessage, IMessageHandler<MessageGridCraftingUpdate, IMessage>
@@ -23,9 +24,9 @@ public class MessageGridCraftingUpdate implements IMessage, IMessageHandler<Mess
 
 	public MessageGridCraftingUpdate(TileGrid grid)
 	{
-		this.x = grid.xCoord;
-		this.y = grid.yCoord;
-		this.z = grid.zCoord;
+		this.x = grid.getPos().getX();
+		this.y = grid.getPos().getY();
+		this.z = grid.getPos().getZ();
 
 		for (int i = 0; i < 9; ++i)
 		{
@@ -62,7 +63,7 @@ public class MessageGridCraftingUpdate implements IMessage, IMessageHandler<Mess
 	@Override
 	public IMessage onMessage(MessageGridCraftingUpdate message, MessageContext context)
 	{
-		TileEntity tile = Minecraft.getMinecraft().theWorld.getTileEntity(message.x, message.y, message.z);
+		TileEntity tile = Minecraft.getMinecraft().theWorld.getTileEntity(new BlockPos(message.x, message.y, message.z));
 
 		if (tile instanceof TileGrid)
 		{

@@ -1,11 +1,11 @@
 package storagecraft.tile;
 
-import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import storagecraft.StorageCraft;
 import storagecraft.container.ContainerGridCrafting;
 import storagecraft.inventory.InventorySimple;
@@ -32,7 +32,7 @@ public class TileGrid extends TileMachine
 
 	public int getType()
 	{
-		return worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+		return 0; // @TODO: Make other grid work too
 	}
 
 	public boolean isCrafting()
@@ -75,7 +75,7 @@ public class TileGrid extends TileMachine
 			onCraftingMatrixChanged();
 
 			// @TODO: HACK!
-			TargetPoint target = new TargetPoint(worldObj.provider.dimensionId, xCoord, yCoord, zCoord, UPDATE_RANGE);
+			TargetPoint target = new TargetPoint(worldObj.provider.getDimensionId(), pos.getX(), pos.getY(), pos.getZ(), UPDATE_RANGE);
 
 			StorageCraft.NETWORK.sendToAllAround(new MessageGridCraftingUpdate(this), target);
 		}

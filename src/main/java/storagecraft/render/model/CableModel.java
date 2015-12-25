@@ -4,8 +4,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.ForgeDirection;
 import storagecraft.tile.TileCable;
 
 public class CableModel extends ModelBase
@@ -100,32 +100,32 @@ public class CableModel extends ModelBase
 			Minecraft.getMinecraft().renderEngine.bindTexture(CABLE_RESOURCE);
 		}
 
-		if (cable.hasConnection(ForgeDirection.UP))
+		if (cable.hasConnection(EnumFacing.UP))
 		{
 			up.render(x);
 		}
 
-		if (cable.hasConnection(ForgeDirection.DOWN))
+		if (cable.hasConnection(EnumFacing.DOWN))
 		{
 			down.render(x);
 		}
 
-		if (cable.hasConnection(ForgeDirection.NORTH))
+		if (cable.hasConnection(EnumFacing.NORTH))
 		{
 			north.render(x);
 		}
 
-		if (cable.hasConnection(ForgeDirection.EAST))
+		if (cable.hasConnection(EnumFacing.EAST))
 		{
 			east.render(x);
 		}
 
-		if (cable.hasConnection(ForgeDirection.SOUTH))
+		if (cable.hasConnection(EnumFacing.SOUTH))
 		{
 			south.render(x);
 		}
 
-		if (cable.hasConnection(ForgeDirection.WEST))
+		if (cable.hasConnection(EnumFacing.WEST))
 		{
 			west.render(x);
 		}

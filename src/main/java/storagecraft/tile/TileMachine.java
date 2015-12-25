@@ -2,6 +2,7 @@ package storagecraft.tile;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.BlockPos;
 
 public abstract class TileMachine extends TileBase implements INetworkTile, IRedstoneModeSetting
 {
@@ -10,17 +11,13 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
 
 	private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
-	private int xController;
-	private int yController;
-	private int zController;
+	private BlockPos controllerPos;
 
 	public void onConnected(TileController controller)
 	{
 		connected = true;
 
-		xController = controller.xCoord;
-		yController = controller.yCoord;
-		zController = controller.zCoord;
+		controllerPos = controller.getPos();
 	}
 
 	public void onDisconnected()
@@ -29,9 +26,9 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
 	}
 
 	@Override
-	public void updateEntity()
+	public void update()
 	{
-		super.updateEntity();
+		super.update();
 
 		if (!worldObj.isRemote && isConnected())
 		{
@@ -59,27 +56,9 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
 		}
 	}
 
-	@Override
-	public int getX()
-	{
-		return xCoord;
-	}
-
-	@Override
-	public int getY()
-	{
-		return yCoord;
-	}
-
-	@Override
-	public int getZ()
-	{
-		return zCoord;
-	}
-
 	public TileController getController()
 	{
-		return (TileController) worldObj.getTileEntity(xController, yController, zController);
+		return (TileController) worldObj.getTileEntity(controllerPos);
 	}
 
 	@Override
@@ -91,16 +70,14 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
 
 		if (connected)
 		{
-			xController = buf.readInt();
-			yController = buf.readInt();
-			zController = buf.readInt();
+			controllerPos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
 		}
 
 		redstoneMode = RedstoneMode.getById(buf.readInt());
 
 		if (lastConnected != connected)
 		{
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			worldObj.markBlockForUpdate(pos);
 		}
 	}
 
@@ -111,9 +88,9 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
 
 		if (connected)
 		{
-			buf.writeInt(xController);
-			buf.writeInt(yController);
-			buf.writeInt(zController);
+			buf.writeInt(controllerPos.getX());
+			buf.writeInt(controllerPos.getY());
+			buf.writeInt(controllerPos.getZ());
 		}
 
 		buf.writeInt(redstoneMode.id);

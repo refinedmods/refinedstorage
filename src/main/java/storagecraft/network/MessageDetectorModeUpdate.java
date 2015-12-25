@@ -1,11 +1,12 @@
 package storagecraft.network;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import storagecraft.tile.TileDetector;
 
 public class MessageDetectorModeUpdate implements IMessage, IMessageHandler<MessageDetectorModeUpdate, IMessage>
@@ -20,9 +21,9 @@ public class MessageDetectorModeUpdate implements IMessage, IMessageHandler<Mess
 
 	public MessageDetectorModeUpdate(TileDetector detector)
 	{
-		this.x = detector.xCoord;
-		this.y = detector.yCoord;
-		this.z = detector.zCoord;
+		this.x = detector.getPos().getX();
+		this.y = detector.getPos().getY();
+		this.z = detector.getPos().getZ();
 	}
 
 	@Override
@@ -46,7 +47,7 @@ public class MessageDetectorModeUpdate implements IMessage, IMessageHandler<Mess
 	{
 		EntityPlayerMP player = context.getServerHandler().playerEntity;
 
-		TileEntity tile = player.worldObj.getTileEntity(message.x, message.y, message.z);
+		TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.x, message.y, message.z));
 
 		if (tile instanceof TileDetector)
 		{

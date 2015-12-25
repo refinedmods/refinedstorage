@@ -1,11 +1,14 @@
 package storagecraft.block;
 
 import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import storagecraft.StorageCraft;
 import storagecraft.StorageCraftGUI;
@@ -13,12 +16,32 @@ import storagecraft.tile.TileController;
 
 public class BlockController extends BlockBase implements ITileEntityProvider
 {
-	private IIcon sideIcon;
-	private IIcon[] icons = new IIcon[9];
+	public static final PropertyInteger ENERGY = PropertyInteger.create("energy", 0, 15);
 
 	public BlockController()
 	{
 		super("controller");
+	}
+
+	@Override
+	protected BlockState createBlockState()
+	{
+		return new BlockState(this, new IProperty[]
+		{
+			ENERGY
+		});
+	}
+
+	@Override
+	public IBlockState getStateFromMeta(int meta)
+	{
+		return getDefaultState().withProperty(ENERGY, meta);
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state)
+	{
+		return ((Integer) state.getValue(ENERGY));
 	}
 
 	@Override
@@ -28,22 +51,22 @@ public class BlockController extends BlockBase implements ITileEntityProvider
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		if (!world.isRemote)
 		{
-			player.openGui(StorageCraft.INSTANCE, StorageCraftGUI.CONTROLLER, world, x, y, z);
+			player.openGui(StorageCraft.INSTANCE, StorageCraftGUI.CONTROLLER, world, pos.getX(), pos.getY(), pos.getZ());
 		}
 
 		return true;
 	}
 
 	@Override
-	public void onBlockPreDestroy(World world, int x, int y, int z, int meta)
+	public void onBlockDestroyedByPlayer(World world, BlockPos pos, IBlockState state) // @TODO: What about explosions?
 	{
-		((TileController) world.getTileEntity(x, y, z)).onDestroyed();
+		((TileController) world.getTileEntity(pos)).onDestroyed();
 
-		super.onBlockPreDestroy(world, x, y, z, meta);
+		super.onBlockDestroyedByPlayer(world, pos, state);
 	}
 
 	@Override
@@ -53,45 +76,10 @@ public class BlockController extends BlockBase implements ITileEntityProvider
 	}
 
 	@Override
-	public int getComparatorInputOverride(World world, int x, int y, int z, int side)
+	public int getComparatorInputOverride(World world, BlockPos pos)
 	{
-		TileController tile = (TileController) world.getTileEntity(x, y, z);
+		TileController tile = (TileController) world.getTileEntity(pos);
 
 		return tile.getEnergyScaled(15);
-	}
-
-	@Override
-	public void registerBlockIcons(IIconRegister register)
-	{
-		for (int i = 0; i <= 8; ++i)
-		{
-			icons[i] = register.registerIcon("storagecraft:controller" + i);
-		}
-
-		sideIcon = register.registerIcon("storagecraft:side");
-	}
-
-	@Override
-	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
-	{
-		TileController tile = (TileController) world.getTileEntity(x, y, z);
-
-		if (side == tile.getDirection().ordinal())
-		{
-			return icons[tile.getEnergyScaled(8)];
-		}
-
-		return sideIcon;
-	}
-
-	@Override
-	public IIcon getIcon(int side, int meta)
-	{
-		if (side == 3)
-		{
-			return icons[0];
-		}
-
-		return sideIcon;
 	}
 }

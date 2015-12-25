@@ -3,6 +3,7 @@ package storagecraft.inventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IChatComponent;
 
 public class InventorySimple implements IInventory
 {
@@ -79,13 +80,13 @@ public class InventorySimple implements IInventory
 	}
 
 	@Override
-	public String getInventoryName()
+	public String getName()
 	{
 		return this.name;
 	}
 
 	@Override
-	public boolean hasCustomInventoryName()
+	public boolean hasCustomName()
 	{
 		return true;
 	}
@@ -103,16 +104,6 @@ public class InventorySimple implements IInventory
 	}
 
 	@Override
-	public void openInventory()
-	{
-	}
-
-	@Override
-	public void closeInventory()
-	{
-	}
-
-	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack)
 	{
 		return true;
@@ -121,5 +112,43 @@ public class InventorySimple implements IInventory
 	@Override
 	public void markDirty()
 	{
+	}
+
+	@Override
+	public void openInventory(EntityPlayer playerIn)
+	{
+	}
+
+	@Override
+	public void closeInventory(EntityPlayer playerIn)
+	{
+	}
+
+	@Override
+	public int getField(int id)
+	{
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value)
+	{
+	}
+
+	@Override
+	public int getFieldCount()
+	{
+		return 0;
+	}
+
+	@Override
+	public void clear()
+	{
+	}
+
+	@Override
+	public IChatComponent getDisplayName()
+	{
+		return null; // @TODO: ...
 	}
 }

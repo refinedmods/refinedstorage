@@ -1,6 +1,7 @@
 package storagecraft.tile;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.util.BlockPos;
 
 public interface INetworkTile
 {
@@ -8,9 +9,5 @@ public interface INetworkTile
 
 	public void toBytes(ByteBuf buf);
 
-	public int getX();
-
-	public int getY();
-
-	public int getZ();
+	public BlockPos getPos();
 }

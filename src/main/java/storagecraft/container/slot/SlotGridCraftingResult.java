@@ -2,6 +2,7 @@ package storagecraft.container.slot;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
 import storagecraft.tile.TileGrid;
@@ -11,7 +12,7 @@ public class SlotGridCraftingResult extends SlotCrafting
 	private IInventory craftingMatrix;
 	private TileGrid grid;
 
-	public SlotGridCraftingResult(EntityPlayer player, IInventory craftingMatrix, IInventory craftingResult, TileGrid grid, int id, int x, int y)
+	public SlotGridCraftingResult(EntityPlayer player, InventoryCrafting craftingMatrix, IInventory craftingResult, TileGrid grid, int id, int x, int y)
 	{
 		super(player, craftingMatrix, craftingResult, id, x, y);
 

@@ -1,27 +1,24 @@
 package storagecraft.tile;
 
 import java.util.List;
-import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import storagecraft.block.BlockCable;
 
 public class TileCable extends TileBase
 {
-	public static boolean isCable(World world, int x, int y, int z, ForgeDirection dir)
+	public static boolean isCable(World world, BlockPos pos)
 	{
-		Block block = world.getBlock(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ);
-
-		return block instanceof BlockCable;
+		return world.getBlockState(pos).getBlock() instanceof BlockCable;
 	}
 
-	public boolean hasConnection(ForgeDirection dir)
+	public boolean hasConnection(EnumFacing dir)
 	{
-		if (!isCable(worldObj, xCoord, yCoord, zCoord, dir))
+		if (!isCable(worldObj, pos.offset(dir)))
 		{
-			TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
+			TileEntity tile = worldObj.getTileEntity(pos.offset(dir));
 
 			return tile instanceof TileMachine || tile instanceof TileController;
 		}
@@ -31,12 +28,14 @@ public class TileCable extends TileBase
 
 	public boolean isPowered()
 	{
-		return worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+		// @TODO: return worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+		return false;
 	}
 
 	public boolean isSensitiveCable()
 	{
-		return worldObj.getBlockMetadata(xCoord, yCoord, zCoord) == 1;
+		// @TODO: return worldObj.getBlockMetadata(xCoord, yCoord, zCoord) == 1;
+		return false;
 	}
 
 	public boolean isEnabled()
@@ -49,29 +48,27 @@ public class TileCable extends TileBase
 		return true;
 	}
 
-	public void addMachines(List<Vec3> visited, List<TileMachine> machines, TileController controller)
+	public void addMachines(List<BlockPos> visited, List<TileMachine> machines, TileController controller)
 	{
-		for (Vec3 visitedBlock : visited)
+		for (BlockPos visitedBlock : visited)
 		{
-			if (visitedBlock.xCoord == xCoord && visitedBlock.yCoord == yCoord && visitedBlock.zCoord == zCoord)
+			if (visitedBlock.equals(pos))
 			{
 				return;
 			}
 		}
 
-		visited.add(Vec3.createVectorHelper(xCoord, yCoord, zCoord));
+		visited.add(pos);
 
-		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+		for (EnumFacing dir : EnumFacing.VALUES)
 		{
-			int x = xCoord + dir.offsetX;
-			int y = yCoord + dir.offsetY;
-			int z = zCoord + dir.offsetZ;
+			BlockPos newPos = pos.offset(dir);
 
 			boolean found = false;
 
-			for (Vec3 visitedBlock : visited)
+			for (BlockPos visitedBlock : visited)
 			{
-				if (visitedBlock.xCoord == x && visitedBlock.yCoord == y && visitedBlock.zCoord == z)
+				if (visitedBlock.equals(newPos))
 				{
 					found = true;
 				}
@@ -82,21 +79,21 @@ public class TileCable extends TileBase
 				continue;
 			}
 
-			TileEntity tile = worldObj.getTileEntity(x, y, z);
+			TileEntity tile = worldObj.getTileEntity(newPos);
 
-			if (tile instanceof TileMachine && ((TileMachine) tile).getRedstoneMode().isEnabled(worldObj, x, y, z))
+			if (tile instanceof TileMachine && ((TileMachine) tile).getRedstoneMode().isEnabled(worldObj, newPos))
 			{
 				machines.add((TileMachine) tile);
 
-				visited.add(Vec3.createVectorHelper(x, y, z));
+				visited.add(newPos);
 			}
 			else if (tile instanceof TileCable && ((TileCable) tile).isEnabled())
 			{
 				((TileCable) tile).addMachines(visited, machines, controller);
 			}
-			else if (tile instanceof TileController && (x != controller.xCoord || y != controller.yCoord || z != controller.zCoord))
+			else if (tile instanceof TileController && !controller.getPos().equals(newPos))
 			{
-				worldObj.createExplosion(null, x, y, z, 4.5f, true);
+				worldObj.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), 4.5f, true);
 			}
 		}
 	}

@@ -1,12 +1,12 @@
 package storagecraft.storage;
 
-import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import storagecraft.util.InventoryUtils;
 
 public class StorageItem
@@ -44,7 +44,7 @@ public class StorageItem
 
 	public StorageItem(ItemStack stack)
 	{
-		this(stack.getItem(), stack.stackSize, stack.getItemDamage(), stack.stackTagCompound);
+		this(stack.getItem(), stack.stackSize, stack.getItemDamage(), stack.getTagCompound());
 	}
 
 	public void toBytes(ByteBuf buf, int id)
@@ -116,7 +116,7 @@ public class StorageItem
 	{
 		ItemStack stack = new ItemStack(type, quantity, damage);
 
-		stack.stackTagCompound = tag;
+		stack.setTagCompound(tag);
 
 		return stack;
 	}
@@ -162,7 +162,7 @@ public class StorageItem
 
 		if ((flags & InventoryUtils.COMPARE_NBT) == InventoryUtils.COMPARE_NBT)
 		{
-			if (tag != null && !tag.equals(stack.stackTagCompound))
+			if (tag != null && !tag.equals(stack.getTagCompound()))
 			{
 				return false;
 			}

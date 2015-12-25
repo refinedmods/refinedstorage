@@ -7,6 +7,8 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.IChatComponent;
 import storagecraft.inventory.InventorySimple;
 import storagecraft.util.InventoryUtils;
 
@@ -34,7 +36,7 @@ public class TileImporter extends TileMachine implements IInventory, ISidedInven
 	@Override
 	public void updateMachine()
 	{
-		TileEntity tile = worldObj.getTileEntity(xCoord + getDirection().offsetX, yCoord + getDirection().offsetY, zCoord + getDirection().offsetZ);
+		TileEntity tile = worldObj.getTileEntity(pos.offset(getDirection()));
 
 		if (tile instanceof IInventory)
 		{
@@ -60,7 +62,7 @@ public class TileImporter extends TileMachine implements IInventory, ISidedInven
 					{
 						ISidedInventory sided = (ISidedInventory) connectedInventory;
 
-						if (sided.canExtractItem(currentSlot, slot.copy(), getDirection().getOpposite().ordinal()))
+						if (sided.canExtractItem(currentSlot, slot.copy(), getDirection().getOpposite()))
 						{
 							if (getController().push(slot.copy()))
 							{
@@ -143,98 +145,6 @@ public class TileImporter extends TileMachine implements IInventory, ISidedInven
 	}
 
 	@Override
-	public int getSizeInventory()
-	{
-		return inventory.getSizeInventory();
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int slot)
-	{
-		return inventory.getStackInSlot(slot);
-	}
-
-	@Override
-	public ItemStack decrStackSize(int slot, int amount)
-	{
-		return inventory.decrStackSize(slot, amount);
-	}
-
-	@Override
-	public ItemStack getStackInSlotOnClosing(int slot)
-	{
-		return inventory.getStackInSlotOnClosing(slot);
-	}
-
-	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack)
-	{
-		inventory.setInventorySlotContents(slot, stack);
-	}
-
-	@Override
-	public String getInventoryName()
-	{
-		return inventory.getInventoryName();
-	}
-
-	@Override
-	public boolean hasCustomInventoryName()
-	{
-		return inventory.hasCustomInventoryName();
-	}
-
-	@Override
-	public int getInventoryStackLimit()
-	{
-		return inventory.getInventoryStackLimit();
-	}
-
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer player)
-	{
-		return inventory.isUseableByPlayer(player);
-	}
-
-	@Override
-	public void openInventory()
-	{
-		inventory.openInventory();
-	}
-
-	@Override
-	public void closeInventory()
-	{
-		inventory.closeInventory();
-	}
-
-	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack stack)
-	{
-		return inventory.isItemValidForSlot(slot, stack);
-	}
-
-	@Override
-	public int[] getAccessibleSlotsFromSide(int side)
-	{
-		return new int[]
-		{
-		};
-	}
-
-	@Override
-	public boolean canInsertItem(int slot, ItemStack stack, int side)
-	{
-		return false;
-	}
-
-	@Override
-	public boolean canExtractItem(int slot, ItemStack stack, int side)
-	{
-		return false;
-	}
-
-	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
@@ -279,5 +189,127 @@ public class TileImporter extends TileMachine implements IInventory, ISidedInven
 
 		buf.writeInt(compare);
 		buf.writeInt(mode);
+	}
+
+	@Override
+	public int getSizeInventory()
+	{
+		return inventory.getSizeInventory();
+	}
+
+	@Override
+	public ItemStack getStackInSlot(int slot)
+	{
+		return inventory.getStackInSlot(slot);
+	}
+
+	@Override
+	public ItemStack decrStackSize(int slot, int count)
+	{
+		return inventory.decrStackSize(slot, count);
+	}
+
+	@Override
+	public ItemStack getStackInSlotOnClosing(int slot)
+	{
+		return inventory.getStackInSlotOnClosing(slot);
+	}
+
+	@Override
+	public void setInventorySlotContents(int slot, ItemStack stack)
+	{
+		inventory.setInventorySlotContents(slot, stack);
+	}
+
+	@Override
+	public int getInventoryStackLimit()
+	{
+		return inventory.getInventoryStackLimit();
+	}
+
+	@Override
+	public boolean isUseableByPlayer(EntityPlayer player)
+	{
+		return inventory.isUseableByPlayer(player);
+	}
+
+	@Override
+	public void openInventory(EntityPlayer player)
+	{
+		inventory.openInventory(player);
+	}
+
+	@Override
+	public void closeInventory(EntityPlayer player)
+	{
+		inventory.closeInventory(player);
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int slot, ItemStack stack)
+	{
+		return inventory.isItemValidForSlot(slot, stack);
+	}
+
+	@Override
+	public int getField(int id)
+	{
+		return inventory.getField(id);
+	}
+
+	@Override
+	public void setField(int id, int value)
+	{
+		inventory.setField(id, value);
+	}
+
+	@Override
+	public int getFieldCount()
+	{
+		return inventory.getFieldCount();
+	}
+
+	@Override
+	public void clear()
+	{
+		inventory.clear();
+	}
+
+	@Override
+	public String getName()
+	{
+		return inventory.getName();
+	}
+
+	@Override
+	public boolean hasCustomName()
+	{
+		return inventory.hasCustomName();
+	}
+
+	@Override
+	public IChatComponent getDisplayName()
+	{
+		return inventory.getDisplayName();
+	}
+
+	@Override
+	public int[] getSlotsForFace(EnumFacing side)
+	{
+		return new int[]
+		{
+		};
+	}
+
+	@Override
+	public boolean canInsertItem(int slot, ItemStack stack, EnumFacing direction)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction)
+	{
+		return false;
 	}
 }

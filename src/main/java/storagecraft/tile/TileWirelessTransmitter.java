@@ -5,6 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.IChatComponent;
 import storagecraft.inventory.InventorySimple;
 import storagecraft.item.ItemWirelessGrid;
 import storagecraft.util.InventoryUtils;
@@ -51,10 +52,11 @@ public class TileWirelessTransmitter extends TileMachine implements IInventory
 		{
 			ItemStack slot = inventory.getStackInSlot(1);
 
-			slot.stackTagCompound = new NBTTagCompound();
-			slot.stackTagCompound.setInteger(ItemWirelessGrid.NBT_WIRELESS_TRANSMITTER_X, xCoord);
-			slot.stackTagCompound.setInteger(ItemWirelessGrid.NBT_WIRELESS_TRANSMITTER_Y, yCoord);
-			slot.stackTagCompound.setInteger(ItemWirelessGrid.NBT_WIRELESS_TRANSMITTER_Z, zCoord);
+			slot.setTagCompound(new NBTTagCompound());
+
+			slot.getTagCompound().setInteger(ItemWirelessGrid.NBT_WIRELESS_TRANSMITTER_X, pos.getX());
+			slot.getTagCompound().setInteger(ItemWirelessGrid.NBT_WIRELESS_TRANSMITTER_Y, pos.getY());
+			slot.getTagCompound().setInteger(ItemWirelessGrid.NBT_WIRELESS_TRANSMITTER_Z, pos.getZ());
 
 			inventory.setInventorySlotContents(2, slot);
 			inventory.setInventorySlotContents(1, null);
@@ -89,7 +91,8 @@ public class TileWirelessTransmitter extends TileMachine implements IInventory
 	{
 		for (TileMachine machine : getController().getMachines())
 		{
-			if (worldObj.getTileEntity(machine.xCoord, machine.yCoord, machine.zCoord) != null)
+			// @TODO: Is this still needed?
+			if (worldObj.getTileEntity(machine.getPos()) != null)
 			{
 				if (machine instanceof TileGrid)
 				{
@@ -104,78 +107,6 @@ public class TileWirelessTransmitter extends TileMachine implements IInventory
 		}
 
 		return null;
-	}
-
-	@Override
-	public int getSizeInventory()
-	{
-		return inventory.getSizeInventory();
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int slot)
-	{
-		return inventory.getStackInSlot(slot);
-	}
-
-	@Override
-	public ItemStack decrStackSize(int slot, int amount)
-	{
-		return inventory.decrStackSize(slot, amount);
-	}
-
-	@Override
-	public ItemStack getStackInSlotOnClosing(int slot)
-	{
-		return inventory.getStackInSlotOnClosing(slot);
-	}
-
-	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack)
-	{
-		inventory.setInventorySlotContents(slot, stack);
-	}
-
-	@Override
-	public String getInventoryName()
-	{
-		return inventory.getInventoryName();
-	}
-
-	@Override
-	public boolean hasCustomInventoryName()
-	{
-		return inventory.hasCustomInventoryName();
-	}
-
-	@Override
-	public int getInventoryStackLimit()
-	{
-		return inventory.getInventoryStackLimit();
-	}
-
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer player)
-	{
-		return inventory.isUseableByPlayer(player);
-	}
-
-	@Override
-	public void openInventory()
-	{
-		inventory.openInventory();
-	}
-
-	@Override
-	public void closeInventory()
-	{
-		inventory.closeInventory();
-	}
-
-	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack stack)
-	{
-		return inventory.isItemValidForSlot(slot, stack);
 	}
 
 	@Override
@@ -219,7 +150,7 @@ public class TileWirelessTransmitter extends TileMachine implements IInventory
 
 		if (lastWorking != working)
 		{
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			worldObj.markBlockForUpdate(pos);
 		}
 	}
 
@@ -236,5 +167,107 @@ public class TileWirelessTransmitter extends TileMachine implements IInventory
 	public IInventory getDroppedInventory()
 	{
 		return inventory;
+	}
+
+	@Override
+	public int getSizeInventory()
+	{
+		return inventory.getSizeInventory();
+	}
+
+	@Override
+	public ItemStack getStackInSlot(int slot)
+	{
+		return inventory.getStackInSlot(slot);
+	}
+
+	@Override
+	public ItemStack decrStackSize(int slot, int count)
+	{
+		return inventory.decrStackSize(slot, count);
+	}
+
+	@Override
+	public ItemStack getStackInSlotOnClosing(int slot)
+	{
+		return inventory.getStackInSlotOnClosing(slot);
+	}
+
+	@Override
+	public void setInventorySlotContents(int slot, ItemStack stack)
+	{
+		inventory.setInventorySlotContents(slot, stack);
+	}
+
+	@Override
+	public int getInventoryStackLimit()
+	{
+		return inventory.getInventoryStackLimit();
+	}
+
+	@Override
+	public boolean isUseableByPlayer(EntityPlayer player)
+	{
+		return inventory.isUseableByPlayer(player);
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int slot, ItemStack stack)
+	{
+		return inventory.isItemValidForSlot(slot, stack);
+	}
+
+	@Override
+	public void openInventory(EntityPlayer player)
+	{
+		inventory.openInventory(player);
+	}
+
+	@Override
+	public void closeInventory(EntityPlayer player)
+	{
+		inventory.closeInventory(player);
+	}
+
+	@Override
+	public int getField(int id)
+	{
+		return inventory.getField(id);
+	}
+
+	@Override
+	public void setField(int id, int value)
+	{
+		inventory.setField(id, value);
+	}
+
+	@Override
+	public int getFieldCount()
+	{
+		return inventory.getFieldCount();
+	}
+
+	@Override
+	public void clear()
+	{
+		inventory.clear();
+	}
+
+	@Override
+	public String getName()
+	{
+		return inventory.getName();
+	}
+
+	@Override
+	public boolean hasCustomName()
+	{
+		return inventory.hasCustomName();
+	}
+
+	@Override
+	public IChatComponent getDisplayName()
+	{
+		return inventory.getDisplayName();
 	}
 }

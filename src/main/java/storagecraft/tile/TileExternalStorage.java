@@ -13,7 +13,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 {
 	public IInventory getInventory()
 	{
-		TileEntity tile = worldObj.getTileEntity(xCoord + getDirection().offsetX, yCoord + getDirection().offsetY, zCoord + getDirection().offsetZ);
+		TileEntity tile = worldObj.getTileEntity(pos.offset(getDirection()));
 
 		if (tile instanceof IInventory)
 		{
