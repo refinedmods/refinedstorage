@@ -11,6 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import storagecraft.StorageCraftBlocks;
+import storagecraft.block.BlockController;
 import storagecraft.storage.IStorage;
 import storagecraft.storage.IStorageProvider;
 import storagecraft.storage.StorageItem;
@@ -116,6 +117,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
 			if (lastEnergy != energy.getEnergyStored())
 			{
+				worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockController.ENERGY, getEnergyScaled(15)));
 				worldObj.markBlockForUpdate(pos);
 				worldObj.notifyNeighborsOfStateChange(pos, StorageCraftBlocks.CONTROLLER);
 			}
@@ -328,7 +330,8 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
 	public boolean isActive()
 	{
-		return energy.getEnergyStored() >= getEnergyUsage() && redstoneMode.isEnabled(worldObj, pos);
+		return true;
+		// @TODO: return energy.getEnergyStored() >= getEnergyUsage() && redstoneMode.isEnabled(worldObj, pos);
 	}
 
 	@Override

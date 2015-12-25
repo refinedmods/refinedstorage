@@ -1,5 +1,6 @@
 package storagecraft.tile;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -7,7 +8,9 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import storagecraft.StorageCraft;
 import storagecraft.network.MessageTileUpdate;
@@ -16,7 +19,7 @@ public abstract class TileBase extends TileEntity implements IUpdatePlayerListBo
 {
 	public static final int UPDATE_RANGE = 256;
 
-	private EnumFacing direction;
+	private EnumFacing direction = EnumFacing.NORTH;
 
 	protected int ticks;
 
@@ -76,6 +79,12 @@ public abstract class TileBase extends TileEntity implements IUpdatePlayerListBo
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
 	{
 		direction = EnumFacing.getFront(packet.getNbtCompound().getInteger("Direction"));
+	}
+
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState)
+	{
+		return false;
 	}
 
 	public IInventory getDroppedInventory()

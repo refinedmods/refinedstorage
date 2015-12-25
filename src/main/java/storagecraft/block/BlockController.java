@@ -78,8 +78,6 @@ public class BlockController extends BlockBase implements ITileEntityProvider
 	@Override
 	public int getComparatorInputOverride(World world, BlockPos pos)
 	{
-		TileController tile = (TileController) world.getTileEntity(pos);
-
-		return tile.getEnergyScaled(15);
+		return (Integer) world.getBlockState(pos).getValue(ENERGY);
 	}
 }

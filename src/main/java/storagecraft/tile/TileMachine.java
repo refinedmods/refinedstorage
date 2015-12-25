@@ -3,6 +3,7 @@ package storagecraft.tile;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
+import storagecraft.block.BlockMachine;
 
 public abstract class TileMachine extends TileBase implements INetworkTile, IRedstoneModeSetting
 {
@@ -18,11 +19,15 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
 		connected = true;
 
 		controllerPos = controller.getPos();
+
+		worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockMachine.CONNECTED, true));
 	}
 
 	public void onDisconnected()
 	{
 		connected = false;
+
+		worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockMachine.CONNECTED, false));
 	}
 
 	@Override
