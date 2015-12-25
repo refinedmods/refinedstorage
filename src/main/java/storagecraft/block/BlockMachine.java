@@ -27,7 +27,7 @@ public abstract class BlockMachine extends BlockBase implements ITileEntityProvi
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
-		return getDefaultState().withProperty(CONNECTED, meta);
+		return getDefaultState().withProperty(CONNECTED, meta == 1 ? true : false);
 	}
 
 	@Override

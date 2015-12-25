@@ -34,7 +34,7 @@ public class BlockCable extends BlockBase implements ITileEntityProvider
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
-		return getDefaultState().withProperty(SENSITIVE, meta);
+		return getDefaultState().withProperty(SENSITIVE, meta == 1 ? true : false);
 	}
 
 	@Override
