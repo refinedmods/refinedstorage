@@ -68,7 +68,7 @@ public class InventoryUtils
 		}
 	}
 
-	public static void dropStack(World world, ItemStack stack, int x, int y, int z) // @TODO: Take BlockPos here
+	public static void dropStack(World world, ItemStack stack, int x, int y, int z)
 	{
 		float xo = world.rand.nextFloat() * 0.8F + 0.1F;
 		float yo = world.rand.nextFloat() * 0.8F + 0.1F;

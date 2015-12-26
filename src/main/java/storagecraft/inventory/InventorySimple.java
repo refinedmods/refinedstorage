@@ -149,6 +149,6 @@ public class InventorySimple implements IInventory
 	@Override
 	public IChatComponent getDisplayName()
 	{
-		return null; // @TODO: ...
+		return null;
 	}
 }

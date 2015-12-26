@@ -105,6 +105,7 @@ public class MessageStoragePush implements IMessage, IMessageHandler<MessageStor
 					else
 					{
 						player.inventory.setInventorySlotContents(message.slot, null);
+						player.openContainer.detectAndSendChanges();
 					}
 				}
 			}

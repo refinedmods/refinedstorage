@@ -156,6 +156,7 @@ public abstract class GuiBase extends GuiContainer
 		{
 			font = stack.getItem().getFontRenderer(stack);
 		}
+
 		if (font == null)
 		{
 			font = fontRendererObj;
