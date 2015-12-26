@@ -1,11 +1,8 @@
 package storagecraft.block;
 
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
@@ -20,8 +17,6 @@ import storagecraft.util.InventoryUtils;
 public abstract class BlockBase extends Block
 {
 	private String name;
-
-	protected List<IProperty> states = new ArrayList<IProperty>();
 
 	public BlockBase(String name)
 	{

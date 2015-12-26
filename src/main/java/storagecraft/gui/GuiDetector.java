@@ -32,7 +32,7 @@ public class GuiDetector extends GuiBase
 
 		addSideButton(new SideButtonDetectorMode(detector));
 
-		amountField = new GuiTextField(0, fontRendererObj, x + 62 + 1, y + 23 + 1, 25, fontRendererObj.FONT_HEIGHT); // @TODO: Is this the right id?
+		amountField = new GuiTextField(0, fontRendererObj, x + 62 + 1, y + 23 + 1, 25, fontRendererObj.FONT_HEIGHT);
 		amountField.setText(String.valueOf(detector.getAmount()));
 		amountField.setEnableBackgroundDrawing(false);
 		amountField.setVisible(true);

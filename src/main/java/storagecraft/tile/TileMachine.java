@@ -27,7 +27,10 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
 	{
 		connected = false;
 
-		worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockMachine.CONNECTED, false));
+		if (!worldObj.isAirBlock(pos))
+		{
+			worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockMachine.CONNECTED, false));
+		}
 	}
 
 	@Override

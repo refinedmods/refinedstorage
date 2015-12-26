@@ -61,7 +61,7 @@ public class GuiGrid extends GuiBase
 		addSideButton(new SideButtonGridSortingDirection());
 		addSideButton(new SideButtonGridSortingType());
 
-		searchField = new GuiTextField(0, fontRendererObj, x + 80 + 1, y + 6 + 1, 88 - 6, fontRendererObj.FONT_HEIGHT); // @TODO: Is this the right id?
+		searchField = new GuiTextField(0, fontRendererObj, x + 80 + 1, y + 6 + 1, 88 - 6, fontRendererObj.FONT_HEIGHT);
 		searchField.setEnableBackgroundDrawing(false);
 		searchField.setVisible(true);
 		searchField.setTextColor(16777215);

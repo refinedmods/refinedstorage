@@ -10,7 +10,7 @@ import storagecraft.StorageCraft;
 import storagecraft.StorageCraftGUI;
 import storagecraft.tile.TileDetector;
 
-// @TODO: This too other textures
+// @TODO: This texture behaves differently
 public class BlockDetector extends BlockMachine
 {
 	public BlockDetector()
