@@ -44,6 +44,8 @@ public class TileGrid extends TileMachine
 
 	public void onCraftingMatrixChanged()
 	{
+		markDirty();
+
 		craftingResult.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(craftingMatrix, worldObj));
 	}
 

@@ -47,6 +47,8 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
 			recipe = newRecipe;
 			progress = 0;
 			working = true;
+
+			markDirty();
 		}
 		else if (working)
 		{
@@ -82,6 +84,8 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
 		progress = 0;
 		working = false;
 		recipe = null;
+
+		markDirty();
 	}
 
 	@Override

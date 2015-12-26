@@ -55,6 +55,8 @@ public class TileConstructor extends TileMachine implements IInventory, ISidedIn
 	@Override
 	public void setCompare(int compare)
 	{
+		markDirty();
+
 		this.compare = compare;
 	}
 

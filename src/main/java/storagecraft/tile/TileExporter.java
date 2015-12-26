@@ -98,6 +98,8 @@ public class TileExporter extends TileMachine implements IInventory, ISidedInven
 	@Override
 	public void setCompare(int compare)
 	{
+		markDirty();
+
 		this.compare = compare;
 	}
 

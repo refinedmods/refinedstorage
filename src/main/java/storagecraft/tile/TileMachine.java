@@ -16,6 +16,8 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
 
 	public void onConnected(TileController controller)
 	{
+		markDirty();
+
 		connected = true;
 
 		controllerPos = controller.getPos();
@@ -25,6 +27,8 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
 
 	public void onDisconnected()
 	{
+		markDirty();
+
 		connected = false;
 
 		if (!worldObj.isAirBlock(pos))
@@ -60,6 +64,8 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
 	{
 		if (redstoneControlled)
 		{
+			markDirty();
+
 			this.redstoneMode = mode;
 		}
 	}

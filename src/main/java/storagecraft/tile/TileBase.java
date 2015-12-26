@@ -17,6 +17,8 @@ import storagecraft.network.MessageTileUpdate;
 
 public abstract class TileBase extends TileEntity implements IUpdatePlayerListBox
 {
+	public static final String NBT_DIRECTION = "Direction";
+
 	public static final int UPDATE_RANGE = 256;
 
 	private EnumFacing direction = EnumFacing.NORTH;
@@ -54,7 +56,7 @@ public abstract class TileBase extends TileEntity implements IUpdatePlayerListBo
 	{
 		super.readFromNBT(nbt);
 
-		direction = EnumFacing.getFront(nbt.getInteger("Direction"));
+		direction = EnumFacing.getFront(nbt.getInteger(NBT_DIRECTION));
 	}
 
 	@Override
@@ -62,7 +64,7 @@ public abstract class TileBase extends TileEntity implements IUpdatePlayerListBo
 	{
 		super.writeToNBT(nbt);
 
-		nbt.setInteger("Direction", direction.ordinal());
+		nbt.setInteger(NBT_DIRECTION, direction.ordinal());
 	}
 
 	@Override
@@ -70,7 +72,7 @@ public abstract class TileBase extends TileEntity implements IUpdatePlayerListBo
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 
-		nbt.setInteger("Direction", direction.ordinal());
+		nbt.setInteger(NBT_DIRECTION, direction.ordinal());
 
 		return new S35PacketUpdateTileEntity(pos, 1, nbt);
 	}
@@ -78,7 +80,7 @@ public abstract class TileBase extends TileEntity implements IUpdatePlayerListBo
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
 	{
-		direction = EnumFacing.getFront(packet.getNbtCompound().getInteger("Direction"));
+		direction = EnumFacing.getFront(packet.getNbtCompound().getInteger(NBT_DIRECTION));
 	}
 
 	@Override

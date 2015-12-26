@@ -47,6 +47,8 @@ public class TileWirelessTransmitter extends TileMachine implements IInventory
 
 			progress = 0;
 			working = true;
+
+			markDirty();
 		}
 
 		if (inventory.getStackInSlot(1) != null)
@@ -68,6 +70,8 @@ public class TileWirelessTransmitter extends TileMachine implements IInventory
 	{
 		progress = 0;
 		working = false;
+
+		markDirty();
 	}
 
 	@Override
@@ -92,7 +96,6 @@ public class TileWirelessTransmitter extends TileMachine implements IInventory
 	{
 		for (TileMachine machine : getController().getMachines())
 		{
-			// @TODO: Is this still needed?
 			if (worldObj.getTileEntity(machine.getPos()) != null)
 			{
 				if (machine instanceof TileGrid)

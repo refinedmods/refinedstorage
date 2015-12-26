@@ -118,6 +118,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 			if (lastEnergy != energy.getEnergyStored())
 			{
 				worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockController.ENERGY, getEnergyScaled(15)));
+				// @TODO: Is this needed?
 				worldObj.markBlockForUpdate(pos);
 				worldObj.notifyNeighborsOfStateChange(pos, StorageCraftBlocks.CONTROLLER);
 			}
@@ -227,16 +228,22 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
 		syncItems();
 
+		markDirty();
+
 		return true;
 	}
 
 	public ItemStack take(ItemStack stack)
 	{
+		markDirty();
+
 		return take(stack, InventoryUtils.COMPARE_DAMAGE | InventoryUtils.COMPARE_NBT);
 	}
 
 	public ItemStack take(ItemStack stack, int flags)
 	{
+		markDirty();
+
 		int requested = stack.stackSize;
 		int receiving = 0;
 
@@ -343,6 +350,8 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 	@Override
 	public void setRedstoneMode(RedstoneMode mode)
 	{
+		markDirty();
+
 		this.redstoneMode = mode;
 	}
 
