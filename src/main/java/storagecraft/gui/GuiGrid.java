@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
@@ -144,6 +146,8 @@ public class GuiGrid extends GuiBase
 	@Override
 	public void drawForeground(int mouseX, int mouseY)
 	{
+		RenderHelper.enableGUIStandardItemLighting();
+
 		drawString(7, 7, t("gui.storagecraft:grid"));
 
 		if (grid.getType() == EnumGridType.CRAFTING)
@@ -182,9 +186,15 @@ public class GuiGrid extends GuiBase
 
 				int color = grid.isConnected() ? -2130706433 : 0xFF5B5B5B;
 
+				GlStateManager.disableLighting();
+				GlStateManager.disableDepth();
 				zLevel = 190;
+				GlStateManager.colorMask(true, true, true, false);
 				drawGradientRect(x, y, x + 16, y + 16, color, color);
 				zLevel = 0;
+				GlStateManager.colorMask(true, true, true, true);
+				GlStateManager.enableLighting();
+				GlStateManager.enableDepth();
 			}
 
 			slot++;
@@ -207,6 +217,8 @@ public class GuiGrid extends GuiBase
 		{
 			drawTooltip(mouseX, mouseY, t("misc.storagecraft:clear"));
 		}
+
+		RenderHelper.disableStandardItemLighting();
 	}
 
 	public List<StorageItem> getItems()
