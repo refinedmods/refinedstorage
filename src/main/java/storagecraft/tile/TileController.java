@@ -10,8 +10,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import storagecraft.StorageCraftBlocks;
-import storagecraft.block.BlockController;
 import storagecraft.storage.IStorage;
 import storagecraft.storage.IStorageProvider;
 import storagecraft.storage.StorageItem;
@@ -45,8 +43,6 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
 		if (!worldObj.isRemote)
 		{
-			int lastEnergy = energy.getEnergyStored();
-
 			if (ticks % 40 == 0)
 			{
 				if (!isActive())
@@ -114,14 +110,6 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 			}
 
 			energy.extractEnergy(energyUsage, false);
-
-			if (lastEnergy != energy.getEnergyStored())
-			{
-				worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockController.ENERGY, getEnergyScaled(15)));
-				// @TODO: Is this needed?
-				worldObj.markBlockForUpdate(pos);
-				worldObj.notifyNeighborsOfStateChange(pos, StorageCraftBlocks.CONTROLLER);
-			}
 		}
 	}
 

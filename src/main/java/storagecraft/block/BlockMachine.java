@@ -5,6 +5,9 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.BlockPos;
+import net.minecraft.world.IBlockAccess;
+import storagecraft.tile.TileMachine;
 
 public abstract class BlockMachine extends BlockBase implements ITileEntityProvider
 {
@@ -13,8 +16,6 @@ public abstract class BlockMachine extends BlockBase implements ITileEntityProvi
 	public BlockMachine(String name)
 	{
 		super(name);
-
-		setDefaultState(blockState.getBaseState().withProperty(CONNECTED, false));
 	}
 
 	@Override
@@ -29,12 +30,18 @@ public abstract class BlockMachine extends BlockBase implements ITileEntityProvi
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
-		return getDefaultState().withProperty(CONNECTED, meta == 1);
+		return getDefaultState();
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
-		return ((Boolean) state.getValue(CONNECTED)) ? 1 : 0;
+		return 0;
+	}
+
+	@Override
+	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
+	{
+		return state.withProperty(CONNECTED, ((TileMachine) world.getTileEntity(pos)).isConnected());
 	}
 }

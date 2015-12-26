@@ -55,29 +55,12 @@ public class BlockGrid extends BlockMachine
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
-		switch (meta)
-		{
-			case 0:
-				return getDefaultState().withProperty(CONNECTED, false).withProperty(TYPE, EnumGridType.NORMAL);
-			case 1:
-				return getDefaultState().withProperty(CONNECTED, false).withProperty(TYPE, EnumGridType.CRAFTING);
-			case 2:
-				return getDefaultState().withProperty(CONNECTED, true).withProperty(TYPE, EnumGridType.NORMAL);
-			case 3:
-				return getDefaultState().withProperty(CONNECTED, true).withProperty(TYPE, EnumGridType.CRAFTING);
-		}
-
-		return null;
+		return getDefaultState().withProperty(TYPE, meta == 0 ? EnumGridType.NORMAL : EnumGridType.CRAFTING);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
-		if ((Boolean) state.getValue(CONNECTED))
-		{
-			return state.getValue(TYPE) == EnumGridType.NORMAL ? 2 : 3;
-		}
-
 		return state.getValue(TYPE) == EnumGridType.NORMAL ? 0 : 1;
 	}
 

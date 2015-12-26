@@ -34,6 +34,12 @@ public abstract class BlockBase extends Block
 	}
 
 	@Override
+	public int damageDropped(IBlockState state)
+	{
+		return getMetaFromState(state);
+	}
+
+	@Override
 	public boolean rotateBlock(World world, BlockPos pos, EnumFacing axis)
 	{
 		TileEntity tile = world.getTileEntity(pos);

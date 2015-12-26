@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import storagecraft.StorageCraft;
 import storagecraft.StorageCraftGUI;
@@ -35,13 +36,19 @@ public class BlockController extends BlockBase implements ITileEntityProvider
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
-		return getDefaultState().withProperty(ENERGY, meta);
+		return getDefaultState();
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
-		return ((Integer) state.getValue(ENERGY));
+		return 0;
+	}
+
+	@Override
+	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
+	{
+		return state.withProperty(ENERGY, ((TileController) world.getTileEntity(pos)).getEnergyScaled(15));
 	}
 
 	@Override
@@ -78,6 +85,6 @@ public class BlockController extends BlockBase implements ITileEntityProvider
 	@Override
 	public int getComparatorInputOverride(World world, BlockPos pos)
 	{
-		return (Integer) world.getBlockState(pos).getValue(ENERGY);
+		return ((TileController) world.getTileEntity(pos)).getEnergyScaled(15);
 	}
 }
