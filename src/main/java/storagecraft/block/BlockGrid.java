@@ -47,6 +47,7 @@ public class BlockGrid extends BlockMachine
 	{
 		return new BlockState(this, new IProperty[]
 		{
+			DIRECTION,
 			CONNECTED,
 			TYPE
 		});

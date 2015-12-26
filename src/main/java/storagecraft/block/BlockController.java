@@ -29,26 +29,16 @@ public class BlockController extends BlockBase implements ITileEntityProvider
 	{
 		return new BlockState(this, new IProperty[]
 		{
+			DIRECTION,
 			ENERGY
 		});
 	}
 
 	@Override
-	public IBlockState getStateFromMeta(int meta)
-	{
-		return getDefaultState();
-	}
-
-	@Override
-	public int getMetaFromState(IBlockState state)
-	{
-		return 0;
-	}
-
-	@Override
 	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
-		return state.withProperty(ENERGY, ((TileController) world.getTileEntity(pos)).getEnergyScaled(15));
+		return super.getActualState(state, world, pos)
+			.withProperty(ENERGY, ((TileController) world.getTileEntity(pos)).getEnergyScaled(15));
 	}
 
 	@Override

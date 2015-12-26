@@ -27,6 +27,7 @@ public class BlockCable extends BlockBase implements ITileEntityProvider
 	{
 		return new BlockState(this, new IProperty[]
 		{
+			DIRECTION,
 			SENSITIVE
 		});
 	}

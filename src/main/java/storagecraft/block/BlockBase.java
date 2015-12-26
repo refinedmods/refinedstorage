@@ -3,12 +3,16 @@ package storagecraft.block;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import storagecraft.StorageCraft;
 import storagecraft.tile.TileBase;
@@ -16,6 +20,8 @@ import storagecraft.util.InventoryUtils;
 
 public abstract class BlockBase extends Block
 {
+	public static final PropertyDirection DIRECTION = PropertyDirection.create("direction");
+
 	private String name;
 
 	public BlockBase(String name)
@@ -31,6 +37,40 @@ public abstract class BlockBase extends Block
 	public String getUnlocalizedName()
 	{
 		return "block." + StorageCraft.ID + ":" + name;
+	}
+
+	@Override
+	protected BlockState createBlockState()
+	{
+		return new BlockState(this, new IProperty[]
+		{
+			DIRECTION,
+		});
+	}
+
+	@Override
+	public IBlockState getStateFromMeta(int meta)
+	{
+		return getDefaultState();
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state)
+	{
+		return 0;
+	}
+
+	@Override
+	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
+	{
+		TileEntity tile = world.getTileEntity(pos);
+
+		if (tile instanceof TileBase)
+		{
+			return state.withProperty(DIRECTION, ((TileBase) tile).getDirection());
+		}
+
+		return state;
 	}
 
 	@Override

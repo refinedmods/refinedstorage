@@ -23,25 +23,15 @@ public abstract class BlockMachine extends BlockBase implements ITileEntityProvi
 	{
 		return new BlockState(this, new IProperty[]
 		{
+			DIRECTION,
 			CONNECTED
 		});
 	}
 
 	@Override
-	public IBlockState getStateFromMeta(int meta)
-	{
-		return getDefaultState();
-	}
-
-	@Override
-	public int getMetaFromState(IBlockState state)
-	{
-		return 0;
-	}
-
-	@Override
 	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
-		return state.withProperty(CONNECTED, ((TileMachine) world.getTileEntity(pos)).isConnected());
+		return super.getActualState(state, world, pos)
+			.withProperty(CONNECTED, ((TileMachine) world.getTileEntity(pos)).isConnected());
 	}
 }
