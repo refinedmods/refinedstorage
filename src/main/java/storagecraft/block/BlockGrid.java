@@ -1,17 +1,27 @@
 package storagecraft.block;
 
+import java.util.List;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import storagecraft.StorageCraft;
 import storagecraft.StorageCraftGUI;
+import static storagecraft.block.BlockMachine.CONNECTED;
 import storagecraft.tile.TileGrid;
 
 public class BlockGrid extends BlockMachine
 {
+	public static final PropertyEnum TYPE = PropertyEnum.create("type", EnumGridType.class);
+
 	public BlockGrid()
 	{
 		super("grid");
@@ -21,6 +31,54 @@ public class BlockGrid extends BlockMachine
 	public TileEntity createNewTileEntity(World world, int meta)
 	{
 		return new TileGrid();
+	}
+
+	@Override
+	public void getSubBlocks(Item item, CreativeTabs tab, List subItems)
+	{
+		for (int i = 0; i < 2; i++)
+		{
+			subItems.add(new ItemStack(item, 1, i));
+		}
+	}
+
+	@Override
+	protected BlockState createBlockState()
+	{
+		return new BlockState(this, new IProperty[]
+		{
+			CONNECTED,
+			TYPE
+		});
+	}
+
+	@Override
+	public IBlockState getStateFromMeta(int meta)
+	{
+		switch (meta)
+		{
+			case 0:
+				return getDefaultState().withProperty(CONNECTED, false).withProperty(TYPE, EnumGridType.NORMAL);
+			case 1:
+				return getDefaultState().withProperty(CONNECTED, false).withProperty(TYPE, EnumGridType.CRAFTING);
+			case 2:
+				return getDefaultState().withProperty(CONNECTED, true).withProperty(TYPE, EnumGridType.NORMAL);
+			case 3:
+				return getDefaultState().withProperty(CONNECTED, true).withProperty(TYPE, EnumGridType.CRAFTING);
+		}
+
+		return null;
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state)
+	{
+		if ((Boolean) state.getValue(CONNECTED))
+		{
+			return state.getValue(TYPE) == EnumGridType.NORMAL ? 2 : 3;
+		}
+
+		return state.getValue(TYPE) == EnumGridType.NORMAL ? 0 : 1;
 	}
 
 	@Override

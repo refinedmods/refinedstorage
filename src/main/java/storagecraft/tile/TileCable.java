@@ -28,14 +28,12 @@ public class TileCable extends TileBase
 
 	public boolean isPowered()
 	{
-		// @TODO: return worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
-		return false;
+		return worldObj.isBlockPowered(pos);
 	}
 
 	public boolean isSensitiveCable()
 	{
-		// @TODO: return worldObj.getBlockMetadata(xCoord, yCoord, zCoord) == 1;
-		return false;
+		return (Boolean) worldObj.getBlockState(pos).getValue(BlockCable.SENSITIVE);
 	}
 
 	public boolean isEnabled()

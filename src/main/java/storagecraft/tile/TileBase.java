@@ -84,7 +84,7 @@ public abstract class TileBase extends TileEntity implements IUpdatePlayerListBo
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState)
 	{
-		return false;
+		return oldState.getBlock() != newState.getBlock();
 	}
 
 	public IInventory getDroppedInventory()

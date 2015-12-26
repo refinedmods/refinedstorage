@@ -2,6 +2,7 @@ package storagecraft.container;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
+import storagecraft.block.EnumGridType;
 import storagecraft.container.slot.SlotGridCraftingResult;
 import storagecraft.tile.TileGrid;
 
@@ -11,9 +12,9 @@ public class ContainerGrid extends ContainerBase
 	{
 		super(player);
 
-		addPlayerInventory(8, grid.isCrafting() ? 174 : 108);
+		addPlayerInventory(8, grid.getType() == EnumGridType.CRAFTING ? 174 : 108);
 
-		if (grid.isCrafting())
+		if (grid.getType() == EnumGridType.CRAFTING)
 		{
 			int x = 25;
 			int y = 106;

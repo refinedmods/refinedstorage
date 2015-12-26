@@ -12,6 +12,7 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import storagecraft.StorageCraft;
 import storagecraft.StorageCraftGUI;
+import storagecraft.block.EnumGridType;
 import storagecraft.tile.TileGrid;
 import storagecraft.tile.TileWirelessTransmitter;
 
@@ -69,7 +70,7 @@ public class ItemWirelessGrid extends ItemBase
 
 						if (wirelessTransmitter.isWorking())
 						{
-							TileGrid grid = wirelessTransmitter.getGrid(stack.getItemDamage());
+							TileGrid grid = wirelessTransmitter.getGrid(stack.getItemDamage() == 1 ? EnumGridType.CRAFTING : EnumGridType.NORMAL);
 
 							if (grid == null)
 							{

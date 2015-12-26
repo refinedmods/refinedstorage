@@ -1,16 +1,14 @@
 package storagecraft.item;
 
 import net.minecraft.block.Block;
-import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemColored;
 import net.minecraft.item.ItemStack;
 
-public abstract class ItemBlockBase extends ItemBlock
+public abstract class ItemBlockBase extends ItemColored
 {
 	public ItemBlockBase(Block block)
 	{
-		super(block);
-
-		setHasSubtypes(true);
+		super(block, true);
 	}
 
 	@Override

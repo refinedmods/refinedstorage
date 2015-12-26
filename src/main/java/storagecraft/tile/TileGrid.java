@@ -7,6 +7,8 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import storagecraft.StorageCraft;
+import storagecraft.block.BlockGrid;
+import storagecraft.block.EnumGridType;
 import storagecraft.container.ContainerGridCrafting;
 import storagecraft.inventory.InventorySimple;
 import storagecraft.network.MessageGridCraftingUpdate;
@@ -30,14 +32,9 @@ public class TileGrid extends TileMachine
 	{
 	}
 
-	public int getType()
+	public EnumGridType getType()
 	{
-		return 0; // @TODO: Make other grid work too
-	}
-
-	public boolean isCrafting()
-	{
-		return getType() == 1;
+		return (EnumGridType) worldObj.getBlockState(pos).getValue(BlockGrid.TYPE);
 	}
 
 	public InventoryCrafting getCraftingMatrix()

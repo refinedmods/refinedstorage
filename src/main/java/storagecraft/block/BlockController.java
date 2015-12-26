@@ -62,11 +62,11 @@ public class BlockController extends BlockBase implements ITileEntityProvider
 	}
 
 	@Override
-	public void onBlockDestroyedByPlayer(World world, BlockPos pos, IBlockState state) // @TODO: What about explosions?
+	public void breakBlock(World world, BlockPos pos, IBlockState state)
 	{
 		((TileController) world.getTileEntity(pos)).onDestroyed();
 
-		super.onBlockDestroyedByPlayer(world, pos, state);
+		super.breakBlock(world, pos, state);
 	}
 
 	@Override

@@ -12,6 +12,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import storagecraft.StorageCraft;
+import storagecraft.block.EnumGridType;
 import storagecraft.container.ContainerGrid;
 import storagecraft.gui.sidebutton.SideButtonGridSortingDirection;
 import storagecraft.gui.sidebutton.SideButtonGridSortingType;
@@ -46,7 +47,7 @@ public class GuiGrid extends GuiBase
 
 	public GuiGrid(ContainerGrid container, TileGrid grid)
 	{
-		super(container, 176, grid.isCrafting() ? 256 : 190);
+		super(container, 176, grid.getType() == EnumGridType.CRAFTING ? 256 : 190);
 
 		this.container = container;
 		this.grid = grid;
@@ -126,7 +127,7 @@ public class GuiGrid extends GuiBase
 	@Override
 	public void drawBackground(int x, int y, int mouseX, int mouseY)
 	{
-		if (grid.isCrafting())
+		if (grid.getType() == EnumGridType.CRAFTING)
 		{
 			bindTexture("gui/craftingGrid.png");
 		}
@@ -145,12 +146,12 @@ public class GuiGrid extends GuiBase
 	{
 		drawString(7, 7, t("gui.storagecraft:grid"));
 
-		if (grid.isCrafting())
+		if (grid.getType() == EnumGridType.CRAFTING)
 		{
 			drawString(7, 94, t("container.crafting"));
 		}
 
-		drawString(7, grid.isCrafting() ? 163 : 96, t("container.inventory"));
+		drawString(7, grid.getType() == EnumGridType.CRAFTING ? 163 : 96, t("container.inventory"));
 
 		int x = 8;
 		int y = 20;
@@ -202,7 +203,7 @@ public class GuiGrid extends GuiBase
 			drawTooltip(mouseX, mouseY, items.get(hoveringSlotId).toItemStack());
 		}
 
-		if (grid.isCrafting() && isHoveringOverClear(mouseX, mouseY))
+		if (grid.getType() == EnumGridType.CRAFTING && isHoveringOverClear(mouseX, mouseY))
 		{
 			drawTooltip(mouseX, mouseY, t("misc.storagecraft:clear"));
 		}
@@ -284,7 +285,7 @@ public class GuiGrid extends GuiBase
 	{
 		super.mouseClicked(mouseX, mouseY, clickedButton);
 
-		boolean clickedClear = grid.isCrafting() && clickedButton == 0 && isHoveringOverClear(mouseX - guiLeft, mouseY - guiTop);
+		boolean clickedClear = grid.getType() == EnumGridType.CRAFTING && clickedButton == 0 && isHoveringOverClear(mouseX - guiLeft, mouseY - guiTop);
 
 		if (grid.isConnected())
 		{

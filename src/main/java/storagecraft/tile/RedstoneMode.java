@@ -8,28 +8,28 @@ public enum RedstoneMode
 	IGNORE(0),
 	HIGH(1),
 	LOW(2);
-
+	
 	public static final String NBT = "RedstoneMode";
-
+	
 	public final int id;
-
+	
 	RedstoneMode(int id)
 	{
 		this.id = id;
 	}
-
+	
 	public RedstoneMode next()
 	{
 		RedstoneMode next = getById(id + 1);
-
+		
 		if (next == null)
 		{
 			return getById(0);
 		}
-
+		
 		return next;
 	}
-
+	
 	public boolean isEnabled(World world, BlockPos pos)
 	{
 		switch (this)
@@ -37,14 +37,14 @@ public enum RedstoneMode
 			case IGNORE:
 				return true;
 			case HIGH:
-				return true; // @TODO: ...
+				return world.isBlockPowered(pos);
 			case LOW:
-				return true;
+				return !world.isBlockPowered(pos);
 		}
-
+		
 		return false;
 	}
-
+	
 	public static RedstoneMode getById(int id)
 	{
 		for (RedstoneMode control : values())
@@ -54,7 +54,7 @@ public enum RedstoneMode
 				return control;
 			}
 		}
-
+		
 		return null;
 	}
 }

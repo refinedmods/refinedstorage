@@ -1,8 +1,11 @@
 package storagecraft.block;
 
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
@@ -17,6 +20,8 @@ import storagecraft.util.InventoryUtils;
 public abstract class BlockBase extends Block
 {
 	private String name;
+
+	protected List<IProperty> states = new ArrayList<IProperty>();
 
 	public BlockBase(String name)
 	{
@@ -73,7 +78,7 @@ public abstract class BlockBase extends Block
 	}
 
 	@Override
-	public void onBlockDestroyedByPlayer(World world, BlockPos pos, IBlockState state) // @TODO: Make this work all
+	public void breakBlock(World world, BlockPos pos, IBlockState state)
 	{
 		TileEntity tile = world.getTileEntity(pos);
 
@@ -82,6 +87,6 @@ public abstract class BlockBase extends Block
 			InventoryUtils.dropInventory(world, ((TileBase) tile).getDroppedInventory(), pos.getX(), pos.getY(), pos.getZ());
 		}
 
-		super.onBlockDestroyedByPlayer(world, pos, state);
+		super.breakBlock(world, pos, state);
 	}
 }

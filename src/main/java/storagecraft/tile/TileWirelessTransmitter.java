@@ -6,6 +6,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IChatComponent;
+import storagecraft.block.EnumGridType;
 import storagecraft.inventory.InventorySimple;
 import storagecraft.item.ItemWirelessGrid;
 import storagecraft.util.InventoryUtils;
@@ -87,7 +88,7 @@ public class TileWirelessTransmitter extends TileMachine implements IInventory
 		return progress;
 	}
 
-	public TileGrid getGrid(int type)
+	public TileGrid getGrid(EnumGridType type)
 	{
 		for (TileMachine machine : getController().getMachines())
 		{

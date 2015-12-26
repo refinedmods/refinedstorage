@@ -9,14 +9,14 @@ import net.minecraft.block.state.IBlockState;
 public abstract class BlockMachine extends BlockBase implements ITileEntityProvider
 {
 	public static final PropertyBool CONNECTED = PropertyBool.create("connected");
-	
+
 	public BlockMachine(String name)
 	{
 		super(name);
-		
-		this.setDefaultState(this.blockState.getBaseState().withProperty(CONNECTED, false));
+
+		setDefaultState(blockState.getBaseState().withProperty(CONNECTED, false));
 	}
-	
+
 	@Override
 	protected BlockState createBlockState()
 	{
@@ -25,16 +25,16 @@ public abstract class BlockMachine extends BlockBase implements ITileEntityProvi
 			CONNECTED
 		});
 	}
-	
+
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
-		return getDefaultState().withProperty(CONNECTED, meta == 1 ? true : false);
+		return getDefaultState().withProperty(CONNECTED, meta == 1);
 	}
-	
+
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
-		return ((Boolean) state.getValue(CONNECTED)) ? 0 : 1;
+		return ((Boolean) state.getValue(CONNECTED)) ? 1 : 0;
 	}
 }
