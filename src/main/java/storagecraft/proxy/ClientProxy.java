@@ -6,6 +6,7 @@ import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -97,8 +98,9 @@ public class ClientProxy extends CommonProxy
 
 		mesher.register(StorageCraftItems.WIRELESS_GRID_PLATE, 0, new ModelResourceLocation("storagecraft:wireless_grid_plate", "inventory"));
 
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(StorageCraftBlocks.GRID), 0, new ModelResourceLocation("storagecraft:grid", "inventory"));
 		// Blocks
-		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.GRID), 0, new ModelResourceLocation("storagecraft:grid", "inventory"));
-		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.GRID), 1, new ModelResourceLocation("storagecraft:grid", "inventory"));
+		//mesher.register(Item.getItemFromBlock(StorageCraftBlocks.GRID), 0, new ModelResourceLocation("storagecraft:grid", "inventory"));
+		//mesher.register(Item.getItemFromBlock(StorageCraftBlocks.GRID), 1, new ModelResourceLocation("storagecraft:grid", "inventory"));
 	}
 }

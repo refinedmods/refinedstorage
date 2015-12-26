@@ -1,5 +1,13 @@
 {
     "forge_marker": 1,
+    "defaults": {
+        "model": "orientable",
+        "transform": "forge:default-block",
+        "textures": {
+            "side": "storagecraft:blocks/side",
+            "top": "storagecraft:blocks/side"
+        }
+    },
     "variants": {
         "type": {
             "normal": {
@@ -9,10 +17,14 @@
         },
         "connected": {
             "true": {
-                "model": "storagecraft:grid_connected"
+                "textures": {
+                    "front": "storagecraft:blocks/grid_connected"
+                }
             },
             "false": {
-                "model": "storagecraft:grid_disconnected"
+                "textures": {
+                    "front": "storagecraft:blocks/grid_disconnected"
+                }
             }
         },
         "direction": {
@@ -35,5 +47,15 @@
                 "x": 90
             }
         }
-    }
+    },
+    "inventory": [
+        {
+            "textures": {
+                "side": "storagecraft:blocks/side",
+                "top": "storagecraft:blocks/side",
+                "front": "storagecraft:blocks/grid_disconnected"
+            },
+            "y": 270
+        }
+    ]
 } 

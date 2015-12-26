@@ -1,8 +1,0 @@
-{
-    "parent": "block/orientable",
-    "textures": {
-        "top": "storagecraft:blocks/side",
-        "front": "storagecraft:blocks/grid_disconnected",
-        "side": "storagecraft:blocks/side"
-    }
-}
