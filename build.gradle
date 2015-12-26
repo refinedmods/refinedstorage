@@ -1,37 +1,17 @@
-buildscript {
-    repositories {
-        mavenCentral()
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
-        maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
-    }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
-    }
+plugins {
+    id "net.minecraftforge.gradle.forge" version "2.0.2"
 }
 
-apply plugin: 'forge'
-
-version = "0.1"
+version = "1.0"
 group = "storagecraft"
 archivesBaseName = "storagecraft"
 
 minecraft {
-    version = "1.8-11.14.1.1341"
-    runDir = "eclipse"
+    version = "1.8-11.14.4.1577"
+    runDir = "run"
+    mappings = "snapshot_20141130"
 }
 
-repositories {
-    maven {
-        name 'CB Repo'
-        url "http://chickenbones.net/maven/"
-    }
-}
 dependencies {
 }
 
@@ -41,7 +21,7 @@ processResources {
 
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-        
+
         expand 'version':project.version, 'mcversion':project.minecraft.version
     }
 

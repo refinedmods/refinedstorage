@@ -114,7 +114,7 @@ public abstract class BlockBase extends Block
 
 		if (tile instanceof TileBase)
 		{
-			((TileBase) tile).setDirection(BlockPistonBase.func_180695_a(world, pos, player));
+			((TileBase) tile).setDirection(BlockPistonBase.getFacingFromEntity(world, pos, player));
 		}
 	}
 

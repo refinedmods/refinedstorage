@@ -9,3 +9,5 @@ gradle/
 .project
 gradlew
 gradlew.bat
+*.launch
+run/

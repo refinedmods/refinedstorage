@@ -1,23 +1,24 @@
 {
     "forge_marker": 1,
-    "defaults": {
-        "model": "storagecraft:grid_disconnected"
-    },
     "variants": {
         "type": {
             "normal": {
             },
-            "crafing": {
+            "crafting": {
             }
         },
         "connected": {
             "true": {
                 "model": "storagecraft:grid_connected"
             },
-            "false": {}
+            "false": {
+                "model": "storagecraft:grid_disconnected"
+            }
         },
         "direction": {
-            "north": {},
+            "north": {
+                "y": 0
+            },
             "east": {
                 "y": 90
             },

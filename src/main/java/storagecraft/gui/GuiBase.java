@@ -162,11 +162,11 @@ public abstract class GuiBase extends GuiContainer
 			font = fontRendererObj;
 		}
 
-		itemRender.func_180450_b(stack, x, y);
+		itemRender.renderItemIntoGUI(stack, x, y);
 
 		if (withOverlay)
 		{
-			itemRender.func_180453_a(font, stack, x, y, null);
+			itemRender.renderItemOverlayIntoGUI(font, stack, x, y, null);
 		}
 
 		zLevel = 0.0F;
