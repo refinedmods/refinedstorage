@@ -68,6 +68,7 @@ public class ClientProxy extends CommonProxy
 
 		ItemModelMesher mesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
 
+		// Items
 		mesher.register(StorageCraftItems.STORAGE_CELL, ItemStorageCell.TYPE_1K, new ModelResourceLocation("storagecraft:1k_storage_cell", "inventory"));
 		mesher.register(StorageCraftItems.STORAGE_CELL, ItemStorageCell.TYPE_4K, new ModelResourceLocation("storagecraft:4k_storage_cell", "inventory"));
 		mesher.register(StorageCraftItems.STORAGE_CELL, ItemStorageCell.TYPE_16K, new ModelResourceLocation("storagecraft:16k_storage_cell", "inventory"));
@@ -95,5 +96,9 @@ public class ClientProxy extends CommonProxy
 		mesher.register(StorageCraftItems.CORE, ItemCore.TYPE_DESTRUCTION, new ModelResourceLocation("storagecraft:destruction_core", "inventory"));
 
 		mesher.register(StorageCraftItems.WIRELESS_GRID_PLATE, 0, new ModelResourceLocation("storagecraft:wireless_grid_plate", "inventory"));
+
+		// Blocks
+		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.GRID), 0, new ModelResourceLocation("storagecraft:grid", "inventory"));
+		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.GRID), 1, new ModelResourceLocation("storagecraft:grid", "inventory"));
 	}
 }
