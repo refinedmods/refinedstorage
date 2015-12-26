@@ -61,17 +61,24 @@ public class MessageGridCraftingUpdate implements IMessage, IMessageHandler<Mess
 	}
 
 	@Override
-	public IMessage onMessage(MessageGridCraftingUpdate message, MessageContext context)
+	public IMessage onMessage(final MessageGridCraftingUpdate message, MessageContext context)
 	{
-		TileEntity tile = Minecraft.getMinecraft().theWorld.getTileEntity(new BlockPos(message.x, message.y, message.z));
-
-		if (tile instanceof TileGrid)
+		Minecraft.getMinecraft().addScheduledTask(new Runnable()
 		{
-			for (int i = 0; i < 9; ++i)
+			@Override
+			public void run()
 			{
-				((TileGrid) tile).getCraftingMatrix().setInventorySlotContents(i, message.craftingMatrix[i]);
+				TileEntity tile = Minecraft.getMinecraft().theWorld.getTileEntity(new BlockPos(message.x, message.y, message.z));
+
+				if (tile instanceof TileGrid)
+				{
+					for (int i = 0; i < 9; ++i)
+					{
+						((TileGrid) tile).getCraftingMatrix().setInventorySlotContents(i, message.craftingMatrix[i]);
+					}
+				}
 			}
-		}
+		});
 
 		return null;
 	}

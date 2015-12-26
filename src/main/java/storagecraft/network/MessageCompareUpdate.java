@@ -5,11 +5,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import storagecraft.tile.ICompareSetting;
 
-public class MessageCompareUpdate implements IMessage, IMessageHandler<MessageCompareUpdate, IMessage>
+public class MessageCompareUpdate extends MessageHandlerPlayerToServer<MessageCompareUpdate> implements IMessage
 {
 	private int x;
 	private int y;
@@ -47,17 +45,13 @@ public class MessageCompareUpdate implements IMessage, IMessageHandler<MessageCo
 	}
 
 	@Override
-	public IMessage onMessage(MessageCompareUpdate message, MessageContext context)
+	public void handle(MessageCompareUpdate message, EntityPlayerMP player)
 	{
-		EntityPlayerMP player = context.getServerHandler().playerEntity;
-
 		TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.x, message.y, message.z));
 
 		if (tile instanceof ICompareSetting)
 		{
 			((ICompareSetting) tile).setCompare(message.compare);
 		}
-
-		return null;
 	}
 }

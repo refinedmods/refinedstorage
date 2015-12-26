@@ -5,11 +5,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import storagecraft.tile.TileDetector;
 
-public class MessageDetectorAmountUpdate implements IMessage, IMessageHandler<MessageDetectorAmountUpdate, IMessage>
+public class MessageDetectorAmountUpdate extends MessageHandlerPlayerToServer<MessageDetectorAmountUpdate> implements IMessage
 {
 	private int x;
 	private int y;
@@ -47,17 +45,13 @@ public class MessageDetectorAmountUpdate implements IMessage, IMessageHandler<Me
 	}
 
 	@Override
-	public IMessage onMessage(MessageDetectorAmountUpdate message, MessageContext context)
+	public void handle(MessageDetectorAmountUpdate message, EntityPlayerMP player)
 	{
-		EntityPlayerMP player = context.getServerHandler().playerEntity;
-
 		TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.x, message.y, message.z));
 
 		if (tile instanceof TileDetector && message.amount >= 0)
 		{
 			((TileDetector) tile).setAmount(message.amount);
 		}
-
-		return null;
 	}
 }

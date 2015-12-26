@@ -6,11 +6,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import storagecraft.tile.TileController;
 
-public class MessageStoragePush implements IMessage, IMessageHandler<MessageStoragePush, IMessage>
+public class MessageStoragePush extends MessageHandlerPlayerToServer<MessageStoragePush> implements IMessage
 {
 	private int x;
 	private int y;
@@ -52,10 +50,8 @@ public class MessageStoragePush implements IMessage, IMessageHandler<MessageStor
 	}
 
 	@Override
-	public IMessage onMessage(MessageStoragePush message, MessageContext context)
+	public void handle(MessageStoragePush message, EntityPlayerMP player)
 	{
-		EntityPlayerMP player = context.getServerHandler().playerEntity;
-
 		TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.x, message.y, message.z));
 
 		if (tile instanceof TileController)
@@ -105,12 +101,9 @@ public class MessageStoragePush implements IMessage, IMessageHandler<MessageStor
 					else
 					{
 						player.inventory.setInventorySlotContents(message.slot, null);
-						player.openContainer.detectAndSendChanges();
 					}
 				}
 			}
 		}
-
-		return null;
 	}
 }

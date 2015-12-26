@@ -5,11 +5,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import storagecraft.tile.TileImporter;
 
-public class MessageImporterModeUpdate implements IMessage, IMessageHandler<MessageImporterModeUpdate, IMessage>
+public class MessageImporterModeUpdate extends MessageHandlerPlayerToServer<MessageImporterModeUpdate> implements IMessage
 {
 	private int x;
 	private int y;
@@ -43,10 +41,8 @@ public class MessageImporterModeUpdate implements IMessage, IMessageHandler<Mess
 	}
 
 	@Override
-	public IMessage onMessage(MessageImporterModeUpdate message, MessageContext context)
+	public void handle(MessageImporterModeUpdate message, EntityPlayerMP player)
 	{
-		EntityPlayerMP player = context.getServerHandler().playerEntity;
-
 		TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.x, message.y, message.z));
 
 		if (tile instanceof TileImporter)
@@ -55,7 +51,5 @@ public class MessageImporterModeUpdate implements IMessage, IMessageHandler<Mess
 
 			importer.setMode(importer.getMode() == TileImporter.MODE_WHITELIST ? TileImporter.MODE_BLACKLIST : TileImporter.MODE_WHITELIST);
 		}
-
-		return null;
 	}
 }

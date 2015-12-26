@@ -5,11 +5,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import storagecraft.tile.TileDetector;
 
-public class MessageDetectorModeUpdate implements IMessage, IMessageHandler<MessageDetectorModeUpdate, IMessage>
+public class MessageDetectorModeUpdate extends MessageHandlerPlayerToServer<MessageDetectorModeUpdate> implements IMessage
 {
 	private int x;
 	private int y;
@@ -43,10 +41,8 @@ public class MessageDetectorModeUpdate implements IMessage, IMessageHandler<Mess
 	}
 
 	@Override
-	public IMessage onMessage(MessageDetectorModeUpdate message, MessageContext context)
+	public void handle(MessageDetectorModeUpdate message, EntityPlayerMP player)
 	{
-		EntityPlayerMP player = context.getServerHandler().playerEntity;
-
 		TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.x, message.y, message.z));
 
 		if (tile instanceof TileDetector)
@@ -66,7 +62,5 @@ public class MessageDetectorModeUpdate implements IMessage, IMessageHandler<Mess
 					break;
 			}
 		}
-
-		return null;
 	}
 }

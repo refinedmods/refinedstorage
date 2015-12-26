@@ -200,7 +200,7 @@ public class GuiGrid extends GuiBase
 
 		if (isHoveringOverValidSlot())
 		{
-			drawTooltip(mouseX, mouseY, items.get(hoveringSlotId).toItemStack());
+			drawTooltip(mouseX, mouseY, getItems().get(hoveringSlotId).toItemStack());
 		}
 
 		if (grid.getType() == EnumGridType.CRAFTING && isHoveringOverClear(mouseX, mouseY))
