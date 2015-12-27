@@ -11,3 +11,7 @@ gradlew
 gradlew.bat
 *.launch
 run/
+*.iml
+*.ipr
+*.iws
+.idea/
