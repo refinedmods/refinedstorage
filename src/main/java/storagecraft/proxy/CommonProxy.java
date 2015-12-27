@@ -95,7 +95,7 @@ public class CommonProxy
 		GameRegistry.registerItem(StorageCraftItems.STORAGE_CELL, "storageCell");
 		GameRegistry.registerItem(StorageCraftItems.WIRELESS_GRID, "wirelessGrid");
 		GameRegistry.registerItem(StorageCraftItems.WIRELESS_GRID_PLATE, "wirelessGridPlate");
-		GameRegistry.registerItem(StorageCraftItems.QUARTZ_ENRICHED_IRON, "storigiumIngot");
+		GameRegistry.registerItem(StorageCraftItems.QUARTZ_ENRICHED_IRON, "quartzEnrichedIron");
 		GameRegistry.registerItem(StorageCraftItems.CORE, "core");
 		GameRegistry.registerItem(StorageCraftItems.SILICON, "silicon");
 		GameRegistry.registerItem(StorageCraftItems.PROCESSOR, "processor");

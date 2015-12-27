@@ -9,6 +9,20 @@
         }
     },
     "variants": {
+        "inventory": [
+            {
+                "textures": {
+                    "front": "storagecraft:blocks/grid_disconnected"
+                },
+                "y": 0
+            },
+            {
+                "textures": {
+                    "front": "storagecraft:blocks/grid_disconnected"
+                },
+                "y": 0
+            }
+        ],
         "type": {
             "normal": {
             },
@@ -47,15 +61,5 @@
                 "x": 90
             }
         }
-    },
-    "inventory": [
-        {
-            "textures": {
-                "side": "storagecraft:blocks/side",
-                "top": "storagecraft:blocks/side",
-                "front": "storagecraft:blocks/grid_disconnected"
-            },
-            "y": 270
-        }
-    ]
+    }
 } 
