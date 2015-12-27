@@ -1,0 +1,29 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "model": "cube_all",
+        "textures": {
+            "all": "storagecraft:blocks/side"
+        }
+    },
+    "variants": {
+        "inventory": [
+            {
+            }
+        ],
+        "direction": {
+            "north": {
+            },
+            "east": {
+            },
+            "south": {
+            },
+            "west": {
+            },
+            "up": {
+            },
+            "down": {
+            }
+        }
+    }
+}

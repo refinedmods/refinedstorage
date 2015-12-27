@@ -2,7 +2,6 @@
     "forge_marker": 1,
     "defaults": {
         "model": "orientable",
-        "transform": "forge:default-block",
         "textures": {
             "side": "storagecraft:blocks/side",
             "top": "storagecraft:blocks/side"

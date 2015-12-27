@@ -36,7 +36,7 @@ public class BlockGrid extends BlockMachine
 	@Override
 	public void getSubBlocks(Item item, CreativeTabs tab, List subItems)
 	{
-		for (int i = 0; i < 2; i++)
+		for (int i = 0; i <= 1; i++)
 		{
 			subItems.add(new ItemStack(item, 1, i));
 		}

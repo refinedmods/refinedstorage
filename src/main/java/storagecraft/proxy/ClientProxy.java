@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import storagecraft.StorageCraftBlocks;
 import storagecraft.StorageCraftItems;
+import storagecraft.block.EnumGridType;
 import storagecraft.item.ItemCore;
 import storagecraft.item.ItemProcessor;
 import storagecraft.item.ItemStorageCell;
@@ -99,7 +100,8 @@ public class ClientProxy extends CommonProxy
 		mesher.register(StorageCraftItems.WIRELESS_GRID_PLATE, 0, new ModelResourceLocation("storagecraft:wireless_grid_plate", "inventory"));
 
 		// Blocks
-		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.GRID), 0, new ModelResourceLocation("storagecraft:grid", "inventory"));
-		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.GRID), 1, new ModelResourceLocation("storagecraft:grid", "inventory"));
+		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.GRID), EnumGridType.NORMAL.getId(), new ModelResourceLocation("storagecraft:grid", "inventory"));
+		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.GRID), EnumGridType.CRAFTING.getId(), new ModelResourceLocation("storagecraft:grid", "inventory"));
+		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.MACHINE_CASING), 0, new ModelResourceLocation("storagecraft:machine_casing", "inventory"));
 	}
 }
