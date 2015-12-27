@@ -16,6 +16,8 @@ import net.minecraft.world.World;
 import storagecraft.StorageCraft;
 import storagecraft.StorageCraftGUI;
 import static storagecraft.block.BlockMachine.CONNECTED;
+
+import storagecraft.tile.TileCable;
 import storagecraft.tile.TileGrid;
 
 public class BlockGrid extends BlockMachine
@@ -28,8 +30,7 @@ public class BlockGrid extends BlockMachine
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta)
-	{
+	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileGrid();
 	}
 

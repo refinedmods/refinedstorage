@@ -13,7 +13,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import storagecraft.tile.TileCable;
 
-public class BlockCable extends BlockBase implements ITileEntityProvider
+public class BlockCable extends BlockBase
 {
 	public static final PropertyBool SENSITIVE = PropertyBool.create("sensitive");
 
@@ -45,8 +45,13 @@ public class BlockCable extends BlockBase implements ITileEntityProvider
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta)
+	public boolean hasTileEntity(IBlockState state)
 	{
+		return true;
+	}
+
+	@Override
+	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileCable();
 	}
 

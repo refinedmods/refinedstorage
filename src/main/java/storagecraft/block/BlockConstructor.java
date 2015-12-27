@@ -18,8 +18,7 @@ public class BlockConstructor extends BlockMachine
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta)
-	{
+	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileConstructor();
 	}
 

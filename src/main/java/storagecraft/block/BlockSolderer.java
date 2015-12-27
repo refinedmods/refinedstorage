@@ -8,6 +8,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import storagecraft.StorageCraft;
 import storagecraft.StorageCraftGUI;
+import storagecraft.tile.TileCable;
 import storagecraft.tile.TileSolderer;
 
 public class BlockSolderer extends BlockMachine
@@ -18,8 +19,7 @@ public class BlockSolderer extends BlockMachine
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta)
-	{
+	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileSolderer();
 	}
 

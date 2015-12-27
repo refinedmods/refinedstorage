@@ -8,6 +8,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import storagecraft.StorageCraft;
 import storagecraft.StorageCraftGUI;
+import storagecraft.tile.TileCable;
 import storagecraft.tile.TileExporter;
 
 public class BlockExporter extends BlockMachine
@@ -18,10 +19,10 @@ public class BlockExporter extends BlockMachine
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta)
-	{
+	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileExporter();
 	}
+
 
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ)

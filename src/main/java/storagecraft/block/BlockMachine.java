@@ -1,6 +1,5 @@
 package storagecraft.block;
 
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockState;
@@ -9,13 +8,19 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import storagecraft.tile.TileMachine;
 
-public abstract class BlockMachine extends BlockBase implements ITileEntityProvider
+public abstract class BlockMachine extends BlockBase
 {
 	public static final PropertyBool CONNECTED = PropertyBool.create("connected");
 
 	public BlockMachine(String name)
 	{
 		super(name);
+	}
+
+	@Override
+	public boolean hasTileEntity(IBlockState state)
+	{
+		return true;
 	}
 
 	@Override

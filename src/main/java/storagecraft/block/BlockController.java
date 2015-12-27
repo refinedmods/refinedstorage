@@ -1,6 +1,5 @@
 package storagecraft.block;
 
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockState;
@@ -15,7 +14,7 @@ import storagecraft.StorageCraft;
 import storagecraft.StorageCraftGUI;
 import storagecraft.tile.TileController;
 
-public class BlockController extends BlockBase implements ITileEntityProvider
+public class BlockController extends BlockBase
 {
 	public static final PropertyInteger ENERGY = PropertyInteger.create("energy", 0, 15);
 
@@ -42,8 +41,13 @@ public class BlockController extends BlockBase implements ITileEntityProvider
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta)
+	public boolean hasTileEntity(IBlockState state)
 	{
+		return true;
+	}
+
+	@Override
+	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileController();
 	}
 
