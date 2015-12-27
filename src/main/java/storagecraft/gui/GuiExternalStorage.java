@@ -29,7 +29,7 @@ public class GuiExternalStorage extends GuiBase
 	@Override
 	public void drawBackground(int x, int y, int mouseX, int mouseY)
 	{
-		bindTexture("gui/externalStorage.png");
+		bindTexture("gui/external_storage.png");
 
 		drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
 	}
@@ -37,7 +37,7 @@ public class GuiExternalStorage extends GuiBase
 	@Override
 	public void drawForeground(int mouseX, int mouseY)
 	{
-		drawString(7, 7, t("gui.storagecraft:externalStorage"));
+		drawString(7, 7, t("gui.storagecraft:external_storage"));
 		drawString(7, 39, t("container.inventory"));
 	}
 }

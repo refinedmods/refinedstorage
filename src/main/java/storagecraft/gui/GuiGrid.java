@@ -131,7 +131,7 @@ public class GuiGrid extends GuiBase
 	{
 		if (grid.getType() == EnumGridType.CRAFTING)
 		{
-			bindTexture("gui/craftingGrid.png");
+			bindTexture("gui/crafting_grid.png");
 		}
 		else
 		{

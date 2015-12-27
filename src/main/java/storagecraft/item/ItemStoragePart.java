@@ -14,7 +14,7 @@ public class ItemStoragePart extends ItemBase
 
 	public ItemStoragePart()
 	{
-		super("storagePart");
+		super("storage_part");
 
 		setHasSubtypes(true);
 		setMaxDamage(0);

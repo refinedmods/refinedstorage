@@ -29,7 +29,7 @@ public class GuiWirelessTransmitter extends GuiBase
 	@Override
 	public void drawBackground(int x, int y, int mouseX, int mouseY)
 	{
-		bindTexture("gui/wirelessTransmitter.png");
+		bindTexture("gui/wireless_transmitter.png");
 
 		drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
 
@@ -44,7 +44,7 @@ public class GuiWirelessTransmitter extends GuiBase
 	@Override
 	public void drawForeground(int mouseX, int mouseY)
 	{
-		drawString(7, 7, t("gui.storagecraft:wirelessTransmitter"));
+		drawString(7, 7, t("gui.storagecraft:wireless_transmitter"));
 		drawString(7, 43, t("container.inventory"));
 	}
 }

@@ -4,7 +4,7 @@ public class ItemWirelessGridPlate extends ItemBase
 {
 	public ItemWirelessGridPlate()
 	{
-		super("wirelessGridPlate");
+		super("wireless_grid_plate");
 
 		setMaxStackSize(1);
 	}

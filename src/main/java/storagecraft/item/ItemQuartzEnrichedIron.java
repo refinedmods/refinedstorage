@@ -4,6 +4,6 @@ public class ItemQuartzEnrichedIron extends ItemBase
 {
 	public ItemQuartzEnrichedIron()
 	{
-		super("quartzEnrichedIron");
+		super("quartz_enriched_iron");
 	}
 }

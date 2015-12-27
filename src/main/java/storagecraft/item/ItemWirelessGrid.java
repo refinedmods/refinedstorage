@@ -24,7 +24,7 @@ public class ItemWirelessGrid extends ItemBase
 
 	public ItemWirelessGrid()
 	{
-		super("wirelessGrid");
+		super("wireless_grid");
 
 		setMaxStackSize(1);
 		setHasSubtypes(true);
@@ -45,7 +45,7 @@ public class ItemWirelessGrid extends ItemBase
 	{
 		if (isValid(stack))
 		{
-			list.add(StatCollector.translateToLocalFormatted("misc.storagecraft:wirelessGrid.tooltip", getX(stack), getY(stack), getZ(stack)));
+			list.add(StatCollector.translateToLocalFormatted("misc.storagecraft:wireless_grid.tooltip", getX(stack), getY(stack), getZ(stack)));
 		}
 	}
 
@@ -74,7 +74,7 @@ public class ItemWirelessGrid extends ItemBase
 
 							if (grid == null)
 							{
-								player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("misc.storagecraft:wirelessGrid.noGrid." + stack.getItemDamage())));
+								player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("misc.storagecraft:wireless_grid.no_grid." + stack.getItemDamage())));
 							}
 							else
 							{
@@ -83,22 +83,22 @@ public class ItemWirelessGrid extends ItemBase
 						}
 						else
 						{
-							player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("misc.storagecraft:wirelessGrid.notWorking")));
+							player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("misc.storagecraft:wireless_grid.not_working")));
 						}
 					}
 					else
 					{
-						player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("misc.storagecraft:wirelessGrid.notFound")));
+						player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("misc.storagecraft:wireless_grid.not_found")));
 					}
 				}
 				else
 				{
-					player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("misc.storagecraft:wirelessGrid.outOfRange")));
+					player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("misc.storagecraft:wireless_grid.out_of_range")));
 				}
 			}
 			else
 			{
-				player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("misc.storagecraft:wirelessGrid.notSet." + stack.getItemDamage())));
+				player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("misc.storagecraft:wireless_grid.not_set." + stack.getItemDamage())));
 			}
 		}
 

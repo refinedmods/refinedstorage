@@ -21,7 +21,7 @@ public class ItemStorageCell extends ItemBase
 
 	public ItemStorageCell()
 	{
-		super("storageCell");
+		super("storage_cell");
 
 		setMaxStackSize(1);
 		setHasSubtypes(true);
@@ -42,11 +42,11 @@ public class ItemStorageCell extends ItemBase
 	{
 		if (getCapacity(cell) == -1)
 		{
-			list.add(String.format(StatCollector.translateToLocal("misc.storagecraft:storageCellStored"), getStored(cell)));
+			list.add(String.format(StatCollector.translateToLocal("misc.storagecraft:storage_cell_stored"), getStored(cell)));
 		}
 		else
 		{
-			list.add(String.format(StatCollector.translateToLocal("misc.storagecraft:storageCellStoredWithCapacity"), getStored(cell), getCapacity(cell)));
+			list.add(String.format(StatCollector.translateToLocal("misc.storagecraft:storage_cell_stored_capacity"), getStored(cell), getCapacity(cell)));
 		}
 	}
 

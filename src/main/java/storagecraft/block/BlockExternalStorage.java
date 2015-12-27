@@ -14,7 +14,7 @@ public class BlockExternalStorage extends BlockMachine
 {
 	public BlockExternalStorage()
 	{
-		super("externalStorage");
+		super("external_storage");
 	}
 
 	@Override

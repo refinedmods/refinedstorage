@@ -49,11 +49,11 @@ public class GuiController extends GuiBase
 		drawString(7, 7, t("gui.storagecraft:controller"));
 		drawString(7, 87, t("container.inventory"));
 
-		drawString(31, 20, t("misc.storagecraft:energyUsage", controller.getEnergyUsage()));
+		drawString(31, 20, t("misc.storagecraft:energy_usage", controller.getEnergyUsage()));
 
 		if (inBounds(barX, barY, barWidth, barHeight, mouseX, mouseY))
 		{
-			drawTooltip(mouseX, mouseY, t("misc.storagecraft:energyStored", controller.getEnergyStored(null), controller.getMaxEnergyStored(null)));
+			drawTooltip(mouseX, mouseY, t("misc.storagecraft:energy_stored", controller.getEnergyStored(null), controller.getMaxEnergyStored(null)));
 		}
 	}
 }

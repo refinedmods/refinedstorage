@@ -22,9 +22,9 @@ public class SideButtonRedstoneMode extends SideButton
 	{
 		StringBuilder builder = new StringBuilder();
 
-		builder.append(EnumChatFormatting.RED).append(gui.t("sidebutton.storagecraft:redstoneMode")).append(EnumChatFormatting.RESET).append("\n");
+		builder.append(EnumChatFormatting.RED).append(gui.t("sidebutton.storagecraft:redstone_mode")).append(EnumChatFormatting.RESET).append("\n");
 
-		builder.append(gui.t("sidebutton.storagecraft:redstoneMode." + setting.getRedstoneMode().id));
+		builder.append(gui.t("sidebutton.storagecraft:redstone_mode." + setting.getRedstoneMode().id));
 
 		return builder.toString();
 	}

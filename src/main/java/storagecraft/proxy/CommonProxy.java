@@ -69,12 +69,12 @@ public class CommonProxy
 		GameRegistry.registerTileEntity(TileCable.class, "cable");
 		GameRegistry.registerTileEntity(TileGrid.class, "grid");
 		GameRegistry.registerTileEntity(TileDrive.class, "drive");
-		GameRegistry.registerTileEntity(TileExternalStorage.class, "externalStorage");
+		GameRegistry.registerTileEntity(TileExternalStorage.class, "external_storage");
 		GameRegistry.registerTileEntity(TileImporter.class, "importer");
 		GameRegistry.registerTileEntity(TileExporter.class, "exporter");
 		GameRegistry.registerTileEntity(TileDetector.class, "detector");
 		GameRegistry.registerTileEntity(TileSolderer.class, "solderer");
-		GameRegistry.registerTileEntity(TileWirelessTransmitter.class, "wirelessTransmitter");
+		GameRegistry.registerTileEntity(TileWirelessTransmitter.class, "wireless_transmitter");
 		GameRegistry.registerTileEntity(TileDestructor.class, "destructor");
 		GameRegistry.registerTileEntity(TileConstructor.class, "constructor");
 
@@ -82,24 +82,24 @@ public class CommonProxy
 		GameRegistry.registerBlock(StorageCraftBlocks.CABLE, ItemBlockCable.class, "cable");
 		GameRegistry.registerBlock(StorageCraftBlocks.GRID, ItemBlockGrid.class, "grid");
 		GameRegistry.registerBlock(StorageCraftBlocks.DRIVE, "drive");
-		GameRegistry.registerBlock(StorageCraftBlocks.EXTERNAL_STORAGE, "externalStorage");
+		GameRegistry.registerBlock(StorageCraftBlocks.EXTERNAL_STORAGE, "external_storage");
 		GameRegistry.registerBlock(StorageCraftBlocks.IMPORTER, "importer");
 		GameRegistry.registerBlock(StorageCraftBlocks.EXPORTER, "exporter");
 		GameRegistry.registerBlock(StorageCraftBlocks.DETECTOR, "detector");
-		GameRegistry.registerBlock(StorageCraftBlocks.MACHINE_CASING, "machineCasing");
+		GameRegistry.registerBlock(StorageCraftBlocks.MACHINE_CASING, "machine_casing");
 		GameRegistry.registerBlock(StorageCraftBlocks.SOLDERER, "solderer");
-		GameRegistry.registerBlock(StorageCraftBlocks.WIRELESS_TRANSMITTER, "wirelessTransmitter");
+		GameRegistry.registerBlock(StorageCraftBlocks.WIRELESS_TRANSMITTER, "wireless_transmitter");
 		GameRegistry.registerBlock(StorageCraftBlocks.DESTRUCTOR, "destructor");
 		GameRegistry.registerBlock(StorageCraftBlocks.CONSTRUCTOR, "constructor");
 
 		GameRegistry.registerItem(StorageCraftItems.STORAGE_CELL, "storageCell");
 		GameRegistry.registerItem(StorageCraftItems.WIRELESS_GRID, "wirelessGrid");
-		GameRegistry.registerItem(StorageCraftItems.WIRELESS_GRID_PLATE, "wirelessGridPlate");
-		GameRegistry.registerItem(StorageCraftItems.QUARTZ_ENRICHED_IRON, "quartzEnrichedIron");
+		GameRegistry.registerItem(StorageCraftItems.WIRELESS_GRID_PLATE, "wireless_grid_plate");
+		GameRegistry.registerItem(StorageCraftItems.QUARTZ_ENRICHED_IRON, "quartz_enriched_iron");
 		GameRegistry.registerItem(StorageCraftItems.CORE, "core");
 		GameRegistry.registerItem(StorageCraftItems.SILICON, "silicon");
 		GameRegistry.registerItem(StorageCraftItems.PROCESSOR, "processor");
-		GameRegistry.registerItem(StorageCraftItems.STORAGE_PART, "storagePart");
+		GameRegistry.registerItem(StorageCraftItems.STORAGE_PART, "storage_part");
 
 		// Processors
 		SoldererRegistry.addRecipe(new SoldererRecipePrintedProcessor(ItemProcessor.TYPE_PRINTED_BASIC));

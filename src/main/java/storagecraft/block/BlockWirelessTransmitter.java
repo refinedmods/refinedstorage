@@ -15,7 +15,7 @@ public class BlockWirelessTransmitter extends BlockMachine
 {
 	public BlockWirelessTransmitter()
 	{
-		super("wirelessTransmitter");
+		super("wireless_transmitter");
 	}
 
 	@Override
