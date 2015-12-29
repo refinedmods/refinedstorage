@@ -40,7 +40,8 @@ public class TileWirelessTransmitter extends TileMachine implements IInventory
 			{
 				reset();
 			}
-		} else if (inventory.getStackInSlot(0) != null)
+		}
+		else if (inventory.getStackInSlot(0) != null)
 		{
 			inventory.decrStackSize(0, 1);
 

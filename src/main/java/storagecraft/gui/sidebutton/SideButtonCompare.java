@@ -27,7 +27,8 @@ public class SideButtonCompare extends SideButton
 		if ((setting.getCompare() & mask) == mask)
 		{
 			builder.append(gui.t("misc.storagecraft:yes"));
-		} else
+		}
+		else
 		{
 			builder.append(gui.t("misc.storagecraft:no"));
 		}

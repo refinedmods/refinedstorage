@@ -69,7 +69,8 @@ public class TileImporter extends TileMachine implements IInventory, ISidedInven
 								connectedInventory.setInventorySlotContents(currentSlot, null);
 							}
 						}
-					} else if (getController().push(slot.copy()))
+					}
+					else if (getController().push(slot.copy()))
 					{
 						connectedInventory.setInventorySlotContents(currentSlot, null);
 					}
@@ -104,7 +105,8 @@ public class TileImporter extends TileMachine implements IInventory, ISidedInven
 					if (mode == MODE_WHITELIST)
 					{
 						return true;
-					} else if (mode == MODE_BLACKLIST)
+					}
+					else if (mode == MODE_BLACKLIST)
 					{
 						return false;
 					}

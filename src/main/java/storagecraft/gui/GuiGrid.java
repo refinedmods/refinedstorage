@@ -133,7 +133,8 @@ public class GuiGrid extends GuiBase
 		if (grid.getType() == EnumGridType.CRAFTING)
 		{
 			bindTexture("gui/crafting_grid.png");
-		} else
+		}
+		else
 		{
 			bindTexture("gui/grid.png");
 		}
@@ -306,13 +307,16 @@ public class GuiGrid extends GuiBase
 			if (isHoveringOverSlot() && container.getPlayer().inventory.getItemStack() != null)
 			{
 				StorageCraft.NETWORK.sendToServer(new MessageStoragePush(controller.getPos().getX(), controller.getPos().getY(), controller.getPos().getZ(), -1, clickedButton == 1));
-			} else if (isHoveringOverValidSlot() && container.getPlayer().inventory.getItemStack() == null)
+			}
+			else if (isHoveringOverValidSlot() && container.getPlayer().inventory.getItemStack() == null)
 			{
 				StorageCraft.NETWORK.sendToServer(new MessageStoragePull(controller.getPos().getX(), controller.getPos().getY(), controller.getPos().getZ(), hoveringId, clickedButton == 1, Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)));
-			} else if (clickedClear)
+			}
+			else if (clickedClear)
 			{
 				StorageCraft.NETWORK.sendToServer(new MessageGridCraftingClear(grid));
-			} else
+			}
+			else
 			{
 				for (Slot slot : container.getPlayerInventorySlots())
 				{
@@ -338,7 +342,8 @@ public class GuiGrid extends GuiBase
 	{
 		if (!checkHotbarKeys(keyCode) && searchField.textboxKeyTyped(character, keyCode))
 		{
-		} else
+		}
+		else
 		{
 			super.keyTyped(character, keyCode);
 		}

@@ -44,7 +44,8 @@ public class ItemStorageCell extends ItemBase
 		if (getCapacity(cell) == -1)
 		{
 			list.add(String.format(StatCollector.translateToLocal("misc.storagecraft:storage_cell_stored"), getStored(cell)));
-		} else
+		}
+		else
 		{
 			list.add(String.format(StatCollector.translateToLocal("misc.storagecraft:storage_cell_stored_capacity"), getStored(cell), getCapacity(cell)));
 		}

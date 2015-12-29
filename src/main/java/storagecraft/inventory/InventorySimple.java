@@ -40,7 +40,8 @@ public class InventorySimple implements IInventory
 			if (stack.stackSize <= amount)
 			{
 				setInventorySlotContents(slot, null);
-			} else
+			}
+			else
 			{
 				stack = stack.splitStack(amount);
 

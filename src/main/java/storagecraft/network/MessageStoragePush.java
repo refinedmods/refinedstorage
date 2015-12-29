@@ -68,7 +68,8 @@ public class MessageStoragePush extends MessageHandlerPlayerToServer<MessageStor
 				{
 					stack.stackSize = 1;
 				}
-			} else
+			}
+			else
 			{
 				stack = player.inventory.getStackInSlot(message.slot);
 			}
@@ -89,13 +90,15 @@ public class MessageStoragePush extends MessageHandlerPlayerToServer<MessageStor
 							{
 								player.inventory.setItemStack(null);
 							}
-						} else
+						}
+						else
 						{
 							player.inventory.setItemStack(null);
 						}
 
 						player.updateHeldItem();
-					} else
+					}
+					else
 					{
 						player.inventory.setInventorySlotContents(message.slot, null);
 					}

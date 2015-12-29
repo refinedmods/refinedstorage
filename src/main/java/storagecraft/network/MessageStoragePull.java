@@ -89,7 +89,8 @@ public class MessageStoragePull extends MessageHandlerPlayerToServer<MessageStor
 						{
 							controller.push(took);
 						}
-					} else
+					}
+					else
 					{
 						player.inventory.setItemStack(took);
 						player.updateHeldItem();

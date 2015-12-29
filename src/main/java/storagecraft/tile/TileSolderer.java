@@ -41,14 +41,16 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
 		if (newRecipe == null)
 		{
 			reset();
-		} else if (newRecipe != recipe && inventory.getStackInSlot(3) == null)
+		}
+		else if (newRecipe != recipe && inventory.getStackInSlot(3) == null)
 		{
 			recipe = newRecipe;
 			progress = 0;
 			working = true;
 
 			markDirty();
-		} else if (working)
+		}
+		else if (working)
 		{
 			progress++;
 

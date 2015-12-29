@@ -24,7 +24,8 @@ public class ContainerDrive extends ContainerBase
 			{
 				x = 71;
 				y += 18;
-			} else
+			}
+			else
 			{
 				x += 18;
 			}
@@ -50,7 +51,8 @@ public class ContainerDrive extends ContainerBase
 				{
 					return null;
 				}
-			} else if (!mergeItemStack(stack, 0, 8, false))
+			}
+			else if (!mergeItemStack(stack, 0, 8, false))
 			{
 				return null;
 			}
@@ -58,7 +60,8 @@ public class ContainerDrive extends ContainerBase
 			if (stack.stackSize == 0)
 			{
 				slot.putStack(null);
-			} else
+			}
+			else
 			{
 				slot.onSlotChanged();
 			}

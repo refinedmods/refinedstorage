@@ -65,7 +65,8 @@ public abstract class ContainerBase extends Container
 			if (clickedButton == 2 || player.inventory.getItemStack() == null)
 			{
 				slot.putStack(null);
-			} else if (slot.isItemValid(player.inventory.getItemStack()))
+			}
+			else if (slot.isItemValid(player.inventory.getItemStack()))
 			{
 				slot.putStack(player.inventory.getItemStack().copy());
 			}

@@ -85,10 +85,12 @@ public class TileCable extends TileBase
 				machines.add((TileMachine) tile);
 
 				visited.add(newPos);
-			} else if (tile instanceof TileCable && ((TileCable) tile).isEnabled())
+			}
+			else if (tile instanceof TileCable && ((TileCable) tile).isEnabled())
 			{
 				((TileCable) tile).addMachines(visited, machines, controller);
-			} else if (tile instanceof TileController && !controller.getPos().equals(newPos))
+			}
+			else if (tile instanceof TileController && !controller.getPos().equals(newPos))
 			{
 				worldObj.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), 4.5f, true);
 			}

@@ -75,7 +75,8 @@ public class GuiDetector extends GuiBase
 			{
 				StorageCraft.NETWORK.sendToServer(new MessageDetectorAmountUpdate(detector, result));
 			}
-		} else
+		}
+		else
 		{
 			super.keyTyped(character, keyCode);
 		}

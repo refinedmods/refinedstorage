@@ -49,7 +49,8 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 				if (!isActive())
 				{
 					disconnectAll();
-				} else
+				}
+				else
 				{
 					visitedCables.clear();
 
@@ -246,7 +247,8 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 				if (newStack == null)
 				{
 					newStack = took;
-				} else
+				}
+				else
 				{
 					newStack.stackSize += took.stackSize;
 				}

@@ -73,10 +73,12 @@ public class TileExporter extends TileMachine implements IInventory, ISidedInven
 								{
 									getController().push(took);
 								}
-							} else if (InventoryUtils.canPushToInventory(connectedInventory, took))
+							}
+							else if (InventoryUtils.canPushToInventory(connectedInventory, took))
 							{
 								InventoryUtils.pushToInventory(connectedInventory, took);
-							} else
+							}
+							else
 							{
 								getController().push(took);
 							}

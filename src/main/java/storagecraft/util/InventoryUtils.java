@@ -107,7 +107,8 @@ public class InventoryUtils
 		if (slot == null)
 		{
 			inventory.setInventorySlotContents(i, stack);
-		} else if (compareStackNoQuantity(slot, stack))
+		}
+		else if (compareStackNoQuantity(slot, stack))
 		{
 			slot.stackSize += stack.stackSize;
 		}
@@ -143,7 +144,8 @@ public class InventoryUtils
 				inventory.setInventorySlotContents(i, stack);
 
 				return;
-			} else if (compareStackNoQuantity(slot, stack))
+			}
+			else if (compareStackNoQuantity(slot, stack))
 			{
 				int toAdd = toGo;
 
@@ -175,7 +177,8 @@ public class InventoryUtils
 			if (slot == null)
 			{
 				return true;
-			} else if (compareStackNoQuantity(slot, stack))
+			}
+			else if (compareStackNoQuantity(slot, stack))
 			{
 				int toAdd = toGo;
 
