@@ -29,7 +29,7 @@ public class TileDetector extends TileMachine implements IInventory, ISidedInven
 	private int mode = MODE_EQUAL;
 	private int amount = 0;
 
-	private boolean providesPower = false;
+	private boolean powered = false;
 
 	public TileDetector()
 	{
@@ -49,7 +49,7 @@ public class TileDetector extends TileMachine implements IInventory, ISidedInven
 		{
 			ItemStack slot = inventory.getStackInSlot(0);
 
-			boolean lastProvidesPower = providesPower;
+			boolean lastPowered = powered;
 
 			if (slot != null)
 			{
@@ -64,13 +64,13 @@ public class TileDetector extends TileMachine implements IInventory, ISidedInven
 						switch (mode)
 						{
 							case MODE_UNDER:
-								providesPower = item.getQuantity() < amount;
+								powered = item.getQuantity() < amount;
 								break;
 							case MODE_EQUAL:
-								providesPower = item.getQuantity() == amount;
+								powered = item.getQuantity() == amount;
 								break;
 							case MODE_ABOVE:
-								providesPower = item.getQuantity() > amount;
+								powered = item.getQuantity() > amount;
 								break;
 						}
 
@@ -82,24 +82,24 @@ public class TileDetector extends TileMachine implements IInventory, ISidedInven
 				{
 					if (mode == MODE_UNDER && amount != 0)
 					{
-						providesPower = true;
+						powered = true;
 					}
 					else if (mode == MODE_EQUAL && amount == 0)
 					{
-						providesPower = true;
+						powered = true;
 					}
 					else
 					{
-						providesPower = false;
+						powered = false;
 					}
 				}
 			}
 			else
 			{
-				providesPower = false;
+				powered = false;
 			}
 
-			if (providesPower != lastProvidesPower)
+			if (powered != lastPowered)
 			{
 				worldObj.markBlockForUpdate(pos);
 				worldObj.notifyBlockOfStateChange(pos, StorageCraftBlocks.DETECTOR);
@@ -107,9 +107,9 @@ public class TileDetector extends TileMachine implements IInventory, ISidedInven
 		}
 	}
 
-	public boolean providesPower()
+	public boolean isPowered()
 	{
-		return providesPower;
+		return powered;
 	}
 
 	@Override
@@ -191,7 +191,7 @@ public class TileDetector extends TileMachine implements IInventory, ISidedInven
 		compare = buf.readInt();
 		mode = buf.readInt();
 		amount = buf.readInt();
-		providesPower = buf.readBoolean();
+		powered = buf.readBoolean();
 	}
 
 	@Override
@@ -202,7 +202,7 @@ public class TileDetector extends TileMachine implements IInventory, ISidedInven
 		buf.writeInt(compare);
 		buf.writeInt(mode);
 		buf.writeInt(amount);
-		buf.writeBoolean(providesPower);
+		buf.writeBoolean(powered);
 	}
 
 	@Override

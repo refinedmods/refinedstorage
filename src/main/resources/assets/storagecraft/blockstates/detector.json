@@ -1,0 +1,55 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "model": "orientable",
+        "textures": {
+            "side": "storagecraft:blocks/detector_unpowered",
+            "top": "storagecraft:blocks/detector_unpowered",
+            "front": "storagecraft:blocks/detector_unpowered"
+        }
+    },
+    "variants": {
+        "inventory": [
+            {
+                "y": 0
+            }
+        ],
+        "connected": {
+            "true": {
+            },
+            "false": {
+            }
+        },
+        "direction": {
+            "north": {
+                "y": 0
+            },
+            "east": {
+                "y": 90
+            },
+            "south": {
+                "y": 180
+            },
+            "west": {
+                "y": 270
+            },
+            "up": {
+                "x": 270
+            },
+            "down": {
+                "x": 90
+            }
+        },
+        "powered": {
+            "true": {
+                "textures": {
+                    "side": "storagecraft:blocks/detector_powered",
+                    "top": "storagecraft:blocks/detector_powered",
+                    "front": "storagecraft:blocks/detector_powered"
+                }
+            },
+            "false": {
+            }
+        }
+    }
+}

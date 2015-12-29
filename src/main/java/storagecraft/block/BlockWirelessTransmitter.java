@@ -14,7 +14,6 @@ import storagecraft.StorageCraft;
 import storagecraft.StorageCraftGUI;
 import storagecraft.tile.TileWirelessTransmitter;
 
-// @TODO: This texture behaves differently
 public class BlockWirelessTransmitter extends BlockMachine
 {
 	public static final PropertyBool WORKING = PropertyBool.create("working");
