@@ -9,6 +9,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import storagecraft.StorageCraftBlocks;
+import storagecraft.block.BlockController;
+import storagecraft.block.EnumControllerType;
 import storagecraft.storage.IStorage;
 import storagecraft.storage.IStorageProvider;
 import storagecraft.storage.StorageItem;
@@ -28,7 +30,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
 	private List<BlockPos> visitedCables = new ArrayList<BlockPos>();
 
-	private EnergyStorage energy = new EnergyStorage(1000);
+	private EnergyStorage energy = new EnergyStorage(32000);
 	private int energyUsage;
 
 	private boolean destroyed = false;
@@ -113,13 +115,24 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 				}
 			}
 
-			energy.extractEnergy(energyUsage, false);
+			switch (getType()){
+				case NORMAL:
+					energy.extractEnergy(energyUsage, false);
+					break;
+				case CREATIVE:
+					energy.setEnergyStored(energy.getMaxEnergyStored());
+					break;
+			}
 
 			if (lastEnergy != energy.getEnergyStored()) {
 				worldObj.markBlockForUpdate(pos);
 				worldObj.updateComparatorOutputLevel(pos, StorageCraftBlocks.CONTROLLER);
 			}
 		}
+	}
+
+	public EnumControllerType getType() {
+		return (EnumControllerType) worldObj.getBlockState(pos).getValue(BlockController.TYPE);
 	}
 
 	public void onDestroyed()

@@ -4,6 +4,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import storagecraft.StorageCraftBlocks;
 import storagecraft.StorageCraftItems;
+import storagecraft.block.EnumGridType;
 import storagecraft.item.ItemProcessor;
 
 public class SoldererRecipeCraftingGrid implements ISoldererRecipe
@@ -30,7 +31,7 @@ public class SoldererRecipeCraftingGrid implements ISoldererRecipe
 	@Override
 	public ItemStack getResult()
 	{
-		return new ItemStack(StorageCraftBlocks.GRID, 1, 1);
+		return new ItemStack(StorageCraftBlocks.GRID, 1, EnumGridType.CRAFTING.getId());
 	}
 
 	@Override

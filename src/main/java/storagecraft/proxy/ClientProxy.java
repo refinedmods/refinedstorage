@@ -11,6 +11,8 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import storagecraft.StorageCraftBlocks;
 import storagecraft.StorageCraftItems;
+import storagecraft.block.BlockController;
+import storagecraft.block.EnumControllerType;
 import storagecraft.block.EnumGridType;
 import storagecraft.item.ItemCore;
 import storagecraft.item.ItemProcessor;
@@ -106,6 +108,7 @@ public class ClientProxy extends CommonProxy
 		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.IMPORTER), 0, new ModelResourceLocation("storagecraft:importer", "inventory"));
 		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.EXTERNAL_STORAGE), 0, new ModelResourceLocation("storagecraft:external_storage", "inventory"));
 		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.DRIVE), 0, new ModelResourceLocation("storagecraft:drive", "inventory"));
-		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.CONTROLLER), 0, new ModelResourceLocation("storagecraft:controller", "inventory"));
+		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.CONTROLLER), EnumControllerType.NORMAL.getId(), new ModelResourceLocation("storagecraft:controller", "inventory"));
+		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.CONTROLLER), EnumControllerType.CREATIVE.getId(), new ModelResourceLocation("storagecraft:controller", "inventory"));
 	}
 }

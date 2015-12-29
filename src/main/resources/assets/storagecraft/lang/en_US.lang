@@ -1,6 +1,7 @@
 itemGroup.storagecraft=StorageCraft
 
-gui.storagecraft:controller=Controller
+gui.storagecraft:controller.0=Controller
+gui.storagecraft:controller.1=Creative Controller
 gui.storagecraft:grid=Grid
 gui.storagecraft:drive=Drive
 gui.storagecraft:external_storage=External Storage
@@ -56,7 +57,8 @@ sidebutton.storagecraft:detector.mode.0=Under the amount
 sidebutton.storagecraft:detector.mode.1=On the amount
 sidebutton.storagecraft:detector.mode.2=Above the amount
 
-block.storagecraft:controller.name=Controller
+block.storagecraft:controller.0.name=Controller
+block.storagecraft:controller.1.name=Creative Controller
 block.storagecraft:cable.0.name=Cable
 block.storagecraft:cable.1.name=Sensitive Cable
 block.storagecraft:grid.0.name=Grid

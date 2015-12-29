@@ -12,11 +12,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import storagecraft.StorageCraft;
 import storagecraft.StorageCraftBlocks;
 import storagecraft.StorageCraftItems;
+import storagecraft.block.EnumGridType;
 import storagecraft.gui.GuiHandler;
 import storagecraft.item.*;
 import storagecraft.network.*;
 import storagecraft.tile.*;
 import storagecraft.tile.solderer.*;
+import storagecraft.block.EnumControllerType;
 
 public class CommonProxy
 {
@@ -48,7 +50,7 @@ public class CommonProxy
 		GameRegistry.registerTileEntity(TileDestructor.class, "destructor");
 		GameRegistry.registerTileEntity(TileConstructor.class, "constructor");
 
-		GameRegistry.registerBlock(StorageCraftBlocks.CONTROLLER, "controller");
+		GameRegistry.registerBlock(StorageCraftBlocks.CONTROLLER, ItemBlockController.class, "controller");
 		GameRegistry.registerBlock(StorageCraftBlocks.CABLE, ItemBlockCable.class, "cable");
 		GameRegistry.registerBlock(StorageCraftBlocks.GRID, ItemBlockGrid.class, "grid");
 		GameRegistry.registerBlock(StorageCraftBlocks.DRIVE, "drive");
@@ -115,7 +117,7 @@ public class CommonProxy
 		);
 
 		// Controller
-		GameRegistry.addRecipe(new ItemStack(StorageCraftBlocks.CONTROLLER),
+		GameRegistry.addRecipe(new ItemStack(StorageCraftBlocks.CONTROLLER, 1, EnumControllerType.NORMAL.getId()),
 			"EDE",
 			"SRS",
 			"ESE",
@@ -154,7 +156,7 @@ public class CommonProxy
 		);
 
 		// Grid
-		GameRegistry.addRecipe(new ItemStack(StorageCraftBlocks.GRID, 1, 0),
+		GameRegistry.addRecipe(new ItemStack(StorageCraftBlocks.GRID, 1, EnumGridType.NORMAL.getId()),
 			"ECE",
 			"PMP",
 			"EDE",

@@ -46,7 +46,7 @@ public class GuiController extends GuiBase
 	@Override
 	public void drawForeground(int mouseX, int mouseY)
 	{
-		drawString(7, 7, t("gui.storagecraft:controller"));
+		drawString(7, 7, t("gui.storagecraft:controller." + controller.getType().getId()));
 		drawString(7, 87, t("container.inventory"));
 
 		drawString(31, 20, t("misc.storagecraft:energy_usage", controller.getEnergyUsage()));
