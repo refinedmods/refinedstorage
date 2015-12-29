@@ -1,0 +1,47 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "model": "orientable",
+        "textures": {
+            "side": "storagecraft:blocks/side",
+            "top": "storagecraft:blocks/side",
+            "front": "storagecraft:blocks/exporter"
+        }
+    },
+    "variants": {
+        "inventory": [
+            {
+                "y": 0
+            },
+            {
+                "y": 0
+            }
+        ],
+        "connected": {
+            "true": {
+            },
+            "false": {
+            }
+        },
+        "direction": {
+            "north": {
+                "y": 0
+            },
+            "east": {
+                "y": 90
+            },
+            "south": {
+                "y": 180
+            },
+            "west": {
+                "y": 270
+            },
+            "up": {
+                "x": 270
+            },
+            "down": {
+                "x": 90
+            }
+        }
+    }
+}
