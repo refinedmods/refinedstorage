@@ -106,5 +106,6 @@ public class ClientProxy extends CommonProxy
 		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.IMPORTER), 0, new ModelResourceLocation("storagecraft:importer", "inventory"));
 		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.EXTERNAL_STORAGE), 0, new ModelResourceLocation("storagecraft:external_storage", "inventory"));
 		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.DRIVE), 0, new ModelResourceLocation("storagecraft:drive", "inventory"));
+		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.CONTROLLER), 0, new ModelResourceLocation("storagecraft:controller", "inventory"));
 	}
 }

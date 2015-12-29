@@ -8,6 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import storagecraft.StorageCraftBlocks;
 import storagecraft.storage.IStorage;
 import storagecraft.storage.IStorageProvider;
 import storagecraft.storage.StorageItem;
@@ -27,7 +28,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
 	private List<BlockPos> visitedCables = new ArrayList<BlockPos>();
 
-	private EnergyStorage energy = new EnergyStorage(32000);
+	private EnergyStorage energy = new EnergyStorage(1000);
 	private int energyUsage;
 
 	private boolean destroyed = false;
@@ -44,6 +45,8 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
 		if (!worldObj.isRemote)
 		{
+			int lastEnergy = energy.getEnergyStored();
+
 			if (ticks % 40 == 0)
 			{
 				if (!isActive())
@@ -111,6 +114,11 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 			}
 
 			energy.extractEnergy(energyUsage, false);
+
+			if (lastEnergy != energy.getEnergyStored()) {
+				worldObj.markBlockForUpdate(pos);
+				worldObj.updateComparatorOutputLevel(pos, StorageCraftBlocks.CONTROLLER);
+			}
 		}
 	}
 
@@ -326,8 +334,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
 	public boolean isActive()
 	{
-		return true;
-		// @TODO: return energy.getEnergyStored() >= getEnergyUsage() && redstoneMode.isEnabled(worldObj, pos);
+		return energy.getEnergyStored() >= getEnergyUsage() && redstoneMode.isEnabled(worldObj, pos);
 	}
 
 	@Override

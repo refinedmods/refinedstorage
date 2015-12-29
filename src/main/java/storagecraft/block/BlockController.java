@@ -16,7 +16,7 @@ import storagecraft.tile.TileController;
 
 public class BlockController extends BlockBase
 {
-	public static final PropertyInteger ENERGY = PropertyInteger.create("energy", 0, 15);
+	public static final PropertyInteger ENERGY = PropertyInteger.create("energy", 0, 8);
 
 	public BlockController()
 	{
@@ -37,7 +37,7 @@ public class BlockController extends BlockBase
 	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
 		return super.getActualState(state, world, pos)
-			.withProperty(ENERGY, ((TileController) world.getTileEntity(pos)).getEnergyScaled(15));
+			.withProperty(ENERGY, ((TileController) world.getTileEntity(pos)).getEnergyScaled(8));
 	}
 
 	@Override
