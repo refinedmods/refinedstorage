@@ -1,11 +1,12 @@
 package storagecraft.storage;
 
-import java.util.List;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import storagecraft.item.ItemStorageCell;
+
+import java.util.List;
 
 public class CellStorage implements IStorage
 {

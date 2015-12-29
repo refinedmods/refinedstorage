@@ -7,28 +7,8 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import storagecraft.StorageCraftGUI;
-import storagecraft.container.ContainerConstructor;
-import storagecraft.container.ContainerController;
-import storagecraft.container.ContainerDestructor;
-import storagecraft.container.ContainerDetector;
-import storagecraft.container.ContainerDrive;
-import storagecraft.container.ContainerExporter;
-import storagecraft.container.ContainerGrid;
-import storagecraft.container.ContainerImporter;
-import storagecraft.container.ContainerSolderer;
-import storagecraft.container.ContainerExternalStorage;
-import storagecraft.container.ContainerWirelessTransmitter;
-import storagecraft.tile.TileConstructor;
-import storagecraft.tile.TileController;
-import storagecraft.tile.TileDestructor;
-import storagecraft.tile.TileDetector;
-import storagecraft.tile.TileDrive;
-import storagecraft.tile.TileExporter;
-import storagecraft.tile.TileGrid;
-import storagecraft.tile.TileImporter;
-import storagecraft.tile.TileSolderer;
-import storagecraft.tile.TileExternalStorage;
-import storagecraft.tile.TileWirelessTransmitter;
+import storagecraft.container.*;
+import storagecraft.tile.*;
 
 public class GuiHandler implements IGuiHandler
 {

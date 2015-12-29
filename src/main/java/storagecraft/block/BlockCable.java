@@ -1,7 +1,5 @@
 package storagecraft.block;
 
-import java.util.List;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockState;
@@ -12,6 +10,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import storagecraft.tile.TileCable;
+
+import java.util.List;
 
 public class BlockCable extends BlockBase
 {
@@ -26,10 +26,10 @@ public class BlockCable extends BlockBase
 	protected BlockState createBlockState()
 	{
 		return new BlockState(this, new IProperty[]
-		{
-			DIRECTION,
-			SENSITIVE
-		});
+			{
+				DIRECTION,
+				SENSITIVE
+			});
 	}
 
 	@Override
@@ -51,7 +51,8 @@ public class BlockCable extends BlockBase
 	}
 
 	@Override
-	public TileEntity createTileEntity(World world, IBlockState state) {
+	public TileEntity createTileEntity(World world, IBlockState state)
+	{
 		return new TileCable();
 	}
 

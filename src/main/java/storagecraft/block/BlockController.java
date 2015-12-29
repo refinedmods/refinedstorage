@@ -27,10 +27,10 @@ public class BlockController extends BlockBase
 	protected BlockState createBlockState()
 	{
 		return new BlockState(this, new IProperty[]
-		{
-			DIRECTION,
-			ENERGY
-		});
+			{
+				DIRECTION,
+				ENERGY
+			});
 	}
 
 	@Override
@@ -47,7 +47,8 @@ public class BlockController extends BlockBase
 	}
 
 	@Override
-	public TileEntity createTileEntity(World world, IBlockState state) {
+	public TileEntity createTileEntity(World world, IBlockState state)
+	{
 		return new TileController();
 	}
 

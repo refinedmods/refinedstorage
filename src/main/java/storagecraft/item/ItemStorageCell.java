@@ -1,6 +1,5 @@
 package storagecraft.item;
 
-import java.util.List;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -10,6 +9,8 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import storagecraft.storage.CellStorage;
+
+import java.util.List;
 
 public class ItemStorageCell extends ItemBase
 {
@@ -43,8 +44,7 @@ public class ItemStorageCell extends ItemBase
 		if (getCapacity(cell) == -1)
 		{
 			list.add(String.format(StatCollector.translateToLocal("misc.storagecraft:storage_cell_stored"), getStored(cell)));
-		}
-		else
+		} else
 		{
 			list.add(String.format(StatCollector.translateToLocal("misc.storagecraft:storage_cell_stored_capacity"), getStored(cell), getCapacity(cell)));
 		}

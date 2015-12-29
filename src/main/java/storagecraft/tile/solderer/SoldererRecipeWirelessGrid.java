@@ -20,12 +20,10 @@ public class SoldererRecipeWirelessGrid implements ISoldererRecipe
 		if (row == 0)
 		{
 			return new ItemStack(StorageCraftItems.WIRELESS_GRID_PLATE);
-		}
-		else if (row == 1)
+		} else if (row == 1)
 		{
 			return new ItemStack(StorageCraftBlocks.GRID, 1, type);
-		}
-		else if (row == 2)
+		} else if (row == 2)
 		{
 			return new ItemStack(StorageCraftItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED);
 		}

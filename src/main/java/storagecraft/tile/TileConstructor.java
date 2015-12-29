@@ -205,8 +205,8 @@ public class TileConstructor extends TileMachine implements IInventory, ISidedIn
 	public int[] getSlotsForFace(EnumFacing side)
 	{
 		return new int[]
-		{
-		};
+			{
+			};
 	}
 
 	@Override

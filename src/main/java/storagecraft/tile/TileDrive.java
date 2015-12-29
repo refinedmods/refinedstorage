@@ -1,6 +1,5 @@
 package storagecraft.tile;
 
-import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -11,6 +10,8 @@ import storagecraft.storage.CellStorage;
 import storagecraft.storage.IStorage;
 import storagecraft.storage.IStorageProvider;
 import storagecraft.util.InventoryUtils;
+
+import java.util.List;
 
 public class TileDrive extends TileMachine implements IInventory, IStorageProvider
 {

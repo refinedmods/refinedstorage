@@ -1,6 +1,5 @@
 package storagecraft.item;
 
-import java.util.List;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -15,6 +14,8 @@ import storagecraft.StorageCraftGUI;
 import storagecraft.block.EnumGridType;
 import storagecraft.tile.TileGrid;
 import storagecraft.tile.TileWirelessTransmitter;
+
+import java.util.List;
 
 public class ItemWirelessGrid extends ItemBase
 {
@@ -75,28 +76,23 @@ public class ItemWirelessGrid extends ItemBase
 							if (grid == null)
 							{
 								player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("misc.storagecraft:wireless_grid.no_grid." + stack.getItemDamage())));
-							}
-							else
+							} else
 							{
 								player.openGui(StorageCraft.INSTANCE, StorageCraftGUI.GRID, world, grid.getPos().getX(), grid.getPos().getY(), grid.getPos().getZ());
 							}
-						}
-						else
+						} else
 						{
 							player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("misc.storagecraft:wireless_grid.not_working")));
 						}
-					}
-					else
+					} else
 					{
 						player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("misc.storagecraft:wireless_grid.not_found")));
 					}
-				}
-				else
+				} else
 				{
 					player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("misc.storagecraft:wireless_grid.out_of_range")));
 				}
-			}
-			else
+			} else
 			{
 				player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("misc.storagecraft:wireless_grid.not_set." + stack.getItemDamage())));
 			}

@@ -1,13 +1,6 @@
 package storagecraft;
 
-import storagecraft.item.ItemCore;
-import storagecraft.item.ItemProcessor;
-import storagecraft.item.ItemSilicon;
-import storagecraft.item.ItemStorageCell;
-import storagecraft.item.ItemQuartzEnrichedIron;
-import storagecraft.item.ItemStoragePart;
-import storagecraft.item.ItemWirelessGrid;
-import storagecraft.item.ItemWirelessGridPlate;
+import storagecraft.item.*;
 
 public final class StorageCraftItems
 {

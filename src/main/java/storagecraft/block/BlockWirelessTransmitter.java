@@ -8,7 +8,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import storagecraft.StorageCraft;
 import storagecraft.StorageCraftGUI;
-import storagecraft.tile.TileCable;
 import storagecraft.tile.TileWirelessTransmitter;
 
 // @TODO: This texture behaves differently
@@ -20,7 +19,8 @@ public class BlockWirelessTransmitter extends BlockMachine
 	}
 
 	@Override
-	public TileEntity createTileEntity(World world, IBlockState state) {
+	public TileEntity createTileEntity(World world, IBlockState state)
+	{
 		return new TileWirelessTransmitter();
 	}
 

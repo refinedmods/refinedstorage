@@ -19,7 +19,8 @@ public class BlockDetector extends BlockMachine
 	}
 
 	@Override
-	public TileEntity createTileEntity(World world, IBlockState state) {
+	public TileEntity createTileEntity(World world, IBlockState state)
+	{
 		return new TileDetector();
 	}
 

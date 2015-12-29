@@ -1,12 +1,13 @@
 package storagecraft.container;
 
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import storagecraft.container.slot.SlotSpecimen;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class ContainerBase extends Container
 {
@@ -64,8 +65,7 @@ public abstract class ContainerBase extends Container
 			if (clickedButton == 2 || player.inventory.getItemStack() == null)
 			{
 				slot.putStack(null);
-			}
-			else if (slot.isItemValid(player.inventory.getItemStack()))
+			} else if (slot.isItemValid(player.inventory.getItemStack()))
 			{
 				slot.putStack(player.inventory.getItemStack().copy());
 			}

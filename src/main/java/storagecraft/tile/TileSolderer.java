@@ -41,16 +41,14 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
 		if (newRecipe == null)
 		{
 			reset();
-		}
-		else if (newRecipe != recipe && inventory.getStackInSlot(3) == null)
+		} else if (newRecipe != recipe && inventory.getStackInSlot(3) == null)
 		{
 			recipe = newRecipe;
 			progress = 0;
 			working = true;
 
 			markDirty();
-		}
-		else if (working)
+		} else if (working)
 		{
 			progress++;
 
@@ -276,16 +274,16 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
 		if (side != EnumFacing.DOWN)
 		{
 			return new int[]
-			{
-				0, 1, 2
-			};
+				{
+					0, 1, 2
+				};
 		}
 
 		// On the bottom we can only reach the output slot
 		return new int[]
-		{
-			3
-		};
+			{
+				3
+			};
 	}
 
 	@Override

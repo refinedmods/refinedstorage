@@ -83,18 +83,15 @@ public class TileDetector extends TileMachine implements IInventory, ISidedInven
 					if (mode == MODE_UNDER && amount != 0)
 					{
 						providesPower = true;
-					}
-					else if (mode == MODE_EQUAL && amount == 0)
+					} else if (mode == MODE_EQUAL && amount == 0)
 					{
 						providesPower = true;
-					}
-					else
+					} else
 					{
 						providesPower = false;
 					}
 				}
-			}
-			else
+			} else
 			{
 				providesPower = false;
 			}
@@ -311,8 +308,8 @@ public class TileDetector extends TileMachine implements IInventory, ISidedInven
 	public int[] getSlotsForFace(EnumFacing side)
 	{
 		return new int[]
-		{
-		};
+			{
+			};
 	}
 
 	@Override

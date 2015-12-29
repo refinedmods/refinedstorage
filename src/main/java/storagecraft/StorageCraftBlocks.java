@@ -1,18 +1,6 @@
 package storagecraft;
 
-import storagecraft.block.BlockCable;
-import storagecraft.block.BlockConstructor;
-import storagecraft.block.BlockController;
-import storagecraft.block.BlockDestructor;
-import storagecraft.block.BlockDetector;
-import storagecraft.block.BlockDrive;
-import storagecraft.block.BlockExporter;
-import storagecraft.block.BlockGrid;
-import storagecraft.block.BlockImporter;
-import storagecraft.block.BlockMachineCasing;
-import storagecraft.block.BlockSolderer;
-import storagecraft.block.BlockExternalStorage;
-import storagecraft.block.BlockWirelessTransmitter;
+import storagecraft.block.*;
 
 public final class StorageCraftBlocks
 {

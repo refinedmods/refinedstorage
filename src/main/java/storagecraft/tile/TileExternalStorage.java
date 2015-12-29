@@ -1,6 +1,5 @@
 package storagecraft.tile;
 
-import java.util.List;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -8,6 +7,8 @@ import storagecraft.storage.IStorage;
 import storagecraft.storage.IStorageProvider;
 import storagecraft.storage.StorageItem;
 import storagecraft.util.InventoryUtils;
+
+import java.util.List;
 
 public class TileExternalStorage extends TileMachine implements IStorageProvider, IStorage
 {

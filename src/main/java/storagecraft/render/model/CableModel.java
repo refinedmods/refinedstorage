@@ -58,8 +58,7 @@ public class CableModel extends ModelBase
 		if (cable.getItemDamage() == 1)
 		{
 			Minecraft.getMinecraft().renderEngine.bindTexture(CABLE_UNPOWERED_RESOURCE);
-		}
-		else
+		} else
 		{
 			Minecraft.getMinecraft().renderEngine.bindTexture(CABLE_RESOURCE);
 		}
@@ -82,13 +81,11 @@ public class CableModel extends ModelBase
 			if (cable.isPowered())
 			{
 				Minecraft.getMinecraft().renderEngine.bindTexture(CABLE_POWERED_RESOURCE);
-			}
-			else
+			} else
 			{
 				Minecraft.getMinecraft().renderEngine.bindTexture(CABLE_UNPOWERED_RESOURCE);
 			}
-		}
-		else
+		} else
 		{
 			Minecraft.getMinecraft().renderEngine.bindTexture(CABLE_RESOURCE);
 		}

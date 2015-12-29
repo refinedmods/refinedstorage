@@ -73,12 +73,10 @@ public class TileExporter extends TileMachine implements IInventory, ISidedInven
 								{
 									getController().push(took);
 								}
-							}
-							else if (InventoryUtils.canPushToInventory(connectedInventory, took))
+							} else if (InventoryUtils.canPushToInventory(connectedInventory, took))
 							{
 								InventoryUtils.pushToInventory(connectedInventory, took);
-							}
-							else
+							} else
 							{
 								getController().push(took);
 							}
@@ -248,8 +246,8 @@ public class TileExporter extends TileMachine implements IInventory, ISidedInven
 	public int[] getSlotsForFace(EnumFacing side)
 	{
 		return new int[]
-		{
-		};
+			{
+			};
 	}
 
 	@Override

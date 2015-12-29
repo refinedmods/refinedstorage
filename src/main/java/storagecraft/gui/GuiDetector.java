@@ -1,7 +1,6 @@
 package storagecraft.gui;
 
 import com.google.common.primitives.Ints;
-import java.io.IOException;
 import net.minecraft.client.gui.GuiTextField;
 import storagecraft.StorageCraft;
 import storagecraft.container.ContainerDetector;
@@ -10,6 +9,8 @@ import storagecraft.gui.sidebutton.SideButtonDetectorMode;
 import storagecraft.network.MessageDetectorAmountUpdate;
 import storagecraft.tile.TileDetector;
 import storagecraft.util.InventoryUtils;
+
+import java.io.IOException;
 
 public class GuiDetector extends GuiBase
 {
@@ -74,8 +75,7 @@ public class GuiDetector extends GuiBase
 			{
 				StorageCraft.NETWORK.sendToServer(new MessageDetectorAmountUpdate(detector, result));
 			}
-		}
-		else
+		} else
 		{
 			super.keyTyped(character, keyCode);
 		}

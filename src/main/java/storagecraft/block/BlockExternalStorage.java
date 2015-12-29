@@ -8,7 +8,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import storagecraft.StorageCraft;
 import storagecraft.StorageCraftGUI;
-import storagecraft.tile.TileCable;
 import storagecraft.tile.TileExternalStorage;
 
 public class BlockExternalStorage extends BlockMachine
@@ -19,7 +18,8 @@ public class BlockExternalStorage extends BlockMachine
 	}
 
 	@Override
-	public TileEntity createTileEntity(World world, IBlockState state) {
+	public TileEntity createTileEntity(World world, IBlockState state)
+	{
 		return new TileExternalStorage();
 	}
 

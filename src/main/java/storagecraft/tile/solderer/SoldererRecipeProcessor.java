@@ -28,12 +28,10 @@ public class SoldererRecipeProcessor implements ISoldererRecipe
 				case ItemProcessor.TYPE_ADVANCED:
 					return new ItemStack(StorageCraftItems.PROCESSOR, 1, ItemProcessor.TYPE_PRINTED_ADVANCED);
 			}
-		}
-		else if (row == 1)
+		} else if (row == 1)
 		{
 			return new ItemStack(Items.redstone);
-		}
-		else if (row == 2)
+		} else if (row == 2)
 		{
 			return new ItemStack(StorageCraftItems.PROCESSOR, 1, ItemProcessor.TYPE_PRINTED_SILICON);
 		}

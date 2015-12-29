@@ -39,8 +39,7 @@ public class ContainerWirelessTransmitter extends ContainerBase
 				{
 					return null;
 				}
-			}
-			else if (!mergeItemStack(stack, 0, 3, false))
+			} else if (!mergeItemStack(stack, 0, 3, false))
 			{
 				return null;
 			}
@@ -48,8 +47,7 @@ public class ContainerWirelessTransmitter extends ContainerBase
 			if (stack.stackSize == 0)
 			{
 				slot.putStack(null);
-			}
-			else
+			} else
 			{
 				slot.onSlotChanged();
 			}
