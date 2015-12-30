@@ -11,8 +11,8 @@ import storagecraft.tile.TileCable;
 public class CableModel extends ModelBase
 {
 	public static final ResourceLocation CABLE_RESOURCE = new ResourceLocation("storagecraft:textures/blocks/cable.png");
-	public static final ResourceLocation CABLE_UNPOWERED_RESOURCE = new ResourceLocation("storagecraft:textures/blocks/cableUnpowered.png");
-	public static final ResourceLocation CABLE_POWERED_RESOURCE = new ResourceLocation("storagecraft:textures/blocks/cablePowered.png");
+	public static final ResourceLocation CABLE_UNPOWERED_RESOURCE = new ResourceLocation("storagecraft:textures/blocks/cable_sensitive_unpowered.png");
+	public static final ResourceLocation CABLE_POWERED_RESOURCE = new ResourceLocation("storagecraft:textures/blocks/cable_sensitive_powered.png");
 
 	private ModelRenderer core;
 	private ModelRenderer up;

@@ -1,6 +1,8 @@
 package storagecraft.item;
 
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -35,10 +37,8 @@ public class ItemWirelessGrid extends ItemBase
 	@Override
 	public void getSubItems(Item item, CreativeTabs tab, List list)
 	{
-		for (int i = 0; i < 2; ++i)
-		{
-			list.add(new ItemStack(item, 1, i));
-		}
+		list.add(new ItemStack(item, 1, 0));
+		list.add(new ItemStack(item, 1, 1));
 	}
 
 	@Override
@@ -106,32 +106,27 @@ public class ItemWirelessGrid extends ItemBase
 		return stack;
 	}
 
-	public boolean isCrafting(ItemStack stack)
-	{
-		return stack.getItemDamage() == 1;
-	}
-
-	public int getX(ItemStack stack)
+	public static int getX(ItemStack stack)
 	{
 		return stack.getTagCompound().getInteger(NBT_WIRELESS_TRANSMITTER_X);
 	}
 
-	public int getY(ItemStack stack)
+	public static int getY(ItemStack stack)
 	{
 		return stack.getTagCompound().getInteger(NBT_WIRELESS_TRANSMITTER_Y);
 	}
 
-	public int getZ(ItemStack stack)
+	public static int getZ(ItemStack stack)
 	{
 		return stack.getTagCompound().getInteger(NBT_WIRELESS_TRANSMITTER_Z);
 	}
 
-	public boolean isInRange(ItemStack stack, EntityPlayer player)
+	public static boolean isInRange(ItemStack stack, EntityPlayer player)
 	{
 		return (int) Math.sqrt(Math.pow(getX(stack) - player.posX, 2) + Math.pow(getY(stack) - player.posY, 2) + Math.pow(getZ(stack) - player.posZ, 2)) < 64;
 	}
 
-	public boolean isValid(ItemStack stack)
+	public static boolean isValid(ItemStack stack)
 	{
 		return stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_WIRELESS_TRANSMITTER_X) && stack.getTagCompound().hasKey(NBT_WIRELESS_TRANSMITTER_Y) && stack.getTagCompound().hasKey(NBT_WIRELESS_TRANSMITTER_Z);
 	}

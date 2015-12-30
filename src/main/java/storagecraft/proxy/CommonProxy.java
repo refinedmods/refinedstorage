@@ -64,8 +64,8 @@ public class CommonProxy
 		GameRegistry.registerBlock(StorageCraftBlocks.DESTRUCTOR, "destructor");
 		GameRegistry.registerBlock(StorageCraftBlocks.CONSTRUCTOR, "constructor");
 
-		GameRegistry.registerItem(StorageCraftItems.STORAGE_CELL, "storageCell");
-		GameRegistry.registerItem(StorageCraftItems.WIRELESS_GRID, "wirelessGrid");
+		GameRegistry.registerItem(StorageCraftItems.STORAGE_CELL, "storage_cell");
+		GameRegistry.registerItem(StorageCraftItems.WIRELESS_GRID, "wireless_grid");
 		GameRegistry.registerItem(StorageCraftItems.WIRELESS_GRID_PLATE, "wireless_grid_plate");
 		GameRegistry.registerItem(StorageCraftItems.QUARTZ_ENRICHED_IRON, "quartz_enriched_iron");
 		GameRegistry.registerItem(StorageCraftItems.CORE, "core");
