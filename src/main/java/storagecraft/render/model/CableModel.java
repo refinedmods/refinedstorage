@@ -53,28 +53,6 @@ public class CableModel extends ModelBase
 		west.setTextureSize(16, 16);
 	}
 
-	public void render(ItemStack cable, float x)
-	{
-		if (cable.getItemDamage() == 1)
-		{
-			Minecraft.getMinecraft().renderEngine.bindTexture(CABLE_UNPOWERED_RESOURCE);
-		}
-		else
-		{
-			Minecraft.getMinecraft().renderEngine.bindTexture(CABLE_RESOURCE);
-		}
-
-		core.render(x);
-
-		if (cable.getItemDamage() == 1)
-		{
-			Minecraft.getMinecraft().renderEngine.bindTexture(CABLE_RESOURCE);
-		}
-
-		north.render(x);
-		south.render(x);
-	}
-
 	public void render(TileCable cable, float x)
 	{
 		if (cable.isSensitiveCable())

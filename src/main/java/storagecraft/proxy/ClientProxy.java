@@ -13,12 +13,10 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import storagecraft.StorageCraftBlocks;
 import storagecraft.StorageCraftItems;
-import storagecraft.block.BlockController;
 import storagecraft.block.EnumControllerType;
 import storagecraft.block.EnumGridType;
 import storagecraft.item.*;
 import storagecraft.render.BlockCableRenderer;
-import storagecraft.render.ItemCableRenderer;
 import storagecraft.tile.TileCable;
 
 public class ClientProxy extends CommonProxy
@@ -69,8 +67,6 @@ public class ClientProxy extends CommonProxy
 		);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCable.class, new BlockCableRenderer());
-
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(StorageCraftBlocks.CABLE), new ItemCableRenderer());
 	}
 
 	@Override
