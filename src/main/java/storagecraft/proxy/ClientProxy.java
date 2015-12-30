@@ -63,6 +63,11 @@ public class ClientProxy extends CommonProxy
 			"storagecraft:wireless_grid_disconnected"
 		);
 
+		ModelBakery.addVariantName(Item.getItemFromBlock(StorageCraftBlocks.CABLE),
+			"storagecraft:cable",
+			"storagecraft:cable_sensitive"
+		);
+
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCable.class, new BlockCableRenderer());
 
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(StorageCraftBlocks.CABLE), new ItemCableRenderer());
@@ -127,5 +132,7 @@ public class ClientProxy extends CommonProxy
 		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.SOLDERER), 0, new ModelResourceLocation("storagecraft:solderer", "inventory"));
 		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.WIRELESS_TRANSMITTER), 0, new ModelResourceLocation("storagecraft:wireless_transmitter", "inventory"));
 		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.DETECTOR), 0, new ModelResourceLocation("storagecraft:detector", "inventory"));
+		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.CABLE), 0, new ModelResourceLocation("storagecraft:cable", "inventory"));
+		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.CABLE), 1, new ModelResourceLocation("storagecraft:cable_sensitive", "inventory"));
 	}
 }
