@@ -47,6 +47,21 @@ public class BlockDetector extends BlockMachine
 		return new TileDetector();
 	}
 
+	public int isProvidingWeakPower(IBlockAccess world, BlockPos pos, IBlockState state, EnumFacing side)
+	{
+		return ((TileDetector) world.getTileEntity(pos)).isPowered() ? 15 : 0;
+	}
+
+	public int isProvidingStrongPower(IBlockAccess world, BlockPos pos, IBlockState state, EnumFacing side)
+	{
+		return ((TileDetector) world.getTileEntity(pos)).isPowered() ? 15 : 0;
+	}
+
+	public boolean canProvidePower()
+	{
+		return true;
+	}
+
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
