@@ -101,8 +101,7 @@ public class TileDetector extends TileMachine implements IInventory, ISidedInven
 
 			if (powered != lastPowered)
 			{
-				worldObj.markBlockForUpdate(pos);
-				worldObj.notifyBlockOfStateChange(pos, StorageCraftBlocks.DETECTOR);
+				worldObj.notifyBlockOfStateChange(pos, StorageCraftBlocks.DETECTOR); // @TODO: redstone update
 			}
 		}
 	}
@@ -191,7 +190,14 @@ public class TileDetector extends TileMachine implements IInventory, ISidedInven
 		compare = buf.readInt();
 		mode = buf.readInt();
 		amount = buf.readInt();
+
+		boolean lastPowered = powered;
+
 		powered = buf.readBoolean();
+
+		if (powered != lastPowered) {
+			worldObj.markBlockForUpdate(pos);
+		}
 	}
 
 	@Override

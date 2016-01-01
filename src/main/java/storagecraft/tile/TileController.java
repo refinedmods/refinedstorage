@@ -125,7 +125,6 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 			}
 
 			if (lastEnergy != energy.getEnergyStored()) {
-				worldObj.markBlockForUpdate(pos);
 				worldObj.updateComparatorOutputLevel(pos, StorageCraftBlocks.CONTROLLER);
 			}
 		}
@@ -367,7 +366,14 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 	@Override
 	public void fromBytes(ByteBuf buf)
 	{
+		int lastEnergy = energy.getEnergyStored();
+
 		energy.setEnergyStored(buf.readInt());
+
+		if (lastEnergy != energy.getEnergyStored()) {
+			worldObj.markBlockForUpdate(pos);
+		}
+
 		energyUsage = buf.readInt();
 
 		redstoneMode = RedstoneMode.getById(buf.readInt());
