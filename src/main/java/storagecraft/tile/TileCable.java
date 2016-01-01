@@ -4,6 +4,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import storagecraft.StorageCraftBlocks;
 import storagecraft.block.BlockCable;
 
 import java.util.List;
@@ -34,7 +35,12 @@ public class TileCable extends TileBase
 
 	public boolean isSensitiveCable()
 	{
-		return (Boolean) worldObj.getBlockState(pos).getValue(BlockCable.SENSITIVE);
+		if (worldObj.getBlockState(pos).getBlock() == StorageCraftBlocks.CABLE)
+		{
+			return (Boolean) worldObj.getBlockState(pos).getValue(BlockCable.SENSITIVE);
+		}
+
+		return false;
 	}
 
 	public boolean isEnabled()
