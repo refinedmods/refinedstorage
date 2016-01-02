@@ -59,8 +59,7 @@ sidebutton.storagecraft:detector.mode.2=Above the amount
 
 block.storagecraft:controller.0.name=Controller
 block.storagecraft:controller.1.name=Creative Controller
-block.storagecraft:cable.0.name=Cable
-block.storagecraft:cable.1.name=Sensitive Cable
+block.storagecraft:cable.name=Cable
 block.storagecraft:grid.0.name=Grid
 block.storagecraft:grid.1.name=Crafting Grid
 block.storagecraft:drive.name=Drive

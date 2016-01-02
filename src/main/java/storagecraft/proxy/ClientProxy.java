@@ -7,10 +7,16 @@ import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import storagecraft.StorageCraft;
 import storagecraft.StorageCraftBlocks;
 import storagecraft.StorageCraftItems;
 import storagecraft.block.EnumControllerType;
@@ -61,18 +67,30 @@ public class ClientProxy extends CommonProxy
 			"storagecraft:wireless_grid_disconnected"
 		);
 
-		ModelBakery.addVariantName(Item.getItemFromBlock(StorageCraftBlocks.CABLE),
-			"storagecraft:cable",
-			"storagecraft:cable_sensitive"
-		);
+		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(StorageCraftBlocks.CABLE), 0, TileCable.class);
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(StorageCraftBlocks.CABLE), 0, new ModelResourceLocation("storagecraft:cable", "inventory"));
+		MinecraftForge.EVENT_BUS.register(BakeEventHandler.instance);
+	}
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileCable.class, new BlockCableRenderer());
+	public static class BakeEventHandler
+	{
+		public static final BakeEventHandler instance = new BakeEventHandler();
+
+		public BakeEventHandler() {}
+
+		@SubscribeEvent
+		public void onModelBakeEvent(ModelBakeEvent event)
+		{
+			event.modelManager.getBlockModelShapes().registerBuiltInBlocks(StorageCraftBlocks.CABLE);
+		}
 	}
 
 	@Override
 	public void init(FMLInitializationEvent e)
 	{
 		super.init(e);
+
+		ClientRegistry.bindTileEntitySpecialRenderer(TileCable.class, new BlockCableRenderer());
 
 		ItemModelMesher mesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
 
@@ -128,7 +146,5 @@ public class ClientProxy extends CommonProxy
 		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.SOLDERER), 0, new ModelResourceLocation("storagecraft:solderer", "inventory"));
 		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.WIRELESS_TRANSMITTER), 0, new ModelResourceLocation("storagecraft:wireless_transmitter", "inventory"));
 		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.DETECTOR), 0, new ModelResourceLocation("storagecraft:detector", "inventory"));
-		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.CABLE), 0, new ModelResourceLocation("storagecraft:cable", "inventory"));
-		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.CABLE), 1, new ModelResourceLocation("storagecraft:cable_sensitive", "inventory"));
 	}
 }

@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import storagecraft.tile.TileCable;
@@ -11,8 +12,6 @@ import storagecraft.tile.TileCable;
 public class CableModel extends ModelBase
 {
 	public static final ResourceLocation CABLE_RESOURCE = new ResourceLocation("storagecraft:textures/blocks/cable.png");
-	public static final ResourceLocation CABLE_UNPOWERED_RESOURCE = new ResourceLocation("storagecraft:textures/blocks/cable_sensitive_unpowered.png");
-	public static final ResourceLocation CABLE_POWERED_RESOURCE = new ResourceLocation("storagecraft:textures/blocks/cable_sensitive_powered.png");
 
 	private ModelRenderer core;
 	private ModelRenderer up;
@@ -53,59 +52,45 @@ public class CableModel extends ModelBase
 		west.setTextureSize(16, 16);
 	}
 
-	public void render(TileCable cable, float x)
+	public void render(TileEntity tile)
 	{
-		if (cable.isSensitiveCable())
+		Minecraft.getMinecraft().renderEngine.bindTexture(CABLE_RESOURCE);
+
+		core.render(0.0625F);
+
+		if (tile != null)
 		{
-			if (cable.isPowered())
+			TileCable cable = (TileCable) tile;
+
+			if (cable.hasConnection(EnumFacing.UP))
 			{
-				Minecraft.getMinecraft().renderEngine.bindTexture(CABLE_POWERED_RESOURCE);
+				up.render(0.0625F);
 			}
-			else
+
+			if (cable.hasConnection(EnumFacing.DOWN))
 			{
-				Minecraft.getMinecraft().renderEngine.bindTexture(CABLE_UNPOWERED_RESOURCE);
+				down.render(0.0625F);
 			}
-		}
-		else
-		{
-			Minecraft.getMinecraft().renderEngine.bindTexture(CABLE_RESOURCE);
-		}
 
-		core.render(x);
+			if (cable.hasConnection(EnumFacing.NORTH))
+			{
+				north.render(0.0625F);
+			}
 
-		if (cable.isSensitiveCable())
-		{
-			Minecraft.getMinecraft().renderEngine.bindTexture(CABLE_RESOURCE);
-		}
+			if (cable.hasConnection(EnumFacing.EAST))
+			{
+				east.render(0.0625F);
+			}
 
-		if (cable.hasConnection(EnumFacing.UP))
-		{
-			up.render(x);
-		}
+			if (cable.hasConnection(EnumFacing.SOUTH))
+			{
+				south.render(0.0625F);
+			}
 
-		if (cable.hasConnection(EnumFacing.DOWN))
-		{
-			down.render(x);
-		}
-
-		if (cable.hasConnection(EnumFacing.NORTH))
-		{
-			north.render(x);
-		}
-
-		if (cable.hasConnection(EnumFacing.EAST))
-		{
-			east.render(x);
-		}
-
-		if (cable.hasConnection(EnumFacing.SOUTH))
-		{
-			south.render(x);
-		}
-
-		if (cable.hasConnection(EnumFacing.WEST))
-		{
-			west.render(x);
+			if (cable.hasConnection(EnumFacing.WEST))
+			{
+				west.render(0.0625F);
+			}
 		}
 	}
 }

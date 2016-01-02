@@ -51,7 +51,7 @@ public class CommonProxy
 		GameRegistry.registerTileEntity(TileConstructor.class, "constructor");
 
 		GameRegistry.registerBlock(StorageCraftBlocks.CONTROLLER, ItemBlockController.class, "controller");
-		GameRegistry.registerBlock(StorageCraftBlocks.CABLE, ItemBlockCable.class, "cable");
+		GameRegistry.registerBlock(StorageCraftBlocks.CABLE, "cable");
 		GameRegistry.registerBlock(StorageCraftBlocks.GRID, ItemBlockGrid.class, "grid");
 		GameRegistry.registerBlock(StorageCraftBlocks.DRIVE, "drive");
 		GameRegistry.registerBlock(StorageCraftBlocks.EXTERNAL_STORAGE, "external_storage");
@@ -140,19 +140,13 @@ public class CommonProxy
 		SoldererRegistry.addRecipe(new SoldererRecipeDrive());
 
 		// Cable
-		GameRegistry.addRecipe(new ItemStack(StorageCraftBlocks.CABLE, 6, 0),
+		GameRegistry.addRecipe(new ItemStack(StorageCraftBlocks.CABLE, 6),
 			"EEE",
 			"GRG",
 			"EEE",
 			'E', new ItemStack(StorageCraftItems.QUARTZ_ENRICHED_IRON),
 			'G', new ItemStack(Blocks.glass),
 			'R', new ItemStack(Items.redstone)
-		);
-
-		// Sensitive Cable
-		GameRegistry.addShapelessRecipe(new ItemStack(StorageCraftBlocks.CABLE, 1, 1),
-			new ItemStack(StorageCraftBlocks.CABLE, 1, 0),
-			new ItemStack(Items.redstone)
 		);
 
 		// Grid

@@ -18,39 +18,24 @@ public class TileCable extends TileBase
 
 	public boolean hasConnection(EnumFacing dir)
 	{
-		if (!isCable(worldObj, pos.offset(dir)))
+		if (!isEnabled())
 		{
-			TileEntity tile = worldObj.getTileEntity(pos.offset(dir));
-
-			return tile instanceof TileMachine || tile instanceof TileController;
+			return false;
 		}
 
-		return true;
-	}
-
-	public boolean isPowered()
-	{
-		return worldObj.isBlockPowered(pos);
-	}
-
-	public boolean isSensitiveCable()
-	{
-		if (worldObj.getBlockState(pos).getBlock() == StorageCraftBlocks.CABLE)
+		if (isCable(worldObj, pos.offset(dir)))
 		{
-			return (Boolean) worldObj.getBlockState(pos).getValue(BlockCable.SENSITIVE);
+			return true;
 		}
 
-		return false;
+		TileEntity tile = worldObj.getTileEntity(pos.offset(dir));
+
+		return tile instanceof TileMachine || tile instanceof TileController;
 	}
 
 	public boolean isEnabled()
 	{
-		if (isSensitiveCable())
-		{
-			return !isPowered();
-		}
-
-		return true;
+		return !worldObj.isBlockPowered(pos);
 	}
 
 	public void addMachines(List<BlockPos> visited, List<TileMachine> machines, TileController controller)

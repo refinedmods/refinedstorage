@@ -16,7 +16,7 @@ public class BlockCableRenderer extends TileEntitySpecialRenderer
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x, (float) y, (float) z);
 
-		CABLE_MODEL.render((TileCable) tile, 0.0625F);
+		CABLE_MODEL.render(tile);
 
 		GL11.glPopMatrix();
 	}
