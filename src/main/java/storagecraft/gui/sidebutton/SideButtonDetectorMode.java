@@ -1,5 +1,7 @@
 package storagecraft.gui.sidebutton;
 
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import storagecraft.StorageCraft;
 import storagecraft.gui.GuiBase;
@@ -30,6 +32,7 @@ public class SideButtonDetectorMode extends SideButton
 	@Override
 	public void draw(GuiBase gui, int x, int y)
 	{
+		gui.drawItem(x, y, new ItemStack(Items.redstone, 1));
 	}
 
 	@Override
