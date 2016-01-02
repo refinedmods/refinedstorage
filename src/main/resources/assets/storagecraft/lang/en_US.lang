@@ -36,9 +36,9 @@ sidebutton.storagecraft:compare.1=Compare Damage
 sidebutton.storagecraft:compare.2=Compare NBT
 
 sidebutton.storagecraft:redstone_mode=Redstone Mode
-sidebutton.storagecraft:redstone_mode.0=Ignore
-sidebutton.storagecraft:redstone_mode.1=High
-sidebutton.storagecraft:redstone_mode.2=Low
+sidebutton.storagecraft:redstone_mode.0=Ignore redstone signal
+sidebutton.storagecraft:redstone_mode.1=Only work with redstone signal
+sidebutton.storagecraft:redstone_mode.2=Only work without redstone signal
 
 sidebutton.storagecraft:sorting.direction=Sorting Direction
 sidebutton.storagecraft:sorting.direction.0=Ascending
@@ -53,9 +53,9 @@ sidebutton.storagecraft:importer.mode.0=Whitelist
 sidebutton.storagecraft:importer.mode.1=Blacklist
 
 sidebutton.storagecraft:detector.mode=Mode
-sidebutton.storagecraft:detector.mode.0=Under the amount
-sidebutton.storagecraft:detector.mode.1=On the amount
-sidebutton.storagecraft:detector.mode.2=Above the amount
+sidebutton.storagecraft:detector.mode.0=Emit signal when under the amount
+sidebutton.storagecraft:detector.mode.1=Emit signal when on the amount
+sidebutton.storagecraft:detector.mode.2=Emit signal when above the amount
 
 block.storagecraft:controller.0.name=Controller
 block.storagecraft:controller.1.name=Creative Controller

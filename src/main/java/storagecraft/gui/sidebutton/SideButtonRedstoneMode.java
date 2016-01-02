@@ -1,7 +1,5 @@
 package storagecraft.gui.sidebutton;
 
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import storagecraft.StorageCraft;
 import storagecraft.gui.GuiBase;
@@ -32,7 +30,8 @@ public class SideButtonRedstoneMode extends SideButton
 	@Override
 	public void draw(GuiBase gui, int x, int y)
 	{
-		gui.drawItem(x, y, new ItemStack(Items.redstone, 1));
+		gui.bindTexture("icons.png");
+		gui.drawTexturedModalRect(x, y + 1, setting.getRedstoneMode().id * 16, 0, 16, 16);
 	}
 
 	@Override
