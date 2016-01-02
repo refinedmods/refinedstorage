@@ -5,6 +5,7 @@ import storagecraft.StorageCraft;
 import storagecraft.gui.GuiBase;
 import storagecraft.network.MessageCompareUpdate;
 import storagecraft.tile.ICompareSetting;
+import storagecraft.util.InventoryUtils;
 
 public class SideButtonCompare extends SideButton
 {
@@ -39,6 +40,22 @@ public class SideButtonCompare extends SideButton
 	@Override
 	public void draw(GuiBase gui, int x, int y)
 	{
+		gui.bindTexture("icons.png");
+
+		int ty = 0;
+
+		if (mask == InventoryUtils.COMPARE_DAMAGE)
+		{
+			ty = 80;
+		}
+		else if (mask == InventoryUtils.COMPARE_NBT)
+		{
+			ty = 48;
+		}
+
+		int tx = (setting.getCompare() & mask) == mask ? 0 : 16;
+
+		gui.drawTexturedModalRect(x, y + 2, tx, ty, 16, 16);
 	}
 
 	@Override
