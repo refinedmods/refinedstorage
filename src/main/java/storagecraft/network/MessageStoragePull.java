@@ -16,19 +16,21 @@ public class MessageStoragePull extends MessageHandlerPlayerToServer<MessageStor
 	private int z;
 	private int id;
 	private boolean half;
+	private boolean one;
 	private boolean shift;
 
 	public MessageStoragePull()
 	{
 	}
 
-	public MessageStoragePull(int x, int y, int z, int id, boolean half, boolean shift)
+	public MessageStoragePull(int x, int y, int z, int id, boolean half, boolean one, boolean shift)
 	{
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		this.id = id;
 		this.half = half;
+		this.one = one;
 		this.shift = shift;
 	}
 
@@ -40,6 +42,7 @@ public class MessageStoragePull extends MessageHandlerPlayerToServer<MessageStor
 		z = buf.readInt();
 		id = buf.readInt();
 		half = buf.readBoolean();
+		one = buf.readBoolean();
 		shift = buf.readBoolean();
 	}
 
@@ -51,6 +54,7 @@ public class MessageStoragePull extends MessageHandlerPlayerToServer<MessageStor
 		buf.writeInt(z);
 		buf.writeInt(id);
 		buf.writeBoolean(half);
+		buf.writeBoolean(one);
 		buf.writeBoolean(shift);
 	}
 
@@ -77,6 +81,10 @@ public class MessageStoragePull extends MessageHandlerPlayerToServer<MessageStor
 					{
 						quantity = 64;
 					}
+				}
+				else if (message.one)
+				{
+					quantity = 1;
 				}
 
 				ItemStack took = controller.take(item.copy(quantity).toItemStack());

@@ -308,7 +308,11 @@ public class GuiGrid extends GuiBase
 			}
 			else if (isHoveringOverValidSlot(getItems()) && container.getPlayer().inventory.getItemStack() == null)
 			{
-				StorageCraft.NETWORK.sendToServer(new MessageStoragePull(controller.getPos().getX(), controller.getPos().getY(), controller.getPos().getZ(), hoveringId, clickedButton == 1, Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)));
+				boolean half = clickedButton == 1;
+				boolean shift = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
+				boolean one = clickedButton == 2;
+
+				StorageCraft.NETWORK.sendToServer(new MessageStoragePull(controller.getPos().getX(), controller.getPos().getY(), controller.getPos().getZ(), hoveringId, half, one, shift));
 			}
 			else if (clickedClear)
 			{
