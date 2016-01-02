@@ -11,20 +11,10 @@
     "variants": {
         "inventory": [
             {
-                "y": 0,
-                "textures": {
-                    "side": "storagecraft:blocks/side",
-                    "top": "storagecraft:blocks/side",
-                    "front": "storagecraft:blocks/controller_0"
-                }
+                "y": 0
             },
             {
-                "y": 0,
-                "textures": {
-                    "front": "storagecraft:blocks/controller_creative_front",
-                    "top": "storagecraft:blocks/controller_creative_side",
-                    "side": "storagecraft:blocks/controller_creative_side"
-                }
+                "y": 0
             }
         ],
         "energy": {
@@ -78,11 +68,6 @@
             "normal": {
             },
             "creative": {
-                "textures": {
-                    "front": "storagecraft:blocks/controller_creative_front",
-                    "top": "storagecraft:blocks/controller_creative_side",
-                    "side": "storagecraft:blocks/controller_creative_side"
-                }
             }
         },
         "direction": {
