@@ -21,6 +21,8 @@ public class SideButtonGridSortingDirection extends SideButton
 	@Override
 	public void draw(GuiBase gui, int x, int y)
 	{
+		gui.bindTexture("icons.png");
+		gui.drawTexturedModalRect(x, y + 2, GuiGrid.SORTING_DIRECTION * 16, 16, 16, 16);
 	}
 
 	@Override
