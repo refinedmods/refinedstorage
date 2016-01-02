@@ -3,7 +3,6 @@ package storagecraft.gui;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -146,8 +145,6 @@ public abstract class GuiBase extends GuiContainer
 
 	public void drawItem(int x, int y, ItemStack stack, boolean withOverlay)
 	{
-		GlStateManager.translate(0.0F, 0.0F, 32.0F);
-
 		zLevel = 200.0F;
 		itemRender.zLevel = 200.0F;
 

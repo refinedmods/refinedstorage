@@ -112,9 +112,9 @@ public class GuiGrid extends GuiBase
 		return offset + delta <= getMaxOffset();
 	}
 
-	private boolean isHoveringOverValidSlot()
+	private boolean isHoveringOverValidSlot(List<StorageItem> items)
 	{
-		return grid.isConnected() && isHoveringOverSlot() && hoveringSlotId < getItems().size();
+		return grid.isConnected() && isHoveringOverSlot() && hoveringSlotId < items.size();
 	}
 
 	private boolean isHoveringOverSlot()
@@ -147,8 +147,6 @@ public class GuiGrid extends GuiBase
 	@Override
 	public void drawForeground(int mouseX, int mouseY)
 	{
-		RenderHelper.enableGUIStandardItemLighting();
-
 		drawString(7, 7, t("gui.storagecraft:grid"));
 
 		if (grid.getType() == EnumGridType.CRAFTING)
@@ -166,6 +164,8 @@ public class GuiGrid extends GuiBase
 		hoveringSlotId = -1;
 
 		int slot = offset * 9;
+
+		RenderHelper.enableGUIStandardItemLighting();
 
 		for (int i = 0; i < 9 * 4; ++i)
 		{
@@ -209,7 +209,7 @@ public class GuiGrid extends GuiBase
 			}
 		}
 
-		if (isHoveringOverValidSlot())
+		if (isHoveringOverValidSlot(items))
 		{
 			drawTooltip(mouseX, mouseY, items.get(hoveringSlotId).toItemStack());
 		}
@@ -218,8 +218,6 @@ public class GuiGrid extends GuiBase
 		{
 			drawTooltip(mouseX, mouseY, t("misc.storagecraft:clear"));
 		}
-
-		RenderHelper.disableStandardItemLighting();
 	}
 
 	public List<StorageItem> getItems()
@@ -308,7 +306,7 @@ public class GuiGrid extends GuiBase
 			{
 				StorageCraft.NETWORK.sendToServer(new MessageStoragePush(controller.getPos().getX(), controller.getPos().getY(), controller.getPos().getZ(), -1, clickedButton == 1));
 			}
-			else if (isHoveringOverValidSlot() && container.getPlayer().inventory.getItemStack() == null)
+			else if (isHoveringOverValidSlot(getItems()) && container.getPlayer().inventory.getItemStack() == null)
 			{
 				StorageCraft.NETWORK.sendToServer(new MessageStoragePull(controller.getPos().getX(), controller.getPos().getY(), controller.getPos().getZ(), hoveringId, clickedButton == 1, Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)));
 			}
