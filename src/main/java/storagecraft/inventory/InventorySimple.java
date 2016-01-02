@@ -56,7 +56,7 @@ public class InventorySimple implements IInventory
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int slot)
+	public ItemStack removeStackFromSlot(int slot)
 	{
 		ItemStack stack = getStackInSlot(slot);
 

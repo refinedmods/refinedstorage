@@ -233,9 +233,9 @@ public class TileDetector extends TileMachine implements IInventory, ISidedInven
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int slot)
+	public ItemStack removeStackFromSlot(int slot)
 	{
-		return inventory.getStackInSlotOnClosing(slot);
+		return inventory.removeStackFromSlot(slot);
 	}
 
 	@Override

@@ -7,8 +7,8 @@ import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
@@ -16,7 +16,6 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import storagecraft.StorageCraft;
 import storagecraft.StorageCraftBlocks;
 import storagecraft.StorageCraftItems;
 import storagecraft.block.EnumControllerType;
@@ -32,39 +31,39 @@ public class ClientProxy extends CommonProxy
 	{
 		super.preInit(e);
 
-		ModelBakery.addVariantName(StorageCraftItems.STORAGE_CELL,
-			"storagecraft:1k_storage_cell",
-			"storagecraft:4k_storage_cell",
-			"storagecraft:16k_storage_cell",
-			"storagecraft:64k_storage_cell",
-			"storagecraft:creative_storage_cell"
+		ModelBakery.registerItemVariants(StorageCraftItems.STORAGE_CELL,
+			new ResourceLocation("storagecraft:1k_storage_cell"),
+			new ResourceLocation("storagecraft:4k_storage_cell"),
+			new ResourceLocation("storagecraft:16k_storage_cell"),
+			new ResourceLocation("storagecraft:64k_storage_cell"),
+			new ResourceLocation("storagecraft:creative_storage_cell")
 		);
 
-		ModelBakery.addVariantName(StorageCraftItems.STORAGE_PART,
-			"storagecraft:1k_storage_part",
-			"storagecraft:4k_storage_part",
-			"storagecraft:16k_storage_part",
-			"storagecraft:64k_storage_part"
+		ModelBakery.registerItemVariants(StorageCraftItems.STORAGE_PART,
+			new ResourceLocation("storagecraft:1k_storage_part"),
+			new ResourceLocation("storagecraft:4k_storage_part"),
+			new ResourceLocation("storagecraft:16k_storage_part"),
+			new ResourceLocation("storagecraft:64k_storage_part")
 		);
 
-		ModelBakery.addVariantName(StorageCraftItems.PROCESSOR,
-			"storagecraft:basic_printed_processor",
-			"storagecraft:improved_printed_processor",
-			"storagecraft:advanced_printed_processor",
-			"storagecraft:basic_processor",
-			"storagecraft:improved_processor",
-			"storagecraft:advanced_processor",
-			"storagecraft:printed_silicon"
+		ModelBakery.registerItemVariants(StorageCraftItems.PROCESSOR,
+			new ResourceLocation("storagecraft:basic_printed_processor"),
+			new ResourceLocation("storagecraft:improved_printed_processor"),
+			new ResourceLocation("storagecraft:advanced_printed_processor"),
+			new ResourceLocation("storagecraft:basic_processor"),
+			new ResourceLocation("storagecraft:improved_processor"),
+			new ResourceLocation("storagecraft:advanced_processor"),
+			new ResourceLocation("storagecraft:printed_silicon")
 		);
 
-		ModelBakery.addVariantName(StorageCraftItems.CORE,
-			"storagecraft:construction_core",
-			"storagecraft:destruction_core"
+		ModelBakery.registerItemVariants(StorageCraftItems.CORE,
+			new ResourceLocation("storagecraft:construction_core"),
+			new ResourceLocation("storagecraft:destruction_core")
 		);
 
-		ModelBakery.addVariantName(StorageCraftItems.WIRELESS_GRID,
-			"storagecraft:wireless_grid_connected",
-			"storagecraft:wireless_grid_disconnected"
+		ModelBakery.registerItemVariants(StorageCraftItems.WIRELESS_GRID,
+			new ResourceLocation("storagecraft:wireless_grid_connected"),
+			new ResourceLocation("storagecraft:wireless_grid_disconnected")
 		);
 
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(StorageCraftBlocks.CABLE), 0, TileCable.class);
@@ -75,8 +74,6 @@ public class ClientProxy extends CommonProxy
 	public static class BakeEventHandler
 	{
 		public static final BakeEventHandler instance = new BakeEventHandler();
-
-		public BakeEventHandler() {}
 
 		@SubscribeEvent
 		public void onModelBakeEvent(ModelBakeEvent event)

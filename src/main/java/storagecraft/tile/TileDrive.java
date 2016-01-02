@@ -85,9 +85,9 @@ public class TileDrive extends TileMachine implements IInventory, IStorageProvid
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int slot)
+	public ItemStack removeStackFromSlot(int slot)
 	{
-		return inventory.getStackInSlotOnClosing(slot);
+		return inventory.removeStackFromSlot(slot);
 	}
 
 	@Override
