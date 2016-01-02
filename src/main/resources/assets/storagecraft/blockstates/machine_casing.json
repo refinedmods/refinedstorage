@@ -9,6 +9,7 @@
     "variants": {
         "inventory": [
             {
+                "transform": "forge:default-block"
             }
         ],
         "direction": {

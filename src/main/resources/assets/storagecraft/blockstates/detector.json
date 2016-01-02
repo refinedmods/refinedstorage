@@ -11,10 +11,8 @@
     "variants": {
         "inventory": [
             {
-                "y": 0
-            },
-            {
-                "y": 0
+                "y": 0,
+                "transform": "forge:default-block"
             }
         ],
         "connected": {

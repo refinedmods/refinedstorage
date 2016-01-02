@@ -30,6 +30,7 @@ public abstract class BlockBase extends Block
 
 		this.name = name;
 
+		setHardness(0.6F);
 		setCreativeTab(StorageCraft.TAB);
 	}
 

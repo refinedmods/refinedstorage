@@ -11,6 +11,7 @@
         "inventory": [
             {
                 "y": 0,
+                "transform": "forge:default-block",
                 "textures": {
                     "front": "storagecraft:blocks/destructor_disconnected"
                 }

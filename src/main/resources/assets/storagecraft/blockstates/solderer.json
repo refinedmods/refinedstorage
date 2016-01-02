@@ -13,7 +13,8 @@
                 "y": 0,
                 "textures": {
                     "front": "storagecraft:blocks/solderer_disconnected"
-                }
+                },
+                "transform": "forge:default-block"
             }
         ],
         "connected": {

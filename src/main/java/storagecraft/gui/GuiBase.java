@@ -178,7 +178,9 @@ public abstract class GuiBase extends GuiContainer
 
 	public void drawString(int x, int y, String message, int color)
 	{
+		GL11.glDisable(GL11.GL_LIGHTING);
 		fontRendererObj.drawString(message, x, y, color);
+		GL11.glEnable(GL11.GL_LIGHTING);
 	}
 
 	public void drawTooltip(int x, int y, String message)
