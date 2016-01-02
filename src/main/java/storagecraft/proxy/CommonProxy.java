@@ -12,13 +12,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import storagecraft.StorageCraft;
 import storagecraft.StorageCraftBlocks;
 import storagecraft.StorageCraftItems;
+import storagecraft.block.EnumControllerType;
 import storagecraft.block.EnumGridType;
 import storagecraft.gui.GuiHandler;
 import storagecraft.item.*;
 import storagecraft.network.*;
 import storagecraft.tile.*;
 import storagecraft.tile.solderer.*;
-import storagecraft.block.EnumControllerType;
 
 public class CommonProxy
 {

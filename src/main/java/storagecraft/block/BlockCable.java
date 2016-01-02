@@ -5,8 +5,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import storagecraft.tile.TileCable;
 
-import java.util.List;
-
 public class BlockCable extends BlockBase
 {
 	public BlockCable()
@@ -39,8 +37,14 @@ public class BlockCable extends BlockBase
 	}
 
 	@Override
-	public boolean isFullCube() { return false; }
+	public boolean isFullCube()
+	{
+		return false;
+	}
 
 	@Override
-	public boolean isVisuallyOpaque() { return false; }
+	public boolean isVisuallyOpaque()
+	{
+		return false;
+	}
 }

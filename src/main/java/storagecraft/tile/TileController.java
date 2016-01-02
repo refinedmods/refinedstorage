@@ -8,7 +8,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import storagecraft.StorageCraft;
 import storagecraft.StorageCraftBlocks;
 import storagecraft.block.BlockController;
 import storagecraft.block.EnumControllerType;
@@ -379,7 +378,8 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
 		energy.setEnergyStored(buf.readInt());
 
-		if (lastEnergy != energy.getEnergyStored()) {
+		if (lastEnergy != energy.getEnergyStored())
+		{
 			worldObj.markBlockForUpdate(pos);
 		}
 
