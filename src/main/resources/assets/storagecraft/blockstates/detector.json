@@ -3,8 +3,8 @@
     "defaults": {
         "model": "orientable",
         "textures": {
-            "side": "storagecraft:blocks/detector_unpowered",
-            "top": "storagecraft:blocks/detector_unpowered",
+            "side": "storagecraft:blocks/side",
+            "top": "storagecraft:blocks/side",
             "front": "storagecraft:blocks/detector_unpowered"
         }
     },
@@ -12,10 +12,22 @@
         "inventory": [
             {
                 "y": 0
+            },
+            {
+                "y": 0
             }
         ],
         "connected": {
             "true": {
+            },
+            "false": {
+            }
+        },
+        "powered": {
+            "true": {
+                "textures": {
+                    "front": "storagecraft:blocks/detector_powered"
+                }
             },
             "false": {
             }
@@ -38,17 +50,6 @@
             },
             "down": {
                 "x": 90
-            }
-        },
-        "powered": {
-            "true": {
-                "textures": {
-                    "side": "storagecraft:blocks/detector_powered",
-                    "top": "storagecraft:blocks/detector_powered",
-                    "front": "storagecraft:blocks/detector_powered"
-                }
-            },
-            "false": {
             }
         }
     }

@@ -37,6 +37,14 @@ public class TileDetector extends TileMachine implements IInventory, ISidedInven
 	}
 
 	@Override
+	public void onDisconnected()
+	{
+		super.onDisconnected();
+
+		powered = false;
+	}
+
+	@Override
 	public int getEnergyUsage()
 	{
 		return 4;
@@ -101,7 +109,6 @@ public class TileDetector extends TileMachine implements IInventory, ISidedInven
 
 			if (powered != lastPowered)
 			{
-				worldObj.markBlockForUpdate(pos);
 				worldObj.notifyNeighborsOfStateChange(pos, StorageCraftBlocks.DETECTOR);
 			}
 		}
@@ -199,7 +206,6 @@ public class TileDetector extends TileMachine implements IInventory, ISidedInven
 		if (powered != lastPowered)
 		{
 			worldObj.markBlockForUpdate(pos);
-			worldObj.notifyNeighborsOfStateChange(pos, StorageCraftBlocks.DETECTOR);
 		}
 	}
 

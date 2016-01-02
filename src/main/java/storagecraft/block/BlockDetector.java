@@ -47,14 +47,23 @@ public class BlockDetector extends BlockMachine
 		return new TileDetector();
 	}
 
-	public int isProvidingWeakPower(IBlockAccess world, BlockPos pos, IBlockState state, EnumFacing side)
+	@Override
+	public int getWeakPower(IBlockAccess world, BlockPos pos, IBlockState state, EnumFacing side)
 	{
-		return ((TileDetector) world.getTileEntity(pos)).isPowered() ? 15 : 0;
+		TileDetector detector = (TileDetector) world.getTileEntity(pos);
+
+		if (detector.getDirection() == side.getOpposite())
+		{
+			return detector.isPowered() ? 15 : 0;
+		}
+
+		return 0;
 	}
 
-	public int isProvidingStrongPower(IBlockAccess world, BlockPos pos, IBlockState state, EnumFacing side)
+	@Override
+	public int getStrongPower(IBlockAccess world, BlockPos pos, IBlockState state, EnumFacing side)
 	{
-		return ((TileDetector) world.getTileEntity(pos)).isPowered() ? 15 : 0;
+		return getWeakPower(world, pos, state, side);
 	}
 
 	public boolean canProvidePower()
