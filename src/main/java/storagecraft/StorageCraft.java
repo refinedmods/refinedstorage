@@ -15,12 +15,11 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import storagecraft.item.ItemStorageCell;
 import storagecraft.proxy.CommonProxy;
 
-@Mod(modid = StorageCraft.ID, version = StorageCraft.VERSION, dependencies = StorageCraft.DEPENDENCIES)
+@Mod(modid = StorageCraft.ID, version = StorageCraft.VERSION)
 public final class StorageCraft
 {
 	public static final String ID = "storagecraft";
 	public static final String VERSION = "0.1";
-	public static final String DEPENDENCIES = "after:NotEnoughItems";
 
 	public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(ID);
 
