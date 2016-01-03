@@ -20,7 +20,7 @@ public class BlockCableRenderer extends TileEntitySpecialRenderer<TileCable>
 	public void renderTileEntityAt(TileCable tile, double x, double y, double z, float scale, int a)
 	{
 		GL11.glPushMatrix();
-		GL11.glTranslatef((float) x, (float) y, (float) z);
+		GL11.glTranslated(x, y, z);
 
 		model.render(tile);
 

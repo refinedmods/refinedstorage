@@ -10,6 +10,10 @@ public class BlockCable extends BlockBase
 	public BlockCable()
 	{
 		super("cable");
+
+		float pixel = 1F / 16F;
+
+		setBlockBounds(4 * pixel, 4 * pixel, 4 * pixel, 1 - 4 * pixel, 1 - 4 * pixel, 1 - 4 * pixel);
 	}
 
 	@Override
@@ -38,6 +42,12 @@ public class BlockCable extends BlockBase
 
 	@Override
 	public boolean isFullCube()
+	{
+		return false;
+	}
+
+	@Override
+	public boolean isNormalCube()
 	{
 		return false;
 	}
