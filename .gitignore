@@ -7,8 +7,6 @@ gradle/
 .classpath
 .nb-gradle-properties
 .project
-gradlew
-gradlew.bat
 *.launch
 run/
 *.iml
