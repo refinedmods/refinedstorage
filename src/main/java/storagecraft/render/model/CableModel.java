@@ -91,5 +91,10 @@ public class CableModel extends ModelBase
 				west.render(0.0625F);
 			}
 		}
+		else
+		{
+			east.render(0.0625F);
+			west.render(0.0625F);
+		}
 	}
 }
