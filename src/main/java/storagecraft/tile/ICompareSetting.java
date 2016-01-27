@@ -8,5 +8,5 @@ public interface ICompareSetting
 
 	public void setCompare(int compare);
 
-	public BlockPos getPos();
+	public BlockPos getMachinePos();
 }

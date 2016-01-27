@@ -70,6 +70,18 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
 		}
 	}
 
+	@Override
+	public BlockPos getMachinePos()
+	{
+		return pos;
+	}
+
+	@Override
+	public BlockPos getTilePos()
+	{
+		return pos;
+	}
+
 	public TileController getController()
 	{
 		return (TileController) worldObj.getTileEntity(controllerPos);

@@ -19,9 +19,9 @@ public class MessageRedstoneModeUpdate extends MessageHandlerPlayerToServer<Mess
 
 	public MessageRedstoneModeUpdate(IRedstoneModeSetting setting)
 	{
-		this.x = setting.getPos().getX();
-		this.y = setting.getPos().getY();
-		this.z = setting.getPos().getZ();
+		this.x = setting.getMachinePos().getX();
+		this.y = setting.getMachinePos().getY();
+		this.z = setting.getMachinePos().getZ();
 	}
 
 	@Override

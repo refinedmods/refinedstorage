@@ -3,6 +3,8 @@ package storagecraft.tile;
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyReceiver;
 import io.netty.buffer.ByteBuf;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -15,9 +17,6 @@ import storagecraft.storage.IStorage;
 import storagecraft.storage.IStorageProvider;
 import storagecraft.storage.StorageItem;
 import storagecraft.util.InventoryUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class TileController extends TileBase implements IEnergyReceiver, INetworkTile, IRedstoneModeSetting
 {
@@ -369,6 +368,18 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 		markDirty();
 
 		this.redstoneMode = mode;
+	}
+
+	@Override
+	public BlockPos getTilePos()
+	{
+		return pos;
+	}
+
+	@Override
+	public BlockPos getMachinePos()
+	{
+		return pos;
 	}
 
 	@Override

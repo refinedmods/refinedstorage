@@ -9,5 +9,5 @@ public interface INetworkTile
 
 	public void toBytes(ByteBuf buf);
 
-	public BlockPos getPos();
+	public BlockPos getTilePos();
 }

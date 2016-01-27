@@ -8,5 +8,5 @@ public interface IRedstoneModeSetting
 
 	public void setRedstoneMode(RedstoneMode mode);
 
-	public BlockPos getPos();
+	public BlockPos getMachinePos();
 }
