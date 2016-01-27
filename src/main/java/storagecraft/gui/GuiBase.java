@@ -1,5 +1,9 @@
 package storagecraft.gui;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -10,11 +14,6 @@ import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
 import storagecraft.StorageCraft;
 import storagecraft.gui.sidebutton.SideButton;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public abstract class GuiBase extends GuiContainer
 {
@@ -185,7 +184,9 @@ public abstract class GuiBase extends GuiContainer
 
 	public void drawTooltip(int x, int y, String message)
 	{
+		GL11.glDisable(GL11.GL_LIGHTING);
 		drawHoveringText(Arrays.asList(message.split("\n")), x, y);
+		GL11.glEnable(GL11.GL_LIGHTING);
 	}
 
 	public void drawTooltip(int x, int y, ItemStack stack)
