@@ -19,10 +19,18 @@ archivesBaseName = "storagecraft"
 minecraft {
     version = "1.8.9-11.15.1.1722"
     runDir = "run"
+	useDepAts = true
     mappings = "stable_20"
 }
 
+repositories {
+	maven {
+		url "http://dvs1.progwml6.com/files/maven"
+	}
+}
+
 dependencies {
+	deobfCompile "mezz.jei:jei_1.8.9:2.20.+"
 }
 
 processResources {
