@@ -17,7 +17,7 @@ group = "storagecraft"
 archivesBaseName = "storagecraft"
 
 minecraft {
-    version = "1.8.9-11.15.0.1671"
+    version = "1.8.9-11.15.1.1722"
     runDir = "run"
     mappings = "stable_20"
 }
