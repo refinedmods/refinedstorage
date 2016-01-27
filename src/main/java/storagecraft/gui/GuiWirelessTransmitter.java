@@ -31,13 +31,13 @@ public class GuiWirelessTransmitter extends GuiBase
 	{
 		bindTexture("gui/wireless_transmitter.png");
 
-		drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
+		drawTexture(x, y, 0, 0, xSize, ySize);
 
 		if (wirelessTransmitter.isWorking())
 		{
 			int progress = (int) ((float) wirelessTransmitter.getProgress() / (float) TileWirelessTransmitter.TOTAL_PROGRESS * 14f);
 
-			drawTexturedModalRect(x + 36 - 1, y + 21 - 1 + progress, 178, 0 + progress, 14, 14);
+			drawTexture(x + 36 - 1, y + 21 - 1 + progress, 178, 0 + progress, 14, 14);
 		}
 	}
 

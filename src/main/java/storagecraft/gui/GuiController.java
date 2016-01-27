@@ -36,11 +36,11 @@ public class GuiController extends GuiBase
 	{
 		bindTexture("gui/controller.png");
 
-		drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
+		drawTexture(x, y, 0, 0, xSize, ySize);
 
 		int barHeightNew = (int) ((float) controller.getEnergyStored(null) / (float) controller.getMaxEnergyStored(null) * (float) barHeight);
 
-		drawTexturedModalRect(x + barX, y + barY + barHeight - barHeightNew, 178, 0 + (barHeight - barHeightNew), barWidth, barHeightNew);
+		drawTexture(x + barX, y + barY + barHeight - barHeightNew, 178, 0 + (barHeight - barHeightNew), barWidth, barHeightNew);
 	}
 
 	@Override

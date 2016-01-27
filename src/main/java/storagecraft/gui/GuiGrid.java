@@ -1,5 +1,10 @@
 package storagecraft.gui;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
@@ -20,12 +25,6 @@ import storagecraft.network.MessageStoragePush;
 import storagecraft.storage.StorageItem;
 import storagecraft.tile.TileController;
 import storagecraft.tile.TileGrid;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
 
 public class GuiGrid extends GuiBase
 {
@@ -139,7 +138,7 @@ public class GuiGrid extends GuiBase
 			bindTexture("gui/grid.png");
 		}
 
-		drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
+		drawTexture(x, y, 0, 0, xSize, ySize);
 
 		searchField.drawTextBox();
 	}

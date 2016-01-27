@@ -31,7 +31,7 @@ public class GuiDestructor extends GuiBase
 	{
 		bindTexture("gui/destructor.png");
 
-		drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
+		drawTexture(x, y, 0, 0, xSize, ySize);
 	}
 
 	@Override

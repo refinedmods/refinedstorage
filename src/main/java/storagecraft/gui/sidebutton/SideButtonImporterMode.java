@@ -31,7 +31,7 @@ public class SideButtonImporterMode extends SideButton
 	public void draw(GuiBase gui, int x, int y)
 	{
 		gui.bindTexture("icons.png");
-		gui.drawTexturedModalRect(x, y + 1, importer.getMode() * 16, 64, 16, 16);
+		gui.drawTexture(x, y + 1, importer.getMode() * 16, 64, 16, 16);
 	}
 
 	@Override

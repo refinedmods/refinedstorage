@@ -72,7 +72,9 @@ public abstract class GuiBase extends GuiContainer
 
 		for (SideButton sideButton : sideButtons)
 		{
+			GL11.glDisable(GL11.GL_LIGHTING);
 			sideButton.draw(this, sideButton.getX() + 2, sideButton.getY() + 1);
+			GL11.glEnable(GL11.GL_LIGHTING);
 
 			if (inBounds(sideButton.getX(), sideButton.getY(), SIDE_BUTTON_WIDTH, SIDE_BUTTON_HEIGHT, mouseX, mouseY))
 			{
@@ -192,6 +194,11 @@ public abstract class GuiBase extends GuiContainer
 	public void drawTooltip(int x, int y, ItemStack stack)
 	{
 		renderToolTip(stack, x, y);
+	}
+
+	public void drawTexture(int x, int y, int textureX, int textureY, int width, int height)
+	{
+		this.drawTexturedModalRect(x, y, textureX, textureY, width, height);
 	}
 
 	public String t(String name, Object... format)

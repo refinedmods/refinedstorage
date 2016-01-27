@@ -31,7 +31,7 @@ public class SideButtonRedstoneMode extends SideButton
 	public void draw(GuiBase gui, int x, int y)
 	{
 		gui.bindTexture("icons.png");
-		gui.drawTexturedModalRect(x, y + 1, setting.getRedstoneMode().id * 16, 0, 16, 16);
+		gui.drawTexture(x, y + 1, setting.getRedstoneMode().id * 16, 0, 16, 16);
 	}
 
 	@Override

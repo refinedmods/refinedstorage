@@ -31,11 +31,11 @@ public class GuiSolderer extends GuiBase
 	{
 		bindTexture("gui/solderer.png");
 
-		drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
+		drawTexture(x, y, 0, 0, xSize, ySize);
 
 		if (solderer.isWorking())
 		{
-			drawTexturedModalRect(x + 83, y + 40 - 1, 177, 0, solderer.getProgressScaled(22), 15);
+			drawTexture(x + 83, y + 40 - 1, 177, 0, solderer.getProgressScaled(22), 15);
 		}
 	}
 

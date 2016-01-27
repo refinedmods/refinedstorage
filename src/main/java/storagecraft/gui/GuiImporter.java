@@ -39,7 +39,7 @@ public class GuiImporter extends GuiBase
 	{
 		bindTexture("gui/importer.png");
 
-		drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
+		drawTexture(x, y, 0, 0, xSize, ySize);
 	}
 
 	@Override

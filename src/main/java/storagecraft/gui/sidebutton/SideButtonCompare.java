@@ -55,7 +55,7 @@ public class SideButtonCompare extends SideButton
 
 		int tx = (setting.getCompare() & mask) == mask ? 0 : 16;
 
-		gui.drawTexturedModalRect(x, y + 2, tx, ty, 16, 16);
+		gui.drawTexture(x, y + 2, tx, ty, 16, 16);
 	}
 
 	@Override

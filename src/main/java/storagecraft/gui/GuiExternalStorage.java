@@ -31,7 +31,7 @@ public class GuiExternalStorage extends GuiBase
 	{
 		bindTexture("gui/external_storage.png");
 
-		drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
+		drawTexture(x, y, 0, 0, xSize, ySize);
 	}
 
 	@Override
