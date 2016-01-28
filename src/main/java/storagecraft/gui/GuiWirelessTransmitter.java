@@ -46,5 +46,12 @@ public class GuiWirelessTransmitter extends GuiBase
 	{
 		drawString(7, 7, t("gui.storagecraft:wireless_transmitter"));
 		drawString(7, 43, t("container.inventory"));
+
+		if (inBounds(36, 21, 14, 14, mouseX, mouseY) && wirelessTransmitter.isWorking())
+		{
+			int workRemaining = (int) (((float) (TileWirelessTransmitter.TOTAL_PROGRESS - wirelessTransmitter.getProgress())) / (float) TileWirelessTransmitter.TOTAL_PROGRESS * 100f);
+
+			drawTooltip(mouseX, mouseY, workRemaining + "%");
+		}
 	}
 }
