@@ -17,7 +17,7 @@ public class SoldererRecipeCategory implements IRecipeCategory
 
 	public SoldererRecipeCategory(IGuiHelper helper)
 	{
-		background = helper.createDrawable(new ResourceLocation("storagecraft", "textures/gui/solderer.png"), 0, 0, 176, 177);
+		background = helper.createDrawable(new ResourceLocation("storagecraft", "textures/gui/solderer.png"), 8, 5, 162, 89);
 	}
 
 	@Override
@@ -53,8 +53,8 @@ public class SoldererRecipeCategory implements IRecipeCategory
 	{
 		IGuiItemStackGroup group = recipeLayout.getItemStacks();
 
-		int x = 44;
-		int y = 20;
+		int x = 44 - 9;
+		int y = 20 - 6;
 
 		for (int i = 0; i < 3; ++i)
 		{
@@ -63,7 +63,7 @@ public class SoldererRecipeCategory implements IRecipeCategory
 			y += 18;
 		}
 
-		group.init(3, false, 134, 38);
+		group.init(3, false, 134 - 9, 38 - 6);
 
 		if (recipeWrapper instanceof SoldererRecipeWrapper)
 		{
