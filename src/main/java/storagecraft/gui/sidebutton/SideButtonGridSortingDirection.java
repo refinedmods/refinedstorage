@@ -22,7 +22,7 @@ public class SideButtonGridSortingDirection extends SideButton
 	public void draw(GuiBase gui, int x, int y)
 	{
 		gui.bindTexture("icons.png");
-		gui.drawTexture(x, y + 2, GuiGrid.SORTING_DIRECTION * 16, 16, 16, 16);
+		gui.drawTexture(x, y + 2 - 1, GuiGrid.SORTING_DIRECTION * 16, 16, 16, 16);
 	}
 
 	@Override
