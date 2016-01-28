@@ -1,5 +1,6 @@
 package storagecraft.block;
 
+import java.util.List;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockState;
@@ -15,8 +16,6 @@ import net.minecraft.world.World;
 import storagecraft.StorageCraft;
 import storagecraft.StorageCraftGUI;
 import storagecraft.tile.TileGrid;
-
-import java.util.List;
 
 public class BlockGrid extends BlockMachine
 {
@@ -46,11 +45,11 @@ public class BlockGrid extends BlockMachine
 	protected BlockState createBlockState()
 	{
 		return new BlockState(this, new IProperty[]
-			{
-				DIRECTION,
-				CONNECTED,
-				TYPE
-			});
+		{
+			DIRECTION,
+			CONNECTED,
+			TYPE
+		});
 	}
 
 	@Override

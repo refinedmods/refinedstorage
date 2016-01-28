@@ -63,6 +63,7 @@ public class CommonProxy
 		GameRegistry.registerBlock(StorageCraftBlocks.WIRELESS_TRANSMITTER, "wireless_transmitter");
 		GameRegistry.registerBlock(StorageCraftBlocks.DESTRUCTOR, "destructor");
 		GameRegistry.registerBlock(StorageCraftBlocks.CONSTRUCTOR, "constructor");
+		GameRegistry.registerBlock(StorageCraftBlocks.STORAGE, ItemBlockStorage.class, "storage");
 
 		GameRegistry.registerItem(StorageCraftItems.STORAGE_CELL, "storage_cell");
 		GameRegistry.registerItem(StorageCraftItems.WIRELESS_GRID, "wireless_grid");
