@@ -1,12 +1,13 @@
 package storagecraft.jei;
 
-import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.IItemRegistry;
 import mezz.jei.api.IJeiHelpers;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
 import mezz.jei.api.IRecipeRegistry;
 import mezz.jei.api.JEIPlugin;
+import storagecraft.StorageCraftItems;
+import storagecraft.storage.CellStorage;
 
 @JEIPlugin
 public class PluginStorageCraft implements IModPlugin
@@ -29,13 +30,13 @@ public class PluginStorageCraft implements IModPlugin
 	@Override
 	public void register(IModRegistry registry)
 	{
-		IGuiHelper guiHelper = jeiHelpers.getGuiHelper();
-
-		registry.addRecipeCategories(new SoldererRecipeCategory(guiHelper));
+		registry.addRecipeCategories(new SoldererRecipeCategory(jeiHelpers.getGuiHelper()));
 
 		registry.addRecipeHandlers(new SoldererRecipeHandler());
 
 		registry.addRecipes(SoldererRecipeMaker.getRecipes());
+
+		jeiHelpers.getNbtIgnoreList().ignoreNbtTagNames(StorageCraftItems.STORAGE_CELL, CellStorage.NBT_ITEMS, CellStorage.NBT_STORED);
 	}
 
 	@Override
