@@ -198,7 +198,7 @@ public abstract class GuiBase extends GuiContainer
 
 	public void drawTexture(int x, int y, int textureX, int textureY, int width, int height)
 	{
-		this.drawTexturedModalRect(x, y, textureX, textureY, width, height);
+		drawTexturedModalRect(x, y, textureX, textureY, width, height);
 	}
 
 	public String t(String name, Object... format)
