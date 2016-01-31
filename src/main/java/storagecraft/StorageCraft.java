@@ -19,7 +19,7 @@ import storagecraft.proxy.CommonProxy;
 public final class StorageCraft
 {
 	public static final String ID = "storagecraft";
-	public static final String VERSION = "0.1.1";
+	public static final String VERSION = "0.2";
 
 	public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(ID);
 
