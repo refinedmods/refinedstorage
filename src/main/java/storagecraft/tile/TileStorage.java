@@ -283,6 +283,16 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 		return new NBTStorage(tag, getCapacity(), priority);
 	}
 
+	public NBTTagCompound getStorageTag()
+	{
+		return tag;
+	}
+
+	public void setStorageTag(NBTTagCompound tag)
+	{
+		this.tag = tag;
+	}
+
 	@Override
 	public int getPriority()
 	{

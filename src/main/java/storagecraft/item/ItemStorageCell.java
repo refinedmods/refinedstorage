@@ -32,7 +32,7 @@ public class ItemStorageCell extends ItemBase
 	{
 		for (int i = 0; i < 5; ++i)
 		{
-			list.add(initNBT(new ItemStack(item, 1, i)));
+			list.add(NBTStorage.initNBT(new ItemStack(item, 1, i)));
 		}
 	}
 
@@ -54,13 +54,6 @@ public class ItemStorageCell extends ItemBase
 	{
 		super.onCreated(stack, world, player);
 
-		initNBT(stack);
-	}
-
-	private ItemStack initNBT(ItemStack stack)
-	{
-		stack.setTagCompound(NBTStorage.getBaseNBT());
-
-		return stack;
+		NBTStorage.initNBT(stack);
 	}
 }

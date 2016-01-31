@@ -149,4 +149,11 @@ public class NBTStorage implements IStorage
 
 		return tag;
 	}
+
+	public static ItemStack initNBT(ItemStack stack)
+	{
+		stack.setTagCompound(NBTStorage.getBaseNBT());
+
+		return stack;
+	}
 }
