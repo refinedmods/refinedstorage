@@ -1,5 +1,6 @@
 package storagecraft.block;
 
+import java.util.List;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.properties.PropertyInteger;
@@ -17,8 +18,6 @@ import net.minecraft.world.World;
 import storagecraft.StorageCraft;
 import storagecraft.StorageCraftGUI;
 import storagecraft.tile.TileController;
-
-import java.util.List;
 
 public class BlockController extends BlockBase
 {
@@ -43,11 +42,11 @@ public class BlockController extends BlockBase
 	protected BlockState createBlockState()
 	{
 		return new BlockState(this, new IProperty[]
-			{
-				DIRECTION,
-				TYPE,
-				ENERGY
-			});
+		{
+			DIRECTION,
+			TYPE,
+			ENERGY
+		});
 	}
 
 	@Override

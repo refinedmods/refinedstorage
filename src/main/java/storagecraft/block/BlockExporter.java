@@ -23,7 +23,6 @@ public class BlockExporter extends BlockMachine
 		return new TileExporter();
 	}
 
-
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ)
 	{

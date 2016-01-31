@@ -27,11 +27,11 @@ public class BlockWirelessTransmitter extends BlockMachine
 	protected BlockState createBlockState()
 	{
 		return new BlockState(this, new IProperty[]
-			{
-				DIRECTION,
-				CONNECTED,
-				WORKING
-			});
+		{
+			DIRECTION,
+			CONNECTED,
+			WORKING
+		});
 	}
 
 	@Override

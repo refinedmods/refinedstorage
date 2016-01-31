@@ -27,11 +27,11 @@ public class BlockDetector extends BlockMachine
 	protected BlockState createBlockState()
 	{
 		return new BlockState(this, new IProperty[]
-			{
-				DIRECTION,
-				CONNECTED,
-				POWERED
-			});
+		{
+			DIRECTION,
+			CONNECTED,
+			POWERED
+		});
 	}
 
 	@Override

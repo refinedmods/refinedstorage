@@ -27,10 +27,10 @@ public abstract class BlockMachine extends BlockBase
 	protected BlockState createBlockState()
 	{
 		return new BlockState(this, new IProperty[]
-			{
-				DIRECTION,
-				CONNECTED
-			});
+		{
+			DIRECTION,
+			CONNECTED
+		});
 	}
 
 	@Override

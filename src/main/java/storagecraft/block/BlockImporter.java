@@ -23,7 +23,6 @@ public class BlockImporter extends BlockMachine
 		return new TileImporter();
 	}
 
-
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ)
 	{

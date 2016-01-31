@@ -44,9 +44,9 @@ public abstract class BlockBase extends Block
 	protected BlockState createBlockState()
 	{
 		return new BlockState(this, new IProperty[]
-			{
-				DIRECTION,
-			});
+		{
+			DIRECTION,
+		});
 	}
 
 	@Override
