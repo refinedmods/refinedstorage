@@ -17,6 +17,7 @@ import storagecraft.block.EnumGridType;
 import storagecraft.gui.GuiHandler;
 import storagecraft.item.*;
 import storagecraft.network.*;
+import storagecraft.storage.NBTStorage;
 import storagecraft.tile.*;
 import storagecraft.tile.solderer.*;
 
@@ -297,7 +298,7 @@ public class CommonProxy
 		);
 
 		// Storage Cells
-		GameRegistry.addRecipe(new ItemStack(StorageCraftItems.STORAGE_CELL, 1, ItemStorageCell.TYPE_1K),
+		GameRegistry.addRecipe(NBTStorage.initNBT(new ItemStack(StorageCraftItems.STORAGE_CELL, 1, ItemStorageCell.TYPE_1K)),
 			"GRG",
 			"RPR",
 			"EEE",
@@ -307,7 +308,7 @@ public class CommonProxy
 			'E', new ItemStack(StorageCraftItems.QUARTZ_ENRICHED_IRON)
 		);
 
-		GameRegistry.addRecipe(new ItemStack(StorageCraftItems.STORAGE_CELL, 1, ItemStorageCell.TYPE_4K),
+		GameRegistry.addRecipe(NBTStorage.initNBT(new ItemStack(StorageCraftItems.STORAGE_CELL, 1, ItemStorageCell.TYPE_4K)),
 			"GRG",
 			"RPR",
 			"EEE",
@@ -317,7 +318,7 @@ public class CommonProxy
 			'E', new ItemStack(StorageCraftItems.QUARTZ_ENRICHED_IRON)
 		);
 
-		GameRegistry.addRecipe(new ItemStack(StorageCraftItems.STORAGE_CELL, 1, ItemStorageCell.TYPE_16K),
+		GameRegistry.addRecipe(NBTStorage.initNBT(new ItemStack(StorageCraftItems.STORAGE_CELL, 1, ItemStorageCell.TYPE_16K)),
 			"GRG",
 			"RPR",
 			"EEE",
@@ -327,7 +328,7 @@ public class CommonProxy
 			'E', new ItemStack(StorageCraftItems.QUARTZ_ENRICHED_IRON)
 		);
 
-		GameRegistry.addRecipe(new ItemStack(StorageCraftItems.STORAGE_CELL, 1, ItemStorageCell.TYPE_64K),
+		GameRegistry.addRecipe(NBTStorage.initNBT(new ItemStack(StorageCraftItems.STORAGE_CELL, 1, ItemStorageCell.TYPE_64K)),
 			"GRG",
 			"RPR",
 			"EEE",
