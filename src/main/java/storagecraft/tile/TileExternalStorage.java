@@ -1,8 +1,5 @@
 package storagecraft.tile;
 
-import storagecraft.tile.settings.IRedstoneModeSetting;
-import storagecraft.tile.settings.IModeSetting;
-import storagecraft.tile.settings.ICompareSetting;
 import io.netty.buffer.ByteBuf;
 import java.util.List;
 import net.minecraft.inventory.IInventory;
@@ -18,6 +15,9 @@ import storagecraft.storage.IStorage;
 import storagecraft.storage.IStorageGui;
 import storagecraft.storage.IStorageProvider;
 import storagecraft.storage.StorageItem;
+import storagecraft.tile.settings.ICompareSetting;
+import storagecraft.tile.settings.IModeSetting;
+import storagecraft.tile.settings.IRedstoneModeSetting;
 import storagecraft.util.InventoryUtils;
 
 public class TileExternalStorage extends TileMachine implements IStorageProvider, IStorage, IStorageGui, ICompareSetting, IModeSetting
@@ -127,7 +127,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 			return false;
 		}
 
-		return InventoryUtils.canPushToInventory(connectedInventory, stack);
+		return TileStorage.checkWhitelistBlacklist(inventory, this, compare, stack) && InventoryUtils.canPushToInventory(connectedInventory, stack);
 	}
 
 	public IInventory getConnectedInventory()

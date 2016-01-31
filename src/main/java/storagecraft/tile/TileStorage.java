@@ -1,8 +1,5 @@
 package storagecraft.tile;
 
-import storagecraft.tile.settings.IRedstoneModeSetting;
-import storagecraft.tile.settings.IModeSetting;
-import storagecraft.tile.settings.ICompareSetting;
 import io.netty.buffer.ByteBuf;
 import java.util.List;
 import net.minecraft.inventory.IInventory;
@@ -20,6 +17,9 @@ import storagecraft.storage.IStorageGui;
 import storagecraft.storage.IStorageProvider;
 import storagecraft.storage.NBTStorage;
 import storagecraft.storage.StorageItem;
+import storagecraft.tile.settings.ICompareSetting;
+import storagecraft.tile.settings.IModeSetting;
+import storagecraft.tile.settings.IRedstoneModeSetting;
 import storagecraft.util.InventoryUtils;
 
 public class TileStorage extends TileMachine implements IStorageProvider, IStorage, IStorageGui, ICompareSetting, IModeSetting
@@ -154,7 +154,48 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 	@Override
 	public boolean canPush(ItemStack stack)
 	{
-		return getStorage().canPush(stack);
+		return checkWhitelistBlacklist(inventory, this, compare, stack) && getStorage().canPush(stack);
+	}
+
+	public static boolean checkWhitelistBlacklist(IInventory inventory, IModeSetting mode, int compare, ItemStack stack)
+	{
+		if (mode.isWhitelist())
+		{
+			int slots = 0;
+
+			for (int i = 0; i < inventory.getSizeInventory(); ++i)
+			{
+				ItemStack slot = inventory.getStackInSlot(i);
+
+				if (slot != null)
+				{
+					slots++;
+
+					if (InventoryUtils.compareStack(slot, stack, compare))
+					{
+						return true;
+					}
+				}
+			}
+
+			return slots == 0;
+		}
+		else if (mode.isBlacklist())
+		{
+			for (int i = 0; i < inventory.getSizeInventory(); ++i)
+			{
+				ItemStack slot = inventory.getStackInSlot(i);
+
+				if (slot != null && InventoryUtils.compareStack(slot, stack, compare))
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		return false;
 	}
 
 	@Override
