@@ -17,6 +17,8 @@ import storagecraft.block.EnumControllerType;
 import storagecraft.storage.IStorage;
 import storagecraft.storage.IStorageProvider;
 import storagecraft.storage.StorageItem;
+import storagecraft.tile.settings.IRedstoneModeSetting;
+import storagecraft.tile.settings.RedstoneMode;
 import storagecraft.util.InventoryUtils;
 
 public class TileController extends TileBase implements IEnergyReceiver, INetworkTile, IRedstoneModeSetting

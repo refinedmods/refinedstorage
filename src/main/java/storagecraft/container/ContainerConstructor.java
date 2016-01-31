@@ -27,7 +27,7 @@ public class ContainerConstructor extends ContainerBase
 	{
 		super(player);
 
-		addSlotToContainer(new SlotConstructor(constructor, 0, 80, 20));
+		addSlotToContainer(new SlotConstructor(constructor.getInventory(), 0, 80, 20));
 
 		addPlayerInventory(8, 55);
 	}

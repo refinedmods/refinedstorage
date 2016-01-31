@@ -4,7 +4,7 @@ import net.minecraft.util.EnumChatFormatting;
 import storagecraft.StorageCraft;
 import storagecraft.gui.GuiBase;
 import storagecraft.network.MessageCompareUpdate;
-import storagecraft.tile.ICompareSetting;
+import storagecraft.tile.settings.ICompareSetting;
 import storagecraft.util.InventoryUtils;
 
 public class SideButtonCompare extends SideButton

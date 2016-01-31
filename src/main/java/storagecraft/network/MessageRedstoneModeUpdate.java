@@ -5,7 +5,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import storagecraft.tile.IRedstoneModeSetting;
+import storagecraft.tile.settings.IRedstoneModeSetting;
 
 public class MessageRedstoneModeUpdate extends MessageHandlerPlayerToServer<MessageRedstoneModeUpdate> implements IMessage
 {

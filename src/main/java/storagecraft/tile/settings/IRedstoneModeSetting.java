@@ -1,4 +1,4 @@
-package storagecraft.tile;
+package storagecraft.tile.settings;
 
 import net.minecraft.util.BlockPos;
 

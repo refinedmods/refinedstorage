@@ -4,7 +4,7 @@ import net.minecraft.util.EnumChatFormatting;
 import storagecraft.StorageCraft;
 import storagecraft.gui.GuiBase;
 import storagecraft.network.MessageRedstoneModeUpdate;
-import storagecraft.tile.IRedstoneModeSetting;
+import storagecraft.tile.settings.IRedstoneModeSetting;
 
 public class SideButtonRedstoneMode extends SideButton
 {

@@ -5,7 +5,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import storagecraft.tile.ICompareSetting;
+import storagecraft.tile.settings.ICompareSetting;
 
 public class MessageCompareUpdate extends MessageHandlerPlayerToServer<MessageCompareUpdate> implements IMessage
 {

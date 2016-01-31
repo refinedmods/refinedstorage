@@ -1,19 +1,16 @@
 package storagecraft.tile;
 
+import storagecraft.tile.settings.ICompareSetting;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.IChatComponent;
 import storagecraft.StorageCraftBlocks;
 import storagecraft.inventory.InventorySimple;
 import storagecraft.storage.StorageItem;
 import storagecraft.util.InventoryUtils;
 
-public class TileDetector extends TileMachine implements IInventory, ISidedInventory, ICompareSetting
+public class TileDetector extends TileMachine implements ICompareSetting
 {
 	public static final int MODE_UNDER = 0;
 	public static final int MODE_EQUAL = 1;
@@ -175,7 +172,7 @@ public class TileDetector extends TileMachine implements IInventory, ISidedInven
 			amount = nbt.getInteger(NBT_AMOUNT);
 		}
 
-		InventoryUtils.restoreInventory(this, nbt);
+		InventoryUtils.restoreInventory(inventory, nbt);
 	}
 
 	@Override
@@ -187,7 +184,7 @@ public class TileDetector extends TileMachine implements IInventory, ISidedInven
 		nbt.setInteger(NBT_MODE, mode);
 		nbt.setInteger(NBT_AMOUNT, amount);
 
-		InventoryUtils.saveInventory(this, nbt);
+		InventoryUtils.saveInventory(inventory, nbt);
 	}
 
 	@Override
@@ -220,125 +217,8 @@ public class TileDetector extends TileMachine implements IInventory, ISidedInven
 		buf.writeBoolean(powered);
 	}
 
-	@Override
-	public int getSizeInventory()
+	public IInventory getInventory()
 	{
-		return inventory.getSizeInventory();
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int slot)
-	{
-		return inventory.getStackInSlot(slot);
-	}
-
-	@Override
-	public ItemStack decrStackSize(int slot, int count)
-	{
-		return inventory.decrStackSize(slot, count);
-	}
-
-	@Override
-	public ItemStack removeStackFromSlot(int slot)
-	{
-		return inventory.removeStackFromSlot(slot);
-	}
-
-	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack)
-	{
-		inventory.setInventorySlotContents(slot, stack);
-	}
-
-	@Override
-	public int getInventoryStackLimit()
-	{
-		return inventory.getInventoryStackLimit();
-	}
-
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer player)
-	{
-		return inventory.isUseableByPlayer(player);
-	}
-
-	@Override
-	public void openInventory(EntityPlayer player)
-	{
-		inventory.openInventory(player);
-	}
-
-	@Override
-	public void closeInventory(EntityPlayer player)
-	{
-		inventory.closeInventory(player);
-	}
-
-	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack stack)
-	{
-		return inventory.isItemValidForSlot(slot, stack);
-	}
-
-	@Override
-	public int getField(int id)
-	{
-		return inventory.getField(id);
-	}
-
-	@Override
-	public void setField(int id, int value)
-	{
-		inventory.setField(id, value);
-	}
-
-	@Override
-	public int getFieldCount()
-	{
-		return inventory.getFieldCount();
-	}
-
-	@Override
-	public void clear()
-	{
-		inventory.clear();
-	}
-
-	@Override
-	public String getName()
-	{
-		return inventory.getName();
-	}
-
-	@Override
-	public boolean hasCustomName()
-	{
-		return inventory.hasCustomName();
-	}
-
-	@Override
-	public IChatComponent getDisplayName()
-	{
-		return inventory.getDisplayName();
-	}
-
-	@Override
-	public int[] getSlotsForFace(EnumFacing side)
-	{
-		return new int[]
-		{
-		};
-	}
-
-	@Override
-	public boolean canInsertItem(int slot, ItemStack stack, EnumFacing direction)
-	{
-		return false;
-	}
-
-	@Override
-	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction)
-	{
-		return false;
+		return inventory;
 	}
 }

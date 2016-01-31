@@ -4,7 +4,7 @@ import net.minecraft.util.EnumChatFormatting;
 import storagecraft.StorageCraft;
 import storagecraft.gui.GuiBase;
 import storagecraft.network.MessageModeToggle;
-import storagecraft.tile.IModeSetting;
+import storagecraft.tile.settings.IModeSetting;
 
 public class SideButtonMode extends SideButton
 {

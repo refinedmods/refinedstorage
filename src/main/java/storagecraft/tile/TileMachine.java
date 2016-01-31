@@ -1,5 +1,7 @@
 package storagecraft.tile;
 
+import storagecraft.tile.settings.RedstoneMode;
+import storagecraft.tile.settings.IRedstoneModeSetting;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;

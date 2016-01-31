@@ -1,5 +1,8 @@
 package storagecraft.tile;
 
+import storagecraft.tile.settings.IRedstoneModeSetting;
+import storagecraft.tile.settings.IModeSetting;
+import storagecraft.tile.settings.ICompareSetting;
 import io.netty.buffer.ByteBuf;
 import java.util.List;
 import net.minecraft.inventory.IInventory;

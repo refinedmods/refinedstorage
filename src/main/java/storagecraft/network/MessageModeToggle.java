@@ -5,7 +5,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import storagecraft.tile.IModeSetting;
+import storagecraft.tile.settings.IModeSetting;
 
 public class MessageModeToggle extends MessageHandlerPlayerToServer<MessageModeToggle> implements IMessage
 {

@@ -10,7 +10,7 @@ public class ContainerDetector extends ContainerBase
 	{
 		super(player);
 
-		addSlotToContainer(new SlotSpecimen(detector, 0, 107, 20));
+		addSlotToContainer(new SlotSpecimen(detector.getInventory(), 0, 107, 20));
 
 		addPlayerInventory(8, 55);
 	}
