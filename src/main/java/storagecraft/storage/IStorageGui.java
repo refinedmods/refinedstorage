@@ -3,6 +3,7 @@ package storagecraft.storage;
 import net.minecraft.inventory.IInventory;
 import storagecraft.tile.ICompareSetting;
 import storagecraft.tile.IRedstoneModeSetting;
+import storagecraft.tile.IWhitelistBlacklistSetting;
 
 public interface IStorageGui
 {
@@ -20,6 +21,8 @@ public interface IStorageGui
 	public IRedstoneModeSetting getRedstoneModeSetting();
 
 	public ICompareSetting getCompareSetting();
+
+	public IWhitelistBlacklistSetting getWhitelistBlacklistSetting();
 
 	public int getStored();
 

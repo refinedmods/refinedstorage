@@ -17,15 +17,17 @@ import storagecraft.storage.IStorageProvider;
 import storagecraft.storage.StorageItem;
 import storagecraft.util.InventoryUtils;
 
-public class TileExternalStorage extends TileMachine implements IStorageProvider, IStorage, IStorageGui, ICompareSetting
+public class TileExternalStorage extends TileMachine implements IStorageProvider, IStorage, IStorageGui, ICompareSetting, IWhitelistBlacklistSetting
 {
 	public static final String NBT_PRIORITY = "Priority";
 	public static final String NBT_COMPARE = "Compare";
+	public static final String NBT_MODE = "Mode";
 
 	private InventorySimple inventory = new InventorySimple("external_storage", 9);
 
 	private int priority = 0;
 	private int compare = 0;
+	private int mode = 0;
 
 	@SideOnly(Side.CLIENT)
 	private int stored = 0;
@@ -145,6 +147,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 		buf.writeInt(priority);
 		buf.writeInt(getConnectedInventory() == null ? 0 : InventoryUtils.getInventoryItems(getConnectedInventory()));
 		buf.writeInt(compare);
+		buf.writeInt(mode);
 	}
 
 	@Override
@@ -155,6 +158,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 		priority = buf.readInt();
 		stored = buf.readInt();
 		compare = buf.readInt();
+		mode = buf.readInt();
 	}
 
 	@Override
@@ -173,6 +177,11 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 		{
 			compare = nbt.getInteger(NBT_COMPARE);
 		}
+
+		if (nbt.hasKey(NBT_MODE))
+		{
+			mode = nbt.getInteger(NBT_MODE);
+		}
 	}
 
 	@Override
@@ -184,6 +193,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
 		nbt.setInteger(NBT_PRIORITY, priority);
 		nbt.setInteger(NBT_COMPARE, compare);
+		nbt.setInteger(NBT_MODE, mode);
 	}
 
 	@Override
@@ -196,6 +206,30 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 	public void setCompare(int compare)
 	{
 		this.compare = compare;
+	}
+
+	@Override
+	public boolean isWhitelist()
+	{
+		return mode == 0;
+	}
+
+	@Override
+	public boolean isBlacklist()
+	{
+		return mode == 1;
+	}
+
+	@Override
+	public void setToWhitelist()
+	{
+		this.mode = 0;
+	}
+
+	@Override
+	public void setToBlacklist()
+	{
+		this.mode = 1;
 	}
 
 	@Override
@@ -235,6 +269,12 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
 	@Override
 	public ICompareSetting getCompareSetting()
+	{
+		return this;
+	}
+
+	@Override
+	public IWhitelistBlacklistSetting getWhitelistBlacklistSetting()
 	{
 		return this;
 	}

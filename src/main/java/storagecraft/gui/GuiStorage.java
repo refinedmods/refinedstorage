@@ -6,6 +6,7 @@ import net.minecraft.client.gui.GuiTextField;
 import storagecraft.container.ContainerStorage;
 import storagecraft.gui.sidebutton.SideButtonCompare;
 import storagecraft.gui.sidebutton.SideButtonRedstoneMode;
+import storagecraft.gui.sidebutton.SideButtonWhitelistBlacklist;
 import storagecraft.storage.IStorageGui;
 import storagecraft.util.InventoryUtils;
 
@@ -33,6 +34,11 @@ public class GuiStorage extends GuiBase
 		if (gui.getRedstoneModeSetting() != null)
 		{
 			addSideButton(new SideButtonRedstoneMode(gui.getRedstoneModeSetting()));
+		}
+
+		if (gui.getWhitelistBlacklistSetting() != null)
+		{
+			addSideButton(new SideButtonWhitelistBlacklist(gui.getWhitelistBlacklistSetting()));
 		}
 
 		if (gui.getCompareSetting() != null)

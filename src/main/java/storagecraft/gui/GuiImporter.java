@@ -2,8 +2,8 @@ package storagecraft.gui;
 
 import storagecraft.container.ContainerImporter;
 import storagecraft.gui.sidebutton.SideButtonCompare;
-import storagecraft.gui.sidebutton.SideButtonWhitelistBlacklist;
 import storagecraft.gui.sidebutton.SideButtonRedstoneMode;
+import storagecraft.gui.sidebutton.SideButtonWhitelistBlacklist;
 import storagecraft.tile.TileImporter;
 import storagecraft.util.InventoryUtils;
 
@@ -23,10 +23,10 @@ public class GuiImporter extends GuiBase
 	{
 		addSideButton(new SideButtonRedstoneMode(importer));
 
+		addSideButton(new SideButtonWhitelistBlacklist(importer));
+
 		addSideButton(new SideButtonCompare(importer, InventoryUtils.COMPARE_DAMAGE));
 		addSideButton(new SideButtonCompare(importer, InventoryUtils.COMPARE_NBT));
-
-		addSideButton(new SideButtonWhitelistBlacklist(importer));
 	}
 
 	@Override
