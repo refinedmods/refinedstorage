@@ -1,16 +1,14 @@
 package storagecraft.item;
 
+import java.util.List;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import storagecraft.storage.CellStorage;
-
-import java.util.List;
+import storagecraft.storage.NBTStorage;
 
 public class ItemStorageCell extends ItemBase
 {
@@ -41,13 +39,13 @@ public class ItemStorageCell extends ItemBase
 	@Override
 	public void addInformation(ItemStack cell, EntityPlayer player, List list, boolean b)
 	{
-		if (getCapacity(cell) == -1)
+		if (CellStorage.getCapacity(cell) == -1)
 		{
-			list.add(String.format(StatCollector.translateToLocal("misc.storagecraft:storage_cell_stored"), getStored(cell)));
+			list.add(String.format(StatCollector.translateToLocal("misc.storagecraft:storage_cell_stored"), NBTStorage.getStored(cell.getTagCompound())));
 		}
 		else
 		{
-			list.add(String.format(StatCollector.translateToLocal("misc.storagecraft:storage_cell_stored_capacity"), getStored(cell), getCapacity(cell)));
+			list.add(String.format(StatCollector.translateToLocal("misc.storagecraft:storage_cell_stored_capacity"), NBTStorage.getStored(cell.getTagCompound()), CellStorage.getCapacity(cell)));
 		}
 	}
 
@@ -59,37 +57,10 @@ public class ItemStorageCell extends ItemBase
 		initNBT(stack);
 	}
 
-	private ItemStack initNBT(ItemStack cell)
+	private ItemStack initNBT(ItemStack stack)
 	{
-		cell.setTagCompound(new NBTTagCompound());
+		stack.setTagCompound(NBTStorage.getBaseNBT());
 
-		cell.getTagCompound().setTag(CellStorage.NBT_ITEMS, new NBTTagList());
-		cell.getTagCompound().setInteger(CellStorage.NBT_STORED, 0);
-
-		return cell;
-	}
-
-	public static int getStored(ItemStack cell)
-	{
-		return cell.getTagCompound().getInteger(CellStorage.NBT_STORED);
-	}
-
-	public static int getCapacity(ItemStack cell)
-	{
-		switch (cell.getItemDamage())
-		{
-			case TYPE_1K:
-				return 1000;
-			case TYPE_4K:
-				return 4000;
-			case TYPE_16K:
-				return 16000;
-			case TYPE_64K:
-				return 64000;
-			case TYPE_CREATIVE:
-				return -1;
-		}
-
-		return 0;
+		return stack;
 	}
 }

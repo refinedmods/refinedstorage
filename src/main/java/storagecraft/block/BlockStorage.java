@@ -8,9 +8,11 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import static storagecraft.block.BlockBase.DIRECTION;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+import storagecraft.tile.TileStorage;
 
-public class BlockStorage extends BlockBase
+public class BlockStorage extends BlockMachine
 {
 	public static final PropertyEnum TYPE = PropertyEnum.create("type", EnumStorageType.class);
 
@@ -34,6 +36,7 @@ public class BlockStorage extends BlockBase
 		return new BlockState(this, new IProperty[]
 		{
 			DIRECTION,
+			CONNECTED,
 			TYPE
 		});
 	}
@@ -48,5 +51,11 @@ public class BlockStorage extends BlockBase
 	public int getMetaFromState(IBlockState state)
 	{
 		return ((EnumStorageType) state.getValue(TYPE)).getId();
+	}
+
+	@Override
+	public TileEntity createTileEntity(World world, IBlockState state)
+	{
+		return new TileStorage();
 	}
 }

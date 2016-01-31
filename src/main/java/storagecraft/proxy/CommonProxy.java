@@ -49,6 +49,7 @@ public class CommonProxy
 		GameRegistry.registerTileEntity(TileWirelessTransmitter.class, "wireless_transmitter");
 		GameRegistry.registerTileEntity(TileDestructor.class, "destructor");
 		GameRegistry.registerTileEntity(TileConstructor.class, "constructor");
+		GameRegistry.registerTileEntity(TileStorage.class, "storage");
 
 		GameRegistry.registerBlock(StorageCraftBlocks.CONTROLLER, ItemBlockController.class, "controller");
 		GameRegistry.registerBlock(StorageCraftBlocks.CABLE, "cable");

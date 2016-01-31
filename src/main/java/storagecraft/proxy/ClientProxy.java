@@ -3,6 +3,7 @@ package storagecraft.proxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.ItemModelMesher;
+import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.Item;
@@ -15,6 +16,8 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import storagecraft.StorageCraftBlocks;
 import storagecraft.StorageCraftItems;
+import storagecraft.block.BlockBase;
+import storagecraft.block.BlockMachine;
 import storagecraft.block.EnumControllerType;
 import storagecraft.block.EnumGridType;
 import storagecraft.block.EnumStorageType;
@@ -62,6 +65,13 @@ public class ClientProxy extends CommonProxy
 		ModelBakery.registerItemVariants(StorageCraftItems.WIRELESS_GRID,
 			new ResourceLocation("storagecraft:wireless_grid_connected"),
 			new ResourceLocation("storagecraft:wireless_grid_disconnected")
+		);
+
+		ModelBakery.registerItemVariants(Item.getItemFromBlock(StorageCraftBlocks.STORAGE),
+			new ResourceLocation("storagecraft:storage"),
+			new ResourceLocation("storagecraft:storage"),
+			new ResourceLocation("storagecraft:storage"),
+			new ResourceLocation("storagecraft:storage")
 		);
 
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(StorageCraftBlocks.CABLE), 0, TileCable.class);
@@ -130,10 +140,12 @@ public class ClientProxy extends CommonProxy
 		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.SOLDERER), 0, new ModelResourceLocation("storagecraft:solderer", "inventory"));
 		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.WIRELESS_TRANSMITTER), 0, new ModelResourceLocation("storagecraft:wireless_transmitter", "inventory"));
 		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.DETECTOR), 0, new ModelResourceLocation("storagecraft:detector", "inventory"));
-		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.STORAGE), EnumStorageType.TYPE_1K.getId(), new ModelResourceLocation("storagecraft:storage", "inventory"));
-		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.STORAGE), EnumStorageType.TYPE_4K.getId(), new ModelResourceLocation("storagecraft:storage", "inventory"));
-		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.STORAGE), EnumStorageType.TYPE_16K.getId(), new ModelResourceLocation("storagecraft:storage", "inventory"));
-		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.STORAGE), EnumStorageType.TYPE_64K.getId(), new ModelResourceLocation("storagecraft:storage", "inventory"));
-		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.STORAGE), EnumStorageType.TYPE_CREATIVE.getId(), new ModelResourceLocation("storagecraft:storage", "inventory"));
+		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.STORAGE), EnumStorageType.TYPE_1K.getId(), new ModelResourceLocation("storagecraft:storage"));
+		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.STORAGE), EnumStorageType.TYPE_4K.getId(), new ModelResourceLocation("storagecraft:storage"));
+		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.STORAGE), EnumStorageType.TYPE_16K.getId(), new ModelResourceLocation("storagecraft:storage"));
+		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.STORAGE), EnumStorageType.TYPE_64K.getId(), new ModelResourceLocation("storagecraft:storage"));
+		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.STORAGE), EnumStorageType.TYPE_CREATIVE.getId(), new ModelResourceLocation("storagecraft:storage"));
+
+		ModelLoader.setCustomStateMapper(StorageCraftBlocks.STORAGE, new StateMap.Builder().ignore(BlockMachine.CONNECTED).ignore(BlockBase.DIRECTION).build());
 	}
 }
