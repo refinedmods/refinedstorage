@@ -4,8 +4,10 @@ import com.google.common.primitives.Ints;
 import java.io.IOException;
 import net.minecraft.client.gui.GuiTextField;
 import storagecraft.container.ContainerStorage;
+import storagecraft.gui.sidebutton.SideButtonCompare;
 import storagecraft.gui.sidebutton.SideButtonRedstoneMode;
 import storagecraft.storage.IStorageGui;
+import storagecraft.util.InventoryUtils;
 
 public class GuiStorage extends GuiBase
 {
@@ -31,6 +33,12 @@ public class GuiStorage extends GuiBase
 		if (gui.getRedstoneModeSetting() != null)
 		{
 			addSideButton(new SideButtonRedstoneMode(gui.getRedstoneModeSetting()));
+		}
+
+		if (gui.getCompareSetting() != null)
+		{
+			addSideButton(new SideButtonCompare(gui.getCompareSetting(), InventoryUtils.COMPARE_DAMAGE));
+			addSideButton(new SideButtonCompare(gui.getCompareSetting(), InventoryUtils.COMPARE_NBT));
 		}
 
 		priorityField = new GuiTextField(0, fontRendererObj, x + 116 + 1, y + 54 + 1, 25, fontRendererObj.FONT_HEIGHT);

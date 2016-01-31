@@ -1,6 +1,7 @@
 package storagecraft.storage;
 
 import net.minecraft.inventory.IInventory;
+import storagecraft.tile.ICompareSetting;
 import storagecraft.tile.IRedstoneModeSetting;
 
 public interface IStorageGui
@@ -17,6 +18,8 @@ public interface IStorageGui
 	public IInventory getInventory();
 
 	public IRedstoneModeSetting getRedstoneModeSetting();
+
+	public ICompareSetting getCompareSetting();
 
 	public int getStored();
 

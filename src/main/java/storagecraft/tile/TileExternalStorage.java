@@ -17,13 +17,15 @@ import storagecraft.storage.IStorageProvider;
 import storagecraft.storage.StorageItem;
 import storagecraft.util.InventoryUtils;
 
-public class TileExternalStorage extends TileMachine implements IStorageProvider, IStorage, IStorageGui
+public class TileExternalStorage extends TileMachine implements IStorageProvider, IStorage, IStorageGui, ICompareSetting
 {
 	public static final String NBT_PRIORITY = "Priority";
+	public static final String NBT_COMPARE = "Compare";
 
 	private InventorySimple inventory = new InventorySimple("external_storage", 9);
 
 	private int priority = 0;
+	private int compare = 0;
 
 	@SideOnly(Side.CLIENT)
 	private int stored = 0;
@@ -142,6 +144,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
 		buf.writeInt(priority);
 		buf.writeInt(getConnectedInventory() == null ? 0 : InventoryUtils.getInventoryItems(getConnectedInventory()));
+		buf.writeInt(compare);
 	}
 
 	@Override
@@ -151,6 +154,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
 		priority = buf.readInt();
 		stored = buf.readInt();
+		compare = buf.readInt();
 	}
 
 	@Override
@@ -164,6 +168,11 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 		{
 			priority = nbt.getInteger(NBT_PRIORITY);
 		}
+
+		if (nbt.hasKey(NBT_COMPARE))
+		{
+			compare = nbt.getInteger(NBT_COMPARE);
+		}
 	}
 
 	@Override
@@ -174,6 +183,19 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 		InventoryUtils.saveInventory(inventory, nbt);
 
 		nbt.setInteger(NBT_PRIORITY, priority);
+		nbt.setInteger(NBT_COMPARE, compare);
+	}
+
+	@Override
+	public int getCompare()
+	{
+		return compare;
+	}
+
+	@Override
+	public void setCompare(int compare)
+	{
+		this.compare = compare;
 	}
 
 	@Override
@@ -207,6 +229,12 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
 	@Override
 	public IRedstoneModeSetting getRedstoneModeSetting()
+	{
+		return this;
+	}
+
+	@Override
+	public ICompareSetting getCompareSetting()
 	{
 		return this;
 	}

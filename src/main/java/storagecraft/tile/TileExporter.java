@@ -248,8 +248,8 @@ public class TileExporter extends TileMachine implements IInventory, ISidedInven
 	public int[] getSlotsForFace(EnumFacing side)
 	{
 		return new int[]
-			{
-			};
+		{
+		};
 	}
 
 	@Override

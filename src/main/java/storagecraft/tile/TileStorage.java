@@ -19,16 +19,18 @@ import storagecraft.storage.NBTStorage;
 import storagecraft.storage.StorageItem;
 import storagecraft.util.InventoryUtils;
 
-public class TileStorage extends TileMachine implements IStorageProvider, IStorage, IStorageGui
+public class TileStorage extends TileMachine implements IStorageProvider, IStorage, IStorageGui, ICompareSetting
 {
 	public static final String NBT_STORAGE = "Storage";
 	public static final String NBT_PRIORITY = "Priority";
+	public static final String NBT_COMPARE = "Compare";
 
 	private InventorySimple inventory = new InventorySimple("storage", 9);
 
 	private NBTTagCompound tag = NBTStorage.getBaseNBT();
 
 	private int priority = 0;
+	private int compare = 0;
 
 	@SideOnly(Side.CLIENT)
 	private int stored;
@@ -66,6 +68,11 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 		{
 			priority = nbt.getInteger(NBT_PRIORITY);
 		}
+
+		if (nbt.hasKey(NBT_COMPARE))
+		{
+			compare = nbt.getInteger(NBT_COMPARE);
+		}
 	}
 
 	@Override
@@ -77,6 +84,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 
 		nbt.setTag(NBT_STORAGE, tag);
 		nbt.setInteger(NBT_PRIORITY, priority);
+		nbt.setInteger(NBT_COMPARE, compare);
 	}
 
 	public EnumStorageType getType()
@@ -91,6 +99,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 
 		buf.writeInt(NBTStorage.getStored(tag));
 		buf.writeInt(priority);
+		buf.writeInt(compare);
 	}
 
 	@Override
@@ -100,6 +109,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 
 		stored = buf.readInt();
 		priority = buf.readInt();
+		compare = buf.readInt();
 	}
 
 	@Override
@@ -135,6 +145,18 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 	}
 
 	@Override
+	public int getCompare()
+	{
+		return compare;
+	}
+
+	@Override
+	public void setCompare(int compare)
+	{
+		this.compare = compare;
+	}
+
+	@Override
 	public String getName()
 	{
 		return "block.storagecraft:storage." + getType().getId() + ".name";
@@ -148,6 +170,12 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 
 	@Override
 	public IRedstoneModeSetting getRedstoneModeSetting()
+	{
+		return this;
+	}
+
+	@Override
+	public ICompareSetting getCompareSetting()
 	{
 		return this;
 	}
