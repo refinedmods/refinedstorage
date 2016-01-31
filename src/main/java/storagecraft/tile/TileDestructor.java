@@ -1,11 +1,10 @@
 package storagecraft.tile;
 
+import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import storagecraft.util.InventoryUtils;
-
-import java.util.List;
 
 public class TileDestructor extends TileMachine
 {

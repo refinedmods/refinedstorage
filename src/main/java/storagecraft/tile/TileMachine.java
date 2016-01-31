@@ -1,11 +1,11 @@
 package storagecraft.tile;
 
-import storagecraft.tile.settings.RedstoneMode;
-import storagecraft.tile.settings.IRedstoneModeSetting;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 import storagecraft.block.BlockMachine;
+import storagecraft.tile.settings.IRedstoneModeSetting;
+import storagecraft.tile.settings.RedstoneMode;
 
 public abstract class TileMachine extends TileBase implements INetworkTile, IRedstoneModeSetting
 {
