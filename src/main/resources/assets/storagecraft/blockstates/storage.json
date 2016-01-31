@@ -4,38 +4,6 @@
 		"model": "cube_all"
 	},
 	"variants": {
-		"inventory": [
-			{
-				"textures": {
-					"all": "storagecraft:blocks/1k_storage_block"
-				},
-				"transform": "forge:default-block"
-			},
-			{
-				"textures": {
-					"all": "storagecraft:blocks/4k_storage_block"
-				},
-				"transform": "forge:default-block"
-			},
-			{
-				"textures": {
-					"all": "storagecraft:blocks/16k_storage_block"
-				},
-				"transform": "forge:default-block"
-			},
-			{
-				"textures": {
-					"all": "storagecraft:blocks/64k_storage_block"
-				},
-				"transform": "forge:default-block"
-			},
-			{
-				"textures": {
-					"all": "storagecraft:blocks/creative_storage_block"
-				},
-				"transform": "forge:default-block"
-			}
-		],
 		"type": {
 			"1k": {
 				"textures": {
@@ -61,26 +29,6 @@
 				"textures": {
 					"all": "storagecraft:blocks/creative_storage_block"
 				}
-			}
-		},
-		"connected": {
-			"true": {
-			},
-			"false": {
-			}
-		},
-		"direction": {
-			"north": {
-			},
-			"east": {
-			},
-			"south": {
-			},
-			"west": {
-			},
-			"up": {
-			},
-			"down": {
 			}
 		}
 	}
