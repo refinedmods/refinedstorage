@@ -22,11 +22,14 @@ import storagecraft.util.InventoryUtils;
 
 public class TileStorage extends TileMachine implements IStorageProvider, IStorage, IInventory, ISidedInventory
 {
-	public static final String STORAGE_NBT = "Storage";
+	public static final String NBT_STORAGE = "Storage";
+	public static final String NBT_PRIORITY = "Priority";
 
 	private InventorySimple inventory = new InventorySimple("storage", 9);
 
 	private NBTTagCompound tag = NBTStorage.getBaseNBT();
+
+	private int priority = 0;
 
 	@SideOnly(Side.CLIENT)
 	private int stored;
@@ -55,9 +58,14 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 
 		InventoryUtils.restoreInventory(this, nbt);
 
-		if (nbt.hasKey(STORAGE_NBT))
+		if (nbt.hasKey(NBT_STORAGE))
 		{
-			tag = nbt.getCompoundTag(STORAGE_NBT);
+			tag = nbt.getCompoundTag(NBT_STORAGE);
+		}
+
+		if (nbt.hasKey(NBT_PRIORITY))
+		{
+			priority = nbt.getInteger(NBT_PRIORITY);
 		}
 	}
 
@@ -68,12 +76,13 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 
 		InventoryUtils.saveInventory(inventory, nbt);
 
-		nbt.setTag(STORAGE_NBT, tag);
+		nbt.setTag(NBT_STORAGE, tag);
+		nbt.setInteger(NBT_PRIORITY, priority);
 	}
 
 	public NBTStorage getStorage()
 	{
-		return new NBTStorage(tag, getType().getCapacity());
+		return new NBTStorage(tag, getType().getCapacity(), priority);
 	}
 
 	public EnumStorageType getType()
@@ -96,12 +105,23 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 		return (int) ((float) getStored() / (float) getType().getCapacity() * (float) scale);
 	}
 
+	public int getPriority()
+	{
+		return priority;
+	}
+
+	public void setPriority(int priority)
+	{
+		this.priority = priority;
+	}
+
 	@Override
 	public void toBytes(ByteBuf buf)
 	{
 		super.toBytes(buf);
 
 		buf.writeInt(NBTStorage.getStored(tag));
+		buf.writeInt(priority);
 	}
 
 	@Override
@@ -110,6 +130,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 		super.fromBytes(buf);
 
 		stored = buf.readInt();
+		priority = buf.readInt();
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyReceiver;
 import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -102,6 +103,15 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 							((IStorageProvider) machine).addStorages(storages);
 						}
 					}
+
+					storages.sort(new Comparator<IStorage>()
+					{
+						@Override
+						public int compare(IStorage s1, IStorage s2)
+						{
+							return (s1.getPriority() > s2.getPriority()) ? -1 : 1;
+						}
+					});
 
 					syncItems();
 				}

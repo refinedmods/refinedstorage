@@ -1,13 +1,20 @@
 package storagecraft.gui;
 
+import com.google.common.primitives.Ints;
+import java.io.IOException;
+import net.minecraft.client.gui.GuiTextField;
+import storagecraft.StorageCraft;
 import storagecraft.block.EnumStorageType;
 import storagecraft.container.ContainerStorage;
 import storagecraft.gui.sidebutton.SideButtonRedstoneMode;
+import storagecraft.network.MessageStoragePriorityUpdate;
 import storagecraft.tile.TileStorage;
 
 public class GuiStorage extends GuiBase
 {
 	private TileStorage storage;
+
+	private GuiTextField priorityField;
 
 	private int barX = 8;
 	private int barY = 54;
@@ -25,6 +32,14 @@ public class GuiStorage extends GuiBase
 	public void init(int x, int y)
 	{
 		addSideButton(new SideButtonRedstoneMode(storage));
+
+		priorityField = new GuiTextField(0, fontRendererObj, x + 116 + 1, y + 54 + 1, 25, fontRendererObj.FONT_HEIGHT);
+		priorityField.setText(String.valueOf(storage.getPriority()));
+		priorityField.setEnableBackgroundDrawing(false);
+		priorityField.setVisible(true);
+		priorityField.setTextColor(16777215);
+		priorityField.setCanLoseFocus(false);
+		priorityField.setFocused(true);
 	}
 
 	@Override
@@ -42,6 +57,8 @@ public class GuiStorage extends GuiBase
 		int barHeightNew = storage.getStoredScaled(barHeight);
 
 		drawTexture(x + barX, y + barY + barHeight - barHeightNew, 179, 0 + (barHeight - barHeightNew), barWidth, barHeightNew);
+
+		priorityField.drawTextBox();
 	}
 
 	@Override
@@ -62,6 +79,24 @@ public class GuiStorage extends GuiBase
 		if (inBounds(barX, barY, barWidth, barHeight, mouseX, mouseY))
 		{
 			drawTooltip(mouseX, mouseY, t("misc.storagecraft:storage.full", storage.getStoredScaled(100)));
+		}
+	}
+
+	@Override
+	protected void keyTyped(char character, int keyCode) throws IOException
+	{
+		if (!checkHotbarKeys(keyCode) && priorityField.textboxKeyTyped(character, keyCode))
+		{
+			Integer result = Ints.tryParse(priorityField.getText());
+
+			if (result != null)
+			{
+				StorageCraft.NETWORK.sendToServer(new MessageStoragePriorityUpdate(storage, result));
+			}
+		}
+		else
+		{
+			super.keyTyped(character, keyCode);
 		}
 	}
 }

@@ -1,8 +1,7 @@
 package storagecraft.storage;
 
-import net.minecraft.item.ItemStack;
-
 import java.util.List;
+import net.minecraft.item.ItemStack;
 
 public interface IStorage
 {
@@ -13,4 +12,6 @@ public interface IStorage
 	public ItemStack take(ItemStack stack, int flags);
 
 	public boolean canPush(ItemStack stack);
+
+	public int getPriority();
 }

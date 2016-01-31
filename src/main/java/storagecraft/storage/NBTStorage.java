@@ -18,11 +18,13 @@ public class NBTStorage implements IStorage
 
 	private NBTTagCompound nbtTag;
 	private int capacity;
+	private int priority;
 
-	public NBTStorage(NBTTagCompound tag, int capacity)
+	public NBTStorage(NBTTagCompound tag, int capacity, int priority)
 	{
 		this.nbtTag = tag;
 		this.capacity = capacity;
+		this.priority = priority;
 	}
 
 	@Override
@@ -120,6 +122,12 @@ public class NBTStorage implements IStorage
 		}
 
 		return (getStored(nbtTag) + stack.stackSize) <= capacity;
+	}
+
+	@Override
+	public int getPriority()
+	{
+		return priority;
 	}
 
 	private StorageItem createItemFromNBT(NBTTagCompound tag)
