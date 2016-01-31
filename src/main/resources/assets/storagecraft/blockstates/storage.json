@@ -1,7 +1,8 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-		"model": "cube_all"
+		"model": "cube_all",
+		"transform": "forge:default-block"
 	},
 	"variants": {
 		"type": {
