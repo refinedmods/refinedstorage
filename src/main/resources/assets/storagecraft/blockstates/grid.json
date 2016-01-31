@@ -1,66 +1,66 @@
 {
-    "forge_marker": 1,
-    "defaults": {
-        "model": "orientable",
-        "textures": {
-            "side": "storagecraft:blocks/side",
-            "top": "storagecraft:blocks/side"
-        }
-    },
-    "variants": {
-        "inventory": [
-            {
-                "textures": {
-                    "front": "storagecraft:blocks/grid_disconnected"
-                },
-                "transform": "forge:default-block",
-                "y": 0
-            },
-            {
-                "textures": {
-                    "front": "storagecraft:blocks/grid_disconnected"
-                },
-                "transform": "forge:default-block",
-                "y": 0
-            }
-        ],
-        "type": {
-            "normal": {
-            },
-            "crafting": {
-            }
-        },
-        "connected": {
-            "true": {
-                "textures": {
-                    "front": "storagecraft:blocks/grid_connected"
-                }
-            },
-            "false": {
-                "textures": {
-                    "front": "storagecraft:blocks/grid_disconnected"
-                }
-            }
-        },
-        "direction": {
-            "north": {
-                "y": 0
-            },
-            "east": {
-                "y": 90
-            },
-            "south": {
-                "y": 180
-            },
-            "west": {
-                "y": 270
-            },
-            "up": {
-                "x": 270
-            },
-            "down": {
-                "x": 90
-            }
-        }
-    }
-} 
+	"forge_marker": 1,
+	"defaults": {
+		"model": "orientable",
+		"textures": {
+			"side": "storagecraft:blocks/side",
+			"top": "storagecraft:blocks/side"
+		}
+	},
+	"variants": {
+		"inventory": [
+			{
+				"textures": {
+					"front": "storagecraft:blocks/grid_disconnected"
+				},
+				"transform": "forge:default-block",
+				"y": 0
+			},
+			{
+				"textures": {
+					"front": "storagecraft:blocks/grid_disconnected"
+				},
+				"transform": "forge:default-block",
+				"y": 0
+			}
+		],
+		"type": {
+			"normal": {
+			},
+			"crafting": {
+			}
+		},
+		"connected": {
+			"true": {
+				"textures": {
+					"front": "storagecraft:blocks/grid_connected"
+				}
+			},
+			"false": {
+				"textures": {
+					"front": "storagecraft:blocks/grid_disconnected"
+				}
+			}
+		},
+		"direction": {
+			"north": {
+				"y": 0
+			},
+			"east": {
+				"y": 90
+			},
+			"south": {
+				"y": 180
+			},
+			"west": {
+				"y": 270
+			},
+			"up": {
+				"x": 270
+			},
+			"down": {
+				"x": 90
+			}
+		}
+	}
+}
