@@ -12,18 +12,15 @@ import net.minecraft.util.IChatComponent;
 import storagecraft.inventory.InventorySimple;
 import storagecraft.util.InventoryUtils;
 
-public class TileImporter extends TileMachine implements IInventory, ISidedInventory, ICompareSetting
+public class TileImporter extends TileMachine implements IInventory, ISidedInventory, ICompareSetting, IWhitelistBlacklistSetting
 {
-	public static final int MODE_WHITELIST = 0;
-	public static final int MODE_BLACKLIST = 1;
-
 	public static final String NBT_COMPARE = "Compare";
 	public static final String NBT_MODE = "Mode";
 
 	private InventorySimple inventory = new InventorySimple("importer", 9);
 
 	private int compare = 0;
-	private int mode = MODE_WHITELIST;
+	private int mode = 0;
 
 	private int currentSlot = 0;
 
@@ -102,11 +99,11 @@ public class TileImporter extends TileMachine implements IInventory, ISidedInven
 
 				if (InventoryUtils.compareStack(stack, slot, compare))
 				{
-					if (mode == MODE_WHITELIST)
+					if (isWhitelist())
 					{
 						return true;
 					}
-					else if (mode == MODE_BLACKLIST)
+					else if (isBlacklist())
 					{
 						return false;
 					}
@@ -114,7 +111,7 @@ public class TileImporter extends TileMachine implements IInventory, ISidedInven
 			}
 		}
 
-		if (mode == MODE_WHITELIST)
+		if (isWhitelist())
 		{
 			return slots == 0;
 		}
@@ -136,16 +133,28 @@ public class TileImporter extends TileMachine implements IInventory, ISidedInven
 		this.compare = compare;
 	}
 
-	public int getMode()
+	@Override
+	public boolean isWhitelist()
 	{
-		return mode;
+		return mode == 0;
 	}
 
-	public void setMode(int mode)
+	@Override
+	public boolean isBlacklist()
 	{
-		markDirty();
+		return mode == 1;
+	}
 
-		this.mode = mode;
+	@Override
+	public void setToWhitelist()
+	{
+		this.mode = 0;
+	}
+
+	@Override
+	public void setToBlacklist()
+	{
+		this.mode = 1;
 	}
 
 	@Override
@@ -301,8 +310,8 @@ public class TileImporter extends TileMachine implements IInventory, ISidedInven
 	public int[] getSlotsForFace(EnumFacing side)
 	{
 		return new int[]
-			{
-			};
+		{
+		};
 	}
 
 	@Override

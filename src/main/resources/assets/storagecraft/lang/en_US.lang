@@ -52,9 +52,9 @@ sidebutton.storagecraft:sorting.type=Sorting Type
 sidebutton.storagecraft:sorting.type.0=Amount
 sidebutton.storagecraft:sorting.type.1=Name
 
-sidebutton.storagecraft:importer.mode=Mode
-sidebutton.storagecraft:importer.mode.0=Whitelist
-sidebutton.storagecraft:importer.mode.1=Blacklist
+sidebutton.storagecraft:whitelist_blacklist=Mode
+sidebutton.storagecraft:whitelist_blacklist.whitelist=Whitelist
+sidebutton.storagecraft:whitelist_blacklist.blacklist=Blacklist
 
 sidebutton.storagecraft:detector.mode=Mode
 sidebutton.storagecraft:detector.mode.0=Emit signal when under the amount
