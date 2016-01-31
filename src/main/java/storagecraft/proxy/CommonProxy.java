@@ -14,6 +14,7 @@ import storagecraft.StorageCraftBlocks;
 import storagecraft.StorageCraftItems;
 import storagecraft.block.EnumControllerType;
 import storagecraft.block.EnumGridType;
+import storagecraft.block.EnumStorageType;
 import storagecraft.gui.GuiHandler;
 import storagecraft.item.*;
 import storagecraft.network.*;
@@ -336,6 +337,47 @@ public class CommonProxy
 			'R', new ItemStack(Items.redstone),
 			'P', new ItemStack(StorageCraftItems.STORAGE_PART, 1, ItemStoragePart.TYPE_64K),
 			'E', new ItemStack(StorageCraftItems.QUARTZ_ENRICHED_IRON)
+		);
+
+		// Storage Blocks
+		GameRegistry.addRecipe(ItemBlockStorage.initNBT(new ItemStack(StorageCraftBlocks.STORAGE, 1, EnumStorageType.TYPE_1K.getId())),
+			"EPE",
+			"RMR",
+			"EEE",
+			'R', new ItemStack(Items.redstone),
+			'P', new ItemStack(StorageCraftItems.STORAGE_PART, 1, ItemStoragePart.TYPE_1K),
+			'E', new ItemStack(StorageCraftItems.QUARTZ_ENRICHED_IRON),
+			'M', new ItemStack(StorageCraftBlocks.MACHINE_CASING)
+		);
+
+		GameRegistry.addRecipe(ItemBlockStorage.initNBT(new ItemStack(StorageCraftBlocks.STORAGE, 1, EnumStorageType.TYPE_4K.getId())),
+			"EPE",
+			"RMR",
+			"EEE",
+			'R', new ItemStack(Items.redstone),
+			'P', new ItemStack(StorageCraftItems.STORAGE_PART, 1, ItemStoragePart.TYPE_4K),
+			'E', new ItemStack(StorageCraftItems.QUARTZ_ENRICHED_IRON),
+			'M', new ItemStack(StorageCraftBlocks.MACHINE_CASING)
+		);
+
+		GameRegistry.addRecipe(ItemBlockStorage.initNBT(new ItemStack(StorageCraftBlocks.STORAGE, 1, EnumStorageType.TYPE_16K.getId())),
+			"EPE",
+			"RMR",
+			"EEE",
+			'R', new ItemStack(Items.redstone),
+			'P', new ItemStack(StorageCraftItems.STORAGE_PART, 1, ItemStoragePart.TYPE_16K),
+			'E', new ItemStack(StorageCraftItems.QUARTZ_ENRICHED_IRON),
+			'M', new ItemStack(StorageCraftBlocks.MACHINE_CASING)
+		);
+
+		GameRegistry.addRecipe(ItemBlockStorage.initNBT(new ItemStack(StorageCraftBlocks.STORAGE, 1, EnumStorageType.TYPE_64K.getId())),
+			"EPE",
+			"RMR",
+			"EEE",
+			'R', new ItemStack(Items.redstone),
+			'P', new ItemStack(StorageCraftItems.STORAGE_PART, 1, ItemStoragePart.TYPE_64K),
+			'E', new ItemStack(StorageCraftItems.QUARTZ_ENRICHED_IRON),
+			'M', new ItemStack(StorageCraftBlocks.MACHINE_CASING)
 		);
 	}
 
