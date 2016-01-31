@@ -18,11 +18,11 @@ public class MessageStoragePriorityUpdate extends MessageHandlerPlayerToServer<M
 	{
 	}
 
-	public MessageStoragePriorityUpdate(TileStorage storage, int priority)
+	public MessageStoragePriorityUpdate(BlockPos pos, int priority)
 	{
-		this.x = storage.getPos().getX();
-		this.y = storage.getPos().getY();
-		this.z = storage.getPos().getZ();
+		this.x = pos.getX();
+		this.y = pos.getY();
+		this.z = pos.getZ();
 		this.priority = priority;
 	}
 

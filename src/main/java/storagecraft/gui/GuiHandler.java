@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
 import storagecraft.StorageCraftGUI;
 import storagecraft.container.*;
 import storagecraft.tile.*;
+import storagecraft.storage.IStorageGui;
 
 public class GuiHandler implements IGuiHandler
 {
@@ -39,7 +40,7 @@ public class GuiHandler implements IGuiHandler
 			case StorageCraftGUI.CONSTRUCTOR:
 				return new ContainerConstructor(player, (TileConstructor) tile);
 			case StorageCraftGUI.STORAGE:
-				return new ContainerStorage(player, (TileStorage) tile);
+				return new ContainerStorage(player, ((IStorageGui) tile).getInventory());
 			default:
 				return null;
 		}
@@ -81,7 +82,7 @@ public class GuiHandler implements IGuiHandler
 			case StorageCraftGUI.CONSTRUCTOR:
 				return new GuiConstructor((ContainerConstructor) getContainer(ID, player, tile), (TileConstructor) tile);
 			case StorageCraftGUI.STORAGE:
-				return new GuiStorage((ContainerStorage) getContainer(ID, player, tile), (TileStorage) tile);
+				return new GuiStorage((ContainerStorage) getContainer(ID, player, tile), (IStorageGui) tile);
 			default:
 				return null;
 		}

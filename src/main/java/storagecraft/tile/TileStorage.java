@@ -2,25 +2,24 @@ package storagecraft.tile;
 
 import io.netty.buffer.ByteBuf;
 import java.util.List;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.IChatComponent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import storagecraft.StorageCraft;
 import storagecraft.block.BlockStorage;
 import storagecraft.block.EnumStorageType;
 import storagecraft.inventory.InventorySimple;
+import storagecraft.network.MessageStoragePriorityUpdate;
 import storagecraft.storage.IStorage;
+import storagecraft.storage.IStorageGui;
 import storagecraft.storage.IStorageProvider;
 import storagecraft.storage.NBTStorage;
 import storagecraft.storage.StorageItem;
 import storagecraft.util.InventoryUtils;
 
-public class TileStorage extends TileMachine implements IStorageProvider, IStorage, IInventory, ISidedInventory
+public class TileStorage extends TileMachine implements IStorageProvider, IStorage, IStorageGui
 {
 	public static final String NBT_STORAGE = "Storage";
 	public static final String NBT_PRIORITY = "Priority";
@@ -56,7 +55,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 	{
 		super.readFromNBT(nbt);
 
-		InventoryUtils.restoreInventory(this, nbt);
+		InventoryUtils.restoreInventory(inventory, nbt);
 
 		if (nbt.hasKey(NBT_STORAGE))
 		{
@@ -80,39 +79,9 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 		nbt.setInteger(NBT_PRIORITY, priority);
 	}
 
-	public NBTStorage getStorage()
-	{
-		return new NBTStorage(tag, getType().getCapacity(), priority);
-	}
-
 	public EnumStorageType getType()
 	{
 		return ((EnumStorageType) worldObj.getBlockState(pos).getValue(BlockStorage.TYPE));
-	}
-
-	public int getStored()
-	{
-		return stored;
-	}
-
-	public int getStoredScaled(int scale)
-	{
-		if (getType() == EnumStorageType.TYPE_CREATIVE)
-		{
-			return 0;
-		}
-
-		return (int) ((float) getStored() / (float) getType().getCapacity() * (float) scale);
-	}
-
-	public int getPriority()
-	{
-		return priority;
-	}
-
-	public void setPriority(int priority)
-	{
-		this.priority = priority;
 	}
 
 	@Override
@@ -166,124 +135,72 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 	}
 
 	@Override
-	public int getSizeInventory()
-	{
-		return inventory.getSizeInventory();
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int slot)
-	{
-		return inventory.getStackInSlot(slot);
-	}
-
-	@Override
-	public ItemStack decrStackSize(int slot, int count)
-	{
-		return inventory.decrStackSize(slot, count);
-	}
-
-	@Override
-	public ItemStack removeStackFromSlot(int slot)
-	{
-		return inventory.removeStackFromSlot(slot);
-	}
-
-	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack)
-	{
-		inventory.setInventorySlotContents(slot, stack);
-	}
-
-	@Override
-	public int getInventoryStackLimit()
-	{
-		return inventory.getInventoryStackLimit();
-	}
-
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer player)
-	{
-		return inventory.isUseableByPlayer(player);
-	}
-
-	@Override
-	public void openInventory(EntityPlayer player)
-	{
-		inventory.openInventory(player);
-	}
-
-	@Override
-	public void closeInventory(EntityPlayer player)
-	{
-		inventory.closeInventory(player);
-	}
-
-	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack stack)
-	{
-		return inventory.isItemValidForSlot(slot, stack);
-	}
-
-	@Override
-	public int getField(int id)
-	{
-		return inventory.getField(id);
-	}
-
-	@Override
-	public void setField(int id, int value)
-	{
-		inventory.setField(id, value);
-	}
-
-	@Override
-	public int getFieldCount()
-	{
-		return inventory.getFieldCount();
-	}
-
-	@Override
-	public void clear()
-	{
-		inventory.clear();
-	}
-
-	@Override
 	public String getName()
 	{
-		return inventory.getName();
+		return "block.storagecraft:storage." + getType().getId() + ".name";
 	}
 
 	@Override
-	public boolean hasCustomName()
+	public IInventory getInventory()
 	{
-		return inventory.hasCustomName();
+		return inventory;
 	}
 
 	@Override
-	public IChatComponent getDisplayName()
+	public IRedstoneModeSetting getRedstoneModeSetting()
 	{
-		return inventory.getDisplayName();
+		return this;
 	}
 
 	@Override
-	public int[] getSlotsForFace(EnumFacing side)
+	public IPriorityHandler getPriorityHandler()
 	{
-		return new int[]
+		return new IPriorityHandler()
 		{
+			@Override
+			public void onPriorityChanged(int priority)
+			{
+				StorageCraft.NETWORK.sendToServer(new MessageStoragePriorityUpdate(pos, priority));
+			}
 		};
 	}
 
 	@Override
-	public boolean canInsertItem(int slot, ItemStack stack, EnumFacing direction)
+	public NBTStorage getStorage()
 	{
-		return false;
+		return new NBTStorage(tag, getCapacity(), priority);
 	}
 
 	@Override
-	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction)
+	public int getPriority()
 	{
-		return false;
+		return priority;
+	}
+
+	public void setPriority(int priority)
+	{
+		this.priority = priority;
+	}
+
+	@Override
+	public int getStored()
+	{
+		return stored;
+	}
+
+	public int getStoredScaled(int scale)
+	{
+		if (getType() == EnumStorageType.TYPE_CREATIVE)
+		{
+			return 0;
+		}
+
+		return (int) ((float) getStored() / (float) getCapacity() * (float) scale);
+	}
+
+	@Override
+	public int getCapacity()
+	{
+		return getType().getCapacity();
 	}
 }
