@@ -41,11 +41,11 @@ public class ItemStorageCell extends ItemBase
 	{
 		if (CellStorage.getCapacity(cell) == -1)
 		{
-			list.add(String.format(StatCollector.translateToLocal("misc.storagecraft:storage_cell_stored"), NBTStorage.getStored(cell.getTagCompound())));
+			list.add(String.format(StatCollector.translateToLocal("misc.storagecraft:storage.stored"), NBTStorage.getStored(cell.getTagCompound())));
 		}
 		else
 		{
-			list.add(String.format(StatCollector.translateToLocal("misc.storagecraft:storage_cell_stored_capacity"), NBTStorage.getStored(cell.getTagCompound()), CellStorage.getCapacity(cell)));
+			list.add(String.format(StatCollector.translateToLocal("misc.storagecraft:storage.stored_capacity"), NBTStorage.getStored(cell.getTagCompound()), CellStorage.getCapacity(cell)));
 		}
 	}
 

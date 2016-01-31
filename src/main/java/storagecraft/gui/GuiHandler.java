@@ -38,6 +38,8 @@ public class GuiHandler implements IGuiHandler
 				return new ContainerDestructor(player);
 			case StorageCraftGUI.CONSTRUCTOR:
 				return new ContainerConstructor(player, (TileConstructor) tile);
+			case StorageCraftGUI.STORAGE:
+				return new ContainerStorage(player, (TileStorage) tile);
 			default:
 				return null;
 		}
@@ -78,6 +80,8 @@ public class GuiHandler implements IGuiHandler
 				return new GuiDestructor((ContainerDestructor) getContainer(ID, player, tile), (TileDestructor) tile);
 			case StorageCraftGUI.CONSTRUCTOR:
 				return new GuiConstructor((ContainerConstructor) getContainer(ID, player, tile), (TileConstructor) tile);
+			case StorageCraftGUI.STORAGE:
+				return new GuiStorage((ContainerStorage) getContainer(ID, player, tile), (TileStorage) tile);
 			default:
 				return null;
 		}

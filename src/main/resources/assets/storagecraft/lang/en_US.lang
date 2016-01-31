@@ -16,8 +16,11 @@ gui.storagecraft:constructor=Constructor
 misc.storagecraft:energy_stored=%d / %d RF
 misc.storagecraft:energy_usage=Usage: %d RF/t
 
-misc.storagecraft:storage_cell_stored=Stored: %d
-misc.storagecraft:storage_cell_stored_capacity=Stored: %d / %d
+misc.storagecraft:storage=Storage
+misc.storagecraft:storage.stored=Stored: %d
+misc.storagecraft:storage.stored_capacity=Stored: %d / %d
+misc.storagecraft:storage.capacity=Capacity: %d
+misc.storagecraft:storage.full=%d%% full
 
 misc.storagecraft:wireless_grid.tooltip=Bound to %d, %d, %d.
 misc.storagecraft:wireless_grid.not_working=The Wireless Transmitter is disabled or out of fuel.
@@ -31,6 +34,7 @@ misc.storagecraft:wireless_grid.no_grid.1=There is no Crafting Grid found in the
 misc.storagecraft:yes=Yes
 misc.storagecraft:no=No
 misc.storagecraft:clear=Clear
+misc.storagecraft:priority=Priority
 
 sidebutton.storagecraft:compare.1=Compare Damage
 sidebutton.storagecraft:compare.2=Compare NBT
