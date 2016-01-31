@@ -68,6 +68,18 @@ public class ClientProxy extends CommonProxy
 		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(StorageCraftBlocks.CABLE), 0, TileCable.class);
 
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(StorageCraftBlocks.CABLE), 0, new ModelResourceLocation("storagecraft:cable", "inventory"));
+
+		ModelLoader.setCustomStateMapper(StorageCraftBlocks.STORAGE, (new StateMap.Builder())
+			.ignore(StorageCraftBlocks.STORAGE.DIRECTION)
+			.ignore(StorageCraftBlocks.STORAGE.CONNECTED)
+			.build()
+		);
+
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(StorageCraftBlocks.STORAGE), EnumStorageType.TYPE_1K.getId(), new ModelResourceLocation("storagecraft:storage", "type=1k"));
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(StorageCraftBlocks.STORAGE), EnumStorageType.TYPE_4K.getId(), new ModelResourceLocation("storagecraft:storage", "type=4k"));
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(StorageCraftBlocks.STORAGE), EnumStorageType.TYPE_16K.getId(), new ModelResourceLocation("storagecraft:storage", "type=16k"));
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(StorageCraftBlocks.STORAGE), EnumStorageType.TYPE_64K.getId(), new ModelResourceLocation("storagecraft:storage", "type=64k"));
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(StorageCraftBlocks.STORAGE), EnumStorageType.TYPE_CREATIVE.getId(), new ModelResourceLocation("storagecraft:storage", "type=creative"));
 	}
 
 	@Override
@@ -131,17 +143,5 @@ public class ClientProxy extends CommonProxy
 		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.SOLDERER), 0, new ModelResourceLocation("storagecraft:solderer", "inventory"));
 		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.WIRELESS_TRANSMITTER), 0, new ModelResourceLocation("storagecraft:wireless_transmitter", "inventory"));
 		mesher.register(Item.getItemFromBlock(StorageCraftBlocks.DETECTOR), 0, new ModelResourceLocation("storagecraft:detector", "inventory"));
-
-		ModelLoader.setCustomStateMapper(StorageCraftBlocks.STORAGE, (new StateMap.Builder())
-			.ignore(StorageCraftBlocks.STORAGE.DIRECTION)
-			.ignore(StorageCraftBlocks.STORAGE.CONNECTED)
-			.build()
-		);
-
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(StorageCraftBlocks.STORAGE), EnumStorageType.TYPE_1K.getId(), new ModelResourceLocation("storagecraft:storage", "type=1k"));
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(StorageCraftBlocks.STORAGE), EnumStorageType.TYPE_4K.getId(), new ModelResourceLocation("storagecraft:storage", "type=4k"));
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(StorageCraftBlocks.STORAGE), EnumStorageType.TYPE_16K.getId(), new ModelResourceLocation("storagecraft:storage", "type=16k"));
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(StorageCraftBlocks.STORAGE), EnumStorageType.TYPE_64K.getId(), new ModelResourceLocation("storagecraft:storage", "type=64k"));
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(StorageCraftBlocks.STORAGE), EnumStorageType.TYPE_CREATIVE.getId(), new ModelResourceLocation("storagecraft:storage", "type=creative"));
 	}
 }
