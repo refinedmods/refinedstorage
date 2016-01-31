@@ -28,7 +28,7 @@ public class BlockExternalStorage extends BlockMachine
 	{
 		if (!world.isRemote)
 		{
-			player.openGui(StorageCraft.INSTANCE, StorageCraftGUI.EXTERNAL_STORAGE, world, pos.getX(), pos.getY(), pos.getZ());
+			player.openGui(StorageCraft.INSTANCE, StorageCraftGUI.STORAGE, world, pos.getX(), pos.getY(), pos.getZ());
 		}
 
 		return true;

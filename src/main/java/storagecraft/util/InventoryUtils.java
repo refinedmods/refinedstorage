@@ -199,6 +199,23 @@ public class InventoryUtils
 		return toGo == 0;
 	}
 
+	public static int getInventoryItems(IInventory inventory)
+	{
+		int size = 0;
+
+		for (int i = 0; i < inventory.getSizeInventory(); ++i)
+		{
+			ItemStack slot = inventory.getStackInSlot(i);
+
+			if (slot != null)
+			{
+				size += slot.stackSize;
+			}
+		}
+
+		return size;
+	}
+
 	public static boolean compareStack(ItemStack first, ItemStack second)
 	{
 		return compareStack(first, second, COMPARE_NBT | COMPARE_DAMAGE | COMPARE_QUANTITY);

@@ -5,6 +5,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import storagecraft.tile.TileExternalStorage;
 import storagecraft.tile.TileStorage;
 
 public class MessageStoragePriorityUpdate extends MessageHandlerPlayerToServer<MessageStoragePriorityUpdate> implements IMessage
@@ -52,6 +53,10 @@ public class MessageStoragePriorityUpdate extends MessageHandlerPlayerToServer<M
 		if (tile instanceof TileStorage)
 		{
 			((TileStorage) tile).setPriority(message.priority);
+		}
+		else if (tile instanceof TileExternalStorage)
+		{
+			((TileExternalStorage) tile).setPriority(message.priority);
 		}
 	}
 }

@@ -1,27 +1,32 @@
 package storagecraft.tile;
 
+import io.netty.buffer.ByteBuf;
 import java.util.List;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import storagecraft.StorageCraft;
+import storagecraft.inventory.InventorySimple;
+import storagecraft.network.MessageStoragePriorityUpdate;
 import storagecraft.storage.IStorage;
+import storagecraft.storage.IStorageGui;
 import storagecraft.storage.IStorageProvider;
 import storagecraft.storage.StorageItem;
 import storagecraft.util.InventoryUtils;
 
-public class TileExternalStorage extends TileMachine implements IStorageProvider, IStorage
+public class TileExternalStorage extends TileMachine implements IStorageProvider, IStorage, IStorageGui
 {
-	public IInventory getInventory()
-	{
-		TileEntity tile = worldObj.getTileEntity(pos.offset(getDirection()));
+	public static final String NBT_PRIORITY = "Priority";
 
-		if (tile instanceof IInventory)
-		{
-			return (IInventory) tile;
-		}
+	private InventorySimple inventory = new InventorySimple("external_storage", 9);
 
-		return null;
-	}
+	private int priority = 0;
+
+	@SideOnly(Side.CLIENT)
+	private int stored = 0;
 
 	@Override
 	public int getEnergyUsage()
@@ -37,15 +42,15 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 	@Override
 	public void addItems(List<StorageItem> items)
 	{
-		IInventory inventory = getInventory();
+		IInventory connectedInventory = getConnectedInventory();
 
-		if (inventory != null)
+		if (connectedInventory != null)
 		{
-			for (int i = 0; i < inventory.getSizeInventory(); ++i)
+			for (int i = 0; i < connectedInventory.getSizeInventory(); ++i)
 			{
-				if (inventory.getStackInSlot(i) != null)
+				if (connectedInventory.getStackInSlot(i) != null)
 				{
-					items.add(new StorageItem(inventory.getStackInSlot(i)));
+					items.add(new StorageItem(connectedInventory.getStackInSlot(i)));
 				}
 			}
 		}
@@ -54,31 +59,31 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 	@Override
 	public void push(ItemStack stack)
 	{
-		IInventory inventory = getInventory();
+		IInventory connectedInventory = getConnectedInventory();
 
-		if (inventory == null)
+		if (connectedInventory == null)
 		{
 			return;
 		}
 
-		InventoryUtils.pushToInventory(inventory, stack);
+		InventoryUtils.pushToInventory(connectedInventory, stack);
 	}
 
 	@Override
 	public ItemStack take(ItemStack stack, int flags)
 	{
-		IInventory inventory = getInventory();
+		IInventory connectedInventory = getConnectedInventory();
 
-		if (inventory == null)
+		if (connectedInventory == null)
 		{
 			return null;
 		}
 
 		int quantity = stack.stackSize;
 
-		for (int i = 0; i < inventory.getSizeInventory(); ++i)
+		for (int i = 0; i < connectedInventory.getSizeInventory(); ++i)
 		{
-			ItemStack slot = inventory.getStackInSlot(i);
+			ItemStack slot = connectedInventory.getStackInSlot(i);
 
 			if (slot != null && InventoryUtils.compareStack(slot, stack, flags))
 			{
@@ -91,7 +96,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
 				if (slot.stackSize == 0)
 				{
-					inventory.setInventorySlotContents(i, null);
+					connectedInventory.setInventorySlotContents(i, null);
 				}
 
 				ItemStack newItem = slot.copy();
@@ -108,26 +113,137 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 	@Override
 	public boolean canPush(ItemStack stack)
 	{
-		IInventory inventory = getInventory();
+		IInventory connectedInventory = getConnectedInventory();
 
-		if (inventory == null)
+		if (connectedInventory == null)
 		{
 			return false;
 		}
 
-		return InventoryUtils.canPushToInventory(inventory, stack);
+		return InventoryUtils.canPushToInventory(connectedInventory, stack);
+	}
+
+	public IInventory getConnectedInventory()
+	{
+		TileEntity tile = worldObj.getTileEntity(pos.offset(getDirection()));
+
+		if (tile instanceof IInventory)
+		{
+			return (IInventory) tile;
+		}
+
+		return null;
+	}
+
+	@Override
+	public void toBytes(ByteBuf buf)
+	{
+		super.toBytes(buf);
+
+		buf.writeInt(priority);
+		buf.writeInt(getConnectedInventory() == null ? 0 : InventoryUtils.getInventoryItems(getConnectedInventory()));
+	}
+
+	@Override
+	public void fromBytes(ByteBuf buf)
+	{
+		super.fromBytes(buf);
+
+		priority = buf.readInt();
+		stored = buf.readInt();
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
+
+		InventoryUtils.restoreInventory(inventory, nbt);
+
+		if (nbt.hasKey(NBT_PRIORITY))
+		{
+			priority = nbt.getInteger(NBT_PRIORITY);
+		}
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+
+		InventoryUtils.saveInventory(inventory, nbt);
+
+		nbt.setInteger(NBT_PRIORITY, priority);
 	}
 
 	@Override
 	public int getPriority()
 	{
-		// @TODO: Priority on this stuff
-		return 0;
+		return priority;
+	}
+
+	public void setPriority(int priority)
+	{
+		this.priority = priority;
 	}
 
 	@Override
 	public void addStorages(List<IStorage> storages)
 	{
 		storages.add(this);
+	}
+
+	@Override
+	public String getName()
+	{
+		return "gui.storagecraft:external_storage";
+	}
+
+	@Override
+	public IStorage getStorage()
+	{
+		return this;
+	}
+
+	@Override
+	public IRedstoneModeSetting getRedstoneModeSetting()
+	{
+		return this;
+	}
+
+	@Override
+	public int getStored()
+	{
+		return stored;
+	}
+
+	@Override
+	public int getCapacity()
+	{
+		if (getConnectedInventory() == null)
+		{
+			return 0;
+		}
+
+		return getConnectedInventory().getSizeInventory() * 64;
+	}
+
+	@Override
+	public IPriorityHandler getPriorityHandler()
+	{
+		return new IPriorityHandler()
+		{
+			@Override
+			public void onPriorityChanged(int priority)
+			{
+				StorageCraft.NETWORK.sendToServer(new MessageStoragePriorityUpdate(pos, priority));
+			}
+		};
+	}
+
+	@Override
+	public IInventory getInventory()
+	{
+		return inventory;
 	}
 }

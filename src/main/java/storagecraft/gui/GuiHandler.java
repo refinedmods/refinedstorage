@@ -8,8 +8,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import storagecraft.StorageCraftGUI;
 import storagecraft.container.*;
-import storagecraft.tile.*;
 import storagecraft.storage.IStorageGui;
+import storagecraft.tile.*;
 
 public class GuiHandler implements IGuiHandler
 {
@@ -23,8 +23,6 @@ public class GuiHandler implements IGuiHandler
 				return new ContainerGrid(player, (TileGrid) tile);
 			case StorageCraftGUI.DRIVE:
 				return new ContainerDrive(player, (TileDrive) tile);
-			case StorageCraftGUI.EXTERNAL_STORAGE:
-				return new ContainerExternalStorage(player);
 			case StorageCraftGUI.IMPORTER:
 				return new ContainerImporter(player, (TileImporter) tile);
 			case StorageCraftGUI.EXPORTER:
@@ -65,8 +63,6 @@ public class GuiHandler implements IGuiHandler
 				return new GuiGrid((ContainerGrid) getContainer(ID, player, tile), (TileGrid) tile);
 			case StorageCraftGUI.DRIVE:
 				return new GuiDrive((ContainerDrive) getContainer(ID, player, tile), (TileDrive) tile);
-			case StorageCraftGUI.EXTERNAL_STORAGE:
-				return new GuiExternalStorage((ContainerExternalStorage) getContainer(ID, player, tile), (TileExternalStorage) tile);
 			case StorageCraftGUI.IMPORTER:
 				return new GuiImporter((ContainerImporter) getContainer(ID, player, tile), (TileImporter) tile);
 			case StorageCraftGUI.EXPORTER:
