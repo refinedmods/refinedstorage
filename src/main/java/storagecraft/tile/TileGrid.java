@@ -105,6 +105,8 @@ public class TileGrid extends TileMachine
 
 	public void setSortingDirection(int sortingDirection)
 	{
+		markDirty();
+
 		this.sortingDirection = sortingDirection;
 	}
 
@@ -115,6 +117,8 @@ public class TileGrid extends TileMachine
 
 	public void setSortingType(int sortingType)
 	{
+		markDirty();
+
 		this.sortingType = sortingType;
 	}
 

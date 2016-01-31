@@ -1,6 +1,5 @@
 package storagecraft.tile;
 
-import storagecraft.tile.settings.ICompareSetting;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -8,6 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import storagecraft.StorageCraftBlocks;
 import storagecraft.inventory.InventorySimple;
 import storagecraft.storage.StorageItem;
+import storagecraft.tile.settings.ICompareSetting;
 import storagecraft.util.InventoryUtils;
 
 public class TileDetector extends TileMachine implements ICompareSetting
@@ -149,6 +149,8 @@ public class TileDetector extends TileMachine implements ICompareSetting
 
 	public void setAmount(int amount)
 	{
+		markDirty();
+
 		this.amount = amount;
 	}
 

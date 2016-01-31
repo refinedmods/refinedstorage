@@ -207,6 +207,8 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 	@Override
 	public void setCompare(int compare)
 	{
+		markDirty();
+
 		this.compare = compare;
 	}
 
@@ -225,12 +227,16 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 	@Override
 	public void setToWhitelist()
 	{
+		markDirty();
+
 		this.mode = 0;
 	}
 
 	@Override
 	public void setToBlacklist()
 	{
+		markDirty();
+
 		this.mode = 1;
 	}
 
@@ -290,6 +296,8 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 
 	public void setStorageTag(NBTTagCompound tag)
 	{
+		markDirty();
+
 		this.tag = tag;
 	}
 
@@ -301,6 +309,8 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 
 	public void setPriority(int priority)
 	{
+		markDirty();
+
 		this.priority = priority;
 	}
 

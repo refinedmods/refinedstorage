@@ -49,6 +49,8 @@ public class TileDrive extends TileMachine implements IInventory, IStorageProvid
 
 	public void setPriority(int priority)
 	{
+		markDirty();
+
 		this.priority = priority;
 	}
 

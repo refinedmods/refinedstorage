@@ -1,7 +1,5 @@
 package storagecraft.tile;
 
-import storagecraft.tile.settings.IModeSetting;
-import storagecraft.tile.settings.ICompareSetting;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -9,6 +7,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import storagecraft.inventory.InventorySimple;
+import storagecraft.tile.settings.ICompareSetting;
+import storagecraft.tile.settings.IModeSetting;
 import storagecraft.util.InventoryUtils;
 
 public class TileImporter extends TileMachine implements ICompareSetting, IModeSetting
@@ -147,12 +147,16 @@ public class TileImporter extends TileMachine implements ICompareSetting, IModeS
 	@Override
 	public void setToWhitelist()
 	{
+		markDirty();
+
 		this.mode = 0;
 	}
 
 	@Override
 	public void setToBlacklist()
 	{
+		markDirty();
+
 		this.mode = 1;
 	}
 

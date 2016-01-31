@@ -1,6 +1,5 @@
 package storagecraft.tile;
 
-import storagecraft.tile.settings.ICompareSetting;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemBlock;
@@ -8,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 import storagecraft.inventory.InventorySimple;
+import storagecraft.tile.settings.ICompareSetting;
 import storagecraft.util.InventoryUtils;
 
 public class TileConstructor extends TileMachine implements ICompareSetting
