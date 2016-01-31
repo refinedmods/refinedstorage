@@ -1,0 +1,107 @@
+itemGroup.storagecraft=StorageCraft
+
+gui.storagecraft:controller.0=Controller
+gui.storagecraft:controller.1=Creative Controller
+gui.storagecraft:grid=Rooster
+gui.storagecraft:drive=Schijf
+gui.storagecraft:external_storage=Externe Opslag
+gui.storagecraft:importer=Importeur
+gui.storagecraft:exporter=Exporteur
+gui.storagecraft:detector=Detector
+gui.storagecraft:solderer=Soldeerder
+gui.storagecraft:wireless_transmitter=Draadloze Zender
+gui.storagecraft:destructor=Destructor
+gui.storagecraft:constructor=Constructor
+
+misc.storagecraft:energy_stored=%d / %d RF
+misc.storagecraft:energy_usage=Vebruik: %d RF/t
+
+misc.storagecraft:storage=Opslag
+misc.storagecraft:storage.stored=Opgeslagen: %d
+misc.storagecraft:storage.stored_capacity=Opgeslagen: %d / %d
+misc.storagecraft:storage.capacity=Capaciteit: %d
+misc.storagecraft:storage.full=%d%% vol
+
+misc.storagecraft:wireless_grid.tooltip=Gebonden aan %d, %d, %d.
+misc.storagecraft:wireless_grid.not_working=De Draadloze Zender is uit of zonder brandstof gevallen.
+misc.storagecraft:wireless_grid.not_found=De Draadloze Zender werd niet gevonden.
+misc.storagecraft:wireless_grid.not_set.0=Dit Draadloos Rooster is nog niet gebonden aan een Draadloze Zender.
+misc.storagecraft:wireless_grid.not_set.1=Dit Draadloos Crafting Rooster is nog niet gebonden aan een Draadloze Zender.
+misc.storagecraft:wireless_grid.out_of_range=De Draadloze Zender is buiten bereik.
+misc.storagecraft:wireless_grid.no_grid.0=Er is geen Rooster gevonden in het netwerk. Je moet eerst een Rooster plaatsen voor je het Draadloze Rooster kunt gebruiken.
+misc.storagecraft:wireless_grid.no_grid.1=Er is geen Crafting Rooster gevonden in het netwerk. Je moet eerst een Crafting Rooster plaatsen voor je het Draadloze Crafting Rooster kunt gebruiken.
+
+misc.storagecraft:yes=Ja
+misc.storagecraft:no=Nee
+misc.storagecraft:clear=Legen
+misc.storagecraft:priority=Prioriteit
+
+sidebutton.storagecraft:compare.1=Vergelijken op damage
+sidebutton.storagecraft:compare.2=Vergelijken op NBT
+
+sidebutton.storagecraft:redstone_mode=Redstone Mode
+sidebutton.storagecraft:redstone_mode.0=Redstone negeren
+sidebutton.storagecraft:redstone_mode.1=Alleen werken met redstone signaal
+sidebutton.storagecraft:redstone_mode.2=Alleen werken zonder redstone signaal
+
+sidebutton.storagecraft:sorting.direction=Sorteer Richting
+sidebutton.storagecraft:sorting.direction.0=Oplopend
+sidebutton.storagecraft:sorting.direction.1=Aflopend
+
+sidebutton.storagecraft:sorting.type=Sorteer Type
+sidebutton.storagecraft:sorting.type.0=Hoeveelheid
+sidebutton.storagecraft:sorting.type.1=Naam
+
+sidebutton.storagecraft:mode=Mode
+sidebutton.storagecraft:mode.whitelist=Whitelist
+sidebutton.storagecraft:mode.blacklist=Blacklist
+
+sidebutton.storagecraft:detector.mode=Mode
+sidebutton.storagecraft:detector.mode.0=Redstone signaal aan wanneer onder het aantal
+sidebutton.storagecraft:detector.mode.1=Redstone signaal aan wanneer op het aantal
+sidebutton.storagecraft:detector.mode.2=Redstone signaal aan wanneer boven het aantal
+
+block.storagecraft:controller.0.name=Controller
+block.storagecraft:controller.1.name=Creative Controller
+block.storagecraft:cable.name=Kabel
+block.storagecraft:grid.0.name=Rooster
+block.storagecraft:grid.1.name=Crafting Rooster
+block.storagecraft:drive.name=Schijf
+block.storagecraft:external_storage.name=Externe Opslag
+block.storagecraft:importer.name=Importeur
+block.storagecraft:exporter.name=Exporteur
+block.storagecraft:detector.name=Detector
+block.storagecraft:machine_casing.name=Machine-omhulsel
+block.storagecraft:solderer.name=Soldeerder
+block.storagecraft:wireless_transmitter.name=Draadloze Zender
+block.storagecraft:destructor.name=Destructor
+block.storagecraft:constructor.name=Constructor
+block.storagecraft:storage.0.name=1k Opslag Blok
+block.storagecraft:storage.1.name=4k Opslag Blok
+block.storagecraft:storage.2.name=16k Opslag Blok
+block.storagecraft:storage.3.name=64k Opslag Blok
+block.storagecraft:storage.4.name=Creative Opslag Blok
+
+item.storagecraft:storage_cell.0.name=1k Opslagcel
+item.storagecraft:storage_cell.1.name=4k Opslagcel
+item.storagecraft:storage_cell.2.name=16k Opslagcel
+item.storagecraft:storage_cell.3.name=64k Opslagcel
+item.storagecraft:storage_cell.4.name=Creative Opslagcel
+item.storagecraft:wireless_grid.0.name=Draadloze Rooster
+item.storagecraft:wireless_grid.1.name=Draadloze Crafting Rooster
+item.storagecraft:wireless_grid_plate.name=Draadloze Rooster Bord
+item.storagecraft:quartz_enriched_iron.name=Quartz Verrijkt Iron
+item.storagecraft:core.0.name=Constructie Core
+item.storagecraft:core.1.name=Destructie Core
+item.storagecraft:silicon.name=Silicon
+item.storagecraft:processor.0.name=Gedrukte Basis Processor
+item.storagecraft:processor.1.name=Gedrukte Verbeterde Processor
+item.storagecraft:processor.2.name=Gedrukte Uitgebreide Processor
+item.storagecraft:processor.3.name=Basis Processor
+item.storagecraft:processor.4.name=Verbeterde Processor
+item.storagecraft:processor.5.name=Uitgebreide Processor
+item.storagecraft:processor.6.name=Gedrukte Silicon
+item.storagecraft:storage_part.0.name=1k Opslagdeel
+item.storagecraft:storage_part.1.name=4k Opslagdeel
+item.storagecraft:storage_part.2.name=16k Opslagdeel
+item.storagecraft:storage_part.3.name=64k Opslagdeel
