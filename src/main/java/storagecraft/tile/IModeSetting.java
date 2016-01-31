@@ -2,7 +2,7 @@ package storagecraft.tile;
 
 import net.minecraft.util.BlockPos;
 
-public interface IWhitelistBlacklistSetting
+public interface IModeSetting
 {
 	public boolean isWhitelist();
 

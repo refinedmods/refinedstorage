@@ -12,7 +12,7 @@ import net.minecraft.util.IChatComponent;
 import storagecraft.inventory.InventorySimple;
 import storagecraft.util.InventoryUtils;
 
-public class TileImporter extends TileMachine implements IInventory, ISidedInventory, ICompareSetting, IWhitelistBlacklistSetting
+public class TileImporter extends TileMachine implements IInventory, ISidedInventory, ICompareSetting, IModeSetting
 {
 	public static final String NBT_COMPARE = "Compare";
 	public static final String NBT_MODE = "Mode";

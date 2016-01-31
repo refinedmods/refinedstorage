@@ -17,7 +17,7 @@ import storagecraft.storage.IStorageProvider;
 import storagecraft.storage.StorageItem;
 import storagecraft.util.InventoryUtils;
 
-public class TileExternalStorage extends TileMachine implements IStorageProvider, IStorage, IStorageGui, ICompareSetting, IWhitelistBlacklistSetting
+public class TileExternalStorage extends TileMachine implements IStorageProvider, IStorage, IStorageGui, ICompareSetting, IModeSetting
 {
 	public static final String NBT_PRIORITY = "Priority";
 	public static final String NBT_COMPARE = "Compare";
@@ -274,7 +274,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 	}
 
 	@Override
-	public IWhitelistBlacklistSetting getWhitelistBlacklistSetting()
+	public IModeSetting getWhitelistBlacklistSetting()
 	{
 		return this;
 	}
