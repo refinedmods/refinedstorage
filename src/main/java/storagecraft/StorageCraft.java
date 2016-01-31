@@ -15,7 +15,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import storagecraft.item.ItemStorageCell;
 import storagecraft.proxy.CommonProxy;
 
-@Mod(modid = StorageCraft.ID, version = StorageCraft.VERSION, dependencies = "required-after:JEI@[2.18,);")
+@Mod(modid = StorageCraft.ID, version = StorageCraft.VERSION)
 public final class StorageCraft
 {
 	public static final String ID = "storagecraft";
