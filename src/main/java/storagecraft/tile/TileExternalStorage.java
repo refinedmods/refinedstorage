@@ -10,7 +10,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import storagecraft.StorageCraft;
 import storagecraft.inventory.InventorySimple;
-import storagecraft.network.MessageStoragePriorityUpdate;
+import storagecraft.network.MessagePriorityUpdate;
 import storagecraft.storage.IStorage;
 import storagecraft.storage.IStorageGui;
 import storagecraft.storage.IStorageProvider;
@@ -307,7 +307,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 			@Override
 			public void onPriorityChanged(int priority)
 			{
-				StorageCraft.NETWORK.sendToServer(new MessageStoragePriorityUpdate(pos, priority));
+				StorageCraft.NETWORK.sendToServer(new MessagePriorityUpdate(pos, priority));
 			}
 		};
 	}

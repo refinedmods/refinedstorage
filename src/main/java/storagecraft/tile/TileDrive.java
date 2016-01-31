@@ -1,5 +1,7 @@
 package storagecraft.tile;
 
+import io.netty.buffer.ByteBuf;
+import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -11,11 +13,13 @@ import storagecraft.storage.IStorage;
 import storagecraft.storage.IStorageProvider;
 import storagecraft.util.InventoryUtils;
 
-import java.util.List;
-
 public class TileDrive extends TileMachine implements IInventory, IStorageProvider
 {
+	public static final String NBT_PRIORITY = "Priority";
+
 	private InventorySimple inventory = new InventorySimple("drive", 8);
+
+	private int priority = 0;
 
 	@Override
 	public int getEnergyUsage()
@@ -38,12 +42,27 @@ public class TileDrive extends TileMachine implements IInventory, IStorageProvid
 	{
 	}
 
+	public int getPriority()
+	{
+		return priority;
+	}
+
+	public void setPriority(int priority)
+	{
+		this.priority = priority;
+	}
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
 
 		InventoryUtils.restoreInventory(this, nbt);
+
+		if (nbt.hasKey(NBT_PRIORITY))
+		{
+			priority = nbt.getInteger(NBT_PRIORITY);
+		}
 	}
 
 	@Override
@@ -52,6 +71,24 @@ public class TileDrive extends TileMachine implements IInventory, IStorageProvid
 		super.writeToNBT(nbt);
 
 		InventoryUtils.saveInventory(this, nbt);
+
+		nbt.setInteger(NBT_PRIORITY, priority);
+	}
+
+	@Override
+	public void toBytes(ByteBuf buf)
+	{
+		super.toBytes(buf);
+
+		buf.writeInt(priority);
+	}
+
+	@Override
+	public void fromBytes(ByteBuf buf)
+	{
+		super.fromBytes(buf);
+
+		priority = buf.readInt();
 	}
 
 	@Override
@@ -61,7 +98,7 @@ public class TileDrive extends TileMachine implements IInventory, IStorageProvid
 		{
 			if (getStackInSlot(i) != null)
 			{
-				storages.add(new CellStorage(getStackInSlot(i)));
+				storages.add(new CellStorage(getStackInSlot(i), priority));
 			}
 		}
 	}

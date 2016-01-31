@@ -11,7 +11,7 @@ import storagecraft.StorageCraft;
 import storagecraft.block.BlockStorage;
 import storagecraft.block.EnumStorageType;
 import storagecraft.inventory.InventorySimple;
-import storagecraft.network.MessageStoragePriorityUpdate;
+import storagecraft.network.MessagePriorityUpdate;
 import storagecraft.storage.IStorage;
 import storagecraft.storage.IStorageGui;
 import storagecraft.storage.IStorageProvider;
@@ -272,7 +272,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 			@Override
 			public void onPriorityChanged(int priority)
 			{
-				StorageCraft.NETWORK.sendToServer(new MessageStoragePriorityUpdate(pos, priority));
+				StorageCraft.NETWORK.sendToServer(new MessagePriorityUpdate(pos, priority));
 			}
 		};
 	}

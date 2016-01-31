@@ -13,7 +13,7 @@ public class ContainerDrive extends ContainerBase
 	{
 		super(player);
 
-		int x = 71;
+		int x = 8;
 		int y = 20;
 
 		for (int i = 0; i < 8; ++i)
@@ -22,7 +22,7 @@ public class ContainerDrive extends ContainerBase
 
 			if ((i + 1) % 2 == 0)
 			{
-				x = 71;
+				x = 8;
 				y += 18;
 			}
 			else

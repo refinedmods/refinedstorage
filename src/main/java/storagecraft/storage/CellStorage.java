@@ -5,9 +5,9 @@ import storagecraft.item.ItemStorageCell;
 
 public class CellStorage extends NBTStorage
 {
-	public CellStorage(ItemStack cell)
+	public CellStorage(ItemStack cell, int priority)
 	{
-		super(cell.getTagCompound(), getCapacity(cell), 0);
+		super(cell.getTagCompound(), getCapacity(cell), priority);
 	}
 
 	public static int getCapacity(ItemStack cell)
