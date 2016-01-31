@@ -28,15 +28,6 @@ import storagecraft.tile.TileGrid;
 
 public class GuiGrid extends GuiBase
 {
-	public static final int SORTING_DIRECTION_ASCENDING = 0;
-	public static final int SORTING_DIRECTION_DESCENDING = 1;
-
-	public static final int SORTING_TYPE_COUNT = 0;
-	public static final int SORTING_TYPE_NAME = 1;
-
-	public static int SORTING_DIRECTION = SORTING_DIRECTION_ASCENDING;
-	public static int SORTING_TYPE = SORTING_TYPE_COUNT;
-
 	private ContainerGrid container;
 	private TileGrid grid;
 
@@ -60,8 +51,8 @@ public class GuiGrid extends GuiBase
 	{
 		addSideButton(new SideButtonRedstoneMode(grid));
 
-		addSideButton(new SideButtonGridSortingDirection());
-		addSideButton(new SideButtonGridSortingType());
+		addSideButton(new SideButtonGridSortingDirection(grid));
+		addSideButton(new SideButtonGridSortingType(grid));
 
 		searchField = new GuiTextField(0, fontRendererObj, x + 80 + 1, y + 6 + 1, 88 - 6, fontRendererObj.FONT_HEIGHT);
 		searchField.setEnableBackgroundDrawing(false);
@@ -245,46 +236,45 @@ public class GuiGrid extends GuiBase
 			}
 		}
 
-		switch (SORTING_TYPE)
+		if (grid.getSortingType() == TileGrid.SORTING_TYPE_QUANTITY)
 		{
-			case SORTING_TYPE_COUNT:
-				items.sort(new Comparator<StorageItem>()
+			items.sort(new Comparator<StorageItem>()
+			{
+				@Override
+				public int compare(StorageItem o1, StorageItem o2)
 				{
-					@Override
-					public int compare(StorageItem o1, StorageItem o2)
+					if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING)
 					{
-						switch (SORTING_DIRECTION)
-						{
-							case SORTING_DIRECTION_ASCENDING:
-								return Integer.valueOf(o2.getQuantity()).compareTo(o1.getQuantity());
-							case SORTING_DIRECTION_DESCENDING:
-								return Integer.valueOf(o1.getQuantity()).compareTo(o2.getQuantity());
-							default:
-								return 0;
-						}
+						return Integer.valueOf(o2.getQuantity()).compareTo(o1.getQuantity());
 					}
-				});
+					else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING)
+					{
+						return Integer.valueOf(o1.getQuantity()).compareTo(o2.getQuantity());
+					}
 
-				break;
-			case SORTING_TYPE_NAME:
-				items.sort(new Comparator<StorageItem>()
+					return 0;
+				}
+			});
+		}
+		else if (grid.getSortingType() == TileGrid.SORTING_TYPE_NAME)
+		{
+			items.sort(new Comparator<StorageItem>()
+			{
+				@Override
+				public int compare(StorageItem o1, StorageItem o2)
 				{
-					@Override
-					public int compare(StorageItem o1, StorageItem o2)
+					if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING)
 					{
-						switch (SORTING_DIRECTION)
-						{
-							case SORTING_DIRECTION_ASCENDING:
-								return o2.toItemStack().getDisplayName().compareTo(o1.toItemStack().getDisplayName());
-							case SORTING_DIRECTION_DESCENDING:
-								return o1.toItemStack().getDisplayName().compareTo(o2.toItemStack().getDisplayName());
-							default:
-								return 0;
-						}
+						return o2.toItemStack().getDisplayName().compareTo(o1.toItemStack().getDisplayName());
 					}
-				});
+					else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING)
+					{
+						return o1.toItemStack().getDisplayName().compareTo(o2.toItemStack().getDisplayName());
+					}
 
-				break;
+					return 0;
+				}
+			});
 		}
 
 		return items;

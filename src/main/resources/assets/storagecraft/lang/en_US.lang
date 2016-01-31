@@ -49,7 +49,7 @@ sidebutton.storagecraft:sorting.direction.0=Ascending
 sidebutton.storagecraft:sorting.direction.1=Descending
 
 sidebutton.storagecraft:sorting.type=Sorting Type
-sidebutton.storagecraft:sorting.type.0=Amount
+sidebutton.storagecraft:sorting.type.0=Quantity
 sidebutton.storagecraft:sorting.type.1=Name
 
 sidebutton.storagecraft:mode=Mode

@@ -1,5 +1,6 @@
 package storagecraft.tile;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -17,9 +18,21 @@ import storagecraft.util.InventoryUtils;
 
 public class TileGrid extends TileMachine
 {
+	public static final String NBT_SORTING_DIRECTION = "SortingDirection";
+	public static final String NBT_SORTING_TYPE = "SortingType";
+
+	public static final int SORTING_DIRECTION_ASCENDING = 0;
+	public static final int SORTING_DIRECTION_DESCENDING = 1;
+
+	public static final int SORTING_TYPE_QUANTITY = 0;
+	public static final int SORTING_TYPE_NAME = 1;
+
 	private ContainerGridCrafting craftingMatrixContainer = new ContainerGridCrafting(this);
 	private InventoryCrafting craftingMatrix = new InventoryCrafting(craftingMatrixContainer, 3, 3);
-	private InventorySimple craftingResult = new InventorySimple("craftingResult", 1);
+	private InventorySimple craftingResult = new InventorySimple("crafting_result", 1);
+
+	private int sortingDirection = 0;
+	private int sortingType = 0;
 
 	@Override
 	public int getEnergyUsage()
@@ -85,12 +98,42 @@ public class TileGrid extends TileMachine
 		return craftingResult;
 	}
 
+	public int getSortingDirection()
+	{
+		return sortingDirection;
+	}
+
+	public void setSortingDirection(int sortingDirection)
+	{
+		this.sortingDirection = sortingDirection;
+	}
+
+	public int getSortingType()
+	{
+		return sortingType;
+	}
+
+	public void setSortingType(int sortingType)
+	{
+		this.sortingType = sortingType;
+	}
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
 
 		InventoryUtils.restoreInventory(craftingMatrix, nbt);
+
+		if (nbt.hasKey(NBT_SORTING_DIRECTION))
+		{
+			sortingDirection = nbt.getInteger(NBT_SORTING_DIRECTION);
+		}
+
+		if (nbt.hasKey(NBT_SORTING_TYPE))
+		{
+			sortingType = nbt.getInteger(NBT_SORTING_TYPE);
+		}
 	}
 
 	@Override
@@ -99,6 +142,27 @@ public class TileGrid extends TileMachine
 		super.writeToNBT(nbt);
 
 		InventoryUtils.saveInventory(craftingMatrix, nbt);
+
+		nbt.setInteger(NBT_SORTING_DIRECTION, sortingDirection);
+		nbt.setInteger(NBT_SORTING_TYPE, sortingType);
+	}
+
+	@Override
+	public void toBytes(ByteBuf buf)
+	{
+		super.toBytes(buf);
+
+		buf.writeInt(sortingDirection);
+		buf.writeInt(sortingType);
+	}
+
+	@Override
+	public void fromBytes(ByteBuf buf)
+	{
+		super.fromBytes(buf);
+
+		sortingDirection = buf.readInt();
+		sortingType = buf.readInt();
 	}
 
 	@Override
