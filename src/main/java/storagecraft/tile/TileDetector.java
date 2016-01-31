@@ -20,7 +20,7 @@ public class TileDetector extends TileMachine implements ICompareSetting
 	public static final String NBT_MODE = "Mode";
 	public static final String NBT_AMOUNT = "Amount";
 
-	private InventorySimple inventory = new InventorySimple("detector", 1);
+	private InventorySimple inventory = new InventorySimple("detector", 1, this);
 
 	private int compare = 0;
 	private int mode = MODE_EQUAL;

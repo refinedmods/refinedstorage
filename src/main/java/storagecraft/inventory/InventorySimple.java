@@ -3,10 +3,12 @@ package storagecraft.inventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IChatComponent;
 
 public class InventorySimple implements IInventory
 {
+	private TileEntity tile;
 	private ItemStack[] inventory;
 	private int size;
 	private String name;
@@ -16,6 +18,13 @@ public class InventorySimple implements IInventory
 		this.name = name;
 		this.size = size;
 		this.inventory = new ItemStack[size];
+	}
+
+	public InventorySimple(String name, int size, TileEntity tile)
+	{
+		this(name, size);
+
+		this.tile = tile;
 	}
 
 	@Override
@@ -112,6 +121,10 @@ public class InventorySimple implements IInventory
 	@Override
 	public void markDirty()
 	{
+		if (tile != null)
+		{
+			tile.markDirty();
+		}
 	}
 
 	@Override

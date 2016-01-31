@@ -1,6 +1,5 @@
 package storagecraft.tile;
 
-import storagecraft.tile.settings.ICompareSetting;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -8,13 +7,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import storagecraft.inventory.InventorySimple;
+import storagecraft.tile.settings.ICompareSetting;
 import storagecraft.util.InventoryUtils;
 
 public class TileExporter extends TileMachine implements ICompareSetting
 {
 	public static final String NBT_COMPARE = "Compare";
 
-	private InventorySimple inventory = new InventorySimple("exporter", 9);
+	private InventorySimple inventory = new InventorySimple("exporter", 9, this);
 
 	private int compare = 0;
 

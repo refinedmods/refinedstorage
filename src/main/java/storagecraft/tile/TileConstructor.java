@@ -14,7 +14,7 @@ public class TileConstructor extends TileMachine implements ICompareSetting
 {
 	public static final String NBT_COMPARE = "Compare";
 
-	private InventorySimple inventory = new InventorySimple("constructor", 1);
+	private InventorySimple inventory = new InventorySimple("constructor", 1, this);
 
 	private int compare = 0;
 

@@ -16,7 +16,7 @@ public class TileImporter extends TileMachine implements ICompareSetting, IModeS
 	public static final String NBT_COMPARE = "Compare";
 	public static final String NBT_MODE = "Mode";
 
-	private InventorySimple inventory = new InventorySimple("importer", 9);
+	private InventorySimple inventory = new InventorySimple("importer", 9, this);
 
 	private int compare = 0;
 	private int mode = 0;

@@ -29,7 +29,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 	public static final String NBT_COMPARE = "Compare";
 	public static final String NBT_MODE = "Mode";
 
-	private InventorySimple inventory = new InventorySimple("storage", 9);
+	private InventorySimple inventory = new InventorySimple("storage", 9, this);
 
 	private NBTTagCompound tag = NBTStorage.getBaseNBT();
 

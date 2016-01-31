@@ -26,7 +26,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 	public static final String NBT_COMPARE = "Compare";
 	public static final String NBT_MODE = "Mode";
 
-	private InventorySimple inventory = new InventorySimple("external_storage", 9);
+	private InventorySimple inventory = new InventorySimple("external_storage", 9, this);
 
 	private int priority = 0;
 	private int compare = 0;
