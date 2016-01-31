@@ -7,7 +7,6 @@ public class CellStorage extends NBTStorage
 {
 	public CellStorage(ItemStack cell)
 	{
-		// @TODO: Priority on this stuff
 		super(cell.getTagCompound(), getCapacity(cell), 0);
 	}
 

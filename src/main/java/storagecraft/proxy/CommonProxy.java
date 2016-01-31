@@ -340,45 +340,10 @@ public class CommonProxy
 		);
 
 		// Storage Blocks
-		GameRegistry.addRecipe(ItemBlockStorage.initNBT(new ItemStack(StorageCraftBlocks.STORAGE, 1, EnumStorageType.TYPE_1K.getId())),
-			"EPE",
-			"RMR",
-			"EEE",
-			'R', new ItemStack(Items.redstone),
-			'P', new ItemStack(StorageCraftItems.STORAGE_PART, 1, ItemStoragePart.TYPE_1K),
-			'E', new ItemStack(StorageCraftItems.QUARTZ_ENRICHED_IRON),
-			'M', new ItemStack(StorageCraftBlocks.MACHINE_CASING)
-		);
-
-		GameRegistry.addRecipe(ItemBlockStorage.initNBT(new ItemStack(StorageCraftBlocks.STORAGE, 1, EnumStorageType.TYPE_4K.getId())),
-			"EPE",
-			"RMR",
-			"EEE",
-			'R', new ItemStack(Items.redstone),
-			'P', new ItemStack(StorageCraftItems.STORAGE_PART, 1, ItemStoragePart.TYPE_4K),
-			'E', new ItemStack(StorageCraftItems.QUARTZ_ENRICHED_IRON),
-			'M', new ItemStack(StorageCraftBlocks.MACHINE_CASING)
-		);
-
-		GameRegistry.addRecipe(ItemBlockStorage.initNBT(new ItemStack(StorageCraftBlocks.STORAGE, 1, EnumStorageType.TYPE_16K.getId())),
-			"EPE",
-			"RMR",
-			"EEE",
-			'R', new ItemStack(Items.redstone),
-			'P', new ItemStack(StorageCraftItems.STORAGE_PART, 1, ItemStoragePart.TYPE_16K),
-			'E', new ItemStack(StorageCraftItems.QUARTZ_ENRICHED_IRON),
-			'M', new ItemStack(StorageCraftBlocks.MACHINE_CASING)
-		);
-
-		GameRegistry.addRecipe(ItemBlockStorage.initNBT(new ItemStack(StorageCraftBlocks.STORAGE, 1, EnumStorageType.TYPE_64K.getId())),
-			"EPE",
-			"RMR",
-			"EEE",
-			'R', new ItemStack(Items.redstone),
-			'P', new ItemStack(StorageCraftItems.STORAGE_PART, 1, ItemStoragePart.TYPE_64K),
-			'E', new ItemStack(StorageCraftItems.QUARTZ_ENRICHED_IRON),
-			'M', new ItemStack(StorageCraftBlocks.MACHINE_CASING)
-		);
+		SoldererRegistry.addRecipe(new SoldererRecipeStorage(EnumStorageType.TYPE_1K, ItemStoragePart.TYPE_1K));
+		SoldererRegistry.addRecipe(new SoldererRecipeStorage(EnumStorageType.TYPE_4K, ItemStoragePart.TYPE_4K));
+		SoldererRegistry.addRecipe(new SoldererRecipeStorage(EnumStorageType.TYPE_16K, ItemStoragePart.TYPE_16K));
+		SoldererRegistry.addRecipe(new SoldererRecipeStorage(EnumStorageType.TYPE_64K, ItemStoragePart.TYPE_64K));
 	}
 
 	public void init(FMLInitializationEvent e)
