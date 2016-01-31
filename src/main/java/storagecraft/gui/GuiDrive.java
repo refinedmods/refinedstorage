@@ -31,7 +31,7 @@ public class GuiDrive extends GuiBase
 	{
 		bindTexture("gui/drive.png");
 
-		drawTexture(x, y, 0, 0, xSize, ySize);
+		drawTexture(x, y, 0, 0, width, height);
 	}
 
 	@Override

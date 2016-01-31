@@ -51,7 +51,7 @@ public class GuiDetector extends GuiBase
 	{
 		bindTexture("gui/detector.png");
 
-		drawTexture(x, y, 0, 0, xSize, ySize);
+		drawTexture(x, y, 0, 0, width, height);
 
 		amountField.drawTextBox();
 	}

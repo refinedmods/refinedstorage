@@ -2,8 +2,8 @@ package storagecraft.gui;
 
 import storagecraft.container.ContainerImporter;
 import storagecraft.gui.sidebutton.SideButtonCompare;
-import storagecraft.gui.sidebutton.SideButtonRedstoneMode;
 import storagecraft.gui.sidebutton.SideButtonMode;
+import storagecraft.gui.sidebutton.SideButtonRedstoneMode;
 import storagecraft.tile.TileImporter;
 import storagecraft.util.InventoryUtils;
 
@@ -39,7 +39,7 @@ public class GuiImporter extends GuiBase
 	{
 		bindTexture("gui/importer.png");
 
-		drawTexture(x, y, 0, 0, xSize, ySize);
+		drawTexture(x, y, 0, 0, width, height);
 	}
 
 	@Override

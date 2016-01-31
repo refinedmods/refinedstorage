@@ -36,7 +36,7 @@ public class GuiConstructor extends GuiBase
 	{
 		bindTexture("gui/constructor.png");
 
-		drawTexture(x, y, 0, 0, xSize, ySize);
+		drawTexture(x, y, 0, 0, width, height);
 	}
 
 	@Override

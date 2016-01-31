@@ -138,7 +138,7 @@ public class GuiGrid extends GuiBase
 			bindTexture("gui/grid.png");
 		}
 
-		drawTexture(x, y, 0, 0, xSize, ySize);
+		drawTexture(x, y, 0, 0, width, height);
 
 		searchField.drawTextBox();
 	}

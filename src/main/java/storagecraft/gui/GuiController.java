@@ -36,7 +36,7 @@ public class GuiController extends GuiBase
 	{
 		bindTexture("gui/controller.png");
 
-		drawTexture(x, y, 0, 0, xSize, ySize);
+		drawTexture(x, y, 0, 0, width, height);
 
 		int barHeightNew = (int) ((float) controller.getEnergyStored(null) / (float) controller.getMaxEnergyStored(null) * (float) barHeight);
 

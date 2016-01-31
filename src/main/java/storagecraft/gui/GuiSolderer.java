@@ -31,7 +31,7 @@ public class GuiSolderer extends GuiBase
 	{
 		bindTexture("gui/solderer.png");
 
-		drawTexture(x, y, 0, 0, xSize, ySize);
+		drawTexture(x, y, 0, 0, width, height);
 
 		if (solderer.isWorking())
 		{

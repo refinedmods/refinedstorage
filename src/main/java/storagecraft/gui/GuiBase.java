@@ -25,17 +25,27 @@ public abstract class GuiBase extends GuiContainer
 	private int lastButtonId = 0;
 	private int lastSideButtonY = 6;
 
-	public GuiBase(Container container, int w, int h)
+	protected int width;
+	protected int height;
+
+	public GuiBase(Container container, int width, int height)
 	{
 		super(container);
 
-		this.xSize = w;
-		this.ySize = h;
+		this.width = width;
+		this.height = height;
+		this.xSize = width;
+		this.ySize = height;
 	}
 
 	@Override
 	public void initGui()
 	{
+		if (sideButtons.size() > 0)
+		{
+			xSize -= SIDE_BUTTON_WIDTH;
+		}
+
 		super.initGui();
 
 		sideButtons.clear();
@@ -44,6 +54,11 @@ public abstract class GuiBase extends GuiContainer
 		lastSideButtonY = 6;
 
 		init(guiLeft, guiTop);
+
+		if (sideButtons.size() > 0)
+		{
+			xSize += SIDE_BUTTON_WIDTH;
+		}
 	}
 
 	@Override

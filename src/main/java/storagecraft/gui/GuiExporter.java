@@ -36,7 +36,7 @@ public class GuiExporter extends GuiBase
 	{
 		bindTexture("gui/exporter.png");
 
-		drawTexture(x, y, 0, 0, xSize, ySize);
+		drawTexture(x, y, 0, 0, width, height);
 	}
 
 	@Override

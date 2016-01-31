@@ -5,8 +5,8 @@ import java.io.IOException;
 import net.minecraft.client.gui.GuiTextField;
 import storagecraft.container.ContainerStorage;
 import storagecraft.gui.sidebutton.SideButtonCompare;
-import storagecraft.gui.sidebutton.SideButtonRedstoneMode;
 import storagecraft.gui.sidebutton.SideButtonMode;
+import storagecraft.gui.sidebutton.SideButtonRedstoneMode;
 import storagecraft.storage.IStorageGui;
 import storagecraft.util.InventoryUtils;
 
@@ -66,7 +66,7 @@ public class GuiStorage extends GuiBase
 	{
 		bindTexture("gui/storage.png");
 
-		drawTexture(x, y, 0, 0, xSize, ySize);
+		drawTexture(x, y, 0, 0, width, height);
 
 		int barHeightNew = (int) ((float) gui.getStored() / (float) gui.getCapacity() * (float) barHeight);
 
