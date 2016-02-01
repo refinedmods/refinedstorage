@@ -31,7 +31,7 @@ public class TileConstructor extends TileMachine implements ICompareSetting
 		{
 			BlockPos front = pos.offset(getDirection());
 
-			if (worldObj.isAirBlock(front) && inventory.getStackInSlot(0) != null)
+			if ((worldObj.isAirBlock(front) || worldObj.getBlockState(front).getBlock().getMaterial().isLiquid()) && inventory.getStackInSlot(0) != null)
 			{
 				ItemStack took = getController().take(inventory.getStackInSlot(0).copy(), compare);
 
