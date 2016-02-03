@@ -174,7 +174,7 @@ public class TileDetector extends TileMachine implements ICompareSetting
 			amount = nbt.getInteger(NBT_AMOUNT);
 		}
 
-		InventoryUtils.restoreInventory(inventory, nbt);
+		InventoryUtils.restoreInventory(inventory, 0, nbt);
 	}
 
 	@Override
@@ -186,7 +186,7 @@ public class TileDetector extends TileMachine implements ICompareSetting
 		nbt.setInteger(NBT_MODE, mode);
 		nbt.setInteger(NBT_AMOUNT, amount);
 
-		InventoryUtils.saveInventory(inventory, nbt);
+		InventoryUtils.saveInventory(inventory, 0, nbt);
 	}
 
 	@Override

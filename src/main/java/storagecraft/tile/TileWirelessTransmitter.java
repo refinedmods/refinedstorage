@@ -118,7 +118,7 @@ public class TileWirelessTransmitter extends TileMachine implements IInventory
 	{
 		super.readFromNBT(nbt);
 
-		InventoryUtils.restoreInventory(this, nbt);
+		InventoryUtils.restoreInventory(this, 0, nbt);
 
 		if (nbt.hasKey(NBT_WORKING))
 		{
@@ -136,7 +136,7 @@ public class TileWirelessTransmitter extends TileMachine implements IInventory
 	{
 		super.writeToNBT(nbt);
 
-		InventoryUtils.saveInventory(this, nbt);
+		InventoryUtils.saveInventory(this, 0, nbt);
 
 		nbt.setBoolean(NBT_WORKING, working);
 		nbt.setInteger(NBT_PROGRESS, progress);

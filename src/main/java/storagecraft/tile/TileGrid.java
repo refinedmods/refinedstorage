@@ -60,7 +60,7 @@ public class TileGrid extends TileMachine
 		}
 	};
 	private InventoryCrafting patternCraftingInventory = new InventoryCrafting(patternCraftingContainer, 3, 3);
-	private InventorySimple patternCraftingResultInventory = new InventorySimple("pattern_crafting_result", 1, this);
+	private InventorySimple patternCraftingResultInventory = new InventorySimple("pattern_crafting_result", 1);
 	private InventorySimple patternInventory = new InventorySimple("pattern", 2, this);
 
 	private int sortingDirection = 0;
@@ -181,10 +181,10 @@ public class TileGrid extends TileMachine
 	{
 		super.readFromNBT(nbt);
 
-		InventoryUtils.restoreInventory(craftingInventory, nbt);
-		InventoryUtils.restoreInventory(patternCraftingInventory, nbt);
-		InventoryUtils.restoreInventory(patternCraftingResultInventory, nbt);
-		InventoryUtils.restoreInventory(patternInventory, nbt);
+		InventoryUtils.restoreInventory(craftingInventory, 0, nbt);
+
+		InventoryUtils.restoreInventory(patternCraftingInventory, 1, nbt);
+		InventoryUtils.restoreInventory(patternInventory, 2, nbt);
 
 		if (nbt.hasKey(NBT_SORTING_DIRECTION))
 		{
@@ -202,10 +202,10 @@ public class TileGrid extends TileMachine
 	{
 		super.writeToNBT(nbt);
 
-		InventoryUtils.saveInventory(craftingInventory, nbt);
-		InventoryUtils.saveInventory(patternCraftingInventory, nbt);
-		InventoryUtils.saveInventory(patternCraftingResultInventory, nbt);
-		InventoryUtils.saveInventory(patternInventory, nbt);
+		InventoryUtils.saveInventory(craftingInventory, 0, nbt);
+
+		InventoryUtils.saveInventory(patternCraftingInventory, 1, nbt);
+		InventoryUtils.saveInventory(patternInventory, 2, nbt);
 
 		nbt.setInteger(NBT_SORTING_DIRECTION, sortingDirection);
 		nbt.setInteger(NBT_SORTING_TYPE, sortingType);

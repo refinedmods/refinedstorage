@@ -95,7 +95,7 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
 	{
 		super.readFromNBT(nbt);
 
-		InventoryUtils.restoreInventory(this, nbt);
+		InventoryUtils.restoreInventory(this, 0, nbt);
 
 		recipe = SoldererRegistry.getRecipe(inventory);
 
@@ -115,7 +115,7 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
 	{
 		super.writeToNBT(nbt);
 
-		InventoryUtils.saveInventory(this, nbt);
+		InventoryUtils.saveInventory(this, 0, nbt);
 
 		nbt.setBoolean(NBT_WORKING, working);
 		nbt.setInteger(NBT_PROGRESS, progress);

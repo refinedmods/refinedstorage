@@ -111,7 +111,7 @@ public class TileExporter extends TileMachine implements ICompareSetting
 			compare = nbt.getInteger(NBT_COMPARE);
 		}
 
-		InventoryUtils.restoreInventory(inventory, nbt);
+		InventoryUtils.restoreInventory(inventory, 0, nbt);
 	}
 
 	@Override
@@ -121,7 +121,7 @@ public class TileExporter extends TileMachine implements ICompareSetting
 
 		nbt.setInteger(NBT_COMPARE, compare);
 
-		InventoryUtils.saveInventory(inventory, nbt);
+		InventoryUtils.saveInventory(inventory, 0, nbt);
 	}
 
 	@Override

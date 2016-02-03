@@ -175,7 +175,7 @@ public class TileImporter extends TileMachine implements ICompareSetting, IModeS
 			mode = nbt.getInteger(NBT_MODE);
 		}
 
-		InventoryUtils.restoreInventory(inventory, nbt);
+		InventoryUtils.restoreInventory(inventory, 0, nbt);
 	}
 
 	@Override
@@ -186,7 +186,7 @@ public class TileImporter extends TileMachine implements ICompareSetting, IModeS
 		nbt.setInteger(NBT_COMPARE, compare);
 		nbt.setInteger(NBT_MODE, mode);
 
-		InventoryUtils.saveInventory(inventory, nbt);
+		InventoryUtils.saveInventory(inventory, 0, nbt);
 	}
 
 	@Override

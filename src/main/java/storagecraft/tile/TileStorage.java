@@ -62,7 +62,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 	{
 		super.readFromNBT(nbt);
 
-		InventoryUtils.restoreInventory(inventory, nbt);
+		InventoryUtils.restoreInventory(inventory, 0, nbt);
 
 		if (nbt.hasKey(NBT_STORAGE))
 		{
@@ -90,7 +90,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 	{
 		super.writeToNBT(nbt);
 
-		InventoryUtils.saveInventory(inventory, nbt);
+		InventoryUtils.saveInventory(inventory, 0, nbt);
 
 		nbt.setTag(NBT_STORAGE, tag);
 		nbt.setInteger(NBT_PRIORITY, priority);

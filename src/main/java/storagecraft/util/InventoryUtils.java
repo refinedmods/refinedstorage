@@ -10,15 +10,14 @@ import net.minecraftforge.common.util.Constants;
 
 public class InventoryUtils
 {
-	public static final String NBT_INVENTORY = "Inventory";
+	public static final String NBT_INVENTORY = "Inventory_%d";
 	public static final String NBT_SLOT = "Slot";
 
 	public static final int COMPARE_DAMAGE = 1;
 	public static final int COMPARE_NBT = 2;
 	public static final int COMPARE_QUANTITY = 4;
 
-	// @TODO: Save multiple inventories
-	public static void saveInventory(IInventory inventory, NBTTagCompound nbt)
+	public static void saveInventory(IInventory inventory, int id, NBTTagCompound nbt)
 	{
 		NBTTagList tagList = new NBTTagList();
 
@@ -36,15 +35,16 @@ public class InventoryUtils
 			}
 		}
 
-		nbt.setTag(NBT_INVENTORY, tagList);
+		nbt.setTag(String.format(NBT_INVENTORY, id), tagList);
 	}
 
-	// @TODO: Restore multiple inventories
-	public static void restoreInventory(IInventory inventory, NBTTagCompound nbt)
+	public static void restoreInventory(IInventory inventory, int id, NBTTagCompound nbt)
 	{
-		if (nbt.hasKey(NBT_INVENTORY))
+		String name = String.format(NBT_INVENTORY, id);
+
+		if (nbt.hasKey(name))
 		{
-			NBTTagList tagList = nbt.getTagList(NBT_INVENTORY, Constants.NBT.TAG_COMPOUND);
+			NBTTagList tagList = nbt.getTagList(name, Constants.NBT.TAG_COMPOUND);
 
 			for (int i = 0; i < tagList.tagCount(); i++)
 			{

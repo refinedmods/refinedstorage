@@ -59,7 +59,7 @@ public class TileDrive extends TileMachine implements IInventory, IStorageProvid
 	{
 		super.readFromNBT(nbt);
 
-		InventoryUtils.restoreInventory(this, nbt);
+		InventoryUtils.restoreInventory(this, 0, nbt);
 
 		if (nbt.hasKey(NBT_PRIORITY))
 		{
@@ -72,7 +72,7 @@ public class TileDrive extends TileMachine implements IInventory, IStorageProvid
 	{
 		super.writeToNBT(nbt);
 
-		InventoryUtils.saveInventory(this, nbt);
+		InventoryUtils.saveInventory(this, 0, nbt);
 
 		nbt.setInteger(NBT_PRIORITY, priority);
 	}

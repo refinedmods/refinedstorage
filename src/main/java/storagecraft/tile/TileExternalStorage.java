@@ -169,7 +169,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 	{
 		super.readFromNBT(nbt);
 
-		InventoryUtils.restoreInventory(inventory, nbt);
+		InventoryUtils.restoreInventory(inventory, 0, nbt);
 
 		if (nbt.hasKey(NBT_PRIORITY))
 		{
@@ -192,7 +192,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 	{
 		super.writeToNBT(nbt);
 
-		InventoryUtils.saveInventory(inventory, nbt);
+		InventoryUtils.saveInventory(inventory, 0, nbt);
 
 		nbt.setInteger(NBT_PRIORITY, priority);
 		nbt.setInteger(NBT_COMPARE, compare);
