@@ -86,6 +86,10 @@ public class MessageStoragePull extends MessageHandlerPlayerToServer<MessageStor
 				{
 					quantity = 1;
 				}
+				else if (message.shift && quantity > item.getType().getItemStackLimit(item.toItemStack()))
+				{
+					quantity = item.getType().getItemStackLimit(item.toItemStack());
+				}
 
 				ItemStack took = controller.take(item.copy(quantity).toItemStack());
 
