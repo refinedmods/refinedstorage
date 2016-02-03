@@ -133,9 +133,17 @@ public class StorageItem
 
 		if ((flags & InventoryUtils.COMPARE_NBT) == InventoryUtils.COMPARE_NBT)
 		{
-			if (tag != null && !tag.equals(other.getTag()))
+			if ((tag != null && other.getTag() == null) || (tag == null && other.getTag() != null))
 			{
 				return false;
+			}
+
+			if (tag != null && other.getTag() != null)
+			{
+				if (!tag.equals(other.getTag()))
+				{
+					return false;
+				}
 			}
 		}
 
@@ -162,9 +170,17 @@ public class StorageItem
 
 		if ((flags & InventoryUtils.COMPARE_NBT) == InventoryUtils.COMPARE_NBT)
 		{
-			if (tag != null && !tag.equals(stack.getTagCompound()))
+			if ((tag != null && stack.getTagCompound() == null) || (tag == null && stack.getTagCompound() != null))
 			{
 				return false;
+			}
+
+			if (tag != null && stack.getTagCompound() != null)
+			{
+				if (!tag.equals(stack.getTagCompound()))
+				{
+					return false;
+				}
 			}
 		}
 
