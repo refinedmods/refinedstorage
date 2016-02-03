@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import storagecraft.StorageCraftItems;
-import storagecraft.container.slot.SlotItemFilter;
+import storagecraft.container.slot.SlotFiltered;
 import storagecraft.tile.TileDrive;
 
 public class ContainerDrive extends ContainerBase
@@ -18,7 +18,7 @@ public class ContainerDrive extends ContainerBase
 
 		for (int i = 0; i < 8; ++i)
 		{
-			addSlotToContainer(new SlotItemFilter(drive, i, x, y, StorageCraftItems.STORAGE_CELL));
+			addSlotToContainer(new SlotFiltered(drive, i, x, y, StorageCraftItems.STORAGE_CELL));
 
 			if ((i + 1) % 2 == 0)
 			{

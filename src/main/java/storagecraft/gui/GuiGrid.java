@@ -40,7 +40,7 @@ public class GuiGrid extends GuiBase
 
 	public GuiGrid(ContainerGrid container, TileGrid grid)
 	{
-		super(container, 176, grid.getType() == EnumGridType.CRAFTING ? 256 : 190);
+		super(container, 176, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 256 : 190);
 
 		this.container = container;
 		this.grid = grid;
@@ -114,7 +114,16 @@ public class GuiGrid extends GuiBase
 
 	public boolean isHoveringOverClear(int mouseX, int mouseY)
 	{
-		return inBounds(81, 105, 7, 7, mouseX, mouseY);
+		if (grid.getType() == EnumGridType.CRAFTING)
+		{
+			return inBounds(81, 105, 7, 7, mouseX, mouseY);
+		}
+		else if (grid.getType() == EnumGridType.PATTERN)
+		{
+			return inBounds(64, 105, 7, 7, mouseX, mouseY);
+		}
+
+		return false;
 	}
 
 	@Override
@@ -123,6 +132,10 @@ public class GuiGrid extends GuiBase
 		if (grid.getType() == EnumGridType.CRAFTING)
 		{
 			bindTexture("gui/crafting_grid.png");
+		}
+		else if (grid.getType() == EnumGridType.PATTERN)
+		{
+			bindTexture("gui/pattern_grid.png");
 		}
 		else
 		{
@@ -143,8 +156,12 @@ public class GuiGrid extends GuiBase
 		{
 			drawString(7, 94, t("container.crafting"));
 		}
+		else if (grid.getType() == EnumGridType.PATTERN)
+		{
+			drawString(7, 94, t("gui.storagecraft:grid.pattern"));
+		}
 
-		drawString(7, grid.getType() == EnumGridType.CRAFTING ? 163 : 96, t("container.inventory"));
+		drawString(7, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 163 : 96, t("container.inventory"));
 
 		int x = 8;
 		int y = 20;
@@ -204,7 +221,7 @@ public class GuiGrid extends GuiBase
 			drawTooltip(mouseX, mouseY, items.get(hoveringSlotId).toItemStack());
 		}
 
-		if (grid.getType() == EnumGridType.CRAFTING && isHoveringOverClear(mouseX, mouseY))
+		if (isHoveringOverClear(mouseX, mouseY))
 		{
 			drawTooltip(mouseX, mouseY, t("misc.storagecraft:clear"));
 		}
@@ -285,7 +302,7 @@ public class GuiGrid extends GuiBase
 	{
 		super.mouseClicked(mouseX, mouseY, clickedButton);
 
-		boolean clickedClear = grid.getType() == EnumGridType.CRAFTING && clickedButton == 0 && isHoveringOverClear(mouseX - guiLeft, mouseY - guiTop);
+		boolean clickedClear = clickedButton == 0 && isHoveringOverClear(mouseX - guiLeft, mouseY - guiTop);
 
 		if (grid.isConnected())
 		{

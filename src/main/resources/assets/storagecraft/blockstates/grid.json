@@ -15,19 +15,14 @@
 				},
 				"transform": "forge:default-block",
 				"y": 0
-			},
-			{
-				"textures": {
-					"front": "storagecraft:blocks/grid_disconnected"
-				},
-				"transform": "forge:default-block",
-				"y": 0
 			}
 		],
 		"type": {
 			"normal": {
 			},
 			"crafting": {
+			},
+			"pattern": {
 			}
 		},
 		"connected": {

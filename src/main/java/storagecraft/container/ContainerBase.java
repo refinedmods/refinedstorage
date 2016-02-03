@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import storagecraft.container.slot.SlotDisabled;
 import storagecraft.container.slot.SlotSpecimen;
 
 public abstract class ContainerBase extends Container
@@ -71,6 +72,10 @@ public abstract class ContainerBase extends Container
 			}
 
 			return player.inventory.getItemStack();
+		}
+		else if (slot instanceof SlotDisabled)
+		{
+			return null;
 		}
 
 		return super.slotClick(id, clickedButton, mode, player);

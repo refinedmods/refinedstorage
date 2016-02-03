@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import storagecraft.block.EnumGridType;
 import storagecraft.tile.TileGrid;
 
 public class MessageGridCraftingClear extends MessageHandlerPlayerToServer<MessageGridCraftingClear> implements IMessage
@@ -50,17 +51,24 @@ public class MessageGridCraftingClear extends MessageHandlerPlayerToServer<Messa
 		{
 			TileGrid grid = (TileGrid) tile;
 
-			if (grid.isConnected())
+			if (grid.getType() == EnumGridType.PATTERN)
 			{
-				for (int i = 0; i < grid.getCraftingMatrix().getSizeInventory(); ++i)
+				for (int i = 0; i < 9; ++i)
 				{
-					ItemStack slot = grid.getCraftingMatrix().getStackInSlot(i);
+					grid.getPatternCraftingInventory().setInventorySlotContents(i, null);
+				}
+			}
+			else if (grid.isConnected() && grid.getType() == EnumGridType.CRAFTING)
+			{
+				for (int i = 0; i < grid.getCraftingInventory().getSizeInventory(); ++i)
+				{
+					ItemStack slot = grid.getCraftingInventory().getStackInSlot(i);
 
 					if (slot != null)
 					{
 						if (grid.getController().push(slot))
 						{
-							grid.getCraftingMatrix().setInventorySlotContents(i, null);
+							grid.getCraftingInventory().setInventorySlotContents(i, null);
 						}
 					}
 				}

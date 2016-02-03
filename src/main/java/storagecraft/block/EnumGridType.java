@@ -5,7 +5,8 @@ import net.minecraft.util.IStringSerializable;
 public enum EnumGridType implements IStringSerializable
 {
 	NORMAL(0, "normal"),
-	CRAFTING(1, "crafting");
+	CRAFTING(1, "crafting"),
+	PATTERN(2, "pattern");
 
 	private int id;
 	private String name;

@@ -5,11 +5,11 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-public class SlotItemFilter extends Slot
+public class SlotFiltered extends Slot
 {
 	private Item item;
 
-	public SlotItemFilter(IInventory inventory, int id, int x, int y, Item item)
+	public SlotFiltered(IInventory inventory, int id, int x, int y, Item item)
 	{
 		super(inventory, id, x, y);
 

@@ -17,6 +17,7 @@ public class InventoryUtils
 	public static final int COMPARE_NBT = 2;
 	public static final int COMPARE_QUANTITY = 4;
 
+	// @TODO: Save multiple inventories
 	public static void saveInventory(IInventory inventory, NBTTagCompound nbt)
 	{
 		NBTTagList tagList = new NBTTagList();
@@ -38,6 +39,7 @@ public class InventoryUtils
 		nbt.setTag(NBT_INVENTORY, tagList);
 	}
 
+	// @TODO: Restore multiple inventories
 	public static void restoreInventory(IInventory inventory, NBTTagCompound nbt)
 	{
 		if (nbt.hasKey(NBT_INVENTORY))

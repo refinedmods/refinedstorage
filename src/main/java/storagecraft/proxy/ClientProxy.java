@@ -91,6 +91,8 @@ public class ClientProxy extends CommonProxy
 
 		ModelLoader.setCustomModelResourceLocation(StorageCraftItems.SILICON, 0, new ModelResourceLocation("storagecraft:silicon", "inventory"));
 
+		ModelLoader.setCustomModelResourceLocation(StorageCraftItems.PATTERN, 0, new ModelResourceLocation("storagecraft:pattern", "inventory"));
+
 		ModelLoader.setCustomModelResourceLocation(StorageCraftItems.QUARTZ_ENRICHED_IRON, 0, new ModelResourceLocation("storagecraft:quartz_enriched_iron", "inventory"));
 
 		ModelLoader.setCustomModelResourceLocation(StorageCraftItems.CORE, ItemCore.TYPE_CONSTRUCTION, new ModelResourceLocation("storagecraft:construction_core", "inventory"));
@@ -109,6 +111,7 @@ public class ClientProxy extends CommonProxy
 		// Blocks
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(StorageCraftBlocks.GRID), EnumGridType.NORMAL.getId(), new ModelResourceLocation("storagecraft:grid", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(StorageCraftBlocks.GRID), EnumGridType.CRAFTING.getId(), new ModelResourceLocation("storagecraft:grid", "inventory"));
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(StorageCraftBlocks.GRID), EnumGridType.PATTERN.getId(), new ModelResourceLocation("storagecraft:grid", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(StorageCraftBlocks.MACHINE_CASING), 0, new ModelResourceLocation("storagecraft:machine_casing", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(StorageCraftBlocks.EXPORTER), 0, new ModelResourceLocation("storagecraft:exporter", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(StorageCraftBlocks.IMPORTER), 0, new ModelResourceLocation("storagecraft:importer", "inventory"));

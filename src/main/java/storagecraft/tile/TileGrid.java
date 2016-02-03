@@ -1,6 +1,8 @@
 package storagecraft.tile;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -10,7 +12,6 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import storagecraft.StorageCraft;
 import storagecraft.block.BlockGrid;
 import storagecraft.block.EnumGridType;
-import storagecraft.container.ContainerGridCrafting;
 import storagecraft.inventory.InventorySimple;
 import storagecraft.network.MessageGridCraftingUpdate;
 import storagecraft.storage.StorageItem;
@@ -27,9 +28,40 @@ public class TileGrid extends TileMachine
 	public static final int SORTING_TYPE_QUANTITY = 0;
 	public static final int SORTING_TYPE_NAME = 1;
 
-	private ContainerGridCrafting craftingMatrixContainer = new ContainerGridCrafting(this);
-	private InventoryCrafting craftingMatrix = new InventoryCrafting(craftingMatrixContainer, 3, 3);
-	private InventorySimple craftingResult = new InventorySimple("crafting_result", 1);
+	private Container craftingContainer = new Container()
+	{
+		@Override
+		public boolean canInteractWith(EntityPlayer player)
+		{
+			return false;
+		}
+
+		@Override
+		public void onCraftMatrixChanged(IInventory inventory)
+		{
+			onCraftingMatrixChanged();
+		}
+	};
+	private InventoryCrafting craftingInventory = new InventoryCrafting(craftingContainer, 3, 3);
+	private InventorySimple craftingResultInventory = new InventorySimple("crafting_result", 1);
+
+	private Container patternCraftingContainer = new Container()
+	{
+		@Override
+		public boolean canInteractWith(EntityPlayer player)
+		{
+			return false;
+		}
+
+		@Override
+		public void onCraftMatrixChanged(IInventory inventory)
+		{
+			onPatternCraftingMatrixChanged();
+		}
+	};
+	private InventoryCrafting patternCraftingInventory = new InventoryCrafting(patternCraftingContainer, 3, 3);
+	private InventorySimple patternCraftingResultInventory = new InventorySimple("pattern_crafting_result", 1, this);
+	private InventorySimple patternInventory = new InventorySimple("pattern", 2, this);
 
 	private int sortingDirection = 0;
 	private int sortingType = 0;
@@ -50,25 +82,37 @@ public class TileGrid extends TileMachine
 		return (EnumGridType) worldObj.getBlockState(pos).getValue(BlockGrid.TYPE);
 	}
 
-	public InventoryCrafting getCraftingMatrix()
+	public InventoryCrafting getCraftingInventory()
 	{
-		return craftingMatrix;
+		return craftingInventory;
+	}
+
+	public InventorySimple getCraftingResultInventory()
+	{
+		return craftingResultInventory;
 	}
 
 	public void onCraftingMatrixChanged()
 	{
 		markDirty();
 
-		craftingResult.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(craftingMatrix, worldObj));
+		craftingResultInventory.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(craftingInventory, worldObj));
+	}
+
+	public void onPatternCraftingMatrixChanged()
+	{
+		markDirty();
+
+		patternCraftingResultInventory.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(patternCraftingInventory, worldObj));
 	}
 
 	public void onCrafted(ItemStack[] matrixSlots)
 	{
 		if (isConnected() && !worldObj.isRemote)
 		{
-			for (int i = 0; i < craftingMatrix.getSizeInventory(); ++i)
+			for (int i = 0; i < craftingInventory.getSizeInventory(); ++i)
 			{
-				ItemStack slot = craftingMatrix.getStackInSlot(i);
+				ItemStack slot = craftingInventory.getStackInSlot(i);
 
 				if (slot == null && matrixSlots[i] != null)
 				{
@@ -76,7 +120,7 @@ public class TileGrid extends TileMachine
 					{
 						if (item.compareNoQuantity(matrixSlots[i].copy()))
 						{
-							craftingMatrix.setInventorySlotContents(i, getController().take(matrixSlots[i].copy()));
+							craftingInventory.setInventorySlotContents(i, getController().take(matrixSlots[i].copy()));
 
 							break;
 						}
@@ -93,9 +137,19 @@ public class TileGrid extends TileMachine
 		}
 	}
 
-	public InventorySimple getCraftingResult()
+	public InventoryCrafting getPatternCraftingInventory()
 	{
-		return craftingResult;
+		return patternCraftingInventory;
+	}
+
+	public InventorySimple getPatternCraftingResultInventory()
+	{
+		return patternCraftingResultInventory;
+	}
+
+	public InventorySimple getPatternInventory()
+	{
+		return patternInventory;
 	}
 
 	public int getSortingDirection()
@@ -127,7 +181,10 @@ public class TileGrid extends TileMachine
 	{
 		super.readFromNBT(nbt);
 
-		InventoryUtils.restoreInventory(craftingMatrix, nbt);
+		InventoryUtils.restoreInventory(craftingInventory, nbt);
+		InventoryUtils.restoreInventory(patternCraftingInventory, nbt);
+		InventoryUtils.restoreInventory(patternCraftingResultInventory, nbt);
+		InventoryUtils.restoreInventory(patternInventory, nbt);
 
 		if (nbt.hasKey(NBT_SORTING_DIRECTION))
 		{
@@ -145,7 +202,10 @@ public class TileGrid extends TileMachine
 	{
 		super.writeToNBT(nbt);
 
-		InventoryUtils.saveInventory(craftingMatrix, nbt);
+		InventoryUtils.saveInventory(craftingInventory, nbt);
+		InventoryUtils.saveInventory(patternCraftingInventory, nbt);
+		InventoryUtils.saveInventory(patternCraftingResultInventory, nbt);
+		InventoryUtils.saveInventory(patternInventory, nbt);
 
 		nbt.setInteger(NBT_SORTING_DIRECTION, sortingDirection);
 		nbt.setInteger(NBT_SORTING_TYPE, sortingType);
@@ -172,6 +232,15 @@ public class TileGrid extends TileMachine
 	@Override
 	public IInventory getDroppedInventory()
 	{
-		return craftingMatrix;
+		if (getType() == EnumGridType.CRAFTING)
+		{
+			return craftingInventory;
+		}
+		else if (getType() == EnumGridType.PATTERN)
+		{
+			return patternInventory;
+		}
+
+		return null;
 	}
 }

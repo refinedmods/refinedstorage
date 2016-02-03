@@ -30,7 +30,7 @@ public class MessageGridCraftingUpdate implements IMessage, IMessageHandler<Mess
 
 		for (int i = 0; i < 9; ++i)
 		{
-			craftingMatrix[i] = grid.getCraftingMatrix().getStackInSlot(i);
+			craftingMatrix[i] = grid.getCraftingInventory().getStackInSlot(i);
 		}
 	}
 
@@ -74,7 +74,7 @@ public class MessageGridCraftingUpdate implements IMessage, IMessageHandler<Mess
 				{
 					for (int i = 0; i < 9; ++i)
 					{
-						((TileGrid) tile).getCraftingMatrix().setInventorySlotContents(i, message.craftingMatrix[i]);
+						((TileGrid) tile).getCraftingInventory().setInventorySlotContents(i, message.craftingMatrix[i]);
 					}
 				}
 			}
