@@ -108,3 +108,4 @@ item.storagecraft:storage_part.1.name=4k Opslagdeel
 item.storagecraft:storage_part.2.name=16k Opslagdeel
 item.storagecraft:storage_part.3.name=64k Opslagdeel
 item.storagecraft:pattern.name=Patroon
+item.storagecraft:pattern.blank.name=Leeg Patroon

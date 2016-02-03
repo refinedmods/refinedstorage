@@ -108,3 +108,4 @@ item.storagecraft:storage_part.1.name=4k Storage Part
 item.storagecraft:storage_part.2.name=16k Storage Part
 item.storagecraft:storage_part.3.name=64k Storage Part
 item.storagecraft:pattern.name=Pattern
+item.storagecraft:pattern.blank.name=Blank Pattern

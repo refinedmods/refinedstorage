@@ -91,7 +91,14 @@ public class ClientProxy extends CommonProxy
 
 		ModelLoader.setCustomModelResourceLocation(StorageCraftItems.SILICON, 0, new ModelResourceLocation("storagecraft:silicon", "inventory"));
 
-		ModelLoader.setCustomModelResourceLocation(StorageCraftItems.PATTERN, 0, new ModelResourceLocation("storagecraft:pattern", "inventory"));
+		ModelLoader.setCustomMeshDefinition(StorageCraftItems.PATTERN, new ItemMeshDefinition()
+		{
+			@Override
+			public ModelResourceLocation getModelLocation(ItemStack stack)
+			{
+				return new ModelResourceLocation("storagecraft:" + (!ItemPattern.hasPattern(stack) ? "blank_" : "") + "pattern", "inventory");
+			}
+		});
 
 		ModelLoader.setCustomModelResourceLocation(StorageCraftItems.QUARTZ_ENRICHED_IRON, 0, new ModelResourceLocation("storagecraft:quartz_enriched_iron", "inventory"));
 

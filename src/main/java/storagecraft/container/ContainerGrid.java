@@ -2,6 +2,7 @@ package storagecraft.container;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 import storagecraft.StorageCraftItems;
 import storagecraft.block.EnumGridType;
 import storagecraft.container.slot.SlotDisabled;
@@ -13,9 +14,13 @@ import storagecraft.tile.TileGrid;
 
 public class ContainerGrid extends ContainerBase
 {
+	private TileGrid grid;
+
 	public ContainerGrid(EntityPlayer player, TileGrid grid)
 	{
 		super(player);
+
+		this.grid = grid;
 
 		addPlayerInventory(8, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 174 : 108);
 
@@ -62,5 +67,16 @@ public class ContainerGrid extends ContainerBase
 			addSlotToContainer(new SlotFiltered(grid.getPatternInventory(), 0, 137, 98, StorageCraftItems.PATTERN));
 			addSlotToContainer(new SlotOutput(grid.getPatternInventory(), 1, 137, 150));
 		}
+	}
+
+	@Override
+	public ItemStack slotClick(int id, int clickedButton, int mode, EntityPlayer player)
+	{
+		if (id >= 0 && getSlot(id) instanceof SlotDisabled)
+		{
+			grid.onPatternCreate();
+		}
+
+		return super.slotClick(id, clickedButton, mode, player);
 	}
 }

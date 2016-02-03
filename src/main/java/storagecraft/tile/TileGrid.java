@@ -10,9 +10,11 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import storagecraft.StorageCraft;
+import storagecraft.StorageCraftItems;
 import storagecraft.block.BlockGrid;
 import storagecraft.block.EnumGridType;
 import storagecraft.inventory.InventorySimple;
+import storagecraft.item.ItemPattern;
 import storagecraft.network.MessageGridCraftingUpdate;
 import storagecraft.storage.StorageItem;
 import storagecraft.util.InventoryUtils;
@@ -99,13 +101,6 @@ public class TileGrid extends TileMachine
 		craftingResultInventory.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(craftingInventory, worldObj));
 	}
 
-	public void onPatternCraftingMatrixChanged()
-	{
-		markDirty();
-
-		patternCraftingResultInventory.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(patternCraftingInventory, worldObj));
-	}
-
 	public void onCrafted(ItemStack[] matrixSlots)
 	{
 		if (isConnected() && !worldObj.isRemote)
@@ -150,6 +145,36 @@ public class TileGrid extends TileMachine
 	public InventorySimple getPatternInventory()
 	{
 		return patternInventory;
+	}
+
+	public void onPatternCraftingMatrixChanged()
+	{
+		markDirty();
+
+		patternCraftingResultInventory.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(patternCraftingInventory, worldObj));
+	}
+
+	public void onPatternCreate()
+	{
+		ItemStack result = patternCraftingResultInventory.getStackInSlot(0);
+
+		if (result != null && patternInventory.getStackInSlot(0).stackSize > 0 && patternInventory.getStackInSlot(1) == null)
+		{
+			ItemStack pattern = new ItemStack(StorageCraftItems.PATTERN);
+
+			for (int i = 0; i < 9; ++i)
+			{
+				ItemStack slot = patternCraftingInventory.getStackInSlot(i);
+
+				if (slot != null)
+				{
+					ItemPattern.setPattern(pattern, slot, i);
+				}
+			}
+
+			patternInventory.decrStackSize(0, 1);
+			patternInventory.setInventorySlotContents(1, pattern);
+		}
 	}
 
 	public int getSortingDirection()
