@@ -2,23 +2,22 @@ package storagecraft.container.slot;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 public class SlotFiltered extends Slot
 {
-	private Item item;
+	private IItemValidator validator;
 
-	public SlotFiltered(IInventory inventory, int id, int x, int y, Item item)
+	public SlotFiltered(IInventory inventory, int id, int x, int y, IItemValidator validator)
 	{
 		super(inventory, id, x, y);
 
-		this.item = item;
+		this.validator = validator;
 	}
 
 	@Override
 	public boolean isItemValid(ItemStack item)
 	{
-		return item.getItem() == this.item;
+		return validator.isValid(item);
 	}
 }

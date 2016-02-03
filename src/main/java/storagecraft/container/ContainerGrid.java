@@ -5,6 +5,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import storagecraft.StorageCraftItems;
 import storagecraft.block.EnumGridType;
+import storagecraft.container.slot.BasicItemValidator;
 import storagecraft.container.slot.SlotDisabled;
 import storagecraft.container.slot.SlotFiltered;
 import storagecraft.container.slot.SlotGridCraftingResult;
@@ -64,7 +65,7 @@ public class ContainerGrid extends ContainerBase
 
 			addSlotToContainer(new SlotDisabled(grid.getPatternCraftingResultInventory(), 0, 133 + 4, 120 + 4));
 
-			addSlotToContainer(new SlotFiltered(grid.getPatternInventory(), 0, 137, 98, StorageCraftItems.PATTERN));
+			addSlotToContainer(new SlotFiltered(grid.getPatternInventory(), 0, 137, 98, new BasicItemValidator(StorageCraftItems.PATTERN)));
 			addSlotToContainer(new SlotOutput(grid.getPatternInventory(), 1, 137, 150));
 		}
 	}

@@ -5,6 +5,7 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import storagecraft.StorageCraftItems;
+import storagecraft.container.slot.BasicItemValidator;
 import storagecraft.container.slot.SlotFiltered;
 import storagecraft.container.slot.SlotOutput;
 import storagecraft.tile.TileWirelessTransmitter;
@@ -15,8 +16,8 @@ public class ContainerWirelessTransmitter extends ContainerBase
 	{
 		super(player);
 
-		addSlotToContainer(new SlotFiltered(wirelessTransmitter, 0, 8, 20, Items.ender_pearl));
-		addSlotToContainer(new SlotFiltered(wirelessTransmitter, 1, 101, 20, StorageCraftItems.WIRELESS_GRID));
+		addSlotToContainer(new SlotFiltered(wirelessTransmitter, 0, 8, 20, new BasicItemValidator(Items.ender_pearl)));
+		addSlotToContainer(new SlotFiltered(wirelessTransmitter, 1, 101, 20, new BasicItemValidator(StorageCraftItems.WIRELESS_GRID)));
 		addSlotToContainer(new SlotOutput(wirelessTransmitter, 2, 152, 20));
 
 		addPlayerInventory(8, 55);
