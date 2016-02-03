@@ -41,7 +41,7 @@ public class ContainerGrid extends ContainerBase
 		}
 		else if (grid.getType() == EnumGridType.PATTERN)
 		{
-			int x = 8;
+			int x = 25;
 			int y = 106;
 
 			for (int i = 0; i < 9; ++i)
@@ -53,14 +53,14 @@ public class ContainerGrid extends ContainerBase
 				if ((i + 1) % 3 == 0)
 				{
 					y += 18;
-					x = 8;
+					x = 25;
 				}
 			}
 
-			addSlotToContainer(new SlotDisabled(grid.getPatternCraftingResultInventory(), 0, 116 + 4, 120 + 4));
+			addSlotToContainer(new SlotDisabled(grid.getPatternCraftingResultInventory(), 0, 133 + 4, 120 + 4));
 
-			addSlotToContainer(new SlotFiltered(grid.getPatternInventory(), 0, 152, 105, StorageCraftItems.PATTERN));
-			addSlotToContainer(new SlotOutput(grid.getPatternInventory(), 1, 152, 142));
+			addSlotToContainer(new SlotFiltered(grid.getPatternInventory(), 0, 137, 98, StorageCraftItems.PATTERN));
+			addSlotToContainer(new SlotOutput(grid.getPatternInventory(), 1, 137, 150));
 		}
 	}
 }

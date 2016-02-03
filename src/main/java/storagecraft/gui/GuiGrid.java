@@ -114,13 +114,9 @@ public class GuiGrid extends GuiBase
 
 	public boolean isHoveringOverClear(int mouseX, int mouseY)
 	{
-		if (grid.getType() == EnumGridType.CRAFTING)
+		if (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN)
 		{
 			return inBounds(81, 105, 7, 7, mouseX, mouseY);
-		}
-		else if (grid.getType() == EnumGridType.PATTERN)
-		{
-			return inBounds(64, 105, 7, 7, mouseX, mouseY);
 		}
 
 		return false;
