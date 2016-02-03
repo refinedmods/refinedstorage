@@ -32,6 +32,8 @@ misc.storagecraft:wireless_grid.out_of_range=De Draadloze Zender is buiten berei
 misc.storagecraft:wireless_grid.no_grid.0=Er is geen Rooster gevonden in het netwerk. Je moet eerst een Rooster plaatsen voor je het Draadloze Rooster kunt gebruiken.
 misc.storagecraft:wireless_grid.no_grid.1=Er is geen Crafting Rooster gevonden in het netwerk. Je moet eerst een Crafting Rooster plaatsen voor je het Draadloze Crafting Rooster kunt gebruiken.
 
+misc.storagecraft:pattern.tooltip=%dx %s
+
 misc.storagecraft:yes=Ja
 misc.storagecraft:no=Nee
 misc.storagecraft:clear=Legen

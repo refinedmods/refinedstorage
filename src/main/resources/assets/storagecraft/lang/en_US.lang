@@ -32,6 +32,8 @@ misc.storagecraft:wireless_grid.out_of_range=The Wireless Transmitter is out of 
 misc.storagecraft:wireless_grid.no_grid.0=There is no Grid found in the network. You need to place a Grid before you can use the Wireless Grid!
 misc.storagecraft:wireless_grid.no_grid.1=There is no Crafting Grid found in the network. You need to place a Crafting Grid before you can use the Wireless Crafting Grid!
 
+misc.storagecraft:pattern.tooltip=%dx %s
+
 misc.storagecraft:yes=Yes
 misc.storagecraft:no=No
 misc.storagecraft:clear=Clear
