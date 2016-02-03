@@ -28,6 +28,17 @@ public class ItemPattern extends ItemBase
 	}
 
 	@Override
+	public int getItemStackLimit(ItemStack stack)
+	{
+		if (hasPattern(stack))
+		{
+			return 1;
+		}
+
+		return 64;
+	}
+
+	@Override
 	public String getUnlocalizedName(ItemStack stack)
 	{
 		if (hasPattern(stack))

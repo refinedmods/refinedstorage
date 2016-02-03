@@ -69,6 +69,11 @@ public class ClientProxy extends CommonProxy
 			new ResourceLocation("storagecraft:wireless_grid_disconnected")
 		);
 
+		ModelBakery.registerItemVariants(StorageCraftItems.PATTERN,
+			new ResourceLocation("storagecraft:pattern"),
+			new ResourceLocation("storagecraft:blank_pattern")
+		);
+
 		// Items
 		ModelLoader.setCustomModelResourceLocation(StorageCraftItems.STORAGE_CELL, ItemStorageCell.TYPE_1K, new ModelResourceLocation("storagecraft:1k_storage_cell", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(StorageCraftItems.STORAGE_CELL, ItemStorageCell.TYPE_4K, new ModelResourceLocation("storagecraft:4k_storage_cell", "inventory"));
@@ -119,7 +124,14 @@ public class ClientProxy extends CommonProxy
 			@Override
 			public ModelResourceLocation getModelLocation(ItemStack stack)
 			{
-				return new ModelResourceLocation("storagecraft:wireless_grid_" + (ItemWirelessGrid.isValid(stack) ? "connected" : "disconnected"), "inventory");
+				if (ItemWirelessGrid.isValid(stack))
+				{
+					return new ModelResourceLocation("storagecraft:wireless_grid_connected", "inventory");
+				}
+				else
+				{
+					return new ModelResourceLocation("storagecraft:wireless_grid_disconnected", "inventory");
+				}
 			}
 		});
 
