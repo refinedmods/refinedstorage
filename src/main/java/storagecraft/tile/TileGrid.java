@@ -158,7 +158,7 @@ public class TileGrid extends TileMachine
 	{
 		ItemStack result = patternCraftingResultInventory.getStackInSlot(0);
 
-		if (result != null && patternInventory.getStackInSlot(0).stackSize > 0 && patternInventory.getStackInSlot(1) == null)
+		if (result != null && patternInventory.getStackInSlot(0) != null && patternInventory.getStackInSlot(0).stackSize > 0 && patternInventory.getStackInSlot(1) == null)
 		{
 			ItemStack pattern = new ItemStack(StorageCraftItems.PATTERN);
 

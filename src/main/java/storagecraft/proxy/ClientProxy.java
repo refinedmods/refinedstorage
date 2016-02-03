@@ -96,7 +96,14 @@ public class ClientProxy extends CommonProxy
 			@Override
 			public ModelResourceLocation getModelLocation(ItemStack stack)
 			{
-				return new ModelResourceLocation("storagecraft:" + (!ItemPattern.hasPattern(stack) ? "blank_" : "") + "pattern", "inventory");
+				if (ItemPattern.hasPattern(stack))
+				{
+					return new ModelResourceLocation("storagecraft:pattern", "inventory");
+				}
+				else
+				{
+					return new ModelResourceLocation("storagecraft:blank_pattern", "inventory");
+				}
 			}
 		});
 
@@ -106,6 +113,7 @@ public class ClientProxy extends CommonProxy
 		ModelLoader.setCustomModelResourceLocation(StorageCraftItems.CORE, ItemCore.TYPE_DESTRUCTION, new ModelResourceLocation("storagecraft:destruction_core", "inventory"));
 
 		ModelLoader.setCustomModelResourceLocation(StorageCraftItems.WIRELESS_GRID_PLATE, 0, new ModelResourceLocation("storagecraft:wireless_grid_plate", "inventory"));
+
 		ModelLoader.setCustomMeshDefinition(StorageCraftItems.WIRELESS_GRID, new ItemMeshDefinition()
 		{
 			@Override

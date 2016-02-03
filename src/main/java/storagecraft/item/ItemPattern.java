@@ -19,11 +19,11 @@ public class ItemPattern extends ItemBase
 	}
 
 	@Override
-	public void addInformation(ItemStack cell, EntityPlayer player, List list, boolean b)
+	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean b)
 	{
-		if (isValid(player.worldObj, cell))
+		if (isValid(player.worldObj, stack))
 		{
-			list.add(getPatternResult(player.worldObj, cell).getDisplayName());
+			list.add(getPatternResult(player.worldObj, stack).getDisplayName());
 		}
 	}
 
