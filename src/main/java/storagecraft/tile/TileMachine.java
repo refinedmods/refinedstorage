@@ -1,6 +1,7 @@
 package storagecraft.tile;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 import storagecraft.block.BlockMachine;
@@ -14,27 +15,32 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
 
 	private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
-	private BlockPos controllerPos;
+	private BlockPos controllerPosition;
+
+	private Block originalBlock;
 
 	public void onConnected(TileController controller)
 	{
-		markDirty();
+		if (worldObj.getBlockState(pos).getBlock() == originalBlock)
+		{
+			markDirty();
 
-		connected = true;
+			connected = true;
 
-		controllerPos = controller.getPos();
+			worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockMachine.CONNECTED, true));
 
-		worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockMachine.CONNECTED, true));
+			controllerPosition = controller.getPos();
+		}
 	}
 
 	public void onDisconnected()
 	{
-		markDirty();
-
-		connected = false;
-
-		if (!worldObj.isAirBlock(pos))
+		if (worldObj.getBlockState(pos).getBlock() == originalBlock)
 		{
+			markDirty();
+
+			connected = false;
+
 			worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockMachine.CONNECTED, false));
 		}
 	}
@@ -42,6 +48,11 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
 	@Override
 	public void update()
 	{
+		if (ticks == 0)
+		{
+			originalBlock = worldObj.getBlockState(pos).getBlock();
+		}
+
 		super.update();
 
 		if (!worldObj.isRemote && isConnected())
@@ -86,7 +97,7 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
 
 	public TileController getController()
 	{
-		return (TileController) worldObj.getTileEntity(controllerPos);
+		return (TileController) worldObj.getTileEntity(controllerPosition);
 	}
 
 	@Override
@@ -98,7 +109,7 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
 
 		if (connected)
 		{
-			controllerPos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
+			controllerPosition = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
 		}
 
 		redstoneMode = RedstoneMode.getById(buf.readInt());
@@ -116,9 +127,9 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
 
 		if (connected)
 		{
-			buf.writeInt(controllerPos.getX());
-			buf.writeInt(controllerPos.getY());
-			buf.writeInt(controllerPos.getZ());
+			buf.writeInt(controllerPosition.getX());
+			buf.writeInt(controllerPosition.getY());
+			buf.writeInt(controllerPosition.getZ());
 		}
 
 		buf.writeInt(redstoneMode.id);
