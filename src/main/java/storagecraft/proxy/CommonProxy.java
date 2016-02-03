@@ -171,6 +171,9 @@ public class CommonProxy
 		// Crafting Grid
 		SoldererRegistry.addRecipe(new SoldererRecipeCraftingGrid());
 
+		// Pattern Grid
+		SoldererRegistry.addRecipe(new SoldererRecipePatternGrid());
+
 		// Wireless Transmitter
 		GameRegistry.addRecipe(new ItemStack(StorageCraftBlocks.WIRELESS_TRANSMITTER),
 			"EPE",
