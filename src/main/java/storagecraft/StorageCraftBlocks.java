@@ -18,4 +18,5 @@ public final class StorageCraftBlocks
 	public static final BlockDestructor DESTRUCTOR = new BlockDestructor();
 	public static final BlockConstructor CONSTRUCTOR = new BlockConstructor();
 	public static final BlockStorage STORAGE = new BlockStorage();
+	public static final BlockCrafter CRAFTER = new BlockCrafter();
 }

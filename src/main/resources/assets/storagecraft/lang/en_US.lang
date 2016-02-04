@@ -13,6 +13,7 @@ gui.storagecraft:solderer=Solderer
 gui.storagecraft:wireless_transmitter=Wireless Transmitter
 gui.storagecraft:destructor=Destructor
 gui.storagecraft:constructor=Constructor
+gui.storagecraft:crafter=Crafter
 
 misc.storagecraft:energy_stored=%d / %d RF
 misc.storagecraft:energy_usage=Usage: %d RF/t
@@ -85,6 +86,7 @@ block.storagecraft:storage.1.name=4k Storage Block
 block.storagecraft:storage.2.name=16k Storage Block
 block.storagecraft:storage.3.name=64k Storage Block
 block.storagecraft:storage.4.name=Creative Storage Block
+block.storagecraft:crafter.name=Crafter
 
 item.storagecraft:storage_cell.0.name=1k Storage Cell
 item.storagecraft:storage_cell.1.name=4k Storage Cell

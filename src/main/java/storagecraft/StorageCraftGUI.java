@@ -13,4 +13,5 @@ public final class StorageCraftGUI
 	public static final int DESTRUCTOR = 9;
 	public static final int CONSTRUCTOR = 10;
 	public static final int STORAGE = 11;
+	public static final int CRAFTER = 12;
 }

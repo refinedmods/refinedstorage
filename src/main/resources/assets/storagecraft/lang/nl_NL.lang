@@ -13,6 +13,7 @@ gui.storagecraft:solderer=Soldeerder
 gui.storagecraft:wireless_transmitter=Draadloze Zender
 gui.storagecraft:destructor=Destructor
 gui.storagecraft:constructor=Constructor
+gui.storagecraft:crafter=Crafter
 
 misc.storagecraft:energy_stored=%d / %d RF
 misc.storagecraft:energy_usage=Vebruik: %d RF/t
@@ -85,6 +86,7 @@ block.storagecraft:storage.1.name=4k Opslag Blok
 block.storagecraft:storage.2.name=16k Opslag Blok
 block.storagecraft:storage.3.name=64k Opslag Blok
 block.storagecraft:storage.4.name=Creative Opslag Blok
+block.storagecraft:crafter.name=Crafter
 
 item.storagecraft:storage_cell.0.name=1k Opslagcel
 item.storagecraft:storage_cell.1.name=4k Opslagcel

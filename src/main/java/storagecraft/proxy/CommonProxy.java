@@ -20,6 +20,7 @@ import storagecraft.item.*;
 import storagecraft.network.*;
 import storagecraft.storage.NBTStorage;
 import storagecraft.tile.*;
+import storagecraft.tile.crafting.TileCrafter;
 import storagecraft.tile.solderer.*;
 
 public class CommonProxy
@@ -54,6 +55,7 @@ public class CommonProxy
 		GameRegistry.registerTileEntity(TileDestructor.class, "destructor");
 		GameRegistry.registerTileEntity(TileConstructor.class, "constructor");
 		GameRegistry.registerTileEntity(TileStorage.class, "storage");
+		GameRegistry.registerTileEntity(TileCrafter.class, "crafter");
 
 		GameRegistry.registerBlock(StorageCraftBlocks.CONTROLLER, ItemBlockController.class, "controller");
 		GameRegistry.registerBlock(StorageCraftBlocks.CABLE, "cable");
@@ -69,6 +71,7 @@ public class CommonProxy
 		GameRegistry.registerBlock(StorageCraftBlocks.DESTRUCTOR, "destructor");
 		GameRegistry.registerBlock(StorageCraftBlocks.CONSTRUCTOR, "constructor");
 		GameRegistry.registerBlock(StorageCraftBlocks.STORAGE, ItemBlockStorage.class, "storage");
+		GameRegistry.registerBlock(StorageCraftBlocks.CRAFTER, "crafter");
 
 		GameRegistry.registerItem(StorageCraftItems.STORAGE_CELL, "storage_cell");
 		GameRegistry.registerItem(StorageCraftItems.WIRELESS_GRID, "wireless_grid");

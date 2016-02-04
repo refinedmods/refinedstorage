@@ -10,6 +10,7 @@ import storagecraft.StorageCraftGUI;
 import storagecraft.container.*;
 import storagecraft.storage.IStorageGui;
 import storagecraft.tile.*;
+import storagecraft.tile.crafting.TileCrafter;
 
 public class GuiHandler implements IGuiHandler
 {
@@ -39,6 +40,8 @@ public class GuiHandler implements IGuiHandler
 				return new ContainerConstructor(player, (TileConstructor) tile);
 			case StorageCraftGUI.STORAGE:
 				return new ContainerStorage(player, ((IStorageGui) tile).getInventory());
+			case StorageCraftGUI.CRAFTER:
+				return new ContainerCrafter(player, (TileCrafter) tile);
 			default:
 				return null;
 		}
@@ -79,6 +82,8 @@ public class GuiHandler implements IGuiHandler
 				return new GuiConstructor((ContainerConstructor) getContainer(ID, player, tile), (TileConstructor) tile);
 			case StorageCraftGUI.STORAGE:
 				return new GuiStorage((ContainerStorage) getContainer(ID, player, tile), (IStorageGui) tile);
+			case StorageCraftGUI.CRAFTER:
+				return new GuiCrafter((ContainerCrafter) getContainer(ID, player, tile), (TileCrafter) tile);
 			default:
 				return null;
 		}
