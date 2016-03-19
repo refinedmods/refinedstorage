@@ -5,6 +5,7 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -22,9 +23,6 @@ public class BlockCable extends BlockBase
 	public BlockCable()
 	{
 		super("cable");
-
-		// float pixel = 1F / 16F;
-		// @TODO: setBlockBounds(4 * pixel, 4 * pixel, 4 * pixel, 1 - 4 * pixel, 1 - 4 * pixel, 1 - 4 * pixel);
 	}
 
 	@Override
@@ -52,6 +50,14 @@ public class BlockCable extends BlockBase
 			.withProperty(WEST, TileCable.isCable(world, pos.west()))
 			.withProperty(UP, TileCable.isCable(world, pos.up()))
 			.withProperty(DOWN, TileCable.isCable(world, pos.down()));
+	}
+
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos)
+	{
+		float pixel = 1F / 16F;
+
+		return new AxisAlignedBB(4 * pixel, 4 * pixel, 4 * pixel, 1 - 4 * pixel, 1 - 4 * pixel, 1 - 4 * pixel);
 	}
 
 	@Override
