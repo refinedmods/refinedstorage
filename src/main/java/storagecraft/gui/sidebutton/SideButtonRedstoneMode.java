@@ -1,6 +1,6 @@
 package storagecraft.gui.sidebutton;
 
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import storagecraft.StorageCraft;
 import storagecraft.gui.GuiBase;
 import storagecraft.network.MessageRedstoneModeUpdate;
@@ -20,7 +20,7 @@ public class SideButtonRedstoneMode extends SideButton
 	{
 		StringBuilder builder = new StringBuilder();
 
-		builder.append(EnumChatFormatting.RED).append(gui.t("sidebutton.storagecraft:redstone_mode")).append(EnumChatFormatting.RESET).append("\n");
+		builder.append(TextFormatting.RED).append(gui.t("sidebutton.storagecraft:redstone_mode")).append(TextFormatting.RESET).append("\n");
 
 		builder.append(gui.t("sidebutton.storagecraft:redstone_mode." + setting.getRedstoneMode().id));
 

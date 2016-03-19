@@ -6,9 +6,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import storagecraft.StorageCraft;
 import storagecraft.StorageCraftGUI;
@@ -43,12 +46,12 @@ public class ItemWirelessGrid extends ItemBase
 	{
 		if (isValid(stack))
 		{
-			list.add(StatCollector.translateToLocalFormatted("misc.storagecraft:wireless_grid.tooltip", getX(stack), getY(stack), getZ(stack)));
+			list.add(I18n.translateToLocalFormatted("misc.storagecraft:wireless_grid.tooltip", getX(stack), getY(stack), getZ(stack)));
 		}
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
+	public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand)
 	{
 		if (!world.isRemote)
 		{
@@ -72,35 +75,41 @@ public class ItemWirelessGrid extends ItemBase
 
 							if (grid == null)
 							{
-								player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("misc.storagecraft:wireless_grid.no_grid." + stack.getItemDamage())));
+								player.addChatComponentMessage(new TextComponentString(I18n.translateToLocal("misc.storagecraft:wireless_grid.no_grid." + stack.getItemDamage())));
 							}
 							else
 							{
 								player.openGui(StorageCraft.INSTANCE, StorageCraftGUI.GRID, world, grid.getPos().getX(), grid.getPos().getY(), grid.getPos().getZ());
+
+								return new ActionResult(EnumActionResult.SUCCESS, stack);
 							}
 						}
 						else
 						{
-							player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("misc.storagecraft:wireless_grid.not_working")));
+							player.addChatComponentMessage(new TextComponentString(I18n.translateToLocal("misc.storagecraft:wireless_grid.not_working")));
 						}
 					}
 					else
 					{
-						player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("misc.storagecraft:wireless_grid.not_found")));
+						player.addChatComponentMessage(new TextComponentString(I18n.translateToLocal("misc.storagecraft:wireless_grid.not_found")));
 					}
 				}
 				else
 				{
-					player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("misc.storagecraft:wireless_grid.out_of_range")));
+					player.addChatComponentMessage(new TextComponentString(I18n.translateToLocal("misc.storagecraft:wireless_grid.out_of_range")));
 				}
 			}
 			else
 			{
-				player.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("misc.storagecraft:wireless_grid.not_set." + stack.getItemDamage())));
+				player.addChatComponentMessage(new TextComponentString(I18n.translateToLocal("misc.storagecraft:wireless_grid.not_set." + stack.getItemDamage())));
 			}
-		}
 
-		return stack;
+			return new ActionResult(EnumActionResult.FAIL, stack);
+		}
+		else
+		{
+			return new ActionResult(EnumActionResult.PASS, stack);
+		}
 	}
 
 	public static int getX(ItemStack stack)

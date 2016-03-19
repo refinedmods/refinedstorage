@@ -5,11 +5,11 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import storagecraft.StorageCraft;
@@ -34,7 +34,7 @@ public abstract class TileBase extends TileEntity implements ITickable
 		{
 			if (this instanceof INetworkTile)
 			{
-				TargetPoint target = new TargetPoint(worldObj.provider.getDimensionId(), pos.getX(), pos.getY(), pos.getZ(), UPDATE_RANGE);
+				TargetPoint target = new TargetPoint(worldObj.provider.getDimensionType().getId(), pos.getX(), pos.getY(), pos.getZ(), UPDATE_RANGE);
 
 				StorageCraft.NETWORK.sendToAllAround(new MessageTileUpdate(this), target);
 			}
@@ -74,11 +74,11 @@ public abstract class TileBase extends TileEntity implements ITickable
 
 		nbt.setInteger(NBT_DIRECTION, direction.ordinal());
 
-		return new S35PacketUpdateTileEntity(pos, 1, nbt);
+		return new SPacketUpdateTileEntity(pos, 1, nbt);
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet)
 	{
 		direction = EnumFacing.getFront(packet.getNbtCompound().getInteger(NBT_DIRECTION));
 	}

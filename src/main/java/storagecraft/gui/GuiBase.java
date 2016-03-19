@@ -10,7 +10,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.translation.I18n;
 import org.lwjgl.opengl.GL11;
 import storagecraft.StorageCraft;
 import storagecraft.gui.sidebutton.SideButton;
@@ -218,7 +218,7 @@ public abstract class GuiBase extends GuiContainer
 
 	public String t(String name, Object... format)
 	{
-		return StatCollector.translateToLocalFormatted(name, format);
+		return I18n.translateToLocalFormatted(name, format);
 	}
 
 	public abstract void init(int x, int y);

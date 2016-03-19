@@ -5,7 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import storagecraft.block.EnumStorageType;
 import storagecraft.storage.NBTStorage;
@@ -29,11 +29,11 @@ public class ItemBlockStorage extends ItemBlockBase
 
 			if (type == EnumStorageType.TYPE_CREATIVE)
 			{
-				list.add(String.format(StatCollector.translateToLocal("misc.storagecraft:storage.stored"), NBTStorage.getStored(tag)));
+				list.add(String.format(I18n.translateToLocal("misc.storagecraft:storage.stored"), NBTStorage.getStored(tag)));
 			}
 			else
 			{
-				list.add(String.format(StatCollector.translateToLocal("misc.storagecraft:storage.stored_capacity"), NBTStorage.getStored(tag), type.getCapacity()));
+				list.add(String.format(I18n.translateToLocal("misc.storagecraft:storage.stored_capacity"), NBTStorage.getStored(tag), type.getCapacity()));
 			}
 		}
 	}

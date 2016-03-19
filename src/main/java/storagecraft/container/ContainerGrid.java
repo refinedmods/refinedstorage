@@ -1,6 +1,7 @@
 package storagecraft.container;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import storagecraft.StorageCraftItems;
@@ -71,13 +72,13 @@ public class ContainerGrid extends ContainerBase
 	}
 
 	@Override
-	public ItemStack slotClick(int id, int clickedButton, int mode, EntityPlayer player)
+	public ItemStack func_184996_a(int id, int clickedButton, ClickType mode, EntityPlayer player)
 	{
 		if (id >= 0 && getSlot(id) instanceof SlotDisabled)
 		{
 			grid.onPatternCreate();
 		}
 
-		return super.slotClick(id, clickedButton, mode, player);
+		return super.func_184996_a(id, clickedButton, mode, player);
 	}
 }

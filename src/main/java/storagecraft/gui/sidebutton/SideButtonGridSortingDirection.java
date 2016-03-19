@@ -1,6 +1,6 @@
 package storagecraft.gui.sidebutton;
 
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import storagecraft.StorageCraft;
 import storagecraft.gui.GuiBase;
 import storagecraft.network.MessageGridSortingUpdate;
@@ -20,7 +20,7 @@ public class SideButtonGridSortingDirection extends SideButton
 	{
 		StringBuilder builder = new StringBuilder();
 
-		builder.append(EnumChatFormatting.YELLOW).append(gui.t("sidebutton.storagecraft:sorting.direction")).append(EnumChatFormatting.RESET).append("\n");
+		builder.append(TextFormatting.YELLOW).append(gui.t("sidebutton.storagecraft:sorting.direction")).append(TextFormatting.RESET).append("\n");
 
 		builder.append(gui.t("sidebutton.storagecraft:sorting.direction." + grid.getSortingDirection()));
 

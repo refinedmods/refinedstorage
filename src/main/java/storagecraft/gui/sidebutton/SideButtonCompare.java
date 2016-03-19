@@ -1,6 +1,6 @@
 package storagecraft.gui.sidebutton;
 
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import storagecraft.StorageCraft;
 import storagecraft.gui.GuiBase;
 import storagecraft.network.MessageCompareUpdate;
@@ -23,7 +23,7 @@ public class SideButtonCompare extends SideButton
 	{
 		StringBuilder builder = new StringBuilder();
 
-		builder.append(EnumChatFormatting.YELLOW).append(gui.t("sidebutton.storagecraft:compare." + mask)).append(EnumChatFormatting.RESET).append("\n");
+		builder.append(TextFormatting.YELLOW).append(gui.t("sidebutton.storagecraft:compare." + mask)).append(TextFormatting.RESET).append("\n");
 
 		if ((setting.getCompare() & mask) == mask)
 		{

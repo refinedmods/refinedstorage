@@ -2,7 +2,7 @@ package storagecraft.gui.sidebutton;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import storagecraft.StorageCraft;
 import storagecraft.gui.GuiBase;
 import storagecraft.network.MessageDetectorModeUpdate;
@@ -22,7 +22,7 @@ public class SideButtonDetectorMode extends SideButton
 	{
 		StringBuilder builder = new StringBuilder();
 
-		builder.append(EnumChatFormatting.GREEN).append(gui.t("sidebutton.storagecraft:detector.mode")).append(EnumChatFormatting.RESET).append("\n");
+		builder.append(TextFormatting.GREEN).append(gui.t("sidebutton.storagecraft:detector.mode")).append(TextFormatting.RESET).append("\n");
 
 		builder.append(gui.t("sidebutton.storagecraft:detector.mode." + detector.getMode()));
 

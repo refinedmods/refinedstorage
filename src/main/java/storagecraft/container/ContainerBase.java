@@ -3,6 +3,7 @@ package storagecraft.container;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -56,7 +57,7 @@ public abstract class ContainerBase extends Container
 	}
 
 	@Override
-	public ItemStack slotClick(int id, int clickedButton, int mode, EntityPlayer player)
+	public ItemStack func_184996_a(int id, int clickedButton, ClickType clickType, EntityPlayer player)
 	{
 		Slot slot = id >= 0 ? getSlot(id) : null;
 
@@ -78,7 +79,7 @@ public abstract class ContainerBase extends Container
 			return null;
 		}
 
-		return super.slotClick(id, clickedButton, mode, player);
+		return super.func_184996_a(id, clickedButton, clickType, player);
 	}
 
 	@Override

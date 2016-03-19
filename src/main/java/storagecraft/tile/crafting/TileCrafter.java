@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
 import storagecraft.inventory.InventorySimple;
 import storagecraft.tile.TileMachine;
 import storagecraft.util.InventoryUtils;
@@ -137,7 +137,7 @@ public class TileCrafter extends TileMachine implements IInventory
 	}
 
 	@Override
-	public IChatComponent getDisplayName()
+	public ITextComponent getDisplayName()
 	{
 		return inventory.getDisplayName();
 	}

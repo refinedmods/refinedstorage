@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
 import storagecraft.inventory.InventorySimple;
 import storagecraft.storage.CellStorage;
 import storagecraft.storage.IStorage;
@@ -202,7 +202,7 @@ public class TileDrive extends TileMachine implements IInventory, IStorageProvid
 	}
 
 	@Override
-	public IChatComponent getDisplayName()
+	public ITextComponent getDisplayName()
 	{
 		return inventory.getDisplayName();
 	}

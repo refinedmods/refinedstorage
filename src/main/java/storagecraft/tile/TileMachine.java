@@ -3,7 +3,7 @@ package storagecraft.tile;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import storagecraft.block.BlockMachine;
 import storagecraft.tile.settings.IRedstoneModeSetting;
 import storagecraft.tile.settings.RedstoneMode;

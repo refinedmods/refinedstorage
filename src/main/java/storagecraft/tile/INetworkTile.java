@@ -1,7 +1,7 @@
 package storagecraft.tile;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 
 public interface INetworkTile
 {

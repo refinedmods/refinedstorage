@@ -7,7 +7,7 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 
 public class ItemPattern extends ItemBase
@@ -26,7 +26,7 @@ public class ItemPattern extends ItemBase
 		{
 			ItemStack result = getPatternResult(player.worldObj, stack);
 
-			list.add(StatCollector.translateToLocalFormatted("misc.storagecraft:pattern.tooltip", result.stackSize, result.getDisplayName()));
+			list.add(I18n.translateToLocalFormatted("misc.storagecraft:pattern.tooltip", result.stackSize, result.getDisplayName()));
 		}
 	}
 

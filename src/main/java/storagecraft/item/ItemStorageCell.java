@@ -5,7 +5,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import storagecraft.storage.CellStorage;
 import storagecraft.storage.NBTStorage;
@@ -41,11 +41,11 @@ public class ItemStorageCell extends ItemBase
 	{
 		if (CellStorage.getCapacity(cell) == -1)
 		{
-			list.add(String.format(StatCollector.translateToLocal("misc.storagecraft:storage.stored"), NBTStorage.getStored(cell.getTagCompound())));
+			list.add(String.format(I18n.translateToLocal("misc.storagecraft:storage.stored"), NBTStorage.getStored(cell.getTagCompound())));
 		}
 		else
 		{
-			list.add(String.format(StatCollector.translateToLocal("misc.storagecraft:storage.stored_capacity"), NBTStorage.getStored(cell.getTagCompound()), CellStorage.getCapacity(cell)));
+			list.add(String.format(I18n.translateToLocal("misc.storagecraft:storage.stored_capacity"), NBTStorage.getStored(cell.getTagCompound()), CellStorage.getCapacity(cell)));
 		}
 	}
 

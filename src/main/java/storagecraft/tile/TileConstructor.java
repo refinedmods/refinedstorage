@@ -5,7 +5,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import storagecraft.inventory.InventorySimple;
 import storagecraft.tile.settings.ICompareSetting;
 import storagecraft.util.InventoryUtils;
@@ -31,7 +31,7 @@ public class TileConstructor extends TileMachine implements ICompareSetting
 		{
 			BlockPos front = pos.offset(getDirection());
 
-			if ((worldObj.isAirBlock(front) || worldObj.getBlockState(front).getBlock().getMaterial().isLiquid()) && inventory.getStackInSlot(0) != null)
+			if ((worldObj.isAirBlock(front) || worldObj.getBlockState(front).getBlock().getMaterial(worldObj.getBlockState(front)).isLiquid()) && inventory.getStackInSlot(0) != null)
 			{
 				ItemStack took = getController().take(inventory.getStackInSlot(0).copy(), compare);
 
