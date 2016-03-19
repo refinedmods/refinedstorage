@@ -8,6 +8,9 @@
 		"uvlock": true
 	},
 	"variants": {
+		"inventory": {
+			"model": "storagecraft:cable_inventory"
+		},
 		"north": {
 			"true": {
 				"submodel": "storagecraft:cable_north"
