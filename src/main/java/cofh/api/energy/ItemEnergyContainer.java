@@ -6,9 +6,9 @@ import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * Reference implementation of {@link IEnergyContainerItem}. Use/extend this or implement your own.
- * 
+ *
  * @author King Lemming
- * 
+ *
  */
 public class ItemEnergyContainer extends Item implements IEnergyContainerItem {
 
@@ -43,27 +43,30 @@ public class ItemEnergyContainer extends Item implements IEnergyContainerItem {
 		return this;
 	}
 
-	public void setMaxTransfer(int maxTransfer) {
+	public ItemEnergyContainer  setMaxTransfer(int maxTransfer) {
 
 		setMaxReceive(maxTransfer);
 		setMaxExtract(maxTransfer);
+		return this;
 	}
 
-	public void setMaxReceive(int maxReceive) {
+	public ItemEnergyContainer  setMaxReceive(int maxReceive) {
 
 		this.maxReceive = maxReceive;
+		return this;
 	}
 
-	public void setMaxExtract(int maxExtract) {
+	public ItemEnergyContainer  setMaxExtract(int maxExtract) {
 
 		this.maxExtract = maxExtract;
+		return this;
 	}
 
 	/* IEnergyContainerItem */
 	@Override
 	public int receiveEnergy(ItemStack container, int maxReceive, boolean simulate) {
 
-		if (container.getTagCompound() == null) {
+		if (!container.hasTagCompound()) {
 			container.setTagCompound(new NBTTagCompound());
 		}
 		int energy = container.getTagCompound().getInteger("Energy");

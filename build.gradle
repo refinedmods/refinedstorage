@@ -17,10 +17,10 @@ group = "storagecraft"
 archivesBaseName = "storagecraft"
 
 minecraft {
-    version = "1.8.9-11.15.1.1722"
+    version = "1.9-12.16.0.1770-1.9"
     runDir = "run"
 	useDepAts = true
-    mappings = "stable_20"
+    mappings = "snapshot_20160312"
 }
 
 repositories {
@@ -30,7 +30,7 @@ repositories {
 }
 
 dependencies {
-	deobfCompile "mezz.jei:jei_1.8.9:2.20.+"
+	deobfCompile "mezz.jei:jei_1.9:3.0.+"
 }
 
 processResources {
