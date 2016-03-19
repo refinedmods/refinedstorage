@@ -1,0 +1,67 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"textures": {
+			"all": "storagecraft:blocks/cable"
+		},
+		"model": "storagecraft:cable_core"
+	},
+	"variants": {
+		"north": {
+			"true": {
+				"submodel": "storagecraft:cable_north"
+			},
+			"false": {
+			}
+		},
+		"east": {
+			"true": {
+				"submodel": "storagecraft:cable_east"
+			},
+			"false": {
+			}
+		},
+		"south": {
+			"true": {
+				"submodel": "storagecraft:cable_south"
+			},
+			"false": {
+			}
+		},
+		"west": {
+			"true": {
+				"submodel": "storagecraft:cable_west"
+			},
+			"false": {
+			}
+		},
+		"up": {
+			"true": {
+				"submodel": "storagecraft:cable_up"
+			},
+			"false": {
+			}
+		},
+		"down": {
+			"true": {
+				"submodel": "storagecraft:cable_down"
+			},
+			"false": {
+			}
+		},
+		"direction": {
+			"north": {
+			},
+			"east": {
+			},
+			"south": {
+			},
+			"west": {
+			},
+			"up": {
+			},
+			"down": {
+			}
+		}
+	}
+}

@@ -1,0 +1,35 @@
+{
+	"elements": [
+		{
+			"__comment": "west",
+			"from": [2, 14, 14],
+			"to": [8, 18, 18],
+			"faces": {
+				"down": {
+					"uv": [16, 0, 10, 4],
+					"texture": "#all"
+				},
+				"up": {
+					"uv": [10, 4, 4, 0],
+					"texture": "#all"
+				},
+				"north": {
+					"uv": [4, 4, 10, 8],
+					"texture": "#all"
+				},
+				"south": {
+					"uv": [14, 4, 20, 8],
+					"texture": "#all"
+				},
+				"west": {
+					"uv": [10, 4, 14, 8],
+					"texture": "#all"
+				},
+				"east": {
+					"uv": [0, 4, 4, 8],
+					"texture": "#all"
+				}
+			}
+		}
+	]
+}

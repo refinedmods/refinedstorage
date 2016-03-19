@@ -7,10 +7,7 @@ import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import storagecraft.StorageCraftBlocks;
 import storagecraft.StorageCraftItems;
@@ -18,8 +15,6 @@ import storagecraft.block.EnumControllerType;
 import storagecraft.block.EnumGridType;
 import storagecraft.block.EnumStorageType;
 import storagecraft.item.*;
-import storagecraft.render.BlockCableRenderer;
-import storagecraft.tile.TileCable;
 
 public class ClientProxy extends CommonProxy
 {
@@ -27,11 +22,6 @@ public class ClientProxy extends CommonProxy
 	public void preInit(FMLPreInitializationEvent e)
 	{
 		super.preInit(e);
-
-		// TESRs
-		ForgeHooksClient.registerTESRItemStack(Item.getItemFromBlock(StorageCraftBlocks.CABLE), 0, TileCable.class);
-
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(StorageCraftBlocks.CABLE), 0, new ModelResourceLocation("storagecraft:cable", "inventory"));
 
 		// Item Variants
 		ModelBakery.registerItemVariants(StorageCraftItems.STORAGE_CELL,
@@ -136,6 +126,7 @@ public class ClientProxy extends CommonProxy
 		});
 
 		// Blocks
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(StorageCraftBlocks.CABLE), 0, new ModelResourceLocation("storagecraft:cable", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(StorageCraftBlocks.GRID), EnumGridType.NORMAL.getId(), new ModelResourceLocation("storagecraft:grid", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(StorageCraftBlocks.GRID), EnumGridType.CRAFTING.getId(), new ModelResourceLocation("storagecraft:grid", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(StorageCraftBlocks.GRID), EnumGridType.PATTERN.getId(), new ModelResourceLocation("storagecraft:grid", "inventory"));
@@ -163,13 +154,5 @@ public class ClientProxy extends CommonProxy
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(StorageCraftBlocks.STORAGE), EnumStorageType.TYPE_16K.getId(), new ModelResourceLocation("storagecraft:storage", "type=16k"));
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(StorageCraftBlocks.STORAGE), EnumStorageType.TYPE_64K.getId(), new ModelResourceLocation("storagecraft:storage", "type=64k"));
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(StorageCraftBlocks.STORAGE), EnumStorageType.TYPE_CREATIVE.getId(), new ModelResourceLocation("storagecraft:storage", "type=creative"));
-	}
-
-	@Override
-	public void init(FMLInitializationEvent e)
-	{
-		super.init(e);
-
-		ClientRegistry.bindTileEntitySpecialRenderer(TileCable.class, BlockCableRenderer.INSTANCE);
 	}
 }

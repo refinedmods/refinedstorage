@@ -4,12 +4,12 @@ import java.util.List;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.IBlockAccess;
 import storagecraft.block.BlockCable;
 
 public class TileCable extends TileBase
 {
-	public static boolean isCable(World world, BlockPos pos)
+	public static boolean isCable(IBlockAccess world, BlockPos pos)
 	{
 		return world.getBlockState(pos).getBlock() instanceof BlockCable;
 	}
