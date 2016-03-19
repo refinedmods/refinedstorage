@@ -15,11 +15,6 @@ public class TileCable extends TileBase
 		return tile instanceof TileCable || tile instanceof TileMachine || tile instanceof TileController;
 	}
 
-	public boolean isEnabled()
-	{
-		return true; // @TODO
-	}
-
 	public void addMachines(List<BlockPos> visited, List<TileMachine> machines, TileController controller)
 	{
 		for (BlockPos visitedBlock : visited)
@@ -59,7 +54,7 @@ public class TileCable extends TileBase
 
 				visited.add(newPos);
 			}
-			else if (tile instanceof TileCable && ((TileCable) tile).isEnabled())
+			else if (tile instanceof TileCable)
 			{
 				((TileCable) tile).addMachines(visited, machines, controller);
 			}
