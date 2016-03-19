@@ -61,6 +61,12 @@ public class BlockCable extends BlockBase
 	}
 
 	@Override
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState state, World world, BlockPos pos)
+	{
+		return getBoundingBox(state, world, pos);
+	}
+
+	@Override
 	public boolean hasTileEntity(IBlockState state)
 	{
 		return true;
@@ -70,5 +76,11 @@ public class BlockCable extends BlockBase
 	public TileEntity createTileEntity(World world, IBlockState state)
 	{
 		return new TileCable();
+	}
+
+	@Override
+	public boolean isOpaqueCube(IBlockState state)
+	{
+		return false;
 	}
 }

@@ -2,15 +2,17 @@
 	"forge_marker": 1,
 	"defaults": {
 		"textures": {
-			"all": "storagecraft:blocks/cable"
+			"all": "storagecraft:blocks/cable",
+			"particle": "storagecraft:blocks/cable"
 		},
 		"model": "storagecraft:cable_core",
 		"uvlock": true
 	},
 	"variants": {
-		"inventory": {
-			"model": "storagecraft:cable_inventory"
-		},
+		"inventory": [{
+				"model": "storagecraft:cable",
+				"transform": "forge:default-block"
+			}],
 		"north": {
 			"true": {
 				"submodel": "storagecraft:cable_north"
