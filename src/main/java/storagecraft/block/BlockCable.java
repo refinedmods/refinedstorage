@@ -44,12 +44,12 @@ public class BlockCable extends BlockBase
 	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
 		return super.getActualState(state, world, pos)
-			.withProperty(NORTH, TileCable.isCable(world, pos.north()))
-			.withProperty(EAST, TileCable.isCable(world, pos.east()))
-			.withProperty(SOUTH, TileCable.isCable(world, pos.south()))
-			.withProperty(WEST, TileCable.isCable(world, pos.west()))
-			.withProperty(UP, TileCable.isCable(world, pos.up()))
-			.withProperty(DOWN, TileCable.isCable(world, pos.down()));
+			.withProperty(NORTH, TileCable.hasConnectionWith(world, pos.north()))
+			.withProperty(EAST, TileCable.hasConnectionWith(world, pos.east()))
+			.withProperty(SOUTH, TileCable.hasConnectionWith(world, pos.south()))
+			.withProperty(WEST, TileCable.hasConnectionWith(world, pos.west()))
+			.withProperty(UP, TileCable.hasConnectionWith(world, pos.up()))
+			.withProperty(DOWN, TileCable.hasConnectionWith(world, pos.down()));
 	}
 
 	@Override

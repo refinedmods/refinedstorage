@@ -5,35 +5,19 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import storagecraft.block.BlockCable;
 
 public class TileCable extends TileBase
 {
-	public static boolean isCable(IBlockAccess world, BlockPos pos)
+	public static boolean hasConnectionWith(IBlockAccess world, BlockPos pos)
 	{
-		return world.getBlockState(pos).getBlock() instanceof BlockCable;
-	}
+		TileEntity tile = world.getTileEntity(pos);
 
-	public boolean hasConnection(EnumFacing dir)
-	{
-		if (!isEnabled())
-		{
-			return false;
-		}
-
-		if (isCable(worldObj, pos.offset(dir)))
-		{
-			return true;
-		}
-
-		TileEntity tile = worldObj.getTileEntity(pos.offset(dir));
-
-		return tile instanceof TileMachine || tile instanceof TileController;
+		return tile instanceof TileCable || tile instanceof TileMachine || tile instanceof TileController;
 	}
 
 	public boolean isEnabled()
 	{
-		return !worldObj.isBlockPowered(pos);
+		return true; // @TODO
 	}
 
 	public void addMachines(List<BlockPos> visited, List<TileMachine> machines, TileController controller)
@@ -52,17 +36,17 @@ public class TileCable extends TileBase
 		{
 			BlockPos newPos = pos.offset(dir);
 
-			boolean found = false;
+			boolean alreadyVisited = false;
 
 			for (BlockPos visitedBlock : visited)
 			{
 				if (visitedBlock.equals(newPos))
 				{
-					found = true;
+					alreadyVisited = true;
 				}
 			}
 
-			if (found)
+			if (alreadyVisited)
 			{
 				continue;
 			}
