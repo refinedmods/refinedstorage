@@ -125,7 +125,6 @@ public class TileGrid extends TileMachine
 
 			onCraftingMatrixChanged();
 
-			// @TODO: HACK!
 			TargetPoint target = new TargetPoint(worldObj.provider.getDimensionType().getId(), pos.getX(), pos.getY(), pos.getZ(), UPDATE_RANGE);
 
 			StorageCraft.NETWORK.sendToAllAround(new MessageGridCraftingUpdate(this), target);

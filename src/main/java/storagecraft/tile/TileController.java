@@ -432,7 +432,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
 		if (lastEnergy != energy.getEnergyStored())
 		{
-			// @TODO: worldObj.markBlockForUpdate(pos);
+			worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2 | 4);
 		}
 
 		energyUsage = buf.readInt();

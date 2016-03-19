@@ -154,7 +154,7 @@ public class TileWirelessTransmitter extends TileMachine implements IInventory
 
 		if (lastWorking != working)
 		{
-			// @TODO: worldObj.markBlockForUpdate(pos);
+			worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2 | 4);
 		}
 	}
 
