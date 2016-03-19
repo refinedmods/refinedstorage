@@ -17,8 +17,6 @@ public class StorageItem
 	private NBTTagCompound tag;
 	@SideOnly(Side.CLIENT)
 	private int id;
-	@SideOnly(Side.CLIENT)
-	private boolean craftable;
 
 	public StorageItem(ByteBuf buf)
 	{
@@ -26,7 +24,6 @@ public class StorageItem
 		this.type = Item.getItemById(buf.readInt());
 		this.quantity = buf.readInt();
 		this.damage = buf.readInt();
-		this.craftable = buf.readBoolean();
 		this.tag = buf.readBoolean() ? ByteBufUtils.readTag(buf) : null;
 	}
 
@@ -50,20 +47,12 @@ public class StorageItem
 		this(stack.getItem(), stack.stackSize, stack.getItemDamage(), stack.getTagCompound());
 	}
 
-	public StorageItem(ItemStack stack, boolean craftable)
-	{
-		this(stack);
-
-		this.craftable = craftable;
-	}
-
 	public void toBytes(ByteBuf buf, int id)
 	{
 		buf.writeInt(id);
 		buf.writeInt(Item.getIdFromItem(type));
 		buf.writeInt(quantity);
 		buf.writeInt(damage);
-		buf.writeBoolean(craftable);
 		buf.writeBoolean(tag != null);
 
 		if (tag != null)
@@ -111,12 +100,6 @@ public class StorageItem
 	public int getId()
 	{
 		return id;
-	}
-
-	@SideOnly(Side.CLIENT)
-	public boolean isCraftable()
-	{
-		return craftable;
 	}
 
 	public StorageItem copy()

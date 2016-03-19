@@ -11,14 +11,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import storagecraft.StorageCraftBlocks;
 import storagecraft.block.BlockController;
 import storagecraft.block.EnumControllerType;
 import storagecraft.storage.IStorage;
 import storagecraft.storage.IStorageProvider;
 import storagecraft.storage.StorageItem;
-import storagecraft.tile.crafting.TileCrafter;
 import storagecraft.tile.settings.IRedstoneModeSetting;
 import storagecraft.tile.settings.RedstoneMode;
 import storagecraft.util.InventoryUtils;
@@ -31,8 +29,6 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 	private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
 	private List<TileMachine> machines = new ArrayList<TileMachine>();
-
-	private List<ItemStack> patterns = new ArrayList<ItemStack>();
 
 	private List<BlockPos> visitedCables = new ArrayList<BlockPos>();
 
@@ -129,40 +125,20 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 					energyUsage += machine.getEnergyUsage();
 				}
 
-				patterns.clear();
-
-				for (TileMachine machine : machines)
+				switch (getType())
 				{
-					if (machine instanceof TileCrafter)
-					{
-						TileCrafter crafter = (TileCrafter) machine;
-
-						for (int i = 0; i < crafter.getSizeInventory(); ++i)
-						{
-							ItemStack slot = crafter.getStackInSlot(i);
-
-							if (slot != null)
-							{
-								patterns.add(slot);
-							}
-						}
-					}
+					case NORMAL:
+						energy.extractEnergy(energyUsage, false);
+						break;
+					case CREATIVE:
+						energy.setEnergyStored(energy.getMaxEnergyStored());
+						break;
 				}
-			}
 
-			switch (getType())
-			{
-				case NORMAL:
-					energy.extractEnergy(energyUsage, false);
-					break;
-				case CREATIVE:
-					energy.setEnergyStored(energy.getMaxEnergyStored());
-					break;
-			}
-
-			if (lastEnergy != energy.getEnergyStored())
-			{
-				worldObj.updateComparatorOutputLevel(pos, StorageCraftBlocks.CONTROLLER);
+				if (lastEnergy != energy.getEnergyStored())
+				{
+					worldObj.updateComparatorOutputLevel(pos, StorageCraftBlocks.CONTROLLER);
+				}
 			}
 		}
 	}
@@ -197,11 +173,6 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 	public List<TileMachine> getMachines()
 	{
 		return machines;
-	}
-
-	public List<ItemStack> getPatterns()
-	{
-		return patterns;
 	}
 
 	public List<StorageItem> getItems()
@@ -447,15 +418,6 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 		{
 			items.add(new StorageItem(buf));
 		}
-
-		int patternSize = buf.readInt();
-
-		patterns.clear();
-
-		for (int i = 0; i < patternSize; ++i)
-		{
-			patterns.add(ByteBufUtils.readItemStack(buf));
-		}
 	}
 
 	@Override
@@ -471,13 +433,6 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 		for (StorageItem item : items)
 		{
 			item.toBytes(buf, items.indexOf(item));
-		}
-
-		buf.writeInt(patterns.size());
-
-		for (ItemStack pattern : patterns)
-		{
-			ByteBufUtils.writeItemStack(buf, pattern);
 		}
 	}
 }

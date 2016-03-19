@@ -10,7 +10,6 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import org.lwjgl.input.Keyboard;
@@ -21,7 +20,6 @@ import storagecraft.container.ContainerGrid;
 import storagecraft.gui.sidebutton.SideButtonGridSortingDirection;
 import storagecraft.gui.sidebutton.SideButtonGridSortingType;
 import storagecraft.gui.sidebutton.SideButtonRedstoneMode;
-import storagecraft.item.ItemPattern;
 import storagecraft.network.MessageGridCraftingClear;
 import storagecraft.network.MessageStoragePull;
 import storagecraft.network.MessageStoragePush;
@@ -43,7 +41,7 @@ public class GuiGrid extends GuiBase
 
 	public GuiGrid(ContainerGrid container, TileGrid grid)
 	{
-		super(container, 176, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 256 : 190);
+		super(container, 176, grid.getType() == EnumGridType.CRAFTING ? 256 : 190);
 
 		this.container = container;
 		this.grid = grid;
@@ -117,7 +115,7 @@ public class GuiGrid extends GuiBase
 
 	public boolean isHoveringOverClear(int mouseX, int mouseY)
 	{
-		if (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN)
+		if (grid.getType() == EnumGridType.CRAFTING)
 		{
 			return inBounds(81, 105, 7, 7, mouseX, mouseY);
 		}
@@ -131,10 +129,6 @@ public class GuiGrid extends GuiBase
 		if (grid.getType() == EnumGridType.CRAFTING)
 		{
 			bindTexture("gui/crafting_grid.png");
-		}
-		else if (grid.getType() == EnumGridType.PATTERN)
-		{
-			bindTexture("gui/pattern_grid.png");
 		}
 		else
 		{
@@ -155,12 +149,8 @@ public class GuiGrid extends GuiBase
 		{
 			drawString(7, 94, t("container.crafting"));
 		}
-		else if (grid.getType() == EnumGridType.PATTERN)
-		{
-			drawString(7, 94, t("gui.storagecraft:grid.pattern"));
-		}
 
-		drawString(7, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 163 : 96, t("container.inventory"));
+		drawString(7, grid.getType() == EnumGridType.CRAFTING ? 163 : 96, t("container.inventory"));
 
 		int x = 8;
 		int y = 20;
@@ -177,15 +167,7 @@ public class GuiGrid extends GuiBase
 		{
 			if (slot < items.size())
 			{
-				if (items.get(slot).isCraftable())
-				{
-					drawItem(x, y, items.get(slot).toItemStack(), false);
-					drawString(x, y, "Craft", 0xFFFFFFFF);
-				}
-				else
-				{
-					drawItem(x, y, items.get(slot).toItemStack(), true);
-				}
+				drawItem(x, y, items.get(slot).toItemStack(), true);
 			}
 
 			if (inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isConnected())
@@ -244,11 +226,6 @@ public class GuiGrid extends GuiBase
 		}
 
 		items.addAll(grid.getController().getItems());
-
-		for (ItemStack pattern : grid.getController().getPatterns())
-		{
-			items.add(new StorageItem(ItemPattern.getPatternResult(grid.getWorld(), pattern), true));
-		}
 
 		if (!searchField.getText().trim().isEmpty())
 		{

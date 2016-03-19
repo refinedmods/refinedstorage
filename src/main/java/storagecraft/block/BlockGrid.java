@@ -36,7 +36,7 @@ public class BlockGrid extends BlockMachine
 	@Override
 	public void getSubBlocks(Item item, CreativeTabs tab, List subItems)
 	{
-		for (int i = 0; i <= 2; i++)
+		for (int i = 0; i <= 1; i++)
 		{
 			subItems.add(new ItemStack(item, 1, i));
 		}
@@ -56,13 +56,13 @@ public class BlockGrid extends BlockMachine
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
-		return getDefaultState().withProperty(TYPE, meta == 0 ? EnumGridType.NORMAL : (meta == 1 ? EnumGridType.CRAFTING : EnumGridType.PATTERN));
+		return getDefaultState().withProperty(TYPE, meta == 0 ? EnumGridType.NORMAL : EnumGridType.CRAFTING);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
-		return state.getValue(TYPE) == EnumGridType.NORMAL ? 0 : (state.getValue(TYPE) == EnumGridType.CRAFTING ? 1 : 2);
+		return state.getValue(TYPE) == EnumGridType.NORMAL ? 0 : 1;
 	}
 
 	@Override

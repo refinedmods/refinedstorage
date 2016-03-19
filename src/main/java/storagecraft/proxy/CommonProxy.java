@@ -20,7 +20,6 @@ import storagecraft.item.*;
 import storagecraft.network.*;
 import storagecraft.storage.NBTStorage;
 import storagecraft.tile.*;
-import storagecraft.tile.crafting.TileCrafter;
 import storagecraft.tile.solderer.*;
 
 public class CommonProxy
@@ -55,7 +54,6 @@ public class CommonProxy
 		GameRegistry.registerTileEntity(TileDestructor.class, "destructor");
 		GameRegistry.registerTileEntity(TileConstructor.class, "constructor");
 		GameRegistry.registerTileEntity(TileStorage.class, "storage");
-		GameRegistry.registerTileEntity(TileCrafter.class, "crafter");
 
 		GameRegistry.registerBlock(StorageCraftBlocks.CONTROLLER, ItemBlockController.class, "controller");
 		GameRegistry.registerBlock(StorageCraftBlocks.CABLE, "cable");
@@ -71,7 +69,6 @@ public class CommonProxy
 		GameRegistry.registerBlock(StorageCraftBlocks.DESTRUCTOR, "destructor");
 		GameRegistry.registerBlock(StorageCraftBlocks.CONSTRUCTOR, "constructor");
 		GameRegistry.registerBlock(StorageCraftBlocks.STORAGE, ItemBlockStorage.class, "storage");
-		GameRegistry.registerBlock(StorageCraftBlocks.CRAFTER, "crafter");
 
 		GameRegistry.registerItem(StorageCraftItems.STORAGE_CELL, "storage_cell");
 		GameRegistry.registerItem(StorageCraftItems.WIRELESS_GRID, "wireless_grid");
@@ -81,7 +78,6 @@ public class CommonProxy
 		GameRegistry.registerItem(StorageCraftItems.SILICON, "silicon");
 		GameRegistry.registerItem(StorageCraftItems.PROCESSOR, "processor");
 		GameRegistry.registerItem(StorageCraftItems.STORAGE_PART, "storage_part");
-		GameRegistry.registerItem(StorageCraftItems.PATTERN, "pattern");
 
 		// Processors
 		SoldererRegistry.addRecipe(new SoldererRecipePrintedProcessor(ItemProcessor.TYPE_PRINTED_BASIC));
@@ -173,9 +169,6 @@ public class CommonProxy
 
 		// Crafting Grid
 		SoldererRegistry.addRecipe(new SoldererRecipeCraftingGrid());
-
-		// Pattern Grid
-		SoldererRegistry.addRecipe(new SoldererRecipePatternGrid());
 
 		// Wireless Transmitter
 		GameRegistry.addRecipe(new ItemStack(StorageCraftBlocks.WIRELESS_TRANSMITTER),
@@ -352,16 +345,6 @@ public class CommonProxy
 		SoldererRegistry.addRecipe(new SoldererRecipeStorage(EnumStorageType.TYPE_4K, ItemStoragePart.TYPE_4K));
 		SoldererRegistry.addRecipe(new SoldererRecipeStorage(EnumStorageType.TYPE_16K, ItemStoragePart.TYPE_16K));
 		SoldererRegistry.addRecipe(new SoldererRecipeStorage(EnumStorageType.TYPE_64K, ItemStoragePart.TYPE_64K));
-
-		// Pattern
-		GameRegistry.addRecipe(new ItemStack(StorageCraftItems.PATTERN),
-			"LGL",
-			"GLG",
-			"EEE",
-			'E', new ItemStack(StorageCraftItems.QUARTZ_ENRICHED_IRON),
-			'L', new ItemStack(Blocks.glass),
-			'G', new ItemStack(Items.glowstone_dust)
-		);
 	}
 
 	public void init(FMLInitializationEvent e)

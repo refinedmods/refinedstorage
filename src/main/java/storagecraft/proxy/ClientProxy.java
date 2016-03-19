@@ -59,11 +59,6 @@ public class ClientProxy extends CommonProxy
 			new ResourceLocation("storagecraft:wireless_grid_disconnected")
 		);
 
-		ModelBakery.registerItemVariants(StorageCraftItems.PATTERN,
-			new ResourceLocation("storagecraft:pattern"),
-			new ResourceLocation("storagecraft:blank_pattern")
-		);
-
 		// Items
 		ModelLoader.setCustomModelResourceLocation(StorageCraftItems.STORAGE_CELL, ItemStorageCell.TYPE_1K, new ModelResourceLocation("storagecraft:1k_storage_cell", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(StorageCraftItems.STORAGE_CELL, ItemStorageCell.TYPE_4K, new ModelResourceLocation("storagecraft:4k_storage_cell", "inventory"));
@@ -85,22 +80,6 @@ public class ClientProxy extends CommonProxy
 		ModelLoader.setCustomModelResourceLocation(StorageCraftItems.PROCESSOR, ItemProcessor.TYPE_PRINTED_SILICON, new ModelResourceLocation("storagecraft:printed_silicon", "inventory"));
 
 		ModelLoader.setCustomModelResourceLocation(StorageCraftItems.SILICON, 0, new ModelResourceLocation("storagecraft:silicon", "inventory"));
-
-		ModelLoader.setCustomMeshDefinition(StorageCraftItems.PATTERN, new ItemMeshDefinition()
-		{
-			@Override
-			public ModelResourceLocation getModelLocation(ItemStack stack)
-			{
-				if (ItemPattern.hasPattern(stack))
-				{
-					return new ModelResourceLocation("storagecraft:pattern", "inventory");
-				}
-				else
-				{
-					return new ModelResourceLocation("storagecraft:blank_pattern", "inventory");
-				}
-			}
-		});
 
 		ModelLoader.setCustomModelResourceLocation(StorageCraftItems.QUARTZ_ENRICHED_IRON, 0, new ModelResourceLocation("storagecraft:quartz_enriched_iron", "inventory"));
 
@@ -129,7 +108,6 @@ public class ClientProxy extends CommonProxy
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(StorageCraftBlocks.CABLE), 0, new ModelResourceLocation("storagecraft:cable", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(StorageCraftBlocks.GRID), EnumGridType.NORMAL.getId(), new ModelResourceLocation("storagecraft:grid", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(StorageCraftBlocks.GRID), EnumGridType.CRAFTING.getId(), new ModelResourceLocation("storagecraft:grid", "inventory"));
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(StorageCraftBlocks.GRID), EnumGridType.PATTERN.getId(), new ModelResourceLocation("storagecraft:grid", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(StorageCraftBlocks.MACHINE_CASING), 0, new ModelResourceLocation("storagecraft:machine_casing", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(StorageCraftBlocks.EXPORTER), 0, new ModelResourceLocation("storagecraft:exporter", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(StorageCraftBlocks.IMPORTER), 0, new ModelResourceLocation("storagecraft:importer", "inventory"));
