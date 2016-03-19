@@ -33,7 +33,6 @@ public class TileCable extends TileBase
 
 	public boolean isEnabled()
 	{
-		// @TODO: Fix going through blocks
 		return !worldObj.isBlockPowered(pos);
 	}
 
