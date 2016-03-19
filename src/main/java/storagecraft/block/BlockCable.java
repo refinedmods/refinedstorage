@@ -13,7 +13,7 @@ public class BlockCable extends BlockBase
 
 		float pixel = 1F / 16F;
 
-		setBlockBounds(4 * pixel, 4 * pixel, 4 * pixel, 1 - 4 * pixel, 1 - 4 * pixel, 1 - 4 * pixel);
+		// @TODO: setBlockBounds(4 * pixel, 4 * pixel, 4 * pixel, 1 - 4 * pixel, 1 - 4 * pixel, 1 - 4 * pixel);
 	}
 
 	@Override

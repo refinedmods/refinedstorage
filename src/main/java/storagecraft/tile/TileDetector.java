@@ -204,7 +204,7 @@ public class TileDetector extends TileMachine implements ICompareSetting
 
 		if (powered != lastPowered)
 		{
-			worldObj.markBlockForUpdate(pos);
+			// @TODO: worldObj.markBlockForUpdate(pos);
 		}
 	}
 

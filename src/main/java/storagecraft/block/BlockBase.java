@@ -98,8 +98,7 @@ public abstract class BlockBase extends Block
 
 			((TileBase) tile).setDirection(EnumFacing.getFront(newDir));
 
-			world.markBlockForUpdate(pos);
-
+			// @TODO: world.markBlockForUpdate(pos);
 			return true;
 		}
 

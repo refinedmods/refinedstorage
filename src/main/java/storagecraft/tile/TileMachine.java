@@ -116,7 +116,7 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
 
 		if (lastConnected != connected)
 		{
-			worldObj.markBlockForUpdate(pos);
+			// @TODO: worldObj.markBlockForUpdate(pos);
 		}
 	}
 
