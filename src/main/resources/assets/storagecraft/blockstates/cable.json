@@ -4,7 +4,8 @@
 		"textures": {
 			"all": "storagecraft:blocks/cable"
 		},
-		"model": "storagecraft:cable_core"
+		"model": "storagecraft:cable_core",
+		"uvlock": true
 	},
 	"variants": {
 		"north": {

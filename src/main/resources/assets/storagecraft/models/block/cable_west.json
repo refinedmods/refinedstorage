@@ -1,33 +1,34 @@
 {
+	"__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
 	"elements": [
 		{
-			"__comment": "west",
-			"from": [2, 14, 14],
-			"to": [8, 18, 18],
+			"name": "West",
+			"from": [0.0, 6.0, 6.0],
+			"to": [6.0, 10.0, 10.0],
 			"faces": {
-				"down": {
-					"uv": [16, 0, 10, 4],
-					"texture": "#all"
-				},
-				"up": {
-					"uv": [10, 4, 4, 0],
-					"texture": "#all"
-				},
 				"north": {
-					"uv": [4, 4, 10, 8],
-					"texture": "#all"
-				},
-				"south": {
-					"uv": [14, 4, 20, 8],
-					"texture": "#all"
-				},
-				"west": {
-					"uv": [10, 4, 14, 8],
-					"texture": "#all"
+					"texture": "#all",
+					"uv": [4.0, 4.0, 8.0, 8.0]
 				},
 				"east": {
-					"uv": [0, 4, 4, 8],
-					"texture": "#all"
+					"texture": "#all",
+					"uv": [0.0, 4.0, 4.0, 8.0]
+				},
+				"south": {
+					"texture": "#all",
+					"uv": [12.0, 4.0, 16.0, 8.0]
+				},
+				"west": {
+					"texture": "#all",
+					"uv": [8.0, 4.0, 12.0, 8.0]
+				},
+				"up": {
+					"texture": "#all",
+					"uv": [8.0, 4.0, 4.0, 0.0]
+				},
+				"down": {
+					"texture": "#all",
+					"uv": [12.0, 0.0, 8.0, 4.0]
 				}
 			}
 		}
