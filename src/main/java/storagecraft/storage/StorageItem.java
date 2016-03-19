@@ -26,6 +26,7 @@ public class StorageItem
 		this.type = Item.getItemById(buf.readInt());
 		this.quantity = buf.readInt();
 		this.damage = buf.readInt();
+		this.craftable = buf.readBoolean();
 		this.tag = buf.readBoolean() ? ByteBufUtils.readTag(buf) : null;
 	}
 
@@ -62,6 +63,7 @@ public class StorageItem
 		buf.writeInt(Item.getIdFromItem(type));
 		buf.writeInt(quantity);
 		buf.writeInt(damage);
+		buf.writeBoolean(craftable);
 		buf.writeBoolean(tag != null);
 
 		if (tag != null)
