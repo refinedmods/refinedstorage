@@ -10,6 +10,7 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import refinedstorage.RefinedStorage;
+import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.block.BlockGrid;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.inventory.InventorySimple;
@@ -61,7 +62,12 @@ public class TileGrid extends TileMachine
 
 	public EnumGridType getType()
 	{
-		return (EnumGridType) worldObj.getBlockState(pos).getValue(BlockGrid.TYPE);
+		if (worldObj.getBlockState(pos).getBlock() == RefinedStorageBlocks.GRID)
+		{
+			return (EnumGridType) worldObj.getBlockState(pos).getValue(BlockGrid.TYPE);
+		}
+
+		return EnumGridType.NORMAL;
 	}
 
 	public InventoryCrafting getCraftingInventory()
