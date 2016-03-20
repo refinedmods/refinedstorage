@@ -1,0 +1,56 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "orientable",
+		"textures": {
+			"side": "refinedstorage:blocks/wireless_transmitter_side",
+			"top": "refinedstorage:blocks/wireless_transmitter_side",
+			"front": "refinedstorage:blocks/wireless_transmitter"
+		}
+	},
+	"variants": {
+		"inventory": [
+			{
+				"y": 0,
+				"transform": "forge:default-block"
+			}
+		],
+		"connected": {
+			"true": {
+			},
+			"false": {
+			}
+		},
+		"direction": {
+			"north": {
+				"y": 0
+			},
+			"east": {
+				"y": 90
+			},
+			"south": {
+				"y": 180
+			},
+			"west": {
+				"y": 270
+			},
+			"up": {
+				"x": 270
+			},
+			"down": {
+				"x": 90
+			}
+		},
+		"working": {
+			"true": {
+				"textures": {
+					"side": "refinedstorage:blocks/wireless_transmitter_side_working",
+					"top": "refinedstorage:blocks/wireless_transmitter_side_working",
+					"front": "refinedstorage:blocks/wireless_transmitter_working"
+				}
+			},
+			"false": {
+			}
+		}
+	}
+}

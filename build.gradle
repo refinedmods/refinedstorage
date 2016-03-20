@@ -13,8 +13,8 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = "0.3"
-group = "storagecraft"
-archivesBaseName = "storagecraft"
+group = "refinedstorage"
+archivesBaseName = "refinedstorage"
 
 minecraft {
     version = "1.9-12.16.0.1770-1.9"

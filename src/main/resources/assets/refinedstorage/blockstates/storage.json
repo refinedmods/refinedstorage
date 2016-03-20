@@ -1,0 +1,36 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "cube_all",
+		"transform": "forge:default-block"
+	},
+	"variants": {
+		"type": {
+			"1k": {
+				"textures": {
+					"all": "refinedstorage:blocks/1k_storage_block"
+				}
+			},
+			"4k": {
+				"textures": {
+					"all": "refinedstorage:blocks/4k_storage_block"
+				}
+			},
+			"16k": {
+				"textures": {
+					"all": "refinedstorage:blocks/16k_storage_block"
+				}
+			},
+			"64k": {
+				"textures": {
+					"all": "refinedstorage:blocks/64k_storage_block"
+				}
+			},
+			"creative": {
+				"textures": {
+					"all": "refinedstorage:blocks/creative_storage_block"
+				}
+			}
+		}
+	}
+}

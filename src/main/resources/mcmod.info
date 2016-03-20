@@ -1,7 +1,7 @@
 [
     {
-      "modid": "storagecraft",
-      "name": "StorageCraft",
+      "modid": "refinedstorage",
+      "name": "Refined Storage",
       "description": "A Minecraft mod all about storage.",
       "version": "0.3",
       "mcversion": "1.9",

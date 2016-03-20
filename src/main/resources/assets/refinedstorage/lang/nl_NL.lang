@@ -1,0 +1,108 @@
+itemGroup.refinedstorage=Refined Storage
+
+gui.refinedstorage:controller.0=Controller
+gui.refinedstorage:controller.1=Creative Controller
+gui.refinedstorage:grid=Rooster
+gui.refinedstorage:drive=Schijf
+gui.refinedstorage:external_storage=Externe Opslag
+gui.refinedstorage:importer=Importeur
+gui.refinedstorage:exporter=Exporteur
+gui.refinedstorage:detector=Detector
+gui.refinedstorage:solderer=Soldeerder
+gui.refinedstorage:wireless_transmitter=Draadloze Zender
+gui.refinedstorage:destructor=Destructor
+gui.refinedstorage:constructor=Constructor
+gui.refinedstorage:crafter=Crafter
+
+misc.refinedstorage:energy_stored=%d / %d RF
+misc.refinedstorage:energy_usage=Vebruik: %d RF/t
+
+misc.refinedstorage:storage=Opslag
+misc.refinedstorage:storage.stored=Opgeslagen: %d
+misc.refinedstorage:storage.stored_capacity=Opgeslagen: %d / %d
+misc.refinedstorage:storage.capacity=Capaciteit: %d
+misc.refinedstorage:storage.full=%d%% vol
+
+misc.refinedstorage:wireless_grid.tooltip=Gebonden aan %d, %d, %d.
+misc.refinedstorage:wireless_grid.not_working=De Draadloze Zender is uit of zonder brandstof gevallen.
+misc.refinedstorage:wireless_grid.not_found=De Draadloze Zender werd niet gevonden.
+misc.refinedstorage:wireless_grid.not_set.0=Dit Draadloos Rooster is nog niet gebonden aan een Draadloze Zender.
+misc.refinedstorage:wireless_grid.not_set.1=Dit Draadloos Crafting Rooster is nog niet gebonden aan een Draadloze Zender.
+misc.refinedstorage:wireless_grid.out_of_range=De Draadloze Zender is buiten bereik.
+misc.refinedstorage:wireless_grid.no_grid.0=Er is geen Rooster gevonden in het netwerk. Je moet eerst een Rooster plaatsen voor je het Draadloze Rooster kunt gebruiken.
+misc.refinedstorage:wireless_grid.no_grid.1=Er is geen Crafting Rooster gevonden in het netwerk. Je moet eerst een Crafting Rooster plaatsen voor je het Draadloze Crafting Rooster kunt gebruiken.
+
+misc.refinedstorage:yes=Ja
+misc.refinedstorage:no=Nee
+misc.refinedstorage:clear=Legen
+misc.refinedstorage:priority=Prioriteit
+
+sidebutton.refinedstorage:compare.1=Vergelijken op damage
+sidebutton.refinedstorage:compare.2=Vergelijken op NBT
+
+sidebutton.refinedstorage:redstone_mode=Redstone Mode
+sidebutton.refinedstorage:redstone_mode.0=Redstone negeren
+sidebutton.refinedstorage:redstone_mode.1=Alleen werken met redstone signaal
+sidebutton.refinedstorage:redstone_mode.2=Alleen werken zonder redstone signaal
+
+sidebutton.refinedstorage:sorting.direction=Sorteer Richting
+sidebutton.refinedstorage:sorting.direction.0=Oplopend
+sidebutton.refinedstorage:sorting.direction.1=Aflopend
+
+sidebutton.refinedstorage:sorting.type=Sorteer Type
+sidebutton.refinedstorage:sorting.type.0=Hoeveelheid
+sidebutton.refinedstorage:sorting.type.1=Naam
+
+sidebutton.refinedstorage:mode=Mode
+sidebutton.refinedstorage:mode.whitelist=Whitelist
+sidebutton.refinedstorage:mode.blacklist=Blacklist
+
+sidebutton.refinedstorage:detector.mode=Mode
+sidebutton.refinedstorage:detector.mode.0=Redstone signaal aan wanneer onder het aantal
+sidebutton.refinedstorage:detector.mode.1=Redstone signaal aan wanneer op het aantal
+sidebutton.refinedstorage:detector.mode.2=Redstone signaal aan wanneer boven het aantal
+
+block.refinedstorage:controller.0.name=Controller
+block.refinedstorage:controller.1.name=Creative Controller
+block.refinedstorage:cable.name=Kabel
+block.refinedstorage:grid.0.name=Rooster
+block.refinedstorage:grid.1.name=Crafting Rooster
+block.refinedstorage:drive.name=Schijf
+block.refinedstorage:external_storage.name=Externe Opslag
+block.refinedstorage:importer.name=Importeur
+block.refinedstorage:exporter.name=Exporteur
+block.refinedstorage:detector.name=Detector
+block.refinedstorage:machine_casing.name=Machine-omhulsel
+block.refinedstorage:solderer.name=Soldeerder
+block.refinedstorage:wireless_transmitter.name=Draadloze Zender
+block.refinedstorage:destructor.name=Destructor
+block.refinedstorage:constructor.name=Constructor
+block.refinedstorage:storage.0.name=1k Opslag Blok
+block.refinedstorage:storage.1.name=4k Opslag Blok
+block.refinedstorage:storage.2.name=16k Opslag Blok
+block.refinedstorage:storage.3.name=64k Opslag Blok
+block.refinedstorage:storage.4.name=Creative Opslag Blok
+
+item.refinedstorage:storage_cell.0.name=1k Opslagcel
+item.refinedstorage:storage_cell.1.name=4k Opslagcel
+item.refinedstorage:storage_cell.2.name=16k Opslagcel
+item.refinedstorage:storage_cell.3.name=64k Opslagcel
+item.refinedstorage:storage_cell.4.name=Creative Opslagcel
+item.refinedstorage:wireless_grid.0.name=Draadloze Rooster
+item.refinedstorage:wireless_grid.1.name=Draadloze Crafting Rooster
+item.refinedstorage:wireless_grid_plate.name=Draadloze Rooster Bord
+item.refinedstorage:quartz_enriched_iron.name=Quartz Verrijkt Iron
+item.refinedstorage:core.0.name=Constructie Core
+item.refinedstorage:core.1.name=Destructie Core
+item.refinedstorage:silicon.name=Silicon
+item.refinedstorage:processor.0.name=Gedrukte Basis Processor
+item.refinedstorage:processor.1.name=Gedrukte Verbeterde Processor
+item.refinedstorage:processor.2.name=Gedrukte Uitgebreide Processor
+item.refinedstorage:processor.3.name=Basis Processor
+item.refinedstorage:processor.4.name=Verbeterde Processor
+item.refinedstorage:processor.5.name=Uitgebreide Processor
+item.refinedstorage:processor.6.name=Gedrukte Silicon
+item.refinedstorage:storage_part.0.name=1k Opslagdeel
+item.refinedstorage:storage_part.1.name=4k Opslagdeel
+item.refinedstorage:storage_part.2.name=16k Opslagdeel
+item.refinedstorage:storage_part.3.name=64k Opslagdeel
