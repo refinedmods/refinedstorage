@@ -419,7 +419,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 	public void toBytes(ByteBuf buf)
 	{
 		buf.writeInt(energy.getEnergyStored());
-		buf.writeInt(energyUsage);
+		buf.writeInt(redstoneMode.isEnabled(worldObj, pos) ? energyUsage : 0);
 
 		buf.writeInt(redstoneMode.id);
 
