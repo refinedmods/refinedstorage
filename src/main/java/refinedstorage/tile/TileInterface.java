@@ -219,7 +219,14 @@ public class TileInterface extends TileMachine implements ISidedInventory
 	@Override
 	public IInventory getDroppedInventory()
 	{
-		return inventory;
+		InventorySimple dummy = new InventorySimple("dummy", 9);
+
+		for (int i = 0; i < 9; ++i)
+		{
+			dummy.setInventorySlotContents(i, inventory.getStackInSlot(18 + i));
+		}
+
+		return dummy;
 	}
 
 	@Override
