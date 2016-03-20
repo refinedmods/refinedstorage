@@ -52,6 +52,7 @@ public class CommonProxy
 		GameRegistry.registerTileEntity(TileDestructor.class, "destructor");
 		GameRegistry.registerTileEntity(TileConstructor.class, "constructor");
 		GameRegistry.registerTileEntity(TileStorage.class, "storage");
+		GameRegistry.registerTileEntity(TileRelay.class, "relay");
 
 		GameRegistry.registerBlock(RefinedStorageBlocks.CONTROLLER, ItemBlockController.class, "controller");
 		GameRegistry.registerBlock(RefinedStorageBlocks.CABLE, "cable");
@@ -67,6 +68,7 @@ public class CommonProxy
 		GameRegistry.registerBlock(RefinedStorageBlocks.DESTRUCTOR, "destructor");
 		GameRegistry.registerBlock(RefinedStorageBlocks.CONSTRUCTOR, "constructor");
 		GameRegistry.registerBlock(RefinedStorageBlocks.STORAGE, ItemBlockStorage.class, "storage");
+		GameRegistry.registerBlock(RefinedStorageBlocks.RELAY, "relay");
 
 		GameRegistry.registerItem(RefinedStorageItems.STORAGE_CELL, "storage_cell");
 		GameRegistry.registerItem(RefinedStorageItems.WIRELESS_GRID, "wireless_grid");

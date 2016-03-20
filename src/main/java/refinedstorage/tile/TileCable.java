@@ -53,6 +53,19 @@ public class TileCable extends TileBase
 				machines.add((TileMachine) tile);
 
 				visited.add(newPos);
+
+				if (tile instanceof TileRelay)
+				{
+					for (EnumFacing relayDir : EnumFacing.VALUES)
+					{
+						TileEntity nextToRelay = worldObj.getTileEntity(newPos.offset(relayDir));
+
+						if (nextToRelay instanceof TileCable)
+						{
+							((TileCable) nextToRelay).addMachines(visited, machines, controller);
+						}
+					}
+				}
 			}
 			else if (tile instanceof TileCable)
 			{

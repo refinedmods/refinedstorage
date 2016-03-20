@@ -39,6 +39,8 @@ public class GuiHandler implements IGuiHandler
 				return new ContainerConstructor(player, (TileConstructor) tile);
 			case RefinedStorageGui.STORAGE:
 				return new ContainerStorage(player, ((IStorageGui) tile).getInventory());
+			case RefinedStorageGui.RELAY:
+				return new ContainerRelay(player);
 			default:
 				return null;
 		}
@@ -79,6 +81,8 @@ public class GuiHandler implements IGuiHandler
 				return new GuiConstructor((ContainerConstructor) getContainer(ID, player, tile), (TileConstructor) tile);
 			case RefinedStorageGui.STORAGE:
 				return new GuiStorage((ContainerStorage) getContainer(ID, player, tile), (IStorageGui) tile);
+			case RefinedStorageGui.RELAY:
+				return new GuiRelay((ContainerRelay) getContainer(ID, player, tile), (TileRelay) tile);
 			default:
 				return null;
 		}

@@ -18,4 +18,5 @@ public final class RefinedStorageBlocks
 	public static final BlockDestructor DESTRUCTOR = new BlockDestructor();
 	public static final BlockConstructor CONSTRUCTOR = new BlockConstructor();
 	public static final BlockStorage STORAGE = new BlockStorage();
+	public static final BlockRelay RELAY = new BlockRelay();
 }

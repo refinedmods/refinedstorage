@@ -12,7 +12,7 @@ gui.refinedstorage:solderer=Soldeerder
 gui.refinedstorage:wireless_transmitter=Draadloze Zender
 gui.refinedstorage:destructor=Destructor
 gui.refinedstorage:constructor=Constructor
-gui.refinedstorage:crafter=Crafter
+gui.refinedstorage:relay=Relais
 
 misc.refinedstorage:energy_stored=%d / %d RF
 misc.refinedstorage:energy_usage=Vebruik: %d RF/t
@@ -82,6 +82,7 @@ block.refinedstorage:storage.1.name=4k Opslag Blok
 block.refinedstorage:storage.2.name=16k Opslag Blok
 block.refinedstorage:storage.3.name=64k Opslag Blok
 block.refinedstorage:storage.4.name=Creative Opslag Blok
+block.refinedstorage:relay.name=Relais
 
 item.refinedstorage:storage_cell.0.name=1k Opslagcel
 item.refinedstorage:storage_cell.1.name=4k Opslagcel
