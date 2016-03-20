@@ -14,4 +14,5 @@ public final class RefinedStorageGui
 	public static final int CONSTRUCTOR = 10;
 	public static final int STORAGE = 11;
 	public static final int RELAY = 12;
+	public static final int INTERFACE = 13;
 }

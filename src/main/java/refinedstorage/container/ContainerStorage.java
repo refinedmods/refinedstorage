@@ -12,7 +12,7 @@ public class ContainerStorage extends ContainerBase
 
 		for (int i = 0; i < 9; ++i)
 		{
-			addSlotToContainer(new SlotSpecimen(inventory, i, 8 + (18 * i), 20));
+			addSlotToContainer(new SlotSpecimen(inventory, i, 8 + (18 * i), 20, false));
 		}
 
 		addPlayerInventory(8, 129);

@@ -13,7 +13,7 @@ public class ContainerConstructor extends ContainerBase
 	{
 		public SlotConstructor(IInventory inventory, int id, int x, int y)
 		{
-			super(inventory, id, x, y);
+			super(inventory, id, x, y, false);
 		}
 
 		@Override

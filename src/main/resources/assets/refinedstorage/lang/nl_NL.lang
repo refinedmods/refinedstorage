@@ -13,6 +13,8 @@ gui.refinedstorage:wireless_transmitter=Draadloze Zender
 gui.refinedstorage:destructor=Destructor
 gui.refinedstorage:constructor=Constructor
 gui.refinedstorage:relay=Relais
+gui.refinedstorage:interface.import=Interface Import
+gui.refinedstorage:interface.export=Interface Export
 
 misc.refinedstorage:energy_stored=%d / %d RF
 misc.refinedstorage:energy_usage=Vebruik: %d RF/t
@@ -83,6 +85,7 @@ block.refinedstorage:storage.2.name=16k Opslag Blok
 block.refinedstorage:storage.3.name=64k Opslag Blok
 block.refinedstorage:storage.4.name=Creative Opslag Blok
 block.refinedstorage:relay.name=Relais
+block.refinedstorage:interface.name=Interface
 
 item.refinedstorage:storage_cell.0.name=1k Opslagcel
 item.refinedstorage:storage_cell.1.name=4k Opslagcel

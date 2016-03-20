@@ -7,9 +7,13 @@ import net.minecraft.item.ItemStack;
 
 public class SlotSpecimen extends Slot
 {
-	public SlotSpecimen(IInventory inventory, int id, int x, int y)
+	private boolean allowSize;
+
+	public SlotSpecimen(IInventory inventory, int id, int x, int y, boolean allowSize)
 	{
 		super(inventory, id, x, y);
+
+		this.allowSize = allowSize;
 	}
 
 	@Override
@@ -27,7 +31,7 @@ public class SlotSpecimen extends Slot
 	@Override
 	public void putStack(ItemStack stack)
 	{
-		if (stack != null)
+		if (stack != null && !allowSize)
 		{
 			stack.stackSize = 1;
 		}
