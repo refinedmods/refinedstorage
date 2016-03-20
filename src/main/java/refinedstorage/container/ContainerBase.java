@@ -63,6 +63,10 @@ public abstract class ContainerBase extends Container
 
 		if (slot instanceof SlotSpecimen)
 		{
+			// @TODO: Put whole the stack if left click
+			// @TODO: Put one item from stack if right click
+			// @TODO: If item is already there, on left / right click add 1 or remove 1
+			// @TODO: If click with empty stack, empty it out
 			if (clickedButton == 2 || player.inventory.getItemStack() == null)
 			{
 				slot.putStack(null);

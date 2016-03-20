@@ -174,7 +174,7 @@ public class InventoryUtils
 
 		for (int i = 0; i < inventory.getSizeInventory(); ++i)
 		{
-			// @TODO: This is experimental
+			// @TODO: Test this better
 			if (!inventory.isItemValidForSlot(i, stack))
 			{
 				continue;

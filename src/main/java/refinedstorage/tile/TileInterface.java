@@ -12,9 +12,6 @@ import refinedstorage.util.InventoryUtils;
 
 public class TileInterface extends TileMachine implements ISidedInventory
 {
-	// 1st row for import
-	// 2st row for specimen to export
-	// 3st row for export
 	private InventorySimple inventory = new InventorySimple("interface", 9 * 3);
 
 	@Override
@@ -26,6 +23,79 @@ public class TileInterface extends TileMachine implements ISidedInventory
 	@Override
 	public void updateMachine()
 	{
+		for (int i = 0; i < 9; ++i)
+		{
+			if (inventory.getStackInSlot(i) != null)
+			{
+				ItemStack slot = inventory.getStackInSlot(i);
+
+				if (getController().push(slot))
+				{
+					inventory.setInventorySlotContents(i, null);
+				}
+			}
+		}
+
+		for (int i = 9; i < 18; ++i)
+		{
+			ItemStack wanted = inventory.getStackInSlot(i);
+			ItemStack got = inventory.getStackInSlot(i + 9);
+
+			if (wanted != null)
+			{
+				boolean ok = false;
+
+				if (got != null)
+				{
+					if (!InventoryUtils.compareStackNoQuantity(wanted, got))
+					{
+						if (getController().push(got))
+						{
+							inventory.setInventorySlotContents(i + 9, null);
+						}
+					}
+					else
+					{
+						ok = true;
+					}
+				}
+				else
+				{
+					ok = true;
+				}
+
+				if (ok)
+				{
+					got = inventory.getStackInSlot(i + 9);
+
+					int needed = got == null ? wanted.stackSize : wanted.stackSize - got.stackSize;
+
+					ItemStack goingToTake = wanted.copy();
+					goingToTake.stackSize = needed;
+
+					ItemStack took = getController().take(goingToTake);
+
+					if (took != null)
+					{
+						if (got == null)
+						{
+							inventory.setInventorySlotContents(i + 9, took);
+						}
+						else
+						{
+							got.stackSize += took.stackSize;
+						}
+					}
+				}
+			}
+			else if (got != null)
+			{
+				if (getController().push(got))
+				{
+					inventory.setInventorySlotContents(i + 9, null);
+				}
+			}
+		}
 	}
 
 	@Override
