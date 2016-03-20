@@ -1,5 +1,6 @@
 package refinedstorage.tile;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -8,11 +9,16 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
 import refinedstorage.inventory.InventorySimple;
+import refinedstorage.tile.settings.ICompareSetting;
 import refinedstorage.util.InventoryUtils;
 
-public class TileInterface extends TileMachine implements ISidedInventory
+public class TileInterface extends TileMachine implements ICompareSetting, ISidedInventory
 {
+	public static final String NBT_COMPARE = "Compare";
+
 	private InventorySimple inventory = new InventorySimple("interface", 9 * 3);
+
+	private int compare = 0;
 
 	@Override
 	public int getEnergyUsage()
@@ -47,7 +53,7 @@ public class TileInterface extends TileMachine implements ISidedInventory
 
 				if (got != null)
 				{
-					if (!InventoryUtils.compareStackNoQuantity(wanted, got))
+					if (!InventoryUtils.compareStack(wanted, got, compare))
 					{
 						if (getController().push(got))
 						{
@@ -73,7 +79,7 @@ public class TileInterface extends TileMachine implements ISidedInventory
 					ItemStack goingToTake = wanted.copy();
 					goingToTake.stackSize = needed;
 
-					ItemStack took = getController().take(goingToTake);
+					ItemStack took = getController().take(goingToTake, compare);
 
 					if (took != null)
 					{
@@ -104,6 +110,11 @@ public class TileInterface extends TileMachine implements ISidedInventory
 		super.readFromNBT(nbt);
 
 		InventoryUtils.restoreInventory(this, 0, nbt);
+
+		if (nbt.hasKey(NBT_COMPARE))
+		{
+			compare = nbt.getInteger(NBT_COMPARE);
+		}
 	}
 
 	@Override
@@ -112,6 +123,24 @@ public class TileInterface extends TileMachine implements ISidedInventory
 		super.writeToNBT(nbt);
 
 		InventoryUtils.saveInventory(this, 0, nbt);
+
+		nbt.setInteger(NBT_COMPARE, compare);
+	}
+
+	@Override
+	public void fromBytes(ByteBuf buf)
+	{
+		super.fromBytes(buf);
+
+		compare = buf.readInt();
+	}
+
+	@Override
+	public void toBytes(ByteBuf buf)
+	{
+		super.toBytes(buf);
+
+		buf.writeInt(compare);
 	}
 
 	@Override
@@ -256,5 +285,19 @@ public class TileInterface extends TileMachine implements ISidedInventory
 	public boolean canExtractItem(int slot, ItemStack stack, EnumFacing side)
 	{
 		return slot >= 18;
+	}
+
+	@Override
+	public int getCompare()
+	{
+		return compare;
+	}
+
+	@Override
+	public void setCompare(int compare)
+	{
+		markDirty();
+
+		this.compare = compare;
 	}
 }
