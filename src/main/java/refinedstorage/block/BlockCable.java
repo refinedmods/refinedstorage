@@ -83,4 +83,10 @@ public class BlockCable extends BlockBase
 	{
 		return false;
 	}
+
+	@Override
+	public boolean isFullCube(IBlockState state)
+	{
+		return false;
+	}
 }
