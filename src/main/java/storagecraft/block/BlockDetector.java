@@ -68,7 +68,8 @@ public class BlockDetector extends BlockMachine
 		return getWeakPower(state, world, pos, side);
 	}
 
-	public boolean canProvidePower()
+	@Override
+	public boolean canProvidePower(IBlockState state)
 	{
 		return true;
 	}

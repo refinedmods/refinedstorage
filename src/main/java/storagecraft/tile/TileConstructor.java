@@ -37,7 +37,7 @@ public class TileConstructor extends TileMachine implements ICompareSetting
 
 				if (took != null)
 				{
-					worldObj.setBlockState(front, ((ItemBlock) took.getItem()).getBlock().getDefaultState(), 1 | 2);
+					worldObj.setBlockState(front, ((ItemBlock) took.getItem()).getBlock().getStateFromMeta(took.getItemDamage()), 1 | 2);
 				}
 			}
 		}
