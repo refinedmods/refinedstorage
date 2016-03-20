@@ -69,8 +69,8 @@ public class CommonProxy
 		GameRegistry.registerBlock(RefinedStorageBlocks.DESTRUCTOR, "destructor");
 		GameRegistry.registerBlock(RefinedStorageBlocks.CONSTRUCTOR, "constructor");
 		GameRegistry.registerBlock(RefinedStorageBlocks.STORAGE, ItemBlockStorage.class, "storage");
-		GameRegistry.registerBlock(RefinedStorageBlocks.RELAY, "relay"); // @TODO: Recipe
-		GameRegistry.registerBlock(RefinedStorageBlocks.INTERFACE, "interface"); // @TODO: Recipe
+		GameRegistry.registerBlock(RefinedStorageBlocks.RELAY, "relay");
+		GameRegistry.registerBlock(RefinedStorageBlocks.INTERFACE, "interface");
 
 		GameRegistry.registerItem(RefinedStorageItems.STORAGE_CELL, "storage_cell");
 		GameRegistry.registerItem(RefinedStorageItems.WIRELESS_GRID, "wireless_grid");
@@ -122,6 +122,13 @@ public class CommonProxy
 			new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
 			new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
 			new ItemStack(Items.quartz)
+		);
+
+		// Relay
+		GameRegistry.addShapelessRecipe(new ItemStack(RefinedStorageBlocks.RELAY),
+			new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
+			new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
+			new ItemStack(RefinedStorageBlocks.CABLE)
 		);
 
 		// Controller
@@ -347,6 +354,9 @@ public class CommonProxy
 		SoldererRegistry.addRecipe(new SoldererRecipeStorage(EnumStorageType.TYPE_4K, ItemStoragePart.TYPE_4K));
 		SoldererRegistry.addRecipe(new SoldererRecipeStorage(EnumStorageType.TYPE_16K, ItemStoragePart.TYPE_16K));
 		SoldererRegistry.addRecipe(new SoldererRecipeStorage(EnumStorageType.TYPE_64K, ItemStoragePart.TYPE_64K));
+
+		// Interface
+		SoldererRegistry.addRecipe(new SoldererRecipeInterface());
 	}
 
 	public void init(FMLInitializationEvent e)
