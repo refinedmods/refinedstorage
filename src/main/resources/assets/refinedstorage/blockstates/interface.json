@@ -1,0 +1,36 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "cube_all",
+		"textures": {
+			"all": "refinedstorage:blocks/interface"
+		}
+	},
+	"variants": {
+		"inventory": [
+			{
+				"transform": "forge:default-block"
+			}
+		],
+		"direction": {
+			"north": {
+			},
+			"east": {
+			},
+			"south": {
+			},
+			"west": {
+			},
+			"up": {
+			},
+			"down": {
+			}
+		},
+		"connected": {
+			"true": {
+			},
+			"false": {
+			}
+		}
+	}
+}
