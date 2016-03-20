@@ -92,7 +92,14 @@ public class GuiStorage extends GuiBase
 
 		if (inBounds(barX, barY, barWidth, barHeight, mouseX, mouseY))
 		{
-			drawTooltip(mouseX, mouseY, t("misc.refinedstorage:storage.full", (int) ((float) gui.getStored() / (float) gui.getCapacity() * 100f)));
+			int full = 0;
+
+			if (gui.getCapacity() >= 0)
+			{
+				full = (int) ((float) gui.getStored() / (float) gui.getCapacity() * 100f);
+			}
+
+			drawTooltip(mouseX, mouseY, t("misc.refinedstorage:storage.full", full));
 		}
 	}
 
