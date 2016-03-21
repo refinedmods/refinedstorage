@@ -7,6 +7,7 @@ import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import org.lwjgl.input.Keyboard;
 import refinedstorage.container.slot.SlotDisabled;
 import refinedstorage.container.slot.SlotSpecimen;
 
@@ -63,7 +64,56 @@ public abstract class ContainerBase extends Container
 
 		if (slot instanceof SlotSpecimen)
 		{
-			if (clickedButton == 2 || player.inventory.getItemStack() == null)
+			if (((SlotSpecimen) slot).isSizeAllowed())
+			{
+				if (player.inventory.getItemStack() != null)
+				{
+					int amount = player.inventory.getItemStack().stackSize;
+
+					if (clickedButton == 1)
+					{
+						amount = 1;
+					}
+
+					ItemStack toPut = player.inventory.getItemStack().copy();
+					toPut.stackSize = amount;
+
+					slot.putStack(toPut);
+				}
+				else if (slot.getStack() != null)
+				{
+					if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
+					{
+						slot.putStack(null);
+					}
+					else
+					{
+						int amount = slot.getStack().stackSize;
+
+						if (clickedButton == 0)
+						{
+							amount++;
+
+							if (amount > 64)
+							{
+								amount = 64;
+							}
+						}
+						else if (clickedButton == 1)
+						{
+							amount--;
+
+							if (amount < 1)
+							{
+								amount = 1;
+							}
+						}
+
+						slot.getStack().stackSize = amount;
+					}
+				}
+			}
+			else if (player.inventory.getItemStack() == null)
 			{
 				slot.putStack(null);
 			}

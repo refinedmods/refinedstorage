@@ -45,5 +45,14 @@ public class GuiInterface extends GuiBase
 		drawString(7, 7, t("gui.refinedstorage:interface.import"));
 		drawString(7, 42, t("gui.refinedstorage:interface.export"));
 		drawString(7, 123, t("container.inventory"));
+
+		if (inBounds(162, 42, 7, 7, mouseX, mouseY))
+		{
+			String message = t("gui.refinedstorage:interface.export.explanation.0");
+			message += "\n" + t("gui.refinedstorage:interface.export.explanation.1");
+			message += "\n" + t("gui.refinedstorage:interface.export.explanation.2");
+
+			drawTooltip(mouseX, mouseY, message);
+		}
 	}
 }

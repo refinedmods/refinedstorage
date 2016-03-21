@@ -15,6 +15,9 @@ gui.refinedstorage:constructor=Constructor
 gui.refinedstorage:relay=Relay
 gui.refinedstorage:interface.import=Interface Import
 gui.refinedstorage:interface.export=Interface Export
+gui.refinedstorage:interface.export.explanation.0=Top slots: items you want exported
+gui.refinedstorage:interface.export.explanation.1=Clear a slot: mouse click + SHIFT
+gui.refinedstorage:interface.export.explanation.2=Incr. or decr. a slot: left/ right mouse click
 
 misc.refinedstorage:energy_stored=%d / %d RF
 misc.refinedstorage:energy_usage=Usage: %d RF/t

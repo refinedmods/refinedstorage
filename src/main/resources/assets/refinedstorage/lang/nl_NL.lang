@@ -15,6 +15,9 @@ gui.refinedstorage:constructor=Constructor
 gui.refinedstorage:relay=Relais
 gui.refinedstorage:interface.import=Interface Import
 gui.refinedstorage:interface.export=Interface Export
+gui.refinedstorage:interface.export.explanation.0=Bovenste slots: items die je wilt exporten
+gui.refinedstorage:interface.export.explanation.1=Slot leegmaken: muisklik + SHIFT
+gui.refinedstorage:interface.export.explanation.2=Verhoog of verklein aantal: links/ rechts muisklik
 
 misc.refinedstorage:energy_stored=%d / %d RF
 misc.refinedstorage:energy_usage=Vebruik: %d RF/t

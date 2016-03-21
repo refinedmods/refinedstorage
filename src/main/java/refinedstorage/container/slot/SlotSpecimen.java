@@ -7,13 +7,13 @@ import net.minecraft.item.ItemStack;
 
 public class SlotSpecimen extends Slot
 {
-	private boolean allowSize;
+	private boolean sizeAllowed;
 
 	public SlotSpecimen(IInventory inventory, int id, int x, int y, boolean allowSize)
 	{
 		super(inventory, id, x, y);
 
-		this.allowSize = allowSize;
+		this.sizeAllowed = allowSize;
 	}
 
 	@Override
@@ -31,11 +31,16 @@ public class SlotSpecimen extends Slot
 	@Override
 	public void putStack(ItemStack stack)
 	{
-		if (stack != null && !allowSize)
+		if (stack != null && !sizeAllowed)
 		{
 			stack.stackSize = 1;
 		}
 
 		super.putStack(stack);
+	}
+
+	public boolean isSizeAllowed()
+	{
+		return sizeAllowed;
 	}
 }
