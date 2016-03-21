@@ -16,7 +16,7 @@ public class SoldererRecipeInterface implements ISoldererRecipe
 		}
 		else if (row == 1)
 		{
-			return new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED);
+			return new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC);
 		}
 		else if (row == 2)
 		{
