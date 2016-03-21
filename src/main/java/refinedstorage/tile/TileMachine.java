@@ -13,7 +13,7 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
 	protected boolean connected = false;
 	protected boolean redstoneControlled = true;
 
-	private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
+	protected RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
 	private BlockPos controllerPosition;
 
