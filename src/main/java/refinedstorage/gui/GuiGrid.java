@@ -38,6 +38,10 @@ public class GuiGrid extends GuiBase
 
 	private int offset;
 
+	private float currentScroll;
+	private boolean wasClicking = false;
+	private boolean isScrolling = false;
+
 	public GuiGrid(ContainerGrid container, TileGrid grid)
 	{
 		super(container, 193, grid.getType() == EnumGridType.CRAFTING ? 256 : 190);
@@ -77,6 +81,28 @@ public class GuiGrid extends GuiBase
 		if (offset > getMaxOffset())
 		{
 			offset = getMaxOffset();
+		}
+	}
+
+	public void handleScrolling(int mouseX, int mouseY)
+	{
+		boolean down = Mouse.isButtonDown(0);
+
+		if (!wasClicking && down && inBounds(174, 20, 12, 70, mouseX, mouseY))
+		{
+			isScrolling = true;
+		}
+
+		if (!down)
+		{
+			isScrolling = false;
+		}
+
+		wasClicking = down;
+
+		if (isScrolling)
+		{
+			currentScroll = mouseY - 20;
 		}
 	}
 
@@ -136,12 +162,16 @@ public class GuiGrid extends GuiBase
 
 		drawTexture(x, y, 0, 0, width, height);
 
+		drawTexture(x + 174, y + 20 + (int) currentScroll, 232, 0, 12, 15);
+
 		searchField.drawTextBox();
 	}
 
 	@Override
 	public void drawForeground(int mouseX, int mouseY)
 	{
+		handleScrolling(mouseX, mouseY);
+
 		drawString(7, 7, t("gui.refinedstorage:grid"));
 
 		if (grid.getType() == EnumGridType.CRAFTING)
