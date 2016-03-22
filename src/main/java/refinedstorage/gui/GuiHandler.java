@@ -66,7 +66,7 @@ public class GuiHandler implements IGuiHandler
 			case RefinedStorageGui.GRID:
 				return new GuiGrid((ContainerGrid) getContainer(ID, player, tile), (TileGrid) tile);
 			case RefinedStorageGui.DRIVE:
-				return new GuiDrive((ContainerDrive) getContainer(ID, player, tile), (TileDrive) tile);
+				return new GuiStorage((ContainerStorage) getContainer(ID, player, tile), (IStorageGui) tile, "gui/drive.png");
 			case RefinedStorageGui.IMPORTER:
 				return new GuiImporter((ContainerImporter) getContainer(ID, player, tile), (TileImporter) tile);
 			case RefinedStorageGui.EXPORTER:

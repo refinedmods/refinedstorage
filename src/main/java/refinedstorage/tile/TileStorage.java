@@ -8,6 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import refinedstorage.RefinedStorage;
+import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.block.BlockStorage;
 import refinedstorage.block.EnumStorageType;
 import refinedstorage.inventory.InventorySimple;
@@ -20,6 +21,7 @@ import refinedstorage.storage.StorageItem;
 import refinedstorage.tile.settings.ICompareSetting;
 import refinedstorage.tile.settings.IModeSetting;
 import refinedstorage.tile.settings.IRedstoneModeSetting;
+import refinedstorage.tile.settings.ModeSettingUtils;
 import refinedstorage.util.InventoryUtils;
 
 public class TileStorage extends TileMachine implements IStorageProvider, IStorage, IStorageGui, ICompareSetting, IModeSetting
@@ -100,7 +102,12 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 
 	public EnumStorageType getType()
 	{
-		return ((EnumStorageType) worldObj.getBlockState(pos).getValue(BlockStorage.TYPE));
+		if (worldObj.getBlockState(pos).getBlock() == RefinedStorageBlocks.STORAGE)
+		{
+			return ((EnumStorageType) worldObj.getBlockState(pos).getValue(BlockStorage.TYPE));
+		}
+
+		return EnumStorageType.TYPE_1K;
 	}
 
 	@Override
@@ -154,48 +161,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 	@Override
 	public boolean canPush(ItemStack stack)
 	{
-		return checkWhitelistBlacklist(inventory, this, compare, stack) && getStorage().canPush(stack);
-	}
-
-	public static boolean checkWhitelistBlacklist(IInventory inventory, IModeSetting mode, int compare, ItemStack stack)
-	{
-		if (mode.isWhitelist())
-		{
-			int slots = 0;
-
-			for (int i = 0; i < inventory.getSizeInventory(); ++i)
-			{
-				ItemStack slot = inventory.getStackInSlot(i);
-
-				if (slot != null)
-				{
-					slots++;
-
-					if (InventoryUtils.compareStack(slot, stack, compare))
-					{
-						return true;
-					}
-				}
-			}
-
-			return slots == 0;
-		}
-		else if (mode.isBlacklist())
-		{
-			for (int i = 0; i < inventory.getSizeInventory(); ++i)
-			{
-				ItemStack slot = inventory.getStackInSlot(i);
-
-				if (slot != null && InventoryUtils.compareStack(slot, stack, compare))
-				{
-					return false;
-				}
-			}
-
-			return true;
-		}
-
-		return false;
+		return ModeSettingUtils.doesNotViolateMode(inventory, this, compare, stack) && getStorage().canPush(stack);
 	}
 
 	@Override
@@ -283,7 +249,6 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 		};
 	}
 
-	@Override
 	public NBTStorage getStorage()
 	{
 		return new NBTStorage(tag, getCapacity(), priority);

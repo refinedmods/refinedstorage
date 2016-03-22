@@ -18,6 +18,7 @@ import refinedstorage.storage.StorageItem;
 import refinedstorage.tile.settings.ICompareSetting;
 import refinedstorage.tile.settings.IModeSetting;
 import refinedstorage.tile.settings.IRedstoneModeSetting;
+import refinedstorage.tile.settings.ModeSettingUtils;
 import refinedstorage.util.InventoryUtils;
 
 public class TileExternalStorage extends TileMachine implements IStorageProvider, IStorage, IStorageGui, ICompareSetting, IModeSetting
@@ -127,7 +128,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 			return false;
 		}
 
-		return TileStorage.checkWhitelistBlacklist(inventory, this, compare, stack) && InventoryUtils.canPushToInventory(connectedInventory, stack);
+		return ModeSettingUtils.doesNotViolateMode(inventory, this, compare, stack) && InventoryUtils.canPushToInventory(connectedInventory, stack);
 	}
 
 	public IInventory getConnectedInventory()
@@ -264,12 +265,6 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 	public String getName()
 	{
 		return "gui.refinedstorage:external_storage";
-	}
-
-	@Override
-	public IStorage getStorage()
-	{
-		return this;
 	}
 
 	@Override

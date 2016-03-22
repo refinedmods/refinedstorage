@@ -13,6 +13,7 @@ import refinedstorage.util.InventoryUtils;
 public class GuiStorage extends GuiBase
 {
 	private IStorageGui gui;
+	private String texture;
 
 	private GuiTextField priorityField;
 
@@ -21,11 +22,17 @@ public class GuiStorage extends GuiBase
 	private int barWidth = 16;
 	private int barHeight = 58;
 
-	public GuiStorage(ContainerStorage container, IStorageGui gui)
+	public GuiStorage(ContainerStorage container, IStorageGui gui, String texture)
 	{
 		super(container, 176, 211);
 
 		this.gui = gui;
+		this.texture = texture;
+	}
+
+	public GuiStorage(ContainerStorage container, IStorageGui gui)
+	{
+		this(container, gui, "gui/storage.png");
 	}
 
 	@Override
@@ -47,8 +54,8 @@ public class GuiStorage extends GuiBase
 			addSideButton(new SideButtonCompare(gui.getCompareSetting(), InventoryUtils.COMPARE_NBT));
 		}
 
-		priorityField = new GuiTextField(0, fontRendererObj, x + 116 + 1, y + 54 + 1, 25, fontRendererObj.FONT_HEIGHT);
-		priorityField.setText(String.valueOf(gui.getStorage().getPriority()));
+		priorityField = new GuiTextField(0, fontRendererObj, x + 98 + 1, y + 54 + 1, 25, fontRendererObj.FONT_HEIGHT);
+		priorityField.setText(String.valueOf(gui.getPriority()));
 		priorityField.setEnableBackgroundDrawing(false);
 		priorityField.setVisible(true);
 		priorityField.setTextColor(16777215);
@@ -64,7 +71,7 @@ public class GuiStorage extends GuiBase
 	@Override
 	public void drawBackground(int x, int y, int mouseX, int mouseY)
 	{
-		bindTexture("gui/storage.png");
+		bindTexture(texture);
 
 		drawTexture(x, y, 0, 0, width, height);
 
@@ -80,7 +87,7 @@ public class GuiStorage extends GuiBase
 	{
 		drawString(7, 7, t(gui.getName()));
 		drawString(7, 42, t("misc.refinedstorage:storage"));
-		drawString(115, 42, t("misc.refinedstorage:priority"));
+		drawString(97, 42, t("misc.refinedstorage:priority"));
 		drawString(7, 117, t("container.inventory"));
 
 		drawString(30, 54, t("misc.refinedstorage:storage.stored", gui.getStored()));

@@ -2,12 +2,29 @@ package refinedstorage.storage;
 
 import net.minecraft.item.ItemStack;
 import refinedstorage.item.ItemStorageCell;
+import refinedstorage.tile.TileDrive;
+import refinedstorage.tile.settings.ModeSettingUtils;
 
 public class CellStorage extends NBTStorage
 {
-	public CellStorage(ItemStack cell, int priority)
+	private TileDrive drive;
+
+	public CellStorage(ItemStack cell, TileDrive drive)
 	{
-		super(cell.getTagCompound(), getCapacity(cell), priority);
+		super(cell.getTagCompound(), getCapacity(cell), drive.getPriority());
+
+		this.drive = drive;
+	}
+
+	@Override
+	public boolean canPush(ItemStack stack)
+	{
+		if (ModeSettingUtils.doesNotViolateMode(drive.getInventory(), drive.getWhitelistBlacklistSetting(), drive.getCompare(), stack))
+		{
+			return super.canPush(stack);
+		}
+
+		return false;
 	}
 
 	public static int getCapacity(ItemStack cell)

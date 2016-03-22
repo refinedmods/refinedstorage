@@ -7,19 +7,30 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
+import refinedstorage.RefinedStorage;
 import refinedstorage.inventory.InventorySimple;
+import refinedstorage.network.MessagePriorityUpdate;
 import refinedstorage.storage.CellStorage;
 import refinedstorage.storage.IStorage;
+import refinedstorage.storage.IStorageGui;
 import refinedstorage.storage.IStorageProvider;
+import refinedstorage.tile.settings.ICompareSetting;
+import refinedstorage.tile.settings.IModeSetting;
+import refinedstorage.tile.settings.IRedstoneModeSetting;
 import refinedstorage.util.InventoryUtils;
 
-public class TileDrive extends TileMachine implements IInventory, IStorageProvider
+public class TileDrive extends TileMachine implements IStorageProvider, IStorageGui, ICompareSetting, IModeSetting, IInventory
 {
 	public static final String NBT_PRIORITY = "Priority";
+	public static final String NBT_COMPARE = "Compare";
+	public static final String NBT_MODE = "Mode";
 
-	private InventorySimple inventory = new InventorySimple("drive", 8);
+	private InventorySimple filterInventory = new InventorySimple("filters", 9, this);
+	private InventorySimple inventory = new InventorySimple("drive", 8, this);
 
 	private int priority = 0;
+	private int compare = 0;
+	private int mode = 0;
 
 	@Override
 	public int getEnergyUsage()
@@ -42,6 +53,161 @@ public class TileDrive extends TileMachine implements IInventory, IStorageProvid
 	{
 	}
 
+	@Override
+	public void addStorages(List<IStorage> storages)
+	{
+		for (int i = 0; i < getSizeInventory(); ++i)
+		{
+			if (getStackInSlot(i) != null)
+			{
+				storages.add(new CellStorage(getStackInSlot(i), this));
+			}
+		}
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
+
+		InventoryUtils.restoreInventory(filterInventory, 0, nbt);
+		InventoryUtils.restoreInventory(inventory, 1, nbt);
+
+		if (nbt.hasKey(NBT_PRIORITY))
+		{
+			priority = nbt.getInteger(NBT_PRIORITY);
+		}
+
+		if (nbt.hasKey(NBT_COMPARE))
+		{
+			compare = nbt.getInteger(NBT_COMPARE);
+		}
+
+		if (nbt.hasKey(NBT_MODE))
+		{
+			mode = nbt.getInteger(NBT_MODE);
+		}
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+
+		InventoryUtils.saveInventory(filterInventory, 0, nbt);
+		InventoryUtils.saveInventory(inventory, 1, nbt);
+
+		nbt.setInteger(NBT_PRIORITY, priority);
+		nbt.setInteger(NBT_COMPARE, compare);
+		nbt.setInteger(NBT_MODE, mode);
+	}
+
+	@Override
+	public void toBytes(ByteBuf buf)
+	{
+		super.toBytes(buf);
+
+		buf.writeInt(priority);
+		buf.writeInt(compare);
+		buf.writeInt(mode);
+	}
+
+	@Override
+	public void fromBytes(ByteBuf buf)
+	{
+		super.fromBytes(buf);
+
+		priority = buf.readInt();
+		compare = buf.readInt();
+		mode = buf.readInt();
+	}
+
+	@Override
+	public int getCompare()
+	{
+		return compare;
+	}
+
+	@Override
+	public void setCompare(int compare)
+	{
+		markDirty();
+
+		this.compare = compare;
+	}
+
+	@Override
+	public boolean isWhitelist()
+	{
+		return mode == 0;
+	}
+
+	@Override
+	public boolean isBlacklist()
+	{
+		return mode == 1;
+	}
+
+	@Override
+	public void setToWhitelist()
+	{
+		markDirty();
+
+		this.mode = 0;
+	}
+
+	@Override
+	public void setToBlacklist()
+	{
+		markDirty();
+
+		this.mode = 1;
+	}
+
+	@Override
+	public String getName()
+	{
+		return "block.refinedstorage:drive.name";
+	}
+
+	@Override
+	public IInventory getInventory()
+	{
+		return filterInventory;
+	}
+
+	@Override
+	public IRedstoneModeSetting getRedstoneModeSetting()
+	{
+		return this;
+	}
+
+	@Override
+	public ICompareSetting getCompareSetting()
+	{
+		return this;
+	}
+
+	@Override
+	public IModeSetting getWhitelistBlacklistSetting()
+	{
+		return this;
+	}
+
+	@Override
+	public IPriorityHandler getPriorityHandler()
+	{
+		return new IPriorityHandler()
+		{
+			@Override
+			public void onPriorityChanged(int priority)
+			{
+				RefinedStorage.NETWORK.sendToServer(new MessagePriorityUpdate(pos, priority));
+			}
+		};
+	}
+
+	@Override
 	public int getPriority()
 	{
 		return priority;
@@ -55,54 +221,15 @@ public class TileDrive extends TileMachine implements IInventory, IStorageProvid
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt)
+	public int getStored()
 	{
-		super.readFromNBT(nbt);
-
-		InventoryUtils.restoreInventory(this, 0, nbt);
-
-		if (nbt.hasKey(NBT_PRIORITY))
-		{
-			priority = nbt.getInteger(NBT_PRIORITY);
-		}
+		return 0;
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt)
+	public int getCapacity()
 	{
-		super.writeToNBT(nbt);
-
-		InventoryUtils.saveInventory(this, 0, nbt);
-
-		nbt.setInteger(NBT_PRIORITY, priority);
-	}
-
-	@Override
-	public void toBytes(ByteBuf buf)
-	{
-		super.toBytes(buf);
-
-		buf.writeInt(priority);
-	}
-
-	@Override
-	public void fromBytes(ByteBuf buf)
-	{
-		super.fromBytes(buf);
-
-		priority = buf.readInt();
-	}
-
-	@Override
-	public void addStorages(List<IStorage> storages)
-	{
-		for (int i = 0; i < getSizeInventory(); ++i)
-		{
-			if (getStackInSlot(i) != null)
-			{
-				storages.add(new CellStorage(getStackInSlot(i), priority));
-			}
-		}
+		return 0;
 	}
 
 	@Override
@@ -187,12 +314,6 @@ public class TileDrive extends TileMachine implements IInventory, IStorageProvid
 	public void clear()
 	{
 		inventory.clear();
-	}
-
-	@Override
-	public String getName()
-	{
-		return inventory.getName();
 	}
 
 	@Override

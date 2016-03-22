@@ -14,7 +14,7 @@ public interface IStorageGui
 
 	public String getName();
 
-	public IStorage getStorage();
+	public int getPriority();
 
 	public IInventory getInventory();
 
