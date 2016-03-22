@@ -6,12 +6,12 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.Slot;
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import refinedstorage.RefinedStorage;
 import refinedstorage.block.EnumGridType;
@@ -40,7 +40,7 @@ public class GuiGrid extends GuiBase
 
 	public GuiGrid(ContainerGrid container, TileGrid grid)
 	{
-		super(container, 176, grid.getType() == EnumGridType.CRAFTING ? 256 : 190);
+		super(container, 193, grid.getType() == EnumGridType.CRAFTING ? 256 : 190);
 
 		this.container = container;
 		this.grid = grid;
@@ -301,7 +301,7 @@ public class GuiGrid extends GuiBase
 			else if (isHoveringOverValidSlot(getItems()) && container.getPlayer().inventory.getItemStack() == null)
 			{
 				boolean half = clickedButton == 1;
-				boolean shift = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
+				boolean shift = GuiScreen.isShiftKeyDown();
 				boolean one = clickedButton == 2;
 
 				RefinedStorage.NETWORK.sendToServer(new MessageStoragePull(controller.getPos().getX(), controller.getPos().getY(), controller.getPos().getZ(), hoveringId, half, one, shift));
@@ -316,7 +316,7 @@ public class GuiGrid extends GuiBase
 				{
 					if (inBounds(slot.xDisplayPosition, slot.yDisplayPosition, 16, 16, mouseX - guiLeft, mouseY - guiTop))
 					{
-						if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
+						if (GuiScreen.isShiftKeyDown())
 						{
 							RefinedStorage.NETWORK.sendToServer(new MessageStoragePush(controller.getPos().getX(), controller.getPos().getY(), controller.getPos().getZ(), slot.slotNumber, clickedButton == 1));
 						}

@@ -2,12 +2,12 @@ package refinedstorage.container;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import org.lwjgl.input.Keyboard;
 import refinedstorage.container.slot.SlotDisabled;
 import refinedstorage.container.slot.SlotSpecimen;
 
@@ -82,7 +82,7 @@ public abstract class ContainerBase extends Container
 				}
 				else if (slot.getStack() != null)
 				{
-					if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
+					if (GuiScreen.isShiftKeyDown())
 					{
 						slot.putStack(null);
 					}
