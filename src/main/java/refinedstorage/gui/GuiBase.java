@@ -161,7 +161,7 @@ public abstract class GuiBase extends GuiContainer
 
 	public void drawItem(int x, int y, ItemStack stack, boolean withOverlay)
 	{
-		drawItem(x, y, stack, false, null);
+		drawItem(x, y, stack, withOverlay, null);
 	}
 
 	public void drawItem(int x, int y, ItemStack stack, boolean withOverlay, String message)
