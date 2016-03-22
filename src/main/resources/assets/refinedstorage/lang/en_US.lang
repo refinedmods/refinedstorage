@@ -22,10 +22,10 @@ gui.refinedstorage:interface.export.explanation.2=Incr. or decr. a slot: left/ r
 misc.refinedstorage:energy_stored=%d / %d RF
 misc.refinedstorage:energy_usage=Usage: %d RF/t
 
-misc.refinedstorage:storage=Storage
 misc.refinedstorage:storage.stored=Stored: %d
 misc.refinedstorage:storage.stored_capacity=Stored: %d / %d
-misc.refinedstorage:storage.capacity=Capacity: %d
+misc.refinedstorage:storage.stored_minimal=%d
+misc.refinedstorage:storage.stored_capacity_minimal=%d / %d
 misc.refinedstorage:storage.full=%d%% full
 
 misc.refinedstorage:wireless_grid.tooltip=Bound to %d, %d, %d.

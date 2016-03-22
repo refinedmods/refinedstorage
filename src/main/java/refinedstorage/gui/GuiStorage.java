@@ -86,16 +86,9 @@ public class GuiStorage extends GuiBase
 	public void drawForeground(int mouseX, int mouseY)
 	{
 		drawString(7, 7, t(gui.getName()));
-		drawString(7, 42, t("misc.refinedstorage:storage"));
+		drawString(7, 42, gui.getCapacity() == -1 ? t("misc.refinedstorage:storage.stored_minimal", gui.getStored()) : t("misc.refinedstorage:storage.stored_capacity_minimal", gui.getStored(), gui.getCapacity()));
 		drawString(97, 42, t("misc.refinedstorage:priority"));
 		drawString(7, 117, t("container.inventory"));
-
-		drawString(30, 54, t("misc.refinedstorage:storage.stored", gui.getStored()));
-
-		if (gui.getCapacity() != -1)
-		{
-			drawString(30, 64, t("misc.refinedstorage:storage.capacity", gui.getCapacity()));
-		}
 
 		if (inBounds(barX, barY, barWidth, barHeight, mouseX, mouseY))
 		{

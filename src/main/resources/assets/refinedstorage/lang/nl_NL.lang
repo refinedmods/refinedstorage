@@ -22,10 +22,10 @@ gui.refinedstorage:interface.export.explanation.2=Verhoog of verklein aantal: li
 misc.refinedstorage:energy_stored=%d / %d RF
 misc.refinedstorage:energy_usage=Vebruik: %d RF/t
 
-misc.refinedstorage:storage=Opslag
 misc.refinedstorage:storage.stored=Opgeslagen: %d
 misc.refinedstorage:storage.stored_capacity=Opgeslagen: %d / %d
-misc.refinedstorage:storage.capacity=Capaciteit: %d
+misc.refinedstorage:storage.stored_minimal=%d
+misc.refinedstorage:storage.stored_capacity_minimal=%d / %d
 misc.refinedstorage:storage.full=%d%% vol
 
 misc.refinedstorage:wireless_grid.tooltip=Gebonden aan %d, %d, %d.
