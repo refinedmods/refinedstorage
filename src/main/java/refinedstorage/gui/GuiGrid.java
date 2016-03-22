@@ -9,9 +9,8 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.Slot;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import refinedstorage.RefinedStorage;
@@ -328,7 +327,7 @@ public class GuiGrid extends GuiBase
 
 		if (clickedClear)
 		{
-			mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(new SoundEvent(new ResourceLocation("gui.button.press")), 1.0F));
+			mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
 		}
 	}
 
