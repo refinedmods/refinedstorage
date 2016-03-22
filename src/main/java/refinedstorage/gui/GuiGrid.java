@@ -36,8 +36,6 @@ public class GuiGrid extends GuiBase
 	private int hoveringSlotId;
 	private int hoveringId;
 
-	private int offset;
-
 	private float currentScroll;
 	private boolean wasClicking = false;
 	private boolean isScrolling = false;
@@ -69,19 +67,22 @@ public class GuiGrid extends GuiBase
 	@Override
 	public void update(int x, int y)
 	{
-		// @TODO: Make this use currentScroll
-		int wheel = Mouse.getDWheel();
-
-		wheel = Math.max(Math.min(-wheel, 1), -1);
-
-		if (canScroll(wheel))
+		if (canScroll())
 		{
-			offset += wheel;
-		}
+			int wheel = Mouse.getDWheel();
 
-		if (offset > getMaxOffset())
-		{
-			offset = getMaxOffset();
+			wheel = Math.max(Math.min(-wheel, 1), -1);
+
+			float delta = 20;
+
+			if (wheel == -1)
+			{
+				setCurrentScroll(currentScroll - delta);
+			}
+			else if (wheel == 1)
+			{
+				setCurrentScroll(currentScroll + delta);
+			}
 		}
 	}
 
@@ -92,56 +93,75 @@ public class GuiGrid extends GuiBase
 
 	public void handleScrolling(int mouseX, int mouseY)
 	{
-		boolean down = Mouse.isButtonDown(0);
-
-		if (!wasClicking && down && inBoundsOfScrollbar(mouseX, mouseY))
-		{
-			isScrolling = true;
-		}
-
-		if (!down)
+		if (!canScroll())
 		{
 			isScrolling = false;
+			wasClicking = false;
+			currentScroll = 0;
 		}
-
-		wasClicking = down;
-
-		if (isScrolling)
+		else
 		{
-			currentScroll = mouseY - 20;
+			boolean down = Mouse.isButtonDown(0);
 
-			if (currentScroll < 0)
+			if (!wasClicking && down && inBoundsOfScrollbar(mouseX, mouseY))
 			{
-				currentScroll = 0;
+				isScrolling = true;
 			}
 
-			if (currentScroll > (89 - 20 - 12))
+			if (!down)
 			{
-				currentScroll = 89 - 20 - 12;
+				isScrolling = false;
+			}
+
+			wasClicking = down;
+
+			if (isScrolling)
+			{
+				setCurrentScroll(mouseY - 20);
 			}
 		}
 	}
 
-	private int getMaxOffset()
+	public void setCurrentScroll(float newCurrentScroll)
+	{
+		if (newCurrentScroll < 0)
+		{
+			newCurrentScroll = 0;
+		}
+
+		if (newCurrentScroll > (89 - 20 - 12 - 2))
+		{
+			newCurrentScroll = 89 - 20 - 12 - 2;
+		}
+
+		currentScroll = newCurrentScroll;
+	}
+
+	public boolean canScroll()
+	{
+		return getRows() > getVisibleRows();
+	}
+
+	public int getOffset()
+	{
+		return (int) (currentScroll / 70f * (float) getRows());
+	}
+
+	public int getVisibleRows()
+	{
+		return 4;
+	}
+
+	public int getRows()
 	{
 		if (!grid.isConnected())
 		{
 			return 0;
 		}
 
-		int max = ((int) Math.ceil((float) getItems().size() / (float) 9)) - 4;
+		int max = (int) Math.ceil((float) getItems().size() / (float) 9);
 
 		return max < 0 ? 0 : max;
-	}
-
-	private boolean canScroll(int delta)
-	{
-		if (offset + delta < 0)
-		{
-			return false;
-		}
-
-		return offset + delta <= getMaxOffset();
 	}
 
 	private boolean isHoveringOverValidSlot(List<StorageItem> items)
@@ -178,7 +198,7 @@ public class GuiGrid extends GuiBase
 
 		drawTexture(x, y, 0, 0, width, height);
 
-		drawTexture(x + 174, y + 20 + (int) currentScroll, 232, 0, 12, 15);
+		drawTexture(x + 174, y + 20 + (int) currentScroll, canScroll() ? 232 : 244, 0, 12, 15);
 
 		searchField.drawTextBox();
 	}
@@ -204,11 +224,11 @@ public class GuiGrid extends GuiBase
 
 		hoveringSlotId = -1;
 
-		int slot = offset * 9;
+		int slot = getOffset() * 9;
 
 		RenderHelper.enableGUIStandardItemLighting();
 
-		for (int i = 0; i < 9 * 4; ++i)
+		for (int i = 0; i < 9 * getVisibleRows(); ++i)
 		{
 			if (slot < items.size())
 			{
