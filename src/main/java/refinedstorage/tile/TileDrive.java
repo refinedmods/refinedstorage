@@ -14,6 +14,7 @@ import refinedstorage.storage.CellStorage;
 import refinedstorage.storage.IStorage;
 import refinedstorage.storage.IStorageGui;
 import refinedstorage.storage.IStorageProvider;
+import refinedstorage.storage.NBTStorage;
 import refinedstorage.tile.settings.ICompareSetting;
 import refinedstorage.tile.settings.IModeSetting;
 import refinedstorage.tile.settings.IRedstoneModeSetting;
@@ -223,13 +224,44 @@ public class TileDrive extends TileMachine implements IStorageProvider, IStorage
 	@Override
 	public int getStored()
 	{
-		return 0;
+		int stored = 0;
+
+		for (int i = 0; i < getSizeInventory(); ++i)
+		{
+			ItemStack stack = getStackInSlot(i);
+
+			if (stack != null)
+			{
+				stored += NBTStorage.getStored(stack.getTagCompound());
+			}
+		}
+
+		return stored;
 	}
 
 	@Override
 	public int getCapacity()
 	{
-		return 0;
+		int capacity = 0;
+
+		for (int i = 0; i < getSizeInventory(); ++i)
+		{
+			ItemStack stack = getStackInSlot(i);
+
+			if (stack != null)
+			{
+				int cellCapacity = CellStorage.getCapacity(stack);
+
+				if (cellCapacity == -1)
+				{
+					return -1;
+				}
+
+				capacity += cellCapacity;
+			}
+		}
+
+		return capacity;
 	}
 
 	@Override
