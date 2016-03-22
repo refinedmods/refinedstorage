@@ -190,22 +190,15 @@ public class TileDrive extends TileMachine implements IStorageProvider, IStorage
 	}
 
 	@Override
-	public IModeSetting getWhitelistBlacklistSetting()
+	public IModeSetting getModeSetting()
 	{
 		return this;
 	}
 
 	@Override
-	public IPriorityHandler getPriorityHandler()
+	public void onPriorityChanged(int priority)
 	{
-		return new IPriorityHandler()
-		{
-			@Override
-			public void onPriorityChanged(int priority)
-			{
-				RefinedStorage.NETWORK.sendToServer(new MessagePriorityUpdate(pos, priority));
-			}
-		};
+		RefinedStorage.NETWORK.sendToServer(new MessagePriorityUpdate(pos, priority));
 	}
 
 	@Override

@@ -43,9 +43,9 @@ public class GuiStorage extends GuiBase
 			addSideButton(new SideButtonRedstoneMode(gui.getRedstoneModeSetting()));
 		}
 
-		if (gui.getWhitelistBlacklistSetting() != null)
+		if (gui.getModeSetting() != null)
 		{
-			addSideButton(new SideButtonMode(gui.getWhitelistBlacklistSetting()));
+			addSideButton(new SideButtonMode(gui.getModeSetting()));
 		}
 
 		if (gui.getCompareSetting() != null)
@@ -119,7 +119,7 @@ public class GuiStorage extends GuiBase
 
 			if (result != null)
 			{
-				gui.getPriorityHandler().onPriorityChanged(result);
+				gui.onPriorityChanged(result);
 			}
 		}
 		else

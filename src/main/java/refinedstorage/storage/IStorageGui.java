@@ -7,14 +7,11 @@ import refinedstorage.tile.settings.IRedstoneModeSetting;
 
 public interface IStorageGui
 {
-	public interface IPriorityHandler
-	{
-		public void onPriorityChanged(int priority);
-	}
-
 	public String getName();
 
 	public int getPriority();
+
+	public void onPriorityChanged(int priority);
 
 	public IInventory getInventory();
 
@@ -22,11 +19,9 @@ public interface IStorageGui
 
 	public ICompareSetting getCompareSetting();
 
-	public IModeSetting getWhitelistBlacklistSetting();
+	public IModeSetting getModeSetting();
 
 	public int getStored();
 
 	public int getCapacity();
-
-	public IPriorityHandler getPriorityHandler();
 }

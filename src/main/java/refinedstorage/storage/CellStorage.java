@@ -19,7 +19,7 @@ public class CellStorage extends NBTStorage
 	@Override
 	public boolean canPush(ItemStack stack)
 	{
-		if (ModeSettingUtils.doesNotViolateMode(drive.getInventory(), drive.getWhitelistBlacklistSetting(), drive.getCompare(), stack))
+		if (ModeSettingUtils.doesNotViolateMode(drive.getInventory(), drive.getModeSetting(), drive.getCompare(), stack))
 		{
 			return super.canPush(stack);
 		}
