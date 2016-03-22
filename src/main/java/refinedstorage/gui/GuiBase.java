@@ -156,10 +156,15 @@ public abstract class GuiBase extends GuiContainer
 
 	public void drawItem(int x, int y, ItemStack stack)
 	{
-		drawItem(x, y, stack, false);
+		drawItem(x, y, stack, false, null);
 	}
 
 	public void drawItem(int x, int y, ItemStack stack, boolean withOverlay)
+	{
+		drawItem(x, y, stack, false, null);
+	}
+
+	public void drawItem(int x, int y, ItemStack stack, boolean withOverlay, String message)
 	{
 		zLevel = 200.0F;
 		itemRender.zLevel = 200.0F;
@@ -180,7 +185,7 @@ public abstract class GuiBase extends GuiContainer
 
 		if (withOverlay)
 		{
-			itemRender.renderItemOverlayIntoGUI(font, stack, x, y, null);
+			itemRender.renderItemOverlayIntoGUI(font, stack, x, y, message);
 		}
 
 		zLevel = 0.0F;

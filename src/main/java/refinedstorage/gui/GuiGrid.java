@@ -232,7 +232,20 @@ public class GuiGrid extends GuiBase
 		{
 			if (slot < items.size())
 			{
-				drawItem(x, y, items.get(slot).toItemStack(), true);
+				int qty = items.get(slot).getQuantity();
+
+				String text = String.valueOf(qty);
+
+				if (qty >= 1000000)
+				{
+					text = String.valueOf((int) Math.floor(qty / 1000000)) + "M";
+				}
+				else if (qty >= 1000)
+				{
+					text = String.valueOf((int) Math.floor(qty / 1000)) + "K";
+				}
+
+				drawItem(x, y, items.get(slot).toItemStack(), true, text);
 			}
 
 			if (inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isConnected())
