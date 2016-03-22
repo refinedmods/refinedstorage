@@ -20,6 +20,8 @@ public class TileInterface extends TileMachine implements ICompareSetting, ISide
 
 	private int compare = 0;
 
+	private int currentSlot = 0;
+
 	@Override
 	public int getEnergyUsage()
 	{
@@ -29,16 +31,33 @@ public class TileInterface extends TileMachine implements ICompareSetting, ISide
 	@Override
 	public void updateMachine()
 	{
-		for (int i = 0; i < 9; ++i)
+		if (ticks % 5 == 0)
 		{
-			if (inventory.getStackInSlot(i) != null)
-			{
-				ItemStack slot = inventory.getStackInSlot(i);
+			ItemStack slot = inventory.getStackInSlot(currentSlot);
 
+			while ((slot = inventory.getStackInSlot(currentSlot)) == null)
+			{
+				currentSlot++;
+
+				if (currentSlot > 8)
+				{
+					break;
+				}
+			}
+
+			if (inventory.getStackInSlot(currentSlot) != null)
+			{
 				if (getController().push(slot))
 				{
-					inventory.setInventorySlotContents(i, null);
+					inventory.setInventorySlotContents(currentSlot, null);
 				}
+			}
+
+			currentSlot++;
+
+			if (currentSlot > 8)
+			{
+				currentSlot = 0;
 			}
 		}
 

@@ -234,7 +234,7 @@ public class GuiGrid extends GuiBase
 			{
 				int qty = items.get(slot).getQuantity();
 
-				String text = String.valueOf(qty);
+				String text;
 
 				if (qty >= 1000000)
 				{
@@ -243,6 +243,14 @@ public class GuiGrid extends GuiBase
 				else if (qty >= 1000)
 				{
 					text = String.valueOf((int) Math.floor(qty / 1000)) + "K";
+				}
+				else if (qty == 1)
+				{
+					text = null;
+				}
+				else
+				{
+					text = String.valueOf(qty);
 				}
 
 				drawItem(x, y, items.get(slot).toItemStack(), true, text);
