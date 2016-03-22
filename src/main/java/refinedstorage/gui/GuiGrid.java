@@ -69,6 +69,7 @@ public class GuiGrid extends GuiBase
 	@Override
 	public void update(int x, int y)
 	{
+		// @TODO: Make this use currentScroll
 		int wheel = Mouse.getDWheel();
 
 		wheel = Math.max(Math.min(-wheel, 1), -1);
@@ -84,11 +85,16 @@ public class GuiGrid extends GuiBase
 		}
 	}
 
+	private boolean inBoundsOfScrollbar(int x, int y)
+	{
+		return inBounds(174, 20, 12, 70, x, y);
+	}
+
 	public void handleScrolling(int mouseX, int mouseY)
 	{
 		boolean down = Mouse.isButtonDown(0);
 
-		if (!wasClicking && down && inBounds(174, 20, 12, 70, mouseX, mouseY))
+		if (!wasClicking && down && inBoundsOfScrollbar(mouseX, mouseY))
 		{
 			isScrolling = true;
 		}
@@ -103,6 +109,16 @@ public class GuiGrid extends GuiBase
 		if (isScrolling)
 		{
 			currentScroll = mouseY - 20;
+
+			if (currentScroll < 0)
+			{
+				currentScroll = 0;
+			}
+
+			if (currentScroll > (89 - 20 - 12))
+			{
+				currentScroll = 89 - 20 - 12;
+			}
 		}
 	}
 
