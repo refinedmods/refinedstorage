@@ -51,7 +51,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 		{
 			int lastEnergy = energy.getEnergyStored();
 
-			if (ticks % 40 == 0)
+			if (ticks % 20 == 0)
 			{
 				if (!isActive())
 				{
