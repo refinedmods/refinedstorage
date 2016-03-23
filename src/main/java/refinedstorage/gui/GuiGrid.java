@@ -12,7 +12,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.Slot;
-import org.lwjgl.input.Mouse;
 import refinedstorage.RefinedStorage;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
@@ -66,24 +65,6 @@ public class GuiGrid extends GuiBase
 	public void update(int x, int y)
 	{
 		scrollbar.setCanScroll(getRows() > getVisibleRows());
-
-		if (scrollbar.canScroll())
-		{
-			int wheel = Mouse.getDWheel();
-
-			wheel = Math.max(Math.min(-wheel, 1), -1);
-
-			float delta = 20;
-
-			if (wheel == -1)
-			{
-				scrollbar.setCurrentScroll(scrollbar.getCurrentScroll() - delta);
-			}
-			else if (wheel == 1)
-			{
-				scrollbar.setCurrentScroll(scrollbar.getCurrentScroll() + delta);
-			}
-		}
 	}
 
 	public int getOffset()

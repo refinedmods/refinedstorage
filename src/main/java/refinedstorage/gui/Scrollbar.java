@@ -73,6 +73,21 @@ public class Scrollbar
 		}
 		else
 		{
+			int wheel = Mouse.getDWheel();
+
+			wheel = Math.max(Math.min(-wheel, 1), -1);
+
+			float delta = 15;
+
+			if (wheel == -1)
+			{
+				setCurrentScroll(currentScroll - delta);
+			}
+			else if (wheel == 1)
+			{
+				setCurrentScroll(currentScroll + delta);
+			}
+
 			boolean down = Mouse.isButtonDown(0);
 
 			if (!wasClicking && down && gui.inBounds(x, y, scrollbarWidth, scrollbarHeight, mouseX, mouseY))

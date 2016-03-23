@@ -52,7 +52,7 @@ public class TileGrid extends TileMachine
 	@Override
 	public int getEnergyUsage()
 	{
-		return 5;
+		return 4;
 	}
 
 	@Override

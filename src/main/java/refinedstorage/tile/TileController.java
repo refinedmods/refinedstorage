@@ -413,6 +413,21 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 		{
 			items.add(new StorageItem(buf));
 		}
+
+		machines.clear();
+
+		size = buf.readInt();
+
+		for (int i = 0; i < size; ++i)
+		{
+			TileEntity tile = worldObj.getTileEntity(new BlockPos(buf.readInt(), buf.readInt(), buf.readInt()));
+
+			if (tile instanceof TileMachine)
+			{
+				machines.add((TileMachine) tile);
+			}
+		}
+
 	}
 
 	@Override
@@ -428,6 +443,15 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 		for (StorageItem item : items)
 		{
 			item.toBytes(buf, items.indexOf(item));
+		}
+
+		buf.writeInt(machines.size());
+
+		for (TileMachine machine : machines)
+		{
+			buf.writeInt(machine.getPos().getX());
+			buf.writeInt(machine.getPos().getY());
+			buf.writeInt(machine.getPos().getZ());
 		}
 	}
 }

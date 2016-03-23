@@ -25,7 +25,7 @@ public class TileInterface extends TileMachine implements ICompareSetting, ISide
 	@Override
 	public int getEnergyUsage()
 	{
-		return 5;
+		return 4;
 	}
 
 	@Override

@@ -44,7 +44,7 @@ public class TileDetector extends TileMachine implements ICompareSetting
 	@Override
 	public int getEnergyUsage()
 	{
-		return 4;
+		return 3;
 	}
 
 	@Override

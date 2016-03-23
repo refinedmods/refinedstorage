@@ -26,7 +26,7 @@ public class TileWirelessTransmitter extends TileMachine implements IInventory
 	@Override
 	public int getEnergyUsage()
 	{
-		return 4;
+		return 3;
 	}
 
 	@Override
