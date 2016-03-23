@@ -21,6 +21,7 @@ gui.refinedstorage:interface.export.explanation.2=Verhoog of verklein aantal: li
 
 misc.refinedstorage:energy_stored=%d / %d RF
 misc.refinedstorage:energy_usage=Vebruik: %d RF/t
+misc.refinedstorage:energy_usage_minimal=%d RF/t
 
 misc.refinedstorage:storage.stored=Opgeslagen: %d
 misc.refinedstorage:storage.stored_capacity=Opgeslagen: %d / %d
