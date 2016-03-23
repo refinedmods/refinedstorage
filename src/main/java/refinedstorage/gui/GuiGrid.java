@@ -36,9 +36,7 @@ public class GuiGrid extends GuiBase
 	private int hoveringSlotId;
 	private int hoveringId;
 
-	private float currentScroll;
-	private boolean wasClicking = false;
-	private boolean isScrolling = false;
+	private Scrollbar scrollbar = new Scrollbar(174, 20, 12, 70);
 
 	public GuiGrid(ContainerGrid container, TileGrid grid)
 	{
@@ -67,7 +65,9 @@ public class GuiGrid extends GuiBase
 	@Override
 	public void update(int x, int y)
 	{
-		if (canScroll())
+		scrollbar.setCanScroll(getRows() > getVisibleRows());
+
+		if (scrollbar.canScroll())
 		{
 			int wheel = Mouse.getDWheel();
 
@@ -77,74 +77,18 @@ public class GuiGrid extends GuiBase
 
 			if (wheel == -1)
 			{
-				setCurrentScroll(currentScroll - delta);
+				scrollbar.setCurrentScroll(scrollbar.getCurrentScroll() - delta);
 			}
 			else if (wheel == 1)
 			{
-				setCurrentScroll(currentScroll + delta);
+				scrollbar.setCurrentScroll(scrollbar.getCurrentScroll() + delta);
 			}
 		}
-	}
-
-	private boolean inBoundsOfScrollbar(int x, int y)
-	{
-		return inBounds(174, 20, 12, 70, x, y);
-	}
-
-	public void handleScrolling(int mouseX, int mouseY)
-	{
-		if (!canScroll())
-		{
-			isScrolling = false;
-			wasClicking = false;
-			currentScroll = 0;
-		}
-		else
-		{
-			boolean down = Mouse.isButtonDown(0);
-
-			if (!wasClicking && down && inBoundsOfScrollbar(mouseX, mouseY))
-			{
-				isScrolling = true;
-			}
-
-			if (!down)
-			{
-				isScrolling = false;
-			}
-
-			wasClicking = down;
-
-			if (isScrolling)
-			{
-				setCurrentScroll(mouseY - 20);
-			}
-		}
-	}
-
-	public void setCurrentScroll(float newCurrentScroll)
-	{
-		if (newCurrentScroll < 0)
-		{
-			newCurrentScroll = 0;
-		}
-
-		if (newCurrentScroll > (89 - 20 - 12 - 2))
-		{
-			newCurrentScroll = 89 - 20 - 12 - 2;
-		}
-
-		currentScroll = newCurrentScroll;
-	}
-
-	public boolean canScroll()
-	{
-		return getRows() > getVisibleRows();
 	}
 
 	public int getOffset()
 	{
-		return (int) (currentScroll / 70f * (float) getRows());
+		return (int) (scrollbar.getCurrentScroll() / 70f * (float) getRows());
 	}
 
 	public int getVisibleRows()
@@ -198,7 +142,7 @@ public class GuiGrid extends GuiBase
 
 		drawTexture(x, y, 0, 0, width, height);
 
-		drawTexture(x + 174, y + 20 + (int) currentScroll, canScroll() ? 232 : 244, 0, 12, 15);
+		scrollbar.draw(this);
 
 		searchField.drawTextBox();
 	}
@@ -206,7 +150,7 @@ public class GuiGrid extends GuiBase
 	@Override
 	public void drawForeground(int mouseX, int mouseY)
 	{
-		handleScrolling(mouseX, mouseY);
+		scrollbar.update(this, mouseX, mouseY);
 
 		drawString(7, 7, t("gui.refinedstorage:grid"));
 

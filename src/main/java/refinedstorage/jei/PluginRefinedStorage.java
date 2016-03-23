@@ -15,6 +15,7 @@ public class PluginRefinedStorage extends BlankModPlugin
 	@Override
 	public void register(IModRegistry registry)
 	{
+		// @TODO: JEI transfer handler
 		registry.addRecipeCategories(new SoldererRecipeCategory(registry.getJeiHelpers().getGuiHelper()));
 
 		registry.addRecipeHandlers(new SoldererRecipeHandler());
