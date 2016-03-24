@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import refinedstorage.item.ItemStorageCell;
+import refinedstorage.item.ItemStorageDisk;
 import refinedstorage.proxy.CommonProxy;
 
 @Mod(modid = RefinedStorage.ID, version = RefinedStorage.VERSION)
@@ -25,7 +25,7 @@ public final class RefinedStorage {
     public static final CreativeTabs TAB = new CreativeTabs(ID) {
         @Override
         public ItemStack getIconItemStack() {
-            return new ItemStack(RefinedStorageItems.STORAGE_CELL, 1, ItemStorageCell.TYPE_1K);
+            return new ItemStack(RefinedStorageItems.STORAGE_DISK, 1, ItemStorageDisk.TYPE_1K);
         }
 
         @Override

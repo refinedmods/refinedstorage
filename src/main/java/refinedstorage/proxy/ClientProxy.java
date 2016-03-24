@@ -22,12 +22,12 @@ public class ClientProxy extends CommonProxy {
         super.preInit(e);
 
         // Item Variants
-        ModelBakery.registerItemVariants(RefinedStorageItems.STORAGE_CELL,
-            new ResourceLocation("refinedstorage:1k_storage_cell"),
-            new ResourceLocation("refinedstorage:4k_storage_cell"),
-            new ResourceLocation("refinedstorage:16k_storage_cell"),
-            new ResourceLocation("refinedstorage:64k_storage_cell"),
-            new ResourceLocation("refinedstorage:creative_storage_cell")
+        ModelBakery.registerItemVariants(RefinedStorageItems.STORAGE_DISK,
+            new ResourceLocation("refinedstorage:1k_storage_disk"),
+            new ResourceLocation("refinedstorage:4k_storage_disk"),
+            new ResourceLocation("refinedstorage:16k_storage_disk"),
+            new ResourceLocation("refinedstorage:64k_storage_disk"),
+            new ResourceLocation("refinedstorage:creative_storage_disk")
         );
 
         ModelBakery.registerItemVariants(RefinedStorageItems.STORAGE_PART,
@@ -58,11 +58,11 @@ public class ClientProxy extends CommonProxy {
         );
 
         // Items
-        ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.STORAGE_CELL, ItemStorageCell.TYPE_1K, new ModelResourceLocation("refinedstorage:1k_storage_cell", "inventory"));
-        ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.STORAGE_CELL, ItemStorageCell.TYPE_4K, new ModelResourceLocation("refinedstorage:4k_storage_cell", "inventory"));
-        ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.STORAGE_CELL, ItemStorageCell.TYPE_16K, new ModelResourceLocation("refinedstorage:16k_storage_cell", "inventory"));
-        ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.STORAGE_CELL, ItemStorageCell.TYPE_64K, new ModelResourceLocation("refinedstorage:64k_storage_cell", "inventory"));
-        ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.STORAGE_CELL, ItemStorageCell.TYPE_CREATIVE, new ModelResourceLocation("refinedstorage:creative_storage_cell", "inventory"));
+        ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.STORAGE_DISK, ItemStorageDisk.TYPE_1K, new ModelResourceLocation("refinedstorage:1k_storage_disk", "inventory"));
+        ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.STORAGE_DISK, ItemStorageDisk.TYPE_4K, new ModelResourceLocation("refinedstorage:4k_storage_disk", "inventory"));
+        ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.STORAGE_DISK, ItemStorageDisk.TYPE_16K, new ModelResourceLocation("refinedstorage:16k_storage_disk", "inventory"));
+        ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.STORAGE_DISK, ItemStorageDisk.TYPE_64K, new ModelResourceLocation("refinedstorage:64k_storage_disk", "inventory"));
+        ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.STORAGE_DISK, ItemStorageDisk.TYPE_CREATIVE, new ModelResourceLocation("refinedstorage:creative_storage_disk", "inventory"));
 
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.STORAGE_PART, ItemStoragePart.TYPE_1K, new ModelResourceLocation("refinedstorage:1k_storage_part", "inventory"));
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.STORAGE_PART, ItemStoragePart.TYPE_4K, new ModelResourceLocation("refinedstorage:4k_storage_part", "inventory"));

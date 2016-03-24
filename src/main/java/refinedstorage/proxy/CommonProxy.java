@@ -72,7 +72,7 @@ public class CommonProxy {
         GameRegistry.registerBlock(RefinedStorageBlocks.RELAY, "relay");
         GameRegistry.registerBlock(RefinedStorageBlocks.INTERFACE, "interface");
 
-        GameRegistry.registerItem(RefinedStorageItems.STORAGE_CELL, "storage_cell");
+        GameRegistry.registerItem(RefinedStorageItems.STORAGE_DISK, "storage_disk");
         GameRegistry.registerItem(RefinedStorageItems.WIRELESS_GRID, "wireless_grid");
         GameRegistry.registerItem(RefinedStorageItems.WIRELESS_GRID_PLATE, "wireless_grid_plate");
         GameRegistry.registerItem(RefinedStorageItems.QUARTZ_ENRICHED_IRON, "quartz_enriched_iron");
@@ -267,7 +267,7 @@ public class CommonProxy {
             'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
         );
 
-        // Storage Cell Parts
+        // Storage Parts
         GameRegistry.addRecipe(new ItemStack(RefinedStorageItems.STORAGE_PART, 1, ItemStoragePart.TYPE_1K),
             "EPE",
             "SRS",
@@ -308,8 +308,8 @@ public class CommonProxy {
             'S', new ItemStack(RefinedStorageItems.STORAGE_PART, 1, ItemStoragePart.TYPE_16K)
         );
 
-        // Storage Cells
-        GameRegistry.addRecipe(NBTStorage.initNBT(new ItemStack(RefinedStorageItems.STORAGE_CELL, 1, ItemStorageCell.TYPE_1K)),
+        // Storage Disks
+        GameRegistry.addRecipe(NBTStorage.initNBT(new ItemStack(RefinedStorageItems.STORAGE_DISK, 1, ItemStorageDisk.TYPE_1K)),
             "GRG",
             "RPR",
             "EEE",
@@ -319,7 +319,7 @@ public class CommonProxy {
             'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
         );
 
-        GameRegistry.addRecipe(NBTStorage.initNBT(new ItemStack(RefinedStorageItems.STORAGE_CELL, 1, ItemStorageCell.TYPE_4K)),
+        GameRegistry.addRecipe(NBTStorage.initNBT(new ItemStack(RefinedStorageItems.STORAGE_DISK, 1, ItemStorageDisk.TYPE_4K)),
             "GRG",
             "RPR",
             "EEE",
@@ -329,7 +329,7 @@ public class CommonProxy {
             'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
         );
 
-        GameRegistry.addRecipe(NBTStorage.initNBT(new ItemStack(RefinedStorageItems.STORAGE_CELL, 1, ItemStorageCell.TYPE_16K)),
+        GameRegistry.addRecipe(NBTStorage.initNBT(new ItemStack(RefinedStorageItems.STORAGE_DISK, 1, ItemStorageDisk.TYPE_16K)),
             "GRG",
             "RPR",
             "EEE",
@@ -339,7 +339,7 @@ public class CommonProxy {
             'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
         );
 
-        GameRegistry.addRecipe(NBTStorage.initNBT(new ItemStack(RefinedStorageItems.STORAGE_CELL, 1, ItemStorageCell.TYPE_64K)),
+        GameRegistry.addRecipe(NBTStorage.initNBT(new ItemStack(RefinedStorageItems.STORAGE_DISK, 1, ItemStorageDisk.TYPE_64K)),
             "GRG",
             "RPR",
             "EEE",

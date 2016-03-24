@@ -50,7 +50,7 @@ public class TileDrive extends TileMachine implements IStorageProvider, IStorage
     public void addStorages(List<IStorage> storages) {
         for (int i = 0; i < getSizeInventory(); ++i) {
             if (getStackInSlot(i) != null) {
-                storages.add(new CellStorage(getStackInSlot(i), this));
+                storages.add(new DiskStorage(getStackInSlot(i), this));
             }
         }
     }
@@ -205,13 +205,13 @@ public class TileDrive extends TileMachine implements IStorageProvider, IStorage
             ItemStack stack = getStackInSlot(i);
 
             if (stack != null) {
-                int cellCapacity = CellStorage.getCapacity(stack);
+                int diskCapacity = DiskStorage.getCapacity(stack);
 
-                if (cellCapacity == -1) {
+                if (diskCapacity == -1) {
                     return -1;
                 }
 
-                capacity += cellCapacity;
+                capacity += diskCapacity;
             }
         }
 

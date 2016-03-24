@@ -6,21 +6,20 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
-import refinedstorage.storage.CellStorage;
+import refinedstorage.storage.DiskStorage;
 import refinedstorage.storage.NBTStorage;
 
 import java.util.List;
 
-// @TODO: Rename to storage disk
-public class ItemStorageCell extends ItemBase {
+public class ItemStorageDisk extends ItemBase {
     public static final int TYPE_1K = 0;
     public static final int TYPE_4K = 1;
     public static final int TYPE_16K = 2;
     public static final int TYPE_64K = 3;
     public static final int TYPE_CREATIVE = 4;
 
-    public ItemStorageCell() {
-        super("storage_cell");
+    public ItemStorageDisk() {
+        super("storage_disk");
 
         setMaxStackSize(1);
         setHasSubtypes(true);
@@ -35,11 +34,11 @@ public class ItemStorageCell extends ItemBase {
     }
 
     @Override
-    public void addInformation(ItemStack cell, EntityPlayer player, List list, boolean b) {
-        if (CellStorage.getCapacity(cell) == -1) {
-            list.add(String.format(I18n.translateToLocal("misc.refinedstorage:storage.stored"), NBTStorage.getStored(cell.getTagCompound())));
+    public void addInformation(ItemStack disk, EntityPlayer player, List list, boolean b) {
+        if (DiskStorage.getCapacity(disk) == -1) {
+            list.add(String.format(I18n.translateToLocal("misc.refinedstorage:storage.stored"), NBTStorage.getStored(disk.getTagCompound())));
         } else {
-            list.add(String.format(I18n.translateToLocal("misc.refinedstorage:storage.stored_capacity"), NBTStorage.getStored(cell.getTagCompound()), CellStorage.getCapacity(cell)));
+            list.add(String.format(I18n.translateToLocal("misc.refinedstorage:storage.stored_capacity"), NBTStorage.getStored(disk.getTagCompound()), DiskStorage.getCapacity(disk)));
         }
     }
 

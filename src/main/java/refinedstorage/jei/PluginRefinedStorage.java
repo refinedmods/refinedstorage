@@ -6,7 +6,7 @@ import mezz.jei.api.JEIPlugin;
 import net.minecraft.item.Item;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageItems;
-import refinedstorage.storage.CellStorage;
+import refinedstorage.storage.DiskStorage;
 import refinedstorage.tile.TileStorage;
 
 @JEIPlugin
@@ -20,7 +20,7 @@ public class PluginRefinedStorage extends BlankModPlugin {
 
         registry.addRecipes(SoldererRecipeMaker.getRecipes());
 
-        registry.getJeiHelpers().getNbtIgnoreList().ignoreNbtTagNames(RefinedStorageItems.STORAGE_CELL, CellStorage.NBT_ITEMS, CellStorage.NBT_STORED);
+        registry.getJeiHelpers().getNbtIgnoreList().ignoreNbtTagNames(RefinedStorageItems.STORAGE_DISK, DiskStorage.NBT_ITEMS, DiskStorage.NBT_STORED);
         registry.getJeiHelpers().getNbtIgnoreList().ignoreNbtTagNames(Item.getItemFromBlock(RefinedStorageBlocks.STORAGE), TileStorage.NBT_STORAGE);
     }
 }
