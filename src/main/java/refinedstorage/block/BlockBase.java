@@ -18,117 +18,101 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.tile.TileBase;
 import refinedstorage.util.InventoryUtils;
 
-public abstract class BlockBase extends Block
-{
-	public static final PropertyDirection DIRECTION = PropertyDirection.create("direction");
+public abstract class BlockBase extends Block {
+    public static final PropertyDirection DIRECTION = PropertyDirection.create("direction");
 
-	private String name;
+    private String name;
 
-	public BlockBase(String name)
-	{
-		super(Material.rock);
+    public BlockBase(String name) {
+        super(Material.rock);
 
-		this.name = name;
+        this.name = name;
 
-		setHardness(0.6F);
-		setCreativeTab(RefinedStorage.TAB);
-	}
+        setHardness(0.6F);
+        setCreativeTab(RefinedStorage.TAB);
+    }
 
-	@Override
-	public String getUnlocalizedName()
-	{
-		return "block." + RefinedStorage.ID + ":" + name;
-	}
+    @Override
+    public String getUnlocalizedName() {
+        return "block." + RefinedStorage.ID + ":" + name;
+    }
 
-	@Override
-	protected BlockStateContainer createBlockState()
-	{
-		return new BlockStateContainer(this, new IProperty[]
-		{
-			DIRECTION,
-		});
-	}
+    @Override
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, new IProperty[]
+            {
+                DIRECTION,
+            });
+    }
 
-	@Override
-	public IBlockState getStateFromMeta(int meta)
-	{
-		return getDefaultState();
-	}
+    @Override
+    public IBlockState getStateFromMeta(int meta) {
+        return getDefaultState();
+    }
 
-	@Override
-	public int getMetaFromState(IBlockState state)
-	{
-		return 0;
-	}
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        return 0;
+    }
 
-	@Override
-	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
-	{
-		TileEntity tile = world.getTileEntity(pos);
+    @Override
+    public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
+        TileEntity tile = world.getTileEntity(pos);
 
-		if (tile instanceof TileBase)
-		{
-			return state.withProperty(DIRECTION, ((TileBase) tile).getDirection());
-		}
+        if (tile instanceof TileBase) {
+            return state.withProperty(DIRECTION, ((TileBase) tile).getDirection());
+        }
 
-		return state;
-	}
+        return state;
+    }
 
-	@Override
-	public int damageDropped(IBlockState state)
-	{
-		return getMetaFromState(state);
-	}
+    @Override
+    public int damageDropped(IBlockState state) {
+        return getMetaFromState(state);
+    }
 
-	@Override
-	public boolean rotateBlock(World world, BlockPos pos, EnumFacing axis)
-	{
-		TileEntity tile = world.getTileEntity(pos);
+    @Override
+    public boolean rotateBlock(World world, BlockPos pos, EnumFacing axis) {
+        TileEntity tile = world.getTileEntity(pos);
 
-		if (tile instanceof TileBase)
-		{
-			EnumFacing dir = ((TileBase) tile).getDirection();
+        if (tile instanceof TileBase) {
+            EnumFacing dir = ((TileBase) tile).getDirection();
 
-			int newDir = dir.ordinal() + 1;
+            int newDir = dir.ordinal() + 1;
 
-			if (newDir > EnumFacing.VALUES.length - 1)
-			{
-				newDir = 0;
-			}
+            if (newDir > EnumFacing.VALUES.length - 1) {
+                newDir = 0;
+            }
 
-			((TileBase) tile).setDirection(EnumFacing.getFront(newDir));
+            ((TileBase) tile).setDirection(EnumFacing.getFront(newDir));
 
-			world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 2 | 4);
+            world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 2 | 4);
 
-			return true;
-		}
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack itemStack)
-	{
-		super.onBlockPlacedBy(world, pos, state, player, itemStack);
+    @Override
+    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack itemStack) {
+        super.onBlockPlacedBy(world, pos, state, player, itemStack);
 
-		TileEntity tile = world.getTileEntity(pos);
+        TileEntity tile = world.getTileEntity(pos);
 
-		if (tile instanceof TileBase)
-		{
-			((TileBase) tile).setDirection(BlockPistonBase.getFacingFromEntity(pos, player));
-		}
-	}
+        if (tile instanceof TileBase) {
+            ((TileBase) tile).setDirection(BlockPistonBase.getFacingFromEntity(pos, player));
+        }
+    }
 
-	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState state)
-	{
-		TileEntity tile = world.getTileEntity(pos);
+    @Override
+    public void breakBlock(World world, BlockPos pos, IBlockState state) {
+        TileEntity tile = world.getTileEntity(pos);
 
-		if (tile instanceof TileBase && ((TileBase) tile).getDroppedInventory() != null)
-		{
-			InventoryUtils.dropInventory(world, ((TileBase) tile).getDroppedInventory(), pos.getX(), pos.getY(), pos.getZ());
-		}
+        if (tile instanceof TileBase && ((TileBase) tile).getDroppedInventory() != null) {
+            InventoryUtils.dropInventory(world, ((TileBase) tile).getDroppedInventory(), pos.getX(), pos.getY(), pos.getZ());
+        }
 
-		super.breakBlock(world, pos, state);
-	}
+        super.breakBlock(world, pos, state);
+    }
 }

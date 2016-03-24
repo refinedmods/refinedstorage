@@ -1,6 +1,5 @@
 package refinedstorage.block;
 
-import java.util.List;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.properties.PropertyInteger;
@@ -20,95 +19,82 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.tile.TileController;
 
-public class BlockController extends BlockBase
-{
-	public static final PropertyEnum TYPE = PropertyEnum.create("type", EnumControllerType.class);
-	public static final PropertyInteger ENERGY = PropertyInteger.create("energy", 0, 8);
+import java.util.List;
 
-	public BlockController()
-	{
-		super("controller");
-	}
+public class BlockController extends BlockBase {
+    public static final PropertyEnum TYPE = PropertyEnum.create("type", EnumControllerType.class);
+    public static final PropertyInteger ENERGY = PropertyInteger.create("energy", 0, 8);
 
-	@Override
-	public void getSubBlocks(Item item, CreativeTabs tab, List subItems)
-	{
-		for (int i = 0; i <= 1; i++)
-		{
-			subItems.add(new ItemStack(item, 1, i));
-		}
-	}
+    public BlockController() {
+        super("controller");
+    }
 
-	@Override
-	protected BlockStateContainer createBlockState()
-	{
-		return new BlockStateContainer(this, new IProperty[]
-		{
-			DIRECTION,
-			TYPE,
-			ENERGY
-		});
-	}
+    @Override
+    public void getSubBlocks(Item item, CreativeTabs tab, List subItems) {
+        for (int i = 0; i <= 1; i++) {
+            subItems.add(new ItemStack(item, 1, i));
+        }
+    }
 
-	@Override
-	public IBlockState getStateFromMeta(int meta)
-	{
-		return getDefaultState().withProperty(TYPE, meta == 0 ? EnumControllerType.NORMAL : EnumControllerType.CREATIVE);
-	}
+    @Override
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, new IProperty[]
+            {
+                DIRECTION,
+                TYPE,
+                ENERGY
+            });
+    }
 
-	@Override
-	public int getMetaFromState(IBlockState state)
-	{
-		return state.getValue(TYPE) == EnumControllerType.NORMAL ? 0 : 1;
-	}
+    @Override
+    public IBlockState getStateFromMeta(int meta) {
+        return getDefaultState().withProperty(TYPE, meta == 0 ? EnumControllerType.NORMAL : EnumControllerType.CREATIVE);
+    }
 
-	@Override
-	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
-	{
-		return super.getActualState(state, world, pos)
-			.withProperty(ENERGY, ((TileController) world.getTileEntity(pos)).getEnergyScaled(8));
-	}
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        return state.getValue(TYPE) == EnumControllerType.NORMAL ? 0 : 1;
+    }
 
-	@Override
-	public boolean hasTileEntity(IBlockState state)
-	{
-		return true;
-	}
+    @Override
+    public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
+        return super.getActualState(state, world, pos)
+            .withProperty(ENERGY, ((TileController) world.getTileEntity(pos)).getEnergyScaled(8));
+    }
 
-	@Override
-	public TileEntity createTileEntity(World world, IBlockState state)
-	{
-		return new TileController();
-	}
+    @Override
+    public boolean hasTileEntity(IBlockState state) {
+        return true;
+    }
 
-	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
-	{
-		if (!world.isRemote)
-		{
-			player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.CONTROLLER, world, pos.getX(), pos.getY(), pos.getZ());
-		}
+    @Override
+    public TileEntity createTileEntity(World world, IBlockState state) {
+        return new TileController();
+    }
 
-		return true;
-	}
+    @Override
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+        if (!world.isRemote) {
+            player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.CONTROLLER, world, pos.getX(), pos.getY(), pos.getZ());
+        }
 
-	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState state)
-	{
-		((TileController) world.getTileEntity(pos)).onDestroyed();
+        return true;
+    }
 
-		super.breakBlock(world, pos, state);
-	}
+    @Override
+    public void breakBlock(World world, BlockPos pos, IBlockState state) {
+        ((TileController) world.getTileEntity(pos)).onDestroyed();
 
-	@Override
-	public boolean hasComparatorInputOverride(IBlockState state)
-	{
-		return true;
-	}
+        super.breakBlock(world, pos, state);
+    }
 
-	@Override
-	public int getComparatorInputOverride(IBlockState state, World world, BlockPos pos)
-	{
-		return ((TileController) world.getTileEntity(pos)).getEnergyScaled(15);
-	}
+    @Override
+    public boolean hasComparatorInputOverride(IBlockState state) {
+        return true;
+    }
+
+    @Override
+    public int getComparatorInputOverride(IBlockState state, World world, BlockPos pos) {
+        return ((TileController) world.getTileEntity(pos)).getEnergyScaled(15);
+    }
 }

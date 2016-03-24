@@ -1,79 +1,68 @@
 package refinedstorage.jei;
 
 import com.google.common.base.Objects;
-import java.util.Collections;
-import java.util.List;
 import mezz.jei.plugins.vanilla.VanillaRecipeWrapper;
 import net.minecraft.item.ItemStack;
 
-public class SoldererRecipeWrapper extends VanillaRecipeWrapper
-{
-	private int hashCode;
-	private List<ItemStack> inputs;
-	private ItemStack output;
+import java.util.Collections;
+import java.util.List;
 
-	public SoldererRecipeWrapper(List<ItemStack> inputs, ItemStack output)
-	{
-		this.inputs = inputs;
-		this.output = output;
+public class SoldererRecipeWrapper extends VanillaRecipeWrapper {
+    private int hashCode;
+    private List<ItemStack> inputs;
+    private ItemStack output;
 
-		int available = 0;
+    public SoldererRecipeWrapper(List<ItemStack> inputs, ItemStack output) {
+        this.inputs = inputs;
+        this.output = output;
 
-		for (int i = 0; i < 3; ++i)
-		{
-			if (inputs.get(i) != null)
-			{
-				available = i;
+        int available = 0;
 
-				break;
-			}
-		}
+        for (int i = 0; i < 3; ++i) {
+            if (inputs.get(i) != null) {
+                available = i;
 
-		hashCode = Objects.hashCode(inputs.get(available), output);
-	}
+                break;
+            }
+        }
 
-	@Override
-	public List<ItemStack> getInputs()
-	{
-		return inputs;
-	}
+        hashCode = Objects.hashCode(inputs.get(available), output);
+    }
 
-	@Override
-	public List<ItemStack> getOutputs()
-	{
-		return Collections.singletonList(output);
-	}
+    @Override
+    public List<ItemStack> getInputs() {
+        return inputs;
+    }
 
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (!(obj instanceof SoldererRecipeWrapper))
-		{
-			return false;
-		}
+    @Override
+    public List<ItemStack> getOutputs() {
+        return Collections.singletonList(output);
+    }
 
-		SoldererRecipeWrapper other = (SoldererRecipeWrapper) obj;
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof SoldererRecipeWrapper)) {
+            return false;
+        }
 
-		for (int i = 0; i < inputs.size(); i++)
-		{
-			if (!ItemStack.areItemStacksEqual(inputs.get(i), other.inputs.get(i)))
-			{
-				return false;
-			}
-		}
+        SoldererRecipeWrapper other = (SoldererRecipeWrapper) obj;
 
-		return ItemStack.areItemStacksEqual(output, other.output);
-	}
+        for (int i = 0; i < inputs.size(); i++) {
+            if (!ItemStack.areItemStacksEqual(inputs.get(i), other.inputs.get(i))) {
+                return false;
+            }
+        }
 
-	@Override
-	public int hashCode()
-	{
-		return hashCode;
-	}
+        return ItemStack.areItemStacksEqual(output, other.output);
+    }
 
-	@Override
-	public String toString()
-	{
-		return inputs + " = " + output;
-	}
+    @Override
+    public int hashCode() {
+        return hashCode;
+    }
+
+    @Override
+    public String toString() {
+        return inputs + " = " + output;
+    }
 }

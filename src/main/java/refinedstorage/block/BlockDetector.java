@@ -16,72 +16,61 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.tile.TileDetector;
 
-public class BlockDetector extends BlockMachine
-{
-	public static final PropertyBool POWERED = PropertyBool.create("powered");
+public class BlockDetector extends BlockMachine {
+    public static final PropertyBool POWERED = PropertyBool.create("powered");
 
-	public BlockDetector()
-	{
-		super("detector");
-	}
+    public BlockDetector() {
+        super("detector");
+    }
 
-	@Override
-	protected BlockStateContainer createBlockState()
-	{
-		return new BlockStateContainer(this, new IProperty[]
-		{
-			DIRECTION,
-			CONNECTED,
-			POWERED
-		});
-	}
+    @Override
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, new IProperty[]
+            {
+                DIRECTION,
+                CONNECTED,
+                POWERED
+            });
+    }
 
-	@Override
-	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
-	{
-		return super.getActualState(state, world, pos)
-			.withProperty(POWERED, ((TileDetector) world.getTileEntity(pos)).isPowered());
-	}
+    @Override
+    public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
+        return super.getActualState(state, world, pos)
+            .withProperty(POWERED, ((TileDetector) world.getTileEntity(pos)).isPowered());
+    }
 
-	@Override
-	public TileEntity createTileEntity(World world, IBlockState state)
-	{
-		return new TileDetector();
-	}
+    @Override
+    public TileEntity createTileEntity(World world, IBlockState state) {
+        return new TileDetector();
+    }
 
-	@Override
-	public int getWeakPower(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
-	{
-		TileDetector detector = (TileDetector) world.getTileEntity(pos);
+    @Override
+    public int getWeakPower(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
+        TileDetector detector = (TileDetector) world.getTileEntity(pos);
 
-		if (detector.getDirection() == side.getOpposite())
-		{
-			return detector.isPowered() ? 15 : 0;
-		}
+        if (detector.getDirection() == side.getOpposite()) {
+            return detector.isPowered() ? 15 : 0;
+        }
 
-		return 0;
-	}
+        return 0;
+    }
 
-	@Override
-	public int getStrongPower(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
-	{
-		return getWeakPower(state, world, pos, side);
-	}
+    @Override
+    public int getStrongPower(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
+        return getWeakPower(state, world, pos, side);
+    }
 
-	@Override
-	public boolean canProvidePower(IBlockState state)
-	{
-		return true;
-	}
+    @Override
+    public boolean canProvidePower(IBlockState state) {
+        return true;
+    }
 
-	@Override
-	public boolean onBlockActivated(World world, net.minecraft.util.math.BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
-	{
-		if (!world.isRemote)
-		{
-			player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.DETECTOR, world, pos.getX(), pos.getY(), pos.getZ());
-		}
+    @Override
+    public boolean onBlockActivated(World world, net.minecraft.util.math.BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+        if (!world.isRemote) {
+            player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.DETECTOR, world, pos.getX(), pos.getY(), pos.getZ());
+        }
 
-		return true;
-	}
+        return true;
+    }
 }

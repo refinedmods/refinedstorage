@@ -7,45 +7,39 @@ import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.tile.TileImporter;
 import refinedstorage.util.InventoryUtils;
 
-public class GuiImporter extends GuiBase
-{
-	private TileImporter importer;
+public class GuiImporter extends GuiBase {
+    private TileImporter importer;
 
-	public GuiImporter(ContainerImporter container, TileImporter importer)
-	{
-		super(container, 176, 137);
+    public GuiImporter(ContainerImporter container, TileImporter importer) {
+        super(container, 176, 137);
 
-		this.importer = importer;
-	}
+        this.importer = importer;
+    }
 
-	@Override
-	public void init(int x, int y)
-	{
-		addSideButton(new SideButtonRedstoneMode(importer));
+    @Override
+    public void init(int x, int y) {
+        addSideButton(new SideButtonRedstoneMode(importer));
 
-		addSideButton(new SideButtonMode(importer));
+        addSideButton(new SideButtonMode(importer));
 
-		addSideButton(new SideButtonCompare(importer, InventoryUtils.COMPARE_DAMAGE));
-		addSideButton(new SideButtonCompare(importer, InventoryUtils.COMPARE_NBT));
-	}
+        addSideButton(new SideButtonCompare(importer, InventoryUtils.COMPARE_DAMAGE));
+        addSideButton(new SideButtonCompare(importer, InventoryUtils.COMPARE_NBT));
+    }
 
-	@Override
-	public void update(int x, int y)
-	{
-	}
+    @Override
+    public void update(int x, int y) {
+    }
 
-	@Override
-	public void drawBackground(int x, int y, int mouseX, int mouseY)
-	{
-		bindTexture("gui/importer.png");
+    @Override
+    public void drawBackground(int x, int y, int mouseX, int mouseY) {
+        bindTexture("gui/importer.png");
 
-		drawTexture(x, y, 0, 0, width, height);
-	}
+        drawTexture(x, y, 0, 0, width, height);
+    }
 
-	@Override
-	public void drawForeground(int mouseX, int mouseY)
-	{
-		drawString(7, 7, t("gui.refinedstorage:importer"));
-		drawString(7, 43, t("container.inventory"));
-	}
+    @Override
+    public void drawForeground(int mouseX, int mouseY) {
+        drawString(7, 7, t("gui.refinedstorage:importer"));
+        drawString(7, 43, t("container.inventory"));
+    }
 }

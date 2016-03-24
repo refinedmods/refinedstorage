@@ -11,27 +11,22 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.tile.TileExporter;
 
-public class BlockExporter extends BlockMachine
-{
-	public BlockExporter()
-	{
-		super("exporter");
-	}
+public class BlockExporter extends BlockMachine {
+    public BlockExporter() {
+        super("exporter");
+    }
 
-	@Override
-	public TileEntity createTileEntity(World world, IBlockState state)
-	{
-		return new TileExporter();
-	}
+    @Override
+    public TileEntity createTileEntity(World world, IBlockState state) {
+        return new TileExporter();
+    }
 
-	@Override
-	public boolean onBlockActivated(World world, net.minecraft.util.math.BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
-	{
-		if (!world.isRemote)
-		{
-			player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.EXPORTER, world, pos.getX(), pos.getY(), pos.getZ());
-		}
+    @Override
+    public boolean onBlockActivated(World world, net.minecraft.util.math.BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+        if (!world.isRemote) {
+            player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.EXPORTER, world, pos.getX(), pos.getY(), pos.getZ());
+        }
 
-		return true;
-	}
+        return true;
+    }
 }

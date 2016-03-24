@@ -1,17 +1,17 @@
 package refinedstorage.storage;
 
-import java.util.List;
 import net.minecraft.item.ItemStack;
 
-public interface IStorage
-{
-	public void addItems(List<StorageItem> items);
+import java.util.List;
 
-	public void push(ItemStack stack);
+public interface IStorage {
+    public void addItems(List<StorageItem> items);
 
-	public ItemStack take(ItemStack stack, int flags);
+    public void push(ItemStack stack);
 
-	public boolean canPush(ItemStack stack);
+    public ItemStack take(ItemStack stack, int flags);
 
-	public int getPriority();
+    public boolean canPush(ItemStack stack);
+
+    public int getPriority();
 }

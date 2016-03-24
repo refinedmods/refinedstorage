@@ -11,267 +11,225 @@ import refinedstorage.inventory.InventorySimple;
 import refinedstorage.item.ItemWirelessGrid;
 import refinedstorage.util.InventoryUtils;
 
-public class TileWirelessTransmitter extends TileMachine implements IInventory
-{
-	public static final int TOTAL_PROGRESS = 10000;
+public class TileWirelessTransmitter extends TileMachine implements IInventory {
+    public static final int TOTAL_PROGRESS = 10000;
 
-	public static final String NBT_WORKING = "Working";
-	public static final String NBT_PROGRESS = "Progress";
+    public static final String NBT_WORKING = "Working";
+    public static final String NBT_PROGRESS = "Progress";
 
-	private InventorySimple inventory = new InventorySimple("wirelessTransmitter", 3);
+    private InventorySimple inventory = new InventorySimple("wirelessTransmitter", 3);
 
-	private boolean working = false;
-	private int progress = 0;
+    private boolean working = false;
+    private int progress = 0;
 
-	@Override
-	public int getEnergyUsage()
-	{
-		return 3;
-	}
+    @Override
+    public int getEnergyUsage() {
+        return 3;
+    }
 
-	@Override
-	public void updateMachine()
-	{
-		if (working)
-		{
-			progress++;
+    @Override
+    public void updateMachine() {
+        if (working) {
+            progress++;
 
-			if (progress == TOTAL_PROGRESS)
-			{
-				reset();
-			}
-		}
-		else if (inventory.getStackInSlot(0) != null)
-		{
-			inventory.decrStackSize(0, 1);
+            if (progress == TOTAL_PROGRESS) {
+                reset();
+            }
+        } else if (inventory.getStackInSlot(0) != null) {
+            inventory.decrStackSize(0, 1);
 
-			progress = 0;
-			working = true;
+            progress = 0;
+            working = true;
 
-			markDirty();
-		}
+            markDirty();
+        }
 
-		if (inventory.getStackInSlot(1) != null)
-		{
-			ItemStack slot = inventory.getStackInSlot(1);
+        if (inventory.getStackInSlot(1) != null) {
+            ItemStack slot = inventory.getStackInSlot(1);
 
-			slot.setTagCompound(new NBTTagCompound());
+            slot.setTagCompound(new NBTTagCompound());
 
-			slot.getTagCompound().setInteger(ItemWirelessGrid.NBT_WIRELESS_TRANSMITTER_X, pos.getX());
-			slot.getTagCompound().setInteger(ItemWirelessGrid.NBT_WIRELESS_TRANSMITTER_Y, pos.getY());
-			slot.getTagCompound().setInteger(ItemWirelessGrid.NBT_WIRELESS_TRANSMITTER_Z, pos.getZ());
+            slot.getTagCompound().setInteger(ItemWirelessGrid.NBT_WIRELESS_TRANSMITTER_X, pos.getX());
+            slot.getTagCompound().setInteger(ItemWirelessGrid.NBT_WIRELESS_TRANSMITTER_Y, pos.getY());
+            slot.getTagCompound().setInteger(ItemWirelessGrid.NBT_WIRELESS_TRANSMITTER_Z, pos.getZ());
 
-			inventory.setInventorySlotContents(2, slot);
-			inventory.setInventorySlotContents(1, null);
-		}
-	}
+            inventory.setInventorySlotContents(2, slot);
+            inventory.setInventorySlotContents(1, null);
+        }
+    }
 
-	public void reset()
-	{
-		progress = 0;
-		working = false;
+    public void reset() {
+        progress = 0;
+        working = false;
 
-		markDirty();
-	}
+        markDirty();
+    }
 
-	@Override
-	public void onDisconnected()
-	{
-		super.onDisconnected();
+    @Override
+    public void onDisconnected() {
+        super.onDisconnected();
 
-		reset();
-	}
+        reset();
+    }
 
-	public boolean isWorking()
-	{
-		return working;
-	}
+    public boolean isWorking() {
+        return working;
+    }
 
-	public int getProgress()
-	{
-		return progress;
-	}
+    public int getProgress() {
+        return progress;
+    }
 
-	public TileGrid getGrid(EnumGridType type)
-	{
-		for (TileMachine machine : getController().getMachines())
-		{
-			if (worldObj.getTileEntity(machine.getPos()) != null)
-			{
-				if (machine instanceof TileGrid)
-				{
-					TileGrid grid = (TileGrid) machine;
+    public TileGrid getGrid(EnumGridType type) {
+        for (TileMachine machine : getController().getMachines()) {
+            if (worldObj.getTileEntity(machine.getPos()) != null) {
+                if (machine instanceof TileGrid) {
+                    TileGrid grid = (TileGrid) machine;
 
-					if (grid.getType() == type)
-					{
-						return grid;
-					}
-				}
-			}
-		}
+                    if (grid.getType() == type) {
+                        return grid;
+                    }
+                }
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	public void readFromNBT(NBTTagCompound nbt)
-	{
-		super.readFromNBT(nbt);
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
+        super.readFromNBT(nbt);
 
-		InventoryUtils.restoreInventory(this, 0, nbt);
+        InventoryUtils.restoreInventory(this, 0, nbt);
 
-		if (nbt.hasKey(NBT_WORKING))
-		{
-			working = nbt.getBoolean(NBT_WORKING);
-		}
+        if (nbt.hasKey(NBT_WORKING)) {
+            working = nbt.getBoolean(NBT_WORKING);
+        }
 
-		if (nbt.hasKey(NBT_PROGRESS))
-		{
-			progress = nbt.getInteger(NBT_PROGRESS);
-		}
-	}
+        if (nbt.hasKey(NBT_PROGRESS)) {
+            progress = nbt.getInteger(NBT_PROGRESS);
+        }
+    }
 
-	@Override
-	public void writeToNBT(NBTTagCompound nbt)
-	{
-		super.writeToNBT(nbt);
+    @Override
+    public void writeToNBT(NBTTagCompound nbt) {
+        super.writeToNBT(nbt);
 
-		InventoryUtils.saveInventory(this, 0, nbt);
+        InventoryUtils.saveInventory(this, 0, nbt);
 
-		nbt.setBoolean(NBT_WORKING, working);
-		nbt.setInteger(NBT_PROGRESS, progress);
-	}
+        nbt.setBoolean(NBT_WORKING, working);
+        nbt.setInteger(NBT_PROGRESS, progress);
+    }
 
-	@Override
-	public void fromBytes(ByteBuf buf)
-	{
-		super.fromBytes(buf);
+    @Override
+    public void fromBytes(ByteBuf buf) {
+        super.fromBytes(buf);
 
-		boolean lastWorking = working;
+        boolean lastWorking = working;
 
-		working = buf.readBoolean();
-		progress = buf.readInt();
+        working = buf.readBoolean();
+        progress = buf.readInt();
 
-		if (lastWorking != working)
-		{
-			worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2 | 4);
-		}
-	}
+        if (lastWorking != working) {
+            worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2 | 4);
+        }
+    }
 
-	@Override
-	public void toBytes(ByteBuf buf)
-	{
-		super.toBytes(buf);
+    @Override
+    public void toBytes(ByteBuf buf) {
+        super.toBytes(buf);
 
-		buf.writeBoolean(working);
-		buf.writeInt(progress);
-	}
+        buf.writeBoolean(working);
+        buf.writeInt(progress);
+    }
 
-	@Override
-	public IInventory getDroppedInventory()
-	{
-		return inventory;
-	}
+    @Override
+    public IInventory getDroppedInventory() {
+        return inventory;
+    }
 
-	@Override
-	public int getSizeInventory()
-	{
-		return inventory.getSizeInventory();
-	}
+    @Override
+    public int getSizeInventory() {
+        return inventory.getSizeInventory();
+    }
 
-	@Override
-	public ItemStack getStackInSlot(int slot)
-	{
-		return inventory.getStackInSlot(slot);
-	}
+    @Override
+    public ItemStack getStackInSlot(int slot) {
+        return inventory.getStackInSlot(slot);
+    }
 
-	@Override
-	public ItemStack decrStackSize(int slot, int count)
-	{
-		return inventory.decrStackSize(slot, count);
-	}
+    @Override
+    public ItemStack decrStackSize(int slot, int count) {
+        return inventory.decrStackSize(slot, count);
+    }
 
-	@Override
-	public ItemStack removeStackFromSlot(int slot)
-	{
-		return inventory.removeStackFromSlot(slot);
-	}
+    @Override
+    public ItemStack removeStackFromSlot(int slot) {
+        return inventory.removeStackFromSlot(slot);
+    }
 
-	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack)
-	{
-		inventory.setInventorySlotContents(slot, stack);
-	}
+    @Override
+    public void setInventorySlotContents(int slot, ItemStack stack) {
+        inventory.setInventorySlotContents(slot, stack);
+    }
 
-	@Override
-	public int getInventoryStackLimit()
-	{
-		return inventory.getInventoryStackLimit();
-	}
+    @Override
+    public int getInventoryStackLimit() {
+        return inventory.getInventoryStackLimit();
+    }
 
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer player)
-	{
-		return inventory.isUseableByPlayer(player);
-	}
+    @Override
+    public boolean isUseableByPlayer(EntityPlayer player) {
+        return inventory.isUseableByPlayer(player);
+    }
 
-	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack stack)
-	{
-		return inventory.isItemValidForSlot(slot, stack);
-	}
+    @Override
+    public boolean isItemValidForSlot(int slot, ItemStack stack) {
+        return inventory.isItemValidForSlot(slot, stack);
+    }
 
-	@Override
-	public void openInventory(EntityPlayer player)
-	{
-		inventory.openInventory(player);
-	}
+    @Override
+    public void openInventory(EntityPlayer player) {
+        inventory.openInventory(player);
+    }
 
-	@Override
-	public void closeInventory(EntityPlayer player)
-	{
-		inventory.closeInventory(player);
-	}
+    @Override
+    public void closeInventory(EntityPlayer player) {
+        inventory.closeInventory(player);
+    }
 
-	@Override
-	public int getField(int id)
-	{
-		return inventory.getField(id);
-	}
+    @Override
+    public int getField(int id) {
+        return inventory.getField(id);
+    }
 
-	@Override
-	public void setField(int id, int value)
-	{
-		inventory.setField(id, value);
-	}
+    @Override
+    public void setField(int id, int value) {
+        inventory.setField(id, value);
+    }
 
-	@Override
-	public int getFieldCount()
-	{
-		return inventory.getFieldCount();
-	}
+    @Override
+    public int getFieldCount() {
+        return inventory.getFieldCount();
+    }
 
-	@Override
-	public void clear()
-	{
-		inventory.clear();
-	}
+    @Override
+    public void clear() {
+        inventory.clear();
+    }
 
-	@Override
-	public String getName()
-	{
-		return inventory.getName();
-	}
+    @Override
+    public String getName() {
+        return inventory.getName();
+    }
 
-	@Override
-	public boolean hasCustomName()
-	{
-		return inventory.hasCustomName();
-	}
+    @Override
+    public boolean hasCustomName() {
+        return inventory.hasCustomName();
+    }
 
-	@Override
-	public ITextComponent getDisplayName()
-	{
-		return inventory.getDisplayName();
-	}
+    @Override
+    public ITextComponent getDisplayName() {
+        return inventory.getDisplayName();
+    }
 }

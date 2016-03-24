@@ -6,36 +6,27 @@ import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.item.ItemProcessor;
 
-public class SoldererRecipeDrive implements ISoldererRecipe
-{
-	@Override
-	public ItemStack getRow(int row)
-	{
-		if (row == 0)
-		{
-			return new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED);
-		}
-		else if (row == 1)
-		{
-			return new ItemStack(RefinedStorageBlocks.MACHINE_CASING);
-		}
-		else if (row == 2)
-		{
-			return new ItemStack(Blocks.chest);
-		}
+public class SoldererRecipeDrive implements ISoldererRecipe {
+    @Override
+    public ItemStack getRow(int row) {
+        if (row == 0) {
+            return new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED);
+        } else if (row == 1) {
+            return new ItemStack(RefinedStorageBlocks.MACHINE_CASING);
+        } else if (row == 2) {
+            return new ItemStack(Blocks.chest);
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	public ItemStack getResult()
-	{
-		return new ItemStack(RefinedStorageBlocks.DRIVE);
-	}
+    @Override
+    public ItemStack getResult() {
+        return new ItemStack(RefinedStorageBlocks.DRIVE);
+    }
 
-	@Override
-	public int getDuration()
-	{
-		return 500;
-	}
+    @Override
+    public int getDuration() {
+        return 500;
+    }
 }

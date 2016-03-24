@@ -1,6 +1,5 @@
 package refinedstorage.item;
 
-import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -11,49 +10,42 @@ import refinedstorage.block.EnumStorageType;
 import refinedstorage.storage.NBTStorage;
 import refinedstorage.tile.TileStorage;
 
-public class ItemBlockStorage extends ItemBlockBase
-{
-	public ItemBlockStorage(Block block)
-	{
-		super(block);
-	}
+import java.util.List;
 
-	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean b)
-	{
-		EnumStorageType type = EnumStorageType.getById(stack.getMetadata());
+public class ItemBlockStorage extends ItemBlockBase {
+    public ItemBlockStorage(Block block) {
+        super(block);
+    }
 
-		if (type != null && stack.getTagCompound() != null && stack.getTagCompound().hasKey(TileStorage.NBT_STORAGE))
-		{
-			NBTTagCompound tag = stack.getTagCompound().getCompoundTag(TileStorage.NBT_STORAGE);
+    @Override
+    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean b) {
+        EnumStorageType type = EnumStorageType.getById(stack.getMetadata());
 
-			if (type == EnumStorageType.TYPE_CREATIVE)
-			{
-				list.add(String.format(I18n.translateToLocal("misc.refinedstorage:storage.stored"), NBTStorage.getStored(tag)));
-			}
-			else
-			{
-				list.add(String.format(I18n.translateToLocal("misc.refinedstorage:storage.stored_capacity"), NBTStorage.getStored(tag), type.getCapacity()));
-			}
-		}
-	}
+        if (type != null && stack.getTagCompound() != null && stack.getTagCompound().hasKey(TileStorage.NBT_STORAGE)) {
+            NBTTagCompound tag = stack.getTagCompound().getCompoundTag(TileStorage.NBT_STORAGE);
 
-	@Override
-	public void onCreated(ItemStack stack, World world, EntityPlayer player)
-	{
-		super.onCreated(stack, world, player);
+            if (type == EnumStorageType.TYPE_CREATIVE) {
+                list.add(String.format(I18n.translateToLocal("misc.refinedstorage:storage.stored"), NBTStorage.getStored(tag)));
+            } else {
+                list.add(String.format(I18n.translateToLocal("misc.refinedstorage:storage.stored_capacity"), NBTStorage.getStored(tag), type.getCapacity()));
+            }
+        }
+    }
 
-		initNBT(stack);
-	}
+    @Override
+    public void onCreated(ItemStack stack, World world, EntityPlayer player) {
+        super.onCreated(stack, world, player);
 
-	public static ItemStack initNBT(ItemStack stack)
-	{
-		NBTTagCompound tag = new NBTTagCompound();
+        initNBT(stack);
+    }
 
-		tag.setTag(TileStorage.NBT_STORAGE, NBTStorage.getBaseNBT());
+    public static ItemStack initNBT(ItemStack stack) {
+        NBTTagCompound tag = new NBTTagCompound();
 
-		stack.setTagCompound(tag);
+        tag.setTag(TileStorage.NBT_STORAGE, NBTStorage.getBaseNBT());
 
-		return stack;
-	}
+        stack.setTagCompound(tag);
+
+        return stack;
+    }
 }

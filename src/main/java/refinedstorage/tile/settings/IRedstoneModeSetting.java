@@ -2,11 +2,10 @@ package refinedstorage.tile.settings;
 
 import net.minecraft.util.math.BlockPos;
 
-public interface IRedstoneModeSetting
-{
-	public RedstoneMode getRedstoneMode();
+public interface IRedstoneModeSetting {
+    public RedstoneMode getRedstoneMode();
 
-	public void setRedstoneMode(RedstoneMode mode);
+    public void setRedstoneMode(RedstoneMode mode);
 
-	public BlockPos getMachinePos();
+    public BlockPos getMachinePos();
 }

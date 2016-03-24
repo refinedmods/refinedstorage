@@ -16,49 +16,42 @@ import refinedstorage.item.ItemStorageCell;
 import refinedstorage.proxy.CommonProxy;
 
 @Mod(modid = RefinedStorage.ID, version = RefinedStorage.VERSION)
-public final class RefinedStorage
-{
-	public static final String ID = "refinedstorage";
-	public static final String VERSION = "0.5";
+public final class RefinedStorage {
+    public static final String ID = "refinedstorage";
+    public static final String VERSION = "0.5";
 
-	public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(ID);
+    public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(ID);
 
-	public static final CreativeTabs TAB = new CreativeTabs(ID)
-	{
-		@Override
-		public ItemStack getIconItemStack()
-		{
-			return new ItemStack(RefinedStorageItems.STORAGE_CELL, 1, ItemStorageCell.TYPE_1K);
-		}
+    public static final CreativeTabs TAB = new CreativeTabs(ID) {
+        @Override
+        public ItemStack getIconItemStack() {
+            return new ItemStack(RefinedStorageItems.STORAGE_CELL, 1, ItemStorageCell.TYPE_1K);
+        }
 
-		@Override
-		public Item getTabIconItem()
-		{
-			return null;
-		}
-	};
+        @Override
+        public Item getTabIconItem() {
+            return null;
+        }
+    };
 
-	@SidedProxy(clientSide = "refinedstorage.proxy.ClientProxy", serverSide = "refinedstorage.proxy.ServerProxy")
-	public static CommonProxy PROXY;
+    @SidedProxy(clientSide = "refinedstorage.proxy.ClientProxy", serverSide = "refinedstorage.proxy.ServerProxy")
+    public static CommonProxy PROXY;
 
-	@Instance
-	public static RefinedStorage INSTANCE;
+    @Instance
+    public static RefinedStorage INSTANCE;
 
-	@EventHandler
-	public void preInit(FMLPreInitializationEvent e)
-	{
-		PROXY.preInit(e);
-	}
+    @EventHandler
+    public void preInit(FMLPreInitializationEvent e) {
+        PROXY.preInit(e);
+    }
 
-	@EventHandler
-	public void init(FMLInitializationEvent e)
-	{
-		PROXY.init(e);
-	}
+    @EventHandler
+    public void init(FMLInitializationEvent e) {
+        PROXY.init(e);
+    }
 
-	@EventHandler
-	public void postInit(FMLPostInitializationEvent e)
-	{
-		PROXY.postInit(e);
-	}
+    @EventHandler
+    public void postInit(FMLPostInitializationEvent e) {
+        PROXY.postInit(e);
+    }
 }

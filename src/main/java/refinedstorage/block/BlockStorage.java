@@ -1,7 +1,5 @@
 package refinedstorage.block;
 
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
@@ -24,111 +22,98 @@ import refinedstorage.RefinedStorageGui;
 import refinedstorage.item.ItemBlockStorage;
 import refinedstorage.tile.TileStorage;
 
-public class BlockStorage extends BlockMachine
-{
-	public static final PropertyEnum TYPE = PropertyEnum.create("type", EnumStorageType.class);
+import java.util.ArrayList;
+import java.util.List;
 
-	public BlockStorage()
-	{
-		super("storage");
-	}
+public class BlockStorage extends BlockMachine {
+    public static final PropertyEnum TYPE = PropertyEnum.create("type", EnumStorageType.class);
 
-	@Override
-	public void getSubBlocks(Item item, CreativeTabs tab, List subItems)
-	{
-		for (int i = 0; i <= 4; i++)
-		{
-			subItems.add(ItemBlockStorage.initNBT(new ItemStack(item, 1, i)));
-		}
-	}
+    public BlockStorage() {
+        super("storage");
+    }
 
-	@Override
-	protected BlockStateContainer createBlockState()
-	{
-		return new BlockStateContainer(this, new IProperty[]
-		{
-			DIRECTION,
-			CONNECTED,
-			TYPE
-		});
-	}
+    @Override
+    public void getSubBlocks(Item item, CreativeTabs tab, List subItems) {
+        for (int i = 0; i <= 4; i++) {
+            subItems.add(ItemBlockStorage.initNBT(new ItemStack(item, 1, i)));
+        }
+    }
 
-	@Override
-	public IBlockState getStateFromMeta(int meta)
-	{
-		return getDefaultState().withProperty(TYPE, EnumStorageType.getById(meta));
-	}
+    @Override
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, new IProperty[]
+            {
+                DIRECTION,
+                CONNECTED,
+                TYPE
+            });
+    }
 
-	@Override
-	public int getMetaFromState(IBlockState state)
-	{
-		return ((EnumStorageType) state.getValue(TYPE)).getId();
-	}
+    @Override
+    public IBlockState getStateFromMeta(int meta) {
+        return getDefaultState().withProperty(TYPE, EnumStorageType.getById(meta));
+    }
 
-	@Override
-	public TileEntity createTileEntity(World world, IBlockState state)
-	{
-		return new TileStorage();
-	}
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        return ((EnumStorageType) state.getValue(TYPE)).getId();
+    }
 
-	@Override
-	public boolean onBlockActivated(World world, net.minecraft.util.math.BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
-	{
-		if (!world.isRemote)
-		{
-			player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.STORAGE, world, pos.getX(), pos.getY(), pos.getZ());
-		}
+    @Override
+    public TileEntity createTileEntity(World world, IBlockState state) {
+        return new TileStorage();
+    }
 
-		return true;
-	}
+    @Override
+    public boolean onBlockActivated(World world, net.minecraft.util.math.BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+        if (!world.isRemote) {
+            player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.STORAGE, world, pos.getX(), pos.getY(), pos.getZ());
+        }
 
-	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack stack)
-	{
-		super.onBlockPlacedBy(world, pos, state, player, stack);
+        return true;
+    }
 
-		NBTTagCompound tag = stack.getTagCompound();
+    @Override
+    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack stack) {
+        super.onBlockPlacedBy(world, pos, state, player, stack);
 
-		if (tag != null && tag.hasKey(TileStorage.NBT_STORAGE))
-		{
-			((TileStorage) world.getTileEntity(pos)).setStorageTag((NBTTagCompound) tag.getTag(TileStorage.NBT_STORAGE));
-		}
-	}
+        NBTTagCompound tag = stack.getTagCompound();
 
-	@Override
-	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
-	{
-		List<ItemStack> drops = new ArrayList<ItemStack>();
+        if (tag != null && tag.hasKey(TileStorage.NBT_STORAGE)) {
+            ((TileStorage) world.getTileEntity(pos)).setStorageTag((NBTTagCompound) tag.getTag(TileStorage.NBT_STORAGE));
+        }
+    }
 
-		ItemStack stack = new ItemStack(RefinedStorageBlocks.STORAGE, 1, RefinedStorageBlocks.STORAGE.getMetaFromState(state));
+    @Override
+    public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+        List<ItemStack> drops = new ArrayList<ItemStack>();
 
-		NBTTagCompound tag = new NBTTagCompound();
+        ItemStack stack = new ItemStack(RefinedStorageBlocks.STORAGE, 1, RefinedStorageBlocks.STORAGE.getMetaFromState(state));
 
-		tag.setTag(TileStorage.NBT_STORAGE, ((TileStorage) world.getTileEntity(pos)).getStorageTag());
+        NBTTagCompound tag = new NBTTagCompound();
 
-		stack.setTagCompound(tag);
+        tag.setTag(TileStorage.NBT_STORAGE, ((TileStorage) world.getTileEntity(pos)).getStorageTag());
 
-		drops.add(stack);
+        stack.setTagCompound(tag);
 
-		return drops;
-	}
+        drops.add(stack);
 
-	@Override
-	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
-	{
-		if (willHarvest)
-		{
-			return true;
-		}
+        return drops;
+    }
 
-		return super.removedByPlayer(state, world, pos, player, willHarvest);
-	}
+    @Override
+    public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
+        if (willHarvest) {
+            return true;
+        }
 
-	@Override
-	public void harvestBlock(World world, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity tile, ItemStack stack)
-	{
-		super.harvestBlock(world, player, pos, state, tile, stack);
+        return super.removedByPlayer(state, world, pos, player, willHarvest);
+    }
 
-		world.setBlockToAir(pos);
-	}
+    @Override
+    public void harvestBlock(World world, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity tile, ItemStack stack) {
+        super.harvestBlock(world, player, pos, state, tile, stack);
+
+        world.setBlockToAir(pos);
+    }
 }

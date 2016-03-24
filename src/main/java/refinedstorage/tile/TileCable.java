@@ -1,80 +1,64 @@
 package refinedstorage.tile;
 
-import java.util.List;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
-public class TileCable extends TileBase
-{
-	public static boolean hasConnectionWith(IBlockAccess world, BlockPos pos)
-	{
-		TileEntity tile = world.getTileEntity(pos);
+import java.util.List;
 
-		return tile instanceof TileCable || tile instanceof TileMachine || tile instanceof TileController;
-	}
+public class TileCable extends TileBase {
+    public static boolean hasConnectionWith(IBlockAccess world, BlockPos pos) {
+        TileEntity tile = world.getTileEntity(pos);
 
-	public void addMachines(List<BlockPos> visited, List<TileMachine> machines, TileController controller)
-	{
-		for (BlockPos visitedBlock : visited)
-		{
-			if (visitedBlock.equals(pos))
-			{
-				return;
-			}
-		}
+        return tile instanceof TileCable || tile instanceof TileMachine || tile instanceof TileController;
+    }
 
-		visited.add(pos);
+    public void addMachines(List<BlockPos> visited, List<TileMachine> machines, TileController controller) {
+        for (BlockPos visitedBlock : visited) {
+            if (visitedBlock.equals(pos)) {
+                return;
+            }
+        }
 
-		for (EnumFacing dir : EnumFacing.VALUES)
-		{
-			BlockPos newPos = pos.offset(dir);
+        visited.add(pos);
 
-			boolean alreadyVisited = false;
+        for (EnumFacing dir : EnumFacing.VALUES) {
+            BlockPos newPos = pos.offset(dir);
 
-			for (BlockPos visitedBlock : visited)
-			{
-				if (visitedBlock.equals(newPos))
-				{
-					alreadyVisited = true;
-				}
-			}
+            boolean alreadyVisited = false;
 
-			if (alreadyVisited)
-			{
-				continue;
-			}
+            for (BlockPos visitedBlock : visited) {
+                if (visitedBlock.equals(newPos)) {
+                    alreadyVisited = true;
+                }
+            }
 
-			TileEntity tile = worldObj.getTileEntity(newPos);
+            if (alreadyVisited) {
+                continue;
+            }
 
-			if (tile instanceof TileMachine && ((TileMachine) tile).getRedstoneMode().isEnabled(worldObj, newPos))
-			{
-				machines.add((TileMachine) tile);
+            TileEntity tile = worldObj.getTileEntity(newPos);
 
-				visited.add(newPos);
+            if (tile instanceof TileMachine && ((TileMachine) tile).getRedstoneMode().isEnabled(worldObj, newPos)) {
+                machines.add((TileMachine) tile);
 
-				if (tile instanceof TileRelay)
-				{
-					for (EnumFacing relayDir : EnumFacing.VALUES)
-					{
-						TileEntity nextToRelay = worldObj.getTileEntity(newPos.offset(relayDir));
+                visited.add(newPos);
 
-						if (nextToRelay instanceof TileCable)
-						{
-							((TileCable) nextToRelay).addMachines(visited, machines, controller);
-						}
-					}
-				}
-			}
-			else if (tile instanceof TileCable)
-			{
-				((TileCable) tile).addMachines(visited, machines, controller);
-			}
-			else if (tile instanceof TileController && !controller.getPos().equals(newPos))
-			{
-				worldObj.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), 4.5f, true);
-			}
-		}
-	}
+                if (tile instanceof TileRelay) {
+                    for (EnumFacing relayDir : EnumFacing.VALUES) {
+                        TileEntity nextToRelay = worldObj.getTileEntity(newPos.offset(relayDir));
+
+                        if (nextToRelay instanceof TileCable) {
+                            ((TileCable) nextToRelay).addMachines(visited, machines, controller);
+                        }
+                    }
+                }
+            } else if (tile instanceof TileCable) {
+                ((TileCable) tile).addMachines(visited, machines, controller);
+            } else if (tile instanceof TileController && !controller.getPos().equals(newPos)) {
+                worldObj.createExplosion(null, pos.getX(), pos.getY(), pos.getZ(), 4.5f, true);
+            }
+        }
+    }
 }

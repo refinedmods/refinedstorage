@@ -1,6 +1,5 @@
 package refinedstorage.item;
 
-import java.util.List;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -10,50 +9,43 @@ import net.minecraft.world.World;
 import refinedstorage.storage.CellStorage;
 import refinedstorage.storage.NBTStorage;
 
-public class ItemStorageCell extends ItemBase
-{
-	public static final int TYPE_1K = 0;
-	public static final int TYPE_4K = 1;
-	public static final int TYPE_16K = 2;
-	public static final int TYPE_64K = 3;
-	public static final int TYPE_CREATIVE = 4;
+import java.util.List;
 
-	public ItemStorageCell()
-	{
-		super("storage_cell");
+public class ItemStorageCell extends ItemBase {
+    public static final int TYPE_1K = 0;
+    public static final int TYPE_4K = 1;
+    public static final int TYPE_16K = 2;
+    public static final int TYPE_64K = 3;
+    public static final int TYPE_CREATIVE = 4;
 
-		setMaxStackSize(1);
-		setHasSubtypes(true);
-		setMaxDamage(0);
-	}
+    public ItemStorageCell() {
+        super("storage_cell");
 
-	@Override
-	public void getSubItems(Item item, CreativeTabs tab, List list)
-	{
-		for (int i = 0; i < 5; ++i)
-		{
-			list.add(NBTStorage.initNBT(new ItemStack(item, 1, i)));
-		}
-	}
+        setMaxStackSize(1);
+        setHasSubtypes(true);
+        setMaxDamage(0);
+    }
 
-	@Override
-	public void addInformation(ItemStack cell, EntityPlayer player, List list, boolean b)
-	{
-		if (CellStorage.getCapacity(cell) == -1)
-		{
-			list.add(String.format(I18n.translateToLocal("misc.refinedstorage:storage.stored"), NBTStorage.getStored(cell.getTagCompound())));
-		}
-		else
-		{
-			list.add(String.format(I18n.translateToLocal("misc.refinedstorage:storage.stored_capacity"), NBTStorage.getStored(cell.getTagCompound()), CellStorage.getCapacity(cell)));
-		}
-	}
+    @Override
+    public void getSubItems(Item item, CreativeTabs tab, List list) {
+        for (int i = 0; i < 5; ++i) {
+            list.add(NBTStorage.initNBT(new ItemStack(item, 1, i)));
+        }
+    }
 
-	@Override
-	public void onCreated(ItemStack stack, World world, EntityPlayer player)
-	{
-		super.onCreated(stack, world, player);
+    @Override
+    public void addInformation(ItemStack cell, EntityPlayer player, List list, boolean b) {
+        if (CellStorage.getCapacity(cell) == -1) {
+            list.add(String.format(I18n.translateToLocal("misc.refinedstorage:storage.stored"), NBTStorage.getStored(cell.getTagCompound())));
+        } else {
+            list.add(String.format(I18n.translateToLocal("misc.refinedstorage:storage.stored_capacity"), NBTStorage.getStored(cell.getTagCompound()), CellStorage.getCapacity(cell)));
+        }
+    }
 
-		NBTStorage.initNBT(stack);
-	}
+    @Override
+    public void onCreated(ItemStack stack, World world, EntityPlayer player) {
+        super.onCreated(stack, world, player);
+
+        NBTStorage.initNBT(stack);
+    }
 }

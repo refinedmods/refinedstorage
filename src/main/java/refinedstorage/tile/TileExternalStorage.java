@@ -1,7 +1,6 @@
 package refinedstorage.tile;
 
 import io.netty.buffer.ByteBuf;
-import java.util.List;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -21,296 +20,254 @@ import refinedstorage.tile.settings.IRedstoneModeSetting;
 import refinedstorage.tile.settings.ModeSettingUtils;
 import refinedstorage.util.InventoryUtils;
 
-public class TileExternalStorage extends TileMachine implements IStorageProvider, IStorage, IStorageGui, ICompareSetting, IModeSetting
-{
-	public static final String NBT_PRIORITY = "Priority";
-	public static final String NBT_COMPARE = "Compare";
-	public static final String NBT_MODE = "Mode";
+import java.util.List;
 
-	private InventorySimple inventory = new InventorySimple("external_storage", 9, this);
+public class TileExternalStorage extends TileMachine implements IStorageProvider, IStorage, IStorageGui, ICompareSetting, IModeSetting {
+    public static final String NBT_PRIORITY = "Priority";
+    public static final String NBT_COMPARE = "Compare";
+    public static final String NBT_MODE = "Mode";
 
-	private int priority = 0;
-	private int compare = 0;
-	private int mode = 0;
+    private InventorySimple inventory = new InventorySimple("external_storage", 9, this);
 
-	@SideOnly(Side.CLIENT)
-	private int stored = 0;
+    private int priority = 0;
+    private int compare = 0;
+    private int mode = 0;
 
-	@Override
-	public int getEnergyUsage()
-	{
-		return 2;
-	}
+    @SideOnly(Side.CLIENT)
+    private int stored = 0;
 
-	@Override
-	public void updateMachine()
-	{
-	}
+    @Override
+    public int getEnergyUsage() {
+        return 2;
+    }
 
-	@Override
-	public void addItems(List<StorageItem> items)
-	{
-		IInventory connectedInventory = getConnectedInventory();
+    @Override
+    public void updateMachine() {
+    }
 
-		if (connectedInventory != null)
-		{
-			for (int i = 0; i < connectedInventory.getSizeInventory(); ++i)
-			{
-				if (connectedInventory.getStackInSlot(i) != null)
-				{
-					items.add(new StorageItem(connectedInventory.getStackInSlot(i)));
-				}
-			}
-		}
-	}
+    @Override
+    public void addItems(List<StorageItem> items) {
+        IInventory connectedInventory = getConnectedInventory();
 
-	@Override
-	public void push(ItemStack stack)
-	{
-		IInventory connectedInventory = getConnectedInventory();
+        if (connectedInventory != null) {
+            for (int i = 0; i < connectedInventory.getSizeInventory(); ++i) {
+                if (connectedInventory.getStackInSlot(i) != null) {
+                    items.add(new StorageItem(connectedInventory.getStackInSlot(i)));
+                }
+            }
+        }
+    }
 
-		if (connectedInventory == null)
-		{
-			return;
-		}
+    @Override
+    public void push(ItemStack stack) {
+        IInventory connectedInventory = getConnectedInventory();
 
-		InventoryUtils.pushToInventory(connectedInventory, stack);
-	}
+        if (connectedInventory == null) {
+            return;
+        }
 
-	@Override
-	public ItemStack take(ItemStack stack, int flags)
-	{
-		IInventory connectedInventory = getConnectedInventory();
+        InventoryUtils.pushToInventory(connectedInventory, stack);
+    }
 
-		if (connectedInventory == null)
-		{
-			return null;
-		}
+    @Override
+    public ItemStack take(ItemStack stack, int flags) {
+        IInventory connectedInventory = getConnectedInventory();
 
-		int quantity = stack.stackSize;
+        if (connectedInventory == null) {
+            return null;
+        }
 
-		for (int i = 0; i < connectedInventory.getSizeInventory(); ++i)
-		{
-			ItemStack slot = connectedInventory.getStackInSlot(i);
+        int quantity = stack.stackSize;
 
-			if (slot != null && InventoryUtils.compareStack(slot, stack, flags))
-			{
-				if (quantity > slot.stackSize)
-				{
-					quantity = slot.stackSize;
-				}
+        for (int i = 0; i < connectedInventory.getSizeInventory(); ++i) {
+            ItemStack slot = connectedInventory.getStackInSlot(i);
 
-				slot.stackSize -= quantity;
+            if (slot != null && InventoryUtils.compareStack(slot, stack, flags)) {
+                if (quantity > slot.stackSize) {
+                    quantity = slot.stackSize;
+                }
 
-				if (slot.stackSize == 0)
-				{
-					connectedInventory.setInventorySlotContents(i, null);
-				}
+                slot.stackSize -= quantity;
 
-				ItemStack newItem = slot.copy();
+                if (slot.stackSize == 0) {
+                    connectedInventory.setInventorySlotContents(i, null);
+                }
 
-				newItem.stackSize = quantity;
+                ItemStack newItem = slot.copy();
 
-				return newItem;
-			}
-		}
+                newItem.stackSize = quantity;
 
-		return null;
-	}
+                return newItem;
+            }
+        }
 
-	@Override
-	public boolean canPush(ItemStack stack)
-	{
-		IInventory connectedInventory = getConnectedInventory();
+        return null;
+    }
 
-		if (connectedInventory == null)
-		{
-			return false;
-		}
+    @Override
+    public boolean canPush(ItemStack stack) {
+        IInventory connectedInventory = getConnectedInventory();
 
-		return ModeSettingUtils.doesNotViolateMode(inventory, this, compare, stack) && InventoryUtils.canPushToInventory(connectedInventory, stack);
-	}
+        if (connectedInventory == null) {
+            return false;
+        }
 
-	public IInventory getConnectedInventory()
-	{
-		TileEntity tile = worldObj.getTileEntity(pos.offset(getDirection()));
+        return ModeSettingUtils.doesNotViolateMode(inventory, this, compare, stack) && InventoryUtils.canPushToInventory(connectedInventory, stack);
+    }
 
-		if (tile instanceof IInventory)
-		{
-			return (IInventory) tile;
-		}
+    public IInventory getConnectedInventory() {
+        TileEntity tile = worldObj.getTileEntity(pos.offset(getDirection()));
 
-		return null;
-	}
+        if (tile instanceof IInventory) {
+            return (IInventory) tile;
+        }
 
-	@Override
-	public void toBytes(ByteBuf buf)
-	{
-		super.toBytes(buf);
+        return null;
+    }
 
-		buf.writeInt(priority);
-		buf.writeInt(getConnectedInventory() == null ? 0 : InventoryUtils.getInventoryItems(getConnectedInventory()));
-		buf.writeInt(compare);
-		buf.writeInt(mode);
-	}
+    @Override
+    public void toBytes(ByteBuf buf) {
+        super.toBytes(buf);
 
-	@Override
-	public void fromBytes(ByteBuf buf)
-	{
-		super.fromBytes(buf);
+        buf.writeInt(priority);
+        buf.writeInt(getConnectedInventory() == null ? 0 : InventoryUtils.getInventoryItems(getConnectedInventory()));
+        buf.writeInt(compare);
+        buf.writeInt(mode);
+    }
 
-		priority = buf.readInt();
-		stored = buf.readInt();
-		compare = buf.readInt();
-		mode = buf.readInt();
-	}
+    @Override
+    public void fromBytes(ByteBuf buf) {
+        super.fromBytes(buf);
 
-	@Override
-	public void readFromNBT(NBTTagCompound nbt)
-	{
-		super.readFromNBT(nbt);
+        priority = buf.readInt();
+        stored = buf.readInt();
+        compare = buf.readInt();
+        mode = buf.readInt();
+    }
 
-		InventoryUtils.restoreInventory(inventory, 0, nbt);
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
+        super.readFromNBT(nbt);
 
-		if (nbt.hasKey(NBT_PRIORITY))
-		{
-			priority = nbt.getInteger(NBT_PRIORITY);
-		}
+        InventoryUtils.restoreInventory(inventory, 0, nbt);
 
-		if (nbt.hasKey(NBT_COMPARE))
-		{
-			compare = nbt.getInteger(NBT_COMPARE);
-		}
+        if (nbt.hasKey(NBT_PRIORITY)) {
+            priority = nbt.getInteger(NBT_PRIORITY);
+        }
 
-		if (nbt.hasKey(NBT_MODE))
-		{
-			mode = nbt.getInteger(NBT_MODE);
-		}
-	}
+        if (nbt.hasKey(NBT_COMPARE)) {
+            compare = nbt.getInteger(NBT_COMPARE);
+        }
 
-	@Override
-	public void writeToNBT(NBTTagCompound nbt)
-	{
-		super.writeToNBT(nbt);
+        if (nbt.hasKey(NBT_MODE)) {
+            mode = nbt.getInteger(NBT_MODE);
+        }
+    }
 
-		InventoryUtils.saveInventory(inventory, 0, nbt);
+    @Override
+    public void writeToNBT(NBTTagCompound nbt) {
+        super.writeToNBT(nbt);
 
-		nbt.setInteger(NBT_PRIORITY, priority);
-		nbt.setInteger(NBT_COMPARE, compare);
-		nbt.setInteger(NBT_MODE, mode);
-	}
+        InventoryUtils.saveInventory(inventory, 0, nbt);
 
-	@Override
-	public int getCompare()
-	{
-		return compare;
-	}
+        nbt.setInteger(NBT_PRIORITY, priority);
+        nbt.setInteger(NBT_COMPARE, compare);
+        nbt.setInteger(NBT_MODE, mode);
+    }
 
-	@Override
-	public void setCompare(int compare)
-	{
-		markDirty();
+    @Override
+    public int getCompare() {
+        return compare;
+    }
 
-		this.compare = compare;
-	}
+    @Override
+    public void setCompare(int compare) {
+        markDirty();
 
-	@Override
-	public boolean isWhitelist()
-	{
-		return mode == 0;
-	}
+        this.compare = compare;
+    }
 
-	@Override
-	public boolean isBlacklist()
-	{
-		return mode == 1;
-	}
+    @Override
+    public boolean isWhitelist() {
+        return mode == 0;
+    }
 
-	@Override
-	public void setToWhitelist()
-	{
-		markDirty();
+    @Override
+    public boolean isBlacklist() {
+        return mode == 1;
+    }
 
-		this.mode = 0;
-	}
+    @Override
+    public void setToWhitelist() {
+        markDirty();
 
-	@Override
-	public void setToBlacklist()
-	{
-		markDirty();
+        this.mode = 0;
+    }
 
-		this.mode = 1;
-	}
+    @Override
+    public void setToBlacklist() {
+        markDirty();
 
-	@Override
-	public int getPriority()
-	{
-		return priority;
-	}
+        this.mode = 1;
+    }
 
-	public void setPriority(int priority)
-	{
-		markDirty();
+    @Override
+    public int getPriority() {
+        return priority;
+    }
 
-		this.priority = priority;
-	}
+    public void setPriority(int priority) {
+        markDirty();
 
-	@Override
-	public void addStorages(List<IStorage> storages)
-	{
-		storages.add(this);
-	}
+        this.priority = priority;
+    }
 
-	@Override
-	public String getName()
-	{
-		return "gui.refinedstorage:external_storage";
-	}
+    @Override
+    public void addStorages(List<IStorage> storages) {
+        storages.add(this);
+    }
 
-	@Override
-	public IRedstoneModeSetting getRedstoneModeSetting()
-	{
-		return this;
-	}
+    @Override
+    public String getName() {
+        return "gui.refinedstorage:external_storage";
+    }
 
-	@Override
-	public ICompareSetting getCompareSetting()
-	{
-		return this;
-	}
+    @Override
+    public IRedstoneModeSetting getRedstoneModeSetting() {
+        return this;
+    }
 
-	@Override
-	public IModeSetting getModeSetting()
-	{
-		return this;
-	}
+    @Override
+    public ICompareSetting getCompareSetting() {
+        return this;
+    }
 
-	@Override
-	public int getStored()
-	{
-		return stored;
-	}
+    @Override
+    public IModeSetting getModeSetting() {
+        return this;
+    }
 
-	@Override
-	public int getCapacity()
-	{
-		if (getConnectedInventory() == null)
-		{
-			return 0;
-		}
+    @Override
+    public int getStored() {
+        return stored;
+    }
 
-		return getConnectedInventory().getSizeInventory() * 64;
-	}
+    @Override
+    public int getCapacity() {
+        if (getConnectedInventory() == null) {
+            return 0;
+        }
 
-	@Override
-	public void onPriorityChanged(int priority)
-	{
-		RefinedStorage.NETWORK.sendToServer(new MessagePriorityUpdate(pos, priority));
-	}
+        return getConnectedInventory().getSizeInventory() * 64;
+    }
 
-	@Override
-	public IInventory getInventory()
-	{
-		return inventory;
-	}
+    @Override
+    public void onPriorityChanged(int priority) {
+        RefinedStorage.NETWORK.sendToServer(new MessagePriorityUpdate(pos, priority));
+    }
+
+    @Override
+    public IInventory getInventory() {
+        return inventory;
+    }
 }

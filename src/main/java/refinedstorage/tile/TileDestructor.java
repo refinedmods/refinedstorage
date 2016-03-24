@@ -1,44 +1,38 @@
 package refinedstorage.tile;
 
-import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import refinedstorage.util.InventoryUtils;
 
-public class TileDestructor extends TileMachine
-{
-	@Override
-	public int getEnergyUsage()
-	{
-		return 1;
-	}
+import java.util.List;
 
-	@Override
-	public void updateMachine()
-	{
-		if (ticks % 10 == 0)
-		{
-			BlockPos front = pos.offset(getDirection());
+public class TileDestructor extends TileMachine {
+    @Override
+    public int getEnergyUsage() {
+        return 1;
+    }
 
-			IBlockState frontBlockState = worldObj.getBlockState(front);
-			Block frontBlock = frontBlockState.getBlock();
+    @Override
+    public void updateMachine() {
+        if (ticks % 10 == 0) {
+            BlockPos front = pos.offset(getDirection());
 
-			if (!frontBlock.isAir(frontBlockState, worldObj, front))
-			{
-				List<ItemStack> drops = frontBlock.getDrops(worldObj, front, worldObj.getBlockState(front), 0);
+            IBlockState frontBlockState = worldObj.getBlockState(front);
+            Block frontBlock = frontBlockState.getBlock();
 
-				worldObj.setBlockToAir(front);
+            if (!frontBlock.isAir(frontBlockState, worldObj, front)) {
+                List<ItemStack> drops = frontBlock.getDrops(worldObj, front, worldObj.getBlockState(front), 0);
 
-				for (ItemStack drop : drops)
-				{
-					if (!getController().push(drop))
-					{
-						InventoryUtils.dropStack(worldObj, drop, front.getX(), front.getY(), front.getZ());
-					}
-				}
-			}
-		}
-	}
+                worldObj.setBlockToAir(front);
+
+                for (ItemStack drop : drops) {
+                    if (!getController().push(drop)) {
+                        InventoryUtils.dropStack(worldObj, drop, front.getX(), front.getY(), front.getZ());
+                    }
+                }
+            }
+        }
+    }
 }

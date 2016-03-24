@@ -1,159 +1,140 @@
 package refinedstorage.storage;
 
-import java.util.List;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
-public class NBTStorage implements IStorage
-{
-	public static final String NBT_ITEMS = "Items";
-	public static final String NBT_STORED = "Stored";
+import java.util.List;
 
-	public static final String NBT_ITEM_TYPE = "Type";
-	public static final String NBT_ITEM_QUANTITY = "Quantity";
-	public static final String NBT_ITEM_DAMAGE = "Damage";
-	public static final String NBT_ITEM_NBT = "NBT";
+public class NBTStorage implements IStorage {
+    public static final String NBT_ITEMS = "Items";
+    public static final String NBT_STORED = "Stored";
 
-	private NBTTagCompound nbtTag;
-	private int capacity;
-	private int priority;
+    public static final String NBT_ITEM_TYPE = "Type";
+    public static final String NBT_ITEM_QUANTITY = "Quantity";
+    public static final String NBT_ITEM_DAMAGE = "Damage";
+    public static final String NBT_ITEM_NBT = "NBT";
 
-	public NBTStorage(NBTTagCompound tag, int capacity, int priority)
-	{
-		this.nbtTag = tag;
-		this.capacity = capacity;
-		this.priority = priority;
-	}
+    private NBTTagCompound nbtTag;
+    private int capacity;
+    private int priority;
 
-	@Override
-	public void addItems(List<StorageItem> items)
-	{
-		NBTTagList list = (NBTTagList) nbtTag.getTag(NBT_ITEMS);
+    public NBTStorage(NBTTagCompound tag, int capacity, int priority) {
+        this.nbtTag = tag;
+        this.capacity = capacity;
+        this.priority = priority;
+    }
 
-		for (int i = 0; i < list.tagCount(); ++i)
-		{
-			items.add(createItemFromNBT(list.getCompoundTagAt(i)));
-		}
-	}
+    @Override
+    public void addItems(List<StorageItem> items) {
+        NBTTagList list = (NBTTagList) nbtTag.getTag(NBT_ITEMS);
 
-	@Override
-	public void push(ItemStack stack)
-	{
-		NBTTagList list = (NBTTagList) nbtTag.getTag(NBT_ITEMS);
+        for (int i = 0; i < list.tagCount(); ++i) {
+            items.add(createItemFromNBT(list.getCompoundTagAt(i)));
+        }
+    }
 
-		nbtTag.setInteger(NBT_STORED, getStored(nbtTag) + stack.stackSize);
+    @Override
+    public void push(ItemStack stack) {
+        NBTTagList list = (NBTTagList) nbtTag.getTag(NBT_ITEMS);
 
-		for (int i = 0; i < list.tagCount(); ++i)
-		{
-			NBTTagCompound tag = list.getCompoundTagAt(i);
+        nbtTag.setInteger(NBT_STORED, getStored(nbtTag) + stack.stackSize);
 
-			StorageItem item = createItemFromNBT(tag);
+        for (int i = 0; i < list.tagCount(); ++i) {
+            NBTTagCompound tag = list.getCompoundTagAt(i);
 
-			if (item.compareNoQuantity(stack))
-			{
-				tag.setInteger(NBT_ITEM_QUANTITY, item.getQuantity() + stack.stackSize);
+            StorageItem item = createItemFromNBT(tag);
 
-				return;
-			}
-		}
+            if (item.compareNoQuantity(stack)) {
+                tag.setInteger(NBT_ITEM_QUANTITY, item.getQuantity() + stack.stackSize);
 
-		NBTTagCompound tag = new NBTTagCompound();
+                return;
+            }
+        }
 
-		tag.setInteger(NBT_ITEM_TYPE, Item.getIdFromItem(stack.getItem()));
-		tag.setInteger(NBT_ITEM_QUANTITY, stack.stackSize);
-		tag.setInteger(NBT_ITEM_DAMAGE, stack.getItemDamage());
+        NBTTagCompound tag = new NBTTagCompound();
 
-		if (stack.hasTagCompound())
-		{
-			tag.setTag(NBT_ITEM_NBT, stack.getTagCompound());
-		}
+        tag.setInteger(NBT_ITEM_TYPE, Item.getIdFromItem(stack.getItem()));
+        tag.setInteger(NBT_ITEM_QUANTITY, stack.stackSize);
+        tag.setInteger(NBT_ITEM_DAMAGE, stack.getItemDamage());
 
-		list.appendTag(tag);
-	}
+        if (stack.hasTagCompound()) {
+            tag.setTag(NBT_ITEM_NBT, stack.getTagCompound());
+        }
 
-	@Override
-	public ItemStack take(ItemStack stack, int flags)
-	{
-		int quantity = stack.stackSize;
+        list.appendTag(tag);
+    }
 
-		NBTTagList list = (NBTTagList) nbtTag.getTag(NBT_ITEMS);
+    @Override
+    public ItemStack take(ItemStack stack, int flags) {
+        int quantity = stack.stackSize;
 
-		for (int i = 0; i < list.tagCount(); ++i)
-		{
-			NBTTagCompound tag = list.getCompoundTagAt(i);
+        NBTTagList list = (NBTTagList) nbtTag.getTag(NBT_ITEMS);
 
-			StorageItem item = createItemFromNBT(tag);
+        for (int i = 0; i < list.tagCount(); ++i) {
+            NBTTagCompound tag = list.getCompoundTagAt(i);
 
-			if (item.compare(stack, flags))
-			{
-				if (quantity > item.getQuantity())
-				{
-					quantity = item.getQuantity();
-				}
+            StorageItem item = createItemFromNBT(tag);
 
-				tag.setInteger(NBT_ITEM_QUANTITY, item.getQuantity() - quantity);
+            if (item.compare(stack, flags)) {
+                if (quantity > item.getQuantity()) {
+                    quantity = item.getQuantity();
+                }
 
-				if (item.getQuantity() - quantity == 0)
-				{
-					list.removeTag(i);
-				}
+                tag.setInteger(NBT_ITEM_QUANTITY, item.getQuantity() - quantity);
 
-				nbtTag.setInteger(NBT_STORED, getStored(nbtTag) - quantity);
+                if (item.getQuantity() - quantity == 0) {
+                    list.removeTag(i);
+                }
 
-				ItemStack newItem = item.toItemStack();
+                nbtTag.setInteger(NBT_STORED, getStored(nbtTag) - quantity);
 
-				newItem.stackSize = quantity;
+                ItemStack newItem = item.toItemStack();
 
-				return newItem;
-			}
-		}
+                newItem.stackSize = quantity;
 
-		return null;
-	}
+                return newItem;
+            }
+        }
 
-	@Override
-	public boolean canPush(ItemStack stack)
-	{
-		if (capacity == -1)
-		{
-			return true;
-		}
+        return null;
+    }
 
-		return (getStored(nbtTag) + stack.stackSize) <= capacity;
-	}
+    @Override
+    public boolean canPush(ItemStack stack) {
+        if (capacity == -1) {
+            return true;
+        }
 
-	@Override
-	public int getPriority()
-	{
-		return priority;
-	}
+        return (getStored(nbtTag) + stack.stackSize) <= capacity;
+    }
 
-	private StorageItem createItemFromNBT(NBTTagCompound tag)
-	{
-		return new StorageItem(Item.getItemById(tag.getInteger(NBT_ITEM_TYPE)), tag.getInteger(NBT_ITEM_QUANTITY), tag.getInteger(NBT_ITEM_DAMAGE), tag.hasKey(NBT_ITEM_NBT) ? ((NBTTagCompound) tag.getTag(NBT_ITEM_NBT)) : null);
-	}
+    @Override
+    public int getPriority() {
+        return priority;
+    }
 
-	public static int getStored(NBTTagCompound tag)
-	{
-		return tag.getInteger(NBT_STORED);
-	}
+    private StorageItem createItemFromNBT(NBTTagCompound tag) {
+        return new StorageItem(Item.getItemById(tag.getInteger(NBT_ITEM_TYPE)), tag.getInteger(NBT_ITEM_QUANTITY), tag.getInteger(NBT_ITEM_DAMAGE), tag.hasKey(NBT_ITEM_NBT) ? ((NBTTagCompound) tag.getTag(NBT_ITEM_NBT)) : null);
+    }
 
-	public static NBTTagCompound getBaseNBT()
-	{
-		NBTTagCompound tag = new NBTTagCompound();
+    public static int getStored(NBTTagCompound tag) {
+        return tag.getInteger(NBT_STORED);
+    }
 
-		tag.setTag(NBT_ITEMS, new NBTTagList());
-		tag.setInteger(NBT_STORED, 0);
+    public static NBTTagCompound getBaseNBT() {
+        NBTTagCompound tag = new NBTTagCompound();
 
-		return tag;
-	}
+        tag.setTag(NBT_ITEMS, new NBTTagList());
+        tag.setInteger(NBT_STORED, 0);
 
-	public static ItemStack initNBT(ItemStack stack)
-	{
-		stack.setTagCompound(NBTStorage.getBaseNBT());
+        return tag;
+    }
 
-		return stack;
-	}
+    public static ItemStack initNBT(ItemStack stack) {
+        stack.setTagCompound(NBTStorage.getBaseNBT());
+
+        return stack;
+    }
 }

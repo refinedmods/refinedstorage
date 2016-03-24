@@ -1,61 +1,50 @@
 package refinedstorage.tile.solderer;
 
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import refinedstorage.util.InventoryUtils;
 
-public class SoldererRegistry
-{
-	public static List<ISoldererRecipe> recipes = new ArrayList<ISoldererRecipe>();
+import java.util.ArrayList;
+import java.util.List;
 
-	public static void addRecipe(ISoldererRecipe recipe)
-	{
-		recipes.add(recipe);
-	}
+public class SoldererRegistry {
+    public static List<ISoldererRecipe> recipes = new ArrayList<ISoldererRecipe>();
 
-	public static ISoldererRecipe getRecipe(IInventory inventory)
-	{
-		for (ISoldererRecipe recipe : recipes)
-		{
-			boolean ok = true;
+    public static void addRecipe(ISoldererRecipe recipe) {
+        recipes.add(recipe);
+    }
 
-			for (int i = 0; i < 3; ++i)
-			{
-				if (!InventoryUtils.compareStackNoQuantity(recipe.getRow(i), inventory.getStackInSlot(i)))
-				{
-					ok = false;
-				}
+    public static ISoldererRecipe getRecipe(IInventory inventory) {
+        for (ISoldererRecipe recipe : recipes) {
+            boolean ok = true;
 
-				if (inventory.getStackInSlot(i) != null && recipe.getRow(i) != null)
-				{
-					if (inventory.getStackInSlot(i).stackSize < recipe.getRow(i).stackSize)
-					{
-						ok = false;
-					}
-				}
-			}
+            for (int i = 0; i < 3; ++i) {
+                if (!InventoryUtils.compareStackNoQuantity(recipe.getRow(i), inventory.getStackInSlot(i))) {
+                    ok = false;
+                }
 
-			if (ok)
-			{
-				return recipe;
-			}
-		}
+                if (inventory.getStackInSlot(i) != null && recipe.getRow(i) != null) {
+                    if (inventory.getStackInSlot(i).stackSize < recipe.getRow(i).stackSize) {
+                        ok = false;
+                    }
+                }
+            }
 
-		return null;
-	}
+            if (ok) {
+                return recipe;
+            }
+        }
 
-	public static ISoldererRecipe getRecipe(ItemStack result)
-	{
-		for (ISoldererRecipe recipe : recipes)
-		{
-			if (InventoryUtils.compareStack(result, recipe.getResult()))
-			{
-				return recipe;
-			}
-		}
+        return null;
+    }
 
-		return null;
-	}
+    public static ISoldererRecipe getRecipe(ItemStack result) {
+        for (ISoldererRecipe recipe : recipes) {
+            if (InventoryUtils.compareStack(result, recipe.getResult())) {
+                return recipe;
+            }
+        }
+
+        return null;
+    }
 }
