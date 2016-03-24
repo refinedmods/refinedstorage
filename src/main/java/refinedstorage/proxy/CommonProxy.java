@@ -19,6 +19,7 @@ import refinedstorage.network.*;
 import refinedstorage.storage.NBTStorage;
 import refinedstorage.tile.*;
 import refinedstorage.tile.solderer.*;
+import static refinedstorage.RefinedStorage.ID;
 
 public class CommonProxy
 {
@@ -39,47 +40,47 @@ public class CommonProxy
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(RefinedStorage.INSTANCE, new GuiHandler());
 
-		GameRegistry.registerTileEntity(TileController.class, "controller");
-		GameRegistry.registerTileEntity(TileCable.class, "cable");
-		GameRegistry.registerTileEntity(TileGrid.class, "grid");
-		GameRegistry.registerTileEntity(TileDrive.class, "drive");
-		GameRegistry.registerTileEntity(TileExternalStorage.class, "external_storage");
-		GameRegistry.registerTileEntity(TileImporter.class, "importer");
-		GameRegistry.registerTileEntity(TileExporter.class, "exporter");
-		GameRegistry.registerTileEntity(TileDetector.class, "detector");
-		GameRegistry.registerTileEntity(TileSolderer.class, "solderer");
-		GameRegistry.registerTileEntity(TileWirelessTransmitter.class, "wireless_transmitter");
-		GameRegistry.registerTileEntity(TileDestructor.class, "destructor");
-		GameRegistry.registerTileEntity(TileConstructor.class, "constructor");
-		GameRegistry.registerTileEntity(TileStorage.class, "storage");
-		GameRegistry.registerTileEntity(TileRelay.class, "relay");
-		GameRegistry.registerTileEntity(TileInterface.class, "interface");
+		GameRegistry.registerTileEntity(TileController.class, ID + ":" + "controller");
+		GameRegistry.registerTileEntity(TileCable.class, ID + ":" + "cable");
+		GameRegistry.registerTileEntity(TileGrid.class, ID + ":" + "grid");
+		GameRegistry.registerTileEntity(TileDrive.class, ID + ":" + "drive");
+		GameRegistry.registerTileEntity(TileExternalStorage.class, ID + ":" + "external_storage");
+		GameRegistry.registerTileEntity(TileImporter.class, ID + ":" + "importer");
+		GameRegistry.registerTileEntity(TileExporter.class, ID + ":" + "exporter");
+		GameRegistry.registerTileEntity(TileDetector.class, ID + ":" + "detector");
+		GameRegistry.registerTileEntity(TileSolderer.class,ID + ":" +  "solderer");
+		GameRegistry.registerTileEntity(TileWirelessTransmitter.class, ID + ":" + "wireless_transmitter");
+		GameRegistry.registerTileEntity(TileDestructor.class, ID + ":" + "destructor");
+		GameRegistry.registerTileEntity(TileConstructor.class, ID + ":" + "constructor");
+		GameRegistry.registerTileEntity(TileStorage.class, ID + ":" + "storage");
+		GameRegistry.registerTileEntity(TileRelay.class, ID + ":" + "relay");
+		GameRegistry.registerTileEntity(TileInterface.class, ID + ":" + "interface");
 
-		GameRegistry.registerBlock(RefinedStorageBlocks.CONTROLLER, ItemBlockController.class, "controller");
-		GameRegistry.registerBlock(RefinedStorageBlocks.CABLE, "cable");
-		GameRegistry.registerBlock(RefinedStorageBlocks.GRID, ItemBlockGrid.class, "grid");
-		GameRegistry.registerBlock(RefinedStorageBlocks.DRIVE, "drive");
-		GameRegistry.registerBlock(RefinedStorageBlocks.EXTERNAL_STORAGE, "external_storage");
-		GameRegistry.registerBlock(RefinedStorageBlocks.IMPORTER, "importer");
-		GameRegistry.registerBlock(RefinedStorageBlocks.EXPORTER, "exporter");
-		GameRegistry.registerBlock(RefinedStorageBlocks.DETECTOR, "detector");
-		GameRegistry.registerBlock(RefinedStorageBlocks.MACHINE_CASING, "machine_casing");
-		GameRegistry.registerBlock(RefinedStorageBlocks.SOLDERER, "solderer");
-		GameRegistry.registerBlock(RefinedStorageBlocks.WIRELESS_TRANSMITTER, "wireless_transmitter");
-		GameRegistry.registerBlock(RefinedStorageBlocks.DESTRUCTOR, "destructor");
-		GameRegistry.registerBlock(RefinedStorageBlocks.CONSTRUCTOR, "constructor");
-		GameRegistry.registerBlock(RefinedStorageBlocks.STORAGE, ItemBlockStorage.class, "storage");
-		GameRegistry.registerBlock(RefinedStorageBlocks.RELAY, "relay");
-		GameRegistry.registerBlock(RefinedStorageBlocks.INTERFACE, "interface");
+		GameRegistry.registerBlock(RefinedStorageBlocks.CONTROLLER, ItemBlockController.class, ID + ":" + "controller");
+		GameRegistry.registerBlock(RefinedStorageBlocks.CABLE, ID + ":" + "cable");
+		GameRegistry.registerBlock(RefinedStorageBlocks.GRID, ItemBlockGrid.class, ID + ":" + "grid");
+		GameRegistry.registerBlock(RefinedStorageBlocks.DRIVE, ID + ":" + "drive");
+		GameRegistry.registerBlock(RefinedStorageBlocks.EXTERNAL_STORAGE, ID + ":" + "external_storage");
+		GameRegistry.registerBlock(RefinedStorageBlocks.IMPORTER, ID + ":" + "importer");
+		GameRegistry.registerBlock(RefinedStorageBlocks.EXPORTER, ID + ":" + "exporter");
+		GameRegistry.registerBlock(RefinedStorageBlocks.DETECTOR, ID + ":" + "detector");
+		GameRegistry.registerBlock(RefinedStorageBlocks.MACHINE_CASING, ID + ":" + "machine_casing");
+		GameRegistry.registerBlock(RefinedStorageBlocks.SOLDERER, ID + ":" + "solderer");
+		GameRegistry.registerBlock(RefinedStorageBlocks.WIRELESS_TRANSMITTER, ID + ":" + "wireless_transmitter");
+		GameRegistry.registerBlock(RefinedStorageBlocks.DESTRUCTOR, ID + ":" + "destructor");
+		GameRegistry.registerBlock(RefinedStorageBlocks.CONSTRUCTOR, ID + ":" + "constructor");
+		GameRegistry.registerBlock(RefinedStorageBlocks.STORAGE, ItemBlockStorage.class, ID + ":" + "storage");
+		GameRegistry.registerBlock(RefinedStorageBlocks.RELAY, ID + ":" + "relay");
+		GameRegistry.registerBlock(RefinedStorageBlocks.INTERFACE, ID + ":" + "interface");
 
-		GameRegistry.registerItem(RefinedStorageItems.STORAGE_CELL, "storage_cell");
-		GameRegistry.registerItem(RefinedStorageItems.WIRELESS_GRID, "wireless_grid");
-		GameRegistry.registerItem(RefinedStorageItems.WIRELESS_GRID_PLATE, "wireless_grid_plate");
-		GameRegistry.registerItem(RefinedStorageItems.QUARTZ_ENRICHED_IRON, "quartz_enriched_iron");
-		GameRegistry.registerItem(RefinedStorageItems.CORE, "core");
-		GameRegistry.registerItem(RefinedStorageItems.SILICON, "silicon");
-		GameRegistry.registerItem(RefinedStorageItems.PROCESSOR, "processor");
-		GameRegistry.registerItem(RefinedStorageItems.STORAGE_PART, "storage_part");
+		GameRegistry.registerItem(RefinedStorageItems.STORAGE_CELL, ID + ":" + "storage_cell");
+		GameRegistry.registerItem(RefinedStorageItems.WIRELESS_GRID, ID + ":" + "wireless_grid");
+		GameRegistry.registerItem(RefinedStorageItems.WIRELESS_GRID_PLATE, ID + ":" + "wireless_grid_plate");
+		GameRegistry.registerItem(RefinedStorageItems.QUARTZ_ENRICHED_IRON, ID + ":" + "quartz_enriched_iron");
+		GameRegistry.registerItem(RefinedStorageItems.CORE, ID + ":" + "core");
+		GameRegistry.registerItem(RefinedStorageItems.SILICON, ID + ":" + "silicon");
+		GameRegistry.registerItem(RefinedStorageItems.PROCESSOR, ID + ":" + "processor");
+		GameRegistry.registerItem(RefinedStorageItems.STORAGE_PART, ID + ":" + "storage_part");
 
 		// Processors
 		SoldererRegistry.addRecipe(new SoldererRecipePrintedProcessor(ItemProcessor.TYPE_PRINTED_BASIC));
