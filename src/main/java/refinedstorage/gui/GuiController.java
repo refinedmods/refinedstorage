@@ -62,6 +62,8 @@ public class GuiController extends GuiBase {
 
         RenderHelper.enableGUIStandardItemLighting();
 
+        ItemStack hoveringMachineStack = null;
+
         for (int i = 0; i < 4; ++i) {
             if (slot < controller.getMachines().size()) {
                 TileMachine machine = controller.getMachines().get(slot);
@@ -71,7 +73,7 @@ public class GuiController extends GuiBase {
                 ItemStack machineStack = new ItemStack(machineBlock, 1, machineBlock.getMetaFromState(machineState));
 
                 if (inBounds(x, y, 16, 16, mouseX, mouseY)) {
-                    drawTooltip(mouseX, mouseY, machineStack);
+                    hoveringMachineStack = machineStack;
                 }
 
                 drawItem(x, y, machineStack);
@@ -86,6 +88,10 @@ public class GuiController extends GuiBase {
             }
 
             slot++;
+        }
+
+        if (hoveringMachineStack != null) {
+            drawTooltip(mouseX, mouseY, hoveringMachineStack);
         }
 
         if (inBounds(barX, barY, barWidth, barHeight, mouseX, mouseY)) {
