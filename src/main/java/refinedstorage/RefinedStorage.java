@@ -19,7 +19,7 @@ import refinedstorage.proxy.CommonProxy;
 public final class RefinedStorage
 {
 	public static final String ID = "refinedstorage";
-	public static final String VERSION = "0.4";
+	public static final String VERSION = "0.4.1";
 
 	public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(ID);
 
