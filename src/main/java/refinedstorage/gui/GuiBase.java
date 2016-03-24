@@ -137,7 +137,7 @@ public abstract class GuiBase extends GuiContainer {
     }
 
     public void drawItem(int x, int y, ItemStack stack) {
-        drawItem(x, y, stack, false, null);
+        drawItem(x, y, stack, false);
     }
 
     public void drawItem(int x, int y, ItemStack stack, boolean withOverlay) {
@@ -185,7 +185,9 @@ public abstract class GuiBase extends GuiContainer {
     }
 
     public void drawTooltip(int x, int y, ItemStack stack) {
+        GL11.glDisable(GL11.GL_LIGHTING);
         renderToolTip(stack, x, y);
+        GL11.glEnable(GL11.GL_LIGHTING);
     }
 
     public void drawTexture(int x, int y, int textureX, int textureY, int width, int height) {

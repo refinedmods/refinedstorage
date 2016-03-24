@@ -70,6 +70,10 @@ public class GuiController extends GuiBase {
 
                 ItemStack machineStack = new ItemStack(machineBlock, 1, machineBlock.getMetaFromState(machineState));
 
+                if (inBounds(x, y, 16, 16, mouseX, mouseY)) {
+                    drawTooltip(mouseX, mouseY, machineStack);
+                }
+
                 drawItem(x, y, machineStack);
                 drawString(x + 21, y + 5, t("misc.refinedstorage:energy_usage_minimal", machine.getEnergyUsage()));
             }
