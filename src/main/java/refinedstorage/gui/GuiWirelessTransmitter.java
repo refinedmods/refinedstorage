@@ -1,6 +1,5 @@
 package refinedstorage.gui;
 
-import net.minecraft.inventory.Container;
 import refinedstorage.container.ContainerWirelessTransmitter;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.tile.TileWirelessTransmitter;

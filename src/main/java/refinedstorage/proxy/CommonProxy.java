@@ -21,6 +21,7 @@ import refinedstorage.network.*;
 import refinedstorage.storage.NBTStorage;
 import refinedstorage.tile.*;
 import refinedstorage.tile.solderer.*;
+
 import static refinedstorage.RefinedStorage.ID;
 
 public class CommonProxy {

@@ -2,8 +2,7 @@ package powercrystals.minefactoryreloaded.api;
 
 import net.minecraft.item.ItemStack;
 
-public interface IDeepStorageUnit
-{
+public interface IDeepStorageUnit {
     /**
      * @return A populated ItemStack with stackSize for the full amount of materials in the DSU. May have a stackSize > getMaxStackSize().
      */
