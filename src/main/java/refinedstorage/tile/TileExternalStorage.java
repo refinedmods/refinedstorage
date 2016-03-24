@@ -97,7 +97,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
         if (connectedInventory instanceof IDeepStorageUnit) {
             IDeepStorageUnit deep = (IDeepStorageUnit) connectedInventory;
 
-            if (deep.getStoredItemType() != null) {
+            if (deep.getStoredItemType() != null && InventoryUtils.compareStackNoQuantity(deep.getStoredItemType(), stack)) {
                 if (deep.getStoredItemType().stackSize < quantity) {
                     quantity = deep.getStoredItemType().stackSize;
                 }
