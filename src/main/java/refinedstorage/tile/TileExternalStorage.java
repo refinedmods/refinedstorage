@@ -7,6 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 import refinedstorage.RefinedStorage;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.network.MessagePriorityUpdate;
@@ -47,12 +48,24 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
     @Override
     public void addItems(List<StorageItem> items) {
-        IInventory connectedInventory = getConnectedInventory();
+        TileEntity connectedInventory = getConnectedInventory();
 
-        if (connectedInventory != null) {
-            for (int i = 0; i < connectedInventory.getSizeInventory(); ++i) {
-                if (connectedInventory.getStackInSlot(i) != null) {
-                    items.add(new StorageItem(connectedInventory.getStackInSlot(i)));
+        if (connectedInventory instanceof IDeepStorageUnit) {
+            IDeepStorageUnit deep = (IDeepStorageUnit) connectedInventory;
+
+            if (deep.getStoredItemType() != null) {
+                ItemStack stack = deep.getStoredItemType().copy();
+
+                while (stack.stackSize > 0) {
+                    items.add(new StorageItem(stack.splitStack(Math.min(stack.getMaxStackSize(), stack.stackSize))));
+                }
+            }
+        } else if (connectedInventory instanceof IInventory) {
+            IInventory inventory = (IInventory) connectedInventory;
+
+            for (int i = 0; i < inventory.getSizeInventory(); ++i) {
+                if (inventory.getStackInSlot(i) != null) {
+                    items.add(new StorageItem(inventory.getStackInSlot(i)));
                 }
             }
         }
@@ -60,44 +73,65 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
     @Override
     public void push(ItemStack stack) {
-        IInventory connectedInventory = getConnectedInventory();
+        TileEntity connectedInventory = getConnectedInventory();
 
-        if (connectedInventory == null) {
-            return;
+        if (connectedInventory instanceof IDeepStorageUnit) {
+            IDeepStorageUnit deep = (IDeepStorageUnit) connectedInventory;
+
+            if (deep.getStoredItemType() == null) {
+                deep.setStoredItemType(stack, stack.stackSize);
+            } else {
+                deep.setStoredItemCount(deep.getStoredItemType().stackSize + stack.stackSize);
+            }
+        } else if (connectedInventory instanceof IInventory) {
+            InventoryUtils.pushToInventory((IInventory) connectedInventory, stack);
         }
-
-        InventoryUtils.pushToInventory(connectedInventory, stack);
     }
 
     @Override
     public ItemStack take(ItemStack stack, int flags) {
-        IInventory connectedInventory = getConnectedInventory();
-
-        if (connectedInventory == null) {
-            return null;
-        }
+        TileEntity connectedInventory = getConnectedInventory();
 
         int quantity = stack.stackSize;
 
-        for (int i = 0; i < connectedInventory.getSizeInventory(); ++i) {
-            ItemStack slot = connectedInventory.getStackInSlot(i);
+        if (connectedInventory instanceof IDeepStorageUnit) {
+            IDeepStorageUnit deep = (IDeepStorageUnit) connectedInventory;
 
-            if (slot != null && InventoryUtils.compareStack(slot, stack, flags)) {
-                if (quantity > slot.stackSize) {
-                    quantity = slot.stackSize;
+            if (deep.getStoredItemType() != null) {
+                if (deep.getStoredItemType().stackSize < quantity) {
+                    quantity = deep.getStoredItemType().stackSize;
                 }
 
-                slot.stackSize -= quantity;
+                ItemStack took = deep.getStoredItemType().copy();
+                took.stackSize = quantity;
 
-                if (slot.stackSize == 0) {
-                    connectedInventory.setInventorySlotContents(i, null);
+                deep.setStoredItemCount(deep.getStoredItemType().stackSize - quantity);
+
+                return took;
+            }
+        } else if (connectedInventory instanceof IInventory) {
+            IInventory inventory = (IInventory) connectedInventory;
+
+            for (int i = 0; i < inventory.getSizeInventory(); ++i) {
+                ItemStack slot = inventory.getStackInSlot(i);
+
+                if (slot != null && InventoryUtils.compareStack(slot, stack, flags)) {
+                    if (quantity > slot.stackSize) {
+                        quantity = slot.stackSize;
+                    }
+
+                    slot.stackSize -= quantity;
+
+                    if (slot.stackSize == 0) {
+                        inventory.setInventorySlotContents(i, null);
+                    }
+
+                    ItemStack newItem = slot.copy();
+
+                    newItem.stackSize = quantity;
+
+                    return newItem;
                 }
-
-                ItemStack newItem = slot.copy();
-
-                newItem.stackSize = quantity;
-
-                return newItem;
             }
         }
 
@@ -106,20 +140,34 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
     @Override
     public boolean canPush(ItemStack stack) {
-        IInventory connectedInventory = getConnectedInventory();
+        if (ModeSettingUtils.doesNotViolateMode(inventory, this, compare, stack)) {
+            TileEntity connectedInventory = getConnectedInventory();
 
-        if (connectedInventory == null) {
-            return false;
+            if (connectedInventory instanceof IDeepStorageUnit) {
+                IDeepStorageUnit deep = (IDeepStorageUnit) connectedInventory;
+
+                if (deep.getStoredItemType() != null) {
+                    if (InventoryUtils.compareStackNoQuantity(deep.getStoredItemType(), stack)) {
+                        return (deep.getStoredItemType().stackSize + stack.stackSize) < deep.getMaxStoredCount();
+                    }
+
+                    return false;
+                } else {
+                    return stack.stackSize < deep.getMaxStoredCount();
+                }
+            } else if (connectedInventory instanceof IInventory) {
+                return InventoryUtils.canPushToInventory((IInventory) connectedInventory, stack);
+            }
         }
 
-        return ModeSettingUtils.doesNotViolateMode(inventory, this, compare, stack) && InventoryUtils.canPushToInventory(connectedInventory, stack);
+        return false;
     }
 
-    public IInventory getConnectedInventory() {
+    public TileEntity getConnectedInventory() {
         TileEntity tile = worldObj.getTileEntity(pos.offset(getDirection()));
 
-        if (tile instanceof IInventory) {
-            return (IInventory) tile;
+        if (tile instanceof IInventory || tile instanceof IDeepStorageUnit) {
+            return tile;
         }
 
         return null;
@@ -130,7 +178,19 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
         super.toBytes(buf);
 
         buf.writeInt(priority);
-        buf.writeInt(getConnectedInventory() == null ? 0 : InventoryUtils.getInventoryItems(getConnectedInventory()));
+
+        TileEntity connectedInventory = getConnectedInventory();
+
+        if (connectedInventory instanceof IDeepStorageUnit) {
+            IDeepStorageUnit deep = (IDeepStorageUnit) connectedInventory;
+
+            buf.writeInt(deep.getStoredItemType() == null ? 0 : deep.getStoredItemType().stackSize);
+        } else if (connectedInventory instanceof IInventory) {
+            buf.writeInt(InventoryUtils.getInventoryItems((IInventory) connectedInventory));
+        } else {
+            buf.writeInt(0);
+        }
+
         buf.writeInt(compare);
         buf.writeInt(mode);
     }
@@ -258,7 +318,15 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
             return 0;
         }
 
-        return getConnectedInventory().getSizeInventory() * 64;
+        TileEntity connectedInventory = getConnectedInventory();
+
+        if (connectedInventory instanceof IDeepStorageUnit) {
+            return ((IDeepStorageUnit) connectedInventory).getMaxStoredCount();
+        } else if (connectedInventory instanceof IInventory) {
+            return ((IInventory) connectedInventory).getSizeInventory() * 64;
+        }
+
+        return 0;
     }
 
     @Override
