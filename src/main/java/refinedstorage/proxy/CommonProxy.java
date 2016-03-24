@@ -42,7 +42,7 @@ public class CommonProxy {
         GameRegistry.registerTileEntity(TileController.class, "controller");
         GameRegistry.registerTileEntity(TileCable.class, "cable");
         GameRegistry.registerTileEntity(TileGrid.class, "grid");
-        GameRegistry.registerTileEntity(TileDrive.class, "drive");
+        GameRegistry.registerTileEntity(TileDiskDrive.class, "disk_drive");
         GameRegistry.registerTileEntity(TileExternalStorage.class, "external_storage");
         GameRegistry.registerTileEntity(TileImporter.class, "importer");
         GameRegistry.registerTileEntity(TileExporter.class, "exporter");
@@ -58,7 +58,7 @@ public class CommonProxy {
         GameRegistry.registerBlock(RefinedStorageBlocks.CONTROLLER, ItemBlockController.class, "controller");
         GameRegistry.registerBlock(RefinedStorageBlocks.CABLE, "cable");
         GameRegistry.registerBlock(RefinedStorageBlocks.GRID, ItemBlockGrid.class, "grid");
-        GameRegistry.registerBlock(RefinedStorageBlocks.DRIVE, "drive");
+        GameRegistry.registerBlock(RefinedStorageBlocks.DISK_DRIVE, "disk_drive");
         GameRegistry.registerBlock(RefinedStorageBlocks.EXTERNAL_STORAGE, "external_storage");
         GameRegistry.registerBlock(RefinedStorageBlocks.IMPORTER, "importer");
         GameRegistry.registerBlock(RefinedStorageBlocks.EXPORTER, "exporter");
@@ -151,8 +151,8 @@ public class CommonProxy {
             'S', new ItemStack(Blocks.sticky_piston)
         );
 
-        // Drive
-        SoldererRegistry.addRecipe(new SoldererRecipeDrive());
+        // Disk Drive
+        SoldererRegistry.addRecipe(new SoldererRecipeDiskDrive());
 
         // Cable
         GameRegistry.addRecipe(new ItemStack(RefinedStorageBlocks.CABLE, 6),

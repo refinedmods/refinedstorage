@@ -1,13 +1,14 @@
 package refinedstorage.gui;
 
 import net.minecraft.inventory.Container;
+import refinedstorage.container.ContainerWirelessTransmitter;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.tile.TileWirelessTransmitter;
 
 public class GuiWirelessTransmitter extends GuiBase {
     private TileWirelessTransmitter wirelessTransmitter;
 
-    public GuiWirelessTransmitter(Container container, TileWirelessTransmitter wirelessTransmitter) {
+    public GuiWirelessTransmitter(ContainerWirelessTransmitter container, TileWirelessTransmitter wirelessTransmitter) {
         super(container, 176, 137);
 
         this.wirelessTransmitter = wirelessTransmitter;

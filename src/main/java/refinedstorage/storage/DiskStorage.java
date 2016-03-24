@@ -2,21 +2,21 @@ package refinedstorage.storage;
 
 import net.minecraft.item.ItemStack;
 import refinedstorage.item.ItemStorageDisk;
-import refinedstorage.tile.TileDrive;
+import refinedstorage.tile.TileDiskDrive;
 import refinedstorage.tile.settings.ModeSettingUtils;
 
 public class DiskStorage extends NBTStorage {
-    private TileDrive drive;
+    private TileDiskDrive diskDrive;
 
-    public DiskStorage(ItemStack disk, TileDrive drive) {
-        super(disk.getTagCompound(), getCapacity(disk), drive.getPriority());
+    public DiskStorage(ItemStack disk, TileDiskDrive diskDrive) {
+        super(disk.getTagCompound(), getCapacity(disk), diskDrive.getPriority());
 
-        this.drive = drive;
+        this.diskDrive = diskDrive;
     }
 
     @Override
     public boolean canPush(ItemStack stack) {
-        if (ModeSettingUtils.doesNotViolateMode(drive.getInventory(), drive.getModeSetting(), drive.getCompare(), stack)) {
+        if (ModeSettingUtils.doesNotViolateMode(diskDrive.getInventory(), diskDrive.getModeSetting(), diskDrive.getCompare(), stack)) {
             return super.canPush(stack);
         }
 

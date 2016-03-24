@@ -5,7 +5,7 @@
 		"textures": {
 			"side": "refinedstorage:blocks/side",
 			"top": "refinedstorage:blocks/side",
-			"front": "refinedstorage:blocks/drive"
+			"front": "refinedstorage:blocks/disk_drive"
 		}
 	},
 	"variants": {

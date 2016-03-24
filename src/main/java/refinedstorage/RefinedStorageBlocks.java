@@ -6,7 +6,7 @@ public final class RefinedStorageBlocks {
     public static final BlockController CONTROLLER = new BlockController();
     public static final BlockCable CABLE = new BlockCable();
     public static final BlockGrid GRID = new BlockGrid();
-    public static final BlockDrive DRIVE = new BlockDrive();
+    public static final BlockDiskDrive DISK_DRIVE = new BlockDiskDrive();
     public static final BlockExternalStorage EXTERNAL_STORAGE = new BlockExternalStorage();
     public static final BlockImporter IMPORTER = new BlockImporter();
     public static final BlockExporter EXPORTER = new BlockExporter();

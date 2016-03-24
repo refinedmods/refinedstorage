@@ -18,8 +18,8 @@ public class GuiHandler implements IGuiHandler {
                 return new ContainerController(player);
             case RefinedStorageGui.GRID:
                 return new ContainerGrid(player, (TileGrid) tile);
-            case RefinedStorageGui.DRIVE:
-                return new ContainerDrive(player, (TileDrive) tile);
+            case RefinedStorageGui.DISK_DRIVE:
+                return new ContainerDiskDrive(player, (TileDiskDrive) tile);
             case RefinedStorageGui.IMPORTER:
                 return new ContainerImporter(player, (TileImporter) tile);
             case RefinedStorageGui.EXPORTER:
@@ -59,8 +59,8 @@ public class GuiHandler implements IGuiHandler {
                 return new GuiController((ContainerController) getContainer(ID, player, tile), (TileController) tile);
             case RefinedStorageGui.GRID:
                 return new GuiGrid((ContainerGrid) getContainer(ID, player, tile), (TileGrid) tile);
-            case RefinedStorageGui.DRIVE:
-                return new GuiStorage((ContainerStorage) getContainer(ID, player, tile), (IStorageGui) tile, "gui/drive.png");
+            case RefinedStorageGui.DISK_DRIVE:
+                return new GuiStorage((ContainerStorage) getContainer(ID, player, tile), (IStorageGui) tile, "gui/disk_drive.png");
             case RefinedStorageGui.IMPORTER:
                 return new GuiImporter((ContainerImporter) getContainer(ID, player, tile), (TileImporter) tile);
             case RefinedStorageGui.EXPORTER:

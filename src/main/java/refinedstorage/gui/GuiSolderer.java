@@ -1,13 +1,14 @@
 package refinedstorage.gui;
 
 import net.minecraft.inventory.Container;
+import refinedstorage.container.ContainerSolderer;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.tile.TileSolderer;
 
 public class GuiSolderer extends GuiBase {
     private TileSolderer solderer;
 
-    public GuiSolderer(Container container, TileSolderer solderer) {
+    public GuiSolderer(ContainerSolderer container, TileSolderer solderer) {
         super(container, 176, 177);
 
         this.solderer = solderer;

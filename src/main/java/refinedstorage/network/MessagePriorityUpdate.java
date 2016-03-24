@@ -5,7 +5,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import refinedstorage.tile.TileDrive;
+import refinedstorage.tile.TileDiskDrive;
 import refinedstorage.tile.TileExternalStorage;
 import refinedstorage.tile.TileStorage;
 
@@ -49,8 +49,8 @@ public class MessagePriorityUpdate extends MessageHandlerPlayerToServer<MessageP
             ((TileStorage) tile).setPriority(message.priority);
         } else if (tile instanceof TileExternalStorage) {
             ((TileExternalStorage) tile).setPriority(message.priority);
-        } else if (tile instanceof TileDrive) {
-            ((TileDrive) tile).setPriority(message.priority);
+        } else if (tile instanceof TileDiskDrive) {
+            ((TileDiskDrive) tile).setPriority(message.priority);
         }
     }
 }

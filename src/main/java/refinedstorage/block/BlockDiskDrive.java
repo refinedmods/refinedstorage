@@ -9,22 +9,22 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
-import refinedstorage.tile.TileDrive;
+import refinedstorage.tile.TileDiskDrive;
 
-public class BlockDrive extends BlockMachine {
-    public BlockDrive() {
-        super("drive");
+public class BlockDiskDrive extends BlockMachine {
+    public BlockDiskDrive() {
+        super("disk_drive");
     }
 
     @Override
     public TileEntity createTileEntity(World world, IBlockState state) {
-        return new TileDrive();
+        return new TileDiskDrive();
     }
 
     @Override
     public boolean onBlockActivated(World world, net.minecraft.util.math.BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
-            player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.DRIVE, world, pos.getX(), pos.getY(), pos.getZ());
+            player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.DISK_DRIVE, world, pos.getX(), pos.getY(), pos.getZ());
         }
 
         return true;
