@@ -11,6 +11,7 @@ import refinedstorage.storage.NBTStorage;
 
 import java.util.List;
 
+// @TODO: Rename to storage disk
 public class ItemStorageCell extends ItemBase {
     public static final int TYPE_1K = 0;
     public static final int TYPE_4K = 1;

@@ -22,8 +22,8 @@ public class TileDrive extends TileMachine implements IStorageProvider, IStorage
     public static final String NBT_COMPARE = "Compare";
     public static final String NBT_MODE = "Mode";
 
-    private InventorySimple filterInventory = new InventorySimple("filters", 9, this);
     private InventorySimple inventory = new InventorySimple("drive", 8, this);
+    private InventorySimple filterInventory = new InventorySimple("filters", 9, this);
 
     private int priority = 0;
     private int compare = 0;
@@ -59,8 +59,8 @@ public class TileDrive extends TileMachine implements IStorageProvider, IStorage
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
 
-        InventoryUtils.restoreInventory(filterInventory, 0, nbt);
-        InventoryUtils.restoreInventory(inventory, 1, nbt);
+        InventoryUtils.restoreInventory(inventory, 0, nbt);
+        InventoryUtils.restoreInventory(filterInventory, 1, nbt);
 
         if (nbt.hasKey(NBT_PRIORITY)) {
             priority = nbt.getInteger(NBT_PRIORITY);
@@ -79,8 +79,8 @@ public class TileDrive extends TileMachine implements IStorageProvider, IStorage
     public void writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
 
-        InventoryUtils.saveInventory(filterInventory, 0, nbt);
-        InventoryUtils.saveInventory(inventory, 1, nbt);
+        InventoryUtils.saveInventory(inventory, 0, nbt);
+        InventoryUtils.saveInventory(filterInventory, 1, nbt);
 
         nbt.setInteger(NBT_PRIORITY, priority);
         nbt.setInteger(NBT_COMPARE, compare);
