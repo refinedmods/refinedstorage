@@ -42,7 +42,6 @@ public class CommonProxy {
         NetworkRegistry.INSTANCE.registerGuiHandler(RefinedStorage.INSTANCE, new GuiHandler());
 
         GameRegistry.registerTileEntity(TileController.class, ID + ":controller");
-        GameRegistry.registerTileEntity(TileCable.class, ID + ":cable");
         GameRegistry.registerTileEntity(TileGrid.class, ID + ":grid");
         GameRegistry.registerTileEntity(TileDiskDrive.class, ID + ":disk_drive");
         GameRegistry.registerTileEntity(TileExternalStorage.class, ID + ":external_storage");

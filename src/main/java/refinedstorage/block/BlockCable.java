@@ -1,5 +1,6 @@
 package refinedstorage.block;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
@@ -9,7 +10,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import refinedstorage.tile.TileCable;
+import refinedstorage.tile.TileController;
+import refinedstorage.tile.TileMachine;
 
 public class BlockCable extends BlockBase {
     public static final PropertyBool NORTH = PropertyBool.create("north");
@@ -40,12 +42,24 @@ public class BlockCable extends BlockBase {
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
         return super.getActualState(state, world, pos)
-            .withProperty(NORTH, TileCable.hasConnectionWith(world, pos.north()))
-            .withProperty(EAST, TileCable.hasConnectionWith(world, pos.east()))
-            .withProperty(SOUTH, TileCable.hasConnectionWith(world, pos.south()))
-            .withProperty(WEST, TileCable.hasConnectionWith(world, pos.west()))
-            .withProperty(UP, TileCable.hasConnectionWith(world, pos.up()))
-            .withProperty(DOWN, TileCable.hasConnectionWith(world, pos.down()));
+            .withProperty(NORTH, hasConnectionWith(world, pos.north()))
+            .withProperty(EAST, hasConnectionWith(world, pos.east()))
+            .withProperty(SOUTH, hasConnectionWith(world, pos.south()))
+            .withProperty(WEST, hasConnectionWith(world, pos.west()))
+            .withProperty(UP, hasConnectionWith(world, pos.up()))
+            .withProperty(DOWN, hasConnectionWith(world, pos.down()));
+    }
+
+    public static boolean hasConnectionWith(IBlockAccess world, BlockPos pos) {
+        Block block = world.getBlockState(pos).getBlock();
+
+        if (block instanceof BlockCable) {
+            return true;
+        }
+
+        TileEntity tile = world.getTileEntity(pos);
+
+        return tile instanceof TileMachine || tile instanceof TileController;
     }
 
     @Override
@@ -58,16 +72,6 @@ public class BlockCable extends BlockBase {
     @Override
     public AxisAlignedBB getCollisionBoundingBox(IBlockState state, World world, BlockPos pos) {
         return getBoundingBox(state, world, pos);
-    }
-
-    @Override
-    public boolean hasTileEntity(IBlockState state) {
-        return true;
-    }
-
-    @Override
-    public TileEntity createTileEntity(World world, IBlockState state) {
-        return new TileCable();
     }
 
     @Override

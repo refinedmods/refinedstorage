@@ -30,7 +30,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
     private List<TileMachine> machines = new ArrayList<TileMachine>();
 
-    private List<BlockPos> visitedCables = new ArrayList<BlockPos>();
+    private List<BlockPos> visited = new ArrayList<BlockPos>();
 
     private EnergyStorage energy = new EnergyStorage(32000);
     private int energyUsage;
@@ -52,16 +52,12 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                 if (!isActive()) {
                     disconnectAll();
                 } else {
-                    visitedCables.clear();
+                    visited.clear();
 
                     List<TileMachine> newMachines = new ArrayList<TileMachine>();
 
                     for (EnumFacing dir : EnumFacing.VALUES) {
-                        TileEntity tile = worldObj.getTileEntity(pos.offset(dir));
-
-                        if (tile instanceof TileCable) {
-                            ((TileCable) tile).addMachines(visitedCables, newMachines, this);
-                        }
+                        MachineSearcher.search(this, pos.offset(dir), visited, newMachines);
                     }
 
                     for (TileMachine machine : machines) {
