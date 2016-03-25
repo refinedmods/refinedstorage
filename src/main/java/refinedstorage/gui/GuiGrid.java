@@ -143,9 +143,9 @@ public class GuiGrid extends GuiBase {
                 String text;
 
                 if (qty >= 1000000) {
-                    text = String.valueOf((int) Math.floor(qty / 1000000)) + "M";
+                    text = String.format("%.1f", (float) qty / 1000000).replace(",", ".").replace(".0", "") + "M";
                 } else if (qty >= 1000) {
-                    text = String.valueOf((int) Math.floor(qty / 1000)) + "K";
+                    text = String.format("%.1f", (float) qty / 1000).replace(",", ".").replace(".0", "") + "K";
                 } else if (qty == 1) {
                     text = null;
                 } else {
