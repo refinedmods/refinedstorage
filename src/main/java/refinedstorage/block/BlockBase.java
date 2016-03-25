@@ -15,6 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
+import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.tile.TileBase;
 import refinedstorage.util.InventoryUtils;
 
@@ -98,10 +99,18 @@ public abstract class BlockBase extends Block {
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack itemStack) {
         super.onBlockPlacedBy(world, pos, state, player, itemStack);
 
+        Block blockPlaced = state.getBlock();
+
         TileEntity tile = world.getTileEntity(pos);
 
         if (tile instanceof TileBase) {
-            ((TileBase) tile).setDirection(BlockPistonBase.getFacingFromEntity(pos, player));
+            EnumFacing facing = BlockPistonBase.getFacingFromEntity(pos, player);
+
+            if (player.isSneaking() && (blockPlaced == RefinedStorageBlocks.IMPORTER || blockPlaced == RefinedStorageBlocks.EXPORTER || blockPlaced == RefinedStorageBlocks.EXTERNAL_STORAGE)) {
+                facing = facing.getOpposite();
+            }
+
+            ((TileBase) tile).setDirection(facing);
         }
     }
 
