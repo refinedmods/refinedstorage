@@ -10,6 +10,9 @@ import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.tile.TileController;
 import refinedstorage.tile.TileMachine;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GuiController extends GuiBase {
     private TileController controller;
 
@@ -68,9 +71,11 @@ public class GuiController extends GuiBase {
 
         RenderHelper.enableGUIStandardItemLighting();
 
+        List<TileMachine> machines = new ArrayList<TileMachine>(controller.getMachines());
+
         for (int i = 0; i < 4; ++i) {
-            if (slot < controller.getMachines().size()) {
-                TileMachine machine = controller.getMachines().get(slot);
+            if (slot < machines.size()) {
+                TileMachine machine = machines.get(slot);
                 IBlockState machineState = machine.getWorld().getBlockState(machine.getPos());
                 Block machineBlock = machineState.getBlock();
 
