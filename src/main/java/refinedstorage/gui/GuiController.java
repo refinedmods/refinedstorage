@@ -2,6 +2,7 @@ package refinedstorage.gui;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import refinedstorage.container.ContainerController;
@@ -48,6 +49,13 @@ public class GuiController extends GuiBase {
         scrollbar.draw(this);
     }
 
+    private int calculateOffsetOnScale(int pos ,float scale)
+    {
+    	float multiplier = (pos / scale);
+    	return (int)multiplier;
+    	
+    }
+    
     @Override
     public void drawForeground(int mouseX, int mouseY) {
         scrollbar.update(this, mouseX, mouseY);
@@ -76,8 +84,14 @@ public class GuiController extends GuiBase {
                     hoveringMachineStack = machineStack;
                 }
 
-                drawItem(x, y, machineStack);
-                drawString(x + 21, y + 5, t("misc.refinedstorage:energy_usage_minimal", machine.getEnergyUsage()));
+                drawItem(x, y+5, machineStack);
+                GlStateManager.pushMatrix();
+                float scale = 0.5f;
+                
+                GlStateManager.scale(scale,scale,1);
+                drawString(calculateOffsetOnScale(x+1,scale) , calculateOffsetOnScale(y-3,scale), machineStack.getDisplayName());
+                drawString(calculateOffsetOnScale(x+21,scale), calculateOffsetOnScale(y+10,scale),t("misc.refinedstorage:energy_usage_minimal", machine.getEnergyUsage()));
+                GlStateManager.popMatrix();
             }
 
             if (i == 1) {
@@ -90,10 +104,13 @@ public class GuiController extends GuiBase {
             slot++;
         }
 
-        if (hoveringMachineStack != null) {
+        /* Not needed?
+          if (hoveringMachineStack != null) {
+         
             drawTooltip(mouseX, mouseY, hoveringMachineStack);
         }
-
+		*/
+        
         if (inBounds(barX, barY, barWidth, barHeight, mouseX, mouseY)) {
             drawTooltip(mouseX, mouseY, t("misc.refinedstorage:energy_usage", controller.getEnergyUsage()) + "\n" + t("misc.refinedstorage:energy_stored", controller.getEnergyStored(null), controller.getMaxEnergyStored(null)));
         }
