@@ -5,6 +5,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
@@ -92,7 +93,8 @@ public class InventoryUtils {
         ItemStack slot = inventory.getStackInSlot(i);
 
         if (slot == null) {
-            inventory.setInventorySlotContents(i, stack);
+            inventory.setInventorySlotContents(i, stack.copy());
+            stack.stackSize = 0;
         } else if (compareStackNoQuantity(slot, stack)) {
         	int toPush = Math.min(stack.stackSize, slot.getMaxStackSize() - slot.stackSize);
         	stack.stackSize -= toPush;
