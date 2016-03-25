@@ -49,11 +49,17 @@ public class GuiController extends GuiBase {
         scrollbar.draw(this);
     }
 
+<<<<<<< HEAD
     private int calculateOffsetOnScale(int pos ,float scale) {
     	float multiplier = (pos / scale);
     	return (int)multiplier;
+=======
+    private int calculateOffsetOnScale(int pos, float scale) {
+        float multiplier = (pos / scale);
+        return (int) multiplier;
+>>>>>>> 002b5c0dda19a3eb8bfddf2cc6182cbdc1b9bbee
     }
-    
+
     @Override
     public void drawForeground(int mouseX, int mouseY) {
         scrollbar.update(this, mouseX, mouseY);
@@ -68,8 +74,6 @@ public class GuiController extends GuiBase {
 
         RenderHelper.enableGUIStandardItemLighting();
 
-        ItemStack hoveringMachineStack = null;
-
         for (int i = 0; i < 4; ++i) {
             if (slot < controller.getMachines().size()) {
                 TileMachine machine = controller.getMachines().get(slot);
@@ -78,13 +82,17 @@ public class GuiController extends GuiBase {
 
                 ItemStack machineStack = new ItemStack(machineBlock, 1, machineBlock.getMetaFromState(machineState));
 
+<<<<<<< HEAD
                 drawItem(x, y+5, machineStack);
+=======
+                drawItem(x, y + 5, machineStack);
+>>>>>>> 002b5c0dda19a3eb8bfddf2cc6182cbdc1b9bbee
                 GlStateManager.pushMatrix();
                 float scale = 0.5f;
-                
-                GlStateManager.scale(scale,scale,1);
-                drawString(calculateOffsetOnScale(x+1,scale) , calculateOffsetOnScale(y-3,scale), machineStack.getDisplayName());
-                drawString(calculateOffsetOnScale(x+21,scale), calculateOffsetOnScale(y+10,scale),t("misc.refinedstorage:energy_usage_minimal", machine.getEnergyUsage()));
+
+                GlStateManager.scale(scale, scale, 1);
+                drawString(calculateOffsetOnScale(x + 1, scale), calculateOffsetOnScale(y - 3, scale), machineStack.getDisplayName());
+                drawString(calculateOffsetOnScale(x + 21, scale), calculateOffsetOnScale(y + 10, scale), t("misc.refinedstorage:energy_usage_minimal", machine.getEnergyUsage()));
                 GlStateManager.popMatrix();
             }
 
