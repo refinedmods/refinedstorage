@@ -46,15 +46,6 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
         }
 
         if (!worldObj.isRemote) {
-        	if(isActive())
-        	switch (getType()) {
-            	case NORMAL:
-            		energy.extractEnergy(energyUsage, false);
-            		break;
-            	case CREATIVE:
-            		energy.setEnergyStored(energy.getMaxEnergyStored());
-            		break;
-        		}
             int lastEnergy = energy.getEnergyStored();
 
             if (ticks % 20 == 0) {
@@ -99,12 +90,21 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                     });
 
                     syncItems();
+
+                    energyUsage = 10;
+
+                    for (TileMachine machine : machines) {
+                        energyUsage += machine.getEnergyUsage();
+                    }
                 }
 
-                energyUsage = 10;
-
-                for (TileMachine machine : machines) {
-                    energyUsage += machine.getEnergyUsage();
+                switch (getType()) {
+                    case NORMAL:
+                        energy.extractEnergy(energyUsage, false);
+                        break;
+                    case CREATIVE:
+                        energy.setEnergyStored(energy.getMaxEnergyStored());
+                        break;
                 }
 
                 if (lastEnergy != energy.getEnergyStored()) {
