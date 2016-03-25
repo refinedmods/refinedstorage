@@ -1,14 +1,18 @@
 package refinedstorage.tile;
 
+import java.util.List;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import refinedstorage.block.BlockMachine;
 import refinedstorage.tile.settings.IRedstoneModeSetting;
 import refinedstorage.tile.settings.RedstoneMode;
 
-public abstract class TileMachine extends TileBase implements INetworkTile, IRedstoneModeSetting {
+public abstract class TileMachine extends TileCable implements INetworkTile, IRedstoneModeSetting {
     protected boolean connected = false;
     protected boolean redstoneControlled = true;
 
@@ -17,6 +21,26 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
     private BlockPos controllerPosition;
 
     private Block originalBlock;
+    
+    @Override
+    public void addMachines(List<BlockPos> visited, List<TileMachine> machines, TileController controller) {
+        
+        if (this instanceof TileMachine && (this.getRedstoneMode().isEnabled(worldObj, pos)) ) {
+            machines.add(this);
+            
+            if (this instanceof TileRelay) {
+                for (EnumFacing relayDir : EnumFacing.VALUES) {
+                    TileEntity nextToRelay = worldObj.getTileEntity(pos.offset(relayDir));
+
+                    if (nextToRelay instanceof TileCable) {
+                        ((TileCable) nextToRelay).addMachines(visited, machines, controller);
+                    }
+                }
+            }
+        }
+        super.addMachines(visited, machines, controller);
+    }
+    
 
     public void onConnected(TileController controller) {
         if (worldObj.getBlockState(pos).getBlock() == originalBlock) {
