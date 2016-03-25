@@ -90,21 +90,21 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                     });
 
                     syncItems();
-                }
 
-                energyUsage = 10;
+                    energyUsage = 10;
 
-                for (TileMachine machine : machines) {
-                    energyUsage += machine.getEnergyUsage();
-                }
+                    for (TileMachine machine : machines) {
+                        energyUsage += machine.getEnergyUsage();
+                    }
 
-                switch (getType()) {
-                    case NORMAL:
-                        energy.extractEnergy(energyUsage, false);
-                        break;
-                    case CREATIVE:
-                        energy.setEnergyStored(energy.getMaxEnergyStored());
-                        break;
+                    switch (getType()) {
+                        case NORMAL:
+                            energy.extractEnergy(energyUsage, false);
+                            break;
+                        case CREATIVE:
+                            energy.setEnergyStored(energy.getMaxEnergyStored());
+                            break;
+                    }
                 }
 
                 if (lastEnergy != energy.getEnergyStored()) {
