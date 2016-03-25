@@ -49,7 +49,7 @@ public class GuiController extends GuiBase {
         scrollbar.draw(this);
     }
 
-    private int calculateOffsetOnScale(int pos ,float scale) {
+    private int calculateOffsetOnScale(int pos, float scale) {
         float multiplier = (pos / scale);
         return (int) multiplier;
     }
