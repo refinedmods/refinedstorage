@@ -1,11 +1,18 @@
 package refinedstorage.gui;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.translation.I18n;
 import org.lwjgl.opengl.GL11;
 import refinedstorage.RefinedStorage;
@@ -161,7 +168,7 @@ public abstract class GuiBase extends GuiContainer {
         itemRender.renderItemIntoGUI(stack, x, y);
 
         if (withOverlay) {
-		renderSlotOverlay(stack, message,x,y);
+       		renderSlotOverlay(stack, message,x,y);
 	}
 
         zLevel = 0.0F;
@@ -185,11 +192,63 @@ public abstract class GuiBase extends GuiContainer {
         	GlStateManager.enableDepth();
         	GlStateManager.enableTexture2D();
         	GlStateManager.depthMask(true);
-        	GlStateManager.enableLighting();
+        	GlStateManager.enableLighting(); 
         	GlStateManager.disableBlend();
         	GlStateManager.popMatrix();
-    		}
-	}
+        	
+		}	
+        	
+        	 if (stack.getItem().showDurabilityBar(stack))
+             {
+                 double health = stack.getItem().getDurabilityForDisplay(stack);
+                 int j = (int)Math.round(13.0D - health * 13.0D);
+                 int i = (int)Math.round(255.0D - health * 255.0D);
+                 GlStateManager.disableLighting();
+                 GlStateManager.disableDepth();
+                 GlStateManager.disableTexture2D();
+                 GlStateManager.disableAlpha();
+                 GlStateManager.disableBlend();
+                 Tessellator tessellator = Tessellator.getInstance();
+                 VertexBuffer vertexbuffer = tessellator.getBuffer();
+                 this.draw(vertexbuffer, x + 2, y + 13, 13, 2, 0, 0, 0, 255);
+                 this.draw(vertexbuffer, x + 2, y + 13, 12, 1, (255 - i) / 4, 64, 0, 255);
+                 this.draw(vertexbuffer, x + 2, y + 13, j, 1, 255 - i, i, 0, 255);
+                 //GlStateManager.enableBlend(); // Forge: Disable Blend because it screws with a lot of things down the line.
+                 GlStateManager.enableAlpha();
+                 GlStateManager.enableTexture2D();
+                 GlStateManager.enableLighting();
+                 GlStateManager.enableDepth();
+             }
+
+             EntityPlayerSP entityplayersp = Minecraft.getMinecraft().thePlayer;
+             float f = entityplayersp == null ? 0.0F : entityplayersp.getCooldownTracker().getCooldown(stack.getItem(), Minecraft.getMinecraft().getRenderPartialTicks());
+
+             if (f > 0.0F)
+             {
+                 GlStateManager.disableLighting();
+                 GlStateManager.disableDepth();
+                 GlStateManager.disableTexture2D();
+                 Tessellator tessellator1 = Tessellator.getInstance();
+                 VertexBuffer vertexbuffer1 = tessellator1.getBuffer();
+                 this.draw(vertexbuffer1, x, y + MathHelper.floor_float(16.0F * (1.0F - f)), 16, MathHelper.ceiling_float_int(16.0F * f), 255, 255, 255, 127);
+                 GlStateManager.enableTexture2D();
+                 GlStateManager.enableLighting();
+                 GlStateManager.enableDepth();
+             }
+         
+        	
+    }
+	
+	 private void draw(VertexBuffer renderer, int x, int y, int width, int height, int red, int green, int blue, int alpha)
+	    {
+	        renderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
+	        renderer.pos((double)(x + 0), (double)(y + 0), 0.0D).color(red, green, blue, alpha).endVertex();
+	        renderer.pos((double)(x + 0), (double)(y + height), 0.0D).color(red, green, blue, alpha).endVertex();
+	        renderer.pos((double)(x + width), (double)(y + height), 0.0D).color(red, green, blue, alpha).endVertex();
+	        renderer.pos((double)(x + width), (double)(y + 0), 0.0D).color(red, green, blue, alpha).endVertex();
+	        Tessellator.getInstance().draw();
+	    }
+
     public void drawString(int x, int y, String message) {
         drawString(x, y, message, 4210752);
     }
