@@ -188,7 +188,7 @@ public abstract class GuiBase extends GuiContainer {
         	GlStateManager.enableBlend();
         	GlStateManager.blendFunc(770, 771);
         	GlStateManager.disableDepth();
-        	fontRendererObj.drawString(text, 30-stringWidth, 22, 16777215);
+        	fontRendererObj.drawStringWithShadow(text, 30-stringWidth, 22, 16777215);
         	GlStateManager.enableDepth();
         	GlStateManager.enableTexture2D();
         	GlStateManager.depthMask(true);
@@ -197,46 +197,8 @@ public abstract class GuiBase extends GuiContainer {
         	GlStateManager.popMatrix();
         	
 		}	
-        	
-        	 if (stack.getItem().showDurabilityBar(stack))
-             {
-                 double health = stack.getItem().getDurabilityForDisplay(stack);
-                 int j = (int)Math.round(13.0D - health * 13.0D);
-                 int i = (int)Math.round(255.0D - health * 255.0D);
-                 GlStateManager.disableLighting();
-                 GlStateManager.disableDepth();
-                 GlStateManager.disableTexture2D();
-                 GlStateManager.disableAlpha();
-                 GlStateManager.disableBlend();
-                 Tessellator tessellator = Tessellator.getInstance();
-                 VertexBuffer vertexbuffer = tessellator.getBuffer();
-                 this.draw(vertexbuffer, x + 2, y + 13, 13, 2, 0, 0, 0, 255);
-                 this.draw(vertexbuffer, x + 2, y + 13, 12, 1, (255 - i) / 4, 64, 0, 255);
-                 this.draw(vertexbuffer, x + 2, y + 13, j, 1, 255 - i, i, 0, 255);
-                 //GlStateManager.enableBlend(); // Forge: Disable Blend because it screws with a lot of things down the line.
-                 GlStateManager.enableAlpha();
-                 GlStateManager.enableTexture2D();
-                 GlStateManager.enableLighting();
-                 GlStateManager.enableDepth();
-             }
-
-             EntityPlayerSP entityplayersp = Minecraft.getMinecraft().thePlayer;
-             float f = entityplayersp == null ? 0.0F : entityplayersp.getCooldownTracker().getCooldown(stack.getItem(), Minecraft.getMinecraft().getRenderPartialTicks());
-
-             if (f > 0.0F)
-             {
-                 GlStateManager.disableLighting();
-                 GlStateManager.disableDepth();
-                 GlStateManager.disableTexture2D();
-                 Tessellator tessellator1 = Tessellator.getInstance();
-                 VertexBuffer vertexbuffer1 = tessellator1.getBuffer();
-                 this.draw(vertexbuffer1, x, y + MathHelper.floor_float(16.0F * (1.0F - f)), 16, MathHelper.ceiling_float_int(16.0F * f), 255, 255, 255, 127);
-                 GlStateManager.enableTexture2D();
-                 GlStateManager.enableLighting();
-                 GlStateManager.enableDepth();
-             }
-         
-        	
+		
+		itemRender.renderItemOverlayIntoGUI(fontRendererObj, stack, x, y, "");
     }
 	
 	 private void draw(VertexBuffer renderer, int x, int y, int width, int height, int red, int green, int blue, int alpha)
