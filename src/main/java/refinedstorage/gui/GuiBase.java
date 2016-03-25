@@ -201,16 +201,6 @@ public abstract class GuiBase extends GuiContainer {
 		itemRender.renderItemOverlayIntoGUI(fontRendererObj, stack, x, y, "");
     }
 	
-	 private void draw(VertexBuffer renderer, int x, int y, int width, int height, int red, int green, int blue, int alpha)
-	    {
-	        renderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-	        renderer.pos((double)(x + 0), (double)(y + 0), 0.0D).color(red, green, blue, alpha).endVertex();
-	        renderer.pos((double)(x + 0), (double)(y + height), 0.0D).color(red, green, blue, alpha).endVertex();
-	        renderer.pos((double)(x + width), (double)(y + height), 0.0D).color(red, green, blue, alpha).endVertex();
-	        renderer.pos((double)(x + width), (double)(y + 0), 0.0D).color(red, green, blue, alpha).endVertex();
-	        Tessellator.getInstance().draw();
-	    }
-
     public void drawString(int x, int y, String message) {
         drawString(x, y, message, 4210752);
     }
