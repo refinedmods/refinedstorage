@@ -51,7 +51,7 @@ public class GuiController extends GuiBase {
 
     private int calculateOffsetOnScale(int pos ,float scale) {
         float multiplier = (pos / scale);
-        return (int)multiplier;
+        return (int) multiplier;
     }
 
     @Override
