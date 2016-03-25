@@ -77,6 +77,7 @@ public class GuiController extends GuiBase {
                 ItemStack machineStack = new ItemStack(machineBlock, 1, machineBlock.getMetaFromState(machineState));
 
                 drawItem(x, y + 5, machineStack);
+
                 GlStateManager.pushMatrix();
                 float scale = 0.5f;
 
