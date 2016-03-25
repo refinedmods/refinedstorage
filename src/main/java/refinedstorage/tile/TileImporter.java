@@ -1,7 +1,5 @@
 package refinedstorage.tile;
 
-import java.util.List;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -50,17 +48,12 @@ public class TileImporter extends TileMachine implements ICompareSetting, IModeS
                 if (slot != null && canImport(slot)) {
                     if (connectedInventory instanceof ISidedInventory) {
                         ISidedInventory sided = (ISidedInventory) connectedInventory;
-                        int slots[] = sided.getSlotsForFace(getDirection().getOpposite());
-                        
-                        for (int i = 0; i < slots.length; i++) {
-                        	if (slots[i] == currentSlot && sided.canExtractItem(currentSlot, slot.copy(), getDirection().getOpposite())) {
-                             	if (getController().push(slot.copy())) {
-                                    connectedInventory.setInventorySlotContents(currentSlot, null);
-                                }
+
+                        if (sided.canExtractItem(currentSlot, slot.copy(), getDirection().getOpposite())) {
+                            if (getController().push(slot.copy())) {
+                                connectedInventory.setInventorySlotContents(currentSlot, null);
                             }
-						}
-                        
-                        
+                        }
                     } else if (getController().push(slot.copy())) {
                         connectedInventory.setInventorySlotContents(currentSlot, null);
                     }
