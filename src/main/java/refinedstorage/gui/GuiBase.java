@@ -1,11 +1,18 @@
 package refinedstorage.gui;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.translation.I18n;
 import org.lwjgl.opengl.GL11;
 import refinedstorage.RefinedStorage;
@@ -161,13 +168,39 @@ public abstract class GuiBase extends GuiContainer {
         itemRender.renderItemIntoGUI(stack, x, y);
 
         if (withOverlay) {
-            itemRender.renderItemOverlayIntoGUI(font, stack, x, y, message);
-        }
+       		renderSlotOverlay(stack, message,x,y);
+	}
 
         zLevel = 0.0F;
         itemRender.zLevel = 0.0F;
     }
 
+	private void renderSlotOverlay(ItemStack stack, String text, int x, int y) {
+		if (text != null) {
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x, y, 1);
+		GL11.glScalef(0.5f, 0.5f, 1);
+
+        	int stringWidth = fontRendererObj.getStringWidth(text);
+        	GlStateManager.disableLighting();
+        	GlStateManager.disableRescaleNormal();
+        	GlStateManager.depthMask(false);
+        	GlStateManager.enableBlend();
+        	GlStateManager.blendFunc(770, 771);
+        	GlStateManager.disableDepth();
+        	fontRendererObj.drawStringWithShadow(text, 30-stringWidth, 22, 16777215);
+        	GlStateManager.enableDepth();
+        	GlStateManager.enableTexture2D();
+        	GlStateManager.depthMask(true);
+        	GlStateManager.enableLighting(); 
+        	GlStateManager.disableBlend();
+        	GlStateManager.popMatrix();
+        	
+		}	
+		
+		itemRender.renderItemOverlayIntoGUI(fontRendererObj, stack, x, y, "");
+    }
+	
     public void drawString(int x, int y, String message) {
         drawString(x, y, message, 4210752);
     }
