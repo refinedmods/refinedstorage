@@ -94,13 +94,19 @@ public class InventoryUtils {
         if (slot == null) {
             inventory.setInventorySlotContents(i, stack);
         } else if (compareStackNoQuantity(slot, stack)) {
-            slot.stackSize += stack.stackSize;
+        	int toPush = Math.min(stack.stackSize, slot.getMaxStackSize() - slot.stackSize);
+        	stack.stackSize -= toPush;
+        	slot.stackSize += toPush;
         }
     }
 
     public static boolean canPushToInventorySlot(IInventory inventory, int i, ItemStack stack) {
         ItemStack slot = inventory.getStackInSlot(i);
 
+        if(!inventory.isItemValidForSlot(i, stack)) {
+        	return false;
+        }
+        
         if (slot == null) {
             return true;
         }
@@ -109,14 +115,18 @@ public class InventoryUtils {
             return false;
         }
 
-        return slot.stackSize + stack.stackSize < slot.getMaxStackSize();
+        return slot.stackSize < slot.getMaxStackSize();
     }
 
     public static void pushToInventory(IInventory inventory, ItemStack stack) {
         int toGo = stack.stackSize;
 
         for (int i = 0; i < inventory.getSizeInventory(); ++i) {
-            ItemStack slot = inventory.getStackInSlot(i);
+        	if(!inventory.isItemValidForSlot(i, stack))
+        	{
+        		continue;
+        	}
+        	ItemStack slot = inventory.getStackInSlot(i);
 
             if (slot == null) {
                 inventory.setInventorySlotContents(i, stack);

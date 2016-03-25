@@ -59,6 +59,14 @@ public class TileExporter extends TileMachine implements ICompareSetting {
                                 if (!pushedAny) {
                                     getController().push(took);
                                 }
+                                else
+                                {
+                                	if(took != null && took.stackSize > 0)
+                                	{
+                                		getController().push(took);
+                                	}
+                                }
+                                	
                             } else if (InventoryUtils.canPushToInventory(connectedInventory, took)) {
                                 InventoryUtils.pushToInventory(connectedInventory, took);
                             } else {
