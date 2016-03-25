@@ -2,10 +2,10 @@ package refinedstorage.tile;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityHopper;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.tile.settings.ICompareSetting;
 import refinedstorage.util.InventoryUtils;
@@ -41,28 +41,10 @@ public class TileExporter extends TileMachine implements ICompareSetting {
                         ItemStack took = getController().take(toTake, compare);
 
                         if (took != null) {
-                            if (connectedInventory instanceof ISidedInventory) {
-                                ISidedInventory sided = (ISidedInventory) connectedInventory;
+                            ItemStack remaining = TileEntityHopper.putStackInInventoryAllSlots(connectedInventory, took, getDirection().getOpposite());
 
-                                boolean pushedAny = false;
-
-                                for (int sidedSlot = 0; sidedSlot < connectedInventory.getSizeInventory(); ++sidedSlot) {
-                                    if (sided.canInsertItem(sidedSlot, took, getDirection().getOpposite()) && InventoryUtils.canPushToInventorySlot(connectedInventory, sidedSlot, took)) {
-                                        InventoryUtils.pushToInventorySlot(connectedInventory, sidedSlot, took);
-
-                                        pushedAny = true;
-
-                                        break;
-                                    }
-                                }
-
-                                if (!pushedAny) {
-                                    getController().push(took);
-                                }
-                            } else if (InventoryUtils.canPushToInventory(connectedInventory, took)) {
-                                InventoryUtils.pushToInventory(connectedInventory, took);
-                            } else {
-                                getController().push(took);
+                            if (remaining != null) {
+                                getController().push(remaining);
                             }
                         }
                     }
