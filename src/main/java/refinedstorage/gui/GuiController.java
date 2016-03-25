@@ -49,15 +49,10 @@ public class GuiController extends GuiBase {
         scrollbar.draw(this);
     }
 
-<<<<<<< HEAD
+
     private int calculateOffsetOnScale(int pos ,float scale) {
     	float multiplier = (pos / scale);
     	return (int)multiplier;
-=======
-    private int calculateOffsetOnScale(int pos, float scale) {
-        float multiplier = (pos / scale);
-        return (int) multiplier;
->>>>>>> 002b5c0dda19a3eb8bfddf2cc6182cbdc1b9bbee
     }
 
     @Override
@@ -82,11 +77,8 @@ public class GuiController extends GuiBase {
 
                 ItemStack machineStack = new ItemStack(machineBlock, 1, machineBlock.getMetaFromState(machineState));
 
-<<<<<<< HEAD
-                drawItem(x, y+5, machineStack);
-=======
                 drawItem(x, y + 5, machineStack);
->>>>>>> 002b5c0dda19a3eb8bfddf2cc6182cbdc1b9bbee
+
                 GlStateManager.pushMatrix();
                 float scale = 0.5f;
 
