@@ -14,6 +14,7 @@ import refinedstorage.gui.sidebutton.SideButtonGridSortingDirection;
 import refinedstorage.gui.sidebutton.SideButtonGridSortingType;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.network.MessageGridCraftingClear;
+import refinedstorage.network.MessageGridCraftingPush;
 import refinedstorage.network.MessageStoragePull;
 import refinedstorage.network.MessageStoragePush;
 import refinedstorage.storage.StorageItem;
@@ -276,6 +277,15 @@ public class GuiGrid extends GuiBase {
                     if (inBounds(slot.xDisplayPosition, slot.yDisplayPosition, 16, 16, mouseX - guiLeft, mouseY - guiTop)) {
                         if (GuiScreen.isShiftKeyDown()) {
                             RefinedStorage.NETWORK.sendToServer(new MessageStoragePush(controller.getPos().getX(), controller.getPos().getY(), controller.getPos().getZ(), slot.slotNumber, clickedButton == 1));
+                        }
+                    }
+                }
+                if (grid.getType() == EnumGridType.CRAFTING) {
+                    for (Slot slot : container.getCraftingSlots()) {
+                        if (inBounds(slot.xDisplayPosition, slot.yDisplayPosition, 16, 16, mouseX - guiLeft, mouseY - guiTop)) {
+                            if (GuiScreen.isShiftKeyDown()) {
+                                RefinedStorage.NETWORK.sendToServer(new MessageGridCraftingPush(grid, slot.getSlotIndex()));
+                            }
                         }
                     }
                 }

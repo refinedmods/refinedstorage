@@ -6,8 +6,13 @@ import refinedstorage.block.EnumGridType;
 import refinedstorage.container.slot.SlotGridCraftingResult;
 import refinedstorage.tile.TileGrid;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ContainerGrid extends ContainerBase {
     private TileGrid grid;
+
+    private List<Slot> craftingSlots = new ArrayList<Slot>();
 
     public ContainerGrid(EntityPlayer player, TileGrid grid) {
         super(player);
@@ -21,7 +26,11 @@ public class ContainerGrid extends ContainerBase {
             int y = 106;
 
             for (int i = 0; i < 9; ++i) {
-                addSlotToContainer(new Slot(grid.getCraftingInventory(), i, x, y));
+                Slot slot = new Slot(grid.getCraftingInventory(), i, x, y);
+
+                craftingSlots.add(slot);
+
+                addSlotToContainer(slot);
 
                 x += 18;
 
@@ -33,5 +42,9 @@ public class ContainerGrid extends ContainerBase {
 
             addSlotToContainer(new SlotGridCraftingResult(player, grid.getCraftingInventory(), grid.getCraftingResultInventory(), grid, 0, 133 + 4, 120 + 4));
         }
+    }
+
+    public List<Slot> getCraftingSlots() {
+        return craftingSlots;
     }
 }
