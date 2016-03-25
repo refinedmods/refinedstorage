@@ -25,7 +25,7 @@ public abstract class TileMachine extends TileCable implements INetworkTile, IRe
     @Override
     public void addMachines(List<BlockPos> visited, List<TileMachine> machines, TileController controller) {
         
-        if (this.getRedstoneMode().isEnabled(worldObj, pos)) {
+        if (this.getRedstoneMode().isEnabled(worldObj, pos) && !visited.contains(pos)) {
             machines.add(this);
             
             if (this instanceof TileRelay) {
