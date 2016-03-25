@@ -20,8 +20,6 @@ public class TileImporter extends TileMachine implements ICompareSetting, IModeS
     private int compare = 0;
     private int mode = 0;
 
-    private int currentSlot = 0;
-
     @Override
     public int getEnergyUsage() {
         return 2;
@@ -29,42 +27,36 @@ public class TileImporter extends TileMachine implements ICompareSetting, IModeS
 
     @Override
     public void updateMachine() {
-        TileEntity tile = worldObj.getTileEntity(pos.offset(getDirection()));
+        if (ticks % 5 == 0) {
+            TileEntity connectedTile = worldObj.getTileEntity(pos.offset(getDirection()));
 
-        if (tile instanceof IInventory) {
-            IInventory connectedInventory = (IInventory) tile;
+            if (connectedTile instanceof ISidedInventory) {
+                ISidedInventory sided = (ISidedInventory) connectedTile;
 
-            if (ticks % 5 == 0) {
-                ItemStack slot = connectedInventory.getStackInSlot(currentSlot);
+                int[] availableSlots = sided.getSlotsForFace(getDirection().getOpposite());
 
-                while ((slot = connectedInventory.getStackInSlot(currentSlot)) == null) {
-                    currentSlot++;
+                for (int availableSlot : availableSlots) {
+                    ItemStack stack = sided.getStackInSlot(availableSlot);
 
-                    if (currentSlot > connectedInventory.getSizeInventory() - 1) {
-                        break;
-                    }
-                }
-
-                if (slot != null && canImport(slot)) {
-                    if (connectedInventory instanceof ISidedInventory) {
-                        ISidedInventory sided = (ISidedInventory) connectedInventory;
-
-                        if (sided.canExtractItem(currentSlot, slot.copy(), getDirection().getOpposite())) {
-                            if (getController().push(slot.copy())) {
-                                connectedInventory.setInventorySlotContents(currentSlot, null);
-                            }
+                    if (stack != null && canImport(stack) && sided.canExtractItem(availableSlot, stack, getDirection().getOpposite())) {
+                        if (getController().push(stack.copy())) {
+                            sided.setInventorySlotContents(availableSlot, null);
+                            sided.markDirty();
                         }
-                    } else if (getController().push(slot.copy())) {
-                        connectedInventory.setInventorySlotContents(currentSlot, null);
                     }
-
-                    connectedInventory.markDirty();
                 }
+            } else if (connectedTile instanceof IInventory) {
+                IInventory inventory = (IInventory) connectedTile;
 
-                currentSlot++;
+                for (int i = 0; i < inventory.getSizeInventory(); ++i) {
+                    ItemStack stack = inventory.getStackInSlot(i);
 
-                if (currentSlot > connectedInventory.getSizeInventory() - 1) {
-                    currentSlot = 0;
+                    if (stack != null && canImport(stack)) {
+                        if (getController().push(stack.copy())) {
+                            inventory.setInventorySlotContents(i, null);
+                            inventory.markDirty();
+                        }
+                    }
                 }
             }
         }
