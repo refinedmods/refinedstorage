@@ -15,10 +15,14 @@ public class TileImporter extends TileMachine implements ICompareSetting, IModeS
     public static final String NBT_COMPARE = "Compare";
     public static final String NBT_MODE = "Mode";
 
+    public static final int SPEED = 3;
+
     private InventorySimple inventory = new InventorySimple("importer", 9, this);
 
     private int compare = 0;
     private int mode = 0;
+
+    private int currentSlot;
 
     @Override
     public int getEnergyUsage() {
@@ -27,38 +31,64 @@ public class TileImporter extends TileMachine implements ICompareSetting, IModeS
 
     @Override
     public void updateMachine() {
-        if (ticks % 5 == 0) {
-            TileEntity connectedTile = worldObj.getTileEntity(pos.offset(getDirection()));
+        TileEntity connectedTile = worldObj.getTileEntity(pos.offset(getDirection()));
 
-            if (connectedTile instanceof ISidedInventory) {
-                ISidedInventory sided = (ISidedInventory) connectedTile;
+        if (connectedTile instanceof ISidedInventory) {
+            ISidedInventory sided = (ISidedInventory) connectedTile;
 
-                int[] availableSlots = sided.getSlotsForFace(getDirection().getOpposite());
+            int[] availableSlots = sided.getSlotsForFace(getDirection().getOpposite());
 
-                for (int availableSlot : availableSlots) {
-                    ItemStack stack = sided.getStackInSlot(availableSlot);
+            if (currentSlot >= availableSlots.length) {
+                currentSlot = 0;
+            }
 
-                    if (stack != null && canImport(stack) && sided.canExtractItem(availableSlot, stack, getDirection().getOpposite())) {
-                        if (getController().push(stack.copy())) {
-                            sided.setInventorySlotContents(availableSlot, null);
-                            sided.markDirty();
-                        }
-                    }
-                }
-            } else if (connectedTile instanceof IInventory) {
-                IInventory inventory = (IInventory) connectedTile;
+            if (availableSlots.length > 0) {
+                int availableSlot = availableSlots[currentSlot];
 
-                for (int i = 0; i < inventory.getSizeInventory(); ++i) {
-                    ItemStack stack = inventory.getStackInSlot(i);
+                ItemStack stack = sided.getStackInSlot(availableSlot);
 
-                    if (stack != null && canImport(stack)) {
-                        if (getController().push(stack.copy())) {
-                            inventory.setInventorySlotContents(i, null);
-                            inventory.markDirty();
+                if (stack == null) {
+                    currentSlot++;
+                } else {
+                    if (ticks % SPEED == 0) {
+                        ItemStack toTake = stack.copy();
+                        toTake.stackSize = 1;
+
+                        if (canImport(toTake) && sided.canExtractItem(availableSlot, toTake, getDirection().getOpposite())) {
+                            if (getController().push(toTake)) {
+                                sided.decrStackSize(availableSlot, 1);
+                                sided.markDirty();
+                            }
                         }
                     }
                 }
             }
+        } else if (connectedTile instanceof IInventory) {
+            IInventory inventory = (IInventory) connectedTile;
+
+            if (currentSlot >= inventory.getSizeInventory()) {
+                currentSlot = 0;
+            }
+
+            ItemStack stack = inventory.getStackInSlot(currentSlot);
+
+            if (stack != null) {
+                if (ticks % SPEED == 0) {
+                    ItemStack toTake = stack.copy();
+                    toTake.stackSize = 1;
+
+                    if (canImport(toTake)) {
+                        if (getController().push(toTake)) {
+                            inventory.decrStackSize(currentSlot, 1);
+                            inventory.markDirty();
+                        }
+                    }
+                }
+            } else {
+                currentSlot++;
+            }
+        } else {
+            currentSlot = 0;
         }
     }
 
