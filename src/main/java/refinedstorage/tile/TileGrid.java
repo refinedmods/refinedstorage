@@ -42,8 +42,8 @@ public class TileGrid extends TileMachine {
     private InventoryCrafting craftingInventory = new InventoryCrafting(craftingContainer, 3, 3);
     private InventorySimple craftingResultInventory = new InventorySimple("crafting_result", 1);
 
-    private int sortingDirection = 0;
-    private int sortingType = 0;
+    private int sortingDirection = SORTING_DIRECTION_DESCENDING;
+    private int sortingType = SORTING_TYPE_NAME;
 
     @Override
     public int getEnergyUsage() {
