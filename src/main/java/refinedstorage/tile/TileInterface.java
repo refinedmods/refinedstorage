@@ -29,7 +29,7 @@ public class TileInterface extends TileMachine implements ICompareSetting, ISide
     @Override
     public void updateMachine() {
         if (ticks % 5 == 0) {
-            ItemStack slot = inventory.getStackInSlot(currentSlot);
+            ItemStack slot;
 
             while ((slot = inventory.getStackInSlot(currentSlot)) == null) {
                 currentSlot++;
@@ -39,7 +39,7 @@ public class TileInterface extends TileMachine implements ICompareSetting, ISide
                 }
             }
 
-            if (inventory.getStackInSlot(currentSlot) != null) {
+            if (slot != null) {
                 if (getController().push(slot)) {
                     inventory.setInventorySlotContents(currentSlot, null);
                 }
