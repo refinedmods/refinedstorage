@@ -48,10 +48,10 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
     @Override
     public void addItems(List<StorageItem> items) {
-        TileEntity connectedInventory = getConnectedInventory();
+        TileEntity connectedTile = getConnectedTile();
 
-        if (connectedInventory instanceof IDeepStorageUnit) {
-            IDeepStorageUnit deep = (IDeepStorageUnit) connectedInventory;
+        if (connectedTile instanceof IDeepStorageUnit) {
+            IDeepStorageUnit deep = (IDeepStorageUnit) connectedTile;
 
             if (deep.getStoredItemType() != null) {
                 ItemStack stack = deep.getStoredItemType().copy();
@@ -60,8 +60,8 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
                     items.add(new StorageItem(stack.splitStack(Math.min(stack.getMaxStackSize(), stack.stackSize))));
                 }
             }
-        } else if (connectedInventory instanceof IInventory) {
-            IInventory inventory = (IInventory) connectedInventory;
+        } else if (connectedTile instanceof IInventory) {
+            IInventory inventory = (IInventory) connectedTile;
 
             for (int i = 0; i < inventory.getSizeInventory(); ++i) {
                 if (inventory.getStackInSlot(i) != null) {
@@ -73,29 +73,29 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
     @Override
     public void push(ItemStack stack) {
-        TileEntity connectedInventory = getConnectedInventory();
+        TileEntity connectedTile = getConnectedTile();
 
-        if (connectedInventory instanceof IDeepStorageUnit) {
-            IDeepStorageUnit deep = (IDeepStorageUnit) connectedInventory;
+        if (connectedTile instanceof IDeepStorageUnit) {
+            IDeepStorageUnit deep = (IDeepStorageUnit) connectedTile;
 
             if (deep.getStoredItemType() == null) {
                 deep.setStoredItemType(stack, stack.stackSize);
             } else {
                 deep.setStoredItemCount(deep.getStoredItemType().stackSize + stack.stackSize);
             }
-        } else if (connectedInventory instanceof IInventory) {
-            InventoryUtils.pushToInventory((IInventory) connectedInventory, stack);
+        } else if (connectedTile instanceof IInventory) {
+            InventoryUtils.pushToInventory((IInventory) connectedTile, stack);
         }
     }
 
     @Override
     public ItemStack take(ItemStack stack, int flags) {
-        TileEntity connectedInventory = getConnectedInventory();
+        TileEntity connectedTile = getConnectedTile();
 
         int quantity = stack.stackSize;
 
-        if (connectedInventory instanceof IDeepStorageUnit) {
-            IDeepStorageUnit deep = (IDeepStorageUnit) connectedInventory;
+        if (connectedTile instanceof IDeepStorageUnit) {
+            IDeepStorageUnit deep = (IDeepStorageUnit) connectedTile;
 
             if (deep.getStoredItemType() != null && InventoryUtils.compareStackNoQuantity(deep.getStoredItemType(), stack)) {
                 if (deep.getStoredItemType().stackSize < quantity) {
@@ -109,8 +109,8 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
                 return took;
             }
-        } else if (connectedInventory instanceof IInventory) {
-            IInventory inventory = (IInventory) connectedInventory;
+        } else if (connectedTile instanceof IInventory) {
+            IInventory inventory = (IInventory) connectedTile;
 
             for (int i = 0; i < inventory.getSizeInventory(); ++i) {
                 ItemStack slot = inventory.getStackInSlot(i);
@@ -141,10 +141,10 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
     @Override
     public boolean canPush(ItemStack stack) {
         if (ModeSettingUtils.doesNotViolateMode(inventory, this, compare, stack)) {
-            TileEntity connectedInventory = getConnectedInventory();
+            TileEntity connectedTile = getConnectedTile();
 
-            if (connectedInventory instanceof IDeepStorageUnit) {
-                IDeepStorageUnit deep = (IDeepStorageUnit) connectedInventory;
+            if (connectedTile instanceof IDeepStorageUnit) {
+                IDeepStorageUnit deep = (IDeepStorageUnit) connectedTile;
 
                 if (deep.getStoredItemType() != null) {
                     if (InventoryUtils.compareStackNoQuantity(deep.getStoredItemType(), stack)) {
@@ -155,15 +155,15 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
                 } else {
                     return stack.stackSize < deep.getMaxStoredCount();
                 }
-            } else if (connectedInventory instanceof IInventory) {
-                return InventoryUtils.canPushToInventory((IInventory) connectedInventory, stack);
+            } else if (connectedTile instanceof IInventory) {
+                return InventoryUtils.canPushToInventory((IInventory) connectedTile, stack);
             }
         }
 
         return false;
     }
 
-    public TileEntity getConnectedInventory() {
+    public TileEntity getConnectedTile() {
         TileEntity tile = worldObj.getTileEntity(pos.offset(getDirection()));
 
         if (tile instanceof IInventory || tile instanceof IDeepStorageUnit) {
@@ -179,14 +179,14 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
         buf.writeInt(priority);
 
-        TileEntity connectedInventory = getConnectedInventory();
+        TileEntity connectedTile = getConnectedTile();
 
-        if (connectedInventory instanceof IDeepStorageUnit) {
-            IDeepStorageUnit deep = (IDeepStorageUnit) connectedInventory;
+        if (connectedTile instanceof IDeepStorageUnit) {
+            IDeepStorageUnit deep = (IDeepStorageUnit) connectedTile;
 
             buf.writeInt(deep.getStoredItemType() == null ? 0 : deep.getStoredItemType().stackSize);
-        } else if (connectedInventory instanceof IInventory) {
-            buf.writeInt(InventoryUtils.getInventoryItems((IInventory) connectedInventory));
+        } else if (connectedTile instanceof IInventory) {
+            buf.writeInt(InventoryUtils.getInventoryItems((IInventory) connectedTile));
         } else {
             buf.writeInt(0);
         }
@@ -314,11 +314,11 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
     @Override
     public int getCapacity() {
-        if (getConnectedInventory() == null) {
+        if (getConnectedTile() == null) {
             return 0;
         }
 
-        TileEntity connectedInventory = getConnectedInventory();
+        TileEntity connectedInventory = getConnectedTile();
 
         if (connectedInventory instanceof IDeepStorageUnit) {
             return ((IDeepStorageUnit) connectedInventory).getMaxStoredCount();

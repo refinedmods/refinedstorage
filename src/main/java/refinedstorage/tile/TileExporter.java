@@ -13,6 +13,8 @@ import refinedstorage.util.InventoryUtils;
 public class TileExporter extends TileMachine implements ICompareSetting {
     public static final String NBT_COMPARE = "Compare";
 
+    public static final int SPEED = 3;
+
     private InventorySimple inventory = new InventorySimple("exporter", 9, this);
 
     private int compare = 0;
@@ -24,19 +26,18 @@ public class TileExporter extends TileMachine implements ICompareSetting {
 
     @Override
     public void updateMachine() {
-        TileEntity tile = worldObj.getTileEntity(pos.offset(getDirection()));
+        TileEntity connectedTile = worldObj.getTileEntity(pos.offset(getDirection()));
 
-        if (tile instanceof IInventory) {
-            IInventory connectedInventory = (IInventory) tile;
+        if (connectedTile instanceof IInventory) {
+            IInventory connectedInventory = (IInventory) connectedTile;
 
-            if (ticks % 5 == 0) {
+            if (ticks % SPEED == 0) {
                 for (int i = 0; i < inventory.getSizeInventory(); ++i) {
                     ItemStack slot = inventory.getStackInSlot(i);
 
                     if (slot != null) {
                         ItemStack toTake = slot.copy();
-
-                        toTake.stackSize = 64;
+                        toTake.stackSize = 1;
 
                         ItemStack took = getController().take(toTake, compare);
 
