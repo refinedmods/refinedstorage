@@ -59,6 +59,9 @@ public class TileImporter extends TileMachine implements ICompareSetting, IModeS
                                 sided.decrStackSize(availableSlot, 1);
                                 sided.markDirty();
                             }
+                        } else {
+                            // If we can't import and/ or extract, move on (otherwise we stay on the same slot forever)
+                            currentSlot++;
                         }
                     }
                 }
