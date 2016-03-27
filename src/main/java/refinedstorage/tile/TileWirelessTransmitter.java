@@ -17,7 +17,7 @@ public class TileWirelessTransmitter extends TileMachine implements IInventory {
     public static final String NBT_WORKING = "Working";
     public static final String NBT_PROGRESS = "Progress";
 
-    private InventorySimple inventory = new InventorySimple("wirelessTransmitter", 3);
+    private InventorySimple inventory = new InventorySimple("wirelessTransmitter", 3, this);
 
     private boolean working = false;
     private int progress = 0;

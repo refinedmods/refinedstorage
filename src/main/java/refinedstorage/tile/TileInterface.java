@@ -24,7 +24,7 @@ public class TileInterface extends TileMachine implements ICompareSetting, ISide
         18, 19, 20, 21, 22, 23, 24, 25, 26
     };
 
-    private InventorySimple inventory = new InventorySimple("interface", 9 * 3);
+    private InventorySimple inventory = new InventorySimple("interface", 9 * 3, this);
 
     private int compare = 0;
 

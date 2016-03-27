@@ -26,7 +26,7 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
         3
     };
 
-    private InventorySimple inventory = new InventorySimple("solderer", 4);
+    private InventorySimple inventory = new InventorySimple("solderer", 4, this);
 
     private ISoldererRecipe recipe;
 
