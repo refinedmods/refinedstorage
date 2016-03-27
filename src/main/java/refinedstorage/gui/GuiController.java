@@ -5,6 +5,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.translation.I18n;
 import refinedstorage.container.ContainerController;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.tile.TileController;
@@ -75,6 +76,8 @@ public class GuiController extends GuiBase {
 
         List<TileMachine> machines = new ArrayList<TileMachine>(controller.getMachines());
 
+        TileMachine machineHovering = null;
+
         for (int i = 0; i < 4; ++i) {
             if (slot < machines.size()) {
                 TileMachine machine = machines.get(slot);
@@ -91,6 +94,10 @@ public class GuiController extends GuiBase {
                 drawString(calculateOffsetOnScale(x + 1, scale), calculateOffsetOnScale(y - 3, scale), machineStack.getDisplayName());
                 drawString(calculateOffsetOnScale(x + 21, scale), calculateOffsetOnScale(y + 10, scale), t("misc.refinedstorage:energy_usage_minimal", machine.getEnergyUsage()));
                 GlStateManager.popMatrix();
+
+                if (inBounds(x, y, 16, 16, mouseX, mouseY)) {
+                    machineHovering = machine;
+                }
             }
 
             if (i == 1) {
@@ -101,6 +108,14 @@ public class GuiController extends GuiBase {
             }
 
             slot++;
+        }
+
+        if (machineHovering != null) {
+            String message = I18n.translateToLocalFormatted("gui.refinedstorage:controller.machine_position.x", machineHovering.getPos().getX());
+            message += "\n" + I18n.translateToLocalFormatted("gui.refinedstorage:controller.machine_position.y", machineHovering.getPos().getY());
+            message += "\n" + I18n.translateToLocalFormatted("gui.refinedstorage:controller.machine_position.z", machineHovering.getPos().getZ());
+
+            drawTooltip(mouseX, mouseY, message);
         }
 
         if (inBounds(barX, barY, barWidth, barHeight, mouseX, mouseY)) {
