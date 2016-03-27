@@ -11,6 +11,8 @@ import refinedstorage.tile.settings.ICompareSetting;
 import refinedstorage.util.InventoryUtils;
 
 public class TileConstructor extends TileMachine implements ICompareSetting {
+    public static final int SPEED = 10;
+
     public static final String NBT_COMPARE = "Compare";
 
     private InventorySimple inventory = new InventorySimple("constructor", 1, this);
@@ -24,7 +26,7 @@ public class TileConstructor extends TileMachine implements ICompareSetting {
 
     @Override
     public void updateMachine() {
-        if (ticks % 10 == 0) {
+        if (ticks % SPEED == 0) {
             BlockPos front = pos.offset(getDirection());
 
             if ((worldObj.isAirBlock(front) || worldObj.getBlockState(front).getBlock().getMaterial(worldObj.getBlockState(front)).isLiquid()) && inventory.getStackInSlot(0) != null) {

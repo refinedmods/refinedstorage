@@ -31,7 +31,7 @@ public class GuiHandler implements IGuiHandler {
             case RefinedStorageGui.WIRELESS_TRANSMITTER:
                 return new ContainerWirelessTransmitter(player, (TileWirelessTransmitter) tile);
             case RefinedStorageGui.DESTRUCTOR:
-                return new ContainerDestructor(player);
+                return new ContainerDestructor(player, (TileDestructor) tile);
             case RefinedStorageGui.CONSTRUCTOR:
                 return new ContainerConstructor(player, (TileConstructor) tile);
             case RefinedStorageGui.STORAGE:
