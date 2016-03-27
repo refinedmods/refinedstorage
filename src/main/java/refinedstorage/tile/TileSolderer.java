@@ -19,6 +19,13 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
     public static final String NBT_WORKING = "Working";
     public static final String NBT_PROGRESS = "Progress";
 
+    public static final int[] FACES = new int[]{
+        0, 1, 2
+    };
+    public static final int[] FACES_DOWN = new int[]{
+        3
+    };
+
     private InventorySimple inventory = new InventorySimple("solderer", 4);
 
     private ISoldererRecipe recipe;
@@ -232,17 +239,7 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
 
     @Override
     public int[] getSlotsForFace(EnumFacing side) {
-        if (side != EnumFacing.DOWN) {
-            return new int[]
-                {
-                    0, 1, 2
-                };
-        }
-
-        return new int[]
-            {
-                3
-            };
+        return side == EnumFacing.DOWN ? FACES_DOWN : FACES;
     }
 
     @Override
