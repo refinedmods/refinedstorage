@@ -15,6 +15,15 @@ import refinedstorage.util.InventoryUtils;
 public class TileInterface extends TileMachine implements ICompareSetting, ISidedInventory {
     public static final String NBT_COMPARE = "Compare";
 
+    public static final int SPEED = 3;
+
+    public static final int[] FACES = new int[]{
+        0, 1, 2, 3, 4, 5, 6, 7, 8
+    };
+    public static final int[] FACES_DOWN = new int[]{
+        18, 19, 20, 21, 22, 23, 24, 25, 26
+    };
+
     private InventorySimple inventory = new InventorySimple("interface", 9 * 3);
 
     private int compare = 0;
@@ -28,27 +37,22 @@ public class TileInterface extends TileMachine implements ICompareSetting, ISide
 
     @Override
     public void updateMachine() {
-        if (ticks % 5 == 0) {
-            ItemStack slot;
+        if (currentSlot > 8) {
+            currentSlot = 0;
+        }
 
-            while ((slot = inventory.getStackInSlot(currentSlot)) == null) {
-                currentSlot++;
+        ItemStack slot = getStackInSlot(currentSlot);
 
-                if (currentSlot > 8) {
-                    break;
-                }
-            }
-
-            if (slot != null) {
-                if (getController().push(slot)) {
-                    inventory.setInventorySlotContents(currentSlot, null);
-                }
-            }
-
+        if (slot == null) {
             currentSlot++;
+        } else {
+            if (ticks % SPEED == 0) {
+                ItemStack toPush = slot.copy();
+                toPush.stackSize = 1;
 
-            if (currentSlot > 8) {
-                currentSlot = 0;
+                if (getController().push(toPush)) {
+                    decrStackSize(currentSlot, 1);
+                }
             }
         }
 
@@ -229,17 +233,7 @@ public class TileInterface extends TileMachine implements ICompareSetting, ISide
 
     @Override
     public int[] getSlotsForFace(EnumFacing side) {
-        if (side == EnumFacing.DOWN) {
-            return new int[]
-                {
-                    18, 19, 20, 21, 22, 23, 24, 25, 26
-                };
-        }
-
-        return new int[]
-            {
-                0, 1, 2, 3, 4, 5, 6, 7, 8
-            };
+        return side == EnumFacing.DOWN ? FACES_DOWN : FACES;
     }
 
     @Override
