@@ -1,6 +1,7 @@
 package refinedstorage.tile;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.Block;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -26,14 +27,16 @@ public class TileConstructor extends TileMachine implements ICompareSetting {
 
     @Override
     public void updateMachine() {
-        if (ticks % SPEED == 0) {
+        if (ticks % SPEED == 0 && inventory.getStackInSlot(0) != null) {
             BlockPos front = pos.offset(getDirection());
 
-            if ((worldObj.isAirBlock(front) || worldObj.getBlockState(front).getBlock().getMaterial(worldObj.getBlockState(front)).isLiquid()) && inventory.getStackInSlot(0) != null) {
+            Block tryingToPlace = ((ItemBlock) inventory.getStackInSlot(0).getItem()).getBlock();
+
+            if (tryingToPlace.canPlaceBlockAt(worldObj, front)) {
                 ItemStack took = getController().take(inventory.getStackInSlot(0).copy(), compare);
 
                 if (took != null) {
-                    worldObj.setBlockState(front, ((ItemBlock) took.getItem()).getBlock().getStateFromMeta(took.getItemDamage()), 1 | 2);
+                    worldObj.setBlockState(front, tryingToPlace.getStateFromMeta(took.getItemDamage()), 1 | 2);
                 }
             }
         }
