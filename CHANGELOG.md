@@ -2,14 +2,14 @@
 
 ### 0.5
 **Bugfixes**
-- Fix clicking sound in Grid
-- Fix NPE in Grid while sorting
-- Fix exporter not exporting is some cases
-- Fix importer not importing in some cases
-- Fix controller drawing RF every 20 ticks instead of every tick
-- Fix not being able to shift click from Crafting Grid crafting slots
-- Fix crash with interfaces
-- Check if the Contructor can actually place said block in the world
+- Fixed clicking sound in Grid
+- Fixed NPE in Grid while sorting
+- Fixed exporter not exporting is some cases
+- Fixed importer not importing in some cases
+- Fixed controller drawing RF every 20 ticks instead of every tick
+- Fixed not being able to shift click from Crafting Grid crafting slots
+- Fixed crash with interfaces
+- Check if the Constructor can actually place said block in the world
 
 **Features**
 - New textures
