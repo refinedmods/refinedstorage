@@ -22,12 +22,11 @@ import refinedstorage.tile.TileController;
 import refinedstorage.tile.TileGrid;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class GuiGrid extends GuiBase {
+    public static final int VISIBLE_ROWS = 4;
+
     private ContainerGrid container;
     private TileGrid grid;
 
@@ -62,15 +61,11 @@ public class GuiGrid extends GuiBase {
 
     @Override
     public void update(int x, int y) {
-        scrollbar.setCanScroll(getRows() > getVisibleRows());
+        scrollbar.setCanScroll(getRows() > VISIBLE_ROWS);
     }
 
     public int getOffset() {
         return (int) (scrollbar.getCurrentScroll() / 70f * (float) getRows());
-    }
-
-    public int getVisibleRows() {
-        return 4;
     }
 
     public int getRows() {
@@ -137,7 +132,7 @@ public class GuiGrid extends GuiBase {
 
         RenderHelper.enableGUIStandardItemLighting();
 
-        for (int i = 0; i < 9 * getVisibleRows(); ++i) {
+        for (int i = 0; i < 9 * VISIBLE_ROWS; ++i) {
             if (slot < items.size()) {
                 int qty = items.get(slot).getQuantity();
 
@@ -218,7 +213,7 @@ public class GuiGrid extends GuiBase {
             }
         }
 
-        items.sort(new Comparator<StorageItem>() {
+        Collections.sort(items, new Comparator<StorageItem>() {
             @Override
             public int compare(StorageItem o1, StorageItem o2) {
                 if (o1 != null && o2 != null) {
@@ -234,7 +229,7 @@ public class GuiGrid extends GuiBase {
         });
 
         if (grid.getSortingType() == TileGrid.SORTING_TYPE_QUANTITY) {
-            items.sort(new Comparator<StorageItem>() {
+            Collections.sort(items, new Comparator<StorageItem>() {
                 @Override
                 public int compare(StorageItem o1, StorageItem o2) {
                     if (o1 != null && o2 != null) {

@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GuiController extends GuiBase {
+    public static final int VISIBLE_ROWS = 2;
+
     private TileController controller;
 
     private int barX = 8;
@@ -36,7 +38,7 @@ public class GuiController extends GuiBase {
 
     @Override
     public void update(int x, int y) {
-        scrollbar.setCanScroll(getRows() > getVisibleRows());
+        scrollbar.setCanScroll(getRows() > VISIBLE_ROWS);
     }
 
     @Override
@@ -47,7 +49,7 @@ public class GuiController extends GuiBase {
 
         int barHeightNew = (int) ((float) controller.getEnergyStored(null) / (float) controller.getMaxEnergyStored(null) * (float) barHeight);
 
-        drawTexture(x + barX, y + barY + barHeight - barHeightNew, 178, 0 + (barHeight - barHeightNew), barWidth, barHeightNew);
+        drawTexture(x + barX, y + barY + barHeight - barHeightNew, 178, barHeight - barHeightNew, barWidth, barHeightNew);
 
         scrollbar.draw(this);
     }
@@ -114,9 +116,5 @@ public class GuiController extends GuiBase {
         int max = (int) Math.ceil((float) controller.getMachines().size() / (float) 2);
 
         return max < 0 ? 0 : max;
-    }
-
-    private int getVisibleRows() {
-        return 2;
     }
 }

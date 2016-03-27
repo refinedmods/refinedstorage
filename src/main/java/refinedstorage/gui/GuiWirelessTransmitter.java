@@ -31,7 +31,7 @@ public class GuiWirelessTransmitter extends GuiBase {
         if (wirelessTransmitter.isWorking()) {
             int progress = (int) ((float) wirelessTransmitter.getProgress() / (float) TileWirelessTransmitter.TOTAL_PROGRESS * 14f);
 
-            drawTexture(x + 36 - 1, y + 21 - 1 + progress, 178, 0 + progress, 14, 14);
+            drawTexture(x + 36 - 1, y + 21 - 1 + progress, 178, progress, 14, 14);
         }
     }
 

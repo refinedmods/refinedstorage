@@ -3,13 +3,13 @@ package refinedstorage.tile.settings;
 import net.minecraft.util.math.BlockPos;
 
 public interface IModeSetting {
-    public boolean isWhitelist();
+    boolean isWhitelist();
 
-    public boolean isBlacklist();
+    boolean isBlacklist();
 
-    public void setToWhitelist();
+    void setToWhitelist();
 
-    public void setToBlacklist();
+    void setToBlacklist();
 
-    public BlockPos getMachinePos();
+    BlockPos getMachinePos();
 }

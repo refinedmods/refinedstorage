@@ -18,7 +18,6 @@ public class SideButtonMode extends SideButton {
         StringBuilder builder = new StringBuilder();
 
         builder.append(TextFormatting.GREEN).append(gui.t("sidebutton.refinedstorage:mode")).append(TextFormatting.RESET).append("\n");
-
         builder.append(gui.t("sidebutton.refinedstorage:mode." + (mode.isWhitelist() ? "whitelist" : "blacklist")));
 
         return builder.toString();

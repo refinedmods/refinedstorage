@@ -19,6 +19,7 @@ import refinedstorage.tile.settings.RedstoneMode;
 import refinedstorage.util.InventoryUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -82,7 +83,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                         }
                     }
 
-                    storages.sort(new Comparator<IStorage>() {
+                    Collections.sort(storages, new Comparator<IStorage>() {
                         @Override
                         public int compare(IStorage s1, IStorage s2) {
                             return (s1.getPriority() > s2.getPriority()) ? -1 : 1;

@@ -18,7 +18,6 @@ public class SideButtonGridSortingType extends SideButton {
         StringBuilder builder = new StringBuilder();
 
         builder.append(TextFormatting.YELLOW).append(gui.t("sidebutton.refinedstorage:sorting.type")).append(TextFormatting.RESET).append("\n");
-
         builder.append(gui.t("sidebutton.refinedstorage:sorting.type." + grid.getSortingType()));
 
         return builder.toString();

@@ -3,9 +3,9 @@ package refinedstorage.tile.solderer;
 import net.minecraft.item.ItemStack;
 
 public interface ISoldererRecipe {
-    public ItemStack getRow(int row);
+    ItemStack getRow(int row);
 
-    public ItemStack getResult();
+    ItemStack getResult();
 
-    public int getDuration();
+    int getDuration();
 }

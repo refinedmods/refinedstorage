@@ -5,13 +5,13 @@ import net.minecraft.item.ItemStack;
 import java.util.List;
 
 public interface IStorage {
-    public void addItems(List<StorageItem> items);
+    void addItems(List<StorageItem> items);
 
-    public void push(ItemStack stack);
+    void push(ItemStack stack);
 
-    public ItemStack take(ItemStack stack, int flags);
+    ItemStack take(ItemStack stack, int flags);
 
-    public boolean canPush(ItemStack stack);
+    boolean canPush(ItemStack stack);
 
-    public int getPriority();
+    int getPriority();
 }

@@ -10,14 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ContainerGrid extends ContainerBase {
-    private TileGrid grid;
-
     private List<Slot> craftingSlots = new ArrayList<Slot>();
 
     public ContainerGrid(EntityPlayer player, TileGrid grid) {
         super(player);
-
-        this.grid = grid;
 
         addPlayerInventory(8, grid.getType() == EnumGridType.CRAFTING ? 174 : 108);
 

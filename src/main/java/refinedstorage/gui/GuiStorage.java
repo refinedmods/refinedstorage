@@ -69,7 +69,7 @@ public class GuiStorage extends GuiBase {
 
         int barHeightNew = (int) ((float) gui.getStored() / (float) gui.getCapacity() * (float) barHeight);
 
-        drawTexture(x + barX, y + barY + barHeight - barHeightNew, 179, 0 + (barHeight - barHeightNew), barWidth, barHeightNew);
+        drawTexture(x + barX, y + barY + barHeight - barHeightNew, 179, barHeight - barHeightNew, barWidth, barHeightNew);
 
         priorityField.drawTextBox();
     }
