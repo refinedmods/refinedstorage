@@ -25,8 +25,6 @@ import java.io.IOException;
 import java.util.*;
 
 public class GuiGrid extends GuiBase {
-    public static final int VISIBLE_ROWS = 4;
-
     private ContainerGrid container;
     private TileGrid grid;
 
@@ -35,13 +33,14 @@ public class GuiGrid extends GuiBase {
     private int hoveringSlotId;
     private int hoveringId;
 
-    private Scrollbar scrollbar = new Scrollbar(174, 20, 12, 70);
+    private Scrollbar scrollbar;
 
     public GuiGrid(ContainerGrid container, TileGrid grid) {
-        super(container, 193, grid.getType() == EnumGridType.CRAFTING ? 256 : 190);
+        super(container, 193, grid.getType() == EnumGridType.CRAFTING ? 256 : 208);
 
         this.container = container;
         this.grid = grid;
+        this.scrollbar = new Scrollbar(174, 20, 12, grid.getType() == EnumGridType.CRAFTING ? 70 : 88);
     }
 
     @Override
@@ -61,7 +60,7 @@ public class GuiGrid extends GuiBase {
 
     @Override
     public void update(int x, int y) {
-        scrollbar.setCanScroll(getRows() > VISIBLE_ROWS);
+        scrollbar.setCanScroll(getRows() > getVisibleRows());
     }
 
     public int getOffset() {
@@ -119,7 +118,7 @@ public class GuiGrid extends GuiBase {
             drawString(7, 94, t("container.crafting"));
         }
 
-        drawString(7, grid.getType() == EnumGridType.CRAFTING ? 163 : 96, t("container.inventory"));
+        drawString(7, grid.getType() == EnumGridType.CRAFTING ? 163 : 113, t("container.inventory"));
 
         int x = 8;
         int y = 20;
@@ -132,7 +131,7 @@ public class GuiGrid extends GuiBase {
 
         RenderHelper.enableGUIStandardItemLighting();
 
-        for (int i = 0; i < 9 * VISIBLE_ROWS; ++i) {
+        for (int i = 0; i < 9 * getVisibleRows(); ++i) {
             if (slot < items.size()) {
                 int qty = items.get(slot).getQuantity();
 
@@ -298,5 +297,13 @@ public class GuiGrid extends GuiBase {
         } else {
             super.keyTyped(character, keyCode);
         }
+    }
+
+    public int getVisibleRows() {
+        if (grid.getType() == EnumGridType.CRAFTING) {
+            return 4;
+        }
+
+        return 5;
     }
 }

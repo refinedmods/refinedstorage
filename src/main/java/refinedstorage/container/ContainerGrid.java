@@ -15,7 +15,7 @@ public class ContainerGrid extends ContainerBase {
     public ContainerGrid(EntityPlayer player, TileGrid grid) {
         super(player);
 
-        addPlayerInventory(8, grid.getType() == EnumGridType.CRAFTING ? 174 : 108);
+        addPlayerInventory(8, grid.getType() == EnumGridType.CRAFTING ? 174 : 126);
 
         if (grid.getType() == EnumGridType.CRAFTING) {
             int x = 25;
