@@ -19,7 +19,7 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
     private Block originalBlock;
 
     public void onConnected(TileController controller) {
-        if (worldObj.getBlockState(pos).getBlock() == originalBlock) {
+        if (worldObj != null && worldObj.getBlockState(pos).getBlock() == originalBlock) {
             markDirty();
 
             connected = true;
@@ -31,7 +31,7 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
     }
 
     public void onDisconnected() {
-        if (worldObj.getBlockState(pos).getBlock() == originalBlock) {
+        if (worldObj != null && worldObj.getBlockState(pos).getBlock() == originalBlock) {
             markDirty();
 
             connected = false;
@@ -42,6 +42,12 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
 
     @Override
     public void update() {
+        if(worldObj == null)
+        {
+            super.update();
+            return;
+        }
+        
         if (ticks == 0) {
             originalBlock = worldObj.getBlockState(pos).getBlock();
         }
