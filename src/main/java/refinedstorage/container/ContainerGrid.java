@@ -49,8 +49,8 @@ public class ContainerGrid extends ContainerBase {
     // I'm overriding detectAndSendChanges() here because the default check
     // checks if the item stacks are equal, and if so, then it will only send the new slot contents.
     // The thing is though, when the grid replaces the slots with new items from the storage
-    // system, the item stack replaced WILL be the same!
-    // That's why we override this here to get rid of the check and ALWAYS send slot changes.
+    // system, the item stack replaced WILL be the same and thus changes will not be sent!
+    // That is why we override here to get rid of the check and ALWAYS send slot changes.
     @Override
     public void detectAndSendChanges() {
         for (int i = 0; i < this.inventorySlots.size(); ++i) {

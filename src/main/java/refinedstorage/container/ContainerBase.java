@@ -57,7 +57,29 @@ public abstract class ContainerBase extends Container {
 
         if (slot instanceof SlotSpecimen) {
             if (((SlotSpecimen) slot).isSizeAllowed()) {
-                if (player.inventory.getItemStack() != null) {
+                if (slot.getStack() != null) {
+                    if (GuiScreen.isShiftKeyDown()) {
+                        slot.putStack(null);
+                    } else {
+                        int amount = slot.getStack().stackSize;
+
+                        if (clickedButton == 0) {
+                            amount--;
+
+                            if (amount < 1) {
+                                amount = 1;
+                            }
+                        } else if (clickedButton == 1) {
+                            amount++;
+
+                            if (amount > 64) {
+                                amount = 64;
+                            }
+                        }
+
+                        slot.getStack().stackSize = amount;
+                    }
+                } else if (player.inventory.getItemStack() != null) {
                     int amount = player.inventory.getItemStack().stackSize;
 
                     if (clickedButton == 1) {
@@ -68,28 +90,6 @@ public abstract class ContainerBase extends Container {
                     toPut.stackSize = amount;
 
                     slot.putStack(toPut);
-                } else if (slot.getStack() != null) {
-                    if (GuiScreen.isShiftKeyDown()) {
-                        slot.putStack(null);
-                    } else {
-                        int amount = slot.getStack().stackSize;
-
-                        if (clickedButton == 0) {
-                            amount++;
-
-                            if (amount > 64) {
-                                amount = 64;
-                            }
-                        } else if (clickedButton == 1) {
-                            amount--;
-
-                            if (amount < 1) {
-                                amount = 1;
-                            }
-                        }
-
-                        slot.getStack().stackSize = amount;
-                    }
                 }
             } else if (player.inventory.getItemStack() == null) {
                 slot.putStack(null);

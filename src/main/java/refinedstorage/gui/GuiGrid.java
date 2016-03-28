@@ -248,7 +248,7 @@ public class GuiGrid extends GuiBase {
         if (grid.isConnected()) {
             TileController controller = grid.getController();
 
-            if (isHoveringOverSlot() && container.getPlayer().inventory.getItemStack() != null) {
+            if (isHoveringOverSlot() && container.getPlayer().inventory.getItemStack() != null && (clickedButton == 0 || clickedButton == 1)) {
                 RefinedStorage.NETWORK.sendToServer(new MessageStoragePush(controller.getPos().getX(), controller.getPos().getY(), controller.getPos().getZ(), -1, clickedButton == 1));
             } else if (isHoveringOverItemInSlot() && container.getPlayer().inventory.getItemStack() == null) {
                 boolean half = clickedButton == 1;
