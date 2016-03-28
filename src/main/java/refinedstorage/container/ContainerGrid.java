@@ -1,7 +1,9 @@
 package refinedstorage.container;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.slot.SlotGridCraftingResult;
 import refinedstorage.tile.TileGrid;
@@ -36,11 +38,31 @@ public class ContainerGrid extends ContainerBase {
                 }
             }
 
-            addSlotToContainer(new SlotGridCraftingResult(player, grid.getCraftingInventory(), grid.getCraftingResultInventory(), grid, 0, 133 + 4, 120 + 4));
+            addSlotToContainer(new SlotGridCraftingResult(this, player, grid.getCraftingInventory(), grid.getCraftingResultInventory(), grid, 0, 133 + 4, 120 + 4));
         }
     }
 
     public List<Slot> getCraftingSlots() {
         return craftingSlots;
+    }
+
+    // I'm overriding detectAndSendChanges() here because the default check
+    // checks if the item stacks are equal, and if so, then it will only send the new slot contents.
+    // The thing is though, when the grid replaces the slots with new items from the storage
+    // system, the item stack replaced WILL be the same!
+    // That's why we override this here to get rid of the check and ALWAYS send slot changes.
+    @Override
+    public void detectAndSendChanges() {
+        for (int i = 0; i < this.inventorySlots.size(); ++i) {
+            ItemStack itemstack = ((Slot) this.inventorySlots.get(i)).getStack();
+            ItemStack itemstack1 = (ItemStack) this.inventoryItemStacks.get(i);
+
+            itemstack1 = itemstack == null ? null : itemstack.copy();
+            this.inventoryItemStacks.set(i, itemstack1);
+
+            for (int j = 0; j < this.crafters.size(); ++j) {
+                ((ICrafting) this.crafters.get(j)).sendSlotContents(this, i, itemstack1);
+            }
+        }
     }
 }

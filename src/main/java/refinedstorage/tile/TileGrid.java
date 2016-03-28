@@ -8,13 +8,10 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
-import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.block.BlockGrid;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.inventory.InventorySimple;
-import refinedstorage.network.MessageGridCraftingUpdate;
 import refinedstorage.storage.StorageItem;
 import refinedstorage.util.InventoryUtils;
 
@@ -76,7 +73,7 @@ public class TileGrid extends TileMachine {
         craftingResultInventory.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(craftingInventory, worldObj));
     }
 
-    public void onCrafted(ItemStack[] matrixSlots) {
+    public void onCrafted(Container container, ItemStack[] matrixSlots) {
         if (isConnected() && !worldObj.isRemote) {
             for (int i = 0; i < craftingInventory.getSizeInventory(); ++i) {
                 ItemStack slot = craftingInventory.getStackInSlot(i);
@@ -94,9 +91,7 @@ public class TileGrid extends TileMachine {
 
             onCraftingMatrixChanged();
 
-            TargetPoint target = new TargetPoint(worldObj.provider.getDimensionType().getId(), pos.getX(), pos.getY(), pos.getZ(), UPDATE_RANGE);
-
-            RefinedStorage.NETWORK.sendToAllAround(new MessageGridCraftingUpdate(this), target);
+            container.detectAndSendChanges();
         }
     }
 

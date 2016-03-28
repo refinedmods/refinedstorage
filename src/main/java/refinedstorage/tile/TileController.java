@@ -359,7 +359,6 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                 machines.add((TileMachine) tile);
             }
         }
-
     }
 
     @Override
