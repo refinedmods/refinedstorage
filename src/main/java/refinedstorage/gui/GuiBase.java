@@ -1,11 +1,13 @@
 package refinedstorage.gui;
 
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import org.lwjgl.opengl.GL11;
 import refinedstorage.RefinedStorage;
@@ -206,6 +208,33 @@ public abstract class GuiBase extends GuiContainer {
         GL11.glDisable(GL11.GL_LIGHTING);
         renderToolTip(stack, x, y);
         GL11.glEnable(GL11.GL_LIGHTING);
+    }
+
+    public void drawTooltip(int x, int y, ItemStack stack, int itemCount) {
+        GL11.glDisable(GL11.GL_LIGHTING);
+        renderToolTipCustom(stack, x, y, itemCount);
+        GL11.glEnable(GL11.GL_LIGHTING);
+    }
+    
+    protected void renderToolTipCustom(ItemStack stack, int x, int y, int itemCount) {
+        List<String> list =  new ArrayList<String>();
+        
+        list.addAll(stack.getTooltip(this.mc.thePlayer, this.mc.gameSettings.advancedItemTooltips));
+        list.add("Count: " + itemCount);
+        for (int i = 0; i < list.size(); ++i)
+        {
+            if (i == 0)
+            {
+                list.set(i, stack.getRarity().rarityColor + (String)list.get(i));
+            }
+            else
+            {
+                list.set(i, TextFormatting.GRAY + (String)list.get(i));
+            }
+        }
+        
+        FontRenderer font = stack.getItem().getFontRenderer(stack);
+        this.drawHoveringText(list, x, y, (font == null ? fontRendererObj : font));
     }
 
     public void drawTexture(int x, int y, int textureX, int textureY, int width, int height) {
