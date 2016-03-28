@@ -49,6 +49,16 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
         if (!worldObj.isRemote) {
             int lastEnergy = energy.getEnergyStored();
 
+                if(isActive())
+                switch (getType()) {
+                    case NORMAL:
+                        energy.extractEnergy(energyUsage, false);
+                        break;
+                    case CREATIVE:
+                        energy.setEnergyStored(energy.getMaxEnergyStored());
+                        break;
+                }
+
             if (ticks % 20 == 0) {
                 if (!isActive()) {
                     disconnectAll();
@@ -97,15 +107,6 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                     for (TileMachine machine : machines) {
                         energyUsage += machine.getEnergyUsage();
                     }
-                }
-
-                switch (getType()) {
-                    case NORMAL:
-                        energy.extractEnergy(energyUsage, false);
-                        break;
-                    case CREATIVE:
-                        energy.setEnergyStored(energy.getMaxEnergyStored());
-                        break;
                 }
 
                 if (lastEnergy != energy.getEnergyStored()) {
