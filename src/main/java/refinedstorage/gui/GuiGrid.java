@@ -183,7 +183,8 @@ public class GuiGrid extends GuiBase {
         }
 
         if (isHoveringOverValidSlot(items)) {
-            drawTooltip(mouseX, mouseY, items.get(hoveringSlotId).toItemStack());
+        	int qty = items.get(hoveringSlotId).getQuantity();
+            drawTooltip(mouseX, mouseY, items.get(hoveringSlotId).toItemStack(), qty);
         }
 
         if (isHoveringOverClear(mouseX, mouseY)) {
