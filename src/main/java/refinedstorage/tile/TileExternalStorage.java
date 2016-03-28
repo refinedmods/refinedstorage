@@ -163,6 +163,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
     }
 
     public TileEntity getConnectedTile() {
+        if(worldObj == null) return null;
         TileEntity tile = worldObj.getTileEntity(pos.offset(getDirection()));
 
         if (tile instanceof IInventory || tile instanceof IDeepStorageUnit) {
