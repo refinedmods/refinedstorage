@@ -73,7 +73,9 @@ public class MessageStoragePull extends MessageHandlerPlayerToServer<MessageStor
                     }
                 } else if (message.one) {
                     quantity = 1;
-                } else if (message.shift && quantity > item.getType().getItemStackLimit(item.toItemStack())) {
+                }
+
+                if (quantity > item.getType().getItemStackLimit(item.toItemStack())) {
                     quantity = item.getType().getItemStackLimit(item.toItemStack());
                 }
 

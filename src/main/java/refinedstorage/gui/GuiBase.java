@@ -159,6 +159,8 @@ public abstract class GuiBase extends GuiContainer {
     }
 
     public void drawItemOverlay(ItemStack stack, String text, int x, int y) {
+        itemRender.renderItemOverlayIntoGUI(fontRendererObj, stack, x, y, "");
+
         if (text != null) {
             GlStateManager.pushMatrix();
             GlStateManager.translate(x, y, 1);
@@ -182,8 +184,6 @@ public abstract class GuiBase extends GuiContainer {
             GlStateManager.disableBlend();
             GlStateManager.popMatrix();
         }
-
-        itemRender.renderItemOverlayIntoGUI(fontRendererObj, stack, x, y, "");
     }
 
     public void drawString(int x, int y, String message) {
