@@ -133,6 +133,16 @@ public class GuiGrid extends GuiBase {
             RenderHelper.enableGUIStandardItemLighting();
 
             for (int i = 0; i < 9 * getVisibleRows(); ++i) {
+                if (inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isConnected()) {
+                    hoveringSlotId = slot;
+
+                    if (slot < items.size()) {
+                        // We need to use the ID, because if we filter, the client-side index will change
+                        // while the serverside's index will still be the same.
+                        hoveringId = items.get(slot).getId();
+                    }
+                }
+
                 if (slot < items.size()) {
                     int qty = items.get(slot).getQuantity();
 
@@ -148,18 +158,14 @@ public class GuiGrid extends GuiBase {
                         text = String.valueOf(qty);
                     }
 
+                    if (hoveringSlotId == slot && GuiScreen.isShiftKeyDown()) {
+                        text = String.valueOf(qty);
+                    }
+
                     drawItem(x, y, items.get(slot).toItemStack(), true, text);
                 }
 
                 if (inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isConnected()) {
-                    hoveringSlotId = slot;
-
-                    if (slot < items.size()) {
-                        // We need to use the ID, because if we filter, the client-side index will change
-                        // while the serverside's index will still be the same.
-                        hoveringId = items.get(slot).getId();
-                    }
-
                     int color = grid.isConnected() ? -2130706433 : 0xFF5B5B5B;
 
                     GlStateManager.disableLighting();
