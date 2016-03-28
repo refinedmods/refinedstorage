@@ -74,12 +74,12 @@ public class TileGrid extends TileMachine {
     }
 
     public void onCrafted(ContainerGrid container) {
-        if (isConnected() && !worldObj.isRemote) {
+        if (!worldObj.isRemote) {
             for (int i = 0; i < craftingInventory.getSizeInventory(); ++i) {
                 ItemStack slot = craftingInventory.getStackInSlot(i);
 
                 if (slot != null) {
-                    if (slot.stackSize == 1) {
+                    if (slot.stackSize == 1 && isConnected()) {
                         craftingInventory.setInventorySlotContents(i, getController().take(slot.copy()));
                     } else {
                         craftingInventory.decrStackSize(i, 1);
