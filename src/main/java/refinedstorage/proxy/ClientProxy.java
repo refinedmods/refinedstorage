@@ -84,8 +84,6 @@ public class ClientProxy extends CommonProxy {
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.CORE, ItemCore.TYPE_CONSTRUCTION, new ModelResourceLocation("refinedstorage:construction_core", "inventory"));
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.CORE, ItemCore.TYPE_DESTRUCTION, new ModelResourceLocation("refinedstorage:destruction_core", "inventory"));
 
-        ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.WIRELESS_GRID_PLATE, 0, new ModelResourceLocation("refinedstorage:wireless_grid_plate", "inventory"));
-
         ModelLoader.setCustomMeshDefinition(RefinedStorageItems.WIRELESS_GRID, new ItemMeshDefinition() {
             @Override
             public ModelResourceLocation getModelLocation(ItemStack stack) {
@@ -111,7 +109,6 @@ public class ClientProxy extends CommonProxy {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.CONSTRUCTOR), 0, new ModelResourceLocation("refinedstorage:constructor", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.DESTRUCTOR), 0, new ModelResourceLocation("refinedstorage:destructor", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.SOLDERER), 0, new ModelResourceLocation("refinedstorage:solderer", "inventory"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.WIRELESS_TRANSMITTER), 0, new ModelResourceLocation("refinedstorage:wireless_transmitter", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.DETECTOR), 0, new ModelResourceLocation("refinedstorage:detector", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.RELAY), 0, new ModelResourceLocation("refinedstorage:relay", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.INTERFACE), 0, new ModelResourceLocation("refinedstorage:interface", "inventory"));

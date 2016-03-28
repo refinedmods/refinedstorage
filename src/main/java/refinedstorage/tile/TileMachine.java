@@ -46,7 +46,7 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
             super.update();
             return;
         }
-        
+
         if (ticks == 0) {
             originalBlock = worldObj.getBlockState(pos).getBlock();
         }

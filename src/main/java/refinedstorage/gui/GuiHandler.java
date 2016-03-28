@@ -28,8 +28,6 @@ public class GuiHandler implements IGuiHandler {
                 return new ContainerDetector(player, (TileDetector) tile);
             case RefinedStorageGui.SOLDERER:
                 return new ContainerSolderer(player, (TileSolderer) tile);
-            case RefinedStorageGui.WIRELESS_TRANSMITTER:
-                return new ContainerWirelessTransmitter(player, (TileWirelessTransmitter) tile);
             case RefinedStorageGui.DESTRUCTOR:
                 return new ContainerDestructor(player, (TileDestructor) tile);
             case RefinedStorageGui.CONSTRUCTOR:
@@ -69,8 +67,6 @@ public class GuiHandler implements IGuiHandler {
                 return new GuiDetector((ContainerDetector) getContainer(ID, player, tile), (TileDetector) tile);
             case RefinedStorageGui.SOLDERER:
                 return new GuiSolderer((ContainerSolderer) getContainer(ID, player, tile), (TileSolderer) tile);
-            case RefinedStorageGui.WIRELESS_TRANSMITTER:
-                return new GuiWirelessTransmitter((ContainerWirelessTransmitter) getContainer(ID, player, tile), (TileWirelessTransmitter) tile);
             case RefinedStorageGui.DESTRUCTOR:
                 return new GuiDestructor((ContainerDestructor) getContainer(ID, player, tile), (TileDestructor) tile);
             case RefinedStorageGui.CONSTRUCTOR:
