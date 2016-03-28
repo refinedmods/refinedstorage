@@ -34,8 +34,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
     private int compare = 0;
     private int mode = 0;
 
-    @SideOnly(Side.CLIENT)
-    private int stored = 0;
+   private int stored = 0;
 
     @Override
     public int getEnergyUsage() {
@@ -164,6 +163,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
     }
 
     public TileEntity getConnectedTile() {
+        if(worldObj == null) return null;
         TileEntity tile = worldObj.getTileEntity(pos.offset(getDirection()));
 
         if (tile instanceof IInventory || tile instanceof IDeepStorageUnit) {
