@@ -11,8 +11,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.block.BlockGrid;
 import refinedstorage.block.EnumGridType;
+import refinedstorage.container.ContainerGrid;
 import refinedstorage.inventory.InventorySimple;
-import refinedstorage.storage.StorageItem;
 import refinedstorage.util.InventoryUtils;
 
 public class TileGrid extends TileMachine {
@@ -73,18 +73,16 @@ public class TileGrid extends TileMachine {
         craftingResultInventory.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(craftingInventory, worldObj));
     }
 
-    public void onCrafted(Container container, ItemStack[] matrixSlots) {
+    public void onCrafted(ContainerGrid container) {
         if (isConnected() && !worldObj.isRemote) {
             for (int i = 0; i < craftingInventory.getSizeInventory(); ++i) {
                 ItemStack slot = craftingInventory.getStackInSlot(i);
 
-                if (slot == null && matrixSlots[i] != null) {
-                    for (StorageItem item : getController().getItems()) {
-                        if (item.compareNoQuantity(matrixSlots[i].copy())) {
-                            craftingInventory.setInventorySlotContents(i, getController().take(matrixSlots[i].copy()));
-
-                            break;
-                        }
+                if (slot != null) {
+                    if (slot.stackSize == 1) {
+                        craftingInventory.setInventorySlotContents(i, getController().take(slot.copy()));
+                    } else {
+                        craftingInventory.decrStackSize(i, 1);
                     }
                 }
             }

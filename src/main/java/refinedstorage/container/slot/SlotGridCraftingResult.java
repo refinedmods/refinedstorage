@@ -23,16 +23,6 @@ public class SlotGridCraftingResult extends SlotCrafting {
 
     @Override
     public void onPickupFromSlot(EntityPlayer player, ItemStack stack) {
-        ItemStack[] matrixSlots = new ItemStack[craftingMatrix.getSizeInventory()];
-
-        for (int i = 0; i < craftingMatrix.getSizeInventory(); ++i) {
-            if (craftingMatrix.getStackInSlot(i) != null) {
-                matrixSlots[i] = craftingMatrix.getStackInSlot(i).copy();
-            }
-        }
-
-        super.onPickupFromSlot(player, stack);
-
-        grid.onCrafted(container, matrixSlots);
+        grid.onCrafted(container);
     }
 }
