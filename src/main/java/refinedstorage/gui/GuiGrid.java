@@ -112,90 +112,89 @@ public class GuiGrid extends GuiBase {
     public void drawForeground(int mouseX, int mouseY) {
         scrollbar.update(this, mouseX, mouseY);
 
-        synchronized (grid.getController()) {
-            drawString(7, 7, t("gui.refinedstorage:grid"));
 
-            if (grid.getType() == EnumGridType.CRAFTING) {
-                drawString(7, 94, t("container.crafting"));
-            }
+        drawString(7, 7, t("gui.refinedstorage:grid"));
 
-            drawString(7, grid.getType() == EnumGridType.CRAFTING ? 163 : 113, t("container.inventory"));
+        if (grid.getType() == EnumGridType.CRAFTING) {
+            drawString(7, 94, t("container.crafting"));
+        }
 
-            int x = 8;
-            int y = 20;
+        drawString(7, grid.getType() == EnumGridType.CRAFTING ? 163 : 113, t("container.inventory"));
 
-            List<StorageItem> items = getItems();
+        int x = 8;
+        int y = 20;
 
-            hoveringSlotId = -1;
+        List<StorageItem> items = getItems();
 
-            int slot = getOffset() * 9;
+        hoveringSlotId = -1;
 
-            RenderHelper.enableGUIStandardItemLighting();
+        int slot = getOffset() * 9;
 
-            for (int i = 0; i < 9 * getVisibleRows(); ++i) {
-                if (inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isConnected()) {
-                    hoveringSlotId = slot;
+        RenderHelper.enableGUIStandardItemLighting();
 
-                    if (slot < items.size()) {
-                        // We need to use the ID, because if we filter, the client-side index will change
-                        // while the serverside's index will still be the same.
-                        hoveringId = items.get(slot).getId();
-                    }
-                }
+        for (int i = 0; i < 9 * getVisibleRows(); ++i) {
+            if (inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isConnected()) {
+                hoveringSlotId = slot;
 
                 if (slot < items.size()) {
-                    int qty = items.get(slot).getQuantity();
-
-                    String text;
-
-                    if (qty >= 1000000) {
-                        text = String.format("%.1f", (float) qty / 1000000).replace(",", ".").replace(".0", "") + "M";
-                    } else if (qty >= 1000) {
-                        text = String.format("%.1f", (float) qty / 1000).replace(",", ".").replace(".0", "") + "K";
-                    } else if (qty == 1) {
-                        text = null;
-                    } else {
-                        text = String.valueOf(qty);
-                    }
-
-                    if (hoveringSlotId == slot && GuiScreen.isShiftKeyDown()) {
-                        text = String.valueOf(qty);
-                    }
-
-                    drawItem(x, y, items.get(slot).toItemStack(), true, text);
-                }
-
-                if (inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isConnected()) {
-                    int color = grid.isConnected() ? -2130706433 : 0xFF5B5B5B;
-
-                    GlStateManager.disableLighting();
-                    GlStateManager.disableDepth();
-                    zLevel = 190;
-                    GlStateManager.colorMask(true, true, true, false);
-                    drawGradientRect(x, y, x + 16, y + 16, color, color);
-                    zLevel = 0;
-                    GlStateManager.colorMask(true, true, true, true);
-                    GlStateManager.enableLighting();
-                    GlStateManager.enableDepth();
-                }
-
-                slot++;
-
-                x += 18;
-
-                if ((i + 1) % 9 == 0) {
-                    x = 8;
-                    y += 18;
+                    // We need to use the ID, because if we filter, the client-side index will change
+                    // while the serverside's index will still be the same.
+                    hoveringId = items.get(slot).getId();
                 }
             }
 
-            if (isHoveringOverValidSlot(items)) {
-                drawTooltip(mouseX, mouseY, items.get(hoveringSlotId).toItemStack());
+            if (slot < items.size()) {
+                int qty = items.get(slot).getQuantity();
+
+                String text;
+
+                if (qty >= 1000000) {
+                    text = String.format("%.1f", (float) qty / 1000000).replace(",", ".").replace(".0", "") + "M";
+                } else if (qty >= 1000) {
+                    text = String.format("%.1f", (float) qty / 1000).replace(",", ".").replace(".0", "") + "K";
+                } else if (qty == 1) {
+                    text = null;
+                } else {
+                    text = String.valueOf(qty);
+                }
+
+                if (hoveringSlotId == slot && GuiScreen.isShiftKeyDown() && qty > 1) {
+                    text = String.valueOf(qty);
+                }
+
+                drawItem(x, y, items.get(slot).toItemStack(), true, text);
             }
 
-            if (isHoveringOverClear(mouseX, mouseY)) {
-                drawTooltip(mouseX, mouseY, t("misc.refinedstorage:clear"));
+            if (inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isConnected()) {
+                int color = grid.isConnected() ? -2130706433 : 0xFF5B5B5B;
+
+                GlStateManager.disableLighting();
+                GlStateManager.disableDepth();
+                zLevel = 190;
+                GlStateManager.colorMask(true, true, true, false);
+                drawGradientRect(x, y, x + 16, y + 16, color, color);
+                zLevel = 0;
+                GlStateManager.colorMask(true, true, true, true);
+                GlStateManager.enableLighting();
+                GlStateManager.enableDepth();
             }
+
+            slot++;
+
+            x += 18;
+
+            if ((i + 1) % 9 == 0) {
+                x = 8;
+                y += 18;
+            }
+        }
+
+        if (isHoveringOverValidSlot(items)) {
+            drawTooltip(mouseX, mouseY, items.get(hoveringSlotId).toItemStack());
+        }
+
+        if (isHoveringOverClear(mouseX, mouseY)) {
+            drawTooltip(mouseX, mouseY, t("misc.refinedstorage:clear"));
         }
     }
 
@@ -206,53 +205,55 @@ public class GuiGrid extends GuiBase {
             return items;
         }
 
-        items.addAll(grid.getController().getItems());
+        synchronized (grid.getController()) {
+            items.addAll(grid.getController().getItems());
 
-        if (!searchField.getText().trim().isEmpty()) {
-            Iterator<StorageItem> t = items.iterator();
+            if (!searchField.getText().trim().isEmpty()) {
+                Iterator<StorageItem> t = items.iterator();
 
-            while (t.hasNext()) {
-                StorageItem item = t.next();
+                while (t.hasNext()) {
+                    StorageItem item = t.next();
 
-                if (!item.toItemStack().getDisplayName().toLowerCase().contains(searchField.getText().toLowerCase())) {
-                    t.remove();
-                }
-            }
-        }
-
-        Collections.sort(items, new Comparator<StorageItem>() {
-            @Override
-            public int compare(StorageItem o1, StorageItem o2) {
-                if (o1 != null && o2 != null) {
-                    if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING) {
-                        return o2.toItemStack().getDisplayName().compareTo(o1.toItemStack().getDisplayName());
-                    } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
-                        return o1.toItemStack().getDisplayName().compareTo(o2.toItemStack().getDisplayName());
+                    if (!item.toItemStack().getDisplayName().toLowerCase().contains(searchField.getText().toLowerCase())) {
+                        t.remove();
                     }
                 }
-
-                return 0;
             }
-        });
 
-        if (grid.getSortingType() == TileGrid.SORTING_TYPE_QUANTITY) {
             Collections.sort(items, new Comparator<StorageItem>() {
                 @Override
                 public int compare(StorageItem o1, StorageItem o2) {
                     if (o1 != null && o2 != null) {
                         if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING) {
-                            return Integer.valueOf(o2.getQuantity()).compareTo(o1.getQuantity());
+                            return o2.toItemStack().getDisplayName().compareTo(o1.toItemStack().getDisplayName());
                         } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
-                            return Integer.valueOf(o1.getQuantity()).compareTo(o2.getQuantity());
+                            return o1.toItemStack().getDisplayName().compareTo(o2.toItemStack().getDisplayName());
                         }
                     }
 
                     return 0;
                 }
             });
-        }
 
-        return items;
+            if (grid.getSortingType() == TileGrid.SORTING_TYPE_QUANTITY) {
+                Collections.sort(items, new Comparator<StorageItem>() {
+                    @Override
+                    public int compare(StorageItem o1, StorageItem o2) {
+                        if (o1 != null && o2 != null) {
+                            if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING) {
+                                return Integer.valueOf(o2.getQuantity()).compareTo(o1.getQuantity());
+                            } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
+                                return Integer.valueOf(o1.getQuantity()).compareTo(o2.getQuantity());
+                            }
+                        }
+
+                        return 0;
+                    }
+                });
+            }
+
+            return items;
+        }
     }
 
     @Override
