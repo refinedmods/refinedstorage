@@ -111,85 +111,86 @@ public class GuiGrid extends GuiBase {
     @Override
     public void drawForeground(int mouseX, int mouseY) {
         scrollbar.update(this, mouseX, mouseY);
-    synchronized (grid.getController()) {    
-        drawString(7, 7, t("gui.refinedstorage:grid"));
 
-        if (grid.getType() == EnumGridType.CRAFTING) {
-            drawString(7, 94, t("container.crafting"));
-        }
+        synchronized (grid.getController()) {
+            drawString(7, 7, t("gui.refinedstorage:grid"));
 
-        drawString(7, grid.getType() == EnumGridType.CRAFTING ? 163 : 113, t("container.inventory"));
-
-        int x = 8;
-        int y = 20;
-
-        List<StorageItem> items = getItems();
-
-        hoveringSlotId = -1;
-
-        int slot = getOffset() * 9;
-
-        RenderHelper.enableGUIStandardItemLighting();
-
-        for (int i = 0; i < 9 * getVisibleRows(); ++i) {
-            if (slot < items.size()) {
-            	int qty = items.get(slot).getQuantity();
-
-                String text;
-
-                if (qty >= 1000000) {
-                    text = String.format("%.1f", (float) qty / 1000000).replace(",", ".").replace(".0", "") + "M";
-                } else if (qty >= 1000) {
-                    text = String.format("%.1f", (float) qty / 1000).replace(",", ".").replace(".0", "") + "K";
-                } else if (qty == 1) {
-                    text = null;
-                } else {
-                    text = String.valueOf(qty);
-                }
-
-                drawItem(x, y, items.get(slot).toItemStack(), true, text);
+            if (grid.getType() == EnumGridType.CRAFTING) {
+                drawString(7, 94, t("container.crafting"));
             }
 
-            if (inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isConnected()) {
-                hoveringSlotId = slot;
+            drawString(7, grid.getType() == EnumGridType.CRAFTING ? 163 : 113, t("container.inventory"));
 
+            int x = 8;
+            int y = 20;
+
+            List<StorageItem> items = getItems();
+
+            hoveringSlotId = -1;
+
+            int slot = getOffset() * 9;
+
+            RenderHelper.enableGUIStandardItemLighting();
+
+            for (int i = 0; i < 9 * getVisibleRows(); ++i) {
                 if (slot < items.size()) {
-                    // We need to use the ID, because if we filter, the client-side index will change
-                    // while the serverside's index will still be the same.
-                    hoveringId = items.get(slot).getId();
+                    int qty = items.get(slot).getQuantity();
+
+                    String text;
+
+                    if (qty >= 1000000) {
+                        text = String.format("%.1f", (float) qty / 1000000).replace(",", ".").replace(".0", "") + "M";
+                    } else if (qty >= 1000) {
+                        text = String.format("%.1f", (float) qty / 1000).replace(",", ".").replace(".0", "") + "K";
+                    } else if (qty == 1) {
+                        text = null;
+                    } else {
+                        text = String.valueOf(qty);
+                    }
+
+                    drawItem(x, y, items.get(slot).toItemStack(), true, text);
                 }
 
-                int color = grid.isConnected() ? -2130706433 : 0xFF5B5B5B;
+                if (inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isConnected()) {
+                    hoveringSlotId = slot;
 
-                GlStateManager.disableLighting();
-                GlStateManager.disableDepth();
-                zLevel = 190;
-                GlStateManager.colorMask(true, true, true, false);
-                drawGradientRect(x, y, x + 16, y + 16, color, color);
-                zLevel = 0;
-                GlStateManager.colorMask(true, true, true, true);
-                GlStateManager.enableLighting();
-                GlStateManager.enableDepth();
+                    if (slot < items.size()) {
+                        // We need to use the ID, because if we filter, the client-side index will change
+                        // while the serverside's index will still be the same.
+                        hoveringId = items.get(slot).getId();
+                    }
+
+                    int color = grid.isConnected() ? -2130706433 : 0xFF5B5B5B;
+
+                    GlStateManager.disableLighting();
+                    GlStateManager.disableDepth();
+                    zLevel = 190;
+                    GlStateManager.colorMask(true, true, true, false);
+                    drawGradientRect(x, y, x + 16, y + 16, color, color);
+                    zLevel = 0;
+                    GlStateManager.colorMask(true, true, true, true);
+                    GlStateManager.enableLighting();
+                    GlStateManager.enableDepth();
+                }
+
+                slot++;
+
+                x += 18;
+
+                if ((i + 1) % 9 == 0) {
+                    x = 8;
+                    y += 18;
+                }
             }
 
-            slot++;
+            if (isHoveringOverValidSlot(items)) {
+                drawTooltip(mouseX, mouseY, items.get(hoveringSlotId).toItemStack());
+            }
 
-            x += 18;
-
-            if ((i + 1) % 9 == 0) {
-                x = 8;
-                y += 18;
+            if (isHoveringOverClear(mouseX, mouseY)) {
+                drawTooltip(mouseX, mouseY, t("misc.refinedstorage:clear"));
             }
         }
-
-        if (isHoveringOverValidSlot(items)) {
-            drawTooltip(mouseX, mouseY, items.get(hoveringSlotId).toItemStack());
-        }
-
-        if (isHoveringOverClear(mouseX, mouseY)) {
-            drawTooltip(mouseX, mouseY, t("misc.refinedstorage:clear"));
-        }
-    }
     }
 
     public List<StorageItem> getItems() {

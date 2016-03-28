@@ -5,8 +5,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 import refinedstorage.RefinedStorage;
 import refinedstorage.inventory.InventorySimple;
@@ -163,7 +161,10 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
     }
 
     public TileEntity getConnectedTile() {
-        if(worldObj == null) return null;
+        if (worldObj == null) {
+            return null;
+        }
+
         TileEntity tile = worldObj.getTileEntity(pos.offset(getDirection()));
 
         if (tile instanceof IInventory || tile instanceof IDeepStorageUnit) {

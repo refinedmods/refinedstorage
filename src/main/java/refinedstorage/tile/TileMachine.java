@@ -42,7 +42,7 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
 
     @Override
     public void update() {
-        if(worldObj == null) {
+        if (worldObj == null) {
             super.update();
             return;
         }
