@@ -68,8 +68,8 @@ public class MessageStoragePull extends MessageHandlerPlayerToServer<MessageStor
                 if (message.half && item.getQuantity() > 1) {
                     quantity = item.getQuantity() / 2;
 
-                    if (quantity > 64) {
-                        quantity = 64;
+                    if (quantity > 32) {
+                        quantity = 32;
                     }
                 } else if (message.one) {
                     quantity = 1;
