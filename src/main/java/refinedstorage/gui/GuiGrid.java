@@ -133,7 +133,9 @@ public class GuiGrid extends GuiBase {
 
         for (int i = 0; i < 9 * getVisibleRows(); ++i) {
             if (slot < items.size()) {
-                int qty = items.get(slot).getQuantity();
+                StorageItem storageItem = items.get(slot);
+            	if(storageItem == null) continue;
+            	int qty = storageItem.getQuantity();
 
                 String text;
 
