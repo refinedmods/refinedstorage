@@ -111,7 +111,7 @@ public class GuiGrid extends GuiBase {
     @Override
     public void drawForeground(int mouseX, int mouseY) {
         scrollbar.update(this, mouseX, mouseY);
-
+    synchronized (grid.getController()) {    
         drawString(7, 7, t("gui.refinedstorage:grid"));
 
         if (grid.getType() == EnumGridType.CRAFTING) {
@@ -133,9 +133,7 @@ public class GuiGrid extends GuiBase {
 
         for (int i = 0; i < 9 * getVisibleRows(); ++i) {
             if (slot < items.size()) {
-                StorageItem storageItem = items.get(slot);
-            	if(storageItem == null) continue;
-            	int qty = storageItem.getQuantity();
+            	int qty = items.get(slot).getQuantity();
 
                 String text;
 
@@ -191,6 +189,7 @@ public class GuiGrid extends GuiBase {
         if (isHoveringOverClear(mouseX, mouseY)) {
             drawTooltip(mouseX, mouseY, t("misc.refinedstorage:clear"));
         }
+    }
     }
 
     public List<StorageItem> getItems() {
