@@ -32,8 +32,8 @@ public class GuiGrid extends GuiBase {
 
     private GuiTextField searchField;
 
-    private int hoveringSlotId;
-    private int hoveringId;
+    private int hoveringSlot;
+    private int hoveringItemId;
 
     private Scrollbar scrollbar;
 
@@ -82,13 +82,11 @@ public class GuiGrid extends GuiBase {
             Collections.sort(items, new Comparator<StorageItem>() {
                 @Override
                 public int compare(StorageItem o1, StorageItem o2) {
-                    if (o1 != null && o2 != null) {
                         if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING) {
                             return o2.toItemStack().getDisplayName().compareTo(o1.toItemStack().getDisplayName());
                         } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
                             return o1.toItemStack().getDisplayName().compareTo(o2.toItemStack().getDisplayName());
                         }
-                    }
 
                     return 0;
                 }
@@ -98,13 +96,11 @@ public class GuiGrid extends GuiBase {
                 Collections.sort(items, new Comparator<StorageItem>() {
                     @Override
                     public int compare(StorageItem o1, StorageItem o2) {
-                        if (o1 != null && o2 != null) {
                             if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING) {
                                 return Integer.valueOf(o2.getQuantity()).compareTo(o1.getQuantity());
                             } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
                                 return Integer.valueOf(o1.getQuantity()).compareTo(o2.getQuantity());
                             }
-                        }
 
                         return 0;
                     }
@@ -120,21 +116,17 @@ public class GuiGrid extends GuiBase {
     }
 
     public int getRows() {
-        if (!grid.isConnected()) {
-            return 0;
-        }
-
         int max = (int) Math.ceil((float) items.size() / (float) 9);
 
         return max < 0 ? 0 : max;
     }
 
-    private boolean isHoveringOverValidSlot() {
-        return grid.isConnected() && isHoveringOverSlot() && hoveringSlotId < items.size();
+    private boolean isHoveringOverItemInSlot() {
+        return grid.isConnected() && isHoveringOverSlot() && hoveringSlot < items.size();
     }
 
     private boolean isHoveringOverSlot() {
-        return hoveringSlotId >= 0;
+        return hoveringSlot >= 0;
     }
 
     public boolean isHoveringOverClear(int mouseX, int mouseY) {
@@ -164,7 +156,6 @@ public class GuiGrid extends GuiBase {
     public void drawForeground(int mouseX, int mouseY) {
         scrollbar.update(this, mouseX, mouseY);
 
-
         drawString(7, 7, t("gui.refinedstorage:grid"));
 
         if (grid.getType() == EnumGridType.CRAFTING) {
@@ -176,7 +167,7 @@ public class GuiGrid extends GuiBase {
         int x = 8;
         int y = 20;
 
-        hoveringSlotId = -1;
+        hoveringSlot = -1;
 
         int slot = getOffset() * 9;
 
@@ -184,12 +175,12 @@ public class GuiGrid extends GuiBase {
 
         for (int i = 0; i < 9 * getVisibleRows(); ++i) {
             if (inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isConnected()) {
-                hoveringSlotId = slot;
+                hoveringSlot = slot;
 
                 if (slot < items.size()) {
                     // We need to use the ID, because if we filter, the client-side index will change
-                    // while the serverside's index will still be the same.
-                    hoveringId = items.get(slot).getId();
+                    // while the server-side's index will still be the same.
+                    hoveringItemId = items.get(slot).getId();
                 }
             }
 
@@ -208,7 +199,7 @@ public class GuiGrid extends GuiBase {
                     text = String.valueOf(qty);
                 }
 
-                if (hoveringSlotId == slot && GuiScreen.isShiftKeyDown() && qty > 1) {
+                if (hoveringSlot == slot && GuiScreen.isShiftKeyDown() && qty > 1) {
                     text = String.valueOf(qty);
                 }
 
@@ -239,8 +230,8 @@ public class GuiGrid extends GuiBase {
             }
         }
 
-        if (isHoveringOverValidSlot()) {
-            drawTooltip(mouseX, mouseY, items.get(hoveringSlotId).toItemStack());
+        if (isHoveringOverItemInSlot()) {
+            drawTooltip(mouseX, mouseY, items.get(hoveringSlot).toItemStack());
         }
 
         if (isHoveringOverClear(mouseX, mouseY)) {
@@ -259,12 +250,12 @@ public class GuiGrid extends GuiBase {
 
             if (isHoveringOverSlot() && container.getPlayer().inventory.getItemStack() != null) {
                 RefinedStorage.NETWORK.sendToServer(new MessageStoragePush(controller.getPos().getX(), controller.getPos().getY(), controller.getPos().getZ(), -1, clickedButton == 1));
-            } else if (isHoveringOverValidSlot() && container.getPlayer().inventory.getItemStack() == null) {
+            } else if (isHoveringOverItemInSlot() && container.getPlayer().inventory.getItemStack() == null) {
                 boolean half = clickedButton == 1;
                 boolean shift = GuiScreen.isShiftKeyDown();
                 boolean one = clickedButton == 2;
 
-                RefinedStorage.NETWORK.sendToServer(new MessageStoragePull(controller.getPos().getX(), controller.getPos().getY(), controller.getPos().getZ(), hoveringId, half, one, shift));
+                RefinedStorage.NETWORK.sendToServer(new MessageStoragePull(controller.getPos().getX(), controller.getPos().getY(), controller.getPos().getZ(), hoveringItemId, half, one, shift));
             } else if (clickedClear) {
                 RefinedStorage.NETWORK.sendToServer(new MessageGridCraftingClear(grid));
             } else {
@@ -275,6 +266,7 @@ public class GuiGrid extends GuiBase {
                         }
                     }
                 }
+
                 if (grid.getType() == EnumGridType.CRAFTING) {
                     for (Slot slot : container.getCraftingSlots()) {
                         if (inBounds(slot.xDisplayPosition, slot.yDisplayPosition, 16, 16, mouseX - guiLeft, mouseY - guiTop)) {
@@ -301,10 +293,6 @@ public class GuiGrid extends GuiBase {
     }
 
     public int getVisibleRows() {
-        if (grid.getType() == EnumGridType.CRAFTING) {
-            return 4;
-        }
-
-        return 5;
+        return grid.getType() == EnumGridType.CRAFTING ? 4 : 5;
     }
 }
