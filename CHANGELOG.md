@@ -29,6 +29,8 @@
 - Made the amount text in the Grid for items smaller
 - Nice formatting for items >= 1K (pressing shift while hovering over an item will still display the real item count)
 - When placing Importer, Exporter or External Storage with SHIFT, it will have the opposite direction. This is for easy placement behind other blocks (furnaces for example)
+- Added mass crafting of items with shift in Crafting Grid
+- Added JEI recipe transfering in Crafting Grid
 
 ### 0.4.1
 **Bugfixes**
