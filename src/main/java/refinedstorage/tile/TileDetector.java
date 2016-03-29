@@ -8,6 +8,7 @@ import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.storage.StorageItem;
 import refinedstorage.tile.settings.ICompareSetting;
+import refinedstorage.tile.settings.RedstoneMode;
 import refinedstorage.util.InventoryUtils;
 
 public class TileDetector extends TileMachine implements ICompareSetting {
@@ -26,10 +27,6 @@ public class TileDetector extends TileMachine implements ICompareSetting {
     private int amount = 0;
 
     private boolean powered = false;
-
-    public TileDetector() {
-        this.redstoneControlled = false;
-    }
 
     @Override
     public void onDisconnected() {
@@ -187,5 +184,10 @@ public class TileDetector extends TileMachine implements ICompareSetting {
 
     public IInventory getInventory() {
         return inventory;
+    }
+
+    @Override
+    public void setRedstoneMode(RedstoneMode mode) {
+        // NO OP
     }
 }

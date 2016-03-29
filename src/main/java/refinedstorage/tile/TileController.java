@@ -42,11 +42,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     public void update() {
         super.update();
 
-        if (destroyed) {
-            return;
-        }
-
-        if (!worldObj.isRemote) {
+        if (!worldObj.isRemote && !destroyed) {
             int lastEnergy = energy.getEnergyStored();
 
             if (ticks % 20 == 0) {

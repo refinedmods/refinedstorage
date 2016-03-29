@@ -10,7 +10,6 @@ import refinedstorage.tile.settings.RedstoneMode;
 
 public abstract class TileMachine extends TileBase implements INetworkTile, IRedstoneModeSetting {
     protected boolean connected = false;
-    protected boolean redstoneControlled = true;
 
     protected RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
@@ -69,11 +68,9 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
 
     @Override
     public void setRedstoneMode(RedstoneMode mode) {
-        if (redstoneControlled) {
-            markDirty();
+        markDirty();
 
-            this.redstoneMode = mode;
-        }
+        this.redstoneMode = mode;
     }
 
     @Override
