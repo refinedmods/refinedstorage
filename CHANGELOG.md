@@ -3,12 +3,14 @@
 ### 0.5
 **Bugfixes**
 - Fixed clicking sound in Grid
-- Fixed NPE in Grid while sorting
+- Fixed a bunch of crashes
 - Fixed exporter not exporting is some cases
 - Fixed importer not importing in some cases
 - Fixed controller drawing RF every 20 ticks instead of every tick
 - Fixed not being able to shift click from Crafting Grid crafting slots
-- Fixed crash with interfaces
+- Fixed new items inserted after crafting in Grid being laggy
+- Fixed flickering of items in Grid
+- Fixed getting a stack of unstackable stuff from Grid
 - Check if the Constructor can actually place said block in the world
 
 **Features**
@@ -25,7 +27,7 @@
 - Deep Storage Unit integration (with this several barrel mods are now supported too!)
 - Machines don't need to be connected with cables anymore, they can be next to each other too
 - Made the amount text in the Grid for items smaller
-- Nice formatting for items >= 1K
+- Nice formatting for items >= 1K (pressing shift while hovering over an item will still display the real item count)
 - When placing Importer, Exporter or External Storage with SHIFT, it will have the opposite direction. This is for easy placement behind other blocks (furnaces for example)
 
 ### 0.4.1
