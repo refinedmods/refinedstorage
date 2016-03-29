@@ -13,7 +13,8 @@ import refinedstorage.tile.TileStorage;
 public class PluginRefinedStorage extends BlankModPlugin {
     @Override
     public void register(IModRegistry registry) {
-        // @TODO: JEI transfer handler
+        registry.getRecipeTransferRegistry().addRecipeTransferHandler(new GridRecipeTransferHandler());
+
         registry.addRecipeCategories(new SoldererRecipeCategory(registry.getJeiHelpers().getGuiHelper()));
 
         registry.addRecipeHandlers(new SoldererRecipeHandler());

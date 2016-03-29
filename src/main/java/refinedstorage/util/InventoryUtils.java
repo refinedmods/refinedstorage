@@ -144,7 +144,6 @@ public class InventoryUtils {
         int toGo = stack.stackSize;
 
         for (int i = 0; i < inventory.getSizeInventory(); ++i) {
-            // @TODO: Test this better
             if (!inventory.isItemValidForSlot(i, stack)) {
                 continue;
             }
