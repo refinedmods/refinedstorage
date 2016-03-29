@@ -14,8 +14,12 @@ import java.util.List;
 public class ContainerGrid extends ContainerBase {
     private List<Slot> craftingSlots = new ArrayList<Slot>();
 
+    private TileGrid grid;
+
     public ContainerGrid(EntityPlayer player, TileGrid grid) {
         super(player);
+
+        this.grid = grid;
 
         addPlayerInventory(8, grid.getType() == EnumGridType.CRAFTING ? 174 : 126);
 
@@ -40,6 +44,10 @@ public class ContainerGrid extends ContainerBase {
 
             addSlotToContainer(new SlotGridCraftingResult(this, player, grid.getCraftingInventory(), grid.getCraftingResultInventory(), grid, 0, 133 + 4, 120 + 4));
         }
+    }
+
+    public TileGrid getGrid() {
+        return grid;
     }
 
     public List<Slot> getCraftingSlots() {

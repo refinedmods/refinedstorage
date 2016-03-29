@@ -124,6 +124,38 @@ public class TileGrid extends TileMachine {
         }
     }
 
+    public void onRecipeTransfer(ItemStack[][] recipe) {
+        if (isConnected()) {
+            for (int i = 0; i < craftingInventory.getSizeInventory(); ++i) {
+                ItemStack slot = craftingInventory.getStackInSlot(i);
+
+                if (slot != null) {
+                    if (!getController().push(slot)) {
+                        return;
+                    }
+
+                    craftingInventory.setInventorySlotContents(i, null);
+                }
+            }
+
+            for (int i = 0; i < craftingInventory.getSizeInventory(); ++i) {
+                if (recipe[i] != null) {
+                    ItemStack[] possibilities = recipe[i];
+
+                    for (ItemStack possibility : possibilities) {
+                        ItemStack took = getController().take(possibility);
+
+                        if (took != null) {
+                            craftingInventory.setInventorySlotContents(i, possibility);
+
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public int getSortingDirection() {
         return sortingDirection;
     }

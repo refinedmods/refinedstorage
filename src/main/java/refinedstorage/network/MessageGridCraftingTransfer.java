@@ -2,9 +2,15 @@ package refinedstorage.network;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import refinedstorage.block.EnumGridType;
+import refinedstorage.container.ContainerGrid;
+import refinedstorage.tile.TileGrid;
 
 public class MessageGridCraftingTransfer extends MessageHandlerPlayerToServer<MessageGridCraftingTransfer> implements IMessage {
     private NBTTagCompound recipe;
@@ -28,6 +34,26 @@ public class MessageGridCraftingTransfer extends MessageHandlerPlayerToServer<Me
 
     @Override
     public void handle(MessageGridCraftingTransfer message, EntityPlayerMP player) {
-        // @TODO: Make it do something
+        if (player.openContainer instanceof ContainerGrid) {
+            TileGrid grid = ((ContainerGrid) player.openContainer).getGrid();
+
+            if (grid.getType() == EnumGridType.CRAFTING) {
+                ItemStack[][] actualRecipe = new ItemStack[9][];
+
+                for (int x = 0; x < actualRecipe.length; x++) {
+                    NBTTagList list = message.recipe.getTagList("#" + x, Constants.NBT.TAG_COMPOUND);
+
+                    if (list.tagCount() > 0) {
+                        actualRecipe[x] = new ItemStack[list.tagCount()];
+
+                        for (int y = 0; y < list.tagCount(); y++) {
+                            actualRecipe[x][y] = ItemStack.loadItemStackFromNBT(list.getCompoundTagAt(y));
+                        }
+                    }
+                }
+
+                grid.onRecipeTransfer(actualRecipe);
+            }
+        }
     }
 }
