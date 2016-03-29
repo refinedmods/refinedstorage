@@ -15,6 +15,9 @@ import refinedstorage.container.ContainerGrid;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.util.InventoryUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TileGrid extends TileMachine {
     public static final String NBT_SORTING_DIRECTION = "SortingDirection";
     public static final String NBT_SORTING_TYPE = "SortingType";
@@ -90,6 +93,34 @@ public class TileGrid extends TileMachine {
             onCraftingMatrixChanged();
 
             container.detectAndSendChanges();
+        }
+    }
+
+    public void onCraftedShift(ContainerGrid container, EntityPlayer player) {
+        List<ItemStack> craftedItemsList = new ArrayList<ItemStack>();
+        int craftedItems = 0;
+        ItemStack crafted = craftingResultInventory.getStackInSlot(0);
+
+        while (true) {
+            onCrafted(container);
+
+            craftedItemsList.add(crafted.copy());
+
+            craftedItems += crafted.stackSize;
+
+            if (!InventoryUtils.compareStack(crafted, craftingResultInventory.getStackInSlot(0)) || craftedItems + crafted.stackSize > 64) {
+                break;
+            }
+        }
+
+        for (ItemStack craftedItem : craftedItemsList) {
+            if (!player.inventory.addItemStackToInventory(craftedItem.copy())) {
+                if (isConnected() && getController().push(craftedItem.copy())) {
+                    // NO OP
+                } else {
+                    InventoryUtils.dropStack(player.worldObj, craftedItem, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
+                }
+            }
         }
     }
 
