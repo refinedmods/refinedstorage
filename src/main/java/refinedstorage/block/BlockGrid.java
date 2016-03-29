@@ -1,6 +1,5 @@
 package refinedstorage.block;
 
-import java.util.List;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
@@ -18,61 +17,53 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.tile.TileGrid;
 
-public class BlockGrid extends BlockMachine
-{
-	public static final PropertyEnum TYPE = PropertyEnum.create("type", EnumGridType.class);
+import java.util.List;
 
-	public BlockGrid()
-	{
-		super("grid");
-	}
+public class BlockGrid extends BlockMachine {
+    public static final PropertyEnum TYPE = PropertyEnum.create("type", EnumGridType.class);
 
-	@Override
-	public TileEntity createTileEntity(World world, IBlockState state)
-	{
-		return new TileGrid();
-	}
+    public BlockGrid() {
+        super("grid");
+    }
 
-	@Override
-	public void getSubBlocks(Item item, CreativeTabs tab, List subItems)
-	{
-		for (int i = 0; i <= 1; i++)
-		{
-			subItems.add(new ItemStack(item, 1, i));
-		}
-	}
+    @Override
+    public TileEntity createTileEntity(World world, IBlockState state) {
+        return new TileGrid();
+    }
 
-	@Override
-	protected BlockStateContainer createBlockState()
-	{
-		return new BlockStateContainer(this, new IProperty[]
-		{
-			DIRECTION,
-			CONNECTED,
-			TYPE
-		});
-	}
+    @Override
+    public void getSubBlocks(Item item, CreativeTabs tab, List subItems) {
+        for (int i = 0; i <= 1; i++) {
+            subItems.add(new ItemStack(item, 1, i));
+        }
+    }
 
-	@Override
-	public IBlockState getStateFromMeta(int meta)
-	{
-		return getDefaultState().withProperty(TYPE, meta == 0 ? EnumGridType.NORMAL : EnumGridType.CRAFTING);
-	}
+    @Override
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, new IProperty[]
+            {
+                DIRECTION,
+                CONNECTED,
+                TYPE
+            });
+    }
 
-	@Override
-	public int getMetaFromState(IBlockState state)
-	{
-		return state.getValue(TYPE) == EnumGridType.NORMAL ? 0 : 1;
-	}
+    @Override
+    public IBlockState getStateFromMeta(int meta) {
+        return getDefaultState().withProperty(TYPE, meta == 0 ? EnumGridType.NORMAL : EnumGridType.CRAFTING);
+    }
 
-	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
-	{
-		if (!world.isRemote)
-		{
-			player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.GRID, world, pos.getX(), pos.getY(), pos.getZ());
-		}
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        return state.getValue(TYPE) == EnumGridType.NORMAL ? 0 : 1;
+    }
 
-		return true;
-	}
+    @Override
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+        if (!world.isRemote) {
+            player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.GRID, world, pos.getX(), pos.getY(), pos.getZ());
+        }
+
+        return true;
+    }
 }

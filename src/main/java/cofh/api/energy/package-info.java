@@ -5,6 +5,6 @@
 @API(apiVersion = CoFHAPIProps.VERSION, owner = "CoFHAPI", provides = "CoFHAPI|energy")
 package cofh.api.energy;
 
-import net.minecraftforge.fml.common.API;
 import cofh.api.CoFHAPIProps;
+import net.minecraftforge.fml.common.API;
 

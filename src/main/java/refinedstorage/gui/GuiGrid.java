@@ -1,10 +1,5 @@
 package refinedstorage.gui;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -19,339 +14,285 @@ import refinedstorage.gui.sidebutton.SideButtonGridSortingDirection;
 import refinedstorage.gui.sidebutton.SideButtonGridSortingType;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.network.MessageGridCraftingClear;
+import refinedstorage.network.MessageGridCraftingPush;
 import refinedstorage.network.MessageStoragePull;
 import refinedstorage.network.MessageStoragePush;
 import refinedstorage.storage.StorageItem;
 import refinedstorage.tile.TileController;
 import refinedstorage.tile.TileGrid;
 
-public class GuiGrid extends GuiBase
-{
-	private ContainerGrid container;
-	private TileGrid grid;
+import java.io.IOException;
+import java.util.*;
 
-	private GuiTextField searchField;
+public class GuiGrid extends GuiBase {
+    private ContainerGrid container;
+    private TileGrid grid;
 
-	private int hoveringSlotId;
-	private int hoveringId;
+    private List<StorageItem> items = new ArrayList<StorageItem>();
 
-	private Scrollbar scrollbar = new Scrollbar(174, 20, 12, 70);
+    private GuiTextField searchField;
 
-	public GuiGrid(ContainerGrid container, TileGrid grid)
-	{
-		super(container, 193, grid.getType() == EnumGridType.CRAFTING ? 256 : 190);
+    private int hoveringSlot;
+    private int hoveringItemId;
 
-		this.container = container;
-		this.grid = grid;
-	}
+    private Scrollbar scrollbar;
 
-	@Override
-	public void init(int x, int y)
-	{
-		addSideButton(new SideButtonRedstoneMode(grid));
+    public GuiGrid(ContainerGrid container, TileGrid grid) {
+        super(container, 193, grid.getType() == EnumGridType.CRAFTING ? 256 : 208);
 
-		addSideButton(new SideButtonGridSortingDirection(grid));
-		addSideButton(new SideButtonGridSortingType(grid));
+        this.container = container;
+        this.grid = grid;
+        this.scrollbar = new Scrollbar(174, 20, 12, grid.getType() == EnumGridType.CRAFTING ? 70 : 88);
+    }
 
-		searchField = new GuiTextField(0, fontRendererObj, x + 80 + 1, y + 6 + 1, 88 - 6, fontRendererObj.FONT_HEIGHT);
-		searchField.setEnableBackgroundDrawing(false);
-		searchField.setVisible(true);
-		searchField.setTextColor(16777215);
-		searchField.setCanLoseFocus(false);
-		searchField.setFocused(true);
-	}
+    @Override
+    public void init(int x, int y) {
+        addSideButton(new SideButtonRedstoneMode(grid));
 
-	@Override
-	public void update(int x, int y)
-	{
-		scrollbar.setCanScroll(getRows() > getVisibleRows());
-	}
+        addSideButton(new SideButtonGridSortingDirection(grid));
+        addSideButton(new SideButtonGridSortingType(grid));
 
-	public int getOffset()
-	{
-		return (int) (scrollbar.getCurrentScroll() / 70f * (float) getRows());
-	}
+        searchField = new GuiTextField(0, fontRendererObj, x + 80 + 1, y + 6 + 1, 88 - 6, fontRendererObj.FONT_HEIGHT);
+        searchField.setEnableBackgroundDrawing(false);
+        searchField.setVisible(true);
+        searchField.setTextColor(16777215);
+        searchField.setCanLoseFocus(false);
+        searchField.setFocused(true);
+    }
 
-	public int getVisibleRows()
-	{
-		return 4;
-	}
+    @Override
+    public void update(int x, int y) {
+        items.clear();
 
-	public int getRows()
-	{
-		if (!grid.isConnected())
-		{
-			return 0;
-		}
+        if (grid.isConnected()) {
+            items.addAll(grid.getController().getItems());
 
-		int max = (int) Math.ceil((float) getItems().size() / (float) 9);
+            if (!searchField.getText().trim().isEmpty()) {
+                Iterator<StorageItem> t = items.iterator();
 
-		return max < 0 ? 0 : max;
-	}
+                while (t.hasNext()) {
+                    StorageItem item = t.next();
 
-	private boolean isHoveringOverValidSlot(List<StorageItem> items)
-	{
-		return grid.isConnected() && isHoveringOverSlot() && hoveringSlotId < items.size();
-	}
+                    if (!item.toItemStack().getDisplayName().toLowerCase().contains(searchField.getText().toLowerCase())) {
+                        t.remove();
+                    }
+                }
+            }
 
-	private boolean isHoveringOverSlot()
-	{
-		return hoveringSlotId >= 0;
-	}
+            Collections.sort(items, new Comparator<StorageItem>() {
+                @Override
+                public int compare(StorageItem o1, StorageItem o2) {
+                        if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING) {
+                            return o2.toItemStack().getDisplayName().compareTo(o1.toItemStack().getDisplayName());
+                        } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
+                            return o1.toItemStack().getDisplayName().compareTo(o2.toItemStack().getDisplayName());
+                        }
 
-	public boolean isHoveringOverClear(int mouseX, int mouseY)
-	{
-		if (grid.getType() == EnumGridType.CRAFTING)
-		{
-			return inBounds(81, 105, 7, 7, mouseX, mouseY);
-		}
+                    return 0;
+                }
+            });
 
-		return false;
-	}
+            if (grid.getSortingType() == TileGrid.SORTING_TYPE_QUANTITY) {
+                Collections.sort(items, new Comparator<StorageItem>() {
+                    @Override
+                    public int compare(StorageItem o1, StorageItem o2) {
+                            if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING) {
+                                return Integer.valueOf(o2.getQuantity()).compareTo(o1.getQuantity());
+                            } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
+                                return Integer.valueOf(o1.getQuantity()).compareTo(o2.getQuantity());
+                            }
 
-	@Override
-	public void drawBackground(int x, int y, int mouseX, int mouseY)
-	{
-		if (grid.getType() == EnumGridType.CRAFTING)
-		{
-			bindTexture("gui/crafting_grid.png");
-		}
-		else
-		{
-			bindTexture("gui/grid.png");
-		}
+                        return 0;
+                    }
+                });
+            }
+        }
 
-		drawTexture(x, y, 0, 0, width, height);
+        scrollbar.setCanScroll(getRows() > getVisibleRows());
+    }
 
-		scrollbar.draw(this);
+    public int getOffset() {
+        return (int) (scrollbar.getCurrentScroll() / 70f * (float) getRows());
+    }
 
-		searchField.drawTextBox();
-	}
+    public int getRows() {
+        int max = (int) Math.ceil((float) items.size() / (float) 9);
 
-	@Override
-	public void drawForeground(int mouseX, int mouseY)
-	{
-		scrollbar.update(this, mouseX, mouseY);
+        return max < 0 ? 0 : max;
+    }
 
-		drawString(7, 7, t("gui.refinedstorage:grid"));
+    private boolean isHoveringOverItemInSlot() {
+        return grid.isConnected() && isHoveringOverSlot() && hoveringSlot < items.size();
+    }
 
-		if (grid.getType() == EnumGridType.CRAFTING)
-		{
-			drawString(7, 94, t("container.crafting"));
-		}
+    private boolean isHoveringOverSlot() {
+        return hoveringSlot >= 0;
+    }
 
-		drawString(7, grid.getType() == EnumGridType.CRAFTING ? 163 : 96, t("container.inventory"));
+    public boolean isHoveringOverClear(int mouseX, int mouseY) {
+        if (grid.getType() == EnumGridType.CRAFTING) {
+            return inBounds(81, 105, 7, 7, mouseX, mouseY);
+        }
 
-		int x = 8;
-		int y = 20;
+        return false;
+    }
 
-		List<StorageItem> items = getItems();
+    @Override
+    public void drawBackground(int x, int y, int mouseX, int mouseY) {
+        if (grid.getType() == EnumGridType.CRAFTING) {
+            bindTexture("gui/crafting_grid.png");
+        } else {
+            bindTexture("gui/grid.png");
+        }
 
-		hoveringSlotId = -1;
+        drawTexture(x, y, 0, 0, width, height);
 
-		int slot = getOffset() * 9;
+        scrollbar.draw(this);
 
-		RenderHelper.enableGUIStandardItemLighting();
+        searchField.drawTextBox();
+    }
 
-		for (int i = 0; i < 9 * getVisibleRows(); ++i)
-		{
-			if (slot < items.size())
-			{
-				int qty = items.get(slot).getQuantity();
+    @Override
+    public void drawForeground(int mouseX, int mouseY) {
+        scrollbar.update(this, mouseX, mouseY);
 
-				String text;
+        drawString(7, 7, t("gui.refinedstorage:grid"));
 
-				if (qty >= 1000000)
-				{
-					text = String.valueOf((int) Math.floor(qty / 1000000)) + "M";
-				}
-				else if (qty >= 1000)
-				{
-					text = String.valueOf((int) Math.floor(qty / 1000)) + "K";
-				}
-				else if (qty == 1)
-				{
-					text = null;
-				}
-				else
-				{
-					text = String.valueOf(qty);
-				}
+        if (grid.getType() == EnumGridType.CRAFTING) {
+            drawString(7, 94, t("container.crafting"));
+        }
 
-				drawItem(x, y, items.get(slot).toItemStack(), true, text);
-			}
+        drawString(7, grid.getType() == EnumGridType.CRAFTING ? 163 : 113, t("container.inventory"));
 
-			if (inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isConnected())
-			{
-				hoveringSlotId = slot;
+        int x = 8;
+        int y = 20;
 
-				if (slot < items.size())
-				{
-					// We need to use the ID, because if we filter, the client-side index will change
-					// while the serverside's index will still be the same.
-					hoveringId = items.get(slot).getId();
-				}
+        hoveringSlot = -1;
 
-				int color = grid.isConnected() ? -2130706433 : 0xFF5B5B5B;
+        int slot = getOffset() * 9;
 
-				GlStateManager.disableLighting();
-				GlStateManager.disableDepth();
-				zLevel = 190;
-				GlStateManager.colorMask(true, true, true, false);
-				drawGradientRect(x, y, x + 16, y + 16, color, color);
-				zLevel = 0;
-				GlStateManager.colorMask(true, true, true, true);
-				GlStateManager.enableLighting();
-				GlStateManager.enableDepth();
-			}
+        RenderHelper.enableGUIStandardItemLighting();
 
-			slot++;
+        for (int i = 0; i < 9 * getVisibleRows(); ++i) {
+            if (inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isConnected()) {
+                hoveringSlot = slot;
 
-			x += 18;
+                if (slot < items.size()) {
+                    // We need to use the ID, because if we filter, the client-side index will change
+                    // while the server-side's index will still be the same.
+                    hoveringItemId = items.get(slot).getId();
+                }
+            }
 
-			if ((i + 1) % 9 == 0)
-			{
-				x = 8;
-				y += 18;
-			}
-		}
+            if (slot < items.size()) {
+                int qty = items.get(slot).getQuantity();
 
-		if (isHoveringOverValidSlot(items))
-		{
-			drawTooltip(mouseX, mouseY, items.get(hoveringSlotId).toItemStack());
-		}
+                String text;
 
-		if (isHoveringOverClear(mouseX, mouseY))
-		{
-			drawTooltip(mouseX, mouseY, t("misc.refinedstorage:clear"));
-		}
-	}
+                if (qty >= 1000000) {
+                    text = String.format("%.1f", (float) qty / 1000000).replace(",", ".").replace(".0", "") + "M";
+                } else if (qty >= 1000) {
+                    text = String.format("%.1f", (float) qty / 1000).replace(",", ".").replace(".0", "") + "K";
+                } else if (qty == 1) {
+                    text = null;
+                } else {
+                    text = String.valueOf(qty);
+                }
 
-	public List<StorageItem> getItems()
-	{
-		List<StorageItem> items = new ArrayList<StorageItem>();
+                if (hoveringSlot == slot && GuiScreen.isShiftKeyDown() && qty > 1) {
+                    text = String.valueOf(qty);
+                }
 
-		if (!grid.isConnected())
-		{
-			return items;
-		}
+                drawItem(x, y, items.get(slot).toItemStack(), true, text);
+            }
 
-		items.addAll(grid.getController().getItems());
+            if (inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isConnected()) {
+                int color = grid.isConnected() ? -2130706433 : 0xFF5B5B5B;
 
-		if (!searchField.getText().trim().isEmpty())
-		{
-			Iterator<StorageItem> t = items.iterator();
+                GlStateManager.disableLighting();
+                GlStateManager.disableDepth();
+                zLevel = 190;
+                GlStateManager.colorMask(true, true, true, false);
+                drawGradientRect(x, y, x + 16, y + 16, color, color);
+                zLevel = 0;
+                GlStateManager.colorMask(true, true, true, true);
+                GlStateManager.enableLighting();
+                GlStateManager.enableDepth();
+            }
 
-			while (t.hasNext())
-			{
-				StorageItem item = t.next();
+            slot++;
 
-				if (!item.toItemStack().getDisplayName().toLowerCase().contains(searchField.getText().toLowerCase()))
-				{
-					t.remove();
-				}
-			}
-		}
+            x += 18;
 
-		items.sort(new Comparator<StorageItem>()
-		{
-			@Override
-			public int compare(StorageItem o1, StorageItem o2)
-			{
-				if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING)
-				{
-					return o2.toItemStack().getDisplayName().compareTo(o1.toItemStack().getDisplayName());
-				}
-				else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING)
-				{
-					return o1.toItemStack().getDisplayName().compareTo(o2.toItemStack().getDisplayName());
-				}
+            if ((i + 1) % 9 == 0) {
+                x = 8;
+                y += 18;
+            }
+        }
 
-				return 0;
-			}
-		});
+        if (isHoveringOverItemInSlot()) {
+            drawTooltip(mouseX, mouseY, items.get(hoveringSlot).toItemStack());
+        }
 
-		if (grid.getSortingType() == TileGrid.SORTING_TYPE_QUANTITY)
-		{
-			items.sort(new Comparator<StorageItem>()
-			{
-				@Override
-				public int compare(StorageItem o1, StorageItem o2)
-				{
-					if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING)
-					{
-						return Integer.valueOf(o2.getQuantity()).compareTo(o1.getQuantity());
-					}
-					else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING)
-					{
-						return Integer.valueOf(o1.getQuantity()).compareTo(o2.getQuantity());
-					}
+        if (isHoveringOverClear(mouseX, mouseY)) {
+            drawTooltip(mouseX, mouseY, t("misc.refinedstorage:clear"));
+        }
+    }
 
-					return 0;
-				}
-			});
-		}
+    @Override
+    public void mouseClicked(int mouseX, int mouseY, int clickedButton) throws IOException {
+        super.mouseClicked(mouseX, mouseY, clickedButton);
 
-		return items;
-	}
+        boolean clickedClear = clickedButton == 0 && isHoveringOverClear(mouseX - guiLeft, mouseY - guiTop);
 
-	@Override
-	public void mouseClicked(int mouseX, int mouseY, int clickedButton) throws IOException
-	{
-		super.mouseClicked(mouseX, mouseY, clickedButton);
+        if (grid.isConnected()) {
+            TileController controller = grid.getController();
 
-		boolean clickedClear = clickedButton == 0 && isHoveringOverClear(mouseX - guiLeft, mouseY - guiTop);
+            if (isHoveringOverSlot() && container.getPlayer().inventory.getItemStack() != null && (clickedButton == 0 || clickedButton == 1)) {
+                RefinedStorage.NETWORK.sendToServer(new MessageStoragePush(controller.getPos().getX(), controller.getPos().getY(), controller.getPos().getZ(), -1, clickedButton == 1));
+            } else if (isHoveringOverItemInSlot() && container.getPlayer().inventory.getItemStack() == null) {
+                boolean half = clickedButton == 1;
+                boolean shift = GuiScreen.isShiftKeyDown();
+                boolean one = clickedButton == 2;
 
-		if (grid.isConnected())
-		{
-			TileController controller = grid.getController();
+                RefinedStorage.NETWORK.sendToServer(new MessageStoragePull(controller.getPos().getX(), controller.getPos().getY(), controller.getPos().getZ(), hoveringItemId, half, one, shift));
+            } else if (clickedClear) {
+                RefinedStorage.NETWORK.sendToServer(new MessageGridCraftingClear(grid));
+            } else {
+                for (Slot slot : container.getPlayerInventorySlots()) {
+                    if (inBounds(slot.xDisplayPosition, slot.yDisplayPosition, 16, 16, mouseX - guiLeft, mouseY - guiTop)) {
+                        if (GuiScreen.isShiftKeyDown()) {
+                            RefinedStorage.NETWORK.sendToServer(new MessageStoragePush(controller.getPos().getX(), controller.getPos().getY(), controller.getPos().getZ(), slot.slotNumber, clickedButton == 1));
+                        }
+                    }
+                }
 
-			if (isHoveringOverSlot() && container.getPlayer().inventory.getItemStack() != null)
-			{
-				RefinedStorage.NETWORK.sendToServer(new MessageStoragePush(controller.getPos().getX(), controller.getPos().getY(), controller.getPos().getZ(), -1, clickedButton == 1));
-			}
-			else if (isHoveringOverValidSlot(getItems()) && container.getPlayer().inventory.getItemStack() == null)
-			{
-				boolean half = clickedButton == 1;
-				boolean shift = GuiScreen.isShiftKeyDown();
-				boolean one = clickedButton == 2;
+                if (grid.getType() == EnumGridType.CRAFTING) {
+                    for (Slot slot : container.getCraftingSlots()) {
+                        if (inBounds(slot.xDisplayPosition, slot.yDisplayPosition, 16, 16, mouseX - guiLeft, mouseY - guiTop)) {
+                            if (GuiScreen.isShiftKeyDown()) {
+                                RefinedStorage.NETWORK.sendToServer(new MessageGridCraftingPush(grid, slot.getSlotIndex()));
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
-				RefinedStorage.NETWORK.sendToServer(new MessageStoragePull(controller.getPos().getX(), controller.getPos().getY(), controller.getPos().getZ(), hoveringId, half, one, shift));
-			}
-			else if (clickedClear)
-			{
-				RefinedStorage.NETWORK.sendToServer(new MessageGridCraftingClear(grid));
-			}
-			else
-			{
-				for (Slot slot : container.getPlayerInventorySlots())
-				{
-					if (inBounds(slot.xDisplayPosition, slot.yDisplayPosition, 16, 16, mouseX - guiLeft, mouseY - guiTop))
-					{
-						if (GuiScreen.isShiftKeyDown())
-						{
-							RefinedStorage.NETWORK.sendToServer(new MessageStoragePush(controller.getPos().getX(), controller.getPos().getY(), controller.getPos().getZ(), slot.slotNumber, clickedButton == 1));
-						}
-					}
-				}
-			}
-		}
+        if (clickedClear) {
+            mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
+        }
+    }
 
-		if (clickedClear)
-		{
-			mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
-		}
-	}
+    @Override
+    protected void keyTyped(char character, int keyCode) throws IOException {
+        if (!checkHotbarKeys(keyCode) && searchField.textboxKeyTyped(character, keyCode)) {
+        } else {
+            super.keyTyped(character, keyCode);
+        }
+    }
 
-	@Override
-	protected void keyTyped(char character, int keyCode) throws IOException
-	{
-		if (!checkHotbarKeys(keyCode) && searchField.textboxKeyTyped(character, keyCode))
-		{
-		}
-		else
-		{
-			super.keyTyped(character, keyCode);
-		}
-	}
+    public int getVisibleRows() {
+        return grid.getType() == EnumGridType.CRAFTING ? 4 : 5;
+    }
 }

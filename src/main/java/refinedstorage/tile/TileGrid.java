@@ -8,194 +8,221 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
-import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.block.BlockGrid;
 import refinedstorage.block.EnumGridType;
+import refinedstorage.container.ContainerGrid;
 import refinedstorage.inventory.InventorySimple;
-import refinedstorage.network.MessageGridCraftingUpdate;
-import refinedstorage.storage.StorageItem;
 import refinedstorage.util.InventoryUtils;
 
-public class TileGrid extends TileMachine
-{
-	public static final String NBT_SORTING_DIRECTION = "SortingDirection";
-	public static final String NBT_SORTING_TYPE = "SortingType";
+import java.util.ArrayList;
+import java.util.List;
 
-	public static final int SORTING_DIRECTION_ASCENDING = 0;
-	public static final int SORTING_DIRECTION_DESCENDING = 1;
+public class TileGrid extends TileMachine {
+    public static final String NBT_SORTING_DIRECTION = "SortingDirection";
+    public static final String NBT_SORTING_TYPE = "SortingType";
 
-	public static final int SORTING_TYPE_QUANTITY = 0;
-	public static final int SORTING_TYPE_NAME = 1;
+    public static final int SORTING_DIRECTION_ASCENDING = 0;
+    public static final int SORTING_DIRECTION_DESCENDING = 1;
 
-	private Container craftingContainer = new Container()
-	{
-		@Override
-		public boolean canInteractWith(EntityPlayer player)
-		{
-			return false;
-		}
+    public static final int SORTING_TYPE_QUANTITY = 0;
+    public static final int SORTING_TYPE_NAME = 1;
 
-		@Override
-		public void onCraftMatrixChanged(IInventory inventory)
-		{
-			onCraftingMatrixChanged();
-		}
-	};
-	private InventoryCrafting craftingInventory = new InventoryCrafting(craftingContainer, 3, 3);
-	private InventorySimple craftingResultInventory = new InventorySimple("crafting_result", 1);
+    private Container craftingContainer = new Container() {
+        @Override
+        public boolean canInteractWith(EntityPlayer player) {
+            return false;
+        }
 
-	private int sortingDirection = 0;
-	private int sortingType = 0;
+        @Override
+        public void onCraftMatrixChanged(IInventory inventory) {
+            onCraftingMatrixChanged();
+        }
+    };
+    private InventoryCrafting craftingInventory = new InventoryCrafting(craftingContainer, 3, 3);
+    private InventorySimple craftingResultInventory = new InventorySimple("crafting_result", 1);
 
-	@Override
-	public int getEnergyUsage()
-	{
-		return 4;
-	}
+    private int sortingDirection = SORTING_DIRECTION_DESCENDING;
+    private int sortingType = SORTING_TYPE_NAME;
 
-	@Override
-	public void updateMachine()
-	{
-	}
+    @Override
+    public int getEnergyUsage() {
+        return 4;
+    }
 
-	public EnumGridType getType()
-	{
-		if (worldObj.getBlockState(pos).getBlock() == RefinedStorageBlocks.GRID)
-		{
-			return (EnumGridType) worldObj.getBlockState(pos).getValue(BlockGrid.TYPE);
-		}
+    @Override
+    public void updateMachine() {
+    }
 
-		return EnumGridType.NORMAL;
-	}
+    public EnumGridType getType() {
+        if (worldObj.getBlockState(pos).getBlock() == RefinedStorageBlocks.GRID) {
+            return (EnumGridType) worldObj.getBlockState(pos).getValue(BlockGrid.TYPE);
+        }
 
-	public InventoryCrafting getCraftingInventory()
-	{
-		return craftingInventory;
-	}
+        return EnumGridType.NORMAL;
+    }
 
-	public InventorySimple getCraftingResultInventory()
-	{
-		return craftingResultInventory;
-	}
+    public InventoryCrafting getCraftingInventory() {
+        return craftingInventory;
+    }
 
-	public void onCraftingMatrixChanged()
-	{
-		markDirty();
+    public InventorySimple getCraftingResultInventory() {
+        return craftingResultInventory;
+    }
 
-		craftingResultInventory.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(craftingInventory, worldObj));
-	}
+    public void onCraftingMatrixChanged() {
+        markDirty();
 
-	public void onCrafted(ItemStack[] matrixSlots)
-	{
-		if (isConnected() && !worldObj.isRemote)
-		{
-			for (int i = 0; i < craftingInventory.getSizeInventory(); ++i)
-			{
-				ItemStack slot = craftingInventory.getStackInSlot(i);
+        craftingResultInventory.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(craftingInventory, worldObj));
+    }
 
-				if (slot == null && matrixSlots[i] != null)
-				{
-					for (StorageItem item : getController().getItems())
-					{
-						if (item.compareNoQuantity(matrixSlots[i].copy()))
-						{
-							craftingInventory.setInventorySlotContents(i, getController().take(matrixSlots[i].copy()));
+    public void onCrafted(ContainerGrid container) {
+        if (!worldObj.isRemote) {
+            for (int i = 0; i < craftingInventory.getSizeInventory(); ++i) {
+                ItemStack slot = craftingInventory.getStackInSlot(i);
 
-							break;
-						}
-					}
-				}
-			}
+                if (slot != null) {
+                    if (slot.stackSize == 1 && isConnected()) {
+                        craftingInventory.setInventorySlotContents(i, getController().take(slot.copy()));
+                    } else {
+                        craftingInventory.decrStackSize(i, 1);
+                    }
+                }
+            }
 
-			onCraftingMatrixChanged();
+            onCraftingMatrixChanged();
 
-			TargetPoint target = new TargetPoint(worldObj.provider.getDimensionType().getId(), pos.getX(), pos.getY(), pos.getZ(), UPDATE_RANGE);
+            container.detectAndSendChanges();
+        }
+    }
 
-			RefinedStorage.NETWORK.sendToAllAround(new MessageGridCraftingUpdate(this), target);
-		}
-	}
+    public void onCraftedShift(ContainerGrid container, EntityPlayer player) {
+        List<ItemStack> craftedItemsList = new ArrayList<ItemStack>();
+        int craftedItems = 0;
+        ItemStack crafted = craftingResultInventory.getStackInSlot(0);
 
-	public int getSortingDirection()
-	{
-		return sortingDirection;
-	}
+        while (true) {
+            onCrafted(container);
 
-	public void setSortingDirection(int sortingDirection)
-	{
-		markDirty();
+            craftedItemsList.add(crafted.copy());
 
-		this.sortingDirection = sortingDirection;
-	}
+            craftedItems += crafted.stackSize;
 
-	public int getSortingType()
-	{
-		return sortingType;
-	}
+            if (!InventoryUtils.compareStack(crafted, craftingResultInventory.getStackInSlot(0)) || craftedItems + crafted.stackSize > 64) {
+                break;
+            }
+        }
 
-	public void setSortingType(int sortingType)
-	{
-		markDirty();
+        for (ItemStack craftedItem : craftedItemsList) {
+            if (!player.inventory.addItemStackToInventory(craftedItem.copy())) {
+                if (isConnected() && getController().push(craftedItem.copy())) {
+                    // NO OP
+                } else {
+                    InventoryUtils.dropStack(player.worldObj, craftedItem, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
+                }
+            }
+        }
+    }
 
-		this.sortingType = sortingType;
-	}
+    public void onRecipeTransfer(ItemStack[][] recipe) {
+        if (isConnected()) {
+            for (int i = 0; i < craftingInventory.getSizeInventory(); ++i) {
+                ItemStack slot = craftingInventory.getStackInSlot(i);
 
-	@Override
-	public void readFromNBT(NBTTagCompound nbt)
-	{
-		super.readFromNBT(nbt);
+                if (slot != null) {
+                    if (!getController().push(slot)) {
+                        return;
+                    }
 
-		InventoryUtils.restoreInventory(craftingInventory, 0, nbt);
+                    craftingInventory.setInventorySlotContents(i, null);
+                }
+            }
 
-		if (nbt.hasKey(NBT_SORTING_DIRECTION))
-		{
-			sortingDirection = nbt.getInteger(NBT_SORTING_DIRECTION);
-		}
+            for (int i = 0; i < craftingInventory.getSizeInventory(); ++i) {
+                if (recipe[i] != null) {
+                    ItemStack[] possibilities = recipe[i];
 
-		if (nbt.hasKey(NBT_SORTING_TYPE))
-		{
-			sortingType = nbt.getInteger(NBT_SORTING_TYPE);
-		}
-	}
+                    for (ItemStack possibility : possibilities) {
+                        ItemStack took = getController().take(possibility);
 
-	@Override
-	public void writeToNBT(NBTTagCompound nbt)
-	{
-		super.writeToNBT(nbt);
+                        if (took != null) {
+                            craftingInventory.setInventorySlotContents(i, possibility);
 
-		InventoryUtils.saveInventory(craftingInventory, 0, nbt);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
 
-		nbt.setInteger(NBT_SORTING_DIRECTION, sortingDirection);
-		nbt.setInteger(NBT_SORTING_TYPE, sortingType);
-	}
+    public int getSortingDirection() {
+        return sortingDirection;
+    }
 
-	@Override
-	public void toBytes(ByteBuf buf)
-	{
-		super.toBytes(buf);
+    public void setSortingDirection(int sortingDirection) {
+        markDirty();
 
-		buf.writeInt(sortingDirection);
-		buf.writeInt(sortingType);
-	}
+        this.sortingDirection = sortingDirection;
+    }
 
-	@Override
-	public void fromBytes(ByteBuf buf)
-	{
-		super.fromBytes(buf);
+    public int getSortingType() {
+        return sortingType;
+    }
 
-		sortingDirection = buf.readInt();
-		sortingType = buf.readInt();
-	}
+    public void setSortingType(int sortingType) {
+        markDirty();
 
-	@Override
-	public IInventory getDroppedInventory()
-	{
-		if (getType() == EnumGridType.CRAFTING)
-		{
-			return craftingInventory;
-		}
+        this.sortingType = sortingType;
+    }
 
-		return null;
-	}
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
+        super.readFromNBT(nbt);
+
+        InventoryUtils.restoreInventory(craftingInventory, 0, nbt);
+
+        if (nbt.hasKey(NBT_SORTING_DIRECTION)) {
+            sortingDirection = nbt.getInteger(NBT_SORTING_DIRECTION);
+        }
+
+        if (nbt.hasKey(NBT_SORTING_TYPE)) {
+            sortingType = nbt.getInteger(NBT_SORTING_TYPE);
+        }
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound nbt) {
+        super.writeToNBT(nbt);
+
+        InventoryUtils.saveInventory(craftingInventory, 0, nbt);
+
+        nbt.setInteger(NBT_SORTING_DIRECTION, sortingDirection);
+        nbt.setInteger(NBT_SORTING_TYPE, sortingType);
+    }
+
+    @Override
+    public void toBytes(ByteBuf buf) {
+        super.toBytes(buf);
+
+        buf.writeInt(sortingDirection);
+        buf.writeInt(sortingType);
+    }
+
+    @Override
+    public void fromBytes(ByteBuf buf) {
+        super.fromBytes(buf);
+
+        sortingDirection = buf.readInt();
+        sortingType = buf.readInt();
+    }
+
+    @Override
+    public IInventory getDroppedInventory() {
+        if (getType() == EnumGridType.CRAFTING) {
+            return craftingInventory;
+        }
+
+        return null;
+    }
 }

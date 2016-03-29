@@ -1,7 +1,6 @@
 package refinedstorage.gui;
 
 import com.google.common.primitives.Ints;
-import java.io.IOException;
 import net.minecraft.client.gui.GuiTextField;
 import refinedstorage.RefinedStorage;
 import refinedstorage.container.ContainerDetector;
@@ -11,73 +10,64 @@ import refinedstorage.network.MessageDetectorAmountUpdate;
 import refinedstorage.tile.TileDetector;
 import refinedstorage.util.InventoryUtils;
 
-public class GuiDetector extends GuiBase
-{
-	private TileDetector detector;
+import java.io.IOException;
 
-	private GuiTextField amountField;
+public class GuiDetector extends GuiBase {
+    private TileDetector detector;
 
-	public GuiDetector(ContainerDetector container, TileDetector detector)
-	{
-		super(container, 176, 137);
+    private GuiTextField amountField;
 
-		this.detector = detector;
-	}
+    public GuiDetector(ContainerDetector container, TileDetector detector) {
+        super(container, 176, 137);
 
-	@Override
-	public void init(int x, int y)
-	{
-		addSideButton(new SideButtonCompare(detector, InventoryUtils.COMPARE_DAMAGE));
-		addSideButton(new SideButtonCompare(detector, InventoryUtils.COMPARE_NBT));
+        this.detector = detector;
+    }
 
-		addSideButton(new SideButtonDetectorMode(detector));
+    @Override
+    public void init(int x, int y) {
+        addSideButton(new SideButtonCompare(detector, InventoryUtils.COMPARE_DAMAGE));
+        addSideButton(new SideButtonCompare(detector, InventoryUtils.COMPARE_NBT));
 
-		amountField = new GuiTextField(0, fontRendererObj, x + 62 + 1, y + 23 + 1, 25, fontRendererObj.FONT_HEIGHT);
-		amountField.setText(String.valueOf(detector.getAmount()));
-		amountField.setEnableBackgroundDrawing(false);
-		amountField.setVisible(true);
-		amountField.setTextColor(16777215);
-		amountField.setCanLoseFocus(false);
-		amountField.setFocused(true);
-	}
+        addSideButton(new SideButtonDetectorMode(detector));
 
-	@Override
-	public void update(int x, int y)
-	{
-	}
+        amountField = new GuiTextField(0, fontRendererObj, x + 62 + 1, y + 23 + 1, 25, fontRendererObj.FONT_HEIGHT);
+        amountField.setText(String.valueOf(detector.getAmount()));
+        amountField.setEnableBackgroundDrawing(false);
+        amountField.setVisible(true);
+        amountField.setTextColor(16777215);
+        amountField.setCanLoseFocus(false);
+        amountField.setFocused(true);
+    }
 
-	@Override
-	public void drawBackground(int x, int y, int mouseX, int mouseY)
-	{
-		bindTexture("gui/detector.png");
+    @Override
+    public void update(int x, int y) {
+    }
 
-		drawTexture(x, y, 0, 0, width, height);
+    @Override
+    public void drawBackground(int x, int y, int mouseX, int mouseY) {
+        bindTexture("gui/detector.png");
 
-		amountField.drawTextBox();
-	}
+        drawTexture(x, y, 0, 0, width, height);
 
-	@Override
-	public void drawForeground(int mouseX, int mouseY)
-	{
-		drawString(7, 7, t("gui.refinedstorage:detector"));
-		drawString(7, 43, t("container.inventory"));
-	}
+        amountField.drawTextBox();
+    }
 
-	@Override
-	protected void keyTyped(char character, int keyCode) throws IOException
-	{
-		if (!checkHotbarKeys(keyCode) && amountField.textboxKeyTyped(character, keyCode))
-		{
-			Integer result = Ints.tryParse(amountField.getText());
+    @Override
+    public void drawForeground(int mouseX, int mouseY) {
+        drawString(7, 7, t("gui.refinedstorage:detector"));
+        drawString(7, 43, t("container.inventory"));
+    }
 
-			if (result != null)
-			{
-				RefinedStorage.NETWORK.sendToServer(new MessageDetectorAmountUpdate(detector, result));
-			}
-		}
-		else
-		{
-			super.keyTyped(character, keyCode);
-		}
-	}
+    @Override
+    protected void keyTyped(char character, int keyCode) throws IOException {
+        if (!checkHotbarKeys(keyCode) && amountField.textboxKeyTyped(character, keyCode)) {
+            Integer result = Ints.tryParse(amountField.getText());
+
+            if (result != null) {
+                RefinedStorage.NETWORK.sendToServer(new MessageDetectorAmountUpdate(detector, result));
+            }
+        } else {
+            super.keyTyped(character, keyCode);
+        }
+    }
 }

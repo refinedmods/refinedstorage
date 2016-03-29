@@ -1,7 +1,5 @@
 package refinedstorage.container;
 
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ClickType;
@@ -9,143 +7,120 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import refinedstorage.container.slot.SlotDisabled;
+import refinedstorage.container.slot.SlotGridCraftingResult;
 import refinedstorage.container.slot.SlotSpecimen;
 
-public abstract class ContainerBase extends Container
-{
-	private EntityPlayer player;
+import java.util.ArrayList;
+import java.util.List;
 
-	private List<Slot> playerInventorySlots = new ArrayList<Slot>();
+public abstract class ContainerBase extends Container {
+    private EntityPlayer player;
 
-	public ContainerBase(EntityPlayer player)
-	{
-		this.player = player;
-	}
+    private List<Slot> playerInventorySlots = new ArrayList<Slot>();
 
-	public EntityPlayer getPlayer()
-	{
-		return player;
-	}
+    public ContainerBase(EntityPlayer player) {
+        this.player = player;
+    }
 
-	protected void addPlayerInventory(int xInventory, int yInventory)
-	{
-		int id = 0;
+    public EntityPlayer getPlayer() {
+        return player;
+    }
 
-		for (int i = 0; i < 9; i++)
-		{
-			Slot slot = new Slot(player.inventory, id, xInventory + i * 18, yInventory + 4 + (3 * 18));
+    protected void addPlayerInventory(int xInventory, int yInventory) {
+        int id = 0;
 
-			playerInventorySlots.add(slot);
+        for (int i = 0; i < 9; i++) {
+            Slot slot = new Slot(player.inventory, id, xInventory + i * 18, yInventory + 4 + (3 * 18));
 
-			addSlotToContainer(slot);
+            playerInventorySlots.add(slot);
 
-			id++;
-		}
+            addSlotToContainer(slot);
 
-		for (int y = 0; y < 3; y++)
-		{
-			for (int x = 0; x < 9; x++)
-			{
-				Slot slot = new Slot(player.inventory, id, xInventory + x * 18, yInventory + y * 18);
+            id++;
+        }
 
-				playerInventorySlots.add(slot);
+        for (int y = 0; y < 3; y++) {
+            for (int x = 0; x < 9; x++) {
+                Slot slot = new Slot(player.inventory, id, xInventory + x * 18, yInventory + y * 18);
 
-				addSlotToContainer(slot);
+                playerInventorySlots.add(slot);
 
-				id++;
-			}
-		}
-	}
+                addSlotToContainer(slot);
 
-	@Override
-	public ItemStack func_184996_a(int id, int clickedButton, ClickType clickType, EntityPlayer player)
-	{
-		Slot slot = id >= 0 ? getSlot(id) : null;
+                id++;
+            }
+        }
+    }
 
-		if (slot instanceof SlotSpecimen)
-		{
-			if (((SlotSpecimen) slot).isSizeAllowed())
-			{
-				if (player.inventory.getItemStack() != null)
-				{
-					int amount = player.inventory.getItemStack().stackSize;
+    @Override
+    public ItemStack func_184996_a(int id, int clickedButton, ClickType clickType, EntityPlayer player) {
+        Slot slot = id >= 0 ? getSlot(id) : null;
 
-					if (clickedButton == 1)
-					{
-						amount = 1;
-					}
+        if (slot instanceof SlotSpecimen) {
+            if (((SlotSpecimen) slot).isSizeAllowed()) {
+                if (slot.getStack() != null) {
+                    if (GuiScreen.isShiftKeyDown()) {
+                        slot.putStack(null);
+                    } else {
+                        int amount = slot.getStack().stackSize;
 
-					ItemStack toPut = player.inventory.getItemStack().copy();
-					toPut.stackSize = amount;
+                        if (clickedButton == 0) {
+                            amount--;
 
-					slot.putStack(toPut);
-				}
-				else if (slot.getStack() != null)
-				{
-					if (GuiScreen.isShiftKeyDown())
-					{
-						slot.putStack(null);
-					}
-					else
-					{
-						int amount = slot.getStack().stackSize;
+                            if (amount < 1) {
+                                amount = 1;
+                            }
+                        } else if (clickedButton == 1) {
+                            amount++;
 
-						if (clickedButton == 0)
-						{
-							amount++;
+                            if (amount > 64) {
+                                amount = 64;
+                            }
+                        }
 
-							if (amount > 64)
-							{
-								amount = 64;
-							}
-						}
-						else if (clickedButton == 1)
-						{
-							amount--;
+                        slot.getStack().stackSize = amount;
+                    }
+                } else if (player.inventory.getItemStack() != null) {
+                    int amount = player.inventory.getItemStack().stackSize;
 
-							if (amount < 1)
-							{
-								amount = 1;
-							}
-						}
+                    if (clickedButton == 1) {
+                        amount = 1;
+                    }
 
-						slot.getStack().stackSize = amount;
-					}
-				}
-			}
-			else if (player.inventory.getItemStack() == null)
-			{
-				slot.putStack(null);
-			}
-			else if (slot.isItemValid(player.inventory.getItemStack()))
-			{
-				slot.putStack(player.inventory.getItemStack().copy());
-			}
+                    ItemStack toPut = player.inventory.getItemStack().copy();
+                    toPut.stackSize = amount;
 
-			return player.inventory.getItemStack();
-		}
-		else if (slot instanceof SlotDisabled)
-		{
-			return null;
-		}
+                    slot.putStack(toPut);
+                }
+            } else if (player.inventory.getItemStack() == null) {
+                slot.putStack(null);
+            } else if (slot.isItemValid(player.inventory.getItemStack())) {
+                slot.putStack(player.inventory.getItemStack().copy());
+            }
 
-		return super.func_184996_a(id, clickedButton, clickType, player);
-	}
+            return player.inventory.getItemStack();
+        } else if (slot instanceof SlotGridCraftingResult && slot.getHasStack() && GuiScreen.isShiftKeyDown()) {
+            ((SlotGridCraftingResult) slot).onShiftClick(player);
 
-	@Override
-	public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex)
-	{
-		return null;
-	}
+            return null;
+        } else if (slot instanceof SlotDisabled) {
+            return null;
+        }
 
-	@Override
-	public boolean canInteractWith(EntityPlayer player)
-	{
-		return true;
-	}
+        return super.func_184996_a(id, clickedButton, clickType, player);
+    }
 
-	public List<Slot> getPlayerInventorySlots()
-	{
-		return playerInventorySlots;
-	}
+    @Override
+    public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) {
+        return null;
+    }
+
+    @Override
+    public boolean canInteractWith(EntityPlayer player) {
+        return true;
+    }
+
+    public List<Slot> getPlayerInventorySlots() {
+        return playerInventorySlots;
+    }
 }

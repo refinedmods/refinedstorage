@@ -1,7 +1,6 @@
 package refinedstorage.gui;
 
 import com.google.common.primitives.Ints;
-import java.io.IOException;
 import net.minecraft.client.gui.GuiTextField;
 import refinedstorage.container.ContainerStorage;
 import refinedstorage.gui.sidebutton.SideButtonCompare;
@@ -10,114 +9,99 @@ import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.storage.IStorageGui;
 import refinedstorage.util.InventoryUtils;
 
-public class GuiStorage extends GuiBase
-{
-	private IStorageGui gui;
-	private String texture;
+import java.io.IOException;
 
-	private GuiTextField priorityField;
+public class GuiStorage extends GuiBase {
+    private IStorageGui gui;
+    private String texture;
 
-	private int barX = 8;
-	private int barY = 54;
-	private int barWidth = 16;
-	private int barHeight = 58;
+    private GuiTextField priorityField;
 
-	public GuiStorage(ContainerStorage container, IStorageGui gui, String texture)
-	{
-		super(container, 176, 211);
+    private int barX = 8;
+    private int barY = 54;
+    private int barWidth = 16;
+    private int barHeight = 58;
 
-		this.gui = gui;
-		this.texture = texture;
-	}
+    public GuiStorage(ContainerStorage container, IStorageGui gui, String texture) {
+        super(container, 176, 211);
 
-	public GuiStorage(ContainerStorage container, IStorageGui gui)
-	{
-		this(container, gui, "gui/storage.png");
-	}
+        this.gui = gui;
+        this.texture = texture;
+    }
 
-	@Override
-	public void init(int x, int y)
-	{
-		if (gui.getRedstoneModeSetting() != null)
-		{
-			addSideButton(new SideButtonRedstoneMode(gui.getRedstoneModeSetting()));
-		}
+    public GuiStorage(ContainerStorage container, IStorageGui gui) {
+        this(container, gui, "gui/storage.png");
+    }
 
-		if (gui.getModeSetting() != null)
-		{
-			addSideButton(new SideButtonMode(gui.getModeSetting()));
-		}
+    @Override
+    public void init(int x, int y) {
+        if (gui.getRedstoneModeSetting() != null) {
+            addSideButton(new SideButtonRedstoneMode(gui.getRedstoneModeSetting()));
+        }
 
-		if (gui.getCompareSetting() != null)
-		{
-			addSideButton(new SideButtonCompare(gui.getCompareSetting(), InventoryUtils.COMPARE_DAMAGE));
-			addSideButton(new SideButtonCompare(gui.getCompareSetting(), InventoryUtils.COMPARE_NBT));
-		}
+        if (gui.getModeSetting() != null) {
+            addSideButton(new SideButtonMode(gui.getModeSetting()));
+        }
 
-		priorityField = new GuiTextField(0, fontRendererObj, x + 98 + 1, y + 54 + 1, 25, fontRendererObj.FONT_HEIGHT);
-		priorityField.setText(String.valueOf(gui.getPriority()));
-		priorityField.setEnableBackgroundDrawing(false);
-		priorityField.setVisible(true);
-		priorityField.setTextColor(16777215);
-		priorityField.setCanLoseFocus(false);
-		priorityField.setFocused(true);
-	}
+        if (gui.getCompareSetting() != null) {
+            addSideButton(new SideButtonCompare(gui.getCompareSetting(), InventoryUtils.COMPARE_DAMAGE));
+            addSideButton(new SideButtonCompare(gui.getCompareSetting(), InventoryUtils.COMPARE_NBT));
+        }
 
-	@Override
-	public void update(int x, int y)
-	{
-	}
+        priorityField = new GuiTextField(0, fontRendererObj, x + 98 + 1, y + 54 + 1, 25, fontRendererObj.FONT_HEIGHT);
+        priorityField.setText(String.valueOf(gui.getPriority()));
+        priorityField.setEnableBackgroundDrawing(false);
+        priorityField.setVisible(true);
+        priorityField.setTextColor(16777215);
+        priorityField.setCanLoseFocus(false);
+        priorityField.setFocused(true);
+    }
 
-	@Override
-	public void drawBackground(int x, int y, int mouseX, int mouseY)
-	{
-		bindTexture(texture);
+    @Override
+    public void update(int x, int y) {
+    }
 
-		drawTexture(x, y, 0, 0, width, height);
+    @Override
+    public void drawBackground(int x, int y, int mouseX, int mouseY) {
+        bindTexture(texture);
 
-		int barHeightNew = (int) ((float) gui.getStored() / (float) gui.getCapacity() * (float) barHeight);
+        drawTexture(x, y, 0, 0, width, height);
 
-		drawTexture(x + barX, y + barY + barHeight - barHeightNew, 179, 0 + (barHeight - barHeightNew), barWidth, barHeightNew);
+        int barHeightNew = (int) ((float) gui.getStored() / (float) gui.getCapacity() * (float) barHeight);
 
-		priorityField.drawTextBox();
-	}
+        drawTexture(x + barX, y + barY + barHeight - barHeightNew, 179, barHeight - barHeightNew, barWidth, barHeightNew);
 
-	@Override
-	public void drawForeground(int mouseX, int mouseY)
-	{
-		drawString(7, 7, t(gui.getName()));
-		drawString(7, 42, gui.getCapacity() == -1 ? t("misc.refinedstorage:storage.stored_minimal", gui.getStored()) : t("misc.refinedstorage:storage.stored_capacity_minimal", gui.getStored(), gui.getCapacity()));
-		drawString(97, 42, t("misc.refinedstorage:priority"));
-		drawString(7, 117, t("container.inventory"));
+        priorityField.drawTextBox();
+    }
 
-		if (inBounds(barX, barY, barWidth, barHeight, mouseX, mouseY))
-		{
-			int full = 0;
+    @Override
+    public void drawForeground(int mouseX, int mouseY) {
+        drawString(7, 7, t(gui.getName()));
+        drawString(7, 42, gui.getCapacity() == -1 ? t("misc.refinedstorage:storage.stored_minimal", gui.getStored()) : t("misc.refinedstorage:storage.stored_capacity_minimal", gui.getStored(), gui.getCapacity()));
+        drawString(97, 42, t("misc.refinedstorage:priority"));
+        drawString(7, 117, t("container.inventory"));
 
-			if (gui.getCapacity() >= 0)
-			{
-				full = (int) ((float) gui.getStored() / (float) gui.getCapacity() * 100f);
-			}
+        if (inBounds(barX, barY, barWidth, barHeight, mouseX, mouseY)) {
+            int full = 0;
 
-			drawTooltip(mouseX, mouseY, t("misc.refinedstorage:storage.full", full));
-		}
-	}
+            if (gui.getCapacity() >= 0) {
+                full = (int) ((float) gui.getStored() / (float) gui.getCapacity() * 100f);
+            }
 
-	@Override
-	protected void keyTyped(char character, int keyCode) throws IOException
-	{
-		if (!checkHotbarKeys(keyCode) && priorityField.textboxKeyTyped(character, keyCode))
-		{
-			Integer result = Ints.tryParse(priorityField.getText());
+            drawTooltip(mouseX, mouseY, t("misc.refinedstorage:storage.full", full));
+        }
+    }
 
-			if (result != null)
-			{
-				gui.onPriorityChanged(result);
-			}
-		}
-		else
-		{
-			super.keyTyped(character, keyCode);
-		}
-	}
+    @Override
+    protected void keyTyped(char character, int keyCode) throws IOException {
+        if (!checkHotbarKeys(keyCode) && priorityField.textboxKeyTyped(character, keyCode)) {
+            Integer result = Ints.tryParse(priorityField.getText());
+
+            if (result != null) {
+                gui.onPriorityChanged(result);
+            }
+        } else {
+            super.keyTyped(character, keyCode);
+        }
+    }
 }

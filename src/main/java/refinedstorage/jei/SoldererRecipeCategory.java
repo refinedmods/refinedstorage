@@ -11,68 +11,57 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
 
-public class SoldererRecipeCategory implements IRecipeCategory
-{
-	private IDrawable background;
+public class SoldererRecipeCategory implements IRecipeCategory {
+    private IDrawable background;
 
-	public SoldererRecipeCategory(IGuiHelper helper)
-	{
-		background = helper.createDrawable(new ResourceLocation("refinedstorage", "textures/gui/solderer.png"), 8, 5, 162, 89);
-	}
+    public SoldererRecipeCategory(IGuiHelper helper) {
+        background = helper.createDrawable(new ResourceLocation("refinedstorage", "textures/gui/solderer.png"), 8, 5, 162, 89);
+    }
 
-	@Override
-	public String getUid()
-	{
-		return "refinedstorage.solderer";
-	}
+    @Override
+    public String getUid() {
+        return "refinedstorage.solderer";
+    }
 
-	@Override
-	public String getTitle()
-	{
-		return I18n.translateToLocal("gui.refinedstorage:solderer");
-	}
+    @Override
+    public String getTitle() {
+        return I18n.translateToLocal("gui.refinedstorage:solderer");
+    }
 
-	@Override
-	public IDrawable getBackground()
-	{
-		return background;
-	}
+    @Override
+    public IDrawable getBackground() {
+        return background;
+    }
 
-	@Override
-	public void drawExtras(Minecraft minecraft)
-	{
-	}
+    @Override
+    public void drawExtras(Minecraft minecraft) {
+    }
 
-	@Override
-	public void drawAnimations(Minecraft minecraft)
-	{
-	}
+    @Override
+    public void drawAnimations(Minecraft minecraft) {
+    }
 
-	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper)
-	{
-		IGuiItemStackGroup group = recipeLayout.getItemStacks();
+    @Override
+    public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper) {
+        IGuiItemStackGroup group = recipeLayout.getItemStacks();
 
-		int x = 44 - 9;
-		int y = 20 - 6;
+        int x = 44 - 9;
+        int y = 20 - 6;
 
-		for (int i = 0; i < 3; ++i)
-		{
-			group.init(i, true, x, y);
+        for (int i = 0; i < 3; ++i) {
+            group.init(i, true, x, y);
 
-			y += 18;
-		}
+            y += 18;
+        }
 
-		group.init(3, false, 134 - 9, 38 - 6);
+        group.init(3, false, 134 - 9, 38 - 6);
 
-		if (recipeWrapper instanceof SoldererRecipeWrapper)
-		{
-			for (int i = 0; i < 3; ++i)
-			{
-				group.set(i, (ItemStack) recipeWrapper.getInputs().get(i));
-			}
+        if (recipeWrapper instanceof SoldererRecipeWrapper) {
+            for (int i = 0; i < 3; ++i) {
+                group.set(i, (ItemStack) recipeWrapper.getInputs().get(i));
+            }
 
-			group.set(3, (ItemStack) recipeWrapper.getOutputs().get(0));
-		}
-	}
+            group.set(3, (ItemStack) recipeWrapper.getOutputs().get(0));
+        }
+    }
 }

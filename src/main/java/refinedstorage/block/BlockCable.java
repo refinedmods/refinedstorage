@@ -1,5 +1,6 @@
 package refinedstorage.block;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
@@ -9,84 +10,77 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import refinedstorage.tile.TileCable;
+import refinedstorage.tile.TileController;
+import refinedstorage.tile.TileMachine;
 
-public class BlockCable extends BlockBase
-{
-	public static final PropertyBool NORTH = PropertyBool.create("north");
-	public static final PropertyBool EAST = PropertyBool.create("east");
-	public static final PropertyBool SOUTH = PropertyBool.create("south");
-	public static final PropertyBool WEST = PropertyBool.create("west");
-	public static final PropertyBool UP = PropertyBool.create("up");
-	public static final PropertyBool DOWN = PropertyBool.create("down");
+public class BlockCable extends BlockBase {
+    public static final PropertyBool NORTH = PropertyBool.create("north");
+    public static final PropertyBool EAST = PropertyBool.create("east");
+    public static final PropertyBool SOUTH = PropertyBool.create("south");
+    public static final PropertyBool WEST = PropertyBool.create("west");
+    public static final PropertyBool UP = PropertyBool.create("up");
+    public static final PropertyBool DOWN = PropertyBool.create("down");
 
-	public BlockCable()
-	{
-		super("cable");
-	}
+    public BlockCable() {
+        super("cable");
+    }
 
-	@Override
-	protected BlockStateContainer createBlockState()
-	{
-		return new BlockStateContainer(this, new IProperty[]
-		{
-			DIRECTION,
-			NORTH,
-			EAST,
-			SOUTH,
-			WEST,
-			UP,
-			DOWN,
-		});
-	}
+    @Override
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, new IProperty[]
+            {
+                DIRECTION,
+                NORTH,
+                EAST,
+                SOUTH,
+                WEST,
+                UP,
+                DOWN,
+            });
+    }
 
-	@Override
-	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos)
-	{
-		return super.getActualState(state, world, pos)
-			.withProperty(NORTH, TileCable.hasConnectionWith(world, pos.north()))
-			.withProperty(EAST, TileCable.hasConnectionWith(world, pos.east()))
-			.withProperty(SOUTH, TileCable.hasConnectionWith(world, pos.south()))
-			.withProperty(WEST, TileCable.hasConnectionWith(world, pos.west()))
-			.withProperty(UP, TileCable.hasConnectionWith(world, pos.up()))
-			.withProperty(DOWN, TileCable.hasConnectionWith(world, pos.down()));
-	}
+    @Override
+    public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
+        return super.getActualState(state, world, pos)
+            .withProperty(NORTH, hasConnectionWith(world, pos.north()))
+            .withProperty(EAST, hasConnectionWith(world, pos.east()))
+            .withProperty(SOUTH, hasConnectionWith(world, pos.south()))
+            .withProperty(WEST, hasConnectionWith(world, pos.west()))
+            .withProperty(UP, hasConnectionWith(world, pos.up()))
+            .withProperty(DOWN, hasConnectionWith(world, pos.down()));
+    }
 
-	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos)
-	{
-		float pixel = 1F / 16F;
+    public static boolean hasConnectionWith(IBlockAccess world, BlockPos pos) {
+        Block block = world.getBlockState(pos).getBlock();
 
-		return new AxisAlignedBB(4 * pixel, 4 * pixel, 4 * pixel, 1 - 4 * pixel, 1 - 4 * pixel, 1 - 4 * pixel);
-	}
+        if (block instanceof BlockCable) {
+            return true;
+        }
 
-	@Override
-	public AxisAlignedBB getCollisionBoundingBox(IBlockState state, World world, BlockPos pos)
-	{
-		return getBoundingBox(state, world, pos);
-	}
+        TileEntity tile = world.getTileEntity(pos);
 
-	@Override
-	public boolean hasTileEntity(IBlockState state)
-	{
-		return true;
-	}
+        return tile instanceof TileMachine || tile instanceof TileController;
+    }
 
-	@Override
-	public TileEntity createTileEntity(World world, IBlockState state)
-	{
-		return new TileCable();
-	}
+    @Override
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
+        float pixel = 1F / 16F;
 
-	@Override
-	public boolean isOpaqueCube(IBlockState state)
-	{
-		return false;
-	}
+        return new AxisAlignedBB(4 * pixel, 4 * pixel, 4 * pixel, 1 - 4 * pixel, 1 - 4 * pixel, 1 - 4 * pixel);
+    }
 
-	@Override
-	public boolean isFullCube(IBlockState state)
-	{
-		return false;
-	}
+    @Override
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState state, World world, BlockPos pos) {
+        return getBoundingBox(state, world, pos);
+    }
+
+    @Override
+    public boolean isOpaqueCube(IBlockState state) {
+        return false;
+    }
+
+    @Override
+    public boolean isFullCube(IBlockState state) {
+        return false;
+    }
 }

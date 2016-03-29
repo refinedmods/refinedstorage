@@ -1,30 +1,28 @@
 package refinedstorage.jei;
 
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.item.ItemStack;
 import refinedstorage.tile.solderer.ISoldererRecipe;
 import refinedstorage.tile.solderer.SoldererRegistry;
 
-public class SoldererRecipeMaker
-{
-	public static List<SoldererRecipeWrapper> getRecipes()
-	{
-		List<SoldererRecipeWrapper> recipes = new ArrayList<SoldererRecipeWrapper>();
+import java.util.ArrayList;
+import java.util.List;
 
-		for (ISoldererRecipe recipe : SoldererRegistry.recipes)
-		{
-			List<ItemStack> inputs = new ArrayList<ItemStack>();
+public class SoldererRecipeMaker {
+    public static List<SoldererRecipeWrapper> getRecipes() {
+        List<SoldererRecipeWrapper> recipes = new ArrayList<SoldererRecipeWrapper>();
 
-			inputs.add(recipe.getRow(0));
-			inputs.add(recipe.getRow(1));
-			inputs.add(recipe.getRow(2));
+        for (ISoldererRecipe recipe : SoldererRegistry.recipes) {
+            List<ItemStack> inputs = new ArrayList<ItemStack>();
 
-			ItemStack output = recipe.getResult();
+            inputs.add(recipe.getRow(0));
+            inputs.add(recipe.getRow(1));
+            inputs.add(recipe.getRow(2));
 
-			recipes.add(new SoldererRecipeWrapper(inputs, output));
-		}
+            ItemStack output = recipe.getResult();
 
-		return recipes;
-	}
+            recipes.add(new SoldererRecipeWrapper(inputs, output));
+        }
+
+        return recipes;
+    }
 }

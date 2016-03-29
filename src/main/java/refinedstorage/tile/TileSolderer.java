@@ -15,288 +15,240 @@ import refinedstorage.tile.solderer.ISoldererRecipe;
 import refinedstorage.tile.solderer.SoldererRegistry;
 import refinedstorage.util.InventoryUtils;
 
-public class TileSolderer extends TileMachine implements IInventory, ISidedInventory
-{
-	public static final String NBT_WORKING = "Working";
-	public static final String NBT_PROGRESS = "Progress";
+public class TileSolderer extends TileMachine implements IInventory, ISidedInventory {
+    public static final String NBT_WORKING = "Working";
+    public static final String NBT_PROGRESS = "Progress";
 
-	private InventorySimple inventory = new InventorySimple("solderer", 4);
+    public static final int[] FACES = new int[]{
+        0, 1, 2
+    };
+    public static final int[] FACES_DOWN = new int[]{
+        3
+    };
 
-	private ISoldererRecipe recipe;
+    private InventorySimple inventory = new InventorySimple("solderer", 4, this);
 
-	private boolean working = false;
-	private int progress = 0;
-	@SideOnly(Side.CLIENT)
-	private int duration;
+    private ISoldererRecipe recipe;
 
-	@Override
-	public int getEnergyUsage()
-	{
-		return 3;
-	}
+    private boolean working = false;
+    private int progress = 0;
+    @SideOnly(Side.CLIENT)
+    private int duration;
 
-	@Override
-	public void updateMachine()
-	{
-		ISoldererRecipe newRecipe = SoldererRegistry.getRecipe(inventory);
+    @Override
+    public int getEnergyUsage() {
+        return 3;
+    }
 
-		if (newRecipe == null)
-		{
-			reset();
-		}
-		else if (newRecipe != recipe && inventory.getStackInSlot(3) == null)
-		{
-			recipe = newRecipe;
-			progress = 0;
-			working = true;
+    @Override
+    public void updateMachine() {
+        ISoldererRecipe newRecipe = SoldererRegistry.getRecipe(inventory);
 
-			markDirty();
-		}
-		else if (working)
-		{
-			progress++;
+        if (newRecipe == null) {
+            reset();
+        } else if (newRecipe != recipe && inventory.getStackInSlot(3) == null) {
+            recipe = newRecipe;
+            progress = 0;
+            working = true;
 
-			if (progress == recipe.getDuration())
-			{
-				inventory.setInventorySlotContents(3, recipe.getResult());
+            markDirty();
+        } else if (working) {
+            progress++;
 
-				for (int i = 0; i < 3; ++i)
-				{
-					if (recipe.getRow(i) != null)
-					{
-						inventory.decrStackSize(i, recipe.getRow(i).stackSize);
-					}
-				}
+            if (progress == recipe.getDuration()) {
+                inventory.setInventorySlotContents(3, recipe.getResult());
 
-				reset();
-			}
-		}
-	}
+                for (int i = 0; i < 3; ++i) {
+                    if (recipe.getRow(i) != null) {
+                        inventory.decrStackSize(i, recipe.getRow(i).stackSize);
+                    }
+                }
 
-	@Override
-	public void onDisconnected()
-	{
-		super.onDisconnected();
+                reset();
+            }
+        }
+    }
 
-		reset();
-	}
+    @Override
+    public void onDisconnected() {
+        super.onDisconnected();
 
-	public void reset()
-	{
-		progress = 0;
-		working = false;
-		recipe = null;
+        reset();
+    }
 
-		markDirty();
-	}
+    public void reset() {
+        progress = 0;
+        working = false;
+        recipe = null;
 
-	@Override
-	public void readFromNBT(NBTTagCompound nbt)
-	{
-		super.readFromNBT(nbt);
+        markDirty();
+    }
 
-		InventoryUtils.restoreInventory(this, 0, nbt);
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
+        super.readFromNBT(nbt);
 
-		recipe = SoldererRegistry.getRecipe(inventory);
+        InventoryUtils.restoreInventory(this, 0, nbt);
 
-		if (nbt.hasKey(NBT_WORKING))
-		{
-			working = nbt.getBoolean(NBT_WORKING);
-		}
+        recipe = SoldererRegistry.getRecipe(inventory);
 
-		if (nbt.hasKey(NBT_PROGRESS))
-		{
-			progress = nbt.getInteger(NBT_PROGRESS);
-		}
-	}
+        if (nbt.hasKey(NBT_WORKING)) {
+            working = nbt.getBoolean(NBT_WORKING);
+        }
 
-	@Override
-	public void writeToNBT(NBTTagCompound nbt)
-	{
-		super.writeToNBT(nbt);
+        if (nbt.hasKey(NBT_PROGRESS)) {
+            progress = nbt.getInteger(NBT_PROGRESS);
+        }
+    }
 
-		InventoryUtils.saveInventory(this, 0, nbt);
+    @Override
+    public void writeToNBT(NBTTagCompound nbt) {
+        super.writeToNBT(nbt);
 
-		nbt.setBoolean(NBT_WORKING, working);
-		nbt.setInteger(NBT_PROGRESS, progress);
-	}
+        InventoryUtils.saveInventory(this, 0, nbt);
 
-	@Override
-	public void fromBytes(ByteBuf buf)
-	{
-		super.fromBytes(buf);
+        nbt.setBoolean(NBT_WORKING, working);
+        nbt.setInteger(NBT_PROGRESS, progress);
+    }
 
-		working = buf.readBoolean();
-		progress = buf.readInt();
-		duration = buf.readInt();
-	}
+    @Override
+    public void fromBytes(ByteBuf buf) {
+        super.fromBytes(buf);
 
-	@Override
-	public void toBytes(ByteBuf buf)
-	{
-		super.toBytes(buf);
+        working = buf.readBoolean();
+        progress = buf.readInt();
+        duration = buf.readInt();
+    }
 
-		buf.writeBoolean(working);
-		buf.writeInt(progress);
-		buf.writeInt(recipe != null ? recipe.getDuration() : 0);
-	}
+    @Override
+    public void toBytes(ByteBuf buf) {
+        super.toBytes(buf);
 
-	public boolean isWorking()
-	{
-		return working;
-	}
+        buf.writeBoolean(working);
+        buf.writeInt(progress);
+        buf.writeInt(recipe != null ? recipe.getDuration() : 0);
+    }
 
-	public int getProgress()
-	{
-		return progress;
-	}
+    public boolean isWorking() {
+        return working;
+    }
 
-	@SideOnly(Side.CLIENT)
-	public int getProgressScaled(int i)
-	{
-		return (int) ((float) progress / (float) duration * (float) i);
-	}
+    public int getProgress() {
+        return progress;
+    }
 
-	@SideOnly(Side.CLIENT)
-	public int getDuration()
-	{
-		return duration;
-	}
+    @SideOnly(Side.CLIENT)
+    public int getProgressScaled(int i) {
+        return (int) ((float) progress / (float) duration * (float) i);
+    }
 
-	@Override
-	public IInventory getDroppedInventory()
-	{
-		return inventory;
-	}
+    @SideOnly(Side.CLIENT)
+    public int getDuration() {
+        return duration;
+    }
 
-	@Override
-	public int getSizeInventory()
-	{
-		return inventory.getSizeInventory();
-	}
+    @Override
+    public IInventory getDroppedInventory() {
+        return inventory;
+    }
 
-	@Override
-	public ItemStack getStackInSlot(int slot)
-	{
-		return inventory.getStackInSlot(slot);
-	}
+    @Override
+    public int getSizeInventory() {
+        return inventory.getSizeInventory();
+    }
 
-	@Override
-	public ItemStack decrStackSize(int slot, int count)
-	{
-		return inventory.decrStackSize(slot, count);
-	}
+    @Override
+    public ItemStack getStackInSlot(int slot) {
+        return inventory.getStackInSlot(slot);
+    }
 
-	@Override
-	public ItemStack removeStackFromSlot(int slot)
-	{
-		return inventory.removeStackFromSlot(slot);
-	}
+    @Override
+    public ItemStack decrStackSize(int slot, int count) {
+        return inventory.decrStackSize(slot, count);
+    }
 
-	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack)
-	{
-		inventory.setInventorySlotContents(slot, stack);
-	}
+    @Override
+    public ItemStack removeStackFromSlot(int slot) {
+        return inventory.removeStackFromSlot(slot);
+    }
 
-	@Override
-	public int getInventoryStackLimit()
-	{
-		return inventory.getInventoryStackLimit();
-	}
+    @Override
+    public void setInventorySlotContents(int slot, ItemStack stack) {
+        inventory.setInventorySlotContents(slot, stack);
+    }
 
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer player)
-	{
-		return inventory.isUseableByPlayer(player);
-	}
+    @Override
+    public int getInventoryStackLimit() {
+        return inventory.getInventoryStackLimit();
+    }
 
-	@Override
-	public void openInventory(EntityPlayer player)
-	{
-		inventory.openInventory(player);
-	}
+    @Override
+    public boolean isUseableByPlayer(EntityPlayer player) {
+        return inventory.isUseableByPlayer(player);
+    }
 
-	@Override
-	public void closeInventory(EntityPlayer player)
-	{
-		inventory.closeInventory(player);
-	}
+    @Override
+    public void openInventory(EntityPlayer player) {
+        inventory.openInventory(player);
+    }
 
-	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack stack)
-	{
-		return inventory.isItemValidForSlot(slot, stack);
-	}
+    @Override
+    public void closeInventory(EntityPlayer player) {
+        inventory.closeInventory(player);
+    }
 
-	@Override
-	public int getField(int id)
-	{
-		return inventory.getField(id);
-	}
+    @Override
+    public boolean isItemValidForSlot(int slot, ItemStack stack) {
+        return inventory.isItemValidForSlot(slot, stack);
+    }
 
-	@Override
-	public void setField(int id, int value)
-	{
-		inventory.setField(id, value);
-	}
+    @Override
+    public int getField(int id) {
+        return inventory.getField(id);
+    }
 
-	@Override
-	public int getFieldCount()
-	{
-		return inventory.getFieldCount();
-	}
+    @Override
+    public void setField(int id, int value) {
+        inventory.setField(id, value);
+    }
 
-	@Override
-	public void clear()
-	{
-		inventory.clear();
-	}
+    @Override
+    public int getFieldCount() {
+        return inventory.getFieldCount();
+    }
 
-	@Override
-	public String getName()
-	{
-		return inventory.getName();
-	}
+    @Override
+    public void clear() {
+        inventory.clear();
+    }
 
-	@Override
-	public boolean hasCustomName()
-	{
-		return inventory.hasCustomName();
-	}
+    @Override
+    public String getName() {
+        return inventory.getName();
+    }
 
-	@Override
-	public ITextComponent getDisplayName()
-	{
-		return inventory.getDisplayName();
-	}
+    @Override
+    public boolean hasCustomName() {
+        return inventory.hasCustomName();
+    }
 
-	@Override
-	public int[] getSlotsForFace(EnumFacing side)
-	{
-		if (side != EnumFacing.DOWN)
-		{
-			return new int[]
-			{
-				0, 1, 2
-			};
-		}
+    @Override
+    public ITextComponent getDisplayName() {
+        return inventory.getDisplayName();
+    }
 
-		return new int[]
-		{
-			3
-		};
-	}
+    @Override
+    public int[] getSlotsForFace(EnumFacing side) {
+        return side == EnumFacing.DOWN ? FACES_DOWN : FACES;
+    }
 
-	@Override
-	public boolean canInsertItem(int slot, ItemStack stack, EnumFacing direction)
-	{
-		return slot != 3;
-	}
+    @Override
+    public boolean canInsertItem(int slot, ItemStack stack, EnumFacing direction) {
+        return slot != 3;
+    }
 
-	@Override
-	public boolean canExtractItem(int slot, ItemStack stack, EnumFacing direction)
-	{
-		return slot == 3;
-	}
+    @Override
+    public boolean canExtractItem(int slot, ItemStack stack, EnumFacing direction) {
+        return slot == 3;
+    }
 }

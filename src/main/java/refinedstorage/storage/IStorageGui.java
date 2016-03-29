@@ -5,23 +5,22 @@ import refinedstorage.tile.settings.ICompareSetting;
 import refinedstorage.tile.settings.IModeSetting;
 import refinedstorage.tile.settings.IRedstoneModeSetting;
 
-public interface IStorageGui
-{
-	public String getName();
+public interface IStorageGui {
+    String getName();
 
-	public int getPriority();
+    int getPriority();
 
-	public void onPriorityChanged(int priority);
+    void onPriorityChanged(int priority);
 
-	public IInventory getInventory();
+    IInventory getInventory();
 
-	public IRedstoneModeSetting getRedstoneModeSetting();
+    IRedstoneModeSetting getRedstoneModeSetting();
 
-	public ICompareSetting getCompareSetting();
+    ICompareSetting getCompareSetting();
 
-	public IModeSetting getModeSetting();
+    IModeSetting getModeSetting();
 
-	public int getStored();
+    int getStored();
 
-	public int getCapacity();
+    int getCapacity();
 }

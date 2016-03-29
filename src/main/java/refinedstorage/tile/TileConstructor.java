@@ -1,6 +1,7 @@
 package refinedstorage.tile;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.Block;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -10,94 +11,84 @@ import refinedstorage.inventory.InventorySimple;
 import refinedstorage.tile.settings.ICompareSetting;
 import refinedstorage.util.InventoryUtils;
 
-public class TileConstructor extends TileMachine implements ICompareSetting
-{
-	public static final String NBT_COMPARE = "Compare";
+public class TileConstructor extends TileMachine implements ICompareSetting {
+    public static final int SPEED = 10;
 
-	private InventorySimple inventory = new InventorySimple("constructor", 1, this);
+    public static final String NBT_COMPARE = "Compare";
 
-	private int compare = 0;
+    private InventorySimple inventory = new InventorySimple("constructor", 1, this);
 
-	@Override
-	public int getEnergyUsage()
-	{
-		return 1;
-	}
+    private int compare = 0;
 
-	@Override
-	public void updateMachine()
-	{
-		if (ticks % 10 == 0)
-		{
-			BlockPos front = pos.offset(getDirection());
+    @Override
+    public int getEnergyUsage() {
+        return 1;
+    }
 
-			if ((worldObj.isAirBlock(front) || worldObj.getBlockState(front).getBlock().getMaterial(worldObj.getBlockState(front)).isLiquid()) && inventory.getStackInSlot(0) != null)
-			{
-				ItemStack took = getController().take(inventory.getStackInSlot(0).copy(), compare);
+    @Override
+    public void updateMachine() {
+        if (ticks % SPEED == 0 && inventory.getStackInSlot(0) != null) {
+            BlockPos front = pos.offset(getDirection());
 
-				if (took != null)
-				{
-					worldObj.setBlockState(front, ((ItemBlock) took.getItem()).getBlock().getStateFromMeta(took.getItemDamage()), 1 | 2);
-				}
-			}
-		}
-	}
+            Block tryingToPlace = ((ItemBlock) inventory.getStackInSlot(0).getItem()).getBlock();
 
-	@Override
-	public int getCompare()
-	{
-		return compare;
-	}
+            if (tryingToPlace.canPlaceBlockAt(worldObj, front)) {
+                ItemStack took = getController().take(inventory.getStackInSlot(0).copy(), compare);
 
-	@Override
-	public void setCompare(int compare)
-	{
-		markDirty();
+                if (took != null) {
+                    worldObj.setBlockState(front, tryingToPlace.getStateFromMeta(took.getItemDamage()), 1 | 2);
+                }
+            }
+        }
+    }
 
-		this.compare = compare;
-	}
+    @Override
+    public int getCompare() {
+        return compare;
+    }
 
-	@Override
-	public void readFromNBT(NBTTagCompound nbt)
-	{
-		super.readFromNBT(nbt);
+    @Override
+    public void setCompare(int compare) {
+        markDirty();
 
-		if (nbt.hasKey(NBT_COMPARE))
-		{
-			compare = nbt.getInteger(NBT_COMPARE);
-		}
+        this.compare = compare;
+    }
 
-		InventoryUtils.restoreInventory(inventory, 0, nbt);
-	}
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
+        super.readFromNBT(nbt);
 
-	@Override
-	public void writeToNBT(NBTTagCompound nbt)
-	{
-		super.writeToNBT(nbt);
+        if (nbt.hasKey(NBT_COMPARE)) {
+            compare = nbt.getInteger(NBT_COMPARE);
+        }
 
-		nbt.setInteger(NBT_COMPARE, compare);
+        InventoryUtils.restoreInventory(inventory, 0, nbt);
+    }
 
-		InventoryUtils.saveInventory(inventory, 0, nbt);
-	}
+    @Override
+    public void writeToNBT(NBTTagCompound nbt) {
+        super.writeToNBT(nbt);
 
-	@Override
-	public void fromBytes(ByteBuf buf)
-	{
-		super.fromBytes(buf);
+        nbt.setInteger(NBT_COMPARE, compare);
 
-		compare = buf.readInt();
-	}
+        InventoryUtils.saveInventory(inventory, 0, nbt);
+    }
 
-	@Override
-	public void toBytes(ByteBuf buf)
-	{
-		super.toBytes(buf);
+    @Override
+    public void fromBytes(ByteBuf buf) {
+        super.fromBytes(buf);
 
-		buf.writeInt(compare);
-	}
+        compare = buf.readInt();
+    }
 
-	public IInventory getInventory()
-	{
-		return inventory;
-	}
+    @Override
+    public void toBytes(ByteBuf buf) {
+        super.toBytes(buf);
+
+        buf.writeInt(compare);
+    }
+
+    public IInventory getInventory() {
+        return inventory;
+    }
 }

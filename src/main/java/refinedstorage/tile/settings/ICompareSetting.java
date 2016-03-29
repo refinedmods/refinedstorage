@@ -2,11 +2,10 @@ package refinedstorage.tile.settings;
 
 import net.minecraft.util.math.BlockPos;
 
-public interface ICompareSetting
-{
-	public int getCompare();
+public interface ICompareSetting {
+    int getCompare();
 
-	public void setCompare(int compare);
+    void setCompare(int compare);
 
-	public BlockPos getMachinePos();
+    BlockPos getMachinePos();
 }

@@ -1,53 +1,53 @@
 {
-	"forge_marker": 1,
-	"defaults": {
-		"model": "orientable",
-		"textures": {
-			"side": "refinedstorage:blocks/side",
-			"top": "refinedstorage:blocks/side"
-		}
-	},
-	"variants": {
-		"inventory": [
-			{
-				"y": 0,
-				"textures": {
-					"front": "refinedstorage:blocks/solderer_disconnected"
-				},
-				"transform": "forge:default-block"
-			}
-		],
-		"connected": {
-			"true": {
-				"textures": {
-					"front": "refinedstorage:blocks/solderer_connected"
-				}
-			},
-			"false": {
-				"textures": {
-					"front": "refinedstorage:blocks/solderer_disconnected"
-				}
-			}
-		},
-		"direction": {
-			"north": {
-				"y": 0
-			},
-			"east": {
-				"y": 90
-			},
-			"south": {
-				"y": 180
-			},
-			"west": {
-				"y": 270
-			},
-			"up": {
-				"x": 270
-			},
-			"down": {
-				"x": 90
-			}
-		}
-	}
+  "forge_marker": 1,
+  "defaults": {
+    "model": "orientable",
+    "textures": {
+      "side": "refinedstorage:blocks/side",
+      "top": "refinedstorage:blocks/side"
+    }
+  },
+  "variants": {
+    "inventory": [
+      {
+        "y": 0,
+        "textures": {
+          "front": "refinedstorage:blocks/solderer_disconnected"
+        },
+        "transform": "forge:default-block"
+      }
+    ],
+    "connected": {
+      "true": {
+        "textures": {
+          "front": "refinedstorage:blocks/solderer_connected"
+        }
+      },
+      "false": {
+        "textures": {
+          "front": "refinedstorage:blocks/solderer_disconnected"
+        }
+      }
+    },
+    "direction": {
+      "north": {
+        "y": 0
+      },
+      "east": {
+        "y": 90
+      },
+      "south": {
+        "y": 180
+      },
+      "west": {
+        "y": 270
+      },
+      "up": {
+        "x": 270
+      },
+      "down": {
+        "x": 90
+      }
+    }
+  }
 }

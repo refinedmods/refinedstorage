@@ -1,7 +1,6 @@
 package refinedstorage.tile;
 
 import io.netty.buffer.ByteBuf;
-import java.util.List;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,284 +12,243 @@ import refinedstorage.block.BlockStorage;
 import refinedstorage.block.EnumStorageType;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.network.MessagePriorityUpdate;
-import refinedstorage.storage.IStorage;
-import refinedstorage.storage.IStorageGui;
-import refinedstorage.storage.IStorageProvider;
-import refinedstorage.storage.NBTStorage;
-import refinedstorage.storage.StorageItem;
+import refinedstorage.storage.*;
 import refinedstorage.tile.settings.ICompareSetting;
 import refinedstorage.tile.settings.IModeSetting;
 import refinedstorage.tile.settings.IRedstoneModeSetting;
 import refinedstorage.tile.settings.ModeSettingUtils;
 import refinedstorage.util.InventoryUtils;
 
-public class TileStorage extends TileMachine implements IStorageProvider, IStorage, IStorageGui, ICompareSetting, IModeSetting
-{
-	public static final String NBT_STORAGE = "Storage";
-	public static final String NBT_PRIORITY = "Priority";
-	public static final String NBT_COMPARE = "Compare";
-	public static final String NBT_MODE = "Mode";
+import java.util.List;
 
-	private InventorySimple inventory = new InventorySimple("storage", 9, this);
+public class TileStorage extends TileMachine implements IStorageProvider, IStorage, IStorageGui, ICompareSetting, IModeSetting {
+    public static final String NBT_STORAGE = "Storage";
+    public static final String NBT_PRIORITY = "Priority";
+    public static final String NBT_COMPARE = "Compare";
+    public static final String NBT_MODE = "Mode";
 
-	private NBTTagCompound tag = NBTStorage.getBaseNBT();
+    private InventorySimple inventory = new InventorySimple("storage", 9, this);
 
-	private int priority = 0;
-	private int compare = 0;
-	private int mode = 0;
+    private NBTTagCompound tag = NBTStorage.getBaseNBT();
 
-	@SideOnly(Side.CLIENT)
-	private int stored;
+    private int priority = 0;
+    private int compare = 0;
+    private int mode = 0;
 
-	@Override
-	public int getEnergyUsage()
-	{
-		return 3;
-	}
+    @SideOnly(Side.CLIENT)
+    private int stored;
 
-	@Override
-	public void updateMachine()
-	{
-	}
+    @Override
+    public int getEnergyUsage() {
+        return 3;
+    }
 
-	@Override
-	public void addStorages(List<IStorage> storages)
-	{
-		storages.add(this);
-	}
+    @Override
+    public void updateMachine() {
+    }
 
-	@Override
-	public void readFromNBT(NBTTagCompound nbt)
-	{
-		super.readFromNBT(nbt);
+    @Override
+    public void addStorages(List<IStorage> storages) {
+        storages.add(this);
+    }
 
-		InventoryUtils.restoreInventory(inventory, 0, nbt);
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
+        super.readFromNBT(nbt);
 
-		if (nbt.hasKey(NBT_STORAGE))
-		{
-			tag = nbt.getCompoundTag(NBT_STORAGE);
-		}
+        InventoryUtils.restoreInventory(inventory, 0, nbt);
 
-		if (nbt.hasKey(NBT_PRIORITY))
-		{
-			priority = nbt.getInteger(NBT_PRIORITY);
-		}
+        if (nbt.hasKey(NBT_STORAGE)) {
+            tag = nbt.getCompoundTag(NBT_STORAGE);
+        }
 
-		if (nbt.hasKey(NBT_COMPARE))
-		{
-			compare = nbt.getInteger(NBT_COMPARE);
-		}
+        if (nbt.hasKey(NBT_PRIORITY)) {
+            priority = nbt.getInteger(NBT_PRIORITY);
+        }
 
-		if (nbt.hasKey(NBT_MODE))
-		{
-			mode = nbt.getInteger(NBT_MODE);
-		}
-	}
+        if (nbt.hasKey(NBT_COMPARE)) {
+            compare = nbt.getInteger(NBT_COMPARE);
+        }
 
-	@Override
-	public void writeToNBT(NBTTagCompound nbt)
-	{
-		super.writeToNBT(nbt);
+        if (nbt.hasKey(NBT_MODE)) {
+            mode = nbt.getInteger(NBT_MODE);
+        }
+    }
 
-		InventoryUtils.saveInventory(inventory, 0, nbt);
+    @Override
+    public void writeToNBT(NBTTagCompound nbt) {
+        super.writeToNBT(nbt);
 
-		nbt.setTag(NBT_STORAGE, tag);
-		nbt.setInteger(NBT_PRIORITY, priority);
-		nbt.setInteger(NBT_COMPARE, compare);
-		nbt.setInteger(NBT_MODE, mode);
-	}
+        InventoryUtils.saveInventory(inventory, 0, nbt);
 
-	public EnumStorageType getType()
-	{
-		if (worldObj.getBlockState(pos).getBlock() == RefinedStorageBlocks.STORAGE)
-		{
-			return ((EnumStorageType) worldObj.getBlockState(pos).getValue(BlockStorage.TYPE));
-		}
+        nbt.setTag(NBT_STORAGE, tag);
+        nbt.setInteger(NBT_PRIORITY, priority);
+        nbt.setInteger(NBT_COMPARE, compare);
+        nbt.setInteger(NBT_MODE, mode);
+    }
 
-		return EnumStorageType.TYPE_1K;
-	}
+    public EnumStorageType getType() {
+        if (worldObj.getBlockState(pos).getBlock() == RefinedStorageBlocks.STORAGE) {
+            return ((EnumStorageType) worldObj.getBlockState(pos).getValue(BlockStorage.TYPE));
+        }
 
-	@Override
-	public void toBytes(ByteBuf buf)
-	{
-		super.toBytes(buf);
+        return EnumStorageType.TYPE_1K;
+    }
 
-		buf.writeInt(NBTStorage.getStored(tag));
-		buf.writeInt(priority);
-		buf.writeInt(compare);
-		buf.writeInt(mode);
-	}
+    @Override
+    public void toBytes(ByteBuf buf) {
+        super.toBytes(buf);
 
-	@Override
-	public void fromBytes(ByteBuf buf)
-	{
-		super.fromBytes(buf);
+        buf.writeInt(NBTStorage.getStored(tag));
+        buf.writeInt(priority);
+        buf.writeInt(compare);
+        buf.writeInt(mode);
+    }
 
-		stored = buf.readInt();
-		priority = buf.readInt();
-		compare = buf.readInt();
-		mode = buf.readInt();
-	}
+    @Override
+    public void fromBytes(ByteBuf buf) {
+        super.fromBytes(buf);
 
-	@Override
-	public void addItems(List<StorageItem> items)
-	{
-		getStorage().addItems(items);
+        stored = buf.readInt();
+        priority = buf.readInt();
+        compare = buf.readInt();
+        mode = buf.readInt();
+    }
 
-		markDirty();
-	}
+    @Override
+    public void addItems(List<StorageItem> items) {
+        getStorage().addItems(items);
 
-	@Override
-	public void push(ItemStack stack)
-	{
-		getStorage().push(stack);
+        markDirty();
+    }
 
-		markDirty();
-	}
+    @Override
+    public void push(ItemStack stack) {
+        getStorage().push(stack);
 
-	@Override
-	public ItemStack take(ItemStack stack, int flags)
-	{
-		ItemStack result = getStorage().take(stack, flags);
+        markDirty();
+    }
 
-		markDirty();
+    @Override
+    public ItemStack take(ItemStack stack, int flags) {
+        ItemStack result = getStorage().take(stack, flags);
 
-		return result;
-	}
+        markDirty();
 
-	@Override
-	public boolean canPush(ItemStack stack)
-	{
-		return ModeSettingUtils.doesNotViolateMode(inventory, this, compare, stack) && getStorage().canPush(stack);
-	}
+        return result;
+    }
 
-	@Override
-	public int getCompare()
-	{
-		return compare;
-	}
+    @Override
+    public boolean canPush(ItemStack stack) {
+        return ModeSettingUtils.doesNotViolateMode(inventory, this, compare, stack) && getStorage().canPush(stack);
+    }
 
-	@Override
-	public void setCompare(int compare)
-	{
-		markDirty();
+    @Override
+    public int getCompare() {
+        return compare;
+    }
 
-		this.compare = compare;
-	}
+    @Override
+    public void setCompare(int compare) {
+        markDirty();
 
-	@Override
-	public boolean isWhitelist()
-	{
-		return mode == 0;
-	}
+        this.compare = compare;
+    }
 
-	@Override
-	public boolean isBlacklist()
-	{
-		return mode == 1;
-	}
+    @Override
+    public boolean isWhitelist() {
+        return mode == 0;
+    }
 
-	@Override
-	public void setToWhitelist()
-	{
-		markDirty();
+    @Override
+    public boolean isBlacklist() {
+        return mode == 1;
+    }
 
-		this.mode = 0;
-	}
+    @Override
+    public void setToWhitelist() {
+        markDirty();
 
-	@Override
-	public void setToBlacklist()
-	{
-		markDirty();
+        this.mode = 0;
+    }
 
-		this.mode = 1;
-	}
+    @Override
+    public void setToBlacklist() {
+        markDirty();
 
-	@Override
-	public String getName()
-	{
-		return "block.refinedstorage:storage." + getType().getId() + ".name";
-	}
+        this.mode = 1;
+    }
 
-	@Override
-	public IInventory getInventory()
-	{
-		return inventory;
-	}
+    @Override
+    public String getName() {
+        return "block.refinedstorage:storage." + getType().getId() + ".name";
+    }
 
-	@Override
-	public IRedstoneModeSetting getRedstoneModeSetting()
-	{
-		return this;
-	}
+    @Override
+    public IInventory getInventory() {
+        return inventory;
+    }
 
-	@Override
-	public ICompareSetting getCompareSetting()
-	{
-		return this;
-	}
+    @Override
+    public IRedstoneModeSetting getRedstoneModeSetting() {
+        return this;
+    }
 
-	@Override
-	public IModeSetting getModeSetting()
-	{
-		return this;
-	}
+    @Override
+    public ICompareSetting getCompareSetting() {
+        return this;
+    }
 
-	@Override
-	public void onPriorityChanged(int priority)
-	{
-		RefinedStorage.NETWORK.sendToServer(new MessagePriorityUpdate(pos, priority));
-	}
+    @Override
+    public IModeSetting getModeSetting() {
+        return this;
+    }
 
-	public NBTStorage getStorage()
-	{
-		return new NBTStorage(tag, getCapacity(), priority);
-	}
+    @Override
+    public void onPriorityChanged(int priority) {
+        RefinedStorage.NETWORK.sendToServer(new MessagePriorityUpdate(pos, priority));
+    }
 
-	public NBTTagCompound getStorageTag()
-	{
-		return tag;
-	}
+    public NBTStorage getStorage() {
+        return new NBTStorage(tag, getCapacity(), priority);
+    }
 
-	public void setStorageTag(NBTTagCompound tag)
-	{
-		markDirty();
+    public NBTTagCompound getStorageTag() {
+        return tag;
+    }
 
-		this.tag = tag;
-	}
+    public void setStorageTag(NBTTagCompound tag) {
+        markDirty();
 
-	@Override
-	public int getPriority()
-	{
-		return priority;
-	}
+        this.tag = tag;
+    }
 
-	public void setPriority(int priority)
-	{
-		markDirty();
+    @Override
+    public int getPriority() {
+        return priority;
+    }
 
-		this.priority = priority;
-	}
+    public void setPriority(int priority) {
+        markDirty();
 
-	@Override
-	public int getStored()
-	{
-		return stored;
-	}
+        this.priority = priority;
+    }
 
-	public int getStoredScaled(int scale)
-	{
-		if (getType() == EnumStorageType.TYPE_CREATIVE)
-		{
-			return 0;
-		}
+    @Override
+    public int getStored() {
+        return stored;
+    }
 
-		return (int) ((float) getStored() / (float) getCapacity() * (float) scale);
-	}
+    public int getStoredScaled(int scale) {
+        if (getType() == EnumStorageType.TYPE_CREATIVE) {
+            return 0;
+        }
 
-	@Override
-	public int getCapacity()
-	{
-		return getType().getCapacity();
-	}
+        return (int) ((float) getStored() / (float) getCapacity() * (float) scale);
+    }
+
+    @Override
+    public int getCapacity() {
+        return getType().getCapacity();
+    }
 }

@@ -8,153 +8,132 @@ import refinedstorage.block.BlockMachine;
 import refinedstorage.tile.settings.IRedstoneModeSetting;
 import refinedstorage.tile.settings.RedstoneMode;
 
-public abstract class TileMachine extends TileBase implements INetworkTile, IRedstoneModeSetting
-{
-	protected boolean connected = false;
-	protected boolean redstoneControlled = true;
+public abstract class TileMachine extends TileBase implements INetworkTile, IRedstoneModeSetting {
+    protected boolean connected = false;
 
-	protected RedstoneMode redstoneMode = RedstoneMode.IGNORE;
+    protected RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
-	private BlockPos controllerPosition;
+    private BlockPos controllerPosition;
 
-	private Block originalBlock;
+    private Block originalBlock;
 
-	public void onConnected(TileController controller)
-	{
-		if (worldObj.getBlockState(pos).getBlock() == originalBlock)
-		{
-			markDirty();
+    public void onConnected(TileController controller) {
+        if (worldObj != null && worldObj.getBlockState(pos).getBlock() == originalBlock) {
+            markDirty();
 
-			connected = true;
+            connected = true;
 
-			worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockMachine.CONNECTED, true));
+            worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockMachine.CONNECTED, true));
 
-			controllerPosition = controller.getPos();
-		}
-	}
+            controllerPosition = controller.getPos();
+        }
+    }
 
-	public void onDisconnected()
-	{
-		if (worldObj.getBlockState(pos).getBlock() == originalBlock)
-		{
-			markDirty();
+    public void onDisconnected() {
+        if (worldObj != null && worldObj.getBlockState(pos).getBlock() == originalBlock) {
+            markDirty();
 
-			connected = false;
+            connected = false;
 
-			worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockMachine.CONNECTED, false));
-		}
-	}
+            worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockMachine.CONNECTED, false));
+        }
+    }
 
-	@Override
-	public void update()
-	{
-		if (ticks == 0)
-		{
-			originalBlock = worldObj.getBlockState(pos).getBlock();
-		}
+    @Override
+    public void update() {
+        if (worldObj == null) {
+            super.update();
+            return;
+        }
 
-		super.update();
+        if (ticks == 0) {
+            originalBlock = worldObj.getBlockState(pos).getBlock();
+        }
 
-		if (!worldObj.isRemote && isConnected())
-		{
-			updateMachine();
-		}
-	}
+        super.update();
 
-	public boolean isConnected()
-	{
-		return connected;
-	}
+        if (!worldObj.isRemote && isConnected()) {
+            updateMachine();
+        }
+    }
 
-	@Override
-	public RedstoneMode getRedstoneMode()
-	{
-		return redstoneMode;
-	}
+    public boolean isConnected() {
+        return connected;
+    }
 
-	@Override
-	public void setRedstoneMode(RedstoneMode mode)
-	{
-		if (redstoneControlled)
-		{
-			markDirty();
+    @Override
+    public RedstoneMode getRedstoneMode() {
+        return redstoneMode;
+    }
 
-			this.redstoneMode = mode;
-		}
-	}
+    @Override
+    public void setRedstoneMode(RedstoneMode mode) {
+        markDirty();
 
-	@Override
-	public BlockPos getMachinePos()
-	{
-		return pos;
-	}
+        this.redstoneMode = mode;
+    }
 
-	@Override
-	public BlockPos getTilePos()
-	{
-		return pos;
-	}
+    @Override
+    public BlockPos getMachinePos() {
+        return pos;
+    }
 
-	public TileController getController()
-	{
-		return (TileController) worldObj.getTileEntity(controllerPosition);
-	}
+    @Override
+    public BlockPos getTilePos() {
+        return pos;
+    }
 
-	@Override
-	public void fromBytes(ByteBuf buf)
-	{
-		boolean lastConnected = connected;
+    public TileController getController() {
+        return (TileController) worldObj.getTileEntity(controllerPosition);
+    }
 
-		connected = buf.readBoolean();
+    @Override
+    public void fromBytes(ByteBuf buf) {
+        boolean lastConnected = connected;
 
-		if (connected)
-		{
-			controllerPosition = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
-		}
+        connected = buf.readBoolean();
 
-		redstoneMode = RedstoneMode.getById(buf.readInt());
+        if (connected) {
+            controllerPosition = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
+        }
 
-		if (lastConnected != connected)
-		{
-			worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2 | 4);
-		}
-	}
+        redstoneMode = RedstoneMode.getById(buf.readInt());
 
-	@Override
-	public void toBytes(ByteBuf buf)
-	{
-		buf.writeBoolean(connected);
+        if (lastConnected != connected) {
+            worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2 | 4);
+        }
+    }
 
-		if (connected)
-		{
-			buf.writeInt(controllerPosition.getX());
-			buf.writeInt(controllerPosition.getY());
-			buf.writeInt(controllerPosition.getZ());
-		}
+    @Override
+    public void toBytes(ByteBuf buf) {
+        buf.writeBoolean(connected);
 
-		buf.writeInt(redstoneMode.id);
-	}
+        if (connected) {
+            buf.writeInt(controllerPosition.getX());
+            buf.writeInt(controllerPosition.getY());
+            buf.writeInt(controllerPosition.getZ());
+        }
 
-	@Override
-	public void readFromNBT(NBTTagCompound nbt)
-	{
-		super.readFromNBT(nbt);
+        buf.writeInt(redstoneMode.id);
+    }
 
-		if (nbt.hasKey(RedstoneMode.NBT))
-		{
-			redstoneMode = RedstoneMode.getById(nbt.getInteger(RedstoneMode.NBT));
-		}
-	}
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
+        super.readFromNBT(nbt);
 
-	@Override
-	public void writeToNBT(NBTTagCompound nbt)
-	{
-		super.writeToNBT(nbt);
+        if (nbt.hasKey(RedstoneMode.NBT)) {
+            redstoneMode = RedstoneMode.getById(nbt.getInteger(RedstoneMode.NBT));
+        }
+    }
 
-		nbt.setInteger(RedstoneMode.NBT, redstoneMode.id);
-	}
+    @Override
+    public void writeToNBT(NBTTagCompound nbt) {
+        super.writeToNBT(nbt);
 
-	public abstract int getEnergyUsage();
+        nbt.setInteger(RedstoneMode.NBT, redstoneMode.id);
+    }
 
-	public abstract void updateMachine();
+    public abstract int getEnergyUsage();
+
+    public abstract void updateMachine();
 }

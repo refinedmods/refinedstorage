@@ -11,204 +11,194 @@ import refinedstorage.tile.settings.ICompareSetting;
 import refinedstorage.tile.settings.IModeSetting;
 import refinedstorage.util.InventoryUtils;
 
-public class TileImporter extends TileMachine implements ICompareSetting, IModeSetting
-{
-	public static final String NBT_COMPARE = "Compare";
-	public static final String NBT_MODE = "Mode";
+public class TileImporter extends TileMachine implements ICompareSetting, IModeSetting {
+    public static final String NBT_COMPARE = "Compare";
+    public static final String NBT_MODE = "Mode";
 
-	private InventorySimple inventory = new InventorySimple("importer", 9, this);
+    public static final int SPEED = 3;
 
-	private int compare = 0;
-	private int mode = 0;
+    private InventorySimple inventory = new InventorySimple("importer", 9, this);
 
-	private int currentSlot = 0;
+    private int compare = 0;
+    private int mode = 0;
 
-	@Override
-	public int getEnergyUsage()
-	{
-		return 2;
-	}
+    private int currentSlot;
 
-	@Override
-	public void updateMachine()
-	{
-		TileEntity tile = worldObj.getTileEntity(pos.offset(getDirection()));
+    @Override
+    public int getEnergyUsage() {
+        return 2;
+    }
 
-		if (tile instanceof IInventory)
-		{
-			IInventory connectedInventory = (IInventory) tile;
+    @Override
+    public void updateMachine() {
+        TileEntity connectedTile = worldObj.getTileEntity(pos.offset(getDirection()));
 
-			if (ticks % 5 == 0)
-			{
-				ItemStack slot = connectedInventory.getStackInSlot(currentSlot);
+        if (connectedTile instanceof ISidedInventory) {
+            ISidedInventory sided = (ISidedInventory) connectedTile;
 
-				while ((slot = connectedInventory.getStackInSlot(currentSlot)) == null)
-				{
-					currentSlot++;
+            int[] availableSlots = sided.getSlotsForFace(getDirection().getOpposite());
 
-					if (currentSlot > connectedInventory.getSizeInventory() - 1)
-					{
-						break;
-					}
-				}
+            if (currentSlot >= availableSlots.length) {
+                currentSlot = 0;
+            }
 
-				if (slot != null && canImport(slot))
-				{
-					if (connectedInventory instanceof ISidedInventory)
-					{
-						ISidedInventory sided = (ISidedInventory) connectedInventory;
+            if (availableSlots.length > 0) {
+                int availableSlot = availableSlots[currentSlot];
 
-						if (sided.canExtractItem(currentSlot, slot.copy(), getDirection().getOpposite()))
-						{
-							if (getController().push(slot.copy()))
-							{
-								connectedInventory.setInventorySlotContents(currentSlot, null);
-							}
-						}
-					}
-					else if (getController().push(slot.copy()))
-					{
-						connectedInventory.setInventorySlotContents(currentSlot, null);
-					}
+                ItemStack stack = sided.getStackInSlot(availableSlot);
 
-					connectedInventory.markDirty();
-				}
+                if (stack == null) {
+                    currentSlot++;
+                } else {
+                    if (ticks % SPEED == 0) {
+                        ItemStack toTake = stack.copy();
+                        toTake.stackSize = 1;
 
-				currentSlot++;
+                        if (canImport(toTake) && sided.canExtractItem(availableSlot, toTake, getDirection().getOpposite())) {
+                            if (getController().push(toTake)) {
+                                sided.decrStackSize(availableSlot, 1);
+                                sided.markDirty();
+                            }
+                        } else {
+                            // If we can't import and/ or extract, move on (otherwise we stay on the same slot forever)
+                            currentSlot++;
+                        }
+                    }
+                }
+            }
+        } else if (connectedTile instanceof IInventory) {
+            IInventory inventory = (IInventory) connectedTile;
 
-				if (currentSlot > connectedInventory.getSizeInventory() - 1)
-				{
-					currentSlot = 0;
-				}
-			}
-		}
-	}
+            if (currentSlot >= inventory.getSizeInventory()) {
+                currentSlot = 0;
+            }
 
-	public boolean canImport(ItemStack stack)
-	{
-		int slots = 0;
+            ItemStack stack = inventory.getStackInSlot(currentSlot);
 
-		for (int i = 0; i < inventory.getSizeInventory(); ++i)
-		{
-			ItemStack slot = inventory.getStackInSlot(i);
+            if (stack != null) {
+                if (ticks % SPEED == 0) {
+                    ItemStack toTake = stack.copy();
+                    toTake.stackSize = 1;
 
-			if (slot != null)
-			{
-				slots++;
+                    if (canImport(toTake)) {
+                        if (getController().push(toTake)) {
+                            inventory.decrStackSize(currentSlot, 1);
+                            inventory.markDirty();
+                        }
+                    }
+                }
+            } else {
+                currentSlot++;
+            }
+        } else {
+            currentSlot = 0;
+        }
+    }
 
-				if (InventoryUtils.compareStack(stack, slot, compare))
-				{
-					if (isWhitelist())
-					{
-						return true;
-					}
-					else if (isBlacklist())
-					{
-						return false;
-					}
-				}
-			}
-		}
+    public boolean canImport(ItemStack stack) {
+        int slots = 0;
 
-		if (isWhitelist())
-		{
-			return slots == 0;
-		}
+        for (int i = 0; i < inventory.getSizeInventory(); ++i) {
+            ItemStack slot = inventory.getStackInSlot(i);
 
-		return true;
-	}
+            if (slot != null) {
+                slots++;
 
-	@Override
-	public int getCompare()
-	{
-		return compare;
-	}
+                if (InventoryUtils.compareStack(stack, slot, compare)) {
+                    if (isWhitelist()) {
+                        return true;
+                    } else if (isBlacklist()) {
+                        return false;
+                    }
+                }
+            }
+        }
 
-	@Override
-	public void setCompare(int compare)
-	{
-		markDirty();
+        if (isWhitelist()) {
+            return slots == 0;
+        }
 
-		this.compare = compare;
-	}
+        return true;
+    }
 
-	@Override
-	public boolean isWhitelist()
-	{
-		return mode == 0;
-	}
+    @Override
+    public int getCompare() {
+        return compare;
+    }
 
-	@Override
-	public boolean isBlacklist()
-	{
-		return mode == 1;
-	}
+    @Override
+    public void setCompare(int compare) {
+        markDirty();
 
-	@Override
-	public void setToWhitelist()
-	{
-		markDirty();
+        this.compare = compare;
+    }
 
-		this.mode = 0;
-	}
+    @Override
+    public boolean isWhitelist() {
+        return mode == 0;
+    }
 
-	@Override
-	public void setToBlacklist()
-	{
-		markDirty();
+    @Override
+    public boolean isBlacklist() {
+        return mode == 1;
+    }
 
-		this.mode = 1;
-	}
+    @Override
+    public void setToWhitelist() {
+        markDirty();
 
-	@Override
-	public void readFromNBT(NBTTagCompound nbt)
-	{
-		super.readFromNBT(nbt);
+        this.mode = 0;
+    }
 
-		if (nbt.hasKey(NBT_COMPARE))
-		{
-			compare = nbt.getInteger(NBT_COMPARE);
-		}
+    @Override
+    public void setToBlacklist() {
+        markDirty();
 
-		if (nbt.hasKey(NBT_MODE))
-		{
-			mode = nbt.getInteger(NBT_MODE);
-		}
+        this.mode = 1;
+    }
 
-		InventoryUtils.restoreInventory(inventory, 0, nbt);
-	}
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
+        super.readFromNBT(nbt);
 
-	@Override
-	public void writeToNBT(NBTTagCompound nbt)
-	{
-		super.writeToNBT(nbt);
+        if (nbt.hasKey(NBT_COMPARE)) {
+            compare = nbt.getInteger(NBT_COMPARE);
+        }
 
-		nbt.setInteger(NBT_COMPARE, compare);
-		nbt.setInteger(NBT_MODE, mode);
+        if (nbt.hasKey(NBT_MODE)) {
+            mode = nbt.getInteger(NBT_MODE);
+        }
 
-		InventoryUtils.saveInventory(inventory, 0, nbt);
-	}
+        InventoryUtils.restoreInventory(inventory, 0, nbt);
+    }
 
-	@Override
-	public void fromBytes(ByteBuf buf)
-	{
-		super.fromBytes(buf);
+    @Override
+    public void writeToNBT(NBTTagCompound nbt) {
+        super.writeToNBT(nbt);
 
-		compare = buf.readInt();
-		mode = buf.readInt();
-	}
+        nbt.setInteger(NBT_COMPARE, compare);
+        nbt.setInteger(NBT_MODE, mode);
 
-	@Override
-	public void toBytes(ByteBuf buf)
-	{
-		super.toBytes(buf);
+        InventoryUtils.saveInventory(inventory, 0, nbt);
+    }
 
-		buf.writeInt(compare);
-		buf.writeInt(mode);
-	}
+    @Override
+    public void fromBytes(ByteBuf buf) {
+        super.fromBytes(buf);
 
-	public IInventory getInventory()
-	{
-		return inventory;
-	}
+        compare = buf.readInt();
+        mode = buf.readInt();
+    }
+
+    @Override
+    public void toBytes(ByteBuf buf) {
+        super.toBytes(buf);
+
+        buf.writeInt(compare);
+        buf.writeInt(mode);
+    }
+
+    public IInventory getInventory() {
+        return inventory;
+    }
 }
