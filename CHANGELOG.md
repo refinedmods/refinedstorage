@@ -4,13 +4,13 @@
 **Bugfixes**
 - Fixed clicking sound in Grid
 - Fixed a bunch of crashes
-- Fixed exporter not exporting is some cases
-- Fixed importer not importing in some cases
-- Fixed controller drawing RF every 20 ticks instead of every tick
+- Fixed Exporter not exporting is some cases
+- Fixed Importer not importing in some cases
+- Fixed Controller drawing RF every 20 ticks instead of every tick
 - Fixed not being able to shift click from Crafting Grid crafting slots
 - Fixed new items inserted after crafting in Grid being laggy
 - Fixed flickering of items in Grid
-- Fixed getting a stack of unstackable stuff from Grid
+- Fixed getting a stack of unstackable items from Grid
 - Check if the Constructor can actually place said block in the world
 
 **Features**
