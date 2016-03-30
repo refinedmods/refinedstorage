@@ -293,7 +293,7 @@ public class GuiGrid extends GuiBase {
     @Override
     protected void keyTyped(char character, int keyCode) throws IOException {
         if (!checkHotbarKeys(keyCode) && searchField.textboxKeyTyped(character, keyCode)) {
-            if (PluginRefinedStorage.isJeiLoaded()) {
+            if (PluginRefinedStorage.isJeiLoaded() && grid.getSearchBoxMode() == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED) {
                 PluginRefinedStorage.INSTANCE.getRuntime().getItemListOverlay().setFilterText(searchField.getText());
             }
         } else {

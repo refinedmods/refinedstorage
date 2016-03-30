@@ -55,7 +55,7 @@ sidebutton.refinedstorage:grid.sorting.type.0=Quantity
 sidebutton.refinedstorage:grid.sorting.type.1=Name
 sidebutton.refinedstorage:grid.search_box_mode=Search Box Mode
 sidebutton.refinedstorage:grid.search_box_mode.0=Normal
-sidebutton.refinedstorage:grid.search_box_mode.1=JEI Synchronized
+sidebutton.refinedstorage:grid.search_box_mode.1=JEI synchronized
 
 sidebutton.refinedstorage:mode=Mode
 sidebutton.refinedstorage:mode.whitelist=Whitelist

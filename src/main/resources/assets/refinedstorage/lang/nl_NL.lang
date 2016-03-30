@@ -55,7 +55,7 @@ sidebutton.refinedstorage:grid.sorting.type.0=Hoeveelheid
 sidebutton.refinedstorage:grid.sorting.type.1=Naam
 sidebutton.refinedstorage:grid.search_box_mode=Zoekbalk Mode
 sidebutton.refinedstorage:grid.search_box_mode.0=Normaal
-sidebutton.refinedstorage:grid.search_box_mode.1=JEI Gesynchronizeerd
+sidebutton.refinedstorage:grid.search_box_mode.1=JEI gesynchroniseerd
 
 sidebutton.refinedstorage:mode=Mode
 sidebutton.refinedstorage:mode.whitelist=Whitelist
