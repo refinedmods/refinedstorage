@@ -1,0 +1,68 @@
+package refinedstorage.network;
+
+import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import refinedstorage.tile.TileGrid;
+
+public class MessageGridSettingsUpdate extends MessageHandlerPlayerToServer<MessageGridSettingsUpdate> implements IMessage {
+    private int x;
+    private int y;
+    private int z;
+    private int sortingDirection;
+    private int sortingType;
+    private int searchBoxMode;
+
+    public MessageGridSettingsUpdate() {
+    }
+
+    public MessageGridSettingsUpdate(TileGrid grid, int sortingDirection, int sortingType, int searchBoxMode) {
+        this.x = grid.getPos().getX();
+        this.y = grid.getPos().getY();
+        this.z = grid.getPos().getZ();
+        this.sortingDirection = sortingDirection;
+        this.sortingType = sortingType;
+        this.searchBoxMode = searchBoxMode;
+    }
+
+    @Override
+    public void fromBytes(ByteBuf buf) {
+        x = buf.readInt();
+        y = buf.readInt();
+        z = buf.readInt();
+        sortingDirection = buf.readInt();
+        sortingType = buf.readInt();
+        searchBoxMode = buf.readInt();
+    }
+
+    @Override
+    public void toBytes(ByteBuf buf) {
+        buf.writeInt(x);
+        buf.writeInt(y);
+        buf.writeInt(z);
+        buf.writeInt(sortingDirection);
+        buf.writeInt(sortingType);
+        buf.writeInt(searchBoxMode);
+    }
+
+    @Override
+    public void handle(MessageGridSettingsUpdate message, EntityPlayerMP player) {
+        TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.x, message.y, message.z));
+
+        if (tile instanceof TileGrid) {
+            if (message.sortingDirection == TileGrid.SORTING_DIRECTION_ASCENDING || message.sortingDirection == TileGrid.SORTING_DIRECTION_DESCENDING) {
+                ((TileGrid) tile).setSortingDirection(message.sortingDirection);
+            }
+
+            if (message.sortingType == TileGrid.SORTING_TYPE_QUANTITY || message.sortingType == TileGrid.SORTING_TYPE_NAME) {
+                ((TileGrid) tile).setSortingType(message.sortingType);
+            }
+
+            if (message.searchBoxMode == TileGrid.SEARCH_BOX_MODE_NORMAL || message.searchBoxMode == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED) {
+                ((TileGrid) tile).setSearchBoxMode(message.searchBoxMode);
+            }
+        }
+    }
+}

@@ -47,13 +47,15 @@ sidebutton.refinedstorage:redstone_mode.0=Redstone negeren
 sidebutton.refinedstorage:redstone_mode.1=Alleen werken met redstone signaal
 sidebutton.refinedstorage:redstone_mode.2=Alleen werken zonder redstone signaal
 
-sidebutton.refinedstorage:sorting.direction=Sorteer Richting
-sidebutton.refinedstorage:sorting.direction.0=Oplopend
-sidebutton.refinedstorage:sorting.direction.1=Aflopend
-
-sidebutton.refinedstorage:sorting.type=Sorteer Type
-sidebutton.refinedstorage:sorting.type.0=Hoeveelheid
-sidebutton.refinedstorage:sorting.type.1=Naam
+sidebutton.refinedstorage:grid.sorting.direction=Sorteer Richting
+sidebutton.refinedstorage:grid.sorting.direction.0=Oplopend
+sidebutton.refinedstorage:grid.sorting.direction.1=Aflopend
+sidebutton.refinedstorage:grid.sorting.type=Sorteer Type
+sidebutton.refinedstorage:grid.sorting.type.0=Hoeveelheid
+sidebutton.refinedstorage:grid.sorting.type.1=Naam
+sidebutton.refinedstorage:grid.search_box_mode=Zoekbalk Mode
+sidebutton.refinedstorage:grid.search_box_mode.0=Normaal
+sidebutton.refinedstorage:grid.search_box_mode.1=JEI Gesynchronizeerd
 
 sidebutton.refinedstorage:mode=Mode
 sidebutton.refinedstorage:mode.whitelist=Whitelist

@@ -10,9 +10,11 @@ import net.minecraft.inventory.Slot;
 import refinedstorage.RefinedStorage;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
+import refinedstorage.gui.sidebutton.SideButtonGridSearchBoxMode;
 import refinedstorage.gui.sidebutton.SideButtonGridSortingDirection;
 import refinedstorage.gui.sidebutton.SideButtonGridSortingType;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
+import refinedstorage.jei.PluginRefinedStorage;
 import refinedstorage.network.MessageGridCraftingClear;
 import refinedstorage.network.MessageGridCraftingPush;
 import refinedstorage.network.MessageStoragePull;
@@ -51,6 +53,10 @@ public class GuiGrid extends GuiBase {
 
         addSideButton(new SideButtonGridSortingDirection(grid));
         addSideButton(new SideButtonGridSortingType(grid));
+
+        if (PluginRefinedStorage.isJeiLoaded()) {
+            addSideButton(new SideButtonGridSearchBoxMode(grid));
+        }
 
         searchField = new GuiTextField(0, fontRendererObj, x + 80 + 1, y + 6 + 1, 88 - 6, fontRendererObj.FONT_HEIGHT);
         searchField.setEnableBackgroundDrawing(false);
@@ -287,6 +293,9 @@ public class GuiGrid extends GuiBase {
     @Override
     protected void keyTyped(char character, int keyCode) throws IOException {
         if (!checkHotbarKeys(keyCode) && searchField.textboxKeyTyped(character, keyCode)) {
+            if (PluginRefinedStorage.isJeiLoaded()) {
+                PluginRefinedStorage.INSTANCE.getRuntime().getItemListOverlay().setFilterText(searchField.getText());
+            }
         } else {
             super.keyTyped(character, keyCode);
         }

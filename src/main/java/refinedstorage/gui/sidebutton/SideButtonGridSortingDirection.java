@@ -3,7 +3,7 @@ package refinedstorage.gui.sidebutton;
 import net.minecraft.util.text.TextFormatting;
 import refinedstorage.RefinedStorage;
 import refinedstorage.gui.GuiBase;
-import refinedstorage.network.MessageGridSortingUpdate;
+import refinedstorage.network.MessageGridSettingsUpdate;
 import refinedstorage.tile.TileGrid;
 
 public class SideButtonGridSortingDirection extends SideButton {
@@ -17,8 +17,8 @@ public class SideButtonGridSortingDirection extends SideButton {
     public String getTooltip(GuiBase gui) {
         StringBuilder builder = new StringBuilder();
 
-        builder.append(TextFormatting.YELLOW).append(gui.t("sidebutton.refinedstorage:sorting.direction")).append(TextFormatting.RESET).append("\n");
-        builder.append(gui.t("sidebutton.refinedstorage:sorting.direction." + grid.getSortingDirection()));
+        builder.append(TextFormatting.YELLOW).append(gui.t("sidebutton.refinedstorage:grid.sorting.direction")).append(TextFormatting.RESET).append("\n");
+        builder.append(gui.t("sidebutton.refinedstorage:grid.sorting.direction." + grid.getSortingDirection()));
 
         return builder.toString();
     }
@@ -39,6 +39,6 @@ public class SideButtonGridSortingDirection extends SideButton {
             dir = TileGrid.SORTING_DIRECTION_ASCENDING;
         }
 
-        RefinedStorage.NETWORK.sendToServer(new MessageGridSortingUpdate(grid, dir, grid.getSortingType()));
+        RefinedStorage.NETWORK.sendToServer(new MessageGridSettingsUpdate(grid, dir, grid.getSortingType(), grid.getSearchBoxMode()));
     }
 }

@@ -47,13 +47,15 @@ sidebutton.refinedstorage:redstone_mode.0=Ignore redstone signal
 sidebutton.refinedstorage:redstone_mode.1=Only work with redstone signal
 sidebutton.refinedstorage:redstone_mode.2=Only work without redstone signal
 
-sidebutton.refinedstorage:sorting.direction=Sorting Direction
-sidebutton.refinedstorage:sorting.direction.0=Ascending
-sidebutton.refinedstorage:sorting.direction.1=Descending
-
-sidebutton.refinedstorage:sorting.type=Sorting Type
-sidebutton.refinedstorage:sorting.type.0=Quantity
-sidebutton.refinedstorage:sorting.type.1=Name
+sidebutton.refinedstorage:grid.sorting.direction=Sorting Direction
+sidebutton.refinedstorage:grid.sorting.direction.0=Ascending
+sidebutton.refinedstorage:grid.sorting.direction.1=Descending
+sidebutton.refinedstorage:grid.sorting.type=Sorting Type
+sidebutton.refinedstorage:grid.sorting.type.0=Quantity
+sidebutton.refinedstorage:grid.sorting.type.1=Name
+sidebutton.refinedstorage:grid.search_box_mode=Search Box Mode
+sidebutton.refinedstorage:grid.search_box_mode.0=Normal
+sidebutton.refinedstorage:grid.search_box_mode.1=JEI Synchronized
 
 sidebutton.refinedstorage:mode=Mode
 sidebutton.refinedstorage:mode.whitelist=Whitelist
