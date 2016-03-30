@@ -31,6 +31,8 @@
 - When placing Importer, Exporter or External Storage with SHIFT, it will have the opposite direction. This is for easy placement behind other blocks (furnaces for example)
 - Added mass crafting of items with shift in Crafting Grid
 - Added JEI recipe transfering in Crafting Grid
+- Grid can synchronize with JEI
+- Side buttons in machine GUIs are now left, not right
 
 ### 0.4.1
 **Bugfixes**
