@@ -88,11 +88,11 @@ public class GuiGrid extends GuiBase {
             Collections.sort(items, new Comparator<StorageItem>() {
                 @Override
                 public int compare(StorageItem o1, StorageItem o2) {
-                        if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING) {
-                            return o2.toItemStack().getDisplayName().compareTo(o1.toItemStack().getDisplayName());
-                        } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
-                            return o1.toItemStack().getDisplayName().compareTo(o2.toItemStack().getDisplayName());
-                        }
+                    if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING) {
+                        return o2.toItemStack().getDisplayName().compareTo(o1.toItemStack().getDisplayName());
+                    } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
+                        return o1.toItemStack().getDisplayName().compareTo(o2.toItemStack().getDisplayName());
+                    }
 
                     return 0;
                 }
@@ -102,11 +102,11 @@ public class GuiGrid extends GuiBase {
                 Collections.sort(items, new Comparator<StorageItem>() {
                     @Override
                     public int compare(StorageItem o1, StorageItem o2) {
-                            if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING) {
-                                return Integer.valueOf(o2.getQuantity()).compareTo(o1.getQuantity());
-                            } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
-                                return Integer.valueOf(o1.getQuantity()).compareTo(o2.getQuantity());
-                            }
+                        if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING) {
+                            return Integer.valueOf(o2.getQuantity()).compareTo(o1.getQuantity());
+                        } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
+                            return Integer.valueOf(o1.getQuantity()).compareTo(o2.getQuantity());
+                        }
 
                         return 0;
                     }

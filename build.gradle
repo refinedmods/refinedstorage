@@ -24,13 +24,13 @@ minecraft {
 }
 
 repositories {
-	maven {
-		url "http://dvs1.progwml6.com/files/maven"
-	}
+    maven {
+        url "http://dvs1.progwml6.com/files/maven"
+    }
 }
 
 dependencies {
-	deobfCompile "mezz.jei:jei_1.9:3.1.+"
+    deobfCompile "mezz.jei:jei_1.9:3.1.+"
 }
 
 processResources {
@@ -40,7 +40,7 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
 
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+        expand 'version': project.version, 'mcversion': project.minecraft.version
     }
 
     from(sourceSets.main.resources.srcDirs) {
