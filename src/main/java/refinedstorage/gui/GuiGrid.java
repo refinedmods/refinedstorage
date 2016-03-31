@@ -257,11 +257,19 @@ public class GuiGrid extends GuiBase {
             if (isHoveringOverSlot() && container.getPlayer().inventory.getItemStack() != null && (clickedButton == 0 || clickedButton == 1)) {
                 RefinedStorage.NETWORK.sendToServer(new MessageStoragePush(controller.getPos().getX(), controller.getPos().getY(), controller.getPos().getZ(), -1, clickedButton == 1));
             } else if (isHoveringOverItemInSlot() && container.getPlayer().inventory.getItemStack() == null) {
-                boolean half = clickedButton == 1;
-                boolean shift = GuiScreen.isShiftKeyDown();
-                boolean one = clickedButton == 2;
+                int flags = 0;
 
-                RefinedStorage.NETWORK.sendToServer(new MessageStoragePull(controller.getPos().getX(), controller.getPos().getY(), controller.getPos().getZ(), hoveringItemId, half, one, shift));
+                if (clickedButton == 1) {
+                    flags |= MessageStoragePull.PULL_HALF;
+                }
+                if (GuiScreen.isShiftKeyDown()) {
+                    flags |= MessageStoragePull.PULL_SHIFT;
+                }
+                if (clickedButton == 2) {
+                    flags |= MessageStoragePull.PULL_ONE;
+                }
+
+                RefinedStorage.NETWORK.sendToServer(new MessageStoragePull(controller.getPos().getX(), controller.getPos().getY(), controller.getPos().getZ(), hoveringItemId, flags));
             } else if (clickedClear) {
                 RefinedStorage.NETWORK.sendToServer(new MessageGridCraftingClear(grid));
             } else {
