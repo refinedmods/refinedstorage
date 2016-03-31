@@ -1,15 +1,14 @@
 package refinedstorage.gui.sidebutton;
 
 import net.minecraft.util.text.TextFormatting;
-import refinedstorage.RefinedStorage;
 import refinedstorage.gui.GuiBase;
-import refinedstorage.network.MessageGridSettingsUpdate;
-import refinedstorage.tile.TileGrid;
+import refinedstorage.tile.grid.IGrid;
+import refinedstorage.tile.grid.TileGrid;
 
 public class SideButtonGridSortingDirection extends SideButton {
-    private TileGrid grid;
+    private IGrid grid;
 
-    public SideButtonGridSortingDirection(TileGrid grid) {
+    public SideButtonGridSortingDirection(IGrid grid) {
         this.grid = grid;
     }
 
@@ -39,6 +38,6 @@ public class SideButtonGridSortingDirection extends SideButton {
             dir = TileGrid.SORTING_DIRECTION_ASCENDING;
         }
 
-        RefinedStorage.NETWORK.sendToServer(new MessageGridSettingsUpdate(grid, dir, grid.getSortingType(), grid.getSearchBoxMode()));
+        grid.onSortingDirectionChanged(dir);
     }
 }

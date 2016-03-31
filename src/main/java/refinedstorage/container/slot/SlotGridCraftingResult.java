@@ -7,7 +7,7 @@ import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import refinedstorage.container.ContainerGrid;
-import refinedstorage.tile.TileGrid;
+import refinedstorage.tile.grid.TileGrid;
 
 public class SlotGridCraftingResult extends SlotCrafting {
     private ContainerGrid container;

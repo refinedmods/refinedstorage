@@ -21,14 +21,15 @@ import refinedstorage.network.MessageStoragePull;
 import refinedstorage.network.MessageStoragePush;
 import refinedstorage.storage.StorageItem;
 import refinedstorage.tile.TileController;
-import refinedstorage.tile.TileGrid;
+import refinedstorage.tile.grid.IGrid;
+import refinedstorage.tile.grid.TileGrid;
 
 import java.io.IOException;
 import java.util.*;
 
 public class GuiGrid extends GuiBase {
     private ContainerGrid container;
-    private TileGrid grid;
+    private IGrid grid;
 
     private List<StorageItem> items = new ArrayList<StorageItem>();
 
@@ -39,7 +40,7 @@ public class GuiGrid extends GuiBase {
 
     private Scrollbar scrollbar;
 
-    public GuiGrid(ContainerGrid container, TileGrid grid) {
+    public GuiGrid(ContainerGrid container, IGrid grid) {
         super(container, 193, grid.getType() == EnumGridType.CRAFTING ? 256 : 208);
 
         this.container = container;
@@ -49,7 +50,9 @@ public class GuiGrid extends GuiBase {
 
     @Override
     public void init(int x, int y) {
-        addSideButton(new SideButtonRedstoneMode(grid));
+        if (grid.getRedstoneModeSetting() != null) {
+            addSideButton(new SideButtonRedstoneMode(grid.getRedstoneModeSetting()));
+        }
 
         addSideButton(new SideButtonGridSortingDirection(grid));
         addSideButton(new SideButtonGridSortingType(grid));
@@ -162,7 +165,7 @@ public class GuiGrid extends GuiBase {
     public void drawForeground(int mouseX, int mouseY) {
         scrollbar.update(this, mouseX, mouseY);
 
-        drawString(7, 7, t("gui.refinedstorage:grid"));
+        drawString(7, 7, t(grid.getType() == EnumGridType.WIRELESS ? "gui.refinedstorage:wireless_grid" : "gui.refinedstorage:grid"));
 
         if (grid.getType() == EnumGridType.CRAFTING) {
             drawString(7, 94, t("container.crafting"));
@@ -271,7 +274,7 @@ public class GuiGrid extends GuiBase {
 
                 RefinedStorage.NETWORK.sendToServer(new MessageStoragePull(controller.getPos().getX(), controller.getPos().getY(), controller.getPos().getZ(), hoveringItemId, flags));
             } else if (clickedClear) {
-                RefinedStorage.NETWORK.sendToServer(new MessageGridCraftingClear(grid));
+                RefinedStorage.NETWORK.sendToServer(new MessageGridCraftingClear((TileGrid) grid));
             } else {
                 for (Slot slot : container.getPlayerInventorySlots()) {
                     if (inBounds(slot.xDisplayPosition, slot.yDisplayPosition, 16, 16, mouseX - guiLeft, mouseY - guiTop)) {
@@ -285,7 +288,7 @@ public class GuiGrid extends GuiBase {
                     for (Slot slot : container.getCraftingSlots()) {
                         if (inBounds(slot.xDisplayPosition, slot.yDisplayPosition, 16, 16, mouseX - guiLeft, mouseY - guiTop)) {
                             if (GuiScreen.isShiftKeyDown()) {
-                                RefinedStorage.NETWORK.sendToServer(new MessageGridCraftingPush(grid, slot.getSlotIndex()));
+                                RefinedStorage.NETWORK.sendToServer(new MessageGridCraftingPush((TileGrid) grid, slot.getSlotIndex()));
                             }
                         }
                     }

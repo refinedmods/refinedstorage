@@ -6,7 +6,8 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.slot.SlotGridCraftingResult;
-import refinedstorage.tile.TileGrid;
+import refinedstorage.tile.grid.IGrid;
+import refinedstorage.tile.grid.TileGrid;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,9 +15,9 @@ import java.util.List;
 public class ContainerGrid extends ContainerBase {
     private List<Slot> craftingSlots = new ArrayList<Slot>();
 
-    private TileGrid grid;
+    private IGrid grid;
 
-    public ContainerGrid(EntityPlayer player, TileGrid grid) {
+    public ContainerGrid(EntityPlayer player, IGrid grid) {
         super(player);
 
         this.grid = grid;
@@ -28,7 +29,7 @@ public class ContainerGrid extends ContainerBase {
             int y = 106;
 
             for (int i = 0; i < 9; ++i) {
-                Slot slot = new Slot(grid.getCraftingInventory(), i, x, y);
+                Slot slot = new Slot(((TileGrid) grid).getCraftingInventory(), i, x, y);
 
                 craftingSlots.add(slot);
 
@@ -42,12 +43,12 @@ public class ContainerGrid extends ContainerBase {
                 }
             }
 
-            addSlotToContainer(new SlotGridCraftingResult(this, player, grid.getCraftingInventory(), grid.getCraftingResultInventory(), grid, 0, 133 + 4, 120 + 4));
+            addSlotToContainer(new SlotGridCraftingResult(this, player, ((TileGrid) grid).getCraftingInventory(), ((TileGrid) grid).getCraftingResultInventory(), (TileGrid) grid, 0, 133 + 4, 120 + 4));
         }
     }
 
     public TileGrid getGrid() {
-        return grid;
+        return (TileGrid) grid;
     }
 
     public List<Slot> getCraftingSlots() {
@@ -71,6 +72,15 @@ public class ContainerGrid extends ContainerBase {
             for (int j = 0; j < this.crafters.size(); ++j) {
                 ((ICrafting) this.crafters.get(j)).sendSlotContents(this, i, itemstack1);
             }
+        }
+    }
+
+    @Override
+    public void onContainerClosed(EntityPlayer player) {
+        super.onContainerClosed(player);
+
+        if (grid.getType() == EnumGridType.WIRELESS && grid.isConnected()) {
+            grid.getController().onCloseWirelessGrid(player);
         }
     }
 }

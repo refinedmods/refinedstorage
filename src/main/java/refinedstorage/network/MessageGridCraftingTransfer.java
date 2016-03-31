@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
-import refinedstorage.tile.TileGrid;
+import refinedstorage.tile.grid.TileGrid;
 
 public class MessageGridCraftingTransfer extends MessageHandlerPlayerToServer<MessageGridCraftingTransfer> implements IMessage {
     private NBTTagCompound recipe;

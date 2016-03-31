@@ -13,4 +13,5 @@ public final class RefinedStorageGui {
     public static final int STORAGE = 11;
     public static final int RELAY = 12;
     public static final int INTERFACE = 13;
+    public static final int WIRELESS_GRID = 14;
 }

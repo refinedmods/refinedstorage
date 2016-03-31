@@ -13,17 +13,19 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
-import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
-import refinedstorage.RefinedStorageGui;
-import refinedstorage.tile.TileGrid;
+import refinedstorage.tile.TileController;
+import refinedstorage.tile.grid.TileGrid;
 
 import java.util.List;
 
 public class ItemWirelessGrid extends ItemBase {
-    public static final String NBT_GRID_X = "GridX";
-    public static final String NBT_GRID_Y = "GridY";
-    public static final String NBT_GRID_Z = "GridZ";
+    public static final String NBT_CONTROLLER_X = "ControllerX";
+    public static final String NBT_CONTROLLER_Y = "ControllerY";
+    public static final String NBT_CONTROLLER_Z = "ControllerZ";
+    public static final String NBT_SORTING_TYPE = "SortingType";
+    public static final String NBT_SORTING_DIRECTION = "SortingDirection";
+    public static final String NBT_SEARCH_BOX_MODE = "SearchBoxMode";
 
     public ItemWirelessGrid() {
         super("wireless_grid");
@@ -44,12 +46,15 @@ public class ItemWirelessGrid extends ItemBase {
     public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         Block block = worldIn.getBlockState(pos).getBlock();
 
-        if (block == RefinedStorageBlocks.GRID) {
+        if (block == RefinedStorageBlocks.CONTROLLER) {
             NBTTagCompound tag = new NBTTagCompound();
 
-            tag.setInteger(NBT_GRID_X, pos.getX());
-            tag.setInteger(NBT_GRID_Y, pos.getY());
-            tag.setInteger(NBT_GRID_Z, pos.getZ());
+            tag.setInteger(NBT_CONTROLLER_X, pos.getX());
+            tag.setInteger(NBT_CONTROLLER_Y, pos.getY());
+            tag.setInteger(NBT_CONTROLLER_Z, pos.getZ());
+            tag.setInteger(NBT_SORTING_DIRECTION, TileGrid.SORTING_DIRECTION_DESCENDING);
+            tag.setInteger(NBT_SORTING_TYPE, TileGrid.SORTING_TYPE_NAME);
+            tag.setInteger(NBT_SEARCH_BOX_MODE, TileGrid.SEARCH_BOX_MODE_NORMAL);
 
             stack.setTagCompound(tag);
 
@@ -66,8 +71,8 @@ public class ItemWirelessGrid extends ItemBase {
                 if (isInRange(stack, player)) {
                     TileEntity tile = world.getTileEntity(new BlockPos(getX(stack), getY(stack), getZ(stack)));
 
-                    if (tile instanceof TileGrid) {
-                        player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.GRID, world, tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ());
+                    if (tile instanceof TileController) {
+                        ((TileController) tile).onOpenWirelessGrid(player, hand);
 
                         return new ActionResult(EnumActionResult.PASS, stack);
                     } else {
@@ -87,15 +92,27 @@ public class ItemWirelessGrid extends ItemBase {
     }
 
     public static int getX(ItemStack stack) {
-        return stack.getTagCompound().getInteger(NBT_GRID_X);
+        return stack.getTagCompound().getInteger(NBT_CONTROLLER_X);
     }
 
     public static int getY(ItemStack stack) {
-        return stack.getTagCompound().getInteger(NBT_GRID_Y);
+        return stack.getTagCompound().getInteger(NBT_CONTROLLER_Y);
     }
 
     public static int getZ(ItemStack stack) {
-        return stack.getTagCompound().getInteger(NBT_GRID_Z);
+        return stack.getTagCompound().getInteger(NBT_CONTROLLER_Z);
+    }
+
+    public static int getSortingType(ItemStack stack) {
+        return stack.getTagCompound().getInteger(NBT_SORTING_TYPE);
+    }
+
+    public static int getSortingDirection(ItemStack stack) {
+        return stack.getTagCompound().getInteger(NBT_SORTING_DIRECTION);
+    }
+
+    public static int getSearchBoxMode(ItemStack stack) {
+        return stack.getTagCompound().getInteger(NBT_SEARCH_BOX_MODE);
     }
 
     public static boolean isInRange(ItemStack stack, EntityPlayer player) {
@@ -103,6 +120,6 @@ public class ItemWirelessGrid extends ItemBase {
     }
 
     public static boolean isValid(ItemStack stack) {
-        return stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_GRID_X) && stack.getTagCompound().hasKey(NBT_GRID_Y) && stack.getTagCompound().hasKey(NBT_GRID_Z);
+        return stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_CONTROLLER_X) && stack.getTagCompound().hasKey(NBT_CONTROLLER_Y) && stack.getTagCompound().hasKey(NBT_CONTROLLER_Z);
     }
 }

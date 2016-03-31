@@ -1,4 +1,4 @@
-package refinedstorage.tile;
+package refinedstorage.tile.grid;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
@@ -8,17 +8,21 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
+import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.block.BlockGrid;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
 import refinedstorage.inventory.InventorySimple;
+import refinedstorage.network.MessageGridSettingsUpdate;
+import refinedstorage.tile.TileMachine;
+import refinedstorage.tile.settings.IRedstoneModeSetting;
 import refinedstorage.util.InventoryUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileGrid extends TileMachine {
+public class TileGrid extends TileMachine implements IGrid {
     public static final String NBT_SORTING_DIRECTION = "SortingDirection";
     public static final String NBT_SORTING_TYPE = "SortingType";
     public static final String NBT_SEARCH_BOX_MODE = "SearchBoxMode";
@@ -183,6 +187,26 @@ public class TileGrid extends TileMachine {
 
     public int getSearchBoxMode() {
         return searchBoxMode;
+    }
+
+    @Override
+    public void onSortingTypeChanged(int type) {
+        RefinedStorage.NETWORK.sendToServer(new MessageGridSettingsUpdate(this, sortingDirection, type, searchBoxMode));
+    }
+
+    @Override
+    public void onSortingDirectionChanged(int direction) {
+        RefinedStorage.NETWORK.sendToServer(new MessageGridSettingsUpdate(this, direction, sortingType, searchBoxMode));
+    }
+
+    @Override
+    public void onSearchBoxModeChanged(int searchBoxMode) {
+        RefinedStorage.NETWORK.sendToServer(new MessageGridSettingsUpdate(this, sortingDirection, sortingType, searchBoxMode));
+    }
+
+    @Override
+    public IRedstoneModeSetting getRedstoneModeSetting() {
+        return this;
     }
 
     public void setSearchBoxMode(int searchBoxMode) {

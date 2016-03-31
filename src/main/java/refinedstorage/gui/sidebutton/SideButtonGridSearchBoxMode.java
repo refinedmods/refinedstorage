@@ -1,15 +1,14 @@
 package refinedstorage.gui.sidebutton;
 
 import net.minecraft.util.text.TextFormatting;
-import refinedstorage.RefinedStorage;
 import refinedstorage.gui.GuiBase;
-import refinedstorage.network.MessageGridSettingsUpdate;
-import refinedstorage.tile.TileGrid;
+import refinedstorage.tile.grid.IGrid;
+import refinedstorage.tile.grid.TileGrid;
 
 public class SideButtonGridSearchBoxMode extends SideButton {
-    private TileGrid grid;
+    private IGrid grid;
 
-    public SideButtonGridSearchBoxMode(TileGrid grid) {
+    public SideButtonGridSearchBoxMode(IGrid grid) {
         this.grid = grid;
     }
 
@@ -39,6 +38,6 @@ public class SideButtonGridSearchBoxMode extends SideButton {
             mode = TileGrid.SEARCH_BOX_MODE_NORMAL;
         }
 
-        RefinedStorage.NETWORK.sendToServer(new MessageGridSettingsUpdate(grid, grid.getSortingDirection(), grid.getSortingType(), mode));
+        grid.onSearchBoxModeChanged(mode);
     }
 }

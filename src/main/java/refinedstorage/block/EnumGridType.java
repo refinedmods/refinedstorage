@@ -4,7 +4,8 @@ import net.minecraft.util.IStringSerializable;
 
 public enum EnumGridType implements IStringSerializable {
     NORMAL(0, "normal"),
-    CRAFTING(1, "crafting");
+    CRAFTING(1, "crafting"),
+    WIRELESS(2, "wireless");
 
     private int id;
     private String name;
@@ -27,5 +28,4 @@ public enum EnumGridType implements IStringSerializable {
     public String toString() {
         return name;
     }
-
 }

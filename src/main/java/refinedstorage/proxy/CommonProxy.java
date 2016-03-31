@@ -20,6 +20,7 @@ import refinedstorage.item.*;
 import refinedstorage.network.*;
 import refinedstorage.storage.NBTStorage;
 import refinedstorage.tile.*;
+import refinedstorage.tile.grid.TileGrid;
 import refinedstorage.tile.solderer.*;
 
 import static refinedstorage.RefinedStorage.ID;
@@ -39,6 +40,7 @@ public class CommonProxy {
         RefinedStorage.NETWORK.registerMessage(MessageGridSettingsUpdate.class, MessageGridSettingsUpdate.class, 11, Side.SERVER);
         RefinedStorage.NETWORK.registerMessage(MessageGridCraftingPush.class, MessageGridCraftingPush.class, 12, Side.SERVER);
         RefinedStorage.NETWORK.registerMessage(MessageGridCraftingTransfer.class, MessageGridCraftingTransfer.class, 13, Side.SERVER);
+        RefinedStorage.NETWORK.registerMessage(MessageWirelessGridSettingsUpdate.class, MessageWirelessGridSettingsUpdate.class, 14, Side.SERVER);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(RefinedStorage.INSTANCE, new GuiHandler());
 

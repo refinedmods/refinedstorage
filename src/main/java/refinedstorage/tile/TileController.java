@@ -3,12 +3,16 @@ package refinedstorage.tile;
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyReceiver;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
+import refinedstorage.RefinedStorageGui;
 import refinedstorage.block.BlockController;
 import refinedstorage.block.EnumControllerType;
 import refinedstorage.storage.IStorage;
@@ -18,14 +22,19 @@ import refinedstorage.tile.settings.IRedstoneModeSetting;
 import refinedstorage.tile.settings.RedstoneMode;
 import refinedstorage.util.InventoryUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class TileController extends TileBase implements IEnergyReceiver, INetworkTile, IRedstoneModeSetting {
+    public class WirelessGridConsumer {
+        public EntityPlayer player;
+        public EnumHand hand;
+        public ItemStack wirelessGrid;
+    }
+
     private List<StorageItem> items = new ArrayList<StorageItem>();
     private List<IStorage> storages = new ArrayList<IStorage>();
+    private List<WirelessGridConsumer> wirelessGridConsumers = new ArrayList<WirelessGridConsumer>();
+    private List<WirelessGridConsumer> wirelessGridConsumersMarkedForRemoval = new ArrayList<WirelessGridConsumer>();
 
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
@@ -104,6 +113,19 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                     case CREATIVE:
                         energy.setEnergyStored(energy.getMaxEnergyStored());
                         break;
+                }
+            }
+
+            wirelessGridConsumers.removeAll(wirelessGridConsumersMarkedForRemoval);
+            wirelessGridConsumersMarkedForRemoval.clear();
+
+            Iterator<WirelessGridConsumer> it = wirelessGridConsumers.iterator();
+            while (it.hasNext()) {
+                WirelessGridConsumer consumer = it.next();
+
+                if (!InventoryUtils.compareStack(consumer.wirelessGrid, consumer.player.getHeldItem(consumer.hand))) {
+                    onCloseWirelessGrid(consumer.player);
+                    consumer.player.closeScreen();
                 }
             }
 
@@ -246,6 +268,35 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
         syncItems();
 
         return newStack;
+    }
+
+    public void onOpenWirelessGrid(EntityPlayer player, EnumHand hand) {
+        WirelessGridConsumer consumer = new WirelessGridConsumer();
+        consumer.hand = hand;
+        consumer.player = player;
+        consumer.wirelessGrid = player.getHeldItem(hand);
+        wirelessGridConsumers.add(consumer);
+
+        player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.WIRELESS_GRID, worldObj, hand == EnumHand.OFF_HAND ? 1 : 0, 0, 0);
+    }
+
+    public void onCloseWirelessGrid(EntityPlayer player) {
+        WirelessGridConsumer consumer = getWirelessGridConsumer(player);
+
+        if (consumer != null) {
+            wirelessGridConsumersMarkedForRemoval.add(consumer);
+        }
+    }
+
+    public WirelessGridConsumer getWirelessGridConsumer(EntityPlayer player) {
+        Iterator<WirelessGridConsumer> it = wirelessGridConsumers.iterator();
+        while (it.hasNext()) {
+            WirelessGridConsumer consumer = it.next();
+            if (consumer.player == player) {
+                return consumer;
+            }
+        }
+        return null;
     }
 
     @Override

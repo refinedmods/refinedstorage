@@ -2,26 +2,24 @@ package refinedstorage.network;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import refinedstorage.RefinedStorageItems;
+import refinedstorage.item.ItemWirelessGrid;
 import refinedstorage.tile.grid.TileGrid;
 
-public class MessageGridSettingsUpdate extends MessageHandlerPlayerToServer<MessageGridSettingsUpdate> implements IMessage {
-    private int x;
-    private int y;
-    private int z;
+public class MessageWirelessGridSettingsUpdate extends MessageHandlerPlayerToServer<MessageWirelessGridSettingsUpdate> implements IMessage {
+    private int hand;
     private int sortingDirection;
     private int sortingType;
     private int searchBoxMode;
 
-    public MessageGridSettingsUpdate() {
+    public MessageWirelessGridSettingsUpdate() {
     }
 
-    public MessageGridSettingsUpdate(TileGrid grid, int sortingDirection, int sortingType, int searchBoxMode) {
-        this.x = grid.getPos().getX();
-        this.y = grid.getPos().getY();
-        this.z = grid.getPos().getZ();
+    public MessageWirelessGridSettingsUpdate(int hand, int sortingDirection, int sortingType, int searchBoxMode) {
+        this.hand = hand;
         this.sortingDirection = sortingDirection;
         this.sortingType = sortingType;
         this.searchBoxMode = searchBoxMode;
@@ -29,9 +27,7 @@ public class MessageGridSettingsUpdate extends MessageHandlerPlayerToServer<Mess
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        x = buf.readInt();
-        y = buf.readInt();
-        z = buf.readInt();
+        hand = buf.readInt();
         sortingDirection = buf.readInt();
         sortingType = buf.readInt();
         searchBoxMode = buf.readInt();
@@ -39,29 +35,27 @@ public class MessageGridSettingsUpdate extends MessageHandlerPlayerToServer<Mess
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(x);
-        buf.writeInt(y);
-        buf.writeInt(z);
+        buf.writeInt(hand);
         buf.writeInt(sortingDirection);
         buf.writeInt(sortingType);
         buf.writeInt(searchBoxMode);
     }
 
     @Override
-    public void handle(MessageGridSettingsUpdate message, EntityPlayerMP player) {
-        TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.x, message.y, message.z));
+    public void handle(MessageWirelessGridSettingsUpdate message, EntityPlayerMP player) {
+        ItemStack held = player.getHeldItem(hand == 1 ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND);
 
-        if (tile instanceof TileGrid) {
+        if (held != null && held.getItem() == RefinedStorageItems.WIRELESS_GRID && held.getTagCompound() != null) {
             if (message.sortingDirection == TileGrid.SORTING_DIRECTION_ASCENDING || message.sortingDirection == TileGrid.SORTING_DIRECTION_DESCENDING) {
-                ((TileGrid) tile).setSortingDirection(message.sortingDirection);
+                held.getTagCompound().setInteger(ItemWirelessGrid.NBT_SORTING_DIRECTION, message.sortingDirection);
             }
 
             if (message.sortingType == TileGrid.SORTING_TYPE_QUANTITY || message.sortingType == TileGrid.SORTING_TYPE_NAME) {
-                ((TileGrid) tile).setSortingType(message.sortingType);
+                held.getTagCompound().setInteger(ItemWirelessGrid.NBT_SORTING_TYPE, message.sortingType);
             }
 
             if (message.searchBoxMode == TileGrid.SEARCH_BOX_MODE_NORMAL || message.searchBoxMode == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED) {
-                ((TileGrid) tile).setSearchBoxMode(message.searchBoxMode);
+                held.getTagCompound().setInteger(ItemWirelessGrid.NBT_SEARCH_BOX_MODE, message.searchBoxMode);
             }
         }
     }

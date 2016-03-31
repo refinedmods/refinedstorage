@@ -15,7 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
-import refinedstorage.tile.TileGrid;
+import refinedstorage.tile.grid.TileGrid;
 
 import java.util.List;
 
