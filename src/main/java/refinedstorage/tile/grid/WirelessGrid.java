@@ -30,7 +30,7 @@ public class WirelessGrid implements IGrid {
 
     @Override
     public EnumGridType getType() {
-        return EnumGridType.WIRELESS;
+        return EnumGridType.NORMAL;
     }
 
     @Override
@@ -81,6 +81,11 @@ public class WirelessGrid implements IGrid {
 
     @Override
     public boolean isConnected() {
-        return getController() instanceof TileController;
+        return getController() instanceof TileController && getController().isActive();
+    }
+
+    @Override
+    public boolean isWireless() {
+        return true;
     }
 }
