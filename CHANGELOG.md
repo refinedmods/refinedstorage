@@ -11,6 +11,7 @@
 - Fixed new items inserted after crafting in Grid being laggy
 - Fixed flickering of items in Grid
 - Fixed getting a stack of unstackable items from Grid
+- Fixed Cable not having a collision box
 - Check if the Constructor can actually place said block in the world
 
 **Features**
