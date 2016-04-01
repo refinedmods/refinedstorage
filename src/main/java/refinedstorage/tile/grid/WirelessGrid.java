@@ -81,9 +81,7 @@ public class WirelessGrid implements IGrid {
 
     @Override
     public boolean isConnected() {
-        // Since getController().isActive() doesn't do anything clientside
-        // we just check if the energy usage is above 0.
-        return getController() instanceof TileController && getController().getEnergyUsage() > 0;
+        return getController() instanceof TileController && getController().isActiveClientSide();
     }
 
     @Override

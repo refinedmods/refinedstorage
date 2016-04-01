@@ -41,6 +41,8 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     private EnergyStorage energy = new EnergyStorage(32000);
     private int energyUsage;
 
+    private boolean activeClientSide;
+
     private boolean destroyed = false;
 
     @Override
@@ -347,6 +349,10 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
         return energy.getEnergyStored() >= getEnergyUsage() && redstoneMode.isEnabled(worldObj, pos);
     }
 
+    public boolean isActiveClientSide() {
+        return activeClientSide;
+    }
+
     @Override
     public RedstoneMode getRedstoneMode() {
         return redstoneMode;
@@ -371,6 +377,8 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
     @Override
     public void fromBytes(ByteBuf buf) {
+        activeClientSide = buf.readBoolean();
+
         int lastEnergy = energy.getEnergyStored();
 
         energy.setEnergyStored(buf.readInt());
@@ -406,8 +414,10 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
     @Override
     public void toBytes(ByteBuf buf) {
+        buf.writeBoolean(isActive());
+
         buf.writeInt(energy.getEnergyStored());
-        buf.writeInt(isActive() ? energyUsage : 0);
+        buf.writeInt(energyUsage);
 
         buf.writeInt(redstoneMode.id);
 

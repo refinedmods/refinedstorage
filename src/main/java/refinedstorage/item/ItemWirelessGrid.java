@@ -74,7 +74,7 @@ public class ItemWirelessGrid extends ItemBase {
                     if (tile instanceof TileController) {
                         ((TileController) tile).onOpenWirelessGrid(player, hand);
 
-                        return new ActionResult(EnumActionResult.PASS, stack);
+                        return new ActionResult(EnumActionResult.SUCCESS, stack);
                     } else {
                         player.addChatComponentMessage(new TextComponentString(I18n.translateToLocal("misc.refinedstorage:wireless_grid.not_found")));
                     }
@@ -84,11 +84,9 @@ public class ItemWirelessGrid extends ItemBase {
             } else {
                 player.addChatComponentMessage(new TextComponentString(I18n.translateToLocal("misc.refinedstorage:wireless_grid.not_found")));
             }
-
-            return new ActionResult(EnumActionResult.FAIL, stack);
-        } else {
-            return new ActionResult(EnumActionResult.PASS, stack);
         }
+
+        return new ActionResult(EnumActionResult.PASS, stack);
     }
 
     public static int getX(ItemStack stack) {
