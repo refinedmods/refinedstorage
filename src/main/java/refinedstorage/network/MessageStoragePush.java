@@ -49,7 +49,7 @@ public class MessageStoragePush extends MessageHandlerPlayerToServer<MessageStor
     public void handle(MessageStoragePush message, EntityPlayerMP player) {
         TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.x, message.y, message.z));
 
-        if (tile instanceof TileController) {
+        if (tile instanceof TileController && ((TileController) tile).isActive()) {
             TileController controller = (TileController) tile;
 
             ItemStack stack;
