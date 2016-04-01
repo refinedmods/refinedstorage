@@ -273,8 +273,10 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
     public void onOpenWirelessGrid(EntityPlayer player, EnumHand hand) {
         wirelessGridConsumers.add(new WirelessGridConsumer(player, hand, player.getHeldItem(hand)));
+
         player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.WIRELESS_GRID, worldObj, HandUtils.getIdFromHand(hand), 0, 0);
-        drainEnergyFromWirelessGrid(player, 100);
+
+        drainEnergyFromWirelessGrid(player, ItemWirelessGrid.USAGE_OPEN);
     }
 
     public void onCloseWirelessGrid(EntityPlayer player) {

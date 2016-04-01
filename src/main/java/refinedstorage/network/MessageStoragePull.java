@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import refinedstorage.item.ItemWirelessGrid;
 import refinedstorage.storage.StorageItem;
 import refinedstorage.tile.TileController;
 
@@ -101,7 +102,7 @@ public class MessageStoragePull extends MessageHandlerPlayerToServer<MessageStor
                         player.updateHeldItem();
                     }
 
-                    controller.drainEnergyFromWirelessGrid(player, 300);
+                    controller.drainEnergyFromWirelessGrid(player, ItemWirelessGrid.USAGE_PULL);
                 }
             }
         }

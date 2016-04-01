@@ -29,6 +29,10 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
     public static final String NBT_SORTING_DIRECTION = "SortingDirection";
     public static final String NBT_SEARCH_BOX_MODE = "SearchBoxMode";
 
+    public static final int USAGE_OPEN = 30;
+    public static final int USAGE_PULL = 3;
+    public static final int USAGE_PUSH = 3;
+
     public ItemWirelessGrid() {
         super(3200);
 
@@ -49,7 +53,7 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
 
     @Override
     public double getDurabilityForDisplay(ItemStack stack) {
-        return 1 - (getEnergyStored(stack) / getMaxEnergyStored(stack));
+        return 1d - ((double) getEnergyStored(stack) / (double) getMaxEnergyStored(stack));
     }
 
     @Override
@@ -64,6 +68,8 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
 
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean b) {
+        list.add(I18n.translateToLocalFormatted("misc.refinedstorage:energy_stored", getEnergyStored(stack), getMaxEnergyStored(stack)));
+
         if (isValid(stack)) {
             list.add(I18n.translateToLocalFormatted("misc.refinedstorage:wireless_grid.tooltip.0", getX(stack)));
             list.add(I18n.translateToLocalFormatted("misc.refinedstorage:wireless_grid.tooltip.1", getY(stack)));
