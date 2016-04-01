@@ -80,11 +80,16 @@ public class TileImporter extends TileMachine implements ICompareSetting, IModeS
                     ItemStack toTake = stack.copy();
                     toTake.stackSize = 1;
 
+                    // If we can't import and/ or push, move on (otherwise we stay on the same slot forever)
                     if (canImport(toTake)) {
                         if (getController().push(toTake)) {
                             inventory.decrStackSize(currentSlot, 1);
                             inventory.markDirty();
+                        } else {
+                            currentSlot++;
                         }
+                    } else {
+                        currentSlot++;
                     }
                 }
             } else {

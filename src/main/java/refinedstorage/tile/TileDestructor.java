@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -39,7 +40,7 @@ public class TileDestructor extends TileMachine implements ICompareSetting, IMod
             IBlockState frontBlockState = worldObj.getBlockState(front);
             Block frontBlock = frontBlockState.getBlock();
 
-            if (!frontBlock.isAir(frontBlockState, worldObj, front)) {
+            if (Item.getItemFromBlock(frontBlock) != null && !frontBlock.isAir(frontBlockState, worldObj, front)) {
                 if (ModeSettingUtils.doesNotViolateMode(inventory, this, compare, new ItemStack(frontBlock, 1, frontBlock.getMetaFromState(frontBlockState)))) {
                     List<ItemStack> drops = frontBlock.getDrops(worldObj, front, frontBlockState, 0);
 
