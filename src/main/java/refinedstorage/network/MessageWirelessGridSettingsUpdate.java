@@ -3,11 +3,11 @@ package refinedstorage.network;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.item.ItemWirelessGrid;
 import refinedstorage.tile.grid.TileGrid;
+import refinedstorage.util.HandUtils;
 
 public class MessageWirelessGridSettingsUpdate extends MessageHandlerPlayerToServer<MessageWirelessGridSettingsUpdate> implements IMessage {
     private int hand;
@@ -43,7 +43,7 @@ public class MessageWirelessGridSettingsUpdate extends MessageHandlerPlayerToSer
 
     @Override
     public void handle(MessageWirelessGridSettingsUpdate message, EntityPlayerMP player) {
-        ItemStack held = player.getHeldItem(hand == 1 ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND);
+        ItemStack held = player.getHeldItem(HandUtils.getHandById(message.hand));
 
         if (held != null && held.getItem() == RefinedStorageItems.WIRELESS_GRID && held.getTagCompound() != null) {
             if (message.sortingDirection == TileGrid.SORTING_DIRECTION_ASCENDING || message.sortingDirection == TileGrid.SORTING_DIRECTION_DESCENDING) {

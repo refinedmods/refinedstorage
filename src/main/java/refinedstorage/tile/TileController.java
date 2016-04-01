@@ -18,19 +18,15 @@ import refinedstorage.block.EnumControllerType;
 import refinedstorage.storage.IStorage;
 import refinedstorage.storage.IStorageProvider;
 import refinedstorage.storage.StorageItem;
+import refinedstorage.tile.grid.WirelessGridConsumer;
 import refinedstorage.tile.settings.IRedstoneModeSetting;
 import refinedstorage.tile.settings.RedstoneMode;
+import refinedstorage.util.HandUtils;
 import refinedstorage.util.InventoryUtils;
 
 import java.util.*;
 
 public class TileController extends TileBase implements IEnergyReceiver, INetworkTile, IRedstoneModeSetting {
-    public class WirelessGridConsumer {
-        public EntityPlayer player;
-        public EnumHand hand;
-        public ItemStack wirelessGrid;
-    }
-
     private List<StorageItem> items = new ArrayList<StorageItem>();
     private List<IStorage> storages = new ArrayList<IStorage>();
     private List<WirelessGridConsumer> wirelessGridConsumers = new ArrayList<WirelessGridConsumer>();
@@ -120,12 +116,13 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
             wirelessGridConsumersMarkedForRemoval.clear();
 
             Iterator<WirelessGridConsumer> it = wirelessGridConsumers.iterator();
+
             while (it.hasNext()) {
                 WirelessGridConsumer consumer = it.next();
 
-                if (!InventoryUtils.compareStack(consumer.wirelessGrid, consumer.player.getHeldItem(consumer.hand))) {
-                    onCloseWirelessGrid(consumer.player);
-                    consumer.player.closeScreen();
+                if (!InventoryUtils.compareStack(consumer.getWirelessGrid(), consumer.getPlayer().getHeldItem(consumer.getHand()))) {
+                    onCloseWirelessGrid(consumer.getPlayer());
+                    consumer.getPlayer().closeScreen();
                 }
             }
 
@@ -271,13 +268,9 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     }
 
     public void onOpenWirelessGrid(EntityPlayer player, EnumHand hand) {
-        WirelessGridConsumer consumer = new WirelessGridConsumer();
-        consumer.hand = hand;
-        consumer.player = player;
-        consumer.wirelessGrid = player.getHeldItem(hand);
-        wirelessGridConsumers.add(consumer);
+        wirelessGridConsumers.add(new WirelessGridConsumer(player, hand, player.getHeldItem(hand)));
 
-        player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.WIRELESS_GRID, worldObj, hand == EnumHand.OFF_HAND ? 1 : 0, 0, 0);
+        player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.WIRELESS_GRID, worldObj, HandUtils.getIdFromHand(hand), 0, 0);
     }
 
     public void onCloseWirelessGrid(EntityPlayer player) {
@@ -290,12 +283,15 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
     public WirelessGridConsumer getWirelessGridConsumer(EntityPlayer player) {
         Iterator<WirelessGridConsumer> it = wirelessGridConsumers.iterator();
+
         while (it.hasNext()) {
             WirelessGridConsumer consumer = it.next();
-            if (consumer.player == player) {
+
+            if (consumer.getPlayer() == player) {
                 return consumer;
             }
         }
+
         return null;
     }
 
