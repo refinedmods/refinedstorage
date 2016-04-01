@@ -386,11 +386,6 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     }
 
     @Override
-    public BlockPos getTilePos() {
-        return pos;
-    }
-
-    @Override
     public BlockPos getMachinePos() {
         return pos;
     }
