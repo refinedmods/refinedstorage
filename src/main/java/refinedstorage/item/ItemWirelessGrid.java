@@ -2,9 +2,11 @@ package refinedstorage.item;
 
 import cofh.api.energy.ItemEnergyContainer;
 import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.IItemPropertyGetter;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
@@ -43,6 +45,7 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
         });
 
         setMaxDamage(3200);
+        setMaxStackSize(1);
         setHasSubtypes(false);
         setCreativeTab(RefinedStorage.TAB);
     }
@@ -73,6 +76,15 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
     }
 
     @Override
+    public void getSubItems(Item item, CreativeTabs tab, List list) {
+        list.add(new ItemStack(item));
+
+        ItemStack fullyCharged = new ItemStack(item);
+        receiveEnergy(fullyCharged, getMaxEnergyStored(fullyCharged), false);
+        list.add(fullyCharged);
+    }
+
+    @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean b) {
         list.add(I18n.translateToLocalFormatted("misc.refinedstorage:energy_stored", getEnergyStored(stack), getMaxEnergyStored(stack)));
 
@@ -88,7 +100,11 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
         Block block = worldIn.getBlockState(pos).getBlock();
 
         if (block == RefinedStorageBlocks.CONTROLLER) {
-            NBTTagCompound tag = new NBTTagCompound();
+            NBTTagCompound tag = stack.getTagCompound();
+
+            if (tag == null) {
+                tag = new NBTTagCompound();
+            }
 
             tag.setInteger(NBT_CONTROLLER_X, pos.getX());
             tag.setInteger(NBT_CONTROLLER_Y, pos.getY());
