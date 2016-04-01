@@ -1,11 +1,9 @@
 package refinedstorage.proxy;
 
-import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -14,7 +12,10 @@ import refinedstorage.RefinedStorageItems;
 import refinedstorage.block.EnumControllerType;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.block.EnumStorageType;
-import refinedstorage.item.*;
+import refinedstorage.item.ItemCore;
+import refinedstorage.item.ItemProcessor;
+import refinedstorage.item.ItemStorageDisk;
+import refinedstorage.item.ItemStoragePart;
 
 public class ClientProxy extends CommonProxy {
     @Override
@@ -52,11 +53,6 @@ public class ClientProxy extends CommonProxy {
             new ResourceLocation("refinedstorage:destruction_core")
         );
 
-        ModelBakery.registerItemVariants(RefinedStorageItems.WIRELESS_GRID,
-            new ResourceLocation("refinedstorage:wireless_grid_connected"),
-            new ResourceLocation("refinedstorage:wireless_grid_disconnected")
-        );
-
         // Items
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.STORAGE_DISK, ItemStorageDisk.TYPE_1K, new ModelResourceLocation("refinedstorage:1k_storage_disk", "inventory"));
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.STORAGE_DISK, ItemStorageDisk.TYPE_4K, new ModelResourceLocation("refinedstorage:4k_storage_disk", "inventory"));
@@ -84,16 +80,7 @@ public class ClientProxy extends CommonProxy {
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.CORE, ItemCore.TYPE_CONSTRUCTION, new ModelResourceLocation("refinedstorage:construction_core", "inventory"));
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.CORE, ItemCore.TYPE_DESTRUCTION, new ModelResourceLocation("refinedstorage:destruction_core", "inventory"));
 
-        ModelLoader.setCustomMeshDefinition(RefinedStorageItems.WIRELESS_GRID, new ItemMeshDefinition() {
-            @Override
-            public ModelResourceLocation getModelLocation(ItemStack stack) {
-                if (ItemWirelessGrid.isValid(stack)) {
-                    return new ModelResourceLocation("refinedstorage:wireless_grid_connected", "inventory");
-                } else {
-                    return new ModelResourceLocation("refinedstorage:wireless_grid_disconnected", "inventory");
-                }
-            }
-        });
+        ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.WIRELESS_GRID, 0, new ModelResourceLocation("refinedstorage:wireless_grid", "inventory"));
 
         // Blocks
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.CABLE), 0, new ModelResourceLocation("refinedstorage:cable", "inventory"));
