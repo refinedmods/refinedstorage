@@ -24,6 +24,7 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
     public static final String NBT_CONTROLLER_X = "ControllerX";
     public static final String NBT_CONTROLLER_Y = "ControllerY";
     public static final String NBT_CONTROLLER_Z = "ControllerZ";
+    public static final String NBT_DIMENSION_ID = "DimensionID";
     public static final String NBT_SORTING_TYPE = "SortingType";
     public static final String NBT_SORTING_DIRECTION = "SortingDirection";
     public static final String NBT_SEARCH_BOX_MODE = "SearchBoxMode";
@@ -96,8 +97,8 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
     }
 
     @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        Block block = worldIn.getBlockState(pos).getBlock();
+    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        Block block = world.getBlockState(pos).getBlock();
 
         if (block == RefinedStorageBlocks.CONTROLLER) {
             NBTTagCompound tag = stack.getTagCompound();
@@ -109,6 +110,7 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
             tag.setInteger(NBT_CONTROLLER_X, pos.getX());
             tag.setInteger(NBT_CONTROLLER_Y, pos.getY());
             tag.setInteger(NBT_CONTROLLER_Z, pos.getZ());
+            tag.setInteger(NBT_DIMENSION_ID, player.dimension);
             tag.setInteger(NBT_SORTING_DIRECTION, TileGrid.SORTING_DIRECTION_DESCENDING);
             tag.setInteger(NBT_SORTING_TYPE, TileGrid.SORTING_TYPE_NAME);
             tag.setInteger(NBT_SEARCH_BOX_MODE, TileGrid.SEARCH_BOX_MODE_NORMAL);
@@ -132,6 +134,10 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
         }
 
         return new ActionResult(EnumActionResult.PASS, stack);
+    }
+
+    public static int getDimensionId(ItemStack stack) {
+        return stack.getTagCompound().getInteger(NBT_DIMENSION_ID);
     }
 
     public static int getX(ItemStack stack) {
@@ -167,6 +173,7 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
             && stack.getTagCompound().hasKey(NBT_CONTROLLER_X)
             && stack.getTagCompound().hasKey(NBT_CONTROLLER_Y)
             && stack.getTagCompound().hasKey(NBT_CONTROLLER_Z)
+            && stack.getTagCompound().hasKey(NBT_DIMENSION_ID)
             && stack.getTagCompound().hasKey(NBT_SORTING_DIRECTION)
             && stack.getTagCompound().hasKey(NBT_SORTING_TYPE)
             && stack.getTagCompound().hasKey(NBT_SEARCH_BOX_MODE)) {
@@ -178,7 +185,7 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
             int y = getY(stack);
             int z = getZ(stack);
 
-            return isInRange(stack, entity) && world.getTileEntity(new BlockPos(x, y, z)) instanceof TileController;
+            return isInRange(stack, entity) && getDimensionId(stack) == entity.dimension && world.getTileEntity(new BlockPos(x, y, z)) instanceof TileController;
         }
 
         return false;
