@@ -100,6 +100,8 @@ public class MessageStoragePull extends MessageHandlerPlayerToServer<MessageStor
                         player.inventory.setItemStack(took);
                         player.updateHeldItem();
                     }
+
+                    controller.drainEnergyFromWirelessGrid(player, 300);
                 }
             }
         }

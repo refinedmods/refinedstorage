@@ -13,8 +13,10 @@ import net.minecraft.util.math.BlockPos;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageGui;
+import refinedstorage.RefinedStorageItems;
 import refinedstorage.block.BlockController;
 import refinedstorage.block.EnumControllerType;
+import refinedstorage.item.ItemWirelessGrid;
 import refinedstorage.storage.IStorage;
 import refinedstorage.storage.IStorageProvider;
 import refinedstorage.storage.StorageItem;
@@ -271,8 +273,8 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
     public void onOpenWirelessGrid(EntityPlayer player, EnumHand hand) {
         wirelessGridConsumers.add(new WirelessGridConsumer(player, hand, player.getHeldItem(hand)));
-
         player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.WIRELESS_GRID, worldObj, HandUtils.getIdFromHand(hand), 0, 0);
+        drainEnergyFromWirelessGrid(player, 100);
     }
 
     public void onCloseWirelessGrid(EntityPlayer player) {
@@ -280,6 +282,22 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
         if (consumer != null) {
             wirelessGridConsumersMarkedForRemoval.add(consumer);
+        }
+    }
+
+    public void drainEnergyFromWirelessGrid(EntityPlayer player, int energy) {
+        WirelessGridConsumer consumer = getWirelessGridConsumer(player);
+
+        if (consumer != null) {
+            ItemWirelessGrid item = RefinedStorageItems.WIRELESS_GRID;
+            ItemStack held = consumer.getPlayer().getHeldItem(consumer.getHand());
+
+            item.extractEnergy(held, energy, false);
+
+            if (item.getEnergyStored(held) <= 0) {
+                onCloseWirelessGrid(player);
+                consumer.getPlayer().closeScreen();
+            }
         }
     }
 

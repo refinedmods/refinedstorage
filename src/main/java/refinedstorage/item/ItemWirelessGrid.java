@@ -1,5 +1,6 @@
 package refinedstorage.item;
 
+import cofh.api.energy.ItemEnergyContainer;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -13,13 +14,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
+import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.tile.TileController;
 import refinedstorage.tile.grid.TileGrid;
 
 import java.util.List;
 
-public class ItemWirelessGrid extends ItemBase {
+public class ItemWirelessGrid extends ItemEnergyContainer {
     public static final String NBT_CONTROLLER_X = "ControllerX";
     public static final String NBT_CONTROLLER_Y = "ControllerY";
     public static final String NBT_CONTROLLER_Z = "ControllerZ";
@@ -28,9 +30,36 @@ public class ItemWirelessGrid extends ItemBase {
     public static final String NBT_SEARCH_BOX_MODE = "SearchBoxMode";
 
     public ItemWirelessGrid() {
-        super("wireless_grid");
+        super(3200);
 
-        setMaxStackSize(1);
+        setMaxDamage(3200);
+        setHasSubtypes(false);
+        setCreativeTab(RefinedStorage.TAB);
+    }
+
+    @Override
+    public boolean isDamageable() {
+        return true;
+    }
+
+    @Override
+    public boolean isRepairable() {
+        return false;
+    }
+
+    @Override
+    public double getDurabilityForDisplay(ItemStack stack) {
+        return 1 - (getEnergyStored(stack) / getMaxEnergyStored(stack));
+    }
+
+    @Override
+    public boolean isDamaged(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public void setDamage(ItemStack stack, int damage) {
+        // NO OP
     }
 
     @Override
@@ -119,5 +148,15 @@ public class ItemWirelessGrid extends ItemBase {
 
     public static boolean isValid(ItemStack stack) {
         return stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_CONTROLLER_X) && stack.getTagCompound().hasKey(NBT_CONTROLLER_Y) && stack.getTagCompound().hasKey(NBT_CONTROLLER_Z);
+    }
+
+    @Override
+    public String getUnlocalizedName() {
+        return "item." + RefinedStorage.ID + ":wireless_grid";
+    }
+
+    @Override
+    public String getUnlocalizedName(ItemStack stack) {
+        return getUnlocalizedName();
     }
 }
