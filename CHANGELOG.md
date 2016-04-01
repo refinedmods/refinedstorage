@@ -19,6 +19,8 @@
 - Updated to the latest Forge and JEI
 - Renamed Drives to Disk Drives
 - Renamed Storage Cells to Storage Disks
+- Removed Wireless Transmitters
+- Wireless Grid is now bound to a  Controller instead of a Grid
 - Drives have a better interface and there are now blacklist and whitelist filters for the Storage Disks in it too.
 - Destructors have the ability to whitelist and blacklist certain items now
 - Shift clicking stuff in the Interface
