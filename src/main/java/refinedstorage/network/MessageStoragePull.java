@@ -69,13 +69,13 @@ public class MessageStoragePull extends MessageHandlerPlayerToServer<MessageStor
         if (tile instanceof TileController && ((TileController) tile).isActive()) {
             TileController controller = (TileController) tile;
 
-            if (message.id < controller.getItems().size()) {
-                ItemGroup item = controller.getItems().get(message.id);
+            if (message.id < controller.getItemGroups().size()) {
+                ItemGroup group = controller.getItemGroups().get(message.id);
 
                 int quantity = 64;
 
-                if (message.isPullingHalf() && item.getQuantity() > 1) {
-                    quantity = item.getQuantity() / 2;
+                if (message.isPullingHalf() && group.getQuantity() > 1) {
+                    quantity = group.getQuantity() / 2;
 
                     if (quantity > 32) {
                         quantity = 32;
@@ -86,11 +86,11 @@ public class MessageStoragePull extends MessageHandlerPlayerToServer<MessageStor
                     // NO OP, the quantity already set (64) is needed for shift
                 }
 
-                if (quantity > item.getType().getItemStackLimit(item.toItemStack())) {
-                    quantity = item.getType().getItemStackLimit(item.toItemStack());
+                if (quantity > group.getType().getItemStackLimit(group.toItemStack())) {
+                    quantity = group.getType().getItemStackLimit(group.toItemStack());
                 }
 
-                ItemStack took = controller.take(item.copy(quantity).toItemStack());
+                ItemStack took = controller.take(group.copy(quantity).toItemStack());
 
                 if (took != null) {
                     if (message.isPullingWithShift()) {

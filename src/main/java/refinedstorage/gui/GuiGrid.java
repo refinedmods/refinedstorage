@@ -74,15 +74,15 @@ public class GuiGrid extends GuiBase {
         items.clear();
 
         if (grid.isConnected()) {
-            items.addAll(grid.getController().getItems());
+            items.addAll(grid.getController().getItemGroups());
 
             if (!searchField.getText().trim().isEmpty()) {
                 Iterator<ItemGroup> t = items.iterator();
 
                 while (t.hasNext()) {
-                    ItemGroup item = t.next();
+                    ItemGroup group = t.next();
 
-                    if (!item.toItemStack().getDisplayName().toLowerCase().contains(searchField.getText().toLowerCase())) {
+                    if (!group.toItemStack().getDisplayName().toLowerCase().contains(searchField.getText().toLowerCase())) {
                         t.remove();
                     }
                 }
@@ -90,11 +90,11 @@ public class GuiGrid extends GuiBase {
 
             Collections.sort(items, new Comparator<ItemGroup>() {
                 @Override
-                public int compare(ItemGroup o1, ItemGroup o2) {
+                public int compare(ItemGroup left, ItemGroup right) {
                     if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING) {
-                        return o2.toItemStack().getDisplayName().compareTo(o1.toItemStack().getDisplayName());
+                        return right.toItemStack().getDisplayName().compareTo(left.toItemStack().getDisplayName());
                     } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
-                        return o1.toItemStack().getDisplayName().compareTo(o2.toItemStack().getDisplayName());
+                        return left.toItemStack().getDisplayName().compareTo(right.toItemStack().getDisplayName());
                     }
 
                     return 0;
@@ -104,11 +104,11 @@ public class GuiGrid extends GuiBase {
             if (grid.getSortingType() == TileGrid.SORTING_TYPE_QUANTITY) {
                 Collections.sort(items, new Comparator<ItemGroup>() {
                     @Override
-                    public int compare(ItemGroup o1, ItemGroup o2) {
+                    public int compare(ItemGroup left, ItemGroup right) {
                         if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING) {
-                            return Integer.valueOf(o2.getQuantity()).compareTo(o1.getQuantity());
+                            return Integer.valueOf(right.getQuantity()).compareTo(left.getQuantity());
                         } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
-                            return Integer.valueOf(o1.getQuantity()).compareTo(o2.getQuantity());
+                            return Integer.valueOf(left.getQuantity()).compareTo(right.getQuantity());
                         }
 
                         return 0;

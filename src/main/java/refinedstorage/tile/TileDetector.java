@@ -50,19 +50,19 @@ public class TileDetector extends TileMachine implements ICompareConfig {
             if (slot != null) {
                 boolean foundAny = false;
 
-                for (ItemGroup item : getController().getItems()) {
-                    if (item.compare(slot, compare)) {
+                for (ItemGroup group : getController().getItemGroups()) {
+                    if (group.compare(slot, compare)) {
                         foundAny = true;
 
                         switch (mode) {
                             case MODE_UNDER:
-                                powered = item.getQuantity() < amount;
+                                powered = group.getQuantity() < amount;
                                 break;
                             case MODE_EQUAL:
-                                powered = item.getQuantity() == amount;
+                                powered = group.getQuantity() == amount;
                                 break;
                             case MODE_ABOVE:
-                                powered = item.getQuantity() > amount;
+                                powered = group.getQuantity() > amount;
                                 break;
                         }
 
