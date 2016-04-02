@@ -34,7 +34,7 @@ public class BlockStorage extends BlockMachine {
 
     @Override
     public void getSubBlocks(Item item, CreativeTabs tab, List subItems) {
-        for (int i = 0; i <= 4; i++) {
+        for (int i = 0; i <= 4; ++i) {
             subItems.add(ItemBlockStorage.initNBT(new ItemStack(item, 1, i)));
         }
     }
