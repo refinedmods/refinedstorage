@@ -1,9 +1,9 @@
 package refinedstorage.item;
 
-import net.minecraft.block.Block;
+import refinedstorage.RefinedStorageBlocks;
 
 public class ItemBlockController extends ItemBlockBase {
-    public ItemBlockController(Block block) {
-        super(block);
+    public ItemBlockController() {
+        super(RefinedStorageBlocks.CONTROLLER);
     }
 }

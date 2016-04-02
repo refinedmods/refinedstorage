@@ -8,6 +8,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -17,6 +18,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
+import refinedstorage.item.ItemBlockController;
 import refinedstorage.tile.TileController;
 
 import java.util.List;
@@ -95,5 +97,10 @@ public class BlockController extends BlockBase {
     @Override
     public int getComparatorInputOverride(IBlockState state, World world, BlockPos pos) {
         return ((TileController) world.getTileEntity(pos)).getEnergyScaled(15);
+    }
+
+    @Override
+    public ItemBlock createItemForBlock() {
+        return new ItemBlockController();
     }
 }

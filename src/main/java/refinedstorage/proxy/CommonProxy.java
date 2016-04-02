@@ -1,7 +1,9 @@
 package refinedstorage.proxy;
 
+import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -12,11 +14,15 @@ import net.minecraftforge.fml.relauncher.Side;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageItems;
+import refinedstorage.block.BlockBase;
 import refinedstorage.block.EnumControllerType;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.block.EnumStorageType;
 import refinedstorage.gui.GuiHandler;
-import refinedstorage.item.*;
+import refinedstorage.item.ItemCore;
+import refinedstorage.item.ItemProcessor;
+import refinedstorage.item.ItemStorageDisk;
+import refinedstorage.item.ItemStoragePart;
 import refinedstorage.network.*;
 import refinedstorage.storage.NBTStorage;
 import refinedstorage.tile.*;
@@ -58,29 +64,29 @@ public class CommonProxy {
         GameRegistry.registerTileEntity(TileRelay.class, ID + ":relay");
         GameRegistry.registerTileEntity(TileInterface.class, ID + ":interface");
 
-        GameRegistry.registerBlock(RefinedStorageBlocks.CONTROLLER, ItemBlockController.class, ID + ":controller");
-        GameRegistry.registerBlock(RefinedStorageBlocks.CABLE, ID + ":cable");
-        GameRegistry.registerBlock(RefinedStorageBlocks.GRID, ItemBlockGrid.class, ID + ":grid");
-        GameRegistry.registerBlock(RefinedStorageBlocks.DISK_DRIVE, ID + ":disk_drive");
-        GameRegistry.registerBlock(RefinedStorageBlocks.EXTERNAL_STORAGE, ID + ":external_storage");
-        GameRegistry.registerBlock(RefinedStorageBlocks.IMPORTER, ID + ":importer");
-        GameRegistry.registerBlock(RefinedStorageBlocks.EXPORTER, ID + ":exporter");
-        GameRegistry.registerBlock(RefinedStorageBlocks.DETECTOR, ID + ":detector");
-        GameRegistry.registerBlock(RefinedStorageBlocks.MACHINE_CASING, ID + ":machine_casing");
-        GameRegistry.registerBlock(RefinedStorageBlocks.SOLDERER, ID + ":solderer");
-        GameRegistry.registerBlock(RefinedStorageBlocks.DESTRUCTOR, ID + ":destructor");
-        GameRegistry.registerBlock(RefinedStorageBlocks.CONSTRUCTOR, ID + ":constructor");
-        GameRegistry.registerBlock(RefinedStorageBlocks.STORAGE, ItemBlockStorage.class, ID + ":storage");
-        GameRegistry.registerBlock(RefinedStorageBlocks.RELAY, ID + ":relay");
-        GameRegistry.registerBlock(RefinedStorageBlocks.INTERFACE, ID + ":interface");
+        registerBlock(RefinedStorageBlocks.CONTROLLER);
+        registerBlock(RefinedStorageBlocks.CABLE);
+        registerBlock(RefinedStorageBlocks.GRID);
+        registerBlock(RefinedStorageBlocks.DISK_DRIVE);
+        registerBlock(RefinedStorageBlocks.EXTERNAL_STORAGE);
+        registerBlock(RefinedStorageBlocks.IMPORTER);
+        registerBlock(RefinedStorageBlocks.EXPORTER);
+        registerBlock(RefinedStorageBlocks.DETECTOR);
+        registerBlock(RefinedStorageBlocks.MACHINE_CASING);
+        registerBlock(RefinedStorageBlocks.SOLDERER);
+        registerBlock(RefinedStorageBlocks.DESTRUCTOR);
+        registerBlock(RefinedStorageBlocks.CONSTRUCTOR);
+        registerBlock(RefinedStorageBlocks.STORAGE);
+        registerBlock(RefinedStorageBlocks.RELAY);
+        registerBlock(RefinedStorageBlocks.INTERFACE);
 
-        GameRegistry.registerItem(RefinedStorageItems.STORAGE_DISK, ID + ":storage_disk");
-        GameRegistry.registerItem(RefinedStorageItems.WIRELESS_GRID, ID + ":wireless_grid");
-        GameRegistry.registerItem(RefinedStorageItems.QUARTZ_ENRICHED_IRON, ID + ":quartz_enriched_iron");
-        GameRegistry.registerItem(RefinedStorageItems.CORE, ID + ":core");
-        GameRegistry.registerItem(RefinedStorageItems.SILICON, ID + ":silicon");
-        GameRegistry.registerItem(RefinedStorageItems.PROCESSOR, ID + ":processor");
-        GameRegistry.registerItem(RefinedStorageItems.STORAGE_PART, ID + ":storage_part");
+        GameRegistry.<Item>register(RefinedStorageItems.STORAGE_DISK);
+        GameRegistry.<Item>register(RefinedStorageItems.WIRELESS_GRID);
+        GameRegistry.<Item>register(RefinedStorageItems.QUARTZ_ENRICHED_IRON);
+        GameRegistry.<Item>register(RefinedStorageItems.CORE);
+        GameRegistry.<Item>register(RefinedStorageItems.SILICON);
+        GameRegistry.<Item>register(RefinedStorageItems.PROCESSOR);
+        GameRegistry.<Item>register(RefinedStorageItems.STORAGE_PART);
 
         // Processors
         SoldererRegistry.addRecipe(new SoldererRecipePrintedProcessor(ItemProcessor.TYPE_PRINTED_BASIC));
@@ -349,5 +355,10 @@ public class CommonProxy {
     }
 
     public void postInit(FMLPostInitializationEvent e) {
+    }
+
+    private void registerBlock(BlockBase block) {
+        GameRegistry.<Block>register(block);
+        GameRegistry.<Item>register(block.createItemForBlock());
     }
 }

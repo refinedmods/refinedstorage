@@ -45,6 +45,7 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
             }
         });
 
+        setRegistryName(RefinedStorage.ID, "wireless_grid");
         setMaxDamage(3200);
         setMaxStackSize(1);
         setHasSubtypes(false);

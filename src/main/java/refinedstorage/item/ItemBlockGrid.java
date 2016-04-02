@@ -1,9 +1,9 @@
 package refinedstorage.item;
 
-import net.minecraft.block.Block;
+import refinedstorage.RefinedStorageBlocks;
 
 public class ItemBlockGrid extends ItemBlockBase {
-    public ItemBlockGrid(Block block) {
-        super(block);
+    public ItemBlockGrid() {
+        super(RefinedStorageBlocks.GRID);
     }
 }

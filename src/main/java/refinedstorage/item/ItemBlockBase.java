@@ -7,6 +7,8 @@ import net.minecraft.item.ItemStack;
 public abstract class ItemBlockBase extends ItemColored {
     public ItemBlockBase(Block block) {
         super(block, true);
+
+        setRegistryName(block.getRegistryName());
     }
 
     @Override
