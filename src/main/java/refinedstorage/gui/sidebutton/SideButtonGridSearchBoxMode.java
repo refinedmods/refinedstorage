@@ -14,12 +14,7 @@ public class SideButtonGridSearchBoxMode extends SideButton {
 
     @Override
     public String getTooltip(GuiBase gui) {
-        StringBuilder builder = new StringBuilder();
-
-        builder.append(TextFormatting.YELLOW).append(gui.t("sidebutton.refinedstorage:grid.search_box_mode")).append(TextFormatting.RESET).append("\n");
-        builder.append(gui.t("sidebutton.refinedstorage:grid.search_box_mode." + grid.getSearchBoxMode()));
-
-        return builder.toString();
+        return TextFormatting.YELLOW + gui.t("sidebutton.refinedstorage:grid.search_box_mode") + TextFormatting.RESET + "\n" + gui.t("sidebutton.refinedstorage:grid.search_box_mode." + grid.getSearchBoxMode());
     }
 
     @Override

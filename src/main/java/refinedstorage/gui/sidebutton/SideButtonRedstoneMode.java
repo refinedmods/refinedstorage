@@ -15,12 +15,7 @@ public class SideButtonRedstoneMode extends SideButton {
 
     @Override
     public String getTooltip(GuiBase gui) {
-        StringBuilder builder = new StringBuilder();
-
-        builder.append(TextFormatting.RED).append(gui.t("sidebutton.refinedstorage:redstone_mode")).append(TextFormatting.RESET).append("\n");
-        builder.append(gui.t("sidebutton.refinedstorage:redstone_mode." + config.getRedstoneMode().id));
-
-        return builder.toString();
+        return TextFormatting.RED + gui.t("sidebutton.refinedstorage:redstone_mode") + TextFormatting.RESET + "\n" + gui.t("sidebutton.refinedstorage:redstone_mode." + config.getRedstoneMode().id);
     }
 
     @Override

@@ -18,17 +18,15 @@ public class SideButtonCompare extends SideButton {
 
     @Override
     public String getTooltip(GuiBase gui) {
-        StringBuilder builder = new StringBuilder();
-
-        builder.append(TextFormatting.YELLOW).append(gui.t("sidebutton.refinedstorage:compare." + mask)).append(TextFormatting.RESET).append("\n");
+        String tooltip = TextFormatting.YELLOW + gui.t("sidebutton.refinedstorage:compare." + mask) + TextFormatting.RESET + "\n";
 
         if ((config.getCompare() & mask) == mask) {
-            builder.append(gui.t("misc.refinedstorage:yes"));
+            tooltip += gui.t("misc.refinedstorage:yes");
         } else {
-            builder.append(gui.t("misc.refinedstorage:no"));
+            tooltip += gui.t("misc.refinedstorage:no");
         }
 
-        return builder.toString();
+        return tooltip;
     }
 
     @Override
@@ -45,7 +43,7 @@ public class SideButtonCompare extends SideButton {
 
         int tx = (config.getCompare() & mask) == mask ? 0 : 16;
 
-        gui.drawTexture(x, y + 2, tx, ty, 16, 16);
+        gui.drawTexture(x, y + 1, tx, ty, 16, 16);
     }
 
     @Override

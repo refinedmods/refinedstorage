@@ -15,12 +15,7 @@ public class SideButtonMode extends SideButton {
 
     @Override
     public String getTooltip(GuiBase gui) {
-        StringBuilder builder = new StringBuilder();
-
-        builder.append(TextFormatting.GREEN).append(gui.t("sidebutton.refinedstorage:mode")).append(TextFormatting.RESET).append("\n");
-        builder.append(gui.t("sidebutton.refinedstorage:mode." + (config.isWhitelist() ? "whitelist" : "blacklist")));
-
-        return builder.toString();
+        return TextFormatting.GREEN + gui.t("sidebutton.refinedstorage:mode") + TextFormatting.RESET + "\n" + gui.t("sidebutton.refinedstorage:mode." + (config.isWhitelist() ? "whitelist" : "blacklist"));
     }
 
     @Override

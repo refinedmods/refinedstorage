@@ -14,12 +14,7 @@ public class SideButtonGridSortingType extends SideButton {
 
     @Override
     public String getTooltip(GuiBase gui) {
-        StringBuilder builder = new StringBuilder();
-
-        builder.append(TextFormatting.YELLOW).append(gui.t("sidebutton.refinedstorage:grid.sorting.type")).append(TextFormatting.RESET).append("\n");
-        builder.append(gui.t("sidebutton.refinedstorage:grid.sorting.type." + grid.getSortingType()));
-
-        return builder.toString();
+        return TextFormatting.YELLOW + gui.t("sidebutton.refinedstorage:grid.sorting.type") + TextFormatting.RESET + "\n" + gui.t("sidebutton.refinedstorage:grid.sorting.type." + grid.getSortingType());
     }
 
     @Override

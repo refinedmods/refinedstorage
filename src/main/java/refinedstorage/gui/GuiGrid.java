@@ -265,9 +265,11 @@ public class GuiGrid extends GuiBase {
                 if (clickedButton == 1) {
                     flags |= MessageStoragePull.PULL_HALF;
                 }
+
                 if (GuiScreen.isShiftKeyDown()) {
                     flags |= MessageStoragePull.PULL_SHIFT;
                 }
+
                 if (clickedButton == 2) {
                     flags |= MessageStoragePull.PULL_ONE;
                 }
