@@ -14,7 +14,7 @@ import java.util.List;
 
 public class ItemBlockStorage extends ItemBlockBase {
     public ItemBlockStorage() {
-        super(RefinedStorageBlocks.STORAGE);
+        super(RefinedStorageBlocks.STORAGE, true);
     }
 
     @Override

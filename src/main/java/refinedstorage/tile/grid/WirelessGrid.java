@@ -1,6 +1,7 @@
 package refinedstorage.tile.grid;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -33,9 +34,13 @@ public class WirelessGrid implements IGrid {
         return EnumGridType.NORMAL;
     }
 
+    public TileEntity getBoundTile() {
+        return world.getTileEntity(new BlockPos(ItemWirelessGrid.getX(stack), ItemWirelessGrid.getY(stack), ItemWirelessGrid.getZ(stack)));
+    }
+
     @Override
     public TileController getController() {
-        return (TileController) world.getTileEntity(new BlockPos(ItemWirelessGrid.getX(stack), ItemWirelessGrid.getY(stack), ItemWirelessGrid.getZ(stack)));
+        return (TileController) getBoundTile();
     }
 
     @Override
@@ -81,11 +86,6 @@ public class WirelessGrid implements IGrid {
 
     @Override
     public boolean isConnected() {
-        return getController() instanceof TileController && getController().isActiveClientSide();
-    }
-
-    @Override
-    public boolean isWireless() {
-        return true;
+        return getBoundTile() instanceof TileController && getController().isActiveClientSide();
     }
 }

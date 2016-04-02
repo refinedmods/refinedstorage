@@ -23,6 +23,7 @@ import refinedstorage.storage.ItemGroup;
 import refinedstorage.tile.TileController;
 import refinedstorage.tile.grid.IGrid;
 import refinedstorage.tile.grid.TileGrid;
+import refinedstorage.tile.grid.WirelessGrid;
 
 import java.io.IOException;
 import java.util.*;
@@ -165,7 +166,7 @@ public class GuiGrid extends GuiBase {
     public void drawForeground(int mouseX, int mouseY) {
         scrollbar.update(this, mouseX, mouseY);
 
-        drawString(7, 7, t(grid.isWireless() ? "gui.refinedstorage:wireless_grid" : "gui.refinedstorage:grid"));
+        drawString(7, 7, t(grid instanceof WirelessGrid ? "gui.refinedstorage:wireless_grid" : "gui.refinedstorage:grid"));
 
         if (grid.getType() == EnumGridType.CRAFTING) {
             drawString(7, 94, t("container.crafting"));

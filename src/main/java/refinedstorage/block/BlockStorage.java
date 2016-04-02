@@ -8,7 +8,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -116,7 +115,7 @@ public class BlockStorage extends BlockMachine {
     }
 
     @Override
-    public ItemBlock createItemForBlock() {
+    public Item createItemForBlock() {
         return new ItemBlockStorage();
     }
 }

@@ -209,11 +209,6 @@ public class TileGrid extends TileMachine implements IGrid {
         return this;
     }
 
-    @Override
-    public boolean isWireless() {
-        return false;
-    }
-
     public void setSearchBoxMode(int searchBoxMode) {
         this.searchBoxMode = searchBoxMode;
     }

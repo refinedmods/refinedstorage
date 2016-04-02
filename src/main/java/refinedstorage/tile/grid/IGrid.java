@@ -24,6 +24,4 @@ public interface IGrid {
     IRedstoneModeConfig getRedstoneModeSetting();
 
     boolean isConnected();
-
-    boolean isWireless();
 }

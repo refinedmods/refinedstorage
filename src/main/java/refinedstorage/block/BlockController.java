@@ -8,7 +8,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -18,7 +17,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
-import refinedstorage.item.ItemBlockController;
+import refinedstorage.item.ItemBlockBase;
 import refinedstorage.tile.TileController;
 
 import java.util.List;
@@ -100,7 +99,7 @@ public class BlockController extends BlockBase {
     }
 
     @Override
-    public ItemBlock createItemForBlock() {
-        return new ItemBlockController();
+    public Item createItemForBlock() {
+        return new ItemBlockBase(this, true);
     }
 }
