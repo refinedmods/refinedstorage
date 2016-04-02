@@ -19,17 +19,17 @@ import refinedstorage.block.EnumControllerType;
 import refinedstorage.item.ItemWirelessGrid;
 import refinedstorage.storage.IStorage;
 import refinedstorage.storage.IStorageProvider;
-import refinedstorage.storage.StorageItem;
+import refinedstorage.storage.ItemGroup;
+import refinedstorage.tile.config.IRedstoneModeConfig;
+import refinedstorage.tile.config.RedstoneMode;
 import refinedstorage.tile.grid.WirelessGridConsumer;
-import refinedstorage.tile.settings.IRedstoneModeSetting;
-import refinedstorage.tile.settings.RedstoneMode;
 import refinedstorage.util.HandUtils;
 import refinedstorage.util.InventoryUtils;
 
 import java.util.*;
 
-public class TileController extends TileBase implements IEnergyReceiver, INetworkTile, IRedstoneModeSetting {
-    private List<StorageItem> items = new ArrayList<StorageItem>();
+public class TileController extends TileBase implements IEnergyReceiver, INetworkTile, IRedstoneModeConfig {
+    private List<ItemGroup> items = new ArrayList<ItemGroup>();
     private List<IStorage> storages = new ArrayList<IStorage>();
     private List<WirelessGridConsumer> wirelessGridConsumers = new ArrayList<WirelessGridConsumer>();
     private List<WirelessGridConsumer> wirelessGridConsumersMarkedForRemoval = new ArrayList<WirelessGridConsumer>();
@@ -84,7 +84,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
                     for (TileMachine machine : machines) {
                         if (machine instanceof IStorageProvider) {
-                            ((IStorageProvider) machine).addStorages(storages);
+                            ((IStorageProvider) machine).provide(storages);
                         }
                     }
 
@@ -162,7 +162,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
         return machines;
     }
 
-    public List<StorageItem> getItems() {
+    public List<ItemGroup> getItems() {
         return items;
     }
 
@@ -184,14 +184,14 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                 continue;
             }
 
-            StorageItem item = items.get(i);
+            ItemGroup item = items.get(i);
 
             for (int j = i + 1; j < items.size(); ++j) {
                 if (markedIndexes.contains(j)) {
                     continue;
                 }
 
-                StorageItem other = items.get(j);
+                ItemGroup other = items.get(j);
 
                 if (item.compareNoQuantity(other)) {
                     item.setQuantity(item.getQuantity() + other.getQuantity());
@@ -201,7 +201,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
             }
         }
 
-        List<StorageItem> markedItems = new ArrayList<StorageItem>();
+        List<ItemGroup> markedItems = new ArrayList<ItemGroup>();
 
         for (int i : markedIndexes) {
             markedItems.add(items.get(i));
@@ -411,7 +411,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
         int size = buf.readInt();
 
         for (int i = 0; i < size; ++i) {
-            items.add(new StorageItem(buf));
+            items.add(new ItemGroup(buf));
         }
 
         machines.clear();
@@ -438,7 +438,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
         buf.writeInt(items.size());
 
-        for (StorageItem item : items) {
+        for (ItemGroup item : items) {
             item.toBytes(buf, items.indexOf(item));
         }
 

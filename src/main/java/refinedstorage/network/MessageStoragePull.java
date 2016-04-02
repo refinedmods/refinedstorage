@@ -7,7 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import refinedstorage.item.ItemWirelessGrid;
-import refinedstorage.storage.StorageItem;
+import refinedstorage.storage.ItemGroup;
 import refinedstorage.tile.TileController;
 
 public class MessageStoragePull extends MessageHandlerPlayerToServer<MessageStoragePull> implements IMessage {
@@ -70,7 +70,7 @@ public class MessageStoragePull extends MessageHandlerPlayerToServer<MessageStor
             TileController controller = (TileController) tile;
 
             if (message.id < controller.getItems().size()) {
-                StorageItem item = controller.getItems().get(message.id);
+                ItemGroup item = controller.getItems().get(message.id);
 
                 int quantity = 64;
 
@@ -83,7 +83,7 @@ public class MessageStoragePull extends MessageHandlerPlayerToServer<MessageStor
                 } else if (message.isPullingOne()) {
                     quantity = 1;
                 } else if (message.isPullingWithShift()) {
-                    // NO OP, the default quantity (64) will be fine
+                    // NO OP, the quantity already set (64) is needed for shift
                 }
 
                 if (quantity > item.getType().getItemStackLimit(item.toItemStack())) {

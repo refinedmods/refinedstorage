@@ -5,7 +5,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import refinedstorage.tile.settings.IModeSetting;
+import refinedstorage.tile.config.IModeConfig;
 
 public class MessageModeToggle extends MessageHandlerPlayerToServer<MessageModeToggle> implements IMessage {
     private int x;
@@ -15,7 +15,7 @@ public class MessageModeToggle extends MessageHandlerPlayerToServer<MessageModeT
     public MessageModeToggle() {
     }
 
-    public MessageModeToggle(IModeSetting mode) {
+    public MessageModeToggle(IModeConfig mode) {
         this.x = mode.getMachinePos().getX();
         this.y = mode.getMachinePos().getY();
         this.z = mode.getMachinePos().getZ();
@@ -39,8 +39,8 @@ public class MessageModeToggle extends MessageHandlerPlayerToServer<MessageModeT
     public void handle(MessageModeToggle message, EntityPlayerMP player) {
         TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.x, message.y, message.z));
 
-        if (tile instanceof IModeSetting) {
-            IModeSetting mode = (IModeSetting) tile;
+        if (tile instanceof IModeConfig) {
+            IModeConfig mode = (IModeConfig) tile;
 
             if (mode.isWhitelist()) {
                 mode.setToBlacklist();

@@ -4,15 +4,15 @@ import net.minecraft.util.text.TextFormatting;
 import refinedstorage.RefinedStorage;
 import refinedstorage.gui.GuiBase;
 import refinedstorage.network.MessageCompareUpdate;
-import refinedstorage.tile.settings.ICompareSetting;
+import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.util.InventoryUtils;
 
 public class SideButtonCompare extends SideButton {
-    private ICompareSetting setting;
+    private ICompareConfig config;
     private int mask;
 
-    public SideButtonCompare(ICompareSetting setting, int mask) {
-        this.setting = setting;
+    public SideButtonCompare(ICompareConfig config, int mask) {
+        this.config = config;
         this.mask = mask;
     }
 
@@ -22,7 +22,7 @@ public class SideButtonCompare extends SideButton {
 
         builder.append(TextFormatting.YELLOW).append(gui.t("sidebutton.refinedstorage:compare." + mask)).append(TextFormatting.RESET).append("\n");
 
-        if ((setting.getCompare() & mask) == mask) {
+        if ((config.getCompare() & mask) == mask) {
             builder.append(gui.t("misc.refinedstorage:yes"));
         } else {
             builder.append(gui.t("misc.refinedstorage:no"));
@@ -43,13 +43,13 @@ public class SideButtonCompare extends SideButton {
             ty = 48;
         }
 
-        int tx = (setting.getCompare() & mask) == mask ? 0 : 16;
+        int tx = (config.getCompare() & mask) == mask ? 0 : 16;
 
         gui.drawTexture(x, y + 2, tx, ty, 16, 16);
     }
 
     @Override
     public void actionPerformed() {
-        RefinedStorage.NETWORK.sendToServer(new MessageCompareUpdate(setting, setting.getCompare() ^ mask));
+        RefinedStorage.NETWORK.sendToServer(new MessageCompareUpdate(config, config.getCompare() ^ mask));
     }
 }

@@ -12,16 +12,16 @@ import refinedstorage.network.MessagePriorityUpdate;
 import refinedstorage.storage.IStorage;
 import refinedstorage.storage.IStorageGui;
 import refinedstorage.storage.IStorageProvider;
-import refinedstorage.storage.StorageItem;
-import refinedstorage.tile.settings.ICompareSetting;
-import refinedstorage.tile.settings.IModeSetting;
-import refinedstorage.tile.settings.IRedstoneModeSetting;
-import refinedstorage.tile.settings.ModeSettingUtils;
+import refinedstorage.storage.ItemGroup;
+import refinedstorage.tile.config.ICompareConfig;
+import refinedstorage.tile.config.IModeConfig;
+import refinedstorage.tile.config.IRedstoneModeConfig;
+import refinedstorage.tile.config.ModeConfigUtils;
 import refinedstorage.util.InventoryUtils;
 
 import java.util.List;
 
-public class TileExternalStorage extends TileMachine implements IStorageProvider, IStorage, IStorageGui, ICompareSetting, IModeSetting {
+public class TileExternalStorage extends TileMachine implements IStorageProvider, IStorage, IStorageGui, ICompareConfig, IModeConfig {
     public static final String NBT_PRIORITY = "Priority";
     public static final String NBT_COMPARE = "Compare";
     public static final String NBT_MODE = "Mode";
@@ -44,7 +44,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
     }
 
     @Override
-    public void addItems(List<StorageItem> items) {
+    public void addItems(List<ItemGroup> items) {
         TileEntity connectedTile = getConnectedTile();
 
         if (connectedTile instanceof IDeepStorageUnit) {
@@ -54,7 +54,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
                 ItemStack stack = deep.getStoredItemType().copy();
 
                 while (stack.stackSize > 0) {
-                    items.add(new StorageItem(stack.splitStack(Math.min(stack.getMaxStackSize(), stack.stackSize))));
+                    items.add(new ItemGroup(stack.splitStack(Math.min(stack.getMaxStackSize(), stack.stackSize))));
                 }
             }
         } else if (connectedTile instanceof IInventory) {
@@ -62,7 +62,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
             for (int i = 0; i < inventory.getSizeInventory(); ++i) {
                 if (inventory.getStackInSlot(i) != null) {
-                    items.add(new StorageItem(inventory.getStackInSlot(i)));
+                    items.add(new ItemGroup(inventory.getStackInSlot(i)));
                 }
             }
         }
@@ -137,7 +137,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
     @Override
     public boolean canPush(ItemStack stack) {
-        if (ModeSettingUtils.doesNotViolateMode(inventory, this, compare, stack)) {
+        if (ModeConfigUtils.doesNotViolateMode(inventory, this, compare, stack)) {
             TileEntity connectedTile = getConnectedTile();
 
             if (connectedTile instanceof IDeepStorageUnit) {
@@ -284,7 +284,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
     }
 
     @Override
-    public void addStorages(List<IStorage> storages) {
+    public void provide(List<IStorage> storages) {
         storages.add(this);
     }
 
@@ -294,17 +294,17 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
     }
 
     @Override
-    public IRedstoneModeSetting getRedstoneModeSetting() {
+    public IRedstoneModeConfig getRedstoneModeConfig() {
         return this;
     }
 
     @Override
-    public ICompareSetting getCompareSetting() {
+    public ICompareConfig getCompareConfig() {
         return this;
     }
 
     @Override
-    public IModeSetting getModeSetting() {
+    public IModeConfig getModeConfig() {
         return this;
     }
 

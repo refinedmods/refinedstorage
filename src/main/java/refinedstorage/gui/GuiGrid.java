@@ -19,7 +19,7 @@ import refinedstorage.network.MessageGridCraftingClear;
 import refinedstorage.network.MessageGridCraftingPush;
 import refinedstorage.network.MessageStoragePull;
 import refinedstorage.network.MessageStoragePush;
-import refinedstorage.storage.StorageItem;
+import refinedstorage.storage.ItemGroup;
 import refinedstorage.tile.TileController;
 import refinedstorage.tile.grid.IGrid;
 import refinedstorage.tile.grid.TileGrid;
@@ -31,7 +31,7 @@ public class GuiGrid extends GuiBase {
     private ContainerGrid container;
     private IGrid grid;
 
-    private List<StorageItem> items = new ArrayList<StorageItem>();
+    private List<ItemGroup> items = new ArrayList<ItemGroup>();
 
     private GuiTextField searchField;
 
@@ -77,10 +77,10 @@ public class GuiGrid extends GuiBase {
             items.addAll(grid.getController().getItems());
 
             if (!searchField.getText().trim().isEmpty()) {
-                Iterator<StorageItem> t = items.iterator();
+                Iterator<ItemGroup> t = items.iterator();
 
                 while (t.hasNext()) {
-                    StorageItem item = t.next();
+                    ItemGroup item = t.next();
 
                     if (!item.toItemStack().getDisplayName().toLowerCase().contains(searchField.getText().toLowerCase())) {
                         t.remove();
@@ -88,9 +88,9 @@ public class GuiGrid extends GuiBase {
                 }
             }
 
-            Collections.sort(items, new Comparator<StorageItem>() {
+            Collections.sort(items, new Comparator<ItemGroup>() {
                 @Override
-                public int compare(StorageItem o1, StorageItem o2) {
+                public int compare(ItemGroup o1, ItemGroup o2) {
                     if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING) {
                         return o2.toItemStack().getDisplayName().compareTo(o1.toItemStack().getDisplayName());
                     } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
@@ -102,9 +102,9 @@ public class GuiGrid extends GuiBase {
             });
 
             if (grid.getSortingType() == TileGrid.SORTING_TYPE_QUANTITY) {
-                Collections.sort(items, new Comparator<StorageItem>() {
+                Collections.sort(items, new Comparator<ItemGroup>() {
                     @Override
-                    public int compare(StorageItem o1, StorageItem o2) {
+                    public int compare(ItemGroup o1, ItemGroup o2) {
                         if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING) {
                             return Integer.valueOf(o2.getQuantity()).compareTo(o1.getQuantity());
                         } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
@@ -187,7 +187,7 @@ public class GuiGrid extends GuiBase {
                 hoveringSlot = slot;
 
                 if (slot < items.size()) {
-                    // We need to use the ID, because if we filter, the client-side index will change
+                    // we need to use the ID, because if we filter, the client-side index will change
                     // while the server-side's index will still be the same.
                     hoveringItemId = items.get(slot).getId();
                 }

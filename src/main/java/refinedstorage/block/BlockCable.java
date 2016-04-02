@@ -5,11 +5,10 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import refinedstorage.tile.TileController;
+import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.tile.TileMachine;
 
 public class BlockCable extends BlockBase {
@@ -28,16 +27,15 @@ public class BlockCable extends BlockBase {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[]
-            {
-                DIRECTION,
-                NORTH,
-                EAST,
-                SOUTH,
-                WEST,
-                UP,
-                DOWN,
-            });
+        return new BlockStateContainer(this, new IProperty[]{
+            DIRECTION,
+            NORTH,
+            EAST,
+            SOUTH,
+            WEST,
+            UP,
+            DOWN,
+        });
     }
 
     @Override
@@ -54,13 +52,7 @@ public class BlockCable extends BlockBase {
     public static boolean hasConnectionWith(IBlockAccess world, BlockPos pos) {
         Block block = world.getBlockState(pos).getBlock();
 
-        if (block instanceof BlockCable) {
-            return true;
-        }
-
-        TileEntity tile = world.getTileEntity(pos);
-
-        return tile instanceof TileMachine || tile instanceof TileController;
+        return (block == RefinedStorageBlocks.CABLE || block == RefinedStorageBlocks.CONTROLLER) || world.getTileEntity(pos) instanceof TileMachine;
     }
 
     @Override

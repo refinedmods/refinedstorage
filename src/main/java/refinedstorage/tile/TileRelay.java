@@ -1,6 +1,6 @@
 package refinedstorage.tile;
 
-import refinedstorage.tile.settings.RedstoneMode;
+import refinedstorage.tile.config.RedstoneMode;
 
 public class TileRelay extends TileMachine {
     public TileRelay() {

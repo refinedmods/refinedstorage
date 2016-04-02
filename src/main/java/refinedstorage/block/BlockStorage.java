@@ -41,12 +41,11 @@ public class BlockStorage extends BlockMachine {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[]
-            {
-                DIRECTION,
-                CONNECTED,
-                TYPE
-            });
+        return new BlockStateContainer(this, new IProperty[]{
+            DIRECTION,
+            CONNECTED,
+            TYPE
+        });
     }
 
     @Override
@@ -91,9 +90,7 @@ public class BlockStorage extends BlockMachine {
         ItemStack stack = new ItemStack(RefinedStorageBlocks.STORAGE, 1, RefinedStorageBlocks.STORAGE.getMetaFromState(state));
 
         NBTTagCompound tag = new NBTTagCompound();
-
         tag.setTag(TileStorage.NBT_STORAGE, ((TileStorage) world.getTileEntity(pos)).getStorageTag());
-
         stack.setTagCompound(tag);
 
         drops.add(stack);

@@ -35,17 +35,17 @@ public class GuiStorage extends GuiBase {
 
     @Override
     public void init(int x, int y) {
-        if (gui.getRedstoneModeSetting() != null) {
-            addSideButton(new SideButtonRedstoneMode(gui.getRedstoneModeSetting()));
+        if (gui.getRedstoneModeConfig() != null) {
+            addSideButton(new SideButtonRedstoneMode(gui.getRedstoneModeConfig()));
         }
 
-        if (gui.getModeSetting() != null) {
-            addSideButton(new SideButtonMode(gui.getModeSetting()));
+        if (gui.getModeConfig() != null) {
+            addSideButton(new SideButtonMode(gui.getModeConfig()));
         }
 
-        if (gui.getCompareSetting() != null) {
-            addSideButton(new SideButtonCompare(gui.getCompareSetting(), InventoryUtils.COMPARE_DAMAGE));
-            addSideButton(new SideButtonCompare(gui.getCompareSetting(), InventoryUtils.COMPARE_NBT));
+        if (gui.getCompareConfig() != null) {
+            addSideButton(new SideButtonCompare(gui.getCompareConfig(), InventoryUtils.COMPARE_DAMAGE));
+            addSideButton(new SideButtonCompare(gui.getCompareConfig(), InventoryUtils.COMPARE_NBT));
         }
 
         priorityField = new GuiTextField(0, fontRendererObj, x + 98 + 1, y + 54 + 1, 25, fontRendererObj.FONT_HEIGHT);

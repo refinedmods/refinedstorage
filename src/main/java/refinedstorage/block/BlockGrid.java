@@ -40,12 +40,11 @@ public class BlockGrid extends BlockMachine {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[]
-            {
-                DIRECTION,
-                CONNECTED,
-                TYPE
-            });
+        return new BlockStateContainer(this, new IProperty[]{
+            DIRECTION,
+            CONNECTED,
+            TYPE
+        });
     }
 
     @Override

@@ -7,11 +7,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import refinedstorage.inventory.InventorySimple;
-import refinedstorage.tile.settings.ICompareSetting;
-import refinedstorage.tile.settings.IModeSetting;
+import refinedstorage.tile.config.ICompareConfig;
+import refinedstorage.tile.config.IModeConfig;
 import refinedstorage.util.InventoryUtils;
 
-public class TileImporter extends TileMachine implements ICompareSetting, IModeSetting {
+public class TileImporter extends TileMachine implements ICompareConfig, IModeConfig {
     public static final String NBT_COMPARE = "Compare";
     public static final String NBT_MODE = "Mode";
 
@@ -60,7 +60,7 @@ public class TileImporter extends TileMachine implements ICompareSetting, IModeS
                                 sided.markDirty();
                             }
                         } else {
-                            // If we can't import and/ or extract, move on (otherwise we stay on the same slot forever)
+                            // if we can't import and/or extract, move on (otherwise we stay on the same slot forever)
                             currentSlot++;
                         }
                     }

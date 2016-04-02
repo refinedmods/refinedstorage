@@ -9,7 +9,7 @@ import refinedstorage.block.EnumGridType;
 import refinedstorage.item.ItemWirelessGrid;
 import refinedstorage.network.MessageWirelessGridSettingsUpdate;
 import refinedstorage.tile.TileController;
-import refinedstorage.tile.settings.IRedstoneModeSetting;
+import refinedstorage.tile.config.IRedstoneModeConfig;
 
 public class WirelessGrid implements IGrid {
     private ItemStack stack;
@@ -75,7 +75,7 @@ public class WirelessGrid implements IGrid {
     }
 
     @Override
-    public IRedstoneModeSetting getRedstoneModeSetting() {
+    public IRedstoneModeConfig getRedstoneModeSetting() {
         return null;
     }
 

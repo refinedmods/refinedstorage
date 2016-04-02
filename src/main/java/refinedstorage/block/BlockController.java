@@ -38,12 +38,11 @@ public class BlockController extends BlockBase {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[]
-            {
-                DIRECTION,
-                TYPE,
-                ENERGY
-            });
+        return new BlockStateContainer(this, new IProperty[]{
+            DIRECTION,
+            TYPE,
+            ENERGY
+        });
     }
 
     @Override

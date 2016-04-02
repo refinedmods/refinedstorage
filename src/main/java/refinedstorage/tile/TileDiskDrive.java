@@ -7,17 +7,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import refinedstorage.RefinedStorage;
+import refinedstorage.block.EnumStorageType;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.network.MessagePriorityUpdate;
 import refinedstorage.storage.*;
-import refinedstorage.tile.settings.ICompareSetting;
-import refinedstorage.tile.settings.IModeSetting;
-import refinedstorage.tile.settings.IRedstoneModeSetting;
+import refinedstorage.tile.config.ICompareConfig;
+import refinedstorage.tile.config.IModeConfig;
+import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.util.InventoryUtils;
 
 import java.util.List;
 
-public class TileDiskDrive extends TileMachine implements IStorageProvider, IStorageGui, ICompareSetting, IModeSetting, IInventory {
+public class TileDiskDrive extends TileMachine implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig, IInventory {
     public static final String NBT_PRIORITY = "Priority";
     public static final String NBT_COMPARE = "Compare";
     public static final String NBT_MODE = "Mode";
@@ -47,7 +48,7 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
     }
 
     @Override
-    public void addStorages(List<IStorage> storages) {
+    public void provide(List<IStorage> storages) {
         for (int i = 0; i < getSizeInventory(); ++i) {
             if (getStackInSlot(i) != null) {
                 storages.add(new DiskStorage(getStackInSlot(i), this));
@@ -152,17 +153,17 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
     }
 
     @Override
-    public IRedstoneModeSetting getRedstoneModeSetting() {
+    public IRedstoneModeConfig getRedstoneModeConfig() {
         return this;
     }
 
     @Override
-    public ICompareSetting getCompareSetting() {
+    public ICompareConfig getCompareConfig() {
         return this;
     }
 
     @Override
-    public IModeSetting getModeSetting() {
+    public IModeConfig getModeConfig() {
         return this;
     }
 
@@ -205,7 +206,7 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
             ItemStack stack = getStackInSlot(i);
 
             if (stack != null) {
-                int diskCapacity = DiskStorage.getCapacity(stack);
+                int diskCapacity = EnumStorageType.getById(stack.getItemDamage()).getCapacity();
 
                 if (diskCapacity == -1) {
                     return -1;

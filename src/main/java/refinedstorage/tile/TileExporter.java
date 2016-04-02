@@ -7,10 +7,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityHopper;
 import refinedstorage.inventory.InventorySimple;
-import refinedstorage.tile.settings.ICompareSetting;
+import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.util.InventoryUtils;
 
-public class TileExporter extends TileMachine implements ICompareSetting {
+public class TileExporter extends TileMachine implements ICompareConfig {
     public static final String NBT_COMPARE = "Compare";
 
     public static final int SPEED = 3;

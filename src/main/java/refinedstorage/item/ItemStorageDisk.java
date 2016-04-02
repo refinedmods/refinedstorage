@@ -6,7 +6,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
-import refinedstorage.storage.DiskStorage;
+import refinedstorage.block.EnumStorageType;
 import refinedstorage.storage.NBTStorage;
 
 import java.util.List;
@@ -29,16 +29,20 @@ public class ItemStorageDisk extends ItemBase {
     @Override
     public void getSubItems(Item item, CreativeTabs tab, List list) {
         for (int i = 0; i < 5; ++i) {
-            list.add(NBTStorage.initNBT(new ItemStack(item, 1, i)));
+            ItemStack disk = new ItemStack(item, 1, i);
+            disk.setTagCompound(NBTStorage.getBaseNBT());
+            list.add(disk);
         }
     }
 
     @Override
     public void addInformation(ItemStack disk, EntityPlayer player, List list, boolean b) {
-        if (DiskStorage.getCapacity(disk) == -1) {
+        int capacity = EnumStorageType.getById(disk.getItemDamage()).getCapacity();
+
+        if (capacity == -1) {
             list.add(String.format(I18n.translateToLocal("misc.refinedstorage:storage.stored"), NBTStorage.getStored(disk.getTagCompound())));
         } else {
-            list.add(String.format(I18n.translateToLocal("misc.refinedstorage:storage.stored_capacity"), NBTStorage.getStored(disk.getTagCompound()), DiskStorage.getCapacity(disk)));
+            list.add(String.format(I18n.translateToLocal("misc.refinedstorage:storage.stored_capacity"), NBTStorage.getStored(disk.getTagCompound()), capacity));
         }
     }
 
@@ -46,6 +50,6 @@ public class ItemStorageDisk extends ItemBase {
     public void onCreated(ItemStack stack, World world, EntityPlayer player) {
         super.onCreated(stack, world, player);
 
-        NBTStorage.initNBT(stack);
+        stack.setTagCompound(NBTStorage.getBaseNBT());
     }
 }

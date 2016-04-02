@@ -9,14 +9,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import refinedstorage.inventory.InventorySimple;
-import refinedstorage.tile.settings.ICompareSetting;
-import refinedstorage.tile.settings.IModeSetting;
-import refinedstorage.tile.settings.ModeSettingUtils;
+import refinedstorage.tile.config.ICompareConfig;
+import refinedstorage.tile.config.IModeConfig;
+import refinedstorage.tile.config.ModeConfigUtils;
 import refinedstorage.util.InventoryUtils;
 
 import java.util.List;
 
-public class TileDestructor extends TileMachine implements ICompareSetting, IModeSetting {
+public class TileDestructor extends TileMachine implements ICompareConfig, IModeConfig {
     public static final String NBT_COMPARE = "Compare";
     public static final String NBT_MODE = "Mode";
 
@@ -41,7 +41,7 @@ public class TileDestructor extends TileMachine implements ICompareSetting, IMod
             Block frontBlock = frontBlockState.getBlock();
 
             if (Item.getItemFromBlock(frontBlock) != null && !frontBlock.isAir(frontBlockState, worldObj, front)) {
-                if (ModeSettingUtils.doesNotViolateMode(inventory, this, compare, new ItemStack(frontBlock, 1, frontBlock.getMetaFromState(frontBlockState)))) {
+                if (ModeConfigUtils.doesNotViolateMode(inventory, this, compare, new ItemStack(frontBlock, 1, frontBlock.getMetaFromState(frontBlockState)))) {
                     List<ItemStack> drops = frontBlock.getDrops(worldObj, front, frontBlockState, 0);
 
                     worldObj.setBlockToAir(front);

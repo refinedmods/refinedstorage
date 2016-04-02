@@ -5,7 +5,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import refinedstorage.tile.settings.IRedstoneModeSetting;
+import refinedstorage.tile.config.IRedstoneModeConfig;
 
 public class MessageRedstoneModeUpdate extends MessageHandlerPlayerToServer<MessageRedstoneModeUpdate> implements IMessage {
     private int x;
@@ -15,7 +15,7 @@ public class MessageRedstoneModeUpdate extends MessageHandlerPlayerToServer<Mess
     public MessageRedstoneModeUpdate() {
     }
 
-    public MessageRedstoneModeUpdate(IRedstoneModeSetting setting) {
+    public MessageRedstoneModeUpdate(IRedstoneModeConfig setting) {
         this.x = setting.getMachinePos().getX();
         this.y = setting.getMachinePos().getY();
         this.z = setting.getMachinePos().getZ();
@@ -39,8 +39,8 @@ public class MessageRedstoneModeUpdate extends MessageHandlerPlayerToServer<Mess
     public void handle(MessageRedstoneModeUpdate message, EntityPlayerMP player) {
         TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.x, message.y, message.z));
 
-        if (tile instanceof IRedstoneModeSetting) {
-            IRedstoneModeSetting setting = (IRedstoneModeSetting) tile;
+        if (tile instanceof IRedstoneModeConfig) {
+            IRedstoneModeConfig setting = (IRedstoneModeConfig) tile;
 
             setting.setRedstoneMode(setting.getRedstoneMode().next());
         }

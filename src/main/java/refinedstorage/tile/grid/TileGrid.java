@@ -16,7 +16,7 @@ import refinedstorage.container.ContainerGrid;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.network.MessageGridSettingsUpdate;
 import refinedstorage.tile.TileMachine;
-import refinedstorage.tile.settings.IRedstoneModeSetting;
+import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.util.InventoryUtils;
 
 import java.util.ArrayList;
@@ -205,7 +205,7 @@ public class TileGrid extends TileMachine implements IGrid {
     }
 
     @Override
-    public IRedstoneModeSetting getRedstoneModeSetting() {
+    public IRedstoneModeConfig getRedstoneModeSetting() {
         return this;
     }
 

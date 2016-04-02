@@ -2,7 +2,7 @@ package refinedstorage.tile.grid;
 
 import refinedstorage.block.EnumGridType;
 import refinedstorage.tile.TileController;
-import refinedstorage.tile.settings.IRedstoneModeSetting;
+import refinedstorage.tile.config.IRedstoneModeConfig;
 
 public interface IGrid {
     EnumGridType getType();
@@ -21,7 +21,7 @@ public interface IGrid {
 
     void onSearchBoxModeChanged(int searchBoxMode);
 
-    IRedstoneModeSetting getRedstoneModeSetting();
+    IRedstoneModeConfig getRedstoneModeSetting();
 
     boolean isConnected();
 

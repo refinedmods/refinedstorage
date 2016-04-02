@@ -25,12 +25,11 @@ public class BlockDetector extends BlockMachine {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[]
-            {
-                DIRECTION,
-                CONNECTED,
-                POWERED
-            });
+        return new BlockStateContainer(this, new IProperty[]{
+            DIRECTION,
+            CONNECTED,
+            POWERED
+        });
     }
 
     @Override

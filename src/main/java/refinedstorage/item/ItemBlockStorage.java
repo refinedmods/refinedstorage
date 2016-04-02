@@ -41,11 +41,8 @@ public class ItemBlockStorage extends ItemBlockBase {
 
     public static ItemStack initNBT(ItemStack stack) {
         NBTTagCompound tag = new NBTTagCompound();
-
         tag.setTag(TileStorage.NBT_STORAGE, NBTStorage.getBaseNBT());
-
         stack.setTagCompound(tag);
-
         return stack;
     }
 }

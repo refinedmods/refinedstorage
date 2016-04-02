@@ -40,10 +40,9 @@ public abstract class BlockBase extends Block {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[]
-            {
-                DIRECTION,
-            });
+        return new BlockStateContainer(this, new IProperty[]{
+            DIRECTION,
+        });
     }
 
     @Override
