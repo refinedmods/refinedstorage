@@ -8,6 +8,7 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -126,10 +127,7 @@ public abstract class BlockBase extends Block {
         super.breakBlock(world, pos, state);
     }
 
-    public ItemBlock createItemForBlock() {
-        ItemBlock itemBlock = new ItemBlock(this);
-        itemBlock.setRegistryName(getRegistryName());
-
-        return itemBlock;
+    public Item createItemForBlock() {
+        return new ItemBlock(this).setRegistryName(getRegistryName());
     }
 }

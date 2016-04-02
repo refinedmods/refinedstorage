@@ -80,13 +80,13 @@ public class CommonProxy {
         registerBlock(RefinedStorageBlocks.RELAY);
         registerBlock(RefinedStorageBlocks.INTERFACE);
 
-        GameRegistry.<Item>register(RefinedStorageItems.STORAGE_DISK);
-        GameRegistry.<Item>register(RefinedStorageItems.WIRELESS_GRID);
-        GameRegistry.<Item>register(RefinedStorageItems.QUARTZ_ENRICHED_IRON);
-        GameRegistry.<Item>register(RefinedStorageItems.CORE);
-        GameRegistry.<Item>register(RefinedStorageItems.SILICON);
-        GameRegistry.<Item>register(RefinedStorageItems.PROCESSOR);
-        GameRegistry.<Item>register(RefinedStorageItems.STORAGE_PART);
+        registerItem(RefinedStorageItems.STORAGE_DISK);
+        registerItem(RefinedStorageItems.WIRELESS_GRID);
+        registerItem(RefinedStorageItems.QUARTZ_ENRICHED_IRON);
+        registerItem(RefinedStorageItems.CORE);
+        registerItem(RefinedStorageItems.SILICON);
+        registerItem(RefinedStorageItems.PROCESSOR);
+        registerItem(RefinedStorageItems.STORAGE_PART);
 
         // Processors
         SoldererRegistry.addRecipe(new SoldererRecipePrintedProcessor(ItemProcessor.TYPE_PRINTED_BASIC));
@@ -359,6 +359,10 @@ public class CommonProxy {
 
     private void registerBlock(BlockBase block) {
         GameRegistry.<Block>register(block);
-        GameRegistry.<Item>register(block.createItemForBlock());
+        GameRegistry.register(block.createItemForBlock());
+    }
+
+    private void registerItem(Item item) {
+        GameRegistry.register(item);
     }
 }
