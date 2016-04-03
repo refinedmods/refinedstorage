@@ -228,4 +228,12 @@ public abstract class GuiBase extends GuiContainer {
     public abstract void drawBackground(int x, int y, int mouseX, int mouseY);
 
     public abstract void drawForeground(int mouseX, int mouseY);
+
+    public int getGuiLeft() {
+        return guiLeft;
+    }
+
+    public int getGuiTop() {
+        return guiTop;
+    }
 }

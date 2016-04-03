@@ -51,7 +51,7 @@ public class Scrollbar {
 
     public void draw(GuiBase gui) {
         gui.bindTexture("icons.png");
-        gui.drawTexture(gui.guiLeft + x, gui.guiTop + y + (int) currentScroll, canScroll() ? 232 : 244, 0, 12, 15);
+        gui.drawTexture(gui.getGuiLeft() + x, gui.getGuiTop() + y + (int) currentScroll, canScroll() ? 232 : 244, 0, 12, 15);
     }
 
     public void update(GuiBase gui, int mouseX, int mouseY) {
