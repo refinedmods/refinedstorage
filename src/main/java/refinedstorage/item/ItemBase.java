@@ -10,6 +10,7 @@ public abstract class ItemBase extends Item {
     public ItemBase(String name) {
         this.name = name;
 
+        setRegistryName(RefinedStorage.ID, name);
         setCreativeTab(RefinedStorage.TAB);
     }
 

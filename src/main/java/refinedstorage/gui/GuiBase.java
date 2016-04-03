@@ -24,6 +24,7 @@ public abstract class GuiBase extends GuiContainer {
 
     private int lastButtonId = 0;
     private int lastSideButtonY = 6;
+    private String sideButtonTooltip;
 
     protected int width;
     protected int height;
@@ -78,17 +79,21 @@ public abstract class GuiBase extends GuiContainer {
         mouseX -= guiLeft;
         mouseY -= guiTop;
 
+        sideButtonTooltip = null;
+
         for (SideButton sideButton : sideButtons) {
-            GL11.glDisable(GL11.GL_LIGHTING);
             sideButton.draw(this, sideButton.getX() + 2, sideButton.getY() + 1);
-            GL11.glEnable(GL11.GL_LIGHTING);
 
             if (inBounds(sideButton.getX(), sideButton.getY(), SIDE_BUTTON_WIDTH, SIDE_BUTTON_HEIGHT, mouseX, mouseY)) {
-                drawTooltip(mouseX, mouseY, sideButton.getTooltip(this));
+                sideButtonTooltip = sideButton.getTooltip(this);
             }
         }
 
         drawForeground(mouseX, mouseY);
+
+        if (sideButtonTooltip != null) {
+            drawTooltip(mouseX, mouseY, sideButtonTooltip);
+        }
     }
 
     @Override
@@ -115,7 +120,7 @@ public abstract class GuiBase extends GuiContainer {
     }
 
     public void addSideButton(SideButton button) {
-        button.setX(xSize - 1);
+        button.setX(-SIDE_BUTTON_WIDTH + 1);
         button.setY(lastSideButtonY);
         button.setId(addButton(guiLeft + button.getX(), guiTop + button.getY(), SIDE_BUTTON_WIDTH, SIDE_BUTTON_HEIGHT).id);
 

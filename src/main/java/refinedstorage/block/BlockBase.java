@@ -8,6 +8,7 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -16,6 +17,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
+import refinedstorage.item.ItemBlockBase;
 import refinedstorage.tile.TileBase;
 import refinedstorage.util.InventoryUtils;
 
@@ -30,6 +32,7 @@ public abstract class BlockBase extends Block {
         this.name = name;
 
         setHardness(0.6F);
+        setRegistryName(RefinedStorage.ID, name);
         setCreativeTab(RefinedStorage.TAB);
     }
 
@@ -40,10 +43,9 @@ public abstract class BlockBase extends Block {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[]
-            {
-                DIRECTION,
-            });
+        return new BlockStateContainer(this, new IProperty[]{
+            DIRECTION,
+        });
     }
 
     @Override
@@ -123,5 +125,9 @@ public abstract class BlockBase extends Block {
         }
 
         super.breakBlock(world, pos, state);
+    }
+
+    public Item createItemForBlock() {
+        return new ItemBlockBase(this, false);
     }
 }

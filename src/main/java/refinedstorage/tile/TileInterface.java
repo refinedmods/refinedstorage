@@ -9,10 +9,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
 import refinedstorage.inventory.InventorySimple;
-import refinedstorage.tile.settings.ICompareSetting;
+import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.util.InventoryUtils;
 
-public class TileInterface extends TileMachine implements ICompareSetting, ISidedInventory {
+public class TileInterface extends TileMachine implements ICompareConfig, ISidedInventory {
     public static final String NBT_COMPARE = "Compare";
 
     public static final int SPEED = 3;

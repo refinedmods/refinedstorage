@@ -6,12 +6,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.inventory.InventorySimple;
-import refinedstorage.storage.StorageItem;
-import refinedstorage.tile.settings.ICompareSetting;
-import refinedstorage.tile.settings.RedstoneMode;
+import refinedstorage.storage.ItemGroup;
+import refinedstorage.tile.config.ICompareConfig;
+import refinedstorage.tile.config.RedstoneMode;
 import refinedstorage.util.InventoryUtils;
 
-public class TileDetector extends TileMachine implements ICompareSetting {
+public class TileDetector extends TileMachine implements ICompareConfig {
     public static final int MODE_UNDER = 0;
     public static final int MODE_EQUAL = 1;
     public static final int MODE_ABOVE = 2;
@@ -50,19 +50,19 @@ public class TileDetector extends TileMachine implements ICompareSetting {
             if (slot != null) {
                 boolean foundAny = false;
 
-                for (StorageItem item : getController().getItems()) {
-                    if (item.compare(slot, compare)) {
+                for (ItemGroup group : getController().getItemGroups()) {
+                    if (group.compare(slot, compare)) {
                         foundAny = true;
 
                         switch (mode) {
                             case MODE_UNDER:
-                                powered = item.getQuantity() < amount;
+                                powered = group.getQuantity() < amount;
                                 break;
                             case MODE_EQUAL:
-                                powered = item.getQuantity() == amount;
+                                powered = group.getQuantity() == amount;
                                 break;
                             case MODE_ABOVE:
-                                powered = item.getQuantity() > amount;
+                                powered = group.getQuantity() > amount;
                                 break;
                         }
 

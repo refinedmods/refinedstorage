@@ -6,6 +6,7 @@ gui.refinedstorage:controller.machine_position.x=X: %d
 gui.refinedstorage:controller.machine_position.y=Y: %d
 gui.refinedstorage:controller.machine_position.z=Z: %d
 gui.refinedstorage:grid=Grid
+gui.refinedstorage:wireless_grid=Wireless Grid
 gui.refinedstorage:disk_drive=Drive
 gui.refinedstorage:external_storage=External Storage
 gui.refinedstorage:importer=Importer
@@ -31,8 +32,8 @@ misc.refinedstorage:storage.full=%d%% full
 misc.refinedstorage:wireless_grid.tooltip.0=X: %d
 misc.refinedstorage:wireless_grid.tooltip.1=Y: %d
 misc.refinedstorage:wireless_grid.tooltip.2=Z: %d
-misc.refinedstorage:wireless_grid.out_of_range=Grid out of range.
-misc.refinedstorage:wireless_grid.not_found=Grid not found.
+misc.refinedstorage:wireless_grid.out_of_range=Controller out of range.
+misc.refinedstorage:wireless_grid.not_found=Controller not found.
 
 misc.refinedstorage:yes=Yes
 misc.refinedstorage:no=No
@@ -47,13 +48,15 @@ sidebutton.refinedstorage:redstone_mode.0=Ignore redstone signal
 sidebutton.refinedstorage:redstone_mode.1=Only work with redstone signal
 sidebutton.refinedstorage:redstone_mode.2=Only work without redstone signal
 
-sidebutton.refinedstorage:sorting.direction=Sorting Direction
-sidebutton.refinedstorage:sorting.direction.0=Ascending
-sidebutton.refinedstorage:sorting.direction.1=Descending
-
-sidebutton.refinedstorage:sorting.type=Sorting Type
-sidebutton.refinedstorage:sorting.type.0=Quantity
-sidebutton.refinedstorage:sorting.type.1=Name
+sidebutton.refinedstorage:grid.sorting.direction=Sorting Direction
+sidebutton.refinedstorage:grid.sorting.direction.0=Ascending
+sidebutton.refinedstorage:grid.sorting.direction.1=Descending
+sidebutton.refinedstorage:grid.sorting.type=Sorting Type
+sidebutton.refinedstorage:grid.sorting.type.0=Quantity
+sidebutton.refinedstorage:grid.sorting.type.1=Name
+sidebutton.refinedstorage:grid.search_box_mode=Search Box Mode
+sidebutton.refinedstorage:grid.search_box_mode.0=Normal
+sidebutton.refinedstorage:grid.search_box_mode.1=JEI synchronized
 
 sidebutton.refinedstorage:mode=Mode
 sidebutton.refinedstorage:mode.whitelist=Whitelist

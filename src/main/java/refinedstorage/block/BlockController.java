@@ -17,6 +17,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
+import refinedstorage.item.ItemBlockBase;
 import refinedstorage.tile.TileController;
 
 import java.util.List;
@@ -38,12 +39,11 @@ public class BlockController extends BlockBase {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[]
-            {
-                DIRECTION,
-                TYPE,
-                ENERGY
-            });
+        return new BlockStateContainer(this, new IProperty[]{
+            DIRECTION,
+            TYPE,
+            ENERGY
+        });
     }
 
     @Override
@@ -96,5 +96,10 @@ public class BlockController extends BlockBase {
     @Override
     public int getComparatorInputOverride(IBlockState state, World world, BlockPos pos) {
         return ((TileController) world.getTileEntity(pos)).getEnergyScaled(15);
+    }
+
+    @Override
+    public Item createItemForBlock() {
+        return new ItemBlockBase(this, true);
     }
 }

@@ -7,7 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import refinedstorage.block.EnumGridType;
-import refinedstorage.tile.TileGrid;
+import refinedstorage.tile.grid.TileGrid;
 
 public class MessageGridCraftingPush extends MessageHandlerPlayerToServer<MessageGridCraftingPush> implements IMessage {
     private int x;

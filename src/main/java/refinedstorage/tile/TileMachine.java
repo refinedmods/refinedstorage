@@ -5,12 +5,11 @@ import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import refinedstorage.block.BlockMachine;
-import refinedstorage.tile.settings.IRedstoneModeSetting;
-import refinedstorage.tile.settings.RedstoneMode;
+import refinedstorage.tile.config.IRedstoneModeConfig;
+import refinedstorage.tile.config.RedstoneMode;
 
-public abstract class TileMachine extends TileBase implements INetworkTile, IRedstoneModeSetting {
+public abstract class TileMachine extends TileBase implements INetworkTile, IRedstoneModeConfig {
     protected boolean connected = false;
-
     protected RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
     private BlockPos controllerPosition;
@@ -75,11 +74,6 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
 
     @Override
     public BlockPos getMachinePos() {
-        return pos;
-    }
-
-    @Override
-    public BlockPos getTilePos() {
         return pos;
     }
 

@@ -34,19 +34,18 @@ public class BlockStorage extends BlockMachine {
 
     @Override
     public void getSubBlocks(Item item, CreativeTabs tab, List subItems) {
-        for (int i = 0; i <= 4; i++) {
+        for (int i = 0; i <= 4; ++i) {
             subItems.add(ItemBlockStorage.initNBT(new ItemStack(item, 1, i)));
         }
     }
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[]
-            {
-                DIRECTION,
-                CONNECTED,
-                TYPE
-            });
+        return new BlockStateContainer(this, new IProperty[]{
+            DIRECTION,
+            CONNECTED,
+            TYPE
+        });
     }
 
     @Override
@@ -91,9 +90,7 @@ public class BlockStorage extends BlockMachine {
         ItemStack stack = new ItemStack(RefinedStorageBlocks.STORAGE, 1, RefinedStorageBlocks.STORAGE.getMetaFromState(state));
 
         NBTTagCompound tag = new NBTTagCompound();
-
         tag.setTag(TileStorage.NBT_STORAGE, ((TileStorage) world.getTileEntity(pos)).getStorageTag());
-
         stack.setTagCompound(tag);
 
         drops.add(stack);
@@ -115,5 +112,10 @@ public class BlockStorage extends BlockMachine {
         super.harvestBlock(world, player, pos, state, tile, stack);
 
         world.setBlockToAir(pos);
+    }
+
+    @Override
+    public Item createItemForBlock() {
+        return new ItemBlockStorage();
     }
 }

@@ -1,9 +1,9 @@
 package refinedstorage.storage;
 
 import net.minecraft.inventory.IInventory;
-import refinedstorage.tile.settings.ICompareSetting;
-import refinedstorage.tile.settings.IModeSetting;
-import refinedstorage.tile.settings.IRedstoneModeSetting;
+import refinedstorage.tile.config.ICompareConfig;
+import refinedstorage.tile.config.IModeConfig;
+import refinedstorage.tile.config.IRedstoneModeConfig;
 
 public interface IStorageGui {
     String getName();
@@ -14,11 +14,11 @@ public interface IStorageGui {
 
     IInventory getInventory();
 
-    IRedstoneModeSetting getRedstoneModeSetting();
+    IRedstoneModeConfig getRedstoneModeConfig();
 
-    ICompareSetting getCompareSetting();
+    ICompareConfig getCompareConfig();
 
-    IModeSetting getModeSetting();
+    IModeConfig getModeConfig();
 
     int getStored();
 

@@ -8,10 +8,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import refinedstorage.inventory.InventorySimple;
-import refinedstorage.tile.settings.ICompareSetting;
+import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.util.InventoryUtils;
 
-public class TileConstructor extends TileMachine implements ICompareSetting {
+public class TileConstructor extends TileMachine implements ICompareConfig {
     public static final int SPEED = 10;
 
     public static final String NBT_COMPARE = "Compare";

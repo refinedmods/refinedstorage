@@ -27,5 +27,4 @@ public enum EnumGridType implements IStringSerializable {
     public String toString() {
         return name;
     }
-
 }

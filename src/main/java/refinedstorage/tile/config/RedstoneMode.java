@@ -1,4 +1,4 @@
-package refinedstorage.tile.settings;
+package refinedstorage.tile.config;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;

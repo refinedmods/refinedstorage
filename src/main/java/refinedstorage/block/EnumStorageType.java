@@ -43,7 +43,6 @@ public enum EnumStorageType implements IStringSerializable {
                 return type;
             }
         }
-
-        return null;
+        return TYPE_1K;
     }
 }

@@ -5,7 +5,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import refinedstorage.tile.settings.ICompareSetting;
+import refinedstorage.tile.config.ICompareConfig;
 
 public class MessageCompareUpdate extends MessageHandlerPlayerToServer<MessageCompareUpdate> implements IMessage {
     private int x;
@@ -16,7 +16,7 @@ public class MessageCompareUpdate extends MessageHandlerPlayerToServer<MessageCo
     public MessageCompareUpdate() {
     }
 
-    public MessageCompareUpdate(ICompareSetting setting, int compare) {
+    public MessageCompareUpdate(ICompareConfig setting, int compare) {
         this.x = setting.getMachinePos().getX();
         this.y = setting.getMachinePos().getY();
         this.z = setting.getMachinePos().getZ();
@@ -43,8 +43,8 @@ public class MessageCompareUpdate extends MessageHandlerPlayerToServer<MessageCo
     public void handle(MessageCompareUpdate message, EntityPlayerMP player) {
         TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.x, message.y, message.z));
 
-        if (tile instanceof ICompareSetting) {
-            ((ICompareSetting) tile).setCompare(message.compare);
+        if (tile instanceof ICompareConfig) {
+            ((ICompareConfig) tile).setCompare(message.compare);
         }
     }
 }

@@ -79,7 +79,7 @@ public class GuiController extends GuiBase {
         TileMachine machineHovering = null;
 
         for (int i = 0; i < 4; ++i) {
-            if (slot < machines.size()) {
+            if (slot < machines.size() && machines.get(slot) != null && machines.get(slot).getWorld() != null) {
                 TileMachine machine = machines.get(slot);
                 IBlockState machineState = machine.getWorld().getBlockState(machine.getPos());
                 Block machineBlock = machineState.getBlock();
@@ -119,7 +119,10 @@ public class GuiController extends GuiBase {
         }
 
         if (inBounds(barX, barY, barWidth, barHeight, mouseX, mouseY)) {
-            drawTooltip(mouseX, mouseY, t("misc.refinedstorage:energy_usage", controller.getEnergyUsage()) + "\n" + t("misc.refinedstorage:energy_stored", controller.getEnergyStored(null), controller.getMaxEnergyStored(null)));
+            String message = t("misc.refinedstorage:energy_usage", controller.isActiveClientSide() ? controller.getEnergyUsage() : 0);
+            message += "\n" + t("misc.refinedstorage:energy_stored", controller.getEnergyStored(null), controller.getMaxEnergyStored(null));
+
+            drawTooltip(mouseX, mouseY, message);
         }
     }
 

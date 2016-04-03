@@ -1,26 +1,20 @@
 package refinedstorage.gui.sidebutton;
 
 import net.minecraft.util.text.TextFormatting;
-import refinedstorage.RefinedStorage;
 import refinedstorage.gui.GuiBase;
-import refinedstorage.network.MessageGridSortingUpdate;
-import refinedstorage.tile.TileGrid;
+import refinedstorage.tile.grid.IGrid;
+import refinedstorage.tile.grid.TileGrid;
 
 public class SideButtonGridSortingType extends SideButton {
-    private TileGrid grid;
+    private IGrid grid;
 
-    public SideButtonGridSortingType(TileGrid grid) {
+    public SideButtonGridSortingType(IGrid grid) {
         this.grid = grid;
     }
 
     @Override
     public String getTooltip(GuiBase gui) {
-        StringBuilder builder = new StringBuilder();
-
-        builder.append(TextFormatting.YELLOW).append(gui.t("sidebutton.refinedstorage:sorting.type")).append(TextFormatting.RESET).append("\n");
-        builder.append(gui.t("sidebutton.refinedstorage:sorting.type." + grid.getSortingType()));
-
-        return builder.toString();
+        return TextFormatting.YELLOW + gui.t("sidebutton.refinedstorage:grid.sorting.type") + TextFormatting.RESET + "\n" + gui.t("sidebutton.refinedstorage:grid.sorting.type." + grid.getSortingType());
     }
 
     @Override
@@ -39,6 +33,6 @@ public class SideButtonGridSortingType extends SideButton {
             type = TileGrid.SORTING_TYPE_QUANTITY;
         }
 
-        RefinedStorage.NETWORK.sendToServer(new MessageGridSortingUpdate(grid, grid.getSortingDirection(), type));
+        grid.onSortingTypeChanged(type);
     }
 }

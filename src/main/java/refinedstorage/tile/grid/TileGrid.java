@@ -1,4 +1,4 @@
-package refinedstorage.tile;
+package refinedstorage.tile.grid;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
@@ -8,25 +8,33 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
+import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.block.BlockGrid;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
 import refinedstorage.inventory.InventorySimple;
+import refinedstorage.network.MessageGridSettingsUpdate;
+import refinedstorage.tile.TileMachine;
+import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.util.InventoryUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileGrid extends TileMachine {
+public class TileGrid extends TileMachine implements IGrid {
     public static final String NBT_SORTING_DIRECTION = "SortingDirection";
     public static final String NBT_SORTING_TYPE = "SortingType";
+    public static final String NBT_SEARCH_BOX_MODE = "SearchBoxMode";
 
     public static final int SORTING_DIRECTION_ASCENDING = 0;
     public static final int SORTING_DIRECTION_DESCENDING = 1;
 
     public static final int SORTING_TYPE_QUANTITY = 0;
     public static final int SORTING_TYPE_NAME = 1;
+
+    public static final int SEARCH_BOX_MODE_NORMAL = 0;
+    public static final int SEARCH_BOX_MODE_JEI_SYNCHRONIZED = 1;
 
     private Container craftingContainer = new Container() {
         @Override
@@ -44,6 +52,7 @@ public class TileGrid extends TileMachine {
 
     private int sortingDirection = SORTING_DIRECTION_DESCENDING;
     private int sortingType = SORTING_TYPE_NAME;
+    private int searchBoxMode = SEARCH_BOX_MODE_NORMAL;
 
     @Override
     public int getEnergyUsage() {
@@ -176,6 +185,34 @@ public class TileGrid extends TileMachine {
         this.sortingType = sortingType;
     }
 
+    public int getSearchBoxMode() {
+        return searchBoxMode;
+    }
+
+    @Override
+    public void onSortingTypeChanged(int type) {
+        RefinedStorage.NETWORK.sendToServer(new MessageGridSettingsUpdate(this, sortingDirection, type, searchBoxMode));
+    }
+
+    @Override
+    public void onSortingDirectionChanged(int direction) {
+        RefinedStorage.NETWORK.sendToServer(new MessageGridSettingsUpdate(this, direction, sortingType, searchBoxMode));
+    }
+
+    @Override
+    public void onSearchBoxModeChanged(int searchBoxMode) {
+        RefinedStorage.NETWORK.sendToServer(new MessageGridSettingsUpdate(this, sortingDirection, sortingType, searchBoxMode));
+    }
+
+    @Override
+    public IRedstoneModeConfig getRedstoneModeSetting() {
+        return this;
+    }
+
+    public void setSearchBoxMode(int searchBoxMode) {
+        this.searchBoxMode = searchBoxMode;
+    }
+
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
@@ -189,6 +226,10 @@ public class TileGrid extends TileMachine {
         if (nbt.hasKey(NBT_SORTING_TYPE)) {
             sortingType = nbt.getInteger(NBT_SORTING_TYPE);
         }
+
+        if (nbt.hasKey(NBT_SEARCH_BOX_MODE)) {
+            searchBoxMode = nbt.getInteger(NBT_SEARCH_BOX_MODE);
+        }
     }
 
     @Override
@@ -199,6 +240,7 @@ public class TileGrid extends TileMachine {
 
         nbt.setInteger(NBT_SORTING_DIRECTION, sortingDirection);
         nbt.setInteger(NBT_SORTING_TYPE, sortingType);
+        nbt.setInteger(NBT_SEARCH_BOX_MODE, searchBoxMode);
     }
 
     @Override
@@ -207,6 +249,7 @@ public class TileGrid extends TileMachine {
 
         buf.writeInt(sortingDirection);
         buf.writeInt(sortingType);
+        buf.writeInt(searchBoxMode);
     }
 
     @Override
@@ -215,6 +258,7 @@ public class TileGrid extends TileMachine {
 
         sortingDirection = buf.readInt();
         sortingType = buf.readInt();
+        searchBoxMode = buf.readInt();
     }
 
     @Override

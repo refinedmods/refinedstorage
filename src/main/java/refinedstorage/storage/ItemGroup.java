@@ -9,7 +9,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import refinedstorage.util.InventoryUtils;
 
-public class StorageItem {
+public class ItemGroup {
     private Item type;
     private int quantity;
     private int damage;
@@ -17,7 +17,7 @@ public class StorageItem {
     @SideOnly(Side.CLIENT)
     private int id;
 
-    public StorageItem(ByteBuf buf) {
+    public ItemGroup(ByteBuf buf) {
         this.id = buf.readInt();
         this.type = Item.getItemById(buf.readInt());
         this.quantity = buf.readInt();
@@ -25,20 +25,14 @@ public class StorageItem {
         this.tag = buf.readBoolean() ? ByteBufUtils.readTag(buf) : null;
     }
 
-    public StorageItem(Item type, int quantity, int damage, NBTTagCompound tag) {
+    public ItemGroup(Item type, int quantity, int damage, NBTTagCompound tag) {
         this.type = type;
         this.quantity = quantity;
         this.damage = damage;
         this.tag = tag;
     }
 
-    public StorageItem(Item type, int quantity, int damage, NBTTagCompound tag, int id) {
-        this(type, quantity, damage, tag);
-
-        this.id = id;
-    }
-
-    public StorageItem(ItemStack stack) {
+    public ItemGroup(ItemStack stack) {
         this(stack.getItem(), stack.stackSize, stack.getItemDamage(), stack.getTagCompound());
     }
 
@@ -87,12 +81,12 @@ public class StorageItem {
         return id;
     }
 
-    public StorageItem copy() {
+    public ItemGroup copy() {
         return copy(quantity);
     }
 
-    public StorageItem copy(int newQuantity) {
-        return new StorageItem(type, newQuantity, damage, tag);
+    public ItemGroup copy(int newQuantity) {
+        return new ItemGroup(type, newQuantity, damage, tag);
     }
 
     public ItemStack toItemStack() {
@@ -103,7 +97,7 @@ public class StorageItem {
         return stack;
     }
 
-    public boolean compare(StorageItem other, int flags) {
+    public boolean compare(ItemGroup other, int flags) {
         if ((flags & InventoryUtils.COMPARE_DAMAGE) == InventoryUtils.COMPARE_DAMAGE) {
             if (damage != other.getDamage()) {
                 return false;
@@ -159,7 +153,7 @@ public class StorageItem {
         return type == stack.getItem();
     }
 
-    public boolean compareNoQuantity(StorageItem other) {
+    public boolean compareNoQuantity(ItemGroup other) {
         return compare(other, InventoryUtils.COMPARE_NBT | InventoryUtils.COMPARE_DAMAGE);
     }
 

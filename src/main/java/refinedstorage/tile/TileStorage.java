@@ -13,15 +13,15 @@ import refinedstorage.block.EnumStorageType;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.network.MessagePriorityUpdate;
 import refinedstorage.storage.*;
-import refinedstorage.tile.settings.ICompareSetting;
-import refinedstorage.tile.settings.IModeSetting;
-import refinedstorage.tile.settings.IRedstoneModeSetting;
-import refinedstorage.tile.settings.ModeSettingUtils;
+import refinedstorage.tile.config.ICompareConfig;
+import refinedstorage.tile.config.IModeConfig;
+import refinedstorage.tile.config.IRedstoneModeConfig;
+import refinedstorage.tile.config.ModeConfigUtils;
 import refinedstorage.util.InventoryUtils;
 
 import java.util.List;
 
-public class TileStorage extends TileMachine implements IStorageProvider, IStorage, IStorageGui, ICompareSetting, IModeSetting {
+public class TileStorage extends TileMachine implements IStorageProvider, IStorage, IStorageGui, ICompareConfig, IModeConfig {
     public static final String NBT_STORAGE = "Storage";
     public static final String NBT_PRIORITY = "Priority";
     public static final String NBT_COMPARE = "Compare";
@@ -34,7 +34,6 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
     private int priority = 0;
     private int compare = 0;
     private int mode = 0;
-
     @SideOnly(Side.CLIENT)
     private int stored;
 
@@ -48,7 +47,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
     }
 
     @Override
-    public void addStorages(List<IStorage> storages) {
+    public void provide(List<IStorage> storages) {
         storages.add(this);
     }
 
@@ -116,7 +115,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
     }
 
     @Override
-    public void addItems(List<StorageItem> items) {
+    public void addItems(List<ItemGroup> items) {
         getStorage().addItems(items);
 
         markDirty();
@@ -140,7 +139,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 
     @Override
     public boolean canPush(ItemStack stack) {
-        return ModeSettingUtils.doesNotViolateMode(inventory, this, compare, stack) && getStorage().canPush(stack);
+        return ModeConfigUtils.doesNotViolateMode(inventory, this, compare, stack) && getStorage().canPush(stack);
     }
 
     @Override
@@ -190,17 +189,17 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
     }
 
     @Override
-    public IRedstoneModeSetting getRedstoneModeSetting() {
+    public IRedstoneModeConfig getRedstoneModeConfig() {
         return this;
     }
 
     @Override
-    public ICompareSetting getCompareSetting() {
+    public ICompareConfig getCompareConfig() {
         return this;
     }
 
     @Override
-    public IModeSetting getModeSetting() {
+    public IModeConfig getModeConfig() {
         return this;
     }
 
@@ -237,14 +236,6 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
     @Override
     public int getStored() {
         return stored;
-    }
-
-    public int getStoredScaled(int scale) {
-        if (getType() == EnumStorageType.TYPE_CREATIVE) {
-            return 0;
-        }
-
-        return (int) ((float) getStored() / (float) getCapacity() * (float) scale);
     }
 
     @Override

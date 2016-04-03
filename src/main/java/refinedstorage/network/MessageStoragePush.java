@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import refinedstorage.item.ItemWirelessGrid;
 import refinedstorage.tile.TileController;
 
 public class MessageStoragePush extends MessageHandlerPlayerToServer<MessageStoragePush> implements IMessage {
@@ -48,7 +49,7 @@ public class MessageStoragePush extends MessageHandlerPlayerToServer<MessageStor
     public void handle(MessageStoragePush message, EntityPlayerMP player) {
         TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.x, message.y, message.z));
 
-        if (tile instanceof TileController) {
+        if (tile instanceof TileController && ((TileController) tile).isActive()) {
             TileController controller = (TileController) tile;
 
             ItemStack stack;
@@ -83,6 +84,8 @@ public class MessageStoragePush extends MessageHandlerPlayerToServer<MessageStor
                         player.inventory.setInventorySlotContents(message.slot, null);
                     }
                 }
+
+                controller.drainEnergyFromWirelessGrid(player, ItemWirelessGrid.USAGE_PUSH);
             }
         }
     }

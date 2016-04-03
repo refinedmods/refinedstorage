@@ -15,7 +15,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
-import refinedstorage.tile.TileGrid;
+import refinedstorage.item.ItemBlockBase;
+import refinedstorage.tile.grid.TileGrid;
 
 import java.util.List;
 
@@ -40,12 +41,11 @@ public class BlockGrid extends BlockMachine {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[]
-            {
-                DIRECTION,
-                CONNECTED,
-                TYPE
-            });
+        return new BlockStateContainer(this, new IProperty[]{
+            DIRECTION,
+            CONNECTED,
+            TYPE
+        });
     }
 
     @Override
@@ -65,5 +65,10 @@ public class BlockGrid extends BlockMachine {
         }
 
         return true;
+    }
+
+    @Override
+    public Item createItemForBlock() {
+        return new ItemBlockBase(this, true);
     }
 }
