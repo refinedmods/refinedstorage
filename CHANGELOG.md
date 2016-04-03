@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 0.5.1
+**Bugfixes**
+- Fix Disk Drive crashing with an AbstractMethodException
+
 ### 0.5
 **Bugfixes**
 - Fixed clicking sound in Grid
