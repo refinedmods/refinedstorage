@@ -40,8 +40,4 @@ public class PluginRefinedStorage implements IModPlugin {
     public IJeiRuntime getRuntime() {
         return runtime;
     }
-
-    public static boolean isJeiLoaded() {
-        return INSTANCE != null;
-    }
 }
