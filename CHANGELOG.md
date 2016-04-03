@@ -1,5 +1,10 @@
 # Refined Storage Changelog
 
+### 0.5.2
+**Bugfixes**
+- Items that don't exist anymore, won't be added to storage again to avoid crashes
+- Fixed not being able to run the mod without JEI
+
 ### 0.5.1
 **Bugfixes**
 - Fix Disk Drive crashing with an AbstractMethodException
