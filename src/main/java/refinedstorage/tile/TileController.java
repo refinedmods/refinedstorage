@@ -186,17 +186,22 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
             ItemGroup group = itemGroups.get(i);
 
-            for (int j = i + 1; j < itemGroups.size(); ++j) {
-                if (markedIndexes.contains(j)) {
-                    continue;
-                }
+            // If the item doesn't exist anymore, remove it from storage to avoid crashes
+            if (group.getType() == null) {
+                markedIndexes.add(i);
+            } else {
+                for (int j = i + 1; j < itemGroups.size(); ++j) {
+                    if (markedIndexes.contains(j)) {
+                        continue;
+                    }
 
-                ItemGroup otherGroup = itemGroups.get(j);
+                    ItemGroup otherGroup = itemGroups.get(j);
 
-                if (group.compareNoQuantity(otherGroup)) {
-                    group.setQuantity(group.getQuantity() + otherGroup.getQuantity());
+                    if (group.compareNoQuantity(otherGroup)) {
+                        group.setQuantity(group.getQuantity() + otherGroup.getQuantity());
 
-                    markedIndexes.add(j);
+                        markedIndexes.add(j);
+                    }
                 }
             }
         }
