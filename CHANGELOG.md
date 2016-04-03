@@ -37,6 +37,8 @@
 - Grid can synchronize with JEI
 - Side buttons in machine GUIs are now left, not right
 
+Special thanks to [GustoniaEagle](https://github.com/gustoniaeagle) for the new textures, and [tomevoll](https://github.com/tomevoll) for providing a bunch of patches and helping me debug some bugs.
+
 ### 0.4.1
 **Bugfixes**
 - Fix ID duplication issues
