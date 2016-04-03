@@ -289,7 +289,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
     }
 
     @Override
-    public String getName() {
+    public String getGuiTitle() {
         return "gui.refinedstorage:external_storage";
     }
 

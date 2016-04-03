@@ -76,7 +76,7 @@ public class GuiStorage extends GuiBase {
 
     @Override
     public void drawForeground(int mouseX, int mouseY) {
-        drawString(7, 7, t(gui.getName()));
+        drawString(7, 7, t(gui.getGuiTitle()));
         drawString(7, 42, gui.getCapacity() == -1 ? t("misc.refinedstorage:storage.stored_minimal", gui.getStored()) : t("misc.refinedstorage:storage.stored_capacity_minimal", gui.getStored(), gui.getCapacity()));
         drawString(97, 42, t("misc.refinedstorage:priority"));
         drawString(7, 117, t("container.inventory"));

@@ -6,7 +6,7 @@ import refinedstorage.tile.config.IModeConfig;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 
 public interface IStorageGui {
-    String getName();
+    String getGuiTitle();
 
     int getPriority();
 

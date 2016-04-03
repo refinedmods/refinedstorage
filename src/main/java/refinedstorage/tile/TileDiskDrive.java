@@ -143,7 +143,7 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
     }
 
     @Override
-    public String getName() {
+    public String getGuiTitle() {
         return "block.refinedstorage:disk_drive.name";
     }
 
@@ -297,6 +297,11 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
     @Override
     public ITextComponent getDisplayName() {
         return inventory.getDisplayName();
+    }
+
+    @Override
+    public String getName() {
+        return inventory.getName();
     }
 
     @Override

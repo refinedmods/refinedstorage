@@ -179,7 +179,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
     }
 
     @Override
-    public String getName() {
+    public String getGuiTitle() {
         return "block.refinedstorage:storage." + getType().getId() + ".name";
     }
 
