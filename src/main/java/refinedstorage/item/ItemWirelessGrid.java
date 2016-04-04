@@ -72,7 +72,7 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
 
     @Override
     public boolean isDamaged(ItemStack stack) {
-        return stack.getItemDamage() == 0;
+        return stack.getItemDamage() != TYPE_CREATIVE;
     }
 
     @Override
