@@ -19,10 +19,7 @@ import refinedstorage.block.EnumControllerType;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.block.EnumStorageType;
 import refinedstorage.gui.GuiHandler;
-import refinedstorage.item.ItemCore;
-import refinedstorage.item.ItemProcessor;
-import refinedstorage.item.ItemStorageDisk;
-import refinedstorage.item.ItemStoragePart;
+import refinedstorage.item.*;
 import refinedstorage.network.*;
 import refinedstorage.storage.NBTStorage;
 import refinedstorage.tile.*;
@@ -191,7 +188,7 @@ public class CommonProxy {
         SoldererRegistry.addRecipe(new SoldererRecipeCraftingGrid());
 
         // Wireless Grid
-        GameRegistry.addRecipe(new ItemStack(RefinedStorageItems.WIRELESS_GRID),
+        GameRegistry.addRecipe(new ItemStack(RefinedStorageItems.WIRELESS_GRID, 1, ItemWirelessGrid.TYPE_NORMAL),
             " P ",
             "ERE",
             "EEE",

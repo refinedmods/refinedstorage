@@ -21,6 +21,9 @@ import refinedstorage.tile.grid.TileGrid;
 import java.util.List;
 
 public class ItemWirelessGrid extends ItemEnergyContainer {
+    public static final int TYPE_NORMAL = 0;
+    public static final int TYPE_CREATIVE = 1;
+
     public static final String NBT_CONTROLLER_X = "ControllerX";
     public static final String NBT_CONTROLLER_Y = "ControllerY";
     public static final String NBT_CONTROLLER_Z = "ControllerZ";
@@ -48,7 +51,7 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
         setRegistryName(RefinedStorage.ID, "wireless_grid");
         setMaxDamage(3200);
         setMaxStackSize(1);
-        setHasSubtypes(false);
+        setHasSubtypes(true);
         setCreativeTab(RefinedStorage.TAB);
     }
 
@@ -69,7 +72,7 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
 
     @Override
     public boolean isDamaged(ItemStack stack) {
-        return true;
+        return stack.getItemDamage() == 0;
     }
 
     @Override
@@ -79,16 +82,20 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
 
     @Override
     public void getSubItems(Item item, CreativeTabs tab, List list) {
-        list.add(new ItemStack(item));
+        list.add(new ItemStack(item, 1, TYPE_NORMAL));
 
-        ItemStack fullyCharged = new ItemStack(item);
+        ItemStack fullyCharged = new ItemStack(item, 1, TYPE_NORMAL);
         receiveEnergy(fullyCharged, getMaxEnergyStored(fullyCharged), false);
         list.add(fullyCharged);
+
+        list.add(new ItemStack(item, 1, TYPE_CREATIVE));
     }
 
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean b) {
-        list.add(I18n.translateToLocalFormatted("misc.refinedstorage:energy_stored", getEnergyStored(stack), getMaxEnergyStored(stack)));
+        if (stack.getItemDamage() != TYPE_CREATIVE) {
+            list.add(I18n.translateToLocalFormatted("misc.refinedstorage:energy_stored", getEnergyStored(stack), getMaxEnergyStored(stack)));
+        }
 
         if (canOpenWirelessGrid(player.worldObj, player, stack)) {
             list.add(I18n.translateToLocalFormatted("misc.refinedstorage:wireless_grid.tooltip.0", getX(stack)));
@@ -204,6 +211,6 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
 
     @Override
     public String getUnlocalizedName(ItemStack stack) {
-        return getUnlocalizedName();
+        return getUnlocalizedName() + "." + stack.getItemDamage();
     }
 }

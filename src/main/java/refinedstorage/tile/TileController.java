@@ -305,11 +305,13 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
             ItemWirelessGrid item = RefinedStorageItems.WIRELESS_GRID;
             ItemStack held = consumer.getPlayer().getHeldItem(consumer.getHand());
 
-            item.extractEnergy(held, energy, false);
+            if (held.getItemDamage() != ItemWirelessGrid.TYPE_CREATIVE) {
+                item.extractEnergy(held, energy, false);
 
-            if (item.getEnergyStored(held) <= 0) {
-                onCloseWirelessGrid(player);
-                consumer.getPlayer().closeScreen();
+                if (item.getEnergyStored(held) <= 0) {
+                    onCloseWirelessGrid(player);
+                    consumer.getPlayer().closeScreen();
+                }
             }
         }
     }

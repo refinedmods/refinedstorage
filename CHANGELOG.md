@@ -7,6 +7,7 @@
 
 **Features**
 - Made the mod way less network intensive
+- Added a Creative Wireless Grid
 
 ### 0.5.2
 **Bugfixes**
