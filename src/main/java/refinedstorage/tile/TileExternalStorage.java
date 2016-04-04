@@ -1,12 +1,14 @@
 package refinedstorage.tile;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 import refinedstorage.RefinedStorage;
+import refinedstorage.container.ContainerStorage;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.network.MessagePriorityUpdate;
 import refinedstorage.storage.IStorage;
@@ -175,8 +177,8 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
-        super.toBytes(buf);
+    public void sendContainerData(ByteBuf buf) {
+        super.sendContainerData(buf);
 
         buf.writeInt(priority);
 
@@ -197,13 +199,18 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
-        super.fromBytes(buf);
+    public void receiveContainerData(ByteBuf buf) {
+        super.receiveContainerData(buf);
 
         priority = buf.readInt();
         stored = buf.readInt();
         compare = buf.readInt();
         mode = buf.readInt();
+    }
+
+    @Override
+    public Class<? extends Container> getContainer() {
+        return ContainerStorage.class;
     }
 
     @Override

@@ -17,10 +17,8 @@ import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.jei.PluginRefinedStorage;
 import refinedstorage.network.MessageGridCraftingClear;
 import refinedstorage.network.MessageGridCraftingPush;
-import refinedstorage.network.MessageStoragePull;
-import refinedstorage.network.MessageStoragePush;
+import refinedstorage.network.MessageGridStoragePull;
 import refinedstorage.storage.ItemGroup;
-import refinedstorage.tile.TileController;
 import refinedstorage.tile.grid.IGrid;
 import refinedstorage.tile.grid.TileGrid;
 import refinedstorage.tile.grid.WirelessGrid;
@@ -75,7 +73,7 @@ public class GuiGrid extends GuiBase {
         items.clear();
 
         if (grid.isConnected()) {
-            items.addAll(grid.getController().getItemGroups());
+            items.addAll(grid.getItemGroups());
 
             if (!searchField.getText().trim().isEmpty()) {
                 Iterator<ItemGroup> t = items.iterator();
@@ -256,33 +254,31 @@ public class GuiGrid extends GuiBase {
         boolean clickedClear = clickedButton == 0 && isHoveringOverClear(mouseX - guiLeft, mouseY - guiTop);
 
         if (grid.isConnected()) {
-            TileController controller = grid.getController();
-
             if (isHoveringOverSlot() && container.getPlayer().inventory.getItemStack() != null && (clickedButton == 0 || clickedButton == 1)) {
-                RefinedStorage.NETWORK.sendToServer(new MessageStoragePush(controller.getPos().getX(), controller.getPos().getY(), controller.getPos().getZ(), -1, clickedButton == 1));
+                grid.onItemPush(-1, clickedButton == 1);
             } else if (isHoveringOverItemInSlot() && container.getPlayer().inventory.getItemStack() == null) {
                 int flags = 0;
 
                 if (clickedButton == 1) {
-                    flags |= MessageStoragePull.PULL_HALF;
+                    flags |= MessageGridStoragePull.PULL_HALF;
                 }
 
                 if (GuiScreen.isShiftKeyDown()) {
-                    flags |= MessageStoragePull.PULL_SHIFT;
+                    flags |= MessageGridStoragePull.PULL_SHIFT;
                 }
 
                 if (clickedButton == 2) {
-                    flags |= MessageStoragePull.PULL_ONE;
+                    flags |= MessageGridStoragePull.PULL_ONE;
                 }
 
-                RefinedStorage.NETWORK.sendToServer(new MessageStoragePull(controller.getPos().getX(), controller.getPos().getY(), controller.getPos().getZ(), hoveringItemId, flags));
+                grid.onItemPull(hoveringItemId, flags);
             } else if (clickedClear) {
                 RefinedStorage.NETWORK.sendToServer(new MessageGridCraftingClear((TileGrid) grid));
             } else {
                 for (Slot slot : container.getPlayerInventorySlots()) {
                     if (inBounds(slot.xDisplayPosition, slot.yDisplayPosition, 16, 16, mouseX - guiLeft, mouseY - guiTop)) {
                         if (GuiScreen.isShiftKeyDown()) {
-                            RefinedStorage.NETWORK.sendToServer(new MessageStoragePush(controller.getPos().getX(), controller.getPos().getY(), controller.getPos().getZ(), slot.slotNumber, clickedButton == 1));
+                            grid.onItemPush(slot.slotNumber, clickedButton == 1);
                         }
                     }
                 }

@@ -9,16 +9,16 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import refinedstorage.tile.INetworkTile;
 
-public class MessageTileUpdate implements IMessage, IMessageHandler<MessageTileUpdate, IMessage> {
+public class MessageContainerUpdate implements IMessage, IMessageHandler<MessageContainerUpdate, IMessage> {
     private TileEntity tile;
     private int x;
     private int y;
     private int z;
 
-    public MessageTileUpdate() {
+    public MessageContainerUpdate() {
     }
 
-    public MessageTileUpdate(TileEntity tile) {
+    public MessageContainerUpdate(TileEntity tile) {
         this.tile = tile;
     }
 
@@ -32,7 +32,7 @@ public class MessageTileUpdate implements IMessage, IMessageHandler<MessageTileU
             tile = Minecraft.getMinecraft().theWorld.getTileEntity(new BlockPos(x, y, z));
 
             if (tile instanceof INetworkTile) {
-                ((INetworkTile) tile).receiveData(buf);
+                ((INetworkTile) tile).receiveContainerData(buf);
             }
         }
     }
@@ -44,12 +44,12 @@ public class MessageTileUpdate implements IMessage, IMessageHandler<MessageTileU
         buf.writeInt(tile.getPos().getZ());
 
         if (tile instanceof INetworkTile) {
-            ((INetworkTile) tile).sendData(buf);
+            ((INetworkTile) tile).sendContainerData(buf);
         }
     }
 
     @Override
-    public IMessage onMessage(MessageTileUpdate message, MessageContext ctx) {
+    public IMessage onMessage(MessageContainerUpdate message, MessageContext ctx) {
         return null;
     }
 }

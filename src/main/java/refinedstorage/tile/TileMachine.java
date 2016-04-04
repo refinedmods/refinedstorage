@@ -1,7 +1,6 @@
 package refinedstorage.tile;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import refinedstorage.block.BlockMachine;
@@ -11,47 +10,39 @@ import refinedstorage.tile.config.RedstoneMode;
 public abstract class TileMachine extends TileBase implements INetworkTile, IRedstoneModeConfig {
     protected boolean connected = false;
     protected RedstoneMode redstoneMode = RedstoneMode.IGNORE;
-
-    private BlockPos controllerPosition;
-
-    private Block originalBlock;
+    protected TileController controller;
 
     public void onConnected(TileController controller) {
-        if (worldObj != null && worldObj.getBlockState(pos).getBlock() == originalBlock) {
+        if (worldObj != null && worldObj.getBlockState(pos).getBlock() == blockType) {
             markDirty();
 
-            connected = true;
+            this.connected = true;
+            this.controller = controller;
 
             worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockMachine.CONNECTED, true));
-
-            controllerPosition = controller.getPos();
         }
     }
 
     public void onDisconnected() {
-        if (worldObj != null && worldObj.getBlockState(pos).getBlock() == originalBlock) {
+        if (worldObj != null && worldObj.getBlockState(pos).getBlock() == blockType) {
             markDirty();
 
-            connected = false;
+            this.connected = false;
+            this.controller = null;
 
             worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockMachine.CONNECTED, false));
         }
     }
 
+    public TileController getController() {
+        return controller;
+    }
+
     @Override
     public void update() {
-        if (worldObj == null) {
-            super.update();
-            return;
-        }
-
-        if (ticks == 0) {
-            originalBlock = worldObj.getBlockState(pos).getBlock();
-        }
-
         super.update();
 
-        if (!worldObj.isRemote && isConnected()) {
+        if (worldObj != null && !worldObj.isRemote && isConnected()) {
             updateMachine();
         }
     }
@@ -77,37 +68,30 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
         return pos;
     }
 
-    public TileController getController() {
-        return (TileController) worldObj.getTileEntity(controllerPosition);
-    }
-
     @Override
-    public void fromBytes(ByteBuf buf) {
+    public void receiveData(ByteBuf buf) {
         boolean lastConnected = connected;
 
         connected = buf.readBoolean();
 
-        if (connected) {
-            controllerPosition = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
-        }
-
-        redstoneMode = RedstoneMode.getById(buf.readInt());
-
         if (lastConnected != connected) {
+            // @TODO: make this work and use correct flags?
             worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2 | 4);
         }
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
+    public void sendData(ByteBuf buf) {
         buf.writeBoolean(connected);
+    }
 
-        if (connected) {
-            buf.writeInt(controllerPosition.getX());
-            buf.writeInt(controllerPosition.getY());
-            buf.writeInt(controllerPosition.getZ());
-        }
+    @Override
+    public void receiveContainerData(ByteBuf buf) {
+        redstoneMode = RedstoneMode.getById(buf.readInt());
+    }
 
+    @Override
+    public void sendContainerData(ByteBuf buf) {
         buf.writeInt(redstoneMode.id);
     }
 

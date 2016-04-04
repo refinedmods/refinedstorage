@@ -4,18 +4,22 @@ import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyReceiver;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.block.BlockController;
 import refinedstorage.block.EnumControllerType;
+import refinedstorage.container.ContainerController;
 import refinedstorage.item.ItemWirelessGrid;
 import refinedstorage.storage.IStorage;
 import refinedstorage.storage.IStorageProvider;
@@ -43,9 +47,10 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     private EnergyStorage energy = new EnergyStorage(32000);
     private int energyUsage;
 
-    private boolean activeClientSide;
-
     private boolean destroyed = false;
+
+    @SideOnly(Side.CLIENT)
+    private boolean activeClientSide;
 
     @Override
     public void update() {
@@ -374,10 +379,6 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
         return energy.getEnergyStored() >= getEnergyUsage() && redstoneMode.isEnabled(worldObj, pos);
     }
 
-    public boolean isActiveClientSide() {
-        return activeClientSide;
-    }
-
     @Override
     public RedstoneMode getRedstoneMode() {
         return redstoneMode;
@@ -396,32 +397,34 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
-        activeClientSide = buf.readBoolean();
-
+    public void receiveData(ByteBuf buf) {
         int lastEnergy = energy.getEnergyStored();
+
+        activeClientSide = buf.readBoolean();
 
         energy.setEnergyStored(buf.readInt());
 
         if (lastEnergy != energy.getEnergyStored()) {
             worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2 | 4);
         }
+    }
 
+    @Override
+    public void sendData(ByteBuf buf) {
+        buf.writeBoolean(isActive());
+
+        buf.writeInt(energy.getEnergyStored());
+    }
+
+    @Override
+    public void receiveContainerData(ByteBuf buf) {
         energyUsage = buf.readInt();
 
         redstoneMode = RedstoneMode.getById(buf.readInt());
 
-        itemGroups.clear();
-
-        int size = buf.readInt();
-
-        for (int i = 0; i < size; ++i) {
-            itemGroups.add(new ItemGroup(buf));
-        }
-
         machines.clear();
 
-        size = buf.readInt();
+        int size = buf.readInt();
 
         for (int i = 0; i < size; ++i) {
             TileEntity tile = worldObj.getTileEntity(new BlockPos(buf.readInt(), buf.readInt(), buf.readInt()));
@@ -433,19 +436,10 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
-        buf.writeBoolean(isActive());
-
-        buf.writeInt(energy.getEnergyStored());
+    public void sendContainerData(ByteBuf buf) {
         buf.writeInt(energyUsage);
 
         buf.writeInt(redstoneMode.id);
-
-        buf.writeInt(itemGroups.size());
-
-        for (ItemGroup group : itemGroups) {
-            group.toBytes(buf, itemGroups.indexOf(group));
-        }
 
         buf.writeInt(machines.size());
 
@@ -454,5 +448,14 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
             buf.writeInt(machine.getPos().getY());
             buf.writeInt(machine.getPos().getZ());
         }
+    }
+
+    public boolean isActiveClientSide() {
+        return activeClientSide;
+    }
+
+    @Override
+    public Class<? extends Container> getContainer() {
+        return ContainerController.class;
     }
 }

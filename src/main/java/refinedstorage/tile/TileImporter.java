@@ -1,11 +1,13 @@
 package refinedstorage.tile;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import refinedstorage.container.ContainerImporter;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.IModeConfig;
@@ -55,7 +57,7 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
                         toTake.stackSize = 1;
 
                         if (canImport(toTake) && sided.canExtractItem(availableSlot, toTake, getDirection().getOpposite())) {
-                            if (getController().push(toTake)) {
+                            if (controller.push(toTake)) {
                                 sided.decrStackSize(availableSlot, 1);
                                 sided.markDirty();
                             }
@@ -82,7 +84,7 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
 
                     // If we can't import and/ or push, move on (otherwise we stay on the same slot forever)
                     if (canImport(toTake)) {
-                        if (getController().push(toTake)) {
+                        if (controller.push(toTake)) {
                             inventory.decrStackSize(currentSlot, 1);
                             inventory.markDirty();
                         } else {
@@ -188,19 +190,24 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
-        super.fromBytes(buf);
+    public void receiveContainerData(ByteBuf buf) {
+        super.receiveContainerData(buf);
 
         compare = buf.readInt();
         mode = buf.readInt();
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
-        super.toBytes(buf);
+    public void sendContainerData(ByteBuf buf) {
+        super.sendContainerData(buf);
 
         buf.writeInt(compare);
         buf.writeInt(mode);
+    }
+
+    @Override
+    public Class<? extends Container> getContainer() {
+        return ContainerImporter.class;
     }
 
     public IInventory getInventory() {

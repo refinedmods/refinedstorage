@@ -1,6 +1,8 @@
 package refinedstorage.tile;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -13,12 +15,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import refinedstorage.RefinedStorage;
+import refinedstorage.network.MessageContainerUpdate;
 import refinedstorage.network.MessageTileUpdate;
 
 public abstract class TileBase extends TileEntity implements ITickable {
     public static final String NBT_DIRECTION = "Direction";
 
-    public static final int UPDATE_RANGE = 256;
+    public static final int UPDATE_RANGE = 32;
 
     private EnumFacing direction = EnumFacing.NORTH;
 
@@ -33,6 +36,12 @@ public abstract class TileBase extends TileEntity implements ITickable {
                 TargetPoint target = new TargetPoint(worldObj.provider.getDimensionType().getId(), pos.getX(), pos.getY(), pos.getZ(), UPDATE_RANGE);
 
                 RefinedStorage.NETWORK.sendToAllAround(new MessageTileUpdate(this), target);
+
+                for (EntityPlayer player : worldObj.playerEntities) {
+                    if (((INetworkTile) this).getContainer() == player.openContainer.getClass()) {
+                        RefinedStorage.NETWORK.sendTo(new MessageContainerUpdate(this), (EntityPlayerMP) player);
+                    }
+                }
             }
         }
     }

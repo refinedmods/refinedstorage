@@ -2,11 +2,13 @@ package refinedstorage.tile;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
+import refinedstorage.container.ContainerConstructor;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.util.InventoryUtils;
@@ -33,7 +35,7 @@ public class TileConstructor extends TileMachine implements ICompareConfig {
             Block tryingToPlace = ((ItemBlock) inventory.getStackInSlot(0).getItem()).getBlock();
 
             if (tryingToPlace.canPlaceBlockAt(worldObj, front)) {
-                ItemStack took = getController().take(inventory.getStackInSlot(0).copy(), compare);
+                ItemStack took = controller.take(inventory.getStackInSlot(0).copy(), compare);
 
                 if (took != null) {
                     worldObj.setBlockState(front, tryingToPlace.getStateFromMeta(took.getItemDamage()), 1 | 2);
@@ -75,17 +77,22 @@ public class TileConstructor extends TileMachine implements ICompareConfig {
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
-        super.fromBytes(buf);
+    public void receiveContainerData(ByteBuf buf) {
+        super.receiveContainerData(buf);
 
         compare = buf.readInt();
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
-        super.toBytes(buf);
+    public void sendContainerData(ByteBuf buf) {
+        super.sendContainerData(buf);
 
         buf.writeInt(compare);
+    }
+
+    @Override
+    public Class<? extends Container> getContainer() {
+        return ContainerConstructor.class;
     }
 
     public IInventory getInventory() {

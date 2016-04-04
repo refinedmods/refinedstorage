@@ -1,10 +1,12 @@
 package refinedstorage.tile;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import refinedstorage.RefinedStorageBlocks;
+import refinedstorage.container.ContainerDetector;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.storage.ItemGroup;
 import refinedstorage.tile.config.ICompareConfig;
@@ -50,7 +52,7 @@ public class TileDetector extends TileMachine implements ICompareConfig {
             if (slot != null) {
                 boolean foundAny = false;
 
-                for (ItemGroup group : getController().getItemGroups()) {
+                for (ItemGroup group : controller.getItemGroups()) {
                     if (group.compare(slot, compare)) {
                         foundAny = true;
 
@@ -156,12 +158,8 @@ public class TileDetector extends TileMachine implements ICompareConfig {
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
-        super.fromBytes(buf);
-
-        compare = buf.readInt();
-        mode = buf.readInt();
-        amount = buf.readInt();
+    public void receiveData(ByteBuf buf) {
+        super.receiveData(buf);
 
         boolean lastPowered = powered;
 
@@ -173,13 +171,33 @@ public class TileDetector extends TileMachine implements ICompareConfig {
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
-        super.toBytes(buf);
+    public void sendData(ByteBuf buf) {
+        super.sendData(buf);
+
+        buf.writeBoolean(powered);
+    }
+
+    @Override
+    public void sendContainerData(ByteBuf buf) {
+        super.sendContainerData(buf);
 
         buf.writeInt(compare);
         buf.writeInt(mode);
         buf.writeInt(amount);
-        buf.writeBoolean(powered);
+    }
+
+    @Override
+    public void receiveContainerData(ByteBuf buf) {
+        super.receiveContainerData(buf);
+
+        compare = buf.readInt();
+        mode = buf.readInt();
+        amount = buf.readInt();
+    }
+
+    @Override
+    public Class<? extends Container> getContainer() {
+        return ContainerDetector.class;
     }
 
     public IInventory getInventory() {

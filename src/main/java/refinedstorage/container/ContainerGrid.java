@@ -6,10 +6,8 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.slot.SlotGridCraftingResult;
-import refinedstorage.tile.TileController;
 import refinedstorage.tile.grid.IGrid;
 import refinedstorage.tile.grid.TileGrid;
-import refinedstorage.tile.grid.WirelessGrid;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,8 +79,9 @@ public class ContainerGrid extends ContainerBase {
     public void onContainerClosed(EntityPlayer player) {
         super.onContainerClosed(player);
 
-        if (grid instanceof WirelessGrid && ((WirelessGrid) grid).getBoundTile() instanceof TileController) {
+        // @TODO: Fix
+        /*if (grid instanceof WirelessGrid && ((WirelessGrid) grid).getBoundTile() instanceof TileController) {
             grid.getController().onCloseWirelessGrid(player);
-        }
+        }*/
     }
 }

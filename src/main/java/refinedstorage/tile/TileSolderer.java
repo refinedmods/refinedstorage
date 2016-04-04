@@ -2,6 +2,7 @@ package refinedstorage.tile;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -10,6 +11,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import refinedstorage.container.ContainerSolderer;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.tile.solderer.ISoldererRecipe;
 import refinedstorage.tile.solderer.SoldererRegistry;
@@ -112,8 +114,8 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
-        super.fromBytes(buf);
+    public void receiveContainerData(ByteBuf buf) {
+        super.receiveContainerData(buf);
 
         working = buf.readBoolean();
         progress = buf.readInt();
@@ -121,12 +123,17 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
-        super.toBytes(buf);
+    public void sendContainerData(ByteBuf buf) {
+        super.sendContainerData(buf);
 
         buf.writeBoolean(working);
         buf.writeInt(progress);
         buf.writeInt(recipe != null ? recipe.getDuration() : 0);
+    }
+
+    @Override
+    public Class<? extends Container> getContainer() {
+        return ContainerSolderer.class;
     }
 
     public boolean isWorking() {

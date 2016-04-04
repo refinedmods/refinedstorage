@@ -1,11 +1,13 @@
 package refinedstorage.tile;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityHopper;
+import refinedstorage.container.ContainerExporter;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.util.InventoryUtils;
@@ -39,13 +41,13 @@ public class TileExporter extends TileMachine implements ICompareConfig {
                         ItemStack toTake = slot.copy();
                         toTake.stackSize = 1;
 
-                        ItemStack took = getController().take(toTake, compare);
+                        ItemStack took = controller.take(toTake, compare);
 
                         if (took != null) {
                             ItemStack remaining = TileEntityHopper.putStackInInventoryAllSlots(connectedInventory, took, getDirection().getOpposite());
 
                             if (remaining != null) {
-                                getController().push(remaining);
+                                controller.push(remaining);
                             }
                         }
                     }
@@ -87,17 +89,22 @@ public class TileExporter extends TileMachine implements ICompareConfig {
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
-        super.fromBytes(buf);
+    public void receiveContainerData(ByteBuf buf) {
+        super.receiveContainerData(buf);
 
         compare = buf.readInt();
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
-        super.toBytes(buf);
+    public void sendContainerData(ByteBuf buf) {
+        super.sendContainerData(buf);
 
         buf.writeInt(compare);
+    }
+
+    @Override
+    public Class<? extends Container> getContainer() {
+        return ContainerExporter.class;
     }
 
     public IInventory getInventory() {

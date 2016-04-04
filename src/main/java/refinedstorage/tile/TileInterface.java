@@ -2,12 +2,14 @@ package refinedstorage.tile;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
+import refinedstorage.container.ContainerInterface;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.util.InventoryUtils;
@@ -50,7 +52,7 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
                 ItemStack toPush = slot.copy();
                 toPush.stackSize = 1;
 
-                if (getController().push(toPush)) {
+                if (controller.push(toPush)) {
                     decrStackSize(currentSlot, 1);
                 }
             }
@@ -65,7 +67,7 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
 
                 if (got != null) {
                     if (!InventoryUtils.compareStack(wanted, got, compare)) {
-                        if (getController().push(got)) {
+                        if (controller.push(got)) {
                             inventory.setInventorySlotContents(i + 9, null);
                         }
                     } else {
@@ -83,7 +85,7 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
                     ItemStack goingToTake = wanted.copy();
                     goingToTake.stackSize = needed;
 
-                    ItemStack took = getController().take(goingToTake, compare);
+                    ItemStack took = controller.take(goingToTake, compare);
 
                     if (took != null) {
                         if (got == null) {
@@ -94,7 +96,7 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
                     }
                 }
             } else if (got != null) {
-                if (getController().push(got)) {
+                if (controller.push(got)) {
                     inventory.setInventorySlotContents(i + 9, null);
                 }
             }
@@ -122,17 +124,22 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
-        super.fromBytes(buf);
+    public void receiveContainerData(ByteBuf buf) {
+        super.receiveContainerData(buf);
 
         compare = buf.readInt();
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
-        super.toBytes(buf);
+    public void sendContainerData(ByteBuf buf) {
+        super.sendContainerData(buf);
 
         buf.writeInt(compare);
+    }
+
+    @Override
+    public Class<? extends Container> getContainer() {
+        return ContainerInterface.class;
     }
 
     @Override

@@ -1,16 +1,17 @@
 package refinedstorage.tile.grid;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.item.ItemWirelessGrid;
 import refinedstorage.network.MessageWirelessGridSettingsUpdate;
-import refinedstorage.tile.TileController;
+import refinedstorage.storage.ItemGroup;
 import refinedstorage.tile.config.IRedstoneModeConfig;
+import refinedstorage.util.HandUtils;
+
+import java.util.List;
 
 public class WirelessGrid implements IGrid {
     private ItemStack stack;
@@ -34,13 +35,19 @@ public class WirelessGrid implements IGrid {
         return EnumGridType.NORMAL;
     }
 
-    public TileEntity getBoundTile() {
-        return world.getTileEntity(new BlockPos(ItemWirelessGrid.getX(stack), ItemWirelessGrid.getY(stack), ItemWirelessGrid.getZ(stack)));
+    @Override
+    public List<ItemGroup> getItemGroups() {
+        return null;
     }
 
     @Override
-    public TileController getController() {
-        return (TileController) getBoundTile();
+    public void onItemPush(int playerSlot, boolean one) {
+
+    }
+
+    @Override
+    public void onItemPull(int id, int flags) {
+
     }
 
     @Override
@@ -60,21 +67,21 @@ public class WirelessGrid implements IGrid {
 
     @Override
     public void onSortingTypeChanged(int type) {
-        RefinedStorage.NETWORK.sendToServer(new MessageWirelessGridSettingsUpdate(hand == EnumHand.OFF_HAND ? 1 : 0, getSortingDirection(), type, getSearchBoxMode()));
+        RefinedStorage.NETWORK.sendToServer(new MessageWirelessGridSettingsUpdate(HandUtils.getIdFromHand(hand), getSortingDirection(), type, getSearchBoxMode()));
 
         this.sortingType = type;
     }
 
     @Override
     public void onSortingDirectionChanged(int direction) {
-        RefinedStorage.NETWORK.sendToServer(new MessageWirelessGridSettingsUpdate(hand == EnumHand.OFF_HAND ? 1 : 0, direction, getSortingType(), getSearchBoxMode()));
+        RefinedStorage.NETWORK.sendToServer(new MessageWirelessGridSettingsUpdate(HandUtils.getIdFromHand(hand), direction, getSortingType(), getSearchBoxMode()));
 
         this.sortingDirection = direction;
     }
 
     @Override
     public void onSearchBoxModeChanged(int searchBoxMode) {
-        RefinedStorage.NETWORK.sendToServer(new MessageWirelessGridSettingsUpdate(hand == EnumHand.OFF_HAND ? 1 : 0, getSortingDirection(), getSortingType(), searchBoxMode));
+        RefinedStorage.NETWORK.sendToServer(new MessageWirelessGridSettingsUpdate(HandUtils.getIdFromHand(hand), getSortingDirection(), getSortingType(), searchBoxMode));
 
         this.searchBoxMode = searchBoxMode;
     }
@@ -86,6 +93,6 @@ public class WirelessGrid implements IGrid {
 
     @Override
     public boolean isConnected() {
-        return getBoundTile() instanceof TileController && getController().isActiveClientSide();
+        return false;
     }
 }

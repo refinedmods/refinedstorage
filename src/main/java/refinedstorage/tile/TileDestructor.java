@@ -3,11 +3,13 @@ package refinedstorage.tile;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
+import refinedstorage.container.ContainerDestructor;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.IModeConfig;
@@ -47,7 +49,7 @@ public class TileDestructor extends TileMachine implements ICompareConfig, IMode
                     worldObj.setBlockToAir(front);
 
                     for (ItemStack drop : drops) {
-                        if (!getController().push(drop)) {
+                        if (!controller.push(drop)) {
                             InventoryUtils.dropStack(worldObj, drop, front.getX(), front.getY(), front.getZ());
                         }
                     }
@@ -118,19 +120,23 @@ public class TileDestructor extends TileMachine implements ICompareConfig, IMode
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
-        super.fromBytes(buf);
+    public void receiveContainerData(ByteBuf buf) {
+        super.receiveContainerData(buf);
 
         compare = buf.readInt();
         mode = buf.readInt();
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
-        super.toBytes(buf);
+    public void sendContainerData(ByteBuf buf) {
+        super.sendContainerData(buf);
 
         buf.writeInt(compare);
         buf.writeInt(mode);
+    }
+
+    public Class<? extends Container> getContainer() {
+        return ContainerDestructor.class;
     }
 
     public IInventory getInventory() {

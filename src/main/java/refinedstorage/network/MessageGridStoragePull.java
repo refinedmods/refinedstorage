@@ -9,43 +9,44 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import refinedstorage.item.ItemWirelessGrid;
 import refinedstorage.storage.ItemGroup;
 import refinedstorage.tile.TileController;
+import refinedstorage.tile.grid.TileGrid;
 
-public class MessageStoragePull extends MessageHandlerPlayerToServer<MessageStoragePull> implements IMessage {
+public class MessageGridStoragePull extends MessageHandlerPlayerToServer<MessageGridStoragePull> implements IMessage {
     public static final int PULL_HALF = 1;
     public static final int PULL_ONE = 2;
     public static final int PULL_SHIFT = 4;
 
-    private int x;
-    private int y;
-    private int z;
+    private int gridX;
+    private int gridY;
+    private int gridZ;
     private int id;
     private int flags;
 
-    public MessageStoragePull() {
+    public MessageGridStoragePull() {
     }
 
-    public MessageStoragePull(int x, int y, int z, int id, int flags) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+    public MessageGridStoragePull(int gridX, int gridY, int gridZ, int id, int flags) {
+        this.gridX = gridX;
+        this.gridY = gridY;
+        this.gridZ = gridZ;
         this.id = id;
         this.flags = flags;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        x = buf.readInt();
-        y = buf.readInt();
-        z = buf.readInt();
+        gridX = buf.readInt();
+        gridY = buf.readInt();
+        gridZ = buf.readInt();
         id = buf.readInt();
         flags = buf.readInt();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(x);
-        buf.writeInt(y);
-        buf.writeInt(z);
+        buf.writeInt(gridX);
+        buf.writeInt(gridY);
+        buf.writeInt(gridZ);
         buf.writeInt(id);
         buf.writeInt(flags);
     }
@@ -63,11 +64,11 @@ public class MessageStoragePull extends MessageHandlerPlayerToServer<MessageStor
     }
 
     @Override
-    public void handle(MessageStoragePull message, EntityPlayerMP player) {
-        TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.x, message.y, message.z));
+    public void handle(MessageGridStoragePull message, EntityPlayerMP player) {
+        TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.gridX, message.gridY, message.gridZ));
 
-        if (tile instanceof TileController && ((TileController) tile).isActive()) {
-            TileController controller = (TileController) tile;
+        if (tile instanceof TileGrid && ((TileGrid) tile).isConnected()) {
+            TileController controller = ((TileGrid) tile).getController();
 
             if (message.id < controller.getItemGroups().size()) {
                 ItemGroup group = controller.getItemGroups().get(message.id);

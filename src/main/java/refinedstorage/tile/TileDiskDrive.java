@@ -2,12 +2,14 @@ package refinedstorage.tile;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import refinedstorage.RefinedStorage;
 import refinedstorage.block.EnumStorageType;
+import refinedstorage.container.ContainerDiskDrive;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.network.MessagePriorityUpdate;
 import refinedstorage.storage.*;
@@ -89,8 +91,8 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
-        super.toBytes(buf);
+    public void sendContainerData(ByteBuf buf) {
+        super.sendContainerData(buf);
 
         buf.writeInt(priority);
         buf.writeInt(compare);
@@ -98,12 +100,17 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
-        super.fromBytes(buf);
+    public void receiveContainerData(ByteBuf buf) {
+        super.receiveContainerData(buf);
 
         priority = buf.readInt();
         compare = buf.readInt();
         mode = buf.readInt();
+    }
+
+    @Override
+    public Class<? extends Container> getContainer() {
+        return ContainerDiskDrive.class;
     }
 
     @Override

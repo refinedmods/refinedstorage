@@ -1,5 +1,7 @@
 package refinedstorage.tile;
 
+import net.minecraft.inventory.Container;
+import refinedstorage.container.ContainerRelay;
 import refinedstorage.tile.config.RedstoneMode;
 
 public class TileRelay extends TileMachine {
@@ -14,5 +16,10 @@ public class TileRelay extends TileMachine {
 
     @Override
     public void updateMachine() {
+    }
+
+    @Override
+    public Class<? extends Container> getContainer() {
+        return ContainerRelay.class;
     }
 }

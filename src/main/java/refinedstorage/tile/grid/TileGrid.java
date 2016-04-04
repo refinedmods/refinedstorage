@@ -8,6 +8,8 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.block.BlockGrid;
@@ -15,6 +17,9 @@ import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.network.MessageGridSettingsUpdate;
+import refinedstorage.network.MessageGridStoragePull;
+import refinedstorage.network.MessageGridStoragePush;
+import refinedstorage.storage.ItemGroup;
 import refinedstorage.tile.TileMachine;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.util.InventoryUtils;
@@ -54,6 +59,9 @@ public class TileGrid extends TileMachine implements IGrid {
     private int sortingType = SORTING_TYPE_NAME;
     private int searchBoxMode = SEARCH_BOX_MODE_NORMAL;
 
+    @SideOnly(Side.CLIENT)
+    private List<ItemGroup> itemGroups = new ArrayList<ItemGroup>();
+
     @Override
     public int getEnergyUsage() {
         return 4;
@@ -69,6 +77,21 @@ public class TileGrid extends TileMachine implements IGrid {
         }
 
         return EnumGridType.NORMAL;
+    }
+
+    @Override
+    public List<ItemGroup> getItemGroups() {
+        return itemGroups;
+    }
+
+    @Override
+    public void onItemPush(int playerSlot, boolean one) {
+        RefinedStorage.NETWORK.sendToServer(new MessageGridStoragePush(getPos().getX(), getPos().getY(), getPos().getZ(), playerSlot, one));
+    }
+
+    @Override
+    public void onItemPull(int id, int flags) {
+        RefinedStorage.NETWORK.sendToServer(new MessageGridStoragePull(getPos().getX(), getPos().getY(), getPos().getZ(), id, flags));
     }
 
     public InventoryCrafting getCraftingInventory() {
@@ -92,7 +115,7 @@ public class TileGrid extends TileMachine implements IGrid {
 
                 if (slot != null) {
                     if (slot.stackSize == 1 && isConnected()) {
-                        craftingInventory.setInventorySlotContents(i, getController().take(slot.copy()));
+                        craftingInventory.setInventorySlotContents(i, controller.take(slot.copy()));
                     } else {
                         craftingInventory.decrStackSize(i, 1);
                     }
@@ -124,7 +147,7 @@ public class TileGrid extends TileMachine implements IGrid {
 
         for (ItemStack craftedItem : craftedItemsList) {
             if (!player.inventory.addItemStackToInventory(craftedItem.copy())) {
-                if (isConnected() && getController().push(craftedItem.copy())) {
+                if (isConnected() && controller.push(craftedItem.copy())) {
                     // NO OP
                 } else {
                     InventoryUtils.dropStack(player.worldObj, craftedItem, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
@@ -139,7 +162,7 @@ public class TileGrid extends TileMachine implements IGrid {
                 ItemStack slot = craftingInventory.getStackInSlot(i);
 
                 if (slot != null) {
-                    if (!getController().push(slot)) {
+                    if (!controller.push(slot)) {
                         return;
                     }
 
@@ -152,7 +175,7 @@ public class TileGrid extends TileMachine implements IGrid {
                     ItemStack[] possibilities = recipe[i];
 
                     for (ItemStack possibility : possibilities) {
-                        ItemStack took = getController().take(possibility);
+                        ItemStack took = controller.take(possibility);
 
                         if (took != null) {
                             craftingInventory.setInventorySlotContents(i, possibility);
@@ -244,21 +267,44 @@ public class TileGrid extends TileMachine implements IGrid {
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
-        super.toBytes(buf);
+    public void sendContainerData(ByteBuf buf) {
+        super.sendContainerData(buf);
 
         buf.writeInt(sortingDirection);
         buf.writeInt(sortingType);
         buf.writeInt(searchBoxMode);
+
+        if (connected) {
+            buf.writeInt(controller.getItemGroups().size());
+
+            for (ItemGroup group : controller.getItemGroups()) {
+                group.toBytes(buf, controller.getItemGroups().indexOf(group));
+            }
+        }
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
-        super.fromBytes(buf);
+    public void receiveContainerData(ByteBuf buf) {
+        super.receiveContainerData(buf);
 
         sortingDirection = buf.readInt();
         sortingType = buf.readInt();
         searchBoxMode = buf.readInt();
+
+        itemGroups.clear();
+
+        if (connected) {
+            int size = buf.readInt();
+
+            for (int i = 0; i < size; ++i) {
+                itemGroups.add(new ItemGroup(buf));
+            }
+        }
+    }
+
+    @Override
+    public Class<? extends Container> getContainer() {
+        return ContainerGrid.class;
     }
 
     @Override
