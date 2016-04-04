@@ -291,15 +291,17 @@ public class TileGrid extends TileMachine implements IGrid {
         sortingType = buf.readInt();
         searchBoxMode = buf.readInt();
 
-        itemGroups.clear();
+        List<ItemGroup> groups = new ArrayList<ItemGroup>();
 
         if (connected) {
             int size = buf.readInt();
 
             for (int i = 0; i < size; ++i) {
-                itemGroups.add(new ItemGroup(buf));
+                groups.add(new ItemGroup(buf));
             }
         }
+
+        itemGroups = groups;
     }
 
     @Override

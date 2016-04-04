@@ -7,6 +7,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import refinedstorage.storage.ItemGroup;
 import refinedstorage.tile.grid.WirelessGrid;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MessageWirelessGridItems implements IMessage, IMessageHandler<MessageWirelessGridItems, IMessage> {
@@ -23,13 +24,14 @@ public class MessageWirelessGridItems implements IMessage, IMessageHandler<Messa
     public void fromBytes(ByteBuf buf) {
         int size = buf.readInt();
 
-        WirelessGrid.ITEM_GROUPS.clear();
-
-        WirelessGrid.LAST_ITEM_GROUP_UPDATE = System.currentTimeMillis();
+        List<ItemGroup> groups = new ArrayList<ItemGroup>();
 
         for (int i = 0; i < size; ++i) {
-            WirelessGrid.ITEM_GROUPS.add(new ItemGroup(buf));
+            groups.add(new ItemGroup(buf));
         }
+
+        WirelessGrid.ITEM_GROUPS = groups;
+        WirelessGrid.LAST_ITEM_GROUP_UPDATE = System.currentTimeMillis();
     }
 
     @Override
