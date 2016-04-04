@@ -13,6 +13,7 @@ import refinedstorage.util.HandUtils;
 
 import java.util.List;
 
+// @TODO: Fix this as well
 public class WirelessGrid implements IGrid {
     private ItemStack stack;
     private EnumHand hand;
