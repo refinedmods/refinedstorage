@@ -3,6 +3,7 @@
 ### 0.5.3
 **Bugfixes**
 - Fixed not being able to open a Grid that is 256 blocks away from the Controller
+- Change block hardness levels
 
 **Features**
 - Made the mod way less network intensive
@@ -72,4 +73,4 @@ Special thanks to [GustoniaEagle](https://github.com/gustoniaeagle) for the new 
 - Interfaces
 
 ### 0.3
-- Initial release
+- Initial release for Minecraft 1.9

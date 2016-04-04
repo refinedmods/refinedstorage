@@ -23,6 +23,8 @@ public class BlockCable extends BlockBase {
 
     public BlockCable() {
         super("cable");
+
+        setHardness(0.6F);
     }
 
     @Override
