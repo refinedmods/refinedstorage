@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 0.6
+**Features**
+- Shift clicking on placing Constructor and Destructor will have opposite direction
+
 ### 0.5.3
 **Bugfixes**
 - Fixed not being able to open a Grid that is 256 blocks away from the Controller

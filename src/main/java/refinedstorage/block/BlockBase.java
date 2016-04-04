@@ -108,7 +108,7 @@ public abstract class BlockBase extends Block {
         if (tile instanceof TileBase) {
             EnumFacing facing = BlockPistonBase.getFacingFromEntity(pos, player);
 
-            if (player.isSneaking() && (blockPlaced == RefinedStorageBlocks.IMPORTER || blockPlaced == RefinedStorageBlocks.EXPORTER || blockPlaced == RefinedStorageBlocks.EXTERNAL_STORAGE)) {
+            if (player.isSneaking() && (blockPlaced == RefinedStorageBlocks.IMPORTER || blockPlaced == RefinedStorageBlocks.EXPORTER || blockPlaced == RefinedStorageBlocks.EXTERNAL_STORAGE || blockPlaced == RefinedStorageBlocks.CONSTRUCTOR || blockPlaced == RefinedStorageBlocks.DESTRUCTOR)) {
                 facing = facing.getOpposite();
             }
 
