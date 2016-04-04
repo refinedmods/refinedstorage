@@ -1,5 +1,12 @@
 # Refined Storage Changelog
 
+### 0.5.3
+**Bugfixes**
+- Fixed not being able to open a Grid that is 256 blocks away from the Controller
+
+**Features**
+- Made the mod way less network intensive
+
 ### 0.5.2
 **Bugfixes**
 - Items that don't exist anymore, won't be added to storage again to avoid crashes
