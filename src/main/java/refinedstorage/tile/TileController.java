@@ -133,8 +133,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                 WirelessGridConsumer consumer = it.next();
 
                 if (!InventoryUtils.compareStack(consumer.getWirelessGrid(), consumer.getPlayer().getHeldItem(consumer.getHand()))) {
-                    onCloseWirelessGrid(consumer.getPlayer());
-                    consumer.getPlayer().closeScreen();
+                    consumer.getPlayer().closeScreen(); // This will call onContainerClosed on the Container and remove it from the list
                 } else {
                     RefinedStorage.NETWORK.sendTo(new MessageWirelessGridItems(itemGroups), (EntityPlayerMP) consumer.getPlayer());
                 }
