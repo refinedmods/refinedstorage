@@ -212,6 +212,12 @@ public class TileGrid extends TileMachine implements IGrid {
         return searchBoxMode;
     }
 
+    public void setSearchBoxMode(int searchBoxMode) {
+        markDirty();
+
+        this.searchBoxMode = searchBoxMode;
+    }
+
     @Override
     public void onSortingTypeChanged(int type) {
         RefinedStorage.NETWORK.sendToServer(new MessageGridSettingsUpdate(this, sortingDirection, type, searchBoxMode));
@@ -230,10 +236,6 @@ public class TileGrid extends TileMachine implements IGrid {
     @Override
     public IRedstoneModeConfig getRedstoneModeSetting() {
         return this;
-    }
-
-    public void setSearchBoxMode(int searchBoxMode) {
-        this.searchBoxMode = searchBoxMode;
     }
 
     @Override
