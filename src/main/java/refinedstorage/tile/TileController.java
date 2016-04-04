@@ -4,6 +4,7 @@ import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyReceiver;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -21,6 +22,8 @@ import refinedstorage.block.BlockController;
 import refinedstorage.block.EnumControllerType;
 import refinedstorage.container.ContainerController;
 import refinedstorage.item.ItemWirelessGrid;
+import refinedstorage.network.GridPullFlags;
+import refinedstorage.network.MessageWirelessGridItems;
 import refinedstorage.storage.IStorage;
 import refinedstorage.storage.IStorageProvider;
 import refinedstorage.storage.ItemGroup;
@@ -132,6 +135,8 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                 if (!InventoryUtils.compareStack(consumer.getWirelessGrid(), consumer.getPlayer().getHeldItem(consumer.getHand()))) {
                     onCloseWirelessGrid(consumer.getPlayer());
                     consumer.getPlayer().closeScreen();
+                } else {
+                    RefinedStorage.NETWORK.sendTo(new MessageWirelessGridItems(itemGroups), (EntityPlayerMP) consumer.getPlayer());
                 }
             }
 
@@ -457,5 +462,80 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     @Override
     public Class<? extends Container> getContainer() {
         return ContainerController.class;
+    }
+
+    public void handleStoragePull(int id, int flags, EntityPlayerMP player) {
+        ItemGroup group = itemGroups.get(id);
+
+        int quantity = 64;
+
+        if (GridPullFlags.isPullingHalf(flags) && group.getQuantity() > 1) {
+            quantity = group.getQuantity() / 2;
+
+            if (quantity > 32) {
+                quantity = 32;
+            }
+        } else if (GridPullFlags.isPullingOne(flags)) {
+            quantity = 1;
+        } else if (GridPullFlags.isPullingWithShift(flags)) {
+            // NO OP, the quantity already set (64) is needed for shift
+        }
+
+        if (quantity > group.getType().getItemStackLimit(group.toItemStack())) {
+            quantity = group.getType().getItemStackLimit(group.toItemStack());
+        }
+
+        ItemStack took = take(group.copy(quantity).toItemStack());
+
+        if (took != null) {
+            if (GridPullFlags.isPullingWithShift(flags)) {
+                if (!player.inventory.addItemStackToInventory(took.copy())) {
+                    push(took);
+                }
+            } else {
+                player.inventory.setItemStack(took);
+                player.updateHeldItem();
+            }
+
+            drainEnergyFromWirelessGrid(player, ItemWirelessGrid.USAGE_PULL);
+        }
+    }
+
+    public void handleStoragePush(int playerSlot, boolean one, EntityPlayerMP player) {
+        ItemStack stack;
+
+        if (playerSlot == -1) {
+            stack = player.inventory.getItemStack().copy();
+
+            if (one) {
+                stack.stackSize = 1;
+            }
+        } else {
+            stack = player.inventory.getStackInSlot(playerSlot);
+        }
+
+        if (stack != null) {
+            boolean success = push(stack);
+
+            if (success) {
+                if (playerSlot == -1) {
+                    if (one) {
+                        player.inventory.getItemStack().stackSize--;
+
+                        if (player.inventory.getItemStack().stackSize == 0) {
+                            player.inventory.setItemStack(null);
+                        }
+                    } else {
+                        player.inventory.setItemStack(null);
+                    }
+
+                    player.updateHeldItem();
+                } else {
+                    player.inventory.setInventorySlotContents(playerSlot, null);
+                }
+            }
+
+            drainEnergyFromWirelessGrid(player, ItemWirelessGrid.USAGE_PUSH);
+        }
     }
 }

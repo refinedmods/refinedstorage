@@ -15,7 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import refinedstorage.RefinedStorage;
-import refinedstorage.network.MessageContainerUpdate;
+import refinedstorage.network.MessageTileContainerUpdate;
 import refinedstorage.network.MessageTileUpdate;
 
 public abstract class TileBase extends TileEntity implements ITickable {
@@ -39,7 +39,7 @@ public abstract class TileBase extends TileEntity implements ITickable {
 
                 for (EntityPlayer player : worldObj.playerEntities) {
                     if (((INetworkTile) this).getContainer() == player.openContainer.getClass()) {
-                        RefinedStorage.NETWORK.sendTo(new MessageContainerUpdate(this), (EntityPlayerMP) player);
+                        RefinedStorage.NETWORK.sendTo(new MessageTileContainerUpdate(this), (EntityPlayerMP) player);
                     }
                 }
             }

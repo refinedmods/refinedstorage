@@ -49,24 +49,24 @@ public class GuiHandler implements IGuiHandler {
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         if (ID == RefinedStorageGui.WIRELESS_GRID) {
-            return getWirelessGridContainer(world, player, x);
+            return getWirelessGridContainer(player, x);
         }
 
         return getContainer(ID, player, world.getTileEntity(new BlockPos(x, y, z)));
     }
 
-    private WirelessGrid getWirelessGrid(World world, EntityPlayer player, int hand) {
-        return new WirelessGrid(player.getHeldItem(HandUtils.getHandById(hand)), HandUtils.getHandById(hand), world);
+    private WirelessGrid getWirelessGrid(EntityPlayer player, int hand) {
+        return new WirelessGrid(player.getHeldItem(HandUtils.getHandById(hand)), HandUtils.getHandById(hand));
     }
 
-    private ContainerGrid getWirelessGridContainer(World world, EntityPlayer player, int hand) {
-        WirelessGrid wirelessGrid = getWirelessGrid(world, player, hand);
+    private ContainerGrid getWirelessGridContainer(EntityPlayer player, int hand) {
+        WirelessGrid wirelessGrid = getWirelessGrid(player, hand);
 
         return new ContainerGrid(player, wirelessGrid);
     }
 
-    private GuiGrid getWirelessGridGui(World world, EntityPlayer player, int hand) {
-        WirelessGrid wirelessGrid = getWirelessGrid(world, player, hand);
+    private GuiGrid getWirelessGridGui(EntityPlayer player, int hand) {
+        WirelessGrid wirelessGrid = getWirelessGrid(player, hand);
 
         return new GuiGrid(new ContainerGrid(player, wirelessGrid), wirelessGrid);
     }
@@ -81,7 +81,7 @@ public class GuiHandler implements IGuiHandler {
             case RefinedStorageGui.GRID:
                 return new GuiGrid((ContainerGrid) getContainer(ID, player, tile), (TileGrid) tile);
             case RefinedStorageGui.WIRELESS_GRID:
-                return getWirelessGridGui(world, player, x);
+                return getWirelessGridGui(player, x);
             case RefinedStorageGui.DISK_DRIVE:
                 return new GuiStorage((ContainerStorage) getContainer(ID, player, tile), (IStorageGui) tile, "gui/disk_drive.png");
             case RefinedStorageGui.IMPORTER:

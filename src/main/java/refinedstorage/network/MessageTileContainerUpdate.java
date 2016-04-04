@@ -9,16 +9,16 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import refinedstorage.tile.INetworkTile;
 
-public class MessageContainerUpdate implements IMessage, IMessageHandler<MessageContainerUpdate, IMessage> {
+public class MessageTileContainerUpdate implements IMessage, IMessageHandler<MessageTileContainerUpdate, IMessage> {
     private TileEntity tile;
     private int x;
     private int y;
     private int z;
 
-    public MessageContainerUpdate() {
+    public MessageTileContainerUpdate() {
     }
 
-    public MessageContainerUpdate(TileEntity tile) {
+    public MessageTileContainerUpdate(TileEntity tile) {
         this.tile = tile;
     }
 
@@ -49,7 +49,7 @@ public class MessageContainerUpdate implements IMessage, IMessageHandler<Message
     }
 
     @Override
-    public IMessage onMessage(MessageContainerUpdate message, MessageContext ctx) {
+    public IMessage onMessage(MessageTileContainerUpdate message, MessageContext ctx) {
         return null;
     }
 }

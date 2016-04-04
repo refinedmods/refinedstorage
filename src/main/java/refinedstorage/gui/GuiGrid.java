@@ -15,9 +15,9 @@ import refinedstorage.gui.sidebutton.SideButtonGridSortingDirection;
 import refinedstorage.gui.sidebutton.SideButtonGridSortingType;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.jei.PluginRefinedStorage;
+import refinedstorage.network.GridPullFlags;
 import refinedstorage.network.MessageGridCraftingClear;
 import refinedstorage.network.MessageGridCraftingPush;
-import refinedstorage.network.MessageGridStoragePull;
 import refinedstorage.storage.ItemGroup;
 import refinedstorage.tile.grid.IGrid;
 import refinedstorage.tile.grid.TileGrid;
@@ -260,15 +260,15 @@ public class GuiGrid extends GuiBase {
                 int flags = 0;
 
                 if (clickedButton == 1) {
-                    flags |= MessageGridStoragePull.PULL_HALF;
+                    flags |= GridPullFlags.PULL_HALF;
                 }
 
                 if (GuiScreen.isShiftKeyDown()) {
-                    flags |= MessageGridStoragePull.PULL_SHIFT;
+                    flags |= GridPullFlags.PULL_SHIFT;
                 }
 
                 if (clickedButton == 2) {
-                    flags |= MessageGridStoragePull.PULL_ONE;
+                    flags |= GridPullFlags.PULL_ONE;
                 }
 
                 grid.onItemPull(hoveringItemId, flags);

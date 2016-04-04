@@ -34,6 +34,7 @@ import static refinedstorage.RefinedStorage.ID;
 public class CommonProxy {
     public void preInit(FMLPreInitializationEvent e) {
         RefinedStorage.NETWORK.registerMessage(MessageTileUpdate.class, MessageTileUpdate.class, 0, Side.CLIENT);
+        RefinedStorage.NETWORK.registerMessage(MessageTileContainerUpdate.class, MessageTileContainerUpdate.class, 15, Side.CLIENT);
         RefinedStorage.NETWORK.registerMessage(MessageRedstoneModeUpdate.class, MessageRedstoneModeUpdate.class, 1, Side.SERVER);
         RefinedStorage.NETWORK.registerMessage(MessageGridStoragePush.class, MessageGridStoragePush.class, 2, Side.SERVER);
         RefinedStorage.NETWORK.registerMessage(MessageGridStoragePull.class, MessageGridStoragePull.class, 3, Side.SERVER);
@@ -47,7 +48,9 @@ public class CommonProxy {
         RefinedStorage.NETWORK.registerMessage(MessageGridCraftingPush.class, MessageGridCraftingPush.class, 12, Side.SERVER);
         RefinedStorage.NETWORK.registerMessage(MessageGridCraftingTransfer.class, MessageGridCraftingTransfer.class, 13, Side.SERVER);
         RefinedStorage.NETWORK.registerMessage(MessageWirelessGridSettingsUpdate.class, MessageWirelessGridSettingsUpdate.class, 14, Side.SERVER);
-        RefinedStorage.NETWORK.registerMessage(MessageContainerUpdate.class, MessageContainerUpdate.class, 15, Side.CLIENT);
+        RefinedStorage.NETWORK.registerMessage(MessageWirelessGridItems.class, MessageWirelessGridItems.class, 16, Side.CLIENT);
+        RefinedStorage.NETWORK.registerMessage(MessageWirelessGridStoragePush.class, MessageWirelessGridStoragePush.class, 17, Side.SERVER);
+        RefinedStorage.NETWORK.registerMessage(MessageWirelessGridStoragePull.class, MessageWirelessGridStoragePull.class, 18, Side.SERVER);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(RefinedStorage.INSTANCE, new GuiHandler());
 

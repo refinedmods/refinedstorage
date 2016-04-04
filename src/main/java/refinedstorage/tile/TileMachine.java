@@ -87,7 +87,6 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
         connected = buf.readBoolean();
 
         if (lastConnected != connected) {
-            // @TODO: Am I using the correct flags?
             worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2 | 4);
         }
     }
