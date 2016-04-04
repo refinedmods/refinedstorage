@@ -12,8 +12,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageGui;
@@ -51,9 +49,6 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     private int energyUsage;
 
     private boolean destroyed = false;
-
-    @SideOnly(Side.CLIENT)
-    private boolean activeClientSide;
 
     @Override
     public void update() {
@@ -135,7 +130,9 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                 if (!InventoryUtils.compareStack(consumer.getWirelessGrid(), consumer.getPlayer().getHeldItem(consumer.getHand()))) {
                     consumer.getPlayer().closeScreen(); // This will call onContainerClosed on the Container and remove it from the list
                 } else {
-                    RefinedStorage.NETWORK.sendTo(new MessageWirelessGridItems(itemGroups), (EntityPlayerMP) consumer.getPlayer());
+                    if (isActive()) {
+                        RefinedStorage.NETWORK.sendTo(new MessageWirelessGridItems(itemGroups), (EntityPlayerMP) consumer.getPlayer());
+                    }
                 }
             }
 
@@ -404,8 +401,6 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     public void receiveData(ByteBuf buf) {
         int lastEnergy = energy.getEnergyStored();
 
-        activeClientSide = buf.readBoolean();
-
         energy.setEnergyStored(buf.readInt());
 
         if (lastEnergy != energy.getEnergyStored()) {
@@ -415,8 +410,6 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
     @Override
     public void sendData(ByteBuf buf) {
-        buf.writeBoolean(isActive());
-
         buf.writeInt(energy.getEnergyStored());
     }
 
@@ -441,7 +434,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
     @Override
     public void sendContainerData(ByteBuf buf) {
-        buf.writeInt(energyUsage);
+        buf.writeInt(isActive() ? energyUsage : 0);
 
         buf.writeInt(redstoneMode.id);
 
@@ -452,10 +445,6 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
             buf.writeInt(machine.getPos().getY());
             buf.writeInt(machine.getPos().getZ());
         }
-    }
-
-    public boolean isActiveClientSide() {
-        return activeClientSide;
     }
 
     @Override
