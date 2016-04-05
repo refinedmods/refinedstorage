@@ -50,6 +50,16 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
     private boolean destroyed = false;
 
+    private boolean machinesHavePosition(List<TileMachine> tiles, BlockPos pos) {
+        for (TileEntity tile : tiles) {
+            if (tile.getPos().getX() == pos.getX() && tile.getPos().getY() == pos.getY() && tile.getPos().getZ() == pos.getZ()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     @Override
     public void update() {
         super.update();
@@ -70,14 +80,22 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                     }
 
                     for (TileMachine machine : machines) {
-                        if (!newMachines.contains(machine)) {
+                        if (!machinesHavePosition(newMachines, machine.getPos())) {
                             machine.onDisconnected();
                         }
                     }
 
                     for (TileMachine machine : newMachines) {
-                        if (!machines.contains(machine)) {
+                        if (!machinesHavePosition(machines, machine.getPos())) {
                             machine.onConnected(this);
+                        } else {
+                            /* This machine is in our machine list, but due to a chunk reload the tile entity
+                             would get reset which causes its connected property to reset too (to false).
+                             So, if the machine is in our list but not connected (which is the case due to a TE reload)
+                             we connect it either way. */
+                            if (!machine.isConnected()) {
+                                machine.onConnected(this);
+                            }
                         }
                     }
 

@@ -1,6 +1,9 @@
 # Refined Storage Changelog
 
 ### 0.6
+**Bugfixes**
+- Fixed machines out of the Controller's chunk range only connecting after block break on rejoining of the world
+
 **Features**
 - Shift clicking on placing Constructor and Destructor will have opposite direction
 
