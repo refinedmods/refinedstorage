@@ -3,7 +3,7 @@
   "defaults": {
     "model": "cube_all",
     "textures": {
-      "all": "refinedstorage:blocks/relay_connected"
+      "all": "refinedstorage:blocks/relay_disconnected"
     }
   },
   "variants": {
@@ -28,11 +28,11 @@
     },
     "connected": {
       "true": {
+        "textures": {
+          "all": "refinedstorage:blocks/relay_connected"
+        }
       },
       "false": {
-        "textures": {
-          "all": "refinedstorage:blocks/relay_disconnected"
-        }
       }
     }
   }
