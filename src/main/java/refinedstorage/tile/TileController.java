@@ -36,6 +36,7 @@ import refinedstorage.util.InventoryUtils;
 import java.util.*;
 
 public class TileController extends TileBase implements IEnergyReceiver, INetworkTile, IRedstoneModeConfig {
+
     public class ClientSideMachine {
         public ItemStack stack;
         public int energyUsage;
@@ -43,6 +44,8 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
         public int y;
         public int z;
     }
+
+    public static final int ENERGY_CAPACITY = 32000;
 
     private List<ItemGroup> itemGroups = new ArrayList<ItemGroup>();
     private List<IStorage> storages = new ArrayList<IStorage>();
@@ -56,7 +59,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
     private List<BlockPos> visited = new ArrayList<BlockPos>();
 
-    private EnergyStorage energy = new EnergyStorage(32000);
+    private EnergyStorage energy = new EnergyStorage(ENERGY_CAPACITY);
     private int energyUsage;
 
     private boolean destroyed = false;
@@ -362,7 +365,10 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
+        readNBT(nbt);
+    }
 
+    public void readNBT(NBTTagCompound nbt) {
         energy.readFromNBT(nbt);
 
         if (nbt.hasKey(RedstoneMode.NBT)) {
@@ -373,9 +379,11 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     @Override
     public void writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
+        writeNBT(nbt);
+    }
 
+    public void writeNBT(NBTTagCompound nbt) {
         energy.writeToNBT(nbt);
-
         nbt.setInteger(RedstoneMode.NBT, redstoneMode.id);
     }
 

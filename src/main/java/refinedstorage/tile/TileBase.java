@@ -20,6 +20,7 @@ import refinedstorage.network.MessageTileUpdate;
 
 public abstract class TileBase extends TileEntity implements ITickable {
     public static final String NBT_DIRECTION = "Direction";
+    public static final String NBT_ENERGY = "Energy";
 
     public static final int UPDATE_RANGE = 32;
 
