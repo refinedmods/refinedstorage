@@ -282,6 +282,8 @@ public class TileGrid extends TileMachine implements IGrid {
             for (ItemGroup group : controller.getItemGroups()) {
                 group.toBytes(buf, controller.getItemGroups().indexOf(group));
             }
+        } else {
+            buf.writeInt(0);
         }
     }
 
@@ -295,12 +297,10 @@ public class TileGrid extends TileMachine implements IGrid {
 
         List<ItemGroup> groups = new ArrayList<ItemGroup>();
 
-        if (connected) {
-            int size = buf.readInt();
+        int size = buf.readInt();
 
-            for (int i = 0; i < size; ++i) {
-                groups.add(new ItemGroup(buf));
-            }
+        for (int i = 0; i < size; ++i) {
+            groups.add(new ItemGroup(buf));
         }
 
         itemGroups = groups;

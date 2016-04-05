@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 0.5.5
+**Bugfixes**
+- Fixed Grid crash
+
 ### 0.5.4
 **Bugfixes**
 - Fixed machines out of the Controller's chunk range only connecting after block break when rejoining the world
