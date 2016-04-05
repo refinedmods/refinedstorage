@@ -40,6 +40,7 @@ public class GuiController extends GuiBase {
     @Override
     public void update(int x, int y) {
         scrollbar.setCanScroll(getRows() > VISIBLE_ROWS);
+        scrollbar.setScrollDelta((float) scrollbar.getScrollbarHeight() / (float) getRows());
     }
 
     @Override

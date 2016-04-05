@@ -460,6 +460,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
         buf.writeInt(machines.size());
 
+        // @TODO: This won't work clientside for far machines, send itemstacks instead!
         for (TileMachine machine : machines) {
             buf.writeInt(machine.getPos().getX());
             buf.writeInt(machine.getPos().getY());

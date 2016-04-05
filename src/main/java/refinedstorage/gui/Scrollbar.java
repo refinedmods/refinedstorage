@@ -10,6 +10,8 @@ public class Scrollbar {
     private int scrollbarWidth;
     private int scrollbarHeight;
 
+    private float scrollDelta = 15f;
+
     private float currentScroll;
     private boolean wasClicking = false;
     private boolean isScrolling = false;
@@ -19,6 +21,14 @@ public class Scrollbar {
         this.y = y;
         this.scrollbarWidth = scrollbarWidth;
         this.scrollbarHeight = scrollbarHeight;
+    }
+
+    public int getScrollbarWidth() {
+        return scrollbarWidth;
+    }
+
+    public int getScrollbarHeight() {
+        return scrollbarHeight;
     }
 
     public void setCanScroll(boolean canScroll) {
@@ -49,6 +59,10 @@ public class Scrollbar {
         currentScroll = newCurrentScroll;
     }
 
+    public void setScrollDelta(float delta) {
+        this.scrollDelta = delta;
+    }
+
     public void draw(GuiBase gui) {
         gui.bindTexture("icons.png");
         gui.drawTexture(gui.getGuiLeft() + x, gui.getGuiTop() + y + (int) currentScroll, canScroll() ? 232 : 244, 0, 12, 15);
@@ -64,12 +78,10 @@ public class Scrollbar {
 
             wheel = Math.max(Math.min(-wheel, 1), -1);
 
-            float delta = 15;
-
             if (wheel == -1) {
-                setCurrentScroll(currentScroll - delta);
+                setCurrentScroll(currentScroll - scrollDelta);
             } else if (wheel == 1) {
-                setCurrentScroll(currentScroll + delta);
+                setCurrentScroll(currentScroll + scrollDelta);
             }
 
             boolean down = Mouse.isButtonDown(0);

@@ -117,6 +117,7 @@ public class GuiGrid extends GuiBase {
         }
 
         scrollbar.setCanScroll(getRows() > getVisibleRows());
+        scrollbar.setScrollDelta((float) scrollbar.getScrollbarHeight() / (float) getRows());
     }
 
     public int getOffset() {
