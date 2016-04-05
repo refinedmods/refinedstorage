@@ -1,6 +1,6 @@
 # Refined Storage Changelog
 
-### 0.5.5
+### 0.6
 **Bugfixes**
 - Fixed Grid crash
 
