@@ -2,7 +2,7 @@
 
 ### 0.5.4
 **Bugfixes**
-- Fixed machines out of the Controller's chunk range only connecting after block break on rejoining of the world
+- Fixed machines out of the Controller's chunk range only connecting after block break when rejoining the world
 - Fixed scrollbar skipping some rows when scrolling with mouse wheel
 - Fixed machines from a long distance not being visible in the Controller
 
