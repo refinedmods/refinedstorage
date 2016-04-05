@@ -21,7 +21,7 @@ public class ItemBlockController extends ItemBlockBase {
 
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean b) {
-        EnumControllerType type = EnumControllerType.values()[stack.getMetadata()];
+        EnumControllerType type = stack.getMetadata() == 1 ? EnumControllerType.CREATIVE : EnumControllerType.NORMAL;
 
         int energyStored = 0;
         int capacity     = TileController.ENERGY_CAPACITY;
@@ -50,7 +50,7 @@ public class ItemBlockController extends ItemBlockBase {
     }
 
     public static ItemStack initNBT(ItemStack stack) {
-        EnumControllerType type = EnumControllerType.values()[stack.getMetadata()];
+        EnumControllerType type = stack.getMetadata() == 1 ? EnumControllerType.CREATIVE : EnumControllerType.NORMAL;
         NBTTagCompound tag = stack.getTagCompound();
         if(tag == null) tag = new NBTTagCompound();
 
