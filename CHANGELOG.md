@@ -1,8 +1,10 @@
 # Refined Storage Changelog
 
-### 0.6
+### 0.5.4
 **Bugfixes**
 - Fixed machines out of the Controller's chunk range only connecting after block break on rejoining of the world
+- Fixed scrollbar skipping some rows when scrolling with mouse wheel
+- Fixed machines from a long distance not being visible in the Controller
 
 **Features**
 - Shift clicking on placing Constructor and Destructor will have opposite direction
