@@ -1,17 +1,12 @@
 package refinedstorage.gui;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.translation.I18n;
 import refinedstorage.container.ContainerController;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.tile.TileController;
-import refinedstorage.tile.TileMachine;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GuiController extends GuiBase {
@@ -75,25 +70,21 @@ public class GuiController extends GuiBase {
 
         RenderHelper.enableGUIStandardItemLighting();
 
-        List<TileMachine> machines = new ArrayList<TileMachine>(controller.getMachines());
+        List<TileController.ClientSideMachine> machines = controller.getClientSideMachines();
 
-        TileMachine machineHovering = null;
+        TileController.ClientSideMachine machineHovering = null;
 
         for (int i = 0; i < 4; ++i) {
-            if (slot < machines.size() && machines.get(slot) != null && machines.get(slot).getWorld() != null) {
-                TileMachine machine = machines.get(slot);
-                IBlockState machineState = machine.getWorld().getBlockState(machine.getPos());
-                Block machineBlock = machineState.getBlock();
+            if (slot < machines.size()) {
+                TileController.ClientSideMachine machine = machines.get(slot);
 
-                ItemStack machineStack = new ItemStack(machineBlock, 1, machineBlock.getMetaFromState(machineState));
-
-                drawItem(x, y + 5, machineStack);
+                drawItem(x, y + 5, machine.stack);
                 GlStateManager.pushMatrix();
                 float scale = 0.5f;
 
                 GlStateManager.scale(scale, scale, 1);
-                drawString(calculateOffsetOnScale(x + 1, scale), calculateOffsetOnScale(y - 3, scale), machineStack.getDisplayName());
-                drawString(calculateOffsetOnScale(x + 21, scale), calculateOffsetOnScale(y + 10, scale), t("misc.refinedstorage:energy_usage_minimal", machine.getEnergyUsage()));
+                drawString(calculateOffsetOnScale(x + 1, scale), calculateOffsetOnScale(y - 3, scale), machine.stack.getDisplayName());
+                drawString(calculateOffsetOnScale(x + 21, scale), calculateOffsetOnScale(y + 10, scale), t("misc.refinedstorage:energy_usage_minimal", machine.energyUsage));
                 GlStateManager.popMatrix();
 
                 if (inBounds(x, y, 16, 16, mouseX, mouseY)) {
@@ -112,9 +103,9 @@ public class GuiController extends GuiBase {
         }
 
         if (machineHovering != null) {
-            String message = I18n.translateToLocalFormatted("gui.refinedstorage:controller.machine_position.x", machineHovering.getPos().getX());
-            message += "\n" + I18n.translateToLocalFormatted("gui.refinedstorage:controller.machine_position.y", machineHovering.getPos().getY());
-            message += "\n" + I18n.translateToLocalFormatted("gui.refinedstorage:controller.machine_position.z", machineHovering.getPos().getZ());
+            String message = I18n.translateToLocalFormatted("gui.refinedstorage:controller.machine_position.x", machineHovering.x);
+            message += "\n" + I18n.translateToLocalFormatted("gui.refinedstorage:controller.machine_position.y", machineHovering.y);
+            message += "\n" + I18n.translateToLocalFormatted("gui.refinedstorage:controller.machine_position.z", machineHovering.z);
 
             drawTooltip(mouseX, mouseY, message);
         }
@@ -132,7 +123,7 @@ public class GuiController extends GuiBase {
     }
 
     private int getRows() {
-        int max = (int) Math.ceil((float) controller.getMachines().size() / (float) 2);
+        int max = (int) Math.ceil((float) controller.getClientSideMachines().size() / (float) 2);
 
         return max < 0 ? 0 : max;
     }

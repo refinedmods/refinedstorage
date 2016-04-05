@@ -3,6 +3,7 @@ package refinedstorage.tile;
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyReceiver;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
@@ -12,6 +13,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageGui;
@@ -34,6 +36,14 @@ import refinedstorage.util.InventoryUtils;
 import java.util.*;
 
 public class TileController extends TileBase implements IEnergyReceiver, INetworkTile, IRedstoneModeConfig {
+    public class ClientSideMachine {
+        public ItemStack stack;
+        public int energyUsage;
+        public int x;
+        public int y;
+        public int z;
+    }
+
     private List<ItemGroup> itemGroups = new ArrayList<ItemGroup>();
     private List<IStorage> storages = new ArrayList<IStorage>();
     private List<WirelessGridConsumer> wirelessGridConsumers = new ArrayList<WirelessGridConsumer>();
@@ -42,6 +52,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
     private List<TileMachine> machines = new ArrayList<TileMachine>();
+    private List<ClientSideMachine> clientSideMachines = new ArrayList<ClientSideMachine>();
 
     private List<BlockPos> visited = new ArrayList<BlockPos>();
 
@@ -417,6 +428,10 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
         return pos;
     }
 
+    public List<ClientSideMachine> getClientSideMachines() {
+        return clientSideMachines;
+    }
+
     @Override
     public void receiveData(ByteBuf buf) {
         int lastEnergy = energy.getEnergyStored();
@@ -441,15 +456,28 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
         machines.clear();
 
+        List<ClientSideMachine> machines = new ArrayList<ClientSideMachine>();
+
         int size = buf.readInt();
 
         for (int i = 0; i < size; ++i) {
-            TileEntity tile = worldObj.getTileEntity(new BlockPos(buf.readInt(), buf.readInt(), buf.readInt()));
+            int energyUsage = buf.readInt();
+            int x = buf.readInt();
+            int y = buf.readInt();
+            int z = buf.readInt();
+            ItemStack stack = ByteBufUtils.readItemStack(buf);
 
-            if (tile instanceof TileMachine) {
-                machines.add((TileMachine) tile);
-            }
+            ClientSideMachine machine = new ClientSideMachine();
+            machine.x = x;
+            machine.y = y;
+            machine.z = z;
+            machine.energyUsage = energyUsage;
+            machine.stack = stack;
+
+            machines.add(machine);
         }
+
+        clientSideMachines = machines;
     }
 
     @Override
@@ -460,11 +488,16 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
         buf.writeInt(machines.size());
 
-        // @TODO: This won't work clientside for far machines, send itemstacks instead!
         for (TileMachine machine : machines) {
+            buf.writeInt(machine.getEnergyUsage());
+
             buf.writeInt(machine.getPos().getX());
             buf.writeInt(machine.getPos().getY());
             buf.writeInt(machine.getPos().getZ());
+
+            IBlockState state = worldObj.getBlockState(machine.getPos());
+
+            ByteBufUtils.writeItemStack(buf, new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state)));
         }
     }
 
