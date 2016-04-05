@@ -36,6 +36,7 @@ import refinedstorage.util.InventoryUtils;
 import java.util.*;
 
 public class TileController extends TileBase implements IEnergyReceiver, INetworkTile, IRedstoneModeConfig {
+
     public class ClientSideMachine {
         public ItemStack stack;
         public int energyUsage;
@@ -379,6 +380,20 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
         nbt.setInteger(RedstoneMode.NBT, redstoneMode.id);
     }
 
+    public void readItemFromNBT(NBTTagCompound nbt) {
+        energy.readFromNBT(nbt);
+
+        if (nbt.hasKey(RedstoneMode.NBT)) {
+            redstoneMode = RedstoneMode.getById(nbt.getInteger(RedstoneMode.NBT));
+        }
+    }
+
+    public void writeItemToNBT(NBTTagCompound nbt) {
+        energy.writeToNBT(nbt);
+
+        nbt.setInteger(RedstoneMode.NBT, redstoneMode.id);
+    }
+
     @Override
     public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
         return energy.receiveEnergy(maxReceive, simulate);
@@ -580,4 +595,9 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
             drainEnergyFromWirelessGrid(player, ItemWirelessGrid.USAGE_PUSH);
         }
     }
+
+    public void setEnergyStored(int energyStored) {
+        if (energyStored > 0) this.energy.setEnergyStored(energyStored);
+    }
+
 }

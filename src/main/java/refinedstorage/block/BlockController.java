@@ -1,18 +1,27 @@
 package refinedstorage.block;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockContainer;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Enchantments;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
@@ -20,7 +29,9 @@ import refinedstorage.RefinedStorageGui;
 import refinedstorage.item.ItemBlockBase;
 import refinedstorage.tile.TileController;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class BlockController extends BlockBase {
     public static final PropertyEnum TYPE = PropertyEnum.create("type", EnumControllerType.class);
@@ -85,7 +96,68 @@ public class BlockController extends BlockBase {
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
         ((TileController) world.getTileEntity(pos)).onDestroyed();
 
-        super.breakBlock(world, pos, state);
+        super.breakBlock(world,pos,state);
+    }
+
+    //Unless making a ItemBlock this seems to be the only solution to store NBT on the dropped stack
+    // any function called after this like get drops will not be able to get the tile
+    public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack stack)
+    {
+        player.addStat(StatList.func_188055_a(this));
+        player.addExhaustion(0.025F);
+
+        if (this.canSilkHarvest(worldIn, pos, state, player) && EnchantmentHelper.getEnchantmentLevel(Enchantments.silkTouch, stack) > 0)
+        {
+            java.util.List<ItemStack> items = new java.util.ArrayList<ItemStack>();
+            ItemStack itemstack = this.createStackedBlock(state);
+
+            if (itemstack != null)
+            {
+                items.add(itemstack);
+            }
+
+            net.minecraftforge.event.ForgeEventFactory.fireBlockHarvesting(items, worldIn, pos, state, 0, 1.0f, true, player);
+            for (ItemStack item : items)
+            {
+                spawnAsEntity(worldIn, pos, item);
+            }
+        }
+        else
+        {
+            harvesters.set(player);
+            int i = EnchantmentHelper.getEnchantmentLevel(Enchantments.fortune, stack);
+            if ((te instanceof TileController)) {
+                List<ItemStack> ls = new ArrayList<ItemStack>();
+
+                TileController controller = (TileController) te;
+                ItemStack item = new ItemStack(getItemDropped(state, null, 0), 1, damageDropped(state));
+                NBTTagCompound tag = new NBTTagCompound();
+                controller.writeItemToNBT(tag);
+                item.setTagCompound(tag);
+                if (!worldIn.isRemote && !worldIn.restoringBlockSnapshots)
+                {
+                    spawnAsEntity(worldIn, pos, item);
+                }
+            }
+                //this.dropBlockAsItem(worldIn, pos, state, i);
+            harvesters.set(null);
+        }
+    }
+
+    @Override
+    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack itemStack) {
+        super.onBlockPlacedBy(world, pos, state, player, itemStack);
+
+        NBTTagCompound tag = itemStack.getTagCompound();
+        if(tag != null)
+        {
+            TileEntity tile = world.getTileEntity(pos);
+            if(tile instanceof TileController)
+            {
+                TileController controller = (TileController)tile;
+                controller.readItemFromNBT(tag);
+            }
+        }
     }
 
     @Override
@@ -102,4 +174,6 @@ public class BlockController extends BlockBase {
     public Item createItemForBlock() {
         return new ItemBlockBase(this, true);
     }
+
+
 }
