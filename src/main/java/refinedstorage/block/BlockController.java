@@ -106,42 +106,20 @@ public class BlockController extends BlockBase {
         player.addStat(StatList.func_188055_a(this));
         player.addExhaustion(0.025F);
 
-        if (this.canSilkHarvest(worldIn, pos, state, player) && EnchantmentHelper.getEnchantmentLevel(Enchantments.silkTouch, stack) > 0)
-        {
-            java.util.List<ItemStack> items = new java.util.ArrayList<ItemStack>();
-            ItemStack itemstack = this.createStackedBlock(state);
-
-            if (itemstack != null)
-            {
-                items.add(itemstack);
-            }
-
-            net.minecraftforge.event.ForgeEventFactory.fireBlockHarvesting(items, worldIn, pos, state, 0, 1.0f, true, player);
-            for (ItemStack item : items)
+        harvesters.set(player);
+        int i = EnchantmentHelper.getEnchantmentLevel(Enchantments.fortune, stack);
+        if ((te instanceof TileController)) {
+            TileController controller = (TileController) te;
+            ItemStack item = new ItemStack(getItemDropped(state, null, 0), 1, damageDropped(state));
+            NBTTagCompound tag = new NBTTagCompound();
+            controller.writeItemToNBT(tag);
+            item.setTagCompound(tag);
+            if (!worldIn.isRemote && !worldIn.restoringBlockSnapshots)
             {
                 spawnAsEntity(worldIn, pos, item);
             }
         }
-        else
-        {
-            harvesters.set(player);
-            int i = EnchantmentHelper.getEnchantmentLevel(Enchantments.fortune, stack);
-            if ((te instanceof TileController)) {
-                List<ItemStack> ls = new ArrayList<ItemStack>();
-
-                TileController controller = (TileController) te;
-                ItemStack item = new ItemStack(getItemDropped(state, null, 0), 1, damageDropped(state));
-                NBTTagCompound tag = new NBTTagCompound();
-                controller.writeItemToNBT(tag);
-                item.setTagCompound(tag);
-                if (!worldIn.isRemote && !worldIn.restoringBlockSnapshots)
-                {
-                    spawnAsEntity(worldIn, pos, item);
-                }
-            }
-                //this.dropBlockAsItem(worldIn, pos, state, i);
-            harvesters.set(null);
-        }
+        harvesters.set(null);
     }
 
     @Override
