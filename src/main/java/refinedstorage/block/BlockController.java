@@ -129,7 +129,7 @@ public class BlockController extends BlockBase {
             if(tile instanceof TileController)
             {
                 TileController controller = (TileController)tile;
-                controller.readItemFromNBT(tag);
+                controller.readNBT(tag);
             }
         }
     }
@@ -141,7 +141,7 @@ public class BlockController extends BlockBase {
         ItemStack stack = new ItemStack(RefinedStorageBlocks.CONTROLLER, 1, RefinedStorageBlocks.CONTROLLER.getMetaFromState(state));
 
         NBTTagCompound tag = new NBTTagCompound();
-        ((TileController) world.getTileEntity(pos)).writeItemToNBT(tag);
+        ((TileController) world.getTileEntity(pos)).writeNBT(tag);
         stack.setTagCompound(tag);
 
         drops.add(stack);

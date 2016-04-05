@@ -5,6 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorageBlocks;
+import refinedstorage.block.EnumControllerType;
 import refinedstorage.block.EnumStorageType;
 import refinedstorage.tile.TileController;
 
@@ -20,17 +21,25 @@ public class ItemBlockController extends ItemBlockBase {
 
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean b) {
+        EnumControllerType type = EnumControllerType.values()[stack.getMetadata()];
 
-        if (stack.getTagCompound() != null && stack.getTagCompound().hasKey(TileController.NBT_ENERGY)) {
+        int energyStored = 0;
+        int capacity     = TileController.ENERGY_CAPACITY;
+        int percent      = 0;
+
+        if(type == EnumControllerType.CREATIVE) {
+            energyStored = capacity;
+            percent = 100;
+        }
+        else if (stack.getTagCompound() != null && stack.getTagCompound().hasKey(TileController.NBT_ENERGY)) {
             NBTTagCompound tag = stack.getTagCompound();
 
-            int energyStored = tag.getInteger(TileController.NBT_ENERGY);
-            int capacity     = TileController.ENERGY_CAPACITY;
-            int percent      = (int)((float)energyStored / (capacity) * 100);
-
-            //TODO: Format numbers ?
-            list.add("RF: " + energyStored + "/" + capacity + "(" + percent + "%)");
+            energyStored = tag.getInteger(TileController.NBT_ENERGY);
+            percent = (int)((float)energyStored / (capacity) * 100);
         }
+        //TODO: Format numbers ?
+        list.add("RF: " + energyStored + "/" + capacity + " (" + percent + "%)");
+
     }
 
     @Override
@@ -41,6 +50,12 @@ public class ItemBlockController extends ItemBlockBase {
     }
 
     public static ItemStack initNBT(ItemStack stack) {
+        EnumControllerType type = EnumControllerType.values()[stack.getMetadata()];
+        NBTTagCompound tag = stack.getTagCompound();
+        if(tag == null) tag = new NBTTagCompound();
+
+        tag.setInteger(TileController.NBT_ENERGY, type == EnumControllerType.CREATIVE ? TileController.ENERGY_CAPACITY : 0);
+
         return stack;
     }
 }

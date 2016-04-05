@@ -368,12 +368,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
         readNBT(nbt);
     }
 
-    public void readItemFromNBT(NBTTagCompound nbt) {
-        readNBT(nbt);
-    }
-
-    private void readNBT(NBTTagCompound nbt)
-    {
+    public void readNBT(NBTTagCompound nbt) {
         energy.readFromNBT(nbt);
 
         if (nbt.hasKey(RedstoneMode.NBT)) {
@@ -387,12 +382,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
         writeNBT(nbt);
     }
 
-    public void writeItemToNBT(NBTTagCompound nbt) {
-        writeNBT(nbt);
-    }
-
-    private void writeNBT(NBTTagCompound nbt)
-    {
+    public void writeNBT(NBTTagCompound nbt) {
         energy.writeToNBT(nbt);
         nbt.setInteger(RedstoneMode.NBT, redstoneMode.id);
     }
