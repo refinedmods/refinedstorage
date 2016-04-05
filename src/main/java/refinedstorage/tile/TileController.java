@@ -45,6 +45,8 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
         public int z;
     }
 
+    public static final int ENERGY_CAPACITY = 32000;
+
     private List<ItemGroup> itemGroups = new ArrayList<ItemGroup>();
     private List<IStorage> storages = new ArrayList<IStorage>();
     private List<WirelessGridConsumer> wirelessGridConsumers = new ArrayList<WirelessGridConsumer>();
@@ -57,7 +59,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
     private List<BlockPos> visited = new ArrayList<BlockPos>();
 
-    private EnergyStorage energy = new EnergyStorage(32000);
+    private EnergyStorage energy = new EnergyStorage(ENERGY_CAPACITY);
     private int energyUsage;
 
     private boolean destroyed = false;

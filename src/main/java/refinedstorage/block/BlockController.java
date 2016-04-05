@@ -14,6 +14,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Enchantments;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatList;
@@ -25,8 +26,10 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
+import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.item.ItemBlockBase;
+import refinedstorage.item.ItemBlockController;
 import refinedstorage.tile.TileController;
 
 import java.util.ArrayList;
@@ -44,7 +47,7 @@ public class BlockController extends BlockBase {
     @Override
     public void getSubBlocks(Item item, CreativeTabs tab, List subItems) {
         for (int i = 0; i <= 1; i++) {
-            subItems.add(new ItemStack(item, 1, i));
+            subItems.add(ItemBlockController.initNBT(new ItemStack(item, 1, i)));
         }
     }
 
@@ -99,27 +102,20 @@ public class BlockController extends BlockBase {
         super.breakBlock(world,pos,state);
     }
 
-    //Unless making a ItemBlock this seems to be the only solution to store NBT on the dropped stack
-    // any function called after this like get drops will not be able to get the tile
-    public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack stack)
-    {
-        player.addStat(StatList.func_188055_a(this));
-        player.addExhaustion(0.025F);
-
-        harvesters.set(player);
-        int i = EnchantmentHelper.getEnchantmentLevel(Enchantments.fortune, stack);
-        if ((te instanceof TileController)) {
-            TileController controller = (TileController) te;
-            ItemStack item = new ItemStack(getItemDropped(state, null, 0), 1, damageDropped(state));
-            NBTTagCompound tag = new NBTTagCompound();
-            controller.writeItemToNBT(tag);
-            item.setTagCompound(tag);
-            if (!worldIn.isRemote && !worldIn.restoringBlockSnapshots)
-            {
-                spawnAsEntity(worldIn, pos, item);
-            }
+    @Override
+    public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
+        if (willHarvest) {
+            return true;
         }
-        harvesters.set(null);
+
+        return super.removedByPlayer(state, world, pos, player, willHarvest);
+    }
+
+    @Override
+    public void harvestBlock(World world, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity tile, ItemStack stack) {
+        super.harvestBlock(world, player, pos, state, tile, stack);
+
+        world.setBlockToAir(pos);
     }
 
     @Override
@@ -139,6 +135,22 @@ public class BlockController extends BlockBase {
     }
 
     @Override
+    public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+        List<ItemStack> drops = new ArrayList<ItemStack>();
+
+        ItemStack stack = new ItemStack(RefinedStorageBlocks.CONTROLLER, 1, RefinedStorageBlocks.CONTROLLER.getMetaFromState(state));
+
+        NBTTagCompound tag = new NBTTagCompound();
+        ((TileController) world.getTileEntity(pos)).writeItemToNBT(tag);
+        stack.setTagCompound(tag);
+
+        drops.add(stack);
+
+        return drops;
+    }
+
+
+    @Override
     public boolean hasComparatorInputOverride(IBlockState state) {
         return true;
     }
@@ -150,7 +162,7 @@ public class BlockController extends BlockBase {
 
     @Override
     public Item createItemForBlock() {
-        return new ItemBlockBase(this, true);
+        return new ItemBlockController();
     }
 
 
