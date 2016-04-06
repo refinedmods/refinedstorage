@@ -18,18 +18,15 @@ public class ItemBlockController extends ItemBlockBase {
 
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean b) {
-        EnumControllerType type = stack.getMetadata() == EnumControllerType.CREATIVE.getId() ? EnumControllerType.CREATIVE : EnumControllerType.NORMAL;
+        if (stack.getMetadata() != EnumControllerType.CREATIVE.getId()) {
+            int energyStored = 0;
 
-        int energyStored = 0;
-        int capacity = TileController.ENERGY_CAPACITY;
+            if (stack.getTagCompound() != null && stack.getTagCompound().hasKey(TileController.NBT_ENERGY)) {
+                energyStored = stack.getTagCompound().getInteger(TileController.NBT_ENERGY);
+            }
 
-        if (type == EnumControllerType.CREATIVE) {
-            energyStored = capacity;
-        } else if (stack.getTagCompound() != null && stack.getTagCompound().hasKey(TileController.NBT_ENERGY)) {
-            energyStored = stack.getTagCompound().getInteger(TileController.NBT_ENERGY);
+            list.add(I18n.format("misc.refinedstorage:energy_stored", energyStored, TileController.ENERGY_CAPACITY));
         }
-
-        list.add(I18n.format("misc.refinedstorage:energy_stored", energyStored, capacity));
     }
 
     @Override
@@ -40,15 +37,13 @@ public class ItemBlockController extends ItemBlockBase {
     }
 
     public static ItemStack initNBT(ItemStack stack) {
-        EnumControllerType type = stack.getMetadata() == EnumControllerType.CREATIVE.getId() ? EnumControllerType.CREATIVE : EnumControllerType.NORMAL;
-
         NBTTagCompound tag = stack.getTagCompound();
 
         if (tag == null) {
             tag = new NBTTagCompound();
         }
 
-        tag.setInteger(TileController.NBT_ENERGY, type == EnumControllerType.CREATIVE ? TileController.ENERGY_CAPACITY : 0);
+        tag.setInteger(TileController.NBT_ENERGY, stack.getMetadata() == EnumControllerType.CREATIVE.getId() ? TileController.ENERGY_CAPACITY : 0);
 
         return stack;
     }
