@@ -111,3 +111,4 @@ item.refinedstorage:storage_part.0.name=1k Storage Part
 item.refinedstorage:storage_part.1.name=4k Storage Part
 item.refinedstorage:storage_part.2.name=16k Storage Part
 item.refinedstorage:storage_part.3.name=64k Storage Part
+item.refinedstorage:pattern.name=Pattern

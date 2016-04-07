@@ -88,6 +88,7 @@ public class CommonProxy {
         registerItem(RefinedStorageItems.SILICON);
         registerItem(RefinedStorageItems.PROCESSOR);
         registerItem(RefinedStorageItems.STORAGE_PART);
+        registerItem(RefinedStorageItems.PATTERN);
 
         // Processors
         SoldererRegistry.addRecipe(new SoldererRecipePrintedProcessor(ItemProcessor.TYPE_PRINTED_BASIC));
@@ -339,6 +340,16 @@ public class CommonProxy {
             'G', new ItemStack(Blocks.glass),
             'R', new ItemStack(Items.redstone),
             'P', new ItemStack(RefinedStorageItems.STORAGE_PART, 1, ItemStoragePart.TYPE_64K),
+            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
+        );
+
+        // Pattern
+        GameRegistry.addRecipe(NBTStorage.initNBT(new ItemStack(RefinedStorageItems.PATTERN)),
+            "GRG",
+            "RGR",
+            "EEE",
+            'G', new ItemStack(Blocks.glass),
+            'R', new ItemStack(Items.redstone),
             'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
         );
 

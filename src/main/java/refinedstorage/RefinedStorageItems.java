@@ -10,4 +10,5 @@ public final class RefinedStorageItems {
     public static final ItemSilicon SILICON = new ItemSilicon();
     public static final ItemProcessor PROCESSOR = new ItemProcessor();
     public static final ItemStoragePart STORAGE_PART = new ItemStoragePart();
+    public static final ItemPattern PATTERN = new ItemPattern();
 }

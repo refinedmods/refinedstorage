@@ -111,3 +111,4 @@ item.refinedstorage:storage_part.0.name=1k Opslagdeel
 item.refinedstorage:storage_part.1.name=4k Opslagdeel
 item.refinedstorage:storage_part.2.name=16k Opslagdeel
 item.refinedstorage:storage_part.3.name=64k Opslagdeel
+item.refinedstorage:pattern.name=Patroon
