@@ -344,7 +344,7 @@ public class CommonProxy {
         );
 
         // Pattern
-        GameRegistry.addRecipe(NBTStorage.initNBT(new ItemStack(RefinedStorageItems.PATTERN)),
+        GameRegistry.addRecipe(new ItemStack(RefinedStorageItems.PATTERN),
             "GRG",
             "RGR",
             "EEE",
