@@ -1,8 +1,11 @@
 # Refined Storage Changelog
 
-### 0.6
+### 0.5.5
 **Bugfixes**
-- Fixed Grid crash
+- Fixed several crashes
+
+**Features**
+- Energy level on Controller is maintained
 
 ### 0.5.4
 **Bugfixes**
