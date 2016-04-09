@@ -3,6 +3,7 @@
 ### 0.5.5
 **Bugfixes**
 - Fixed several crashes
+- Updated to Forge 1859
 
 **Features**
 - Energy level on Controller is maintained
