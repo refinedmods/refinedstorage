@@ -5,8 +5,6 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.block.BlockStorage;
@@ -36,7 +34,6 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
     private int priority = 0;
     private int compare = 0;
     private int mode = 0;
-    @SideOnly(Side.CLIENT)
     private int stored;
 
     @Override

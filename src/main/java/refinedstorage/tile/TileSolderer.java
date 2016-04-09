@@ -9,8 +9,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import refinedstorage.container.ContainerSolderer;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.tile.solderer.ISoldererRecipe;
@@ -34,7 +32,6 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
 
     private boolean working = false;
     private int progress = 0;
-    @SideOnly(Side.CLIENT)
     private int duration;
 
     @Override
@@ -144,12 +141,10 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
         return progress;
     }
 
-    @SideOnly(Side.CLIENT)
     public int getProgressScaled(int i) {
         return (int) ((float) progress / (float) duration * (float) i);
     }
 
-    @SideOnly(Side.CLIENT)
     public int getDuration() {
         return duration;
     }

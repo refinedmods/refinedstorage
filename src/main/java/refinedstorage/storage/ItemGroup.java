@@ -5,8 +5,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import refinedstorage.util.InventoryUtils;
 
 public class ItemGroup {
@@ -14,7 +12,6 @@ public class ItemGroup {
     private int quantity;
     private int damage;
     private NBTTagCompound tag;
-    @SideOnly(Side.CLIENT)
     private int id;
 
     public ItemGroup(ByteBuf buf) {
@@ -76,7 +73,6 @@ public class ItemGroup {
         this.tag = tag;
     }
 
-    @SideOnly(Side.CLIENT)
     public int getId() {
         return id;
     }
