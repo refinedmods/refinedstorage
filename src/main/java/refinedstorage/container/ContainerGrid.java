@@ -1,11 +1,15 @@
 package refinedstorage.container;
 
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import refinedstorage.RefinedStorage;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.slot.SlotGridCraftingResult;
+import refinedstorage.network.MessageGridCraftingShift;
 import refinedstorage.tile.grid.IGrid;
 import refinedstorage.tile.grid.TileGrid;
 import refinedstorage.tile.grid.WirelessGrid;
@@ -83,5 +87,20 @@ public class ContainerGrid extends ContainerBase {
         if (!player.worldObj.isRemote && grid instanceof WirelessGrid) {
             ((WirelessGrid) grid).onClose(player);
         }
+    }
+
+    @Override
+    public ItemStack func_184996_a(int id, int clickedButton, ClickType clickType, EntityPlayer player) {
+        Slot slot = id >= 0 ? getSlot(id) : null;
+
+        if (player.worldObj.isRemote && slot instanceof SlotGridCraftingResult && slot.getHasStack()) {
+            if (GuiScreen.isShiftKeyDown()) {
+                RefinedStorage.NETWORK.sendToServer(new MessageGridCraftingShift((TileGrid) grid));
+
+                return null;
+            }
+        }
+
+        return super.func_184996_a(id, clickedButton, clickType, player);
     }
 }

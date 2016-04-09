@@ -48,6 +48,7 @@ public class CommonProxy {
         RefinedStorage.NETWORK.registerMessage(MessageWirelessGridItems.class, MessageWirelessGridItems.class, 16, Side.CLIENT);
         RefinedStorage.NETWORK.registerMessage(MessageWirelessGridStoragePush.class, MessageWirelessGridStoragePush.class, 17, Side.SERVER);
         RefinedStorage.NETWORK.registerMessage(MessageWirelessGridStoragePull.class, MessageWirelessGridStoragePull.class, 18, Side.SERVER);
+        RefinedStorage.NETWORK.registerMessage(MessageGridCraftingShift.class, MessageGridCraftingShift.class, 19, Side.SERVER);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(RefinedStorage.INSTANCE, new GuiHandler());
 

@@ -7,7 +7,6 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import refinedstorage.container.slot.SlotDisabled;
-import refinedstorage.container.slot.SlotGridCraftingResult;
 import refinedstorage.container.slot.SlotSpecimen;
 
 import java.util.ArrayList;
@@ -99,10 +98,6 @@ public abstract class ContainerBase extends Container {
             }
 
             return player.inventory.getItemStack();
-        } else if (slot instanceof SlotGridCraftingResult && slot.getHasStack() && GuiScreen.isShiftKeyDown()) {
-            ((SlotGridCraftingResult) slot).onShiftClick(player);
-
-            return null;
         } else if (slot instanceof SlotDisabled) {
             return null;
         }

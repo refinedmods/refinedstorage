@@ -30,8 +30,4 @@ public class SlotGridCraftingResult extends SlotCrafting {
 
         grid.onCrafted(container);
     }
-
-    public void onShiftClick(EntityPlayer player) {
-        grid.onCraftedShift(container, player);
-    }
 }
