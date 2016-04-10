@@ -10,6 +10,7 @@ import refinedstorage.RefinedStorageGui;
 import refinedstorage.container.*;
 import refinedstorage.storage.IStorageGui;
 import refinedstorage.tile.*;
+import refinedstorage.tile.autocrafting.TileCraftingMonitor;
 import refinedstorage.tile.grid.TileGrid;
 import refinedstorage.tile.grid.WirelessGrid;
 import refinedstorage.util.HandUtils;
@@ -41,6 +42,8 @@ public class GuiHandler implements IGuiHandler {
                 return new ContainerRelay(player);
             case RefinedStorageGui.INTERFACE:
                 return new ContainerInterface(player, (TileInterface) tile);
+            case RefinedStorageGui.CRAFTING_MONITOR:
+                return new ContainerCraftingMonitor(player);
             default:
                 return null;
         }
@@ -102,6 +105,8 @@ public class GuiHandler implements IGuiHandler {
                 return new GuiRelay((ContainerRelay) getContainer(ID, player, tile), (TileRelay) tile);
             case RefinedStorageGui.INTERFACE:
                 return new GuiInterface((ContainerInterface) getContainer(ID, player, tile), (TileInterface) tile);
+            case RefinedStorageGui.CRAFTING_MONITOR:
+                return new GuiCraftingMonitor((ContainerCraftingMonitor) getContainer(ID, player, tile), (TileCraftingMonitor) tile);
             default:
                 return null;
         }

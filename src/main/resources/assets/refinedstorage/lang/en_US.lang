@@ -20,6 +20,7 @@ gui.refinedstorage:relay=Relay
 gui.refinedstorage:interface.import=Interface Import
 gui.refinedstorage:interface.export=Interface Export
 gui.refinedstorage:interface.patterns=Patterns
+gui.refinedstorage:crafting_monitor=Crafting Monitor
 
 misc.refinedstorage:energy_stored=%d / %d RF
 misc.refinedstorage:energy_usage=Usage: %d RF/t
@@ -91,6 +92,7 @@ block.refinedstorage:storage.3.name=64k Storage Block
 block.refinedstorage:storage.4.name=Creative Storage Block
 block.refinedstorage:relay.name=Relay
 block.refinedstorage:interface.name=Interface
+block.refinedstorage:crafting_monitor.name=Crafting Monitor
 
 item.refinedstorage:storage_disk.0.name=1k Storage Disk
 item.refinedstorage:storage_disk.1.name=4k Storage Disk

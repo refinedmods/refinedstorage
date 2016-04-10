@@ -18,4 +18,5 @@ public final class RefinedStorageBlocks {
     public static final BlockStorage STORAGE = new BlockStorage();
     public static final BlockRelay RELAY = new BlockRelay();
     public static final BlockInterface INTERFACE = new BlockInterface();
+    public static final BlockCraftingMonitor CRAFTING_MONITOR = new BlockCraftingMonitor();
 }
