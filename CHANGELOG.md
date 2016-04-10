@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 0.6
+WIP
+
 ### 0.5.5
 **Bugfixes**
 - Fixed several crashes
