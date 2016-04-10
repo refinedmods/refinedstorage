@@ -43,8 +43,16 @@ public class ItemPattern extends ItemBase {
         pattern.getTagCompound().setTag(NBT_RESULT, stackTag);
     }
 
+    public static boolean hasResult(ItemStack pattern) {
+        if (pattern.getTagCompound() == null) {
+            return false;
+        }
+
+        return pattern.getTagCompound().hasKey(NBT_RESULT);
+    }
+
     public static ItemStack getResult(ItemStack pattern) {
-        if (pattern.getTagCompound() == null || !pattern.getTagCompound().hasKey(NBT_RESULT)) {
+        if (!hasResult(pattern)) {
             return null;
         }
 

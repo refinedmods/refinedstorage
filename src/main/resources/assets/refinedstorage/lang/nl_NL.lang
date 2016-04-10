@@ -19,6 +19,7 @@ gui.refinedstorage:constructor=Constructor
 gui.refinedstorage:relay=Relais
 gui.refinedstorage:interface.import=Interface Import
 gui.refinedstorage:interface.export=Interface Export
+gui.refinedstorage:interface.patterns=Patronen
 
 misc.refinedstorage:energy_stored=%d / %d RF
 misc.refinedstorage:energy_usage=Vebruik: %d RF/t

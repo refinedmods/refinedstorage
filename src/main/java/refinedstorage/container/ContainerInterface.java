@@ -3,8 +3,12 @@ package refinedstorage.container;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import refinedstorage.RefinedStorageItems;
+import refinedstorage.container.slot.IItemValidator;
+import refinedstorage.container.slot.SlotFiltered;
 import refinedstorage.container.slot.SlotOutput;
 import refinedstorage.container.slot.SlotSpecimen;
+import refinedstorage.item.ItemPattern;
 import refinedstorage.tile.TileInterface;
 
 public class ContainerInterface extends ContainerBase {
@@ -23,7 +27,16 @@ public class ContainerInterface extends ContainerBase {
             addSlotToContainer(new SlotOutput(tile, i, 8 + (18 * (i - 18)), 100));
         }
 
-        addPlayerInventory(8, 136);
+        for (int i = 27; i < 27 + 9; ++i) {
+            addSlotToContainer(new SlotFiltered(tile, i, 8 + (18 * (i - 27)), 134, new IItemValidator() {
+                @Override
+                public boolean isValid(ItemStack stack) {
+                    return stack.getItem() == RefinedStorageItems.PATTERN && ItemPattern.hasResult(stack);
+                }
+            }));
+        }
+
+        addPlayerInventory(8, 168);
     }
 
     @Override
