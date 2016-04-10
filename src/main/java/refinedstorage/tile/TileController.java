@@ -28,6 +28,7 @@ import refinedstorage.network.MessageWirelessGridItems;
 import refinedstorage.storage.IStorage;
 import refinedstorage.storage.IStorageProvider;
 import refinedstorage.storage.ItemGroup;
+import refinedstorage.tile.autocrafting.CraftingTask;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
 import refinedstorage.tile.grid.WirelessGridConsumer;
@@ -56,6 +57,8 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
     private List<TileMachine> machines = new ArrayList<TileMachine>();
     private List<ClientSideMachine> clientSideMachines = new ArrayList<ClientSideMachine>();
+
+    private List<CraftingTask> craftingTasks = new ArrayList<CraftingTask>();
 
     private List<BlockPos> visited = new ArrayList<BlockPos>();
 
@@ -198,6 +201,10 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
     public List<ItemGroup> getItemGroups() {
         return itemGroups;
+    }
+
+    public List<CraftingTask> getCraftingTasks() {
+        return craftingTasks;
     }
 
     private void syncItems() {

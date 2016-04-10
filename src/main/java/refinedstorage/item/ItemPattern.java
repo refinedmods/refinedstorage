@@ -7,7 +7,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import java.util.List;
 
 public class ItemPattern extends ItemBase {
-    public static final String NBT_SLOT = "Slot_%d";
     public static final String NBT_RESULT = "Result";
 
     public ItemPattern() {
@@ -19,17 +18,6 @@ public class ItemPattern extends ItemBase {
         if (getResult(pattern) != null) {
             list.add(getResult(pattern).getDisplayName());
         }
-    }
-
-    public static void setSlot(ItemStack pattern, int i, ItemStack stack) {
-        if (pattern.getTagCompound() == null) {
-            pattern.setTagCompound(new NBTTagCompound());
-        }
-
-        NBTTagCompound stackTag = new NBTTagCompound();
-        stack.writeToNBT(stackTag);
-
-        pattern.getTagCompound().setTag(String.format(NBT_SLOT, i), stackTag);
     }
 
     public static void setResult(ItemStack pattern, ItemStack stack) {

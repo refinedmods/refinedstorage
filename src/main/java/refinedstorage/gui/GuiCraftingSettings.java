@@ -1,16 +1,10 @@
 package refinedstorage.gui;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
+import refinedstorage.container.ContainerDummy;
 
 public class GuiCraftingSettings extends GuiBase {
     public GuiCraftingSettings() {
-        super(new Container() {
-            @Override
-            public boolean canInteractWith(EntityPlayer player) {
-                return false;
-            }
-        }, 143, 61);
+        super(new ContainerDummy(), 143, 61);
     }
 
     @Override
