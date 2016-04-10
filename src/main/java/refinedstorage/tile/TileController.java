@@ -141,6 +141,18 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                         energyUsage += machine.getEnergyUsage();
                     }
                 }
+
+                Iterator<CraftingTask> it = craftingTasks.iterator();
+
+                while (it.hasNext()) {
+                    CraftingTask task = it.next();
+
+                    if (task.attemptCraft(this)) {
+                        it.remove();
+
+                        push(task.getResult());
+                    }
+                }
             }
 
             if (isActive()) {
