@@ -21,6 +21,7 @@ import refinedstorage.RefinedStorageItems;
 import refinedstorage.block.BlockController;
 import refinedstorage.block.EnumControllerType;
 import refinedstorage.container.ContainerController;
+import refinedstorage.item.ItemPattern;
 import refinedstorage.item.ItemWirelessGrid;
 import refinedstorage.network.GridPullFlags;
 import refinedstorage.network.MessageWirelessGridItems;
@@ -162,7 +163,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                     consumer.getPlayer().closeScreen(); // This will call onContainerClosed on the Container and remove it from the list
                 } else {
                     if (isActive()) {
-                        RefinedStorage.NETWORK.sendTo(new MessageWirelessGridItems(itemGroups), (EntityPlayerMP) consumer.getPlayer());
+                        RefinedStorage.NETWORK.sendTo(new MessageWirelessGridItems(this), (EntityPlayerMP) consumer.getPlayer());
                     }
                 }
             }
@@ -204,6 +205,22 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
         for (IStorage storage : storages) {
             storage.addItems(itemGroups);
+        }
+
+        for (TileMachine machine : machines) {
+            if (machine instanceof TileInterface) {
+                TileInterface tile = (TileInterface) machine;
+
+                for (int i = 27; i < 27 + 9; ++i) {
+                    ItemStack pattern = tile.getStackInSlot(i);
+
+                    if (pattern != null) {
+                        ItemGroup patternGroup = new ItemGroup(ItemPattern.getResult(pattern));
+                        patternGroup.setQuantity(0);
+                        itemGroups.add(patternGroup);
+                    }
+                }
+            }
         }
 
         combineItems();
@@ -572,6 +589,14 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
             }
 
             drainEnergyFromWirelessGrid(player, ItemWirelessGrid.USAGE_PUSH);
+        }
+    }
+
+    public void sendItemGroups(ByteBuf buf) {
+        buf.writeInt(getItemGroups().size());
+
+        for (ItemGroup group : getItemGroups()) {
+            group.toBytes(buf, getItemGroups().indexOf(group));
         }
     }
 }

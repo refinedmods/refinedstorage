@@ -210,6 +210,8 @@ public class GuiGrid extends GuiBase {
                     text = String.format("%.1f", (float) qty / 1000).replace(",", ".").replace(".0", "") + "K";
                 } else if (qty == 1) {
                     text = null;
+                } else if (qty == 0) {
+                    text = "Craft";
                 } else {
                     text = String.valueOf(qty);
                 }

@@ -5,19 +5,20 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import refinedstorage.storage.ItemGroup;
+import refinedstorage.tile.TileController;
 import refinedstorage.tile.grid.WirelessGrid;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MessageWirelessGridItems implements IMessage, IMessageHandler<MessageWirelessGridItems, IMessage> {
-    private List<ItemGroup> itemGroups;
+    private TileController controller;
 
     public MessageWirelessGridItems() {
     }
 
-    public MessageWirelessGridItems(List<ItemGroup> itemGroups) {
-        this.itemGroups = itemGroups;
+    public MessageWirelessGridItems(TileController controller) {
+        this.controller = controller;
     }
 
     @Override
@@ -36,11 +37,7 @@ public class MessageWirelessGridItems implements IMessage, IMessageHandler<Messa
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(itemGroups.size());
-
-        for (ItemGroup group : itemGroups) {
-            group.toBytes(buf, itemGroups.indexOf(group));
-        }
+        controller.sendItemGroups(buf);
     }
 
     @Override
