@@ -7,8 +7,9 @@ import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import refinedstorage.RefinedStorage;
+import refinedstorage.RefinedStorageItems;
 import refinedstorage.block.EnumGridType;
-import refinedstorage.container.slot.SlotGridCraftingResult;
+import refinedstorage.container.slot.*;
 import refinedstorage.network.MessageGridCraftingShift;
 import refinedstorage.tile.grid.IGrid;
 import refinedstorage.tile.grid.TileGrid;
@@ -27,7 +28,7 @@ public class ContainerGrid extends ContainerBase {
 
         this.grid = grid;
 
-        addPlayerInventory(8, grid.getType() == EnumGridType.CRAFTING ? 174 : 126);
+        addPlayerInventory(8, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 174 : 126);
 
         if (grid.getType() == EnumGridType.CRAFTING) {
             int x = 25;
@@ -49,6 +50,25 @@ public class ContainerGrid extends ContainerBase {
             }
 
             addSlotToContainer(new SlotGridCraftingResult(this, player, ((TileGrid) grid).getCraftingInventory(), ((TileGrid) grid).getCraftingResultInventory(), (TileGrid) grid, 0, 133 + 4, 120 + 4));
+        } else if (grid.getType() == EnumGridType.PATTERN) {
+            int x = 8;
+            int y = 106;
+
+            for (int i = 0; i < 9; ++i) {
+                addSlotToContainer(new SlotSpecimen(((TileGrid) grid).getCraftingInventory(), i, x, y, false));
+
+                x += 18;
+
+                if ((i + 1) % 3 == 0) {
+                    y += 18;
+                    x = 8;
+                }
+            }
+
+            addSlotToContainer(new SlotDisabled(((TileGrid) grid).getCraftingResultInventory(), 0, 116 + 4, 120 + 4));
+
+            addSlotToContainer(new SlotFiltered(((TileGrid) grid).getPatternsInventory(), 0, 152, 106, new BasicItemValidator(RefinedStorageItems.PATTERN)));
+            addSlotToContainer(new SlotOutput(((TileGrid) grid).getPatternsInventory(), 1, 152, 142));
         }
     }
 
@@ -93,7 +113,7 @@ public class ContainerGrid extends ContainerBase {
     public ItemStack func_184996_a(int id, int clickedButton, ClickType clickType, EntityPlayer player) {
         Slot slot = id >= 0 ? getSlot(id) : null;
 
-        if (player.worldObj.isRemote && slot instanceof SlotGridCraftingResult && slot.getHasStack()) {
+        if (player.worldObj.isRemote && slot instanceof SlotGridCraftingResult && grid.getType() == EnumGridType.CRAFTING && slot.getHasStack()) {
             if (GuiScreen.isShiftKeyDown()) {
                 RefinedStorage.NETWORK.sendToServer(new MessageGridCraftingShift((TileGrid) grid));
 

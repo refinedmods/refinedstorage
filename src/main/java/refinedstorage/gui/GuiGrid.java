@@ -40,11 +40,11 @@ public class GuiGrid extends GuiBase {
     private Scrollbar scrollbar;
 
     public GuiGrid(ContainerGrid container, IGrid grid) {
-        super(container, 193, grid.getType() == EnumGridType.CRAFTING ? 256 : 208);
+        super(container, 193, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 256 : 208);
 
         this.container = container;
         this.grid = grid;
-        this.scrollbar = new Scrollbar(174, 20, 12, grid.getType() == EnumGridType.CRAFTING ? 70 : 88);
+        this.scrollbar = new Scrollbar(174, 20, 12, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 70 : 88);
     }
 
     @Override
@@ -141,6 +141,8 @@ public class GuiGrid extends GuiBase {
     public boolean isHoveringOverClear(int mouseX, int mouseY) {
         if (grid.getType() == EnumGridType.CRAFTING) {
             return inBounds(81, 105, 7, 7, mouseX, mouseY);
+        } else if (grid.getType() == EnumGridType.PATTERN) {
+            return inBounds(64, 105, 7, 7, mouseX, mouseY);
         }
 
         return false;
@@ -150,6 +152,8 @@ public class GuiGrid extends GuiBase {
     public void drawBackground(int x, int y, int mouseX, int mouseY) {
         if (grid.getType() == EnumGridType.CRAFTING) {
             bindTexture("gui/crafting_grid.png");
+        } else if (grid.getType() == EnumGridType.PATTERN) {
+            bindTexture("gui/pattern_grid.png");
         } else {
             bindTexture("gui/grid.png");
         }
@@ -169,9 +173,11 @@ public class GuiGrid extends GuiBase {
 
         if (grid.getType() == EnumGridType.CRAFTING) {
             drawString(7, 94, t("container.crafting"));
+        } else if (grid.getType() == EnumGridType.PATTERN) {
+            drawString(7, 94, t("gui.refinedstorage:grid.pattern"));
         }
 
-        drawString(7, grid.getType() == EnumGridType.CRAFTING ? 163 : 113, t("container.inventory"));
+        drawString(7, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 163 : 113, t("container.inventory"));
 
         int x = 8;
         int y = 20;
@@ -313,6 +319,6 @@ public class GuiGrid extends GuiBase {
     }
 
     public int getVisibleRows() {
-        return grid.getType() == EnumGridType.CRAFTING ? 4 : 5;
+        return (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 4 : 5;
     }
 }

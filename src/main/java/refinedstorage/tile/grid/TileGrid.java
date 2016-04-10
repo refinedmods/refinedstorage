@@ -53,6 +53,8 @@ public class TileGrid extends TileMachine implements IGrid {
     private InventoryCrafting craftingInventory = new InventoryCrafting(craftingContainer, 3, 3);
     private InventorySimple craftingResultInventory = new InventorySimple("crafting_result", 1);
 
+    private InventorySimple patternsInventory = new InventorySimple("patterns", 2);
+
     private int sortingDirection = SORTING_DIRECTION_DESCENDING;
     private int sortingType = SORTING_TYPE_NAME;
     private int searchBoxMode = SEARCH_BOX_MODE_NORMAL;
@@ -97,6 +99,10 @@ public class TileGrid extends TileMachine implements IGrid {
 
     public InventorySimple getCraftingResultInventory() {
         return craftingResultInventory;
+    }
+
+    public InventorySimple getPatternsInventory() {
+        return patternsInventory;
     }
 
     public void onCraftingMatrixChanged() {
@@ -240,6 +246,7 @@ public class TileGrid extends TileMachine implements IGrid {
         super.readFromNBT(nbt);
 
         InventoryUtils.restoreInventory(craftingInventory, 0, nbt);
+        InventoryUtils.restoreInventory(patternsInventory, 1, nbt);
 
         if (nbt.hasKey(NBT_SORTING_DIRECTION)) {
             sortingDirection = nbt.getInteger(NBT_SORTING_DIRECTION);
@@ -259,6 +266,7 @@ public class TileGrid extends TileMachine implements IGrid {
         super.writeToNBT(nbt);
 
         InventoryUtils.saveInventory(craftingInventory, 0, nbt);
+        InventoryUtils.saveInventory(patternsInventory, 1, nbt);
 
         nbt.setInteger(NBT_SORTING_DIRECTION, sortingDirection);
         nbt.setInteger(NBT_SORTING_TYPE, sortingType);

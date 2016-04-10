@@ -13,7 +13,7 @@ public class SoldererRecipeCraftingGrid implements ISoldererRecipe {
         if (row == 0) {
             return new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED);
         } else if (row == 1) {
-            return new ItemStack(RefinedStorageBlocks.GRID, 1, 0);
+            return new ItemStack(RefinedStorageBlocks.GRID, 1, EnumGridType.NORMAL.getId());
         } else if (row == 2) {
             return new ItemStack(Blocks.crafting_table);
         }

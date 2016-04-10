@@ -189,6 +189,9 @@ public class CommonProxy {
         // Crafting Grid
         SoldererRegistry.addRecipe(new SoldererRecipeCraftingGrid());
 
+        // Pattern Grid
+        SoldererRegistry.addRecipe(new SoldererRecipePatternGrid());
+
         // Wireless Grid
         GameRegistry.addRecipe(new ItemStack(RefinedStorageItems.WIRELESS_GRID, 1, ItemWirelessGrid.TYPE_NORMAL),
             " P ",
