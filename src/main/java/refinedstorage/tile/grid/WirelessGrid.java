@@ -8,6 +8,7 @@ import net.minecraft.util.math.BlockPos;
 import refinedstorage.RefinedStorage;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.item.ItemWirelessGrid;
+import refinedstorage.network.MessageWirelessGridCraftingStart;
 import refinedstorage.network.MessageWirelessGridSettingsUpdate;
 import refinedstorage.network.MessageWirelessGridStoragePull;
 import refinedstorage.network.MessageWirelessGridStoragePush;
@@ -99,6 +100,11 @@ public class WirelessGrid implements IGrid {
         RefinedStorage.NETWORK.sendToServer(new MessageWirelessGridSettingsUpdate(HandUtils.getIdFromHand(hand), getSortingDirection(), getSortingType(), searchBoxMode));
 
         this.searchBoxMode = searchBoxMode;
+    }
+
+    @Override
+    public void onCraftingRequested(int id, int quantity) {
+        RefinedStorage.NETWORK.sendToServer(new MessageWirelessGridCraftingStart(ItemWirelessGrid.getX(stack), ItemWirelessGrid.getY(stack), ItemWirelessGrid.getZ(stack), id, quantity));
     }
 
     @Override

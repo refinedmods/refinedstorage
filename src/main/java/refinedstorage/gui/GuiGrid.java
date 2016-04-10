@@ -69,6 +69,10 @@ public class GuiGrid extends GuiBase {
         searchField.setFocused(true);
     }
 
+    public IGrid getGrid() {
+        return grid;
+    }
+
     @Override
     public void update(int x, int y) {
         items.clear();
@@ -268,7 +272,7 @@ public class GuiGrid extends GuiBase {
                 grid.onItemPush(-1, clickedButton == 1);
             } else if (isHoveringOverItemInSlot() && container.getPlayer().inventory.getItemStack() == null) {
                 if (items.get(hoveringSlot).getQuantity() == 0) {
-                    FMLCommonHandler.instance().showGuiScreen(new GuiCraftingSettings());
+                    FMLCommonHandler.instance().showGuiScreen(new GuiCraftingSettings(this, hoveringItemId));
                 } else {
                     int flags = 0;
 

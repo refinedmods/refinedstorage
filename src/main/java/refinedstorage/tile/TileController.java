@@ -606,4 +606,8 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
             group.toBytes(buf, getItemGroups().indexOf(group));
         }
     }
+
+    public void onCraftingRequested(int id, int quantity) {
+        System.out.println("Requested crafting for item " + id + " with quantity of " + quantity);
+    }
 }

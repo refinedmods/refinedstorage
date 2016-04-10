@@ -50,6 +50,8 @@ public class CommonProxy {
         RefinedStorage.NETWORK.registerMessage(MessageWirelessGridStoragePush.class, MessageWirelessGridStoragePush.class, 17, Side.SERVER);
         RefinedStorage.NETWORK.registerMessage(MessageWirelessGridStoragePull.class, MessageWirelessGridStoragePull.class, 18, Side.SERVER);
         RefinedStorage.NETWORK.registerMessage(MessageGridCraftingShift.class, MessageGridCraftingShift.class, 19, Side.SERVER);
+        RefinedStorage.NETWORK.registerMessage(MessageGridCraftingStart.class, MessageGridCraftingStart.class, 20, Side.SERVER);
+        RefinedStorage.NETWORK.registerMessage(MessageWirelessGridCraftingStart.class, MessageWirelessGridCraftingStart.class, 21, Side.SERVER);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(RefinedStorage.INSTANCE, new GuiHandler());
 
@@ -86,13 +88,13 @@ public class CommonProxy {
         registerBlock(RefinedStorageBlocks.CRAFTING_MONITOR);
 
         registerItem(RefinedStorageItems.STORAGE_DISK);
+        registerItem(RefinedStorageItems.PATTERN);
         registerItem(RefinedStorageItems.WIRELESS_GRID);
         registerItem(RefinedStorageItems.QUARTZ_ENRICHED_IRON);
         registerItem(RefinedStorageItems.CORE);
         registerItem(RefinedStorageItems.SILICON);
         registerItem(RefinedStorageItems.PROCESSOR);
         registerItem(RefinedStorageItems.STORAGE_PART);
-        registerItem(RefinedStorageItems.PATTERN);
 
         // Processors
         SoldererRegistry.addRecipe(new SoldererRecipePrintedProcessor(ItemProcessor.TYPE_PRINTED_BASIC));

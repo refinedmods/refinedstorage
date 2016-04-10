@@ -1,20 +1,29 @@
 package refinedstorage.gui;
 
+import com.google.common.primitives.Ints;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import refinedstorage.container.ContainerDummy;
 
 import java.io.IOException;
 
 public class GuiCraftingSettings extends GuiBase {
     private GuiTextField amountField;
+    private GuiGrid gridGui;
+    private int id;
+    private GuiButton startButton;
 
-    public GuiCraftingSettings() {
+    public GuiCraftingSettings(GuiGrid gridGui, int id) {
         super(new ContainerDummy(), 143, 61);
+
+        this.gridGui = gridGui;
+        this.id = id;
     }
 
     @Override
     public void init(int x, int y) {
-        addButton(x + 48, y + 35, 50, 20, t("misc.refinedstorage:start"));
+        startButton = addButton(x + 48, y + 35, 50, 20, t("misc.refinedstorage:start"));
 
         amountField = new GuiTextField(0, fontRendererObj, x + 39 + 1, y + 21 + 1, 69 - 6, fontRendererObj.FONT_HEIGHT);
         amountField.setEnableBackgroundDrawing(false);
@@ -49,6 +58,21 @@ public class GuiCraftingSettings extends GuiBase {
             // NO OP
         } else {
             super.keyTyped(character, keyCode);
+        }
+    }
+
+    @Override
+    protected void actionPerformed(GuiButton button) throws IOException {
+        super.actionPerformed(button);
+
+        if (button.id == startButton.id) {
+            Integer quantity = Ints.tryParse(amountField.getText());
+
+            if (quantity != null && quantity > 0) {
+                gridGui.getGrid().onCraftingRequested(id, quantity);
+
+                FMLClientHandler.instance().showGuiScreen(gridGui);
+            }
         }
     }
 }

@@ -7,22 +7,22 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import refinedstorage.tile.TileController;
 
-public class MessageWirelessGridStoragePull extends MessageHandlerPlayerToServer<MessageWirelessGridStoragePull> implements IMessage {
+public class MessageWirelessGridCraftingStart extends MessageHandlerPlayerToServer<MessageWirelessGridCraftingStart> implements IMessage {
     private int controllerX;
     private int controllerY;
     private int controllerZ;
     private int id;
-    private int flags;
+    private int quantity;
 
-    public MessageWirelessGridStoragePull() {
+    public MessageWirelessGridCraftingStart() {
     }
 
-    public MessageWirelessGridStoragePull(int controllerX, int controllerY, int controllerZ, int id, int flags) {
+    public MessageWirelessGridCraftingStart(int controllerX, int controllerY, int controllerZ, int id, int quantity) {
         this.controllerX = controllerX;
         this.controllerY = controllerY;
         this.controllerZ = controllerZ;
         this.id = id;
-        this.flags = flags;
+        this.quantity = quantity;
     }
 
     @Override
@@ -31,7 +31,7 @@ public class MessageWirelessGridStoragePull extends MessageHandlerPlayerToServer
         controllerY = buf.readInt();
         controllerZ = buf.readInt();
         id = buf.readInt();
-        flags = buf.readInt();
+        quantity = buf.readInt();
     }
 
     @Override
@@ -40,19 +40,15 @@ public class MessageWirelessGridStoragePull extends MessageHandlerPlayerToServer
         buf.writeInt(controllerY);
         buf.writeInt(controllerZ);
         buf.writeInt(id);
-        buf.writeInt(flags);
+        buf.writeInt(quantity);
     }
 
     @Override
-    public void handle(MessageWirelessGridStoragePull message, EntityPlayerMP player) {
+    public void handle(MessageWirelessGridCraftingStart message, EntityPlayerMP player) {
         TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.controllerX, message.controllerY, message.controllerZ));
 
-        if (tile instanceof TileController && ((TileController) tile).isActive()) {
-            TileController controller = (TileController) tile;
-
-            if (message.id >= 0 && message.id < controller.getItemGroups().size()) {
-                controller.handleStoragePull(message.id, message.flags, player);
-            }
+        if (tile instanceof TileController && ((TileController) tile).isActive() && message.quantity > 0 && message.id >= 0) {
+            ((TileController) tile).onCraftingRequested(message.id, message.quantity);
         }
     }
 }

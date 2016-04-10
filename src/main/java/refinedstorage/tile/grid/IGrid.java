@@ -27,6 +27,8 @@ public interface IGrid {
 
     void onSearchBoxModeChanged(int searchBoxMode);
 
+    void onCraftingRequested(int id, int quantity);
+
     IRedstoneModeConfig getRedstoneModeSetting();
 
     boolean isConnected();

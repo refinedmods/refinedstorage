@@ -16,6 +16,7 @@ import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.item.ItemPattern;
+import refinedstorage.network.MessageGridCraftingStart;
 import refinedstorage.network.MessageGridSettingsUpdate;
 import refinedstorage.network.MessageGridStoragePull;
 import refinedstorage.network.MessageGridStoragePush;
@@ -249,6 +250,11 @@ public class TileGrid extends TileMachine implements IGrid {
     @Override
     public void onSearchBoxModeChanged(int searchBoxMode) {
         RefinedStorage.NETWORK.sendToServer(new MessageGridSettingsUpdate(this, sortingDirection, sortingType, searchBoxMode));
+    }
+
+    @Override
+    public void onCraftingRequested(int id, int quantity) {
+        RefinedStorage.NETWORK.sendToServer(new MessageGridCraftingStart(getPos().getX(), getPos().getY(), getPos().getZ(), id, quantity));
     }
 
     @Override
