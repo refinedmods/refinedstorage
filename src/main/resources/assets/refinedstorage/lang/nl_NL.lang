@@ -40,6 +40,7 @@ misc.refinedstorage:wireless_grid.not_found=Controller werd niet gevonden.
 
 misc.refinedstorage:yes=Ja
 misc.refinedstorage:no=Nee
+misc.refinedstorage:start=Start
 misc.refinedstorage:clear=Legen
 misc.refinedstorage:priority=Prioriteit
 

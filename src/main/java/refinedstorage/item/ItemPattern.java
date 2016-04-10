@@ -15,7 +15,7 @@ public class ItemPattern extends ItemBase {
 
     @Override
     public void addInformation(ItemStack pattern, EntityPlayer player, List list, boolean b) {
-        if (getResult(pattern) != null) {
+        if (hasResult(pattern)) {
             list.add(getResult(pattern).getDisplayName());
         }
     }
