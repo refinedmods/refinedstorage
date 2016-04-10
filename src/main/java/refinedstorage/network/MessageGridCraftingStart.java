@@ -47,7 +47,7 @@ public class MessageGridCraftingStart extends MessageHandlerPlayerToServer<Messa
     public void handle(MessageGridCraftingStart message, EntityPlayerMP player) {
         TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.gridX, message.gridY, message.gridZ));
 
-        if (tile instanceof TileGrid && ((TileGrid) tile).isConnected() && message.quantity > 0 && message.id >= 0) {
+        if (tile instanceof TileGrid && ((TileGrid) tile).isConnected()) {
             ((TileGrid) tile).getController().onCraftingRequested(message.id, message.quantity);
         }
     }

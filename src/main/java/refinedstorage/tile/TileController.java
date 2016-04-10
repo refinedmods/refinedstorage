@@ -525,6 +525,10 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     }
 
     public void handleStoragePull(int id, int flags, EntityPlayerMP player) {
+        if (id < 0 || id >= itemGroups.size() - 1) {
+            return;
+        }
+
         ItemGroup group = itemGroups.get(id);
 
         int quantity = 64;
@@ -608,6 +612,12 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     }
 
     public void onCraftingRequested(int id, int quantity) {
-        System.out.println("Requested crafting for item " + id + " with quantity of " + quantity);
+        if (id >= 0 && id < itemGroups.size() && quantity > 0) {
+            for (int i = 0; i < quantity; ++i) {
+                ItemStack toCraft = itemGroups.get(id).toItemStack();
+                toCraft.stackSize = 1;
+                craftingTasks.add(CraftingTask.create(toCraft));
+            }
+        }
     }
 }

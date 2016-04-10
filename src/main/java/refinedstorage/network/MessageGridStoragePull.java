@@ -49,11 +49,7 @@ public class MessageGridStoragePull extends MessageHandlerPlayerToServer<Message
         TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.gridX, message.gridY, message.gridZ));
 
         if (tile instanceof TileGrid && ((TileGrid) tile).isConnected()) {
-            TileController controller = ((TileGrid) tile).getController();
-
-            if (message.id >= 0 && message.id < controller.getItemGroups().size()) {
-                controller.handleStoragePull(message.id, message.flags, player);
-            }
+            ((TileController) tile).handleStoragePull(message.id, message.flags, player);
         }
     }
 }

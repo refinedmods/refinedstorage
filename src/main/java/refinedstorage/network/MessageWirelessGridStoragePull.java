@@ -48,11 +48,7 @@ public class MessageWirelessGridStoragePull extends MessageHandlerPlayerToServer
         TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.controllerX, message.controllerY, message.controllerZ));
 
         if (tile instanceof TileController && ((TileController) tile).isActive()) {
-            TileController controller = (TileController) tile;
-
-            if (message.id >= 0 && message.id < controller.getItemGroups().size()) {
-                controller.handleStoragePull(message.id, message.flags, player);
-            }
+            ((TileController) tile).handleStoragePull(message.id, message.flags, player);
         }
     }
 }
