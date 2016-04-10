@@ -5,7 +5,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import refinedstorage.tile.TileController;
 import refinedstorage.tile.grid.TileGrid;
 
 public class MessageGridStoragePull extends MessageHandlerPlayerToServer<MessageGridStoragePull> implements IMessage {
@@ -49,7 +48,7 @@ public class MessageGridStoragePull extends MessageHandlerPlayerToServer<Message
         TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.gridX, message.gridY, message.gridZ));
 
         if (tile instanceof TileGrid && ((TileGrid) tile).isConnected()) {
-            ((TileController) tile).handleStoragePull(message.id, message.flags, player);
+            ((TileGrid) tile).getController().handleStoragePull(message.id, message.flags, player);
         }
     }
 }

@@ -79,12 +79,14 @@ public class GuiController extends GuiBase {
                 TileController.ClientSideMachine machine = machines.get(slot);
 
                 drawItem(x, y + 5, machine.stack);
-                GlStateManager.pushMatrix();
-                float scale = 0.5f;
 
+                GlStateManager.pushMatrix();
+
+                float scale = 0.5f;
                 GlStateManager.scale(scale, scale, 1);
                 drawString(calculateOffsetOnScale(x + 1, scale), calculateOffsetOnScale(y - 3, scale), machine.stack.getDisplayName());
                 drawString(calculateOffsetOnScale(x + 21, scale), calculateOffsetOnScale(y + 10, scale), t("misc.refinedstorage:energy_usage_minimal", machine.energyUsage));
+
                 GlStateManager.popMatrix();
 
                 if (inBounds(x, y, 16, 16, mouseX, mouseY)) {

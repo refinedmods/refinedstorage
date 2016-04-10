@@ -19,6 +19,10 @@ public class CraftingTask {
         this.ingredients = ingredients;
     }
 
+    public ItemStack getResult() {
+        return result;
+    }
+
     public static CraftingTask create(ItemStack result) {
         List<ItemStack> ingredients = new ArrayList<ItemStack>();
 
