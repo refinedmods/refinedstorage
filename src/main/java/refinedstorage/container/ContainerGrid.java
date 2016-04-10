@@ -121,6 +121,12 @@ public class ContainerGrid extends ContainerBase {
             }
         }
 
+        if (!player.worldObj.isRemote && slot instanceof SlotDisabled && grid.getType() == EnumGridType.PATTERN && slot.getHasStack()) {
+            ((TileGrid) grid).onCreatePattern();
+
+            return null;
+        }
+
         return super.func_184996_a(id, clickedButton, clickType, player);
     }
 }

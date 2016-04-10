@@ -10,10 +10,12 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
+import refinedstorage.RefinedStorageItems;
 import refinedstorage.block.BlockGrid;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
 import refinedstorage.inventory.InventorySimple;
+import refinedstorage.item.ItemPattern;
 import refinedstorage.network.MessageGridSettingsUpdate;
 import refinedstorage.network.MessageGridStoragePull;
 import refinedstorage.network.MessageGridStoragePush;
@@ -156,6 +158,27 @@ public class TileGrid extends TileMachine implements IGrid {
                     InventoryUtils.dropStack(player.worldObj, craftedItem, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
                 }
             }
+        }
+    }
+
+    public void onCreatePattern() {
+        ItemStack crafted = craftingResultInventory.getStackInSlot(0);
+
+        if (patternsInventory.getStackInSlot(1) == null && patternsInventory.getStackInSlot(0) != null && patternsInventory.getStackInSlot(0).stackSize > 0) {
+            patternsInventory.decrStackSize(0, 1);
+
+            ItemStack pattern = new ItemStack(RefinedStorageItems.PATTERN);
+            ItemPattern.setResult(pattern, crafted);
+
+            for (int i = 0; i < 9; ++i) {
+                ItemStack slot = craftingInventory.getStackInSlot(i);
+
+                if (slot != null) {
+                    ItemPattern.setSlot(pattern, i, slot);
+                }
+            }
+
+            patternsInventory.setInventorySlotContents(1, pattern);
         }
     }
 
