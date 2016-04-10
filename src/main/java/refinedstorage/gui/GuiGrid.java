@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.Slot;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import refinedstorage.RefinedStorage;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
@@ -266,21 +267,25 @@ public class GuiGrid extends GuiBase {
             if (isHoveringOverSlot() && container.getPlayer().inventory.getItemStack() != null && (clickedButton == 0 || clickedButton == 1)) {
                 grid.onItemPush(-1, clickedButton == 1);
             } else if (isHoveringOverItemInSlot() && container.getPlayer().inventory.getItemStack() == null) {
-                int flags = 0;
+                if (items.get(hoveringSlot).getQuantity() == 0) {
+                    FMLCommonHandler.instance().showGuiScreen(new GuiCraftingSettings());
+                } else {
+                    int flags = 0;
 
-                if (clickedButton == 1) {
-                    flags |= GridPullFlags.PULL_HALF;
+                    if (clickedButton == 1) {
+                        flags |= GridPullFlags.PULL_HALF;
+                    }
+
+                    if (GuiScreen.isShiftKeyDown()) {
+                        flags |= GridPullFlags.PULL_SHIFT;
+                    }
+
+                    if (clickedButton == 2) {
+                        flags |= GridPullFlags.PULL_ONE;
+                    }
+
+                    grid.onItemPull(hoveringItemId, flags);
                 }
-
-                if (GuiScreen.isShiftKeyDown()) {
-                    flags |= GridPullFlags.PULL_SHIFT;
-                }
-
-                if (clickedButton == 2) {
-                    flags |= GridPullFlags.PULL_ONE;
-                }
-
-                grid.onItemPull(hoveringItemId, flags);
             } else if (clickedClear) {
                 RefinedStorage.NETWORK.sendToServer(new MessageGridCraftingClear((TileGrid) grid));
             } else {
