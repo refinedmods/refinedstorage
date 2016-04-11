@@ -37,6 +37,7 @@ misc.refinedstorage:wireless_grid.tooltip.0=X: %d
 misc.refinedstorage:wireless_grid.tooltip.1=Y: %d
 misc.refinedstorage:wireless_grid.tooltip.2=Z: %d
 misc.refinedstorage:wireless_grid.out_of_range=Controller out of range.
+misc.refinedstorage:wireless_grid.not_found=Controller not found.
 
 misc.refinedstorage:yes=Yes
 misc.refinedstorage:no=No
