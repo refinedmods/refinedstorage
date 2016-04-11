@@ -66,6 +66,8 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     private EnergyStorage energy = new EnergyStorage(ENERGY_CAPACITY);
     private int energyUsage;
 
+    private int wirelessGridRange;
+
     private boolean destroyed = false;
 
     private boolean machinesHavePosition(List<TileMachine> tiles, BlockPos pos) {
@@ -103,7 +105,13 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                         }
                     }
 
+                    int range = 0;
+
                     for (TileMachine machine : newMachines) {
+                        if (machine instanceof TileWirelessTransmitter) {
+                            range += ((TileWirelessTransmitter) machine).getRange();
+                        }
+
                         if (!machinesHavePosition(machines, machine.getPos())) {
                             machine.onConnected(this);
                         } else {
@@ -116,6 +124,8 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                             }
                         }
                     }
+
+                    wirelessGridRange = range;
 
                     machines = newMachines;
 
@@ -199,6 +209,10 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
         }
 
         return EnumControllerType.NORMAL;
+    }
+
+    public int getWirelessGridRange() {
+        return wirelessGridRange;
     }
 
     public void onDestroyed() {
@@ -353,12 +367,20 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
         return newStack;
     }
 
-    public void onOpenWirelessGrid(EntityPlayer player, EnumHand hand) {
+    public boolean onOpenWirelessGrid(EntityPlayer player, EnumHand hand) {
+        boolean inRange = (int) Math.sqrt(Math.pow(getPos().getX() - player.posX, 2) + Math.pow(getPos().getY() - player.posY, 2) + Math.pow(getPos().getZ() - player.posZ, 2)) < getWirelessGridRange();
+
+        if (!inRange) {
+            return false;
+        }
+
         wirelessGridConsumers.add(new WirelessGridConsumer(player, hand, player.getHeldItem(hand)));
 
         player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.WIRELESS_GRID, worldObj, HandUtils.getIdFromHand(hand), 0, 0);
 
         drainEnergyFromWirelessGrid(player, ItemWirelessGrid.USAGE_OPEN);
+
+        return true;
     }
 
     public void onCloseWirelessGrid(EntityPlayer player) {

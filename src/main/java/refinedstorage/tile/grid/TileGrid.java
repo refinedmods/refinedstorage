@@ -56,7 +56,7 @@ public class TileGrid extends TileMachine implements IGrid {
     private InventoryCrafting craftingInventory = new InventoryCrafting(craftingContainer, 3, 3);
     private InventorySimple craftingResultInventory = new InventorySimple("crafting_result", 1);
 
-    private InventorySimple patternsInventory = new InventorySimple("patterns", 2);
+    private InventorySimple patternsInventory = new InventorySimple("patterns", 2, this);
 
     private int sortingDirection = SORTING_DIRECTION_DESCENDING;
     private int sortingType = SORTING_TYPE_NAME;

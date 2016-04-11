@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
@@ -32,8 +33,6 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
     public static final String NBT_SORTING_DIRECTION = "SortingDirection";
     public static final String NBT_SEARCH_BOX_MODE = "SearchBoxMode";
 
-    public static final int RANGE = 64;
-
     public static final int USAGE_OPEN = 30;
     public static final int USAGE_PULL = 3;
     public static final int USAGE_PUSH = 3;
@@ -44,7 +43,7 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
         addPropertyOverride(new ResourceLocation("connected"), new IItemPropertyGetter() {
             @Override
             public float apply(ItemStack stack, World world, EntityLivingBase entity) {
-                return canOpenWirelessGrid(world, entity, stack) ? 1.0f : 0.0f;
+                return (hasValidNBT(stack) && getDimensionId(stack) == entity.dimension) ? 1.0f : 0.0f;
             }
         });
 
@@ -97,7 +96,7 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
             list.add(I18n.translateToLocalFormatted("misc.refinedstorage:energy_stored", getEnergyStored(stack), getMaxEnergyStored(stack)));
         }
 
-        if (canOpenWirelessGrid(player.worldObj, player, stack)) {
+        if (hasValidNBT(stack)) {
             list.add(I18n.translateToLocalFormatted("misc.refinedstorage:wireless_grid.tooltip.0", getX(stack)));
             list.add(I18n.translateToLocalFormatted("misc.refinedstorage:wireless_grid.tooltip.1", getY(stack)));
             list.add(I18n.translateToLocalFormatted("misc.refinedstorage:wireless_grid.tooltip.2", getZ(stack)));
@@ -133,12 +132,14 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
-        if (!world.isRemote && canOpenWirelessGrid(world, player, stack)) {
+        if (!world.isRemote && getDimensionId(stack) == player.dimension) {
             TileController tile = (TileController) world.getTileEntity(new BlockPos(getX(stack), getY(stack), getZ(stack)));
 
-            tile.onOpenWirelessGrid(player, hand);
-
-            return new ActionResult(EnumActionResult.SUCCESS, stack);
+            if (tile.onOpenWirelessGrid(player, hand)) {
+                return new ActionResult(EnumActionResult.SUCCESS, stack);
+            } else {
+                player.addChatComponentMessage(new TextComponentString(I18n.translateToLocal("misc.refinedstorage:wireless_grid.out_of_range")));
+            }
         }
 
         return new ActionResult(EnumActionResult.PASS, stack);
@@ -172,31 +173,15 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
         return stack.getTagCompound().getInteger(NBT_SEARCH_BOX_MODE);
     }
 
-    public static boolean isInRange(ItemStack stack, EntityLivingBase entity) {
-        return (int) Math.sqrt(Math.pow(getX(stack) - entity.posX, 2) + Math.pow(getY(stack) - entity.posY, 2) + Math.pow(getZ(stack) - entity.posZ, 2)) < RANGE;
-    }
-
-    public static boolean canOpenWirelessGrid(World world, EntityLivingBase entity, ItemStack stack) {
-        if (entity != null && stack.hasTagCompound()
+    private static boolean hasValidNBT(ItemStack stack) {
+        return stack.hasTagCompound()
             && stack.getTagCompound().hasKey(NBT_CONTROLLER_X)
             && stack.getTagCompound().hasKey(NBT_CONTROLLER_Y)
             && stack.getTagCompound().hasKey(NBT_CONTROLLER_Z)
             && stack.getTagCompound().hasKey(NBT_DIMENSION_ID)
             && stack.getTagCompound().hasKey(NBT_SORTING_DIRECTION)
             && stack.getTagCompound().hasKey(NBT_SORTING_TYPE)
-            && stack.getTagCompound().hasKey(NBT_SEARCH_BOX_MODE)) {
-            if (world == null) {
-                world = entity.worldObj;
-            }
-
-            int x = getX(stack);
-            int y = getY(stack);
-            int z = getZ(stack);
-
-            return isInRange(stack, entity) && getDimensionId(stack) == entity.dimension && world.getTileEntity(new BlockPos(x, y, z)) instanceof TileController;
-        }
-
-        return false;
+            && stack.getTagCompound().hasKey(NBT_SEARCH_BOX_MODE);
     }
 
     @Override

@@ -15,4 +15,5 @@ public final class RefinedStorageGui {
     public static final int INTERFACE = 13;
     public static final int WIRELESS_GRID = 14;
     public static final int CRAFTING_MONITOR = 15;
+    public static final int WIRELESS_TRANSMITTER = 16;
 }

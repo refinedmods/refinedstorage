@@ -21,6 +21,7 @@ gui.refinedstorage:interface.import=Interface Import
 gui.refinedstorage:interface.export=Interface Export
 gui.refinedstorage:interface.patterns=Patronen
 gui.refinedstorage:crafting_monitor=Crafting Monitor
+gui.refinedstorage:wireless_transmitter=Draadloze Zender (%d blokken)
 
 misc.refinedstorage:energy_stored=%d / %d RF
 misc.refinedstorage:energy_usage=Vebruik: %d RF/t
@@ -36,7 +37,6 @@ misc.refinedstorage:wireless_grid.tooltip.0=X: %d
 misc.refinedstorage:wireless_grid.tooltip.1=Y: %d
 misc.refinedstorage:wireless_grid.tooltip.2=Z: %d
 misc.refinedstorage:wireless_grid.out_of_range=Controller buiten bereik.
-misc.refinedstorage:wireless_grid.not_found=Controller werd niet gevonden.
 
 misc.refinedstorage:yes=Ja
 misc.refinedstorage:no=Nee
