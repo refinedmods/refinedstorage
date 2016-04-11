@@ -59,6 +59,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     private List<ClientSideMachine> clientSideMachines = new ArrayList<ClientSideMachine>();
 
     private List<CraftingTask> craftingTasks = new ArrayList<CraftingTask>();
+    private List<CraftingTask> craftingTasksToAdd = new ArrayList<CraftingTask>();
 
     private List<BlockPos> visited = new ArrayList<BlockPos>();
 
@@ -142,6 +143,9 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                     }
                 }
 
+                craftingTasks.addAll(craftingTasksToAdd);
+                craftingTasksToAdd.clear();
+
                 Iterator<CraftingTask> it = craftingTasks.iterator();
 
                 while (it.hasNext()) {
@@ -217,6 +221,10 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
     public List<CraftingTask> getCraftingTasks() {
         return craftingTasks;
+    }
+
+    public void addCraftingTask(CraftingTask task) {
+        craftingTasksToAdd.add(task);
     }
 
     private void syncItems() {
@@ -628,7 +636,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
             for (int i = 0; i < quantity; ++i) {
                 ItemStack toCraft = itemGroups.get(id).toItemStack();
                 toCraft.stackSize = 1;
-                craftingTasks.add(CraftingTask.create(toCraft));
+                addCraftingTask(CraftingTask.create(toCraft));
             }
         }
     }
