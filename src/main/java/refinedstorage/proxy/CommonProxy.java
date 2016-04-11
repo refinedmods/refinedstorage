@@ -23,6 +23,7 @@ import refinedstorage.item.*;
 import refinedstorage.network.*;
 import refinedstorage.storage.NBTStorage;
 import refinedstorage.tile.*;
+import refinedstorage.tile.autocrafting.TileCraftingCPU;
 import refinedstorage.tile.autocrafting.TileCraftingMonitor;
 import refinedstorage.tile.grid.TileGrid;
 import refinedstorage.tile.solderer.*;
@@ -69,6 +70,8 @@ public class CommonProxy {
         GameRegistry.registerTileEntity(TileRelay.class, ID + ":relay");
         GameRegistry.registerTileEntity(TileInterface.class, ID + ":interface");
         GameRegistry.registerTileEntity(TileCraftingMonitor.class, ID + ":crafting_monitor");
+        GameRegistry.registerTileEntity(TileCraftingCPU.class, ID + ":crafting_cpu");
+        GameRegistry.registerTileEntity(TileWirelessTransmitter.class, ID + ":wireless_transmitter");
 
         registerBlock(RefinedStorageBlocks.CONTROLLER);
         registerBlock(RefinedStorageBlocks.CABLE);
@@ -86,6 +89,8 @@ public class CommonProxy {
         registerBlock(RefinedStorageBlocks.RELAY);
         registerBlock(RefinedStorageBlocks.INTERFACE);
         registerBlock(RefinedStorageBlocks.CRAFTING_MONITOR);
+        registerBlock(RefinedStorageBlocks.CRAFTING_CPU);
+        registerBlock(RefinedStorageBlocks.WIRELESS_TRANSMITTER);
 
         registerItem(RefinedStorageItems.STORAGE_DISK);
         registerItem(RefinedStorageItems.PATTERN);
@@ -95,6 +100,7 @@ public class CommonProxy {
         registerItem(RefinedStorageItems.SILICON);
         registerItem(RefinedStorageItems.PROCESSOR);
         registerItem(RefinedStorageItems.STORAGE_PART);
+        registerItem(RefinedStorageItems.UPGRADE);
 
         // Processors
         SoldererRegistry.addRecipe(new SoldererRecipePrintedProcessor(ItemProcessor.TYPE_PRINTED_BASIC));
