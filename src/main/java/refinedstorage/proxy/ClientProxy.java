@@ -12,10 +12,7 @@ import refinedstorage.RefinedStorageItems;
 import refinedstorage.block.EnumControllerType;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.block.EnumStorageType;
-import refinedstorage.item.ItemCore;
-import refinedstorage.item.ItemProcessor;
-import refinedstorage.item.ItemStorageDisk;
-import refinedstorage.item.ItemStoragePart;
+import refinedstorage.item.*;
 
 public class ClientProxy extends CommonProxy {
     @Override
@@ -53,6 +50,11 @@ public class ClientProxy extends CommonProxy {
             new ResourceLocation("refinedstorage:destruction_core")
         );
 
+        ModelBakery.registerItemVariants(RefinedStorageItems.UPGRADE,
+            new ResourceLocation("refinedstorage:range_upgrade"),
+            new ResourceLocation("refinedstorage:speed_upgrade")
+        );
+
         // Items
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.STORAGE_DISK, ItemStorageDisk.TYPE_1K, new ModelResourceLocation("refinedstorage:1k_storage_disk", "inventory"));
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.STORAGE_DISK, ItemStorageDisk.TYPE_4K, new ModelResourceLocation("refinedstorage:4k_storage_disk", "inventory"));
@@ -84,6 +86,9 @@ public class ClientProxy extends CommonProxy {
 
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.PATTERN, 0, new ModelResourceLocation("refinedstorage:pattern", "inventory"));
 
+        ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_RANGE, new ModelResourceLocation("refinedstorage:range_upgrade", "inventory"));
+        ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED, new ModelResourceLocation("refinedstorage:speed_upgrade", "inventory"));
+
         // Blocks
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.CABLE), 0, new ModelResourceLocation("refinedstorage:cable", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.GRID), EnumGridType.NORMAL.getId(), new ModelResourceLocation("refinedstorage:grid", "inventory"));
@@ -102,8 +107,16 @@ public class ClientProxy extends CommonProxy {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.DETECTOR), 0, new ModelResourceLocation("refinedstorage:detector", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.RELAY), 0, new ModelResourceLocation("refinedstorage:relay", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.INTERFACE), 0, new ModelResourceLocation("refinedstorage:interface", "inventory"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.WIRELESS_TRANSMITTER), 0, new ModelResourceLocation("refinedstorage:wireless_transmitter", "inventory"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.CRAFTING_MONITOR), 0, new ModelResourceLocation("refinedstorage:crafting_monitor", "inventory"));
 
         ModelLoader.setCustomStateMapper(RefinedStorageBlocks.STORAGE, (new StateMap.Builder())
+            .ignore(RefinedStorageBlocks.STORAGE.DIRECTION)
+            .ignore(RefinedStorageBlocks.STORAGE.CONNECTED)
+            .build()
+        );
+
+        ModelLoader.setCustomStateMapper(RefinedStorageBlocks.CRAFTING_CPU, (new StateMap.Builder())
             .ignore(RefinedStorageBlocks.STORAGE.DIRECTION)
             .ignore(RefinedStorageBlocks.STORAGE.CONNECTED)
             .build()
@@ -114,5 +127,11 @@ public class ClientProxy extends CommonProxy {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.STORAGE), EnumStorageType.TYPE_16K.getId(), new ModelResourceLocation("refinedstorage:storage", "type=16k"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.STORAGE), EnumStorageType.TYPE_64K.getId(), new ModelResourceLocation("refinedstorage:storage", "type=64k"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.STORAGE), EnumStorageType.TYPE_CREATIVE.getId(), new ModelResourceLocation("refinedstorage:storage", "type=creative"));
+
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.CRAFTING_CPU), EnumStorageType.TYPE_1K.getId(), new ModelResourceLocation("refinedstorage:crafting_cpu", "type=1k"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.CRAFTING_CPU), EnumStorageType.TYPE_4K.getId(), new ModelResourceLocation("refinedstorage:crafting_cpu", "type=4k"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.CRAFTING_CPU), EnumStorageType.TYPE_16K.getId(), new ModelResourceLocation("refinedstorage:crafting_cpu", "type=16k"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.CRAFTING_CPU), EnumStorageType.TYPE_64K.getId(), new ModelResourceLocation("refinedstorage:crafting_cpu", "type=64k"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.CRAFTING_CPU), EnumStorageType.TYPE_CREATIVE.getId(), new ModelResourceLocation("refinedstorage:crafting_cpu", "type=creative"));
     }
 }
