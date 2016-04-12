@@ -241,12 +241,8 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
         craftingTasksToAdd.add(task);
     }
 
-    private void syncItems() {
-        itemGroups.clear();
-
-        for (IStorage storage : storages) {
-            storage.addItems(itemGroups);
-        }
+    public List<ItemStack> getPatterns() {
+        List<ItemStack> patterns = new ArrayList<ItemStack>();
 
         for (TileMachine machine : machines) {
             if (machine instanceof TileInterface) {
@@ -256,12 +252,36 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                     ItemStack pattern = tile.getStackInSlot(i);
 
                     if (pattern != null) {
-                        ItemGroup patternGroup = new ItemGroup(ItemPattern.getResult(pattern));
-                        patternGroup.setQuantity(0);
-                        itemGroups.add(patternGroup);
+                        patterns.add(pattern);
                     }
                 }
             }
+        }
+
+        return patterns;
+    }
+
+    public ItemStack getPatternForItem(ItemStack stack) {
+        for (ItemStack pattern : getPatterns()) {
+            if (InventoryUtils.compareStackNoQuantity(ItemPattern.getResult(pattern), stack)) {
+                return pattern;
+            }
+        }
+
+        return null;
+    }
+
+    private void syncItems() {
+        itemGroups.clear();
+
+        for (IStorage storage : storages) {
+            storage.addItems(itemGroups);
+        }
+
+        for (ItemStack pattern : getPatterns()) {
+            ItemGroup patternGroup = new ItemGroup(ItemPattern.getResult(pattern));
+            patternGroup.setQuantity(0);
+            itemGroups.add(patternGroup);
         }
 
         combineItems();
@@ -655,10 +675,15 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
     public void onCraftingRequested(int id, int quantity) {
         if (id >= 0 && id < itemGroups.size() && quantity > 0) {
+            System.out.println("Start for " + quantity);
             for (int i = 0; i < quantity; ++i) {
-                ItemStack toCraft = itemGroups.get(id).toItemStack();
-                toCraft.stackSize = 1;
-                addCraftingTask(CraftingTask.create(toCraft));
+                ItemStack pattern = getPatternForItem(itemGroups.get(id).toItemStack());
+
+                if (pattern != null) {
+                    addCraftingTask(CraftingTask.createFromPattern(pattern));
+                } else {
+                    System.out.println("Pattern not found !");
+                }
             }
         }
     }

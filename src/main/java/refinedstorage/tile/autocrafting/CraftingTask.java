@@ -1,11 +1,8 @@
 package refinedstorage.tile.autocrafting;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.ShapedRecipes;
+import refinedstorage.item.ItemPattern;
 import refinedstorage.tile.TileController;
-import refinedstorage.util.InventoryUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +26,20 @@ public class CraftingTask {
                 ItemStack took = controller.take(ingredient.getStack().copy());
 
                 if (took != null) {
+                    System.out.println("Ingredient " + ingredient.getStack() + " SATISFIED");
                     ingredient.setSatisfied();
                 } else if (!ingredient.isSubtaskCreated()) {
-                    CraftingTask subTask = CraftingTask.create(ingredient.getStack());
-                    ingredient.setSubtaskCreated();
-                    controller.addCraftingTask(subTask);
+                    System.out.println("Ingredient " + ingredient.getStack() + " NOT SATISFIED, creating subtask");
+
+                    ItemStack pattern = controller.getPatternForItem(ingredient.getStack());
+
+                    if (pattern != null) {
+                        System.out.println("Found a pattern for this!");
+                        CraftingTask subTask = CraftingTask.createFromPattern(pattern);
+                        ingredient.setSubtaskCreated();
+                        controller.addCraftingTask(subTask);
+                        break;
+                    }
                 }
             }
         }
@@ -47,31 +53,19 @@ public class CraftingTask {
         return true;
     }
 
-    public static CraftingTask create(ItemStack result) {
+    public static CraftingTask createFromPattern(ItemStack pattern) {
+        System.out.println("Creating crafting task for " + ItemPattern.getResult(pattern));
         List<CraftingIngredient> ingredients = new ArrayList<CraftingIngredient>();
 
-        addCraftingIngredients(ingredients, result);
+        for (int i = 0; i < 9; ++i) {
+            ItemStack ingredient = ItemPattern.getSlot(pattern, i);
 
-        return new CraftingTask(result, ingredients);
-    }
-
-    private static void addCraftingIngredients(List<CraftingIngredient> ingredients, ItemStack result) {
-        for (IRecipe recipe : CraftingManager.getInstance().getRecipeList()) {
-            if (recipe instanceof ShapedRecipes) {
-                ItemStack output = recipe.getRecipeOutput();
-                // this may seem unnecessary but keep it, some mods return a null itemstack
-                if (output != null && output.getItem() != null) {
-                    // first check if the output is the stack we're adding the ingredients for
-                    if (InventoryUtils.compareStack(output, result)) {
-                        // now get all the ingredients from that recipe
-                        for (ItemStack ingredient : ((ShapedRecipes) recipe).recipeItems) {
-                            if (ingredient != null) {
-                                ingredients.add(new CraftingIngredient(ingredient));
-                            }
-                        }
-                    }
-                }
+            if (ingredient != null) {
+                System.out.println("Ingredient #" + i + ": " + ingredient);
+                ingredients.add(new CraftingIngredient(ingredient));
             }
         }
+
+        return new CraftingTask(ItemPattern.getResult(pattern), ingredients);
     }
 }

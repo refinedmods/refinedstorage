@@ -8,6 +8,7 @@ import java.util.List;
 
 public class ItemPattern extends ItemBase {
     public static final String NBT_RESULT = "Result";
+    public static final String NBT_SLOT = "Slot_%d";
 
     public ItemPattern() {
         super("pattern");
@@ -18,6 +19,29 @@ public class ItemPattern extends ItemBase {
         if (hasResult(pattern)) {
             list.add(getResult(pattern).getDisplayName());
         }
+    }
+
+    public static void setSlot(ItemStack pattern, int slot, ItemStack stack) {
+        if (pattern.getTagCompound() == null) {
+            pattern.setTagCompound(new NBTTagCompound());
+        }
+
+        NBTTagCompound tag = new NBTTagCompound();
+        stack.writeToNBT(tag);
+
+        pattern.getTagCompound().setTag(String.format(NBT_SLOT, slot), tag);
+    }
+
+    public static ItemStack getSlot(ItemStack pattern, int slot) {
+        if (pattern.getTagCompound() == null) {
+            return null;
+        }
+
+        if (pattern.getTagCompound().hasKey(String.format(NBT_SLOT, slot))) {
+            return ItemStack.loadItemStackFromNBT(pattern.getTagCompound().getCompoundTag(String.format(NBT_SLOT, slot)));
+        }
+
+        return null;
     }
 
     public static void setResult(ItemStack pattern, ItemStack stack) {
