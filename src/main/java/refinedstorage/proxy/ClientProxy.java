@@ -51,6 +51,7 @@ public class ClientProxy extends CommonProxy {
         );
 
         ModelBakery.registerItemVariants(RefinedStorageItems.UPGRADE,
+            new ResourceLocation("refinedstorage:upgrade"),
             new ResourceLocation("refinedstorage:range_upgrade"),
             new ResourceLocation("refinedstorage:speed_upgrade")
         );
@@ -86,6 +87,7 @@ public class ClientProxy extends CommonProxy {
 
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.PATTERN, 0, new ModelResourceLocation("refinedstorage:pattern", "inventory"));
 
+        ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.UPGRADE, 0, new ModelResourceLocation("refinedstorage:upgrade", "inventory"));
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_RANGE, new ModelResourceLocation("refinedstorage:range_upgrade", "inventory"));
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED, new ModelResourceLocation("refinedstorage:speed_upgrade", "inventory"));
 

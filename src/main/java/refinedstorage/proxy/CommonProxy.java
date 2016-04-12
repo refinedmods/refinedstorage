@@ -230,14 +230,14 @@ public class CommonProxy {
         GameRegistry.addShapelessRecipe(new ItemStack(RefinedStorageBlocks.IMPORTER),
             new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
             new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
-            new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC)
+            new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
         );
 
         // Exporter
         GameRegistry.addShapelessRecipe(new ItemStack(RefinedStorageBlocks.EXPORTER),
             new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
             new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
-            new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC)
+            new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
         );
 
         // Destructor
@@ -367,6 +367,19 @@ public class CommonProxy {
             'R', new ItemStack(Items.redstone),
             'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
         );
+
+        // Upgrade
+        GameRegistry.addRecipe(new ItemStack(RefinedStorageItems.UPGRADE, 1, 0),
+            "EGE",
+            "EPE",
+            "EGE",
+            'G', new ItemStack(Blocks.glass),
+            'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED),
+            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
+        );
+
+        SoldererRegistry.addRecipe(new SoldererRecipeUpgrade(ItemUpgrade.TYPE_RANGE));
+        SoldererRegistry.addRecipe(new SoldererRecipeUpgrade(ItemUpgrade.TYPE_SPEED));
 
         // Storage Blocks
         SoldererRegistry.addRecipe(new SoldererRecipeStorage(EnumStorageType.TYPE_1K, ItemStoragePart.TYPE_1K));
