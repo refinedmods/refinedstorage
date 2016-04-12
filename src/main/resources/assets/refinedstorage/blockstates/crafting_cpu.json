@@ -25,11 +25,6 @@
         "textures": {
           "all": "refinedstorage:blocks/64k_crafting_cpu"
         }
-      },
-      "creative": {
-        "textures": {
-          "all": "refinedstorage:blocks/creative_crafting_cpu"
-        }
       }
     }
   }

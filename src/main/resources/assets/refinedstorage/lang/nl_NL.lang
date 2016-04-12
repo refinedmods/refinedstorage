@@ -95,11 +95,11 @@ block.refinedstorage:storage.4.name=Creative Opslag Blok
 block.refinedstorage:relay.name=Relais
 block.refinedstorage:interface.name=Interface
 block.refinedstorage:crafting_monitor.name=Crafting Monitor
+block.refinedstorage:crafting_unit.name=Crafting Eenheid
 block.refinedstorage:crafting_cpu.0.name=1k Crafting CPU
 block.refinedstorage:crafting_cpu.1.name=4k Crafting CPU
 block.refinedstorage:crafting_cpu.2.name=16k Crafting CPU
 block.refinedstorage:crafting_cpu.3.name=64k Crafting CPU
-block.refinedstorage:crafting_cpu.4.name=Creative Crafting CPU
 block.refinedstorage:wireless_transmitter.name=Draadloze Zender
 
 item.refinedstorage:storage_disk.0.name=1k Opslagschijf

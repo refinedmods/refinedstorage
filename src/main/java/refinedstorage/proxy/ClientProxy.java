@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.block.EnumControllerType;
+import refinedstorage.block.EnumCraftingCPUType;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.block.EnumStorageType;
 import refinedstorage.item.*;
@@ -119,8 +120,8 @@ public class ClientProxy extends CommonProxy {
         );
 
         ModelLoader.setCustomStateMapper(RefinedStorageBlocks.CRAFTING_CPU, (new StateMap.Builder())
-            .ignore(RefinedStorageBlocks.STORAGE.DIRECTION)
-            .ignore(RefinedStorageBlocks.STORAGE.CONNECTED)
+            .ignore(RefinedStorageBlocks.CRAFTING_CPU.DIRECTION)
+            .ignore(RefinedStorageBlocks.CRAFTING_CPU.CONNECTED)
             .build()
         );
 
@@ -130,10 +131,11 @@ public class ClientProxy extends CommonProxy {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.STORAGE), EnumStorageType.TYPE_64K.getId(), new ModelResourceLocation("refinedstorage:storage", "type=64k"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.STORAGE), EnumStorageType.TYPE_CREATIVE.getId(), new ModelResourceLocation("refinedstorage:storage", "type=creative"));
 
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.CRAFTING_CPU), EnumStorageType.TYPE_1K.getId(), new ModelResourceLocation("refinedstorage:crafting_cpu", "type=1k"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.CRAFTING_CPU), EnumStorageType.TYPE_4K.getId(), new ModelResourceLocation("refinedstorage:crafting_cpu", "type=4k"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.CRAFTING_CPU), EnumStorageType.TYPE_16K.getId(), new ModelResourceLocation("refinedstorage:crafting_cpu", "type=16k"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.CRAFTING_CPU), EnumStorageType.TYPE_64K.getId(), new ModelResourceLocation("refinedstorage:crafting_cpu", "type=64k"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.CRAFTING_CPU), EnumStorageType.TYPE_CREATIVE.getId(), new ModelResourceLocation("refinedstorage:crafting_cpu", "type=creative"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.CRAFTING_UNIT), 0, new ModelResourceLocation("refinedstorage:crafting_unit", "inventory"));
+
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.CRAFTING_CPU), EnumCraftingCPUType.TYPE_1K.getId(), new ModelResourceLocation("refinedstorage:crafting_cpu", "type=1k"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.CRAFTING_CPU), EnumCraftingCPUType.TYPE_4K.getId(), new ModelResourceLocation("refinedstorage:crafting_cpu", "type=4k"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.CRAFTING_CPU), EnumCraftingCPUType.TYPE_16K.getId(), new ModelResourceLocation("refinedstorage:crafting_cpu", "type=16k"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.CRAFTING_CPU), EnumCraftingCPUType.TYPE_64K.getId(), new ModelResourceLocation("refinedstorage:crafting_cpu", "type=64k"));
     }
 }

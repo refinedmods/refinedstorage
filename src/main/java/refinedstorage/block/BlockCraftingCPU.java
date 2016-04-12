@@ -16,7 +16,7 @@ import refinedstorage.tile.autocrafting.TileCraftingCPU;
 import java.util.List;
 
 public class BlockCraftingCPU extends BlockMachine {
-    public static final PropertyEnum TYPE = PropertyEnum.create("type", EnumStorageType.class);
+    public static final PropertyEnum TYPE = PropertyEnum.create("type", EnumCraftingCPUType.class);
 
     public BlockCraftingCPU() {
         super("crafting_cpu");
@@ -24,7 +24,7 @@ public class BlockCraftingCPU extends BlockMachine {
 
     @Override
     public void getSubBlocks(Item item, CreativeTabs tab, List subItems) {
-        for (int i = 0; i <= 4; ++i) {
+        for (int i = 0; i <= 3; ++i) {
             subItems.add(ItemBlockStorage.initNBT(new ItemStack(item, 1, i)));
         }
     }
@@ -40,12 +40,12 @@ public class BlockCraftingCPU extends BlockMachine {
 
     @Override
     public IBlockState getStateFromMeta(int meta) {
-        return getDefaultState().withProperty(TYPE, EnumStorageType.getById(meta));
+        return getDefaultState().withProperty(TYPE, EnumCraftingCPUType.getById(meta));
     }
 
     @Override
     public int getMetaFromState(IBlockState state) {
-        return ((EnumStorageType) state.getValue(TYPE)).getId();
+        return ((EnumCraftingCPUType) state.getValue(TYPE)).getId();
     }
 
     @Override

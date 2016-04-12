@@ -91,6 +91,7 @@ public class CommonProxy {
         registerBlock(RefinedStorageBlocks.CRAFTING_MONITOR);
         registerBlock(RefinedStorageBlocks.CRAFTING_CPU);
         registerBlock(RefinedStorageBlocks.WIRELESS_TRANSMITTER);
+        registerBlock(RefinedStorageBlocks.CRAFTING_UNIT);
 
         registerItem(RefinedStorageItems.STORAGE_DISK);
         registerItem(RefinedStorageItems.PATTERN);
