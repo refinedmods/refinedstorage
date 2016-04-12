@@ -185,6 +185,17 @@ public class CommonProxy {
             'R', new ItemStack(Items.redstone)
         );
 
+        // Wireless Transmitter
+        GameRegistry.addRecipe(new ItemStack(RefinedStorageBlocks.WIRELESS_TRANSMITTER),
+            "EPE",
+            "EME",
+            "EAE",
+            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+            'A', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
+            'P', new ItemStack(Items.ender_pearl),
+            'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING)
+        );
+
         // Grid
         GameRegistry.addRecipe(new ItemStack(RefinedStorageBlocks.GRID, 1, EnumGridType.NORMAL.getId()),
             "ECE",
