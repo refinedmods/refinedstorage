@@ -131,14 +131,12 @@ public class CommonProxy {
 
         // Construction Core
         GameRegistry.addShapelessRecipe(new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
-            new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
             new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
             new ItemStack(Items.glowstone_dust)
         );
 
         // Destruction Core
         GameRegistry.addShapelessRecipe(new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
-            new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
             new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
             new ItemStack(Items.quartz)
         );
@@ -413,6 +411,17 @@ public class CommonProxy {
         SoldererRegistry.addRecipe(new SoldererRecipeCraftingCPU(EnumCraftingCPUType.TYPE_4K, ItemStoragePart.TYPE_4K));
         SoldererRegistry.addRecipe(new SoldererRecipeCraftingCPU(EnumCraftingCPUType.TYPE_16K, ItemStoragePart.TYPE_16K));
         SoldererRegistry.addRecipe(new SoldererRecipeCraftingCPU(EnumCraftingCPUType.TYPE_64K, ItemStoragePart.TYPE_64K));
+
+        // Crafting Monitor
+        GameRegistry.addRecipe(new ItemStack(RefinedStorageBlocks.CRAFTING_MONITOR),
+            "EGE",
+            "GMG",
+            "EPE",
+            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+            'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
+            'G', new ItemStack(Blocks.glass),
+            'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
+        );
 
         // Interface
         SoldererRegistry.addRecipe(new SoldererRecipeInterface());
