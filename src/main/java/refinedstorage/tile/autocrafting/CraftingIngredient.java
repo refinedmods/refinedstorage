@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 public class CraftingIngredient {
     private ItemStack stack;
     private boolean satisfied;
-    private boolean subtaskCreated;
+    private boolean childTaskCreated;
 
     public CraftingIngredient(ItemStack stack) {
         this.stack = stack;
@@ -23,11 +23,11 @@ public class CraftingIngredient {
         this.satisfied = true;
     }
 
-    public boolean isSubtaskCreated() {
-        return subtaskCreated;
+    public boolean isChildTaskCreated() {
+        return childTaskCreated;
     }
 
-    public void setSubtaskCreated() {
-        subtaskCreated = true;
+    public void setChildTaskCreated() {
+        childTaskCreated = true;
     }
 }

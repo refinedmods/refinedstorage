@@ -161,7 +161,9 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                 while (it.hasNext()) {
                     CraftingTask task = it.next();
 
-                    if (task.attemptCraft(this)) {
+                    task.attemptCraft(this);
+
+                    if (task.isDone()) {
                         it.remove();
 
                         push(task.getResult());
@@ -675,14 +677,15 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
     public void onCraftingRequested(int id, int quantity) {
         if (id >= 0 && id < itemGroups.size() && quantity > 0) {
-            System.out.println("Start for " + quantity);
-            for (int i = 0; i < quantity; ++i) {
+            while (quantity > 0) {
                 ItemStack pattern = getPatternForItem(itemGroups.get(id).toItemStack());
 
                 if (pattern != null) {
                     addCraftingTask(CraftingTask.createFromPattern(pattern));
+
+                    quantity -= ItemPattern.getResult(pattern).stackSize;
                 } else {
-                    System.out.println("Pattern not found !");
+                    break;
                 }
             }
         }
