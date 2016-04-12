@@ -14,10 +14,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageItems;
-import refinedstorage.block.BlockBase;
-import refinedstorage.block.EnumControllerType;
-import refinedstorage.block.EnumGridType;
-import refinedstorage.block.EnumStorageType;
+import refinedstorage.block.*;
 import refinedstorage.gui.GuiHandler;
 import refinedstorage.item.*;
 import refinedstorage.network.*;
@@ -398,6 +395,24 @@ public class CommonProxy {
         SoldererRegistry.addRecipe(new SoldererRecipeStorage(EnumStorageType.TYPE_4K, ItemStoragePart.TYPE_4K));
         SoldererRegistry.addRecipe(new SoldererRecipeStorage(EnumStorageType.TYPE_16K, ItemStoragePart.TYPE_16K));
         SoldererRegistry.addRecipe(new SoldererRecipeStorage(EnumStorageType.TYPE_64K, ItemStoragePart.TYPE_64K));
+
+        // Crafting Unit
+        GameRegistry.addShapedRecipe(new ItemStack(RefinedStorageBlocks.CRAFTING_UNIT),
+            "ECE",
+            "PMP",
+            "EDE",
+            'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
+            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+            'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
+            'C', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
+            'D', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_DESTRUCTION)
+        );
+
+        // Crafting CPUs
+        SoldererRegistry.addRecipe(new SoldererRecipeCraftingCPU(EnumCraftingCPUType.TYPE_1K, ItemStoragePart.TYPE_1K));
+        SoldererRegistry.addRecipe(new SoldererRecipeCraftingCPU(EnumCraftingCPUType.TYPE_4K, ItemStoragePart.TYPE_4K));
+        SoldererRegistry.addRecipe(new SoldererRecipeCraftingCPU(EnumCraftingCPUType.TYPE_16K, ItemStoragePart.TYPE_16K));
+        SoldererRegistry.addRecipe(new SoldererRecipeCraftingCPU(EnumCraftingCPUType.TYPE_64K, ItemStoragePart.TYPE_64K));
 
         // Interface
         SoldererRegistry.addRecipe(new SoldererRecipeInterface());
