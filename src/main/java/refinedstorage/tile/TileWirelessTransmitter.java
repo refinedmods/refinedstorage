@@ -13,7 +13,7 @@ public class TileWirelessTransmitter extends TileMachine implements IInventory {
     public static final int RANGE_PER_UPGRADE = 8;
     public static final int RF_PER_UPGRADE = 8;
 
-    private InventorySimple inventory = new InventorySimple("upgrades", 9, this);
+    private InventorySimple inventory = new InventorySimple("upgrades", 4, this);
 
     @Override
     public int getEnergyUsage() {
@@ -45,7 +45,7 @@ public class TileWirelessTransmitter extends TileMachine implements IInventory {
     private int getUpgrades() {
         int upgrades = 0;
 
-        for (int i = 0; i < 9; ++i) {
+        for (int i = 0; i < inventory.getSizeInventory(); ++i) {
             if (inventory.getStackInSlot(i) != null) {
                 upgrades++;
             }

@@ -19,6 +19,7 @@ import refinedstorage.jei.PluginRefinedStorage;
 import refinedstorage.network.GridPullFlags;
 import refinedstorage.network.MessageGridCraftingClear;
 import refinedstorage.network.MessageGridCraftingPush;
+import refinedstorage.network.MessageGridPatternCreate;
 import refinedstorage.storage.ItemGroup;
 import refinedstorage.tile.grid.IGrid;
 import refinedstorage.tile.grid.TileGrid;
@@ -153,6 +154,18 @@ public class GuiGrid extends GuiBase {
         return false;
     }
 
+    public boolean isHoveringOverCreatePattern(int mouseX, int mouseY) {
+        if (grid.getType() == EnumGridType.PATTERN) {
+            return inBounds(152, 124, 16, 16, mouseX, mouseY) && isCreatePatternEnabled();
+        }
+
+        return false;
+    }
+
+    public boolean isCreatePatternEnabled() {
+        return ((TileGrid) grid).getCraftingResultInventory().getStackInSlot(0) != null && ((TileGrid) grid).getPatternsInventory().getStackInSlot(0) != null;
+    }
+
     @Override
     public void drawBackground(int x, int y, int mouseX, int mouseY) {
         if (grid.getType() == EnumGridType.CRAFTING) {
@@ -164,6 +177,20 @@ public class GuiGrid extends GuiBase {
         }
 
         drawTexture(x, y, 0, 0, width, height);
+
+        if (grid.getType() == EnumGridType.PATTERN) {
+            int ty = 0;
+
+            if (isHoveringOverCreatePattern(mouseX - guiLeft, mouseY - guiTop)) {
+                ty = 1;
+            }
+
+            if (!isCreatePatternEnabled()) {
+                ty = 2;
+            }
+
+            drawTexture(x + 152, y + 124, 195, ty * 16, 16, 16);
+        }
 
         scrollbar.draw(this);
 
@@ -259,6 +286,10 @@ public class GuiGrid extends GuiBase {
         if (isHoveringOverClear(mouseX, mouseY)) {
             drawTooltip(mouseX, mouseY, t("misc.refinedstorage:clear"));
         }
+
+        if (isHoveringOverCreatePattern(mouseX, mouseY)) {
+            drawTooltip(mouseX, mouseY, t("gui.refinedstorage:grid.pattern_create"));
+        }
     }
 
     @Override
@@ -266,9 +297,14 @@ public class GuiGrid extends GuiBase {
         super.mouseClicked(mouseX, mouseY, clickedButton);
 
         boolean clickedClear = clickedButton == 0 && isHoveringOverClear(mouseX - guiLeft, mouseY - guiTop);
+        boolean playClickSound = clickedClear;
 
         if (grid.isConnected()) {
-            if (isHoveringOverSlot() && container.getPlayer().inventory.getItemStack() != null && (clickedButton == 0 || clickedButton == 1)) {
+            if (isHoveringOverCreatePattern(mouseX - guiLeft, mouseY - guiTop)) {
+                RefinedStorage.NETWORK.sendToServer(new MessageGridPatternCreate((TileGrid) grid));
+
+                playClickSound = true;
+            } else if (isHoveringOverSlot() && container.getPlayer().inventory.getItemStack() != null && (clickedButton == 0 || clickedButton == 1)) {
                 grid.onItemPush(-1, clickedButton == 1);
             } else if (isHoveringOverItemInSlot() && container.getPlayer().inventory.getItemStack() == null) {
                 if (items.get(hoveringSlot).getQuantity() == 0) {
@@ -313,7 +349,7 @@ public class GuiGrid extends GuiBase {
             }
         }
 
-        if (clickedClear) {
+        if (playClickSound) {
             mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
         }
     }

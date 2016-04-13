@@ -67,8 +67,8 @@ public class ContainerGrid extends ContainerBase {
 
             addSlotToContainer(new SlotDisabled(((TileGrid) grid).getCraftingResultInventory(), 0, 116 + 4, 120 + 4));
 
-            addSlotToContainer(new SlotFiltered(((TileGrid) grid).getPatternsInventory(), 0, 152, 106, new BasicItemValidator(RefinedStorageItems.PATTERN)));
-            addSlotToContainer(new SlotOutput(((TileGrid) grid).getPatternsInventory(), 1, 152, 142));
+            addSlotToContainer(new SlotFiltered(((TileGrid) grid).getPatternsInventory(), 0, 152, 104, new BasicItemValidator(RefinedStorageItems.PATTERN)));
+            addSlotToContainer(new SlotOutput(((TileGrid) grid).getPatternsInventory(), 1, 152, 144));
         }
     }
 
@@ -119,12 +119,6 @@ public class ContainerGrid extends ContainerBase {
 
                 return null;
             }
-        }
-
-        if (!player.worldObj.isRemote && slot instanceof SlotDisabled && grid.getType() == EnumGridType.PATTERN && slot.getHasStack()) {
-            ((TileGrid) grid).onCreatePattern();
-
-            return null;
         }
 
         return super.func_184996_a(id, clickedButton, clickType, player);

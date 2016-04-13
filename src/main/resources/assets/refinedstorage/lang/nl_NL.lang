@@ -7,6 +7,7 @@ gui.refinedstorage:controller.machine_position.y=Y: %d
 gui.refinedstorage:controller.machine_position.z=Z: %d
 gui.refinedstorage:grid=Rooster
 gui.refinedstorage:grid.pattern=Patroon
+gui.refinedstorage:grid.pattern_create=Patroon maken
 gui.refinedstorage:wireless_grid=Draadloos Rooster
 gui.refinedstorage:disk_drive=Schijf
 gui.refinedstorage:external_storage=Externe Opslag
@@ -21,7 +22,8 @@ gui.refinedstorage:interface.import=Interface Import
 gui.refinedstorage:interface.export=Interface Export
 gui.refinedstorage:interface.patterns=Patronen
 gui.refinedstorage:crafting_monitor=Crafting Monitor
-gui.refinedstorage:wireless_transmitter=Draadloze Zender (%d blokken)
+gui.refinedstorage:wireless_transmitter=Draadloze Zender
+gui.refinedstorage:wireless_transmitter.distance=%d blokken
 
 misc.refinedstorage:energy_stored=%d / %d RF
 misc.refinedstorage:energy_usage=Vebruik: %d RF/t

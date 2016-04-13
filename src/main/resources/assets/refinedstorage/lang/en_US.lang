@@ -7,6 +7,7 @@ gui.refinedstorage:controller.machine_position.y=Y: %d
 gui.refinedstorage:controller.machine_position.z=Z: %d
 gui.refinedstorage:grid=Grid
 gui.refinedstorage:grid.pattern=Pattern
+gui.refinedstorage:grid.pattern_create=Create Pattern
 gui.refinedstorage:wireless_grid=Wireless Grid
 gui.refinedstorage:disk_drive=Drive
 gui.refinedstorage:external_storage=External Storage
@@ -21,7 +22,8 @@ gui.refinedstorage:interface.import=Interface Import
 gui.refinedstorage:interface.export=Interface Export
 gui.refinedstorage:interface.patterns=Patterns
 gui.refinedstorage:crafting_monitor=Crafting Monitor
-gui.refinedstorage:wireless_transmitter=Wireless Transmitter (%d blocks)
+gui.refinedstorage:wireless_transmitter=Wireless Transmitter
+gui.refinedstorage:wireless_transmitter.distance=%d blocks
 
 misc.refinedstorage:energy_stored=%d / %d RF
 misc.refinedstorage:energy_usage=Usage: %d RF/t

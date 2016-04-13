@@ -13,8 +13,8 @@ public class ContainerWirelessTransmitter extends ContainerBase {
     public ContainerWirelessTransmitter(EntityPlayer player, TileWirelessTransmitter wirelessTransmitter) {
         super(player);
 
-        for (int i = 0; i < 9; ++i) {
-            addSlotToContainer(new SlotFiltered(wirelessTransmitter, i, 8 + (i * 18), 20, new IItemValidator() {
+        for (int i = 0; i < 4; ++i) {
+            addSlotToContainer(new SlotFiltered(wirelessTransmitter, i, 187, 6 + (i * 18), new IItemValidator() {
                 @Override
                 public boolean isValid(ItemStack stack) {
                     return stack.getItem() == RefinedStorageItems.UPGRADE && stack.getMetadata() == ItemUpgrade.TYPE_RANGE;
