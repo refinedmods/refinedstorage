@@ -7,16 +7,15 @@ import net.minecraft.util.math.BlockPos;
 import refinedstorage.RefinedStorageBlocks;
 
 import java.util.List;
+import java.util.Set;
 
 public class MachineSearcher {
-    public static void search(TileController controller, BlockPos current, List<BlockPos> visited, List<TileMachine> machines) {
-        for (BlockPos visit : visited) {
-            if (visit.equals(current) || controller.getPos().equals(current)) {
-                return;
-            }
+    public static void search(TileController controller, BlockPos current, Set<String> visited, List<TileMachine> machines) {
+        if (visited.contains(current.getX() + "," + current.getY() + "," + current.getZ()) || controller.getPos().equals(current)) {
+            return;
         }
 
-        visited.add(current);
+        visited.add(current.getX() + "," + current.getY() + "," + current.getZ());
 
         Block block = controller.getWorld().getBlockState(current).getBlock();
         TileEntity tile = controller.getWorld().getTileEntity(current);

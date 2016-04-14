@@ -61,7 +61,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     private List<CraftingTask> craftingTasks = new ArrayList<CraftingTask>();
     private List<CraftingTask> craftingTasksToAdd = new ArrayList<CraftingTask>();
 
-    private List<BlockPos> visited = new ArrayList<BlockPos>();
+    private Set<String> visited = new HashSet<String>();
 
     private EnergyStorage energy = new EnergyStorage(ENERGY_CAPACITY);
     private int energyUsage;
