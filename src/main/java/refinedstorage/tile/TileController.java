@@ -106,11 +106,20 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                     }
 
                     int range = 0;
+                    int usage = 0;
+
+                    storages.clear();
 
                     for (TileMachine machine : newMachines) {
                         if (machine instanceof TileWirelessTransmitter) {
                             range += ((TileWirelessTransmitter) machine).getRange();
                         }
+
+                        if (machine instanceof IStorageProvider) {
+                            ((IStorageProvider) machine).provide(storages);
+                        }
+
+                        usage += machine.getEnergyUsage();
 
                         if (!machinesHavePosition(machines, machine.getPos())) {
                             machine.onConnected(this);
@@ -126,16 +135,8 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                     }
 
                     wirelessGridRange = range;
-
+                    energyUsage = usage;
                     machines = newMachines;
-
-                    storages.clear();
-
-                    for (TileMachine machine : machines) {
-                        if (machine instanceof IStorageProvider) {
-                            ((IStorageProvider) machine).provide(storages);
-                        }
-                    }
 
                     Collections.sort(storages, new Comparator<IStorage>() {
                         @Override
@@ -145,12 +146,6 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                     });
 
                     syncItems();
-
-                    energyUsage = 10;
-
-                    for (TileMachine machine : machines) {
-                        energyUsage += machine.getEnergyUsage();
-                    }
                 }
 
                 craftingTasks.addAll(craftingTasksToAdd);
@@ -193,7 +188,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                 if (!InventoryUtils.compareStack(consumer.getWirelessGrid(), consumer.getPlayer().getHeldItem(consumer.getHand()))) {
                     consumer.getPlayer().closeScreen(); // This will call onContainerClosed on the Container and remove it from the list
                 } else {
-                    if (isActive()) {
+                    if (isActive() && ticks % 4 == 0) {
                         RefinedStorage.NETWORK.sendTo(new MessageWirelessGridItems(this), (EntityPlayerMP) consumer.getPlayer());
                     }
                 }
