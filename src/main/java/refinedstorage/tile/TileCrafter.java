@@ -4,9 +4,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import refinedstorage.container.ContainerCrafter;
 import refinedstorage.inventory.InventorySimple;
+import refinedstorage.util.InventoryUtils;
 
 public class TileCrafter extends TileMachine implements IInventory {
     private InventorySimple inventory = new InventorySimple("crafter", PATTERN_SLOTS + 4, this);
@@ -25,6 +27,20 @@ public class TileCrafter extends TileMachine implements IInventory {
     @Override
     public Class<? extends Container> getContainer() {
         return ContainerCrafter.class;
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
+        super.readFromNBT(nbt);
+
+        InventoryUtils.restoreInventory(inventory, 0, nbt);
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound nbt) {
+        super.writeToNBT(nbt);
+
+        InventoryUtils.saveInventory(inventory, 0, nbt);
     }
 
     @Override
