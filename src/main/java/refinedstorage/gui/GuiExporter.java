@@ -10,7 +10,7 @@ public class GuiExporter extends GuiBase {
     private TileExporter exporter;
 
     public GuiExporter(ContainerExporter container, TileExporter exporter) {
-        super(container, 176, 137);
+        super(container, 211, 137);
 
         this.exporter = exporter;
     }

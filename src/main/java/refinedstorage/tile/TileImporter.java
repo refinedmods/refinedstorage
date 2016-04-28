@@ -25,18 +25,6 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
 
     private int currentSlot;
 
-    public int getSpeed() {
-        int upgrades = 0;
-
-        for (int i = 0; i < upgradesInventory.getSizeInventory(); ++i) {
-            if (upgradesInventory.getStackInSlot(i) != null) {
-                upgrades++;
-            }
-        }
-
-        return 9 - (upgrades * 2);
-    }
-
     @Override
     public int getEnergyUsage() {
         return 2;
@@ -63,7 +51,7 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
                 if (stack == null) {
                     currentSlot++;
                 } else {
-                    if (ticks % getSpeed() == 0) {
+                    if (ticks % TileInterface.getSpeed(upgradesInventory) == 0) {
                         ItemStack toTake = stack.copy();
                         toTake.stackSize = 1;
 
@@ -89,7 +77,7 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
             ItemStack stack = inventory.getStackInSlot(currentSlot);
 
             if (stack != null) {
-                if (ticks % getSpeed() == 0) {
+                if (ticks % TileInterface.getSpeed(upgradesInventory) == 0) {
                     ItemStack toTake = stack.copy();
                     toTake.stackSize = 1;
 

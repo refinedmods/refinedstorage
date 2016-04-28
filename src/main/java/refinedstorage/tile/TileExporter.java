@@ -15,9 +15,8 @@ import refinedstorage.util.InventoryUtils;
 public class TileExporter extends TileMachine implements ICompareConfig {
     public static final String NBT_COMPARE = "Compare";
 
-    public static final int SPEED = 3;
-
     private InventorySimple inventory = new InventorySimple("exporter", 9, this);
+    private InventorySimple upgradesInventory = new InventorySimple("upgrades", 4, this);
 
     private int compare = 0;
 
@@ -33,7 +32,7 @@ public class TileExporter extends TileMachine implements ICompareConfig {
         if (connectedTile instanceof IInventory) {
             IInventory connectedInventory = (IInventory) connectedTile;
 
-            if (ticks % SPEED == 0) {
+            if (ticks % TileInterface.getSpeed(upgradesInventory) == 0) {
                 for (int i = 0; i < inventory.getSizeInventory(); ++i) {
                     ItemStack slot = inventory.getStackInSlot(i);
 
@@ -77,6 +76,7 @@ public class TileExporter extends TileMachine implements ICompareConfig {
         }
 
         InventoryUtils.restoreInventory(inventory, 0, nbt);
+        InventoryUtils.restoreInventory(upgradesInventory, 1, nbt);
     }
 
     @Override
@@ -86,6 +86,7 @@ public class TileExporter extends TileMachine implements ICompareConfig {
         nbt.setInteger(NBT_COMPARE, compare);
 
         InventoryUtils.saveInventory(inventory, 0, nbt);
+        InventoryUtils.saveInventory(upgradesInventory, 1, nbt);
     }
 
     @Override
@@ -105,6 +106,15 @@ public class TileExporter extends TileMachine implements ICompareConfig {
     @Override
     public Class<? extends Container> getContainer() {
         return ContainerExporter.class;
+    }
+
+    @Override
+    public IInventory getDroppedInventory() {
+        return upgradesInventory;
+    }
+
+    public InventorySimple getUpgradesInventory() {
+        return upgradesInventory;
     }
 
     public IInventory getInventory() {

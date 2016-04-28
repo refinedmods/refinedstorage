@@ -36,7 +36,7 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
         return 4;
     }
 
-    public int getSpeed() {
+    public static int getSpeed(InventorySimple upgradesInventory) {
         int upgrades = 0;
 
         for (int i = 0; i < upgradesInventory.getSizeInventory(); ++i) {
@@ -59,7 +59,7 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
         if (slot == null) {
             currentSlot++;
         } else {
-            if (ticks % getSpeed() == 0) {
+            if (ticks % getSpeed(upgradesInventory) == 0) {
                 ItemStack toPush = slot.copy();
                 toPush.stackSize = 1;
 
