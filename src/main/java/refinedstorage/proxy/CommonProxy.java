@@ -20,7 +20,6 @@ import refinedstorage.item.*;
 import refinedstorage.network.*;
 import refinedstorage.storage.NBTStorage;
 import refinedstorage.tile.*;
-import refinedstorage.tile.autocrafting.TileCraftingCPU;
 import refinedstorage.tile.autocrafting.TileCraftingMonitor;
 import refinedstorage.tile.grid.TileGrid;
 import refinedstorage.tile.solderer.*;
@@ -68,7 +67,6 @@ public class CommonProxy {
         GameRegistry.registerTileEntity(TileRelay.class, ID + ":relay");
         GameRegistry.registerTileEntity(TileInterface.class, ID + ":interface");
         GameRegistry.registerTileEntity(TileCraftingMonitor.class, ID + ":crafting_monitor");
-        GameRegistry.registerTileEntity(TileCraftingCPU.class, ID + ":crafting_cpu");
         GameRegistry.registerTileEntity(TileWirelessTransmitter.class, ID + ":wireless_transmitter");
 
         registerBlock(RefinedStorageBlocks.CONTROLLER);
@@ -87,9 +85,7 @@ public class CommonProxy {
         registerBlock(RefinedStorageBlocks.RELAY);
         registerBlock(RefinedStorageBlocks.INTERFACE);
         registerBlock(RefinedStorageBlocks.CRAFTING_MONITOR);
-        registerBlock(RefinedStorageBlocks.CRAFTING_CPU);
         registerBlock(RefinedStorageBlocks.WIRELESS_TRANSMITTER);
-        registerBlock(RefinedStorageBlocks.CRAFTING_UNIT);
 
         registerItem(RefinedStorageItems.STORAGE_DISK);
         registerItem(RefinedStorageItems.PATTERN);
@@ -394,24 +390,6 @@ public class CommonProxy {
         SoldererRegistry.addRecipe(new SoldererRecipeStorage(EnumStorageType.TYPE_4K, ItemStoragePart.TYPE_4K));
         SoldererRegistry.addRecipe(new SoldererRecipeStorage(EnumStorageType.TYPE_16K, ItemStoragePart.TYPE_16K));
         SoldererRegistry.addRecipe(new SoldererRecipeStorage(EnumStorageType.TYPE_64K, ItemStoragePart.TYPE_64K));
-
-        // Crafting Unit
-        GameRegistry.addShapedRecipe(new ItemStack(RefinedStorageBlocks.CRAFTING_UNIT),
-            "ECE",
-            "PMP",
-            "EDE",
-            'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
-            'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
-            'C', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
-            'D', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_DESTRUCTION)
-        );
-
-        // Crafting CPUs
-        SoldererRegistry.addRecipe(new SoldererRecipeCraftingCPU(EnumCraftingCPUType.TYPE_1K, ItemStoragePart.TYPE_1K));
-        SoldererRegistry.addRecipe(new SoldererRecipeCraftingCPU(EnumCraftingCPUType.TYPE_4K, ItemStoragePart.TYPE_4K));
-        SoldererRegistry.addRecipe(new SoldererRecipeCraftingCPU(EnumCraftingCPUType.TYPE_16K, ItemStoragePart.TYPE_16K));
-        SoldererRegistry.addRecipe(new SoldererRecipeCraftingCPU(EnumCraftingCPUType.TYPE_64K, ItemStoragePart.TYPE_64K));
 
         // Crafting Monitor
         GameRegistry.addRecipe(new ItemStack(RefinedStorageBlocks.CRAFTING_MONITOR),

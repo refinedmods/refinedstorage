@@ -97,11 +97,6 @@ block.refinedstorage:storage.4.name=Creative Storage Block
 block.refinedstorage:relay.name=Relay
 block.refinedstorage:interface.name=Interface
 block.refinedstorage:crafting_monitor.name=Crafting Monitor
-block.refinedstorage:crafting_unit.name=Crafting Unit
-block.refinedstorage:crafting_cpu.0.name=1k Crafting CPU
-block.refinedstorage:crafting_cpu.1.name=4k Crafting CPU
-block.refinedstorage:crafting_cpu.2.name=16k Crafting CPU
-block.refinedstorage:crafting_cpu.3.name=64k Crafting CPU
 block.refinedstorage:wireless_transmitter.name=Wireless Transmitter
 
 item.refinedstorage:storage_disk.0.name=1k Storage Disk
