@@ -17,8 +17,6 @@ import refinedstorage.util.InventoryUtils;
 public class TileInterface extends TileMachine implements ICompareConfig, ISidedInventory {
     public static final String NBT_COMPARE = "Compare";
 
-    public static final int SPEED = 3;
-
     public static final int[] FACES = new int[]{
         0, 1, 2, 3, 4, 5, 6, 7, 8
     };
@@ -26,7 +24,8 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
         18, 19, 20, 21, 22, 23, 24, 25, 26
     };
 
-    private InventorySimple inventory = new InventorySimple("interface", 9 * 4, this);
+    private InventorySimple inventory = new InventorySimple("interface", 9 * 3, this);
+    private InventorySimple upgradesInventory = new InventorySimple("upgrades", 4, this);
 
     private int compare = 0;
 
@@ -35,6 +34,18 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
     @Override
     public int getEnergyUsage() {
         return 4;
+    }
+
+    public int getSpeed() {
+        int upgrades = 0;
+
+        for (int i = 0; i < upgradesInventory.getSizeInventory(); ++i) {
+            if (upgradesInventory.getStackInSlot(i) != null) {
+                upgrades++;
+            }
+        }
+
+        return 9 - (upgrades * 2);
     }
 
     @Override
@@ -48,7 +59,7 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
         if (slot == null) {
             currentSlot++;
         } else {
-            if (ticks % SPEED == 0) {
+            if (ticks % getSpeed() == 0) {
                 ItemStack toPush = slot.copy();
                 toPush.stackSize = 1;
 
@@ -108,6 +119,7 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
         super.readFromNBT(nbt);
 
         InventoryUtils.restoreInventory(this, 0, nbt);
+        InventoryUtils.restoreInventory(upgradesInventory, 1, nbt);
 
         if (nbt.hasKey(NBT_COMPARE)) {
             compare = nbt.getInteger(NBT_COMPARE);
@@ -119,8 +131,13 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
         super.writeToNBT(nbt);
 
         InventoryUtils.saveInventory(this, 0, nbt);
+        InventoryUtils.saveInventory(upgradesInventory, 1, nbt);
 
         nbt.setInteger(NBT_COMPARE, compare);
+    }
+
+    public InventorySimple getUpgradesInventory() {
+        return upgradesInventory;
     }
 
     @Override
@@ -225,17 +242,6 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
     @Override
     public ITextComponent getDisplayName() {
         return inventory.getDisplayName();
-    }
-
-    @Override
-    public IInventory getDroppedInventory() {
-        InventorySimple dummy = new InventorySimple("dummy", 9);
-
-        for (int i = 0; i < 9; ++i) {
-            dummy.setInventorySlotContents(i, inventory.getStackInSlot(18 + i));
-        }
-
-        return dummy;
     }
 
     @Override

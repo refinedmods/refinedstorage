@@ -10,7 +10,7 @@ public class GuiInterface extends GuiBase {
     private TileInterface tile;
 
     public GuiInterface(ContainerInterface container, TileInterface tile) {
-        super(container, 176, 250);
+        super(container, 211, 217);
 
         this.tile = tile;
     }
@@ -38,7 +38,6 @@ public class GuiInterface extends GuiBase {
     public void drawForeground(int mouseX, int mouseY) {
         drawString(7, 7, t("gui.refinedstorage:interface.import"));
         drawString(7, 42, t("gui.refinedstorage:interface.export"));
-        drawString(7, 122, t("gui.refinedstorage:interface.patterns"));
-        drawString(7, 156, t("container.inventory"));
+        drawString(7, 122, t("container.inventory"));
     }
 }

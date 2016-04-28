@@ -9,6 +9,7 @@ import refinedstorage.container.slot.SlotFiltered;
 import refinedstorage.container.slot.SlotOutput;
 import refinedstorage.container.slot.SlotSpecimen;
 import refinedstorage.item.ItemPattern;
+import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.TileInterface;
 
 public class ContainerInterface extends ContainerBase {
@@ -27,16 +28,16 @@ public class ContainerInterface extends ContainerBase {
             addSlotToContainer(new SlotOutput(tile, i, 8 + (18 * (i - 18)), 100));
         }
 
-        for (int i = 27; i < 27 + 9; ++i) {
-            addSlotToContainer(new SlotFiltered(tile, i, 8 + (18 * (i - 27)), 134, new IItemValidator() {
+        for (int i = 0; i < 4; ++i) {
+            addSlotToContainer(new SlotFiltered(tile.getUpgradesInventory(), i, 187, 6 + (i * 18), new IItemValidator() {
                 @Override
                 public boolean isValid(ItemStack stack) {
-                    return stack.getItem() == RefinedStorageItems.PATTERN && ItemPattern.hasResult(stack);
+                    return stack.getItem() == RefinedStorageItems.UPGRADE && stack.getMetadata() == ItemUpgrade.TYPE_SPEED;
                 }
             }));
         }
 
-        addPlayerInventory(8, 168);
+        addPlayerInventory(8, 134);
     }
 
     @Override

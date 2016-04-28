@@ -20,7 +20,6 @@ gui.refinedstorage:constructor=Constructor
 gui.refinedstorage:relay=Relais
 gui.refinedstorage:interface.import=Interface Import
 gui.refinedstorage:interface.export=Interface Export
-gui.refinedstorage:interface.patterns=Patronen
 gui.refinedstorage:crafting_monitor=Crafting Monitor
 gui.refinedstorage:wireless_transmitter=Draadloze Zender
 gui.refinedstorage:wireless_transmitter.distance=%d blokken

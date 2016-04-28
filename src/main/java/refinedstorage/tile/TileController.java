@@ -243,20 +243,6 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     public List<ItemStack> getPatterns() {
         List<ItemStack> patterns = new ArrayList<ItemStack>();
 
-        for (TileMachine machine : machines) {
-            if (machine instanceof TileInterface) {
-                TileInterface tile = (TileInterface) machine;
-
-                for (int i = 27; i < 27 + 9; ++i) {
-                    ItemStack pattern = tile.getStackInSlot(i);
-
-                    if (pattern != null) {
-                        patterns.add(pattern);
-                    }
-                }
-            }
-        }
-
         return patterns;
     }
 
