@@ -68,6 +68,7 @@ public class CommonProxy {
         GameRegistry.registerTileEntity(TileInterface.class, ID + ":interface");
         GameRegistry.registerTileEntity(TileCraftingMonitor.class, ID + ":crafting_monitor");
         GameRegistry.registerTileEntity(TileWirelessTransmitter.class, ID + ":wireless_transmitter");
+        GameRegistry.registerTileEntity(TileCrafter.class, ID + ":crafter");
 
         registerBlock(RefinedStorageBlocks.CONTROLLER);
         registerBlock(RefinedStorageBlocks.CABLE);
@@ -86,6 +87,7 @@ public class CommonProxy {
         registerBlock(RefinedStorageBlocks.INTERFACE);
         registerBlock(RefinedStorageBlocks.CRAFTING_MONITOR);
         registerBlock(RefinedStorageBlocks.WIRELESS_TRANSMITTER);
+        registerBlock(RefinedStorageBlocks.CRAFTER);
 
         registerItem(RefinedStorageItems.STORAGE_DISK);
         registerItem(RefinedStorageItems.PATTERN);

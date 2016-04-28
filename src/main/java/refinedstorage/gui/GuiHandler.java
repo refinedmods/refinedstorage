@@ -46,6 +46,8 @@ public class GuiHandler implements IGuiHandler {
                 return new ContainerCraftingMonitor(player);
             case RefinedStorageGui.WIRELESS_TRANSMITTER:
                 return new ContainerWirelessTransmitter(player, (TileWirelessTransmitter) tile);
+            case RefinedStorageGui.CRAFTER:
+                return new ContainerCrafter(player, (TileCrafter) tile);
             default:
                 return null;
         }
@@ -111,6 +113,8 @@ public class GuiHandler implements IGuiHandler {
                 return new GuiCraftingMonitor((ContainerCraftingMonitor) getContainer(ID, player, tile), (TileCraftingMonitor) tile);
             case RefinedStorageGui.WIRELESS_TRANSMITTER:
                 return new GuiWirelessTransmitter((ContainerWirelessTransmitter) getContainer(ID, player, tile), (TileWirelessTransmitter) tile);
+            case RefinedStorageGui.CRAFTER:
+                return new GuiCrafter((ContainerCrafter) getContainer(ID, player, tile), (TileCrafter) tile);
             default:
                 return null;
         }

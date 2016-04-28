@@ -20,4 +20,5 @@ public final class RefinedStorageBlocks {
     public static final BlockInterface INTERFACE = new BlockInterface();
     public static final BlockCraftingMonitor CRAFTING_MONITOR = new BlockCraftingMonitor();
     public static final BlockWirelessTransmitter WIRELESS_TRANSMITTER = new BlockWirelessTransmitter();
+    public static final BlockCrafter CRAFTER = new BlockCrafter();
 }
