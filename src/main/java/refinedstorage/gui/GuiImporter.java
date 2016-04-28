@@ -11,7 +11,7 @@ public class GuiImporter extends GuiBase {
     private TileImporter importer;
 
     public GuiImporter(ContainerImporter container, TileImporter importer) {
-        super(container, 176, 137);
+        super(container, 211, 137);
 
         this.importer = importer;
     }

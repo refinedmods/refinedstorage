@@ -17,14 +17,25 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
     public static final String NBT_COMPARE = "Compare";
     public static final String NBT_MODE = "Mode";
 
-    public static final int SPEED = 3;
-
     private InventorySimple inventory = new InventorySimple("importer", 9, this);
+    private InventorySimple upgradesInventory = new InventorySimple("upgrades", 4, this);
 
     private int compare = 0;
     private int mode = 0;
 
     private int currentSlot;
+
+    public int getSpeed() {
+        int upgrades = 0;
+
+        for (int i = 0; i < upgradesInventory.getSizeInventory(); ++i) {
+            if (upgradesInventory.getStackInSlot(i) != null) {
+                upgrades++;
+            }
+        }
+
+        return 9 - (upgrades * 2);
+    }
 
     @Override
     public int getEnergyUsage() {
@@ -52,7 +63,7 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
                 if (stack == null) {
                     currentSlot++;
                 } else {
-                    if (ticks % SPEED == 0) {
+                    if (ticks % getSpeed() == 0) {
                         ItemStack toTake = stack.copy();
                         toTake.stackSize = 1;
 
@@ -78,7 +89,7 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
             ItemStack stack = inventory.getStackInSlot(currentSlot);
 
             if (stack != null) {
-                if (ticks % SPEED == 0) {
+                if (ticks % getSpeed() == 0) {
                     ItemStack toTake = stack.copy();
                     toTake.stackSize = 1;
 
@@ -177,6 +188,7 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
         }
 
         InventoryUtils.restoreInventory(inventory, 0, nbt);
+        InventoryUtils.restoreInventory(upgradesInventory, 1, nbt);
     }
 
     @Override
@@ -187,6 +199,7 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
         nbt.setInteger(NBT_MODE, mode);
 
         InventoryUtils.saveInventory(inventory, 0, nbt);
+        InventoryUtils.saveInventory(upgradesInventory, 1, nbt);
     }
 
     @Override
@@ -208,6 +221,15 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
     @Override
     public Class<? extends Container> getContainer() {
         return ContainerImporter.class;
+    }
+
+    @Override
+    public IInventory getDroppedInventory() {
+        return upgradesInventory;
+    }
+
+    public InventorySimple getUpgradesInventory() {
+        return upgradesInventory;
     }
 
     public IInventory getInventory() {

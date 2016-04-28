@@ -260,6 +260,11 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
     }
 
     @Override
+    public IInventory getDroppedInventory() {
+        return upgradesInventory;
+    }
+
+    @Override
     public int getCompare() {
         return compare;
     }
