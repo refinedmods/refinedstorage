@@ -53,8 +53,8 @@ public class GuiStorage extends GuiBase {
         priorityField.setEnableBackgroundDrawing(false);
         priorityField.setVisible(true);
         priorityField.setTextColor(16777215);
-        priorityField.setCanLoseFocus(false);
-        priorityField.setFocused(true);
+        priorityField.setCanLoseFocus(true);
+        priorityField.setFocused(false);
     }
 
     @Override
@@ -90,6 +90,13 @@ public class GuiStorage extends GuiBase {
 
             drawTooltip(mouseX, mouseY, t("misc.refinedstorage:storage.full", full));
         }
+    }
+
+    @Override
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+        super.mouseClicked(mouseX, mouseY, mouseButton);
+
+        priorityField.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     @Override

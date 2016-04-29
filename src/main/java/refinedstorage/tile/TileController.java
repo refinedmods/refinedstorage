@@ -63,6 +63,8 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
     private boolean destroyed = false;
 
+    private long lastEnergyRerender;
+
     private boolean machinesHavePosition(List<TileMachine> tiles, BlockPos pos) {
         for (TileEntity tile : tiles) {
             if (tile.getPos().getX() == pos.getX() && tile.getPos().getY() == pos.getY() && tile.getPos().getZ() == pos.getZ()) {
@@ -125,6 +127,10 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                     Collections.sort(storages, new Comparator<IStorage>() {
                         @Override
                         public int compare(IStorage s1, IStorage s2) {
+                            if (s1.getPriority() == s2.getPriority()) {
+                                return 0;
+                            }
+
                             return (s1.getPriority() > s2.getPriority()) ? -1 : 1;
                         }
                     });
@@ -432,7 +438,9 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
         energy.setEnergyStored(buf.readInt());
 
-        if (lastEnergy != energy.getEnergyStored()) {
+        if (lastEnergy != energy.getEnergyStored() && System.currentTimeMillis() - lastEnergyRerender > 3000) {
+            lastEnergyRerender = System.currentTimeMillis();
+
             worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2 | 4);
         }
     }

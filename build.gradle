@@ -12,12 +12,12 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "0.5.5"
+version = "0.5.6"
 group = "refinedstorage"
 archivesBaseName = "refinedstorage"
 
 minecraft {
-    version = "1.9-12.16.0.1859-1.9"
+    version = "1.9-12.16.0.1868-1.9"
     runDir = "run"
     useDepAts = true
     mappings = "snapshot_20160312"
