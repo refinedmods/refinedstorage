@@ -44,7 +44,7 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
         addPropertyOverride(new ResourceLocation("connected"), new IItemPropertyGetter() {
             @Override
             public float apply(ItemStack stack, World world, EntityLivingBase entity) {
-                return (hasValidNBT(stack) && getDimensionId(stack) == entity.dimension) ? 1.0f : 0.0f;
+                return (entity != null && hasValidNBT(stack) && getDimensionId(stack) == entity.dimension) ? 1.0f : 0.0f;
             }
         });
 
