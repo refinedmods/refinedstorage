@@ -22,7 +22,7 @@ public class CraftingTask {
         return pattern;
     }
 
-    public boolean attemptCraft(TileController controller) {
+    public boolean update(TileController controller) {
         boolean done = true;
 
         for (int i = 0; i < pattern.getIngredients().length; ++i) {

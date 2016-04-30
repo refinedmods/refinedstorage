@@ -43,6 +43,18 @@ public class TileCrafter extends TileMachine implements IInventory {
         InventoryUtils.saveInventory(inventory, 0, nbt);
     }
 
+    public int getUpgrades() {
+        int upgrades = 0;
+
+        for (int i = PATTERN_SLOTS; i < PATTERN_SLOTS + 4; ++i) {
+            if (inventory.getStackInSlot(i) != null) {
+                upgrades++;
+            }
+        }
+
+        return upgrades;
+    }
+
     @Override
     public int getSizeInventory() {
         return inventory.getSizeInventory();

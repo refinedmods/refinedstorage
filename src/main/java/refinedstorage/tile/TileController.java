@@ -154,20 +154,20 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
                     syncItems();
                 }
+            }
 
-                craftingTasks.addAll(craftingTasksToAdd);
-                craftingTasksToAdd.clear();
+            craftingTasks.addAll(craftingTasksToAdd);
+            craftingTasksToAdd.clear();
 
-                Iterator<CraftingTask> it = craftingTasks.iterator();
+            Iterator<CraftingTask> crIt = craftingTasks.iterator();
 
-                while (it.hasNext()) {
-                    CraftingTask task = it.next();
+            while (crIt.hasNext()) {
+                CraftingTask task = crIt.next();
 
-                    if (task.attemptCraft(this)) {
-                        it.remove();
+                if (ticks % task.getPattern().getSpeed() == 0 && task.update(this)) {
+                    crIt.remove();
 
-                        push(task.getPattern().getResult());
-                    }
+                    push(task.getPattern().getResult());
                 }
             }
 
@@ -185,10 +185,10 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
             wirelessGridConsumers.removeAll(wirelessGridConsumersMarkedForRemoval);
             wirelessGridConsumersMarkedForRemoval.clear();
 
-            Iterator<WirelessGridConsumer> it = wirelessGridConsumers.iterator();
+            Iterator<WirelessGridConsumer> wgIt = wirelessGridConsumers.iterator();
 
-            while (it.hasNext()) {
-                WirelessGridConsumer consumer = it.next();
+            while (wgIt.hasNext()) {
+                WirelessGridConsumer consumer = wgIt.next();
 
                 if (!InventoryUtils.compareStack(consumer.getWirelessGrid(), consumer.getPlayer().getHeldItem(consumer.getHand()))) {
                     consumer.getPlayer().closeScreen(); // This will call onContainerClosed on the Container and remove it from the list
@@ -258,7 +258,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                     if (crafter.getStackInSlot(i) != null) {
                         ItemStack pattern = crafter.getStackInSlot(i);
 
-                        patterns.add(new CraftingPattern(ItemPattern.getResult(pattern), ItemPattern.getIngredients(pattern), 20));
+                        patterns.add(new CraftingPattern(ItemPattern.getResult(pattern), ItemPattern.getIngredients(pattern), 20 - (crafter.getUpgrades() * 4)));
                     }
                 }
             }
