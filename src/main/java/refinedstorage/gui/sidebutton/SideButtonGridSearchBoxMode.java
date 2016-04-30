@@ -1,6 +1,8 @@
 package refinedstorage.gui.sidebutton;
 
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.util.text.TextFormatting;
+import refinedstorage.RefinedStorage;
 import refinedstorage.gui.GuiBase;
 import refinedstorage.tile.grid.IGrid;
 import refinedstorage.tile.grid.TileGrid;
@@ -28,8 +30,16 @@ public class SideButtonGridSearchBoxMode extends SideButton {
         int mode = grid.getSearchBoxMode();
 
         if (mode == TileGrid.SEARCH_BOX_MODE_NORMAL) {
-            mode = TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED;
+            mode = TileGrid.SEARCH_BOX_MODE_NORMAL_AUTOSELECTED;
+        } else if (mode == TileGrid.SEARCH_BOX_MODE_NORMAL_AUTOSELECTED) {
+            if (RefinedStorage.hasJei()) {
+                mode = TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED;
+            } else {
+                mode = TileGrid.SEARCH_BOX_MODE_NORMAL;
+            }
         } else if (mode == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED) {
+            mode = TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED;
+        } else if (mode == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED) {
             mode = TileGrid.SEARCH_BOX_MODE_NORMAL;
         }
 

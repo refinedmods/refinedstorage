@@ -41,7 +41,9 @@ public class TileGrid extends TileMachine implements IGrid {
     public static final int SORTING_TYPE_NAME = 1;
 
     public static final int SEARCH_BOX_MODE_NORMAL = 0;
-    public static final int SEARCH_BOX_MODE_JEI_SYNCHRONIZED = 1;
+    public static final int SEARCH_BOX_MODE_NORMAL_AUTOSELECTED = 1;
+    public static final int SEARCH_BOX_MODE_JEI_SYNCHRONIZED = 2;
+    public static final int SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED = 3;
 
     private Container craftingContainer = new Container() {
         @Override

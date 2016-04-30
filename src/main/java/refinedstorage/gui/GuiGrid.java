@@ -55,19 +55,16 @@ public class GuiGrid extends GuiBase {
             addSideButton(new SideButtonRedstoneMode(grid.getRedstoneModeSetting()));
         }
 
-        addSideButton(new SideButtonGridSortingDirection(grid));
-        addSideButton(new SideButtonGridSortingType(grid));
-
-        if (RefinedStorage.hasJei()) {
-            addSideButton(new SideButtonGridSearchBoxMode(grid));
-        }
-
         searchField = new GuiTextField(0, fontRendererObj, x + 80 + 1, y + 6 + 1, 88 - 6, fontRendererObj.FONT_HEIGHT);
         searchField.setEnableBackgroundDrawing(false);
         searchField.setVisible(true);
         searchField.setTextColor(16777215);
-        searchField.setCanLoseFocus(false);
-        searchField.setFocused(true);
+        searchField.setCanLoseFocus(true);
+        searchField.setFocused(grid.getSearchBoxMode() == TileGrid.SEARCH_BOX_MODE_NORMAL_AUTOSELECTED || grid.getSearchBoxMode() == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED);
+
+        addSideButton(new SideButtonGridSortingDirection(grid));
+        addSideButton(new SideButtonGridSortingType(grid));
+        addSideButton(new SideButtonGridSearchBoxMode(grid));
     }
 
     public IGrid getGrid() {
@@ -296,14 +293,16 @@ public class GuiGrid extends GuiBase {
     public void mouseClicked(int mouseX, int mouseY, int clickedButton) throws IOException {
         super.mouseClicked(mouseX, mouseY, clickedButton);
 
+        searchField.mouseClicked(mouseX, mouseY, clickedButton);
+
         boolean clickedClear = clickedButton == 0 && isHoveringOverClear(mouseX - guiLeft, mouseY - guiTop);
-        boolean playClickSound = clickedClear;
+        boolean clickedCreatePattern = clickedButton == 0 && isHoveringOverCreatePattern(mouseX - guiLeft, mouseY - guiTop);
+
+        boolean playClickSound = clickedClear || clickedCreatePattern;
 
         if (grid.isConnected()) {
-            if (isHoveringOverCreatePattern(mouseX - guiLeft, mouseY - guiTop)) {
+            if (clickedCreatePattern) {
                 RefinedStorage.NETWORK.sendToServer(new MessageGridPatternCreate((TileGrid) grid));
-
-                playClickSound = true;
             } else if (isHoveringOverSlot() && container.getPlayer().inventory.getItemStack() != null && (clickedButton == 0 || clickedButton == 1)) {
                 grid.onItemPush(-1, clickedButton == 1);
             } else if (isHoveringOverItemInSlot() && container.getPlayer().inventory.getItemStack() == null) {
@@ -326,7 +325,7 @@ public class GuiGrid extends GuiBase {
 
                     grid.onItemPull(hoveringItemId, flags);
                 }
-            } else if (clickedClear) {
+            } else if (clickedClear && grid.isConnected()) {
                 RefinedStorage.NETWORK.sendToServer(new MessageGridCraftingClear((TileGrid) grid));
             } else {
                 for (Slot slot : container.getPlayerInventorySlots()) {
@@ -357,7 +356,7 @@ public class GuiGrid extends GuiBase {
     @Override
     protected void keyTyped(char character, int keyCode) throws IOException {
         if (!checkHotbarKeys(keyCode) && searchField.textboxKeyTyped(character, keyCode)) {
-            if (RefinedStorage.hasJei() && grid.getSearchBoxMode() == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED) {
+            if (RefinedStorage.hasJei() && (grid.getSearchBoxMode() == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED || grid.getSearchBoxMode() == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED)) {
                 PluginRefinedStorage.INSTANCE.getRuntime().getItemListOverlay().setFilterText(searchField.getText());
             }
         } else {

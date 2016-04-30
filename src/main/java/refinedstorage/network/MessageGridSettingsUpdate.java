@@ -60,7 +60,10 @@ public class MessageGridSettingsUpdate extends MessageHandlerPlayerToServer<Mess
                 ((TileGrid) tile).setSortingType(message.sortingType);
             }
 
-            if (message.searchBoxMode == TileGrid.SEARCH_BOX_MODE_NORMAL || message.searchBoxMode == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED) {
+            if (message.searchBoxMode == TileGrid.SEARCH_BOX_MODE_NORMAL ||
+                message.searchBoxMode == TileGrid.SEARCH_BOX_MODE_NORMAL_AUTOSELECTED ||
+                message.searchBoxMode == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED ||
+                message.searchBoxMode == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED) {
                 ((TileGrid) tile).setSearchBoxMode(message.searchBoxMode);
             }
         }
