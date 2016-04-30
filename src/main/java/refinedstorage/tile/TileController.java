@@ -59,6 +59,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     private List<TileMachine> machines = new ArrayList<TileMachine>();
     private List<ClientSideMachine> clientSideMachines = new ArrayList<ClientSideMachine>();
 
+    private List<CraftingPattern> patterns = new ArrayList<CraftingPattern>();
     private List<CraftingTask> craftingTasks = new ArrayList<CraftingTask>();
     private List<CraftingTask> craftingTasksToAdd = new ArrayList<CraftingTask>();
 
@@ -110,8 +111,8 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
                     int range = 0;
                     int usage = 0;
-
-                    storages.clear();
+                    List<IStorage> newStorages = new ArrayList<IStorage>();
+                    List<CraftingPattern> newPatterns = new ArrayList<CraftingPattern>();
 
                     for (TileMachine machine : newMachines) {
                         if (machine instanceof TileWirelessTransmitter) {
@@ -119,7 +120,19 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                         }
 
                         if (machine instanceof IStorageProvider) {
-                            ((IStorageProvider) machine).provide(storages);
+                            ((IStorageProvider) machine).provide(newStorages);
+                        }
+
+                        if (machine instanceof TileCrafter) {
+                            TileCrafter crafter = (TileCrafter) machine;
+
+                            for (int i = 0; i < TileCrafter.PATTERN_SLOTS; ++i) {
+                                if (crafter.getStackInSlot(i) != null) {
+                                    ItemStack pattern = crafter.getStackInSlot(i);
+
+                                    newPatterns.add(new CraftingPattern(ItemPattern.getResult(pattern), ItemPattern.getIngredients(pattern), 20 - (crafter.getUpgrades() * 4)));
+                                }
+                            }
                         }
 
                         usage += machine.getEnergyUsage();
@@ -140,6 +153,8 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                     wirelessGridRange = range;
                     energyUsage = usage;
                     machines = newMachines;
+                    storages = newStorages;
+                    patterns = newPatterns;
 
                     Collections.sort(storages, new Comparator<IStorage>() {
                         @Override
@@ -244,26 +259,6 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     }
 
     public List<CraftingPattern> getPatterns() {
-        List<CraftingPattern> patterns = new ArrayList<CraftingPattern>();
-
-        Iterator<TileMachine> it = machines.iterator();
-
-        while (it.hasNext()) {
-            TileMachine machine = it.next();
-
-            if (machine instanceof TileCrafter) {
-                TileCrafter crafter = (TileCrafter) machine;
-
-                for (int i = 0; i < TileCrafter.PATTERN_SLOTS; ++i) {
-                    if (crafter.getStackInSlot(i) != null) {
-                        ItemStack pattern = crafter.getStackInSlot(i);
-
-                        patterns.add(new CraftingPattern(ItemPattern.getResult(pattern), ItemPattern.getIngredients(pattern), 20 - (crafter.getUpgrades() * 4)));
-                    }
-                }
-            }
-        }
-
         return patterns;
     }
 
