@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.Slot;
+import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import refinedstorage.RefinedStorage;
 import refinedstorage.block.EnumGridType;
@@ -35,6 +36,7 @@ public class GuiGrid extends GuiBase {
     private List<ItemGroup> items = new ArrayList<ItemGroup>();
 
     private GuiTextField searchField;
+    private GuiCheckBox processingCheckbox;
 
     private int hoveringSlot;
     private int hoveringItemId;
@@ -65,6 +67,10 @@ public class GuiGrid extends GuiBase {
         addSideButton(new SideButtonGridSortingDirection(grid));
         addSideButton(new SideButtonGridSortingType(grid));
         addSideButton(new SideButtonGridSearchBoxMode(grid));
+
+        if (grid.getType() == EnumGridType.PATTERN) {
+            processingCheckbox = (GuiCheckBox) addCheckBox(x + 65, y + 148, t("misc.refinedstorage:processing"));
+        }
     }
 
     public IGrid getGrid() {
@@ -302,7 +308,7 @@ public class GuiGrid extends GuiBase {
 
         if (grid.isConnected()) {
             if (clickedCreatePattern) {
-                RefinedStorage.NETWORK.sendToServer(new MessageGridPatternCreate((TileGrid) grid));
+                RefinedStorage.NETWORK.sendToServer(new MessageGridPatternCreate((TileGrid) grid, processingCheckbox.isChecked()));
             } else if (isHoveringOverSlot() && container.getPlayer().inventory.getItemStack() != null && (clickedButton == 0 || clickedButton == 1)) {
                 grid.onItemPush(-1, clickedButton == 1);
             } else if (isHoveringOverItemInSlot() && container.getPlayer().inventory.getItemStack() == null) {

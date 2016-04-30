@@ -46,6 +46,7 @@ misc.refinedstorage:no=No
 misc.refinedstorage:start=Start
 misc.refinedstorage:clear=Clear
 misc.refinedstorage:priority=Priority
+misc.refinedstorage:processing=Processing
 
 sidebutton.refinedstorage:compare.1=Compare Damage
 sidebutton.refinedstorage:compare.2=Compare NBT

@@ -29,7 +29,8 @@ import refinedstorage.storage.IStorage;
 import refinedstorage.storage.IStorageProvider;
 import refinedstorage.storage.ItemGroup;
 import refinedstorage.tile.autocrafting.CraftingPattern;
-import refinedstorage.tile.autocrafting.CraftingTask;
+import refinedstorage.tile.autocrafting.BasicCraftingTask;
+import refinedstorage.tile.autocrafting.ICraftingTask;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
 import refinedstorage.tile.grid.WirelessGridConsumer;
@@ -60,8 +61,8 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     private List<ClientSideMachine> clientSideMachines = new ArrayList<ClientSideMachine>();
 
     private List<CraftingPattern> patterns = new ArrayList<CraftingPattern>();
-    private List<CraftingTask> craftingTasks = new ArrayList<CraftingTask>();
-    private List<CraftingTask> craftingTasksToAdd = new ArrayList<CraftingTask>();
+    private List<ICraftingTask> craftingTasks = new ArrayList<ICraftingTask>();
+    private List<ICraftingTask> craftingTasksToAdd = new ArrayList<ICraftingTask>();
 
     private Set<String> visited = new HashSet<String>();
 
@@ -174,10 +175,10 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
             craftingTasks.addAll(craftingTasksToAdd);
             craftingTasksToAdd.clear();
 
-            Iterator<CraftingTask> crIt = craftingTasks.iterator();
+            Iterator<ICraftingTask> crIt = craftingTasks.iterator();
 
             while (crIt.hasNext()) {
-                CraftingTask task = crIt.next();
+                ICraftingTask task = crIt.next();
 
                 if (ticks % task.getPattern().getSpeed() == 0 && task.update(this)) {
                     crIt.remove();
@@ -250,11 +251,11 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
         return itemGroups;
     }
 
-    public List<CraftingTask> getCraftingTasks() {
+    public List<ICraftingTask> getCraftingTasks() {
         return craftingTasks;
     }
 
-    public void addCraftingTask(CraftingTask task) {
+    public void addCraftingTask(ICraftingTask task) {
         craftingTasksToAdd.add(task);
     }
 
@@ -682,7 +683,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                 CraftingPattern pattern = getPatternForItem(itemGroups.get(id).toItemStack());
 
                 if (pattern != null) {
-                    addCraftingTask(new CraftingTask(pattern));
+                    addCraftingTask(new BasicCraftingTask(pattern));
 
                     quantity -= pattern.getResult().stackSize;
                 } else {

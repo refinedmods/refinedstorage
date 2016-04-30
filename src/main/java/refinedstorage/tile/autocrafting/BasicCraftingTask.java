@@ -1,18 +1,14 @@
 package refinedstorage.tile.autocrafting;
 
 import net.minecraft.item.ItemStack;
-import refinedstorage.item.ItemPattern;
 import refinedstorage.tile.TileController;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class CraftingTask {
+public class BasicCraftingTask implements ICraftingTask {
     private CraftingPattern pattern;
     private boolean satisfied[];
     private boolean childTasks[];
 
-    public CraftingTask(CraftingPattern pattern) {
+    public BasicCraftingTask(CraftingPattern pattern) {
         this.pattern = pattern;
         this.satisfied = new boolean[pattern.getIngredients().length];
         this.childTasks = new boolean[pattern.getIngredients().length];
@@ -39,7 +35,7 @@ public class CraftingTask {
                     CraftingPattern pattern = controller.getPatternForItem(ingredient);
 
                     if (pattern != null) {
-                        controller.addCraftingTask(new CraftingTask(pattern));
+                        controller.addCraftingTask(new BasicCraftingTask(pattern));
 
                         childTasks[i] = true;
 

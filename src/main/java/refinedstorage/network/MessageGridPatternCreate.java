@@ -12,14 +12,16 @@ public class MessageGridPatternCreate extends MessageHandlerPlayerToServer<Messa
     private int x;
     private int y;
     private int z;
+    private boolean processing;
 
     public MessageGridPatternCreate() {
     }
 
-    public MessageGridPatternCreate(TileGrid grid) {
+    public MessageGridPatternCreate(TileGrid grid, boolean processing) {
         this.x = grid.getPos().getX();
         this.y = grid.getPos().getY();
         this.z = grid.getPos().getZ();
+        this.processing = processing;
     }
 
     @Override
@@ -27,6 +29,7 @@ public class MessageGridPatternCreate extends MessageHandlerPlayerToServer<Messa
         x = buf.readInt();
         y = buf.readInt();
         z = buf.readInt();
+        processing = buf.readBoolean();
     }
 
     @Override
@@ -34,6 +37,7 @@ public class MessageGridPatternCreate extends MessageHandlerPlayerToServer<Messa
         buf.writeInt(x);
         buf.writeInt(y);
         buf.writeInt(z);
+        buf.writeBoolean(processing);
     }
 
     @Override
@@ -41,7 +45,7 @@ public class MessageGridPatternCreate extends MessageHandlerPlayerToServer<Messa
         TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.x, message.y, message.z));
 
         if (tile instanceof TileGrid && ((TileGrid) tile).getType() == EnumGridType.PATTERN) {
-            ((TileGrid) tile).onCreatePattern();
+            ((TileGrid) tile).onCreatePattern(message.processing);
         }
     }
 }

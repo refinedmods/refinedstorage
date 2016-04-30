@@ -45,7 +45,7 @@ public class GuiCrafter extends GuiBase {
 
         RenderHelper.enableGUIStandardItemLighting();
 
-        for (int i = 0; i < 6; ++i) {
+        for (int i = 0; i < TileCrafter.PATTERN_SLOTS; ++i) {
             int x = 27;
             int y = 19 + (i * 18);
 

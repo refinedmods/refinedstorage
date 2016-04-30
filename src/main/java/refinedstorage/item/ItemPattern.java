@@ -4,6 +4,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.util.Constants;
 
 import java.util.List;
@@ -11,6 +13,7 @@ import java.util.List;
 public class ItemPattern extends ItemBase {
     public static final String NBT_RESULT = "Result";
     public static final String NBT_INGREDIENTS = "Ingredients";
+    public static final String NBT_PROCESSING = "Processing";
 
     public ItemPattern() {
         super("pattern");
@@ -20,6 +23,10 @@ public class ItemPattern extends ItemBase {
     public void addInformation(ItemStack pattern, EntityPlayer player, List list, boolean b) {
         if (hasResult(pattern)) {
             list.add(getResult(pattern).getDisplayName());
+
+            if (isProcessing(pattern)) {
+                list.add(TextFormatting.ITALIC + I18n.translateToLocal("misc.refinedstorage:processing") + TextFormatting.RESET);
+            }
         }
     }
 
@@ -64,6 +71,22 @@ public class ItemPattern extends ItemBase {
         stack.writeToNBT(stackTag);
 
         pattern.getTagCompound().setTag(NBT_RESULT, stackTag);
+    }
+
+    public static void setProcessing(ItemStack pattern, boolean processing) {
+        if (pattern.getTagCompound() == null) {
+            pattern.setTagCompound(new NBTTagCompound());
+        }
+
+        pattern.getTagCompound().setBoolean(NBT_PROCESSING, processing);
+    }
+
+    public static boolean isProcessing(ItemStack pattern) {
+        if (pattern.getTagCompound() == null) {
+            return false;
+        }
+
+        return pattern.getTagCompound().getBoolean(NBT_PROCESSING);
     }
 
     public static boolean hasResult(ItemStack pattern) {
