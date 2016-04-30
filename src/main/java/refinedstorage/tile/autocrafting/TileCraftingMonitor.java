@@ -30,7 +30,7 @@ public class TileCraftingMonitor extends TileMachine {
             buf.writeInt(controller.getCraftingTasks().size());
 
             for (CraftingTask task : controller.getCraftingTasks()) {
-                ByteBufUtils.writeItemStack(buf, task.getResult());
+                ByteBufUtils.writeItemStack(buf, task.getPattern().getResult());
             }
         } else {
             buf.writeInt(0);

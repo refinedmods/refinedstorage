@@ -28,6 +28,7 @@ import refinedstorage.network.MessageWirelessGridItems;
 import refinedstorage.storage.IStorage;
 import refinedstorage.storage.IStorageProvider;
 import refinedstorage.storage.ItemGroup;
+import refinedstorage.tile.autocrafting.CraftingPattern;
 import refinedstorage.tile.autocrafting.CraftingTask;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
@@ -162,12 +163,10 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                 while (it.hasNext()) {
                     CraftingTask task = it.next();
 
-                    task.attemptCraft(this);
-
-                    if (task.isDone()) {
+                    if (task.attemptCraft(this)) {
                         it.remove();
 
-                        push(task.getResult());
+                        push(task.getPattern().getResult());
                     }
                 }
             }
@@ -244,8 +243,8 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
         craftingTasksToAdd.add(task);
     }
 
-    public List<ItemStack> getPatterns() {
-        List<ItemStack> patterns = new ArrayList<ItemStack>();
+    public List<CraftingPattern> getPatterns() {
+        List<CraftingPattern> patterns = new ArrayList<CraftingPattern>();
 
         Iterator<TileMachine> it = machines.iterator();
 
@@ -257,7 +256,9 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
                 for (int i = 0; i < TileCrafter.PATTERN_SLOTS; ++i) {
                     if (crafter.getStackInSlot(i) != null) {
-                        patterns.add(crafter.getStackInSlot(i));
+                        ItemStack pattern = crafter.getStackInSlot(i);
+
+                        patterns.add(new CraftingPattern(ItemPattern.getResult(pattern), ItemPattern.getIngredients(pattern), 20));
                     }
                 }
             }
@@ -266,9 +267,9 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
         return patterns;
     }
 
-    public ItemStack getPatternForItem(ItemStack stack) {
-        for (ItemStack pattern : getPatterns()) {
-            if (InventoryUtils.compareStackNoQuantity(ItemPattern.getResult(pattern), stack)) {
+    public CraftingPattern getPatternForItem(ItemStack stack) {
+        for (CraftingPattern pattern : getPatterns()) {
+            if (InventoryUtils.compareStackNoQuantity(pattern.getResult(), stack)) {
                 return pattern;
             }
         }
@@ -283,8 +284,8 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
             storage.addItems(itemGroups);
         }
 
-        for (ItemStack pattern : getPatterns()) {
-            ItemGroup patternGroup = new ItemGroup(ItemPattern.getResult(pattern));
+        for (CraftingPattern pattern : getPatterns()) {
+            ItemGroup patternGroup = new ItemGroup(pattern.getResult());
             patternGroup.setQuantity(0);
             itemGroups.add(patternGroup);
         }
@@ -683,12 +684,12 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     public void onCraftingRequested(int id, int quantity) {
         if (id >= 0 && id < itemGroups.size() && quantity > 0) {
             while (quantity > 0) {
-                ItemStack pattern = getPatternForItem(itemGroups.get(id).toItemStack());
+                CraftingPattern pattern = getPatternForItem(itemGroups.get(id).toItemStack());
 
                 if (pattern != null) {
-                    addCraftingTask(CraftingTask.createFromPattern(pattern));
+                    addCraftingTask(new CraftingTask(pattern));
 
-                    quantity -= ItemPattern.getResult(pattern).stackSize;
+                    quantity -= pattern.getResult().stackSize;
                 } else {
                     break;
                 }

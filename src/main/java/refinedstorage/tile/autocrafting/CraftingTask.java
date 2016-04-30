@@ -8,32 +8,41 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CraftingTask {
-    private ItemStack result;
-    private List<CraftingIngredient> ingredients;
+    private CraftingPattern pattern;
+    private boolean satisfied[];
+    private boolean childTasks[];
 
-    public CraftingTask(ItemStack result, List<CraftingIngredient> ingredients) {
-        this.result = result;
-        this.ingredients = ingredients;
+    public CraftingTask(CraftingPattern pattern) {
+        this.pattern = pattern;
+        this.satisfied = new boolean[pattern.getIngredients().length];
+        this.childTasks = new boolean[pattern.getIngredients().length];
     }
 
-    public ItemStack getResult() {
-        return result;
+    public CraftingPattern getPattern() {
+        return pattern;
     }
 
-    public void attemptCraft(TileController controller) {
-        for (CraftingIngredient ingredient : ingredients) {
-            if (!ingredient.isSatisfied()) {
-                ItemStack took = controller.take(ingredient.getStack().copy());
+    public boolean attemptCraft(TileController controller) {
+        boolean done = true;
+
+        for (int i = 0; i < pattern.getIngredients().length; ++i) {
+            ItemStack ingredient = pattern.getIngredients()[i];
+
+            if (!satisfied[i]) {
+                done = false;
+
+                ItemStack took = controller.take(ingredient.copy());
 
                 if (took != null) {
-                    ingredient.setSatisfied();
-                } else if (!ingredient.isChildTaskCreated()) {
-                    ItemStack pattern = controller.getPatternForItem(ingredient.getStack());
+                    satisfied[i] = true;
+                } else if (!childTasks[i]) {
+                    CraftingPattern pattern = controller.getPatternForItem(ingredient);
 
                     if (pattern != null) {
-                        CraftingTask childTask = CraftingTask.createFromPattern(pattern);
-                        ingredient.setChildTaskCreated();
-                        controller.addCraftingTask(childTask);
+                        controller.addCraftingTask(new CraftingTask(pattern));
+
+                        childTasks[i] = true;
+
                         break;
                     }
                 } else {
@@ -41,29 +50,7 @@ public class CraftingTask {
                 }
             }
         }
-    }
 
-    public boolean isDone() {
-        for (CraftingIngredient ingredient : ingredients) {
-            if (!ingredient.isSatisfied()) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    public static CraftingTask createFromPattern(ItemStack pattern) {
-        List<CraftingIngredient> ingredients = new ArrayList<CraftingIngredient>();
-
-        for (int i = 0; i < 9; ++i) {
-            ItemStack ingredient = ItemPattern.getSlot(pattern, i);
-
-            if (ingredient != null) {
-                ingredients.add(new CraftingIngredient(ingredient));
-            }
-        }
-
-        return new CraftingTask(ItemPattern.getResult(pattern), ingredients);
+        return done;
     }
 }

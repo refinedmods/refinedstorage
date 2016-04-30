@@ -3,12 +3,14 @@ package refinedstorage.item;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.common.util.Constants;
 
 import java.util.List;
 
 public class ItemPattern extends ItemBase {
     public static final String NBT_RESULT = "Result";
-    public static final String NBT_SLOT = "Slot_%d";
+    public static final String NBT_INGREDIENTS = "Ingredients";
 
     public ItemPattern() {
         super("pattern");
@@ -21,27 +23,36 @@ public class ItemPattern extends ItemBase {
         }
     }
 
-    public static void setSlot(ItemStack pattern, int slot, ItemStack stack) {
+    public static void addIngredient(ItemStack pattern, ItemStack stack) {
         if (pattern.getTagCompound() == null) {
             pattern.setTagCompound(new NBTTagCompound());
         }
 
-        NBTTagCompound tag = new NBTTagCompound();
-        stack.writeToNBT(tag);
+        if (!pattern.getTagCompound().hasKey(NBT_INGREDIENTS)) {
+            pattern.getTagCompound().setTag(NBT_INGREDIENTS, new NBTTagList());
+        }
 
-        pattern.getTagCompound().setTag(String.format(NBT_SLOT, slot), tag);
+        pattern.getTagCompound().getTagList(NBT_INGREDIENTS, Constants.NBT.TAG_COMPOUND).appendTag(stack.serializeNBT());
     }
 
-    public static ItemStack getSlot(ItemStack pattern, int slot) {
+    public static ItemStack[] getIngredients(ItemStack pattern) {
         if (pattern.getTagCompound() == null) {
             return null;
         }
 
-        if (pattern.getTagCompound().hasKey(String.format(NBT_SLOT, slot))) {
-            return ItemStack.loadItemStackFromNBT(pattern.getTagCompound().getCompoundTag(String.format(NBT_SLOT, slot)));
+        if (!pattern.getTagCompound().hasKey(NBT_INGREDIENTS)) {
+            return null;
         }
 
-        return null;
+        NBTTagList ingredients = pattern.getTagCompound().getTagList(NBT_INGREDIENTS, Constants.NBT.TAG_COMPOUND);
+
+        ItemStack[] ingredientsArray = new ItemStack[ingredients.tagCount()];
+
+        for (int i = 0; i < ingredients.tagCount(); ++i) {
+            ingredientsArray[i] = ItemStack.loadItemStackFromNBT(ingredients.getCompoundTagAt(i));
+        }
+
+        return ingredientsArray;
     }
 
     public static void setResult(ItemStack pattern, ItemStack stack) {

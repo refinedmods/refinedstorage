@@ -172,13 +172,14 @@ public class TileGrid extends TileMachine implements IGrid {
             patternsInventory.decrStackSize(0, 1);
 
             ItemStack pattern = new ItemStack(RefinedStorageItems.PATTERN);
+
             ItemPattern.setResult(pattern, crafted);
 
             for (int i = 0; i < 9; ++i) {
                 ItemStack ingredient = craftingInventory.getStackInSlot(i);
 
                 if (ingredient != null) {
-                    ItemPattern.setSlot(pattern, i, ingredient);
+                    ItemPattern.addIngredient(pattern, ingredient);
                 }
             }
 
