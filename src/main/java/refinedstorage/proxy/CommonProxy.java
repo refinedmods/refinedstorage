@@ -71,32 +71,32 @@ public class CommonProxy {
         GameRegistry.registerTileEntity(TileCrafter.class, ID + ":crafter");
 
         registerBlock(RefinedStorageBlocks.CONTROLLER);
-        registerBlock(RefinedStorageBlocks.CABLE);
         registerBlock(RefinedStorageBlocks.GRID);
+        registerBlock(RefinedStorageBlocks.CRAFTING_MONITOR);
+        registerBlock(RefinedStorageBlocks.CRAFTER);
         registerBlock(RefinedStorageBlocks.DISK_DRIVE);
+        registerBlock(RefinedStorageBlocks.STORAGE);
         registerBlock(RefinedStorageBlocks.EXTERNAL_STORAGE);
+        registerBlock(RefinedStorageBlocks.SOLDERER);
         registerBlock(RefinedStorageBlocks.IMPORTER);
         registerBlock(RefinedStorageBlocks.EXPORTER);
-        registerBlock(RefinedStorageBlocks.DETECTOR);
-        registerBlock(RefinedStorageBlocks.MACHINE_CASING);
-        registerBlock(RefinedStorageBlocks.SOLDERER);
-        registerBlock(RefinedStorageBlocks.DESTRUCTOR);
         registerBlock(RefinedStorageBlocks.CONSTRUCTOR);
-        registerBlock(RefinedStorageBlocks.STORAGE);
+        registerBlock(RefinedStorageBlocks.DESTRUCTOR);
+        registerBlock(RefinedStorageBlocks.DETECTOR);
         registerBlock(RefinedStorageBlocks.RELAY);
         registerBlock(RefinedStorageBlocks.INTERFACE);
-        registerBlock(RefinedStorageBlocks.CRAFTING_MONITOR);
         registerBlock(RefinedStorageBlocks.WIRELESS_TRANSMITTER);
-        registerBlock(RefinedStorageBlocks.CRAFTER);
+        registerBlock(RefinedStorageBlocks.MACHINE_CASING);
+        registerBlock(RefinedStorageBlocks.CABLE);
 
+        registerItem(RefinedStorageItems.QUARTZ_ENRICHED_IRON);
         registerItem(RefinedStorageItems.STORAGE_DISK);
         registerItem(RefinedStorageItems.PATTERN);
+        registerItem(RefinedStorageItems.STORAGE_PART);
         registerItem(RefinedStorageItems.WIRELESS_GRID);
-        registerItem(RefinedStorageItems.QUARTZ_ENRICHED_IRON);
+        registerItem(RefinedStorageItems.PROCESSOR);
         registerItem(RefinedStorageItems.CORE);
         registerItem(RefinedStorageItems.SILICON);
-        registerItem(RefinedStorageItems.PROCESSOR);
-        registerItem(RefinedStorageItems.STORAGE_PART);
         registerItem(RefinedStorageItems.UPGRADE);
 
         // Processors
@@ -217,6 +217,18 @@ public class CommonProxy {
             'P', new ItemStack(Items.ender_pearl),
             'R', new ItemStack(Items.redstone),
             'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
+        );
+
+        // Crafter
+        GameRegistry.addRecipe(new ItemStack(RefinedStorageBlocks.CRAFTER),
+            "ECE",
+            "AMA",
+            "EDE",
+            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+            'A', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
+            'C', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
+            'D', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
+            'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING)
         );
 
         // External Storage
