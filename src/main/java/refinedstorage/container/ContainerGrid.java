@@ -20,7 +20,7 @@ import java.util.List;
 
 public class ContainerGrid extends ContainerBase {
     private List<Slot> craftingSlots = new ArrayList<Slot>();
-
+    private SlotGridCraftingResult craftingResultSlot;
     private IGrid grid;
 
     public ContainerGrid(EntityPlayer player, IGrid grid) {
@@ -49,7 +49,7 @@ public class ContainerGrid extends ContainerBase {
                 }
             }
 
-            addSlotToContainer(new SlotGridCraftingResult(this, player, ((TileGrid) grid).getCraftingInventory(), ((TileGrid) grid).getCraftingResultInventory(), (TileGrid) grid, 0, 133 + 4, 120 + 4));
+            addSlotToContainer(craftingResultSlot = new SlotGridCraftingResult(this, player, ((TileGrid) grid).getCraftingInventory(), ((TileGrid) grid).getCraftingResultInventory(), (TileGrid) grid, 0, 133 + 4, 120 + 4));
         } else if (grid.getType() == EnumGridType.PATTERN) {
             int x = 8;
             int y = 106;
@@ -122,5 +122,10 @@ public class ContainerGrid extends ContainerBase {
         }
 
         return super.func_184996_a(id, clickedButton, clickType, player);
+    }
+
+    @Override
+    public boolean canMergeSlot(ItemStack stack, Slot slot) {
+        return slot != craftingResultSlot;
     }
 }
