@@ -36,6 +36,8 @@ public class CraftingTask {
                         controller.addCraftingTask(childTask);
                         break;
                     }
+                } else {
+                    break;
                 }
             }
         }
