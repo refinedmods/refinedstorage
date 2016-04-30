@@ -14,17 +14,8 @@ public class ContainerCrafter extends ContainerStorage {
     public ContainerCrafter(EntityPlayer player, TileCrafter crafter) {
         super(player);
 
-        for (int i = 0; i < 3; ++i) {
+        for (int i = 0; i < 6; ++i) {
             addSlotToContainer(new SlotFiltered(crafter, i, 8, 19 + (i * 18), new IItemValidator() {
-                @Override
-                public boolean isValid(ItemStack stack) {
-                    return stack.getItem() == RefinedStorageItems.PATTERN && ItemPattern.hasResult(stack);
-                }
-            }));
-        }
-
-        for (int i = 3; i < 6; ++i) {
-            addSlotToContainer(new SlotFiltered(crafter, i, 89, 19 + ((i - 3) * 18), new IItemValidator() {
                 @Override
                 public boolean isValid(ItemStack stack) {
                     return stack.getItem() == RefinedStorageItems.PATTERN && ItemPattern.hasResult(stack);
@@ -41,7 +32,7 @@ public class ContainerCrafter extends ContainerStorage {
             }));
         }
 
-        addPlayerInventory(8, 90);
+        addPlayerInventory(8, 144);
     }
 
     @Override

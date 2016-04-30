@@ -12,7 +12,7 @@ public class GuiCrafter extends GuiBase {
     private TileCrafter crafter;
 
     public GuiCrafter(ContainerCrafter container, TileCrafter crafter) {
-        super(container, 211, 173);
+        super(container, 211, 226);
 
         this.crafter = crafter;
     }
@@ -41,13 +41,13 @@ public class GuiCrafter extends GuiBase {
     @Override
     public void drawForeground(int mouseX, int mouseY) {
         drawString(7, 7, t("gui.refinedstorage:crafter"));
-        drawString(7, 77, t("container.inventory"));
+        drawString(7, 131, t("container.inventory"));
 
         RenderHelper.enableGUIStandardItemLighting();
 
         for (int i = 0; i < 6; ++i) {
-            int x = i >= 3 ? 109 : 27;
-            int y = 19 + ((i - (i >= 3 ? 3 : 0)) * 18);
+            int x = 27;
+            int y = 19 + (i * 18);
 
             if (crafter.getStackInSlot(i) != null) {
                 ItemStack result = ItemPattern.getResult(crafter.getStackInSlot(i));
