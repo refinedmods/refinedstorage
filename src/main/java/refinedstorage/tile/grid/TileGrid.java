@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
@@ -54,7 +55,7 @@ public class TileGrid extends TileMachine implements IGrid {
         }
     };
     private InventoryCrafting craftingInventory = new InventoryCrafting(craftingContainer, 3, 3);
-    private InventorySimple craftingResultInventory = new InventorySimple("crafting_result", 1);
+    private InventoryCraftResult craftingResultInventory = new InventoryCraftResult();
 
     private InventorySimple patternsInventory = new InventorySimple("patterns", 2, this);
 
@@ -100,7 +101,7 @@ public class TileGrid extends TileMachine implements IGrid {
         return craftingInventory;
     }
 
-    public InventorySimple getCraftingResultInventory() {
+    public InventoryCraftResult getCraftingResultInventory() {
         return craftingResultInventory;
     }
 
