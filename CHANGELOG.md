@@ -3,6 +3,12 @@
 ### 0.6
 WIP
 
+### 0.5.6
+**Bugfixes**
+- Fix sorting crash
+- Fix autofocusing on priority field in storage GUIs
+- Fix controller causing lag when energy level changes
+
 ### 0.5.5
 **Bugfixes**
 - Fixed several crashes
