@@ -122,7 +122,6 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
     public void receiveContainerData(ByteBuf buf) {
         super.receiveContainerData(buf);
 
-        working = buf.readBoolean();
         progress = buf.readInt();
         duration = buf.readInt();
     }
@@ -131,9 +130,28 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
     public void sendContainerData(ByteBuf buf) {
         super.sendContainerData(buf);
 
-        buf.writeBoolean(working);
         buf.writeInt(progress);
         buf.writeInt(recipe != null ? recipe.getDuration() : 0);
+    }
+
+    @Override
+    public void receiveData(ByteBuf buf) {
+        super.receiveData(buf);
+
+        boolean lastWorking = working;
+
+        working = buf.readBoolean();
+
+        if (working != lastWorking) {
+            worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2 | 4);
+        }
+    }
+
+    @Override
+    public void sendData(ByteBuf buf) {
+        super.sendData(buf);
+
+        buf.writeBoolean(working);
     }
 
     @Override
@@ -145,16 +163,8 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
         return working;
     }
 
-    public int getProgress() {
-        return progress;
-    }
-
     public int getProgressScaled(int i) {
         return (int) ((float) progress / (float) duration * (float) i);
-    }
-
-    public int getDuration() {
-        return duration;
     }
 
     @Override

@@ -4,29 +4,30 @@
     "model": "orientable",
     "textures": {
       "side": "refinedstorage:blocks/side",
-      "top": "refinedstorage:blocks/side"
+      "top": "refinedstorage:blocks/side",
+      "front": "refinedstorage:blocks/solderer"
     }
   },
   "variants": {
     "inventory": [
       {
         "y": 0,
-        "textures": {
-          "front": "refinedstorage:blocks/solderer_disconnected"
-        },
         "transform": "forge:default-block"
       }
     ],
     "connected": {
       "true": {
+      },
+      "false": {
+      }
+    },
+    "working": {
+      "true": {
         "textures": {
-          "front": "refinedstorage:blocks/solderer_connected"
+          "front": "refinedstorage:blocks/solderer_working"
         }
       },
       "false": {
-        "textures": {
-          "front": "refinedstorage:blocks/solderer_disconnected"
-        }
       }
     },
     "direction": {
