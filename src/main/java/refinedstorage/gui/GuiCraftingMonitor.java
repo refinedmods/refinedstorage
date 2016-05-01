@@ -10,14 +10,14 @@ import refinedstorage.tile.autocrafting.TileCraftingMonitor;
 import java.util.List;
 
 public class GuiCraftingMonitor extends GuiBase {
-    public static final int VISIBLE_ROWS = 2;
+    public static final int VISIBLE_ROWS = 3;
 
     private TileCraftingMonitor craftingMonitor;
 
-    private Scrollbar scrollbar = new Scrollbar(157, 20, 12, 59);
+    private Scrollbar scrollbar = new Scrollbar(157, 20, 12, 89);
 
     public GuiCraftingMonitor(ContainerCraftingMonitor container, TileCraftingMonitor craftingMonitor) {
-        super(container, 176, 181);
+        super(container, 176, 211);
 
         this.craftingMonitor = craftingMonitor;
     }
@@ -52,7 +52,7 @@ public class GuiCraftingMonitor extends GuiBase {
         scrollbar.update(this, mouseX, mouseY);
 
         drawString(7, 7, t("gui.refinedstorage:crafting_monitor"));
-        drawString(7, 87, t("container.inventory"));
+        drawString(7, 114, t("container.inventory"));
 
         int ox = 11;
         int x = ox;
@@ -64,7 +64,7 @@ public class GuiCraftingMonitor extends GuiBase {
 
         List<ItemStack> tasks = craftingMonitor.getTasks();
 
-        for (int i = 0; i < 4; ++i) {
+        for (int i = 0; i < 6; ++i) {
             if (slot < tasks.size()) {
                 ItemStack task = tasks.get(slot);
 
@@ -79,7 +79,7 @@ public class GuiCraftingMonitor extends GuiBase {
                 GlStateManager.popMatrix();
             }
 
-            if (i == 1) {
+            if (i == 1 || i == 3) {
                 x = ox;
                 y += 30;
             } else {
@@ -91,7 +91,7 @@ public class GuiCraftingMonitor extends GuiBase {
     }
 
     public int getOffset() {
-        return (int) (scrollbar.getCurrentScroll() / 59f * (float) getRows());
+        return (int) (scrollbar.getCurrentScroll() / 89f * (float) getRows());
     }
 
     private int getRows() {
