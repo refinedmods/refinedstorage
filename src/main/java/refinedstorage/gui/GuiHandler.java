@@ -11,6 +11,7 @@ import refinedstorage.container.*;
 import refinedstorage.storage.IStorageGui;
 import refinedstorage.tile.*;
 import refinedstorage.tile.autocrafting.TileCraftingMonitor;
+import refinedstorage.tile.autocrafting.TileProcessingPatternEncoder;
 import refinedstorage.tile.grid.TileGrid;
 import refinedstorage.tile.grid.WirelessGrid;
 import refinedstorage.util.HandUtils;
@@ -48,6 +49,8 @@ public class GuiHandler implements IGuiHandler {
                 return new ContainerWirelessTransmitter(player, (TileWirelessTransmitter) tile);
             case RefinedStorageGui.CRAFTER:
                 return new ContainerCrafter(player, (TileCrafter) tile);
+            case RefinedStorageGui.PROCESSING_PATTERN_ENCODER:
+                return new ContainerProcessingPatternEncoder(player, (TileProcessingPatternEncoder) tile);
             default:
                 return null;
         }
@@ -115,6 +118,8 @@ public class GuiHandler implements IGuiHandler {
                 return new GuiWirelessTransmitter((ContainerWirelessTransmitter) getContainer(ID, player, tile), (TileWirelessTransmitter) tile);
             case RefinedStorageGui.CRAFTER:
                 return new GuiCrafter((ContainerCrafter) getContainer(ID, player, tile), (TileCrafter) tile);
+            case RefinedStorageGui.PROCESSING_PATTERN_ENCODER:
+                return new GuiProcessingPatternEncoder((ContainerProcessingPatternEncoder) getContainer(ID, player, tile), (TileProcessingPatternEncoder) tile);
             default:
                 return null;
         }

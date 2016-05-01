@@ -21,6 +21,7 @@ import refinedstorage.network.*;
 import refinedstorage.storage.NBTStorage;
 import refinedstorage.tile.*;
 import refinedstorage.tile.autocrafting.TileCraftingMonitor;
+import refinedstorage.tile.autocrafting.TileProcessingPatternEncoder;
 import refinedstorage.tile.grid.TileGrid;
 import refinedstorage.tile.solderer.*;
 
@@ -69,6 +70,7 @@ public class CommonProxy {
         GameRegistry.registerTileEntity(TileCraftingMonitor.class, ID + ":crafting_monitor");
         GameRegistry.registerTileEntity(TileWirelessTransmitter.class, ID + ":wireless_transmitter");
         GameRegistry.registerTileEntity(TileCrafter.class, ID + ":crafter");
+        GameRegistry.registerTileEntity(TileProcessingPatternEncoder.class, ID + ":processing_pattern_encoder");
 
         registerBlock(RefinedStorageBlocks.CONTROLLER);
         registerBlock(RefinedStorageBlocks.GRID);
@@ -88,6 +90,7 @@ public class CommonProxy {
         registerBlock(RefinedStorageBlocks.WIRELESS_TRANSMITTER);
         registerBlock(RefinedStorageBlocks.MACHINE_CASING);
         registerBlock(RefinedStorageBlocks.CABLE);
+        registerBlock(RefinedStorageBlocks.PROCESSING_PATTERN_ENCODER);
 
         registerItem(RefinedStorageItems.QUARTZ_ENRICHED_IRON);
         registerItem(RefinedStorageItems.STORAGE_DISK);

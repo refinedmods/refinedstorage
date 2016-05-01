@@ -36,7 +36,6 @@ public class GuiGrid extends GuiBase {
     private List<ItemGroup> items = new ArrayList<ItemGroup>();
 
     private GuiTextField searchField;
-    private GuiCheckBox processingCheckbox;
 
     private int hoveringSlot;
     private int hoveringItemId;
@@ -67,10 +66,6 @@ public class GuiGrid extends GuiBase {
         addSideButton(new SideButtonGridSortingDirection(grid));
         addSideButton(new SideButtonGridSortingType(grid));
         addSideButton(new SideButtonGridSearchBoxMode(grid));
-
-        if (grid.getType() == EnumGridType.PATTERN) {
-            processingCheckbox = (GuiCheckBox) addCheckBox(x + 65, y + 148, t("misc.refinedstorage:processing"));
-        }
     }
 
     public IGrid getGrid() {
@@ -308,7 +303,7 @@ public class GuiGrid extends GuiBase {
 
         if (grid.isConnected()) {
             if (clickedCreatePattern) {
-                RefinedStorage.NETWORK.sendToServer(new MessageGridPatternCreate((TileGrid) grid, processingCheckbox.isChecked()));
+                RefinedStorage.NETWORK.sendToServer(new MessageGridPatternCreate((TileGrid) grid));
             } else if (isHoveringOverSlot() && container.getPlayer().inventory.getItemStack() != null && (clickedButton == 0 || clickedButton == 1)) {
                 grid.onItemPush(-1, clickedButton == 1);
             } else if (isHoveringOverItemInSlot() && container.getPlayer().inventory.getItemStack() == null) {

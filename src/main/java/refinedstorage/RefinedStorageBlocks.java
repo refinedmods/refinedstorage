@@ -21,4 +21,5 @@ public final class RefinedStorageBlocks {
     public static final BlockCraftingMonitor CRAFTING_MONITOR = new BlockCraftingMonitor();
     public static final BlockWirelessTransmitter WIRELESS_TRANSMITTER = new BlockWirelessTransmitter();
     public static final BlockCrafter CRAFTER = new BlockCrafter();
+    public static final BlockProcessingPatternEncoder PROCESSING_PATTERN_ENCODER = new BlockProcessingPatternEncoder();
 }

@@ -165,7 +165,7 @@ public class TileGrid extends TileMachine implements IGrid {
         }
     }
 
-    public void onCreatePattern(boolean processing) {
+    public void onCreatePattern() {
         ItemStack crafted = craftingResultInventory.getStackInSlot(0);
 
         if (patternsInventory.getStackInSlot(1) == null && patternsInventory.getStackInSlot(0) != null && patternsInventory.getStackInSlot(0).stackSize > 0) {
@@ -174,7 +174,7 @@ public class TileGrid extends TileMachine implements IGrid {
             ItemStack pattern = new ItemStack(RefinedStorageItems.PATTERN);
 
             ItemPattern.setResult(pattern, crafted);
-            ItemPattern.setProcessing(pattern, processing);
+            ItemPattern.setProcessing(pattern, false);
 
             for (int i = 0; i < 9; ++i) {
                 ItemStack ingredient = craftingInventory.getStackInSlot(i);
