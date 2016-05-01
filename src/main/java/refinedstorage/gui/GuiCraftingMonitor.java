@@ -52,7 +52,7 @@ public class GuiCraftingMonitor extends GuiBase {
         scrollbar.update(this, mouseX, mouseY);
 
         drawString(7, 7, t("gui.refinedstorage:crafting_monitor"));
-        drawString(7, 114, t("container.inventory"));
+        drawString(7, 116, t("container.inventory"));
 
         int ox = 11;
         int x = ox;

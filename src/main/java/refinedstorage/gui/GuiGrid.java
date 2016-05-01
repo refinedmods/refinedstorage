@@ -312,7 +312,7 @@ public class GuiGrid extends GuiBase {
             } else if (isHoveringOverSlot() && container.getPlayer().inventory.getItemStack() != null && (clickedButton == 0 || clickedButton == 1)) {
                 grid.onItemPush(-1, clickedButton == 1);
             } else if (isHoveringOverItemInSlot() && container.getPlayer().inventory.getItemStack() == null) {
-                if (items.get(hoveringSlot).getQuantity() == 0) {
+                if (items.get(hoveringSlot).getQuantity() == 0 || (GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown())) {
                     FMLCommonHandler.instance().showGuiScreen(new GuiCraftingSettings(this, hoveringItemId));
                 } else {
                     int flags = 0;

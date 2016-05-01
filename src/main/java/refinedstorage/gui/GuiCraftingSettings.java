@@ -4,6 +4,7 @@ import com.google.common.primitives.Ints;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraftforge.fml.client.FMLClientHandler;
+import org.lwjgl.input.Keyboard;
 import refinedstorage.container.ContainerDummy;
 
 import java.io.IOException;
@@ -57,7 +58,11 @@ public class GuiCraftingSettings extends GuiBase {
         if (!checkHotbarKeys(keyCode) && amountField.textboxKeyTyped(character, keyCode)) {
             // NO OP
         } else {
-            super.keyTyped(character, keyCode);
+            if (keyCode == Keyboard.KEY_RETURN) {
+                startRequest();
+            } else {
+                super.keyTyped(character, keyCode);
+            }
         }
     }
 
@@ -66,13 +71,17 @@ public class GuiCraftingSettings extends GuiBase {
         super.actionPerformed(button);
 
         if (button.id == startButton.id) {
-            Integer quantity = Ints.tryParse(amountField.getText());
+            startRequest();
+        }
+    }
 
-            if (quantity != null && quantity > 0) {
-                gridGui.getGrid().onCraftingRequested(id, quantity);
+    private void startRequest() {
+        Integer quantity = Ints.tryParse(amountField.getText());
 
-                FMLClientHandler.instance().showGuiScreen(gridGui);
-            }
+        if (quantity != null && quantity > 0) {
+            gridGui.getGrid().onCraftingRequested(id, quantity);
+
+            FMLClientHandler.instance().showGuiScreen(gridGui);
         }
     }
 }
