@@ -41,15 +41,15 @@ public class TileCraftingMonitor extends TileMachine {
     public void receiveContainerData(ByteBuf buf) {
         super.receiveContainerData(buf);
 
-        List<ItemStack> crafting = new ArrayList<ItemStack>();
+        List<ItemStack> newTasks = new ArrayList<ItemStack>();
 
         int size = buf.readInt();
 
         for (int i = 0; i < size; ++i) {
-            crafting.add(ByteBufUtils.readItemStack(buf));
+            newTasks.add(ByteBufUtils.readItemStack(buf));
         }
 
-        tasks = crafting;
+        tasks = newTasks;
     }
 
     public List<ItemStack> getTasks() {

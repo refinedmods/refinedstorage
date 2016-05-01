@@ -61,8 +61,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     private List<ClientSideMachine> clientSideMachines = new ArrayList<ClientSideMachine>();
 
     private List<CraftingPattern> patterns = new ArrayList<CraftingPattern>();
-    private List<ICraftingTask> craftingTasks = new ArrayList<ICraftingTask>();
-    private List<ICraftingTask> craftingTasksToAdd = new ArrayList<ICraftingTask>();
+    private Stack<ICraftingTask> craftingTasks = new Stack<ICraftingTask>();
 
     private Set<String> visited = new HashSet<String>();
 
@@ -73,11 +72,11 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
     private boolean destroyed = false;
 
-    private long lastEnergyRerender;
+    private long lastEnergyRender;
 
-    private boolean machinesHavePosition(List<TileMachine> tiles, BlockPos pos) {
-        for (TileEntity tile : tiles) {
-            if (tile.getPos().getX() == pos.getX() && tile.getPos().getY() == pos.getY() && tile.getPos().getZ() == pos.getZ()) {
+    private boolean machinesHavePosition(List<TileMachine> machines, BlockPos pos) {
+        for (TileEntity machine : machines) {
+            if (machine.getPos().getX() == pos.getX() && machine.getPos().getY() == pos.getY() && machine.getPos().getZ() == pos.getZ()) {
                 return true;
             }
         }
@@ -110,14 +109,14 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                         }
                     }
 
-                    int range = 0;
-                    int usage = 0;
+                    int newWirelessGridRange = 0;
+                    int newEnergyUsage = 0;
                     List<IStorage> newStorages = new ArrayList<IStorage>();
                     List<CraftingPattern> newPatterns = new ArrayList<CraftingPattern>();
 
                     for (TileMachine machine : newMachines) {
                         if (machine instanceof TileWirelessTransmitter) {
-                            range += ((TileWirelessTransmitter) machine).getRange();
+                            newWirelessGridRange += ((TileWirelessTransmitter) machine).getRange();
                         }
 
                         if (machine instanceof IStorageProvider) {
@@ -136,7 +135,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                             }
                         }
 
-                        usage += machine.getEnergyUsage();
+                        newEnergyUsage += machine.getEnergyUsage();
 
                         if (!machinesHavePosition(machines, machine.getPos())) {
                             machine.onConnected(this);
@@ -151,8 +150,8 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                         }
                     }
 
-                    wirelessGridRange = range;
-                    energyUsage = usage;
+                    wirelessGridRange = newWirelessGridRange;
+                    energyUsage = newEnergyUsage;
                     machines = newMachines;
                     storages = newStorages;
                     patterns = newPatterns;
@@ -172,18 +171,13 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                 }
             }
 
-            craftingTasks.addAll(craftingTasksToAdd);
-            craftingTasksToAdd.clear();
-
-            Iterator<ICraftingTask> crIt = craftingTasks.iterator();
-
-            while (crIt.hasNext()) {
-                ICraftingTask task = crIt.next();
+            if (craftingTasks.size() > 0) {
+                ICraftingTask task = craftingTasks.peek();
 
                 if (ticks % task.getPattern().getSpeed() == 0 && task.update(this)) {
-                    crIt.remove();
-
                     push(task.getPattern().getResult());
+
+                    craftingTasks.pop();
                 }
             }
 
@@ -201,10 +195,10 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
             wirelessGridConsumers.removeAll(wirelessGridConsumersMarkedForRemoval);
             wirelessGridConsumersMarkedForRemoval.clear();
 
-            Iterator<WirelessGridConsumer> wgIt = wirelessGridConsumers.iterator();
+            Iterator<WirelessGridConsumer> it = wirelessGridConsumers.iterator();
 
-            while (wgIt.hasNext()) {
-                WirelessGridConsumer consumer = wgIt.next();
+            while (it.hasNext()) {
+                WirelessGridConsumer consumer = it.next();
 
                 if (!InventoryUtils.compareStack(consumer.getWirelessGrid(), consumer.getPlayer().getHeldItem(consumer.getHand()))) {
                     consumer.getPlayer().closeScreen(); // This will call onContainerClosed on the Container and remove it from the list
@@ -256,7 +250,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     }
 
     public void addCraftingTask(ICraftingTask task) {
-        craftingTasksToAdd.add(task);
+        craftingTasks.push(task);
     }
 
     public List<CraftingPattern> getPatterns() {
@@ -280,7 +274,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
             storage.addItems(itemGroups);
         }
 
-        for (CraftingPattern pattern : getPatterns()) {
+        for (CraftingPattern pattern : patterns) {
             ItemGroup patternGroup = new ItemGroup(pattern.getResult());
             patternGroup.setQuantity(0);
             itemGroups.add(patternGroup);
@@ -520,8 +514,8 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
         energy.setEnergyStored(buf.readInt());
 
-        if (lastEnergy != energy.getEnergyStored() && System.currentTimeMillis() - lastEnergyRerender > 3000) {
-            lastEnergyRerender = System.currentTimeMillis();
+        if (lastEnergy != energy.getEnergyStored() && System.currentTimeMillis() - lastEnergyRender > 3000) {
+            lastEnergyRender = System.currentTimeMillis();
 
             worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2 | 4);
         }
