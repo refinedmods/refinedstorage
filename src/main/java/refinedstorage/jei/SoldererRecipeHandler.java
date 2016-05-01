@@ -11,7 +11,7 @@ public class SoldererRecipeHandler implements IRecipeHandler<SoldererRecipeWrapp
 
     @Override
     public String getRecipeCategoryUid() {
-        return "refinedstorage.solderer";
+        return SoldererRecipeCategory.ID;
     }
 
     @Override

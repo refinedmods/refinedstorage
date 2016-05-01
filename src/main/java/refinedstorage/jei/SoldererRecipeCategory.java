@@ -12,6 +12,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
 
 public class SoldererRecipeCategory implements IRecipeCategory {
+    public static final String ID = "refinedstorage.solderer";
+
     private IDrawable background;
 
     public SoldererRecipeCategory(IGuiHelper helper) {
@@ -20,7 +22,7 @@ public class SoldererRecipeCategory implements IRecipeCategory {
 
     @Override
     public String getUid() {
-        return "refinedstorage.solderer";
+        return ID;
     }
 
     @Override

@@ -5,6 +5,7 @@ import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
 import mezz.jei.api.JEIPlugin;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.storage.DiskStorage;
@@ -27,6 +28,8 @@ public class PluginRefinedStorage implements IModPlugin {
         registry.addRecipeHandlers(new SoldererRecipeHandler());
 
         registry.addRecipes(SoldererRecipeMaker.getRecipes());
+
+        registry.addRecipeCategoryCraftingItem(new ItemStack(RefinedStorageBlocks.SOLDERER), SoldererRecipeCategory.ID);
 
         registry.getJeiHelpers().getNbtIgnoreList().ignoreNbtTagNames(RefinedStorageItems.STORAGE_DISK, DiskStorage.NBT_ITEMS, DiskStorage.NBT_STORED);
         registry.getJeiHelpers().getNbtIgnoreList().ignoreNbtTagNames(Item.getItemFromBlock(RefinedStorageBlocks.STORAGE), TileStorage.NBT_STORAGE);
