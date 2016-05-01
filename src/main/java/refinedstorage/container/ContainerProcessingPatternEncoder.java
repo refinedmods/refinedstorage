@@ -36,6 +36,6 @@ public class ContainerProcessingPatternEncoder extends ContainerBase {
         addSlotToContainer(new SlotFiltered(ppEncoder, 0, 152, 18, new BasicItemValidator(RefinedStorageItems.PATTERN)));
         addSlotToContainer(new SlotOutput(ppEncoder, 1, 152, 58));
 
-        addPlayerInventory(8, 93);
+        addPlayerInventory(8, 90);
     }
 }

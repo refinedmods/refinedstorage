@@ -146,4 +146,8 @@ public class TileProcessingPatternEncoder extends TileBase implements ISidedInve
     public InventorySimple getInputsOutputsInventory() {
         return inputsOutputsInventory;
     }
+
+    public void onCreatePattern() {
+        System.out.println("Create pattern!!");
+    }
 }

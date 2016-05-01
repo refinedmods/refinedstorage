@@ -25,6 +25,7 @@ gui.refinedstorage:wireless_transmitter=Draadloze Zender
 gui.refinedstorage:wireless_transmitter.distance=%d blokken
 gui.refinedstorage:crafter=Crafter
 gui.refinedstorage:processing_pattern_encoder=Verwerkingspatroon Codeerder
+gui.refinedstorage:processing_pattern_encoder.pattern_create=Patroon maken
 
 misc.refinedstorage:energy_stored=%d / %d RF
 misc.refinedstorage:energy_usage=Vebruik: %d RF/t

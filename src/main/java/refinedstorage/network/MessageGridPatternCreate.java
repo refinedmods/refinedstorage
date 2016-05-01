@@ -6,6 +6,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import refinedstorage.block.EnumGridType;
+import refinedstorage.tile.autocrafting.TileProcessingPatternEncoder;
 import refinedstorage.tile.grid.TileGrid;
 
 public class MessageGridPatternCreate extends MessageHandlerPlayerToServer<MessageGridPatternCreate> implements IMessage {
@@ -16,10 +17,10 @@ public class MessageGridPatternCreate extends MessageHandlerPlayerToServer<Messa
     public MessageGridPatternCreate() {
     }
 
-    public MessageGridPatternCreate(TileGrid grid) {
-        this.x = grid.getPos().getX();
-        this.y = grid.getPos().getY();
-        this.z = grid.getPos().getZ();
+    public MessageGridPatternCreate(int x, int y, int z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 
     @Override
@@ -42,6 +43,8 @@ public class MessageGridPatternCreate extends MessageHandlerPlayerToServer<Messa
 
         if (tile instanceof TileGrid && ((TileGrid) tile).getType() == EnumGridType.PATTERN) {
             ((TileGrid) tile).onCreatePattern();
+        } else if (tile instanceof TileProcessingPatternEncoder) {
+            ((TileProcessingPatternEncoder) tile).onCreatePattern();
         }
     }
 }
