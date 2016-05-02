@@ -1,7 +1,8 @@
-package refinedstorage.tile.autocrafting;
+package refinedstorage.tile.autocrafting.task;
 
 import net.minecraft.item.ItemStack;
 import refinedstorage.tile.TileController;
+import refinedstorage.tile.autocrafting.CraftingPattern;
 
 public class BasicCraftingTask implements ICraftingTask {
     private CraftingPattern pattern;
@@ -10,8 +11,8 @@ public class BasicCraftingTask implements ICraftingTask {
 
     public BasicCraftingTask(CraftingPattern pattern) {
         this.pattern = pattern;
-        this.satisfied = new boolean[pattern.getIngredients().length];
-        this.childTasks = new boolean[pattern.getIngredients().length];
+        this.satisfied = new boolean[pattern.getInputs().length];
+        this.childTasks = new boolean[pattern.getInputs().length];
     }
 
     public CraftingPattern getPattern() {
@@ -21,18 +22,18 @@ public class BasicCraftingTask implements ICraftingTask {
     public boolean update(TileController controller) {
         boolean done = true;
 
-        for (int i = 0; i < pattern.getIngredients().length; ++i) {
-            ItemStack ingredient = pattern.getIngredients()[i];
+        for (int i = 0; i < pattern.getInputs().length; ++i) {
+            ItemStack input = pattern.getInputs()[i];
 
             if (!satisfied[i]) {
                 done = false;
 
-                ItemStack took = controller.take(ingredient.copy());
+                ItemStack took = controller.take(input.copy());
 
                 if (took != null) {
                     satisfied[i] = true;
                 } else if (!childTasks[i]) {
-                    CraftingPattern pattern = controller.getPatternForItem(ingredient);
+                    CraftingPattern pattern = controller.getPatternForItem(input);
 
                     if (pattern != null) {
                         controller.addCraftingTask(new BasicCraftingTask(pattern));
@@ -48,5 +49,12 @@ public class BasicCraftingTask implements ICraftingTask {
         }
 
         return done;
+    }
+
+    @Override
+    public void onDone(TileController controller) {
+        for (ItemStack output : pattern.getOutputs()) {
+            controller.push(output);
+        }
     }
 }

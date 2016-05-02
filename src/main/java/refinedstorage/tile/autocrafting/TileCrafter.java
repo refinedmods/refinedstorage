@@ -1,4 +1,4 @@
-package refinedstorage.tile;
+package refinedstorage.tile.autocrafting;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -8,6 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import refinedstorage.container.ContainerCrafter;
 import refinedstorage.inventory.InventorySimple;
+import refinedstorage.tile.TileMachine;
 import refinedstorage.util.InventoryUtils;
 
 public class TileCrafter extends TileMachine implements IInventory {
@@ -43,7 +44,11 @@ public class TileCrafter extends TileMachine implements IInventory {
         InventoryUtils.saveInventory(inventory, 0, nbt);
     }
 
-    public int getUpgrades() {
+    public int getSpeed() {
+        return 20 - (getUpgrades() * 4);
+    }
+
+    private int getUpgrades() {
         int upgrades = 0;
 
         for (int i = PATTERN_SLOTS; i < PATTERN_SLOTS + 4; ++i) {

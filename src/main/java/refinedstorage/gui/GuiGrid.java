@@ -155,14 +155,10 @@ public class GuiGrid extends GuiBase {
 
     public boolean isHoveringOverCreatePattern(int mouseX, int mouseY) {
         if (grid.getType() == EnumGridType.PATTERN) {
-            return inBounds(152, 124, 16, 16, mouseX, mouseY) && isCreatePatternEnabled();
+            return inBounds(152, 124, 16, 16, mouseX, mouseY) && ((TileGrid) grid).canCreatePattern();
         }
 
         return false;
-    }
-
-    public boolean isCreatePatternEnabled() {
-        return ((TileGrid) grid).getCraftingResultInventory().getStackInSlot(0) != null && ((TileGrid) grid).getPatternsInventory().getStackInSlot(0) != null;
     }
 
     @Override
@@ -184,7 +180,7 @@ public class GuiGrid extends GuiBase {
                 ty = 1;
             }
 
-            if (!isCreatePatternEnabled()) {
+            if (!((TileGrid) grid).canCreatePattern()) {
                 ty = 2;
             }
 

@@ -33,25 +33,7 @@ public class GuiProcessingPatternEncoder extends GuiBase {
     }
 
     public boolean isHoveringOverCreatePattern(int mouseX, int mouseY) {
-        return inBounds(152, 38, 16, 16, mouseX, mouseY) && isCreatePatternEnabled();
-    }
-
-    public boolean isCreatePatternEnabled() {
-        int inputsFilled = 0, outputsFilled = 0;
-
-        for (int i = 0; i < 9; ++i) {
-            if (ppEncoder.getInputsOutputsInventory().getStackInSlot(i) != null) {
-                inputsFilled++;
-            }
-        }
-
-        for (int i = 9; i < 18; ++i) {
-            if (ppEncoder.getInputsOutputsInventory().getStackInSlot(i) != null) {
-                outputsFilled++;
-            }
-        }
-
-        return inputsFilled > 0 && outputsFilled > 0 && ppEncoder.getStackInSlot(0) != null;
+        return inBounds(152, 38, 16, 16, mouseX, mouseY) && ppEncoder.canCreatePattern();
     }
 
     @Override
@@ -66,7 +48,7 @@ public class GuiProcessingPatternEncoder extends GuiBase {
             ty = 1;
         }
 
-        if (!isCreatePatternEnabled()) {
+        if (!ppEncoder.canCreatePattern()) {
             ty = 2;
         }
 

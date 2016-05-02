@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import refinedstorage.container.ContainerCraftingMonitor;
 import refinedstorage.tile.TileMachine;
+import refinedstorage.tile.autocrafting.task.ICraftingTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,11 @@ public class TileCraftingMonitor extends TileMachine {
             buf.writeInt(controller.getCraftingTasks().size());
 
             for (ICraftingTask task : controller.getCraftingTasks()) {
-                ByteBufUtils.writeItemStack(buf, task.getPattern().getResult());
+                buf.writeInt(task.getPattern().getOutputs().length);
+
+                for (ItemStack output : task.getPattern().getOutputs()) {
+                    ByteBufUtils.writeItemStack(buf, output);
+                }
             }
         } else {
             buf.writeInt(0);
@@ -46,7 +51,11 @@ public class TileCraftingMonitor extends TileMachine {
         int size = buf.readInt();
 
         for (int i = 0; i < size; ++i) {
-            newTasks.add(ByteBufUtils.readItemStack(buf));
+            int outputSize = buf.readInt();
+
+            for (int j = 0; j < outputSize; ++j) {
+                newTasks.add(ByteBufUtils.readItemStack(buf));
+            }
         }
 
         tasks = newTasks;

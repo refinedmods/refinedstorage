@@ -20,6 +20,7 @@ import refinedstorage.item.*;
 import refinedstorage.network.*;
 import refinedstorage.storage.NBTStorage;
 import refinedstorage.tile.*;
+import refinedstorage.tile.autocrafting.TileCrafter;
 import refinedstorage.tile.autocrafting.TileCraftingMonitor;
 import refinedstorage.tile.autocrafting.TileProcessingPatternEncoder;
 import refinedstorage.tile.grid.TileGrid;

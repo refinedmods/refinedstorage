@@ -3,25 +3,31 @@ package refinedstorage.tile.autocrafting;
 import net.minecraft.item.ItemStack;
 
 public class CraftingPattern {
-    private ItemStack result;
-    private ItemStack[] ingredients;
-    private int speed;
+    private TileCrafter crafter;
+    private boolean processing;
+    private ItemStack[] inputs;
+    private ItemStack[] outputs;
 
-    public CraftingPattern(ItemStack result, ItemStack[] ingredients, int speed) {
-        this.result = result;
-        this.ingredients = ingredients;
-        this.speed = speed;
+    public CraftingPattern(TileCrafter crafter, boolean processing, ItemStack[] inputs, ItemStack[] outputs) {
+        this.crafter = crafter;
+        this.processing = processing;
+        this.inputs = inputs;
+        this.outputs = outputs;
     }
 
-    public ItemStack getResult() {
-        return result;
+    public TileCrafter getCrafter() {
+        return crafter;
     }
 
-    public ItemStack[] getIngredients() {
-        return ingredients;
+    public boolean isProcessing() {
+        return processing;
     }
 
-    public int getSpeed() {
-        return speed;
+    public ItemStack[] getInputs() {
+        return inputs;
+    }
+
+    public ItemStack[] getOutputs() {
+        return outputs;
     }
 }

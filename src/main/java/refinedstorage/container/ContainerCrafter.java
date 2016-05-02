@@ -8,7 +8,7 @@ import refinedstorage.container.slot.IItemValidator;
 import refinedstorage.container.slot.SlotFiltered;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.item.ItemUpgrade;
-import refinedstorage.tile.TileCrafter;
+import refinedstorage.tile.autocrafting.TileCrafter;
 
 public class ContainerCrafter extends ContainerStorage {
     public ContainerCrafter(EntityPlayer player, TileCrafter crafter) {
@@ -18,7 +18,7 @@ public class ContainerCrafter extends ContainerStorage {
             addSlotToContainer(new SlotFiltered(crafter, i, 8, 19 + (i * 18), new IItemValidator() {
                 @Override
                 public boolean isValid(ItemStack stack) {
-                    return stack.getItem() == RefinedStorageItems.PATTERN && ItemPattern.hasResult(stack);
+                    return stack.getItem() == RefinedStorageItems.PATTERN && ItemPattern.isValid(stack);
                 }
             }));
         }

@@ -10,6 +10,7 @@ import refinedstorage.RefinedStorageGui;
 import refinedstorage.container.*;
 import refinedstorage.storage.IStorageGui;
 import refinedstorage.tile.*;
+import refinedstorage.tile.autocrafting.TileCrafter;
 import refinedstorage.tile.autocrafting.TileCraftingMonitor;
 import refinedstorage.tile.autocrafting.TileProcessingPatternEncoder;
 import refinedstorage.tile.grid.TileGrid;

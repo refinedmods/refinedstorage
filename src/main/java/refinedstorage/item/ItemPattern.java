@@ -11,8 +11,8 @@ import net.minecraftforge.common.util.Constants;
 import java.util.List;
 
 public class ItemPattern extends ItemBase {
-    public static final String NBT_RESULT = "Result";
-    public static final String NBT_INGREDIENTS = "Ingredients";
+    public static final String NBT_INPUTS = "Inputs";
+    public static final String NBT_OUTPUTS = "Outputs";
     public static final String NBT_PROCESSING = "Processing";
 
     public ItemPattern() {
@@ -21,8 +21,10 @@ public class ItemPattern extends ItemBase {
 
     @Override
     public void addInformation(ItemStack pattern, EntityPlayer player, List list, boolean b) {
-        if (hasResult(pattern)) {
-            list.add(getResult(pattern).getDisplayName());
+        if (isValid(pattern)) {
+            for (ItemStack output : getOutputs(pattern)) {
+                list.add(output.getDisplayName());
+            }
 
             if (isProcessing(pattern)) {
                 list.add(TextFormatting.ITALIC + I18n.translateToLocal("misc.refinedstorage:processing") + TextFormatting.RESET);
@@ -30,47 +32,55 @@ public class ItemPattern extends ItemBase {
         }
     }
 
-    public static void addIngredient(ItemStack pattern, ItemStack stack) {
+    public static void addInput(ItemStack pattern, ItemStack stack) {
+        add(pattern, stack, NBT_INPUTS);
+    }
+
+    public static void addOutput(ItemStack pattern, ItemStack stack) {
+        add(pattern, stack, NBT_OUTPUTS);
+    }
+
+    private static void add(ItemStack pattern, ItemStack stack, String type) {
         if (pattern.getTagCompound() == null) {
             pattern.setTagCompound(new NBTTagCompound());
         }
 
-        if (!pattern.getTagCompound().hasKey(NBT_INGREDIENTS)) {
-            pattern.getTagCompound().setTag(NBT_INGREDIENTS, new NBTTagList());
+        if (!pattern.getTagCompound().hasKey(type)) {
+            pattern.getTagCompound().setTag(type, new NBTTagList());
         }
 
-        pattern.getTagCompound().getTagList(NBT_INGREDIENTS, Constants.NBT.TAG_COMPOUND).appendTag(stack.serializeNBT());
+        pattern.getTagCompound().getTagList(type, Constants.NBT.TAG_COMPOUND).appendTag(stack.serializeNBT());
     }
 
-    public static ItemStack[] getIngredients(ItemStack pattern) {
-        if (pattern.getTagCompound() == null) {
+    public static ItemStack[] getInputs(ItemStack pattern) {
+        return get(pattern, NBT_INPUTS);
+    }
+
+    public static ItemStack[] getOutputs(ItemStack pattern) {
+        return get(pattern, NBT_OUTPUTS);
+    }
+
+    private static ItemStack[] get(ItemStack pattern, String type) {
+        if (!isValid(pattern)) {
             return null;
         }
 
-        if (!pattern.getTagCompound().hasKey(NBT_INGREDIENTS)) {
-            return null;
+        NBTTagList stacksList = pattern.getTagCompound().getTagList(type, Constants.NBT.TAG_COMPOUND);
+
+        ItemStack[] stacks = new ItemStack[stacksList.tagCount()];
+
+        for (int i = 0; i < stacksList.tagCount(); ++i) {
+            stacks[i] = ItemStack.loadItemStackFromNBT(stacksList.getCompoundTagAt(i));
         }
 
-        NBTTagList ingredients = pattern.getTagCompound().getTagList(NBT_INGREDIENTS, Constants.NBT.TAG_COMPOUND);
-
-        ItemStack[] ingredientsArray = new ItemStack[ingredients.tagCount()];
-
-        for (int i = 0; i < ingredients.tagCount(); ++i) {
-            ingredientsArray[i] = ItemStack.loadItemStackFromNBT(ingredients.getCompoundTagAt(i));
-        }
-
-        return ingredientsArray;
+        return stacks;
     }
 
-    public static void setResult(ItemStack pattern, ItemStack stack) {
-        if (pattern.getTagCompound() == null) {
-            pattern.setTagCompound(new NBTTagCompound());
-        }
-
-        NBTTagCompound stackTag = new NBTTagCompound();
-        stack.writeToNBT(stackTag);
-
-        pattern.getTagCompound().setTag(NBT_RESULT, stackTag);
+    public static boolean isValid(ItemStack pattern) {
+        return pattern.getTagCompound() != null &&
+            pattern.getTagCompound().hasKey(NBT_INPUTS) &&
+            pattern.getTagCompound().hasKey(NBT_OUTPUTS) &&
+            pattern.getTagCompound().hasKey(NBT_PROCESSING);
     }
 
     public static void setProcessing(ItemStack pattern, boolean processing) {
@@ -87,21 +97,5 @@ public class ItemPattern extends ItemBase {
         }
 
         return pattern.getTagCompound().getBoolean(NBT_PROCESSING);
-    }
-
-    public static boolean hasResult(ItemStack pattern) {
-        if (pattern.getTagCompound() == null) {
-            return false;
-        }
-
-        return pattern.getTagCompound().hasKey(NBT_RESULT);
-    }
-
-    public static ItemStack getResult(ItemStack pattern) {
-        if (!hasResult(pattern)) {
-            return null;
-        }
-
-        return ItemStack.loadItemStackFromNBT(pattern.getTagCompound().getCompoundTag(NBT_RESULT));
     }
 }

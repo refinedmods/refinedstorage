@@ -7,7 +7,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
+import refinedstorage.RefinedStorageItems;
 import refinedstorage.inventory.InventorySimple;
+import refinedstorage.item.ItemPattern;
 import refinedstorage.tile.TileBase;
 import refinedstorage.util.InventoryUtils;
 
@@ -148,6 +150,40 @@ public class TileProcessingPatternEncoder extends TileBase implements ISidedInve
     }
 
     public void onCreatePattern() {
-        System.out.println("Create pattern!!");
+        if (canCreatePattern()) {
+            ItemStack pattern = new ItemStack(RefinedStorageItems.PATTERN);
+
+            ItemPattern.setProcessing(pattern, true);
+
+            for (int i = 0; i < 18; ++i) {
+                if (inputsOutputsInventory.getStackInSlot(i) != null) {
+                    if (i >= 9) {
+                        ItemPattern.addOutput(pattern, inputsOutputsInventory.getStackInSlot(i));
+                    } else {
+                        ItemPattern.addInput(pattern, inputsOutputsInventory.getStackInSlot(i));
+                    }
+                }
+            }
+
+            setInventorySlotContents(1, pattern);
+        }
+    }
+
+    public boolean canCreatePattern() {
+        int inputsFilled = 0, outputsFilled = 0;
+
+        for (int i = 0; i < 9; ++i) {
+            if (inputsOutputsInventory.getStackInSlot(i) != null) {
+                inputsFilled++;
+            }
+        }
+
+        for (int i = 9; i < 18; ++i) {
+            if (inputsOutputsInventory.getStackInSlot(i) != null) {
+                outputsFilled++;
+            }
+        }
+
+        return inputsFilled > 0 && outputsFilled > 0 && getStackInSlot(0) != null && getStackInSlot(1) == null;
     }
 }

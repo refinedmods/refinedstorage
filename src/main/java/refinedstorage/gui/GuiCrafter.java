@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import refinedstorage.container.ContainerCrafter;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.item.ItemPattern;
-import refinedstorage.tile.TileCrafter;
+import refinedstorage.tile.autocrafting.TileCrafter;
 
 public class GuiCrafter extends GuiBase {
     private TileCrafter crafter;
@@ -50,15 +50,23 @@ public class GuiCrafter extends GuiBase {
             int y = 19 + (i * 18);
 
             if (crafter.getStackInSlot(i) != null) {
-                ItemStack result = ItemPattern.getResult(crafter.getStackInSlot(i));
+                ItemStack pattern = crafter.getStackInSlot(i);
 
-                drawItem(x, y, result);
+                String text = "Processing";
+
+                if (!ItemPattern.isProcessing(pattern)) {
+                    ItemStack result = ItemPattern.getOutputs(pattern)[0];
+
+                    drawItem(x, y, result);
+
+                    text = result.getDisplayName();
+                }
 
                 GlStateManager.pushMatrix();
 
                 float scale = 0.5f;
                 GlStateManager.scale(scale, scale, 1);
-                drawString(calculateOffsetOnScale(x + 20, scale), calculateOffsetOnScale(y + 6, scale), result.getDisplayName());
+                drawString(calculateOffsetOnScale(x + (ItemPattern.isProcessing(pattern) ? 0 : 20), scale), calculateOffsetOnScale(y + 6, scale), text);
 
                 GlStateManager.popMatrix();
             }

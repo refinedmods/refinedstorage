@@ -166,26 +166,29 @@ public class TileGrid extends TileMachine implements IGrid {
     }
 
     public void onCreatePattern() {
-        ItemStack crafted = craftingResultInventory.getStackInSlot(0);
-
-        if (patternsInventory.getStackInSlot(1) == null && patternsInventory.getStackInSlot(0) != null && patternsInventory.getStackInSlot(0).stackSize > 0) {
+        if (canCreatePattern()) {
             patternsInventory.decrStackSize(0, 1);
 
             ItemStack pattern = new ItemStack(RefinedStorageItems.PATTERN);
 
-            ItemPattern.setResult(pattern, crafted);
+            ItemPattern.addOutput(pattern, craftingResultInventory.getStackInSlot(0));
+
             ItemPattern.setProcessing(pattern, false);
 
             for (int i = 0; i < 9; ++i) {
                 ItemStack ingredient = craftingInventory.getStackInSlot(i);
 
                 if (ingredient != null) {
-                    ItemPattern.addIngredient(pattern, ingredient);
+                    ItemPattern.addInput(pattern, ingredient);
                 }
             }
 
             patternsInventory.setInventorySlotContents(1, pattern);
         }
+    }
+
+    public boolean canCreatePattern() {
+        return craftingResultInventory.getStackInSlot(0) != null && patternsInventory.getStackInSlot(1) == null && patternsInventory.getStackInSlot(0) != null;
     }
 
     public void onRecipeTransfer(ItemStack[][] recipe) {
