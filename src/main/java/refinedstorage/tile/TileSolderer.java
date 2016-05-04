@@ -27,6 +27,7 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
     };
 
     private InventorySimple inventory = new InventorySimple("solderer", 4, this);
+    private InventorySimple upgradesInventory = new InventorySimple("upgrades", 4, this);
 
     private ISoldererRecipe recipe;
 
@@ -56,9 +57,9 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
                 markDirty();
             }
         } else if (working) {
-            progress++;
+            progress += getSpeed();
 
-            if (progress == recipe.getDuration()) {
+            if (progress >= recipe.getDuration()) {
                 if (inventory.getStackInSlot(3) != null) {
                     inventory.getStackInSlot(3).stackSize += recipe.getResult().stackSize;
                 } else {
@@ -74,6 +75,18 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
                 reset();
             }
         }
+    }
+
+    public int getSpeed() {
+        int speed = 1;
+
+        for (int i = 0; i < upgradesInventory.getSizeInventory(); ++i) {
+            if (upgradesInventory.getStackInSlot(i) != null) {
+                speed += 1;
+            }
+        }
+
+        return speed;
     }
 
     @Override
@@ -96,6 +109,7 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
         super.readFromNBT(nbt);
 
         InventoryUtils.restoreInventory(this, 0, nbt);
+        InventoryUtils.restoreInventory(upgradesInventory, 1, nbt);
 
         recipe = SoldererRegistry.getRecipe(inventory);
 
@@ -113,6 +127,7 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
         super.writeToNBT(nbt);
 
         InventoryUtils.saveInventory(this, 0, nbt);
+        InventoryUtils.saveInventory(upgradesInventory, 1, nbt);
 
         nbt.setBoolean(NBT_WORKING, working);
         nbt.setInteger(NBT_PROGRESS, progress);
@@ -164,6 +179,9 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
     }
 
     public int getProgressScaled(int i) {
+        if (progress > duration) {
+            return i;
+        }
         return (int) ((float) progress / (float) duration * (float) i);
     }
 
@@ -270,5 +288,9 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
     @Override
     public boolean canExtractItem(int slot, ItemStack stack, EnumFacing direction) {
         return slot == 3;
+    }
+
+    public InventorySimple getUpgradesInventory() {
+        return upgradesInventory;
     }
 }

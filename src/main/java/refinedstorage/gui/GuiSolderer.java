@@ -8,7 +8,7 @@ public class GuiSolderer extends GuiBase {
     private TileSolderer solderer;
 
     public GuiSolderer(ContainerSolderer container, TileSolderer solderer) {
-        super(container, 176, 177);
+        super(container, 211, 177);
 
         this.solderer = solderer;
     }
@@ -29,7 +29,7 @@ public class GuiSolderer extends GuiBase {
         drawTexture(x, y, 0, 0, width, height);
 
         if (solderer.isWorking()) {
-            drawTexture(x + 83, y + 40 - 1, 177, 0, solderer.getProgressScaled(22), 15);
+            drawTexture(x + 83, y + 40 - 1, 212, 0, solderer.getProgressScaled(22), 15);
         }
     }
 
