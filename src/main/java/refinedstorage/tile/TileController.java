@@ -348,10 +348,13 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
         syncItems();
 
-        for (ICraftingTask task : craftingTasks) {
-            if (task instanceof ProcessingCraftingTask) {
-                if (((ProcessingCraftingTask) task).onInserted(stack)) {
-                    break;
+        // processing tasks accept 1-per
+        for (int i = 0; i < stack.stackSize; ++i) {
+            for (ICraftingTask task : craftingTasks) {
+                if (task instanceof ProcessingCraftingTask) {
+                    if (((ProcessingCraftingTask) task).onInserted(stack)) {
+                        break;
+                    }
                 }
             }
         }

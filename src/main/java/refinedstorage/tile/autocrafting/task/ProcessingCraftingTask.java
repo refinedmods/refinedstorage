@@ -27,16 +27,16 @@ public class ProcessingCraftingTask implements ICraftingTask {
 
     @Override
     public boolean update(TileController controller) {
-        for (int i = 0; i < inserted.length; ++i) {
-            if (!inserted[i]) {
-                ItemStack input = pattern.getInputs()[i];
-                ItemStack took = controller.take(input);
+        TileCrafter crafter = pattern.getCrafter();
+        TileEntity crafterFacing = crafter.getWorld().getTileEntity(crafter.getPos().offset(crafter.getDirection()));
 
-                if (took != null) {
-                    TileCrafter crafter = pattern.getCrafter();
-                    TileEntity crafterFacing = crafter.getWorld().getTileEntity(crafter.getPos().offset(crafter.getDirection()));
+        if (crafterFacing instanceof IInventory) {
+            for (int i = 0; i < inserted.length; ++i) {
+                if (!inserted[i]) {
+                    ItemStack input = pattern.getInputs()[i];
+                    ItemStack took = controller.take(input);
 
-                    if (crafterFacing instanceof IInventory) {
+                    if (took != null) {
                         ItemStack remaining = TileEntityHopper.putStackInInventoryAllSlots((IInventory) crafterFacing, took, crafter.getDirection().getOpposite());
 
                         if (remaining == null) {
@@ -60,7 +60,7 @@ public class ProcessingCraftingTask implements ICraftingTask {
 
     public boolean onInserted(ItemStack inserted) {
         for (int i = 0; i < pattern.getOutputs().length; ++i) {
-            if (!satisfied[i] && InventoryUtils.compareStack(inserted, pattern.getOutputs()[i])) {
+            if (!satisfied[i] && InventoryUtils.compareStackNoQuantity(inserted, pattern.getOutputs()[i])) {
                 satisfied[i] = true;
 
                 return true;

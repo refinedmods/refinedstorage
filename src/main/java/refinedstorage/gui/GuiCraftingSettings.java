@@ -50,7 +50,7 @@ public class GuiCraftingSettings extends GuiBase {
 
     @Override
     public void drawForeground(int mouseX, int mouseY) {
-        drawString(53, 7, t("container.crafting"));
+        drawString((width - fontRendererObj.getStringWidth(t("container.crafting"))) / 2, 8, t("container.crafting"));
     }
 
     @Override
