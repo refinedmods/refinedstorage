@@ -46,9 +46,12 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler {
 
                         NBTTagList tags = new NBTTagList();
 
-                        for (ItemStack stack : possibleItems) {
+                        for (int i = 0; i < possibleItems.size(); ++i) {
+                            if (i >= 5) {
+                                break; // max 5 possible items
+                            }
                             NBTTagCompound tag = new NBTTagCompound();
-                            stack.writeToNBT(tag);
+                            possibleItems.get(i).writeToNBT(tag);
                             tags.appendTag(tag);
                         }
 
