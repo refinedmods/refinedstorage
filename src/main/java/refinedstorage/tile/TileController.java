@@ -62,7 +62,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     private List<ClientSideMachine> clientSideMachines = new ArrayList<ClientSideMachine>();
 
     private List<CraftingPattern> patterns = new ArrayList<CraftingPattern>();
-    private Stack<ICraftingTask> craftingTasks = new Stack<ICraftingTask>();
+    private List<ICraftingTask> craftingTasks = new ArrayList<ICraftingTask>();
 
     private Set<String> visited = new HashSet<String>();
 
@@ -172,13 +172,15 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                 }
             }
 
-            if (craftingTasks.size() > 0) {
-                ICraftingTask task = craftingTasks.peek();
+            Iterator<ICraftingTask> craftingTaskIterator = craftingTasks.iterator();
+
+            while (craftingTaskIterator.hasNext()) {
+                ICraftingTask task = craftingTaskIterator.next();
 
                 if (ticks % task.getPattern().getCrafter().getSpeed() == 0 && task.update(this)) {
                     task.onDone(this);
 
-                    craftingTasks.pop();
+                    craftingTaskIterator.remove();
                 }
             }
 
@@ -196,10 +198,10 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
             wirelessGridConsumers.removeAll(wirelessGridConsumersMarkedForRemoval);
             wirelessGridConsumersMarkedForRemoval.clear();
 
-            Iterator<WirelessGridConsumer> it = wirelessGridConsumers.iterator();
+            Iterator<WirelessGridConsumer> gridConsumerIterator = wirelessGridConsumers.iterator();
 
-            while (it.hasNext()) {
-                WirelessGridConsumer consumer = it.next();
+            while (gridConsumerIterator.hasNext()) {
+                WirelessGridConsumer consumer = gridConsumerIterator.next();
 
                 if (!InventoryUtils.compareStack(consumer.getWirelessGrid(), consumer.getPlayer().getHeldItem(consumer.getHand()))) {
                     consumer.getPlayer().closeScreen(); // This will call onContainerClosed on the Container and remove it from the list
@@ -251,7 +253,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     }
 
     public void addCraftingTask(ICraftingTask task) {
-        craftingTasks.push(task);
+        craftingTasks.add(task);
     }
 
     public List<CraftingPattern> getPatterns() {

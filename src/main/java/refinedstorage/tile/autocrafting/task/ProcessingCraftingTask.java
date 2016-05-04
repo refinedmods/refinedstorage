@@ -2,6 +2,7 @@ package refinedstorage.tile.autocrafting.task;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityHopper;
 import refinedstorage.tile.TileController;
 import refinedstorage.tile.autocrafting.CraftingPattern;
@@ -10,11 +11,12 @@ import refinedstorage.util.InventoryUtils;
 
 public class ProcessingCraftingTask implements ICraftingTask {
     private CraftingPattern pattern;
-    private boolean inserted;
+    private boolean inserted[];
     private boolean satisfied[];
 
     public ProcessingCraftingTask(CraftingPattern pattern) {
         this.pattern = pattern;
+        this.inserted = new boolean[pattern.getInputs().length];
         this.satisfied = new boolean[pattern.getOutputs().length];
     }
 
@@ -25,18 +27,26 @@ public class ProcessingCraftingTask implements ICraftingTask {
 
     @Override
     public boolean update(TileController controller) {
-        if (!inserted) {
-            for (ItemStack input : pattern.getInputs()) {
-                ItemStack take = controller.take(input);
+        for (int i = 0; i < inserted.length; ++i) {
+            if (!inserted[i]) {
+                ItemStack input = pattern.getInputs()[i];
+                ItemStack took = controller.take(input);
 
-                if (take != null) {
+                if (took != null) {
                     TileCrafter crafter = pattern.getCrafter();
+                    TileEntity crafterFacing = crafter.getWorld().getTileEntity(crafter.getPos().offset(crafter.getDirection()));
 
-                    TileEntityHopper.putStackInInventoryAllSlots((IInventory) crafter.getWorld().getTileEntity(crafter.getPos().offset(crafter.getDirection())), take, crafter.getDirection().getOpposite());
+                    if (crafterFacing instanceof IInventory) {
+                        ItemStack remaining = TileEntityHopper.putStackInInventoryAllSlots((IInventory) crafterFacing, took, crafter.getDirection().getOpposite());
+
+                        if (remaining == null) {
+                            inserted[i] = true;
+                        } else {
+                            controller.push(input);
+                        }
+                    }
                 }
             }
-
-            inserted = true;
         }
 
         for (int i = 0; i < satisfied.length; ++i) {
@@ -48,9 +58,9 @@ public class ProcessingCraftingTask implements ICraftingTask {
         return true;
     }
 
-    public void onInserted(ItemStack in) {
+    public void onInserted(ItemStack inserted) {
         for (int i = 0; i < pattern.getOutputs().length; ++i) {
-            if (!satisfied[i] && InventoryUtils.compareStack(in, pattern.getOutputs()[i])) {
+            if (!satisfied[i] && InventoryUtils.compareStack(inserted, pattern.getOutputs()[i])) {
                 satisfied[i] = true;
             }
         }
