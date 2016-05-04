@@ -209,14 +209,18 @@ public class TileGrid extends TileMachine implements IGrid {
                 if (recipe[i] != null) {
                     ItemStack[] possibilities = recipe[i];
 
-                    for (ItemStack possibility : possibilities) {
-                        ItemStack took = controller.take(possibility);
+                    if (getType() == EnumGridType.CRAFTING) {
+                        for (ItemStack possibility : possibilities) {
+                            ItemStack took = controller.take(possibility);
 
-                        if (took != null) {
-                            craftingInventory.setInventorySlotContents(i, possibility);
+                            if (took != null) {
+                                craftingInventory.setInventorySlotContents(i, possibility);
 
-                            break;
+                                break;
+                            }
                         }
+                    } else if (getType() == EnumGridType.PATTERN) {
+                        craftingInventory.setInventorySlotContents(i, possibilities[0]);
                     }
                 }
             }

@@ -37,7 +37,7 @@ public class MessageGridCraftingTransfer extends MessageHandlerPlayerToServer<Me
         if (player.openContainer instanceof ContainerGrid) {
             TileGrid grid = ((ContainerGrid) player.openContainer).getGrid();
 
-            if (grid.getType() == EnumGridType.CRAFTING) {
+            if (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) {
                 ItemStack[][] actualRecipe = new ItemStack[9][];
 
                 for (int x = 0; x < actualRecipe.length; x++) {
