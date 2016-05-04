@@ -14,7 +14,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageItems;
-import refinedstorage.block.*;
+import refinedstorage.block.BlockBase;
+import refinedstorage.block.EnumControllerType;
+import refinedstorage.block.EnumGridType;
+import refinedstorage.block.EnumStorageType;
 import refinedstorage.gui.GuiHandler;
 import refinedstorage.item.*;
 import refinedstorage.network.*;
@@ -233,6 +236,18 @@ public class CommonProxy {
             'C', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
             'D', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
             'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING)
+        );
+
+        // Processing Pattern Encoder
+        GameRegistry.addRecipe(new ItemStack(RefinedStorageBlocks.PROCESSING_PATTERN_ENCODER),
+            "ECE",
+            "PMP",
+            "EFE",
+            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+            'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
+            'P', new ItemStack(RefinedStorageItems.PATTERN),
+            'C', new ItemStack(Blocks.crafting_table),
+            'F', new ItemStack(Blocks.furnace)
         );
 
         // External Storage

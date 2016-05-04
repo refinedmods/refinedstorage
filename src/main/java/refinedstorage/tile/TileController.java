@@ -63,6 +63,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
     private List<CraftingPattern> patterns = new ArrayList<CraftingPattern>();
     private List<ICraftingTask> craftingTasks = new ArrayList<ICraftingTask>();
+    private List<ICraftingTask> craftingTasksToAdd = new ArrayList<ICraftingTask>();
 
     private Set<String> visited = new HashSet<String>();
 
@@ -172,6 +173,9 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                 }
             }
 
+            craftingTasks.addAll(craftingTasksToAdd);
+            craftingTasksToAdd.clear();
+
             Iterator<ICraftingTask> craftingTaskIterator = craftingTasks.iterator();
 
             while (craftingTaskIterator.hasNext()) {
@@ -253,7 +257,15 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     }
 
     public void addCraftingTask(ICraftingTask task) {
-        craftingTasks.add(task);
+        craftingTasksToAdd.add(task);
+    }
+
+    public void addCraftingTaskForPattern(CraftingPattern pattern) {
+        if (pattern.isProcessing()) {
+            addCraftingTask(new ProcessingCraftingTask(pattern));
+        } else {
+            addCraftingTask(new BasicCraftingTask(pattern));
+        }
     }
 
     public List<CraftingPattern> getPatterns() {
@@ -704,11 +716,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
             while (quantity > 0) {
                 if (pattern != null) {
-                    if (pattern.isProcessing()) {
-                        addCraftingTask(new ProcessingCraftingTask(pattern));
-                    } else {
-                        addCraftingTask(new BasicCraftingTask(pattern));
-                    }
+                    addCraftingTaskForPattern(pattern);
 
                     quantity -= quantityPerRequest;
                 } else {

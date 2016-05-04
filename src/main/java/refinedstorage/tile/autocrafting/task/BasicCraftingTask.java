@@ -36,7 +36,7 @@ public class BasicCraftingTask implements ICraftingTask {
                     CraftingPattern pattern = controller.getPatternForItem(input);
 
                     if (pattern != null) {
-                        controller.addCraftingTask(new BasicCraftingTask(pattern));
+                        controller.addCraftingTaskForPattern(pattern);
 
                         childTasks[i] = true;
 

@@ -3,6 +3,13 @@
 ### 0.6
 WIP
 
+**TODO**
+- Saving crafting task state
+- Cancelling crafting tasks
+- "Craft if needed" upgrade on exporter, constructor and interface
+- Textures
+- Update wiki
+
 ### 0.5.6
 **Bugfixes**
 - Fix sorting crash
