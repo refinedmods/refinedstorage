@@ -58,12 +58,15 @@ public class ProcessingCraftingTask implements ICraftingTask {
         return true;
     }
 
-    public void onInserted(ItemStack inserted) {
+    public boolean onInserted(ItemStack inserted) {
         for (int i = 0; i < pattern.getOutputs().length; ++i) {
             if (!satisfied[i] && InventoryUtils.compareStack(inserted, pattern.getOutputs()[i])) {
                 satisfied[i] = true;
+
+                return true;
             }
         }
+        return false;
     }
 
     @Override
