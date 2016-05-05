@@ -1,6 +1,7 @@
 package refinedstorage.tile.autocrafting.task;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
 import refinedstorage.tile.TileController;
 import refinedstorage.tile.autocrafting.CraftingPattern;
 
@@ -56,5 +57,48 @@ public class BasicCraftingTask implements ICraftingTask {
         for (ItemStack output : pattern.getOutputs()) {
             controller.push(output);
         }
+    }
+
+    @Override
+    public String getInfo() {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append(TextFormatting.YELLOW).append("{missing_items}").append(TextFormatting.RESET).append("\n");
+
+        int missingItems = 0;
+
+        for (int i = 0; i < pattern.getInputs().length; ++i) {
+            ItemStack input = pattern.getInputs()[i];
+
+            if (!satisfied[i] && !childTasks[i]) {
+                builder.append("- ").append(input.getUnlocalizedName()).append("\n");
+
+                missingItems++;
+            }
+        }
+
+        if (missingItems == 0) {
+            builder.append(TextFormatting.GRAY).append(TextFormatting.ITALIC).append("{none}").append(TextFormatting.RESET).append("\n");
+        }
+
+        builder.append(TextFormatting.YELLOW).append("{items_crafting}").append(TextFormatting.RESET).append("\n");
+
+        int itemsCrafting = 0;
+
+        for (int i = 0; i < pattern.getInputs().length; ++i) {
+            ItemStack input = pattern.getInputs()[i];
+
+            if (childTasks[i]) {
+                builder.append("- ").append(input.getDisplayName()).append("\n");
+
+                itemsCrafting++;
+            }
+        }
+
+        if (itemsCrafting == 0) {
+            builder.append(TextFormatting.GRAY).append(TextFormatting.ITALIC).append("{none}").append(TextFormatting.RESET).append("\n");
+        }
+
+        return builder.toString();
     }
 }

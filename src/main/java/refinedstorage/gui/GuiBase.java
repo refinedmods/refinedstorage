@@ -204,8 +204,12 @@ public abstract class GuiBase extends GuiContainer {
     }
 
     public void drawTooltip(int x, int y, String message) {
+        drawTooltip(x, y, Arrays.asList(message.split("\n")));
+    }
+
+    public void drawTooltip(int x, int y, List<String> lines) {
         GL11.glDisable(GL11.GL_LIGHTING);
-        drawHoveringText(Arrays.asList(message.split("\n")), x, y);
+        drawHoveringText(lines, x, y);
         GL11.glEnable(GL11.GL_LIGHTING);
     }
 

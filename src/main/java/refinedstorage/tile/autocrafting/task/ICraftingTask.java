@@ -9,4 +9,6 @@ public interface ICraftingTask {
     boolean update(TileController controller);
 
     void onDone(TileController controller);
+
+    String getInfo();
 }

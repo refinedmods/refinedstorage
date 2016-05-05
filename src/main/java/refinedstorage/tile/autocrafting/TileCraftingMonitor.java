@@ -13,6 +13,7 @@ import java.util.List;
 
 public class TileCraftingMonitor extends TileMachine {
     private List<ItemStack> tasks = new ArrayList<ItemStack>();
+    private String[] info = new String[0];
 
     @Override
     public int getEnergyUsage() {
@@ -31,6 +32,8 @@ public class TileCraftingMonitor extends TileMachine {
             buf.writeInt(controller.getCraftingTasks().size());
 
             for (ICraftingTask task : controller.getCraftingTasks()) {
+                ByteBufUtils.writeUTF8String(buf, task.getInfo());
+
                 buf.writeInt(task.getPattern().getOutputs().length);
 
                 for (ItemStack output : task.getPattern().getOutputs()) {
@@ -46,11 +49,14 @@ public class TileCraftingMonitor extends TileMachine {
     public void receiveContainerData(ByteBuf buf) {
         super.receiveContainerData(buf);
 
-        List<ItemStack> newTasks = new ArrayList<ItemStack>();
-
         int size = buf.readInt();
 
+        List<ItemStack> newTasks = new ArrayList<ItemStack>();
+        String[] newInfo = new String[size];
+
         for (int i = 0; i < size; ++i) {
+            newInfo[i] = ByteBufUtils.readUTF8String(buf);
+
             int outputSize = buf.readInt();
 
             for (int j = 0; j < outputSize; ++j) {
@@ -59,10 +65,15 @@ public class TileCraftingMonitor extends TileMachine {
         }
 
         tasks = newTasks;
+        info = newInfo;
     }
 
     public List<ItemStack> getTasks() {
         return tasks;
+    }
+
+    public String[] getInfo() {
+        return info;
     }
 
     @Override

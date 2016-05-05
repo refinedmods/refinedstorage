@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import refinedstorage.container.ContainerCraftingMonitor;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.tile.autocrafting.TileCraftingMonitor;
+import scala.actors.threadpool.Arrays;
 
 import java.util.List;
 
@@ -64,8 +65,10 @@ public class GuiCraftingMonitor extends GuiBase {
 
         List<ItemStack> tasks = craftingMonitor.getTasks();
 
+        List<String> infoLines = null;
+
         for (int i = 0; i < 6; ++i) {
-            if (slot < tasks.size()) {
+            if (slot < tasks.size() && slot < craftingMonitor.getInfo().length) {
                 ItemStack task = tasks.get(slot);
 
                 drawItem(x, y + 5, task);
@@ -77,6 +80,21 @@ public class GuiCraftingMonitor extends GuiBase {
                 drawString(calculateOffsetOnScale(x + 1, scale), calculateOffsetOnScale(y - 3, scale), task.getDisplayName());
 
                 GlStateManager.popMatrix();
+
+                if (inBounds(x, y + 5, 16, 16, mouseX, mouseY)) {
+                    infoLines = Arrays.asList(craftingMonitor.getInfo()[slot].split("\n"));
+
+                    for (int j = 0; j < infoLines.size(); ++j) {
+                        String line = infoLines.get(j);
+
+                        infoLines.set(j, line
+                            .replace("{missing_items}", t("gui.refinedstorage:crafting_monitor.missing_items"))
+                            .replace("{items_crafting}", t("gui.refinedstorage:crafting_monitor.items_crafting"))
+                            .replace("{items_processing}", t("gui.refinedstorage:crafting_monitor.items_processing"))
+                            .replace("{missing_machine}", t("gui.refinedstorage:crafting_monitor.missing_machine"))
+                            .replace("{none}", t("misc.refinedstorage:none")));
+                    }
+                }
             }
 
             if (i == 1 || i == 3) {
@@ -87,6 +105,10 @@ public class GuiCraftingMonitor extends GuiBase {
             }
 
             slot++;
+        }
+
+        if (infoLines != null) {
+            drawTooltip(mouseX, mouseY, infoLines);
         }
     }
 

@@ -4,6 +4,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityHopper;
+import net.minecraft.util.text.TextFormatting;
 import refinedstorage.tile.TileController;
 import refinedstorage.tile.autocrafting.CraftingPattern;
 import refinedstorage.tile.autocrafting.TileCrafter;
@@ -12,11 +13,14 @@ import refinedstorage.util.InventoryUtils;
 public class ProcessingCraftingTask implements ICraftingTask {
     private CraftingPattern pattern;
     private boolean inserted[];
+    private boolean missing[];
     private boolean satisfied[];
+    private boolean missingMachine;
 
     public ProcessingCraftingTask(CraftingPattern pattern) {
         this.pattern = pattern;
         this.inserted = new boolean[pattern.getInputs().length];
+        this.missing = new boolean[pattern.getInputs().length];
         this.satisfied = new boolean[pattern.getOutputs().length];
     }
 
@@ -31,12 +35,16 @@ public class ProcessingCraftingTask implements ICraftingTask {
         TileEntity crafterFacing = crafter.getWorld().getTileEntity(crafter.getPos().offset(crafter.getDirection()));
 
         if (crafterFacing instanceof IInventory) {
+            missingMachine = false;
+
             for (int i = 0; i < inserted.length; ++i) {
                 if (!inserted[i]) {
                     ItemStack input = pattern.getInputs()[i];
                     ItemStack took = controller.take(input);
 
                     if (took != null) {
+                        missing[i] = false;
+
                         ItemStack remaining = TileEntityHopper.putStackInInventoryAllSlots((IInventory) crafterFacing, took, crafter.getDirection().getOpposite());
 
                         if (remaining == null) {
@@ -44,9 +52,13 @@ public class ProcessingCraftingTask implements ICraftingTask {
                         } else {
                             controller.push(input);
                         }
+                    } else {
+                        missing[i] = true;
                     }
                 }
             }
+        } else {
+            missingMachine = true;
         }
 
         for (int i = 0; i < satisfied.length; ++i) {
@@ -72,5 +84,52 @@ public class ProcessingCraftingTask implements ICraftingTask {
     @Override
     public void onDone(TileController controller) {
         // NO OP
+    }
+
+    @Override
+    public String getInfo() {
+        StringBuilder builder = new StringBuilder();
+
+        if (missingMachine) {
+            builder.append(TextFormatting.RED).append("{missing_machine}").append(TextFormatting.RESET).append("\n");
+        }
+
+        builder.append(TextFormatting.YELLOW).append("{missing_items}").append(TextFormatting.RESET).append("\n");
+
+        int missingItems = 0;
+
+        for (int i = 0; i < pattern.getInputs().length; ++i) {
+            ItemStack input = pattern.getInputs()[i];
+
+            if (missing[i]) {
+                builder.append("- ").append(input.getDisplayName()).append("\n");
+
+                missingItems++;
+            }
+        }
+
+        if (missingItems == 0) {
+            builder.append(TextFormatting.GRAY).append(TextFormatting.ITALIC).append("{none}").append(TextFormatting.RESET).append("\n");
+        }
+
+        builder.append(TextFormatting.YELLOW).append("{items_processing}").append(TextFormatting.RESET).append("\n");
+
+        int itemsProcessing = 0;
+
+        for (int i = 0; i < pattern.getInputs().length; ++i) {
+            ItemStack input = pattern.getInputs()[i];
+
+            if (inserted[i] && !satisfied[i]) {
+                builder.append("- ").append(input.getDisplayName()).append("\n");
+
+                itemsProcessing++;
+            }
+        }
+
+        if (itemsProcessing == 0) {
+            builder.append(TextFormatting.GRAY).append(TextFormatting.ITALIC).append("{none}").append(TextFormatting.RESET).append("\n");
+        }
+
+        return builder.toString();
     }
 }
