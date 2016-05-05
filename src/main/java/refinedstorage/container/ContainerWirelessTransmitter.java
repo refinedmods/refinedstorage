@@ -3,10 +3,8 @@ package refinedstorage.container;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import refinedstorage.RefinedStorageItems;
-import refinedstorage.container.slot.IItemValidator;
 import refinedstorage.container.slot.SlotFiltered;
-import refinedstorage.container.slot.SlotUpgrade;
+import refinedstorage.container.slot.UpgradeItemValidator;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.TileWirelessTransmitter;
 
@@ -15,7 +13,7 @@ public class ContainerWirelessTransmitter extends ContainerBase {
         super(player);
 
         for (int i = 0; i < 4; ++i) {
-            addSlotToContainer(new SlotFiltered(wirelessTransmitter, i, 187, 6 + (i * 18), new SlotUpgrade(ItemUpgrade.TYPE_RANGE)));
+            addSlotToContainer(new SlotFiltered(wirelessTransmitter, i, 187, 6 + (i * 18), new UpgradeItemValidator(ItemUpgrade.TYPE_RANGE)));
         }
 
         addPlayerInventory(8, 55);

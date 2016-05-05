@@ -3,9 +3,7 @@ package refinedstorage.container;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import refinedstorage.RefinedStorageItems;
 import refinedstorage.container.slot.*;
-import refinedstorage.item.ItemPattern;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.TileInterface;
 
@@ -26,7 +24,7 @@ public class ContainerInterface extends ContainerBase {
         }
 
         for (int i = 0; i < 4; ++i) {
-            addSlotToContainer(new SlotFiltered(tile.getUpgradesInventory(), i, 187, 6 + (i * 18), new SlotUpgrade(ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_CRAFTING)));
+            addSlotToContainer(new SlotFiltered(tile.getUpgradesInventory(), i, 187, 6 + (i * 18), new UpgradeItemValidator(ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_CRAFTING)));
         }
 
         addPlayerInventory(8, 134);

@@ -5,10 +5,10 @@ import refinedstorage.RefinedStorageItems;
 
 import java.util.Arrays;
 
-public class SlotUpgrade implements IItemValidator {
+public class UpgradeItemValidator implements IItemValidator {
     private int[] allowedUpgrades;
 
-    public SlotUpgrade(int... allowedUpgrades) {
+    public UpgradeItemValidator(int... allowedUpgrades) {
         this.allowedUpgrades = allowedUpgrades;
     }
 
