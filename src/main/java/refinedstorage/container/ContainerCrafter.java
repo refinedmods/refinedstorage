@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.container.slot.IItemValidator;
 import refinedstorage.container.slot.SlotFiltered;
+import refinedstorage.container.slot.SlotUpgrade;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.autocrafting.TileCrafter;
@@ -24,12 +25,7 @@ public class ContainerCrafter extends ContainerStorage {
         }
 
         for (int i = 0; i < 4; ++i) {
-            addSlotToContainer(new SlotFiltered(crafter, 6 + i, 187, 6 + (i * 18), new IItemValidator() {
-                @Override
-                public boolean isValid(ItemStack stack) {
-                    return stack.getItem() == RefinedStorageItems.UPGRADE && stack.getMetadata() == ItemUpgrade.TYPE_SPEED;
-                }
-            }));
+            addSlotToContainer(new SlotFiltered(crafter, 6 + i, 187, 6 + (i * 18), new SlotUpgrade(ItemUpgrade.TYPE_SPEED)));
         }
 
         addPlayerInventory(8, 144);

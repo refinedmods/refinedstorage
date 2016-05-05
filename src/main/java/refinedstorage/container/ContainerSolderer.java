@@ -2,11 +2,13 @@ package refinedstorage.container;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.container.slot.IItemValidator;
 import refinedstorage.container.slot.SlotFiltered;
 import refinedstorage.container.slot.SlotOutput;
+import refinedstorage.container.slot.SlotUpgrade;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.TileSolderer;
 
@@ -26,12 +28,7 @@ public class ContainerSolderer extends ContainerBase {
         addSlotToContainer(new SlotOutput(solderer, 3, 134, 38));
 
         for (int i = 0; i < 4; ++i) {
-            addSlotToContainer(new SlotFiltered(solderer.getUpgradesInventory(), i, 187, 6 + (i * 18), new IItemValidator() {
-                @Override
-                public boolean isValid(ItemStack stack) {
-                    return stack.getItem() == RefinedStorageItems.UPGRADE && stack.getMetadata() == ItemUpgrade.TYPE_SPEED;
-                }
-            }));
+            addSlotToContainer(new SlotFiltered(solderer.getUpgradesInventory(), i, 187, 6 + (i * 18), new SlotUpgrade(ItemUpgrade.TYPE_SPEED)));
         }
 
         addPlayerInventory(8, 95);
