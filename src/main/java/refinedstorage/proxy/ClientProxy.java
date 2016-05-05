@@ -90,6 +90,7 @@ public class ClientProxy extends CommonProxy {
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.UPGRADE, 0, new ModelResourceLocation("refinedstorage:upgrade", "inventory"));
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_RANGE, new ModelResourceLocation("refinedstorage:range_upgrade", "inventory"));
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED, new ModelResourceLocation("refinedstorage:speed_upgrade", "inventory"));
+        ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_CRAFTING, new ModelResourceLocation("refinedstorage:crafting_upgrade", "inventory"));
 
         // Blocks
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.CABLE), 0, new ModelResourceLocation("refinedstorage:cable", "inventory"));

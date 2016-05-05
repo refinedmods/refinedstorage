@@ -80,6 +80,7 @@ public class CommonProxy {
         registerBlock(RefinedStorageBlocks.GRID);
         registerBlock(RefinedStorageBlocks.CRAFTING_MONITOR);
         registerBlock(RefinedStorageBlocks.CRAFTER);
+        registerBlock(RefinedStorageBlocks.PROCESSING_PATTERN_ENCODER);
         registerBlock(RefinedStorageBlocks.DISK_DRIVE);
         registerBlock(RefinedStorageBlocks.STORAGE);
         registerBlock(RefinedStorageBlocks.EXTERNAL_STORAGE);
@@ -94,7 +95,6 @@ public class CommonProxy {
         registerBlock(RefinedStorageBlocks.WIRELESS_TRANSMITTER);
         registerBlock(RefinedStorageBlocks.MACHINE_CASING);
         registerBlock(RefinedStorageBlocks.CABLE);
-        registerBlock(RefinedStorageBlocks.PROCESSING_PATTERN_ENCODER);
 
         registerItem(RefinedStorageItems.QUARTZ_ENRICHED_IRON);
         registerItem(RefinedStorageItems.STORAGE_DISK);
@@ -417,6 +417,7 @@ public class CommonProxy {
 
         SoldererRegistry.addRecipe(new SoldererRecipeUpgrade(ItemUpgrade.TYPE_RANGE));
         SoldererRegistry.addRecipe(new SoldererRecipeUpgrade(ItemUpgrade.TYPE_SPEED));
+        SoldererRegistry.addRecipe(new SoldererRecipeUpgrade(ItemUpgrade.TYPE_CRAFTING));
 
         // Storage Blocks
         SoldererRegistry.addRecipe(new SoldererRecipeStorage(EnumStorageType.TYPE_1K, ItemStoragePart.TYPE_1K));

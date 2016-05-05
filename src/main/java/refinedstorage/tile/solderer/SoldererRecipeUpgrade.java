@@ -32,6 +32,8 @@ public class SoldererRecipeUpgrade implements ISoldererRecipe {
                 return new ItemStack(Items.ender_pearl);
             case ItemUpgrade.TYPE_SPEED:
                 return new ItemStack(Blocks.redstone_block);
+            case ItemUpgrade.TYPE_CRAFTING:
+                return new ItemStack(Blocks.crafting_table);
         }
 
         return null;

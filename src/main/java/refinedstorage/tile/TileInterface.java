@@ -12,6 +12,7 @@ import net.minecraft.util.text.ITextComponent;
 import refinedstorage.container.ContainerInterface;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.item.ItemUpgrade;
+import refinedstorage.tile.autocrafting.CraftingPattern;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.util.InventoryUtils;
 
@@ -115,6 +116,18 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
                                 inventory.setInventorySlotContents(i + 9, took);
                             } else {
                                 got.stackSize += took.stackSize;
+                            }
+                        }
+
+                        if (hasCrafting(upgradesInventory)) {
+                            CraftingPattern pattern = controller.getPatternForItem(wanted, compare);
+
+                            if (pattern != null && took == null || took.stackSize != needed) {
+                                int tasksToCreate = needed - controller.getAmountOfCraftingTasksWithPattern(pattern, compare);
+
+                                for (int j = 0; j < tasksToCreate; ++j) {
+                                    controller.addCraftingTaskForPattern(pattern);
+                                }
                             }
                         }
                     }

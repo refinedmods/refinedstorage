@@ -260,14 +260,20 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
         craftingTasksToAdd.add(task);
     }
 
-    public boolean hasCraftingTaskWithPattern(CraftingPattern pattern, int flags) {
+    public int getAmountOfCraftingTasksWithPattern(CraftingPattern pattern, int flags) {
+        int amount = 0;
+
         for (int i = 0; i < craftingTasks.size(); ++i) {
             if (craftingTasks.get(i).getPattern().comparePattern(pattern, flags)) {
-                return true;
+                amount++;
             }
         }
 
-        return false;
+        return amount;
+    }
+
+    public boolean hasCraftingTaskWithPattern(CraftingPattern pattern, int flags) {
+        return getAmountOfCraftingTasksWithPattern(pattern, flags) > 0;
     }
 
     public void addCraftingTaskForPattern(CraftingPattern pattern) {

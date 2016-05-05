@@ -32,7 +32,7 @@ public class ContainerInterface extends ContainerBase {
             addSlotToContainer(new SlotFiltered(tile.getUpgradesInventory(), i, 187, 6 + (i * 18), new IItemValidator() {
                 @Override
                 public boolean isValid(ItemStack stack) {
-                    return stack.getItem() == RefinedStorageItems.UPGRADE && stack.getMetadata() == ItemUpgrade.TYPE_SPEED;
+                    return stack.getItem() == RefinedStorageItems.UPGRADE && (stack.getMetadata() == ItemUpgrade.TYPE_SPEED || stack.getMetadata() == ItemUpgrade.TYPE_CRAFTING);
                 }
             }));
         }
