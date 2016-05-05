@@ -9,6 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityHopper;
 import refinedstorage.container.ContainerExporter;
 import refinedstorage.inventory.InventorySimple;
+import refinedstorage.tile.autocrafting.CraftingPattern;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.util.InventoryUtils;
 
@@ -47,6 +48,12 @@ public class TileExporter extends TileMachine implements ICompareConfig {
 
                             if (remaining != null) {
                                 controller.push(remaining);
+                            }
+                        } else if (TileInterface.hasCrafting(upgradesInventory)) {
+                            CraftingPattern pattern = controller.getPatternForItem(slot, compare);
+
+                            if (pattern != null && !controller.hasCraftingTaskWithPattern(pattern, compare)) {
+                                controller.addCraftingTaskForPattern(pattern);
                             }
                         }
                     }

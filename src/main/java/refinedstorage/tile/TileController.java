@@ -260,6 +260,16 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
         craftingTasksToAdd.add(task);
     }
 
+    public boolean hasCraftingTaskWithPattern(CraftingPattern pattern, int flags) {
+        for (int i = 0; i < craftingTasks.size(); ++i) {
+            if (craftingTasks.get(i).getPattern().comparePattern(pattern, flags)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public void addCraftingTaskForPattern(CraftingPattern pattern) {
         if (pattern.isProcessing()) {
             addCraftingTask(new ProcessingCraftingTask(pattern));
@@ -273,9 +283,13 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     }
 
     public CraftingPattern getPatternForItem(ItemStack stack) {
+        return getPatternForItem(stack, InventoryUtils.COMPARE_DAMAGE | InventoryUtils.COMPARE_NBT);
+    }
+
+    public CraftingPattern getPatternForItem(ItemStack stack, int flags) {
         for (CraftingPattern pattern : getPatterns()) {
             for (ItemStack output : pattern.getOutputs()) {
-                if (InventoryUtils.compareStackNoQuantity(output, stack)) {
+                if (InventoryUtils.compareStack(output, stack, flags)) {
                     return pattern;
                 }
             }

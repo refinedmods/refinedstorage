@@ -49,7 +49,7 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
         } else if (newRecipe != recipe) {
             boolean isSameItem = inventory.getStackInSlot(3) != null ? InventoryUtils.compareStackNoQuantity(inventory.getStackInSlot(3), newRecipe.getResult()) : false;
 
-            if (inventory.getStackInSlot(3) == null || (isSameItem && ((inventory.getStackInSlot(3).stackSize + newRecipe.getResult().stackSize) < inventory.getStackInSlot(3).getMaxStackSize()))) {
+            if (inventory.getStackInSlot(3) == null || (isSameItem && ((inventory.getStackInSlot(3).stackSize + newRecipe.getResult().stackSize) <= inventory.getStackInSlot(3).getMaxStackSize()))) {
                 recipe = newRecipe;
                 progress = 0;
                 working = true;

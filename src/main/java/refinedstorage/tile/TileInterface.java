@@ -11,6 +11,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
 import refinedstorage.container.ContainerInterface;
 import refinedstorage.inventory.InventorySimple;
+import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.util.InventoryUtils;
 
@@ -40,12 +41,22 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
         int upgrades = 0;
 
         for (int i = 0; i < upgradesInventory.getSizeInventory(); ++i) {
-            if (upgradesInventory.getStackInSlot(i) != null) {
+            if (upgradesInventory.getStackInSlot(i) != null && upgradesInventory.getStackInSlot(i).getMetadata() == ItemUpgrade.TYPE_SPEED) {
                 upgrades++;
             }
         }
 
         return 9 - (upgrades * 2);
+    }
+
+    public static boolean hasCrafting(InventorySimple upgradesInventory) {
+        for (int i = 0; i < upgradesInventory.getSizeInventory(); ++i) {
+            if (upgradesInventory.getStackInSlot(i) != null && upgradesInventory.getStackInSlot(i).getMetadata() == ItemUpgrade.TYPE_CRAFTING) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override
@@ -93,16 +104,18 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
 
                     int needed = got == null ? wanted.stackSize : wanted.stackSize - got.stackSize;
 
-                    ItemStack goingToTake = wanted.copy();
-                    goingToTake.stackSize = needed;
+                    if (needed > 0) {
+                        ItemStack goingToTake = wanted.copy();
+                        goingToTake.stackSize = needed;
 
-                    ItemStack took = controller.take(goingToTake, compare);
+                        ItemStack took = controller.take(goingToTake, compare);
 
-                    if (took != null) {
-                        if (got == null) {
-                            inventory.setInventorySlotContents(i + 9, took);
-                        } else {
-                            got.stackSize += took.stackSize;
+                        if (took != null) {
+                            if (got == null) {
+                                inventory.setInventorySlotContents(i + 9, took);
+                            } else {
+                                got.stackSize += took.stackSize;
+                            }
                         }
                     }
                 }

@@ -1,5 +1,6 @@
 package refinedstorage.tile.solderer;
 
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import refinedstorage.RefinedStorageItems;
@@ -30,7 +31,7 @@ public class SoldererRecipeUpgrade implements ISoldererRecipe {
             case ItemUpgrade.TYPE_RANGE:
                 return new ItemStack(Items.ender_pearl);
             case ItemUpgrade.TYPE_SPEED:
-                return new ItemStack(Items.redstone);
+                return new ItemStack(Blocks.redstone_block);
         }
 
         return null;

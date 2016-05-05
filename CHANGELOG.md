@@ -6,7 +6,7 @@ WIP
 **TODO**
 - Saving crafting task state
 - Cancelling crafting tasks
-- "Craft if needed" upgrade on exporter, constructor and interface
+- "Craft if needed" upgrade on constructor and interface
 - Textures
 - Update wiki
 
