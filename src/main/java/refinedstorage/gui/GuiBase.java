@@ -7,7 +7,6 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
-import net.minecraftforge.fml.client.config.GuiCheckBox;
 import org.lwjgl.opengl.GL11;
 import refinedstorage.RefinedStorage;
 import refinedstorage.gui.sidebutton.SideButton;
@@ -114,10 +113,6 @@ public abstract class GuiBase extends GuiContainer {
 
     public GuiButton addButton(int x, int y, int w, int h, String text) {
         return addButton(new GuiButton(lastButtonId++, x, y, w, h, text));
-    }
-
-    public GuiButton addCheckBox(int x, int y, String text) {
-        return addButton(new GuiCheckBox(lastButtonId++, x, y, text, false));
     }
 
     public GuiButton addButton(GuiButton button) {

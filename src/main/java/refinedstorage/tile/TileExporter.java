@@ -9,9 +9,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityHopper;
 import refinedstorage.container.ContainerExporter;
 import refinedstorage.inventory.InventorySimple;
+import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.autocrafting.CraftingPattern;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.util.InventoryUtils;
+import refinedstorage.util.UpgradeUtils;
 
 public class TileExporter extends TileMachine implements ICompareConfig {
     public static final String NBT_COMPARE = "Compare";
@@ -33,7 +35,7 @@ public class TileExporter extends TileMachine implements ICompareConfig {
         if (connectedTile instanceof IInventory) {
             IInventory connectedInventory = (IInventory) connectedTile;
 
-            if (ticks % TileInterface.getSpeed(upgradesInventory) == 0) {
+            if (ticks % UpgradeUtils.getSpeed(upgradesInventory) == 0) {
                 for (int i = 0; i < inventory.getSizeInventory(); ++i) {
                     ItemStack slot = inventory.getStackInSlot(i);
 
@@ -49,7 +51,7 @@ public class TileExporter extends TileMachine implements ICompareConfig {
                             if (remaining != null) {
                                 controller.push(remaining);
                             }
-                        } else if (TileInterface.hasCrafting(upgradesInventory)) {
+                        } else if (UpgradeUtils.hasUpgrade(upgradesInventory, ItemUpgrade.TYPE_CRAFTING)) {
                             CraftingPattern pattern = controller.getPattern(slot, compare);
 
                             if (pattern != null && !controller.hasCraftingTask(pattern, compare)) {

@@ -10,14 +10,16 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import refinedstorage.container.ContainerConstructor;
 import refinedstorage.inventory.InventorySimple;
+import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.autocrafting.CraftingPattern;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.util.InventoryUtils;
+import refinedstorage.util.UpgradeUtils;
 
 public class TileConstructor extends TileMachine implements ICompareConfig {
-    public static final int BASE_SPEED = 20;
-
     public static final String NBT_COMPARE = "Compare";
+
+    public static final int BASE_SPEED = 20;
 
     private InventorySimple inventory = new InventorySimple("constructor", 1, this);
     private InventorySimple upgradesInventory = new InventorySimple("upgrades", 4, this);
@@ -31,18 +33,18 @@ public class TileConstructor extends TileMachine implements ICompareConfig {
 
     @Override
     public void updateMachine() {
-        if (ticks % TileInterface.getSpeed(upgradesInventory, BASE_SPEED) == 0 && inventory.getStackInSlot(0) != null) {
+        if (ticks % UpgradeUtils.getSpeed(upgradesInventory, BASE_SPEED, 4) == 0 && inventory.getStackInSlot(0) != null) {
             BlockPos front = pos.offset(getDirection());
 
-            Block tryingToPlace = ((ItemBlock) inventory.getStackInSlot(0).getItem()).getBlock();
+            Block block = ((ItemBlock) inventory.getStackInSlot(0).getItem()).getBlock();
 
-            if (tryingToPlace.canPlaceBlockAt(worldObj, front)) {
+            if (block.canPlaceBlockAt(worldObj, front)) {
                 ItemStack took = controller.take(inventory.getStackInSlot(0).copy(), compare);
 
                 if (took != null) {
-                    worldObj.setBlockState(front, tryingToPlace.getStateFromMeta(took.getItemDamage()), 1 | 2);
-                } else if (TileInterface.hasCrafting(upgradesInventory)) {
-                    CraftingPattern pattern = controller.getPattern(inventory.getStackInSlot(0).copy(), compare);
+                    worldObj.setBlockState(front, block.getStateFromMeta(took.getItemDamage()), 1 | 2);
+                } else if (UpgradeUtils.hasUpgrade(upgradesInventory, ItemUpgrade.TYPE_CRAFTING)) {
+                    CraftingPattern pattern = controller.getPattern(inventory.getStackInSlot(0), compare);
 
                     if (pattern != null && !controller.hasCraftingTask(pattern, compare)) {
                         controller.addCraftingTask(pattern);

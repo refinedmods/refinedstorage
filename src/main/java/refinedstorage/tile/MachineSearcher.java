@@ -32,7 +32,7 @@ public class MachineSearcher {
             if (machine.getRedstoneMode().isEnabled(controller.getWorld(), tile.getPos())) {
                 machines.add(machine);
             } else if (machine instanceof TileRelay) {
-                // if the relay is disabled we can't search any further
+                // If the relay is disabled we can't search any further
                 return;
             }
         }

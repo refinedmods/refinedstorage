@@ -15,6 +15,7 @@ import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.IModeConfig;
 import refinedstorage.tile.config.ModeConfigUtils;
 import refinedstorage.util.InventoryUtils;
+import refinedstorage.util.UpgradeUtils;
 
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class TileDestructor extends TileMachine implements ICompareConfig, IMode
 
     @Override
     public void updateMachine() {
-        if (ticks % TileInterface.getSpeed(upgradesInventory, BASE_SPEED) == 0) {
+        if (ticks % UpgradeUtils.getSpeed(upgradesInventory, BASE_SPEED, 4) == 0) {
             BlockPos front = pos.offset(getDirection());
 
             IBlockState frontBlockState = worldObj.getBlockState(front);

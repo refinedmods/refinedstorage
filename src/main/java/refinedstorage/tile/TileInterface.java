@@ -15,6 +15,7 @@ import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.autocrafting.CraftingPattern;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.util.InventoryUtils;
+import refinedstorage.util.UpgradeUtils;
 
 public class TileInterface extends TileMachine implements ICompareConfig, ISidedInventory {
     public static final String NBT_COMPARE = "Compare";
@@ -38,32 +39,6 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
         return 4;
     }
 
-    public static int getSpeed(InventorySimple upgradesInventory) {
-        return getSpeed(upgradesInventory, 9);
-    }
-
-    public static int getSpeed(InventorySimple upgradesInventory, int baseSpeed) {
-        int upgrades = 0;
-
-        for (int i = 0; i < upgradesInventory.getSizeInventory(); ++i) {
-            if (upgradesInventory.getStackInSlot(i) != null && upgradesInventory.getStackInSlot(i).getMetadata() == ItemUpgrade.TYPE_SPEED) {
-                upgrades++;
-            }
-        }
-
-        return baseSpeed - (upgrades * 2);
-    }
-
-    public static boolean hasCrafting(InventorySimple upgradesInventory) {
-        for (int i = 0; i < upgradesInventory.getSizeInventory(); ++i) {
-            if (upgradesInventory.getStackInSlot(i) != null && upgradesInventory.getStackInSlot(i).getMetadata() == ItemUpgrade.TYPE_CRAFTING) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     @Override
     public void updateMachine() {
         if (currentSlot > 8) {
@@ -75,7 +50,7 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
         if (slot == null) {
             currentSlot++;
         } else {
-            if (ticks % getSpeed(upgradesInventory) == 0) {
+            if (ticks % UpgradeUtils.getSpeed(upgradesInventory) == 0) {
                 ItemStack toPush = slot.copy();
                 toPush.stackSize = 1;
 
@@ -123,10 +98,10 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
                             }
                         }
 
-                        if (hasCrafting(upgradesInventory)) {
+                        if (UpgradeUtils.hasUpgrade(upgradesInventory, ItemUpgrade.TYPE_CRAFTING)) {
                             CraftingPattern pattern = controller.getPattern(wanted, compare);
 
-                            if (pattern != null && took == null || took.stackSize != needed) {
+                            if (pattern != null && (took == null || took.stackSize != needed)) {
                                 int tasksToCreate = needed - controller.getCraftingTaskCount(pattern, compare);
 
                                 for (int j = 0; j < tasksToCreate; ++j) {
@@ -142,6 +117,18 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
                 }
             }
         }
+    }
+
+    @Override
+    public int getCompare() {
+        return compare;
+    }
+
+    @Override
+    public void setCompare(int compare) {
+        markDirty();
+
+        this.compare = compare;
     }
 
     @Override
@@ -292,17 +279,5 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
     @Override
     public IInventory getDroppedInventory() {
         return upgradesInventory;
-    }
-
-    @Override
-    public int getCompare() {
-        return compare;
-    }
-
-    @Override
-    public void setCompare(int compare) {
-        markDirty();
-
-        this.compare = compare;
     }
 }

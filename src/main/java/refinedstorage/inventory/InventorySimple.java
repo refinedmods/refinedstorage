@@ -106,11 +106,11 @@ public class InventorySimple implements IInventory {
     }
 
     @Override
-    public void openInventory(EntityPlayer playerIn) {
+    public void openInventory(EntityPlayer player) {
     }
 
     @Override
-    public void closeInventory(EntityPlayer playerIn) {
+    public void closeInventory(EntityPlayer player) {
     }
 
     @Override

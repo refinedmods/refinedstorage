@@ -12,6 +12,7 @@ import refinedstorage.inventory.InventorySimple;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.IModeConfig;
 import refinedstorage.util.InventoryUtils;
+import refinedstorage.util.UpgradeUtils;
 
 public class TileImporter extends TileMachine implements ICompareConfig, IModeConfig {
     public static final String NBT_COMPARE = "Compare";
@@ -51,7 +52,7 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
                 if (stack == null) {
                     currentSlot++;
                 } else {
-                    if (ticks % TileInterface.getSpeed(upgradesInventory) == 0) {
+                    if (ticks % UpgradeUtils.getSpeed(upgradesInventory) == 0) {
                         ItemStack toTake = stack.copy();
                         toTake.stackSize = 1;
 
@@ -61,7 +62,7 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
                                 sided.markDirty();
                             }
                         } else {
-                            // if we can't import and/or extract, move on (otherwise we stay on the same slot forever)
+                            // If we can't import and/or extract, move on (otherwise we stay on the same slot forever)
                             currentSlot++;
                         }
                     }
@@ -77,7 +78,7 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
             ItemStack stack = inventory.getStackInSlot(currentSlot);
 
             if (stack != null) {
-                if (ticks % TileInterface.getSpeed(upgradesInventory) == 0) {
+                if (ticks % UpgradeUtils.getSpeed(upgradesInventory) == 0) {
                     ItemStack toTake = stack.copy();
                     toTake.stackSize = 1;
 

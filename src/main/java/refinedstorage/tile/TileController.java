@@ -28,7 +28,8 @@ import refinedstorage.network.MessageWirelessGridItems;
 import refinedstorage.storage.IStorage;
 import refinedstorage.storage.IStorageProvider;
 import refinedstorage.storage.ItemGroup;
-import refinedstorage.tile.autocrafting.*;
+import refinedstorage.tile.autocrafting.CraftingPattern;
+import refinedstorage.tile.autocrafting.TileCrafter;
 import refinedstorage.tile.autocrafting.task.BasicCraftingTask;
 import refinedstorage.tile.autocrafting.task.ICraftingTask;
 import refinedstorage.tile.autocrafting.task.ProcessingCraftingTask;
@@ -362,38 +363,31 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     }
 
     public boolean push(ItemStack stack) {
-        IStorage foundStorage = null;
-
         for (IStorage storage : storages) {
             if (storage.canPush(stack)) {
-                foundStorage = storage;
+                storage.push(stack);
 
-                break;
-            }
-        }
+                syncItems();
 
-        if (foundStorage == null) {
-            return false;
-        }
-
-        foundStorage.push(stack);
-
-        syncItems();
-
-        // processing tasks accept 1-per
-        for (int i = 0; i < stack.stackSize; ++i) {
-            for (ICraftingTask task : craftingTasks) {
-                if (task instanceof ProcessingCraftingTask) {
-                    if (((ProcessingCraftingTask) task).onInserted(stack)) {
-                        break;
+                // Notify processing tasks that we got an item
+                // A processing task accepts itemstacks of 1 item, so give it like that
+                for (int i = 0; i < stack.stackSize; ++i) {
+                    for (ICraftingTask task : craftingTasks) {
+                        if (task instanceof ProcessingCraftingTask) {
+                            if (((ProcessingCraftingTask) task).onInserted(stack)) {
+                                break;
+                            }
+                        }
                     }
                 }
+
+                markDirty();
+
+                return true;
             }
         }
 
-        markDirty();
-
-        return true;
+        return false;
     }
 
     public ItemStack take(ItemStack stack) {
@@ -727,20 +721,19 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
             int quantityPerRequest = 0;
             CraftingPattern pattern = getPattern(requested);
 
-            for (ItemStack output : pattern.getOutputs()) {
-                if (InventoryUtils.compareStackNoQuantity(requested, output)) {
-                    quantityPerRequest = output.stackSize;
-                    break;
-                }
-            }
+            if (pattern != null) {
+                for (ItemStack output : pattern.getOutputs()) {
+                    if (InventoryUtils.compareStackNoQuantity(requested, output)) {
+                        quantityPerRequest = output.stackSize;
 
-            while (quantity > 0) {
-                if (pattern != null) {
+                        break;
+                    }
+                }
+
+                while (quantity > 0) {
                     addCraftingTask(pattern);
 
                     quantity -= quantityPerRequest;
-                } else {
-                    break;
                 }
             }
         }
