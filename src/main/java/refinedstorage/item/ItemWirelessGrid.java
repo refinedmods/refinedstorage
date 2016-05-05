@@ -133,7 +133,7 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
-        if (!world.isRemote && getDimensionId(stack) == player.dimension) {
+        if (!world.isRemote && hasValidNBT(stack) && getDimensionId(stack) == player.dimension) {
             TileEntity tile = world.getTileEntity(new BlockPos(getX(stack), getY(stack), getZ(stack)));
 
             if (tile instanceof TileController) {
@@ -191,6 +191,22 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
 
     @Override
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+        if (oldStack.getItem() == newStack.getItem()) {
+            if (hasValidNBT(oldStack) && hasValidNBT(newStack)) {
+                int x1 = getX(oldStack);
+                int y1 = getY(oldStack);
+                int z1 = getZ(oldStack);
+                int dim1 = getDimensionId(oldStack);
+                int x2 = getX(newStack);
+                int y2 = getY(newStack);
+                int z2 = getZ(newStack);
+                int dim2 = getDimensionId(newStack);
+
+                if (x1 == x2 && y1 == y2 && z1 == z2 && dim1 == dim2) {
+                    return false;
+                }
+            }
+        }
         return slotChanged;
     }
 

@@ -3,8 +3,6 @@ package refinedstorage.container.slot;
 import net.minecraft.item.ItemStack;
 import refinedstorage.RefinedStorageItems;
 
-import java.util.Arrays;
-
 public class UpgradeItemValidator implements IItemValidator {
     private int[] allowedUpgrades;
 
@@ -14,6 +12,14 @@ public class UpgradeItemValidator implements IItemValidator {
 
     @Override
     public boolean isValid(ItemStack stack) {
-        return stack.getItem() == RefinedStorageItems.UPGRADE && Arrays.asList(allowedUpgrades).contains(stack.getMetadata());
+        if (stack.getItem() == RefinedStorageItems.UPGRADE) {
+            for (int upgrade : allowedUpgrades) {
+                if (upgrade == stack.getMetadata()) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
