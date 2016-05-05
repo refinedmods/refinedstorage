@@ -10,7 +10,7 @@ public class GuiConstructor extends GuiBase {
     private TileConstructor constructor;
 
     public GuiConstructor(ContainerConstructor container, TileConstructor constructor) {
-        super(container, 176, 137);
+        super(container, 211, 137);
 
         this.constructor = constructor;
     }
