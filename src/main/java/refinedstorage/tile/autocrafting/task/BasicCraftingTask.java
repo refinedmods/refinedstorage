@@ -71,7 +71,7 @@ public class BasicCraftingTask implements ICraftingTask {
             ItemStack input = pattern.getInputs()[i];
 
             if (!satisfied[i] && !childTasks[i]) {
-                builder.append("- ").append(input.getUnlocalizedName()).append("\n");
+                builder.append("- ").append(input.getDisplayName()).append("\n");
 
                 missingItems++;
             }
