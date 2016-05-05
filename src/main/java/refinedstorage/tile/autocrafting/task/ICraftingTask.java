@@ -10,5 +10,7 @@ public interface ICraftingTask {
 
     void onDone(TileController controller);
 
+    void onCancelled(TileController controller);
+
     String getInfo();
 }

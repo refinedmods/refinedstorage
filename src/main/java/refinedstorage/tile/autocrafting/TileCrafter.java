@@ -9,6 +9,7 @@ import net.minecraft.util.text.ITextComponent;
 import refinedstorage.container.ContainerCrafter;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.tile.TileMachine;
+import refinedstorage.tile.autocrafting.task.ICraftingTask;
 import refinedstorage.util.InventoryUtils;
 
 public class TileCrafter extends TileMachine implements IInventory {
@@ -28,6 +29,17 @@ public class TileCrafter extends TileMachine implements IInventory {
     @Override
     public Class<? extends Container> getContainer() {
         return ContainerCrafter.class;
+    }
+
+    @Override
+    public void onDisconnected() {
+        for (ICraftingTask task : controller.getCraftingTasks()) {
+            if (task.getPattern().getCrafter() == this) {
+                controller.cancelCraftingTask(task);
+            }
+        }
+
+        super.onDisconnected();
     }
 
     @Override

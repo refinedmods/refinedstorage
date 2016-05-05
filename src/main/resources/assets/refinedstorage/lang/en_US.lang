@@ -24,7 +24,6 @@ gui.refinedstorage:crafting_monitor=Crafting Monitor
 gui.refinedstorage:crafting_monitor.missing_items=Missing items:
 gui.refinedstorage:crafting_monitor.items_crafting=Items crafting:
 gui.refinedstorage:crafting_monitor.items_processing=Items processing:
-gui.refinedstorage:crafting_monitor.missing_machine=Missing machine!
 gui.refinedstorage:wireless_transmitter=Wireless Transmitter
 gui.refinedstorage:wireless_transmitter.distance=%d blocks
 gui.refinedstorage:crafter=Crafter

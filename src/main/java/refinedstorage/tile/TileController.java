@@ -65,6 +65,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     private List<CraftingPattern> patterns = new ArrayList<CraftingPattern>();
     private List<ICraftingTask> craftingTasks = new ArrayList<ICraftingTask>();
     private List<ICraftingTask> craftingTasksToAdd = new ArrayList<ICraftingTask>();
+    private List<ICraftingTask> craftingTasksToCancel = new ArrayList<ICraftingTask>();
 
     private Set<String> visited = new HashSet<String>();
 
@@ -174,6 +175,13 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                 }
             }
 
+            for (ICraftingTask taskToCancel : craftingTasksToCancel) {
+                taskToCancel.onCancelled(this);
+            }
+
+            craftingTasks.removeAll(craftingTasksToCancel);
+            craftingTasksToCancel.clear();
+
             craftingTasks.addAll(craftingTasksToAdd);
             craftingTasksToAdd.clear();
 
@@ -267,6 +275,10 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
         } else {
             addCraftingTask(new BasicCraftingTask(pattern));
         }
+    }
+
+    public void cancelCraftingTask(ICraftingTask task) {
+        craftingTasksToCancel.add(task);
     }
 
     public int getCraftingTaskCount(CraftingPattern pattern, int flags) {

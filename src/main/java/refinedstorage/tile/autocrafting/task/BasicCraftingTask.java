@@ -5,14 +5,20 @@ import net.minecraft.util.text.TextFormatting;
 import refinedstorage.tile.TileController;
 import refinedstorage.tile.autocrafting.CraftingPattern;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BasicCraftingTask implements ICraftingTask {
     private CraftingPattern pattern;
     private boolean satisfied[];
+    private boolean checked[];
     private boolean childTasks[];
+    private List<ItemStack> itemsTook = new ArrayList<ItemStack>();
 
     public BasicCraftingTask(CraftingPattern pattern) {
         this.pattern = pattern;
         this.satisfied = new boolean[pattern.getInputs().length];
+        this.checked = new boolean[pattern.getInputs().length];
         this.childTasks = new boolean[pattern.getInputs().length];
     }
 
@@ -24,6 +30,8 @@ public class BasicCraftingTask implements ICraftingTask {
         boolean done = true;
 
         for (int i = 0; i < pattern.getInputs().length; ++i) {
+            checked[i] = true;
+
             ItemStack input = pattern.getInputs()[i];
 
             if (!satisfied[i]) {
@@ -32,6 +40,8 @@ public class BasicCraftingTask implements ICraftingTask {
                 ItemStack took = controller.take(input.copy());
 
                 if (took != null) {
+                    itemsTook.add(took);
+
                     satisfied[i] = true;
                 } else if (!childTasks[i]) {
                     CraftingPattern pattern = controller.getPattern(input);
@@ -60,6 +70,13 @@ public class BasicCraftingTask implements ICraftingTask {
     }
 
     @Override
+    public void onCancelled(TileController controller) {
+        for (ItemStack took : itemsTook) {
+            controller.push(took);
+        }
+    }
+
+    @Override
     public String getInfo() {
         StringBuilder builder = new StringBuilder();
 
@@ -70,7 +87,7 @@ public class BasicCraftingTask implements ICraftingTask {
         for (int i = 0; i < pattern.getInputs().length; ++i) {
             ItemStack input = pattern.getInputs()[i];
 
-            if (!satisfied[i] && !childTasks[i]) {
+            if (checked[i] && !satisfied[i] && !childTasks[i]) {
                 builder.append("- ").append(input.getDisplayName()).append("\n");
 
                 missingItems++;
@@ -88,7 +105,7 @@ public class BasicCraftingTask implements ICraftingTask {
         for (int i = 0; i < pattern.getInputs().length; ++i) {
             ItemStack input = pattern.getInputs()[i];
 
-            if (childTasks[i]) {
+            if (!satisfied[i] && childTasks[i]) {
                 builder.append("- ").append(input.getDisplayName()).append("\n");
 
                 itemsCrafting++;

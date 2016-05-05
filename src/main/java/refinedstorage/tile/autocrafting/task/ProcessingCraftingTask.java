@@ -15,7 +15,6 @@ public class ProcessingCraftingTask implements ICraftingTask {
     private boolean inserted[];
     private boolean missing[];
     private boolean satisfied[];
-    private boolean missingMachine;
 
     public ProcessingCraftingTask(CraftingPattern pattern) {
         this.pattern = pattern;
@@ -35,8 +34,6 @@ public class ProcessingCraftingTask implements ICraftingTask {
         TileEntity crafterFacing = crafter.getWorld().getTileEntity(crafter.getPos().offset(crafter.getDirection()));
 
         if (crafterFacing instanceof IInventory) {
-            missingMachine = false;
-
             for (int i = 0; i < inserted.length; ++i) {
                 if (!inserted[i]) {
                     ItemStack input = pattern.getInputs()[i];
@@ -50,7 +47,7 @@ public class ProcessingCraftingTask implements ICraftingTask {
                         if (remaining == null) {
                             inserted[i] = true;
                         } else {
-                            controller.push(input);
+                            controller.push(took);
                         }
                     } else {
                         missing[i] = true;
@@ -58,7 +55,7 @@ public class ProcessingCraftingTask implements ICraftingTask {
                 }
             }
         } else {
-            missingMachine = true;
+            return true;
         }
 
         for (int i = 0; i < satisfied.length; ++i) {
@@ -78,6 +75,7 @@ public class ProcessingCraftingTask implements ICraftingTask {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -87,12 +85,13 @@ public class ProcessingCraftingTask implements ICraftingTask {
     }
 
     @Override
+    public void onCancelled(TileController controller) {
+        // NO OP
+    }
+
+    @Override
     public String getInfo() {
         StringBuilder builder = new StringBuilder();
-
-        if (missingMachine) {
-            builder.append(TextFormatting.RED).append("{missing_machine}").append(TextFormatting.RESET).append("\n");
-        }
 
         builder.append(TextFormatting.YELLOW).append("{missing_items}").append(TextFormatting.RESET).append("\n");
 
