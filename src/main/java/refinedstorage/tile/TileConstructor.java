@@ -15,7 +15,7 @@ import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.util.InventoryUtils;
 
 public class TileConstructor extends TileMachine implements ICompareConfig {
-    public static final int SPEED = 10;
+    public static final int BASE_SPEED = 20;
 
     public static final String NBT_COMPARE = "Compare";
 
@@ -31,7 +31,7 @@ public class TileConstructor extends TileMachine implements ICompareConfig {
 
     @Override
     public void updateMachine() {
-        if (ticks % TileInterface.getSpeed(upgradesInventory) == 0 && inventory.getStackInSlot(0) != null) {
+        if (ticks % TileInterface.getSpeed(upgradesInventory, BASE_SPEED) == 0 && inventory.getStackInSlot(0) != null) {
             BlockPos front = pos.offset(getDirection());
 
             Block tryingToPlace = ((ItemBlock) inventory.getStackInSlot(0).getItem()).getBlock();
@@ -42,10 +42,10 @@ public class TileConstructor extends TileMachine implements ICompareConfig {
                 if (took != null) {
                     worldObj.setBlockState(front, tryingToPlace.getStateFromMeta(took.getItemDamage()), 1 | 2);
                 } else if (TileInterface.hasCrafting(upgradesInventory)) {
-                    CraftingPattern pattern = controller.getPatternForItem(inventory.getStackInSlot(0).copy(), compare);
+                    CraftingPattern pattern = controller.getPattern(inventory.getStackInSlot(0).copy(), compare);
 
-                    if (pattern != null && !controller.hasCraftingTaskWithPattern(pattern, compare)) {
-                        controller.addCraftingTaskForPattern(pattern);
+                    if (pattern != null && !controller.hasCraftingTask(pattern, compare)) {
+                        controller.addCraftingTask(pattern);
                     }
                 }
             }

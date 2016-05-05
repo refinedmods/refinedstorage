@@ -11,7 +11,7 @@ public class GuiDestructor extends GuiBase {
     private TileDestructor destructor;
 
     public GuiDestructor(ContainerDestructor container, TileDestructor destructor) {
-        super(container, 176, 137);
+        super(container, 211, 137);
 
         this.destructor = destructor;
     }

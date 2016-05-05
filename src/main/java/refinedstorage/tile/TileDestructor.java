@@ -22,9 +22,10 @@ public class TileDestructor extends TileMachine implements ICompareConfig, IMode
     public static final String NBT_COMPARE = "Compare";
     public static final String NBT_MODE = "Mode";
 
-    public static final int SPEED = 10;
+    public static final int BASE_SPEED = 20;
 
     private InventorySimple inventory = new InventorySimple("destructor", 9, this);
+    private InventorySimple upgradesInventory = new InventorySimple("upgrades", 4, this);
 
     private int compare = 0;
     private int mode = 0;
@@ -36,7 +37,7 @@ public class TileDestructor extends TileMachine implements ICompareConfig, IMode
 
     @Override
     public void updateMachine() {
-        if (ticks % SPEED == 0) {
+        if (ticks % TileInterface.getSpeed(upgradesInventory, BASE_SPEED) == 0) {
             BlockPos front = pos.offset(getDirection());
 
             IBlockState frontBlockState = worldObj.getBlockState(front);
@@ -108,6 +109,7 @@ public class TileDestructor extends TileMachine implements ICompareConfig, IMode
         }
 
         InventoryUtils.restoreInventory(inventory, 0, nbt);
+        InventoryUtils.restoreInventory(upgradesInventory, 1, nbt);
     }
 
     @Override
@@ -118,6 +120,7 @@ public class TileDestructor extends TileMachine implements ICompareConfig, IMode
         nbt.setInteger(NBT_MODE, mode);
 
         InventoryUtils.saveInventory(inventory, 0, nbt);
+        InventoryUtils.saveInventory(upgradesInventory, 1, nbt);
     }
 
     @Override
@@ -138,6 +141,10 @@ public class TileDestructor extends TileMachine implements ICompareConfig, IMode
 
     public Class<? extends Container> getContainer() {
         return ContainerDestructor.class;
+    }
+
+    public InventorySimple getUpgradesInventory() {
+        return upgradesInventory;
     }
 
     public IInventory getInventory() {

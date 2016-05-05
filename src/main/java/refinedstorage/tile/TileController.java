@@ -260,7 +260,15 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
         craftingTasksToAdd.add(task);
     }
 
-    public int getAmountOfCraftingTasksWithPattern(CraftingPattern pattern, int flags) {
+    public void addCraftingTask(CraftingPattern pattern) {
+        if (pattern.isProcessing()) {
+            addCraftingTask(new ProcessingCraftingTask(pattern));
+        } else {
+            addCraftingTask(new BasicCraftingTask(pattern));
+        }
+    }
+
+    public int getCraftingTaskCount(CraftingPattern pattern, int flags) {
         int amount = 0;
 
         for (int i = 0; i < craftingTasks.size(); ++i) {
@@ -272,31 +280,23 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
         return amount;
     }
 
-    public boolean hasCraftingTaskWithPattern(CraftingPattern pattern, int flags) {
-        return getAmountOfCraftingTasksWithPattern(pattern, flags) > 0;
-    }
-
-    public void addCraftingTaskForPattern(CraftingPattern pattern) {
-        if (pattern.isProcessing()) {
-            addCraftingTask(new ProcessingCraftingTask(pattern));
-        } else {
-            addCraftingTask(new BasicCraftingTask(pattern));
-        }
+    public boolean hasCraftingTask(CraftingPattern pattern, int flags) {
+        return getCraftingTaskCount(pattern, flags) > 0;
     }
 
     public List<CraftingPattern> getPatterns() {
         return patterns;
     }
 
-    public CraftingPattern getPatternForItem(ItemStack stack) {
-        return getPatternForItem(stack, InventoryUtils.COMPARE_DAMAGE | InventoryUtils.COMPARE_NBT);
+    public CraftingPattern getPattern(ItemStack pattern) {
+        return getPattern(pattern, InventoryUtils.COMPARE_DAMAGE | InventoryUtils.COMPARE_NBT);
     }
 
-    public CraftingPattern getPatternForItem(ItemStack stack, int flags) {
-        for (CraftingPattern pattern : getPatterns()) {
-            for (ItemStack output : pattern.getOutputs()) {
-                if (InventoryUtils.compareStack(output, stack, flags)) {
-                    return pattern;
+    public CraftingPattern getPattern(ItemStack pattern, int flags) {
+        for (CraftingPattern craftingPattern : getPatterns()) {
+            for (ItemStack output : craftingPattern.getOutputs()) {
+                if (InventoryUtils.compareStack(output, pattern, flags)) {
+                    return craftingPattern;
                 }
             }
         }
@@ -725,7 +725,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
         if (id >= 0 && id < itemGroups.size() && quantity > 0) {
             ItemStack requested = itemGroups.get(id).toItemStack();
             int quantityPerRequest = 0;
-            CraftingPattern pattern = getPatternForItem(requested);
+            CraftingPattern pattern = getPattern(requested);
 
             for (ItemStack output : pattern.getOutputs()) {
                 if (InventoryUtils.compareStackNoQuantity(requested, output)) {
@@ -736,7 +736,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
             while (quantity > 0) {
                 if (pattern != null) {
-                    addCraftingTaskForPattern(pattern);
+                    addCraftingTask(pattern);
 
                     quantity -= quantityPerRequest;
                 } else {

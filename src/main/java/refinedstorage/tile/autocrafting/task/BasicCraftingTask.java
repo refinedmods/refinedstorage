@@ -33,10 +33,10 @@ public class BasicCraftingTask implements ICraftingTask {
                 if (took != null) {
                     satisfied[i] = true;
                 } else if (!childTasks[i]) {
-                    CraftingPattern pattern = controller.getPatternForItem(input);
+                    CraftingPattern pattern = controller.getPattern(input);
 
                     if (pattern != null) {
-                        controller.addCraftingTaskForPattern(pattern);
+                        controller.addCraftingTask(pattern);
 
                         childTasks[i] = true;
 

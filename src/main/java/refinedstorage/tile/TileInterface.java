@@ -39,6 +39,10 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
     }
 
     public static int getSpeed(InventorySimple upgradesInventory) {
+        return getSpeed(upgradesInventory, 9);
+    }
+
+    public static int getSpeed(InventorySimple upgradesInventory, int baseSpeed) {
         int upgrades = 0;
 
         for (int i = 0; i < upgradesInventory.getSizeInventory(); ++i) {
@@ -47,7 +51,7 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
             }
         }
 
-        return 9 - (upgrades * 2);
+        return baseSpeed - (upgrades * 2);
     }
 
     public static boolean hasCrafting(InventorySimple upgradesInventory) {
@@ -86,7 +90,7 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
             ItemStack got = inventory.getStackInSlot(i + 9);
 
             if (wanted != null) {
-                boolean ok = false;
+                boolean mayTake = false;
 
                 if (got != null) {
                     if (!InventoryUtils.compareStack(wanted, got, compare)) {
@@ -94,13 +98,13 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
                             inventory.setInventorySlotContents(i + 9, null);
                         }
                     } else {
-                        ok = true;
+                        mayTake = true;
                     }
                 } else {
-                    ok = true;
+                    mayTake = true;
                 }
 
-                if (ok) {
+                if (mayTake) {
                     got = inventory.getStackInSlot(i + 9);
 
                     int needed = got == null ? wanted.stackSize : wanted.stackSize - got.stackSize;
@@ -120,13 +124,13 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
                         }
 
                         if (hasCrafting(upgradesInventory)) {
-                            CraftingPattern pattern = controller.getPatternForItem(wanted, compare);
+                            CraftingPattern pattern = controller.getPattern(wanted, compare);
 
                             if (pattern != null && took == null || took.stackSize != needed) {
-                                int tasksToCreate = needed - controller.getAmountOfCraftingTasksWithPattern(pattern, compare);
+                                int tasksToCreate = needed - controller.getCraftingTaskCount(pattern, compare);
 
                                 for (int j = 0; j < tasksToCreate; ++j) {
-                                    controller.addCraftingTaskForPattern(pattern);
+                                    controller.addCraftingTask(pattern);
                                 }
                             }
                         }

@@ -50,10 +50,10 @@ public class TileExporter extends TileMachine implements ICompareConfig {
                                 controller.push(remaining);
                             }
                         } else if (TileInterface.hasCrafting(upgradesInventory)) {
-                            CraftingPattern pattern = controller.getPatternForItem(slot, compare);
+                            CraftingPattern pattern = controller.getPattern(slot, compare);
 
-                            if (pattern != null && !controller.hasCraftingTaskWithPattern(pattern, compare)) {
-                                controller.addCraftingTaskForPattern(pattern);
+                            if (pattern != null && !controller.hasCraftingTask(pattern, compare)) {
+                                controller.addCraftingTask(pattern);
                             }
                         }
                     }
