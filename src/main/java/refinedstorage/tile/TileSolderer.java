@@ -11,9 +11,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
 import refinedstorage.container.ContainerSolderer;
 import refinedstorage.inventory.InventorySimple;
+import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.solderer.ISoldererRecipe;
 import refinedstorage.tile.solderer.SoldererRegistry;
 import refinedstorage.util.InventoryUtils;
+import refinedstorage.util.UpgradeUtils;
 
 public class TileSolderer extends TileMachine implements IInventory, ISidedInventory {
     public static final String NBT_WORKING = "Working";
@@ -57,7 +59,7 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
                 markDirty();
             }
         } else if (working) {
-            progress += getSpeed();
+            progress += 1 + UpgradeUtils.getUpgradeCount(upgradesInventory, ItemUpgrade.TYPE_SPEED);
 
             if (progress >= recipe.getDuration()) {
                 if (inventory.getStackInSlot(3) != null) {
@@ -75,18 +77,6 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
                 reset();
             }
         }
-    }
-
-    public int getSpeed() {
-        int speed = 1;
-
-        for (int i = 0; i < upgradesInventory.getSizeInventory(); ++i) {
-            if (upgradesInventory.getStackInSlot(i) != null) {
-                speed += 1;
-            }
-        }
-
-        return speed;
     }
 
     @Override
