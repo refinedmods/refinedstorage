@@ -1,5 +1,6 @@
 package refinedstorage.gui;
 
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
@@ -19,6 +20,8 @@ public class GuiCraftingMonitor extends GuiBase {
 
     private TileCraftingMonitor craftingMonitor;
 
+    private GuiButton cancelButton;
+
     private int itemSelected = -1;
     private int itemSelectedX;
     private int itemSelectedY;
@@ -26,7 +29,7 @@ public class GuiCraftingMonitor extends GuiBase {
     private Scrollbar scrollbar = new Scrollbar(157, 20, 12, 89);
 
     public GuiCraftingMonitor(ContainerCraftingMonitor container, TileCraftingMonitor craftingMonitor) {
-        super(container, 176, 211);
+        super(container, 176, 230);
 
         this.craftingMonitor = craftingMonitor;
     }
@@ -34,6 +37,8 @@ public class GuiCraftingMonitor extends GuiBase {
     @Override
     public void init(int x, int y) {
         addSideButton(new SideButtonRedstoneMode(craftingMonitor));
+
+        cancelButton = addButton(x + 7, y + 113, 50, 20, "Cancel");
     }
 
     @Override
@@ -44,6 +49,8 @@ public class GuiCraftingMonitor extends GuiBase {
         if (itemSelected >= craftingMonitor.getTasks().size()) {
             itemSelected = -1;
         }
+
+        cancelButton.enabled = itemSelected != -1;
     }
 
     @Override
@@ -69,7 +76,7 @@ public class GuiCraftingMonitor extends GuiBase {
         scrollbar.update(this, mouseX, mouseY);
 
         drawString(7, 7, t("gui.refinedstorage:crafting_monitor"));
-        drawString(7, 116, t("container.inventory"));
+        drawString(7, 137, t("container.inventory"));
 
         int ox = 11;
         int x = ox;
@@ -141,9 +148,9 @@ public class GuiCraftingMonitor extends GuiBase {
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         super.mouseClicked(mouseX, mouseY, mouseButton);
 
-        itemSelected = -1;
+        if (mouseButton == 0 && inBounds(8, 20, 144, 90, mouseX - guiLeft, mouseY - guiTop)) {
+            itemSelected = -1;
 
-        if (mouseButton == 0) {
             int i = 0;
 
             for (int y = 0; y < 3; ++y) {

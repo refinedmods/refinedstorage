@@ -6,6 +6,6 @@ public class ContainerCraftingMonitor extends ContainerBase {
     public ContainerCraftingMonitor(EntityPlayer player) {
         super(player);
 
-        addPlayerInventory(8, 129);
+        addPlayerInventory(8, 148);
     }
 }
