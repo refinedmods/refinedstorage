@@ -23,6 +23,7 @@ public class GuiCraftingMonitor extends GuiBase {
     private TileCraftingMonitor craftingMonitor;
 
     private GuiButton cancelButton;
+    private GuiButton cancelAllButton;
 
     private int itemSelected = -1;
     private int itemSelectedX;
@@ -41,6 +42,7 @@ public class GuiCraftingMonitor extends GuiBase {
         addSideButton(new SideButtonRedstoneMode(craftingMonitor));
 
         cancelButton = addButton(x + 7, y + 113, 50, 20, t("misc.refinedstorage:cancel"));
+        cancelAllButton = addButton(x + 7 + 50 + 4, y + 113, 60, 20, t("misc.refinedstorage:cancel_all"));
     }
 
     @Override
@@ -53,6 +55,7 @@ public class GuiCraftingMonitor extends GuiBase {
         }
 
         cancelButton.enabled = itemSelected != -1;
+        cancelAllButton.enabled = craftingMonitor.getTasks().size() > 0;
     }
 
     @Override
@@ -152,6 +155,8 @@ public class GuiCraftingMonitor extends GuiBase {
 
         if (button == cancelButton && itemSelected != -1) {
             RefinedStorage.NETWORK.sendToServer(new MessageCraftingMonitorCancel(craftingMonitor, itemSelected));
+        } else if (button == cancelAllButton && craftingMonitor.getTasks().size() > 0) {
+            RefinedStorage.NETWORK.sendToServer(new MessageCraftingMonitorCancel(craftingMonitor, -1));
         }
     }
 
