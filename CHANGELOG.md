@@ -5,7 +5,7 @@ WIP
 
 **TODO**
 - Saving crafting task state
-- Cancelling crafting tasks
+- Cancelling all crafting tasks
 - Textures
 - Update wiki
 

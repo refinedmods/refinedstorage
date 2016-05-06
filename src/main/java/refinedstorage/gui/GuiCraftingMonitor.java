@@ -162,7 +162,7 @@ public class GuiCraftingMonitor extends GuiBase {
         if (mouseButton == 0 && inBounds(8, 20, 144, 90, mouseX - guiLeft, mouseY - guiTop)) {
             itemSelected = -1;
 
-            int i = 0;
+            int i = getOffset();
 
             for (int y = 0; y < 3; ++y) {
                 for (int x = 0; x < 2; ++x) {
