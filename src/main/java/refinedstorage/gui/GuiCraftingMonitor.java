@@ -84,7 +84,7 @@ public class GuiCraftingMonitor extends GuiBase {
         int x = ox;
         int y = 26;
 
-        int slot = getOffset() * 2;
+        int item = getOffset() * 2;
 
         RenderHelper.enableGUIStandardItemLighting();
 
@@ -93,8 +93,8 @@ public class GuiCraftingMonitor extends GuiBase {
         List<String> infoLines = null;
 
         for (int i = 0; i < 6; ++i) {
-            if (slot < tasks.size() && slot < craftingMonitor.getInfo().length) {
-                ItemStack task = tasks.get(slot);
+            if (item < tasks.size() && item < craftingMonitor.getInfo().length) {
+                ItemStack task = tasks.get(item);
 
                 drawItem(x, y + 5, task);
 
@@ -107,7 +107,7 @@ public class GuiCraftingMonitor extends GuiBase {
                 GlStateManager.popMatrix();
 
                 if (inBounds(x, y + 5, 16, 16, mouseX, mouseY)) {
-                    infoLines = Arrays.asList(craftingMonitor.getInfo()[slot].split("\n"));
+                    infoLines = Arrays.asList(craftingMonitor.getInfo()[item].split("\n"));
 
                     for (int j = 0; j < infoLines.size(); ++j) {
                         String line = infoLines.get(j);
@@ -128,7 +128,7 @@ public class GuiCraftingMonitor extends GuiBase {
                 x += 75;
             }
 
-            slot++;
+            item++;
         }
 
         if (infoLines != null) {
@@ -162,20 +162,20 @@ public class GuiCraftingMonitor extends GuiBase {
         if (mouseButton == 0 && inBounds(8, 20, 144, 90, mouseX - guiLeft, mouseY - guiTop)) {
             itemSelected = -1;
 
-            int i = getOffset();
+            int item = getOffset() * 2;
 
             for (int y = 0; y < 3; ++y) {
                 for (int x = 0; x < 2; ++x) {
                     int ix = 8 + (x * ITEM_WIDTH);
                     int iy = 20 + (y * ITEM_HEIGHT);
 
-                    if (inBounds(ix, iy, ITEM_WIDTH, ITEM_HEIGHT, mouseX - guiLeft, mouseY - guiTop) && i < craftingMonitor.getTasks().size()) {
-                        itemSelected = i;
+                    if (inBounds(ix, iy, ITEM_WIDTH, ITEM_HEIGHT, mouseX - guiLeft, mouseY - guiTop) && item < craftingMonitor.getTasks().size()) {
+                        itemSelected = item;
                         itemSelectedX = ix;
                         itemSelectedY = iy;
                     }
 
-                    i++;
+                    item++;
                 }
             }
         }
