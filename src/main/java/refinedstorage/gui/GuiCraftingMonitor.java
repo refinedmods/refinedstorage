@@ -8,12 +8,20 @@ import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.tile.autocrafting.TileCraftingMonitor;
 import scala.actors.threadpool.Arrays;
 
+import java.io.IOException;
 import java.util.List;
 
 public class GuiCraftingMonitor extends GuiBase {
     public static final int VISIBLE_ROWS = 3;
 
+    public static final int ITEM_WIDTH = 72;
+    public static final int ITEM_HEIGHT = 30;
+
     private TileCraftingMonitor craftingMonitor;
+
+    private int itemSelected = -1;
+    private int itemSelectedX;
+    private int itemSelectedY;
 
     private Scrollbar scrollbar = new Scrollbar(157, 20, 12, 89);
 
@@ -32,6 +40,10 @@ public class GuiCraftingMonitor extends GuiBase {
     public void update(int x, int y) {
         scrollbar.setCanScroll(getRows() > VISIBLE_ROWS);
         scrollbar.setScrollDelta((float) scrollbar.getScrollbarHeight() / (float) getRows());
+
+        if (itemSelected >= craftingMonitor.getTasks().size()) {
+            itemSelected = -1;
+        }
     }
 
     @Override
@@ -39,6 +51,10 @@ public class GuiCraftingMonitor extends GuiBase {
         bindTexture("gui/crafting_monitor.png");
 
         drawTexture(x, y, 0, 0, width, height);
+
+        if (itemSelected != -1) {
+            drawTexture(x + itemSelectedX, y + itemSelectedY, 178, 0, ITEM_WIDTH, ITEM_HEIGHT);
+        }
 
         scrollbar.draw(this);
     }
@@ -119,5 +135,31 @@ public class GuiCraftingMonitor extends GuiBase {
         int max = (int) Math.ceil((float) craftingMonitor.getTasks().size() / (float) 2);
 
         return max < 0 ? 0 : max;
+    }
+
+    @Override
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+        super.mouseClicked(mouseX, mouseY, mouseButton);
+
+        itemSelected = -1;
+
+        if (mouseButton == 0) {
+            int i = 0;
+
+            for (int y = 0; y < 3; ++y) {
+                for (int x = 0; x < 2; ++x) {
+                    int ix = 8 + (x * ITEM_WIDTH);
+                    int iy = 20 + (y * ITEM_HEIGHT);
+
+                    if (inBounds(ix, iy, ITEM_WIDTH, ITEM_HEIGHT, mouseX - guiLeft, mouseY - guiTop) && i < craftingMonitor.getTasks().size()) {
+                        itemSelected = i;
+                        itemSelectedX = ix;
+                        itemSelectedY = iy;
+                    }
+
+                    i++;
+                }
+            }
+        }
     }
 }
