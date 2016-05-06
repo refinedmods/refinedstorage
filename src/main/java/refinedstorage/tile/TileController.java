@@ -750,4 +750,10 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
             }
         }
     }
+
+    public void onCraftingTaskCancelRequested(int id) {
+        if (id >= 0 && id < craftingTasks.size()) {
+            cancelCraftingTask(craftingTasks.get(id));
+        }
+    }
 }

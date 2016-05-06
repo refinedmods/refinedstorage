@@ -51,6 +51,7 @@ misc.refinedstorage:no=Nee
 misc.refinedstorage:start=Start
 misc.refinedstorage:clear=Legen
 misc.refinedstorage:none=Geen
+misc.refinedstorage:cancel=Annuleer
 misc.refinedstorage:priority=Prioriteit
 misc.refinedstorage:processing=Verwerking
 

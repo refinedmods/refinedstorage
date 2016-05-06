@@ -51,6 +51,7 @@ misc.refinedstorage:no=No
 misc.refinedstorage:start=Start
 misc.refinedstorage:clear=Clear
 misc.refinedstorage:none=None
+misc.refinedstorage:cancel=Cancel
 misc.refinedstorage:priority=Priority
 misc.refinedstorage:processing=Processing
 

@@ -4,8 +4,10 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
+import refinedstorage.RefinedStorage;
 import refinedstorage.container.ContainerCraftingMonitor;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
+import refinedstorage.network.MessageCraftingMonitorCancel;
 import refinedstorage.tile.autocrafting.TileCraftingMonitor;
 import scala.actors.threadpool.Arrays;
 
@@ -38,7 +40,7 @@ public class GuiCraftingMonitor extends GuiBase {
     public void init(int x, int y) {
         addSideButton(new SideButtonRedstoneMode(craftingMonitor));
 
-        cancelButton = addButton(x + 7, y + 113, 50, 20, "Cancel");
+        cancelButton = addButton(x + 7, y + 113, 50, 20, t("misc.refinedstorage:cancel"));
     }
 
     @Override
@@ -142,6 +144,15 @@ public class GuiCraftingMonitor extends GuiBase {
         int max = (int) Math.ceil((float) craftingMonitor.getTasks().size() / (float) 2);
 
         return max < 0 ? 0 : max;
+    }
+
+    @Override
+    protected void actionPerformed(GuiButton button) throws IOException {
+        super.actionPerformed(button);
+
+        if (button == cancelButton && itemSelected != -1) {
+            RefinedStorage.NETWORK.sendToServer(new MessageCraftingMonitorCancel(craftingMonitor, itemSelected));
+        }
     }
 
     @Override

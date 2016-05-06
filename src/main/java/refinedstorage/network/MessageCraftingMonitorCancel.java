@@ -1,0 +1,54 @@
+package refinedstorage.network;
+
+import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import refinedstorage.tile.autocrafting.TileCraftingMonitor;
+
+public class MessageCraftingMonitorCancel extends MessageHandlerPlayerToServer<MessageCraftingMonitorCancel> implements IMessage {
+    private int x;
+    private int y;
+    private int z;
+    private int id;
+
+    public MessageCraftingMonitorCancel() {
+    }
+
+    public MessageCraftingMonitorCancel(TileCraftingMonitor craftingMonitor, int id) {
+        this.x = craftingMonitor.getPos().getX();
+        this.y = craftingMonitor.getPos().getY();
+        this.z = craftingMonitor.getPos().getZ();
+        this.id = id;
+    }
+
+    @Override
+    public void fromBytes(ByteBuf buf) {
+        x = buf.readInt();
+        y = buf.readInt();
+        z = buf.readInt();
+        id = buf.readInt();
+    }
+
+    @Override
+    public void toBytes(ByteBuf buf) {
+        buf.writeInt(x);
+        buf.writeInt(y);
+        buf.writeInt(z);
+        buf.writeInt(id);
+    }
+
+    @Override
+    public void handle(MessageCraftingMonitorCancel message, EntityPlayerMP player) {
+        TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.x, message.y, message.z));
+
+        if (tile instanceof TileCraftingMonitor) {
+            TileCraftingMonitor craftingMonitor = (TileCraftingMonitor) tile;
+
+            if (craftingMonitor.isConnected()) {
+                craftingMonitor.getController().onCraftingTaskCancelRequested(message.id);
+            }
+        }
+    }
+}
