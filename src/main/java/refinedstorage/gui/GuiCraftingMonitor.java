@@ -26,8 +26,8 @@ public class GuiCraftingMonitor extends GuiBase {
     private GuiButton cancelAllButton;
 
     private int itemSelected = -1;
-    private int itemSelectedX;
-    private int itemSelectedY;
+    private boolean renderItemSelection;
+    private int itemSelectedX, itemSelectedY;
 
     private Scrollbar scrollbar = new Scrollbar(157, 20, 12, 89);
 
@@ -42,7 +42,7 @@ public class GuiCraftingMonitor extends GuiBase {
         addSideButton(new SideButtonRedstoneMode(craftingMonitor));
 
         cancelButton = addButton(x + 7, y + 113, 50, 20, t("misc.refinedstorage:cancel"));
-        cancelAllButton = addButton(x + 7 + 50 + 4, y + 113, 60, 20, t("misc.refinedstorage:cancel_all"));
+        cancelAllButton = addButton(x + 7 + 50 + 4, y + 113, 12 + fontRendererObj.getStringWidth(t("misc.refinedstorage:cancel_all")), 20, t("misc.refinedstorage:cancel_all"));
     }
 
     @Override
@@ -64,7 +64,7 @@ public class GuiCraftingMonitor extends GuiBase {
 
         drawTexture(x, y, 0, 0, width, height);
 
-        if (itemSelected != -1) {
+        if (renderItemSelection) {
             drawTexture(x + itemSelectedX, y + itemSelectedY, 178, 0, ITEM_WIDTH, ITEM_HEIGHT);
         }
 
@@ -83,9 +83,8 @@ public class GuiCraftingMonitor extends GuiBase {
         drawString(7, 7, t("gui.refinedstorage:crafting_monitor"));
         drawString(7, 137, t("container.inventory"));
 
-        int ox = 11;
-        int x = ox;
-        int y = 26;
+        int x = 8;
+        int y = 20;
 
         int item = getOffset() * 2;
 
@@ -95,21 +94,29 @@ public class GuiCraftingMonitor extends GuiBase {
 
         List<String> infoLines = null;
 
+        renderItemSelection = false;
+
         for (int i = 0; i < 6; ++i) {
             if (item < tasks.size() && item < craftingMonitor.getInfo().length) {
+                if (item == itemSelected) {
+                    renderItemSelection = true;
+                    itemSelectedX = x;
+                    itemSelectedY = y;
+                }
+
                 ItemStack task = tasks.get(item);
 
-                drawItem(x, y + 5, task);
+                drawItem(x + 4, y + 11, task);
 
                 GlStateManager.pushMatrix();
 
                 float scale = 0.5f;
                 GlStateManager.scale(scale, scale, 1);
-                drawString(calculateOffsetOnScale(x + 1, scale), calculateOffsetOnScale(y - 3, scale), task.getDisplayName());
+                drawString(calculateOffsetOnScale(x + 5, scale), calculateOffsetOnScale(y + 4, scale), task.getDisplayName());
 
                 GlStateManager.popMatrix();
 
-                if (inBounds(x, y + 5, 16, 16, mouseX, mouseY)) {
+                if (inBounds(x + 5, y + 10, 16, 16, mouseX, mouseY)) {
                     infoLines = Arrays.asList(craftingMonitor.getInfo()[item].split("\n"));
 
                     for (int j = 0; j < infoLines.size(); ++j) {
@@ -125,10 +132,10 @@ public class GuiCraftingMonitor extends GuiBase {
             }
 
             if (i == 1 || i == 3) {
-                x = ox;
-                y += 30;
+                x = 8;
+                y += ITEM_HEIGHT;
             } else {
-                x += 75;
+                x += ITEM_WIDTH;
             }
 
             item++;
