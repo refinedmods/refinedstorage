@@ -26,8 +26,10 @@ public class GuiCraftingMonitor extends GuiBase {
     private GuiButton cancelAllButton;
 
     private int itemSelected = -1;
+
     private boolean renderItemSelection;
-    private int itemSelectedX, itemSelectedY;
+    private int renderItemSelectionX;
+    private int renderItemSelectionY;
 
     private Scrollbar scrollbar = new Scrollbar(157, 20, 12, 89);
 
@@ -41,8 +43,14 @@ public class GuiCraftingMonitor extends GuiBase {
     public void init(int x, int y) {
         addSideButton(new SideButtonRedstoneMode(craftingMonitor));
 
-        cancelButton = addButton(x + 7, y + 113, 50, 20, t("misc.refinedstorage:cancel"));
-        cancelAllButton = addButton(x + 7 + 50 + 4, y + 113, 12 + fontRendererObj.getStringWidth(t("misc.refinedstorage:cancel_all")), 20, t("misc.refinedstorage:cancel_all"));
+        String cancel = t("misc.refinedstorage:cancel");
+        String cancelAll = t("misc.refinedstorage:cancel_all");
+
+        int cancelButtonWidth = 14 + fontRendererObj.getStringWidth(cancel);
+        int cancelAllButtonWidth = 14 + fontRendererObj.getStringWidth(cancelAll);
+
+        cancelButton = addButton(x + 7, y + 113, cancelButtonWidth, 20, cancel, false);
+        cancelAllButton = addButton(x + 7 + cancelButtonWidth + 4, y + 113, cancelAllButtonWidth, 20, cancelAll, false);
     }
 
     @Override
@@ -65,7 +73,7 @@ public class GuiCraftingMonitor extends GuiBase {
         drawTexture(x, y, 0, 0, width, height);
 
         if (renderItemSelection) {
-            drawTexture(x + itemSelectedX, y + itemSelectedY, 178, 0, ITEM_WIDTH, ITEM_HEIGHT);
+            drawTexture(x + renderItemSelectionX, y + renderItemSelectionY, 178, 0, ITEM_WIDTH, ITEM_HEIGHT);
         }
 
         scrollbar.draw(this);
@@ -100,8 +108,8 @@ public class GuiCraftingMonitor extends GuiBase {
             if (item < tasks.size() && item < craftingMonitor.getInfo().length) {
                 if (item == itemSelected) {
                     renderItemSelection = true;
-                    itemSelectedX = x;
-                    itemSelectedY = y;
+                    renderItemSelectionX = x;
+                    renderItemSelectionY = y;
                 }
 
                 ItemStack task = tasks.get(item);
@@ -183,8 +191,6 @@ public class GuiCraftingMonitor extends GuiBase {
 
                     if (inBounds(ix, iy, ITEM_WIDTH, ITEM_HEIGHT, mouseX - guiLeft, mouseY - guiTop) && item < craftingMonitor.getTasks().size()) {
                         itemSelected = item;
-                        itemSelectedX = ix;
-                        itemSelectedY = iy;
                     }
 
                     item++;

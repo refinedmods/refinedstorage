@@ -112,10 +112,13 @@ public abstract class GuiBase extends GuiContainer {
     }
 
     public GuiButton addButton(int x, int y, int w, int h, String text) {
-        return addButton(new GuiButton(lastButtonId++, x, y, w, h, text));
+        return addButton(x, y, w, h, text, true);
     }
 
-    public GuiButton addButton(GuiButton button) {
+    public GuiButton addButton(int x, int y, int w, int h, String text, boolean enabled) {
+        GuiButton button = new GuiButton(lastButtonId++, x, y, w, h, text);
+        button.enabled = enabled;
+
         buttonList.add(button);
 
         return button;
