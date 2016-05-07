@@ -6,6 +6,7 @@ gui.refinedstorage:controller.machine_position.x=X: %d
 gui.refinedstorage:controller.machine_position.y=Y: %d
 gui.refinedstorage:controller.machine_position.z=Z: %d
 gui.refinedstorage:grid=Grid
+gui.refinedstorage:grid.craft=Craft
 gui.refinedstorage:grid.pattern=Pattern
 gui.refinedstorage:grid.pattern_create=Create Pattern
 gui.refinedstorage:wireless_grid=Wireless Grid

@@ -127,11 +127,15 @@ public class GuiCraftingMonitor extends GuiBase {
                     for (int j = 0; j < infoLines.size(); ++j) {
                         String line = infoLines.get(j);
 
-                        infoLines.set(j, line
-                            .replace("{missing_items}", t("gui.refinedstorage:crafting_monitor.missing_items"))
-                            .replace("{items_crafting}", t("gui.refinedstorage:crafting_monitor.items_crafting"))
-                            .replace("{items_processing}", t("gui.refinedstorage:crafting_monitor.items_processing"))
-                            .replace("{none}", t("misc.refinedstorage:none")));
+                        if (line.startsWith("- ")) {
+                            infoLines.set(j, "- " + t(line.substring(2)));
+                        } else {
+                            infoLines.set(j, line
+                                .replace("{missing_items}", t("gui.refinedstorage:crafting_monitor.missing_items"))
+                                .replace("{items_crafting}", t("gui.refinedstorage:crafting_monitor.items_crafting"))
+                                .replace("{items_processing}", t("gui.refinedstorage:crafting_monitor.items_processing"))
+                                .replace("{none}", t("misc.refinedstorage:none")));
+                        }
                     }
                 }
             }

@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import refinedstorage.RefinedStorage;
 import refinedstorage.block.EnumGridType;
@@ -238,7 +237,7 @@ public class GuiGrid extends GuiBase {
                 } else if (qty == 1) {
                     text = null;
                 } else if (qty == 0) {
-                    text = "Craft";
+                    text = t("gui.refinedstorage:grid.craft");
                 } else {
                     text = String.valueOf(qty);
                 }
