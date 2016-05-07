@@ -12,8 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TileCraftingMonitor extends TileMachine {
-    private List<ItemStack> tasks = new ArrayList<ItemStack>();
-    private String[] info = new String[0];
+    public class ClientSideCraftingTask {
+        public ItemStack output;
+        public int id;
+        public String info;
+    }
+
+    private List<ClientSideCraftingTask> tasks = new ArrayList<ClientSideCraftingTask>();
 
     @Override
     public int getEnergyUsage() {
@@ -51,29 +56,29 @@ public class TileCraftingMonitor extends TileMachine {
 
         int size = buf.readInt();
 
-        List<ItemStack> newTasks = new ArrayList<ItemStack>();
-        String[] newInfo = new String[size];
+        List<ClientSideCraftingTask> newTasks = new ArrayList<ClientSideCraftingTask>();
 
         for (int i = 0; i < size; ++i) {
-            newInfo[i] = ByteBufUtils.readUTF8String(buf);
+            String info = ByteBufUtils.readUTF8String(buf);
 
-            int outputSize = buf.readInt();
+            int outputs = buf.readInt();
 
-            for (int j = 0; j < outputSize; ++j) {
-                newTasks.add(ByteBufUtils.readItemStack(buf));
+            for (int j = 0; j < outputs; ++j) {
+                ClientSideCraftingTask task = new ClientSideCraftingTask();
+
+                task.info = info;
+                task.output = ByteBufUtils.readItemStack(buf);
+                task.id = i;
+
+                newTasks.add(task);
             }
         }
 
         tasks = newTasks;
-        info = newInfo;
     }
 
-    public List<ItemStack> getTasks() {
+    public List<ClientSideCraftingTask> getTasks() {
         return tasks;
-    }
-
-    public String[] getInfo() {
-        return info;
     }
 
     @Override

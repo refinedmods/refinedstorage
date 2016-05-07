@@ -3,7 +3,6 @@ package refinedstorage.gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.item.ItemStack;
 import refinedstorage.RefinedStorage;
 import refinedstorage.container.ContainerCraftingMonitor;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
@@ -98,34 +97,32 @@ public class GuiCraftingMonitor extends GuiBase {
 
         RenderHelper.enableGUIStandardItemLighting();
 
-        List<ItemStack> tasks = craftingMonitor.getTasks();
-
         List<String> infoLines = null;
 
         renderItemSelection = false;
 
         for (int i = 0; i < 6; ++i) {
-            if (item < tasks.size() && item < craftingMonitor.getInfo().length) {
+            if (item < craftingMonitor.getTasks().size()) {
                 if (item == itemSelected) {
                     renderItemSelection = true;
                     renderItemSelectionX = x;
                     renderItemSelectionY = y;
                 }
 
-                ItemStack task = tasks.get(item);
+                TileCraftingMonitor.ClientSideCraftingTask task = craftingMonitor.getTasks().get(i);
 
-                drawItem(x + 4, y + 11, task);
+                drawItem(x + 4, y + 11, task.output);
 
                 GlStateManager.pushMatrix();
 
                 float scale = 0.5f;
                 GlStateManager.scale(scale, scale, 1);
-                drawString(calculateOffsetOnScale(x + 5, scale), calculateOffsetOnScale(y + 4, scale), task.getDisplayName());
+                drawString(calculateOffsetOnScale(x + 5, scale), calculateOffsetOnScale(y + 4, scale), task.output.getDisplayName());
 
                 GlStateManager.popMatrix();
 
                 if (inBounds(x + 5, y + 10, 16, 16, mouseX, mouseY)) {
-                    infoLines = Arrays.asList(craftingMonitor.getInfo()[item].split("\n"));
+                    infoLines = Arrays.asList(task.info.split("\n"));
 
                     for (int j = 0; j < infoLines.size(); ++j) {
                         String line = infoLines.get(j);
@@ -169,7 +166,7 @@ public class GuiCraftingMonitor extends GuiBase {
         super.actionPerformed(button);
 
         if (button == cancelButton && itemSelected != -1) {
-            RefinedStorage.NETWORK.sendToServer(new MessageCraftingMonitorCancel(craftingMonitor, itemSelected));
+            RefinedStorage.NETWORK.sendToServer(new MessageCraftingMonitorCancel(craftingMonitor, craftingMonitor.getTasks().get(itemSelected).id));
         } else if (button == cancelAllButton && craftingMonitor.getTasks().size() > 0) {
             RefinedStorage.NETWORK.sendToServer(new MessageCraftingMonitorCancel(craftingMonitor, -1));
         }
