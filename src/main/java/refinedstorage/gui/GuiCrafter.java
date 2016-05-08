@@ -52,7 +52,7 @@ public class GuiCrafter extends GuiBase {
             if (crafter.getStackInSlot(i) != null) {
                 ItemStack pattern = crafter.getStackInSlot(i);
 
-                String text = "Processing";
+                String text = t("misc.refinedstorage:processing");
 
                 if (!ItemPattern.isProcessing(pattern)) {
                     ItemStack result = ItemPattern.getOutputs(pattern)[0];
@@ -66,7 +66,7 @@ public class GuiCrafter extends GuiBase {
 
                 float scale = 0.5f;
                 GlStateManager.scale(scale, scale, 1);
-                drawString(calculateOffsetOnScale(x + (ItemPattern.isProcessing(pattern) ? 0 : 20), scale), calculateOffsetOnScale(y + 6, scale), text);
+                drawString(calculateOffsetOnScale(x + (ItemPattern.isProcessing(pattern) ? 5 : 20), scale), calculateOffsetOnScale(y + 6, scale), text);
 
                 GlStateManager.popMatrix();
             }

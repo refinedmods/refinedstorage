@@ -4,8 +4,7 @@
 WIP
 
 **TODO**
-- Saving crafting task state
-- Cancelling all crafting tasks
+- Crafter direction
 - Textures
 - Update wiki
 

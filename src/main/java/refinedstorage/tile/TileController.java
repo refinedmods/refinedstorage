@@ -520,10 +520,10 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                 NBTTagCompound taskTag = taskList.getCompoundTagAt(i);
 
                 switch (taskTag.getInteger("Type")) {
-                    case 0:
+                    case BasicCraftingTask.ID:
                         addCraftingTask(new BasicCraftingTask(taskTag));
                         break;
-                    case 1:
+                    case ProcessingCraftingTask.ID:
                         addCraftingTask(new ProcessingCraftingTask(taskTag));
                         break;
                 }

@@ -36,6 +36,7 @@ public class CraftingPattern {
         if (crafter == null) {
             crafter = (TileCrafter) world.getTileEntity(new BlockPos(crafterX, crafterY, crafterZ));
         }
+
         return crafter;
     }
 
