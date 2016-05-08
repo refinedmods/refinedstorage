@@ -6,8 +6,8 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+import refinedstorage.RefinedStorageUtils;
 import refinedstorage.item.ItemPattern;
-import refinedstorage.util.InventoryUtils;
 
 public class CraftingPattern {
     public static final String NBT = "Pattern";
@@ -65,13 +65,13 @@ public class CraftingPattern {
         }
 
         for (int i = 0; i < inputs.length; ++i) {
-            if (!InventoryUtils.compareStack(inputs[i], otherPattern.getInputs()[i], flags)) {
+            if (!RefinedStorageUtils.compareStack(inputs[i], otherPattern.getInputs()[i], flags)) {
                 return false;
             }
         }
 
         for (int i = 0; i < outputs.length; ++i) {
-            if (!InventoryUtils.compareStack(outputs[i], otherPattern.getOutputs()[i], flags)) {
+            if (!RefinedStorageUtils.compareStack(outputs[i], otherPattern.getOutputs()[i], flags)) {
                 return false;
             }
         }

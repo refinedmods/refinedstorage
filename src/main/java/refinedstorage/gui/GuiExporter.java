@@ -1,10 +1,10 @@
 package refinedstorage.gui;
 
+import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerExporter;
 import refinedstorage.gui.sidebutton.SideButtonCompare;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.tile.TileExporter;
-import refinedstorage.util.InventoryUtils;
 
 public class GuiExporter extends GuiBase {
     private TileExporter exporter;
@@ -19,8 +19,8 @@ public class GuiExporter extends GuiBase {
     public void init(int x, int y) {
         addSideButton(new SideButtonRedstoneMode(exporter));
 
-        addSideButton(new SideButtonCompare(exporter, InventoryUtils.COMPARE_DAMAGE));
-        addSideButton(new SideButtonCompare(exporter, InventoryUtils.COMPARE_NBT));
+        addSideButton(new SideButtonCompare(exporter, RefinedStorageUtils.COMPARE_DAMAGE));
+        addSideButton(new SideButtonCompare(exporter, RefinedStorageUtils.COMPARE_NBT));
     }
 
     @Override

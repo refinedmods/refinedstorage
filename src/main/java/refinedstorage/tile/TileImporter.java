@@ -7,12 +7,11 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerImporter;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.IModeConfig;
-import refinedstorage.util.InventoryUtils;
-import refinedstorage.util.UpgradeUtils;
 
 public class TileImporter extends TileMachine implements ICompareConfig, IModeConfig {
     public static final String NBT_COMPARE = "Compare";
@@ -52,7 +51,7 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
                 if (stack == null) {
                     currentSlot++;
                 } else {
-                    if (ticks % UpgradeUtils.getSpeed(upgradesInventory) == 0) {
+                    if (ticks % RefinedStorageUtils.getSpeed(upgradesInventory) == 0) {
                         ItemStack toTake = stack.copy();
                         toTake.stackSize = 1;
 
@@ -78,7 +77,7 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
             ItemStack stack = inventory.getStackInSlot(currentSlot);
 
             if (stack != null) {
-                if (ticks % UpgradeUtils.getSpeed(upgradesInventory) == 0) {
+                if (ticks % RefinedStorageUtils.getSpeed(upgradesInventory) == 0) {
                     ItemStack toTake = stack.copy();
                     toTake.stackSize = 1;
 
@@ -111,7 +110,7 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
             if (slot != null) {
                 slots++;
 
-                if (InventoryUtils.compareStack(stack, slot, compare)) {
+                if (RefinedStorageUtils.compareStack(stack, slot, compare)) {
                     if (isWhitelist()) {
                         return true;
                     } else if (isBlacklist()) {
@@ -176,8 +175,8 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
             mode = nbt.getInteger(NBT_MODE);
         }
 
-        InventoryUtils.restoreInventory(inventory, 0, nbt);
-        InventoryUtils.restoreInventory(upgradesInventory, 1, nbt);
+        RefinedStorageUtils.restoreInventory(inventory, 0, nbt);
+        RefinedStorageUtils.restoreInventory(upgradesInventory, 1, nbt);
     }
 
     @Override
@@ -187,8 +186,8 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
         nbt.setInteger(NBT_COMPARE, compare);
         nbt.setInteger(NBT_MODE, mode);
 
-        InventoryUtils.saveInventory(inventory, 0, nbt);
-        InventoryUtils.saveInventory(upgradesInventory, 1, nbt);
+        RefinedStorageUtils.saveInventory(inventory, 0, nbt);
+        RefinedStorageUtils.saveInventory(upgradesInventory, 1, nbt);
     }
 
     @Override

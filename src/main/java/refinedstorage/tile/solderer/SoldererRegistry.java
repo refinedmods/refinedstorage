@@ -2,7 +2,7 @@ package refinedstorage.tile.solderer;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import refinedstorage.util.InventoryUtils;
+import refinedstorage.RefinedStorageUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ public class SoldererRegistry {
             boolean ok = true;
 
             for (int i = 0; i < 3; ++i) {
-                if (!InventoryUtils.compareStackNoQuantity(recipe.getRow(i), inventory.getStackInSlot(i))) {
+                if (!RefinedStorageUtils.compareStackNoQuantity(recipe.getRow(i), inventory.getStackInSlot(i))) {
                     ok = false;
                 }
 
@@ -40,7 +40,7 @@ public class SoldererRegistry {
 
     public static ISoldererRecipe getRecipe(ItemStack result) {
         for (ISoldererRecipe recipe : recipes) {
-            if (InventoryUtils.compareStack(result, recipe.getResult())) {
+            if (RefinedStorageUtils.compareStack(result, recipe.getResult())) {
                 return recipe;
             }
         }

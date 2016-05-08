@@ -5,7 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import refinedstorage.util.InventoryUtils;
+import refinedstorage.RefinedStorageUtils;
 
 public class ItemGroup {
     private Item type;
@@ -94,13 +94,13 @@ public class ItemGroup {
     }
 
     public boolean compare(ItemGroup other, int flags) {
-        if ((flags & InventoryUtils.COMPARE_DAMAGE) == InventoryUtils.COMPARE_DAMAGE) {
+        if ((flags & RefinedStorageUtils.COMPARE_DAMAGE) == RefinedStorageUtils.COMPARE_DAMAGE) {
             if (damage != other.getDamage()) {
                 return false;
             }
         }
 
-        if ((flags & InventoryUtils.COMPARE_NBT) == InventoryUtils.COMPARE_NBT) {
+        if ((flags & RefinedStorageUtils.COMPARE_NBT) == RefinedStorageUtils.COMPARE_NBT) {
             if ((tag != null && other.getTag() == null) || (tag == null && other.getTag() != null)) {
                 return false;
             }
@@ -112,7 +112,7 @@ public class ItemGroup {
             }
         }
 
-        if ((flags & InventoryUtils.COMPARE_QUANTITY) == InventoryUtils.COMPARE_QUANTITY) {
+        if ((flags & RefinedStorageUtils.COMPARE_QUANTITY) == RefinedStorageUtils.COMPARE_QUANTITY) {
             if (quantity != other.getQuantity()) {
                 return false;
             }
@@ -122,13 +122,13 @@ public class ItemGroup {
     }
 
     public boolean compare(ItemStack stack, int flags) {
-        if ((flags & InventoryUtils.COMPARE_DAMAGE) == InventoryUtils.COMPARE_DAMAGE) {
+        if ((flags & RefinedStorageUtils.COMPARE_DAMAGE) == RefinedStorageUtils.COMPARE_DAMAGE) {
             if (damage != stack.getItemDamage()) {
                 return false;
             }
         }
 
-        if ((flags & InventoryUtils.COMPARE_NBT) == InventoryUtils.COMPARE_NBT) {
+        if ((flags & RefinedStorageUtils.COMPARE_NBT) == RefinedStorageUtils.COMPARE_NBT) {
             if ((tag != null && stack.getTagCompound() == null) || (tag == null && stack.getTagCompound() != null)) {
                 return false;
             }
@@ -140,7 +140,7 @@ public class ItemGroup {
             }
         }
 
-        if ((flags & InventoryUtils.COMPARE_QUANTITY) == InventoryUtils.COMPARE_QUANTITY) {
+        if ((flags & RefinedStorageUtils.COMPARE_QUANTITY) == RefinedStorageUtils.COMPARE_QUANTITY) {
             if (quantity != stack.stackSize) {
                 return false;
             }
@@ -150,10 +150,10 @@ public class ItemGroup {
     }
 
     public boolean compareNoQuantity(ItemGroup other) {
-        return compare(other, InventoryUtils.COMPARE_NBT | InventoryUtils.COMPARE_DAMAGE);
+        return compare(other, RefinedStorageUtils.COMPARE_NBT | RefinedStorageUtils.COMPARE_DAMAGE);
     }
 
     public boolean compareNoQuantity(ItemStack stack) {
-        return compare(stack, InventoryUtils.COMPARE_NBT | InventoryUtils.COMPARE_DAMAGE);
+        return compare(stack, RefinedStorageUtils.COMPARE_NBT | RefinedStorageUtils.COMPARE_DAMAGE);
     }
 }

@@ -6,6 +6,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import refinedstorage.RefinedStorage;
+import refinedstorage.RefinedStorageUtils;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.item.ItemWirelessGrid;
 import refinedstorage.network.MessageWirelessGridCraftingStart;
@@ -15,7 +16,6 @@ import refinedstorage.network.MessageWirelessGridStoragePush;
 import refinedstorage.storage.ItemGroup;
 import refinedstorage.tile.TileController;
 import refinedstorage.tile.config.IRedstoneModeConfig;
-import refinedstorage.util.HandUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,21 +83,21 @@ public class WirelessGrid implements IGrid {
 
     @Override
     public void onSortingTypeChanged(int type) {
-        RefinedStorage.NETWORK.sendToServer(new MessageWirelessGridSettingsUpdate(HandUtils.getIdFromHand(hand), getSortingDirection(), type, getSearchBoxMode()));
+        RefinedStorage.NETWORK.sendToServer(new MessageWirelessGridSettingsUpdate(RefinedStorageUtils.getIdFromHand(hand), getSortingDirection(), type, getSearchBoxMode()));
 
         this.sortingType = type;
     }
 
     @Override
     public void onSortingDirectionChanged(int direction) {
-        RefinedStorage.NETWORK.sendToServer(new MessageWirelessGridSettingsUpdate(HandUtils.getIdFromHand(hand), direction, getSortingType(), getSearchBoxMode()));
+        RefinedStorage.NETWORK.sendToServer(new MessageWirelessGridSettingsUpdate(RefinedStorageUtils.getIdFromHand(hand), direction, getSortingType(), getSearchBoxMode()));
 
         this.sortingDirection = direction;
     }
 
     @Override
     public void onSearchBoxModeChanged(int searchBoxMode) {
-        RefinedStorage.NETWORK.sendToServer(new MessageWirelessGridSettingsUpdate(HandUtils.getIdFromHand(hand), getSortingDirection(), getSortingType(), searchBoxMode));
+        RefinedStorage.NETWORK.sendToServer(new MessageWirelessGridSettingsUpdate(RefinedStorageUtils.getIdFromHand(hand), getSortingDirection(), getSortingType(), searchBoxMode));
 
         this.searchBoxMode = searchBoxMode;
     }

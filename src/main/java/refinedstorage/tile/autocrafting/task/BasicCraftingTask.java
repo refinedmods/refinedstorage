@@ -5,9 +5,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.Constants;
+import refinedstorage.RefinedStorageUtils;
 import refinedstorage.tile.TileController;
 import refinedstorage.tile.autocrafting.CraftingPattern;
-import refinedstorage.util.NBTUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +35,9 @@ public class BasicCraftingTask implements ICraftingTask {
 
     public BasicCraftingTask(NBTTagCompound tag) {
         this.pattern = CraftingPattern.readFromNBT(tag.getCompoundTag(CraftingPattern.NBT));
-        this.satisfied = NBTUtils.readBoolArray(tag, NBT_SATISFIED);
-        this.checked = NBTUtils.readBoolArray(tag, NBT_CHECKED);
-        this.childTasks = NBTUtils.readBoolArray(tag, NBT_CHILD_TASKS);
+        this.satisfied = RefinedStorageUtils.readBoolArray(tag, NBT_SATISFIED);
+        this.checked = RefinedStorageUtils.readBoolArray(tag, NBT_CHECKED);
+        this.childTasks = RefinedStorageUtils.readBoolArray(tag, NBT_CHILD_TASKS);
 
         NBTTagList tookList = tag.getTagList(NBT_TOOK, Constants.NBT.TAG_COMPOUND);
 
@@ -106,9 +106,9 @@ public class BasicCraftingTask implements ICraftingTask {
         pattern.writeToNBT(patternTag);
         tag.setTag(CraftingPattern.NBT, patternTag);
 
-        NBTUtils.writeBoolArray(tag, NBT_SATISFIED, satisfied);
-        NBTUtils.writeBoolArray(tag, NBT_CHECKED, checked);
-        NBTUtils.writeBoolArray(tag, NBT_CHILD_TASKS, childTasks);
+        RefinedStorageUtils.writeBoolArray(tag, NBT_SATISFIED, satisfied);
+        RefinedStorageUtils.writeBoolArray(tag, NBT_CHECKED, checked);
+        RefinedStorageUtils.writeBoolArray(tag, NBT_CHILD_TASKS, childTasks);
 
         NBTTagList tookList = new NBTTagList();
 

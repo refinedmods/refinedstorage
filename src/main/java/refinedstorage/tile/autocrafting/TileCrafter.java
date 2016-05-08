@@ -6,11 +6,11 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
+import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerCrafter;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.tile.TileMachine;
 import refinedstorage.tile.autocrafting.task.ICraftingTask;
-import refinedstorage.util.InventoryUtils;
 
 public class TileCrafter extends TileMachine implements IInventory {
     private InventorySimple inventory = new InventorySimple("crafter", PATTERN_SLOTS + 4, this);
@@ -46,14 +46,14 @@ public class TileCrafter extends TileMachine implements IInventory {
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
 
-        InventoryUtils.restoreInventory(inventory, 0, nbt);
+        RefinedStorageUtils.restoreInventory(inventory, 0, nbt);
     }
 
     @Override
     public void writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
 
-        InventoryUtils.saveInventory(inventory, 0, nbt);
+        RefinedStorageUtils.saveInventory(inventory, 0, nbt);
     }
 
     public int getSpeed() {

@@ -6,8 +6,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
+import refinedstorage.RefinedStorageUtils;
 import refinedstorage.inventory.InventorySimple;
-import refinedstorage.util.InventoryUtils;
 
 public class TileWirelessTransmitter extends TileMachine implements IInventory {
     public static final int RANGE_PER_UPGRADE = 8;
@@ -28,14 +28,14 @@ public class TileWirelessTransmitter extends TileMachine implements IInventory {
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
 
-        InventoryUtils.restoreInventory(inventory, 0, nbt);
+        RefinedStorageUtils.restoreInventory(inventory, 0, nbt);
     }
 
     @Override
     public void writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
 
-        InventoryUtils.saveInventory(inventory, 0, nbt);
+        RefinedStorageUtils.saveInventory(inventory, 0, nbt);
     }
 
     public int getRange() {

@@ -6,11 +6,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.text.TextFormatting;
+import refinedstorage.RefinedStorageUtils;
 import refinedstorage.tile.TileController;
 import refinedstorage.tile.autocrafting.CraftingPattern;
 import refinedstorage.tile.autocrafting.TileCrafter;
-import refinedstorage.util.InventoryUtils;
-import refinedstorage.util.NBTUtils;
 
 public class ProcessingCraftingTask implements ICraftingTask {
     public static final int ID = 1;
@@ -33,9 +32,9 @@ public class ProcessingCraftingTask implements ICraftingTask {
 
     public ProcessingCraftingTask(NBTTagCompound tag) {
         this.pattern = CraftingPattern.readFromNBT(tag.getCompoundTag(CraftingPattern.NBT));
-        this.inserted = NBTUtils.readBoolArray(tag, NBT_INSERTED);
-        this.missing = NBTUtils.readBoolArray(tag, NBT_MISSING);
-        this.satisfied = NBTUtils.readBoolArray(tag, NBT_SATISFIED);
+        this.inserted = RefinedStorageUtils.readBoolArray(tag, NBT_INSERTED);
+        this.missing = RefinedStorageUtils.readBoolArray(tag, NBT_MISSING);
+        this.satisfied = RefinedStorageUtils.readBoolArray(tag, NBT_SATISFIED);
     }
 
     @Override
@@ -84,7 +83,7 @@ public class ProcessingCraftingTask implements ICraftingTask {
 
     public boolean onInserted(ItemStack inserted) {
         for (int i = 0; i < pattern.getOutputs().length; ++i) {
-            if (!satisfied[i] && InventoryUtils.compareStackNoQuantity(inserted, pattern.getOutputs()[i])) {
+            if (!satisfied[i] && RefinedStorageUtils.compareStackNoQuantity(inserted, pattern.getOutputs()[i])) {
                 satisfied[i] = true;
 
                 return true;
@@ -110,9 +109,9 @@ public class ProcessingCraftingTask implements ICraftingTask {
         pattern.writeToNBT(patternTag);
         tag.setTag(CraftingPattern.NBT, patternTag);
 
-        NBTUtils.writeBoolArray(tag, NBT_INSERTED, satisfied);
-        NBTUtils.writeBoolArray(tag, NBT_MISSING, missing);
-        NBTUtils.writeBoolArray(tag, NBT_SATISFIED, satisfied);
+        RefinedStorageUtils.writeBoolArray(tag, NBT_INSERTED, satisfied);
+        RefinedStorageUtils.writeBoolArray(tag, NBT_MISSING, missing);
+        RefinedStorageUtils.writeBoolArray(tag, NBT_SATISFIED, satisfied);
 
         tag.setInteger("Type", ID);
     }

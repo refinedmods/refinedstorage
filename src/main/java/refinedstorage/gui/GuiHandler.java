@@ -7,6 +7,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import refinedstorage.RefinedStorageGui;
+import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.*;
 import refinedstorage.storage.IStorageGui;
 import refinedstorage.tile.*;
@@ -15,7 +16,6 @@ import refinedstorage.tile.autocrafting.TileCraftingMonitor;
 import refinedstorage.tile.autocrafting.TileProcessingPatternEncoder;
 import refinedstorage.tile.grid.TileGrid;
 import refinedstorage.tile.grid.WirelessGrid;
-import refinedstorage.util.HandUtils;
 
 public class GuiHandler implements IGuiHandler {
     private Container getContainer(int ID, EntityPlayer player, TileEntity tile) {
@@ -67,7 +67,7 @@ public class GuiHandler implements IGuiHandler {
     }
 
     private WirelessGrid getWirelessGrid(EntityPlayer player, int hand) {
-        return new WirelessGrid(player.getHeldItem(HandUtils.getHandById(hand)), HandUtils.getHandById(hand));
+        return new WirelessGrid(player.getHeldItem(RefinedStorageUtils.getHandById(hand)), RefinedStorageUtils.getHandById(hand));
     }
 
     private ContainerGrid getWirelessGridContainer(EntityPlayer player, int hand) {

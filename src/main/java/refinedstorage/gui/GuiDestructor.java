@@ -1,11 +1,11 @@
 package refinedstorage.gui;
 
+import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerDestructor;
 import refinedstorage.gui.sidebutton.SideButtonCompare;
 import refinedstorage.gui.sidebutton.SideButtonMode;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.tile.TileDestructor;
-import refinedstorage.util.InventoryUtils;
 
 public class GuiDestructor extends GuiBase {
     private TileDestructor destructor;
@@ -22,8 +22,8 @@ public class GuiDestructor extends GuiBase {
 
         addSideButton(new SideButtonMode(destructor));
 
-        addSideButton(new SideButtonCompare(destructor, InventoryUtils.COMPARE_DAMAGE));
-        addSideButton(new SideButtonCompare(destructor, InventoryUtils.COMPARE_NBT));
+        addSideButton(new SideButtonCompare(destructor, RefinedStorageUtils.COMPARE_DAMAGE));
+        addSideButton(new SideButtonCompare(destructor, RefinedStorageUtils.COMPARE_NBT));
     }
 
     @Override

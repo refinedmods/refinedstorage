@@ -12,6 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageItems;
+import refinedstorage.RefinedStorageUtils;
 import refinedstorage.block.BlockGrid;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
@@ -24,7 +25,6 @@ import refinedstorage.network.MessageGridStoragePush;
 import refinedstorage.storage.ItemGroup;
 import refinedstorage.tile.TileMachine;
 import refinedstorage.tile.config.IRedstoneModeConfig;
-import refinedstorage.util.InventoryUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -149,7 +149,7 @@ public class TileGrid extends TileMachine implements IGrid {
 
             craftedItems += crafted.stackSize;
 
-            if (!InventoryUtils.compareStack(crafted, craftingResultInventory.getStackInSlot(0)) || craftedItems + crafted.stackSize > 64) {
+            if (!RefinedStorageUtils.compareStack(crafted, craftingResultInventory.getStackInSlot(0)) || craftedItems + crafted.stackSize > 64) {
                 break;
             }
         }
@@ -159,7 +159,7 @@ public class TileGrid extends TileMachine implements IGrid {
                 if (controller != null && controller.push(craftedItem.copy())) {
                     // NO OP
                 } else {
-                    InventoryUtils.dropStack(player.worldObj, craftedItem, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
+                    RefinedStorageUtils.dropStack(player.worldObj, craftedItem, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
                 }
             }
         }
@@ -286,8 +286,8 @@ public class TileGrid extends TileMachine implements IGrid {
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
 
-        InventoryUtils.restoreInventory(craftingInventory, 0, nbt);
-        InventoryUtils.restoreInventory(patternsInventory, 1, nbt);
+        RefinedStorageUtils.restoreInventory(craftingInventory, 0, nbt);
+        RefinedStorageUtils.restoreInventory(patternsInventory, 1, nbt);
 
         if (nbt.hasKey(NBT_SORTING_DIRECTION)) {
             sortingDirection = nbt.getInteger(NBT_SORTING_DIRECTION);
@@ -306,8 +306,8 @@ public class TileGrid extends TileMachine implements IGrid {
     public void writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
 
-        InventoryUtils.saveInventory(craftingInventory, 0, nbt);
-        InventoryUtils.saveInventory(patternsInventory, 1, nbt);
+        RefinedStorageUtils.saveInventory(craftingInventory, 0, nbt);
+        RefinedStorageUtils.saveInventory(patternsInventory, 1, nbt);
 
         nbt.setInteger(NBT_SORTING_DIRECTION, sortingDirection);
         nbt.setInteger(NBT_SORTING_TYPE, sortingType);

@@ -17,9 +17,9 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
+import refinedstorage.RefinedStorageUtils;
 import refinedstorage.item.ItemBlockBase;
 import refinedstorage.tile.TileBase;
-import refinedstorage.util.InventoryUtils;
 
 public abstract class BlockBase extends Block {
     public static final PropertyDirection DIRECTION = PropertyDirection.create("direction");
@@ -126,7 +126,7 @@ public abstract class BlockBase extends Block {
         TileEntity tile = world.getTileEntity(pos);
 
         if (tile instanceof TileBase && ((TileBase) tile).getDroppedInventory() != null) {
-            InventoryUtils.dropInventory(world, ((TileBase) tile).getDroppedInventory(), pos.getX(), pos.getY(), pos.getZ());
+            RefinedStorageUtils.dropInventory(world, ((TileBase) tile).getDroppedInventory(), pos.getX(), pos.getY(), pos.getZ());
         }
 
         super.breakBlock(world, pos, state);

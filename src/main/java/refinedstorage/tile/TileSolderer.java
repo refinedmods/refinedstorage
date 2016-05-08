@@ -9,13 +9,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
+import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerSolderer;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.solderer.ISoldererRecipe;
 import refinedstorage.tile.solderer.SoldererRegistry;
-import refinedstorage.util.InventoryUtils;
-import refinedstorage.util.UpgradeUtils;
 
 public class TileSolderer extends TileMachine implements IInventory, ISidedInventory {
     public static final String NBT_WORKING = "Working";
@@ -49,7 +48,7 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
         if (newRecipe == null) {
             reset();
         } else if (newRecipe != recipe) {
-            boolean isSameItem = inventory.getStackInSlot(3) != null ? InventoryUtils.compareStackNoQuantity(inventory.getStackInSlot(3), newRecipe.getResult()) : false;
+            boolean isSameItem = inventory.getStackInSlot(3) != null ? RefinedStorageUtils.compareStackNoQuantity(inventory.getStackInSlot(3), newRecipe.getResult()) : false;
 
             if (inventory.getStackInSlot(3) == null || (isSameItem && ((inventory.getStackInSlot(3).stackSize + newRecipe.getResult().stackSize) <= inventory.getStackInSlot(3).getMaxStackSize()))) {
                 recipe = newRecipe;
@@ -59,7 +58,7 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
                 markDirty();
             }
         } else if (working) {
-            progress += 1 + UpgradeUtils.getUpgradeCount(upgradesInventory, ItemUpgrade.TYPE_SPEED);
+            progress += 1 + RefinedStorageUtils.getUpgradeCount(upgradesInventory, ItemUpgrade.TYPE_SPEED);
 
             if (progress >= recipe.getDuration()) {
                 if (inventory.getStackInSlot(3) != null) {
@@ -98,8 +97,8 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
 
-        InventoryUtils.restoreInventory(this, 0, nbt);
-        InventoryUtils.restoreInventory(upgradesInventory, 1, nbt);
+        RefinedStorageUtils.restoreInventory(this, 0, nbt);
+        RefinedStorageUtils.restoreInventory(upgradesInventory, 1, nbt);
 
         recipe = SoldererRegistry.getRecipe(inventory);
 
@@ -116,8 +115,8 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
     public void writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
 
-        InventoryUtils.saveInventory(this, 0, nbt);
-        InventoryUtils.saveInventory(upgradesInventory, 1, nbt);
+        RefinedStorageUtils.saveInventory(this, 0, nbt);
+        RefinedStorageUtils.saveInventory(upgradesInventory, 1, nbt);
 
         nbt.setBoolean(NBT_WORKING, working);
         nbt.setInteger(NBT_PROGRESS, progress);

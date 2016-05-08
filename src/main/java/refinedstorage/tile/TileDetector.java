@@ -6,12 +6,12 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import refinedstorage.RefinedStorageBlocks;
+import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerDetector;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.storage.ItemGroup;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.RedstoneMode;
-import refinedstorage.util.InventoryUtils;
 
 public class TileDetector extends TileMachine implements ICompareConfig {
     public static final int MODE_UNDER = 0;
@@ -143,7 +143,7 @@ public class TileDetector extends TileMachine implements ICompareConfig {
             amount = nbt.getInteger(NBT_AMOUNT);
         }
 
-        InventoryUtils.restoreInventory(inventory, 0, nbt);
+        RefinedStorageUtils.restoreInventory(inventory, 0, nbt);
     }
 
     @Override
@@ -154,7 +154,7 @@ public class TileDetector extends TileMachine implements ICompareConfig {
         nbt.setInteger(NBT_MODE, mode);
         nbt.setInteger(NBT_AMOUNT, amount);
 
-        InventoryUtils.saveInventory(inventory, 0, nbt);
+        RefinedStorageUtils.saveInventory(inventory, 0, nbt);
     }
 
     @Override

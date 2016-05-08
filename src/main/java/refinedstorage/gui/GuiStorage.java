@@ -2,12 +2,12 @@ package refinedstorage.gui;
 
 import com.google.common.primitives.Ints;
 import net.minecraft.client.gui.GuiTextField;
+import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerStorage;
 import refinedstorage.gui.sidebutton.SideButtonCompare;
 import refinedstorage.gui.sidebutton.SideButtonMode;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.storage.IStorageGui;
-import refinedstorage.util.InventoryUtils;
 
 import java.io.IOException;
 
@@ -44,8 +44,8 @@ public class GuiStorage extends GuiBase {
         }
 
         if (gui.getCompareConfig() != null) {
-            addSideButton(new SideButtonCompare(gui.getCompareConfig(), InventoryUtils.COMPARE_DAMAGE));
-            addSideButton(new SideButtonCompare(gui.getCompareConfig(), InventoryUtils.COMPARE_NBT));
+            addSideButton(new SideButtonCompare(gui.getCompareConfig(), RefinedStorageUtils.COMPARE_DAMAGE));
+            addSideButton(new SideButtonCompare(gui.getCompareConfig(), RefinedStorageUtils.COMPARE_NBT));
         }
 
         priorityField = new GuiTextField(0, fontRendererObj, x + 98 + 1, y + 54 + 1, 25, fontRendererObj.FONT_HEIGHT);

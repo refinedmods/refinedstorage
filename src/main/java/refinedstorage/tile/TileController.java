@@ -16,10 +16,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageBlocks;
-import refinedstorage.RefinedStorageGui;
-import refinedstorage.RefinedStorageItems;
+import refinedstorage.*;
 import refinedstorage.block.BlockController;
 import refinedstorage.block.EnumControllerType;
 import refinedstorage.container.ContainerController;
@@ -38,8 +35,6 @@ import refinedstorage.tile.autocrafting.task.ProcessingCraftingTask;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
 import refinedstorage.tile.grid.WirelessGridConsumer;
-import refinedstorage.util.HandUtils;
-import refinedstorage.util.InventoryUtils;
 
 import java.util.*;
 
@@ -226,7 +221,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
             while (gridConsumerIterator.hasNext()) {
                 WirelessGridConsumer consumer = gridConsumerIterator.next();
 
-                if (!InventoryUtils.compareStack(consumer.getWirelessGrid(), consumer.getPlayer().getHeldItem(consumer.getHand()))) {
+                if (!RefinedStorageUtils.compareStack(consumer.getWirelessGrid(), consumer.getPlayer().getHeldItem(consumer.getHand()))) {
                     consumer.getPlayer().closeScreen(); // This will call onContainerClosed on the Container and remove it from the list
                 } else {
                     if (isActive()) {
@@ -312,13 +307,13 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     }
 
     public CraftingPattern getPattern(ItemStack pattern) {
-        return getPattern(pattern, InventoryUtils.COMPARE_DAMAGE | InventoryUtils.COMPARE_NBT);
+        return getPattern(pattern, RefinedStorageUtils.COMPARE_DAMAGE | RefinedStorageUtils.COMPARE_NBT);
     }
 
     public CraftingPattern getPattern(ItemStack pattern, int flags) {
         for (CraftingPattern craftingPattern : getPatterns()) {
             for (ItemStack output : craftingPattern.getOutputs()) {
-                if (InventoryUtils.compareStack(output, pattern, flags)) {
+                if (RefinedStorageUtils.compareStack(output, pattern, flags)) {
                     return craftingPattern;
                 }
             }
@@ -415,7 +410,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     public ItemStack take(ItemStack stack) {
         markDirty();
 
-        return take(stack, InventoryUtils.COMPARE_DAMAGE | InventoryUtils.COMPARE_NBT);
+        return take(stack, RefinedStorageUtils.COMPARE_DAMAGE | RefinedStorageUtils.COMPARE_NBT);
     }
 
     public ItemStack take(ItemStack stack, int flags) {
@@ -458,7 +453,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
         wirelessGridConsumers.add(new WirelessGridConsumer(player, hand, player.getHeldItem(hand)));
 
-        player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.WIRELESS_GRID, worldObj, HandUtils.getIdFromHand(hand), 0, 0);
+        player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.WIRELESS_GRID, worldObj, RefinedStorageUtils.getIdFromHand(hand), 0, 0);
 
         drainEnergyFromWirelessGrid(player, ItemWirelessGrid.USAGE_OPEN);
 
@@ -772,7 +767,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
             if (pattern != null) {
                 for (ItemStack output : pattern.getOutputs()) {
-                    if (InventoryUtils.compareStackNoQuantity(requested, output)) {
+                    if (RefinedStorageUtils.compareStackNoQuantity(requested, output)) {
                         quantityPerRequest = output.stackSize;
 
                         break;

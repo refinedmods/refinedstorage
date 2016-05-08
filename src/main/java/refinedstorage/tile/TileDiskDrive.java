@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import refinedstorage.RefinedStorage;
+import refinedstorage.RefinedStorageUtils;
 import refinedstorage.block.EnumStorageType;
 import refinedstorage.container.ContainerDiskDrive;
 import refinedstorage.inventory.InventorySimple;
@@ -16,7 +17,6 @@ import refinedstorage.storage.*;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.IModeConfig;
 import refinedstorage.tile.config.IRedstoneModeConfig;
-import refinedstorage.util.InventoryUtils;
 
 import java.util.List;
 
@@ -62,8 +62,8 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
 
-        InventoryUtils.restoreInventory(inventory, 0, nbt);
-        InventoryUtils.restoreInventory(filterInventory, 1, nbt);
+        RefinedStorageUtils.restoreInventory(inventory, 0, nbt);
+        RefinedStorageUtils.restoreInventory(filterInventory, 1, nbt);
 
         if (nbt.hasKey(NBT_PRIORITY)) {
             priority = nbt.getInteger(NBT_PRIORITY);
@@ -82,8 +82,8 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
     public void writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
 
-        InventoryUtils.saveInventory(inventory, 0, nbt);
-        InventoryUtils.saveInventory(filterInventory, 1, nbt);
+        RefinedStorageUtils.saveInventory(inventory, 0, nbt);
+        RefinedStorageUtils.saveInventory(filterInventory, 1, nbt);
 
         nbt.setInteger(NBT_PRIORITY, priority);
         nbt.setInteger(NBT_COMPARE, compare);

@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
+import refinedstorage.RefinedStorageUtils;
 import refinedstorage.block.BlockStorage;
 import refinedstorage.block.EnumStorageType;
 import refinedstorage.container.ContainerStorage;
@@ -17,7 +18,6 @@ import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.IModeConfig;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.ModeConfigUtils;
-import refinedstorage.util.InventoryUtils;
 
 import java.util.List;
 
@@ -54,7 +54,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
 
-        InventoryUtils.restoreInventory(inventory, 0, nbt);
+        RefinedStorageUtils.restoreInventory(inventory, 0, nbt);
 
         if (nbt.hasKey(NBT_STORAGE)) {
             tag = nbt.getCompoundTag(NBT_STORAGE);
@@ -77,7 +77,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
     public void writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
 
-        InventoryUtils.saveInventory(inventory, 0, nbt);
+        RefinedStorageUtils.saveInventory(inventory, 0, nbt);
 
         nbt.setTag(NBT_STORAGE, tag);
         nbt.setInteger(NBT_PRIORITY, priority);

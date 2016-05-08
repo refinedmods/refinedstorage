@@ -8,6 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 import refinedstorage.RefinedStorage;
+import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerStorage;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.network.MessagePriorityUpdate;
@@ -19,7 +20,6 @@ import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.IModeConfig;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.ModeConfigUtils;
-import refinedstorage.util.InventoryUtils;
 
 import java.util.List;
 
@@ -83,7 +83,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
                 deep.setStoredItemCount(deep.getStoredItemType().stackSize + stack.stackSize);
             }
         } else if (connectedTile instanceof IInventory) {
-            InventoryUtils.pushToInventory((IInventory) connectedTile, stack);
+            RefinedStorageUtils.pushToInventory((IInventory) connectedTile, stack);
         }
     }
 
@@ -96,7 +96,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
         if (connectedTile instanceof IDeepStorageUnit) {
             IDeepStorageUnit deep = (IDeepStorageUnit) connectedTile;
 
-            if (deep.getStoredItemType() != null && InventoryUtils.compareStackNoQuantity(deep.getStoredItemType(), stack)) {
+            if (deep.getStoredItemType() != null && RefinedStorageUtils.compareStackNoQuantity(deep.getStoredItemType(), stack)) {
                 if (deep.getStoredItemType().stackSize < quantity) {
                     quantity = deep.getStoredItemType().stackSize;
                 }
@@ -114,7 +114,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
             for (int i = 0; i < inventory.getSizeInventory(); ++i) {
                 ItemStack slot = inventory.getStackInSlot(i);
 
-                if (slot != null && InventoryUtils.compareStack(slot, stack, flags)) {
+                if (slot != null && RefinedStorageUtils.compareStack(slot, stack, flags)) {
                     if (quantity > slot.stackSize) {
                         quantity = slot.stackSize;
                     }
@@ -146,7 +146,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
                 IDeepStorageUnit deep = (IDeepStorageUnit) connectedTile;
 
                 if (deep.getStoredItemType() != null) {
-                    if (InventoryUtils.compareStackNoQuantity(deep.getStoredItemType(), stack)) {
+                    if (RefinedStorageUtils.compareStackNoQuantity(deep.getStoredItemType(), stack)) {
                         return (deep.getStoredItemType().stackSize + stack.stackSize) < deep.getMaxStoredCount();
                     }
 
@@ -155,7 +155,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
                     return stack.stackSize < deep.getMaxStoredCount();
                 }
             } else if (connectedTile instanceof IInventory) {
-                return InventoryUtils.canPushToInventory((IInventory) connectedTile, stack);
+                return RefinedStorageUtils.canPushToInventory((IInventory) connectedTile, stack);
             }
         }
 
@@ -189,7 +189,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
             buf.writeInt(deep.getStoredItemType() == null ? 0 : deep.getStoredItemType().stackSize);
         } else if (connectedTile instanceof IInventory) {
-            buf.writeInt(InventoryUtils.getInventoryItems((IInventory) connectedTile));
+            buf.writeInt(RefinedStorageUtils.getInventoryItemCount((IInventory) connectedTile));
         } else {
             buf.writeInt(0);
         }
@@ -217,7 +217,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
 
-        InventoryUtils.restoreInventory(inventory, 0, nbt);
+        RefinedStorageUtils.restoreInventory(inventory, 0, nbt);
 
         if (nbt.hasKey(NBT_PRIORITY)) {
             priority = nbt.getInteger(NBT_PRIORITY);
@@ -236,7 +236,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
     public void writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
 
-        InventoryUtils.saveInventory(inventory, 0, nbt);
+        RefinedStorageUtils.saveInventory(inventory, 0, nbt);
 
         nbt.setInteger(NBT_PRIORITY, priority);
         nbt.setInteger(NBT_COMPARE, compare);

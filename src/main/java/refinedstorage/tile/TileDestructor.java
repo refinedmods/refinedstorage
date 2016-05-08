@@ -9,13 +9,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
+import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerDestructor;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.IModeConfig;
 import refinedstorage.tile.config.ModeConfigUtils;
-import refinedstorage.util.InventoryUtils;
-import refinedstorage.util.UpgradeUtils;
 
 import java.util.List;
 
@@ -38,7 +37,7 @@ public class TileDestructor extends TileMachine implements ICompareConfig, IMode
 
     @Override
     public void updateMachine() {
-        if (ticks % UpgradeUtils.getSpeed(upgradesInventory, BASE_SPEED, 4) == 0) {
+        if (ticks % RefinedStorageUtils.getSpeed(upgradesInventory, BASE_SPEED, 4) == 0) {
             BlockPos front = pos.offset(getDirection());
 
             IBlockState frontBlockState = worldObj.getBlockState(front);
@@ -53,7 +52,7 @@ public class TileDestructor extends TileMachine implements ICompareConfig, IMode
 
                     for (ItemStack drop : drops) {
                         if (!controller.push(drop)) {
-                            InventoryUtils.dropStack(worldObj, drop, front.getX(), front.getY(), front.getZ());
+                            RefinedStorageUtils.dropStack(worldObj, drop, front.getX(), front.getY(), front.getZ());
                         }
                     }
                 }
@@ -109,8 +108,8 @@ public class TileDestructor extends TileMachine implements ICompareConfig, IMode
             mode = nbt.getInteger(NBT_MODE);
         }
 
-        InventoryUtils.restoreInventory(inventory, 0, nbt);
-        InventoryUtils.restoreInventory(upgradesInventory, 1, nbt);
+        RefinedStorageUtils.restoreInventory(inventory, 0, nbt);
+        RefinedStorageUtils.restoreInventory(upgradesInventory, 1, nbt);
     }
 
     @Override
@@ -120,8 +119,8 @@ public class TileDestructor extends TileMachine implements ICompareConfig, IMode
         nbt.setInteger(NBT_COMPARE, compare);
         nbt.setInteger(NBT_MODE, mode);
 
-        InventoryUtils.saveInventory(inventory, 0, nbt);
-        InventoryUtils.saveInventory(upgradesInventory, 1, nbt);
+        RefinedStorageUtils.saveInventory(inventory, 0, nbt);
+        RefinedStorageUtils.saveInventory(upgradesInventory, 1, nbt);
     }
 
     @Override

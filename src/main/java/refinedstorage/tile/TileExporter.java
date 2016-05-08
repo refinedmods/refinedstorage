@@ -7,13 +7,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityHopper;
+import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerExporter;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.autocrafting.CraftingPattern;
 import refinedstorage.tile.config.ICompareConfig;
-import refinedstorage.util.InventoryUtils;
-import refinedstorage.util.UpgradeUtils;
 
 public class TileExporter extends TileMachine implements ICompareConfig {
     public static final String NBT_COMPARE = "Compare";
@@ -35,7 +34,7 @@ public class TileExporter extends TileMachine implements ICompareConfig {
         if (connectedTile instanceof IInventory) {
             IInventory connectedInventory = (IInventory) connectedTile;
 
-            if (ticks % UpgradeUtils.getSpeed(upgradesInventory) == 0) {
+            if (ticks % RefinedStorageUtils.getSpeed(upgradesInventory) == 0) {
                 for (int i = 0; i < inventory.getSizeInventory(); ++i) {
                     ItemStack slot = inventory.getStackInSlot(i);
 
@@ -51,7 +50,7 @@ public class TileExporter extends TileMachine implements ICompareConfig {
                             if (remaining != null) {
                                 controller.push(remaining);
                             }
-                        } else if (UpgradeUtils.hasUpgrade(upgradesInventory, ItemUpgrade.TYPE_CRAFTING)) {
+                        } else if (RefinedStorageUtils.hasUpgrade(upgradesInventory, ItemUpgrade.TYPE_CRAFTING)) {
                             CraftingPattern pattern = controller.getPattern(slot, compare);
 
                             if (pattern != null && !controller.hasCraftingTask(pattern, compare)) {
@@ -84,8 +83,8 @@ public class TileExporter extends TileMachine implements ICompareConfig {
             compare = nbt.getInteger(NBT_COMPARE);
         }
 
-        InventoryUtils.restoreInventory(inventory, 0, nbt);
-        InventoryUtils.restoreInventory(upgradesInventory, 1, nbt);
+        RefinedStorageUtils.restoreInventory(inventory, 0, nbt);
+        RefinedStorageUtils.restoreInventory(upgradesInventory, 1, nbt);
     }
 
     @Override
@@ -94,8 +93,8 @@ public class TileExporter extends TileMachine implements ICompareConfig {
 
         nbt.setInteger(NBT_COMPARE, compare);
 
-        InventoryUtils.saveInventory(inventory, 0, nbt);
-        InventoryUtils.saveInventory(upgradesInventory, 1, nbt);
+        RefinedStorageUtils.saveInventory(inventory, 0, nbt);
+        RefinedStorageUtils.saveInventory(upgradesInventory, 1, nbt);
     }
 
     @Override

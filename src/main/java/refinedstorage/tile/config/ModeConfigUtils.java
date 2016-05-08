@@ -2,7 +2,7 @@ package refinedstorage.tile.config;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import refinedstorage.util.InventoryUtils;
+import refinedstorage.RefinedStorageUtils;
 
 public class ModeConfigUtils {
     public static boolean doesNotViolateMode(IInventory inventory, IModeConfig mode, int compare, ItemStack stack) {
@@ -15,7 +15,7 @@ public class ModeConfigUtils {
                 if (slot != null) {
                     slots++;
 
-                    if (InventoryUtils.compareStack(slot, stack, compare)) {
+                    if (RefinedStorageUtils.compareStack(slot, stack, compare)) {
                         return true;
                     }
                 }
@@ -26,7 +26,7 @@ public class ModeConfigUtils {
             for (int i = 0; i < inventory.getSizeInventory(); ++i) {
                 ItemStack slot = inventory.getStackInSlot(i);
 
-                if (slot != null && InventoryUtils.compareStack(slot, stack, compare)) {
+                if (slot != null && RefinedStorageUtils.compareStack(slot, stack, compare)) {
                     return false;
                 }
             }

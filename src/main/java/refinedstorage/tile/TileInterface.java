@@ -9,13 +9,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
+import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerInterface;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.autocrafting.CraftingPattern;
 import refinedstorage.tile.config.ICompareConfig;
-import refinedstorage.util.InventoryUtils;
-import refinedstorage.util.UpgradeUtils;
 
 public class TileInterface extends TileMachine implements ICompareConfig, ISidedInventory {
     public static final String NBT_COMPARE = "Compare";
@@ -50,7 +49,7 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
         if (slot == null) {
             currentSlot++;
         } else {
-            if (ticks % UpgradeUtils.getSpeed(upgradesInventory) == 0) {
+            if (ticks % RefinedStorageUtils.getSpeed(upgradesInventory) == 0) {
                 ItemStack toPush = slot.copy();
                 toPush.stackSize = 1;
 
@@ -68,7 +67,7 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
                 boolean mayTake = false;
 
                 if (got != null) {
-                    if (!InventoryUtils.compareStack(wanted, got, compare)) {
+                    if (!RefinedStorageUtils.compareStack(wanted, got, compare)) {
                         if (controller.push(got)) {
                             inventory.setInventorySlotContents(i + 9, null);
                         }
@@ -98,7 +97,7 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
                             }
                         }
 
-                        if (UpgradeUtils.hasUpgrade(upgradesInventory, ItemUpgrade.TYPE_CRAFTING)) {
+                        if (RefinedStorageUtils.hasUpgrade(upgradesInventory, ItemUpgrade.TYPE_CRAFTING)) {
                             CraftingPattern pattern = controller.getPattern(wanted, compare);
 
                             if (pattern != null && (took == null || took.stackSize != needed)) {
@@ -135,8 +134,8 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
 
-        InventoryUtils.restoreInventory(this, 0, nbt);
-        InventoryUtils.restoreInventory(upgradesInventory, 1, nbt);
+        RefinedStorageUtils.restoreInventory(this, 0, nbt);
+        RefinedStorageUtils.restoreInventory(upgradesInventory, 1, nbt);
 
         if (nbt.hasKey(NBT_COMPARE)) {
             compare = nbt.getInteger(NBT_COMPARE);
@@ -147,8 +146,8 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
     public void writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
 
-        InventoryUtils.saveInventory(this, 0, nbt);
-        InventoryUtils.saveInventory(upgradesInventory, 1, nbt);
+        RefinedStorageUtils.saveInventory(this, 0, nbt);
+        RefinedStorageUtils.saveInventory(upgradesInventory, 1, nbt);
 
         nbt.setInteger(NBT_COMPARE, compare);
     }

@@ -1,14 +1,18 @@
-package refinedstorage.util;
+package refinedstorage;
 
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+import refinedstorage.inventory.InventorySimple;
+import refinedstorage.item.ItemUpgrade;
 
-public class InventoryUtils {
+public class RefinedStorageUtils {
     public static final String NBT_INVENTORY = "Inventory_%d";
     public static final String NBT_SLOT = "Slot";
 
@@ -146,7 +150,7 @@ public class InventoryUtils {
         return toGo == 0;
     }
 
-    public static int getInventoryItems(IInventory inventory) {
+    public static int getInventoryItemCount(IInventory inventory) {
         int size = 0;
 
         for (int i = 0; i < inventory.getSizeInventory(); ++i) {
@@ -196,5 +200,79 @@ public class InventoryUtils {
 
     public static boolean compareStackNoQuantity(ItemStack first, ItemStack second) {
         return compareStack(first, second, COMPARE_NBT | COMPARE_DAMAGE);
+    }
+
+    public static int getSpeed(InventorySimple upgrades) {
+        return getSpeed(upgrades, 9, 2);
+    }
+
+    public static int getSpeed(InventorySimple inventory, int speed, int speedIncrease) {
+        for (int i = 0; i < inventory.getSizeInventory(); ++i) {
+            if (inventory.getStackInSlot(i) != null && inventory.getStackInSlot(i).getMetadata() == ItemUpgrade.TYPE_SPEED) {
+                speed -= speedIncrease;
+            }
+        }
+
+        return speed;
+    }
+
+    public static boolean hasUpgrade(InventorySimple inventory, int type) {
+        return getUpgradeCount(inventory, type) > 0;
+    }
+
+    public static int getUpgradeCount(InventorySimple inventory, int type) {
+        int upgrades = 0;
+
+        for (int i = 0; i < inventory.getSizeInventory(); ++i) {
+            if (inventory.getStackInSlot(i) != null && inventory.getStackInSlot(i).getMetadata() == type) {
+                upgrades++;
+            }
+        }
+
+        return upgrades;
+    }
+
+    public static void writeBoolArray(NBTTagCompound tag, String name, boolean[] array) {
+        int[] intArray = new int[array.length];
+
+        for (int i = 0; i < intArray.length; ++i) {
+            intArray[i] = array[i] ? 1 : 0;
+        }
+
+        tag.setTag(name, new NBTTagIntArray(intArray));
+    }
+
+    public static boolean[] readBoolArray(NBTTagCompound tag, String name) {
+        int[] intArray = tag.getIntArray(name);
+
+        boolean array[] = new boolean[intArray.length];
+
+        for (int i = 0; i < intArray.length; ++i) {
+            array[i] = intArray[i] == 1 ? true : false;
+        }
+
+        return array;
+    }
+
+    public static EnumHand getHandById(int id) {
+        switch (id) {
+            case 0:
+                return EnumHand.MAIN_HAND;
+            case 1:
+                return EnumHand.OFF_HAND;
+            default:
+                return EnumHand.MAIN_HAND;
+        }
+    }
+
+    public static int getIdFromHand(EnumHand hand) {
+        switch (hand) {
+            case MAIN_HAND:
+                return 0;
+            case OFF_HAND:
+                return 1;
+            default:
+                return 0;
+        }
     }
 }

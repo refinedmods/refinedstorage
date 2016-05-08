@@ -8,10 +8,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
 import refinedstorage.RefinedStorageItems;
+import refinedstorage.RefinedStorageUtils;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.tile.TileBase;
-import refinedstorage.util.InventoryUtils;
 
 public class TileProcessingPatternEncoder extends TileBase implements ISidedInventory {
     public static final int[] FACES = new int[]{
@@ -28,16 +28,16 @@ public class TileProcessingPatternEncoder extends TileBase implements ISidedInve
     public void writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
 
-        InventoryUtils.saveInventory(inventory, 0, nbt);
-        InventoryUtils.saveInventory(inputsOutputsInventory, 1, nbt);
+        RefinedStorageUtils.saveInventory(inventory, 0, nbt);
+        RefinedStorageUtils.saveInventory(inputsOutputsInventory, 1, nbt);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
 
-        InventoryUtils.restoreInventory(inventory, 0, nbt);
-        InventoryUtils.restoreInventory(inputsOutputsInventory, 1, nbt);
+        RefinedStorageUtils.restoreInventory(inventory, 0, nbt);
+        RefinedStorageUtils.restoreInventory(inputsOutputsInventory, 1, nbt);
     }
 
     @Override

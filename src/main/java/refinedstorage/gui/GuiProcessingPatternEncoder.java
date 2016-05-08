@@ -3,15 +3,9 @@ package refinedstorage.gui;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.init.SoundEvents;
 import refinedstorage.RefinedStorage;
-import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerProcessingPatternEncoder;
-import refinedstorage.gui.sidebutton.SideButtonCompare;
-import refinedstorage.gui.sidebutton.SideButtonMode;
-import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.network.MessageGridPatternCreate;
 import refinedstorage.tile.autocrafting.TileProcessingPatternEncoder;
-import refinedstorage.tile.grid.TileGrid;
-import refinedstorage.util.InventoryUtils;
 
 import java.io.IOException;
 
