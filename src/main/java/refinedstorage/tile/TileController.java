@@ -9,10 +9,12 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
@@ -51,6 +53,8 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     }
 
     public static final int ENERGY_CAPACITY = 32000;
+
+    public static final String NBT_CRAFTING_TASKS = "CraftingTasks";
 
     private List<ItemGroup> itemGroups = new ArrayList<ItemGroup>();
     private List<IStorage> storages = new ArrayList<IStorage>();
@@ -502,6 +506,23 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
         if (nbt.hasKey(RedstoneMode.NBT)) {
             redstoneMode = RedstoneMode.getById(nbt.getInteger(RedstoneMode.NBT));
         }
+
+        if (nbt.hasKey(NBT_CRAFTING_TASKS)) {
+            NBTTagList taskList = nbt.getTagList(NBT_CRAFTING_TASKS, Constants.NBT.TAG_COMPOUND);
+
+            for (int i = 0; i < taskList.tagCount(); ++i) {
+                NBTTagCompound taskTag = taskList.getCompoundTagAt(i);
+
+                switch (taskTag.getInteger("Type")) {
+                    case 0:
+                        addCraftingTask(new BasicCraftingTask(worldObj, taskTag));
+                        break;
+                    case 1:
+                        addCraftingTask(new ProcessingCraftingTask(worldObj, taskTag));
+                        break;
+                }
+            }
+        }
     }
 
     @Override
@@ -509,6 +530,16 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
         super.writeToNBT(nbt);
 
         nbt.setInteger(RedstoneMode.NBT, redstoneMode.id);
+
+        NBTTagList list = new NBTTagList();
+
+        for (ICraftingTask task : craftingTasks) {
+            NBTTagCompound taskTag = new NBTTagCompound();
+            task.writeToNBT(taskTag);
+            list.appendTag(taskTag);
+        }
+
+        nbt.setTag(NBT_CRAFTING_TASKS, list);
     }
 
     @Override

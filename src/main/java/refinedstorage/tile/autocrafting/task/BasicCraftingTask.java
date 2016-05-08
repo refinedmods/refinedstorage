@@ -1,14 +1,25 @@
 package refinedstorage.tile.autocrafting.task;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 import refinedstorage.tile.TileController;
 import refinedstorage.tile.autocrafting.CraftingPattern;
+import refinedstorage.util.NBTUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class BasicCraftingTask implements ICraftingTask {
+    public static final int ID = 0;
+
+    public static final String NBT_SATISFIED = "Satisfied";
+    public static final String NBT_CHECKED = "Checked";
+    public static final String NBT_CHILD_TASKS = "ChildTasks";
+    public static final String NBT_TOOK = "Took";
+
     private CraftingPattern pattern;
     private boolean satisfied[];
     private boolean checked[];
@@ -20,6 +31,13 @@ public class BasicCraftingTask implements ICraftingTask {
         this.satisfied = new boolean[pattern.getInputs().length];
         this.checked = new boolean[pattern.getInputs().length];
         this.childTasks = new boolean[pattern.getInputs().length];
+    }
+
+    public BasicCraftingTask(World world, NBTTagCompound tag) {
+        this.pattern = CraftingPattern.readFromNBT(world, tag.getCompoundTag(CraftingPattern.NBT));
+        this.satisfied = NBTUtils.readBoolArray(tag, NBT_SATISFIED);
+        this.checked = NBTUtils.readBoolArray(tag, NBT_CHECKED);
+        this.childTasks = NBTUtils.readBoolArray(tag, NBT_CHILD_TASKS);
     }
 
     public CraftingPattern getPattern() {
@@ -74,6 +92,27 @@ public class BasicCraftingTask implements ICraftingTask {
         for (ItemStack took : itemsTook) {
             controller.push(took);
         }
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound tag) {
+        NBTTagCompound patternTag = new NBTTagCompound();
+        pattern.writeToNBT(patternTag);
+        tag.setTag(CraftingPattern.NBT, patternTag);
+
+        NBTUtils.writeBoolArray(tag, NBT_SATISFIED, satisfied);
+        NBTUtils.writeBoolArray(tag, NBT_CHECKED, checked);
+        NBTUtils.writeBoolArray(tag, NBT_CHILD_TASKS, childTasks);
+
+        NBTTagList tookList = new NBTTagList();
+
+        for (ItemStack took : itemsTook) {
+            tookList.appendTag(took.serializeNBT());
+        }
+
+        tag.setTag(NBT_TOOK, tookList);
+
+        tag.setInteger("Type", ID);
     }
 
     @Override

@@ -2,15 +2,24 @@ package refinedstorage.tile.autocrafting.task;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 import refinedstorage.tile.TileController;
 import refinedstorage.tile.autocrafting.CraftingPattern;
 import refinedstorage.tile.autocrafting.TileCrafter;
 import refinedstorage.util.InventoryUtils;
+import refinedstorage.util.NBTUtils;
 
 public class ProcessingCraftingTask implements ICraftingTask {
+    public static final int ID = 1;
+
+    public static final String NBT_INSERTED = "Inserted";
+    public static final String NBT_MISSING = "Missing";
+    public static final String NBT_SATISFIED = "Satisfied";
+
     private CraftingPattern pattern;
     private boolean inserted[];
     private boolean missing[];
@@ -21,6 +30,13 @@ public class ProcessingCraftingTask implements ICraftingTask {
         this.inserted = new boolean[pattern.getInputs().length];
         this.missing = new boolean[pattern.getInputs().length];
         this.satisfied = new boolean[pattern.getOutputs().length];
+    }
+
+    public ProcessingCraftingTask(World world, NBTTagCompound tag) {
+        this.pattern = CraftingPattern.readFromNBT(world, tag.getCompoundTag(CraftingPattern.NBT));
+        this.inserted = NBTUtils.readBoolArray(tag, NBT_INSERTED);
+        this.missing = NBTUtils.readBoolArray(tag, NBT_MISSING);
+        this.satisfied = NBTUtils.readBoolArray(tag, NBT_SATISFIED);
     }
 
     @Override
@@ -87,6 +103,19 @@ public class ProcessingCraftingTask implements ICraftingTask {
     @Override
     public void onCancelled(TileController controller) {
         // NO OP
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound tag) {
+        NBTTagCompound patternTag = new NBTTagCompound();
+        pattern.writeToNBT(patternTag);
+        tag.setTag(CraftingPattern.NBT, patternTag);
+
+        NBTUtils.writeBoolArray(tag, NBT_INSERTED, satisfied);
+        NBTUtils.writeBoolArray(tag, NBT_MISSING, missing);
+        NBTUtils.writeBoolArray(tag, NBT_SATISFIED, satisfied);
+
+        tag.setInteger("Type", ID);
     }
 
     @Override
