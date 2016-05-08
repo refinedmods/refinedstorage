@@ -7,6 +7,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerConstructor;
@@ -42,6 +43,7 @@ public class TileConstructor extends TileMachine implements ICompareConfig {
 
                 if (took != null) {
                     worldObj.setBlockState(front, block.getStateFromMeta(took.getItemDamage()), 1 | 2);
+                    worldObj.playSound(null, front, block.getStepSound().getPlaceSound(), SoundCategory.BLOCKS, 1.0F, 1.0F);
                 } else if (RefinedStorageUtils.hasUpgrade(upgradesInventory, ItemUpgrade.TYPE_CRAFTING)) {
                     CraftingPattern pattern = controller.getPattern(inventory.getStackInSlot(0), compare);
 

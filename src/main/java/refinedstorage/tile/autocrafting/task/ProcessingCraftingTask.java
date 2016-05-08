@@ -32,9 +32,9 @@ public class ProcessingCraftingTask implements ICraftingTask {
 
     public ProcessingCraftingTask(NBTTagCompound tag) {
         this.pattern = CraftingPattern.readFromNBT(tag.getCompoundTag(CraftingPattern.NBT));
-        this.inserted = RefinedStorageUtils.readBoolArray(tag, NBT_INSERTED);
-        this.missing = RefinedStorageUtils.readBoolArray(tag, NBT_MISSING);
-        this.satisfied = RefinedStorageUtils.readBoolArray(tag, NBT_SATISFIED);
+        this.inserted = RefinedStorageUtils.readBooleanArray(tag, NBT_INSERTED);
+        this.missing = RefinedStorageUtils.readBooleanArray(tag, NBT_MISSING);
+        this.satisfied = RefinedStorageUtils.readBooleanArray(tag, NBT_SATISFIED);
     }
 
     @Override
@@ -109,9 +109,9 @@ public class ProcessingCraftingTask implements ICraftingTask {
         pattern.writeToNBT(patternTag);
         tag.setTag(CraftingPattern.NBT, patternTag);
 
-        RefinedStorageUtils.writeBoolArray(tag, NBT_INSERTED, satisfied);
-        RefinedStorageUtils.writeBoolArray(tag, NBT_MISSING, missing);
-        RefinedStorageUtils.writeBoolArray(tag, NBT_SATISFIED, satisfied);
+        RefinedStorageUtils.writeBooleanArray(tag, NBT_INSERTED, satisfied);
+        RefinedStorageUtils.writeBooleanArray(tag, NBT_MISSING, missing);
+        RefinedStorageUtils.writeBooleanArray(tag, NBT_SATISFIED, satisfied);
 
         tag.setInteger("Type", ID);
     }

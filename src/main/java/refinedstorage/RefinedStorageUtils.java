@@ -232,7 +232,7 @@ public class RefinedStorageUtils {
         return upgrades;
     }
 
-    public static void writeBoolArray(NBTTagCompound tag, String name, boolean[] array) {
+    public static void writeBooleanArray(NBTTagCompound tag, String name, boolean[] array) {
         int[] intArray = new int[array.length];
 
         for (int i = 0; i < intArray.length; ++i) {
@@ -242,7 +242,7 @@ public class RefinedStorageUtils {
         tag.setTag(name, new NBTTagIntArray(intArray));
     }
 
-    public static boolean[] readBoolArray(NBTTagCompound tag, String name) {
+    public static boolean[] readBooleanArray(NBTTagCompound tag, String name) {
         int[] intArray = tag.getIntArray(name);
 
         boolean array[] = new boolean[intArray.length];

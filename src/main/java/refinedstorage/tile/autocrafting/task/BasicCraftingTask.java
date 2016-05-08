@@ -35,9 +35,9 @@ public class BasicCraftingTask implements ICraftingTask {
 
     public BasicCraftingTask(NBTTagCompound tag) {
         this.pattern = CraftingPattern.readFromNBT(tag.getCompoundTag(CraftingPattern.NBT));
-        this.satisfied = RefinedStorageUtils.readBoolArray(tag, NBT_SATISFIED);
-        this.checked = RefinedStorageUtils.readBoolArray(tag, NBT_CHECKED);
-        this.childTasks = RefinedStorageUtils.readBoolArray(tag, NBT_CHILD_TASKS);
+        this.satisfied = RefinedStorageUtils.readBooleanArray(tag, NBT_SATISFIED);
+        this.checked = RefinedStorageUtils.readBooleanArray(tag, NBT_CHECKED);
+        this.childTasks = RefinedStorageUtils.readBooleanArray(tag, NBT_CHILD_TASKS);
 
         NBTTagList tookList = tag.getTagList(NBT_TOOK, Constants.NBT.TAG_COMPOUND);
 
@@ -106,9 +106,9 @@ public class BasicCraftingTask implements ICraftingTask {
         pattern.writeToNBT(patternTag);
         tag.setTag(CraftingPattern.NBT, patternTag);
 
-        RefinedStorageUtils.writeBoolArray(tag, NBT_SATISFIED, satisfied);
-        RefinedStorageUtils.writeBoolArray(tag, NBT_CHECKED, checked);
-        RefinedStorageUtils.writeBoolArray(tag, NBT_CHILD_TASKS, childTasks);
+        RefinedStorageUtils.writeBooleanArray(tag, NBT_SATISFIED, satisfied);
+        RefinedStorageUtils.writeBooleanArray(tag, NBT_CHECKED, checked);
+        RefinedStorageUtils.writeBooleanArray(tag, NBT_CHILD_TASKS, childTasks);
 
         NBTTagList tookList = new NBTTagList();
 
