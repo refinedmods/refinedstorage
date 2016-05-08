@@ -4,7 +4,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
 import refinedstorage.tile.TileController;
 import refinedstorage.tile.autocrafting.CraftingPattern;
 import refinedstorage.util.NBTUtils;
@@ -33,8 +32,8 @@ public class BasicCraftingTask implements ICraftingTask {
         this.childTasks = new boolean[pattern.getInputs().length];
     }
 
-    public BasicCraftingTask(World world, NBTTagCompound tag) {
-        this.pattern = CraftingPattern.readFromNBT(world, tag.getCompoundTag(CraftingPattern.NBT));
+    public BasicCraftingTask(NBTTagCompound tag) {
+        this.pattern = CraftingPattern.readFromNBT(tag.getCompoundTag(CraftingPattern.NBT));
         this.satisfied = NBTUtils.readBoolArray(tag, NBT_SATISFIED);
         this.checked = NBTUtils.readBoolArray(tag, NBT_CHECKED);
         this.childTasks = NBTUtils.readBoolArray(tag, NBT_CHILD_TASKS);

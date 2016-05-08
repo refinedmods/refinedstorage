@@ -6,7 +6,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
 import refinedstorage.tile.TileController;
 import refinedstorage.tile.autocrafting.CraftingPattern;
 import refinedstorage.tile.autocrafting.TileCrafter;
@@ -32,8 +31,8 @@ public class ProcessingCraftingTask implements ICraftingTask {
         this.satisfied = new boolean[pattern.getOutputs().length];
     }
 
-    public ProcessingCraftingTask(World world, NBTTagCompound tag) {
-        this.pattern = CraftingPattern.readFromNBT(world, tag.getCompoundTag(CraftingPattern.NBT));
+    public ProcessingCraftingTask(NBTTagCompound tag) {
+        this.pattern = CraftingPattern.readFromNBT(tag.getCompoundTag(CraftingPattern.NBT));
         this.inserted = NBTUtils.readBoolArray(tag, NBT_INSERTED);
         this.missing = NBTUtils.readBoolArray(tag, NBT_MISSING);
         this.satisfied = NBTUtils.readBoolArray(tag, NBT_SATISFIED);
@@ -46,7 +45,7 @@ public class ProcessingCraftingTask implements ICraftingTask {
 
     @Override
     public boolean update(TileController controller) {
-        TileCrafter crafter = pattern.getCrafter();
+        TileCrafter crafter = pattern.getCrafter(controller.getWorld());
         TileEntity crafterFacing = crafter.getWorld().getTileEntity(crafter.getPos().offset(crafter.getDirection()));
 
         if (crafterFacing instanceof IInventory) {

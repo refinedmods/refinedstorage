@@ -34,7 +34,7 @@ public class TileCrafter extends TileMachine implements IInventory {
     @Override
     public void onDisconnected() {
         for (ICraftingTask task : controller.getCraftingTasks()) {
-            if (task.getPattern().getCrafter() == this) {
+            if (task.getPattern().getCrafter(worldObj) == this) {
                 controller.cancelCraftingTask(task);
             }
         }

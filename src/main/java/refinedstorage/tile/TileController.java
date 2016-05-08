@@ -138,7 +138,13 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                                 if (crafter.getStackInSlot(i) != null) {
                                     ItemStack pattern = crafter.getStackInSlot(i);
 
-                                    newPatterns.add(new CraftingPattern(crafter, ItemPattern.isProcessing(pattern), ItemPattern.getInputs(pattern), ItemPattern.getOutputs(pattern)));
+                                    newPatterns.add(new CraftingPattern(
+                                        crafter.getPos().getX(),
+                                        crafter.getPos().getY(),
+                                        crafter.getPos().getZ(),
+                                        ItemPattern.isProcessing(pattern),
+                                        ItemPattern.getInputs(pattern),
+                                        ItemPattern.getOutputs(pattern)));
                                 }
                             }
                         }
@@ -194,7 +200,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
             while (craftingTaskIterator.hasNext()) {
                 ICraftingTask task = craftingTaskIterator.next();
 
-                if (ticks % task.getPattern().getCrafter().getSpeed() == 0 && task.update(this)) {
+                if (ticks % task.getPattern().getCrafter(worldObj).getSpeed() == 0 && task.update(this)) {
                     task.onDone(this);
 
                     craftingTaskIterator.remove();
@@ -289,7 +295,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
         int amount = 0;
 
         for (int i = 0; i < craftingTasks.size(); ++i) {
-            if (craftingTasks.get(i).getPattern().comparePattern(pattern, flags)) {
+            if (craftingTasks.get(i).getPattern().comparePattern(worldObj, pattern, flags)) {
                 amount++;
             }
         }
@@ -515,10 +521,10 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
                 switch (taskTag.getInteger("Type")) {
                     case 0:
-                        addCraftingTask(new BasicCraftingTask(worldObj, taskTag));
+                        addCraftingTask(new BasicCraftingTask(taskTag));
                         break;
                     case 1:
-                        addCraftingTask(new ProcessingCraftingTask(worldObj, taskTag));
+                        addCraftingTask(new ProcessingCraftingTask(taskTag));
                         break;
                 }
             }
