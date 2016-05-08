@@ -66,7 +66,7 @@ public class GuiCrafter extends GuiBase {
 
                 float scale = 0.5f;
                 GlStateManager.scale(scale, scale, 1);
-                drawString(calculateOffsetOnScale(x + (ItemPattern.isProcessing(pattern) ? 5 : 20), scale), calculateOffsetOnScale(y + 6, scale), text);
+                drawString(calculateOffsetOnScale(x + (ItemPattern.isProcessing(pattern) ? 1 : 20), scale), calculateOffsetOnScale(y + 6, scale), text);
 
                 GlStateManager.popMatrix();
             }

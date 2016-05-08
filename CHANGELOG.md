@@ -4,7 +4,6 @@
 WIP
 
 **TODO**
-- Crafter direction
 - Textures
 - Update wiki
 

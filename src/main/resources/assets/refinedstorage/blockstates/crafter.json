@@ -1,15 +1,18 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "cube_all",
+    "model": "orientable",
     "textures": {
-      "all": "refinedstorage:blocks/crafter"
+      "side": "refinedstorage:blocks/side",
+      "top": "refinedstorage:blocks/side",
+      "front": "refinedstorage:blocks/crafter"
     }
   },
   "variants": {
     "inventory": [
       {
-        "transform": "forge:default-block"
+        "transform": "forge:default-block",
+        "y": 0
       }
     ],
     "connected": {
@@ -20,16 +23,22 @@
     },
     "direction": {
       "north": {
+        "y": 0
       },
       "east": {
+        "y": 90
       },
       "south": {
+        "y": 180
       },
       "west": {
+        "y": 270
       },
       "up": {
+        "x": 270
       },
       "down": {
+        "x": 90
       }
     }
   }
