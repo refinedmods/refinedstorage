@@ -19,11 +19,11 @@ public class SoldererRecipeStorage implements ISoldererRecipe {
     @Override
     public ItemStack getRow(int row) {
         if (row == 0) {
-            return new ItemStack(RefinedStorageItems.STORAGE_PART, 1, storagePart);
+            return new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC);
         } else if (row == 1) {
             return new ItemStack(RefinedStorageBlocks.MACHINE_CASING);
         } else if (row == 2) {
-            return new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED);
+            return new ItemStack(RefinedStorageItems.STORAGE_PART, 1, storagePart);
         }
 
         return null;

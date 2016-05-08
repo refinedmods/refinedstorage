@@ -16,7 +16,7 @@ import refinedstorage.gui.sidebutton.SideButtonGridSearchBoxMode;
 import refinedstorage.gui.sidebutton.SideButtonGridSortingDirection;
 import refinedstorage.gui.sidebutton.SideButtonGridSortingType;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
-import refinedstorage.jei.PluginRefinedStorage;
+import refinedstorage.jei.RefinedStorageJEIPlugin;
 import refinedstorage.network.GridPullFlags;
 import refinedstorage.network.MessageGridCraftingClear;
 import refinedstorage.network.MessageGridCraftingPush;
@@ -355,7 +355,7 @@ public class GuiGrid extends GuiBase {
     protected void keyTyped(char character, int keyCode) throws IOException {
         if (!checkHotbarKeys(keyCode) && searchField.textboxKeyTyped(character, keyCode)) {
             if (RefinedStorage.hasJei() && (grid.getSearchBoxMode() == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED || grid.getSearchBoxMode() == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED)) {
-                PluginRefinedStorage.INSTANCE.getRuntime().getItemListOverlay().setFilterText(searchField.getText());
+                RefinedStorageJEIPlugin.INSTANCE.getRuntime().getItemListOverlay().setFilterText(searchField.getText());
             }
         } else {
             super.keyTyped(character, keyCode);

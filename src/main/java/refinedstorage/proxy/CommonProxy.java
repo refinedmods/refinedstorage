@@ -219,11 +219,11 @@ public class CommonProxy {
 
         // Wireless Grid
         GameRegistry.addRecipe(new ItemStack(RefinedStorageItems.WIRELESS_GRID, 1, ItemWirelessGrid.TYPE_NORMAL),
-            " P ",
-            "ERE",
+            "EPE",
+            "EAE",
             "EEE",
             'P', new ItemStack(Items.ender_pearl),
-            'R', new ItemStack(Items.redstone),
+            'A', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
             'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
         );
 
