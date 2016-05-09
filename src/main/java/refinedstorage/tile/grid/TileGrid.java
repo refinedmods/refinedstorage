@@ -355,12 +355,13 @@ public class TileGrid extends TileMachine implements IGrid {
 
     @Override
     public IInventory getDroppedInventory() {
-        if (getType() == EnumGridType.CRAFTING) {
-            return craftingInventory;
-        } else if (getType() == EnumGridType.PATTERN) {
-            return patternsInventory;
+        switch (getType()) {
+            case CRAFTING:
+                return craftingInventory;
+            case PATTERN:
+                return patternsInventory;
+            default:
+                return null;
         }
-
-        return null;
     }
 }
