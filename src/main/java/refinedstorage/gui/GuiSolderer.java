@@ -2,7 +2,7 @@ package refinedstorage.gui;
 
 import refinedstorage.container.ContainerSolderer;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
-import refinedstorage.tile.TileSolderer;
+import refinedstorage.tile.solderer.TileSolderer;
 
 public class GuiSolderer extends GuiBase {
     private TileSolderer solderer;

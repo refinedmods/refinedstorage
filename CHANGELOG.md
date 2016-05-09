@@ -4,6 +4,8 @@
 WIP
 
 **TODO**
+- Fix wrong quantity per craft
+- Better way to do crafting upgrades
 - Textures
 - Update wiki
 

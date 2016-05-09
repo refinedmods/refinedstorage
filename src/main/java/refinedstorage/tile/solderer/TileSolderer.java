@@ -1,4 +1,4 @@
-package refinedstorage.tile;
+package refinedstorage.tile.solderer;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,8 +13,7 @@ import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerSolderer;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.item.ItemUpgrade;
-import refinedstorage.tile.solderer.ISoldererRecipe;
-import refinedstorage.tile.solderer.SoldererRegistry;
+import refinedstorage.tile.TileMachine;
 
 public class TileSolderer extends TileMachine implements IInventory, ISidedInventory {
     public static final String NBT_WORKING = "Working";
@@ -27,8 +26,7 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
         3
     };
 
-    private InventorySimple inventory = new InventorySimple("solderer", 4, this);
-    private InventorySimple upgradesInventory = new InventorySimple("upgrades", 4, this);
+    private InventorySimple inventory = new InventorySimple("solderer", 4 + 4, this);
 
     private ISoldererRecipe recipe;
 
@@ -58,7 +56,7 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
                 markDirty();
             }
         } else if (working) {
-            progress += 1 + RefinedStorageUtils.getUpgradeCount(upgradesInventory, ItemUpgrade.TYPE_SPEED);
+            progress += 1 + RefinedStorageUtils.getUpgradeCount(inventory, ItemUpgrade.TYPE_SPEED, 4);
 
             if (progress >= recipe.getDuration()) {
                 if (inventory.getStackInSlot(3) != null) {
@@ -98,7 +96,6 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
         super.readFromNBT(nbt);
 
         RefinedStorageUtils.restoreInventory(this, 0, nbt);
-        RefinedStorageUtils.restoreInventory(upgradesInventory, 1, nbt);
 
         recipe = SoldererRegistry.getRecipe(inventory);
 
@@ -116,7 +113,6 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
         super.writeToNBT(nbt);
 
         RefinedStorageUtils.saveInventory(this, 0, nbt);
-        RefinedStorageUtils.saveInventory(upgradesInventory, 1, nbt);
 
         nbt.setBoolean(NBT_WORKING, working);
         nbt.setInteger(NBT_PROGRESS, progress);
@@ -277,9 +273,5 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
     @Override
     public boolean canExtractItem(int slot, ItemStack stack, EnumFacing direction) {
         return slot == 3;
-    }
-
-    public InventorySimple getUpgradesInventory() {
-        return upgradesInventory;
     }
 }

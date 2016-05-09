@@ -7,7 +7,7 @@ import refinedstorage.container.slot.SlotFiltered;
 import refinedstorage.container.slot.SlotOutput;
 import refinedstorage.container.slot.UpgradeItemValidator;
 import refinedstorage.item.ItemUpgrade;
-import refinedstorage.tile.TileSolderer;
+import refinedstorage.tile.solderer.TileSolderer;
 
 public class ContainerSolderer extends ContainerBase {
     public ContainerSolderer(EntityPlayer player, TileSolderer solderer) {
@@ -25,7 +25,7 @@ public class ContainerSolderer extends ContainerBase {
         addSlotToContainer(new SlotOutput(solderer, 3, 134, 38));
 
         for (int i = 0; i < 4; ++i) {
-            addSlotToContainer(new SlotFiltered(solderer.getUpgradesInventory(), i, 187, 6 + (i * 18), new UpgradeItemValidator(ItemUpgrade.TYPE_SPEED)));
+            addSlotToContainer(new SlotFiltered(solderer, 4 + i, 187, 6 + (i * 18), new UpgradeItemValidator(ItemUpgrade.TYPE_SPEED)));
         }
 
         addPlayerInventory(8, 95);

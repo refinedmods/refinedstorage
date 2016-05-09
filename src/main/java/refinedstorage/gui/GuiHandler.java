@@ -16,6 +16,7 @@ import refinedstorage.tile.autocrafting.TileCraftingMonitor;
 import refinedstorage.tile.autocrafting.TileProcessingPatternEncoder;
 import refinedstorage.tile.grid.TileGrid;
 import refinedstorage.tile.grid.WirelessGrid;
+import refinedstorage.tile.solderer.TileSolderer;
 
 public class GuiHandler implements IGuiHandler {
     private Container getContainer(int ID, EntityPlayer player, TileEntity tile) {

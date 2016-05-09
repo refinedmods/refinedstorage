@@ -202,12 +202,20 @@ public class RefinedStorageUtils {
         return compareStack(first, second, COMPARE_NBT | COMPARE_DAMAGE);
     }
 
-    public static int getSpeed(InventorySimple upgrades) {
-        return getSpeed(upgrades, 9, 2);
+    public static int getSpeed(InventorySimple inventory) {
+        return getSpeed(inventory, 9, 2, 0);
+    }
+
+    public static int getSpeed(InventorySimple inventory, int start) {
+        return getSpeed(inventory, 9, 2, start);
     }
 
     public static int getSpeed(InventorySimple inventory, int speed, int speedIncrease) {
-        for (int i = 0; i < inventory.getSizeInventory(); ++i) {
+        return getSpeed(inventory, speed, speedIncrease, 0);
+    }
+
+    public static int getSpeed(InventorySimple inventory, int speed, int speedIncrease, int start) {
+        for (int i = start; i < inventory.getSizeInventory(); ++i) {
             if (inventory.getStackInSlot(i) != null && inventory.getStackInSlot(i).getMetadata() == ItemUpgrade.TYPE_SPEED) {
                 speed -= speedIncrease;
             }
@@ -221,9 +229,13 @@ public class RefinedStorageUtils {
     }
 
     public static int getUpgradeCount(InventorySimple inventory, int type) {
+        return getUpgradeCount(inventory, type, 0);
+    }
+
+    public static int getUpgradeCount(InventorySimple inventory, int type, int start) {
         int upgrades = 0;
 
-        for (int i = 0; i < inventory.getSizeInventory(); ++i) {
+        for (int i = start; i < inventory.getSizeInventory(); ++i) {
             if (inventory.getStackInSlot(i) != null && inventory.getStackInSlot(i).getMetadata() == type) {
                 upgrades++;
             }

@@ -147,6 +147,11 @@ public class TileDestructor extends TileMachine implements ICompareConfig, IMode
         return upgradesInventory;
     }
 
+    @Override
+    public IInventory getDroppedInventory() {
+        return upgradesInventory;
+    }
+
     public IInventory getInventory() {
         return inventory;
     }
