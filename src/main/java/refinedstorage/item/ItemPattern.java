@@ -4,8 +4,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.util.Constants;
 
 import java.util.List;
@@ -24,10 +22,6 @@ public class ItemPattern extends ItemBase {
         if (isValid(pattern)) {
             for (ItemStack output : getOutputs(pattern)) {
                 list.add(output.getDisplayName());
-            }
-
-            if (isProcessing(pattern)) {
-                list.add(TextFormatting.ITALIC + I18n.translateToLocal("misc.refinedstorage:processing") + TextFormatting.RESET);
             }
         }
     }

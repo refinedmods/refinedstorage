@@ -28,6 +28,7 @@ gui.refinedstorage:crafting_monitor.items_processing=Items aan het verwerken:
 gui.refinedstorage:wireless_transmitter=Draadloze Zender
 gui.refinedstorage:wireless_transmitter.distance=%d blokken
 gui.refinedstorage:crafter=Crafter
+gui.refinedstorage:crafter.processing=Verwerking
 gui.refinedstorage:processing_pattern_encoder=Verwerkingspatroon Codeerder
 gui.refinedstorage:processing_pattern_encoder.pattern_create=Patroon maken
 
@@ -55,7 +56,6 @@ misc.refinedstorage:none=Geen
 misc.refinedstorage:cancel=Annuleer
 misc.refinedstorage:cancel_all=Annuleer alles
 misc.refinedstorage:priority=Prioriteit
-misc.refinedstorage:processing=Verwerking
 
 sidebutton.refinedstorage:compare.1=Vergelijken op schade
 sidebutton.refinedstorage:compare.2=Vergelijken op NBT

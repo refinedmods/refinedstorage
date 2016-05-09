@@ -52,7 +52,7 @@ public class GuiCrafter extends GuiBase {
             if (crafter.getStackInSlot(i) != null) {
                 ItemStack pattern = crafter.getStackInSlot(i);
 
-                String text = t("misc.refinedstorage:processing");
+                String text = t("gui.refinedstorage:crafter.processing");
 
                 if (!ItemPattern.isProcessing(pattern)) {
                     ItemStack result = ItemPattern.getOutputs(pattern)[0];
