@@ -167,6 +167,7 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
         if (progress > duration) {
             return i;
         }
+
         return (int) ((float) progress / (float) duration * (float) i);
     }
 

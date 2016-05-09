@@ -286,22 +286,6 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
         craftingTasksToCancel.add(task);
     }
 
-    public int getCraftingTaskCount(CraftingPattern pattern, int flags) {
-        int amount = 0;
-
-        for (int i = 0; i < craftingTasks.size(); ++i) {
-            if (craftingTasks.get(i).getPattern().comparePattern(worldObj, pattern, flags)) {
-                amount++;
-            }
-        }
-
-        return amount;
-    }
-
-    public boolean hasCraftingTask(CraftingPattern pattern, int flags) {
-        return getCraftingTaskCount(pattern, flags) > 0;
-    }
-
     public List<CraftingPattern> getPatterns() {
         return patterns;
     }

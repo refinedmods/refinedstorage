@@ -265,14 +265,17 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
     public IInventory getDroppedInventory() {
         InventorySimple dummy = new InventorySimple(null, 9 + 9 + 4);
 
+        // Importing slots
         for (int i = 0; i < 9; ++i) {
             dummy.setInventorySlotContents(i, inventory.getStackInSlot(i));
         }
 
+        // Exporting slots
         for (int i = 0; i < 9; ++i) {
             dummy.setInventorySlotContents(9 + i, inventory.getStackInSlot(18 + i));
         }
 
+        // Upgrade slots
         for (int i = 0; i < 4; ++i) {
             dummy.setInventorySlotContents(18 + i, upgradesInventory.getStackInSlot(i));
         }
