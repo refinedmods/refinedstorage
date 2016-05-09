@@ -11,7 +11,6 @@ import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerExporter;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.item.ItemUpgrade;
-import refinedstorage.tile.autocrafting.CraftingPattern;
 import refinedstorage.tile.config.ICompareConfig;
 
 public class TileExporter extends TileMachine implements ICompareConfig {
@@ -21,6 +20,8 @@ public class TileExporter extends TileMachine implements ICompareConfig {
     private InventorySimple upgradesInventory = new InventorySimple("upgrades", 4, this);
 
     private int compare = 0;
+
+    private CraftingTaskScheduler scheduler = new CraftingTaskScheduler();
 
     @Override
     public int getEnergyUsage() {
@@ -45,16 +46,16 @@ public class TileExporter extends TileMachine implements ICompareConfig {
                         ItemStack took = controller.take(toTake, compare);
 
                         if (took != null) {
+                            scheduler.resetSchedule();
+
                             ItemStack remaining = TileEntityHopper.putStackInInventoryAllSlots(connectedInventory, took, getDirection().getOpposite());
 
                             if (remaining != null) {
                                 controller.push(remaining);
                             }
                         } else if (RefinedStorageUtils.hasUpgrade(upgradesInventory, ItemUpgrade.TYPE_CRAFTING)) {
-                            CraftingPattern pattern = controller.getPattern(slot, compare);
-
-                            if (pattern != null && !controller.hasCraftingTask(pattern, compare)) {
-                                controller.addCraftingTask(pattern);
+                            if (scheduler.canSchedule(compare, slot)) {
+                                scheduler.schedule(controller, compare, slot);
                             }
                         }
                     }
@@ -85,6 +86,8 @@ public class TileExporter extends TileMachine implements ICompareConfig {
 
         RefinedStorageUtils.restoreInventory(inventory, 0, nbt);
         RefinedStorageUtils.restoreInventory(upgradesInventory, 1, nbt);
+
+        scheduler.readFromNBT(nbt);
     }
 
     @Override
@@ -95,6 +98,8 @@ public class TileExporter extends TileMachine implements ICompareConfig {
 
         RefinedStorageUtils.saveInventory(inventory, 0, nbt);
         RefinedStorageUtils.saveInventory(upgradesInventory, 1, nbt);
+
+        scheduler.writeToNBT(nbt);
     }
 
     @Override
