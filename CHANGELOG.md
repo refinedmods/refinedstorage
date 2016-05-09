@@ -5,7 +5,6 @@ WIP
 
 **TODO**
 - Fix wrong quantity per craft
-- New scheduling system in interface too
 - Textures
 - Update wiki
 
