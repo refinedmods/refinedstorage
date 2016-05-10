@@ -77,15 +77,14 @@ public class ClientProxy extends CommonProxy {
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.PROCESSOR, ItemProcessor.TYPE_PRINTED_SILICON, new ModelResourceLocation("refinedstorage:printed_silicon", "inventory"));
 
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.SILICON, 0, new ModelResourceLocation("refinedstorage:silicon", "inventory"));
-
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.QUARTZ_ENRICHED_IRON, 0, new ModelResourceLocation("refinedstorage:quartz_enriched_iron", "inventory"));
 
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.CORE, ItemCore.TYPE_CONSTRUCTION, new ModelResourceLocation("refinedstorage:construction_core", "inventory"));
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.CORE, ItemCore.TYPE_DESTRUCTION, new ModelResourceLocation("refinedstorage:destruction_core", "inventory"));
 
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.WIRELESS_GRID, 0, new ModelResourceLocation("refinedstorage:wireless_grid", "inventory"));
-
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.PATTERN, 0, new ModelResourceLocation("refinedstorage:pattern", "inventory"));
+        ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.STORAGE_HOUSING, 0, new ModelResourceLocation("refinedstorage:storage_housing", "inventory"));
 
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.UPGRADE, 0, new ModelResourceLocation("refinedstorage:upgrade", "inventory"));
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_RANGE, new ModelResourceLocation("refinedstorage:range_upgrade", "inventory"));

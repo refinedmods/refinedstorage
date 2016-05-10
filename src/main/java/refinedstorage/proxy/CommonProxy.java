@@ -99,6 +99,7 @@ public class CommonProxy {
 
         registerItem(RefinedStorageItems.QUARTZ_ENRICHED_IRON);
         registerItem(RefinedStorageItems.STORAGE_DISK);
+        registerItem(RefinedStorageItems.STORAGE_HOUSING);
         registerItem(RefinedStorageItems.PATTERN);
         registerItem(RefinedStorageItems.STORAGE_PART);
         registerItem(RefinedStorageItems.WIRELESS_GRID);
@@ -355,46 +356,35 @@ public class CommonProxy {
             'S', new ItemStack(RefinedStorageItems.STORAGE_PART, 1, ItemStoragePart.TYPE_16K)
         );
 
+        // Storage Housing
+        GameRegistry.addRecipe(NBTStorage.initNBT(new ItemStack(RefinedStorageItems.STORAGE_HOUSING)),
+            "GRG",
+            "R R",
+            "EEE",
+            'G', new ItemStack(Blocks.glass),
+            'R', new ItemStack(Items.redstone),
+            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
+        );
+
         // Storage Disks
-        GameRegistry.addRecipe(NBTStorage.initNBT(new ItemStack(RefinedStorageItems.STORAGE_DISK, 1, ItemStorageDisk.TYPE_1K)),
-            "GRG",
-            "RPR",
-            "EEE",
-            'G', new ItemStack(Blocks.glass),
-            'R', new ItemStack(Items.redstone),
-            'P', new ItemStack(RefinedStorageItems.STORAGE_PART, 1, ItemStoragePart.TYPE_1K),
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
-        );
+        for (int type = 0; type <= 3; ++type) {
+            ItemStack disk = NBTStorage.initNBT(new ItemStack(RefinedStorageItems.STORAGE_DISK, 1, type));
 
-        GameRegistry.addRecipe(NBTStorage.initNBT(new ItemStack(RefinedStorageItems.STORAGE_DISK, 1, ItemStorageDisk.TYPE_4K)),
-            "GRG",
-            "RPR",
-            "EEE",
-            'G', new ItemStack(Blocks.glass),
-            'R', new ItemStack(Items.redstone),
-            'P', new ItemStack(RefinedStorageItems.STORAGE_PART, 1, ItemStoragePart.TYPE_4K),
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
-        );
+            GameRegistry.addRecipe(disk,
+                "GRG",
+                "RPR",
+                "EEE",
+                'G', new ItemStack(Blocks.glass),
+                'R', new ItemStack(Items.redstone),
+                'P', new ItemStack(RefinedStorageItems.STORAGE_PART, 1, type),
+                'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
+            );
 
-        GameRegistry.addRecipe(NBTStorage.initNBT(new ItemStack(RefinedStorageItems.STORAGE_DISK, 1, ItemStorageDisk.TYPE_16K)),
-            "GRG",
-            "RPR",
-            "EEE",
-            'G', new ItemStack(Blocks.glass),
-            'R', new ItemStack(Items.redstone),
-            'P', new ItemStack(RefinedStorageItems.STORAGE_PART, 1, ItemStoragePart.TYPE_16K),
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
-        );
-
-        GameRegistry.addRecipe(NBTStorage.initNBT(new ItemStack(RefinedStorageItems.STORAGE_DISK, 1, ItemStorageDisk.TYPE_64K)),
-            "GRG",
-            "RPR",
-            "EEE",
-            'G', new ItemStack(Blocks.glass),
-            'R', new ItemStack(Items.redstone),
-            'P', new ItemStack(RefinedStorageItems.STORAGE_PART, 1, ItemStoragePart.TYPE_64K),
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
-        );
+            GameRegistry.addShapelessRecipe(disk,
+                new ItemStack(RefinedStorageItems.STORAGE_HOUSING),
+                new ItemStack(RefinedStorageItems.STORAGE_PART, type, type)
+            );
+        }
 
         // Pattern
         GameRegistry.addRecipe(new ItemStack(RefinedStorageItems.PATTERN),

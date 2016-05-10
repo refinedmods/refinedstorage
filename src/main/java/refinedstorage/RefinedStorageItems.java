@@ -12,4 +12,5 @@ public final class RefinedStorageItems {
     public static final ItemStoragePart STORAGE_PART = new ItemStoragePart();
     public static final ItemPattern PATTERN = new ItemPattern();
     public static final ItemUpgrade UPGRADE = new ItemUpgrade();
+    public static final ItemStorageHousing STORAGE_HOUSING = new ItemStorageHousing();
 }
