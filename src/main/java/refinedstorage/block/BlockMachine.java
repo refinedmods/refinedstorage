@@ -5,8 +5,6 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -49,15 +47,6 @@ public abstract class BlockMachine extends BlockBase {
         }
 
         super.breakBlock(world, pos, state);
-    }
-
-    @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack stack) {
-        super.onBlockPlacedBy(world, pos, state, player, stack);
-
-        if (!world.isRemote) {
-            ((TileMachine) world.getTileEntity(pos)).searchController();
-        }
     }
 
     @Override

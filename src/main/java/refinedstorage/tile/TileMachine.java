@@ -1,6 +1,7 @@
 package refinedstorage.tile;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import refinedstorage.block.BlockMachine;
@@ -14,6 +15,7 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
     protected boolean connected = false;
     protected RedstoneMode redstoneMode = RedstoneMode.IGNORE;
     protected TileController controller;
+    private Block block;
 
     private Set<String> visited = new HashSet<String>();
 
@@ -41,7 +43,9 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
     public void onLoad() {
         super.onLoad();
 
-        if (!worldObj.isRemote && !connected) {
+        if (!worldObj.isRemote) {
+            block = worldObj.getBlockState(pos).getBlock();
+
             searchController();
         }
     }
@@ -49,7 +53,9 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
     public void onConnected() {
         connected = true;
 
-        worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockMachine.CONNECTED, true));
+        if (worldObj.getBlockState(pos).getBlock() == block) {
+            worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockMachine.CONNECTED, true));
+        }
 
         controller.addMachine(this);
     }
@@ -57,7 +63,9 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
     public void onDisconnected() {
         connected = false;
 
-        worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockMachine.CONNECTED, false));
+        if (worldObj.getBlockState(pos).getBlock() == block) {
+            worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockMachine.CONNECTED, false));
+        }
 
         controller.removeMachine(this);
     }

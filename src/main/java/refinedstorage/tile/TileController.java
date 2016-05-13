@@ -80,6 +80,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     }
 
     public void removeMachine(TileMachine machine) {
+        System.out.println("Added for removal!");
         machinesToRemove.add(machine.getPos());
     }
 
@@ -92,8 +93,11 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
             machinesToAdd.clear();
 
             for (BlockPos pos : machinesToRemove) {
+                System.out.println("ToRemove:" + pos.getX() + "," + pos.getY() + "," + pos.getZ());
                 for (TileMachine machine : machines) {
-                    if (machine.getPos().getX() == pos.getX() && machine.getPos().getY() == pos.getY() && machine.getPos().getZ() == pos.getZ()) {
+                    System.out.println("Machine:" + machine.getPos().getX() + "," + machine.getPos().getY() + "," + machine.getPos().getZ());
+                    if (machine.getPos().equals(pos)) {
+                        System.out.println("Found! Removing");
                         machines.remove(machine);
                         break;
                     }

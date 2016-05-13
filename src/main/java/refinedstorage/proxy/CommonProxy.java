@@ -382,7 +382,7 @@ public class CommonProxy {
 
             GameRegistry.addShapelessRecipe(disk,
                 new ItemStack(RefinedStorageItems.STORAGE_HOUSING),
-                new ItemStack(RefinedStorageItems.STORAGE_PART, type, type)
+                new ItemStack(RefinedStorageItems.STORAGE_PART, 1, type)
             );
         }
 
