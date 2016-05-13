@@ -59,7 +59,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
     private List<TileMachine> machines = new ArrayList<TileMachine>();
     private List<TileMachine> machinesToAdd = new ArrayList<TileMachine>();
-    private List<BlockPos> machinesToRemove = new ArrayList<BlockPos>();
+    private List<TileMachine> machinesToRemove = new ArrayList<TileMachine>();
 
     private List<ClientSideMachine> clientSideMachines = new ArrayList<ClientSideMachine>();
 
@@ -80,8 +80,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     }
 
     public void removeMachine(TileMachine machine) {
-        System.out.println("Added for removal!");
-        machinesToRemove.add(machine.getPos());
+        machinesToRemove.add(machine);
     }
 
     @Override
@@ -92,18 +91,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
             machines.addAll(machinesToAdd);
             machinesToAdd.clear();
 
-            for (BlockPos pos : machinesToRemove) {
-                System.out.println("ToRemove:" + pos.getX() + "," + pos.getY() + "," + pos.getZ());
-                for (TileMachine machine : machines) {
-                    System.out.println("Machine:" + machine.getPos().getX() + "," + machine.getPos().getY() + "," + machine.getPos().getZ());
-                    if (machine.getPos().equals(pos)) {
-                        System.out.println("Found! Removing");
-                        machines.remove(machine);
-                        break;
-                    }
-                }
-            }
-
+            machines.removeAll(machinesToRemove);
             machinesToRemove.clear();
 
             int lastEnergy = energy.getEnergyStored();

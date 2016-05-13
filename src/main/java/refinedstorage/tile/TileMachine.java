@@ -40,14 +40,14 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
     }
 
     @Override
-    public void onLoad() {
-        super.onLoad();
-
-        if (!worldObj.isRemote) {
+    public void update() {
+        if (!worldObj.isRemote && ticks == 0) {
             block = worldObj.getBlockState(pos).getBlock();
 
             searchController();
         }
+
+        super.update();
     }
 
     public void onConnected() {
