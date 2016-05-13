@@ -10,7 +10,6 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -54,11 +53,14 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     private List<ItemGroup> itemGroups = new ArrayList<ItemGroup>();
     private List<IStorage> storages = new ArrayList<IStorage>();
     private List<WirelessGridConsumer> wirelessGridConsumers = new ArrayList<WirelessGridConsumer>();
-    private List<WirelessGridConsumer> wirelessGridConsumersMarkedForRemoval = new ArrayList<WirelessGridConsumer>();
+    private List<WirelessGridConsumer> wirelessGridConsumersToRemove = new ArrayList<WirelessGridConsumer>();
 
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
     private List<TileMachine> machines = new ArrayList<TileMachine>();
+    private List<TileMachine> machinesToAdd = new ArrayList<TileMachine>();
+    private List<TileMachine> machinesToRemove = new ArrayList<TileMachine>();
+
     private List<ClientSideMachine> clientSideMachines = new ArrayList<ClientSideMachine>();
 
     private List<CraftingPattern> patterns = new ArrayList<CraftingPattern>();
@@ -66,119 +68,94 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     private List<ICraftingTask> craftingTasksToAdd = new ArrayList<ICraftingTask>();
     private List<ICraftingTask> craftingTasksToCancel = new ArrayList<ICraftingTask>();
 
-    private Set<String> visited = new HashSet<String>();
-
     private EnergyStorage energy = new EnergyStorage(ENERGY_CAPACITY);
     private int energyUsage;
 
     private int wirelessGridRange;
 
-    private boolean destroyed = false;
-
     private long lastEnergyRender;
 
-    private boolean machinesHavePosition(List<TileMachine> machines, BlockPos pos) {
-        for (TileEntity machine : machines) {
-            if (machine.getPos().getX() == pos.getX() && machine.getPos().getY() == pos.getY() && machine.getPos().getZ() == pos.getZ()) {
-                return true;
-            }
-        }
+    public void addMachine(TileMachine machine) {
+        machinesToAdd.add(machine);
+    }
 
-        return false;
+    public void removeMachine(TileMachine machine) {
+        machinesToRemove.add(machine);
     }
 
     @Override
     public void update() {
         super.update();
 
-        if (!worldObj.isRemote && !destroyed) {
+        if (!worldObj.isRemote) {
+            if (!canRun()) {
+                disconnectAll();
+            }
+
+            machines.addAll(machinesToAdd);
+            machinesToAdd.clear();
+
+            machines.removeAll(machinesToRemove);
+            machinesToRemove.clear();
+
             int lastEnergy = energy.getEnergyStored();
 
-            if (ticks % 20 == 0) {
-                if (!isActive()) {
-                    disconnectAll();
-                } else {
-                    visited.clear();
+            int newWirelessGridRange = 0;
+            int newEnergyUsage = 10;
+            List<IStorage> newStorages = new ArrayList<IStorage>();
+            List<CraftingPattern> newPatterns = new ArrayList<CraftingPattern>();
 
-                    List<TileMachine> newMachines = new ArrayList<TileMachine>();
+            for (TileMachine machine : machines) {
+                machine.updateMachine();
 
-                    for (EnumFacing dir : EnumFacing.VALUES) {
-                        MachineSearcher.search(this, pos.offset(dir), visited, newMachines);
-                    }
-
-                    for (TileMachine machine : machines) {
-                        if (!machinesHavePosition(newMachines, machine.getPos())) {
-                            machine.onDisconnected();
-                        }
-                    }
-
-                    int newWirelessGridRange = 0;
-                    int newEnergyUsage = 0;
-                    List<IStorage> newStorages = new ArrayList<IStorage>();
-                    List<CraftingPattern> newPatterns = new ArrayList<CraftingPattern>();
-
-                    for (TileMachine machine : newMachines) {
-                        if (machine instanceof TileWirelessTransmitter) {
-                            newWirelessGridRange += ((TileWirelessTransmitter) machine).getRange();
-                        }
-
-                        if (machine instanceof IStorageProvider) {
-                            ((IStorageProvider) machine).provide(newStorages);
-                        }
-
-                        if (machine instanceof TileCrafter) {
-                            TileCrafter crafter = (TileCrafter) machine;
-
-                            for (int i = 0; i < TileCrafter.PATTERN_SLOTS; ++i) {
-                                if (crafter.getStackInSlot(i) != null) {
-                                    ItemStack pattern = crafter.getStackInSlot(i);
-
-                                    newPatterns.add(new CraftingPattern(
-                                        crafter.getPos().getX(),
-                                        crafter.getPos().getY(),
-                                        crafter.getPos().getZ(),
-                                        ItemPattern.isProcessing(pattern),
-                                        ItemPattern.getInputs(pattern),
-                                        ItemPattern.getOutputs(pattern)));
-                                }
-                            }
-                        }
-
-                        newEnergyUsage += machine.getEnergyUsage();
-
-                        if (!machinesHavePosition(machines, machine.getPos())) {
-                            machine.onConnected(this);
-                        } else {
-                            /* This machine is in our machine list, but due to a chunk reload the tile entity
-                             would get reset which causes its connected property to reset too (to false).
-                             So, if the machine is in our list but not connected (which is the case due to a TE reload)
-                             we connect it either way. */
-                            if (!machine.isConnected()) {
-                                machine.onConnected(this);
-                            }
-                        }
-                    }
-
-                    wirelessGridRange = newWirelessGridRange;
-                    energyUsage = newEnergyUsage;
-                    machines = newMachines;
-                    storages = newStorages;
-                    patterns = newPatterns;
-
-                    Collections.sort(storages, new Comparator<IStorage>() {
-                        @Override
-                        public int compare(IStorage s1, IStorage s2) {
-                            if (s1.getPriority() == s2.getPriority()) {
-                                return 0;
-                            }
-
-                            return (s1.getPriority() > s2.getPriority()) ? -1 : 1;
-                        }
-                    });
-
-                    syncItems();
+                if (machine instanceof TileWirelessTransmitter) {
+                    newWirelessGridRange += ((TileWirelessTransmitter) machine).getRange();
                 }
+
+                if (machine instanceof IStorageProvider) {
+                    ((IStorageProvider) machine).provide(newStorages);
+                }
+
+                if (machine instanceof TileCrafter) {
+                    TileCrafter crafter = (TileCrafter) machine;
+
+                    for (int i = 0; i < TileCrafter.PATTERN_SLOTS; ++i) {
+                        if (crafter.getStackInSlot(i) == null) {
+                            continue;
+                        }
+
+                        ItemStack pattern = crafter.getStackInSlot(i);
+
+                        newPatterns.add(new CraftingPattern(
+                            crafter.getPos().getX(),
+                            crafter.getPos().getY(),
+                            crafter.getPos().getZ(),
+                            ItemPattern.isProcessing(pattern),
+                            ItemPattern.getInputs(pattern),
+                            ItemPattern.getOutputs(pattern)));
+                    }
+                }
+
+                newEnergyUsage += machine.getEnergyUsage();
             }
+
+            wirelessGridRange = newWirelessGridRange;
+            energyUsage = newEnergyUsage;
+            storages = newStorages;
+            patterns = newPatterns;
+
+            Collections.sort(storages, new Comparator<IStorage>() {
+                @Override
+                public int compare(IStorage s1, IStorage s2) {
+                    if (s1.getPriority() == s2.getPriority()) {
+                        return 0;
+                    }
+
+                    return (s1.getPriority() > s2.getPriority()) ? -1 : 1;
+                }
+            });
+
+            syncItems();
 
             for (ICraftingTask taskToCancel : craftingTasksToCancel) {
                 taskToCancel.onCancelled(this);
@@ -202,7 +179,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                 }
             }
 
-            if (isActive()) {
+            if (canRun()) {
                 switch (getType()) {
                     case NORMAL:
                         energy.extractEnergy(energyUsage, false);
@@ -213,8 +190,8 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                 }
             }
 
-            wirelessGridConsumers.removeAll(wirelessGridConsumersMarkedForRemoval);
-            wirelessGridConsumersMarkedForRemoval.clear();
+            wirelessGridConsumers.removeAll(wirelessGridConsumersToRemove);
+            wirelessGridConsumersToRemove.clear();
 
             Iterator<WirelessGridConsumer> gridConsumerIterator = wirelessGridConsumers.iterator();
 
@@ -224,7 +201,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                 if (!RefinedStorageUtils.compareStack(consumer.getWirelessGrid(), consumer.getPlayer().getHeldItem(consumer.getHand()))) {
                     consumer.getPlayer().closeScreen(); // This will call onContainerClosed on the Container and remove it from the list
                 } else {
-                    if (isActive()) {
+                    if (canRun()) {
                         RefinedStorage.NETWORK.sendTo(new MessageWirelessGridItems(this), (EntityPlayerMP) consumer.getPlayer());
                     }
                 }
@@ -250,8 +227,6 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
     public void onDestroyed() {
         disconnectAll();
-
-        destroyed = true;
     }
 
     private void disconnectAll() {
@@ -448,7 +423,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
         WirelessGridConsumer consumer = getWirelessGridConsumer(player);
 
         if (consumer != null) {
-            wirelessGridConsumersMarkedForRemoval.add(consumer);
+            wirelessGridConsumersToRemove.add(consumer);
         }
     }
 
@@ -555,7 +530,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
         return true;
     }
 
-    public boolean isActive() {
+    public boolean canRun() {
         return energy.getEnergyStored() >= getEnergyUsage() && redstoneMode.isEnabled(worldObj, pos);
     }
 
@@ -632,7 +607,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
     @Override
     public void sendContainerData(ByteBuf buf) {
-        buf.writeInt(isActive() ? energyUsage : 0);
+        buf.writeInt(canRun() ? energyUsage : 0);
 
         buf.writeInt(redstoneMode.id);
 

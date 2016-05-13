@@ -1,62 +1,65 @@
 package refinedstorage.tile;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import refinedstorage.block.BlockMachine;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public abstract class TileMachine extends TileBase implements INetworkTile, IRedstoneModeConfig {
     protected boolean connected = false;
     protected RedstoneMode redstoneMode = RedstoneMode.IGNORE;
     protected TileController controller;
 
-    private Block machineBlock;
-
-    public void onConnected(TileController controller) {
-        if (worldObj != null && worldObj.getBlockState(pos).getBlock() == machineBlock) {
-            markDirty();
-
-            this.connected = true;
-            this.controller = controller;
-
-            worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockMachine.CONNECTED, true));
-        }
-    }
-
-    public void onDisconnected() {
-        if (worldObj != null && worldObj.getBlockState(pos).getBlock() == machineBlock) {
-            markDirty();
-
-            this.connected = false;
-            this.controller = null;
-
-            worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockMachine.CONNECTED, false));
-        }
-    }
+    private Set<String> visited = new HashSet<String>();
 
     public TileController getController() {
         return controller;
     }
 
+    public void searchController() {
+        visited.clear();
+
+        TileController newController = ControllerSearcher.search(worldObj, pos, visited);
+
+        if (newController != null) {
+            this.controller = newController;
+
+            onConnected();
+        } else if (this.controller != null) {
+            this.controller = null;
+
+            onDisconnected();
+        }
+    }
+
     @Override
-    public void update() {
-        if (worldObj == null) {
-            super.update();
-            return;
-        }
+    public void onLoad() {
+        super.onLoad();
 
-        if (ticks == 0) {
-            machineBlock = worldObj.getBlockState(pos).getBlock();
+        if (!worldObj.isRemote && !connected) {
+            searchController();
         }
+    }
 
-        super.update();
+    public void onConnected() {
+        connected = true;
 
-        if (!worldObj.isRemote && isConnected()) {
-            updateMachine();
-        }
+        worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockMachine.CONNECTED, true));
+
+        controller.addMachine(this);
+    }
+
+    public void onDisconnected() {
+        connected = false;
+
+        worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockMachine.CONNECTED, false));
+
+        controller.removeMachine(this);
     }
 
     public boolean isConnected() {
