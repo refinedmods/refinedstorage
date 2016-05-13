@@ -59,7 +59,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
     private List<TileMachine> machines = new ArrayList<TileMachine>();
     private List<TileMachine> machinesToAdd = new ArrayList<TileMachine>();
-    private List<TileMachine> machinesToRemove = new ArrayList<TileMachine>();
+    private List<BlockPos> machinesToRemove = new ArrayList<BlockPos>();
 
     private List<ClientSideMachine> clientSideMachines = new ArrayList<ClientSideMachine>();
 
@@ -80,7 +80,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
     }
 
     public void removeMachine(TileMachine machine) {
-        machinesToRemove.add(machine);
+        machinesToRemove.add(machine.getPos());
     }
 
     @Override
@@ -88,14 +88,18 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
         super.update();
 
         if (!worldObj.isRemote) {
-            if (!canRun()) {
-                disconnectAll();
-            }
-
             machines.addAll(machinesToAdd);
             machinesToAdd.clear();
 
-            machines.removeAll(machinesToRemove);
+            for (BlockPos pos : machinesToRemove) {
+                for (TileMachine machine : machines) {
+                    if (machine.getPos().getX() == pos.getX() && machine.getPos().getY() == pos.getY() && machine.getPos().getZ() == pos.getZ()) {
+                        machines.remove(machine);
+                        break;
+                    }
+                }
+            }
+
             machinesToRemove.clear();
 
             int lastEnergy = energy.getEnergyStored();
@@ -120,19 +124,17 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                     TileCrafter crafter = (TileCrafter) machine;
 
                     for (int i = 0; i < TileCrafter.PATTERN_SLOTS; ++i) {
-                        if (crafter.getStackInSlot(i) == null) {
-                            continue;
+                        if (crafter.getStackInSlot(i) != null) {
+                            ItemStack pattern = crafter.getStackInSlot(i);
+
+                            newPatterns.add(new CraftingPattern(
+                                crafter.getPos().getX(),
+                                crafter.getPos().getY(),
+                                crafter.getPos().getZ(),
+                                ItemPattern.isProcessing(pattern),
+                                ItemPattern.getInputs(pattern),
+                                ItemPattern.getOutputs(pattern)));
                         }
-
-                        ItemStack pattern = crafter.getStackInSlot(i);
-
-                        newPatterns.add(new CraftingPattern(
-                            crafter.getPos().getX(),
-                            crafter.getPos().getY(),
-                            crafter.getPos().getZ(),
-                            ItemPattern.isProcessing(pattern),
-                            ItemPattern.getInputs(pattern),
-                            ItemPattern.getOutputs(pattern)));
                     }
                 }
 
@@ -179,15 +181,15 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
                 }
             }
 
-            if (canRun()) {
-                switch (getType()) {
-                    case NORMAL:
+            switch (getType()) {
+                case NORMAL:
+                    if (canRun()) {
                         energy.extractEnergy(energyUsage, false);
-                        break;
-                    case CREATIVE:
-                        energy.setEnergyStored(energy.getMaxEnergyStored());
-                        break;
-                }
+                    }
+                    break;
+                case CREATIVE:
+                    energy.setEnergyStored(energy.getMaxEnergyStored());
+                    break;
             }
 
             wirelessGridConsumers.removeAll(wirelessGridConsumersToRemove);

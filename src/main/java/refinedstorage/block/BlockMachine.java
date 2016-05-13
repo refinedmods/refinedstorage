@@ -40,8 +40,6 @@ public abstract class BlockMachine extends BlockBase {
 
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
-        super.breakBlock(world, pos, state);
-
         if (!world.isRemote) {
             TileMachine machine = (TileMachine) world.getTileEntity(pos);
 
@@ -49,6 +47,8 @@ public abstract class BlockMachine extends BlockBase {
                 machine.onDisconnected();
             }
         }
+
+        super.breakBlock(world, pos, state);
     }
 
     @Override
