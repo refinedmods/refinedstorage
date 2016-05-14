@@ -6,7 +6,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorageUtils;
-import refinedstorage.block.BlockMachine;
 import refinedstorage.network.MessageMachineConnectedUpdate;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
@@ -67,10 +66,6 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
         this.controller = controller;
         this.connected = true;
 
-        if (world.getBlockState(pos).getBlock() == block) {
-            world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockMachine.CONNECTED, true));
-        }
-
         world.notifyNeighborsOfStateChange(pos, block);
 
         controller.addMachine(this);
@@ -78,10 +73,6 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
 
     public void onDisconnected(World world) {
         this.connected = false;
-
-        if (world.getBlockState(pos).getBlock() == block) {
-            world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockMachine.CONNECTED, false));
-        }
 
         if (this.controller != null) {
             this.controller.removeMachine(this);
