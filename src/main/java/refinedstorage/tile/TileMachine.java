@@ -31,7 +31,7 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
         TileController newController = ControllerSearcher.search(worldObj, pos, visited);
 
         if (controller == null) {
-            if (newController != null) {
+            if (newController != null && redstoneMode.isEnabled(worldObj, pos)) {
                 onConnected(newController);
             }
         } else {
@@ -43,10 +43,16 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
 
     @Override
     public void update() {
-        if (!worldObj.isRemote && ticks == 0) {
-            block = worldObj.getBlockState(pos).getBlock();
+        if (!worldObj.isRemote) {
+            if (ticks == 0) {
+                block = worldObj.getBlockState(pos).getBlock();
 
-            searchController();
+                searchController();
+            }
+
+            if (connected && !redstoneMode.isEnabled(worldObj, pos)) {
+                onDisconnected();
+            }
         }
 
         super.update();
@@ -72,6 +78,8 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
 
         if (worldObj.getBlockState(pos).getBlock() == block) {
             worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockMachine.CONNECTED, false));
+
+            RefinedStorageUtils.sendToAllAround(worldObj, pos, new MessageMachineConnectedUpdate(this));
         }
 
         // I have no idea why this is needed

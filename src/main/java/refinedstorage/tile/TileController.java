@@ -98,92 +98,87 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
             int lastEnergy = energy.getEnergyStored();
 
             int newWirelessGridRange = 0;
-            int newEnergyUsage = 10;
+            int newEnergyUsage = 0;
             List<IStorage> newStorages = new ArrayList<IStorage>();
             List<CraftingPattern> newPatterns = new ArrayList<CraftingPattern>();
 
-            for (TileMachine machine : machines) {
-                machine.updateMachine();
+            if (canRun()) {
+                newEnergyUsage = 10;
 
-                if (machine instanceof TileWirelessTransmitter) {
-                    newWirelessGridRange += ((TileWirelessTransmitter) machine).getRange();
-                }
+                for (TileMachine machine : machines) {
+                    machine.updateMachine();
 
-                if (machine instanceof IStorageProvider) {
-                    ((IStorageProvider) machine).provide(newStorages);
-                }
+                    if (machine instanceof TileWirelessTransmitter) {
+                        newWirelessGridRange += ((TileWirelessTransmitter) machine).getRange();
+                    }
 
-                if (machine instanceof TileCrafter) {
-                    TileCrafter crafter = (TileCrafter) machine;
+                    if (machine instanceof IStorageProvider) {
+                        ((IStorageProvider) machine).provide(newStorages);
+                    }
 
-                    for (int i = 0; i < TileCrafter.PATTERN_SLOTS; ++i) {
-                        if (crafter.getStackInSlot(i) != null) {
-                            ItemStack pattern = crafter.getStackInSlot(i);
+                    if (machine instanceof TileCrafter) {
+                        TileCrafter crafter = (TileCrafter) machine;
 
-                            newPatterns.add(new CraftingPattern(
-                                crafter.getPos().getX(),
-                                crafter.getPos().getY(),
-                                crafter.getPos().getZ(),
-                                ItemPattern.isProcessing(pattern),
-                                ItemPattern.getInputs(pattern),
-                                ItemPattern.getOutputs(pattern)));
+                        for (int i = 0; i < TileCrafter.PATTERN_SLOTS; ++i) {
+                            if (crafter.getStackInSlot(i) != null) {
+                                ItemStack pattern = crafter.getStackInSlot(i);
+
+                                newPatterns.add(new CraftingPattern(
+                                    crafter.getPos().getX(),
+                                    crafter.getPos().getY(),
+                                    crafter.getPos().getZ(),
+                                    ItemPattern.isProcessing(pattern),
+                                    ItemPattern.getInputs(pattern),
+                                    ItemPattern.getOutputs(pattern)));
+                            }
                         }
                     }
+
+                    newEnergyUsage += machine.getEnergyUsage();
                 }
 
-                newEnergyUsage += machine.getEnergyUsage();
+                Collections.sort(storages, new Comparator<IStorage>() {
+                    @Override
+                    public int compare(IStorage s1, IStorage s2) {
+                        if (s1.getPriority() == s2.getPriority()) {
+                            return 0;
+                        }
+
+                        return (s1.getPriority() > s2.getPriority()) ? -1 : 1;
+                    }
+                });
+
+                syncItems();
+
+                for (ICraftingTask taskToCancel : craftingTasksToCancel) {
+                    taskToCancel.onCancelled(this);
+                }
+
+                craftingTasks.removeAll(craftingTasksToCancel);
+                craftingTasksToCancel.clear();
+
+                craftingTasks.addAll(craftingTasksToAdd);
+                craftingTasksToAdd.clear();
+
+                Iterator<ICraftingTask> craftingTaskIterator = craftingTasks.iterator();
+
+                while (craftingTaskIterator.hasNext()) {
+                    ICraftingTask task = craftingTaskIterator.next();
+
+                    if (ticks % task.getPattern().getCrafter(worldObj).getSpeed() == 0 && task.update(this)) {
+                        task.onDone(this);
+
+                        craftingTaskIterator.remove();
+                    }
+                }
+            } else {
+                disconnectAll();
             }
 
             wirelessGridRange = newWirelessGridRange;
             energyUsage = newEnergyUsage;
             storages = newStorages;
             patterns = newPatterns;
-
-            Collections.sort(storages, new Comparator<IStorage>() {
-                @Override
-                public int compare(IStorage s1, IStorage s2) {
-                    if (s1.getPriority() == s2.getPriority()) {
-                        return 0;
-                    }
-
-                    return (s1.getPriority() > s2.getPriority()) ? -1 : 1;
-                }
-            });
-
-            syncItems();
-
-            for (ICraftingTask taskToCancel : craftingTasksToCancel) {
-                taskToCancel.onCancelled(this);
-            }
-
-            craftingTasks.removeAll(craftingTasksToCancel);
-            craftingTasksToCancel.clear();
-
-            craftingTasks.addAll(craftingTasksToAdd);
-            craftingTasksToAdd.clear();
-
-            Iterator<ICraftingTask> craftingTaskIterator = craftingTasks.iterator();
-
-            while (craftingTaskIterator.hasNext()) {
-                ICraftingTask task = craftingTaskIterator.next();
-
-                if (ticks % task.getPattern().getCrafter(worldObj).getSpeed() == 0 && task.update(this)) {
-                    task.onDone(this);
-
-                    craftingTaskIterator.remove();
-                }
-            }
-
-            switch (getType()) {
-                case NORMAL:
-                    if (canRun()) {
-                        energy.extractEnergy(energyUsage, false);
-                    }
-                    break;
-                case CREATIVE:
-                    energy.setEnergyStored(energy.getMaxEnergyStored());
-                    break;
-            }
 
             wirelessGridConsumers.removeAll(wirelessGridConsumersToRemove);
             wirelessGridConsumersToRemove.clear();
@@ -200,6 +195,17 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
                         RefinedStorage.NETWORK.sendTo(new MessageWirelessGridItems(this), (EntityPlayerMP) consumer.getPlayer());
                     }
                 }
+            }
+
+            switch (getType()) {
+                case NORMAL:
+                    if (canRun()) {
+                        energy.extractEnergy(energyUsage, false);
+                    }
+                    break;
+                case CREATIVE:
+                    energy.setEnergyStored(energy.getMaxEnergyStored());
+                    break;
             }
 
             if (lastEnergy != energy.getEnergyStored()) {
@@ -594,7 +600,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
     @Override
     public void sendContainerData(ByteBuf buf) {
-        buf.writeInt(canRun() ? energyUsage : 0);
+        buf.writeInt(energyUsage);
 
         buf.writeInt(redstoneMode.id);
 
