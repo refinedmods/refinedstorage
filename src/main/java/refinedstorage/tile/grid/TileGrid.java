@@ -155,7 +155,7 @@ public class TileGrid extends TileMachine implements IGrid {
 
             craftedItems += crafted.stackSize;
 
-            if (!RefinedStorageUtils.compareStack(crafted, craftingResultInventory.getStackInSlot(0)) || craftedItems + crafted.stackSize > 64) {
+            if (!RefinedStorageUtils.compareStack(crafted, craftingResultInventory.getStackInSlot(0)) || craftedItems + crafted.stackSize > crafted.getMaxStackSize()) {
                 break;
             }
         }
