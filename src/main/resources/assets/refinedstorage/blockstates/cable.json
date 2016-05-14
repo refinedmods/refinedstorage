@@ -70,6 +70,12 @@
       },
       "down": {
       }
+    },
+    "connected": {
+      "true": {
+      },
+      "false": {
+      }
     }
   }
 }

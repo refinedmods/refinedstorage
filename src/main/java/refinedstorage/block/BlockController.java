@@ -87,13 +87,6 @@ public class BlockController extends BlockBase {
     }
 
     @Override
-    public void breakBlock(World world, BlockPos pos, IBlockState state) {
-        ((TileController) world.getTileEntity(pos)).onDestroyed();
-
-        super.breakBlock(world, pos, state);
-    }
-
-    @Override
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack itemStack) {
         super.onBlockPlacedBy(world, pos, state, player, itemStack);
 

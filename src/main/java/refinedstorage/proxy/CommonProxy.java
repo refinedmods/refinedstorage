@@ -79,6 +79,7 @@ public class CommonProxy {
         GameRegistry.registerTileEntity(TileWirelessTransmitter.class, ID + ":wireless_transmitter");
         GameRegistry.registerTileEntity(TileCrafter.class, ID + ":crafter");
         GameRegistry.registerTileEntity(TileProcessingPatternEncoder.class, ID + ":processing_pattern_encoder");
+        GameRegistry.registerTileEntity(TileCable.class, ID + ":cable");
 
         registerBlock(RefinedStorageBlocks.CONTROLLER);
         registerBlock(RefinedStorageBlocks.GRID);

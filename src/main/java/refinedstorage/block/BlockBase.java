@@ -90,7 +90,7 @@ public abstract class BlockBase extends Block {
 
             ((TileBase) tile).setDirection(EnumFacing.getFront(newDir));
 
-            world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 2 | 4);
+            RefinedStorageUtils.reRenderBlock(world, pos);
 
             return true;
         }

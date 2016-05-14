@@ -1,17 +1,19 @@
 package refinedstorage.block;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import refinedstorage.RefinedStorageBlocks;
+import refinedstorage.tile.TileCable;
 import refinedstorage.tile.TileMachine;
 
-public class BlockCable extends BlockBase {
+public class BlockCable extends BlockMachine {
     public static final AxisAlignedBB CABLE_AABB = new AxisAlignedBB(4 * (1F / 16F), 4 * (1F / 16F), 4 * (1F / 16F), 1 - 4 * (1F / 16F), 1 - 4 * (1F / 16F), 1 - 4 * (1F / 16F));
 
     public static final PropertyBool NORTH = PropertyBool.create("north");
@@ -28,9 +30,15 @@ public class BlockCable extends BlockBase {
     }
 
     @Override
+    public TileEntity createTileEntity(World world, IBlockState state) {
+        return new TileCable();
+    }
+
+    @Override
     protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, new IProperty[]{
             DIRECTION,
+            CONNECTED,
             NORTH,
             EAST,
             SOUTH,
@@ -52,9 +60,7 @@ public class BlockCable extends BlockBase {
     }
 
     public static boolean hasConnectionWith(IBlockAccess world, BlockPos pos) {
-        Block block = world.getBlockState(pos).getBlock();
-
-        return (block == RefinedStorageBlocks.CABLE || block == RefinedStorageBlocks.CONTROLLER) || world.getTileEntity(pos) instanceof TileMachine;
+        return world.getBlockState(pos).getBlock() == RefinedStorageBlocks.CONTROLLER || world.getTileEntity(pos) instanceof TileMachine;
     }
 
     @Override

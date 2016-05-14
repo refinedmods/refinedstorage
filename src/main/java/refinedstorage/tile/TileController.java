@@ -211,11 +211,13 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
             if (lastEnergy != energy.getEnergyStored()) {
                 worldObj.updateComparatorOutputLevel(pos, RefinedStorageBlocks.CONTROLLER);
 
-                if (System.currentTimeMillis() - lastEnergyUpdate > 3000) {
+                if (System.currentTimeMillis() - lastEnergyUpdate > 3000L) {
                     RefinedStorageUtils.sendToAllAround(worldObj, pos, new MessageControllerEnergyUpdate(this));
 
                     lastEnergyUpdate = System.currentTimeMillis();
                 }
+            } else if (ticks < 10) {
+                RefinedStorageUtils.sendToAllAround(worldObj, pos, new MessageControllerEnergyUpdate(this));
             }
         }
     }
@@ -230,10 +232,6 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
     public int getWirelessGridRange() {
         return wirelessGridRange;
-    }
-
-    public void onDestroyed() {
-        disconnectAll();
     }
 
     private void disconnectAll() {
@@ -474,6 +472,8 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
 
+        energy.readFromNBT(nbt);
+
         if (nbt.hasKey(RedstoneMode.NBT)) {
             redstoneMode = RedstoneMode.getById(nbt.getInteger(RedstoneMode.NBT));
         }
@@ -499,6 +499,8 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     @Override
     public void writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
+
+        energy.writeToNBT(nbt);
 
         nbt.setInteger(RedstoneMode.NBT, redstoneMode.id);
 

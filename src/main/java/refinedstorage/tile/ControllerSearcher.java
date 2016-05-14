@@ -1,11 +1,9 @@
 package refinedstorage.tile;
 
-import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import refinedstorage.RefinedStorageBlocks;
 
 import java.util.Set;
 
@@ -21,11 +19,7 @@ public class ControllerSearcher {
 
         if (tile instanceof TileController) {
             return (TileController) tile;
-        }
-
-        Block block = world.getBlockState(current).getBlock();
-
-        if (tile instanceof TileMachine || block == RefinedStorageBlocks.CABLE) {
+        } else if (tile instanceof TileMachine) {
             // We need to have visited more than 1 tile so that the relay can find a controller for itself
             if (visited.size() > 1 && tile instanceof TileRelay && !((TileRelay) tile).isConnected()) {
                 return null;
