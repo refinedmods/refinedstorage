@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.World;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerSolderer;
 import refinedstorage.inventory.InventorySimple;
@@ -80,8 +81,8 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
     }
 
     @Override
-    public void onDisconnected() {
-        super.onDisconnected();
+    public void onDisconnected(World world) {
+        super.onDisconnected(world);
 
         reset();
     }

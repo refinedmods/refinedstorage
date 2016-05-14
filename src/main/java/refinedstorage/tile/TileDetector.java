@@ -5,6 +5,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerDetector;
@@ -32,8 +33,8 @@ public class TileDetector extends TileMachine implements ICompareConfig {
     private boolean powered = false;
 
     @Override
-    public void onDisconnected() {
-        super.onDisconnected();
+    public void onDisconnected(World world) {
+        super.onDisconnected(world);
 
         powered = false;
     }

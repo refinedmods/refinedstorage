@@ -6,6 +6,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.World;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerCrafter;
 import refinedstorage.inventory.InventorySimple;
@@ -32,14 +33,14 @@ public class TileCrafter extends TileMachine implements IInventory {
     }
 
     @Override
-    public void onDisconnected() {
+    public void onDisconnected(World world) {
         for (ICraftingTask task : controller.getCraftingTasks()) {
             if (task.getPattern().getCrafter(worldObj) == this) {
                 controller.cancelCraftingTask(task);
             }
         }
 
-        super.onDisconnected();
+        super.onDisconnected(world);
     }
 
     @Override

@@ -292,12 +292,12 @@ public class RefinedStorageUtils {
     }
 
     public static void sendToAllAround(World world, BlockPos pos, IMessage message) {
-        NetworkRegistry.TargetPoint target = new NetworkRegistry.TargetPoint(world.provider.getDimensionType().getId(), pos.getX(), pos.getY(), pos.getZ(), 64);
+        NetworkRegistry.TargetPoint target = new NetworkRegistry.TargetPoint(world.provider.getDimensionType().getId(), pos.getX(), pos.getY(), pos.getZ(), 128);
 
         RefinedStorage.NETWORK.sendToAllAround(message, target);
     }
 
     public static void reRenderBlock(World world, BlockPos pos) {
-        world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 2 | 4);
+        world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 8);
     }
 }

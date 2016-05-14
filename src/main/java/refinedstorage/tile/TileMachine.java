@@ -29,22 +29,17 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
     // We use a world parameter here and not worldObj because in BlockMachine.onNeighborBlockChange
     // this method is called and at that point in time worldObj is not set yet.
     public void searchController(World world) {
-        // @TODO: Give onConnected and onDisconnected a world param
-        if (worldObj == null) {
-            worldObj = world;
-        }
-
         visited.clear();
 
         TileController newController = ControllerSearcher.search(worldObj, pos, visited);
 
         if (controller == null) {
             if (newController != null && redstoneMode.isEnabled(worldObj, pos)) {
-                onConnected(newController);
+                onConnected(world, newController);
             }
         } else {
             if (newController == null) {
-                onDisconnected();
+                onDisconnected(world);
             }
         }
     }
@@ -60,41 +55,40 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
                 searchController(worldObj);
             }
 
-            RefinedStorageUtils.sendToAllAround(worldObj, pos, new MessageMachineConnectedUpdate(this));
-
             if (connected && !redstoneMode.isEnabled(worldObj, pos)) {
-                onDisconnected();
+                onDisconnected(worldObj);
             }
+
+            RefinedStorageUtils.sendToAllAround(worldObj, pos, new MessageMachineConnectedUpdate(this));
         }
     }
 
-    public void onConnected(TileController controller) {
+    public void onConnected(World world, TileController controller) {
         this.controller = controller;
         this.connected = true;
 
-        if (worldObj.getBlockState(pos).getBlock() == block) {
-            worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockMachine.CONNECTED, true));
+        if (world.getBlockState(pos).getBlock() == block) {
+            world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockMachine.CONNECTED, true));
         }
 
-        worldObj.notifyNeighborsOfStateChange(pos, block);
+        world.notifyNeighborsOfStateChange(pos, block);
 
         controller.addMachine(this);
     }
 
-    public void onDisconnected() {
+    public void onDisconnected(World world) {
         this.connected = false;
 
-        if (worldObj.getBlockState(pos).getBlock() == block) {
-            worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockMachine.CONNECTED, false));
+        if (world.getBlockState(pos).getBlock() == block) {
+            world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockMachine.CONNECTED, false));
         }
 
-        // I have no idea why this is needed
         if (this.controller != null) {
             this.controller.removeMachine(this);
             this.controller = null;
         }
 
-        worldObj.notifyNeighborsOfStateChange(pos, block);
+        world.notifyNeighborsOfStateChange(pos, block);
     }
 
     public boolean isConnected() {

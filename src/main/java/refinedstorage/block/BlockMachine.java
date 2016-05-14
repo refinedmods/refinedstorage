@@ -42,7 +42,7 @@ public abstract class BlockMachine extends BlockBase {
             TileMachine machine = (TileMachine) world.getTileEntity(pos);
 
             if (machine.isConnected()) {
-                machine.onDisconnected();
+                machine.onDisconnected(world);
             }
         }
 

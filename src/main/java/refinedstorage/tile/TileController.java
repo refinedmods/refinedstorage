@@ -228,7 +228,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
     private void disconnectAll() {
         for (TileMachine machine : machines) {
-            machine.onDisconnected();
+            machine.onDisconnected(worldObj);
         }
 
         machines.clear();
