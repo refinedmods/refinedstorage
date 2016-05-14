@@ -54,7 +54,7 @@ public abstract class BlockMachine extends BlockBase {
         super.onNeighborBlockChange(world, pos, state, neighborBlock);
 
         if (!world.isRemote) {
-            ((TileMachine) world.getTileEntity(pos)).searchController();
+            ((TileMachine) world.getTileEntity(pos)).searchController(world);
         }
     }
 }

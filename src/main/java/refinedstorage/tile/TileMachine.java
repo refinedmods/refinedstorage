@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.block.BlockMachine;
 import refinedstorage.network.MessageMachineConnectedUpdate;
@@ -25,7 +26,14 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
         return controller;
     }
 
-    public void searchController() {
+    // We use a world parameter here and not worldObj because in BlockMachine.onNeighborBlockChange
+    // this method is called and at that point in time worldObj is not set yet.
+    public void searchController(World world) {
+        // @TODO: Give onConnected and onDisconnected a world param
+        if (worldObj == null) {
+            worldObj = world;
+        }
+
         visited.clear();
 
         TileController newController = ControllerSearcher.search(worldObj, pos, visited);
@@ -49,7 +57,7 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
             if (ticks == 1) {
                 block = worldObj.getBlockState(pos).getBlock();
 
-                searchController();
+                searchController(worldObj);
             }
 
             if (connected && !redstoneMode.isEnabled(worldObj, pos)) {

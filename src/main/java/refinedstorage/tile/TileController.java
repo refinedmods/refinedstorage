@@ -102,78 +102,78 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
             List<IStorage> newStorages = new ArrayList<IStorage>();
             List<CraftingPattern> newPatterns = new ArrayList<CraftingPattern>();
 
-            if (canRun()) {
-                newEnergyUsage = 10;
+            //if (canRun()) {
+            newEnergyUsage = 10;
 
-                for (TileMachine machine : machines) {
-                    machine.updateMachine();
+            for (TileMachine machine : machines) {
+                machine.updateMachine();
 
-                    if (machine instanceof TileWirelessTransmitter) {
-                        newWirelessGridRange += ((TileWirelessTransmitter) machine).getRange();
-                    }
+                if (machine instanceof TileWirelessTransmitter) {
+                    newWirelessGridRange += ((TileWirelessTransmitter) machine).getRange();
+                }
 
-                    if (machine instanceof IStorageProvider) {
-                        ((IStorageProvider) machine).provide(newStorages);
-                    }
+                if (machine instanceof IStorageProvider) {
+                    ((IStorageProvider) machine).provide(newStorages);
+                }
 
-                    if (machine instanceof TileCrafter) {
-                        TileCrafter crafter = (TileCrafter) machine;
+                if (machine instanceof TileCrafter) {
+                    TileCrafter crafter = (TileCrafter) machine;
 
-                        for (int i = 0; i < TileCrafter.PATTERN_SLOTS; ++i) {
-                            if (crafter.getStackInSlot(i) != null) {
-                                ItemStack pattern = crafter.getStackInSlot(i);
+                    for (int i = 0; i < TileCrafter.PATTERN_SLOTS; ++i) {
+                        if (crafter.getStackInSlot(i) != null) {
+                            ItemStack pattern = crafter.getStackInSlot(i);
 
-                                newPatterns.add(new CraftingPattern(
-                                    crafter.getPos().getX(),
-                                    crafter.getPos().getY(),
-                                    crafter.getPos().getZ(),
-                                    ItemPattern.isProcessing(pattern),
-                                    ItemPattern.getInputs(pattern),
-                                    ItemPattern.getOutputs(pattern)));
-                            }
+                            newPatterns.add(new CraftingPattern(
+                                crafter.getPos().getX(),
+                                crafter.getPos().getY(),
+                                crafter.getPos().getZ(),
+                                ItemPattern.isProcessing(pattern),
+                                ItemPattern.getInputs(pattern),
+                                ItemPattern.getOutputs(pattern)));
                         }
                     }
-
-                    newEnergyUsage += machine.getEnergyUsage();
                 }
 
-                Collections.sort(storages, new Comparator<IStorage>() {
-                    @Override
-                    public int compare(IStorage s1, IStorage s2) {
-                        if (s1.getPriority() == s2.getPriority()) {
-                            return 0;
-                        }
-
-                        return (s1.getPriority() > s2.getPriority()) ? -1 : 1;
-                    }
-                });
-
-                syncItems();
-
-                for (ICraftingTask taskToCancel : craftingTasksToCancel) {
-                    taskToCancel.onCancelled(this);
-                }
-
-                craftingTasks.removeAll(craftingTasksToCancel);
-                craftingTasksToCancel.clear();
-
-                craftingTasks.addAll(craftingTasksToAdd);
-                craftingTasksToAdd.clear();
-
-                Iterator<ICraftingTask> craftingTaskIterator = craftingTasks.iterator();
-
-                while (craftingTaskIterator.hasNext()) {
-                    ICraftingTask task = craftingTaskIterator.next();
-
-                    if (ticks % task.getPattern().getCrafter(worldObj).getSpeed() == 0 && task.update(this)) {
-                        task.onDone(this);
-
-                        craftingTaskIterator.remove();
-                    }
-                }
-            } else {
-                disconnectAll();
+                newEnergyUsage += machine.getEnergyUsage();
             }
+
+            Collections.sort(storages, new Comparator<IStorage>() {
+                @Override
+                public int compare(IStorage s1, IStorage s2) {
+                    if (s1.getPriority() == s2.getPriority()) {
+                        return 0;
+                    }
+
+                    return (s1.getPriority() > s2.getPriority()) ? -1 : 1;
+                }
+            });
+
+            syncItems();
+
+            for (ICraftingTask taskToCancel : craftingTasksToCancel) {
+                taskToCancel.onCancelled(this);
+            }
+
+            craftingTasks.removeAll(craftingTasksToCancel);
+            craftingTasksToCancel.clear();
+
+            craftingTasks.addAll(craftingTasksToAdd);
+            craftingTasksToAdd.clear();
+
+            Iterator<ICraftingTask> craftingTaskIterator = craftingTasks.iterator();
+
+            while (craftingTaskIterator.hasNext()) {
+                ICraftingTask task = craftingTaskIterator.next();
+
+                if (ticks % task.getPattern().getCrafter(worldObj).getSpeed() == 0 && task.update(this)) {
+                    task.onDone(this);
+
+                    craftingTaskIterator.remove();
+                }
+            }
+            /*} else {
+                disconnectAll();
+            }*/
 
             wirelessGridRange = newWirelessGridRange;
             energyUsage = newEnergyUsage;
@@ -208,7 +208,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
                     break;
             }
 
-            if (lastEnergy != energy.getEnergyStored()) {
+            if (lastEnergy != energy.getEnergyStored() || ticks == 1) {
                 worldObj.updateComparatorOutputLevel(pos, RefinedStorageBlocks.CONTROLLER);
 
                 if (System.currentTimeMillis() - lastEnergyUpdate > 3000L) {
@@ -216,8 +216,6 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
                     lastEnergyUpdate = System.currentTimeMillis();
                 }
-            } else if (ticks < 10) {
-                RefinedStorageUtils.sendToAllAround(worldObj, pos, new MessageControllerEnergyUpdate(this));
             }
         }
     }
