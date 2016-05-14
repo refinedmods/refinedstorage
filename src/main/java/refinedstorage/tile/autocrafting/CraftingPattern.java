@@ -6,7 +6,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.item.ItemPattern;
 
 public class CraftingPattern {
@@ -50,33 +49,6 @@ public class CraftingPattern {
 
     public ItemStack[] getOutputs() {
         return outputs;
-    }
-
-    public boolean comparePattern(World world, CraftingPattern otherPattern, int flags) {
-        if (otherPattern == this) {
-            return true;
-        }
-
-        if (otherPattern.getInputs().length != inputs.length ||
-            otherPattern.getOutputs().length != outputs.length ||
-            otherPattern.isProcessing() != processing ||
-            !otherPattern.getCrafter(world).getPos().equals(getCrafter(world).getPos())) {
-            return false;
-        }
-
-        for (int i = 0; i < inputs.length; ++i) {
-            if (!RefinedStorageUtils.compareStack(inputs[i], otherPattern.getInputs()[i], flags)) {
-                return false;
-            }
-        }
-
-        for (int i = 0; i < outputs.length; ++i) {
-            if (!RefinedStorageUtils.compareStack(outputs[i], otherPattern.getOutputs()[i], flags)) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     public void writeToNBT(NBTTagCompound tag) {
