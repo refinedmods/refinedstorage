@@ -28,14 +28,14 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
 
         TileController newController = ControllerSearcher.search(worldObj, pos, visited);
 
-        if (newController != null) {
-            this.controller = newController;
-
-            onConnected();
-        } else if (this.controller != null) {
-            this.controller = null;
-
-            onDisconnected();
+        if (controller == null) {
+            if (newController != null) {
+                onConnected(newController);
+            }
+        } else {
+            if (newController == null) {
+                onDisconnected();
+            }
         }
     }
 
@@ -50,24 +50,33 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
         super.update();
     }
 
-    public void onConnected() {
-        connected = true;
+    public void onConnected(TileController controller) {
+        this.controller = controller;
+        this.connected = true;
 
         if (worldObj.getBlockState(pos).getBlock() == block) {
             worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockMachine.CONNECTED, true));
         }
 
+        worldObj.notifyNeighborsOfStateChange(pos, block);
+
         controller.addMachine(this);
     }
 
     public void onDisconnected() {
-        connected = false;
+        this.connected = false;
 
         if (worldObj.getBlockState(pos).getBlock() == block) {
             worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockMachine.CONNECTED, false));
         }
 
-        controller.removeMachine(this);
+        // I have no idea why this is needed
+        if (controller != null) {
+            this.controller.removeMachine(this);
+            this.controller = null;
+        }
+
+        worldObj.notifyNeighborsOfStateChange(pos, block);
     }
 
     public boolean isConnected() {

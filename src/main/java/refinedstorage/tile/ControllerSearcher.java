@@ -26,6 +26,11 @@ public class ControllerSearcher {
         Block block = world.getBlockState(current).getBlock();
 
         if (tile instanceof TileMachine || block == RefinedStorageBlocks.CABLE) {
+            // We need to have visited more than 1 tile so that the relay can find a controller for itself
+            if (visited.size() > 1 && tile instanceof TileRelay && !((TileRelay) tile).isConnected()) {
+                return null;
+            }
+
             for (EnumFacing dir : EnumFacing.VALUES) {
                 TileController controller = search(world, current.offset(dir), visited);
 
