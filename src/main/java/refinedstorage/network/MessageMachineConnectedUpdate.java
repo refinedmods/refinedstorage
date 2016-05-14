@@ -52,9 +52,13 @@ public class MessageMachineConnectedUpdate implements IMessage, IMessageHandler<
         TileEntity tile = world.getTileEntity(pos);
 
         if (tile instanceof TileMachine) {
+            boolean wasConnected = ((TileMachine) tile).isConnected();
+
             ((TileMachine) tile).setConnected(message.connected);
 
-            RefinedStorageUtils.reRenderBlock(world, pos);
+            if (wasConnected != message.connected) {
+                RefinedStorageUtils.reRenderBlock(world, pos);
+            }
         }
 
         return null;

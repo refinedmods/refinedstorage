@@ -88,9 +88,9 @@ public class TileDetector extends TileMachine implements ICompareConfig {
 
             if (powered != lastPowered) {
                 worldObj.notifyNeighborsOfStateChange(pos, RefinedStorageBlocks.DETECTOR);
-
-                RefinedStorageUtils.sendToAllAround(worldObj, pos, new MessageDetectorPoweredUpdate(this));
             }
+
+            RefinedStorageUtils.sendToAllAround(worldObj, pos, new MessageDetectorPoweredUpdate(this));
         }
     }
 

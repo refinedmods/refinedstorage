@@ -44,8 +44,6 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
     public void updateMachine() {
         ISoldererRecipe newRecipe = SoldererRegistry.getRecipe(inventory);
 
-        boolean lastWorking = working;
-
         if (newRecipe == null) {
             reset();
         } else if (newRecipe != recipe) {
@@ -78,9 +76,7 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
             }
         }
 
-        if (working != lastWorking) {
-            RefinedStorageUtils.sendToAllAround(worldObj, pos, new MessageSoldererWorkingUpdate(this));
-        }
+        RefinedStorageUtils.sendToAllAround(worldObj, pos, new MessageSoldererWorkingUpdate(this));
     }
 
     @Override

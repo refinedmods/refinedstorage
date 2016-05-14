@@ -12,6 +12,8 @@ import refinedstorage.RefinedStorageUtils;
 import refinedstorage.tile.TileController;
 
 public class MessageControllerEnergyUpdate implements IMessage, IMessageHandler<MessageControllerEnergyUpdate, IMessage> {
+    public static long LAST_RE_RENDER;
+
     private int x;
     private int y;
     private int z;
@@ -52,9 +54,15 @@ public class MessageControllerEnergyUpdate implements IMessage, IMessageHandler<
         TileEntity tile = world.getTileEntity(pos);
 
         if (tile instanceof TileController) {
+            int lastEnergy = ((TileController) tile).getEnergyStored(null);
+
             ((TileController) tile).setEnergyStored(message.energy);
 
-            RefinedStorageUtils.reRenderBlock(world, pos);
+            if (lastEnergy != message.energy && System.currentTimeMillis() - LAST_RE_RENDER > 3000) {
+                RefinedStorageUtils.reRenderBlock(world, pos);
+
+                LAST_RE_RENDER = System.currentTimeMillis();
+            }
         }
 
         return null;

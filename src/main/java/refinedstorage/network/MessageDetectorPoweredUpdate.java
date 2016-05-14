@@ -52,9 +52,13 @@ public class MessageDetectorPoweredUpdate implements IMessage, IMessageHandler<M
         TileEntity tile = world.getTileEntity(pos);
 
         if (tile instanceof TileDetector) {
+            boolean wasPowered = ((TileDetector) tile).isPowered();
+
             ((TileDetector) tile).setPowered(message.powered);
 
-            RefinedStorageUtils.reRenderBlock(world, pos);
+            if (wasPowered != message.powered) {
+                RefinedStorageUtils.reRenderBlock(world, pos);
+            }
         }
 
         return null;
