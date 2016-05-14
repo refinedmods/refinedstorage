@@ -34,7 +34,7 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
         TileController newController = ControllerSearcher.search(worldObj, pos, visited);
 
         if (controller == null) {
-            if (newController != null && redstoneMode.isEnabled(worldObj, pos)) {
+            if (newController != null && newController.canRun() && redstoneMode.isEnabled(worldObj, pos)) {
                 onConnected(world, newController);
             }
         } else {

@@ -72,6 +72,8 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     private EnergyStorage energy = new EnergyStorage(ENERGY_CAPACITY);
     private int energyUsage;
 
+    private boolean couldRun;
+
     private int wirelessGridRange;
 
     public void addMachine(TileMachine machine) {
@@ -101,8 +103,6 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
             List<CraftingPattern> newPatterns = new ArrayList<CraftingPattern>();
 
             if (canRun()) {
-                newEnergyUsage = 10;
-
                 for (TileMachine machine : machines) {
                     machine.updateMachine();
 
@@ -173,6 +173,12 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
                 disconnectAll();
             }
 
+            if (couldRun != canRun()) {
+                couldRun = canRun();
+
+                worldObj.notifyNeighborsOfStateChange(pos, RefinedStorageBlocks.CONTROLLER);
+            }
+
             wirelessGridRange = newWirelessGridRange;
             energyUsage = newEnergyUsage;
             storages = newStorages;
@@ -197,8 +203,12 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
             switch (getType()) {
                 case NORMAL:
-                    if (canRun()) {
-                        energy.extractEnergy(energyUsage, false);
+                    if (energyUsage > 0) {
+                        if (energy.getEnergyStored() - energyUsage >= 0) {
+                            energy.extractEnergy(energyUsage, false);
+                        } else {
+                            energy.setEnergyStored(0);
+                        }
                     }
                     break;
                 case CREATIVE:
@@ -536,7 +546,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     }
 
     public boolean canRun() {
-        return energy.getEnergyStored() >= getEnergyUsage() && redstoneMode.isEnabled(worldObj, pos);
+        return energy.getEnergyStored() > 0 && energy.getEnergyStored() >= energyUsage && redstoneMode.isEnabled(worldObj, pos);
     }
 
     @Override
