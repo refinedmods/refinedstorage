@@ -33,7 +33,6 @@ import static refinedstorage.RefinedStorage.ID;
 
 public class CommonProxy {
     public void preInit(FMLPreInitializationEvent e) {
-        RefinedStorage.NETWORK.registerMessage(MessageTileUpdate.class, MessageTileUpdate.class, 0, Side.CLIENT);
         RefinedStorage.NETWORK.registerMessage(MessageTileContainerUpdate.class, MessageTileContainerUpdate.class, 15, Side.CLIENT);
         RefinedStorage.NETWORK.registerMessage(MessageRedstoneModeUpdate.class, MessageRedstoneModeUpdate.class, 1, Side.SERVER);
         RefinedStorage.NETWORK.registerMessage(MessageGridStoragePush.class, MessageGridStoragePush.class, 2, Side.SERVER);
@@ -56,6 +55,10 @@ public class CommonProxy {
         RefinedStorage.NETWORK.registerMessage(MessageWirelessGridCraftingStart.class, MessageWirelessGridCraftingStart.class, 21, Side.SERVER);
         RefinedStorage.NETWORK.registerMessage(MessageGridPatternCreate.class, MessageGridPatternCreate.class, 22, Side.SERVER);
         RefinedStorage.NETWORK.registerMessage(MessageCraftingMonitorCancel.class, MessageCraftingMonitorCancel.class, 23, Side.SERVER);
+        RefinedStorage.NETWORK.registerMessage(MessageControllerEnergyUpdate.class, MessageControllerEnergyUpdate.class, 24, Side.CLIENT);
+        RefinedStorage.NETWORK.registerMessage(MessageSoldererWorkingUpdate.class, MessageSoldererWorkingUpdate.class, 25, Side.CLIENT);
+        RefinedStorage.NETWORK.registerMessage(MessageMachineConnectedUpdate.class, MessageMachineConnectedUpdate.class, 26, Side.CLIENT);
+        RefinedStorage.NETWORK.registerMessage(MessageDetectorPoweredUpdate.class, MessageDetectorPoweredUpdate.class, 27, Side.CLIENT);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(RefinedStorage.INSTANCE, new GuiHandler());
 

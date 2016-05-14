@@ -13,6 +13,7 @@ import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerSolderer;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.item.ItemUpgrade;
+import refinedstorage.network.MessageSoldererWorkingUpdate;
 import refinedstorage.tile.TileMachine;
 
 public class TileSolderer extends TileMachine implements IInventory, ISidedInventory {
@@ -42,6 +43,8 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
     @Override
     public void updateMachine() {
         ISoldererRecipe newRecipe = SoldererRegistry.getRecipe(inventory);
+
+        boolean lastWorking = working;
 
         if (newRecipe == null) {
             reset();
@@ -73,6 +76,10 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
 
                 reset();
             }
+        }
+
+        if (working != lastWorking) {
+            RefinedStorageUtils.sendToAllAround(worldObj, pos, new MessageSoldererWorkingUpdate(this));
         }
     }
 
@@ -135,28 +142,12 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
     }
 
     @Override
-    public void receiveData(ByteBuf buf) {
-        super.receiveData(buf);
-
-        boolean lastWorking = working;
-
-        working = buf.readBoolean();
-
-        if (working != lastWorking) {
-            worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2 | 4);
-        }
-    }
-
-    @Override
-    public void sendData(ByteBuf buf) {
-        super.sendData(buf);
-
-        buf.writeBoolean(working);
-    }
-
-    @Override
     public Class<? extends Container> getContainer() {
         return ContainerSolderer.class;
+    }
+
+    public void setWorking(boolean working) {
+        this.working = working;
     }
 
     public boolean isWorking() {

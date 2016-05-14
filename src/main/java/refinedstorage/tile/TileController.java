@@ -22,6 +22,7 @@ import refinedstorage.container.ContainerController;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.item.ItemWirelessGrid;
 import refinedstorage.network.GridPullFlags;
+import refinedstorage.network.MessageControllerEnergyUpdate;
 import refinedstorage.network.MessageWirelessGridItems;
 import refinedstorage.storage.IStorage;
 import refinedstorage.storage.IStorageProvider;
@@ -37,7 +38,7 @@ import refinedstorage.tile.grid.WirelessGridConsumer;
 
 import java.util.*;
 
-public class TileController extends TileBase implements IEnergyReceiver, INetworkTile, IRedstoneModeConfig {
+public class TileController extends TileBase implements IEnergyReceiver, ISynchronizedContainer, IRedstoneModeConfig {
     public class ClientSideMachine {
         public ItemStack stack;
         public int energyUsage;
@@ -73,7 +74,7 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
     private int wirelessGridRange;
 
-    private long lastEnergyRender;
+    private long lastEnergyUpdate;
 
     public void addMachine(TileMachine machine) {
         machinesToAdd.add(machine);
@@ -203,6 +204,12 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
             if (lastEnergy != energy.getEnergyStored()) {
                 worldObj.updateComparatorOutputLevel(pos, RefinedStorageBlocks.CONTROLLER);
+
+                if (System.currentTimeMillis() - lastEnergyUpdate > 3000) {
+                    RefinedStorageUtils.sendToAllAround(worldObj, pos, new MessageControllerEnergyUpdate(this));
+
+                    lastEnergyUpdate = System.currentTimeMillis();
+                }
             }
         }
     }
@@ -397,6 +404,10 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
         return newStack;
     }
 
+    public void setEnergyStored(int amount) {
+        energy.setEnergyStored(amount);
+    }
+
     public boolean onOpenWirelessGrid(EntityPlayer player, EnumHand hand) {
         boolean inRange = (int) Math.sqrt(Math.pow(getPos().getX() - player.posX, 2) + Math.pow(getPos().getY() - player.posY, 2) + Math.pow(getPos().getZ() - player.posZ, 2)) < getWirelessGridRange();
 
@@ -547,24 +558,6 @@ public class TileController extends TileBase implements IEnergyReceiver, INetwor
 
     public List<ClientSideMachine> getClientSideMachines() {
         return clientSideMachines;
-    }
-
-    @Override
-    public void receiveData(ByteBuf buf) {
-        int lastEnergy = energy.getEnergyStored();
-
-        energy.setEnergyStored(buf.readInt());
-
-        if (lastEnergy != energy.getEnergyStored() && System.currentTimeMillis() - lastEnergyRender > 3000) {
-            lastEnergyRender = System.currentTimeMillis();
-
-            worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2 | 4);
-        }
-    }
-
-    @Override
-    public void sendData(ByteBuf buf) {
-        buf.writeInt(energy.getEnergyStored());
     }
 
     @Override

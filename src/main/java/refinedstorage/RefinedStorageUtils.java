@@ -7,8 +7,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.item.ItemUpgrade;
 
@@ -286,5 +289,15 @@ public class RefinedStorageUtils {
             default:
                 return 0;
         }
+    }
+
+    public static void sendToAllAround(World world, BlockPos pos, IMessage message) {
+        NetworkRegistry.TargetPoint target = new NetworkRegistry.TargetPoint(world.provider.getDimensionType().getId(), pos.getX(), pos.getY(), pos.getZ(), 64);
+
+        RefinedStorage.NETWORK.sendToAllAround(message, target);
+    }
+
+    public static void reRenderBlock(World world, BlockPos pos) {
+        world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 1 | 2);
     }
 }

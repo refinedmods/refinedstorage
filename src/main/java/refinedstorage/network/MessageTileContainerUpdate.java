@@ -7,7 +7,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import refinedstorage.tile.INetworkTile;
+import refinedstorage.tile.ISynchronizedContainer;
 
 public class MessageTileContainerUpdate implements IMessage, IMessageHandler<MessageTileContainerUpdate, IMessage> {
     private TileEntity tile;
@@ -31,8 +31,8 @@ public class MessageTileContainerUpdate implements IMessage, IMessageHandler<Mes
         if (Minecraft.getMinecraft().theWorld != null) {
             tile = Minecraft.getMinecraft().theWorld.getTileEntity(new BlockPos(x, y, z));
 
-            if (tile instanceof INetworkTile) {
-                ((INetworkTile) tile).receiveContainerData(buf);
+            if (tile instanceof ISynchronizedContainer) {
+                ((ISynchronizedContainer) tile).receiveContainerData(buf);
             }
         }
     }
@@ -43,8 +43,8 @@ public class MessageTileContainerUpdate implements IMessage, IMessageHandler<Mes
         buf.writeInt(tile.getPos().getY());
         buf.writeInt(tile.getPos().getZ());
 
-        if (tile instanceof INetworkTile) {
-            ((INetworkTile) tile).sendContainerData(buf);
+        if (tile instanceof ISynchronizedContainer) {
+            ((ISynchronizedContainer) tile).sendContainerData(buf);
         }
     }
 

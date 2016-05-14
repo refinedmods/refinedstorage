@@ -4,14 +4,16 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
+import refinedstorage.RefinedStorageUtils;
 import refinedstorage.block.BlockMachine;
+import refinedstorage.network.MessageMachineConnectedUpdate;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class TileMachine extends TileBase implements INetworkTile, IRedstoneModeConfig {
+public abstract class TileMachine extends TileBase implements ISynchronizedContainer, IRedstoneModeConfig {
     protected boolean connected = false;
     protected RedstoneMode redstoneMode = RedstoneMode.IGNORE;
     protected TileController controller;
@@ -56,6 +58,8 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
 
         if (worldObj.getBlockState(pos).getBlock() == block) {
             worldObj.setBlockState(pos, worldObj.getBlockState(pos).withProperty(BlockMachine.CONNECTED, true));
+
+            RefinedStorageUtils.sendToAllAround(worldObj, pos, new MessageMachineConnectedUpdate(this));
         }
 
         worldObj.notifyNeighborsOfStateChange(pos, block);
@@ -83,6 +87,10 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
         return connected;
     }
 
+    public void setConnected(boolean connected) {
+        this.connected = connected;
+    }
+
     @Override
     public RedstoneMode getRedstoneMode() {
         return redstoneMode;
@@ -98,22 +106,6 @@ public abstract class TileMachine extends TileBase implements INetworkTile, IRed
     @Override
     public BlockPos getMachinePos() {
         return pos;
-    }
-
-    @Override
-    public void receiveData(ByteBuf buf) {
-        boolean lastConnected = connected;
-
-        connected = buf.readBoolean();
-
-        if (lastConnected != connected) {
-            worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2 | 4);
-        }
-    }
-
-    @Override
-    public void sendData(ByteBuf buf) {
-        buf.writeBoolean(connected);
     }
 
     @Override

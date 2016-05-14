@@ -13,16 +13,12 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import refinedstorage.RefinedStorage;
 import refinedstorage.network.MessageTileContainerUpdate;
-import refinedstorage.network.MessageTileUpdate;
 
 public abstract class TileBase extends TileEntity implements ITickable {
     public static final String NBT_DIRECTION = "Direction";
     public static final String NBT_ENERGY = "Energy";
-
-    public static final int UPDATE_RANGE = 64;
 
     private EnumFacing direction = EnumFacing.NORTH;
 
@@ -33,13 +29,9 @@ public abstract class TileBase extends TileEntity implements ITickable {
         ticks++;
 
         if (!worldObj.isRemote) {
-            if (this instanceof INetworkTile) {
-                TargetPoint target = new TargetPoint(worldObj.provider.getDimensionType().getId(), pos.getX(), pos.getY(), pos.getZ(), UPDATE_RANGE);
-
-                RefinedStorage.NETWORK.sendToAllAround(new MessageTileUpdate(this), target);
-
+            if (this instanceof ISynchronizedContainer) {
                 for (EntityPlayer player : worldObj.playerEntities) {
-                    if (((INetworkTile) this).getContainer() == player.openContainer.getClass()) {
+                    if (((ISynchronizedContainer) this).getContainer() == player.openContainer.getClass()) {
                         RefinedStorage.NETWORK.sendTo(new MessageTileContainerUpdate(this), (EntityPlayerMP) player);
                     }
                 }

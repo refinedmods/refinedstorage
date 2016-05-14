@@ -9,6 +9,7 @@ import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerDetector;
 import refinedstorage.inventory.InventorySimple;
+import refinedstorage.network.MessageDetectorPoweredUpdate;
 import refinedstorage.storage.ItemGroup;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.RedstoneMode;
@@ -87,12 +88,18 @@ public class TileDetector extends TileMachine implements ICompareConfig {
 
             if (powered != lastPowered) {
                 worldObj.notifyNeighborsOfStateChange(pos, RefinedStorageBlocks.DETECTOR);
+
+                RefinedStorageUtils.sendToAllAround(worldObj, pos, new MessageDetectorPoweredUpdate(this));
             }
         }
     }
 
     public boolean isPowered() {
         return powered;
+    }
+
+    public void setPowered(boolean powered) {
+        this.powered = powered;
     }
 
     @Override
@@ -155,26 +162,6 @@ public class TileDetector extends TileMachine implements ICompareConfig {
         nbt.setInteger(NBT_AMOUNT, amount);
 
         RefinedStorageUtils.saveInventory(inventory, 0, nbt);
-    }
-
-    @Override
-    public void receiveData(ByteBuf buf) {
-        super.receiveData(buf);
-
-        boolean lastPowered = powered;
-
-        powered = buf.readBoolean();
-
-        if (powered != lastPowered) {
-            worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2 | 4);
-        }
-    }
-
-    @Override
-    public void sendData(ByteBuf buf) {
-        super.sendData(buf);
-
-        buf.writeBoolean(powered);
     }
 
     @Override
