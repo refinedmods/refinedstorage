@@ -14,6 +14,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
+import refinedstorage.RefinedStorageUtils;
 import refinedstorage.network.MessageTileContainerUpdate;
 
 public abstract class TileBase extends TileEntity implements ITickable {
@@ -75,6 +76,8 @@ public abstract class TileBase extends TileEntity implements ITickable {
     @Override
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
         direction = EnumFacing.getFront(packet.getNbtCompound().getInteger(NBT_DIRECTION));
+
+        RefinedStorageUtils.reRenderBlock(worldObj, pos);
     }
 
     @Override

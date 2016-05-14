@@ -79,7 +79,7 @@ public abstract class BlockBase extends Block {
     public boolean rotateBlock(World world, BlockPos pos, EnumFacing axis) {
         TileEntity tile = world.getTileEntity(pos);
 
-        if (tile instanceof TileBase) {
+        if (!world.isRemote && tile instanceof TileBase) {
             EnumFacing dir = ((TileBase) tile).getDirection();
 
             int newDir = dir.ordinal() + 1;
@@ -90,7 +90,7 @@ public abstract class BlockBase extends Block {
 
             ((TileBase) tile).setDirection(EnumFacing.getFront(newDir));
 
-            RefinedStorageUtils.reRenderBlock(world, pos);
+            world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 8);
 
             return true;
         }
