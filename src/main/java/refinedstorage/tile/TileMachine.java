@@ -43,8 +43,10 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
 
     @Override
     public void update() {
+        super.update();
+
         if (!worldObj.isRemote) {
-            if (ticks == 0) {
+            if (ticks == 1) {
                 block = worldObj.getBlockState(pos).getBlock();
 
                 searchController();
@@ -54,8 +56,6 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
                 onDisconnected();
             }
         }
-
-        super.update();
     }
 
     public void onConnected(TileController controller) {
