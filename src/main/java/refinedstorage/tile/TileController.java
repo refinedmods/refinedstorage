@@ -629,6 +629,10 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     }
 
     public void handleStoragePull(int id, int flags, EntityPlayerMP player) {
+        if (player.inventory.getItemStack() != null) {
+            return;
+        }
+
         if (id < 0 || id > itemGroups.size() - 1) {
             return;
         }
