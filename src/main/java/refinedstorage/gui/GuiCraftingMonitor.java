@@ -8,9 +8,9 @@ import refinedstorage.container.ContainerCraftingMonitor;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.network.MessageCraftingMonitorCancel;
 import refinedstorage.tile.autocrafting.TileCraftingMonitor;
-import scala.actors.threadpool.Arrays;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 public class GuiCraftingMonitor extends GuiBase {
