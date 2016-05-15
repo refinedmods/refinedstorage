@@ -48,6 +48,8 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
         } else {
             if (newController == null) {
                 onDisconnected(world);
+            } else {
+                connected = true;
             }
         }
     }
@@ -66,7 +68,7 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
                     TileEntity tile = worldObj.getTileEntity(new BlockPos(controllerX, controllerY, controllerZ));
 
                     if (tile instanceof TileController) {
-                        search = !tryConnect(worldObj, (TileController) tile);
+                        search = !tryConnect((TileController) tile);
                     }
                 }
 
@@ -76,7 +78,7 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
             }
 
             if (connected && !redstoneMode.isEnabled(worldObj, pos)) {
-                onDisconnected(worldObj);
+                onDisconnected(worldObj, false);
             }
 
             if (!(this instanceof TileCable)) {
@@ -86,13 +88,13 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
     }
 
     public void onConnected(World world, TileController controller) {
-        if (tryConnect(world, controller)) {
+        if (tryConnect(controller)) {
             world.notifyNeighborsOfStateChange(pos, block);
         }
     }
 
-    private boolean tryConnect(World world, TileController controller) {
-        if (!controller.canRun() || !redstoneMode.isEnabled(world, pos)) {
+    private boolean tryConnect(TileController controller) {
+        if (!controller.canRun()) {
             return false;
         }
 
@@ -105,9 +107,13 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
     }
 
     public void onDisconnected(World world) {
+        onDisconnected(world, true);
+    }
+
+    public void onDisconnected(World world, boolean removeController) {
         this.connected = false;
 
-        if (this.controller != null) {
+        if (removeController && this.controller != null) {
             this.controller.removeMachine(this);
             this.controller = null;
         }
