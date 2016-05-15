@@ -11,6 +11,7 @@
 - Fixed Crafting Grid not respecting remainder in recipes
 - Fixed Crafting Grid giving back the wrong amount of items when shift clicking
 - Fixed items disappearing in Grid when doing a weird combination of inputs
+- Fixed Solderer not stacking items
 
 **Features**
 - Added autocrafting
