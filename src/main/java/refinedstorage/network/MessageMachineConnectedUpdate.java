@@ -24,7 +24,7 @@ public class MessageMachineConnectedUpdate implements IMessage, IMessageHandler<
         this.x = machine.getPos().getX();
         this.y = machine.getPos().getY();
         this.z = machine.getPos().getZ();
-        this.connected = machine.isConnected();
+        this.connected = machine.isConnected() && machine.mayUpdate();
     }
 
     @Override

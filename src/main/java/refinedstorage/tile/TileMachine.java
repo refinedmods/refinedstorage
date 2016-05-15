@@ -48,8 +48,6 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
         } else {
             if (newController == null) {
                 onDisconnected(world);
-            } else {
-                connected = true;
             }
         }
     }
@@ -77,14 +75,14 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
                 }
             }
 
-            if (connected && !redstoneMode.isEnabled(worldObj, pos)) {
-                onDisconnected(worldObj, false);
-            }
-
             if (!(this instanceof TileCable)) {
                 RefinedStorageUtils.sendToAllAround(worldObj, pos, new MessageMachineConnectedUpdate(this));
             }
         }
+    }
+
+    public boolean mayUpdate() {
+        return redstoneMode.isEnabled(worldObj, pos);
     }
 
     public void onConnected(World world, TileController controller) {
@@ -107,13 +105,9 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
     }
 
     public void onDisconnected(World world) {
-        onDisconnected(world, true);
-    }
-
-    public void onDisconnected(World world, boolean removeController) {
         this.connected = false;
 
-        if (removeController && this.controller != null) {
+        if (this.controller != null) {
             this.controller.removeMachine(this);
             this.controller = null;
         }

@@ -119,6 +119,9 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
             if (canRun()) {
                 for (TileMachine machine : machines) {
+                    if (!machine.mayUpdate()) {
+                        continue;
+                    }
                     machine.updateMachine();
 
                     if (machine instanceof TileWirelessTransmitter) {
@@ -618,22 +621,25 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
         List<ClientSideMachine> m = new ArrayList<ClientSideMachine>();
 
         for (TileMachine machine : machines) {
-            IBlockState state = worldObj.getBlockState(machine.getPos());
+            if (machine.mayUpdate()) {
+                IBlockState state = worldObj.getBlockState(machine.getPos());
 
-            ClientSideMachine clientMachine = new ClientSideMachine();
+                ClientSideMachine clientMachine = new ClientSideMachine();
 
-            clientMachine.energyUsage = machine.getEnergyUsage();
-            clientMachine.amount = 1;
-            clientMachine.stack = new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state));
+                clientMachine.energyUsage = machine.getEnergyUsage();
+                clientMachine.amount = 1;
+                clientMachine.stack = new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state));
 
-            if (m.contains(clientMachine)) {
-                for (ClientSideMachine other : m) {
-                    if (other.equals(clientMachine)) {
-                        other.amount++;
+                if (m.contains(clientMachine)) {
+                    for (ClientSideMachine other : m) {
+                        if (other.equals(clientMachine)) {
+                            other.amount++;
+                            break;
+                        }
                     }
+                } else {
+                    m.add(clientMachine);
                 }
-            } else {
-                m.add(clientMachine);
             }
         }
 
