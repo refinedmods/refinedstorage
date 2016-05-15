@@ -104,7 +104,12 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
         super.update();
 
         if (!worldObj.isRemote) {
-            machines.addAll(machinesToAdd);
+            // Prevent cache from re-adding the block
+            for (TileMachine machine : machinesToAdd) {
+                if (!machines.contains(machine)) {
+                    machines.add(machine);
+                }
+            }
             machinesToAdd.clear();
 
             machines.removeAll(machinesToRemove);

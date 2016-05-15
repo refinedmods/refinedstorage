@@ -20,8 +20,7 @@ public class ControllerSearcher {
         if (tile instanceof TileController) {
             return (TileController) tile;
         } else if (tile instanceof TileMachine) {
-            // We need to have visited more than 1 tile so that the relay can find a controller for itself
-            if (visited.size() > 1 && tile instanceof TileRelay && !((TileRelay) tile).isConnected()) {
+            if (visited.size() > 1 && tile instanceof TileRelay && !((TileRelay) tile).mayUpdate()) {
                 return null;
             }
 
