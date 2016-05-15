@@ -298,6 +298,6 @@ public class RefinedStorageUtils {
     }
 
     public static void reRenderBlock(World world, BlockPos pos) {
-        world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 1 | 2);
+        world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
     }
 }

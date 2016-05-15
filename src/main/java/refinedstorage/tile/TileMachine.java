@@ -161,7 +161,6 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
         controllerIsCached = nbt.hasKey(NBT_CONTROLLER_X) && nbt.hasKey(NBT_CONTROLLER_Y) && nbt.hasKey(NBT_CONTROLLER_Z);
 
         if (controllerIsCached) {
-            System.out.println("Getting from cache");
             controllerX = nbt.getInteger(NBT_CONTROLLER_X);
             controllerY = nbt.getInteger(NBT_CONTROLLER_Y);
             controllerZ = nbt.getInteger(NBT_CONTROLLER_Z);
