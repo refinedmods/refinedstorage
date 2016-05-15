@@ -54,7 +54,10 @@ public class MessageWirelessGridSettingsUpdate extends MessageHandlerPlayerToSer
                 held.getTagCompound().setInteger(ItemWirelessGrid.NBT_SORTING_TYPE, message.sortingType);
             }
 
-            if (message.searchBoxMode == TileGrid.SEARCH_BOX_MODE_NORMAL || message.searchBoxMode == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED) {
+            if (message.searchBoxMode == TileGrid.SEARCH_BOX_MODE_NORMAL ||
+                message.searchBoxMode == TileGrid.SEARCH_BOX_MODE_NORMAL_AUTOSELECTED ||
+                message.searchBoxMode == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED ||
+                message.searchBoxMode == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED) {
                 held.getTagCompound().setInteger(ItemWirelessGrid.NBT_SEARCH_BOX_MODE, message.searchBoxMode);
             }
         }
