@@ -2,7 +2,6 @@ package refinedstorage.gui;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.util.text.translation.I18n;
 import refinedstorage.container.ContainerController;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.tile.TileController;
@@ -84,8 +83,8 @@ public class GuiController extends GuiBase {
 
                 float scale = 0.5f;
                 GlStateManager.scale(scale, scale, 1);
-                drawString(calculateOffsetOnScale(x + 1, scale), calculateOffsetOnScale(y - 3, scale), machine.stack.getDisplayName());
-                drawString(calculateOffsetOnScale(x + 21, scale), calculateOffsetOnScale(y + 10, scale), t("misc.refinedstorage:energy_usage_minimal", machine.energyUsage));
+                drawString(calculateOffsetOnScale(x + 1, scale), calculateOffsetOnScale(y - 2, scale), machine.stack.getDisplayName());
+                drawString(calculateOffsetOnScale(x + 21, scale), calculateOffsetOnScale(y + 10, scale), t("gui.refinedstorage:controller.machine_amount", machine.amount));
 
                 GlStateManager.popMatrix();
 
@@ -105,11 +104,7 @@ public class GuiController extends GuiBase {
         }
 
         if (machineHovering != null) {
-            String message = I18n.translateToLocalFormatted("gui.refinedstorage:controller.machine_position.x", machineHovering.x);
-            message += "\n" + I18n.translateToLocalFormatted("gui.refinedstorage:controller.machine_position.y", machineHovering.y);
-            message += "\n" + I18n.translateToLocalFormatted("gui.refinedstorage:controller.machine_position.z", machineHovering.z);
-
-            drawTooltip(mouseX, mouseY, message);
+            drawTooltip(mouseX, mouseY, t("misc.refinedstorage:energy_usage_minimal", machineHovering.energyUsage));
         }
 
         if (inBounds(barX, barY, barWidth, barHeight, mouseX, mouseY)) {

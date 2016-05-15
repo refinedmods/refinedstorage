@@ -2,9 +2,7 @@ itemGroup.refinedstorage=Refined Storage
 
 gui.refinedstorage:controller.0=Controller
 gui.refinedstorage:controller.1=Creative Controller
-gui.refinedstorage:controller.machine_position.x=X: %d
-gui.refinedstorage:controller.machine_position.y=Y: %d
-gui.refinedstorage:controller.machine_position.z=Z: %d
+gui.refinedstorage:controller.machine_amount=%dx
 gui.refinedstorage:grid=Grid
 gui.refinedstorage:grid.craft=Craft
 gui.refinedstorage:grid.pattern=Pattern

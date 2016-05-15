@@ -41,10 +41,25 @@ import java.util.*;
 public class TileController extends TileBase implements IEnergyReceiver, ISynchronizedContainer, IRedstoneModeConfig {
     public class ClientSideMachine {
         public ItemStack stack;
+        public int amount;
         public int energyUsage;
-        public int x;
-        public int y;
-        public int z;
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            ClientSideMachine other = (ClientSideMachine) o;
+
+            return energyUsage == other.energyUsage && RefinedStorageUtils.compareStack(stack, other.stack);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = stack.hashCode();
+            result = 31 * result + energyUsage;
+            return result;
+        }
     }
 
     public static final int ENERGY_CAPACITY = 32000;
@@ -583,18 +598,10 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
         int size = buf.readInt();
 
         for (int i = 0; i < size; ++i) {
-            int energyUsage = buf.readInt();
-            int x = buf.readInt();
-            int y = buf.readInt();
-            int z = buf.readInt();
-            ItemStack stack = ByteBufUtils.readItemStack(buf);
-
             ClientSideMachine machine = new ClientSideMachine();
-            machine.x = x;
-            machine.y = y;
-            machine.z = z;
-            machine.energyUsage = energyUsage;
-            machine.stack = stack;
+            machine.energyUsage = buf.readInt();
+            machine.amount = buf.readInt();
+            machine.stack = ByteBufUtils.readItemStack(buf);
 
             machines.add(machine);
         }
@@ -608,18 +615,34 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
         buf.writeInt(redstoneMode.id);
 
-        buf.writeInt(machines.size());
+        List<ClientSideMachine> m = new ArrayList<ClientSideMachine>();
 
         for (TileMachine machine : machines) {
-            buf.writeInt(machine.getEnergyUsage());
-
-            buf.writeInt(machine.getPos().getX());
-            buf.writeInt(machine.getPos().getY());
-            buf.writeInt(machine.getPos().getZ());
-
             IBlockState state = worldObj.getBlockState(machine.getPos());
 
-            ByteBufUtils.writeItemStack(buf, new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state)));
+            ClientSideMachine clientMachine = new ClientSideMachine();
+
+            clientMachine.energyUsage = machine.getEnergyUsage();
+            clientMachine.amount = 1;
+            clientMachine.stack = new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state));
+
+            if (m.contains(clientMachine)) {
+                for (ClientSideMachine other : m) {
+                    if (other.equals(clientMachine)) {
+                        other.amount++;
+                    }
+                }
+            } else {
+                m.add(clientMachine);
+            }
+        }
+
+        buf.writeInt(m.size());
+
+        for (ClientSideMachine machine : m) {
+            buf.writeInt(machine.energyUsage);
+            buf.writeInt(machine.amount);
+            ByteBufUtils.writeItemStack(buf, machine.stack);
         }
     }
 
