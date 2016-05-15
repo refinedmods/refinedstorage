@@ -1,12 +1,32 @@
 # Refined Storage Changelog
 
 ### 0.6
-WIP
+**Bugfixes**
+- Destructor plays block break sound now
+- Constructor plays block placement sound now
+- Fixed picking up from crafting result slot
+- Fixed being able to use right click on crafting result slot
+- Fixed item duplication issue with the Interface
+- Fixed Importers not working when changing facing with a wrench
+- Fixed Crafting Grid not respecting remainder in recipes
+- Fixed Crafting Grid giving back the wrong amount of items when shift clicking
+- Fixed items disappearing in Grid when doing a weird combination of inputs
 
-**TODO**
-- Fix wrong quantity per craft
-- Textures
-- Update wiki
+**Features**
+- Added autocrafting
+- Massive performance improvements which reduces lag and lets machines connect almost instantly
+- Added the Pattern Grid
+- Added the Crafting Monitor
+- Added the Crafter
+- Added the Processing Pattern Encoder
+- Added a Pattern item
+- Added the Wireless Transmitter
+- Added Speed Upgrades which are applicable on a bunch of machines
+- Added Range Upgrades for in the Wireless Transmitter
+- Added Crafting Upgrades
+- Changed Grid modes to have a autoselected option
+- Added recipe category -> item JEI integration
+- Added Storage Housing
 
 ### 0.5.6
 **Bugfixes**
