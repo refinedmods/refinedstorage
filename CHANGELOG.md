@@ -13,6 +13,7 @@
 - Fixed items disappearing in Grid when doing a weird combination of inputs
 - Fixed Solderer not stacking items
 - Fixed Importer voiding Storage Disks from the Disk Drive
+- Fixed Controller not saving energy
 
 **Features**
 - Added autocrafting
@@ -32,9 +33,9 @@
 
 ### 0.5.6
 **Bugfixes**
-- Fix sorting crash
-- Fix autofocusing on priority field in storage GUIs
-- Fix controller causing lag when energy level changes
+- Fixed sorting crash
+- Fixed autofocusing on priority field in storage GUIs
+- Fixed controller causing lag when energy level changes
 
 ### 0.5.5
 **Bugfixes**

@@ -51,7 +51,7 @@ public class ItemStorageDisk extends ItemBase {
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
-        if (!world.isRemote && NBTStorage.getStored(stack.getTagCompound()) == 0 && stack.getMetadata() != TYPE_CREATIVE) {
+        if (!world.isRemote && player.isSneaking() && NBTStorage.getStored(stack.getTagCompound()) == 0 && stack.getMetadata() != TYPE_CREATIVE) {
             ItemStack storagePart = new ItemStack(RefinedStorageItems.STORAGE_PART, 1, stack.getMetadata());
 
             if (!player.inventory.addItemStackToInventory(storagePart.copy())) {
