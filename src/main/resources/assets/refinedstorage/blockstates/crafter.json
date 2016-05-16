@@ -4,21 +4,29 @@
     "model": "orientable",
     "textures": {
       "side": "refinedstorage:blocks/side",
-      "top": "refinedstorage:blocks/side",
-      "front": "refinedstorage:blocks/crafter"
+      "top": "refinedstorage:blocks/side"
     }
   },
   "variants": {
     "inventory": [
       {
+        "textures": {
+          "front": "refinedstorage:blocks/crafter_disconnected"
+        },
         "transform": "forge:default-block",
         "y": 0
       }
     ],
     "connected": {
       "true": {
+        "textures": {
+          "front": "refinedstorage:blocks/crafter_connected"
+        }
       },
       "false": {
+        "textures": {
+          "front": "refinedstorage:blocks/crafter_disconnected"
+        }
       }
     },
     "direction": {
