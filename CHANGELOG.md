@@ -2,8 +2,8 @@
 
 ### 0.6
 **Bugfixes**
-- Destructor plays block break sound now
-- Constructor plays block placement sound now
+- Fixed Destructor not playing block break sound
+- Fixed Constructor not playing block place sound
 - Fixed picking up from crafting result slot
 - Fixed being able to use right click on crafting result slot
 - Fixed item duplication issue with the Interface
