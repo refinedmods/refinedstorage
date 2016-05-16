@@ -1,5 +1,10 @@
 # Refined Storage Changelog
 
+### 0.6.1
+**Bugfixes**
+- Fixed NPE on world load
+- Fixed Destructor crashing when removing a connected machine
+
 ### 0.6
 **Bugfixes**
 - Fixed Destructor not playing block break sound
