@@ -127,6 +127,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
                     if (!machine.mayUpdate()) {
                         continue;
                     }
+
                     machine.updateMachine();
 
                     if (machine instanceof TileWirelessTransmitter) {
@@ -158,7 +159,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
                     newEnergyUsage += machine.getEnergyUsage();
                 }
 
-                Collections.sort(storages, new Comparator<IStorage>() {
+                Collections.sort(newStorages, new Comparator<IStorage>() {
                     @Override
                     public int compare(IStorage s1, IStorage s2) {
                         if (s1.getPriority() == s2.getPriority()) {
