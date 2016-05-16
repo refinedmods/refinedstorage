@@ -370,4 +370,19 @@ public class TileGrid extends TileMachine implements IGrid {
                 return null;
         }
     }
+
+    public static boolean isValidSearchBoxMode(int mode) {
+        return mode == SEARCH_BOX_MODE_NORMAL ||
+            mode == SEARCH_BOX_MODE_NORMAL_AUTOSELECTED ||
+            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED ||
+            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED;
+    }
+
+    public static boolean isValidSortingType(int type) {
+        return type == SORTING_TYPE_QUANTITY || type == TileGrid.SORTING_TYPE_NAME;
+    }
+
+    public static boolean isValidSortingDirection(int direction) {
+        return direction == SORTING_DIRECTION_ASCENDING || direction == SORTING_DIRECTION_DESCENDING;
+    }
 }

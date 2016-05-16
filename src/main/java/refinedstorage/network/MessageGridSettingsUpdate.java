@@ -52,18 +52,15 @@ public class MessageGridSettingsUpdate extends MessageHandlerPlayerToServer<Mess
         TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.x, message.y, message.z));
 
         if (tile instanceof TileGrid) {
-            if (message.sortingDirection == TileGrid.SORTING_DIRECTION_ASCENDING || message.sortingDirection == TileGrid.SORTING_DIRECTION_DESCENDING) {
+            if (TileGrid.isValidSortingDirection(message.sortingDirection)) {
                 ((TileGrid) tile).setSortingDirection(message.sortingDirection);
             }
 
-            if (message.sortingType == TileGrid.SORTING_TYPE_QUANTITY || message.sortingType == TileGrid.SORTING_TYPE_NAME) {
+            if (TileGrid.isValidSortingType(message.sortingType)) {
                 ((TileGrid) tile).setSortingType(message.sortingType);
             }
 
-            if (message.searchBoxMode == TileGrid.SEARCH_BOX_MODE_NORMAL ||
-                message.searchBoxMode == TileGrid.SEARCH_BOX_MODE_NORMAL_AUTOSELECTED ||
-                message.searchBoxMode == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED ||
-                message.searchBoxMode == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED) {
+            if (TileGrid.isValidSearchBoxMode(message.searchBoxMode)) {
                 ((TileGrid) tile).setSearchBoxMode(message.searchBoxMode);
             }
         }

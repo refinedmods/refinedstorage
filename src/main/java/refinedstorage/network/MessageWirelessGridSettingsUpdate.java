@@ -46,18 +46,15 @@ public class MessageWirelessGridSettingsUpdate extends MessageHandlerPlayerToSer
         ItemStack held = player.getHeldItem(RefinedStorageUtils.getHandById(message.hand));
 
         if (held != null && held.getItem() == RefinedStorageItems.WIRELESS_GRID && held.getTagCompound() != null) {
-            if (message.sortingDirection == TileGrid.SORTING_DIRECTION_ASCENDING || message.sortingDirection == TileGrid.SORTING_DIRECTION_DESCENDING) {
+            if (TileGrid.isValidSortingDirection(message.sortingDirection)) {
                 held.getTagCompound().setInteger(ItemWirelessGrid.NBT_SORTING_DIRECTION, message.sortingDirection);
             }
 
-            if (message.sortingType == TileGrid.SORTING_TYPE_QUANTITY || message.sortingType == TileGrid.SORTING_TYPE_NAME) {
+            if (TileGrid.isValidSortingType(message.sortingType)) {
                 held.getTagCompound().setInteger(ItemWirelessGrid.NBT_SORTING_TYPE, message.sortingType);
             }
 
-            if (message.searchBoxMode == TileGrid.SEARCH_BOX_MODE_NORMAL ||
-                message.searchBoxMode == TileGrid.SEARCH_BOX_MODE_NORMAL_AUTOSELECTED ||
-                message.searchBoxMode == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED ||
-                message.searchBoxMode == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED) {
+            if (TileGrid.isValidSearchBoxMode(message.searchBoxMode)) {
                 held.getTagCompound().setInteger(ItemWirelessGrid.NBT_SEARCH_BOX_MODE, message.searchBoxMode);
             }
         }
