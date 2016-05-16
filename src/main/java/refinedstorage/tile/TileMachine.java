@@ -39,7 +39,7 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
     public void searchController(World world) {
         visited.clear();
 
-        TileController newController = ControllerSearcher.search(worldObj, pos, visited);
+        TileController newController = ControllerSearcher.search(world, pos, visited);
 
         if (controller == null) {
             if (newController != null) {
