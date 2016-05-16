@@ -54,7 +54,7 @@ public class TileDestructor extends TileMachine implements ICompareConfig, IMode
                     worldObj.setBlockToAir(front);
 
                     for (ItemStack drop : drops) {
-                        if (!controller.push(drop)) {
+                        if (controller != null && !controller.push(drop)) {
                             RefinedStorageUtils.dropStack(worldObj, drop, front.getX(), front.getY(), front.getZ());
                         }
                     }
