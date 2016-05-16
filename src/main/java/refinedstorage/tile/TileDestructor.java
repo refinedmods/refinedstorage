@@ -37,7 +37,10 @@ public class TileDestructor extends TileMachine implements ICompareConfig, IMode
 
     @Override
     public void updateMachine() {
-        if (ticks % RefinedStorageUtils.getSpeed(upgradesInventory, BASE_SPEED, 4) == 0) {
+        // We check if the controller isn't null here because
+        // when a destructor faces a storage network block and removes it
+        // it will essentially remove itself from the network without knowing.
+        if (controller != null && ticks % RefinedStorageUtils.getSpeed(upgradesInventory, BASE_SPEED, 4) == 0) {
             BlockPos front = pos.offset(getDirection());
 
             IBlockState frontBlockState = worldObj.getBlockState(front);
