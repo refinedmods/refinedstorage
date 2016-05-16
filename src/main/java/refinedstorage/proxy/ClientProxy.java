@@ -1,10 +1,12 @@
 package refinedstorage.proxy;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import refinedstorage.RefinedStorageBlocks;
@@ -15,6 +17,10 @@ import refinedstorage.block.EnumStorageType;
 import refinedstorage.item.*;
 
 public class ClientProxy extends CommonProxy {
+    public static World getWorld() {
+        return Minecraft.getMinecraft().theWorld;
+    }
+
     @Override
     public void preInit(FMLPreInitializationEvent e) {
         super.preInit(e);

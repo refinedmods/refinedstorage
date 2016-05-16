@@ -7,6 +7,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import refinedstorage.proxy.ClientProxy;
 import refinedstorage.tile.ISynchronizedContainer;
 
 public class MessageTileContainerUpdate implements IMessage, IMessageHandler<MessageTileContainerUpdate, IMessage> {
@@ -29,7 +30,7 @@ public class MessageTileContainerUpdate implements IMessage, IMessageHandler<Mes
         z = buf.readInt();
 
         if (Minecraft.getMinecraft().theWorld != null) {
-            tile = Minecraft.getMinecraft().theWorld.getTileEntity(new BlockPos(x, y, z));
+            tile = ClientProxy.getWorld().getTileEntity(new BlockPos(x, y, z));
 
             if (tile instanceof ISynchronizedContainer) {
                 ((ISynchronizedContainer) tile).receiveContainerData(buf);

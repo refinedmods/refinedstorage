@@ -1,7 +1,6 @@
 package refinedstorage.network;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -9,6 +8,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import refinedstorage.RefinedStorageUtils;
+import refinedstorage.proxy.ClientProxy;
 import refinedstorage.tile.TileDetector;
 
 public class MessageDetectorPoweredUpdate implements IMessage, IMessageHandler<MessageDetectorPoweredUpdate, IMessage> {
@@ -47,7 +47,7 @@ public class MessageDetectorPoweredUpdate implements IMessage, IMessageHandler<M
     public IMessage onMessage(MessageDetectorPoweredUpdate message, MessageContext ctx) {
         BlockPos pos = new BlockPos(message.x, message.y, message.z);
 
-        World world = Minecraft.getMinecraft().theWorld;
+        World world = ClientProxy.getWorld();
 
         TileEntity tile = world.getTileEntity(pos);
 

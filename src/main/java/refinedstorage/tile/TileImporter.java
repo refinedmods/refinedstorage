@@ -34,6 +34,11 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
     public void updateMachine() {
         TileEntity connectedTile = worldObj.getTileEntity(pos.offset(getDirection()));
 
+        // In order to avoid voiding of Storage Disks
+        if (connectedTile instanceof TileDiskDrive) {
+            connectedTile = null;
+        }
+
         if (connectedTile instanceof ISidedInventory) {
             ISidedInventory sided = (ISidedInventory) connectedTile;
 

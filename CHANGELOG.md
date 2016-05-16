@@ -7,11 +7,12 @@
 - Fixed picking up from crafting result slot
 - Fixed being able to use right click on crafting result slot
 - Fixed item duplication issue with the Interface
-- Fixed Importers not working when changing facing with a wrench
+- Fixed Importers and Exporters not working when changing facing with a wrench
 - Fixed Crafting Grid not respecting remainder in recipes
 - Fixed Crafting Grid giving back the wrong amount of items when shift clicking
 - Fixed items disappearing in Grid when doing a weird combination of inputs
 - Fixed Solderer not stacking items
+- Fixed Importer voiding Storage Disks from the Disk Drive
 
 **Features**
 - Added autocrafting
