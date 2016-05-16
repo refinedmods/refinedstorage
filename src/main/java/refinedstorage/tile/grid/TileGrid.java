@@ -203,8 +203,10 @@ public class TileGrid extends TileMachine implements IGrid {
                 ItemStack slot = craftingInventory.getStackInSlot(i);
 
                 if (slot != null) {
-                    if (!controller.push(slot)) {
-                        return;
+                    if (getType() == EnumGridType.CRAFTING) {
+                        if (!controller.push(slot)) {
+                            return;
+                        }
                     }
 
                     craftingInventory.setInventorySlotContents(i, null);
