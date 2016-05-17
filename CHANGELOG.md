@@ -4,6 +4,7 @@
 **Bugfixes**
 - Fixed race condition with crafting tasks
 - Fixed pressing escape in crafting settings GUI not going back to grid GUI
+- Fixed losing autoselection in Grid when clicking on slot with autoselection mode
 - Added a max crafting quantity per request cap (hardcoded to 100)
 
 ### 0.6.1

@@ -60,8 +60,8 @@ public class GuiGrid extends GuiBase {
         searchField.setEnableBackgroundDrawing(false);
         searchField.setVisible(true);
         searchField.setTextColor(16777215);
-        searchField.setCanLoseFocus(true);
-        searchField.setFocused(grid.getSearchBoxMode() == TileGrid.SEARCH_BOX_MODE_NORMAL_AUTOSELECTED || grid.getSearchBoxMode() == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED);
+        searchField.setCanLoseFocus(!TileGrid.isSearchBoxModeWithAutoselection(grid.getSearchBoxMode()));
+        searchField.setFocused(TileGrid.isSearchBoxModeWithAutoselection(grid.getSearchBoxMode()));
 
         addSideButton(new SideButtonGridSortingDirection(grid));
         addSideButton(new SideButtonGridSortingType(grid));

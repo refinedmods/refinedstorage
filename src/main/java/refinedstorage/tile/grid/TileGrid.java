@@ -380,6 +380,10 @@ public class TileGrid extends TileMachine implements IGrid {
             mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED;
     }
 
+    public static boolean isSearchBoxModeWithAutoselection(int mode) {
+        return mode == SEARCH_BOX_MODE_NORMAL_AUTOSELECTED || mode == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED;
+    }
+
     public static boolean isValidSortingType(int type) {
         return type == SORTING_TYPE_QUANTITY || type == TileGrid.SORTING_TYPE_NAME;
     }
