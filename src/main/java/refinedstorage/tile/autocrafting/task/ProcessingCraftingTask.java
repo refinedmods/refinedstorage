@@ -20,6 +20,7 @@ public class ProcessingCraftingTask implements ICraftingTask {
 
     private CraftingPattern pattern;
     private boolean inserted[];
+    // @TODO: this should create a child task when missing?
     private boolean missing[];
     private boolean satisfied[];
 
