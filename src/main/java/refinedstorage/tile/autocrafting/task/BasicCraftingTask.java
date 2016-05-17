@@ -68,6 +68,11 @@ public class BasicCraftingTask implements ICraftingTask {
 
                     satisfied[i] = true;
 
+                    // This is needed because if we request 2 chests for example
+                    // it will schedule 2 child tasks for wood the child tasks will then give 8 wood
+                    // but the first chest task will take all the 8 wood for completion
+                    // and then you end up with the second task not having anything anymore
+                    // and is stuck because the child task is already created.
                     if (childTasks[i]) {
                         break;
                     }

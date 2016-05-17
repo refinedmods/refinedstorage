@@ -14,6 +14,7 @@ public class GuiCraftingSettings extends GuiBase {
     private GuiGrid gridGui;
     private int id;
     private GuiButton startButton;
+    private boolean isClosed;
 
     public GuiCraftingSettings(GuiGrid gridGui, int id) {
         super(new ContainerDummy(), 143, 61);
@@ -60,6 +61,8 @@ public class GuiCraftingSettings extends GuiBase {
         } else {
             if (keyCode == Keyboard.KEY_RETURN) {
                 startRequest();
+            } else if (keyCode == Keyboard.KEY_ESCAPE) {
+                FMLClientHandler.instance().showGuiScreen(gridGui);
             } else {
                 super.keyTyped(character, keyCode);
             }
