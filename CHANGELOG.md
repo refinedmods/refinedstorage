@@ -7,6 +7,9 @@
 - Fixed losing autoselection in Grid when clicking on slot with autoselection mode
 - Added a max crafting quantity per request cap (hardcoded to 100)
 
+**Features**
+- Upgrades now draw extra energy
+
 ### 0.6.1
 **Bugfixes**
 - Fixed NPE on world load

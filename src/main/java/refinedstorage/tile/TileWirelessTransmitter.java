@@ -8,16 +8,16 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.inventory.InventorySimple;
+import refinedstorage.item.ItemUpgrade;
 
 public class TileWirelessTransmitter extends TileMachine implements IInventory {
     public static final int RANGE_PER_UPGRADE = 8;
-    public static final int RF_PER_UPGRADE = 8;
 
     private InventorySimple inventory = new InventorySimple("upgrades", 4, this);
 
     @Override
     public int getEnergyUsage() {
-        return 8 + (getUpgrades() * RF_PER_UPGRADE);
+        return 8 + RefinedStorageUtils.getUpgradeEnergyUsage(inventory);
     }
 
     @Override
@@ -39,19 +39,7 @@ public class TileWirelessTransmitter extends TileMachine implements IInventory {
     }
 
     public int getRange() {
-        return 16 + (getUpgrades() * RANGE_PER_UPGRADE);
-    }
-
-    private int getUpgrades() {
-        int upgrades = 0;
-
-        for (int i = 0; i < inventory.getSizeInventory(); ++i) {
-            if (inventory.getStackInSlot(i) != null) {
-                upgrades++;
-            }
-        }
-
-        return upgrades;
+        return 16 + (RefinedStorageUtils.getUpgradeCount(inventory, ItemUpgrade.TYPE_RANGE) * RANGE_PER_UPGRADE);
     }
 
     @Override

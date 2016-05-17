@@ -33,7 +33,7 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
 
     @Override
     public int getEnergyUsage() {
-        return 4;
+        return 4 + RefinedStorageUtils.getUpgradeEnergyUsage(upgradesInventory);
     }
 
     @Override

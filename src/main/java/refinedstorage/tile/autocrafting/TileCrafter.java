@@ -10,6 +10,7 @@ import net.minecraft.world.World;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerCrafter;
 import refinedstorage.inventory.InventorySimple;
+import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.TileMachine;
 import refinedstorage.tile.autocrafting.task.ICraftingTask;
 
@@ -20,7 +21,7 @@ public class TileCrafter extends TileMachine implements IInventory {
 
     @Override
     public int getEnergyUsage() {
-        return 2;
+        return 2 + RefinedStorageUtils.getUpgradeEnergyUsage(inventory, PATTERN_SLOTS);
     }
 
     @Override
@@ -58,19 +59,7 @@ public class TileCrafter extends TileMachine implements IInventory {
     }
 
     public int getSpeed() {
-        return 20 - (getUpgrades() * 4);
-    }
-
-    private int getUpgrades() {
-        int upgrades = 0;
-
-        for (int i = PATTERN_SLOTS; i < PATTERN_SLOTS + 4; ++i) {
-            if (inventory.getStackInSlot(i) != null) {
-                upgrades++;
-            }
-        }
-
-        return upgrades;
+        return 20 - (RefinedStorageUtils.getUpgradeCount(inventory, ItemUpgrade.TYPE_SPEED, PATTERN_SLOTS) * 4);
     }
 
     @Override

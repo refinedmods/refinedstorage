@@ -25,7 +25,7 @@ public class TileExporter extends TileMachine implements ICompareConfig {
 
     @Override
     public int getEnergyUsage() {
-        return 2;
+        return 2 + RefinedStorageUtils.getUpgradeEnergyUsage(upgradesInventory);
     }
 
     @Override

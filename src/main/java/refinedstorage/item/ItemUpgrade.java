@@ -25,4 +25,17 @@ public class ItemUpgrade extends ItemBase {
             list.add(new ItemStack(item, 1, i));
         }
     }
+
+    public static int getEnergyUsage(int type) {
+        switch (type) {
+            case TYPE_RANGE:
+                return 8;
+            case TYPE_SPEED:
+                return 2;
+            case TYPE_CRAFTING:
+                return 5;
+            default:
+                return 0;
+        }
+    }
 }

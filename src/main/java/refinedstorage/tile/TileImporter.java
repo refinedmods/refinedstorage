@@ -27,7 +27,7 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
 
     @Override
     public int getEnergyUsage() {
-        return 2;
+        return 2 + RefinedStorageUtils.getUpgradeEnergyUsage(upgradesInventory);
     }
 
     @Override

@@ -209,10 +209,6 @@ public class RefinedStorageUtils {
         return getSpeed(inventory, 9, 2, 0);
     }
 
-    public static int getSpeed(InventorySimple inventory, int start) {
-        return getSpeed(inventory, 9, 2, start);
-    }
-
     public static int getSpeed(InventorySimple inventory, int speed, int speedIncrease) {
         return getSpeed(inventory, speed, speedIncrease, 0);
     }
@@ -245,6 +241,22 @@ public class RefinedStorageUtils {
         }
 
         return upgrades;
+    }
+
+    public static int getUpgradeEnergyUsage(InventorySimple inventory) {
+        return getUpgradeEnergyUsage(inventory, 0);
+    }
+
+    public static int getUpgradeEnergyUsage(InventorySimple inventory, int start) {
+        int usage = 0;
+
+        for (int i = start; i < inventory.getSizeInventory(); ++i) {
+            if (inventory.getStackInSlot(i) != null) {
+                usage += ItemUpgrade.getEnergyUsage(inventory.getStackInSlot(i).getMetadata());
+            }
+        }
+
+        return usage;
     }
 
     public static void writeBooleanArray(NBTTagCompound tag, String name, boolean[] array) {

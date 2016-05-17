@@ -30,7 +30,7 @@ public class TileConstructor extends TileMachine implements ICompareConfig {
 
     @Override
     public int getEnergyUsage() {
-        return 1;
+        return 1 + RefinedStorageUtils.getUpgradeEnergyUsage(upgradesInventory);
     }
 
     @Override

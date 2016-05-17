@@ -32,15 +32,12 @@ public class TileDestructor extends TileMachine implements ICompareConfig, IMode
 
     @Override
     public int getEnergyUsage() {
-        return 1;
+        return 1 + RefinedStorageUtils.getUpgradeEnergyUsage(upgradesInventory);
     }
 
     @Override
     public void updateMachine() {
-        // We check if the controller isn't null here because
-        // when a destructor faces a storage network block and removes it
-        // it will essentially remove itself from the network without knowing.
-        if (controller != null && ticks % RefinedStorageUtils.getSpeed(upgradesInventory, BASE_SPEED, 4) == 0) {
+        if (ticks % RefinedStorageUtils.getSpeed(upgradesInventory, BASE_SPEED, 4) == 0) {
             BlockPos front = pos.offset(getDirection());
 
             IBlockState frontBlockState = worldObj.getBlockState(front);
@@ -54,6 +51,9 @@ public class TileDestructor extends TileMachine implements ICompareConfig, IMode
                     worldObj.setBlockToAir(front);
 
                     for (ItemStack drop : drops) {
+                        // We check if the controller isn't null here because
+                        // when a destructor faces a storage network block and removes it
+                        // it will essentially remove this block from the network without knowing.
                         if (controller != null && !controller.push(drop)) {
                             RefinedStorageUtils.dropStack(worldObj, drop, front.getX(), front.getY(), front.getZ());
                         }
