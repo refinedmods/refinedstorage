@@ -66,6 +66,8 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
     public static final String NBT_CRAFTING_TASKS = "CraftingTasks";
 
+    public static final int MAX_CRAFTING_QUANTITY_PER_REQUEST = 100;
+
     private List<ItemGroup> itemGroups = new ArrayList<ItemGroup>();
     private List<IStorage> storages = new ArrayList<IStorage>();
     private List<WirelessGridConsumer> wirelessGridConsumers = new ArrayList<WirelessGridConsumer>();
@@ -755,7 +757,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     }
 
     public void onCraftingRequested(int id, int quantity) {
-        if (id >= 0 && id < itemGroups.size() && quantity > 0) {
+        if (id >= 0 && id < itemGroups.size() && quantity > 0 && quantity <= MAX_CRAFTING_QUANTITY_PER_REQUEST) {
             ItemStack requested = itemGroups.get(id).toItemStack();
             int quantityPerRequest = 0;
             CraftingPattern pattern = getPattern(requested);
