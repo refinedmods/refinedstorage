@@ -21,6 +21,7 @@ import java.util.List;
 public class ContainerGrid extends ContainerBase {
     private List<Slot> craftingSlots = new ArrayList<Slot>();
     private SlotGridCraftingResult craftingResultSlot;
+    private SlotDisabled patternResultSlot;
     private IGrid grid;
 
     public ContainerGrid(EntityPlayer player, IGrid grid) {
@@ -65,7 +66,7 @@ public class ContainerGrid extends ContainerBase {
                 }
             }
 
-            addSlotToContainer(new SlotDisabled(((TileGrid) grid).getCraftingResultInventory(), 0, 116 + 4, 120 + 4));
+            addSlotToContainer(patternResultSlot = new SlotDisabled(((TileGrid) grid).getCraftingResultInventory(), 0, 116 + 4, 120 + 4));
 
             addSlotToContainer(new SlotFiltered(((TileGrid) grid).getPatternsInventory(), 0, 152, 104, new BasicItemValidator(RefinedStorageItems.PATTERN)));
             addSlotToContainer(new SlotOutput(((TileGrid) grid).getPatternsInventory(), 1, 152, 144));
@@ -126,6 +127,10 @@ public class ContainerGrid extends ContainerBase {
 
     @Override
     public boolean canMergeSlot(ItemStack stack, Slot slot) {
-        return slot != craftingResultSlot && super.canMergeSlot(stack, slot);
+        if (slot == craftingResultSlot || slot == patternResultSlot) {
+            return false;
+        }
+
+        return super.canMergeSlot(stack, slot);
     }
 }
