@@ -75,7 +75,7 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
                 }
             }
 
-            if (!(this instanceof TileCable) && ticks % 5 == 0) {
+            if (!(this instanceof TileCable) && ticks % 4 == 0) {
                 RefinedStorageUtils.sendToAllAround(worldObj, pos, new MessageMachineConnectedUpdate(this));
             }
         }
