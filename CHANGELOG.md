@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 0.6.3
+**Bugfixes**
+- Performance improvements
+
 ### 0.6.2
 **Bugfixes**
 - Fixed race condition with crafting tasks

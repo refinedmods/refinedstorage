@@ -304,7 +304,7 @@ public class RefinedStorageUtils {
     }
 
     public static void sendToAllAround(World world, BlockPos pos, IMessage message) {
-        NetworkRegistry.TargetPoint target = new NetworkRegistry.TargetPoint(world.provider.getDimensionType().getId(), pos.getX(), pos.getY(), pos.getZ(), 128);
+        NetworkRegistry.TargetPoint target = new NetworkRegistry.TargetPoint(world.provider.getDimensionType().getId(), pos.getX(), pos.getY(), pos.getZ(), 64);
 
         RefinedStorage.NETWORK.sendToAllAround(message, target);
     }
