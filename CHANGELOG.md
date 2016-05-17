@@ -1,5 +1,11 @@
 # Refined Storage Changelog
 
+### 0.6.2
+**Bugfixes**
+- Fixed race condition with crafting tasks
+- Fixed pressing escape in crafting settings GUI not going back to grid GUI
+- Added a max crafting quantity per request cap (hardcoded to 100)
+
 ### 0.6.1
 **Bugfixes**
 - Fixed NPE on world load
