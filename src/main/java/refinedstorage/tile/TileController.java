@@ -424,7 +424,9 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
             }
         }
 
-        syncItems();
+        if (newStack != null) {
+            syncItems();
+        }
 
         return newStack;
     }
