@@ -29,7 +29,9 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 
     private InventorySimple inventory = new InventorySimple("storage", 9, this);
 
-    private NBTTagCompound tag = NBTStorage.createNBT();
+    private NBTTagCompound storageTag = NBTStorage.createNBT();
+
+    private NBTStorage storage;
 
     private int priority = 0;
     private int compare = 0;
@@ -45,6 +47,14 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
     public void updateMachine() {
     }
 
+    public NBTStorage getStorage() {
+        if (storage == null) {
+            storage = new NBTStorage(storageTag, priority, getCapacity());
+        }
+
+        return storage;
+    }
+
     @Override
     public void provide(List<IStorage> storages) {
         storages.add(this);
@@ -56,12 +66,12 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 
         RefinedStorageUtils.restoreInventory(inventory, 0, nbt);
 
-        if (nbt.hasKey(NBT_STORAGE)) {
-            tag = nbt.getCompoundTag(NBT_STORAGE);
-        }
-
         if (nbt.hasKey(NBT_PRIORITY)) {
             priority = nbt.getInteger(NBT_PRIORITY);
+        }
+
+        if (nbt.hasKey(NBT_STORAGE)) {
+            storageTag = nbt.getCompoundTag(NBT_STORAGE);
         }
 
         if (nbt.hasKey(NBT_COMPARE)) {
@@ -79,8 +89,8 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 
         RefinedStorageUtils.saveInventory(inventory, 0, nbt);
 
-        nbt.setTag(NBT_STORAGE, tag);
         nbt.setInteger(NBT_PRIORITY, priority);
+        nbt.setTag(NBT_STORAGE, getStorage().getTag());
         nbt.setInteger(NBT_COMPARE, compare);
         nbt.setInteger(NBT_MODE, mode);
     }
@@ -97,7 +107,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
     public void sendContainerData(ByteBuf buf) {
         super.sendContainerData(buf);
 
-        buf.writeInt(NBTStorage.getStored(tag));
+        buf.writeInt(NBTStorage.getStored(storageTag));
         buf.writeInt(priority);
         buf.writeInt(compare);
         buf.writeInt(mode);
@@ -212,18 +222,14 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
         RefinedStorage.NETWORK.sendToServer(new MessagePriorityUpdate(pos, priority));
     }
 
-    public NBTStorage getStorage() {
-        return new NBTStorage(tag, getCapacity(), priority);
-    }
-
     public NBTTagCompound getStorageTag() {
-        return tag;
+        return storageTag;
     }
 
     public void setStorageTag(NBTTagCompound tag) {
         markDirty();
 
-        this.tag = tag;
+        this.storageTag = tag;
     }
 
     @Override
@@ -234,6 +240,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
     public void setPriority(int priority) {
         markDirty();
 
+        this.getStorage().setPriority(priority);
         this.priority = priority;
     }
 

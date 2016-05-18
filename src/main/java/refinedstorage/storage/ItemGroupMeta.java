@@ -96,6 +96,14 @@ public class ItemGroupMeta {
         return true;
     }
 
+    public boolean compareNoQuantity(ItemGroupMeta other) {
+        return compare(other, RefinedStorageUtils.COMPARE_NBT | RefinedStorageUtils.COMPARE_DAMAGE);
+    }
+
+    public boolean compareNoQuantity(ItemStack stack) {
+        return compare(stack, RefinedStorageUtils.COMPARE_NBT | RefinedStorageUtils.COMPARE_DAMAGE);
+    }
+
     @Override
     public boolean equals(Object other) {
         if (this == other) {
