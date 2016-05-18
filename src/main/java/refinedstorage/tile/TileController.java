@@ -192,7 +192,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
             }
 
             RefinedStorageUtils.sendToAllAround(worldObj, pos, new MessageControllerEnergyUpdate(this));
-
+            
             if (lastEnergy != energy.getEnergyStored()) {
                 worldObj.updateComparatorOutputLevel(pos, RefinedStorageBlocks.CONTROLLER);
             }
@@ -377,6 +377,8 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
                     }
                 }
 
+                markDirty();
+
                 return true;
             }
         }
@@ -385,10 +387,14 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     }
 
     public ItemStack take(ItemStack stack) {
+        markDirty();
+
         return take(stack, RefinedStorageUtils.COMPARE_DAMAGE | RefinedStorageUtils.COMPARE_NBT);
     }
 
     public ItemStack take(ItemStack stack, int flags) {
+        markDirty();
+
         int requested = stack.stackSize;
         int receiving = 0;
 

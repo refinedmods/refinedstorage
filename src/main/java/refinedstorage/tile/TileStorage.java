@@ -30,7 +30,6 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
     private InventorySimple inventory = new InventorySimple("storage", 9, this);
 
     private NBTTagCompound tag = NBTStorage.getBaseNBT();
-    private NBTStorage storage;
 
     private int priority = 0;
     private int compare = 0;
@@ -57,12 +56,12 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 
         RefinedStorageUtils.restoreInventory(inventory, 0, nbt);
 
-        if (nbt.hasKey(NBT_PRIORITY)) {
-            priority = nbt.getInteger(NBT_PRIORITY);
-        }
-
         if (nbt.hasKey(NBT_STORAGE)) {
             tag = nbt.getCompoundTag(NBT_STORAGE);
+        }
+
+        if (nbt.hasKey(NBT_PRIORITY)) {
+            priority = nbt.getInteger(NBT_PRIORITY);
         }
 
         if (nbt.hasKey(NBT_COMPARE)) {
@@ -80,8 +79,8 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 
         RefinedStorageUtils.saveInventory(inventory, 0, nbt);
 
-        nbt.setInteger(NBT_PRIORITY, priority);
         nbt.setTag(NBT_STORAGE, tag);
+        nbt.setInteger(NBT_PRIORITY, priority);
         nbt.setInteger(NBT_COMPARE, compare);
         nbt.setInteger(NBT_MODE, mode);
     }
@@ -98,7 +97,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
     public void sendContainerData(ByteBuf buf) {
         super.sendContainerData(buf);
 
-        buf.writeInt(stored);
+        buf.writeInt(NBTStorage.getStored(tag));
         buf.writeInt(priority);
         buf.writeInt(compare);
         buf.writeInt(mode);
@@ -214,11 +213,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
     }
 
     public NBTStorage getStorage() {
-        if (storage == null) {
-            storage = new NBTStorage(tag, getCapacity(), priority);
-        }
-
-        return storage;
+        return new NBTStorage(tag, getCapacity(), priority);
     }
 
     public NBTTagCompound getStorageTag() {
@@ -239,17 +234,12 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
     public void setPriority(int priority) {
         markDirty();
 
-        this.storage.setPriority(priority);
         this.priority = priority;
     }
 
     @Override
     public int getStored() {
-        if (worldObj.isRemote) {
-            return stored;
-        } else {
-            return NBTStorage.getStored(tag);
-        }
+        return stored;
     }
 
     @Override

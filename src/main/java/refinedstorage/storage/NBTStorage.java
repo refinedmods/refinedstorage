@@ -5,7 +5,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class NBTStorage implements IStorage {
@@ -17,93 +16,81 @@ public class NBTStorage implements IStorage {
     public static final String NBT_ITEM_DAMAGE = "Damage";
     public static final String NBT_ITEM_NBT = "NBT";
 
-    private NBTTagCompound nbt;
+    private NBTTagCompound nbtTag;
     private int capacity;
     private int priority;
-    private List<ItemGroup> items = new ArrayList<ItemGroup>();
 
-    public NBTStorage(NBTTagCompound nbt, int capacity, int priority) {
-        this.nbt = nbt;
+    public NBTStorage(NBTTagCompound tag, int capacity, int priority) {
+        this.nbtTag = tag;
         this.capacity = capacity;
         this.priority = priority;
-
-        readFromNBT();
-    }
-
-    public void readFromNBT() {
-        NBTTagList list = (NBTTagList) nbt.getTag(NBT_ITEMS);
-
-        for (int i = 0; i < list.tagCount(); ++i) {
-            NBTTagCompound tag = list.getCompoundTagAt(i);
-
-            items.add(new ItemGroup(
-                Item.getItemById(tag.getInteger(NBT_ITEM_TYPE)),
-                tag.getInteger(NBT_ITEM_QUANTITY),
-                tag.getInteger(NBT_ITEM_DAMAGE),
-                tag.hasKey(NBT_ITEM_NBT) ? ((NBTTagCompound) tag.getTag(NBT_ITEM_NBT)) : null)
-            );
-        }
-    }
-
-    public void writeToNBT(NBTTagCompound nbt) {
-        NBTTagList list = new NBTTagList();
-
-        for (ItemGroup item : items) {
-            NBTTagCompound tag = new NBTTagCompound();
-
-            tag.setInteger(NBT_ITEM_TYPE, Item.getIdFromItem(item.getType()));
-            tag.setInteger(NBT_ITEM_QUANTITY, item.getQuantity());
-            tag.setInteger(NBT_ITEM_DAMAGE, item.getDamage());
-
-            if (item.getTag() != null) {
-                tag.setTag(NBT_ITEM_NBT, item.getTag());
-            }
-
-            list.appendTag(tag);
-        }
-
-        nbt.setTag(NBT_ITEMS, list);
     }
 
     @Override
     public void addItems(List<ItemGroup> items) {
-        items.addAll(this.items);
+        NBTTagList list = (NBTTagList) nbtTag.getTag(NBT_ITEMS);
+
+        for (int i = 0; i < list.tagCount(); ++i) {
+            items.add(createItemGroupFromNBT(list.getCompoundTagAt(i)));
+        }
     }
 
     @Override
     public void push(ItemStack stack) {
-        nbt.setInteger(NBT_STORED, getStored(nbt) + stack.stackSize);
+        NBTTagList list = (NBTTagList) nbtTag.getTag(NBT_ITEMS);
 
-        for (ItemGroup item : items) {
-            if (item.compareNoQuantity(stack)) {
-                item.setQuantity(item.getQuantity() + stack.stackSize);
+        nbtTag.setInteger(NBT_STORED, getStored(nbtTag) + stack.stackSize);
+
+        for (int i = 0; i < list.tagCount(); ++i) {
+            NBTTagCompound tag = list.getCompoundTagAt(i);
+
+            ItemGroup group = createItemGroupFromNBT(tag);
+
+            if (group.compareNoQuantity(stack)) {
+                tag.setInteger(NBT_ITEM_QUANTITY, group.getQuantity() + stack.stackSize);
 
                 return;
             }
         }
 
-        items.add(new ItemGroup(stack));
+        NBTTagCompound tag = new NBTTagCompound();
+
+        tag.setInteger(NBT_ITEM_TYPE, Item.getIdFromItem(stack.getItem()));
+        tag.setInteger(NBT_ITEM_QUANTITY, stack.stackSize);
+        tag.setInteger(NBT_ITEM_DAMAGE, stack.getItemDamage());
+
+        if (stack.hasTagCompound()) {
+            tag.setTag(NBT_ITEM_NBT, stack.getTagCompound());
+        }
+
+        list.appendTag(tag);
     }
 
     @Override
     public ItemStack take(ItemStack stack, int flags) {
         int quantity = stack.stackSize;
 
-        for (ItemGroup item : items) {
-            if (item.compare(stack, flags)) {
-                if (quantity > item.getQuantity()) {
-                    quantity = item.getQuantity();
+        NBTTagList list = (NBTTagList) nbtTag.getTag(NBT_ITEMS);
+
+        for (int i = 0; i < list.tagCount(); ++i) {
+            NBTTagCompound tag = list.getCompoundTagAt(i);
+
+            ItemGroup group = createItemGroupFromNBT(tag);
+
+            if (group.compare(stack, flags)) {
+                if (quantity > group.getQuantity()) {
+                    quantity = group.getQuantity();
                 }
 
-                item.setQuantity(item.getQuantity() - quantity);
+                tag.setInteger(NBT_ITEM_QUANTITY, group.getQuantity() - quantity);
 
-                if (item.getQuantity() == 0) {
-                    items.remove(item);
+                if (group.getQuantity() - quantity == 0) {
+                    list.removeTag(i);
                 }
 
-                nbt.setInteger(NBT_STORED, getStored(nbt) - quantity);
+                nbtTag.setInteger(NBT_STORED, getStored(nbtTag) - quantity);
 
-                ItemStack newItem = item.toItemStack();
+                ItemStack newItem = group.toItemStack();
 
                 newItem.stackSize = quantity;
 
@@ -120,7 +107,7 @@ public class NBTStorage implements IStorage {
             return true;
         }
 
-        return (getStored(nbt) + stack.stackSize) <= capacity;
+        return (getStored(nbtTag) + stack.stackSize) <= capacity;
     }
 
     @Override
@@ -128,8 +115,8 @@ public class NBTStorage implements IStorage {
         return priority;
     }
 
-    public void setPriority(int priority) {
-        this.priority = priority;
+    private ItemGroup createItemGroupFromNBT(NBTTagCompound tag) {
+        return new ItemGroup(Item.getItemById(tag.getInteger(NBT_ITEM_TYPE)), tag.getInteger(NBT_ITEM_QUANTITY), tag.getInteger(NBT_ITEM_DAMAGE), tag.hasKey(NBT_ITEM_NBT) ? ((NBTTagCompound) tag.getTag(NBT_ITEM_NBT)) : null);
     }
 
     public static int getStored(NBTTagCompound tag) {

@@ -27,7 +27,6 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
 
     private InventorySimple inventory = new InventorySimple("disk_drive", 8, this);
     private InventorySimple filterInventory = new InventorySimple("filters", 9, this);
-    private DiskStorage[] storages = new DiskStorage[getSizeInventory()];
 
     private int priority = 0;
     private int compare = 0;
@@ -53,8 +52,8 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
     @Override
     public void provide(List<IStorage> storages) {
         for (int i = 0; i < getSizeInventory(); ++i) {
-            if (this.storages[i] != null) {
-                storages.add(this.storages[i]);
+            if (getStackInSlot(i) != null) {
+                storages.add(new DiskStorage(getStackInSlot(i), this));
             }
         }
     }
@@ -82,12 +81,6 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
     @Override
     public void writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
-
-        for (int i = 0; i < getSizeInventory(); ++i) {
-            if (storages[i] != null) {
-                storages[i].writeToNBT(getStackInSlot(i).getTagCompound());
-            }
-        }
 
         RefinedStorageUtils.saveInventory(inventory, 0, nbt);
         RefinedStorageUtils.saveInventory(filterInventory, 1, nbt);
@@ -255,12 +248,6 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
 
     @Override
     public void setInventorySlotContents(int slot, ItemStack stack) {
-        if (stack == null) {
-            storages[slot] = null;
-        } else {
-            storages[slot] = new DiskStorage(stack, this);
-        }
-        
         inventory.setInventorySlotContents(slot, stack);
     }
 
