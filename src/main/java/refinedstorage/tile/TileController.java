@@ -73,7 +73,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     private List<WirelessGridConsumer> wirelessGridConsumers = new ArrayList<WirelessGridConsumer>();
     private List<WirelessGridConsumer> wirelessGridConsumersToRemove = new ArrayList<WirelessGridConsumer>();
 
-    private List<ItemGroup> combinedGroups = new ArrayList<ItemGroup>();
+    private List<Integer> combinedGroups = new ArrayList<Integer>();
 
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
@@ -333,31 +333,35 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
         for (int i = 0; i < itemGroups.size(); ++i) {
             ItemGroup group = itemGroups.get(i);
 
-            if (combinedGroups.contains(group)) {
+            if (combinedGroups.contains(i)) {
                 continue;
             }
 
             // If the item doesn't exist anymore, remove it from storage to avoid crashes
             if (group.getType() == null) {
-                combinedGroups.add(group);
+                combinedGroups.add(i);
             } else {
                 for (int j = i + 1; j < itemGroups.size(); ++j) {
                     ItemGroup otherGroup = itemGroups.get(j);
 
-                    if (combinedGroups.contains(otherGroup)) {
+                    if (combinedGroups.contains(j)) {
                         continue;
                     }
 
                     if (group.compareNoQuantity(otherGroup)) {
                         group.setQuantity(group.getQuantity() + otherGroup.getQuantity());
 
-                        combinedGroups.add(otherGroup);
+                        combinedGroups.add(j);
                     }
                 }
             }
         }
 
-        itemGroups.removeAll(combinedGroups);
+        Collections.sort(combinedGroups, Collections.reverseOrder());
+
+        for (int i : combinedGroups) {
+            itemGroups.remove(i);
+        }
     }
 
     public boolean push(ItemStack stack) {
