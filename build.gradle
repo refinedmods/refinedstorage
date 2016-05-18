@@ -17,7 +17,7 @@ group = "refinedstorage"
 archivesBaseName = "refinedstorage"
 
 minecraft {
-    version = "1.9-12.16.1.1887"
+    version = "1.9-12.16.1.1907"
     runDir = "run"
     useDepAts = true
     mappings = "snapshot_20160312"

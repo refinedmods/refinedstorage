@@ -1,5 +1,12 @@
 # Refined Storage Changelog
 
+### 0.6.5
+**Bugfixes**
+- Performance improvements
+
+**Features**
+- Updated Forge to build 1907
+
 ### 0.6.4
 **Bugfixes**
 - Performance improvements
