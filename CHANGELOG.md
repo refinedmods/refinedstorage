@@ -2,7 +2,8 @@
 
 ### 0.6.5
 **Bugfixes**
-- Performance improvements
+- Performance improvements for servers
+- Performance improvements for client scrollbars
 
 **Features**
 - Updated Forge to build 1907
