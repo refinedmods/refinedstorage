@@ -191,8 +191,10 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
                 energy.setEnergyStored(energy.getMaxEnergyStored());
             }
 
-            RefinedStorageUtils.sendToAllAround(worldObj, pos, new MessageControllerEnergyUpdate(this));
-            
+            if (ticks % 4 == 0) {
+                RefinedStorageUtils.sendToAllAround(worldObj, pos, new MessageControllerEnergyUpdate(this));
+            }
+
             if (lastEnergy != energy.getEnergyStored()) {
                 worldObj.updateComparatorOutputLevel(pos, RefinedStorageBlocks.CONTROLLER);
             }

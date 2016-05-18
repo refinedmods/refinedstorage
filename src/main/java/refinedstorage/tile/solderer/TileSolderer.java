@@ -77,7 +77,9 @@ public class TileSolderer extends TileMachine implements IInventory, ISidedInven
             }
         }
 
-        RefinedStorageUtils.sendToAllAround(worldObj, pos, new MessageSoldererWorkingUpdate(this));
+        if (ticks % 4 == 0) {
+            RefinedStorageUtils.sendToAllAround(worldObj, pos, new MessageSoldererWorkingUpdate(this));
+        }
     }
 
     @Override
