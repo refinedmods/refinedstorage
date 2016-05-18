@@ -90,7 +90,7 @@ public class NBTStorage implements IStorage {
 
                 nbt.setInteger(NBT_STORED, getStored(nbt) - quantity);
 
-                ItemStack newItem = group.toItemStack();
+                ItemStack newItem = group.toStack();
 
                 newItem.stackSize = quantity;
 
@@ -116,7 +116,13 @@ public class NBTStorage implements IStorage {
     }
 
     private ItemGroup createItemGroupFromNBT(NBTTagCompound tag) {
-        return new ItemGroup(Item.getItemById(tag.getInteger(NBT_ITEM_TYPE)), tag.getInteger(NBT_ITEM_QUANTITY), tag.getInteger(NBT_ITEM_DAMAGE), tag.hasKey(NBT_ITEM_NBT) ? ((NBTTagCompound) tag.getTag(NBT_ITEM_NBT)) : null);
+        return new ItemGroup(
+            new ItemGroupMeta(
+                Item.getItemById(tag.getInteger(NBT_ITEM_TYPE)),
+                tag.getInteger(NBT_ITEM_DAMAGE),
+                tag.hasKey(NBT_ITEM_NBT) ? ((NBTTagCompound) tag.getTag(NBT_ITEM_NBT)) : null
+            ), tag.getInteger(NBT_ITEM_QUANTITY)
+        );
     }
 
     public static int getStored(NBTTagCompound tag) {

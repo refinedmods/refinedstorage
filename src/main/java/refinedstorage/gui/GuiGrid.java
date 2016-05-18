@@ -92,7 +92,7 @@ public class GuiGrid extends GuiBase {
                 while (t.hasNext()) {
                     ItemGroup group = t.next();
 
-                    if (!group.toItemStack().getDisplayName().toLowerCase().contains(searchField.getText().toLowerCase())) {
+                    if (!group.toStack().getDisplayName().toLowerCase().contains(searchField.getText().toLowerCase())) {
                         t.remove();
                     }
                 }
@@ -102,9 +102,9 @@ public class GuiGrid extends GuiBase {
                 @Override
                 public int compare(ItemGroup left, ItemGroup right) {
                     if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING) {
-                        return right.toItemStack().getDisplayName().compareTo(left.toItemStack().getDisplayName());
+                        return right.toStack().getDisplayName().compareTo(left.toStack().getDisplayName());
                     } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
-                        return left.toItemStack().getDisplayName().compareTo(right.toItemStack().getDisplayName());
+                        return left.toStack().getDisplayName().compareTo(right.toStack().getDisplayName());
                     }
 
                     return 0;
@@ -251,7 +251,7 @@ public class GuiGrid extends GuiBase {
                     text = String.valueOf(qty);
                 }
 
-                drawItem(x, y, items.get(slot).toItemStack(), true, text);
+                drawItem(x, y, items.get(slot).toStack(), true, text);
             }
 
             if (inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isConnected()) {
@@ -279,7 +279,7 @@ public class GuiGrid extends GuiBase {
         }
 
         if (isHoveringOverItemInSlot()) {
-            drawTooltip(mouseX, mouseY, items.get(hoveringSlot).toItemStack());
+            drawTooltip(mouseX, mouseY, items.get(hoveringSlot).toStack());
         }
 
         if (isHoveringOverClear(mouseX, mouseY)) {

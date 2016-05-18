@@ -338,7 +338,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
             }
 
             // If the item doesn't exist anymore, remove it from storage to avoid crashes
-            if (group.getType() == null) {
+            if (group.getMeta().getType() == null) {
                 combinedGroups.add(i);
             } else {
                 for (int j = i + 1; j < itemGroups.size(); ++j) {
@@ -679,11 +679,11 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
             // NO OP, the quantity already set (64) is needed for shift
         }
 
-        if (quantity > group.getType().getItemStackLimit(group.toItemStack())) {
-            quantity = group.getType().getItemStackLimit(group.toItemStack());
+        if (quantity > group.getMeta().getType().getItemStackLimit(group.toStack())) {
+            quantity = group.getMeta().getType().getItemStackLimit(group.toStack());
         }
 
-        ItemStack took = take(group.copy(quantity).toItemStack());
+        ItemStack took = take(group.copy(quantity).toStack());
 
         if (took != null) {
             if (GridPullFlags.isPullingWithShift(flags)) {
@@ -747,7 +747,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
     public void onCraftingRequested(int id, int quantity) {
         if (id >= 0 && id < itemGroups.size() && quantity > 0 && quantity <= MAX_CRAFTING_QUANTITY_PER_REQUEST) {
-            ItemStack requested = itemGroups.get(id).toItemStack();
+            ItemStack requested = itemGroups.get(id).toStack();
             int quantityPerRequest = 0;
             CraftingPattern pattern = getPattern(requested);
 
