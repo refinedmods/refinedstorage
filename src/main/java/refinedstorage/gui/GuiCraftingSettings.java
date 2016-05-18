@@ -6,7 +6,7 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import org.lwjgl.input.Keyboard;
 import refinedstorage.container.ContainerDummy;
-import refinedstorage.tile.controller.TileController;
+import refinedstorage.tile.TileController;
 
 import java.io.IOException;
 

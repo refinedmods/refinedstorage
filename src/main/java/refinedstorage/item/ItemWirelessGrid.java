@@ -17,7 +17,7 @@ import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
-import refinedstorage.tile.controller.TileController;
+import refinedstorage.tile.TileController;
 import refinedstorage.tile.grid.TileGrid;
 
 import java.util.List;

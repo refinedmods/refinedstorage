@@ -6,8 +6,8 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.Constants;
 import refinedstorage.RefinedStorageUtils;
+import refinedstorage.tile.TileController;
 import refinedstorage.tile.autocrafting.CraftingPattern;
-import refinedstorage.tile.controller.TileController;
 
 import java.util.ArrayList;
 import java.util.List;

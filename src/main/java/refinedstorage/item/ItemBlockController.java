@@ -7,7 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.block.EnumControllerType;
-import refinedstorage.tile.controller.TileController;
+import refinedstorage.tile.TileController;
 
 import java.util.List;
 

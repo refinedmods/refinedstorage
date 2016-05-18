@@ -5,7 +5,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import refinedstorage.tile.controller.TileController;
+import refinedstorage.tile.TileController;
 
 public class MessageWirelessGridCraftingStart extends MessageHandlerPlayerToServer<MessageWirelessGridCraftingStart> implements IMessage {
     private int controllerX;

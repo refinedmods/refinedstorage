@@ -1,4 +1,4 @@
-package refinedstorage.tile.controller;
+package refinedstorage.tile;
 
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyReceiver;
@@ -27,10 +27,6 @@ import refinedstorage.network.MessageWirelessGridItems;
 import refinedstorage.storage.IStorage;
 import refinedstorage.storage.IStorageProvider;
 import refinedstorage.storage.ItemGroup;
-import refinedstorage.tile.ISynchronizedContainer;
-import refinedstorage.tile.TileBase;
-import refinedstorage.tile.TileMachine;
-import refinedstorage.tile.TileWirelessTransmitter;
 import refinedstorage.tile.autocrafting.CraftingPattern;
 import refinedstorage.tile.autocrafting.TileCrafter;
 import refinedstorage.tile.autocrafting.task.BasicCraftingTask;
