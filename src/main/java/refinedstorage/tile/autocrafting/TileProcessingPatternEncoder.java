@@ -87,7 +87,7 @@ public class TileProcessingPatternEncoder extends TileBase implements ISidedInve
 
     @Override
     public boolean isItemValidForSlot(int slot, ItemStack stack) {
-        return inventory.isItemValidForSlot(slot, stack);
+        return stack.getItem() == RefinedStorageItems.PATTERN;
     }
 
     @Override
@@ -164,6 +164,8 @@ public class TileProcessingPatternEncoder extends TileBase implements ISidedInve
                     }
                 }
             }
+
+            decrStackSize(0, 1);
 
             setInventorySlotContents(1, pattern);
         }

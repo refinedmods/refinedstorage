@@ -13,7 +13,7 @@ public class ContainerWirelessTransmitter extends ContainerBase {
         super(player);
 
         for (int i = 0; i < 4; ++i) {
-            addSlotToContainer(new SlotFiltered(wirelessTransmitter, i, 187, 6 + (i * 18), new UpgradeItemValidator(ItemUpgrade.TYPE_RANGE)));
+            addSlotToContainer(new SlotFiltered(wirelessTransmitter.getDroppedInventory(), i, 187, 6 + (i * 18), new UpgradeItemValidator(ItemUpgrade.TYPE_RANGE)));
         }
 
         addPlayerInventory(8, 55);

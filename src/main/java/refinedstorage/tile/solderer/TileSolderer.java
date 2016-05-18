@@ -17,7 +17,7 @@ import refinedstorage.item.ItemUpgrade;
 import refinedstorage.network.MessageSoldererWorkingUpdate;
 import refinedstorage.tile.TileMachine;
 
-public class TileSolderer extends TileMachine implements IInventory, ISidedInventory {
+public class TileSolderer extends TileMachine implements ISidedInventory {
     public static final String NBT_WORKING = "Working";
     public static final String NBT_PROGRESS = "Progress";
 

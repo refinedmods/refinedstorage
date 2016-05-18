@@ -7,9 +7,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
+import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerCrafter;
 import refinedstorage.inventory.InventorySimple;
+import refinedstorage.item.ItemPattern;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.TileMachine;
 import refinedstorage.tile.autocrafting.task.ICraftingTask;
@@ -109,7 +111,7 @@ public class TileCrafter extends TileMachine implements IInventory {
 
     @Override
     public boolean isItemValidForSlot(int slot, ItemStack stack) {
-        return inventory.isItemValidForSlot(slot, stack);
+        return stack.getItem() == RefinedStorageItems.PATTERN && ItemPattern.isValid(stack);
     }
 
     @Override

@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import refinedstorage.RefinedStorage;
+import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.block.EnumStorageType;
 import refinedstorage.container.ContainerDiskDrive;
@@ -273,7 +274,7 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
 
     @Override
     public boolean isItemValidForSlot(int slot, ItemStack stack) {
-        return inventory.isItemValidForSlot(slot, stack);
+        return stack.getItem() == RefinedStorageItems.STORAGE_DISK;
     }
 
     @Override
