@@ -34,7 +34,7 @@ public class ItemStorageDisk extends ItemBase {
     @Override
     public void getSubItems(Item item, CreativeTabs tab, List list) {
         for (int i = 0; i < 5; ++i) {
-            list.add(NBTStorage.initNBT(new ItemStack(item, 1, i)));
+            list.add(NBTStorage.createStackWithNBT(new ItemStack(item, 1, i)));
         }
     }
 
@@ -68,6 +68,6 @@ public class ItemStorageDisk extends ItemBase {
     public void onCreated(ItemStack stack, World world, EntityPlayer player) {
         super.onCreated(stack, world, player);
 
-        NBTStorage.initNBT(stack);
+        NBTStorage.createStackWithNBT(stack);
     }
 }

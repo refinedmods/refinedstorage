@@ -361,7 +361,7 @@ public class CommonProxy {
         );
 
         // Storage Housing
-        GameRegistry.addRecipe(NBTStorage.initNBT(new ItemStack(RefinedStorageItems.STORAGE_HOUSING)),
+        GameRegistry.addRecipe(NBTStorage.createStackWithNBT(new ItemStack(RefinedStorageItems.STORAGE_HOUSING)),
             "GRG",
             "R R",
             "EEE",
@@ -372,7 +372,7 @@ public class CommonProxy {
 
         // Storage Disks
         for (int type = 0; type <= 3; ++type) {
-            ItemStack disk = NBTStorage.initNBT(new ItemStack(RefinedStorageItems.STORAGE_DISK, 1, type));
+            ItemStack disk = NBTStorage.createStackWithNBT(new ItemStack(RefinedStorageItems.STORAGE_DISK, 1, type));
 
             GameRegistry.addRecipe(disk,
                 "GRG",
