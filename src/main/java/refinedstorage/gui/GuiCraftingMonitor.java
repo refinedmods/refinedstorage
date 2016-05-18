@@ -53,6 +53,13 @@ public class GuiCraftingMonitor extends GuiBase {
     }
 
     @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        super.drawScreen(mouseX, mouseY, partialTicks);
+
+        scrollbar.update(this, mouseX - guiLeft, mouseY - guiTop);
+    }
+
+    @Override
     public void update(int x, int y) {
         scrollbar.setCanScroll(getRows() > VISIBLE_ROWS);
         scrollbar.setScrollDelta((float) scrollbar.getScrollbarHeight() / (float) getRows());
@@ -85,8 +92,6 @@ public class GuiCraftingMonitor extends GuiBase {
 
     @Override
     public void drawForeground(int mouseX, int mouseY) {
-        scrollbar.update(this, mouseX, mouseY);
-
         drawString(7, 7, t("gui.refinedstorage:crafting_monitor"));
         drawString(7, 137, t("container.inventory"));
 

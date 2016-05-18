@@ -32,6 +32,13 @@ public class GuiController extends GuiBase {
     }
 
     @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        super.drawScreen(mouseX, mouseY, partialTicks);
+
+        scrollbar.update(this, mouseX - guiLeft, mouseY - guiTop);
+    }
+
+    @Override
     public void update(int x, int y) {
         scrollbar.setCanScroll(getRows() > VISIBLE_ROWS);
         scrollbar.setScrollDelta((float) scrollbar.getScrollbarHeight() / (float) getRows());
@@ -57,8 +64,6 @@ public class GuiController extends GuiBase {
 
     @Override
     public void drawForeground(int mouseX, int mouseY) {
-        scrollbar.update(this, mouseX, mouseY);
-
         drawString(7, 7, t("gui.refinedstorage:controller." + controller.getType().getId()));
         drawString(7, 87, t("container.inventory"));
 

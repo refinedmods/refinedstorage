@@ -68,6 +68,13 @@ public class GuiGrid extends GuiBase {
         addSideButton(new SideButtonGridSearchBoxMode(grid));
     }
 
+    @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        super.drawScreen(mouseX, mouseY, partialTicks);
+
+        scrollbar.update(this, mouseX - guiLeft, mouseY - guiTop);
+    }
+
     public IGrid getGrid() {
         return grid;
     }
@@ -193,9 +200,7 @@ public class GuiGrid extends GuiBase {
 
     @Override
     public void drawForeground(int mouseX, int mouseY) {
-        scrollbar.update(this, mouseX, mouseY);
-
-        drawString(7, 7, t(grid instanceof WirelessGrid ? "gui.refinedstorage:wireless_grid" : "gui.refinedstorage:grid"));
+        drawString(7, 8, t(grid instanceof WirelessGrid ? "gui.refinedstorage:wireless_grid" : "gui.refinedstorage:grid"));
 
         if (grid.getType() == EnumGridType.CRAFTING) {
             drawString(7, 94, t("container.crafting"));
@@ -203,12 +208,12 @@ public class GuiGrid extends GuiBase {
             drawString(7, 94, t("gui.refinedstorage:grid.pattern"));
         }
 
-        drawString(7, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 163 : 113, t("container.inventory"));
+        drawString(7, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 163 : 114, t("container.inventory"));
 
         int x = 8;
         int y = 20;
 
-        hoveringSlot = -1;
+        this.hoveringSlot = -1;
 
         int slot = getOffset() * 9;
 
@@ -216,12 +221,12 @@ public class GuiGrid extends GuiBase {
 
         for (int i = 0; i < 9 * getVisibleRows(); ++i) {
             if (inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isConnected()) {
-                hoveringSlot = slot;
+                this.hoveringSlot = slot;
 
                 if (slot < items.size()) {
                     // we need to use the ID, because if we filter, the client-side index will change
                     // while the server-side's index will still be the same.
-                    hoveringItemId = items.get(slot).getId();
+                    this.hoveringItemId = items.get(slot).getId();
                 }
             }
 
@@ -242,7 +247,7 @@ public class GuiGrid extends GuiBase {
                     text = String.valueOf(qty);
                 }
 
-                if (hoveringSlot == slot && GuiScreen.isShiftKeyDown() && qty > 1) {
+                if (this.hoveringSlot == slot && GuiScreen.isShiftKeyDown() && qty > 1) {
                     text = String.valueOf(qty);
                 }
 
