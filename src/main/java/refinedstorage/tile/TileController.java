@@ -123,51 +123,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
             if (canRun()) {
                 if (ticks % 20 == 0) {
-                    this.wirelessGridRange = 0;
-                    this.energyUsage = 0;
-                    this.storages.clear();
-                    this.patterns.clear();
-
-                    for (TileMachine machine : machines) {
-                        if (!machine.mayUpdate()) {
-                            continue;
-                        }
-
-                        if (machine instanceof TileWirelessTransmitter) {
-                            this.wirelessGridRange += ((TileWirelessTransmitter) machine).getRange();
-                        }
-
-                        if (machine instanceof IStorageProvider) {
-                            ((IStorageProvider) machine).provide(storages);
-                        }
-
-                        if (machine instanceof TileCrafter) {
-                            TileCrafter crafter = (TileCrafter) machine;
-
-                            for (int i = 0; i < TileCrafter.PATTERN_SLOTS; ++i) {
-                                if (crafter.getStackInSlot(i) != null) {
-                                    ItemStack pattern = crafter.getStackInSlot(i);
-
-                                    patterns.add(new CraftingPattern(crafter.getPos().getX(), crafter.getPos().getY(), crafter.getPos().getZ(), ItemPattern.isProcessing(pattern), ItemPattern.getInputs(pattern), ItemPattern.getOutputs(pattern)));
-                                }
-                            }
-                        }
-
-                        this.energyUsage += machine.getEnergyUsage();
-                    }
-
-                    Collections.sort(storages, new Comparator<IStorage>() {
-                        @Override
-                        public int compare(IStorage s1, IStorage s2) {
-                            if (s1.getPriority() == s2.getPriority()) {
-                                return 0;
-                            }
-
-                            return (s1.getPriority() > s2.getPriority()) ? -1 : 1;
-                        }
-                    });
-
-                    syncItems();
+                    syncMachines();
                 }
 
                 for (TileMachine machine : machines) {
@@ -235,14 +191,60 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
                 energy.setEnergyStored(energy.getMaxEnergyStored());
             }
 
-            if (ticks % 20 == 0) {
-                RefinedStorageUtils.sendToAllAround(worldObj, pos, new MessageControllerEnergyUpdate(this));
-            }
-
+            RefinedStorageUtils.sendToAllAround(worldObj, pos, new MessageControllerEnergyUpdate(this));
+            
             if (lastEnergy != energy.getEnergyStored()) {
                 worldObj.updateComparatorOutputLevel(pos, RefinedStorageBlocks.CONTROLLER);
             }
         }
+    }
+
+    public void syncMachines() {
+        this.wirelessGridRange = 0;
+        this.energyUsage = 0;
+        this.storages.clear();
+        this.patterns.clear();
+
+        for (TileMachine machine : machines) {
+            if (!machine.mayUpdate()) {
+                continue;
+            }
+
+            if (machine instanceof TileWirelessTransmitter) {
+                this.wirelessGridRange += ((TileWirelessTransmitter) machine).getRange();
+            }
+
+            if (machine instanceof IStorageProvider) {
+                ((IStorageProvider) machine).provide(storages);
+            }
+
+            if (machine instanceof TileCrafter) {
+                TileCrafter crafter = (TileCrafter) machine;
+
+                for (int i = 0; i < TileCrafter.PATTERN_SLOTS; ++i) {
+                    if (crafter.getStackInSlot(i) != null) {
+                        ItemStack pattern = crafter.getStackInSlot(i);
+
+                        patterns.add(new CraftingPattern(crafter.getPos().getX(), crafter.getPos().getY(), crafter.getPos().getZ(), ItemPattern.isProcessing(pattern), ItemPattern.getInputs(pattern), ItemPattern.getOutputs(pattern)));
+                    }
+                }
+            }
+
+            this.energyUsage += machine.getEnergyUsage();
+        }
+
+        Collections.sort(storages, new Comparator<IStorage>() {
+            @Override
+            public int compare(IStorage s1, IStorage s2) {
+                if (s1.getPriority() == s2.getPriority()) {
+                    return 0;
+                }
+
+                return (s1.getPriority() > s2.getPriority()) ? -1 : 1;
+            }
+        });
+
+        syncItems();
     }
 
     public EnumControllerType getType() {
