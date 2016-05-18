@@ -1,5 +1,10 @@
 # Refined Storage Changelog
 
+### 0.6.6
+**Bugfixes**
+- Fixed being able to insert non-allowed items in inventories with hoppers
+- Fixed Processing Pattern Encoder not using up a Pattern
+
 ### 0.6.5
 **Bugfixes**
 - Performance improvements for servers
