@@ -156,4 +156,27 @@ public class ItemGroup {
     public boolean compareNoQuantity(ItemStack stack) {
         return compare(stack, RefinedStorageUtils.COMPARE_NBT | RefinedStorageUtils.COMPARE_DAMAGE);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ItemGroup itemGroup = (ItemGroup) o;
+
+        if (quantity != itemGroup.quantity) return false;
+        if (damage != itemGroup.damage) return false;
+        if (!type.equals(itemGroup.type)) return false;
+        return tag != null ? tag.equals(itemGroup.tag) : itemGroup.tag == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = type.hashCode();
+        result = 31 * result + quantity;
+        result = 31 * result + damage;
+        result = 31 * result + (tag != null ? tag.hashCode() : 0);
+        return result;
+    }
 }

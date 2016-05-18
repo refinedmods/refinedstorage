@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.proxy.ClientProxy;
-import refinedstorage.tile.TileController;
+import refinedstorage.tile.controller.TileController;
 
 public class MessageControllerEnergyUpdate implements IMessage, IMessageHandler<MessageControllerEnergyUpdate, IMessage> {
     public static long LAST_RE_RENDER;

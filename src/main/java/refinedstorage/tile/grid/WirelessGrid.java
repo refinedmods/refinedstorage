@@ -14,8 +14,8 @@ import refinedstorage.network.MessageWirelessGridSettingsUpdate;
 import refinedstorage.network.MessageWirelessGridStoragePull;
 import refinedstorage.network.MessageWirelessGridStoragePush;
 import refinedstorage.storage.ItemGroup;
-import refinedstorage.tile.TileController;
 import refinedstorage.tile.config.IRedstoneModeConfig;
+import refinedstorage.tile.controller.TileController;
 
 import java.util.ArrayList;
 import java.util.List;

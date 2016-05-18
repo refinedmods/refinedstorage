@@ -1,4 +1,4 @@
-package refinedstorage.tile;
+package refinedstorage.tile.controller;
 
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyReceiver;
@@ -27,6 +27,10 @@ import refinedstorage.network.MessageWirelessGridItems;
 import refinedstorage.storage.IStorage;
 import refinedstorage.storage.IStorageProvider;
 import refinedstorage.storage.ItemGroup;
+import refinedstorage.tile.ISynchronizedContainer;
+import refinedstorage.tile.TileBase;
+import refinedstorage.tile.TileMachine;
+import refinedstorage.tile.TileWirelessTransmitter;
 import refinedstorage.tile.autocrafting.CraftingPattern;
 import refinedstorage.tile.autocrafting.TileCrafter;
 import refinedstorage.tile.autocrafting.task.BasicCraftingTask;
@@ -72,6 +76,8 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     private List<IStorage> storages = new ArrayList<IStorage>();
     private List<WirelessGridConsumer> wirelessGridConsumers = new ArrayList<WirelessGridConsumer>();
     private List<WirelessGridConsumer> wirelessGridConsumersToRemove = new ArrayList<WirelessGridConsumer>();
+
+    private List<ItemGroup> combinedGroups = new ArrayList<ItemGroup>();
 
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
@@ -322,46 +328,36 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
             }
         }
 
-        combineItems();
-    }
-
-    private void combineItems() {
-        List<Integer> markedIndexes = new ArrayList<Integer>();
+        combinedGroups.clear();
 
         for (int i = 0; i < itemGroups.size(); ++i) {
-            if (markedIndexes.contains(i)) {
+            ItemGroup group = itemGroups.get(i);
+
+            if (combinedGroups.contains(group)) {
                 continue;
             }
 
-            ItemGroup group = itemGroups.get(i);
-
             // If the item doesn't exist anymore, remove it from storage to avoid crashes
             if (group.getType() == null) {
-                markedIndexes.add(i);
+                combinedGroups.add(group);
             } else {
                 for (int j = i + 1; j < itemGroups.size(); ++j) {
-                    if (markedIndexes.contains(j)) {
+                    ItemGroup otherGroup = itemGroups.get(j);
+
+                    if (combinedGroups.contains(otherGroup)) {
                         continue;
                     }
-
-                    ItemGroup otherGroup = itemGroups.get(j);
 
                     if (group.compareNoQuantity(otherGroup)) {
                         group.setQuantity(group.getQuantity() + otherGroup.getQuantity());
 
-                        markedIndexes.add(j);
+                        combinedGroups.add(otherGroup);
                     }
                 }
             }
         }
 
-        List<ItemGroup> markedItems = new ArrayList<ItemGroup>();
-
-        for (int i : markedIndexes) {
-            markedItems.add(itemGroups.get(i));
-        }
-
-        itemGroups.removeAll(markedItems);
+        itemGroups.removeAll(combinedGroups);
     }
 
     public boolean push(ItemStack stack) {

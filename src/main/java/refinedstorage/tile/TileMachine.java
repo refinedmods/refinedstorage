@@ -10,6 +10,7 @@ import refinedstorage.RefinedStorageUtils;
 import refinedstorage.network.MessageMachineConnectedUpdate;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
+import refinedstorage.tile.controller.TileController;
 
 import java.util.HashSet;
 import java.util.Set;
