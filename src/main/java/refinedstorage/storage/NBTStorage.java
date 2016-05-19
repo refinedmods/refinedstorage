@@ -20,6 +20,7 @@ public class NBTStorage implements IStorage {
     private NBTTagCompound tag;
     private int capacity;
     private int priority;
+
     private boolean dirty;
 
     private List<ItemGroup> groups = new ArrayList<ItemGroup>();
@@ -76,19 +77,21 @@ public class NBTStorage implements IStorage {
 
     @Override
     public void push(ItemStack stack) {
-        markDirty();
-
         tag.setInteger(NBT_STORED, getStored(tag) + stack.stackSize);
 
         for (ItemGroup group : groups) {
             if (group.compareNoQuantity(stack)) {
                 group.setQuantity(group.getQuantity() + stack.stackSize);
 
+                markDirty();
+
                 return;
             }
         }
 
         groups.add(new ItemGroup(stack));
+
+        markDirty();
     }
 
     @Override
@@ -167,6 +170,7 @@ public class NBTStorage implements IStorage {
 
     public static ItemStack createStackWithNBT(ItemStack stack) {
         stack.setTagCompound(createNBT());
+
         return stack;
     }
 }
