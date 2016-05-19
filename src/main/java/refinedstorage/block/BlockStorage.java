@@ -76,10 +76,8 @@ public class BlockStorage extends BlockMachine {
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack stack) {
         super.onBlockPlacedBy(world, pos, state, player, stack);
 
-        if (!world.isRemote) {
-            NBTTagCompound tag = stack.getTagCompound();
-
-            ((TileStorage) world.getTileEntity(pos)).onPlaced((tag != null && tag.hasKey(TileStorage.NBT_STORAGE)) ? tag.getCompoundTag(TileStorage.NBT_STORAGE) : null);
+        if (!world.isRemote && stack.hasTagCompound() && stack.getTagCompound().hasKey(TileStorage.NBT_STORAGE)) {
+            ((TileStorage) world.getTileEntity(pos)).setStorageTag(stack.getTagCompound().getCompoundTag(TileStorage.NBT_STORAGE));
         }
     }
 

@@ -43,20 +43,16 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 
     @Override
     public void updateMachine() {
+        if (storage == null && storageTag != null) {
+            storage = new StorageBlockStorage(this);
+        }
+
         if (storage != null && storage.isDirty()) {
             markDirty();
 
             storage.writeToNBT(storageTag);
             storage.markClean();
         }
-    }
-
-    public void onPlaced(NBTTagCompound tag) {
-        if (tag != null) {
-            this.storageTag = tag;
-        }
-
-        this.storage = new StorageBlockStorage(this);
     }
 
     @Override
@@ -79,8 +75,6 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
         if (nbt.hasKey(NBT_STORAGE)) {
             storageTag = nbt.getCompoundTag(NBT_STORAGE);
         }
-
-        storage = new StorageBlockStorage(this);
 
         if (nbt.hasKey(NBT_COMPARE)) {
             compare = nbt.getInteger(NBT_COMPARE);
@@ -204,6 +198,10 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 
     public NBTTagCompound getStorageTag() {
         return storageTag;
+    }
+
+    public void setStorageTag(NBTTagCompound storageTag) {
+        this.storageTag = storageTag;
     }
 
     @Override

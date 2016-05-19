@@ -10,7 +10,7 @@ import net.minecraft.nbt.NBTTagList;
 import java.util.Collection;
 import java.util.List;
 
-public class NBTStorage implements IStorage {
+public abstract class NBTStorage implements IStorage {
     public static final String NBT_ITEMS = "Items";
     public static final String NBT_STORED = "Stored";
 
@@ -21,16 +21,14 @@ public class NBTStorage implements IStorage {
 
     private NBTTagCompound tag;
     private int capacity;
-    private int priority;
 
     private boolean dirty;
 
     private Multimap<Item, ItemGroup> groups = ArrayListMultimap.create();
 
-    public NBTStorage(NBTTagCompound tag, int capacity, int priority) {
+    public NBTStorage(NBTTagCompound tag, int capacity) {
         this.tag = tag;
         this.capacity = capacity;
-        this.priority = priority;
 
         readFromNBT();
     }
@@ -134,11 +132,6 @@ public class NBTStorage implements IStorage {
     @Override
     public boolean canPush(ItemStack stack) {
         return capacity == -1 || (getStored(tag) + stack.stackSize) <= capacity;
-    }
-
-    @Override
-    public int getPriority() {
-        return priority;
     }
 
     public int getCapacity() {

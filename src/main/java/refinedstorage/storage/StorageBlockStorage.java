@@ -8,7 +8,7 @@ public class StorageBlockStorage extends NBTStorage {
     private TileStorage storage;
 
     public StorageBlockStorage(TileStorage storage) {
-        super(storage.getStorageTag(), storage.getCapacity(), 0);
+        super(storage.getStorageTag(), storage.getCapacity());
 
         this.storage = storage;
     }
