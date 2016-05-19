@@ -204,7 +204,6 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     public void syncMachines() {
         this.wirelessGridRange = 0;
         this.energyUsage = 0;
-        this.itemGroups.clear();
         this.storages.clear();
         this.patterns.clear();
 
