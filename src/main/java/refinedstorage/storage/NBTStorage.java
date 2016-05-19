@@ -1,13 +1,11 @@
 package refinedstorage.storage;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class NBTStorage implements IStorage {
@@ -24,7 +22,7 @@ public abstract class NBTStorage implements IStorage {
 
     private boolean dirty;
 
-    private Multimap<Item, ItemGroup> groups = ArrayListMultimap.create();
+    private List<ItemGroup> groups = new ArrayList<ItemGroup>();
 
     public NBTStorage(NBTTagCompound tag, int capacity) {
         this.tag = tag;
@@ -46,14 +44,14 @@ public abstract class NBTStorage implements IStorage {
                 tag.hasKey(NBT_ITEM_NBT) ? ((NBTTagCompound) tag.getTag(NBT_ITEM_NBT)) : null
             );
 
-            groups.put(group.getType(), group);
+            groups.add(group);
         }
     }
 
     public void writeToNBT(NBTTagCompound tag) {
         NBTTagList list = new NBTTagList();
 
-        for (ItemGroup group : groups.values()) {
+        for (ItemGroup group : groups) {
             NBTTagCompound itemTag = new NBTTagCompound();
 
             itemTag.setInteger(NBT_ITEM_TYPE, Item.getIdFromItem(group.getType()));
@@ -72,16 +70,14 @@ public abstract class NBTStorage implements IStorage {
 
     @Override
     public void addItems(List<ItemGroup> items) {
-        items.addAll(groups.values());
+        items.addAll(groups);
     }
 
     @Override
     public void push(ItemStack stack) {
         tag.setInteger(NBT_STORED, getStored(tag) + stack.stackSize);
 
-        Collection<ItemGroup> candidates = groups.get(stack.getItem());
-
-        for (ItemGroup group : candidates) {
+        for (ItemGroup group : groups) {
             if (group.compareNoQuantity(stack)) {
                 group.setQuantity(group.getQuantity() + stack.stackSize);
 
@@ -91,7 +87,7 @@ public abstract class NBTStorage implements IStorage {
             }
         }
 
-        groups.put(stack.getItem(), new ItemGroup(stack));
+        groups.add(new ItemGroup(stack));
 
         markDirty();
     }
@@ -100,16 +96,14 @@ public abstract class NBTStorage implements IStorage {
     public ItemStack take(ItemStack stack, int flags) {
         int quantity = stack.stackSize;
 
-        Collection<ItemGroup> candidates = groups.get(stack.getItem());
-
-        for (ItemGroup group : candidates) {
+        for (ItemGroup group : groups) {
             if (group.compare(stack, flags)) {
                 if (quantity > group.getQuantity()) {
                     quantity = group.getQuantity();
                 }
 
                 if (group.getQuantity() - quantity == 0) {
-                    groups.remove(group.getType(), group);
+                    groups.remove(group);
                 } else {
                     group.setQuantity(group.getQuantity() - quantity);
                 }
