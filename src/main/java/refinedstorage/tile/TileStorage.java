@@ -27,7 +27,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 
     private InventorySimple inventory = new InventorySimple("storage", 9, this);
 
-    private NBTTagCompound storageTag;
+    private NBTTagCompound storageTag = NBTStorage.createNBT();
 
     private StorageBlockStorage storage;
 
@@ -43,31 +43,26 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 
     @Override
     public void updateMachine() {
-        if (getStorage().isDirty()) {
+        if (storage != null && storage.isDirty()) {
             markDirty();
 
-            getStorage().markClean();
+            storage.markClean();
         }
     }
 
     public void onPlaced(NBTTagCompound tag) {
-        if (tag == null) {
-            storageTag = NBTStorage.createNBT();
-        } else {
-            storageTag = tag;
+        if (tag != null) {
+            this.storageTag = tag;
         }
-    }
 
-    public NBTStorage getStorage() {
-        if (storage == null) {
-            storage = new StorageBlockStorage(this);
-        }
-        return storage;
+        this.storage = new StorageBlockStorage(this);
     }
 
     @Override
     public void provide(List<IStorage> storages) {
-        storages.add(getStorage());
+        if (storage != null) {
+            storages.add(storage);
+        }
     }
 
     @Override
@@ -82,9 +77,9 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 
         if (nbt.hasKey(NBT_STORAGE)) {
             storageTag = nbt.getCompoundTag(NBT_STORAGE);
-        } else {
-            storageTag = NBTStorage.createNBT();
         }
+
+        storage = new StorageBlockStorage(this);
 
         if (nbt.hasKey(NBT_COMPARE)) {
             compare = nbt.getInteger(NBT_COMPARE);
@@ -102,7 +97,10 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
         RefinedStorageUtils.saveInventory(inventory, 0, nbt);
 
         nbt.setInteger(NBT_PRIORITY, priority);
+
+        storage.writeToNBT(storageTag);
         nbt.setTag(NBT_STORAGE, storageTag);
+
         nbt.setInteger(NBT_COMPARE, compare);
         nbt.setInteger(NBT_MODE, mode);
     }
@@ -208,12 +206,6 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 
     public NBTTagCompound getStorageTag() {
         return storageTag;
-    }
-
-    public void setStorageTag(NBTTagCompound tag) {
-        markDirty();
-
-        this.storageTag = tag;
     }
 
     @Override
