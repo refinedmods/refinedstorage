@@ -3,7 +3,6 @@ package refinedstorage.tile;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
@@ -17,11 +16,10 @@ import refinedstorage.storage.*;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.IModeConfig;
 import refinedstorage.tile.config.IRedstoneModeConfig;
-import refinedstorage.tile.config.ModeConfigUtils;
 
 import java.util.List;
 
-public class TileStorage extends TileMachine implements IStorageProvider, IStorage, IStorageGui, ICompareConfig, IModeConfig {
+public class TileStorage extends TileMachine implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig {
     public static final String NBT_STORAGE = "Storage";
     public static final String NBT_PRIORITY = "Priority";
     public static final String NBT_COMPARE = "Compare";
@@ -29,9 +27,9 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 
     private InventorySimple inventory = new InventorySimple("storage", 9, this);
 
-    private NBTTagCompound storageTag = NBTStorage.createNBT();
+    private NBTTagCompound storageTag;
 
-    private NBTStorage storage;
+    private StorageBlockStorage storage;
 
     private int priority = 0;
     private int compare = 0;
@@ -45,19 +43,31 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 
     @Override
     public void updateMachine() {
+        if (getStorage().isDirty()) {
+            markDirty();
+
+            getStorage().markClean();
+        }
+    }
+
+    public void onPlaced(NBTTagCompound tag) {
+        if (tag == null) {
+            storageTag = NBTStorage.createNBT();
+        } else {
+            storageTag = tag;
+        }
     }
 
     public NBTStorage getStorage() {
         if (storage == null) {
-            storage = new NBTStorage(storageTag, priority, getCapacity());
+            storage = new StorageBlockStorage(this);
         }
-
         return storage;
     }
 
     @Override
     public void provide(List<IStorage> storages) {
-        storages.add(this);
+        storages.add(getStorage());
     }
 
     @Override
@@ -72,6 +82,8 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 
         if (nbt.hasKey(NBT_STORAGE)) {
             storageTag = nbt.getCompoundTag(NBT_STORAGE);
+        } else {
+            storageTag = NBTStorage.createNBT();
         }
 
         if (nbt.hasKey(NBT_COMPARE)) {
@@ -90,7 +102,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
         RefinedStorageUtils.saveInventory(inventory, 0, nbt);
 
         nbt.setInteger(NBT_PRIORITY, priority);
-        nbt.setTag(NBT_STORAGE, getStorage().getTag());
+        nbt.setTag(NBT_STORAGE, storageTag);
         nbt.setInteger(NBT_COMPARE, compare);
         nbt.setInteger(NBT_MODE, mode);
     }
@@ -126,34 +138,6 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
     @Override
     public Class<? extends Container> getContainer() {
         return ContainerStorage.class;
-    }
-
-    @Override
-    public void addItems(List<ItemGroup> items) {
-        getStorage().addItems(items);
-
-        markDirty();
-    }
-
-    @Override
-    public void push(ItemStack stack) {
-        getStorage().push(stack);
-
-        markDirty();
-    }
-
-    @Override
-    public ItemStack take(ItemStack stack, int flags) {
-        ItemStack result = getStorage().take(stack, flags);
-
-        markDirty();
-
-        return result;
-    }
-
-    @Override
-    public boolean canPush(ItemStack stack) {
-        return ModeConfigUtils.doesNotViolateMode(inventory, this, compare, stack) && getStorage().canPush(stack);
     }
 
     @Override
@@ -240,7 +224,6 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
     public void setPriority(int priority) {
         markDirty();
 
-        this.getStorage().setPriority(priority);
         this.priority = priority;
     }
 

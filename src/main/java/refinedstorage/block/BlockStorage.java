@@ -78,9 +78,7 @@ public class BlockStorage extends BlockMachine {
 
         NBTTagCompound tag = stack.getTagCompound();
 
-        if (tag != null && tag.hasKey(TileStorage.NBT_STORAGE)) {
-            ((TileStorage) world.getTileEntity(pos)).setStorageTag((NBTTagCompound) tag.getTag(TileStorage.NBT_STORAGE));
-        }
+        ((TileStorage) world.getTileEntity(pos)).onPlaced((tag != null && tag.hasKey(TileStorage.NBT_STORAGE)) ? tag.getCompoundTag(TileStorage.NBT_STORAGE) : null);
     }
 
     @Override

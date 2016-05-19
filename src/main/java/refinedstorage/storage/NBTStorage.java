@@ -143,6 +143,14 @@ public class NBTStorage implements IStorage {
         this.priority = priority;
     }
 
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
     public NBTTagCompound getTag() {
         return tag;
     }
