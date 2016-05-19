@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 0.6.8
+**Bugfixes**
+- Fix CTRL + pick block on machines crashing game
+
 ### 0.6.7
 **Bugfixes**
 - Performance improvements
