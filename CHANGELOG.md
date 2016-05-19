@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 0.6.7
+**Bugfixes**
+- Performance improvements
+
 ### 0.6.6
 **Bugfixes**
 - Fixed being able to insert non-allowed items in inventories with hoppers
