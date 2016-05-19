@@ -46,6 +46,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
         if (storage != null && storage.isDirty()) {
             markDirty();
 
+            storage.writeToNBT(storageTag);
             storage.markClean();
         }
     }
@@ -97,10 +98,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
         RefinedStorageUtils.saveInventory(inventory, 0, nbt);
 
         nbt.setInteger(NBT_PRIORITY, priority);
-
-        storage.writeToNBT(storageTag);
         nbt.setTag(NBT_STORAGE, storageTag);
-
         nbt.setInteger(NBT_COMPARE, compare);
         nbt.setInteger(NBT_MODE, mode);
     }
