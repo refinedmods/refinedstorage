@@ -111,7 +111,7 @@ public class NBTStorage implements IStorage {
 
                 ItemStack result = group.toStack();
 
-                result.setTagCompound(group.getTag());
+                result.stackSize = quantity;
 
                 markDirty();
 
