@@ -338,7 +338,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
             }
 
             // If the item doesn't exist anymore, remove it from storage to avoid crashes
-            if (group.getMeta().getType() == null) {
+            if (group.getType() == null) {
                 combinedGroups.add(i);
             } else {
                 for (int j = i + 1; j < itemGroups.size(); ++j) {
@@ -679,8 +679,8 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
             // NO OP, the quantity already set (64) is needed for shift
         }
 
-        if (quantity > group.getMeta().getType().getItemStackLimit(group.toStack())) {
-            quantity = group.getMeta().getType().getItemStackLimit(group.toStack());
+        if (quantity > group.getType().getItemStackLimit(group.toStack())) {
+            quantity = group.getType().getItemStackLimit(group.toStack());
         }
 
         ItemStack took = take(group.copy(quantity).toStack());

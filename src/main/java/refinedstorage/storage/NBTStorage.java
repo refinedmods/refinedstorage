@@ -5,9 +5,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class NBTStorage implements IStorage {
     public static final String NBT_ITEMS = "Items";
@@ -23,8 +22,7 @@ public class NBTStorage implements IStorage {
     private int priority;
     private boolean dirty;
 
-    // We use a map here because is much faster than looping over a list
-    private Map<ItemGroupMeta, Integer> groups = new HashMap<ItemGroupMeta, Integer>();
+    private List<ItemGroup> groups = new ArrayList<ItemGroup>();
 
     public NBTStorage(NBTTagCompound tag, int capacity, int priority) {
         this.tag = tag;
@@ -40,28 +38,29 @@ public class NBTStorage implements IStorage {
         for (int i = 0; i < list.tagCount(); ++i) {
             NBTTagCompound tag = list.getCompoundTagAt(i);
 
-            ItemGroupMeta meta = new ItemGroupMeta(
+            ItemGroup group = new ItemGroup(
                 Item.getItemById(tag.getInteger(NBT_ITEM_TYPE)),
+                tag.getInteger(NBT_ITEM_QUANTITY),
                 tag.getInteger(NBT_ITEM_DAMAGE),
                 tag.hasKey(NBT_ITEM_NBT) ? ((NBTTagCompound) tag.getTag(NBT_ITEM_NBT)) : null
             );
 
-            groups.put(meta, tag.getInteger(NBT_ITEM_QUANTITY));
+            groups.add(group);
         }
     }
 
     public void writeToNBT(NBTTagCompound tag) {
         NBTTagList list = new NBTTagList();
 
-        for (Map.Entry<ItemGroupMeta, Integer> entry : groups.entrySet()) {
+        for (ItemGroup group : groups) {
             NBTTagCompound itemTag = new NBTTagCompound();
 
-            itemTag.setInteger(NBT_ITEM_TYPE, Item.getIdFromItem(entry.getKey().getType()));
-            itemTag.setInteger(NBT_ITEM_QUANTITY, entry.getValue());
-            itemTag.setInteger(NBT_ITEM_DAMAGE, entry.getKey().getDamage());
+            itemTag.setInteger(NBT_ITEM_TYPE, Item.getIdFromItem(group.getType()));
+            itemTag.setInteger(NBT_ITEM_QUANTITY, group.getQuantity());
+            itemTag.setInteger(NBT_ITEM_DAMAGE, group.getDamage());
 
-            if (entry.getKey().hasTag()) {
-                itemTag.setTag(NBT_ITEM_NBT, entry.getKey().getTag());
+            if (group.hasTag()) {
+                itemTag.setTag(NBT_ITEM_NBT, group.getTag());
             }
 
             list.appendTag(itemTag);
@@ -72,9 +71,7 @@ public class NBTStorage implements IStorage {
 
     @Override
     public void addItems(List<ItemGroup> items) {
-        for (Map.Entry<ItemGroupMeta, Integer> entry : groups.entrySet()) {
-            items.add(new ItemGroup(entry.getKey(), entry.getValue()));
-        }
+        items.addAll(groups);
     }
 
     @Override
@@ -83,42 +80,38 @@ public class NBTStorage implements IStorage {
 
         tag.setInteger(NBT_STORED, getStored(tag) + stack.stackSize);
 
-        for (Map.Entry<ItemGroupMeta, Integer> entry : groups.entrySet()) {
-            if (entry.getKey().compareNoQuantity(stack)) {
-                groups.put(entry.getKey(), entry.getValue() + stack.stackSize);
+        for (ItemGroup group : groups) {
+            if (group.compareNoQuantity(stack)) {
+                group.setQuantity(group.getQuantity() + stack.stackSize);
 
                 return;
             }
         }
 
-        groups.put(new ItemGroupMeta(stack), stack.stackSize);
+        groups.add(new ItemGroup(stack));
     }
 
     @Override
     public ItemStack take(ItemStack stack, int flags) {
         int quantity = stack.stackSize;
 
-        for (Map.Entry<ItemGroupMeta, Integer> entry : groups.entrySet()) {
-            if (entry.getKey().compare(stack, flags)) {
-                if (quantity > entry.getValue()) {
-                    quantity = entry.getValue();
+        for (ItemGroup group : groups) {
+            if (group.compare(stack, flags)) {
+                if (quantity > group.getQuantity()) {
+                    quantity = group.getQuantity();
                 }
 
-                if (entry.getValue() - quantity == 0) {
-                    groups.remove(entry.getKey());
+                if (group.getQuantity() - quantity == 0) {
+                    groups.remove(group);
                 } else {
-                    groups.put(entry.getKey(), entry.getValue() - quantity);
+                    group.setQuantity(group.getQuantity() - quantity);
                 }
 
                 tag.setInteger(NBT_STORED, getStored(tag) - quantity);
 
-                ItemStack result = new ItemStack(
-                    entry.getKey().getType(),
-                    quantity,
-                    entry.getKey().getDamage()
-                );
+                ItemStack result = group.toStack();
 
-                result.setTagCompound(entry.getKey().getTag());
+                result.setTagCompound(group.getTag());
 
                 markDirty();
 
@@ -139,16 +132,8 @@ public class NBTStorage implements IStorage {
         return priority;
     }
 
-    public void setPriority(int priority) {
-        this.priority = priority;
-    }
-
     public int getCapacity() {
         return capacity;
-    }
-
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
     }
 
     public NBTTagCompound getTag() {
