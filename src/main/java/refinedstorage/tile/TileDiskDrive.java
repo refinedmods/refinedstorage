@@ -29,11 +29,21 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
     private InventorySimple inventory = new InventorySimple("disk_drive", 8, this);
     private InventorySimple filterInventory = new InventorySimple("filters", 9, this);
 
-    private NBTStorage storages[] = new NBTStorage[getSizeInventory()];
+    private NBTStorage storages[] = new NBTStorage[8];
 
     private int priority = 0;
     private int compare = 0;
     private int mode = 0;
+
+    public NBTStorage getStorage(int slot) {
+        if (inventory.getStackInSlot(slot) == null) {
+            storages[slot] = null;
+        } else if (storages[slot] == null) {
+            storages[slot] = new DiskStorage(getStackInSlot(slot), this);
+        }
+
+        return storages[slot];
+    }
 
     @Override
     public int getEnergyUsage() {
@@ -50,11 +60,21 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
 
     @Override
     public void updateMachine() {
+        for (int i = 0; i < getSizeInventory(); ++i) {
+            NBTStorage storage = getStorage(i);
+
+            if (storage != null && storage.isDirty()) {
+                storage.writeToNBT(getStackInSlot(i).getTagCompound());
+                storage.markClean();
+            }
+        }
     }
 
     @Override
     public void provide(List<IStorage> storages) {
-        for (NBTStorage storage : this.storages) {
+        for (int i = 0; i < getSizeInventory(); ++i) {
+            NBTStorage storage = getStorage(i);
+
             if (storage != null) {
                 storages.add(storage);
             }
@@ -251,12 +271,6 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
 
     @Override
     public void setInventorySlotContents(int slot, ItemStack stack) {
-        if (stack != null) {
-            storages[slot] = new DiskStorage(stack, this);
-        } else {
-            storages[slot] = null;
-        }
-
         inventory.setInventorySlotContents(slot, stack);
     }
 
