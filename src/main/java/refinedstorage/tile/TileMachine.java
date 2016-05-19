@@ -173,7 +173,7 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
 
         nbt.setInteger(RedstoneMode.NBT, redstoneMode.id);
 
-        if (connected) {
+        if (controller != null && connected) {
             nbt.setInteger(NBT_CONTROLLER_X, controller.getPos().getX());
             nbt.setInteger(NBT_CONTROLLER_Y, controller.getPos().getY());
             nbt.setInteger(NBT_CONTROLLER_Z, controller.getPos().getZ());
