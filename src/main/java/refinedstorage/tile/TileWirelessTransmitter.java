@@ -4,6 +4,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
 import refinedstorage.RefinedStorageUtils;
+import refinedstorage.container.ContainerWirelessTransmitter;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.item.ItemUpgrade;
 
@@ -41,7 +42,7 @@ public class TileWirelessTransmitter extends TileMachine {
 
     @Override
     public Class<? extends Container> getContainer() {
-        return null;
+        return ContainerWirelessTransmitter.class;
     }
 
     @Override
