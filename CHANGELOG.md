@@ -4,6 +4,7 @@
 **Bugfixes**
 - Fixed bug where machines wouldn't disconnect / connect when needed outside of chunk
 - Fixed not being able to toggle redstone mode in a Wireless Transmitter
+- Fixed same machine being connected to the network multiple times
 - Improved network usage
 
 ### 0.6.8
