@@ -3,7 +3,6 @@ package refinedstorage.tile;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorageUtils;
@@ -15,20 +14,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 public abstract class TileMachine extends TileBase implements ISynchronizedContainer, IRedstoneModeConfig {
-    public static final String NBT_CONTROLLER_X = "ControllerX";
-    public static final String NBT_CONTROLLER_Y = "ControllerY";
-    public static final String NBT_CONTROLLER_Z = "ControllerZ";
-
     protected boolean connected = false;
     protected RedstoneMode redstoneMode = RedstoneMode.IGNORE;
     protected TileController controller;
-    private Block block;
 
-    // Used for caching
-    private boolean controllerIsCached;
-    private int controllerX;
-    private int controllerY;
-    private int controllerZ;
+    private Block block;
 
     private Set<String> visited = new HashSet<String>();
 
@@ -60,19 +50,7 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
             if (ticks == 1) {
                 block = worldObj.getBlockState(pos).getBlock();
 
-                boolean search = true;
-
-                if (controllerIsCached) {
-                    TileEntity tile = worldObj.getTileEntity(new BlockPos(controllerX, controllerY, controllerZ));
-
-                    if (tile instanceof TileController) {
-                        search = !tryConnect((TileController) tile);
-                    }
-                }
-
-                if (search) {
-                    searchController(worldObj);
-                }
+                searchController(worldObj);
             }
 
             if (!(this instanceof TileCable) && ticks % 4 == 0) {
@@ -157,14 +135,6 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
         if (nbt.hasKey(RedstoneMode.NBT)) {
             redstoneMode = RedstoneMode.getById(nbt.getInteger(RedstoneMode.NBT));
         }
-
-        controllerIsCached = nbt.hasKey(NBT_CONTROLLER_X) && nbt.hasKey(NBT_CONTROLLER_Y) && nbt.hasKey(NBT_CONTROLLER_Z);
-
-        if (controllerIsCached) {
-            controllerX = nbt.getInteger(NBT_CONTROLLER_X);
-            controllerY = nbt.getInteger(NBT_CONTROLLER_Y);
-            controllerZ = nbt.getInteger(NBT_CONTROLLER_Z);
-        }
     }
 
     @Override
@@ -172,16 +142,6 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
         super.writeToNBT(nbt);
 
         nbt.setInteger(RedstoneMode.NBT, redstoneMode.id);
-
-        if (controller != null && connected) {
-            nbt.setInteger(NBT_CONTROLLER_X, controller.getPos().getX());
-            nbt.setInteger(NBT_CONTROLLER_Y, controller.getPos().getY());
-            nbt.setInteger(NBT_CONTROLLER_Z, controller.getPos().getZ());
-        } else {
-            nbt.removeTag(NBT_CONTROLLER_X);
-            nbt.removeTag(NBT_CONTROLLER_Y);
-            nbt.removeTag(NBT_CONTROLLER_Z);
-        }
     }
 
     public abstract int getEnergyUsage();
