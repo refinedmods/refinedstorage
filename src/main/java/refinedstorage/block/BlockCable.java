@@ -37,8 +37,6 @@ public class BlockCable extends BlockMachine {
     @Override
     protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, new IProperty[]{
-            DIRECTION,
-            CONNECTED,
             NORTH,
             EAST,
             SOUTH,
@@ -50,8 +48,7 @@ public class BlockCable extends BlockMachine {
 
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
-        return super.getActualState(state, world, pos)
-            .withProperty(NORTH, hasConnectionWith(world, pos.north()))
+        return state.withProperty(NORTH, hasConnectionWith(world, pos.north()))
             .withProperty(EAST, hasConnectionWith(world, pos.east()))
             .withProperty(SOUTH, hasConnectionWith(world, pos.south()))
             .withProperty(WEST, hasConnectionWith(world, pos.west()))

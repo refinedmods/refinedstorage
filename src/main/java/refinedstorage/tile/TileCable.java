@@ -20,5 +20,4 @@ public class TileCable extends TileMachine {
     public boolean maySendConnectivityData() {
         return false;
     }
-
 }

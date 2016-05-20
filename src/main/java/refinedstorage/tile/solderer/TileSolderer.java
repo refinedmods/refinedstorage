@@ -14,7 +14,6 @@ import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerSolderer;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.item.ItemUpgrade;
-import refinedstorage.network.MessageSoldererWorkingUpdate;
 import refinedstorage.tile.TileMachine;
 
 public class TileSolderer extends TileMachine implements ISidedInventory {
@@ -44,6 +43,8 @@ public class TileSolderer extends TileMachine implements ISidedInventory {
     @Override
     public void updateMachine() {
         ISoldererRecipe newRecipe = SoldererRegistry.getRecipe(inventory);
+
+        boolean wasWorking = working;
 
         if (newRecipe == null) {
             reset();
@@ -77,8 +78,8 @@ public class TileSolderer extends TileMachine implements ISidedInventory {
             }
         }
 
-        if (ticks % 4 == 0) {
-            RefinedStorageUtils.sendToAllAround(worldObj, pos, new MessageSoldererWorkingUpdate(this));
+        if (wasWorking != working) {
+            RefinedStorageUtils.updateBlock(worldObj, pos);
         }
     }
 
@@ -122,6 +123,20 @@ public class TileSolderer extends TileMachine implements ISidedInventory {
 
         nbt.setBoolean(NBT_WORKING, working);
         nbt.setInteger(NBT_PROGRESS, progress);
+    }
+
+    @Override
+    public void writeToDescriptionPacketNBT(NBTTagCompound tag) {
+        super.writeToDescriptionPacketNBT(tag);
+
+        tag.setBoolean(NBT_WORKING, working);
+    }
+
+    @Override
+    public void readFromDescriptionPacketNBT(NBTTagCompound tag) {
+        super.readFromDescriptionPacketNBT(tag);
+
+        working = tag.getBoolean(NBT_WORKING);
     }
 
     @Override

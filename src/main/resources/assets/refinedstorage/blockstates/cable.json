@@ -56,26 +56,6 @@
       },
       "false": {
       }
-    },
-    "direction": {
-      "north": {
-      },
-      "east": {
-      },
-      "south": {
-      },
-      "west": {
-      },
-      "up": {
-      },
-      "down": {
-      }
-    },
-    "connected": {
-      "true": {
-      },
-      "false": {
-      }
     }
   }
 }
