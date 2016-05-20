@@ -353,8 +353,9 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
                     ItemGroup otherGroup = itemGroups.get(j);
 
                     if (group.compareNoQuantity(otherGroup)) {
-                        // We copy here so we don't modify the quantity of the item group IStorage uses
-                        itemGroups.set(i, group.copy(group.getQuantity() + otherGroup.getQuantity()));
+                        // We copy here so we don't modify the quantity of the item group IStorage uses.
+                        // We re-get the itemgroup with .get(i) because the group may change from a previous iteration in this for loop.
+                        itemGroups.set(i, itemGroups.get(i).copy(itemGroups.get(i).getQuantity() + otherGroup.getQuantity()));
 
                         combinedGroups.add(otherGroup);
                         combinedGroupsIndices.add(j);
