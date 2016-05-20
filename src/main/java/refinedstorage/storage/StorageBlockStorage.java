@@ -19,7 +19,7 @@ public class StorageBlockStorage extends NBTStorage {
     }
 
     @Override
-    public boolean canPush(ItemStack stack) {
-        return ModeConfigUtils.doesNotViolateMode(storage.getInventory(), storage, storage.getCompare(), stack) && super.canPush(stack);
+    public boolean mayPush(ItemStack stack) {
+        return ModeConfigUtils.doesNotViolateMode(storage.getInventory(), storage, storage.getCompare(), stack) && super.mayPush(stack);
     }
 }

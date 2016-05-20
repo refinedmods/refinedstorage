@@ -11,7 +11,7 @@ public interface IStorage {
 
     ItemStack take(ItemStack stack, int flags);
 
-    boolean canPush(ItemStack stack);
+    boolean mayPush(ItemStack stack);
 
     int getPriority();
 }

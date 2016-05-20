@@ -122,7 +122,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
             int lastEnergy = energy.getEnergyStored();
 
-            if (canRun()) {
+            if (mayRun()) {
                 if (ticks % 20 == 0) {
                     syncMachines();
                 }
@@ -157,8 +157,8 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
                 disconnectAll();
             }
 
-            if (couldRun != canRun()) {
-                couldRun = canRun();
+            if (couldRun != mayRun()) {
+                couldRun = mayRun();
 
                 worldObj.notifyNeighborsOfStateChange(pos, RefinedStorageBlocks.CONTROLLER);
             }
@@ -174,7 +174,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
                 if (!RefinedStorageUtils.compareStack(consumer.getWirelessGrid(), consumer.getPlayer().getHeldItem(consumer.getHand()))) {
                     consumer.getPlayer().closeScreen(); // This will call onContainerClosed on the Container and remove it from the list
                 } else {
-                    if (canRun()) {
+                    if (mayRun()) {
                         RefinedStorage.NETWORK.sendTo(new MessageWirelessGridItems(this), (EntityPlayerMP) consumer.getPlayer());
                     }
                 }
@@ -365,7 +365,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
     public boolean push(ItemStack stack) {
         for (IStorage storage : storages) {
-            if (storage.canPush(stack)) {
+            if (storage.mayPush(stack)) {
                 storage.push(stack);
 
                 syncItems();
@@ -559,7 +559,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
         return true;
     }
 
-    public boolean canRun() {
+    public boolean mayRun() {
         return energy.getEnergyStored() > 0 && energy.getEnergyStored() >= energyUsage && redstoneMode.isEnabled(worldObj, pos);
     }
 

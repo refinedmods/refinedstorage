@@ -47,7 +47,7 @@ public class MessageWirelessGridStoragePush extends MessageHandlerPlayerToServer
     public void handle(MessageWirelessGridStoragePush message, EntityPlayerMP player) {
         TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.controllerX, message.controllerY, message.controllerZ));
 
-        if (tile instanceof TileController && ((TileController) tile).canRun()) {
+        if (tile instanceof TileController && ((TileController) tile).mayRun()) {
             ((TileController) tile).handleStoragePush(message.playerSlot, message.one, player);
         }
     }

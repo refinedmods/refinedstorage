@@ -134,7 +134,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
     }
 
     @Override
-    public boolean canPush(ItemStack stack) {
+    public boolean mayPush(ItemStack stack) {
         if (ModeConfigUtils.doesNotViolateMode(inventory, this, compare, stack)) {
             TileEntity connectedTile = getConnectedTile();
 

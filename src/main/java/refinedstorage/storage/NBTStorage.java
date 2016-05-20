@@ -124,7 +124,7 @@ public abstract class NBTStorage implements IStorage {
     }
 
     @Override
-    public boolean canPush(ItemStack stack) {
+    public boolean mayPush(ItemStack stack) {
         return capacity == -1 || (getStored(tag) + stack.stackSize) <= capacity;
     }
 
