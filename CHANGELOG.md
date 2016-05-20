@@ -1,9 +1,15 @@
 # Refined Storage Changelog
 
+### 0.6.9
+**Bugfixes**
+- Fixed bug where machines wouldn't disconnect / connect when needed outside of chunk
+- Fixed not being able to toggle redstone mode in a Wireless Transmitter
+- Improved network usage
+
 ### 0.6.8
 **Bugfixes**
 - Performance improvements
-- Fix CTRL + pick block on machines crashing game
+- Fixed CTRL + pick block on machines crashing game
 
 ### 0.6.7
 **Bugfixes**
