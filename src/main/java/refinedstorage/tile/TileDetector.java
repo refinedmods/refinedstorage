@@ -10,7 +10,6 @@ import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerDetector;
 import refinedstorage.inventory.InventorySimple;
-import refinedstorage.network.MessageDetectorPoweredUpdate;
 import refinedstorage.storage.ItemGroup;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.RedstoneMode;
@@ -23,6 +22,7 @@ public class TileDetector extends TileMachine implements ICompareConfig {
     public static final String NBT_COMPARE = "Compare";
     public static final String NBT_MODE = "Mode";
     public static final String NBT_AMOUNT = "Amount";
+    public static final String NBT_DESC_POWERED = "Powered";
 
     private InventorySimple inventory = new InventorySimple("detector", 1, this);
 
@@ -49,7 +49,7 @@ public class TileDetector extends TileMachine implements ICompareConfig {
         if (ticks % 5 == 0) {
             ItemStack slot = inventory.getStackInSlot(0);
 
-            boolean lastPowered = powered;
+            boolean wasPowered = powered;
 
             if (slot != null) {
                 boolean foundAny = false;
@@ -87,12 +87,10 @@ public class TileDetector extends TileMachine implements ICompareConfig {
                 powered = false;
             }
 
-            if (powered != lastPowered) {
+            if (powered != wasPowered) {
                 worldObj.notifyNeighborsOfStateChange(pos, RefinedStorageBlocks.DETECTOR);
-            }
 
-            if (ticks % 4 == 0) {
-                RefinedStorageUtils.sendToAllAround(worldObj, pos, new MessageDetectorPoweredUpdate(this));
+                RefinedStorageUtils.updateBlock(worldObj, pos);
             }
         }
     }
@@ -165,6 +163,20 @@ public class TileDetector extends TileMachine implements ICompareConfig {
         nbt.setInteger(NBT_AMOUNT, amount);
 
         RefinedStorageUtils.saveInventory(inventory, 0, nbt);
+    }
+
+    @Override
+    public void readFromDescriptionPacketNBT(NBTTagCompound tag) {
+        super.readFromDescriptionPacketNBT(tag);
+
+        powered = tag.getBoolean(NBT_DESC_POWERED);
+    }
+
+    @Override
+    public void writeToDescriptionPacketNBT(NBTTagCompound tag) {
+        super.writeToDescriptionPacketNBT(tag);
+
+        tag.setBoolean(NBT_DESC_POWERED, powered);
     }
 
     @Override
