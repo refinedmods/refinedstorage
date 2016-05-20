@@ -8,6 +8,9 @@
 - Fixed External Storage not working
 - Improved network usage
 
+**Features**
+- Added automation for the Solderer: every side corresponds to a slot (see the wiki)
+
 ### 0.6.8
 **Bugfixes**
 - Performance improvements
