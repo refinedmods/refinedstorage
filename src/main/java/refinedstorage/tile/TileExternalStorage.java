@@ -60,7 +60,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
             for (int i = 0; i < inventory.getSizeInventory(); ++i) {
                 if (inventory.getStackInSlot(i) != null) {
-                    items.add(new ItemGroup(inventory.getStackInSlot(i)));
+                    items.add(new ItemGroup(inventory.getStackInSlot(i).copy()));
                 }
             }
         }

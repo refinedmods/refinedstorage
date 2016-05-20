@@ -73,7 +73,8 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     private List<WirelessGridConsumer> wirelessGridConsumers = new ArrayList<WirelessGridConsumer>();
     private List<WirelessGridConsumer> wirelessGridConsumersToRemove = new ArrayList<WirelessGridConsumer>();
 
-    private List<Integer> combinedGroups = new ArrayList<Integer>();
+    private Set<Integer> combinedGroupsIndices = new HashSet<Integer>();
+    private List<ItemGroup> combinedGroups = new ArrayList<ItemGroup>();
 
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
@@ -127,11 +128,9 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
                 }
 
                 for (TileMachine machine : machines) {
-                    if (!machine.mayUpdate()) {
-                        continue;
+                    if (machine.mayUpdate()) {
+                        machine.updateMachine();
                     }
-
-                    machine.updateMachine();
                 }
 
                 for (ICraftingTask taskToCancel : craftingTasksToCancel) {
@@ -329,40 +328,39 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
         }
 
         combinedGroups.clear();
+        combinedGroupsIndices.clear();
 
         for (int i = 0; i < itemGroups.size(); ++i) {
-            ItemGroup group = itemGroups.get(i);
-
-            if (combinedGroups.contains(i)) {
+            if (combinedGroupsIndices.contains(i)) {
                 continue;
             }
 
+            ItemGroup group = itemGroups.get(i);
+
             // If the item doesn't exist anymore, remove it from storage to avoid crashes
             if (group.getType() == null) {
-                combinedGroups.add(i);
+                combinedGroups.add(group);
+                combinedGroupsIndices.add(i);
             } else {
                 for (int j = i + 1; j < itemGroups.size(); ++j) {
-                    ItemGroup otherGroup = itemGroups.get(j);
-
-                    if (combinedGroups.contains(j)) {
+                    if (combinedGroupsIndices.contains(j)) {
                         continue;
                     }
+
+                    ItemGroup otherGroup = itemGroups.get(j);
 
                     if (group.compareNoQuantity(otherGroup)) {
                         // We copy here so we don't modify the quantity of the item group IStorage uses
                         itemGroups.set(i, group.copy(group.getQuantity() + otherGroup.getQuantity()));
 
-                        combinedGroups.add(j);
+                        combinedGroups.add(otherGroup);
+                        combinedGroupsIndices.add(j);
                     }
                 }
             }
         }
 
-        Collections.sort(combinedGroups, Collections.reverseOrder());
-
-        for (int i : combinedGroups) {
-            itemGroups.remove(i);
-        }
+        itemGroups.removeAll(combinedGroups);
     }
 
     public boolean push(ItemStack stack) {
