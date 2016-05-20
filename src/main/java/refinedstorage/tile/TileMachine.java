@@ -171,4 +171,22 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
     public abstract int getEnergyUsage();
 
     public abstract void updateMachine();
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == this) {
+            return true;
+        }
+
+        if (!(other instanceof TileMachine)) {
+            return false;
+        }
+
+        return ((TileMachine) other).getPos().equals(pos);
+    }
+
+    @Override
+    public int hashCode() {
+        return pos.hashCode();
+    }
 }
