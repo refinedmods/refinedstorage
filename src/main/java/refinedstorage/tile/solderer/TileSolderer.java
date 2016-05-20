@@ -20,8 +20,14 @@ public class TileSolderer extends TileMachine implements ISidedInventory {
     public static final String NBT_WORKING = "Working";
     public static final String NBT_PROGRESS = "Progress";
 
-    public static final int[] FACES = new int[]{
-        0, 1, 2
+    public static final int[] FACES_UP = new int[]{
+        1
+    };
+    public static final int[] FACES_LEFT = new int[]{
+        0
+    };
+    public static final int[] FACES_RIGHT = new int[]{
+        2
     };
     public static final int[] FACES_DOWN = new int[]{
         3
@@ -160,10 +166,6 @@ public class TileSolderer extends TileMachine implements ISidedInventory {
         return ContainerSolderer.class;
     }
 
-    public void setWorking(boolean working) {
-        this.working = working;
-    }
-
     public boolean isWorking() {
         return working;
     }
@@ -268,7 +270,20 @@ public class TileSolderer extends TileMachine implements ISidedInventory {
 
     @Override
     public int[] getSlotsForFace(EnumFacing side) {
-        return side == EnumFacing.DOWN ? FACES_DOWN : FACES;
+        EnumFacing left = getDirection().rotateY();
+        EnumFacing right = getDirection().rotateYCCW();
+
+        if (side == left) {
+            return FACES_LEFT;
+        } else if (side == right) {
+            return FACES_RIGHT;
+        } else if (side == EnumFacing.UP) {
+            return FACES_UP;
+        } else if (side == EnumFacing.DOWN) {
+            return FACES_DOWN;
+        } else {
+            return FACES_UP;
+        }
     }
 
     @Override
