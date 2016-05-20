@@ -6,7 +6,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorageUtils;
-import refinedstorage.network.MessageMachineConnectedUpdate;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
 
@@ -14,7 +13,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 public abstract class TileMachine extends TileBase implements ISynchronizedContainer, IRedstoneModeConfig {
-    protected boolean connected = false;
+    public static final String NBT_DESC_CONNECTED = "Connected";
+
+    protected boolean connected;
+    protected boolean wasConnected;
     protected RedstoneMode redstoneMode = RedstoneMode.IGNORE;
     protected TileController controller;
 
@@ -53,10 +55,16 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
                 searchController(worldObj);
             }
 
-            if (!(this instanceof TileCable) && ticks % 4 == 0) {
-                RefinedStorageUtils.sendToAllAround(worldObj, pos, new MessageMachineConnectedUpdate(this));
+            if (wasConnected != (isConnected() && mayUpdate()) && maySendConnectivityData()) {
+                wasConnected = isConnected() && mayUpdate();
+
+                RefinedStorageUtils.updateBlock(worldObj, pos);
             }
         }
+    }
+
+    public boolean maySendConnectivityData() {
+        return true;
     }
 
     public boolean mayUpdate() {
@@ -142,6 +150,18 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
         super.writeToNBT(nbt);
 
         nbt.setInteger(RedstoneMode.NBT, redstoneMode.id);
+    }
+
+    public void writeToDescriptionPacketNBT(NBTTagCompound tag) {
+        super.writeToDescriptionPacketNBT(tag);
+
+        tag.setBoolean(NBT_DESC_CONNECTED, isConnected() && mayUpdate());
+    }
+
+    public void readFromDescriptionPacketNBT(NBTTagCompound tag) {
+        super.readFromDescriptionPacketNBT(tag);
+
+        connected = tag.getBoolean(NBT_DESC_CONNECTED);
     }
 
     public abstract int getEnergyUsage();

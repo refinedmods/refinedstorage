@@ -90,8 +90,7 @@ public abstract class BlockBase extends Block {
 
             ((TileBase) tile).setDirection(EnumFacing.getFront(newDir));
 
-            // This will resend the description packet
-            world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 1 | 2);
+            RefinedStorageUtils.updateBlock(world, pos);
 
             return true;
         }

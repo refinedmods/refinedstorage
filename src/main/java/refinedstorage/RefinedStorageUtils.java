@@ -309,7 +309,7 @@ public class RefinedStorageUtils {
         RefinedStorage.NETWORK.sendToAllAround(message, target);
     }
 
-    public static void reRenderBlock(World world, BlockPos pos) {
-        world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
+    public static void updateBlock(World world, BlockPos pos) {
+        world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 1 | 2);
     }
 }

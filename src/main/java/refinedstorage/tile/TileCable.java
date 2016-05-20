@@ -16,4 +16,9 @@ public class TileCable extends TileMachine {
     public Class<? extends Container> getContainer() {
         return null;
     }
+
+    public boolean maySendConnectivityData() {
+        return false;
+    }
+
 }

@@ -64,20 +64,28 @@ public abstract class TileBase extends TileEntity implements ITickable {
         nbt.setInteger(NBT_DIRECTION, direction.ordinal());
     }
 
+    public void writeToDescriptionPacketNBT(NBTTagCompound tag) {
+        tag.setInteger(NBT_DIRECTION, direction.ordinal());
+    }
+
+    public void readFromDescriptionPacketNBT(NBTTagCompound tag) {
+        direction = EnumFacing.getFront(tag.getInteger(NBT_DIRECTION));
+    }
+
     @Override
     public Packet getDescriptionPacket() {
         NBTTagCompound nbt = new NBTTagCompound();
 
-        nbt.setInteger(NBT_DIRECTION, direction.ordinal());
+        writeToDescriptionPacketNBT(nbt);
 
         return new SPacketUpdateTileEntity(pos, 1, nbt);
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
-        direction = EnumFacing.getFront(packet.getNbtCompound().getInteger(NBT_DIRECTION));
+        readFromDescriptionPacketNBT(packet.getNbtCompound());
 
-        RefinedStorageUtils.reRenderBlock(worldObj, pos);
+        RefinedStorageUtils.updateBlock(worldObj, pos);
     }
 
     @Override

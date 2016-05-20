@@ -57,7 +57,7 @@ public class MessageSoldererWorkingUpdate implements IMessage, IMessageHandler<M
             ((TileSolderer) tile).setWorking(message.working);
 
             if (wasWorking != message.working) {
-                RefinedStorageUtils.reRenderBlock(world, pos);
+                RefinedStorageUtils.updateBlock(world, pos);
             }
         }
 

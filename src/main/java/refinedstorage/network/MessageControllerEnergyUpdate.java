@@ -59,7 +59,7 @@ public class MessageControllerEnergyUpdate implements IMessage, IMessageHandler<
             ((TileController) tile).setEnergyStored(message.energy);
 
             if (lastEnergy != message.energy && System.currentTimeMillis() - LAST_RE_RENDER > 3000) {
-                RefinedStorageUtils.reRenderBlock(world, pos);
+                RefinedStorageUtils.updateBlock(world, pos);
 
                 LAST_RE_RENDER = System.currentTimeMillis();
             }
