@@ -22,7 +22,6 @@ import refinedstorage.container.ContainerController;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.item.ItemWirelessGrid;
 import refinedstorage.network.GridPullFlags;
-import refinedstorage.network.MessageControllerEnergyUpdate;
 import refinedstorage.network.MessageWirelessGridItems;
 import refinedstorage.storage.IStorage;
 import refinedstorage.storage.IStorageProvider;
@@ -65,6 +64,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     public static final int ENERGY_CAPACITY = 32000;
 
     public static final String NBT_CRAFTING_TASKS = "CraftingTasks";
+    public static final String NBT_DESC_ENERGY = "Energy";
 
     public static final int MAX_CRAFTING_QUANTITY_PER_REQUEST = 100;
 
@@ -93,6 +93,8 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     private int energyUsage;
 
     private boolean couldRun;
+
+    private long lastEnergyUpdate;
 
     private int wirelessGridRange;
 
@@ -190,12 +192,14 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
                 energy.setEnergyStored(energy.getMaxEnergyStored());
             }
 
-            if (ticks % 4 == 0) {
-                RefinedStorageUtils.sendToAllAround(worldObj, pos, new MessageControllerEnergyUpdate(this));
-            }
-
-            if (lastEnergy != energy.getEnergyStored()) {
+            if (energy.getEnergyStored() != lastEnergy) {
                 worldObj.updateComparatorOutputLevel(pos, RefinedStorageBlocks.CONTROLLER);
+
+                if (System.currentTimeMillis() - lastEnergyUpdate > 5000) {
+                    lastEnergyUpdate = System.currentTimeMillis();
+
+                    RefinedStorageUtils.updateBlock(worldObj, pos);
+                }
             }
         }
     }
@@ -532,6 +536,20 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     }
 
     @Override
+    public void writeToDescriptionPacketNBT(NBTTagCompound tag) {
+        super.writeToDescriptionPacketNBT(tag);
+
+        tag.setInteger(NBT_DESC_ENERGY, getEnergyStored(null));
+    }
+
+    @Override
+    public void readFromDescriptionPacketNBT(NBTTagCompound tag) {
+        super.readFromDescriptionPacketNBT(tag);
+
+        setEnergyStored(tag.getInteger(NBT_DESC_ENERGY));
+    }
+
+    @Override
     public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
         return energy.receiveEnergy(maxReceive, simulate);
     }
@@ -586,6 +604,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
     @Override
     public void receiveContainerData(ByteBuf buf) {
+        setEnergyStored(buf.readInt());
         energyUsage = buf.readInt();
 
         redstoneMode = RedstoneMode.getById(buf.readInt());
@@ -610,6 +629,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
     @Override
     public void sendContainerData(ByteBuf buf) {
+        buf.writeInt(getEnergyStored(null));
         buf.writeInt(energyUsage);
 
         buf.writeInt(redstoneMode.id);

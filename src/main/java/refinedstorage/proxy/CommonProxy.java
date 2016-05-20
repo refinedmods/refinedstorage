@@ -36,7 +36,6 @@ public class CommonProxy {
         int id = 0;
 
         RefinedStorage.NETWORK.registerMessage(MessageTileContainerUpdate.class, MessageTileContainerUpdate.class, id++, Side.CLIENT);
-        RefinedStorage.NETWORK.registerMessage(MessageControllerEnergyUpdate.class, MessageControllerEnergyUpdate.class, id++, Side.CLIENT);
         RefinedStorage.NETWORK.registerMessage(MessageRedstoneModeUpdate.class, MessageRedstoneModeUpdate.class, id++, Side.SERVER);
         RefinedStorage.NETWORK.registerMessage(MessageGridStoragePush.class, MessageGridStoragePush.class, id++, Side.SERVER);
         RefinedStorage.NETWORK.registerMessage(MessageGridStoragePull.class, MessageGridStoragePull.class, id++, Side.SERVER);
