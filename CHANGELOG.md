@@ -6,7 +6,7 @@
 - Fixed not being able to toggle redstone mode in a Wireless Transmitter
 - Fixed same machine being connected to the network multiple times
 - Fixed External Storage not working
-- Improved network usage
+- Reduced network usage
 
 **Features**
 - Added automation for the Solderer: every side corresponds to a slot (see the wiki)
