@@ -237,9 +237,9 @@ public class TileGrid extends TileMachine implements IGrid {
     }
 
     public void setSortingDirection(int sortingDirection) {
-        markDirty();
-
         this.sortingDirection = sortingDirection;
+
+        markDirty();
     }
 
     public int getSortingType() {
@@ -247,9 +247,9 @@ public class TileGrid extends TileMachine implements IGrid {
     }
 
     public void setSortingType(int sortingType) {
-        markDirty();
-
         this.sortingType = sortingType;
+
+        markDirty();
     }
 
     public int getSearchBoxMode() {
@@ -257,9 +257,9 @@ public class TileGrid extends TileMachine implements IGrid {
     }
 
     public void setSearchBoxMode(int searchBoxMode) {
-        markDirty();
-
         this.searchBoxMode = searchBoxMode;
+
+        markDirty();
     }
 
     @Override

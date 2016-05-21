@@ -49,10 +49,10 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
         }
 
         if (storage != null && storage.isDirty()) {
-            markDirty();
-
             storage.writeToNBT(storageTag);
             storage.markClean();
+
+            markDirty();
         }
     }
 
@@ -138,9 +138,9 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 
     @Override
     public void setCompare(int compare) {
-        markDirty();
-
         this.compare = compare;
+
+        markDirty();
     }
 
     @Override
@@ -151,6 +151,8 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
     @Override
     public void setMode(int mode) {
         this.mode = mode;
+
+        markDirty();
     }
 
     @Override
@@ -197,9 +199,9 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
     }
 
     public void setPriority(int priority) {
-        markDirty();
-
         this.priority = priority;
+
+        markDirty();
     }
 
     @Override

@@ -284,6 +284,8 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
     public void addCraftingTask(ICraftingTask task) {
         craftingTasksToAdd.add(task);
+
+        markDirty();
     }
 
     public void addCraftingTask(CraftingPattern pattern) {
@@ -296,6 +298,8 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
     public void cancelCraftingTask(ICraftingTask task) {
         craftingTasksToCancel.add(task);
+
+        markDirty();
     }
 
     public List<CraftingPattern> getPatterns() {
@@ -593,9 +597,9 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
     @Override
     public void setRedstoneMode(RedstoneMode mode) {
-        markDirty();
-
         this.redstoneMode = mode;
+
+        markDirty();
     }
 
     @Override

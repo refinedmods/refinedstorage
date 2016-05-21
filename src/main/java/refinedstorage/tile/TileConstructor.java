@@ -67,9 +67,9 @@ public class TileConstructor extends TileMachine implements ICompareConfig {
 
     @Override
     public void setCompare(int compare) {
-        markDirty();
-
         this.compare = compare;
+
+        markDirty();
     }
 
     @Override

@@ -106,9 +106,9 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
 
     @Override
     public void setCompare(int compare) {
-        markDirty();
-
         this.compare = compare;
+
+        markDirty();
     }
 
     @Override

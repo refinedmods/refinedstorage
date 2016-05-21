@@ -110,9 +110,9 @@ public class TileDetector extends TileMachine implements ICompareConfig {
 
     @Override
     public void setCompare(int compare) {
-        markDirty();
-
         this.compare = compare;
+
+        markDirty();
     }
 
     public int getMode() {
@@ -120,9 +120,9 @@ public class TileDetector extends TileMachine implements ICompareConfig {
     }
 
     public void setMode(int mode) {
-        markDirty();
-
         this.mode = mode;
+
+        markDirty();
     }
 
     public int getAmount() {
@@ -130,9 +130,9 @@ public class TileDetector extends TileMachine implements ICompareConfig {
     }
 
     public void setAmount(int amount) {
-        markDirty();
-
         this.amount = amount;
+
+        markDirty();
     }
 
     @Override

@@ -247,9 +247,9 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
     @Override
     public void setCompare(int compare) {
-        markDirty();
-
         this.compare = compare;
+
+        markDirty();
     }
 
     @Override
@@ -260,6 +260,8 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
     @Override
     public void setMode(int mode) {
         this.mode = mode;
+
+        markDirty();
     }
 
     @Override
@@ -268,9 +270,9 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
     }
 
     public void setPriority(int priority) {
-        markDirty();
-
         this.priority = priority;
+
+        markDirty();
     }
 
     @Override

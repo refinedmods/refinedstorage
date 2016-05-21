@@ -41,9 +41,9 @@ public abstract class TileBase extends TileEntity implements ITickable {
     }
 
     public void setDirection(EnumFacing direction) {
-        markDirty();
-
         this.direction = direction;
+
+        markDirty();
     }
 
     public EnumFacing getDirection() {

@@ -86,9 +86,9 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
 
     @Override
     public void setCompare(int compare) {
-        markDirty();
-
         this.compare = compare;
+
+        markDirty();
     }
 
     @Override
@@ -99,6 +99,8 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
     @Override
     public void setMode(int mode) {
         this.mode = mode;
+
+        markDirty();
     }
 
     @Override

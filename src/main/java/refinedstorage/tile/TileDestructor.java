@@ -72,9 +72,9 @@ public class TileDestructor extends TileMachine implements ICompareConfig, IMode
 
     @Override
     public void setCompare(int compare) {
-        markDirty();
-
         this.compare = compare;
+
+        markDirty();
     }
 
     @Override
@@ -85,6 +85,8 @@ public class TileDestructor extends TileMachine implements ICompareConfig, IMode
     @Override
     public void setMode(int mode) {
         this.mode = mode;
+
+        markDirty();
     }
 
     @Override

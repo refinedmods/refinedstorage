@@ -144,9 +144,9 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
 
     @Override
     public void setCompare(int compare) {
-        markDirty();
-
         this.compare = compare;
+
+        markDirty();
     }
 
     @Override
@@ -157,6 +157,8 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
     @Override
     public void setMode(int mode) {
         this.mode = mode;
+
+        markDirty();
     }
 
     @Override
@@ -195,9 +197,9 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
     }
 
     public void setPriority(int priority) {
-        markDirty();
-
         this.priority = priority;
+
+        markDirty();
     }
 
     @Override
