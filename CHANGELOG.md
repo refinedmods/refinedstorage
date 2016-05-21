@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 0.6.11
+**Bugfixes**
+- Fixed crafting patterns crashing when item of an input or output no longer exists
+
 ### 0.6.10
 **Bugfixes**
 - Fixed Processing Patterns not working

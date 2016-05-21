@@ -226,7 +226,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
                 TileCrafter crafter = (TileCrafter) machine;
 
                 for (int i = 0; i < TileCrafter.PATTERN_SLOTS; ++i) {
-                    if (crafter.getStackInSlot(i) != null) {
+                    if (crafter.getStackInSlot(i) != null && ItemPattern.isValid(crafter.getStackInSlot(i))) {
                         ItemStack pattern = crafter.getStackInSlot(i);
 
                         patterns.add(new CraftingPattern(crafter.getPos().getX(), crafter.getPos().getY(), crafter.getPos().getZ(), ItemPattern.isProcessing(pattern), ItemPattern.getInputs(pattern), ItemPattern.getOutputs(pattern)));
@@ -502,13 +502,17 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
             for (int i = 0; i < taskList.tagCount(); ++i) {
                 NBTTagCompound taskTag = taskList.getCompoundTagAt(i);
 
-                switch (taskTag.getInteger("Type")) {
-                    case BasicCraftingTask.ID:
-                        addCraftingTask(new BasicCraftingTask(taskTag));
-                        break;
-                    case ProcessingCraftingTask.ID:
-                        addCraftingTask(new ProcessingCraftingTask(taskTag));
-                        break;
+                CraftingPattern pattern = CraftingPattern.readFromNBT(taskTag.getCompoundTag(CraftingPattern.NBT));
+
+                if (pattern != null) {
+                    switch (taskTag.getInteger("Type")) {
+                        case BasicCraftingTask.ID:
+                            addCraftingTask(new BasicCraftingTask(taskTag, pattern));
+                            break;
+                        case ProcessingCraftingTask.ID:
+                            addCraftingTask(new ProcessingCraftingTask(taskTag, pattern));
+                            break;
+                    }
                 }
             }
         }

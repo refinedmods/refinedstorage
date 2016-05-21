@@ -80,14 +80,24 @@ public class CraftingPattern {
 
         NBTTagList inputsTag = tag.getTagList(ItemPattern.NBT_INPUTS, Constants.NBT.TAG_COMPOUND);
         ItemStack inputs[] = new ItemStack[inputsTag.tagCount()];
+
         for (int i = 0; i < inputsTag.tagCount(); ++i) {
             inputs[i] = ItemStack.loadItemStackFromNBT(inputsTag.getCompoundTagAt(i));
+
+            if (inputs[i] == null) {
+                return null;
+            }
         }
 
         NBTTagList outputsTag = tag.getTagList(ItemPattern.NBT_OUTPUTS, Constants.NBT.TAG_COMPOUND);
         ItemStack outputs[] = new ItemStack[outputsTag.tagCount()];
+
         for (int i = 0; i < outputsTag.tagCount(); ++i) {
             outputs[i] = ItemStack.loadItemStackFromNBT(outputsTag.getCompoundTagAt(i));
+
+            if (outputs[i] == null) {
+                return null;
+            }
         }
 
         return new CraftingPattern(cx, cy, cz, processing, inputs, outputs);

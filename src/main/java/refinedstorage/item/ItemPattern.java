@@ -65,7 +65,7 @@ public class ItemPattern extends ItemBase {
     }
 
     private static ItemStack[] get(ItemStack pattern, String type) {
-        if (!isValid(pattern)) {
+        if (!pattern.hasTagCompound() || !pattern.getTagCompound().hasKey(type)) {
             return null;
         }
 
@@ -81,10 +81,23 @@ public class ItemPattern extends ItemBase {
     }
 
     public static boolean isValid(ItemStack pattern) {
-        return pattern.getTagCompound() != null &&
-            pattern.getTagCompound().hasKey(NBT_INPUTS) &&
-            pattern.getTagCompound().hasKey(NBT_OUTPUTS) &&
-            pattern.getTagCompound().hasKey(NBT_PROCESSING);
+        if (pattern.getTagCompound() == null || (!pattern.getTagCompound().hasKey(NBT_INPUTS) || !pattern.getTagCompound().hasKey(NBT_OUTPUTS) || !pattern.getTagCompound().hasKey(NBT_PROCESSING))) {
+            return false;
+        }
+
+        for (ItemStack input : getInputs(pattern)) {
+            if (input == null) {
+                return false;
+            }
+        }
+
+        for (ItemStack output : getOutputs(pattern)) {
+            if (output == null) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public static void setProcessing(ItemStack pattern, boolean processing) {
@@ -96,7 +109,7 @@ public class ItemPattern extends ItemBase {
     }
 
     public static boolean isProcessing(ItemStack pattern) {
-        if (pattern.getTagCompound() == null) {
+        if (!pattern.hasTagCompound() || !pattern.getTagCompound().hasKey(NBT_PROCESSING)) {
             return false;
         }
 

@@ -30,8 +30,8 @@ public class ProcessingCraftingTask implements ICraftingTask {
         this.satisfied = new boolean[pattern.getOutputs().length];
     }
 
-    public ProcessingCraftingTask(NBTTagCompound tag) {
-        this.pattern = CraftingPattern.readFromNBT(tag.getCompoundTag(CraftingPattern.NBT));
+    public ProcessingCraftingTask(NBTTagCompound tag, CraftingPattern pattern) {
+        this.pattern = pattern;
         this.inserted = RefinedStorageUtils.readBooleanArray(tag, NBT_INSERTED);
         this.childTasks = RefinedStorageUtils.readBooleanArray(tag, NBT_CHILD_TASKS);
         this.satisfied = RefinedStorageUtils.readBooleanArray(tag, NBT_SATISFIED);

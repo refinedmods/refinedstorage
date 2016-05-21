@@ -33,8 +33,8 @@ public class BasicCraftingTask implements ICraftingTask {
         this.childTasks = new boolean[pattern.getInputs().length];
     }
 
-    public BasicCraftingTask(NBTTagCompound tag) {
-        this.pattern = CraftingPattern.readFromNBT(tag.getCompoundTag(CraftingPattern.NBT));
+    public BasicCraftingTask(NBTTagCompound tag, CraftingPattern pattern) {
+        this.pattern = pattern;
         this.satisfied = RefinedStorageUtils.readBooleanArray(tag, NBT_SATISFIED);
         this.checked = RefinedStorageUtils.readBooleanArray(tag, NBT_CHECKED);
         this.childTasks = RefinedStorageUtils.readBooleanArray(tag, NBT_CHILD_TASKS);
