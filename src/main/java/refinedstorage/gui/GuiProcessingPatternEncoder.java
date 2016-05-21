@@ -27,7 +27,7 @@ public class GuiProcessingPatternEncoder extends GuiBase {
     }
 
     public boolean isHoveringOverCreatePattern(int mouseX, int mouseY) {
-        return inBounds(152, 38, 16, 16, mouseX, mouseY) && ppEncoder.canCreatePattern();
+        return inBounds(152, 38, 16, 16, mouseX, mouseY) && ppEncoder.mayCreatePattern();
     }
 
     @Override
@@ -42,7 +42,7 @@ public class GuiProcessingPatternEncoder extends GuiBase {
             ty = 1;
         }
 
-        if (!ppEncoder.canCreatePattern()) {
+        if (!ppEncoder.mayCreatePattern()) {
             ty = 2;
         }
 

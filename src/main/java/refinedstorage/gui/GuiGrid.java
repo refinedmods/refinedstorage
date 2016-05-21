@@ -161,7 +161,7 @@ public class GuiGrid extends GuiBase {
 
     public boolean isHoveringOverCreatePattern(int mouseX, int mouseY) {
         if (grid.getType() == EnumGridType.PATTERN) {
-            return inBounds(152, 124, 16, 16, mouseX, mouseY) && ((TileGrid) grid).canCreatePattern();
+            return inBounds(152, 124, 16, 16, mouseX, mouseY) && ((TileGrid) grid).mayCreatePattern();
         }
 
         return false;
@@ -186,7 +186,7 @@ public class GuiGrid extends GuiBase {
                 ty = 1;
             }
 
-            if (!((TileGrid) grid).canCreatePattern()) {
+            if (!((TileGrid) grid).mayCreatePattern()) {
                 ty = 2;
             }
 

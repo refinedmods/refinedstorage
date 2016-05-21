@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 import refinedstorage.RefinedStorageUtils;
 
 public class ModeFilter {
-    public static boolean violatesMode(IInventory filters, IModeConfig mode, int compare, ItemStack stack) {
+    public static boolean respectsMode(IInventory filters, IModeConfig mode, int compare, ItemStack stack) {
         if (mode.isWhitelist()) {
             int slots = 0;
 

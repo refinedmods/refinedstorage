@@ -44,13 +44,16 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
         public int energyUsage;
 
         @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+        public boolean equals(Object other) {
+            if (this == other) {
+                return true;
+            }
 
-            ClientSideMachine other = (ClientSideMachine) o;
+            if (!(other instanceof ClientSideMachine)) {
+                return false;
+            }
 
-            return energyUsage == other.energyUsage && RefinedStorageUtils.compareStack(stack, other.stack);
+            return energyUsage == ((ClientSideMachine) other).energyUsage && RefinedStorageUtils.compareStack(stack, ((ClientSideMachine) other).stack);
         }
 
         @Override

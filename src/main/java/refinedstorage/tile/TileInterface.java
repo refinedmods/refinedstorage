@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerInterface;
 import refinedstorage.inventory.InventorySimple;
@@ -48,10 +49,7 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
             currentSlot++;
         } else {
             if (ticks % RefinedStorageUtils.getSpeed(upgradesInventory) == 0) {
-                ItemStack toPush = slot.copy();
-                toPush.stackSize = 1;
-
-                if (controller.push(toPush)) {
+                if (controller.push(ItemHandlerHelper.copyStackWithSize(slot, 1))) {
                     decrStackSize(currentSlot, 1);
                 }
             }
@@ -82,10 +80,7 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
                     int needed = got == null ? wanted.stackSize : wanted.stackSize - got.stackSize;
 
                     if (needed > 0) {
-                        ItemStack goingToTake = wanted.copy();
-                        goingToTake.stackSize = needed;
-
-                        ItemStack took = controller.take(goingToTake, compare);
+                        ItemStack took = controller.take(ItemHandlerHelper.copyStackWithSize(wanted, needed), compare);
 
                         if (took != null) {
                             if (got == null) {

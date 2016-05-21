@@ -45,7 +45,7 @@ public class TileDestructor extends TileMachine implements ICompareConfig, IMode
             Block frontBlock = frontBlockState.getBlock();
 
             if (Item.getItemFromBlock(frontBlock) != null && !frontBlock.isAir(frontBlockState, worldObj, front)) {
-                if (ModeFilter.violatesMode(inventory, this, compare, new ItemStack(frontBlock, 1, frontBlock.getMetaFromState(frontBlockState)))) {
+                if (ModeFilter.respectsMode(inventory, this, compare, new ItemStack(frontBlock, 1, frontBlock.getMetaFromState(frontBlockState)))) {
                     List<ItemStack> drops = frontBlock.getDrops(worldObj, front, frontBlockState, 0);
 
                     worldObj.playAuxSFXAtEntity(null, 2001, front, Block.getStateId(frontBlockState));

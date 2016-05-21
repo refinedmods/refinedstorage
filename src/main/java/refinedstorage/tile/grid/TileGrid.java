@@ -169,7 +169,7 @@ public class TileGrid extends TileMachine implements IGrid {
     }
 
     public void onCreatePattern() {
-        if (canCreatePattern()) {
+        if (mayCreatePattern()) {
             patternsInventory.decrStackSize(0, 1);
 
             ItemStack pattern = new ItemStack(RefinedStorageItems.PATTERN);
@@ -190,7 +190,7 @@ public class TileGrid extends TileMachine implements IGrid {
         }
     }
 
-    public boolean canCreatePattern() {
+    public boolean mayCreatePattern() {
         return craftingResultInventory.getStackInSlot(0) != null && patternsInventory.getStackInSlot(1) == null && patternsInventory.getStackInSlot(0) != null;
     }
 

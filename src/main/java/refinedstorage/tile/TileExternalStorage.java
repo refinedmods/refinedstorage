@@ -6,6 +6,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageUtils;
@@ -80,10 +81,8 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
             IItemHandler handler = getItemHandler();
 
             if (handler != null) {
-                for (int i = 0; i < handler.getSlots(); ++i) {
-                    if (handler.insertItem(i, stack, false) == null) {
-                        break;
-                    }
+                if (ItemHandlerHelper.insertItem(handler, stack, false) == null) {
+                    return;
                 }
             }
         }
@@ -136,7 +135,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
     @Override
     public boolean mayPush(ItemStack stack) {
-        if (ModeFilter.violatesMode(inventory, this, compare, stack)) {
+        if (ModeFilter.respectsMode(inventory, this, compare, stack)) {
             IDeepStorageUnit storageUnit = getStorageUnit();
 
             if (storageUnit != null) {
@@ -149,10 +148,8 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
                 IItemHandler handler = getItemHandler();
 
                 if (handler != null) {
-                    for (int i = 0; i < handler.getSlots(); ++i) {
-                        if (handler.insertItem(i, stack, true) == null) {
-                            return true;
-                        }
+                    if (ItemHandlerHelper.insertItem(handler, stack, false) == null) {
+                        return true;
                     }
                 }
             }

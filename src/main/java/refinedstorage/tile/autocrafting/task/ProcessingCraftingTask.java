@@ -4,6 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.tile.TileController;
 import refinedstorage.tile.autocrafting.CraftingPattern;
@@ -52,17 +53,11 @@ public class ProcessingCraftingTask implements ICraftingTask {
                     ItemStack took = controller.take(input);
 
                     if (took != null) {
-                        for (int j = 0; j < handler.getSlots(); ++j) {
-                            if (handler.insertItem(j, took, true) == null) {
-                                handler.insertItem(j, took, false);
+                        if (ItemHandlerHelper.insertItem(handler, took, true) == null) {
+                            ItemHandlerHelper.insertItem(handler, took, false);
 
-                                inserted[i] = true;
-
-                                break;
-                            }
-                        }
-
-                        if (!inserted[i]) {
+                            inserted[i] = true;
+                        } else {
                             controller.push(took);
                         }
                     } else if (!childTasks[i]) {

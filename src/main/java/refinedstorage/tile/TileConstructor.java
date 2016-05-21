@@ -50,10 +50,10 @@ public class TileConstructor extends TileMachine implements ICompareConfig {
                     SoundType blockSound = block.getStepSound();
                     worldObj.playSound(null, front, blockSound.getPlaceSound(), SoundCategory.BLOCKS, (blockSound.getVolume() + 1.0F) / 2.0F, blockSound.getPitch() * 0.8F);
                 } else if (RefinedStorageUtils.hasUpgrade(upgradesInventory, ItemUpgrade.TYPE_CRAFTING)) {
-                    ItemStack toCraft = inventory.getStackInSlot(0);
+                    ItemStack craft = inventory.getStackInSlot(0);
 
-                    if (scheduler.canSchedule(compare, toCraft)) {
-                        scheduler.schedule(controller, compare, toCraft);
+                    if (scheduler.canSchedule(compare, craft)) {
+                        scheduler.schedule(controller, compare, craft);
                     }
                 }
             }

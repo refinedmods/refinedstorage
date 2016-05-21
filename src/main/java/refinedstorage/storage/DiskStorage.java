@@ -21,6 +21,6 @@ public class DiskStorage extends NBTStorage {
 
     @Override
     public boolean mayPush(ItemStack stack) {
-        return ModeFilter.violatesMode(diskDrive.getInventory(), diskDrive.getModeConfig(), diskDrive.getCompare(), stack) && super.mayPush(stack);
+        return ModeFilter.respectsMode(diskDrive.getInventory(), diskDrive.getModeConfig(), diskDrive.getCompare(), stack) && super.mayPush(stack);
     }
 }

@@ -6,6 +6,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerExporter;
 import refinedstorage.inventory.InventorySimple;
@@ -36,20 +37,15 @@ public class TileExporter extends TileMachine implements ICompareConfig {
                 ItemStack slot = inventory.getStackInSlot(i);
 
                 if (slot != null) {
-                    ItemStack taking = slot.copy();
-                    taking.stackSize = 1;
-
-                    ItemStack took = controller.take(taking, compare);
+                    ItemStack took = controller.take(ItemHandlerHelper.copyStackWithSize(slot, 1), compare);
 
                     if (took != null) {
                         scheduler.resetSchedule();
 
-                        for (int j = 0; j < handler.getSlots(); ++j) {
-                            if (handler.insertItem(j, took, true) == null) {
-                                handler.insertItem(j, took, false);
+                        if (ItemHandlerHelper.insertItem(handler, took, true) == null) {
+                            ItemHandlerHelper.insertItem(handler, took, false);
 
-                                return;
-                            }
+                            return;
                         }
 
                         controller.push(took);

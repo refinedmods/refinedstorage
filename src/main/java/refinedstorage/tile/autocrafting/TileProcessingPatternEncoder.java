@@ -150,7 +150,7 @@ public class TileProcessingPatternEncoder extends TileBase implements ISidedInve
     }
 
     public void onCreatePattern() {
-        if (canCreatePattern()) {
+        if (mayCreatePattern()) {
             ItemStack pattern = new ItemStack(RefinedStorageItems.PATTERN);
 
             ItemPattern.setProcessing(pattern, true);
@@ -171,7 +171,7 @@ public class TileProcessingPatternEncoder extends TileBase implements ISidedInve
         }
     }
 
-    public boolean canCreatePattern() {
+    public boolean mayCreatePattern() {
         int inputsFilled = 0, outputsFilled = 0;
 
         for (int i = 0; i < 9; ++i) {
