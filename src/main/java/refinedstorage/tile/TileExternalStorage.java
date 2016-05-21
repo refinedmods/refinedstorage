@@ -5,7 +5,6 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.items.IItemHandler;
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 import refinedstorage.RefinedStorage;
@@ -162,16 +161,12 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
         return false;
     }
 
-    public TileEntity getFront() {
-        return worldObj.getTileEntity(pos.offset(getDirection()));
-    }
-
     public IDeepStorageUnit getStorageUnit() {
-        return getFront() instanceof IDeepStorageUnit ? (IDeepStorageUnit) getFront() : null;
+        return getFacingTile() instanceof IDeepStorageUnit ? (IDeepStorageUnit) getFacingTile() : null;
     }
 
     public IItemHandler getItemHandler() {
-        return RefinedStorageUtils.getItemHandler(getFront(), getDirection().getOpposite());
+        return RefinedStorageUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
     }
 
     @Override

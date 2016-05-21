@@ -5,7 +5,6 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerImporter;
@@ -32,10 +31,9 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
 
     @Override
     public void updateMachine() {
-        TileEntity tile = worldObj.getTileEntity(pos.offset(getDirection()));
-        IItemHandler handler = RefinedStorageUtils.getItemHandler(tile, getDirection().getOpposite());
+        IItemHandler handler = RefinedStorageUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
 
-        if (tile instanceof TileDiskDrive || handler == null) {
+        if (getFacingTile() instanceof TileDiskDrive || handler == null) {
             return;
         }
 

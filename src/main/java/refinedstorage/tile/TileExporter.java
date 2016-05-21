@@ -29,7 +29,7 @@ public class TileExporter extends TileMachine implements ICompareConfig {
 
     @Override
     public void updateMachine() {
-        IItemHandler handler = RefinedStorageUtils.getItemHandler(worldObj.getTileEntity(pos.offset(getDirection())), getDirection().getOpposite());
+        IItemHandler handler = RefinedStorageUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
 
         if (handler != null && ticks % RefinedStorageUtils.getSpeed(upgradesInventory) == 0) {
             for (int i = 0; i < inventory.getSizeInventory(); ++i) {

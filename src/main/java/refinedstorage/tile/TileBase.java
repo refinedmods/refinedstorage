@@ -93,6 +93,10 @@ public abstract class TileBase extends TileEntity implements ITickable {
         return oldState.getBlock() != newState.getBlock();
     }
 
+    public TileEntity getFacingTile() {
+        return worldObj.getTileEntity(pos.offset(direction));
+    }
+
     public IInventory getDroppedInventory() {
         return null;
     }
