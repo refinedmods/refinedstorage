@@ -1,11 +1,9 @@
 package refinedstorage.tile.autocrafting.task;
 
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.tile.TileController;
 import refinedstorage.tile.autocrafting.CraftingPattern;
@@ -45,20 +43,26 @@ public class ProcessingCraftingTask implements ICraftingTask {
     @Override
     public boolean update(TileController controller) {
         TileCrafter crafter = pattern.getCrafter(controller.getWorld());
-        TileEntity crafterFacing = crafter.getWorld().getTileEntity(crafter.getPos().offset(crafter.getDirection()));
+        IItemHandler handler = RefinedStorageUtils.getItemHandler(crafter.getFacingTile(), crafter.getDirection().getOpposite());
 
-        if (crafterFacing instanceof IInventory) {
+        if (handler != null) {
             for (int i = 0; i < inserted.length; ++i) {
                 if (!inserted[i]) {
                     ItemStack input = pattern.getInputs()[i];
                     ItemStack took = controller.take(input);
 
                     if (took != null) {
-                        ItemStack remaining = TileEntityHopper.putStackInInventoryAllSlots((IInventory) crafterFacing, took, crafter.getDirection().getOpposite());
+                        for (int j = 0; j < handler.getSlots(); ++j) {
+                            if (handler.insertItem(j, took, true) == null) {
+                                handler.insertItem(j, took, false);
 
-                        if (remaining == null) {
-                            inserted[i] = true;
-                        } else {
+                                inserted[i] = true;
+
+                                break;
+                            }
+                        }
+
+                        if (!inserted[i]) {
                             controller.push(took);
                         }
                     } else if (!childTasks[i]) {
