@@ -2,14 +2,21 @@ package refinedstorage;
 
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.InvWrapper;
+import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.item.ItemUpgrade;
 
@@ -303,5 +310,19 @@ public class RefinedStorageUtils {
 
     public static void updateBlock(World world, BlockPos pos) {
         world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 1 | 2);
+    }
+
+    public static IItemHandler getItemHandler(TileEntity te, EnumFacing side) {
+        IItemHandler handler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side);
+
+        if (handler == null) {
+            if (side != null && te instanceof ISidedInventory) {
+                handler = new SidedInvWrapper((ISidedInventory) te, side);
+            } else if (te instanceof IInventory) {
+                handler = new InvWrapper((IInventory) te);
+            }
+        }
+
+        return handler;
     }
 }

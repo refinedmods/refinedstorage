@@ -5,8 +5,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityHopper;
+import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerExporter;
 import refinedstorage.inventory.InventorySimple;
@@ -30,33 +29,32 @@ public class TileExporter extends TileMachine implements ICompareConfig {
 
     @Override
     public void updateMachine() {
-        TileEntity connectedTile = worldObj.getTileEntity(pos.offset(getDirection()));
+        IItemHandler handler = RefinedStorageUtils.getItemHandler(worldObj.getTileEntity(pos.offset(getDirection())), getDirection().getOpposite());
 
-        if (connectedTile instanceof IInventory) {
-            IInventory connectedInventory = (IInventory) connectedTile;
+        if (handler != null && ticks % RefinedStorageUtils.getSpeed(upgradesInventory) == 0) {
+            for (int i = 0; i < inventory.getSizeInventory(); ++i) {
+                ItemStack slot = inventory.getStackInSlot(i);
 
-            if (ticks % RefinedStorageUtils.getSpeed(upgradesInventory) == 0) {
-                for (int i = 0; i < inventory.getSizeInventory(); ++i) {
-                    ItemStack slot = inventory.getStackInSlot(i);
+                if (slot != null) {
+                    ItemStack taking = slot.copy();
+                    taking.stackSize = 1;
 
-                    if (slot != null) {
-                        ItemStack toTake = slot.copy();
-                        toTake.stackSize = 1;
+                    ItemStack took = controller.take(taking, compare);
 
-                        ItemStack took = controller.take(toTake, compare);
+                    if (took != null) {
+                        scheduler.resetSchedule();
 
-                        if (took != null) {
-                            scheduler.resetSchedule();
-
-                            ItemStack remaining = TileEntityHopper.putStackInInventoryAllSlots(connectedInventory, took, getDirection().getOpposite());
-
-                            if (remaining != null) {
-                                controller.push(remaining);
+                        for (int j = 0; j < handler.getSlots(); ++j) {
+                            // If we have no remainder
+                            if (handler.insertItem(j, took, true) == null) {
+                                handler.insertItem(j, took, false);
+                            } else {
+                                break;
                             }
-                        } else if (RefinedStorageUtils.hasUpgrade(upgradesInventory, ItemUpgrade.TYPE_CRAFTING)) {
-                            if (scheduler.canSchedule(compare, slot)) {
-                                scheduler.schedule(controller, compare, slot);
-                            }
+                        }
+                    } else if (RefinedStorageUtils.hasUpgrade(upgradesInventory, ItemUpgrade.TYPE_CRAFTING)) {
+                        if (scheduler.canSchedule(compare, slot)) {
+                            scheduler.schedule(controller, compare, slot);
                         }
                     }
                 }
