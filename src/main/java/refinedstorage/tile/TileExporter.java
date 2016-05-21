@@ -45,13 +45,14 @@ public class TileExporter extends TileMachine implements ICompareConfig {
                         scheduler.resetSchedule();
 
                         for (int j = 0; j < handler.getSlots(); ++j) {
-                            // If we have no remainder
                             if (handler.insertItem(j, took, true) == null) {
                                 handler.insertItem(j, took, false);
-                            } else {
-                                controller.push(took);
+
+                                return;
                             }
                         }
+
+                        controller.push(took);
                     } else if (RefinedStorageUtils.hasUpgrade(upgradesInventory, ItemUpgrade.TYPE_CRAFTING)) {
                         if (scheduler.canSchedule(compare, slot)) {
                             scheduler.schedule(controller, compare, slot);
