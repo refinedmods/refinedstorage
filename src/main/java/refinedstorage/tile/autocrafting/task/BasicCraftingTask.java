@@ -61,7 +61,7 @@ public class BasicCraftingTask implements ICraftingTask {
             if (!satisfied[i]) {
                 done = false;
 
-                ItemStack took = controller.take(input.copy());
+                ItemStack took = controller.take(input);
 
                 if (took != null) {
                     itemsTook.add(took);
@@ -74,9 +74,9 @@ public class BasicCraftingTask implements ICraftingTask {
                         controller.addCraftingTask(pattern);
 
                         childTasks[i] = true;
-
-                        break;
                     }
+
+                    break;
                 } else {
                     break;
                 }

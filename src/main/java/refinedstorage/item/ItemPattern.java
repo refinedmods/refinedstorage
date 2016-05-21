@@ -20,8 +20,18 @@ public class ItemPattern extends ItemBase {
     @Override
     public void addInformation(ItemStack pattern, EntityPlayer player, List list, boolean b) {
         if (isValid(pattern)) {
-            for (ItemStack output : getOutputs(pattern)) {
-                list.add(output.getDisplayName());
+            if (!isProcessing(pattern)) {
+                for (ItemStack output : getOutputs(pattern)) {
+                    list.add(output.getDisplayName());
+                }
+            } else {
+                for (ItemStack input : getInputs(pattern)) {
+                    list.add(input.getDisplayName());
+                }
+
+                for (ItemStack output : getOutputs(pattern)) {
+                    list.add("-> " + output.getDisplayName());
+                }
             }
         }
     }

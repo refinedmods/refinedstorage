@@ -15,26 +15,25 @@ public class ProcessingCraftingTask implements ICraftingTask {
     public static final int ID = 1;
 
     public static final String NBT_INSERTED = "Inserted";
-    public static final String NBT_MISSING = "Missing";
+    public static final String NBT_CHILD_TASKS = "ChildTasks";
     public static final String NBT_SATISFIED = "Satisfied";
 
     private CraftingPattern pattern;
     private boolean inserted[];
-    // @TODO: this should create a child task when missing?
-    private boolean missing[];
+    private boolean childTasks[];
     private boolean satisfied[];
 
     public ProcessingCraftingTask(CraftingPattern pattern) {
         this.pattern = pattern;
         this.inserted = new boolean[pattern.getInputs().length];
-        this.missing = new boolean[pattern.getInputs().length];
+        this.childTasks = new boolean[pattern.getInputs().length];
         this.satisfied = new boolean[pattern.getOutputs().length];
     }
 
     public ProcessingCraftingTask(NBTTagCompound tag) {
         this.pattern = CraftingPattern.readFromNBT(tag.getCompoundTag(CraftingPattern.NBT));
         this.inserted = RefinedStorageUtils.readBooleanArray(tag, NBT_INSERTED);
-        this.missing = RefinedStorageUtils.readBooleanArray(tag, NBT_MISSING);
+        this.childTasks = RefinedStorageUtils.readBooleanArray(tag, NBT_CHILD_TASKS);
         this.satisfied = RefinedStorageUtils.readBooleanArray(tag, NBT_SATISFIED);
     }
 
@@ -55,8 +54,6 @@ public class ProcessingCraftingTask implements ICraftingTask {
                     ItemStack took = controller.take(input);
 
                     if (took != null) {
-                        missing[i] = false;
-
                         ItemStack remaining = TileEntityHopper.putStackInInventoryAllSlots((IInventory) crafterFacing, took, crafter.getDirection().getOpposite());
 
                         if (remaining == null) {
@@ -64,8 +61,18 @@ public class ProcessingCraftingTask implements ICraftingTask {
                         } else {
                             controller.push(took);
                         }
+                    } else if (!childTasks[i]) {
+                        CraftingPattern pattern = controller.getPattern(input);
+
+                        if (pattern != null) {
+                            childTasks[i] = true;
+
+                            controller.addCraftingTask(pattern);
+
+                            break;
+                        }
                     } else {
-                        missing[i] = true;
+                        break;
                     }
                 }
             }
@@ -82,7 +89,7 @@ public class ProcessingCraftingTask implements ICraftingTask {
         return true;
     }
 
-    public boolean onInserted(ItemStack inserted) {
+    public boolean onPushed(ItemStack inserted) {
         for (int i = 0; i < pattern.getOutputs().length; ++i) {
             if (!satisfied[i] && RefinedStorageUtils.compareStackNoQuantity(inserted, pattern.getOutputs()[i])) {
                 satisfied[i] = true;
@@ -110,8 +117,8 @@ public class ProcessingCraftingTask implements ICraftingTask {
         pattern.writeToNBT(patternTag);
         tag.setTag(CraftingPattern.NBT, patternTag);
 
-        RefinedStorageUtils.writeBooleanArray(tag, NBT_INSERTED, satisfied);
-        RefinedStorageUtils.writeBooleanArray(tag, NBT_MISSING, missing);
+        RefinedStorageUtils.writeBooleanArray(tag, NBT_INSERTED, inserted);
+        RefinedStorageUtils.writeBooleanArray(tag, NBT_CHILD_TASKS, childTasks);
         RefinedStorageUtils.writeBooleanArray(tag, NBT_SATISFIED, satisfied);
 
         tag.setInteger("Type", ID);
@@ -128,7 +135,7 @@ public class ProcessingCraftingTask implements ICraftingTask {
         for (int i = 0; i < pattern.getInputs().length; ++i) {
             ItemStack input = pattern.getInputs()[i];
 
-            if (missing[i]) {
+            if (!inserted[i] && !childTasks[i]) {
                 builder.append("- ").append(input.getDisplayName()).append("\n");
 
                 missingItems++;
@@ -139,6 +146,24 @@ public class ProcessingCraftingTask implements ICraftingTask {
             builder.append(TextFormatting.GRAY).append(TextFormatting.ITALIC).append("{none}").append(TextFormatting.RESET).append("\n");
         }
 
+        builder.append(TextFormatting.YELLOW).append("{items_crafting}").append(TextFormatting.RESET).append("\n");
+
+        int itemsCrafting = 0;
+
+        for (int i = 0; i < pattern.getInputs().length; ++i) {
+            ItemStack input = pattern.getInputs()[i];
+
+            if (!inserted[i] && childTasks[i]) {
+                builder.append("- ").append(input.getUnlocalizedName()).append(".name").append("\n");
+
+                itemsCrafting++;
+            }
+        }
+
+        if (itemsCrafting == 0) {
+            builder.append(TextFormatting.GRAY).append(TextFormatting.ITALIC).append("{none}").append(TextFormatting.RESET).append("\n");
+        }
+
         builder.append(TextFormatting.YELLOW).append("{items_processing}").append(TextFormatting.RESET).append("\n");
 
         int itemsProcessing = 0;
@@ -146,7 +171,7 @@ public class ProcessingCraftingTask implements ICraftingTask {
         for (int i = 0; i < pattern.getInputs().length; ++i) {
             ItemStack input = pattern.getInputs()[i];
 
-            if (inserted[i] && !satisfied[i]) {
+            if (inserted[i]) {
                 builder.append("- ").append(input.getDisplayName()).append("\n");
 
                 itemsProcessing++;

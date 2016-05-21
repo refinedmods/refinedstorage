@@ -140,11 +140,14 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
                 craftingTasks.removeAll(craftingTasksToCancel);
                 craftingTasksToCancel.clear();
 
-                craftingTasks.addAll(craftingTasksToAdd);
+                for (ICraftingTask task : craftingTasksToAdd) {
+                    craftingTasks.push(task);
+                }
                 craftingTasksToAdd.clear();
 
                 if (!craftingTasks.empty()) {
                     ICraftingTask top = craftingTasks.peek();
+
                     if (ticks % top.getPattern().getCrafter(worldObj).getSpeed() == 0 && top.update(this)) {
                         top.onDone(this);
 
@@ -371,14 +374,12 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
                 syncItems();
 
-                // Notify processing tasks that we got an item
-                // A processing task accepts itemstacks of 1 item, so give it like that
                 for (int i = 0; i < stack.stackSize; ++i) {
-                    for (ICraftingTask task : craftingTasks) {
-                        if (task instanceof ProcessingCraftingTask) {
-                            if (((ProcessingCraftingTask) task).onInserted(stack)) {
-                                break;
-                            }
+                    if (!craftingTasks.empty()) {
+                        ICraftingTask top = craftingTasks.peek();
+
+                        if (top instanceof ProcessingCraftingTask) {
+                            ((ProcessingCraftingTask) top).onPushed(stack);
                         }
                     }
                 }
