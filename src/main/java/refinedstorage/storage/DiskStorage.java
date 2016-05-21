@@ -3,7 +3,7 @@ package refinedstorage.storage;
 import net.minecraft.item.ItemStack;
 import refinedstorage.block.EnumStorageType;
 import refinedstorage.tile.TileDiskDrive;
-import refinedstorage.tile.config.ModeConfigUtils;
+import refinedstorage.tile.config.ModeFilter;
 
 public class DiskStorage extends NBTStorage {
     private TileDiskDrive diskDrive;
@@ -21,6 +21,6 @@ public class DiskStorage extends NBTStorage {
 
     @Override
     public boolean mayPush(ItemStack stack) {
-        return ModeConfigUtils.doesNotViolateMode(diskDrive.getInventory(), diskDrive.getModeConfig(), diskDrive.getCompare(), stack) && super.mayPush(stack);
+        return ModeFilter.violatesMode(diskDrive.getInventory(), diskDrive.getModeConfig(), diskDrive.getCompare(), stack) && super.mayPush(stack);
     }
 }

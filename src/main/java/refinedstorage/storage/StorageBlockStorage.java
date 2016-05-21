@@ -2,7 +2,7 @@ package refinedstorage.storage;
 
 import net.minecraft.item.ItemStack;
 import refinedstorage.tile.TileStorage;
-import refinedstorage.tile.config.ModeConfigUtils;
+import refinedstorage.tile.config.ModeFilter;
 
 public class StorageBlockStorage extends NBTStorage {
     private TileStorage storage;
@@ -20,6 +20,6 @@ public class StorageBlockStorage extends NBTStorage {
 
     @Override
     public boolean mayPush(ItemStack stack) {
-        return ModeConfigUtils.doesNotViolateMode(storage.getInventory(), storage, storage.getCompare(), stack) && super.mayPush(stack);
+        return ModeFilter.violatesMode(storage.getInventory(), storage, storage.getCompare(), stack) && super.mayPush(stack);
     }
 }

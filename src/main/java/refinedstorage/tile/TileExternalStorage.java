@@ -20,7 +20,7 @@ import refinedstorage.storage.ItemGroup;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.IModeConfig;
 import refinedstorage.tile.config.IRedstoneModeConfig;
-import refinedstorage.tile.config.ModeConfigUtils;
+import refinedstorage.tile.config.ModeFilter;
 
 import java.util.List;
 
@@ -137,7 +137,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
     @Override
     public boolean mayPush(ItemStack stack) {
-        if (ModeConfigUtils.doesNotViolateMode(inventory, this, compare, stack)) {
+        if (ModeFilter.violatesMode(inventory, this, compare, stack)) {
             IDeepStorageUnit storageUnit = getStorageUnit();
 
             if (storageUnit != null) {
