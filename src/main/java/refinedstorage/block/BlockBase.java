@@ -9,6 +9,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -127,7 +128,7 @@ public abstract class BlockBase extends Block {
         TileEntity tile = world.getTileEntity(pos);
 
         if (tile instanceof TileBase && ((TileBase) tile).getDroppedInventory() != null) {
-            RefinedStorageUtils.dropInventory(world, ((TileBase) tile).getDroppedInventory(), pos.getX(), pos.getY(), pos.getZ());
+            InventoryHelper.dropInventoryItems(world, pos, ((TileBase) tile).getDroppedInventory());
         }
 
         super.breakBlock(world, pos, state);

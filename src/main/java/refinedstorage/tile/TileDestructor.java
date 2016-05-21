@@ -5,6 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -55,7 +56,7 @@ public class TileDestructor extends TileMachine implements ICompareConfig, IMode
                         // when a destructor faces a storage network block and removes it
                         // it will essentially remove this block from the network without knowing.
                         if (controller != null && !controller.push(drop)) {
-                            RefinedStorageUtils.dropStack(worldObj, drop, front.getX(), front.getY(), front.getZ());
+                            InventoryHelper.spawnItemStack(worldObj, front.getX(), front.getY(), front.getZ(), drop);
                         }
                     }
                 }

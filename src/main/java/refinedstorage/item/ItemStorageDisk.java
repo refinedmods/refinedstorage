@@ -2,6 +2,7 @@ package refinedstorage.item;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
@@ -10,7 +11,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorageItems;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.block.EnumStorageType;
 import refinedstorage.storage.NBTStorage;
 
@@ -55,7 +55,7 @@ public class ItemStorageDisk extends ItemBase {
             ItemStack storagePart = new ItemStack(RefinedStorageItems.STORAGE_PART, 1, stack.getMetadata());
 
             if (!player.inventory.addItemStackToInventory(storagePart.copy())) {
-                RefinedStorageUtils.dropStack(world, storagePart, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
+                InventoryHelper.spawnItemStack(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), storagePart);
             }
 
             return new ActionResult(EnumActionResult.SUCCESS, new ItemStack(RefinedStorageItems.STORAGE_HOUSING));
