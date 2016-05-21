@@ -76,7 +76,7 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
             }
         }
 
-        return mode == ModeConstants.BLACKLIST ? (slots == 0) : true;
+        return mode == ModeConstants.WHITELIST ? (slots == 0) : true;
     }
 
     @Override

@@ -5,16 +5,6 @@
 - Fixed crafting patterns crashing when item of an input or output no longer exists
 - Fixed importer / exporter / crafter not being able to interact with some inventories
 
-**NOTE: Backwards incompatible changes**
-
-Machines that can be whitelisted or blacklisted are now blacklisted by default.
-
-Machines used to work with an empty whitelist, now they don't anymore. They now just work with an empty blacklist.
-
-That means all machines with default empty whitelists from the previous version will no longer work.
-
-If you want to have the old behaviour back, change the machine to be in blacklist mode.
-
 ### 0.6.10
 **Bugfixes**
 - Fixed Processing Patterns not working
