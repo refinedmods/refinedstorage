@@ -23,10 +23,10 @@ public class TileSolderer extends TileMachine implements ISidedInventory {
     public static final int[] FACES_UP = new int[]{
         1
     };
-    public static final int[] FACES_LEFT = new int[]{
+    public static final int[] FACES_NE = new int[]{
         0
     };
-    public static final int[] FACES_RIGHT = new int[]{
+    public static final int[] FACES_SW = new int[]{
         2
     };
     public static final int[] FACES_DOWN = new int[]{
@@ -270,20 +270,17 @@ public class TileSolderer extends TileMachine implements ISidedInventory {
 
     @Override
     public int[] getSlotsForFace(EnumFacing side) {
-        EnumFacing left = getDirection().rotateY();
-        EnumFacing right = getDirection().rotateYCCW();
-
-        if (side == left) {
-            return FACES_LEFT;
-        } else if (side == right) {
-            return FACES_RIGHT;
-        } else if (side == EnumFacing.UP) {
+        if (side == EnumFacing.UP) {
             return FACES_UP;
         } else if (side == EnumFacing.DOWN) {
             return FACES_DOWN;
-        } else {
-            return FACES_UP;
+        } else if (side == EnumFacing.NORTH || side == EnumFacing.EAST) {
+            return FACES_NE;
+        } else if (side == EnumFacing.SOUTH || side == EnumFacing.WEST) {
+            return FACES_SW;
         }
+
+        return FACES_UP;
     }
 
     @Override
