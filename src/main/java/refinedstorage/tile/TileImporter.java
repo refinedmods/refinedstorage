@@ -11,6 +11,7 @@ import refinedstorage.container.ContainerImporter;
 import refinedstorage.inventory.InventorySimple;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.IModeConfig;
+import refinedstorage.tile.config.ModeConstants;
 
 public class TileImporter extends TileMachine implements ICompareConfig, IModeConfig {
     public static final String NBT_COMPARE = "Compare";
@@ -20,7 +21,7 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
     private InventorySimple upgradesInventory = new InventorySimple("upgrades", 4, this);
 
     private int compare = 0;
-    private int mode = 0;
+    private int mode = ModeConstants.BLACKLIST;
 
     private int currentSlot;
 
@@ -66,17 +67,16 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
                 slots++;
 
                 if (RefinedStorageUtils.compareStack(stack, slot, compare)) {
-                    if (isWhitelist()) {
+                    if (mode == ModeConstants.WHITELIST) {
                         return true;
-                    } else if (isBlacklist()) {
+                    } else if (mode == ModeConstants.BLACKLIST) {
                         return false;
                     }
                 }
             }
         }
 
-        // @todo: this should be isBlacklist
-        return isWhitelist() ? (slots == 0) : true;
+        return mode == ModeConstants.BLACKLIST ? (slots == 0) : true;
     }
 
     @Override
@@ -92,27 +92,13 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
     }
 
     @Override
-    public boolean isWhitelist() {
-        return mode == 0;
+    public int getMode() {
+        return mode;
     }
 
     @Override
-    public boolean isBlacklist() {
-        return mode == 1;
-    }
-
-    @Override
-    public void setToWhitelist() {
-        markDirty();
-
-        this.mode = 0;
-    }
-
-    @Override
-    public void setToBlacklist() {
-        markDirty();
-
-        this.mode = 1;
+    public void setMode(int mode) {
+        this.mode = mode;
     }
 
     @Override

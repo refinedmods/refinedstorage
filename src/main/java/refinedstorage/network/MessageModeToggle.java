@@ -6,6 +6,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import refinedstorage.tile.config.IModeConfig;
+import refinedstorage.tile.config.ModeConstants;
 
 public class MessageModeToggle extends MessageHandlerPlayerToServer<MessageModeToggle> implements IMessage {
     private int x;
@@ -42,10 +43,10 @@ public class MessageModeToggle extends MessageHandlerPlayerToServer<MessageModeT
         if (tile instanceof IModeConfig) {
             IModeConfig mode = (IModeConfig) tile;
 
-            if (mode.isWhitelist()) {
-                mode.setToBlacklist();
-            } else if (mode.isBlacklist()) {
-                mode.setToWhitelist();
+            if (mode.getMode() == ModeConstants.WHITELIST) {
+                mode.setMode(ModeConstants.BLACKLIST);
+            } else {
+                mode.setMode(ModeConstants.WHITELIST);
             }
         }
     }

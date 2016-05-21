@@ -18,6 +18,7 @@ import refinedstorage.storage.*;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.IModeConfig;
 import refinedstorage.tile.config.IRedstoneModeConfig;
+import refinedstorage.tile.config.ModeConstants;
 
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
 
     private int priority = 0;
     private int compare = 0;
-    private int mode = 0;
+    private int mode = ModeConstants.BLACKLIST;
 
     public NBTStorage getStorage(int slot) {
         if (inventory.getStackInSlot(slot) == null) {
@@ -149,27 +150,13 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
     }
 
     @Override
-    public boolean isWhitelist() {
-        return mode == 0;
+    public int getMode() {
+        return mode;
     }
 
     @Override
-    public boolean isBlacklist() {
-        return mode == 1;
-    }
-
-    @Override
-    public void setToWhitelist() {
-        markDirty();
-
-        this.mode = 0;
-    }
-
-    @Override
-    public void setToBlacklist() {
-        markDirty();
-
-        this.mode = 1;
+    public void setMode(int mode) {
+        this.mode = mode;
     }
 
     @Override

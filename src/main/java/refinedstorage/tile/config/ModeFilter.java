@@ -6,7 +6,7 @@ import refinedstorage.RefinedStorageUtils;
 
 public class ModeFilter {
     public static boolean respectsMode(IInventory filters, IModeConfig mode, int compare, ItemStack stack) {
-        if (mode.isWhitelist()) {
+        if (mode.getMode() == ModeConstants.WHITELIST) {
             int slots = 0;
 
             for (int i = 0; i < filters.getSizeInventory(); ++i) {
@@ -22,7 +22,7 @@ public class ModeFilter {
             }
 
             return slots == 0;
-        } else if (mode.isBlacklist()) {
+        } else if (mode.getMode() == ModeConstants.BLACKLIST) {
             for (int i = 0; i < filters.getSizeInventory(); ++i) {
                 ItemStack slot = filters.getStackInSlot(i);
 

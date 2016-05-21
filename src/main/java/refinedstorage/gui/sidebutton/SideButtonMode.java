@@ -5,6 +5,7 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.gui.GuiBase;
 import refinedstorage.network.MessageModeToggle;
 import refinedstorage.tile.config.IModeConfig;
+import refinedstorage.tile.config.ModeConstants;
 
 public class SideButtonMode extends SideButton {
     private IModeConfig config;
@@ -15,7 +16,7 @@ public class SideButtonMode extends SideButton {
 
     @Override
     public String getTooltip(GuiBase gui) {
-        return TextFormatting.GREEN + gui.t("sidebutton.refinedstorage:mode") + TextFormatting.RESET + "\n" + gui.t("sidebutton.refinedstorage:mode." + (config.isWhitelist() ? "whitelist" : "blacklist"));
+        return TextFormatting.GREEN + gui.t("sidebutton.refinedstorage:mode") + TextFormatting.RESET + "\n" + gui.t("sidebutton.refinedstorage:mode." + (config.getMode() == ModeConstants.WHITELIST ? "whitelist" : "blacklist"));
     }
 
     @Override
@@ -24,9 +25,9 @@ public class SideButtonMode extends SideButton {
 
         int tx = 0;
 
-        if (config.isWhitelist()) {
+        if (config.getMode() == ModeConstants.WHITELIST) {
             tx = 0;
-        } else if (config.isBlacklist()) {
+        } else if (config.getMode() == ModeConstants.WHITELIST) {
             tx = 16;
         }
 

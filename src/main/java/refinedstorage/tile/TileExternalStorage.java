@@ -17,10 +17,7 @@ import refinedstorage.storage.IStorage;
 import refinedstorage.storage.IStorageGui;
 import refinedstorage.storage.IStorageProvider;
 import refinedstorage.storage.ItemGroup;
-import refinedstorage.tile.config.ICompareConfig;
-import refinedstorage.tile.config.IModeConfig;
-import refinedstorage.tile.config.IRedstoneModeConfig;
-import refinedstorage.tile.config.ModeFilter;
+import refinedstorage.tile.config.*;
 
 import java.util.List;
 
@@ -33,7 +30,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
     private int priority = 0;
     private int compare = 0;
-    private int mode = 0;
+    private int mode = ModeConstants.BLACKLIST;
 
     private int stored = 0;
 
@@ -256,27 +253,13 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
     }
 
     @Override
-    public boolean isWhitelist() {
-        return mode == 0;
+    public int getMode() {
+        return mode;
     }
 
     @Override
-    public boolean isBlacklist() {
-        return mode == 1;
-    }
-
-    @Override
-    public void setToWhitelist() {
-        markDirty();
-
-        this.mode = 0;
-    }
-
-    @Override
-    public void setToBlacklist() {
-        markDirty();
-
-        this.mode = 1;
+    public void setMode(int mode) {
+        this.mode = mode;
     }
 
     @Override
