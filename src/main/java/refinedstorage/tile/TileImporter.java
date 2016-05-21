@@ -3,10 +3,10 @@ package refinedstorage.tile;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerImporter;
 import refinedstorage.inventory.InventorySimple;
@@ -32,81 +32,33 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
 
     @Override
     public void updateMachine() {
-        TileEntity connectedTile = worldObj.getTileEntity(pos.offset(getDirection()));
+        TileEntity tile = worldObj.getTileEntity(pos.offset(getDirection()));
+        IItemHandler handler = RefinedStorageUtils.getItemHandler(tile, getDirection().getOpposite());
 
-        // In order to avoid voiding of Storage Disks
-        if (connectedTile instanceof TileDiskDrive) {
-            connectedTile = null;
+        if (tile instanceof TileDiskDrive || handler == null) {
+            return;
         }
 
-        if (connectedTile instanceof ISidedInventory) {
-            ISidedInventory sided = (ISidedInventory) connectedTile;
-
-            int[] availableSlots = sided.getSlotsForFace(getDirection().getOpposite());
-
-            if (currentSlot >= availableSlots.length) {
-                currentSlot = 0;
-            }
-
-            if (availableSlots.length > 0) {
-                int availableSlot = availableSlots[currentSlot];
-
-                ItemStack stack = sided.getStackInSlot(availableSlot);
-
-                if (stack == null) {
-                    currentSlot++;
-                } else {
-                    if (ticks % RefinedStorageUtils.getSpeed(upgradesInventory) == 0) {
-                        ItemStack toTake = stack.copy();
-                        toTake.stackSize = 1;
-
-                        if (canImport(toTake) && sided.canExtractItem(availableSlot, toTake, getDirection().getOpposite())) {
-                            if (controller.push(toTake)) {
-                                sided.decrStackSize(availableSlot, 1);
-                                sided.markDirty();
-                            }
-                        } else {
-                            // If we can't import and/or extract, move on (otherwise we stay on the same slot forever)
-                            currentSlot++;
-                        }
-                    }
-                }
-            }
-        } else if (connectedTile instanceof IInventory) {
-            IInventory inventory = (IInventory) connectedTile;
-
-            if (currentSlot >= inventory.getSizeInventory()) {
-                currentSlot = 0;
-            }
-
-            ItemStack stack = inventory.getStackInSlot(currentSlot);
-
-            if (stack != null) {
-                if (ticks % RefinedStorageUtils.getSpeed(upgradesInventory) == 0) {
-                    // If we can't import and/ or push, move on (otherwise we stay on the same slot forever)
-                    if (canImport(stack)) {
-                        ItemStack taking = stack.copy();
-                        taking.stackSize = 1;
-
-                        if (controller.push(taking)) {
-                            inventory.decrStackSize(currentSlot, 1);
-                            inventory.markDirty();
-                        } else {
-                            currentSlot++;
-                        }
-                    } else {
-                        currentSlot++;
-                    }
-                }
-            } else {
-                currentSlot++;
-            }
-        } else {
+        if (currentSlot >= handler.getSlots()) {
             currentSlot = 0;
+        }
+
+        if (handler.getSlots() > 0) {
+            ItemStack stack = handler.getStackInSlot(currentSlot);
+
+            if (stack == null) {
+                currentSlot++;
+            } else if (ticks % RefinedStorageUtils.getSpeed(upgradesInventory) == 0 && mayImportStack(stack)) {
+                ItemStack result = handler.extractItem(currentSlot, 1, true);
+
+                if (result != null && controller.push(result)) {
+                    handler.extractItem(currentSlot, 1, false);
+                }
+            }
         }
     }
 
-    public boolean canImport(ItemStack stack) {
+    private boolean mayImportStack(ItemStack stack) {
         int slots = 0;
 
         for (int i = 0; i < inventory.getSizeInventory(); ++i) {
@@ -125,11 +77,8 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
             }
         }
 
-        if (isWhitelist()) {
-            return slots == 0;
-        }
-
-        return true;
+        // @todo: this should be isBlacklist
+        return isWhitelist() ? (slots == 0) : true;
     }
 
     @Override

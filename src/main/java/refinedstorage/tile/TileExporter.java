@@ -49,7 +49,7 @@ public class TileExporter extends TileMachine implements ICompareConfig {
                             if (handler.insertItem(j, took, true) == null) {
                                 handler.insertItem(j, took, false);
                             } else {
-                                break;
+                                controller.push(took);
                             }
                         }
                     } else if (RefinedStorageUtils.hasUpgrade(upgradesInventory, ItemUpgrade.TYPE_CRAFTING)) {

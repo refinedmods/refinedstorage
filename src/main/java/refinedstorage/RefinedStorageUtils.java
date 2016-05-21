@@ -312,14 +312,18 @@ public class RefinedStorageUtils {
         world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 1 | 2);
     }
 
-    public static IItemHandler getItemHandler(TileEntity te, EnumFacing side) {
-        IItemHandler handler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side);
+    public static IItemHandler getItemHandler(TileEntity tile, EnumFacing side) {
+        if (tile == null) {
+            return null;
+        }
+
+        IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side);
 
         if (handler == null) {
-            if (side != null && te instanceof ISidedInventory) {
-                handler = new SidedInvWrapper((ISidedInventory) te, side);
-            } else if (te instanceof IInventory) {
-                handler = new InvWrapper((IInventory) te);
+            if (side != null && tile instanceof ISidedInventory) {
+                handler = new SidedInvWrapper((ISidedInventory) tile, side);
+            } else if (tile instanceof IInventory) {
+                handler = new InvWrapper((IInventory) tile);
             }
         }
 
