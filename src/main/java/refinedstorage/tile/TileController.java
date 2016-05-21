@@ -66,7 +66,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     public static final String NBT_CRAFTING_TASKS = "CraftingTasks";
     public static final String NBT_DESC_ENERGY = "Energy";
 
-    public static final int MAX_CRAFTING_QUANTITY_PER_REQUEST = 100;
+    public static final int MAX_CRAFTING_QUANTITY_PER_REQUEST = 500;
 
     private List<ItemGroup> itemGroups = new ArrayList<ItemGroup>();
     private List<IStorage> storages = new ArrayList<IStorage>();

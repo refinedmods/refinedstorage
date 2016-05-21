@@ -1,5 +1,12 @@
 # Refined Storage Changelog
 
+### 0.6.10
+**Bugfixes**
+- Fixed Processing Patterns not working
+- Fixed not being able to request more than 1 item at once
+- Fixed crash with the Solderer
+- Increased max crafting request size to 500
+
 ### 0.6.9
 **Bugfixes**
 - Fixed bug where machines wouldn't disconnect / connect when needed outside of chunk
