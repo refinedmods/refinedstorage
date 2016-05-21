@@ -4,7 +4,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,9 +110,12 @@ public abstract class NBTStorage implements IStorage {
 
                 tag.setInteger(NBT_STORED, getStored(tag) - quantity);
 
+                ItemStack result = group.toStack();
+                result.stackSize = quantity;
+
                 markDirty();
 
-                return ItemHandlerHelper.copyStackWithSize(group.toStack(), quantity);
+                return result;
             }
         }
 
