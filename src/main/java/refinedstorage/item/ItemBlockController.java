@@ -33,10 +33,10 @@ public class ItemBlockController extends ItemBlockBase {
     public void onCreated(ItemStack stack, World world, EntityPlayer player) {
         super.onCreated(stack, world, player);
 
-        initNBT(stack);
+        createStackWithNBT(stack);
     }
 
-    public static ItemStack initNBT(ItemStack stack) {
+    public static ItemStack createStackWithNBT(ItemStack stack) {
         NBTTagCompound tag = stack.getTagCompound();
 
         if (tag == null) {
