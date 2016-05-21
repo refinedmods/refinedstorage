@@ -12,6 +12,7 @@ import refinedstorage.inventory.InventorySimple;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.IModeConfig;
 import refinedstorage.tile.config.ModeConstants;
+import refinedstorage.tile.config.ModeFilter;
 
 public class TileImporter extends TileMachine implements ICompareConfig, IModeConfig {
     public static final String NBT_COMPARE = "Compare";
@@ -47,7 +48,7 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
 
             if (stack == null) {
                 currentSlot++;
-            } else if (ticks % RefinedStorageUtils.getSpeed(upgradesInventory) == 0 && mayImportStack(stack)) {
+            } else if (ticks % RefinedStorageUtils.getSpeed(upgradesInventory) == 0 && ModeFilter.respectsMode(inventory, this, compare, stack)) {
                 ItemStack result = handler.extractItem(currentSlot, 1, true);
 
                 if (result != null && controller.push(result)) {
@@ -55,28 +56,6 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
                 }
             }
         }
-    }
-
-    private boolean mayImportStack(ItemStack stack) {
-        int slots = 0;
-
-        for (int i = 0; i < inventory.getSizeInventory(); ++i) {
-            ItemStack slot = inventory.getStackInSlot(i);
-
-            if (slot != null) {
-                slots++;
-
-                if (RefinedStorageUtils.compareStack(stack, slot, compare)) {
-                    if (mode == ModeConstants.WHITELIST) {
-                        return true;
-                    } else if (mode == ModeConstants.BLACKLIST) {
-                        return false;
-                    }
-                }
-            }
-        }
-
-        return mode == ModeConstants.WHITELIST ? (slots == 0) : true;
     }
 
     @Override
