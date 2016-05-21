@@ -85,7 +85,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     private List<ClientSideMachine> clientSideMachines = new ArrayList<ClientSideMachine>();
 
     private List<CraftingPattern> patterns = new ArrayList<CraftingPattern>();
-    private List<ICraftingTask> craftingTasks = new ArrayList<ICraftingTask>();
+    private Stack<ICraftingTask> craftingTasks = new Stack<ICraftingTask>();
     private List<ICraftingTask> craftingTasksToAdd = new ArrayList<ICraftingTask>();
     private List<ICraftingTask> craftingTasksToCancel = new ArrayList<ICraftingTask>();
 
@@ -143,15 +143,12 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
                 craftingTasks.addAll(craftingTasksToAdd);
                 craftingTasksToAdd.clear();
 
-                Iterator<ICraftingTask> craftingTaskIterator = craftingTasks.iterator();
+                if (!craftingTasks.empty()) {
+                    ICraftingTask top = craftingTasks.peek();
+                    if (ticks % top.getPattern().getCrafter(worldObj).getSpeed() == 0 && top.update(this)) {
+                        top.onDone(this);
 
-                while (craftingTaskIterator.hasNext()) {
-                    ICraftingTask task = craftingTaskIterator.next();
-
-                    if (ticks % task.getPattern().getCrafter(worldObj).getSpeed() == 0 && task.update(this)) {
-                        task.onDone(this);
-
-                        craftingTaskIterator.remove();
+                        craftingTasks.pop();
                     }
                 }
             } else {
