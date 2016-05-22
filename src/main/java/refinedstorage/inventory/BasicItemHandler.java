@@ -15,14 +15,6 @@ public class BasicItemHandler extends ItemStackHandler {
         this.validators = validators;
     }
 
-    public TileEntity getTile() {
-        return tile;
-    }
-
-    public IItemValidator[] getValidators() {
-        return validators;
-    }
-
     public BasicItemHandler(int size, IItemValidator... validators) {
         this(size, null, validators);
     }
@@ -34,15 +26,16 @@ public class BasicItemHandler extends ItemStackHandler {
         for (IItemValidator validator : validators) {
             if (validator.valid(stack)) {
                 mayInsert = true;
+
                 break;
             }
         }
 
         if (mayInsert) {
             return super.insertItem(slot, stack, simulate);
-        } else {
-            return stack;
         }
+
+        return stack;
     }
 
     @Override
