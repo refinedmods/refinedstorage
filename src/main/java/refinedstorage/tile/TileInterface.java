@@ -4,6 +4,9 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorageItems;
@@ -11,10 +14,10 @@ import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerInterface;
 import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.inventory.BasicItemValidator;
+import refinedstorage.inventory.InterfaceItemHandler;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
 
-// @TODO: Write a capability handler for this
 public class TileInterface extends TileMachine implements ICompareConfig {
     public static final String NBT_COMPARE = "Compare";
 
@@ -127,7 +130,6 @@ public class TileInterface extends TileMachine implements ICompareConfig {
     }
 
 
-
     @Override
     public void receiveContainerData(ByteBuf buf) {
         super.receiveContainerData(buf);
@@ -172,5 +174,19 @@ public class TileInterface extends TileMachine implements ICompareConfig {
         }
 
         return dummy;
+    }
+
+    @Override
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return (T) new InterfaceItemHandler(items, facing);
+        }
+
+        return super.getCapability(capability, facing);
+    }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
     }
 }
