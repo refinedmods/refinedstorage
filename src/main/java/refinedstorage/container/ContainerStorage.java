@@ -17,7 +17,7 @@ public class ContainerStorage extends ContainerBase {
 
     protected void addSpecimenAndPlayerInventorySlots(IItemHandler filters) {
         for (int i = 0; i < 9; ++i) {
-            addSlotToContainer(new SlotSpecimen(filters, i, 8 + (18 * i), 20, false));
+            addSlotToContainer(new SlotSpecimen(filters, i, 8 + (18 * i), 20));
         }
 
         addPlayerInventory(8, 129);

@@ -10,7 +10,7 @@ public class ContainerImporter extends ContainerBase {
         super(player);
 
         for (int i = 0; i < 9; ++i) {
-            addSlotToContainer(new SlotSpecimen(importer.getFilters(), i, 8 + (18 * i), 20, false));
+            addSlotToContainer(new SlotSpecimen(importer.getFilters(), i, 8 + (18 * i), 20));
         }
 
         for (int i = 0; i < 4; ++i) {

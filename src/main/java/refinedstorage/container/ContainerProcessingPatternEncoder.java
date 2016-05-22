@@ -15,7 +15,7 @@ public class ContainerProcessingPatternEncoder extends ContainerBase {
         int y = 20;
 
         for (int i = 0; i < 9 * 2; ++i) {
-            addSlotToContainer(new SlotSpecimen(processingPatternEncoder.getConfiguration(), i, x, y, false));
+            addSlotToContainer(new SlotSpecimen(processingPatternEncoder.getConfiguration(), i, x, y));
 
             x += 18;
 

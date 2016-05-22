@@ -57,7 +57,7 @@ public abstract class ContainerBase extends Container {
         Slot slot = id >= 0 ? getSlot(id) : null;
 
         if (slot instanceof SlotSpecimen) {
-            if (((SlotSpecimen) slot).isSizeAllowed()) {
+            if (((SlotSpecimen) slot).isWithSize()) {
                 if (slot.getStack() != null) {
                     if (GuiScreen.isShiftKeyDown()) {
                         slot.putStack(null);
