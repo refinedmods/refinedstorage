@@ -13,8 +13,8 @@ import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerDestructor;
-import refinedstorage.inventory.SimpleItemHandler;
-import refinedstorage.inventory.SimpleItemValidator;
+import refinedstorage.inventory.BasicItemHandler;
+import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.IModeConfig;
@@ -29,8 +29,8 @@ public class TileDestructor extends TileMachine implements ICompareConfig, IMode
 
     public static final int BASE_SPEED = 20;
 
-    private SimpleItemHandler filters = new SimpleItemHandler(9, this);
-    private SimpleItemHandler upgrades = new SimpleItemHandler(4, this, new SimpleItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED));
+    private BasicItemHandler filters = new BasicItemHandler(9, this);
+    private BasicItemHandler upgrades = new BasicItemHandler(4, this, new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED));
 
     private int compare = 0;
     private int mode = ModeConstants.WHITELIST;

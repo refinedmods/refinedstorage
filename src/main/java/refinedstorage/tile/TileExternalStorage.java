@@ -10,7 +10,7 @@ import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerStorage;
-import refinedstorage.inventory.SimpleItemHandler;
+import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.network.MessagePriorityUpdate;
 import refinedstorage.storage.IStorage;
 import refinedstorage.storage.IStorageGui;
@@ -25,7 +25,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
     public static final String NBT_COMPARE = "Compare";
     public static final String NBT_MODE = "Mode";
 
-    private SimpleItemHandler filters = new SimpleItemHandler(9, this);
+    private BasicItemHandler filters = new BasicItemHandler(9, this);
 
     private int priority = 0;
     private int compare = 0;

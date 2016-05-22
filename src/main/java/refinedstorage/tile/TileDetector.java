@@ -9,7 +9,7 @@ import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerDetector;
-import refinedstorage.inventory.SimpleItemHandler;
+import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.storage.ItemGroup;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.RedstoneMode;
@@ -24,7 +24,7 @@ public class TileDetector extends TileMachine implements ICompareConfig {
     public static final String NBT_AMOUNT = "Amount";
     public static final String NBT_DESC_POWERED = "Powered";
 
-    private SimpleItemHandler filter = new SimpleItemHandler(1, this);
+    private BasicItemHandler filter = new BasicItemHandler(1, this);
 
     private int compare = 0;
     private int mode = MODE_EQUAL;

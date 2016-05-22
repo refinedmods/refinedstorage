@@ -8,23 +8,23 @@ import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerCrafter;
+import refinedstorage.inventory.BasicItemHandler;
+import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.inventory.IItemValidator;
-import refinedstorage.inventory.SimpleItemHandler;
-import refinedstorage.inventory.SimpleItemValidator;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.TileMachine;
 import refinedstorage.tile.autocrafting.task.ICraftingTask;
 
 public class TileCrafter extends TileMachine {
-    private SimpleItemHandler patterns = new SimpleItemHandler(PATTERN_SLOTS, this, new IItemValidator() {
+    private BasicItemHandler patterns = new BasicItemHandler(PATTERN_SLOTS, this, new IItemValidator() {
         @Override
         public boolean valid(ItemStack stack) {
             return stack.getItem() == RefinedStorageItems.PATTERN && ItemPattern.isValid(stack);
         }
     });
 
-    private SimpleItemHandler upgrades = new SimpleItemHandler(4, this, new SimpleItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED));
+    private BasicItemHandler upgrades = new BasicItemHandler(4, this, new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED));
 
     public static final int PATTERN_SLOTS = 6;
 
@@ -83,7 +83,7 @@ public class TileCrafter extends TileMachine {
 
     @Override
     public IItemHandler getDroppedItems() {
-        SimpleItemHandler dummy = new SimpleItemHandler(PATTERN_SLOTS + 4);
+        BasicItemHandler dummy = new BasicItemHandler(PATTERN_SLOTS + 4);
 
         for (int i = 0; i < PATTERN_SLOTS; ++i) {
             dummy.setStackInSlot(i, patterns.getStackInSlot(i));

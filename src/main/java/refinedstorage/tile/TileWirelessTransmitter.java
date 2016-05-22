@@ -6,14 +6,14 @@ import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerWirelessTransmitter;
-import refinedstorage.inventory.SimpleItemHandler;
-import refinedstorage.inventory.SimpleItemValidator;
+import refinedstorage.inventory.BasicItemHandler;
+import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.item.ItemUpgrade;
 
 public class TileWirelessTransmitter extends TileMachine {
     public static final int RANGE_PER_UPGRADE = 8;
 
-    private SimpleItemHandler upgrades = new SimpleItemHandler(4, this, new SimpleItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_RANGE));
+    private BasicItemHandler upgrades = new BasicItemHandler(4, this, new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_RANGE));
 
     @Override
     public int getEnergyUsage() {
@@ -42,7 +42,7 @@ public class TileWirelessTransmitter extends TileMachine {
         return 16 + (RefinedStorageUtils.getUpgradeCount(upgrades, ItemUpgrade.TYPE_RANGE) * RANGE_PER_UPGRADE);
     }
 
-    public SimpleItemHandler getUpgrades() {
+    public BasicItemHandler getUpgrades() {
         return upgrades;
     }
 

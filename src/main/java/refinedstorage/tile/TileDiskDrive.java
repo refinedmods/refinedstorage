@@ -10,8 +10,8 @@ import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.block.EnumStorageType;
 import refinedstorage.container.ContainerDiskDrive;
-import refinedstorage.inventory.SimpleItemHandler;
-import refinedstorage.inventory.SimpleItemValidator;
+import refinedstorage.inventory.BasicItemHandler;
+import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.network.MessagePriorityUpdate;
 import refinedstorage.storage.*;
 import refinedstorage.tile.config.ICompareConfig;
@@ -26,8 +26,8 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
     public static final String NBT_COMPARE = "Compare";
     public static final String NBT_MODE = "Mode";
 
-    private SimpleItemHandler disks = new SimpleItemHandler(8, this, new SimpleItemValidator(RefinedStorageItems.STORAGE_DISK));
-    private SimpleItemHandler filters = new SimpleItemHandler(9, this);
+    private BasicItemHandler disks = new BasicItemHandler(8, this, new BasicItemValidator(RefinedStorageItems.STORAGE_DISK));
+    private BasicItemHandler filters = new BasicItemHandler(9, this);
 
     private NBTStorage storages[] = new NBTStorage[8];
 

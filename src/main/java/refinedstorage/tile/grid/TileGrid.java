@@ -15,8 +15,8 @@ import refinedstorage.RefinedStorageUtils;
 import refinedstorage.block.BlockGrid;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
-import refinedstorage.inventory.SimpleItemHandler;
-import refinedstorage.inventory.SimpleItemValidator;
+import refinedstorage.inventory.BasicItemHandler;
+import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.network.MessageGridCraftingStart;
 import refinedstorage.network.MessageGridSettingsUpdate;
@@ -59,7 +59,7 @@ public class TileGrid extends TileMachine implements IGrid {
     private InventoryCrafting matrix = new InventoryCrafting(craftingContainer, 3, 3);
     private InventoryCraftResult result = new InventoryCraftResult();
 
-    private SimpleItemHandler patterns = new SimpleItemHandler(2, this, new SimpleItemValidator(RefinedStorageItems.PATTERN));
+    private BasicItemHandler patterns = new BasicItemHandler(2, this, new BasicItemValidator(RefinedStorageItems.PATTERN));
 
     private int sortingDirection = SORTING_DIRECTION_DESCENDING;
     private int sortingType = SORTING_TYPE_NAME;

@@ -5,14 +5,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
-import refinedstorage.inventory.SimpleItemHandler;
-import refinedstorage.inventory.SimpleItemValidator;
+import refinedstorage.inventory.BasicItemHandler;
+import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.tile.TileBase;
 
 public class TileProcessingPatternEncoder extends TileBase {
-    private SimpleItemHandler patterns = new SimpleItemHandler(2, this, new SimpleItemValidator(RefinedStorageItems.PATTERN));
-    private SimpleItemHandler configuration = new SimpleItemHandler(9 * 2, this);
+    private BasicItemHandler patterns = new BasicItemHandler(2, this, new BasicItemValidator(RefinedStorageItems.PATTERN));
+    private BasicItemHandler configuration = new BasicItemHandler(9 * 2, this);
 
     @Override
     public void writeToNBT(NBTTagCompound nbt) {
@@ -69,11 +69,11 @@ public class TileProcessingPatternEncoder extends TileBase {
         return inputsFilled > 0 && outputsFilled > 0 && patterns.getStackInSlot(0) != null && patterns.getStackInSlot(1) == null;
     }
 
-    public SimpleItemHandler getPatterns() {
+    public BasicItemHandler getPatterns() {
         return patterns;
     }
 
-    public SimpleItemHandler getConfiguration() {
+    public BasicItemHandler getConfiguration() {
         return configuration;
     }
 

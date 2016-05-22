@@ -8,8 +8,8 @@ import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerImporter;
-import refinedstorage.inventory.SimpleItemHandler;
-import refinedstorage.inventory.SimpleItemValidator;
+import refinedstorage.inventory.BasicItemHandler;
+import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.IModeConfig;
@@ -20,8 +20,8 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
     public static final String NBT_COMPARE = "Compare";
     public static final String NBT_MODE = "Mode";
 
-    private SimpleItemHandler filters = new SimpleItemHandler(9, this);
-    private SimpleItemHandler upgrades = new SimpleItemHandler(4, this, new SimpleItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED));
+    private BasicItemHandler filters = new BasicItemHandler(9, this);
+    private BasicItemHandler upgrades = new BasicItemHandler(4, this, new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED));
 
     private int compare = 0;
     private int mode = ModeConstants.WHITELIST;
@@ -53,7 +53,6 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
             } else if (ticks % RefinedStorageUtils.getSpeed(upgrades) == 0) {
                 ItemStack result = handler.extractItem(currentSlot, 1, true);
 
-                // @TODO: Sometimes this pushes twice
                 if (result != null && controller.push(result)) {
                     handler.extractItem(currentSlot, 1, false);
                 }

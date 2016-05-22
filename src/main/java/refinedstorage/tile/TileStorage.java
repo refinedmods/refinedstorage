@@ -10,7 +10,7 @@ import refinedstorage.RefinedStorageUtils;
 import refinedstorage.block.BlockStorage;
 import refinedstorage.block.EnumStorageType;
 import refinedstorage.container.ContainerStorage;
-import refinedstorage.inventory.SimpleItemHandler;
+import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.network.MessagePriorityUpdate;
 import refinedstorage.storage.*;
 import refinedstorage.tile.config.ICompareConfig;
@@ -26,7 +26,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
     public static final String NBT_COMPARE = "Compare";
     public static final String NBT_MODE = "Mode";
 
-    private SimpleItemHandler filters = new SimpleItemHandler(9, this);
+    private BasicItemHandler filters = new BasicItemHandler(9, this);
 
     private NBTTagCompound storageTag = NBTStorage.createNBT();
 

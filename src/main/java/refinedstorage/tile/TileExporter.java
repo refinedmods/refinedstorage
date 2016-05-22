@@ -9,20 +9,20 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerExporter;
-import refinedstorage.inventory.SimpleItemHandler;
-import refinedstorage.inventory.SimpleItemValidator;
+import refinedstorage.inventory.BasicItemHandler;
+import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
 
 public class TileExporter extends TileMachine implements ICompareConfig {
     public static final String NBT_COMPARE = "Compare";
 
-    private SimpleItemHandler filters = new SimpleItemHandler(9, this);
-    private SimpleItemHandler upgrades = new SimpleItemHandler(
+    private BasicItemHandler filters = new BasicItemHandler(9, this);
+    private BasicItemHandler upgrades = new BasicItemHandler(
         4,
         this,
-        new SimpleItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED),
-        new SimpleItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_CRAFTING)
+        new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED),
+        new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_CRAFTING)
     );
 
     private int compare = 0;

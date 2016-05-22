@@ -13,8 +13,8 @@ import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerConstructor;
-import refinedstorage.inventory.SimpleItemHandler;
-import refinedstorage.inventory.SimpleItemValidator;
+import refinedstorage.inventory.BasicItemHandler;
+import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
 
@@ -23,12 +23,12 @@ public class TileConstructor extends TileMachine implements ICompareConfig {
 
     public static final int BASE_SPEED = 20;
 
-    private SimpleItemHandler filter = new SimpleItemHandler(1, this);
-    private SimpleItemHandler upgrades = new SimpleItemHandler(
+    private BasicItemHandler filter = new BasicItemHandler(1, this);
+    private BasicItemHandler upgrades = new BasicItemHandler(
         4,
         this,
-        new SimpleItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED),
-        new SimpleItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_CRAFTING)
+        new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED),
+        new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_CRAFTING)
     );
 
     private int compare = 0;

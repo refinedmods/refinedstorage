@@ -9,16 +9,16 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerInterface;
-import refinedstorage.inventory.SimpleItemHandler;
-import refinedstorage.inventory.SimpleItemValidator;
+import refinedstorage.inventory.BasicItemHandler;
+import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
 
 public class TileInterface extends TileMachine implements ICompareConfig {
     public static final String NBT_COMPARE = "Compare";
 
-    private SimpleItemHandler items = new SimpleItemHandler(9 * 3, this);
-    private SimpleItemHandler upgrades = new SimpleItemHandler(4, this, new SimpleItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED));
+    private BasicItemHandler items = new BasicItemHandler(9 * 3, this);
+    private BasicItemHandler upgrades = new BasicItemHandler(4, this, new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED));
 
     private int compare = 0;
 
@@ -156,7 +156,7 @@ public class TileInterface extends TileMachine implements ICompareConfig {
 
     @Override
     public IItemHandler getDroppedItems() {
-        SimpleItemHandler dummy = new SimpleItemHandler(9 + 9 + 4);
+        BasicItemHandler dummy = new BasicItemHandler(9 + 9 + 4);
 
         for (int i = 0; i < 9; ++i) {
             dummy.setStackInSlot(i, items.getStackInSlot(i));
