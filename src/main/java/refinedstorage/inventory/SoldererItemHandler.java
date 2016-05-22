@@ -3,11 +3,11 @@ package refinedstorage.inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 
-public class SoldererItemHandler extends BasicItemHandler {
+public class SoldererItemHandler extends ProxyItemHandler {
     private EnumFacing side;
 
-    public SoldererItemHandler(BasicItemHandler parent, EnumFacing side) {
-        super(parent.getSlots(), parent.getTile(), parent.getValidators());
+    public SoldererItemHandler(BasicItemHandler soldererHandler, EnumFacing side) {
+        super(soldererHandler);
 
         this.side = side;
     }
@@ -16,7 +16,7 @@ public class SoldererItemHandler extends BasicItemHandler {
     public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
         if (((side == EnumFacing.NORTH || side == EnumFacing.EAST) && slot == 0) ||
             ((side == EnumFacing.SOUTH || side == EnumFacing.WEST) && slot == 2) ||
-            (side == EnumFacing.UP && slot == 1)) {
+            ((side == EnumFacing.UP && slot == 1))) {
             return super.insertItem(slot, stack, simulate);
         }
 
