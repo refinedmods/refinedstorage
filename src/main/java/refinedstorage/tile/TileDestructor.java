@@ -30,7 +30,7 @@ public class TileDestructor extends TileMachine implements ICompareConfig, IMode
     private InventorySimple upgradesInventory = new InventorySimple("upgrades", 4, this);
 
     private int compare = 0;
-    private int mode = ModeConstants.BLACKLIST;
+    private int mode = ModeConstants.WHITELIST;
 
     @Override
     public int getEnergyUsage() {

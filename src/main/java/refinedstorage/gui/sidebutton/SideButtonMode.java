@@ -27,7 +27,7 @@ public class SideButtonMode extends SideButton {
 
         if (config.getMode() == ModeConstants.WHITELIST) {
             tx = 0;
-        } else if (config.getMode() == ModeConstants.WHITELIST) {
+        } else if (config.getMode() == ModeConstants.BLACKLIST) {
             tx = 16;
         }
 

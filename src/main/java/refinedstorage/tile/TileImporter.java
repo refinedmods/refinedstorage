@@ -22,7 +22,7 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
     private InventorySimple upgradesInventory = new InventorySimple("upgrades", 4, this);
 
     private int compare = 0;
-    private int mode = ModeConstants.BLACKLIST;
+    private int mode = ModeConstants.WHITELIST;
 
     private int currentSlot;
 
@@ -46,9 +46,9 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
         if (handler.getSlots() > 0) {
             ItemStack stack = handler.getStackInSlot(currentSlot);
 
-            if (stack == null) {
+            if (stack == null || !ModeFilter.respectsMode(inventory, this, compare, stack)) {
                 currentSlot++;
-            } else if (ticks % RefinedStorageUtils.getSpeed(upgradesInventory) == 0 && ModeFilter.respectsMode(inventory, this, compare, stack)) {
+            } else if (ticks % RefinedStorageUtils.getSpeed(upgradesInventory) == 0) {
                 ItemStack result = handler.extractItem(currentSlot, 1, true);
 
                 if (result != null && controller.push(result)) {

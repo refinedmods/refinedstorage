@@ -34,7 +34,7 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
 
     private int priority = 0;
     private int compare = 0;
-    private int mode = ModeConstants.BLACKLIST;
+    private int mode = ModeConstants.WHITELIST;
 
     public NBTStorage getStorage(int slot) {
         if (inventory.getStackInSlot(slot) == null) {

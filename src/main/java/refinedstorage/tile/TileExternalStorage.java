@@ -30,7 +30,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
     private int priority = 0;
     private int compare = 0;
-    private int mode = ModeConstants.BLACKLIST;
+    private int mode = ModeConstants.WHITELIST;
 
     private int stored = 0;
 
