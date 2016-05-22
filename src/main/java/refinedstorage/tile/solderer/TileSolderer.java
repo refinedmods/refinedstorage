@@ -175,6 +175,16 @@ public class TileSolderer extends TileMachine {
 
     @Override
     public IItemHandler getDroppedItems() {
-        return items;
+        SimpleItemHandler dummy = new SimpleItemHandler(4 + 4);
+
+        for (int i = 0; i < 4; ++i) {
+            dummy.setStackInSlot(i, items.getStackInSlot(i));
+        }
+
+        for (int i = 0; i < 4; ++i) {
+            dummy.setStackInSlot(4 + i, upgrades.getStackInSlot(i));
+        }
+
+        return dummy;
     }
 }

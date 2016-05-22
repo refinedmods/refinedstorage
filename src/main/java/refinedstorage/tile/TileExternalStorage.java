@@ -140,9 +140,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
                 IItemHandler handler = getItemHandler();
 
                 if (handler != null) {
-                    if (ItemHandlerHelper.insertItem(handler, stack, false) == null) {
-                        return true;
-                    }
+                    return ItemHandlerHelper.insertItem(handler, stack, true) == null;
                 }
             }
         }

@@ -10,6 +10,7 @@ import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerCrafter;
 import refinedstorage.inventory.IItemValidator;
 import refinedstorage.inventory.SimpleItemHandler;
+import refinedstorage.inventory.SimpleItemValidator;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.TileMachine;
@@ -23,7 +24,7 @@ public class TileCrafter extends TileMachine {
         }
     });
 
-    private SimpleItemHandler upgrades = new SimpleItemHandler(4, this);
+    private SimpleItemHandler upgrades = new SimpleItemHandler(4, this, new SimpleItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED));
 
     public static final int PATTERN_SLOTS = 6;
 

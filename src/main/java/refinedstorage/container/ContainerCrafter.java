@@ -10,12 +10,12 @@ public class ContainerCrafter extends ContainerStorage {
     public ContainerCrafter(EntityPlayer player, TileCrafter crafter) {
         super(player);
 
-        for (int i = 0; i < 6; ++i) {
+        for (int i = 0; i < TileCrafter.PATTERN_SLOTS; ++i) {
             addSlotToContainer(new SlotItemHandler(crafter.getPatterns(), i, 8, 19 + (i * 18)));
         }
 
         for (int i = 0; i < 4; ++i) {
-            addSlotToContainer(new SlotItemHandler(crafter.getUpgrades(), 6 + i, 187, 6 + (i * 18)));
+            addSlotToContainer(new SlotItemHandler(crafter.getUpgrades(), i, 187, 6 + (i * 18)));
         }
 
         addPlayerInventory(8, 144);

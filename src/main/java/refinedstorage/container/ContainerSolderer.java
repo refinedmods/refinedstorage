@@ -23,7 +23,7 @@ public class ContainerSolderer extends ContainerBase {
         addSlotToContainer(new SlotOutput(solderer.getItems(), 3, 134, 38));
 
         for (int i = 0; i < 4; ++i) {
-            addSlotToContainer(new SlotItemHandler(solderer.getUpgrades(), 4 + i, 187, 6 + (i * 18)));
+            addSlotToContainer(new SlotItemHandler(solderer.getUpgrades(), i, 187, 6 + (i * 18)));
         }
 
         addPlayerInventory(8, 95);

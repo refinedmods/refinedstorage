@@ -53,6 +53,7 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
             } else if (ticks % RefinedStorageUtils.getSpeed(upgrades) == 0) {
                 ItemStack result = handler.extractItem(currentSlot, 1, true);
 
+                // @TODO: Sometimes this pushes twice
                 if (result != null && controller.push(result)) {
                     handler.extractItem(currentSlot, 1, false);
                 }
