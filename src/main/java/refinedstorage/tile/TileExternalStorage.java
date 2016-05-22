@@ -77,10 +77,9 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
         } else {
             IItemHandler handler = getItemHandler();
 
+            // @todo: something goes wrong here
             if (handler != null) {
-                if (ItemHandlerHelper.insertItem(handler, stack, false) == null) {
-                    return;
-                }
+                ItemHandlerHelper.insertItem(handler, stack, false);
             }
         }
     }
@@ -118,10 +117,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
                         handler.extractItem(i, quantity, false);
 
-                        ItemStack took = slot.copy();
-                        took.stackSize = quantity;
-
-                        return took;
+                        return ItemHandlerHelper.copyStackWithSize(slot, quantity);
                     }
                 }
             }
