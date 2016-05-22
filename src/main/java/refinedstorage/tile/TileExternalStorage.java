@@ -2,7 +2,6 @@ package refinedstorage.tile;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.items.IItemHandler;
@@ -11,7 +10,7 @@ import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerStorage;
-import refinedstorage.inventory.InventorySimple;
+import refinedstorage.inventory.SimpleItemHandler;
 import refinedstorage.network.MessagePriorityUpdate;
 import refinedstorage.storage.IStorage;
 import refinedstorage.storage.IStorageGui;
@@ -26,7 +25,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
     public static final String NBT_COMPARE = "Compare";
     public static final String NBT_MODE = "Mode";
 
-    private InventorySimple inventory = new InventorySimple("external_storage", 9, this);
+    private SimpleItemHandler filters = new SimpleItemHandler(9, this);
 
     private int priority = 0;
     private int compare = 0;
@@ -77,7 +76,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
         } else {
             IItemHandler handler = getItemHandler();
 
-            // @todo: something goes wrong here
+            // @TODO: Something goes wrong here
             if (handler != null) {
                 ItemHandlerHelper.insertItem(handler, stack, false);
             }
@@ -128,7 +127,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
     @Override
     public boolean mayPush(ItemStack stack) {
-        if (ModeFilter.respectsMode(inventory, this, compare, stack)) {
+        if (ModeFilter.respectsMode(filters, this, compare, stack)) {
             IDeepStorageUnit storageUnit = getStorageUnit();
 
             if (storageUnit != null) {
@@ -210,7 +209,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
 
-        RefinedStorageUtils.restoreInventory(inventory, 0, nbt);
+        RefinedStorageUtils.restoreItems(filters, 0, nbt);
 
         if (nbt.hasKey(NBT_PRIORITY)) {
             priority = nbt.getInteger(NBT_PRIORITY);
@@ -229,7 +228,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
     public void writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
 
-        RefinedStorageUtils.saveInventory(inventory, 0, nbt);
+        RefinedStorageUtils.saveItems(filters, 0, nbt);
 
         nbt.setInteger(NBT_PRIORITY, priority);
         nbt.setInteger(NBT_COMPARE, compare);
@@ -324,7 +323,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
     }
 
     @Override
-    public IInventory getInventory() {
-        return inventory;
+    public IItemHandler getFilters() {
+        return filters;
     }
 }

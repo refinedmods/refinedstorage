@@ -1,15 +1,15 @@
 package refinedstorage.container.slot;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
-public class SlotSpecimen extends Slot {
+public class SlotSpecimen extends SlotItemHandler {
     private boolean sizeAllowed;
 
-    public SlotSpecimen(IInventory inventory, int id, int x, int y, boolean allowSize) {
-        super(inventory, id, x, y);
+    public SlotSpecimen(IItemHandler handler, int id, int x, int y, boolean allowSize) {
+        super(handler, id, x, y);
 
         this.sizeAllowed = allowSize;
     }

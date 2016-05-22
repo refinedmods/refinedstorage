@@ -2,15 +2,15 @@ package refinedstorage.tile;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.block.BlockStorage;
 import refinedstorage.block.EnumStorageType;
 import refinedstorage.container.ContainerStorage;
-import refinedstorage.inventory.InventorySimple;
+import refinedstorage.inventory.SimpleItemHandler;
 import refinedstorage.network.MessagePriorityUpdate;
 import refinedstorage.storage.*;
 import refinedstorage.tile.config.ICompareConfig;
@@ -26,7 +26,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
     public static final String NBT_COMPARE = "Compare";
     public static final String NBT_MODE = "Mode";
 
-    private InventorySimple inventory = new InventorySimple("storage", 9, this);
+    private SimpleItemHandler filters = new SimpleItemHandler(9, this);
 
     private NBTTagCompound storageTag = NBTStorage.createNBT();
 
@@ -67,7 +67,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
 
-        RefinedStorageUtils.restoreInventory(inventory, 0, nbt);
+        RefinedStorageUtils.restoreItems(filters, 0, nbt);
 
         if (nbt.hasKey(NBT_PRIORITY)) {
             priority = nbt.getInteger(NBT_PRIORITY);
@@ -90,7 +90,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
     public void writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
 
-        RefinedStorageUtils.saveInventory(inventory, 0, nbt);
+        RefinedStorageUtils.saveItems(filters, 0, nbt);
 
         nbt.setInteger(NBT_PRIORITY, priority);
         nbt.setTag(NBT_STORAGE, storageTag);
@@ -161,8 +161,8 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
     }
 
     @Override
-    public IInventory getInventory() {
-        return inventory;
+    public IItemHandler getFilters() {
+        return filters;
     }
 
     @Override

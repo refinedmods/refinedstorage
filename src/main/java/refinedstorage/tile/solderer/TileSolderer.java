@@ -1,39 +1,24 @@
 package refinedstorage.tile.solderer;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.items.IItemHandler;
+import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerSolderer;
-import refinedstorage.inventory.InventorySimple;
+import refinedstorage.inventory.SimpleItemHandler;
+import refinedstorage.inventory.SimpleItemValidator;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.TileMachine;
 
-public class TileSolderer extends TileMachine implements ISidedInventory {
+public class TileSolderer extends TileMachine {
     public static final String NBT_WORKING = "Working";
     public static final String NBT_PROGRESS = "Progress";
 
-    public static final int[] FACES_UP = new int[]{
-        1
-    };
-    public static final int[] FACES_NE = new int[]{
-        0
-    };
-    public static final int[] FACES_SW = new int[]{
-        2
-    };
-    public static final int[] FACES_DOWN = new int[]{
-        3
-    };
-
-    private InventorySimple inventory = new InventorySimple("solderer", 4 + 4, this);
+    private SimpleItemHandler items = new SimpleItemHandler(4, this);
+    private SimpleItemHandler upgrades = new SimpleItemHandler(4, this, new SimpleItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED));
 
     private ISoldererRecipe recipe;
 
@@ -48,16 +33,16 @@ public class TileSolderer extends TileMachine implements ISidedInventory {
 
     @Override
     public void updateMachine() {
-        ISoldererRecipe newRecipe = SoldererRegistry.getRecipe(inventory);
+        ISoldererRecipe newRecipe = SoldererRegistry.getRecipe(items);
 
         boolean wasWorking = working;
 
         if (newRecipe == null) {
             reset();
         } else if (newRecipe != recipe) {
-            boolean isSameItem = inventory.getStackInSlot(3) != null ? RefinedStorageUtils.compareStackNoQuantity(inventory.getStackInSlot(3), newRecipe.getResult()) : false;
+            boolean isSameItem = items.getStackInSlot(3) != null ? RefinedStorageUtils.compareStackNoQuantity(items.getStackInSlot(3), newRecipe.getResult()) : false;
 
-            if (inventory.getStackInSlot(3) == null || (isSameItem && ((inventory.getStackInSlot(3).stackSize + newRecipe.getResult().stackSize) <= inventory.getStackInSlot(3).getMaxStackSize()))) {
+            if (items.getStackInSlot(3) == null || (isSameItem && ((items.getStackInSlot(3).stackSize + newRecipe.getResult().stackSize) <= items.getStackInSlot(3).getMaxStackSize()))) {
                 recipe = newRecipe;
                 progress = 0;
                 working = true;
@@ -65,18 +50,18 @@ public class TileSolderer extends TileMachine implements ISidedInventory {
                 markDirty();
             }
         } else if (working) {
-            progress += 1 + RefinedStorageUtils.getUpgradeCount(inventory, ItemUpgrade.TYPE_SPEED, 4);
+            progress += 1 + RefinedStorageUtils.getUpgradeCount(upgrades, ItemUpgrade.TYPE_SPEED);
 
             if (progress >= recipe.getDuration()) {
-                if (inventory.getStackInSlot(3) != null) {
-                    inventory.getStackInSlot(3).stackSize += recipe.getResult().stackSize;
+                if (items.getStackInSlot(3) != null) {
+                    items.getStackInSlot(3).stackSize += recipe.getResult().stackSize;
                 } else {
-                    inventory.setInventorySlotContents(3, recipe.getResult());
+                    items.setStackInSlot(3, recipe.getResult());
                 }
 
                 for (int i = 0; i < 3; ++i) {
                     if (recipe.getRow(i) != null) {
-                        inventory.decrStackSize(i, recipe.getRow(i).stackSize);
+                        items.extractItem(i, recipe.getRow(i).stackSize, false);
                     }
                 }
 
@@ -108,9 +93,10 @@ public class TileSolderer extends TileMachine implements ISidedInventory {
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
 
-        RefinedStorageUtils.restoreInventory(this, 0, nbt);
+        RefinedStorageUtils.restoreItems(items, 0, nbt);
+        RefinedStorageUtils.restoreItems(upgrades, 1, nbt);
 
-        recipe = SoldererRegistry.getRecipe(inventory);
+        recipe = SoldererRegistry.getRecipe(items);
 
         if (nbt.hasKey(NBT_WORKING)) {
             working = nbt.getBoolean(NBT_WORKING);
@@ -125,7 +111,8 @@ public class TileSolderer extends TileMachine implements ISidedInventory {
     public void writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
 
-        RefinedStorageUtils.saveInventory(this, 0, nbt);
+        RefinedStorageUtils.saveItems(items, 0, nbt);
+        RefinedStorageUtils.saveItems(upgrades, 1, nbt);
 
         nbt.setBoolean(NBT_WORKING, working);
         nbt.setInteger(NBT_PROGRESS, progress);
@@ -178,118 +165,16 @@ public class TileSolderer extends TileMachine implements ISidedInventory {
         return (int) ((float) progress / (float) duration * (float) i);
     }
 
-    @Override
-    public IInventory getDroppedInventory() {
-        return inventory;
+    public IItemHandler getItems() {
+        return items;
+    }
+
+    public IItemHandler getUpgrades() {
+        return upgrades;
     }
 
     @Override
-    public int getSizeInventory() {
-        return inventory.getSizeInventory();
-    }
-
-    @Override
-    public ItemStack getStackInSlot(int slot) {
-        return inventory.getStackInSlot(slot);
-    }
-
-    @Override
-    public ItemStack decrStackSize(int slot, int count) {
-        return inventory.decrStackSize(slot, count);
-    }
-
-    @Override
-    public ItemStack removeStackFromSlot(int slot) {
-        return inventory.removeStackFromSlot(slot);
-    }
-
-    @Override
-    public void setInventorySlotContents(int slot, ItemStack stack) {
-        inventory.setInventorySlotContents(slot, stack);
-    }
-
-    @Override
-    public int getInventoryStackLimit() {
-        return inventory.getInventoryStackLimit();
-    }
-
-    @Override
-    public boolean isUseableByPlayer(EntityPlayer player) {
-        return inventory.isUseableByPlayer(player);
-    }
-
-    @Override
-    public void openInventory(EntityPlayer player) {
-        inventory.openInventory(player);
-    }
-
-    @Override
-    public void closeInventory(EntityPlayer player) {
-        inventory.closeInventory(player);
-    }
-
-    @Override
-    public boolean isItemValidForSlot(int slot, ItemStack stack) {
-        return inventory.isItemValidForSlot(slot, stack);
-    }
-
-    @Override
-    public int getField(int id) {
-        return inventory.getField(id);
-    }
-
-    @Override
-    public void setField(int id, int value) {
-        inventory.setField(id, value);
-    }
-
-    @Override
-    public int getFieldCount() {
-        return inventory.getFieldCount();
-    }
-
-    @Override
-    public void clear() {
-        inventory.clear();
-    }
-
-    @Override
-    public String getName() {
-        return inventory.getName();
-    }
-
-    @Override
-    public boolean hasCustomName() {
-        return inventory.hasCustomName();
-    }
-
-    @Override
-    public ITextComponent getDisplayName() {
-        return inventory.getDisplayName();
-    }
-
-    @Override
-    public int[] getSlotsForFace(EnumFacing side) {
-        if (side == EnumFacing.UP) {
-            return FACES_UP;
-        } else if (side == EnumFacing.DOWN) {
-            return FACES_DOWN;
-        } else if (side == EnumFacing.NORTH || side == EnumFacing.EAST) {
-            return FACES_NE;
-        } else if (side == EnumFacing.SOUTH || side == EnumFacing.WEST) {
-            return FACES_SW;
-        }
-
-        return FACES_UP;
-    }
-
-    @Override
-    public boolean canInsertItem(int slot, ItemStack stack, EnumFacing direction) {
-        return slot != 3;
-    }
-
-    @Override
-    public boolean canExtractItem(int slot, ItemStack stack, EnumFacing direction) {
-        return slot == 3;
+    public IItemHandler getDroppedItems() {
+        return items;
     }
 }

@@ -17,6 +17,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageUtils;
@@ -127,8 +128,14 @@ public abstract class BlockBase extends Block {
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
         TileEntity tile = world.getTileEntity(pos);
 
-        if (tile instanceof TileBase && ((TileBase) tile).getDroppedInventory() != null) {
-            InventoryHelper.dropInventoryItems(world, pos, ((TileBase) tile).getDroppedInventory());
+        if (tile instanceof TileBase && ((TileBase) tile).getDroppedItems() != null) {
+            IItemHandler handler = ((TileBase) tile).getDroppedItems();
+
+            for (int i = 0; i < handler.getSlots(); ++i) {
+                if (handler.getStackInSlot(i) != null) {
+                    InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), handler.getStackInSlot(i));
+                }
+            }
         }
 
         super.breakBlock(world, pos, state);

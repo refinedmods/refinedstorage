@@ -1,6 +1,6 @@
 package refinedstorage.storage;
 
-import net.minecraft.inventory.IInventory;
+import net.minecraftforge.items.IItemHandler;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.IModeConfig;
 import refinedstorage.tile.config.IRedstoneModeConfig;
@@ -12,7 +12,7 @@ public interface IStorageGui {
 
     void onPriorityChanged(int priority);
 
-    IInventory getInventory();
+    IItemHandler getFilters();
 
     IRedstoneModeConfig getRedstoneModeConfig();
 

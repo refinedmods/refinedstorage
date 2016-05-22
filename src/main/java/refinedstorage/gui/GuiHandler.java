@@ -40,7 +40,7 @@ public class GuiHandler implements IGuiHandler {
             case RefinedStorageGui.CONSTRUCTOR:
                 return new ContainerConstructor(player, (TileConstructor) tile);
             case RefinedStorageGui.STORAGE:
-                return new ContainerStorage(player, ((IStorageGui) tile).getInventory());
+                return new ContainerStorage(player, ((IStorageGui) tile).getFilters());
             case RefinedStorageGui.RELAY:
                 return new ContainerRelay(player);
             case RefinedStorageGui.INTERFACE:

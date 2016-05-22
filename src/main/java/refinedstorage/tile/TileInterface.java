@@ -1,32 +1,24 @@
 package refinedstorage.tile;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerInterface;
-import refinedstorage.inventory.InventorySimple;
+import refinedstorage.inventory.SimpleItemHandler;
+import refinedstorage.inventory.SimpleItemValidator;
+import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
 
-public class TileInterface extends TileMachine implements ICompareConfig, ISidedInventory {
+public class TileInterface extends TileMachine implements ICompareConfig {
     public static final String NBT_COMPARE = "Compare";
 
-    public static final int[] FACES = new int[]{
-        0, 1, 2, 3, 4, 5, 6, 7, 8
-    };
-    public static final int[] FACES_DOWN = new int[]{
-        18, 19, 20, 21, 22, 23, 24, 25, 26
-    };
-
-    private InventorySimple inventory = new InventorySimple("interface", 9 * 3, this);
-    private InventorySimple upgradesInventory = new InventorySimple("upgrades", 4, this);
+    private SimpleItemHandler items = new SimpleItemHandler(9 * 3, this);
+    private SimpleItemHandler upgrades = new SimpleItemHandler(4, this, new SimpleItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED));
 
     private int compare = 0;
 
@@ -34,7 +26,7 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
 
     @Override
     public int getEnergyUsage() {
-        return 4 + RefinedStorageUtils.getUpgradeEnergyUsage(upgradesInventory);
+        return 4 + RefinedStorageUtils.getUpgradeEnergyUsage(upgrades);
     }
 
     @Override
@@ -43,21 +35,21 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
             currentSlot = 0;
         }
 
-        ItemStack slot = getStackInSlot(currentSlot);
+        ItemStack slot = items.getStackInSlot(currentSlot);
 
         if (slot == null) {
             currentSlot++;
         } else {
-            if (ticks % RefinedStorageUtils.getSpeed(upgradesInventory) == 0) {
+            if (ticks % RefinedStorageUtils.getSpeed(upgrades) == 0) {
                 if (controller.push(ItemHandlerHelper.copyStackWithSize(slot, 1))) {
-                    decrStackSize(currentSlot, 1);
+                    items.extractItem(currentSlot, 1, false);
                 }
             }
         }
 
         for (int i = 9; i < 18; ++i) {
-            ItemStack wanted = inventory.getStackInSlot(i);
-            ItemStack got = inventory.getStackInSlot(i + 9);
+            ItemStack wanted = items.getStackInSlot(i);
+            ItemStack got = items.getStackInSlot(i + 9);
 
             if (wanted != null) {
                 boolean mayTake = false;
@@ -65,7 +57,7 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
                 if (got != null) {
                     if (!RefinedStorageUtils.compareStack(wanted, got, compare)) {
                         if (controller.push(got)) {
-                            inventory.setInventorySlotContents(i + 9, null);
+                            items.setStackInSlot(i + 9, null);
                         }
                     } else {
                         mayTake = true;
@@ -75,7 +67,7 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
                 }
 
                 if (mayTake) {
-                    got = inventory.getStackInSlot(i + 9);
+                    got = items.getStackInSlot(i + 9);
 
                     int needed = got == null ? wanted.stackSize : wanted.stackSize - got.stackSize;
 
@@ -84,7 +76,7 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
 
                         if (took != null) {
                             if (got == null) {
-                                inventory.setInventorySlotContents(i + 9, took);
+                                items.setStackInSlot(i + 9, took);
                             } else {
                                 got.stackSize += took.stackSize;
                             }
@@ -93,7 +85,7 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
                 }
             } else if (got != null) {
                 if (controller.push(got)) {
-                    inventory.setInventorySlotContents(i + 9, null);
+                    items.setStackInSlot(i + 9, null);
                 }
             }
         }
@@ -115,8 +107,8 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
 
-        RefinedStorageUtils.restoreInventory(this, 0, nbt);
-        RefinedStorageUtils.restoreInventory(upgradesInventory, 1, nbt);
+        RefinedStorageUtils.restoreItems(items, 0, nbt);
+        RefinedStorageUtils.restoreItems(upgrades, 1, nbt);
 
         if (nbt.hasKey(NBT_COMPARE)) {
             compare = nbt.getInteger(NBT_COMPARE);
@@ -127,15 +119,13 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
     public void writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
 
-        RefinedStorageUtils.saveInventory(this, 0, nbt);
-        RefinedStorageUtils.saveInventory(upgradesInventory, 1, nbt);
+        RefinedStorageUtils.saveItems(items, 0, nbt);
+        RefinedStorageUtils.saveItems(upgrades, 1, nbt);
 
         nbt.setInteger(NBT_COMPARE, compare);
     }
 
-    public InventorySimple getUpgradesInventory() {
-        return upgradesInventory;
-    }
+
 
     @Override
     public void receiveContainerData(ByteBuf buf) {
@@ -156,123 +146,28 @@ public class TileInterface extends TileMachine implements ICompareConfig, ISided
         return ContainerInterface.class;
     }
 
-    @Override
-    public int getSizeInventory() {
-        return inventory.getSizeInventory();
+    public IItemHandler getItems() {
+        return items;
+    }
+
+    public IItemHandler getUpgrades() {
+        return upgrades;
     }
 
     @Override
-    public ItemStack getStackInSlot(int slot) {
-        return inventory.getStackInSlot(slot);
-    }
+    public IItemHandler getDroppedItems() {
+        SimpleItemHandler dummy = new SimpleItemHandler(9 + 9 + 4);
 
-    @Override
-    public ItemStack decrStackSize(int slot, int count) {
-        return inventory.decrStackSize(slot, count);
-    }
-
-    @Override
-    public ItemStack removeStackFromSlot(int slot) {
-        return inventory.removeStackFromSlot(slot);
-    }
-
-    @Override
-    public void setInventorySlotContents(int slot, ItemStack stack) {
-        inventory.setInventorySlotContents(slot, stack);
-    }
-
-    @Override
-    public int getInventoryStackLimit() {
-        return inventory.getInventoryStackLimit();
-    }
-
-    @Override
-    public boolean isUseableByPlayer(EntityPlayer player) {
-        return inventory.isUseableByPlayer(player);
-    }
-
-    @Override
-    public void openInventory(EntityPlayer player) {
-        inventory.openInventory(player);
-    }
-
-    @Override
-    public void closeInventory(EntityPlayer player) {
-        inventory.closeInventory(player);
-    }
-
-    @Override
-    public boolean isItemValidForSlot(int slot, ItemStack stack) {
-        return inventory.isItemValidForSlot(slot, stack);
-    }
-
-    @Override
-    public int getField(int id) {
-        return inventory.getField(id);
-    }
-
-    @Override
-    public void setField(int id, int value) {
-        inventory.setField(id, value);
-    }
-
-    @Override
-    public int getFieldCount() {
-        return inventory.getFieldCount();
-    }
-
-    @Override
-    public void clear() {
-        inventory.clear();
-    }
-
-    @Override
-    public String getName() {
-        return inventory.getName();
-    }
-
-    @Override
-    public boolean hasCustomName() {
-        return inventory.hasCustomName();
-    }
-
-    @Override
-    public ITextComponent getDisplayName() {
-        return inventory.getDisplayName();
-    }
-
-    @Override
-    public int[] getSlotsForFace(EnumFacing side) {
-        return side == EnumFacing.DOWN ? FACES_DOWN : FACES;
-    }
-
-    @Override
-    public boolean canInsertItem(int slot, ItemStack stack, EnumFacing side) {
-        return slot < 9;
-    }
-
-    @Override
-    public boolean canExtractItem(int slot, ItemStack stack, EnumFacing side) {
-        return slot >= 18;
-    }
-
-    @Override
-    public IInventory getDroppedInventory() {
-        InventorySimple dummy = new InventorySimple(null, 9 + 9 + 4);
-
-        // Importing slots
         for (int i = 0; i < 9; ++i) {
-            dummy.setInventorySlotContents(i, inventory.getStackInSlot(i));
+            dummy.setStackInSlot(i, items.getStackInSlot(i));
         }
 
-        // Exporting slots
         for (int i = 0; i < 9; ++i) {
-            dummy.setInventorySlotContents(9 + i, inventory.getStackInSlot(18 + i));
+            dummy.setStackInSlot(9 + i, items.getStackInSlot(18 + i));
         }
 
-        // Upgrade slots
         for (int i = 0; i < 4; ++i) {
-            dummy.setInventorySlotContents(18 + i, upgradesInventory.getStackInSlot(i));
+            dummy.setStackInSlot(18 + i, upgrades.getStackInSlot(i));
         }
 
         return dummy;

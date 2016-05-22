@@ -4,15 +4,18 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.items.IItemHandler;
+import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerDestructor;
-import refinedstorage.inventory.InventorySimple;
+import refinedstorage.inventory.SimpleItemHandler;
+import refinedstorage.inventory.SimpleItemValidator;
+import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.IModeConfig;
 import refinedstorage.tile.config.ModeConstants;
@@ -26,27 +29,27 @@ public class TileDestructor extends TileMachine implements ICompareConfig, IMode
 
     public static final int BASE_SPEED = 20;
 
-    private InventorySimple inventory = new InventorySimple("destructor", 9, this);
-    private InventorySimple upgradesInventory = new InventorySimple("upgrades", 4, this);
+    private SimpleItemHandler filters = new SimpleItemHandler(9, this);
+    private SimpleItemHandler upgrades = new SimpleItemHandler(4, this, new SimpleItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED));
 
     private int compare = 0;
     private int mode = ModeConstants.WHITELIST;
 
     @Override
     public int getEnergyUsage() {
-        return 1 + RefinedStorageUtils.getUpgradeEnergyUsage(upgradesInventory);
+        return 1 + RefinedStorageUtils.getUpgradeEnergyUsage(upgrades);
     }
 
     @Override
     public void updateMachine() {
-        if (ticks % RefinedStorageUtils.getSpeed(upgradesInventory, BASE_SPEED, 4) == 0) {
+        if (ticks % RefinedStorageUtils.getSpeed(upgrades, BASE_SPEED, 4) == 0) {
             BlockPos front = pos.offset(getDirection());
 
             IBlockState frontBlockState = worldObj.getBlockState(front);
             Block frontBlock = frontBlockState.getBlock();
 
             if (Item.getItemFromBlock(frontBlock) != null && !frontBlock.isAir(frontBlockState, worldObj, front)) {
-                if (ModeFilter.respectsMode(inventory, this, compare, new ItemStack(frontBlock, 1, frontBlock.getMetaFromState(frontBlockState)))) {
+                if (ModeFilter.respectsMode(filters, this, compare, new ItemStack(frontBlock, 1, frontBlock.getMetaFromState(frontBlockState)))) {
                     List<ItemStack> drops = frontBlock.getDrops(worldObj, front, frontBlockState, 0);
 
                     worldObj.playAuxSFXAtEntity(null, 2001, front, Block.getStateId(frontBlockState));
@@ -101,8 +104,8 @@ public class TileDestructor extends TileMachine implements ICompareConfig, IMode
             mode = nbt.getInteger(NBT_MODE);
         }
 
-        RefinedStorageUtils.restoreInventory(inventory, 0, nbt);
-        RefinedStorageUtils.restoreInventory(upgradesInventory, 1, nbt);
+        RefinedStorageUtils.restoreItems(filters, 0, nbt);
+        RefinedStorageUtils.restoreItems(upgrades, 1, nbt);
     }
 
     @Override
@@ -112,8 +115,8 @@ public class TileDestructor extends TileMachine implements ICompareConfig, IMode
         nbt.setInteger(NBT_COMPARE, compare);
         nbt.setInteger(NBT_MODE, mode);
 
-        RefinedStorageUtils.saveInventory(inventory, 0, nbt);
-        RefinedStorageUtils.saveInventory(upgradesInventory, 1, nbt);
+        RefinedStorageUtils.saveItems(filters, 0, nbt);
+        RefinedStorageUtils.saveItems(upgrades, 1, nbt);
     }
 
     @Override
@@ -136,16 +139,16 @@ public class TileDestructor extends TileMachine implements ICompareConfig, IMode
         return ContainerDestructor.class;
     }
 
-    public InventorySimple getUpgradesInventory() {
-        return upgradesInventory;
+    public IItemHandler getUpgrades() {
+        return upgrades;
+    }
+
+    public IItemHandler getInventory() {
+        return filters;
     }
 
     @Override
-    public IInventory getDroppedInventory() {
-        return upgradesInventory;
-    }
-
-    public IInventory getInventory() {
-        return inventory;
+    public IItemHandler getDroppedItems() {
+        return upgrades;
     }
 }

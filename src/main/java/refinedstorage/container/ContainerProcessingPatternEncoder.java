@@ -1,15 +1,13 @@
 package refinedstorage.container;
 
 import net.minecraft.entity.player.EntityPlayer;
-import refinedstorage.RefinedStorageItems;
-import refinedstorage.container.slot.BasicItemValidator;
-import refinedstorage.container.slot.SlotFiltered;
+import net.minecraftforge.items.SlotItemHandler;
 import refinedstorage.container.slot.SlotOutput;
 import refinedstorage.container.slot.SlotSpecimen;
 import refinedstorage.tile.autocrafting.TileProcessingPatternEncoder;
 
 public class ContainerProcessingPatternEncoder extends ContainerBase {
-    public ContainerProcessingPatternEncoder(EntityPlayer player, TileProcessingPatternEncoder ppEncoder) {
+    public ContainerProcessingPatternEncoder(EntityPlayer player, TileProcessingPatternEncoder processingPatternEncoder) {
         super(player);
 
         int ox = 8;
@@ -17,7 +15,7 @@ public class ContainerProcessingPatternEncoder extends ContainerBase {
         int y = 20;
 
         for (int i = 0; i < 9 * 2; ++i) {
-            addSlotToContainer(new SlotSpecimen(ppEncoder.getInputsOutputsInventory(), i, x, y, false));
+            addSlotToContainer(new SlotSpecimen(processingPatternEncoder.getConfiguration(), i, x, y, false));
 
             x += 18;
 
@@ -33,8 +31,8 @@ public class ContainerProcessingPatternEncoder extends ContainerBase {
             }
         }
 
-        addSlotToContainer(new SlotFiltered(ppEncoder, 0, 152, 18, new BasicItemValidator(RefinedStorageItems.PATTERN)));
-        addSlotToContainer(new SlotOutput(ppEncoder, 1, 152, 58));
+        addSlotToContainer(new SlotItemHandler(processingPatternEncoder.getPatterns(), 0, 152, 18));
+        addSlotToContainer(new SlotOutput(processingPatternEncoder.getPatterns(), 1, 152, 58));
 
         addPlayerInventory(8, 90);
     }

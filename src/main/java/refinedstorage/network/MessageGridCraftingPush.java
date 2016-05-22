@@ -48,12 +48,12 @@ public class MessageGridCraftingPush extends MessageHandlerPlayerToServer<Messag
         if (tile instanceof TileGrid) {
             TileGrid grid = (TileGrid) tile;
 
-            if (grid.isConnected() && grid.getType() == EnumGridType.CRAFTING && message.craftingSlot < grid.getCraftingInventory().getSizeInventory()) {
-                ItemStack stack = grid.getCraftingInventory().getStackInSlot(message.craftingSlot);
+            if (grid.isConnected() && grid.getType() == EnumGridType.CRAFTING && message.craftingSlot < grid.getMatrix().getSizeInventory()) {
+                ItemStack stack = grid.getMatrix().getStackInSlot(message.craftingSlot);
 
                 if (stack != null) {
                     if (grid.getController().push(stack)) {
-                        grid.getCraftingInventory().setInventorySlotContents(message.craftingSlot, null);
+                        grid.getMatrix().setInventorySlotContents(message.craftingSlot, null);
                     }
                 }
             }

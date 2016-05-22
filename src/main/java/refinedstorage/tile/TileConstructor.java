@@ -4,15 +4,17 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.items.IItemHandler;
+import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerConstructor;
-import refinedstorage.inventory.InventorySimple;
+import refinedstorage.inventory.SimpleItemHandler;
+import refinedstorage.inventory.SimpleItemValidator;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
 
@@ -21,8 +23,13 @@ public class TileConstructor extends TileMachine implements ICompareConfig {
 
     public static final int BASE_SPEED = 20;
 
-    private InventorySimple inventory = new InventorySimple("constructor", 1, this);
-    private InventorySimple upgradesInventory = new InventorySimple("upgrades", 4, this);
+    private SimpleItemHandler filter = new SimpleItemHandler(1, this);
+    private SimpleItemHandler upgrades = new SimpleItemHandler(
+        4,
+        this,
+        new SimpleItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED),
+        new SimpleItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_CRAFTING)
+    );
 
     private int compare = 0;
 
@@ -30,18 +37,18 @@ public class TileConstructor extends TileMachine implements ICompareConfig {
 
     @Override
     public int getEnergyUsage() {
-        return 1 + RefinedStorageUtils.getUpgradeEnergyUsage(upgradesInventory);
+        return 1 + RefinedStorageUtils.getUpgradeEnergyUsage(upgrades);
     }
 
     @Override
     public void updateMachine() {
-        if (ticks % RefinedStorageUtils.getSpeed(upgradesInventory, BASE_SPEED, 4) == 0 && inventory.getStackInSlot(0) != null) {
+        if (ticks % RefinedStorageUtils.getSpeed(upgrades, BASE_SPEED, 4) == 0 && filter.getStackInSlot(0) != null) {
             BlockPos front = pos.offset(getDirection());
 
-            Block block = ((ItemBlock) inventory.getStackInSlot(0).getItem()).getBlock();
+            Block block = ((ItemBlock) filter.getStackInSlot(0).getItem()).getBlock();
 
             if (block.canPlaceBlockAt(worldObj, front)) {
-                ItemStack took = controller.take(inventory.getStackInSlot(0).copy(), compare);
+                ItemStack took = controller.take(filter.getStackInSlot(0).copy(), compare);
 
                 if (took != null) {
                     scheduler.resetSchedule();
@@ -49,8 +56,8 @@ public class TileConstructor extends TileMachine implements ICompareConfig {
                     // From ItemBlock.onItemUse
                     SoundType blockSound = block.getStepSound();
                     worldObj.playSound(null, front, blockSound.getPlaceSound(), SoundCategory.BLOCKS, (blockSound.getVolume() + 1.0F) / 2.0F, blockSound.getPitch() * 0.8F);
-                } else if (RefinedStorageUtils.hasUpgrade(upgradesInventory, ItemUpgrade.TYPE_CRAFTING)) {
-                    ItemStack craft = inventory.getStackInSlot(0);
+                } else if (RefinedStorageUtils.hasUpgrade(upgrades, ItemUpgrade.TYPE_CRAFTING)) {
+                    ItemStack craft = filter.getStackInSlot(0);
 
                     if (scheduler.canSchedule(compare, craft)) {
                         scheduler.schedule(controller, compare, craft);
@@ -80,8 +87,8 @@ public class TileConstructor extends TileMachine implements ICompareConfig {
             compare = nbt.getInteger(NBT_COMPARE);
         }
 
-        RefinedStorageUtils.restoreInventory(inventory, 0, nbt);
-        RefinedStorageUtils.restoreInventory(upgradesInventory, 1, nbt);
+        RefinedStorageUtils.restoreItems(filter, 0, nbt);
+        RefinedStorageUtils.restoreItems(upgrades, 1, nbt);
 
         scheduler.readFromNBT(nbt);
     }
@@ -92,8 +99,8 @@ public class TileConstructor extends TileMachine implements ICompareConfig {
 
         nbt.setInteger(NBT_COMPARE, compare);
 
-        RefinedStorageUtils.saveInventory(inventory, 0, nbt);
-        RefinedStorageUtils.saveInventory(upgradesInventory, 1, nbt);
+        RefinedStorageUtils.saveItems(filter, 0, nbt);
+        RefinedStorageUtils.saveItems(upgrades, 1, nbt);
 
         scheduler.writeToNBT(nbt);
     }
@@ -117,16 +124,16 @@ public class TileConstructor extends TileMachine implements ICompareConfig {
         return ContainerConstructor.class;
     }
 
-    public InventorySimple getUpgradesInventory() {
-        return upgradesInventory;
+    public IItemHandler getUpgrades() {
+        return upgrades;
+    }
+
+    public IItemHandler getFilter() {
+        return filter;
     }
 
     @Override
-    public IInventory getDroppedInventory() {
-        return upgradesInventory;
-    }
-
-    public IInventory getInventory() {
-        return inventory;
+    public IItemHandler getDroppedItems() {
+        return upgrades;
     }
 }

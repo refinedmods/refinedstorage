@@ -6,10 +6,13 @@ import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.SlotItemHandler;
 import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageItems;
 import refinedstorage.block.EnumGridType;
-import refinedstorage.container.slot.*;
+import refinedstorage.container.slot.SlotDisabled;
+import refinedstorage.container.slot.SlotGridCraftingResult;
+import refinedstorage.container.slot.SlotOutput;
+import refinedstorage.container.slot.SlotSpecimenLegacy;
 import refinedstorage.network.MessageGridCraftingShift;
 import refinedstorage.tile.grid.IGrid;
 import refinedstorage.tile.grid.TileGrid;
@@ -36,7 +39,7 @@ public class ContainerGrid extends ContainerBase {
             int y = 106;
 
             for (int i = 0; i < 9; ++i) {
-                Slot slot = new Slot(((TileGrid) grid).getCraftingInventory(), i, x, y);
+                Slot slot = new Slot(((TileGrid) grid).getMatrix(), i, x, y);
 
                 craftingSlots.add(slot);
 
@@ -50,13 +53,13 @@ public class ContainerGrid extends ContainerBase {
                 }
             }
 
-            addSlotToContainer(craftingResultSlot = new SlotGridCraftingResult(this, player, ((TileGrid) grid).getCraftingInventory(), ((TileGrid) grid).getCraftingResultInventory(), (TileGrid) grid, 0, 133 + 4, 120 + 4));
+            addSlotToContainer(craftingResultSlot = new SlotGridCraftingResult(this, player, ((TileGrid) grid).getMatrix(), ((TileGrid) grid).getResult(), (TileGrid) grid, 0, 133 + 4, 120 + 4));
         } else if (grid.getType() == EnumGridType.PATTERN) {
             int x = 8;
             int y = 106;
 
             for (int i = 0; i < 9; ++i) {
-                addSlotToContainer(new SlotSpecimen(((TileGrid) grid).getCraftingInventory(), i, x, y, false));
+                addSlotToContainer(new SlotSpecimenLegacy(((TileGrid) grid).getMatrix(), i, x, y, false));
 
                 x += 18;
 
@@ -66,10 +69,10 @@ public class ContainerGrid extends ContainerBase {
                 }
             }
 
-            addSlotToContainer(patternResultSlot = new SlotDisabled(((TileGrid) grid).getCraftingResultInventory(), 0, 116 + 4, 120 + 4));
+            addSlotToContainer(patternResultSlot = new SlotDisabled(((TileGrid) grid).getResult(), 0, 116 + 4, 120 + 4));
 
-            addSlotToContainer(new SlotFiltered(((TileGrid) grid).getPatternsInventory(), 0, 152, 104, new BasicItemValidator(RefinedStorageItems.PATTERN)));
-            addSlotToContainer(new SlotOutput(((TileGrid) grid).getPatternsInventory(), 1, 152, 144));
+            addSlotToContainer(new SlotItemHandler(((TileGrid) grid).getPatterns(), 0, 152, 104));
+            addSlotToContainer(new SlotOutput(((TileGrid) grid).getPatterns(), 1, 152, 144));
         }
     }
 

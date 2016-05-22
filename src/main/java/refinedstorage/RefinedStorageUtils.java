@@ -16,7 +16,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
-import refinedstorage.inventory.InventorySimple;
 import refinedstorage.item.ItemUpgrade;
 
 public class RefinedStorageUtils {
@@ -27,7 +26,41 @@ public class RefinedStorageUtils {
     public static final int COMPARE_NBT = 2;
     public static final int COMPARE_QUANTITY = 4;
 
-    public static void saveInventory(IInventory inventory, int id, NBTTagCompound nbt) {
+    public static void saveItems(IItemHandler handler, int id, NBTTagCompound nbt) {
+        NBTTagList tagList = new NBTTagList();
+
+        for (int i = 0; i < handler.getSlots(); i++) {
+            if (handler.getStackInSlot(i) != null) {
+                NBTTagCompound compoundTag = new NBTTagCompound();
+
+                compoundTag.setInteger(NBT_SLOT, i);
+
+                handler.getStackInSlot(i).writeToNBT(compoundTag);
+
+                tagList.appendTag(compoundTag);
+            }
+        }
+
+        nbt.setTag(String.format(NBT_INVENTORY, id), tagList);
+    }
+
+    public static void restoreItems(IItemHandler handler, int id, NBTTagCompound nbt) {
+        String name = String.format(NBT_INVENTORY, id);
+
+        if (nbt.hasKey(name)) {
+            NBTTagList tagList = nbt.getTagList(name, Constants.NBT.TAG_COMPOUND);
+
+            for (int i = 0; i < tagList.tagCount(); i++) {
+                int slot = tagList.getCompoundTagAt(i).getInteger(NBT_SLOT);
+
+                ItemStack stack = ItemStack.loadItemStackFromNBT(tagList.getCompoundTagAt(i));
+
+                handler.insertItem(slot, stack, false);
+            }
+        }
+    }
+
+    public static void saveItemsLegacy(IInventory inventory, int id, NBTTagCompound nbt) {
         NBTTagList tagList = new NBTTagList();
 
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
@@ -45,7 +78,7 @@ public class RefinedStorageUtils {
         nbt.setTag(String.format(NBT_INVENTORY, id), tagList);
     }
 
-    public static void restoreInventory(IInventory inventory, int id, NBTTagCompound nbt) {
+    public static void restoreItemsLegacy(IInventory inventory, int id, NBTTagCompound nbt) {
         String name = String.format(NBT_INVENTORY, id);
 
         if (nbt.hasKey(name)) {
@@ -99,17 +132,17 @@ public class RefinedStorageUtils {
         return compareStack(first, second, COMPARE_NBT | COMPARE_DAMAGE);
     }
 
-    public static int getSpeed(InventorySimple inventory) {
-        return getSpeed(inventory, 9, 2, 0);
+    public static int getSpeed(IItemHandler handler) {
+        return getSpeed(handler, 9, 2, 0);
     }
 
-    public static int getSpeed(InventorySimple inventory, int speed, int speedIncrease) {
-        return getSpeed(inventory, speed, speedIncrease, 0);
+    public static int getSpeed(IItemHandler handler, int speed, int speedIncrease) {
+        return getSpeed(handler, speed, speedIncrease, 0);
     }
 
-    public static int getSpeed(InventorySimple inventory, int speed, int speedIncrease, int start) {
-        for (int i = start; i < inventory.getSizeInventory(); ++i) {
-            if (inventory.getStackInSlot(i) != null && inventory.getStackInSlot(i).getMetadata() == ItemUpgrade.TYPE_SPEED) {
+    public static int getSpeed(IItemHandler handler, int speed, int speedIncrease, int start) {
+        for (int i = start; i < handler.getSlots(); ++i) {
+            if (handler.getStackInSlot(i) != null && handler.getStackInSlot(i).getMetadata() == ItemUpgrade.TYPE_SPEED) {
                 speed -= speedIncrease;
             }
         }
@@ -117,19 +150,19 @@ public class RefinedStorageUtils {
         return speed;
     }
 
-    public static boolean hasUpgrade(InventorySimple inventory, int type) {
-        return getUpgradeCount(inventory, type) > 0;
+    public static boolean hasUpgrade(IItemHandler handler, int type) {
+        return getUpgradeCount(handler, type) > 0;
     }
 
-    public static int getUpgradeCount(InventorySimple inventory, int type) {
-        return getUpgradeCount(inventory, type, 0);
+    public static int getUpgradeCount(IItemHandler handler, int type) {
+        return getUpgradeCount(handler, type, 0);
     }
 
-    public static int getUpgradeCount(InventorySimple inventory, int type, int start) {
+    public static int getUpgradeCount(IItemHandler handler, int type, int start) {
         int upgrades = 0;
 
-        for (int i = start; i < inventory.getSizeInventory(); ++i) {
-            if (inventory.getStackInSlot(i) != null && inventory.getStackInSlot(i).getMetadata() == type) {
+        for (int i = start; i < handler.getSlots(); ++i) {
+            if (handler.getStackInSlot(i) != null && handler.getStackInSlot(i).getMetadata() == type) {
                 upgrades++;
             }
         }
@@ -137,16 +170,16 @@ public class RefinedStorageUtils {
         return upgrades;
     }
 
-    public static int getUpgradeEnergyUsage(InventorySimple inventory) {
-        return getUpgradeEnergyUsage(inventory, 0);
+    public static int getUpgradeEnergyUsage(IItemHandler handler) {
+        return getUpgradeEnergyUsage(handler, 0);
     }
 
-    public static int getUpgradeEnergyUsage(InventorySimple inventory, int start) {
+    public static int getUpgradeEnergyUsage(IItemHandler handler, int start) {
         int usage = 0;
 
-        for (int i = start; i < inventory.getSizeInventory(); ++i) {
-            if (inventory.getStackInSlot(i) != null) {
-                usage += ItemUpgrade.getEnergyUsage(inventory.getStackInSlot(i).getMetadata());
+        for (int i = start; i < handler.getSlots(); ++i) {
+            if (handler.getStackInSlot(i) != null) {
+                usage += ItemUpgrade.getEnergyUsage(handler.getStackInSlot(i).getMetadata());
             }
         }
 

@@ -1,7 +1,7 @@
 package refinedstorage.tile.solderer;
 
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorageUtils;
 
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ public class SoldererRegistry {
         recipes.add(recipe);
     }
 
-    public static ISoldererRecipe getRecipe(IInventory inventory) {
+    public static ISoldererRecipe getRecipe(IItemHandler inventory) {
         for (ISoldererRecipe recipe : recipes) {
             boolean ok = true;
 

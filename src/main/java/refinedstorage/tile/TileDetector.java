@@ -2,14 +2,14 @@ package refinedstorage.tile;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerDetector;
-import refinedstorage.inventory.InventorySimple;
+import refinedstorage.inventory.SimpleItemHandler;
 import refinedstorage.storage.ItemGroup;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.RedstoneMode;
@@ -24,7 +24,7 @@ public class TileDetector extends TileMachine implements ICompareConfig {
     public static final String NBT_AMOUNT = "Amount";
     public static final String NBT_DESC_POWERED = "Powered";
 
-    private InventorySimple inventory = new InventorySimple("detector", 1, this);
+    private SimpleItemHandler filter = new SimpleItemHandler(1, this);
 
     private int compare = 0;
     private int mode = MODE_EQUAL;
@@ -47,7 +47,7 @@ public class TileDetector extends TileMachine implements ICompareConfig {
     @Override
     public void updateMachine() {
         if (ticks % 5 == 0) {
-            ItemStack slot = inventory.getStackInSlot(0);
+            ItemStack slot = filter.getStackInSlot(0);
 
             boolean wasPowered = powered;
 
@@ -151,7 +151,7 @@ public class TileDetector extends TileMachine implements ICompareConfig {
             amount = nbt.getInteger(NBT_AMOUNT);
         }
 
-        RefinedStorageUtils.restoreInventory(inventory, 0, nbt);
+        RefinedStorageUtils.restoreItems(filter, 0, nbt);
     }
 
     @Override
@@ -162,7 +162,7 @@ public class TileDetector extends TileMachine implements ICompareConfig {
         nbt.setInteger(NBT_MODE, mode);
         nbt.setInteger(NBT_AMOUNT, amount);
 
-        RefinedStorageUtils.saveInventory(inventory, 0, nbt);
+        RefinedStorageUtils.saveItems(filter, 0, nbt);
     }
 
     @Override
@@ -202,8 +202,8 @@ public class TileDetector extends TileMachine implements ICompareConfig {
         return ContainerDetector.class;
     }
 
-    public IInventory getInventory() {
-        return inventory;
+    public IItemHandler getInventory() {
+        return filter;
     }
 
     @Override

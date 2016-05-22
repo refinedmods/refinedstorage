@@ -1,29 +1,35 @@
 package refinedstorage.tile.autocrafting;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerCrafter;
-import refinedstorage.inventory.InventorySimple;
+import refinedstorage.inventory.IItemValidator;
+import refinedstorage.inventory.SimpleItemHandler;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.TileMachine;
 import refinedstorage.tile.autocrafting.task.ICraftingTask;
 
-public class TileCrafter extends TileMachine implements IInventory {
-    private InventorySimple inventory = new InventorySimple("crafter", PATTERN_SLOTS + 4, this);
+public class TileCrafter extends TileMachine {
+    private SimpleItemHandler patterns = new SimpleItemHandler(PATTERN_SLOTS, this, new IItemValidator() {
+        @Override
+        public boolean valid(ItemStack stack) {
+            return stack.getItem() == RefinedStorageItems.PATTERN && ItemPattern.isValid(stack);
+        }
+    });
+
+    private SimpleItemHandler upgrades = new SimpleItemHandler(4, this);
 
     public static final int PATTERN_SLOTS = 6;
 
     @Override
     public int getEnergyUsage() {
-        return 2 + RefinedStorageUtils.getUpgradeEnergyUsage(inventory, PATTERN_SLOTS);
+        return 2 + RefinedStorageUtils.getUpgradeEnergyUsage(upgrades);
     }
 
     @Override
@@ -50,107 +56,42 @@ public class TileCrafter extends TileMachine implements IInventory {
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
 
-        RefinedStorageUtils.restoreInventory(inventory, 0, nbt);
+        RefinedStorageUtils.restoreItems(patterns, 0, nbt);
+        RefinedStorageUtils.restoreItems(upgrades, 1, nbt);
     }
 
     @Override
     public void writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
 
-        RefinedStorageUtils.saveInventory(inventory, 0, nbt);
+        RefinedStorageUtils.saveItems(patterns, 0, nbt);
+        RefinedStorageUtils.saveItems(upgrades, 1, nbt);
     }
 
     public int getSpeed() {
-        return 20 - (RefinedStorageUtils.getUpgradeCount(inventory, ItemUpgrade.TYPE_SPEED, PATTERN_SLOTS) * 4);
+        return 20 - (RefinedStorageUtils.getUpgradeCount(upgrades, ItemUpgrade.TYPE_SPEED, PATTERN_SLOTS) * 4);
+    }
+
+    public IItemHandler getPatterns() {
+        return patterns;
+    }
+
+    public IItemHandler getUpgrades() {
+        return upgrades;
     }
 
     @Override
-    public int getSizeInventory() {
-        return inventory.getSizeInventory();
-    }
+    public IItemHandler getDroppedItems() {
+        SimpleItemHandler dummy = new SimpleItemHandler(PATTERN_SLOTS + 4);
 
-    @Override
-    public ItemStack getStackInSlot(int slot) {
-        return inventory.getStackInSlot(slot);
-    }
+        for (int i = 0; i < PATTERN_SLOTS; ++i) {
+            dummy.setStackInSlot(i, patterns.getStackInSlot(i));
+        }
 
-    @Override
-    public ItemStack decrStackSize(int slot, int count) {
-        return inventory.decrStackSize(slot, count);
-    }
+        for (int i = 0; i < 4; ++i) {
+            dummy.setStackInSlot(PATTERN_SLOTS + i, upgrades.getStackInSlot(i));
+        }
 
-    @Override
-    public ItemStack removeStackFromSlot(int slot) {
-        return inventory.removeStackFromSlot(slot);
-    }
-
-    @Override
-    public void setInventorySlotContents(int slot, ItemStack stack) {
-        inventory.setInventorySlotContents(slot, stack);
-    }
-
-    @Override
-    public int getInventoryStackLimit() {
-        return inventory.getInventoryStackLimit();
-    }
-
-    @Override
-    public boolean isUseableByPlayer(EntityPlayer player) {
-        return inventory.isUseableByPlayer(player);
-    }
-
-    @Override
-    public void openInventory(EntityPlayer player) {
-        inventory.openInventory(player);
-    }
-
-    @Override
-    public void closeInventory(EntityPlayer player) {
-        inventory.closeInventory(player);
-    }
-
-    @Override
-    public boolean isItemValidForSlot(int slot, ItemStack stack) {
-        return stack.getItem() == RefinedStorageItems.PATTERN && ItemPattern.isValid(stack);
-    }
-
-    @Override
-    public int getField(int id) {
-        return inventory.getField(id);
-    }
-
-    @Override
-    public void setField(int id, int value) {
-        inventory.setField(id, value);
-    }
-
-    @Override
-    public int getFieldCount() {
-        return inventory.getFieldCount();
-    }
-
-    @Override
-    public void clear() {
-        inventory.clear();
-    }
-
-    @Override
-    public boolean hasCustomName() {
-        return inventory.hasCustomName();
-    }
-
-    @Override
-    public ITextComponent getDisplayName() {
-        return inventory.getDisplayName();
-    }
-
-    @Override
-    public String getName() {
-        return inventory.getName();
-    }
-
-    @Override
-    public IInventory getDroppedInventory() {
-        return inventory;
+        return dummy;
     }
 }

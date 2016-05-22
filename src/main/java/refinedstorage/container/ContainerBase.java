@@ -8,6 +8,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import refinedstorage.container.slot.SlotDisabled;
 import refinedstorage.container.slot.SlotSpecimen;
+import refinedstorage.container.slot.SlotSpecimenLegacy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,6 +93,14 @@ public abstract class ContainerBase extends Container {
                     slot.putStack(toPut);
                 }
             } else if (player.inventory.getItemStack() == null) {
+                slot.putStack(null);
+            } else if (slot.isItemValid(player.inventory.getItemStack())) {
+                slot.putStack(player.inventory.getItemStack().copy());
+            }
+
+            return player.inventory.getItemStack();
+        } else if (slot instanceof SlotSpecimenLegacy) {
+            if (player.inventory.getItemStack() == null) {
                 slot.putStack(null);
             } else if (slot.isItemValid(player.inventory.getItemStack())) {
                 slot.putStack(player.inventory.getItemStack().copy());

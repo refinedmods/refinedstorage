@@ -11,20 +11,20 @@ import refinedstorage.tile.grid.TileGrid;
 
 public class SlotGridCraftingResult extends SlotCrafting {
     private ContainerGrid container;
-    private IInventory craftingMatrix;
+    private IInventory matrix;
     private TileGrid grid;
 
-    public SlotGridCraftingResult(ContainerGrid container, EntityPlayer player, InventoryCrafting craftingMatrix, IInventory craftingResult, TileGrid grid, int id, int x, int y) {
-        super(player, craftingMatrix, craftingResult, id, x, y);
+    public SlotGridCraftingResult(ContainerGrid container, EntityPlayer player, InventoryCrafting matrix, IInventory craftingResult, TileGrid grid, int id, int x, int y) {
+        super(player, matrix, craftingResult, id, x, y);
 
         this.container = container;
-        this.craftingMatrix = craftingMatrix;
+        this.matrix = matrix;
         this.grid = grid;
     }
 
     @Override
     public void onPickupFromSlot(EntityPlayer player, ItemStack stack) {
-        FMLCommonHandler.instance().firePlayerCraftingEvent(player, stack, craftingMatrix);
+        FMLCommonHandler.instance().firePlayerCraftingEvent(player, stack, matrix);
 
         onCrafting(stack);
 

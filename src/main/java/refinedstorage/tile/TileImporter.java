@@ -2,13 +2,15 @@ package refinedstorage.tile;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.items.IItemHandler;
+import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerImporter;
-import refinedstorage.inventory.InventorySimple;
+import refinedstorage.inventory.SimpleItemHandler;
+import refinedstorage.inventory.SimpleItemValidator;
+import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.IModeConfig;
 import refinedstorage.tile.config.ModeConstants;
@@ -18,8 +20,8 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
     public static final String NBT_COMPARE = "Compare";
     public static final String NBT_MODE = "Mode";
 
-    private InventorySimple inventory = new InventorySimple("importer", 9, this);
-    private InventorySimple upgradesInventory = new InventorySimple("upgrades", 4, this);
+    private SimpleItemHandler filters = new SimpleItemHandler(9, this);
+    private SimpleItemHandler upgrades = new SimpleItemHandler(4, this, new SimpleItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED));
 
     private int compare = 0;
     private int mode = ModeConstants.WHITELIST;
@@ -28,7 +30,7 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
 
     @Override
     public int getEnergyUsage() {
-        return 2 + RefinedStorageUtils.getUpgradeEnergyUsage(upgradesInventory);
+        return 2 + RefinedStorageUtils.getUpgradeEnergyUsage(upgrades);
     }
 
     @Override
@@ -46,9 +48,9 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
         if (handler.getSlots() > 0) {
             ItemStack stack = handler.getStackInSlot(currentSlot);
 
-            if (stack == null || !ModeFilter.respectsMode(inventory, this, compare, stack)) {
+            if (stack == null || !ModeFilter.respectsMode(filters, this, compare, stack)) {
                 currentSlot++;
-            } else if (ticks % RefinedStorageUtils.getSpeed(upgradesInventory) == 0) {
+            } else if (ticks % RefinedStorageUtils.getSpeed(upgrades) == 0) {
                 ItemStack result = handler.extractItem(currentSlot, 1, true);
 
                 if (result != null && controller.push(result)) {
@@ -94,8 +96,8 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
             mode = nbt.getInteger(NBT_MODE);
         }
 
-        RefinedStorageUtils.restoreInventory(inventory, 0, nbt);
-        RefinedStorageUtils.restoreInventory(upgradesInventory, 1, nbt);
+        RefinedStorageUtils.restoreItems(filters, 0, nbt);
+        RefinedStorageUtils.restoreItems(upgrades, 1, nbt);
     }
 
     @Override
@@ -105,8 +107,8 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
         nbt.setInteger(NBT_COMPARE, compare);
         nbt.setInteger(NBT_MODE, mode);
 
-        RefinedStorageUtils.saveInventory(inventory, 0, nbt);
-        RefinedStorageUtils.saveInventory(upgradesInventory, 1, nbt);
+        RefinedStorageUtils.saveItems(filters, 0, nbt);
+        RefinedStorageUtils.saveItems(upgrades, 1, nbt);
     }
 
     @Override
@@ -130,16 +132,16 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
         return ContainerImporter.class;
     }
 
+    public IItemHandler getUpgrades() {
+        return upgrades;
+    }
+
+    public IItemHandler getFilters() {
+        return filters;
+    }
+
     @Override
-    public IInventory getDroppedInventory() {
-        return upgradesInventory;
-    }
-
-    public InventorySimple getUpgradesInventory() {
-        return upgradesInventory;
-    }
-
-    public IInventory getInventory() {
-        return inventory;
+    public IItemHandler getDroppedItems() {
+        return upgrades;
     }
 }

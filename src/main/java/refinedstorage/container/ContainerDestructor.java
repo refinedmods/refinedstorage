@@ -1,10 +1,8 @@
 package refinedstorage.container;
 
 import net.minecraft.entity.player.EntityPlayer;
-import refinedstorage.container.slot.SlotFiltered;
+import net.minecraftforge.items.SlotItemHandler;
 import refinedstorage.container.slot.SlotSpecimenItemBlock;
-import refinedstorage.container.slot.UpgradeItemValidator;
-import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.TileDestructor;
 
 public class ContainerDestructor extends ContainerBase {
@@ -16,7 +14,7 @@ public class ContainerDestructor extends ContainerBase {
         }
 
         for (int i = 0; i < 4; ++i) {
-            addSlotToContainer(new SlotFiltered(destructor.getUpgradesInventory(), i, 187, 6 + (i * 18), new UpgradeItemValidator(ItemUpgrade.TYPE_SPEED)));
+            addSlotToContainer(new SlotItemHandler(destructor.getUpgrades(), i, 187, 6 + (i * 18)));
         }
 
         addPlayerInventory(8, 55);

@@ -1,7 +1,7 @@
 package refinedstorage.container;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
+import net.minecraftforge.items.IItemHandler;
 import refinedstorage.container.slot.SlotSpecimen;
 
 public class ContainerStorage extends ContainerBase {
@@ -9,15 +9,15 @@ public class ContainerStorage extends ContainerBase {
         super(player);
     }
 
-    public ContainerStorage(EntityPlayer player, IInventory inventory) {
+    public ContainerStorage(EntityPlayer player, IItemHandler filters) {
         this(player);
 
-        addSpecimenAndPlayerInventorySlots(inventory);
+        addSpecimenAndPlayerInventorySlots(filters);
     }
 
-    protected void addSpecimenAndPlayerInventorySlots(IInventory inventory) {
+    protected void addSpecimenAndPlayerInventorySlots(IItemHandler filters) {
         for (int i = 0; i < 9; ++i) {
-            addSlotToContainer(new SlotSpecimen(inventory, i, 8 + (18 * i), 20, false));
+            addSlotToContainer(new SlotSpecimen(filters, i, 8 + (18 * i), 20, false));
         }
 
         addPlayerInventory(8, 129);

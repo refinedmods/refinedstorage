@@ -6,6 +6,8 @@ import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.InvWrapper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageItems;
@@ -13,7 +15,8 @@ import refinedstorage.RefinedStorageUtils;
 import refinedstorage.block.BlockGrid;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
-import refinedstorage.inventory.InventorySimple;
+import refinedstorage.inventory.SimpleItemHandler;
+import refinedstorage.inventory.SimpleItemValidator;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.network.MessageGridCraftingStart;
 import refinedstorage.network.MessageGridSettingsUpdate;
@@ -53,10 +56,10 @@ public class TileGrid extends TileMachine implements IGrid {
             onCraftingMatrixChanged();
         }
     };
-    private InventoryCrafting craftingInventory = new InventoryCrafting(craftingContainer, 3, 3);
-    private InventoryCraftResult craftingResultInventory = new InventoryCraftResult();
+    private InventoryCrafting matrix = new InventoryCrafting(craftingContainer, 3, 3);
+    private InventoryCraftResult result = new InventoryCraftResult();
 
-    private InventorySimple patternsInventory = new InventorySimple("patterns", 2, this);
+    private SimpleItemHandler patterns = new SimpleItemHandler(2, this, new SimpleItemValidator(RefinedStorageItems.PATTERN));
 
     private int sortingDirection = SORTING_DIRECTION_DESCENDING;
     private int sortingType = SORTING_TYPE_NAME;
@@ -96,39 +99,39 @@ public class TileGrid extends TileMachine implements IGrid {
         RefinedStorage.NETWORK.sendToServer(new MessageGridStoragePull(getPos().getX(), getPos().getY(), getPos().getZ(), id, flags));
     }
 
-    public InventoryCrafting getCraftingInventory() {
-        return craftingInventory;
+    public InventoryCrafting getMatrix() {
+        return matrix;
     }
 
-    public InventoryCraftResult getCraftingResultInventory() {
-        return craftingResultInventory;
+    public InventoryCraftResult getResult() {
+        return result;
     }
 
-    public InventorySimple getPatternsInventory() {
-        return patternsInventory;
+    public IItemHandler getPatterns() {
+        return patterns;
     }
 
     public void onCraftingMatrixChanged() {
         markDirty();
 
-        craftingResultInventory.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(craftingInventory, worldObj));
+        result.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(matrix, worldObj));
     }
 
     public void onCrafted(ContainerGrid container) {
         if (!worldObj.isRemote) {
-            ItemStack[] remainder = CraftingManager.getInstance().func_180303_b(craftingInventory, worldObj);
+            ItemStack[] remainder = CraftingManager.getInstance().func_180303_b(matrix, worldObj);
 
-            for (int i = 0; i < craftingInventory.getSizeInventory(); ++i) {
+            for (int i = 0; i < matrix.getSizeInventory(); ++i) {
                 if (remainder[i] != null) {
-                    craftingInventory.setInventorySlotContents(i, remainder[i].copy());
+                    matrix.setInventorySlotContents(i, remainder[i].copy());
                 } else {
-                    ItemStack slot = craftingInventory.getStackInSlot(i);
+                    ItemStack slot = matrix.getStackInSlot(i);
 
                     if (slot != null) {
                         if (slot.stackSize == 1 && isConnected()) {
-                            craftingInventory.setInventorySlotContents(i, controller.take(slot.copy()));
+                            matrix.setInventorySlotContents(i, controller.take(slot.copy()));
                         } else {
-                            craftingInventory.decrStackSize(i, 1);
+                            matrix.decrStackSize(i, 1);
                         }
                     }
                 }
@@ -143,7 +146,7 @@ public class TileGrid extends TileMachine implements IGrid {
     public void onCraftedShift(ContainerGrid container, EntityPlayer player) {
         List<ItemStack> craftedItemsList = new ArrayList<ItemStack>();
         int craftedItems = 0;
-        ItemStack crafted = craftingResultInventory.getStackInSlot(0);
+        ItemStack crafted = result.getStackInSlot(0);
 
         while (true) {
             onCrafted(container);
@@ -152,7 +155,7 @@ public class TileGrid extends TileMachine implements IGrid {
 
             craftedItems += crafted.stackSize;
 
-            if (!RefinedStorageUtils.compareStack(crafted, craftingResultInventory.getStackInSlot(0)) || craftedItems + crafted.stackSize > crafted.getMaxStackSize()) {
+            if (!RefinedStorageUtils.compareStack(crafted, result.getStackInSlot(0)) || craftedItems + crafted.stackSize > crafted.getMaxStackSize()) {
                 break;
             }
         }
@@ -170,34 +173,34 @@ public class TileGrid extends TileMachine implements IGrid {
 
     public void onCreatePattern() {
         if (mayCreatePattern()) {
-            patternsInventory.decrStackSize(0, 1);
+            patterns.extractItem(0, 1, false);
 
             ItemStack pattern = new ItemStack(RefinedStorageItems.PATTERN);
 
-            ItemPattern.addOutput(pattern, craftingResultInventory.getStackInSlot(0));
+            ItemPattern.addOutput(pattern, result.getStackInSlot(0));
 
             ItemPattern.setProcessing(pattern, false);
 
             for (int i = 0; i < 9; ++i) {
-                ItemStack ingredient = craftingInventory.getStackInSlot(i);
+                ItemStack ingredient = matrix.getStackInSlot(i);
 
                 if (ingredient != null) {
                     ItemPattern.addInput(pattern, ingredient);
                 }
             }
 
-            patternsInventory.setInventorySlotContents(1, pattern);
+            patterns.setStackInSlot(1, pattern);
         }
     }
 
     public boolean mayCreatePattern() {
-        return craftingResultInventory.getStackInSlot(0) != null && patternsInventory.getStackInSlot(1) == null && patternsInventory.getStackInSlot(0) != null;
+        return result.getStackInSlot(0) != null && patterns.getStackInSlot(1) == null && patterns.getStackInSlot(0) != null;
     }
 
     public void onRecipeTransfer(ItemStack[][] recipe) {
         if (isConnected()) {
-            for (int i = 0; i < craftingInventory.getSizeInventory(); ++i) {
-                ItemStack slot = craftingInventory.getStackInSlot(i);
+            for (int i = 0; i < matrix.getSizeInventory(); ++i) {
+                ItemStack slot = matrix.getStackInSlot(i);
 
                 if (slot != null) {
                     if (getType() == EnumGridType.CRAFTING) {
@@ -206,11 +209,11 @@ public class TileGrid extends TileMachine implements IGrid {
                         }
                     }
 
-                    craftingInventory.setInventorySlotContents(i, null);
+                    matrix.setInventorySlotContents(i, null);
                 }
             }
 
-            for (int i = 0; i < craftingInventory.getSizeInventory(); ++i) {
+            for (int i = 0; i < matrix.getSizeInventory(); ++i) {
                 if (recipe[i] != null) {
                     ItemStack[] possibilities = recipe[i];
 
@@ -219,13 +222,13 @@ public class TileGrid extends TileMachine implements IGrid {
                             ItemStack took = controller.take(possibility);
 
                             if (took != null) {
-                                craftingInventory.setInventorySlotContents(i, possibility);
+                                matrix.setInventorySlotContents(i, possibility);
 
                                 break;
                             }
                         }
                     } else if (getType() == EnumGridType.PATTERN) {
-                        craftingInventory.setInventorySlotContents(i, possibilities[0]);
+                        matrix.setInventorySlotContents(i, possibilities[0]);
                     }
                 }
             }
@@ -291,8 +294,8 @@ public class TileGrid extends TileMachine implements IGrid {
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
 
-        RefinedStorageUtils.restoreInventory(craftingInventory, 0, nbt);
-        RefinedStorageUtils.restoreInventory(patternsInventory, 1, nbt);
+        RefinedStorageUtils.restoreItemsLegacy(matrix, 0, nbt);
+        RefinedStorageUtils.restoreItems(patterns, 1, nbt);
 
         if (nbt.hasKey(NBT_SORTING_DIRECTION)) {
             sortingDirection = nbt.getInteger(NBT_SORTING_DIRECTION);
@@ -311,8 +314,8 @@ public class TileGrid extends TileMachine implements IGrid {
     public void writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
 
-        RefinedStorageUtils.saveInventory(craftingInventory, 0, nbt);
-        RefinedStorageUtils.saveInventory(patternsInventory, 1, nbt);
+        RefinedStorageUtils.saveItemsLegacy(matrix, 0, nbt);
+        RefinedStorageUtils.saveItems(patterns, 1, nbt);
 
         nbt.setInteger(NBT_SORTING_DIRECTION, sortingDirection);
         nbt.setInteger(NBT_SORTING_TYPE, sortingType);
@@ -359,12 +362,12 @@ public class TileGrid extends TileMachine implements IGrid {
     }
 
     @Override
-    public IInventory getDroppedInventory() {
+    public IItemHandler getDroppedItems() {
         switch (getType()) {
             case CRAFTING:
-                return craftingInventory;
+                return new InvWrapper(matrix);
             case PATTERN:
-                return patternsInventory;
+                return patterns;
             default:
                 return null;
         }

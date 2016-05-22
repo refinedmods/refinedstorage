@@ -229,9 +229,9 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
                 TileCrafter crafter = (TileCrafter) machine;
 
                 for (int i = 0; i < TileCrafter.PATTERN_SLOTS; ++i) {
-                    if (crafter.getStackInSlot(i) != null && ItemPattern.isValid(crafter.getStackInSlot(i))) {
-                        ItemStack pattern = crafter.getStackInSlot(i);
+                    ItemStack pattern = crafter.getPatterns().getStackInSlot(i);
 
+                    if (pattern != null && ItemPattern.isValid(pattern)) {
                         patterns.add(new CraftingPattern(crafter.getPos().getX(), crafter.getPos().getY(), crafter.getPos().getZ(), ItemPattern.isProcessing(pattern), ItemPattern.getInputs(pattern), ItemPattern.getOutputs(pattern)));
                     }
                 }

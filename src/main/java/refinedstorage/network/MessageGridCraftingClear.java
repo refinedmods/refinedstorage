@@ -46,18 +46,18 @@ public class MessageGridCraftingClear extends MessageHandlerPlayerToServer<Messa
 
             if (grid.isConnected()) {
                 if (grid.getType() == EnumGridType.CRAFTING) {
-                    for (int i = 0; i < grid.getCraftingInventory().getSizeInventory(); ++i) {
-                        ItemStack slot = grid.getCraftingInventory().getStackInSlot(i);
+                    for (int i = 0; i < grid.getMatrix().getSizeInventory(); ++i) {
+                        ItemStack slot = grid.getMatrix().getStackInSlot(i);
 
                         if (slot != null) {
                             if (grid.getController().push(slot)) {
-                                grid.getCraftingInventory().setInventorySlotContents(i, null);
+                                grid.getMatrix().setInventorySlotContents(i, null);
                             }
                         }
                     }
                 } else if (grid.getType() == EnumGridType.PATTERN) {
-                    for (int i = 0; i < grid.getCraftingInventory().getSizeInventory(); ++i) {
-                        grid.getCraftingInventory().setInventorySlotContents(i, null);
+                    for (int i = 0; i < grid.getMatrix().getSizeInventory(); ++i) {
+                        grid.getMatrix().setInventorySlotContents(i, null);
                     }
                 }
             }

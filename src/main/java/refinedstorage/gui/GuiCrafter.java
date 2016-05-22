@@ -49,9 +49,9 @@ public class GuiCrafter extends GuiBase {
             int x = 27;
             int y = 19 + (i * 18);
 
-            if (crafter.getStackInSlot(i) != null && ItemPattern.isValid(crafter.getStackInSlot(i))) {
-                ItemStack pattern = crafter.getStackInSlot(i);
+            ItemStack pattern = crafter.getPatterns().getStackInSlot(i);
 
+            if (pattern != null && ItemPattern.isValid(pattern)) {
                 String text = t("gui.refinedstorage:crafter.processing");
 
                 if (!ItemPattern.isProcessing(pattern)) {

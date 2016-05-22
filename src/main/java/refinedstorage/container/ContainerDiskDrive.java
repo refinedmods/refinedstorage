@@ -3,9 +3,7 @@ package refinedstorage.container;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import refinedstorage.RefinedStorageItems;
-import refinedstorage.container.slot.BasicItemValidator;
-import refinedstorage.container.slot.SlotFiltered;
+import net.minecraftforge.items.SlotItemHandler;
 import refinedstorage.tile.TileDiskDrive;
 
 public class ContainerDiskDrive extends ContainerStorage {
@@ -13,14 +11,14 @@ public class ContainerDiskDrive extends ContainerStorage {
         super(player);
 
         for (int i = 0; i < 4; ++i) {
-            addSlotToContainer(new SlotFiltered(drive, i, 98 + (i * 18), 78, new BasicItemValidator(RefinedStorageItems.STORAGE_DISK)));
+            addSlotToContainer(new SlotItemHandler(drive.getDisks(), i, 98 + (i * 18), 78));
         }
 
         for (int i = 0; i < 4; ++i) {
-            addSlotToContainer(new SlotFiltered(drive, 4 + i, 98 + (i * 18), 96, new BasicItemValidator(RefinedStorageItems.STORAGE_DISK)));
+            addSlotToContainer(new SlotItemHandler(drive.getDisks(), 4 + i, 98 + (i * 18), 96));
         }
 
-        addSpecimenAndPlayerInventorySlots(drive.getInventory());
+        addSpecimenAndPlayerInventorySlots(drive.getFilters());
     }
 
     @Override

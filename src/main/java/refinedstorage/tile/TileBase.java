@@ -3,7 +3,6 @@ package refinedstorage.tile;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -13,6 +12,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.network.MessageTileContainerUpdate;
@@ -97,7 +97,7 @@ public abstract class TileBase extends TileEntity implements ITickable {
         return worldObj.getTileEntity(pos.offset(direction));
     }
 
-    public IInventory getDroppedInventory() {
+    public IItemHandler getDroppedItems() {
         return null;
     }
 }

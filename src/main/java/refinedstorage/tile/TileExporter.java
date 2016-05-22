@@ -2,22 +2,28 @@ package refinedstorage.tile;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerExporter;
-import refinedstorage.inventory.InventorySimple;
+import refinedstorage.inventory.SimpleItemHandler;
+import refinedstorage.inventory.SimpleItemValidator;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
 
 public class TileExporter extends TileMachine implements ICompareConfig {
     public static final String NBT_COMPARE = "Compare";
 
-    private InventorySimple inventory = new InventorySimple("exporter", 9, this);
-    private InventorySimple upgradesInventory = new InventorySimple("upgrades", 4, this);
+    private SimpleItemHandler filters = new SimpleItemHandler(9, this);
+    private SimpleItemHandler upgrades = new SimpleItemHandler(
+        4,
+        this,
+        new SimpleItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED),
+        new SimpleItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_CRAFTING)
+    );
 
     private int compare = 0;
 
@@ -25,16 +31,16 @@ public class TileExporter extends TileMachine implements ICompareConfig {
 
     @Override
     public int getEnergyUsage() {
-        return 2 + RefinedStorageUtils.getUpgradeEnergyUsage(upgradesInventory);
+        return 2 + RefinedStorageUtils.getUpgradeEnergyUsage(upgrades);
     }
 
     @Override
     public void updateMachine() {
         IItemHandler handler = RefinedStorageUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
 
-        if (handler != null && ticks % RefinedStorageUtils.getSpeed(upgradesInventory) == 0) {
-            for (int i = 0; i < inventory.getSizeInventory(); ++i) {
-                ItemStack slot = inventory.getStackInSlot(i);
+        if (handler != null && ticks % RefinedStorageUtils.getSpeed(upgrades) == 0) {
+            for (int i = 0; i < filters.getSlots(); ++i) {
+                ItemStack slot = filters.getStackInSlot(i);
 
                 if (slot != null) {
                     ItemStack took = controller.take(ItemHandlerHelper.copyStackWithSize(slot, 1), compare);
@@ -49,7 +55,7 @@ public class TileExporter extends TileMachine implements ICompareConfig {
                         }
 
                         controller.push(took);
-                    } else if (RefinedStorageUtils.hasUpgrade(upgradesInventory, ItemUpgrade.TYPE_CRAFTING)) {
+                    } else if (RefinedStorageUtils.hasUpgrade(upgrades, ItemUpgrade.TYPE_CRAFTING)) {
                         if (scheduler.canSchedule(compare, slot)) {
                             scheduler.schedule(controller, compare, slot);
                         }
@@ -79,8 +85,8 @@ public class TileExporter extends TileMachine implements ICompareConfig {
             compare = nbt.getInteger(NBT_COMPARE);
         }
 
-        RefinedStorageUtils.restoreInventory(inventory, 0, nbt);
-        RefinedStorageUtils.restoreInventory(upgradesInventory, 1, nbt);
+        RefinedStorageUtils.restoreItems(filters, 0, nbt);
+        RefinedStorageUtils.restoreItems(upgrades, 1, nbt);
 
         scheduler.readFromNBT(nbt);
     }
@@ -91,8 +97,8 @@ public class TileExporter extends TileMachine implements ICompareConfig {
 
         nbt.setInteger(NBT_COMPARE, compare);
 
-        RefinedStorageUtils.saveInventory(inventory, 0, nbt);
-        RefinedStorageUtils.saveInventory(upgradesInventory, 1, nbt);
+        RefinedStorageUtils.saveItems(filters, 0, nbt);
+        RefinedStorageUtils.saveItems(upgrades, 1, nbt);
 
         scheduler.writeToNBT(nbt);
     }
@@ -116,16 +122,16 @@ public class TileExporter extends TileMachine implements ICompareConfig {
         return ContainerExporter.class;
     }
 
+    public IItemHandler getFilters() {
+        return filters;
+    }
+
+    public IItemHandler getUpgrades() {
+        return upgrades;
+    }
+
     @Override
-    public IInventory getDroppedInventory() {
-        return upgradesInventory;
-    }
-
-    public InventorySimple getUpgradesInventory() {
-        return upgradesInventory;
-    }
-
-    public IInventory getInventory() {
-        return inventory;
+    public IItemHandler getDroppedItems() {
+        return upgrades;
     }
 }
