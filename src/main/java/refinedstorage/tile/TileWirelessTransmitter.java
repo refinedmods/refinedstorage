@@ -2,6 +2,9 @@ package refinedstorage.tile;
 
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
@@ -54,5 +57,19 @@ public class TileWirelessTransmitter extends TileMachine {
     @Override
     public IItemHandler getDroppedItems() {
         return upgrades;
+    }
+
+    @Override
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return (T) upgrades;
+        }
+
+        return super.getCapability(capability, facing);
+    }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
     }
 }

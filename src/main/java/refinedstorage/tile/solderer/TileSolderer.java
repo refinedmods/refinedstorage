@@ -3,13 +3,17 @@ package refinedstorage.tile.solderer;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerSolderer;
 import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.inventory.BasicItemValidator;
+import refinedstorage.inventory.SoldererItemHandler;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.TileMachine;
 
@@ -186,5 +190,19 @@ public class TileSolderer extends TileMachine {
         }
 
         return dummy;
+    }
+
+    @Override
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return (T) new SoldererItemHandler(items, facing);
+        }
+
+        return super.getCapability(capability, facing);
+    }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
     }
 }

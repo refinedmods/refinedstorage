@@ -4,6 +4,9 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageItems;
@@ -244,5 +247,19 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
     @Override
     public IItemHandler getDroppedItems() {
         return disks;
+    }
+
+    @Override
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return (T) disks;
+        }
+
+        return super.getCapability(capability, facing);
+    }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
     }
 }

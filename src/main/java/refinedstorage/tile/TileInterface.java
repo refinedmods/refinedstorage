@@ -14,6 +14,7 @@ import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
 
+// @TODO: Write a capability handler for this
 public class TileInterface extends TileMachine implements ICompareConfig {
     public static final String NBT_COMPARE = "Compare";
 

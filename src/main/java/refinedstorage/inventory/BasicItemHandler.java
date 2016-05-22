@@ -15,6 +15,14 @@ public class BasicItemHandler extends ItemStackHandler {
         this.validators = validators;
     }
 
+    public TileEntity getTile() {
+        return tile;
+    }
+
+    public IItemValidator[] getValidators() {
+        return validators;
+    }
+
     public BasicItemHandler(int size, IItemValidator... validators) {
         this(size, null, validators);
     }
