@@ -1,6 +1,9 @@
 # Refined Storage Changelog
 
 ### 0.7
+**Bugfixes**
+- Fixed Crafting Grid / Pattern Grid not throwing items on break
+
 **Features**
 - Port to Minecraft 1.9.4
 

@@ -32,6 +32,8 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 
     private StorageBlockStorage storage;
 
+    private EnumStorageType type;
+
     private int priority = 0;
     private int compare = 0;
     private int mode = ModeConstants.WHITELIST;
@@ -101,11 +103,11 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
     }
 
     public EnumStorageType getType() {
-        if (worldObj.getBlockState(pos).getBlock() == RefinedStorageBlocks.STORAGE) {
-            return ((EnumStorageType) worldObj.getBlockState(pos).getValue(BlockStorage.TYPE));
+        if (type == null && worldObj.getBlockState(pos).getBlock() == RefinedStorageBlocks.STORAGE) {
+            this.type = ((EnumStorageType) worldObj.getBlockState(pos).getValue(BlockStorage.TYPE));
         }
 
-        return EnumStorageType.TYPE_1K;
+        return type;
     }
 
     @Override

@@ -71,6 +71,8 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
     public static final int MAX_CRAFTING_QUANTITY_PER_REQUEST = 500;
 
+    private EnumControllerType type;
+
     private List<ItemGroup> itemGroups = new ArrayList<ItemGroup>();
     private List<IStorage> storages = new ArrayList<IStorage>();
     private List<WirelessGridConsumer> wirelessGridConsumers = new ArrayList<WirelessGridConsumer>();
@@ -255,11 +257,11 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     }
 
     public EnumControllerType getType() {
-        if (worldObj.getBlockState(pos).getBlock() == RefinedStorageBlocks.CONTROLLER) {
-            return (EnumControllerType) worldObj.getBlockState(pos).getValue(BlockController.TYPE);
+        if (type == null && worldObj.getBlockState(pos).getBlock() == RefinedStorageBlocks.CONTROLLER) {
+            this.type = (EnumControllerType) worldObj.getBlockState(pos).getValue(BlockController.TYPE);
         }
 
-        return EnumControllerType.NORMAL;
+        return type;
     }
 
     public int getWirelessGridRange() {

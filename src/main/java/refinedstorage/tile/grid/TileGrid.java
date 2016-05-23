@@ -61,6 +61,8 @@ public class TileGrid extends TileMachine implements IGrid {
 
     private BasicItemHandler patterns = new BasicItemHandler(2, this, new BasicItemValidator(RefinedStorageItems.PATTERN));
 
+    private EnumGridType type;
+
     private int sortingDirection = SORTING_DIRECTION_DESCENDING;
     private int sortingType = SORTING_TYPE_NAME;
     private int searchBoxMode = SEARCH_BOX_MODE_NORMAL;
@@ -77,11 +79,11 @@ public class TileGrid extends TileMachine implements IGrid {
     }
 
     public EnumGridType getType() {
-        if (worldObj.getBlockState(pos).getBlock() == RefinedStorageBlocks.GRID) {
-            return (EnumGridType) worldObj.getBlockState(pos).getValue(BlockGrid.TYPE);
+        if (type == null && worldObj.getBlockState(pos).getBlock() == RefinedStorageBlocks.GRID) {
+            this.type = (EnumGridType) worldObj.getBlockState(pos).getValue(BlockGrid.TYPE);
         }
 
-        return EnumGridType.NORMAL;
+        return type;
     }
 
     @Override
