@@ -133,15 +133,11 @@ public class RefinedStorageUtils {
     }
 
     public static int getSpeed(IItemHandler handler) {
-        return getSpeed(handler, 9, 2, 0);
+        return getSpeed(handler, 9, 2);
     }
 
     public static int getSpeed(IItemHandler handler, int speed, int speedIncrease) {
-        return getSpeed(handler, speed, speedIncrease, 0);
-    }
-
-    public static int getSpeed(IItemHandler handler, int speed, int speedIncrease, int start) {
-        for (int i = start; i < handler.getSlots(); ++i) {
+        for (int i = 0; i < handler.getSlots(); ++i) {
             if (handler.getStackInSlot(i) != null && handler.getStackInSlot(i).getMetadata() == ItemUpgrade.TYPE_SPEED) {
                 speed -= speedIncrease;
             }
@@ -155,13 +151,9 @@ public class RefinedStorageUtils {
     }
 
     public static int getUpgradeCount(IItemHandler handler, int type) {
-        return getUpgradeCount(handler, type, 0);
-    }
-
-    public static int getUpgradeCount(IItemHandler handler, int type, int start) {
         int upgrades = 0;
 
-        for (int i = start; i < handler.getSlots(); ++i) {
+        for (int i = 0; i < handler.getSlots(); ++i) {
             if (handler.getStackInSlot(i) != null && handler.getStackInSlot(i).getMetadata() == type) {
                 upgrades++;
             }
@@ -171,13 +163,9 @@ public class RefinedStorageUtils {
     }
 
     public static int getUpgradeEnergyUsage(IItemHandler handler) {
-        return getUpgradeEnergyUsage(handler, 0);
-    }
-
-    public static int getUpgradeEnergyUsage(IItemHandler handler, int start) {
         int usage = 0;
 
-        for (int i = start; i < handler.getSlots(); ++i) {
+        for (int i = 0; i < handler.getSlots(); ++i) {
             if (handler.getStackInSlot(i) != null) {
                 usage += ItemUpgrade.getEnergyUsage(handler.getStackInSlot(i).getMetadata());
             }

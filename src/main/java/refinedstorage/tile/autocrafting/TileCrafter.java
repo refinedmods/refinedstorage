@@ -71,7 +71,7 @@ public class TileCrafter extends TileMachine {
     }
 
     public int getSpeed() {
-        return 20 - (RefinedStorageUtils.getUpgradeCount(upgrades, ItemUpgrade.TYPE_SPEED, PATTERN_SLOTS) * 4);
+        return 20 - (RefinedStorageUtils.getUpgradeCount(upgrades, ItemUpgrade.TYPE_SPEED) * 4);
     }
 
     public IItemHandler getPatterns() {
