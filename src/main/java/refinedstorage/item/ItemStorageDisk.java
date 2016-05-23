@@ -43,9 +43,9 @@ public class ItemStorageDisk extends ItemBase {
         int capacity = EnumStorageType.getById(disk.getItemDamage()).getCapacity();
 
         if (capacity == -1) {
-            list.add(String.format(I18n.format("misc.refinedstorage:storage.stored"), NBTStorage.getStored(disk.getTagCompound())));
+            list.add(I18n.format("misc.refinedstorage:storage.stored", NBTStorage.getStored(disk.getTagCompound())));
         } else {
-            list.add(String.format(I18n.format("misc.refinedstorage:storage.stored_capacity"), NBTStorage.getStored(disk.getTagCompound()), capacity));
+            list.add(I18n.format("misc.refinedstorage:storage.stored_capacity", NBTStorage.getStored(disk.getTagCompound()), capacity));
         }
     }
 
