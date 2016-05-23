@@ -156,14 +156,14 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
         return super.writeToNBT(nbt);
     }
 
-    public void writeToDescriptionPacketNBT(NBTTagCompound tag) {
-        super.writeToDescriptionPacketNBT(tag);
-
+    public NBTTagCompound writeToUpdatePacketNBT(NBTTagCompound tag) {
         tag.setBoolean(NBT_DESC_CONNECTED, isActive());
+
+        return super.writeToUpdatePacketNBT(tag);
     }
 
-    public void readFromDescriptionPacketNBT(NBTTagCompound tag) {
-        super.readFromDescriptionPacketNBT(tag);
+    public void readFromUpdatePacketNBT(NBTTagCompound tag) {
+        super.readFromUpdatePacketNBT(tag);
 
         connected = tag.getBoolean(NBT_DESC_CONNECTED);
     }

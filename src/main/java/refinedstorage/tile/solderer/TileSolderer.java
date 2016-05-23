@@ -124,15 +124,15 @@ public class TileSolderer extends TileMachine {
     }
 
     @Override
-    public void writeToDescriptionPacketNBT(NBTTagCompound tag) {
-        super.writeToDescriptionPacketNBT(tag);
-
+    public NBTTagCompound writeToUpdatePacketNBT(NBTTagCompound tag) {
         tag.setBoolean(NBT_WORKING, working);
+
+        return super.writeToUpdatePacketNBT(tag);
     }
 
     @Override
-    public void readFromDescriptionPacketNBT(NBTTagCompound tag) {
-        super.readFromDescriptionPacketNBT(tag);
+    public void readFromUpdatePacketNBT(NBTTagCompound tag) {
+        super.readFromUpdatePacketNBT(tag);
 
         working = tag.getBoolean(NBT_WORKING);
     }

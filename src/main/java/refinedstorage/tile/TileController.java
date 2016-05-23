@@ -545,15 +545,15 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     }
 
     @Override
-    public void writeToDescriptionPacketNBT(NBTTagCompound tag) {
-        super.writeToDescriptionPacketNBT(tag);
-
+    public NBTTagCompound writeToUpdatePacketNBT(NBTTagCompound tag) {
         tag.setInteger(NBT_DESC_ENERGY, getEnergyStored(null));
+
+        return super.writeToUpdatePacketNBT(tag);
     }
 
     @Override
-    public void readFromDescriptionPacketNBT(NBTTagCompound tag) {
-        super.readFromDescriptionPacketNBT(tag);
+    public void readFromUpdatePacketNBT(NBTTagCompound tag) {
+        super.readFromUpdatePacketNBT(tag);
 
         setEnergyStored(tag.getInteger(NBT_DESC_ENERGY));
     }
