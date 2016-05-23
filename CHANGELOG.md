@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 0.7
+**Features**
+- Port to Minecraft 1.9.4
+
 ### 0.6.11
 **Bugfixes**
 - Fixed crafting patterns crashing when item of an input or output no longer exists

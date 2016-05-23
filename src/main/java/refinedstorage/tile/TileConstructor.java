@@ -105,7 +105,7 @@ public class TileConstructor extends TileMachine implements ICompareConfig {
 
         scheduler.writeToNBT(nbt);
 
-        return nbt;
+        return super.writeToNBT(nbt);
     }
 
     @Override
