@@ -14,17 +14,17 @@ public class SoldererRegistry {
         recipes.add(recipe);
     }
 
-    public static ISoldererRecipe getRecipe(IItemHandler inventory) {
+    public static ISoldererRecipe getRecipe(IItemHandler items) {
         for (ISoldererRecipe recipe : recipes) {
             boolean ok = true;
 
             for (int i = 0; i < 3; ++i) {
-                if (!RefinedStorageUtils.compareStackNoQuantity(recipe.getRow(i), inventory.getStackInSlot(i))) {
+                if (!RefinedStorageUtils.compareStackNoQuantity(recipe.getRow(i), items.getStackInSlot(i))) {
                     ok = false;
                 }
 
-                if (inventory.getStackInSlot(i) != null && recipe.getRow(i) != null) {
-                    if (inventory.getStackInSlot(i).stackSize < recipe.getRow(i).stackSize) {
+                if (items.getStackInSlot(i) != null && recipe.getRow(i) != null) {
+                    if (items.getStackInSlot(i).stackSize < recipe.getRow(i).stackSize) {
                         ok = false;
                     }
                 }

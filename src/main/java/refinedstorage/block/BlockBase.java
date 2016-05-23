@@ -19,7 +19,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.item.ItemBlockBase;
 import refinedstorage.tile.TileBase;
@@ -104,19 +103,12 @@ public abstract class BlockBase extends Block {
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack itemStack) {
         super.onBlockPlacedBy(world, pos, state, player, itemStack);
 
-        Block blockPlaced = state.getBlock();
-
         TileEntity tile = world.getTileEntity(pos);
 
         if (tile instanceof TileBase) {
             EnumFacing facing = BlockPistonBase.getFacingFromEntity(pos, player);
 
-            if (player.isSneaking() && (blockPlaced == RefinedStorageBlocks.IMPORTER ||
-                blockPlaced == RefinedStorageBlocks.EXPORTER ||
-                blockPlaced == RefinedStorageBlocks.EXTERNAL_STORAGE ||
-                blockPlaced == RefinedStorageBlocks.CONSTRUCTOR ||
-                blockPlaced == RefinedStorageBlocks.DESTRUCTOR ||
-                blockPlaced == RefinedStorageBlocks.CRAFTER)) {
+            if (player.isSneaking() && hasOppositeFacingOnSneakPlace()) {
                 facing = facing.getOpposite();
             }
 
@@ -159,5 +151,9 @@ public abstract class BlockBase extends Block {
 
     public Item createItemForBlock() {
         return new ItemBlockBase(this, false);
+    }
+
+    public boolean hasOppositeFacingOnSneakPlace() {
+        return false;
     }
 }

@@ -33,7 +33,11 @@ public class TileDestructor extends TileMachine implements ICompareConfig, IMode
     public static final int BASE_SPEED = 20;
 
     private BasicItemHandler filters = new BasicItemHandler(9, this);
-    private BasicItemHandler upgrades = new BasicItemHandler(4, this, new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED));
+    private BasicItemHandler upgrades = new BasicItemHandler(
+        4,
+        this,
+        new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED)
+    );
 
     private int compare = 0;
     private int mode = ModeConstants.WHITELIST;

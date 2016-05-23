@@ -8,6 +8,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerSolderer;
@@ -179,17 +180,7 @@ public class TileSolderer extends TileMachine {
 
     @Override
     public IItemHandler getDroppedItems() {
-        BasicItemHandler dummy = new BasicItemHandler(4 + 4);
-
-        for (int i = 0; i < 4; ++i) {
-            dummy.setStackInSlot(i, items.getStackInSlot(i));
-        }
-
-        for (int i = 0; i < 4; ++i) {
-            dummy.setStackInSlot(4 + i, upgrades.getStackInSlot(i));
-        }
-
-        return dummy;
+        return new CombinedInvWrapper(items, upgrades);
     }
 
     @Override

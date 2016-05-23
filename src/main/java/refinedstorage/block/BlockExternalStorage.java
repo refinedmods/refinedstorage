@@ -30,4 +30,9 @@ public class BlockExternalStorage extends BlockMachine {
 
         return true;
     }
+
+    @Override
+    public boolean hasOppositeFacingOnSneakPlace() {
+        return true;
+    }
 }

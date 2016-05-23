@@ -5,6 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerCrafter;
@@ -83,16 +84,6 @@ public class TileCrafter extends TileMachine {
 
     @Override
     public IItemHandler getDroppedItems() {
-        BasicItemHandler dummy = new BasicItemHandler(PATTERN_SLOTS + 4);
-
-        for (int i = 0; i < PATTERN_SLOTS; ++i) {
-            dummy.setStackInSlot(i, patterns.getStackInSlot(i));
-        }
-
-        for (int i = 0; i < 4; ++i) {
-            dummy.setStackInSlot(PATTERN_SLOTS + i, upgrades.getStackInSlot(i));
-        }
-
-        return dummy;
+        return new CombinedInvWrapper(patterns, upgrades);
     }
 }
