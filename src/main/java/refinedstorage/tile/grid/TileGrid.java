@@ -169,6 +169,8 @@ public class TileGrid extends TileMachine implements IGrid {
                 }
             }
         }
+
+        container.detectAndSendChanges();
     }
 
     public void onCreatePattern() {

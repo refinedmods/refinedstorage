@@ -3,7 +3,8 @@
 ### 0.6.11
 **Bugfixes**
 - Fixed crafting patterns crashing when item of an input or output no longer exists
-- Fixed importer / exporter / crafter not being able to interact with some inventories
+- Fixed Grid letting the current held item flicker
+- Converted all inventories in the mod to Forge's item handler capability system
 
 ### 0.6.10
 **Bugfixes**

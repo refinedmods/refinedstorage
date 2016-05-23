@@ -3,16 +3,12 @@ package refinedstorage.container;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ClickType;
-import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
 import refinedstorage.RefinedStorage;
 import refinedstorage.block.EnumGridType;
-import refinedstorage.container.slot.SlotDisabled;
-import refinedstorage.container.slot.SlotGridCraftingResult;
-import refinedstorage.container.slot.SlotOutput;
-import refinedstorage.container.slot.SlotSpecimenLegacy;
+import refinedstorage.container.slot.*;
 import refinedstorage.network.MessageGridCraftingShift;
 import refinedstorage.tile.grid.IGrid;
 import refinedstorage.tile.grid.TileGrid;
@@ -22,9 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ContainerGrid extends ContainerBase {
-    private List<Slot> craftingSlots = new ArrayList<Slot>();
+    private List<SlotGridCrafting> craftingSlots = new ArrayList<SlotGridCrafting>();
     private SlotGridCraftingResult craftingResultSlot;
+
     private SlotDisabled patternResultSlot;
+
     private IGrid grid;
 
     public ContainerGrid(EntityPlayer player, IGrid grid) {
@@ -39,7 +37,7 @@ public class ContainerGrid extends ContainerBase {
             int y = 106;
 
             for (int i = 0; i < 9; ++i) {
-                Slot slot = new Slot(((TileGrid) grid).getMatrix(), i, x, y);
+                SlotGridCrafting slot = new SlotGridCrafting(((TileGrid) grid).getMatrix(), i, x, y);
 
                 craftingSlots.add(slot);
 
@@ -80,7 +78,7 @@ public class ContainerGrid extends ContainerBase {
         return (TileGrid) grid;
     }
 
-    public List<Slot> getCraftingSlots() {
+    public List<SlotGridCrafting> getCraftingSlots() {
         return craftingSlots;
     }
 
@@ -91,15 +89,24 @@ public class ContainerGrid extends ContainerBase {
      That is why we override here to get rid of the check and ALWAYS send slot changes. */
     @Override
     public void detectAndSendChanges() {
-        for (int i = 0; i < this.inventorySlots.size(); ++i) {
-            ItemStack itemstack = ((Slot) this.inventorySlots.get(i)).getStack();
-            ItemStack itemstack1 = (ItemStack) this.inventoryItemStacks.get(i);
+        for (int i = 0; i < inventorySlots.size(); ++i) {
+            if (inventorySlots.get(i) instanceof SlotGridCrafting || inventorySlots.get(i) == craftingResultSlot) {
+                for (int j = 0; j < crafters.size(); ++j) {
+                    crafters.get(j).sendSlotContents(this, i, inventorySlots.get(i).getStack());
+                }
+            } else {
+                ItemStack current = inventorySlots.get(i).getStack();
+                ItemStack cached = inventoryItemStacks.get(i);
 
-            itemstack1 = itemstack == null ? null : itemstack.copy();
-            this.inventoryItemStacks.set(i, itemstack1);
+                if (!ItemStack.areItemStacksEqual(cached, current)) {
+                    cached = current == null ? null : current.copy();
 
-            for (int j = 0; j < this.crafters.size(); ++j) {
-                ((ICrafting) this.crafters.get(j)).sendSlotContents(this, i, itemstack1);
+                    inventoryItemStacks.set(i, cached);
+
+                    for (int j = 0; j < crafters.size(); ++j) {
+                        crafters.get(j).sendSlotContents(this, i, cached);
+                    }
+                }
             }
         }
     }
