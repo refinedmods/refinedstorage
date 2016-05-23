@@ -4,7 +4,7 @@
 **Bugfixes**
 - Fixed crafting patterns crashing when item of an input or output no longer exists
 - Fixed Grid letting the current held item flicker
-- Fixed Importer / Exporter / External Storage not being able to push or pull out of a second chest in a double chest
+- Fixed Importer / Exporter / External Storage not being able to push or pull out of the other side of a double chest
 - Converted all inventories in the mod to Forge's item handler capability system
 
 ### 0.6.10
