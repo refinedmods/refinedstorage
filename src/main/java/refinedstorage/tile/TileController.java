@@ -67,7 +67,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     public static final int ENERGY_CAPACITY = 32000;
 
     public static final String NBT_CRAFTING_TASKS = "CraftingTasks";
-    public static final String NBT_DESC_ENERGY = "Energy";
+    public static final String NBT_ENERGY = "Energy";
 
     public static final int MAX_CRAFTING_QUANTITY_PER_REQUEST = 500;
 
@@ -551,7 +551,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {
         super.writeUpdate(tag);
 
-        tag.setInteger(NBT_DESC_ENERGY, getEnergyStored(null));
+        tag.setInteger(NBT_ENERGY, getEnergyStored(null));
 
         return tag;
     }
@@ -560,7 +560,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     public void readUpdate(NBTTagCompound tag) {
         super.readUpdate(tag);
 
-        setEnergyStored(tag.getInteger(NBT_DESC_ENERGY));
+        setEnergyStored(tag.getInteger(NBT_ENERGY));
     }
 
     @Override
