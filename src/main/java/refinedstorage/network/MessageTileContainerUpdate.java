@@ -33,7 +33,7 @@ public class MessageTileContainerUpdate implements IMessage, IMessageHandler<Mes
             tile = ClientProxy.getWorld().getTileEntity(new BlockPos(x, y, z));
 
             if (tile instanceof ISynchronizedContainer) {
-                ((ISynchronizedContainer) tile).receiveContainerData(buf);
+                ((ISynchronizedContainer) tile).readContainerData(buf);
             }
         }
     }
@@ -45,7 +45,7 @@ public class MessageTileContainerUpdate implements IMessage, IMessageHandler<Mes
         buf.writeInt(tile.getPos().getZ());
 
         if (tile instanceof ISynchronizedContainer) {
-            ((ISynchronizedContainer) tile).sendContainerData(buf);
+            ((ISynchronizedContainer) tile).writeContainerData(buf);
         }
     }
 

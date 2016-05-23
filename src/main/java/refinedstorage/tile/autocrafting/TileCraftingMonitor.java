@@ -30,8 +30,8 @@ public class TileCraftingMonitor extends TileMachine {
     }
 
     @Override
-    public void sendContainerData(ByteBuf buf) {
-        super.sendContainerData(buf);
+    public void writeContainerData(ByteBuf buf) {
+        super.writeContainerData(buf);
 
         if (connected) {
             buf.writeInt(controller.getCraftingTasks().size());
@@ -51,8 +51,8 @@ public class TileCraftingMonitor extends TileMachine {
     }
 
     @Override
-    public void receiveContainerData(ByteBuf buf) {
-        super.receiveContainerData(buf);
+    public void readContainerData(ByteBuf buf) {
+        super.readContainerData(buf);
 
         int size = buf.readInt();
 

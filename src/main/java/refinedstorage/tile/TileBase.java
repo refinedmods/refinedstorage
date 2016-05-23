@@ -49,40 +49,53 @@ public abstract class TileBase extends TileEntity implements ITickable {
         return direction;
     }
 
-    @Override
-    public void readFromNBT(NBTTagCompound nbt) {
-        super.readFromNBT(nbt);
-
-        direction = EnumFacing.getFront(nbt.getInteger(NBT_DIRECTION));
-    }
-
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-        nbt.setInteger(NBT_DIRECTION, direction.ordinal());
-
-        return super.writeToNBT(nbt);
-    }
-
-    public NBTTagCompound writeToUpdatePacketNBT(NBTTagCompound tag) {
+    public NBTTagCompound write(NBTTagCompound tag) {
         tag.setInteger(NBT_DIRECTION, direction.ordinal());
 
         return tag;
     }
 
-    public void readFromUpdatePacketNBT(NBTTagCompound tag) {
+    public NBTTagCompound writeUpdate(NBTTagCompound tag) {
+        tag.setByte("U", (byte) 1);
+        tag.setInteger(NBT_DIRECTION, direction.ordinal());
+
+        return tag;
+    }
+
+    public void read(NBTTagCompound tag) {
         direction = EnumFacing.getFront(tag.getInteger(NBT_DIRECTION));
     }
 
+    public void readUpdate(NBTTagCompound tag) {
+        direction = EnumFacing.getFront(tag.getInteger(NBT_DIRECTION));
+
+        RefinedStorageUtils.updateBlock(worldObj, pos);
+    }
+
     @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
-        return new SPacketUpdateTileEntity(pos, 1, writeToUpdatePacketNBT(new NBTTagCompound()));
+    public void readFromNBT(NBTTagCompound nbt) {
+        super.readFromNBT(nbt);
+
+        if (nbt.hasKey("U")) {
+            readUpdate(nbt);
+        } else {
+            read(nbt);
+        }
+    }
+
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+        return write(super.writeToNBT(tag));
+    }
+
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        return writeUpdate(super.getUpdateTag());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
-        readFromUpdatePacketNBT(packet.getNbtCompound());
-
-        RefinedStorageUtils.updateBlock(worldObj, pos);
+        readUpdate(packet.getNbtCompound());
     }
 
     @Override

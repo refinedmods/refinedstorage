@@ -26,7 +26,7 @@ public class RefinedStorageUtils {
     public static final int COMPARE_NBT = 2;
     public static final int COMPARE_QUANTITY = 4;
 
-    public static void saveItems(IItemHandler handler, int id, NBTTagCompound nbt) {
+    public static void writeItems(IItemHandler handler, int id, NBTTagCompound nbt) {
         NBTTagList tagList = new NBTTagList();
 
         for (int i = 0; i < handler.getSlots(); i++) {
@@ -44,7 +44,7 @@ public class RefinedStorageUtils {
         nbt.setTag(String.format(NBT_INVENTORY, id), tagList);
     }
 
-    public static void restoreItems(IItemHandler handler, int id, NBTTagCompound nbt) {
+    public static void readItems(IItemHandler handler, int id, NBTTagCompound nbt) {
         String name = String.format(NBT_INVENTORY, id);
 
         if (nbt.hasKey(name)) {
@@ -60,7 +60,7 @@ public class RefinedStorageUtils {
         }
     }
 
-    public static void saveItemsLegacy(IInventory inventory, int id, NBTTagCompound nbt) {
+    public static void writeItemsLegacy(IInventory inventory, int id, NBTTagCompound nbt) {
         NBTTagList tagList = new NBTTagList();
 
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
@@ -78,7 +78,7 @@ public class RefinedStorageUtils {
         nbt.setTag(String.format(NBT_INVENTORY, id), tagList);
     }
 
-    public static void restoreItemsLegacy(IInventory inventory, int id, NBTTagCompound nbt) {
+    public static void readItemsLegacy(IInventory inventory, int id, NBTTagCompound nbt) {
         String name = String.format(NBT_INVENTORY, id);
 
         if (nbt.hasKey(name)) {

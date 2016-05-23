@@ -85,11 +85,11 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
-        super.readFromNBT(nbt);
+    public void read(NBTTagCompound nbt) {
+        super.read(nbt);
 
-        RefinedStorageUtils.restoreItems(disks, 0, nbt);
-        RefinedStorageUtils.restoreItems(filters, 1, nbt);
+        RefinedStorageUtils.readItems(disks, 0, nbt);
+        RefinedStorageUtils.readItems(filters, 1, nbt);
 
         if (nbt.hasKey(NBT_PRIORITY)) {
             priority = nbt.getInteger(NBT_PRIORITY);
@@ -105,20 +105,22 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-        RefinedStorageUtils.saveItems(disks, 0, nbt);
-        RefinedStorageUtils.saveItems(filters, 1, nbt);
+    public NBTTagCompound write(NBTTagCompound tag) {
+        super.write(tag);
 
-        nbt.setInteger(NBT_PRIORITY, priority);
-        nbt.setInteger(NBT_COMPARE, compare);
-        nbt.setInteger(NBT_MODE, mode);
+        RefinedStorageUtils.writeItems(disks, 0, tag);
+        RefinedStorageUtils.writeItems(filters, 1, tag);
 
-        return super.writeToNBT(nbt);
+        tag.setInteger(NBT_PRIORITY, priority);
+        tag.setInteger(NBT_COMPARE, compare);
+        tag.setInteger(NBT_MODE, mode);
+
+        return tag;
     }
 
     @Override
-    public void sendContainerData(ByteBuf buf) {
-        super.sendContainerData(buf);
+    public void writeContainerData(ByteBuf buf) {
+        super.writeContainerData(buf);
 
         buf.writeInt(priority);
         buf.writeInt(compare);
@@ -126,8 +128,8 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
     }
 
     @Override
-    public void receiveContainerData(ByteBuf buf) {
-        super.receiveContainerData(buf);
+    public void readContainerData(ByteBuf buf) {
+        super.readContainerData(buf);
 
         priority = buf.readInt();
         compare = buf.readInt();

@@ -156,8 +156,8 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
     }
 
     @Override
-    public void sendContainerData(ByteBuf buf) {
-        super.sendContainerData(buf);
+    public void writeContainerData(ByteBuf buf) {
+        super.writeContainerData(buf);
 
         buf.writeInt(priority);
 
@@ -188,8 +188,8 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
     }
 
     @Override
-    public void receiveContainerData(ByteBuf buf) {
-        super.receiveContainerData(buf);
+    public void readContainerData(ByteBuf buf) {
+        super.readContainerData(buf);
 
         priority = buf.readInt();
         stored = buf.readInt();
@@ -203,10 +203,10 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
-        super.readFromNBT(nbt);
+    public void read(NBTTagCompound nbt) {
+        super.read(nbt);
 
-        RefinedStorageUtils.restoreItems(filters, 0, nbt);
+        RefinedStorageUtils.readItems(filters, 0, nbt);
 
         if (nbt.hasKey(NBT_PRIORITY)) {
             priority = nbt.getInteger(NBT_PRIORITY);
@@ -222,14 +222,16 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-        RefinedStorageUtils.saveItems(filters, 0, nbt);
+    public NBTTagCompound write(NBTTagCompound tag) {
+        super.write(tag);
 
-        nbt.setInteger(NBT_PRIORITY, priority);
-        nbt.setInteger(NBT_COMPARE, compare);
-        nbt.setInteger(NBT_MODE, mode);
+        RefinedStorageUtils.writeItems(filters, 0, tag);
 
-        return super.writeToNBT(nbt);
+        tag.setInteger(NBT_PRIORITY, priority);
+        tag.setInteger(NBT_COMPARE, compare);
+        tag.setInteger(NBT_MODE, mode);
+
+        return tag;
     }
 
     @Override

@@ -293,11 +293,11 @@ public class TileGrid extends TileMachine implements IGrid {
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
-        super.readFromNBT(nbt);
+    public void read(NBTTagCompound nbt) {
+        super.read(nbt);
 
-        RefinedStorageUtils.restoreItemsLegacy(matrix, 0, nbt);
-        RefinedStorageUtils.restoreItems(patterns, 1, nbt);
+        RefinedStorageUtils.readItemsLegacy(matrix, 0, nbt);
+        RefinedStorageUtils.readItems(patterns, 1, nbt);
 
         if (nbt.hasKey(NBT_SORTING_DIRECTION)) {
             sortingDirection = nbt.getInteger(NBT_SORTING_DIRECTION);
@@ -313,20 +313,22 @@ public class TileGrid extends TileMachine implements IGrid {
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-        RefinedStorageUtils.saveItemsLegacy(matrix, 0, nbt);
-        RefinedStorageUtils.saveItems(patterns, 1, nbt);
+    public NBTTagCompound write(NBTTagCompound tag) {
+        super.write(tag);
 
-        nbt.setInteger(NBT_SORTING_DIRECTION, sortingDirection);
-        nbt.setInteger(NBT_SORTING_TYPE, sortingType);
-        nbt.setInteger(NBT_SEARCH_BOX_MODE, searchBoxMode);
+        RefinedStorageUtils.writeItemsLegacy(matrix, 0, tag);
+        RefinedStorageUtils.writeItems(patterns, 1, tag);
 
-        return super.writeToNBT(nbt);
+        tag.setInteger(NBT_SORTING_DIRECTION, sortingDirection);
+        tag.setInteger(NBT_SORTING_TYPE, sortingType);
+        tag.setInteger(NBT_SEARCH_BOX_MODE, searchBoxMode);
+
+        return tag;
     }
 
     @Override
-    public void sendContainerData(ByteBuf buf) {
-        super.sendContainerData(buf);
+    public void writeContainerData(ByteBuf buf) {
+        super.writeContainerData(buf);
 
         buf.writeInt(sortingDirection);
         buf.writeInt(sortingType);
@@ -340,8 +342,8 @@ public class TileGrid extends TileMachine implements IGrid {
     }
 
     @Override
-    public void receiveContainerData(ByteBuf buf) {
-        super.receiveContainerData(buf);
+    public void readContainerData(ByteBuf buf) {
+        super.readContainerData(buf);
 
         sortingDirection = buf.readInt();
         sortingType = buf.readInt();

@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public abstract class TileMachine extends TileBase implements ISynchronizedContainer, IRedstoneModeConfig {
-    public static final String NBT_DESC_CONNECTED = "Connected";
+    public static final String NBT_CONNECTED = "Connected";
 
     protected boolean connected;
     protected boolean wasConnected;
@@ -131,18 +131,18 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
     }
 
     @Override
-    public void receiveContainerData(ByteBuf buf) {
+    public void readContainerData(ByteBuf buf) {
         redstoneMode = RedstoneMode.getById(buf.readInt());
     }
 
     @Override
-    public void sendContainerData(ByteBuf buf) {
+    public void writeContainerData(ByteBuf buf) {
         buf.writeInt(redstoneMode.id);
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
-        super.readFromNBT(nbt);
+    public void read(NBTTagCompound nbt) {
+        super.read(nbt);
 
         if (nbt.hasKey(RedstoneMode.NBT)) {
             redstoneMode = RedstoneMode.getById(nbt.getInteger(RedstoneMode.NBT));
@@ -150,22 +150,26 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-        nbt.setInteger(RedstoneMode.NBT, redstoneMode.id);
+    public NBTTagCompound write(NBTTagCompound tag) {
+        super.write(tag);
 
-        return super.writeToNBT(nbt);
+        tag.setInteger(RedstoneMode.NBT, redstoneMode.id);
+
+        return tag;
     }
 
-    public NBTTagCompound writeToUpdatePacketNBT(NBTTagCompound tag) {
-        tag.setBoolean(NBT_DESC_CONNECTED, isActive());
+    public NBTTagCompound writeUpdate(NBTTagCompound tag) {
+        super.writeUpdate(tag);
 
-        return super.writeToUpdatePacketNBT(tag);
+        tag.setBoolean(NBT_CONNECTED, isActive());
+
+        return tag;
     }
 
-    public void readFromUpdatePacketNBT(NBTTagCompound tag) {
-        super.readFromUpdatePacketNBT(tag);
+    public void readUpdate(NBTTagCompound tag) {
+        super.readUpdate(tag);
 
-        connected = tag.getBoolean(NBT_DESC_CONNECTED);
+        connected = tag.getBoolean(NBT_CONNECTED);
     }
 
     public abstract int getEnergyUsage();

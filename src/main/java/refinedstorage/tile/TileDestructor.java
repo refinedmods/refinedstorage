@@ -100,8 +100,8 @@ public class TileDestructor extends TileMachine implements ICompareConfig, IMode
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
-        super.readFromNBT(nbt);
+    public void read(NBTTagCompound nbt) {
+        super.read(nbt);
 
         if (nbt.hasKey(NBT_COMPARE)) {
             compare = nbt.getInteger(NBT_COMPARE);
@@ -111,32 +111,34 @@ public class TileDestructor extends TileMachine implements ICompareConfig, IMode
             mode = nbt.getInteger(NBT_MODE);
         }
 
-        RefinedStorageUtils.restoreItems(filters, 0, nbt);
-        RefinedStorageUtils.restoreItems(upgrades, 1, nbt);
+        RefinedStorageUtils.readItems(filters, 0, nbt);
+        RefinedStorageUtils.readItems(upgrades, 1, nbt);
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-        nbt.setInteger(NBT_COMPARE, compare);
-        nbt.setInteger(NBT_MODE, mode);
+    public NBTTagCompound write(NBTTagCompound tag) {
+        super.write(tag);
 
-        RefinedStorageUtils.saveItems(filters, 0, nbt);
-        RefinedStorageUtils.saveItems(upgrades, 1, nbt);
+        tag.setInteger(NBT_COMPARE, compare);
+        tag.setInteger(NBT_MODE, mode);
 
-        return super.writeToNBT(nbt);
+        RefinedStorageUtils.writeItems(filters, 0, tag);
+        RefinedStorageUtils.writeItems(upgrades, 1, tag);
+
+        return tag;
     }
 
     @Override
-    public void receiveContainerData(ByteBuf buf) {
-        super.receiveContainerData(buf);
+    public void readContainerData(ByteBuf buf) {
+        super.readContainerData(buf);
 
         compare = buf.readInt();
         mode = buf.readInt();
     }
 
     @Override
-    public void sendContainerData(ByteBuf buf) {
-        super.sendContainerData(buf);
+    public void writeContainerData(ByteBuf buf) {
+        super.writeContainerData(buf);
 
         buf.writeInt(compare);
         buf.writeInt(mode);

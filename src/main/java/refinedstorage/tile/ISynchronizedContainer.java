@@ -4,9 +4,9 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.Container;
 
 public interface ISynchronizedContainer {
-    void receiveContainerData(ByteBuf buf);
+    void readContainerData(ByteBuf buf);
 
-    void sendContainerData(ByteBuf buf);
+    void writeContainerData(ByteBuf buf);
 
     Class<? extends Container> getContainer();
 }

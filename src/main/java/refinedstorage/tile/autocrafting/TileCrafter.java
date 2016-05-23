@@ -55,19 +55,21 @@ public class TileCrafter extends TileMachine {
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
-        super.readFromNBT(nbt);
+    public void read(NBTTagCompound nbt) {
+        super.read(nbt);
 
-        RefinedStorageUtils.restoreItems(patterns, 0, nbt);
-        RefinedStorageUtils.restoreItems(upgrades, 1, nbt);
+        RefinedStorageUtils.readItems(patterns, 0, nbt);
+        RefinedStorageUtils.readItems(upgrades, 1, nbt);
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-        RefinedStorageUtils.saveItems(patterns, 0, nbt);
-        RefinedStorageUtils.saveItems(upgrades, 1, nbt);
+    public NBTTagCompound write(NBTTagCompound tag) {
+        super.write(tag);
 
-        return super.writeToNBT(nbt);
+        RefinedStorageUtils.writeItems(patterns, 0, tag);
+        RefinedStorageUtils.writeItems(upgrades, 1, tag);
+
+        return tag;
     }
 
     public int getSpeed() {

@@ -18,19 +18,21 @@ public class TileProcessingPatternEncoder extends TileBase {
     private BasicItemHandler configuration = new BasicItemHandler(9 * 2, this);
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-        RefinedStorageUtils.saveItems(patterns, 0, nbt);
-        RefinedStorageUtils.saveItems(configuration, 1, nbt);
+    public NBTTagCompound write(NBTTagCompound tag) {
+        super.write(tag);
 
-        return super.writeToNBT(nbt);
+        RefinedStorageUtils.writeItems(patterns, 0, tag);
+        RefinedStorageUtils.writeItems(configuration, 1, tag);
+
+        return tag;
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
-        super.readFromNBT(nbt);
+    public void read(NBTTagCompound nbt) {
+        super.read(nbt);
 
-        RefinedStorageUtils.restoreItems(patterns, 0, nbt);
-        RefinedStorageUtils.restoreItems(configuration, 1, nbt);
+        RefinedStorageUtils.readItems(patterns, 0, nbt);
+        RefinedStorageUtils.readItems(configuration, 1, nbt);
     }
 
     public void onCreatePattern() {

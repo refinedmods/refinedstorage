@@ -494,8 +494,30 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
-        super.readFromNBT(nbt);
+    public NBTTagCompound write(NBTTagCompound tag) {
+        super.write(tag);
+
+        energy.writeToNBT(tag);
+
+        tag.setInteger(RedstoneMode.NBT, redstoneMode.id);
+
+        NBTTagList list = new NBTTagList();
+
+        for (ICraftingTask task : craftingTasks) {
+            NBTTagCompound taskTag = new NBTTagCompound();
+            task.writeToNBT(taskTag);
+            list.appendTag(taskTag);
+        }
+
+        tag.setTag(NBT_CRAFTING_TASKS, list);
+
+        return tag;
+    }
+
+
+    @Override
+    public void read(NBTTagCompound nbt) {
+        super.read(nbt);
 
         energy.readFromNBT(nbt);
 
@@ -526,34 +548,17 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-        energy.writeToNBT(nbt);
+    public NBTTagCompound writeUpdate(NBTTagCompound tag) {
+        super.writeUpdate(tag);
 
-        nbt.setInteger(RedstoneMode.NBT, redstoneMode.id);
-
-        NBTTagList list = new NBTTagList();
-
-        for (ICraftingTask task : craftingTasks) {
-            NBTTagCompound taskTag = new NBTTagCompound();
-            task.writeToNBT(taskTag);
-            list.appendTag(taskTag);
-        }
-
-        nbt.setTag(NBT_CRAFTING_TASKS, list);
-
-        return super.writeToNBT(nbt);
-    }
-
-    @Override
-    public NBTTagCompound writeToUpdatePacketNBT(NBTTagCompound tag) {
         tag.setInteger(NBT_DESC_ENERGY, getEnergyStored(null));
 
-        return super.writeToUpdatePacketNBT(tag);
+        return tag;
     }
 
     @Override
-    public void readFromUpdatePacketNBT(NBTTagCompound tag) {
-        super.readFromUpdatePacketNBT(tag);
+    public void readUpdate(NBTTagCompound tag) {
+        super.readUpdate(tag);
 
         setEnergyStored(tag.getInteger(NBT_DESC_ENERGY));
     }
@@ -612,7 +617,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     }
 
     @Override
-    public void receiveContainerData(ByteBuf buf) {
+    public void readContainerData(ByteBuf buf) {
         setEnergyStored(buf.readInt());
         energyUsage = buf.readInt();
 
@@ -637,7 +642,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     }
 
     @Override
-    public void sendContainerData(ByteBuf buf) {
+    public void writeContainerData(ByteBuf buf) {
         buf.writeInt(getEnergyStored(null));
         buf.writeInt(energyUsage);
 

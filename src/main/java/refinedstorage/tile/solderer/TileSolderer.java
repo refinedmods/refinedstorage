@@ -95,11 +95,11 @@ public class TileSolderer extends TileMachine {
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
-        super.readFromNBT(nbt);
+    public void read(NBTTagCompound nbt) {
+        super.read(nbt);
 
-        RefinedStorageUtils.restoreItems(items, 0, nbt);
-        RefinedStorageUtils.restoreItems(upgrades, 1, nbt);
+        RefinedStorageUtils.readItems(items, 0, nbt);
+        RefinedStorageUtils.readItems(upgrades, 1, nbt);
 
         recipe = SoldererRegistry.getRecipe(items);
 
@@ -113,41 +113,45 @@ public class TileSolderer extends TileMachine {
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-        RefinedStorageUtils.saveItems(items, 0, nbt);
-        RefinedStorageUtils.saveItems(upgrades, 1, nbt);
+    public NBTTagCompound write(NBTTagCompound tag) {
+        super.write(tag);
 
-        nbt.setBoolean(NBT_WORKING, working);
-        nbt.setInteger(NBT_PROGRESS, progress);
+        RefinedStorageUtils.writeItems(items, 0, tag);
+        RefinedStorageUtils.writeItems(upgrades, 1, tag);
 
-        return super.writeToNBT(nbt);
+        tag.setBoolean(NBT_WORKING, working);
+        tag.setInteger(NBT_PROGRESS, progress);
+
+        return tag;
     }
 
     @Override
-    public NBTTagCompound writeToUpdatePacketNBT(NBTTagCompound tag) {
+    public NBTTagCompound writeUpdate(NBTTagCompound tag) {
+        super.writeUpdate(tag);
+
         tag.setBoolean(NBT_WORKING, working);
 
-        return super.writeToUpdatePacketNBT(tag);
+        return tag;
     }
 
     @Override
-    public void readFromUpdatePacketNBT(NBTTagCompound tag) {
-        super.readFromUpdatePacketNBT(tag);
+    public void readUpdate(NBTTagCompound tag) {
+        super.readUpdate(tag);
 
         working = tag.getBoolean(NBT_WORKING);
     }
 
     @Override
-    public void receiveContainerData(ByteBuf buf) {
-        super.receiveContainerData(buf);
+    public void readContainerData(ByteBuf buf) {
+        super.readContainerData(buf);
 
         progress = buf.readInt();
         duration = buf.readInt();
     }
 
     @Override
-    public void sendContainerData(ByteBuf buf) {
-        super.sendContainerData(buf);
+    public void writeContainerData(ByteBuf buf) {
+        super.writeContainerData(buf);
 
         buf.writeInt(progress);
         buf.writeInt(recipe != null ? recipe.getDuration() : 0);

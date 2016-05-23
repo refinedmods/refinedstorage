@@ -83,41 +83,43 @@ public class TileConstructor extends TileMachine implements ICompareConfig {
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
-        super.readFromNBT(nbt);
+    public void read(NBTTagCompound tag) {
+        super.read(tag);
 
-        if (nbt.hasKey(NBT_COMPARE)) {
-            compare = nbt.getInteger(NBT_COMPARE);
+        if (tag.hasKey(NBT_COMPARE)) {
+            compare = tag.getInteger(NBT_COMPARE);
         }
 
-        RefinedStorageUtils.restoreItems(filter, 0, nbt);
-        RefinedStorageUtils.restoreItems(upgrades, 1, nbt);
+        RefinedStorageUtils.readItems(filter, 0, tag);
+        RefinedStorageUtils.readItems(upgrades, 1, tag);
 
-        scheduler.readFromNBT(nbt);
+        scheduler.read(tag);
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-        nbt.setInteger(NBT_COMPARE, compare);
+    public NBTTagCompound write(NBTTagCompound tag) {
+        super.write(tag);
 
-        RefinedStorageUtils.saveItems(filter, 0, nbt);
-        RefinedStorageUtils.saveItems(upgrades, 1, nbt);
+        tag.setInteger(NBT_COMPARE, compare);
 
-        scheduler.writeToNBT(nbt);
+        RefinedStorageUtils.writeItems(filter, 0, tag);
+        RefinedStorageUtils.writeItems(upgrades, 1, tag);
 
-        return super.writeToNBT(nbt);
+        scheduler.writeToNBT(tag);
+
+        return tag;
     }
 
     @Override
-    public void receiveContainerData(ByteBuf buf) {
-        super.receiveContainerData(buf);
+    public void readContainerData(ByteBuf buf) {
+        super.readContainerData(buf);
 
         compare = buf.readInt();
     }
 
     @Override
-    public void sendContainerData(ByteBuf buf) {
-        super.sendContainerData(buf);
+    public void writeContainerData(ByteBuf buf) {
+        super.writeContainerData(buf);
 
         buf.writeInt(compare);
     }

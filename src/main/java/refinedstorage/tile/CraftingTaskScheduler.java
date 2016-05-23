@@ -39,7 +39,7 @@ public class CraftingTaskScheduler {
         }
     }
 
-    public void readFromNBT(NBTTagCompound tag) {
+    public void read(NBTTagCompound tag) {
         if (tag.hasKey(NBT_SCHEDULED)) {
             scheduledFor = ItemStack.loadItemStackFromNBT(tag.getCompoundTag(NBT_SCHEDULED));
         }

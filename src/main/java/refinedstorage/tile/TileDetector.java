@@ -136,8 +136,8 @@ public class TileDetector extends TileMachine implements ICompareConfig {
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
-        super.readFromNBT(nbt);
+    public void read(NBTTagCompound nbt) {
+        super.read(nbt);
 
         if (nbt.hasKey(NBT_COMPARE)) {
             compare = nbt.getInteger(NBT_COMPARE);
@@ -151,37 +151,41 @@ public class TileDetector extends TileMachine implements ICompareConfig {
             amount = nbt.getInteger(NBT_AMOUNT);
         }
 
-        RefinedStorageUtils.restoreItems(filter, 0, nbt);
+        RefinedStorageUtils.readItems(filter, 0, nbt);
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-        nbt.setInteger(NBT_COMPARE, compare);
-        nbt.setInteger(NBT_MODE, mode);
-        nbt.setInteger(NBT_AMOUNT, amount);
+    public NBTTagCompound write(NBTTagCompound tag) {
+        super.write(tag);
 
-        RefinedStorageUtils.saveItems(filter, 0, nbt);
+        tag.setInteger(NBT_COMPARE, compare);
+        tag.setInteger(NBT_MODE, mode);
+        tag.setInteger(NBT_AMOUNT, amount);
 
-        return super.writeToNBT(nbt);
+        RefinedStorageUtils.writeItems(filter, 0, tag);
+
+        return tag;
     }
 
     @Override
-    public void readFromUpdatePacketNBT(NBTTagCompound tag) {
-        super.readFromUpdatePacketNBT(tag);
+    public void readUpdate(NBTTagCompound tag) {
+        super.readUpdate(tag);
 
         powered = tag.getBoolean(NBT_DESC_POWERED);
     }
 
     @Override
-    public NBTTagCompound writeToUpdatePacketNBT(NBTTagCompound tag) {
+    public NBTTagCompound writeUpdate(NBTTagCompound tag) {
+        super.writeUpdate(tag);
+
         tag.setBoolean(NBT_DESC_POWERED, powered);
 
-        return super.writeToUpdatePacketNBT(tag);
+        return tag;
     }
 
     @Override
-    public void sendContainerData(ByteBuf buf) {
-        super.sendContainerData(buf);
+    public void writeContainerData(ByteBuf buf) {
+        super.writeContainerData(buf);
 
         buf.writeInt(compare);
         buf.writeInt(mode);
@@ -189,8 +193,8 @@ public class TileDetector extends TileMachine implements ICompareConfig {
     }
 
     @Override
-    public void receiveContainerData(ByteBuf buf) {
-        super.receiveContainerData(buf);
+    public void readContainerData(ByteBuf buf) {
+        super.readContainerData(buf);
 
         compare = buf.readInt();
         mode = buf.readInt();
