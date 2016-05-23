@@ -29,7 +29,7 @@ public abstract class BlockBase extends Block {
     private String name;
 
     public BlockBase(String name) {
-        super(Material.rock);
+        super(Material.ROCK);
 
         this.name = name;
 

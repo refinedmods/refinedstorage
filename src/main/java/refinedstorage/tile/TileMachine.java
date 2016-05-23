@@ -150,10 +150,10 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound nbt) {
-        super.writeToNBT(nbt);
-
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         nbt.setInteger(RedstoneMode.NBT, redstoneMode.id);
+
+        return super.writeToNBT(nbt);
     }
 
     public void writeToDescriptionPacketNBT(NBTTagCompound tag) {

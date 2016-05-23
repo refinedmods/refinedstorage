@@ -1,5 +1,6 @@
 package refinedstorage.item;
 
+import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
@@ -8,7 +9,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.block.EnumStorageType;
@@ -43,9 +43,9 @@ public class ItemStorageDisk extends ItemBase {
         int capacity = EnumStorageType.getById(disk.getItemDamage()).getCapacity();
 
         if (capacity == -1) {
-            list.add(String.format(I18n.translateToLocal("misc.refinedstorage:storage.stored"), NBTStorage.getStored(disk.getTagCompound())));
+            list.add(String.format(I18n.format("misc.refinedstorage:storage.stored"), NBTStorage.getStored(disk.getTagCompound())));
         } else {
-            list.add(String.format(I18n.translateToLocal("misc.refinedstorage:storage.stored_capacity"), NBTStorage.getStored(disk.getTagCompound()), capacity));
+            list.add(String.format(I18n.format("misc.refinedstorage:storage.stored_capacity"), NBTStorage.getStored(disk.getTagCompound()), capacity));
         }
     }
 

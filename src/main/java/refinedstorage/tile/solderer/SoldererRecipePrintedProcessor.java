@@ -17,11 +17,11 @@ public class SoldererRecipePrintedProcessor implements ISoldererRecipe {
         if (row == 1) {
             switch (type) {
                 case ItemProcessor.TYPE_PRINTED_BASIC:
-                    return new ItemStack(Items.iron_ingot);
+                    return new ItemStack(Items.IRON_INGOT);
                 case ItemProcessor.TYPE_PRINTED_IMPROVED:
-                    return new ItemStack(Items.gold_ingot);
+                    return new ItemStack(Items.GOLD_INGOT);
                 case ItemProcessor.TYPE_PRINTED_ADVANCED:
-                    return new ItemStack(Items.diamond);
+                    return new ItemStack(Items.DIAMOND);
                 case ItemProcessor.TYPE_PRINTED_SILICON:
                     return new ItemStack(RefinedStorageItems.SILICON);
             }

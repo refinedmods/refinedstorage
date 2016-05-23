@@ -105,15 +105,15 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound nbt) {
-        super.writeToNBT(nbt);
-
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         RefinedStorageUtils.saveItems(disks, 0, nbt);
         RefinedStorageUtils.saveItems(filters, 1, nbt);
 
         nbt.setInteger(NBT_PRIORITY, priority);
         nbt.setInteger(NBT_COMPARE, compare);
         nbt.setInteger(NBT_MODE, mode);
+
+        return super.writeToNBT(nbt);
     }
 
     @Override

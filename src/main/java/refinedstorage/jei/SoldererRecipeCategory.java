@@ -7,9 +7,9 @@ import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.translation.I18n;
 
 public class SoldererRecipeCategory implements IRecipeCategory {
     public static final String ID = "refinedstorage.solderer";
@@ -27,7 +27,7 @@ public class SoldererRecipeCategory implements IRecipeCategory {
 
     @Override
     public String getTitle() {
-        return I18n.translateToLocal("gui.refinedstorage:solderer");
+        return I18n.format("gui.refinedstorage:solderer");
     }
 
     @Override

@@ -155,14 +155,14 @@ public class TileDetector extends TileMachine implements ICompareConfig {
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound nbt) {
-        super.writeToNBT(nbt);
-
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         nbt.setInteger(NBT_COMPARE, compare);
         nbt.setInteger(NBT_MODE, mode);
         nbt.setInteger(NBT_AMOUNT, amount);
 
         RefinedStorageUtils.saveItems(filter, 0, nbt);
+
+        return super.writeToNBT(nbt);
     }
 
     @Override

@@ -14,7 +14,7 @@ public class SoldererRecipeDiskDrive implements ISoldererRecipe {
         } else if (row == 1) {
             return new ItemStack(RefinedStorageBlocks.MACHINE_CASING);
         } else if (row == 2) {
-            return new ItemStack(Blocks.chest);
+            return new ItemStack(Blocks.CHEST);
         }
 
         return null;

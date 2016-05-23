@@ -50,8 +50,8 @@ public abstract class BlockMachine extends BlockBase {
     }
 
     @Override
-    public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block neighborBlock) {
-        super.onNeighborBlockChange(world, pos, state, neighborBlock);
+    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
+        super.neighborChanged(state, world, pos, block);
 
         if (!world.isRemote) {
             ((TileMachine) world.getTileEntity(pos)).searchController(world);

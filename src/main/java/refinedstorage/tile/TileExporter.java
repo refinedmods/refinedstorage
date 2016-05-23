@@ -95,15 +95,15 @@ public class TileExporter extends TileMachine implements ICompareConfig {
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound nbt) {
-        super.writeToNBT(nbt);
-
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         nbt.setInteger(NBT_COMPARE, compare);
 
         RefinedStorageUtils.saveItems(filters, 0, nbt);
         RefinedStorageUtils.saveItems(upgrades, 1, nbt);
 
         scheduler.writeToNBT(nbt);
+
+        return super.writeToNBT(nbt);
     }
 
     @Override

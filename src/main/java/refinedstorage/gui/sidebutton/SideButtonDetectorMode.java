@@ -22,7 +22,7 @@ public class SideButtonDetectorMode extends SideButton {
 
     @Override
     public void draw(GuiBase gui, int x, int y) {
-        gui.drawItem(x, y, new ItemStack(Items.redstone, 1));
+        gui.drawItem(x, y, new ItemStack(Items.REDSTONE, 1));
     }
 
     @Override

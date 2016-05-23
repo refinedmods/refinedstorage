@@ -53,7 +53,7 @@ public abstract class ContainerBase extends Container {
     }
 
     @Override
-    public ItemStack func_184996_a(int id, int clickedButton, ClickType clickType, EntityPlayer player) {
+    public ItemStack slotClick(int id, int clickedButton, ClickType clickType, EntityPlayer player) {
         Slot slot = id >= 0 ? getSlot(id) : null;
 
         if (slot instanceof SlotSpecimen) {
@@ -111,7 +111,7 @@ public abstract class ContainerBase extends Container {
             return null;
         }
 
-        return super.func_184996_a(id, clickedButton, clickType, player);
+        return super.slotClick(id, clickedButton, clickType, player);
     }
 
     @Override

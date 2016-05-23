@@ -526,9 +526,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound nbt) {
-        super.writeToNBT(nbt);
-
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         energy.writeToNBT(nbt);
 
         nbt.setInteger(RedstoneMode.NBT, redstoneMode.id);
@@ -542,6 +540,8 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
         }
 
         nbt.setTag(NBT_CRAFTING_TASKS, list);
+
+        return super.writeToNBT(nbt);
     }
 
     @Override

@@ -2,6 +2,7 @@ package refinedstorage.item;
 
 import cofh.api.energy.ItemEnergyContainer;
 import net.minecraft.block.Block;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,7 +14,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
@@ -94,13 +94,13 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean b) {
         if (stack.getItemDamage() != TYPE_CREATIVE) {
-            list.add(I18n.translateToLocalFormatted("misc.refinedstorage:energy_stored", getEnergyStored(stack), getMaxEnergyStored(stack)));
+            list.add(I18n.format("misc.refinedstorage:energy_stored", getEnergyStored(stack), getMaxEnergyStored(stack)));
         }
 
         if (hasValidNBT(stack)) {
-            list.add(I18n.translateToLocalFormatted("misc.refinedstorage:wireless_grid.tooltip.0", getX(stack)));
-            list.add(I18n.translateToLocalFormatted("misc.refinedstorage:wireless_grid.tooltip.1", getY(stack)));
-            list.add(I18n.translateToLocalFormatted("misc.refinedstorage:wireless_grid.tooltip.2", getZ(stack)));
+            list.add(I18n.format("misc.refinedstorage:wireless_grid.tooltip.0", getX(stack)));
+            list.add(I18n.format("misc.refinedstorage:wireless_grid.tooltip.1", getY(stack)));
+            list.add(I18n.format("misc.refinedstorage:wireless_grid.tooltip.2", getZ(stack)));
         }
     }
 
@@ -140,10 +140,10 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
                 if (((TileController) tile).onOpenWirelessGrid(player, hand)) {
                     return new ActionResult(EnumActionResult.SUCCESS, stack);
                 } else {
-                    player.addChatComponentMessage(new TextComponentString(I18n.translateToLocal("misc.refinedstorage:wireless_grid.out_of_range")));
+                    player.addChatComponentMessage(new TextComponentString(I18n.format("misc.refinedstorage:wireless_grid.out_of_range")));
                 }
             } else {
-                player.addChatComponentMessage(new TextComponentString(I18n.translateToLocal("misc.refinedstorage:wireless_grid.not_found")));
+                player.addChatComponentMessage(new TextComponentString(I18n.format("misc.refinedstorage:wireless_grid.not_found")));
             }
         }
 

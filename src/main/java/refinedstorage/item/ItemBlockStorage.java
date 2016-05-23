@@ -1,9 +1,9 @@
 package refinedstorage.item;
 
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.block.EnumStorageType;
@@ -25,9 +25,9 @@ public class ItemBlockStorage extends ItemBlockBase {
             NBTTagCompound tag = stack.getTagCompound().getCompoundTag(TileStorage.NBT_STORAGE);
 
             if (type == EnumStorageType.TYPE_CREATIVE) {
-                list.add(String.format(I18n.translateToLocal("misc.refinedstorage:storage.stored"), NBTStorage.getStored(tag)));
+                list.add(String.format(I18n.format("misc.refinedstorage:storage.stored"), NBTStorage.getStored(tag)));
             } else {
-                list.add(String.format(I18n.translateToLocal("misc.refinedstorage:storage.stored_capacity"), NBTStorage.getStored(tag), type.getCapacity()));
+                list.add(String.format(I18n.format("misc.refinedstorage:storage.stored_capacity"), NBTStorage.getStored(tag), type.getCapacity()));
             }
         }
     }

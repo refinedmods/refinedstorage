@@ -5,7 +5,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -58,10 +57,10 @@ public abstract class TileBase extends TileEntity implements ITickable {
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound nbt) {
-        super.writeToNBT(nbt);
-
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         nbt.setInteger(NBT_DIRECTION, direction.ordinal());
+
+        return super.writeToNBT(nbt);
     }
 
     public void writeToDescriptionPacketNBT(NBTTagCompound tag) {
@@ -73,7 +72,7 @@ public abstract class TileBase extends TileEntity implements ITickable {
     }
 
     @Override
-    public Packet getDescriptionPacket() {
+    public SPacketUpdateTileEntity getUpdatePacket() {
         NBTTagCompound nbt = new NBTTagCompound();
 
         writeToDescriptionPacketNBT(nbt);

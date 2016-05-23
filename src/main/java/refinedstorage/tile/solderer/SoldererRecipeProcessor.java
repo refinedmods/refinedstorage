@@ -24,7 +24,7 @@ public class SoldererRecipeProcessor implements ISoldererRecipe {
                     return new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_PRINTED_ADVANCED);
             }
         } else if (row == 1) {
-            return new ItemStack(Items.redstone);
+            return new ItemStack(Items.REDSTONE);
         } else if (row == 2) {
             return new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_PRINTED_SILICON);
         }

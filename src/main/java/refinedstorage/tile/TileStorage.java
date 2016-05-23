@@ -87,15 +87,15 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound nbt) {
-        super.writeToNBT(nbt);
-
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         RefinedStorageUtils.saveItems(filters, 0, nbt);
 
         nbt.setInteger(NBT_PRIORITY, priority);
         nbt.setTag(NBT_STORAGE, storageTag);
         nbt.setInteger(NBT_COMPARE, compare);
         nbt.setInteger(NBT_MODE, mode);
+
+        return super.writeToNBT(nbt);
     }
 
     public EnumStorageType getType() {

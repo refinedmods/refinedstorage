@@ -222,14 +222,14 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound nbt) {
-        super.writeToNBT(nbt);
-
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         RefinedStorageUtils.saveItems(filters, 0, nbt);
 
         nbt.setInteger(NBT_PRIORITY, priority);
         nbt.setInteger(NBT_COMPARE, compare);
         nbt.setInteger(NBT_MODE, mode);
+
+        return super.writeToNBT(nbt);
     }
 
     @Override

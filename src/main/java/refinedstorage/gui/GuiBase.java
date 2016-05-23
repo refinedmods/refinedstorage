@@ -3,10 +3,10 @@ package refinedstorage.gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.translation.I18n;
 import org.lwjgl.opengl.GL11;
 import refinedstorage.RefinedStorage;
 import refinedstorage.gui.sidebutton.SideButton;
@@ -227,7 +227,7 @@ public abstract class GuiBase extends GuiContainer {
     }
 
     public String t(String name, Object... format) {
-        return I18n.translateToLocalFormatted(name, format);
+        return I18n.format(name, format);
     }
 
     public abstract void init(int x, int y);

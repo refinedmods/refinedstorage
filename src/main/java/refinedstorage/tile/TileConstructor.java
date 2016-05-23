@@ -57,7 +57,7 @@ public class TileConstructor extends TileMachine implements ICompareConfig {
                     scheduler.resetSchedule();
                     worldObj.setBlockState(front, block.getStateFromMeta(took.getItemDamage()), 1 | 2);
                     // From ItemBlock.onItemUse
-                    SoundType blockSound = block.getStepSound();
+                    SoundType blockSound = block.getSoundType();
                     worldObj.playSound(null, front, blockSound.getPlaceSound(), SoundCategory.BLOCKS, (blockSound.getVolume() + 1.0F) / 2.0F, blockSound.getPitch() * 0.8F);
                 } else if (RefinedStorageUtils.hasUpgrade(upgrades, ItemUpgrade.TYPE_CRAFTING)) {
                     ItemStack craft = filter.getStackInSlot(0);
@@ -97,15 +97,15 @@ public class TileConstructor extends TileMachine implements ICompareConfig {
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound nbt) {
-        super.writeToNBT(nbt);
-
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         nbt.setInteger(NBT_COMPARE, compare);
 
         RefinedStorageUtils.saveItems(filter, 0, nbt);
         RefinedStorageUtils.saveItems(upgrades, 1, nbt);
 
         scheduler.writeToNBT(nbt);
+
+        return nbt;
     }
 
     @Override

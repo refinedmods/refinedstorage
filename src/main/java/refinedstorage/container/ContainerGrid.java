@@ -91,8 +91,8 @@ public class ContainerGrid extends ContainerBase {
     public void detectAndSendChanges() {
         for (int i = 0; i < inventorySlots.size(); ++i) {
             if (inventorySlots.get(i) instanceof SlotGridCrafting || inventorySlots.get(i) == craftingResultSlot) {
-                for (int j = 0; j < crafters.size(); ++j) {
-                    crafters.get(j).sendSlotContents(this, i, inventorySlots.get(i).getStack());
+                for (int j = 0; j < listeners.size(); ++j) {
+                    listeners.get(j).sendSlotContents(this, i, inventorySlots.get(i).getStack());
                 }
             } else {
                 ItemStack current = inventorySlots.get(i).getStack();
@@ -103,8 +103,8 @@ public class ContainerGrid extends ContainerBase {
 
                     inventoryItemStacks.set(i, cached);
 
-                    for (int j = 0; j < crafters.size(); ++j) {
-                        crafters.get(j).sendSlotContents(this, i, cached);
+                    for (int j = 0; j < listeners.size(); ++j) {
+                        listeners.get(j).sendSlotContents(this, i, cached);
                     }
                 }
             }
@@ -121,7 +121,7 @@ public class ContainerGrid extends ContainerBase {
     }
 
     @Override
-    public ItemStack func_184996_a(int id, int clickedButton, ClickType clickType, EntityPlayer player) {
+    public ItemStack slotClick(int id, int clickedButton, ClickType clickType, EntityPlayer player) {
         Slot slot = id >= 0 ? getSlot(id) : null;
 
         if (player.worldObj.isRemote && slot instanceof SlotGridCraftingResult && grid.getType() == EnumGridType.CRAFTING && slot.getHasStack()) {
@@ -132,7 +132,7 @@ public class ContainerGrid extends ContainerBase {
             }
         }
 
-        return super.func_184996_a(id, clickedButton, clickType, player);
+        return super.slotClick(id, clickedButton, clickType, player);
     }
 
     @Override

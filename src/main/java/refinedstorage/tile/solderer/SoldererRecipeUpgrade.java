@@ -29,11 +29,11 @@ public class SoldererRecipeUpgrade implements ISoldererRecipe {
     private ItemStack getBottomAndTopItem() {
         switch (type) {
             case ItemUpgrade.TYPE_RANGE:
-                return new ItemStack(Items.ender_pearl);
+                return new ItemStack(Items.ENDER_PEARL);
             case ItemUpgrade.TYPE_SPEED:
-                return new ItemStack(Blocks.redstone_block);
+                return new ItemStack(Blocks.REDSTONE_BLOCK);
             case ItemUpgrade.TYPE_CRAFTING:
-                return new ItemStack(Blocks.crafting_table);
+                return new ItemStack(Blocks.CRAFTING_TABLE);
         }
 
         return null;

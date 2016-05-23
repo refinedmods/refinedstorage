@@ -113,14 +113,14 @@ public class TileSolderer extends TileMachine {
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound nbt) {
-        super.writeToNBT(nbt);
-
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         RefinedStorageUtils.saveItems(items, 0, nbt);
         RefinedStorageUtils.saveItems(upgrades, 1, nbt);
 
         nbt.setBoolean(NBT_WORKING, working);
         nbt.setInteger(NBT_PROGRESS, progress);
+
+        return super.writeToNBT(nbt);
     }
 
     @Override

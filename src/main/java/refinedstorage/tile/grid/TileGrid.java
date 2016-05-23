@@ -119,7 +119,7 @@ public class TileGrid extends TileMachine implements IGrid {
 
     public void onCrafted(ContainerGrid container) {
         if (!worldObj.isRemote) {
-            ItemStack[] remainder = CraftingManager.getInstance().func_180303_b(matrix, worldObj);
+            ItemStack[] remainder = CraftingManager.getInstance().getRemainingItems(matrix, worldObj);
 
             for (int i = 0; i < matrix.getSizeInventory(); ++i) {
                 if (remainder[i] != null) {
@@ -313,15 +313,15 @@ public class TileGrid extends TileMachine implements IGrid {
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound nbt) {
-        super.writeToNBT(nbt);
-
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         RefinedStorageUtils.saveItemsLegacy(matrix, 0, nbt);
         RefinedStorageUtils.saveItems(patterns, 1, nbt);
 
         nbt.setInteger(NBT_SORTING_DIRECTION, sortingDirection);
         nbt.setInteger(NBT_SORTING_TYPE, sortingType);
         nbt.setInteger(NBT_SEARCH_BOX_MODE, searchBoxMode);
+
+        return super.writeToNBT(nbt);
     }
 
     @Override

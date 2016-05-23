@@ -35,10 +35,10 @@ public class TileWirelessTransmitter extends TileMachine {
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound nbt) {
-        super.writeToNBT(nbt);
-
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         RefinedStorageUtils.saveItems(upgrades, 0, nbt);
+
+        return super.writeToNBT(nbt);
     }
 
     public int getRange() {
