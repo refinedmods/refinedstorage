@@ -22,7 +22,6 @@ import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.item.ItemBlockController;
 import refinedstorage.tile.TileController;
-import refinedstorage.tile.TileMachine;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,11 +91,11 @@ public class BlockController extends BlockBase {
 
         NBTTagCompound tag = itemStack.getTagCompound();
 
-        if (tag != null && tag.hasKey(TileMachine.NBT_ENERGY)) {
+        if (tag != null && tag.hasKey(TileController.NBT_ENERGY)) {
             TileEntity tile = world.getTileEntity(pos);
 
             if (tile instanceof TileController) {
-                ((TileController) tile).receiveEnergy(null, tag.getInteger(TileMachine.NBT_ENERGY), false);
+                ((TileController) tile).receiveEnergy(null, tag.getInteger(TileController.NBT_ENERGY), false);
             }
         }
     }
@@ -108,7 +107,7 @@ public class BlockController extends BlockBase {
         ItemStack stack = new ItemStack(RefinedStorageBlocks.CONTROLLER, 1, RefinedStorageBlocks.CONTROLLER.getMetaFromState(state));
 
         NBTTagCompound tag = new NBTTagCompound();
-        tag.setInteger(TileMachine.NBT_ENERGY, ((TileController) world.getTileEntity(pos)).getEnergyStored(null));
+        tag.setInteger(TileController.NBT_ENERGY, ((TileController) world.getTileEntity(pos)).getEnergyStored(null));
         stack.setTagCompound(tag);
 
         drops.add(stack);
