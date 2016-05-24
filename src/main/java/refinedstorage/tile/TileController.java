@@ -261,7 +261,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
             this.type = (EnumControllerType) worldObj.getBlockState(pos).getValue(BlockController.TYPE);
         }
 
-        return type;
+        return type == null ? EnumControllerType.NORMAL : type;
     }
 
     public int getWirelessGridRange() {

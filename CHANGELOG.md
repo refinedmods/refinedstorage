@@ -1,5 +1,11 @@
 # Refined Storage Changelog
 
+### 0.7.1
+**Bugfixes**
+- Fixed NPE in some tiles
+- Fixed going out of crafting GUI not restoring state (scrollbar and search term)
+- Fixed not being able to create a pattern in disconnected Pattern Grid
+
 ### 0.7
 **Bugfixes**
 - Fixed Crafting Grid / Pattern Grid not throwing items on break

@@ -78,6 +78,7 @@ public abstract class TileBase extends TileEntity implements ITickable {
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
 
+        System.out.println("READ FROM NBT " + pos);
         if (tag.hasKey(NBT_UPDATE)) {
             readUpdate(tag);
         } else {

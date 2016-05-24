@@ -62,7 +62,7 @@ public class GuiCraftingSettings extends GuiBase {
             if (keyCode == Keyboard.KEY_RETURN) {
                 startRequest();
             } else if (keyCode == Keyboard.KEY_ESCAPE) {
-                FMLClientHandler.instance().showGuiScreen(gridGui);
+                close();
             } else {
                 super.keyTyped(character, keyCode);
             }
@@ -84,7 +84,11 @@ public class GuiCraftingSettings extends GuiBase {
         if (quantity != null && quantity > 0 && quantity <= TileController.MAX_CRAFTING_QUANTITY_PER_REQUEST) {
             gridGui.getGrid().onCraftingRequested(id, quantity);
 
-            FMLClientHandler.instance().showGuiScreen(gridGui);
+            close();
         }
+    }
+
+    private void close() {
+        FMLClientHandler.instance().showGuiScreen(gridGui);
     }
 }

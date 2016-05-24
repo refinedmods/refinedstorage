@@ -83,7 +83,7 @@ public class TileGrid extends TileMachine implements IGrid {
             this.type = (EnumGridType) worldObj.getBlockState(pos).getValue(BlockGrid.TYPE);
         }
 
-        return type;
+        return type == null ? EnumGridType.NORMAL : type;
     }
 
     @Override

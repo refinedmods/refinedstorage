@@ -107,7 +107,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
             this.type = ((EnumStorageType) worldObj.getBlockState(pos).getValue(BlockStorage.TYPE));
         }
 
-        return type;
+        return type == null ? EnumStorageType.TYPE_1K : type;
     }
 
     @Override

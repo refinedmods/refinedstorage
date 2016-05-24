@@ -56,12 +56,20 @@ public class GuiGrid extends GuiBase {
             addSideButton(new SideButtonRedstoneMode(grid.getRedstoneModeSetting()));
         }
 
-        searchField = new GuiTextField(0, fontRendererObj, x + 80 + 1, y + 6 + 1, 88 - 6, fontRendererObj.FONT_HEIGHT);
-        searchField.setEnableBackgroundDrawing(false);
-        searchField.setVisible(true);
-        searchField.setTextColor(16777215);
-        searchField.setCanLoseFocus(!TileGrid.isSearchBoxModeWithAutoselection(grid.getSearchBoxMode()));
-        searchField.setFocused(TileGrid.isSearchBoxModeWithAutoselection(grid.getSearchBoxMode()));
+        int sx = x + 80 + 1;
+        int sy = y + 6 + 1;
+
+        if (searchField == null) {
+            searchField = new GuiTextField(0, fontRendererObj, sx, sy, 88 - 6, fontRendererObj.FONT_HEIGHT);
+            searchField.setEnableBackgroundDrawing(false);
+            searchField.setVisible(true);
+            searchField.setTextColor(16777215);
+            searchField.setCanLoseFocus(!TileGrid.isSearchBoxModeWithAutoselection(grid.getSearchBoxMode()));
+            searchField.setFocused(TileGrid.isSearchBoxModeWithAutoselection(grid.getSearchBoxMode()));
+        } else {
+            searchField.xPosition = sx;
+            searchField.yPosition = sy;
+        }
 
         addSideButton(new SideButtonGridSortingDirection(grid));
         addSideButton(new SideButtonGridSortingType(grid));
@@ -300,13 +308,12 @@ public class GuiGrid extends GuiBase {
         boolean clickedClear = clickedButton == 0 && isHoveringOverClear(mouseX - guiLeft, mouseY - guiTop);
         boolean clickedCreatePattern = clickedButton == 0 && isHoveringOverCreatePattern(mouseX - guiLeft, mouseY - guiTop);
 
-        boolean playClickSound = clickedClear || clickedCreatePattern;
+        if (clickedCreatePattern) {
+            BlockPos gridPos = ((TileGrid) grid).getPos();
 
-        if (grid.isConnected()) {
-            if (clickedCreatePattern) {
-                BlockPos gridPos = ((TileGrid) grid).getPos();
-                RefinedStorage.NETWORK.sendToServer(new MessageGridPatternCreate(gridPos.getX(), gridPos.getY(), gridPos.getZ()));
-            } else if (isHoveringOverSlot() && container.getPlayer().inventory.getItemStack() != null && (clickedButton == 0 || clickedButton == 1)) {
+            RefinedStorage.NETWORK.sendToServer(new MessageGridPatternCreate(gridPos.getX(), gridPos.getY(), gridPos.getZ()));
+        } else if (grid.isConnected()) {
+            if (isHoveringOverSlot() && container.getPlayer().inventory.getItemStack() != null && (clickedButton == 0 || clickedButton == 1)) {
                 grid.onItemPush(-1, clickedButton == 1);
             } else if (isHoveringOverItemInSlot() && container.getPlayer().inventory.getItemStack() == null) {
                 if (items.get(hoveringSlot).getQuantity() == 0 || (GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown())) {
@@ -328,7 +335,7 @@ public class GuiGrid extends GuiBase {
 
                     grid.onItemPull(hoveringItemId, flags);
                 }
-            } else if (clickedClear && grid.isConnected()) {
+            } else if (clickedClear) {
                 RefinedStorage.NETWORK.sendToServer(new MessageGridCraftingClear((TileGrid) grid));
             } else {
                 for (Slot slot : container.getPlayerInventorySlots()) {
@@ -351,7 +358,7 @@ public class GuiGrid extends GuiBase {
             }
         }
 
-        if (playClickSound) {
+        if (clickedClear || clickedCreatePattern) {
             mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
         }
     }
