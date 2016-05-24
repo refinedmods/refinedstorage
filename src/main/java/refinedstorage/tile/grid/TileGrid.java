@@ -337,7 +337,7 @@ public class TileGrid extends TileMachine implements IGrid {
         buf.writeInt(searchBoxMode);
 
         if (connected) {
-            controller.sendItemGroups(buf);
+            controller.writeItemGroups(buf);
         } else {
             buf.writeInt(0);
         }

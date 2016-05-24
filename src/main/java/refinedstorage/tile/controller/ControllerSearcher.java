@@ -1,9 +1,11 @@
-package refinedstorage.tile;
+package refinedstorage.tile.controller;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import refinedstorage.tile.TileMachine;
+import refinedstorage.tile.TileRelay;
 
 import java.util.Set;
 

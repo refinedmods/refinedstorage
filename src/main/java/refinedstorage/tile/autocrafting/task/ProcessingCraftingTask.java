@@ -6,9 +6,9 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorageUtils;
-import refinedstorage.tile.TileController;
 import refinedstorage.tile.autocrafting.CraftingPattern;
 import refinedstorage.tile.autocrafting.TileCrafter;
+import refinedstorage.tile.controller.TileController;
 
 public class ProcessingCraftingTask implements ICraftingTask {
     public static final int ID = 1;

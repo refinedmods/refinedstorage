@@ -17,7 +17,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
-import refinedstorage.tile.TileController;
+import refinedstorage.tile.controller.TileController;
 import refinedstorage.tile.grid.TileGrid;
 
 import java.util.List;
@@ -137,7 +137,7 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
             TileEntity tile = world.getTileEntity(new BlockPos(getX(stack), getY(stack), getZ(stack)));
 
             if (tile instanceof TileController) {
-                if (((TileController) tile).onOpenWirelessGrid(player, hand)) {
+                if (((TileController) tile).getWirelessGridHandler().handleOpen(player, hand)) {
                     return new ActionResult(EnumActionResult.SUCCESS, stack);
                 } else {
                     player.addChatComponentMessage(new TextComponentString(I18n.format("misc.refinedstorage:wireless_grid.out_of_range")));

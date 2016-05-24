@@ -5,7 +5,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import refinedstorage.tile.TileController;
+import refinedstorage.tile.controller.TileController;
 
 public class MessageWirelessGridStoragePull extends MessageHandlerPlayerToServer<MessageWirelessGridStoragePull> implements IMessage {
     private int controllerX;
@@ -48,7 +48,7 @@ public class MessageWirelessGridStoragePull extends MessageHandlerPlayerToServer
         TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.controllerX, message.controllerY, message.controllerZ));
 
         if (tile instanceof TileController && ((TileController) tile).mayRun()) {
-            ((TileController) tile).handleStoragePull(message.id, message.flags, player);
+            ((TileController) tile).getStorageHandler().handlePull(message.id, message.flags, player);
         }
     }
 }

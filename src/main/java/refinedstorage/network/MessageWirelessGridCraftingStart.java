@@ -5,7 +5,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import refinedstorage.tile.TileController;
+import refinedstorage.tile.controller.TileController;
 
 public class MessageWirelessGridCraftingStart extends MessageHandlerPlayerToServer<MessageWirelessGridCraftingStart> implements IMessage {
     private int controllerX;
@@ -48,7 +48,7 @@ public class MessageWirelessGridCraftingStart extends MessageHandlerPlayerToServ
         TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.controllerX, message.controllerY, message.controllerZ));
 
         if (tile instanceof TileController && ((TileController) tile).mayRun()) {
-            ((TileController) tile).onCraftingRequested(message.id, message.quantity);
+            ((TileController) tile).getStorageHandler().handleCraftingRequest(message.id, message.quantity);
         }
     }
 }

@@ -8,6 +8,8 @@ import net.minecraft.world.World;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
+import refinedstorage.tile.controller.ControllerSearcher;
+import refinedstorage.tile.controller.TileController;
 
 import java.util.HashSet;
 import java.util.Set;

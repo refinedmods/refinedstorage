@@ -21,7 +21,7 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.item.ItemBlockController;
-import refinedstorage.tile.TileController;
+import refinedstorage.tile.controller.TileController;
 
 import java.util.ArrayList;
 import java.util.List;

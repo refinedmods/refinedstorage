@@ -1,31 +1,30 @@
-package refinedstorage.tile;
+package refinedstorage.tile.controller;
 
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyReceiver;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import refinedstorage.*;
+import refinedstorage.RefinedStorageBlocks;
+import refinedstorage.RefinedStorageUtils;
 import refinedstorage.block.BlockController;
 import refinedstorage.block.EnumControllerType;
 import refinedstorage.container.ContainerController;
 import refinedstorage.item.ItemPattern;
-import refinedstorage.item.ItemWirelessGrid;
-import refinedstorage.network.GridPullFlags;
-import refinedstorage.network.MessageWirelessGridItems;
 import refinedstorage.storage.IStorage;
 import refinedstorage.storage.IStorageProvider;
 import refinedstorage.storage.ItemGroup;
+import refinedstorage.tile.ISynchronizedContainer;
+import refinedstorage.tile.TileBase;
+import refinedstorage.tile.TileMachine;
+import refinedstorage.tile.TileWirelessTransmitter;
 import refinedstorage.tile.autocrafting.CraftingPattern;
 import refinedstorage.tile.autocrafting.TileCrafter;
 import refinedstorage.tile.autocrafting.task.BasicCraftingTask;
@@ -33,50 +32,23 @@ import refinedstorage.tile.autocrafting.task.ICraftingTask;
 import refinedstorage.tile.autocrafting.task.ProcessingCraftingTask;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
-import refinedstorage.tile.grid.WirelessGridConsumer;
 
 import java.util.*;
 
 public class TileController extends TileBase implements IEnergyReceiver, ISynchronizedContainer, IRedstoneModeConfig {
-    public class ClientSideMachine {
-        public ItemStack stack;
-        public int amount;
-        public int energyUsage;
-
-        @Override
-        public boolean equals(Object other) {
-            if (this == other) {
-                return true;
-            }
-
-            if (!(other instanceof ClientSideMachine)) {
-                return false;
-            }
-
-            return energyUsage == ((ClientSideMachine) other).energyUsage && RefinedStorageUtils.compareStack(stack, ((ClientSideMachine) other).stack);
-        }
-
-        @Override
-        public int hashCode() {
-            int result = stack.hashCode();
-            result = 31 * result + energyUsage;
-            return result;
-        }
-    }
-
     public static final int ENERGY_CAPACITY = 32000;
 
     public static final String NBT_CRAFTING_TASKS = "CraftingTasks";
     public static final String NBT_ENERGY = "Energy";
 
-    public static final int MAX_CRAFTING_QUANTITY_PER_REQUEST = 500;
-
     private EnumControllerType type;
 
+    private StorageHandler storageHandler = new StorageHandler(this);
+    private WirelessGridHandler wirelessGridHandler = new WirelessGridHandler(this);
+
     private List<ItemGroup> itemGroups = new ArrayList<ItemGroup>();
+
     private List<IStorage> storages = new ArrayList<IStorage>();
-    private List<WirelessGridConsumer> wirelessGridConsumers = new ArrayList<WirelessGridConsumer>();
-    private List<WirelessGridConsumer> wirelessGridConsumersToRemove = new ArrayList<WirelessGridConsumer>();
 
     private Set<Integer> combinedGroupsIndices = new HashSet<Integer>();
     private List<ItemGroup> combinedGroups = new ArrayList<ItemGroup>();
@@ -97,19 +69,11 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     private EnergyStorage energy = new EnergyStorage(ENERGY_CAPACITY);
     private int energyUsage;
 
+    private int wirelessGridRange;
+
     private boolean couldRun;
 
     private long lastEnergyUpdate;
-
-    private int wirelessGridRange;
-
-    public void addMachine(TileMachine machine) {
-        machinesToAdd.add(machine);
-    }
-
-    public void removeMachine(TileMachine machine) {
-        machinesToRemove.add(machine);
-    }
 
     @Override
     public void update() {
@@ -169,22 +133,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
                 worldObj.notifyNeighborsOfStateChange(pos, RefinedStorageBlocks.CONTROLLER);
             }
 
-            wirelessGridConsumers.removeAll(wirelessGridConsumersToRemove);
-            wirelessGridConsumersToRemove.clear();
-
-            Iterator<WirelessGridConsumer> gridConsumerIterator = wirelessGridConsumers.iterator();
-
-            while (gridConsumerIterator.hasNext()) {
-                WirelessGridConsumer consumer = gridConsumerIterator.next();
-
-                if (!RefinedStorageUtils.compareStack(consumer.getWirelessGrid(), consumer.getPlayer().getHeldItem(consumer.getHand()))) {
-                    consumer.getPlayer().closeScreen(); // This will call onContainerClosed on the Container and remove it from the list
-                } else {
-                    if (mayRun()) {
-                        RefinedStorage.NETWORK.sendTo(new MessageWirelessGridItems(this), (EntityPlayerMP) consumer.getPlayer());
-                    }
-                }
-            }
+            wirelessGridHandler.update();
 
             if (getType() == EnumControllerType.NORMAL && energyUsage > 0) {
                 if (energy.getEnergyStored() - energyUsage >= 0) {
@@ -256,12 +205,29 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
         syncItems();
     }
 
+
+    public void addMachine(TileMachine machine) {
+        machinesToAdd.add(machine);
+    }
+
+    public void removeMachine(TileMachine machine) {
+        machinesToRemove.add(machine);
+    }
+
     public EnumControllerType getType() {
         if (type == null && worldObj.getBlockState(pos).getBlock() == RefinedStorageBlocks.CONTROLLER) {
             this.type = (EnumControllerType) worldObj.getBlockState(pos).getValue(BlockController.TYPE);
         }
 
         return type == null ? EnumControllerType.NORMAL : type;
+    }
+
+    public StorageHandler getStorageHandler() {
+        return storageHandler;
+    }
+
+    public WirelessGridHandler getWirelessGridHandler() {
+        return wirelessGridHandler;
     }
 
     public int getWirelessGridRange() {
@@ -278,6 +244,14 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
     public List<ItemGroup> getItemGroups() {
         return itemGroups;
+    }
+
+    public void writeItemGroups(ByteBuf buf) {
+        buf.writeInt(itemGroups.size());
+
+        for (ItemGroup group : itemGroups) {
+            group.toBytes(buf, itemGroups.indexOf(group));
+        }
     }
 
     public List<ICraftingTask> getCraftingTasks() {
@@ -437,62 +411,6 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
     public void setEnergyStored(int amount) {
         energy.setEnergyStored(amount);
-    }
-
-    public boolean onOpenWirelessGrid(EntityPlayer player, EnumHand hand) {
-        boolean inRange = (int) Math.sqrt(Math.pow(getPos().getX() - player.posX, 2) + Math.pow(getPos().getY() - player.posY, 2) + Math.pow(getPos().getZ() - player.posZ, 2)) < getWirelessGridRange();
-
-        if (!inRange) {
-            return false;
-        }
-
-        wirelessGridConsumers.add(new WirelessGridConsumer(player, hand, player.getHeldItem(hand)));
-
-        player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.WIRELESS_GRID, worldObj, RefinedStorageUtils.getIdFromHand(hand), 0, 0);
-
-        drainEnergyFromWirelessGrid(player, ItemWirelessGrid.USAGE_OPEN);
-
-        return true;
-    }
-
-    public void onCloseWirelessGrid(EntityPlayer player) {
-        WirelessGridConsumer consumer = getWirelessGridConsumer(player);
-
-        if (consumer != null) {
-            wirelessGridConsumersToRemove.add(consumer);
-        }
-    }
-
-    public void drainEnergyFromWirelessGrid(EntityPlayer player, int energy) {
-        WirelessGridConsumer consumer = getWirelessGridConsumer(player);
-
-        if (consumer != null) {
-            ItemWirelessGrid item = RefinedStorageItems.WIRELESS_GRID;
-            ItemStack held = consumer.getPlayer().getHeldItem(consumer.getHand());
-
-            if (held.getItemDamage() != ItemWirelessGrid.TYPE_CREATIVE) {
-                item.extractEnergy(held, energy, false);
-
-                if (item.getEnergyStored(held) <= 0) {
-                    onCloseWirelessGrid(player);
-                    consumer.getPlayer().closeScreen();
-                }
-            }
-        }
-    }
-
-    public WirelessGridConsumer getWirelessGridConsumer(EntityPlayer player) {
-        Iterator<WirelessGridConsumer> it = wirelessGridConsumers.iterator();
-
-        while (it.hasNext()) {
-            WirelessGridConsumer consumer = it.next();
-
-            if (consumer.getPlayer() == player) {
-                return consumer;
-            }
-        }
-
-        return null;
     }
 
     @Override
@@ -687,130 +605,5 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     @Override
     public Class<? extends Container> getContainer() {
         return ContainerController.class;
-    }
-
-    public void handleStoragePull(int id, int flags, EntityPlayerMP player) {
-        if (player.inventory.getItemStack() != null) {
-            return;
-        }
-
-        if (id < 0 || id > itemGroups.size() - 1) {
-            return;
-        }
-
-        ItemGroup group = itemGroups.get(id);
-
-        int quantity = 64;
-
-        if (GridPullFlags.isPullingHalf(flags) && group.getQuantity() > 1) {
-            quantity = group.getQuantity() / 2;
-
-            if (quantity > 32) {
-                quantity = 32;
-            }
-        } else if (GridPullFlags.isPullingOne(flags)) {
-            quantity = 1;
-        } else if (GridPullFlags.isPullingWithShift(flags)) {
-            // NO OP, the quantity already set (64) is needed for shift
-        }
-
-        if (quantity > group.getType().getItemStackLimit(group.toStack())) {
-            quantity = group.getType().getItemStackLimit(group.toStack());
-        }
-
-        ItemStack took = take(group.copy(quantity).toStack());
-
-        if (took != null) {
-            if (GridPullFlags.isPullingWithShift(flags)) {
-                if (!player.inventory.addItemStackToInventory(took.copy())) {
-                    push(took);
-                }
-            } else {
-                player.inventory.setItemStack(took);
-                player.updateHeldItem();
-            }
-
-            drainEnergyFromWirelessGrid(player, ItemWirelessGrid.USAGE_PULL);
-        }
-    }
-
-    public void handleStoragePush(int playerSlot, boolean one, EntityPlayerMP player) {
-        ItemStack stack;
-
-        if (playerSlot == -1) {
-            stack = player.inventory.getItemStack().copy();
-
-            if (one) {
-                stack.stackSize = 1;
-            }
-        } else {
-            stack = player.inventory.getStackInSlot(playerSlot);
-        }
-
-        if (stack != null) {
-            boolean success = push(stack);
-
-            if (success) {
-                if (playerSlot == -1) {
-                    if (one) {
-                        player.inventory.getItemStack().stackSize--;
-
-                        if (player.inventory.getItemStack().stackSize == 0) {
-                            player.inventory.setItemStack(null);
-                        }
-                    } else {
-                        player.inventory.setItemStack(null);
-                    }
-
-                    player.updateHeldItem();
-                } else {
-                    player.inventory.setInventorySlotContents(playerSlot, null);
-                }
-            }
-
-            drainEnergyFromWirelessGrid(player, ItemWirelessGrid.USAGE_PUSH);
-        }
-    }
-
-    public void sendItemGroups(ByteBuf buf) {
-        buf.writeInt(getItemGroups().size());
-
-        for (ItemGroup group : getItemGroups()) {
-            group.toBytes(buf, getItemGroups().indexOf(group));
-        }
-    }
-
-    public void onCraftingRequested(int id, int quantity) {
-        if (id >= 0 && id < itemGroups.size() && quantity > 0 && quantity <= MAX_CRAFTING_QUANTITY_PER_REQUEST) {
-            ItemStack requested = itemGroups.get(id).toStack();
-            int quantityPerRequest = 0;
-            CraftingPattern pattern = getPattern(requested);
-
-            if (pattern != null) {
-                for (ItemStack output : pattern.getOutputs()) {
-                    if (RefinedStorageUtils.compareStackNoQuantity(requested, output)) {
-                        quantityPerRequest = output.stackSize;
-
-                        break;
-                    }
-                }
-
-                while (quantity > 0) {
-                    addCraftingTask(pattern);
-
-                    quantity -= quantityPerRequest;
-                }
-            }
-        }
-    }
-
-    public void onCraftingTaskCancelRequested(int id) {
-        if (id >= 0 && id < craftingTasks.size()) {
-            cancelCraftingTask(craftingTasks.get(id));
-        } else if (id == -1) {
-            for (ICraftingTask task : craftingTasks) {
-                cancelCraftingTask(task);
-            }
-        }
     }
 }

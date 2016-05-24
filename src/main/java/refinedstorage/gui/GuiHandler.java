@@ -14,6 +14,7 @@ import refinedstorage.tile.*;
 import refinedstorage.tile.autocrafting.TileCrafter;
 import refinedstorage.tile.autocrafting.TileCraftingMonitor;
 import refinedstorage.tile.autocrafting.TileProcessingPatternEncoder;
+import refinedstorage.tile.controller.TileController;
 import refinedstorage.tile.grid.TileGrid;
 import refinedstorage.tile.grid.WirelessGrid;
 import refinedstorage.tile.solderer.TileSolderer;

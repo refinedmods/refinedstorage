@@ -6,7 +6,7 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import org.lwjgl.input.Keyboard;
 import refinedstorage.container.ContainerDummy;
-import refinedstorage.tile.TileController;
+import refinedstorage.tile.controller.StorageHandler;
 
 import java.io.IOException;
 
@@ -81,7 +81,7 @@ public class GuiCraftingSettings extends GuiBase {
     private void startRequest() {
         Integer quantity = Ints.tryParse(amountField.getText());
 
-        if (quantity != null && quantity > 0 && quantity <= TileController.MAX_CRAFTING_QUANTITY_PER_REQUEST) {
+        if (quantity != null && quantity > 0 && quantity <= StorageHandler.MAX_CRAFTING_PER_REQUEST) {
             gridGui.getGrid().onCraftingRequested(id, quantity);
 
             close();

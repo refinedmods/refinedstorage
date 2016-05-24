@@ -5,7 +5,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import refinedstorage.storage.ItemGroup;
-import refinedstorage.tile.TileController;
+import refinedstorage.tile.controller.TileController;
 import refinedstorage.tile.grid.WirelessGrid;
 
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class MessageWirelessGridItems implements IMessage, IMessageHandler<Messa
 
     @Override
     public void toBytes(ByteBuf buf) {
-        controller.sendItemGroups(buf);
+        controller.writeItemGroups(buf);
     }
 
     @Override

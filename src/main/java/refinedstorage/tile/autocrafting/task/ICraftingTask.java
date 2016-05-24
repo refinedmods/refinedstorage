@@ -1,8 +1,8 @@
 package refinedstorage.tile.autocrafting.task;
 
 import net.minecraft.nbt.NBTTagCompound;
-import refinedstorage.tile.TileController;
 import refinedstorage.tile.autocrafting.CraftingPattern;
+import refinedstorage.tile.controller.TileController;
 
 public interface ICraftingTask {
     CraftingPattern getPattern();
