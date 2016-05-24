@@ -100,7 +100,7 @@ public class GuiGrid extends GuiBase {
                 while (t.hasNext()) {
                     ItemGroup group = t.next();
 
-                    if (!group.toStack().getDisplayName().toLowerCase().contains(searchField.getText().toLowerCase())) {
+                    if (!group.toCachedStack().getDisplayName().toLowerCase().contains(searchField.getText().toLowerCase())) {
                         t.remove();
                     }
                 }
@@ -110,9 +110,9 @@ public class GuiGrid extends GuiBase {
                 @Override
                 public int compare(ItemGroup left, ItemGroup right) {
                     if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING) {
-                        return right.toStack().getDisplayName().compareTo(left.toStack().getDisplayName());
+                        return right.toCachedStack().getDisplayName().compareTo(left.toCachedStack().getDisplayName());
                     } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
-                        return left.toStack().getDisplayName().compareTo(right.toStack().getDisplayName());
+                        return left.toCachedStack().getDisplayName().compareTo(right.toCachedStack().getDisplayName());
                     }
 
                     return 0;
@@ -259,7 +259,7 @@ public class GuiGrid extends GuiBase {
                     text = String.valueOf(qty);
                 }
 
-                drawItem(x, y, items.get(slot).toStack(), true, text);
+                drawItem(x, y, items.get(slot).toCachedStack(), true, text);
             }
 
             if (inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isConnected()) {
@@ -287,7 +287,7 @@ public class GuiGrid extends GuiBase {
         }
 
         if (isHoveringOverItemInSlot()) {
-            drawTooltip(mouseX, mouseY, items.get(hoveringSlot).toStack());
+            drawTooltip(mouseX, mouseY, items.get(hoveringSlot).toCachedStack());
         }
 
         if (isHoveringOverClear(mouseX, mouseY)) {

@@ -14,6 +14,7 @@ public class ItemGroup {
     private NBTTagCompound tag;
     // Used clientside
     private int id;
+    private ItemStack cachedStack;
 
     public ItemGroup(ByteBuf buf) {
         this.id = buf.readInt();
@@ -164,5 +165,13 @@ public class ItemGroup {
         stack.setTagCompound(tag);
 
         return stack;
+    }
+
+    public ItemStack toCachedStack() {
+        if (cachedStack == null) {
+            cachedStack = toStack();
+        }
+
+        return cachedStack;
     }
 }
