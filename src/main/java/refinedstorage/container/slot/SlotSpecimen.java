@@ -2,6 +2,7 @@ package refinedstorage.container.slot;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemBlockSpecial;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
@@ -29,7 +30,7 @@ public class SlotSpecimen extends SlotItemHandler {
 
     @Override
     public boolean isItemValid(ItemStack stack) {
-        return isBlockOnly() ? (stack.getItem() instanceof ItemBlock) : true;
+        return isBlockOnly() ? (stack.getItem() instanceof ItemBlock || stack.getItem() instanceof ItemBlockSpecial) : true;
     }
 
     @Override

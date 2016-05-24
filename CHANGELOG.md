@@ -5,6 +5,7 @@
 - Fixed NPE in some tiles
 - Fixed going out of crafting GUI not restoring state (scrollbar and search term)
 - Fixed not being able to create a pattern in disconnected Pattern Grid
+- Fixed not being able to place cake or string
 
 ### 0.7
 **Bugfixes**
