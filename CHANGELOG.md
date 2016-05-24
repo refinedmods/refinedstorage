@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 0.7.2
+**Bugfixes**
+- Fixed Importer getting stuck on slot
+
 ### 0.7.1
 **Bugfixes**
 - Fixed NPE in some tiles
