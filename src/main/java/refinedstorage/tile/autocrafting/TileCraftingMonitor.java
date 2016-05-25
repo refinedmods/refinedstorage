@@ -9,15 +9,10 @@ import refinedstorage.tile.TileMachine;
 import refinedstorage.tile.autocrafting.task.ICraftingTask;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class TileCraftingMonitor extends TileMachine {
-    public class ClientSideCraftingTask {
-        public ItemStack output;
-        public int id;
-        public String info;
-    }
-
     private List<ClientSideCraftingTask> tasks = new ArrayList<ClientSideCraftingTask>();
 
     @Override
@@ -64,15 +59,11 @@ public class TileCraftingMonitor extends TileMachine {
             int outputs = buf.readInt();
 
             for (int j = 0; j < outputs; ++j) {
-                ClientSideCraftingTask task = new ClientSideCraftingTask();
-
-                task.info = info;
-                task.output = ByteBufUtils.readItemStack(buf);
-                task.id = i;
-
-                newTasks.add(task);
+                newTasks.add(new ClientSideCraftingTask(ByteBufUtils.readItemStack(buf), i, info));
             }
         }
+
+        Collections.reverse(newTasks);
 
         tasks = newTasks;
     }
@@ -84,5 +75,17 @@ public class TileCraftingMonitor extends TileMachine {
     @Override
     public Class<? extends Container> getContainer() {
         return ContainerCraftingMonitor.class;
+    }
+
+    public class ClientSideCraftingTask {
+        public ItemStack output;
+        public int id;
+        public String info;
+
+        public ClientSideCraftingTask(ItemStack output, int id, String info) {
+            this.output = output;
+            this.id = id;
+            this.info = info;
+        }
     }
 }

@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 0.7.3
+**Features**
+- Crafting tasks are now sorted from new to old in the Crafting Monitor
+
 ### 0.7.2
 **Bugfixes**
 - Fixed Importer getting stuck on slot

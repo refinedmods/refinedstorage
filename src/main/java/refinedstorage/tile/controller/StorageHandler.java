@@ -117,7 +117,7 @@ public class StorageHandler {
                 }
 
                 while (quantity > 0) {
-                    controller.addCraftingTask(pattern);
+                    controller.addCraftingTaskAsLast(controller.createCraftingTask(pattern));
 
                     quantity -= quantityPerRequest;
                 }

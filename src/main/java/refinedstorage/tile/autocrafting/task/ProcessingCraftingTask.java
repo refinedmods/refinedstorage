@@ -66,7 +66,7 @@ public class ProcessingCraftingTask implements ICraftingTask {
                         if (pattern != null) {
                             childTasks[i] = true;
 
-                            controller.addCraftingTask(pattern);
+                            controller.addCraftingTask(controller.createCraftingTask(pattern));
 
                             break;
                         }

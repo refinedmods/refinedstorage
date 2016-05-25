@@ -21,7 +21,7 @@ public class CraftingTaskScheduler {
         if (pattern != null) {
             scheduledItem = item;
 
-            controller.addCraftingTask(pattern);
+            controller.addCraftingTask(controller.createCraftingTask(pattern));
         }
     }
 
