@@ -28,6 +28,21 @@
 **Features**
 - Port to Minecraft 1.9.4
 
+### 0.6.12
+This is a bugfix release containing all fixes from the 1.9.4 version.
+
+**Bugfixes**
+- Fixed Crafting Grid / Pattern Grid not throwing items on break
+- Fixed NPE in some tiles
+- Fixed going out of crafting GUI not restoring state (scrollbar and search term)
+- Fixed not being able to place cake or string
+- Performance improvement to Grids
+- Fixed Importer getting stuck on slot
+- Fixed silicon + quartz enriched iron not having oredict names
+
+**Features**
+- Crafting tasks are now sorted from new to old in the Crafting Monitor
+
 ### 0.6.11
 **Bugfixes**
 - Fixed crafting patterns crashing when item of an input or output no longer exists
