@@ -11,6 +11,8 @@ public interface IGrid {
 
     List<ItemGroup> getItemGroups();
 
+    void setItemGroups(List<ItemGroup> groups);
+
     void onItemPush(int playerSlot, boolean one);
 
     void onItemPull(int id, int flags);

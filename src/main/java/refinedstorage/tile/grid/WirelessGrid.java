@@ -21,14 +21,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WirelessGrid implements IGrid {
-    public static long LAST_ITEM_GROUP_UPDATE = 0;
-    public static List<ItemGroup> ITEM_GROUPS = new ArrayList<ItemGroup>();
-
     private ItemStack stack;
     private EnumHand hand;
     private int sortingType;
     private int sortingDirection;
     private int searchBoxMode;
+    private List<ItemGroup> itemGroups = new ArrayList<ItemGroup>();
+    private long lastUpdate;
 
     public WirelessGrid(ItemStack stack, EnumHand hand) {
         this.stack = stack;
@@ -45,7 +44,13 @@ public class WirelessGrid implements IGrid {
 
     @Override
     public List<ItemGroup> getItemGroups() {
-        return ITEM_GROUPS;
+        return itemGroups;
+    }
+
+    @Override
+    public void setItemGroups(List<ItemGroup> groups) {
+        this.itemGroups = groups;
+        this.lastUpdate = System.currentTimeMillis();
     }
 
     @Override
@@ -114,6 +119,6 @@ public class WirelessGrid implements IGrid {
 
     @Override
     public boolean isConnected() {
-        return System.currentTimeMillis() - LAST_ITEM_GROUP_UPDATE < 1000;
+        return System.currentTimeMillis() - lastUpdate < 1000;
     }
 }

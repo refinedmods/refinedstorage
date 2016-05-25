@@ -74,8 +74,8 @@ public class ContainerGrid extends ContainerBase {
         }
     }
 
-    public TileGrid getGrid() {
-        return (TileGrid) grid;
+    public IGrid getGrid() {
+        return grid;
     }
 
     public List<SlotGridCrafting> getCraftingSlots() {

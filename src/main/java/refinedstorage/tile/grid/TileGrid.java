@@ -2,6 +2,7 @@ package refinedstorage.tile.grid;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
@@ -89,6 +90,17 @@ public class TileGrid extends TileMachine implements IGrid {
     @Override
     public List<ItemGroup> getItemGroups() {
         return itemGroups;
+    }
+
+    @Override
+    public void setItemGroups(List<ItemGroup> itemGroups) {
+        this.itemGroups = itemGroups;
+    }
+
+    public void onGridOpened(EntityPlayer player) {
+        if (isConnected()) {
+            controller.syncItemsWithClient((EntityPlayerMP) player);
+        }
     }
 
     @Override
@@ -335,12 +347,6 @@ public class TileGrid extends TileMachine implements IGrid {
         buf.writeInt(sortingDirection);
         buf.writeInt(sortingType);
         buf.writeInt(searchBoxMode);
-
-        if (connected) {
-            controller.writeItemGroups(buf);
-        } else {
-            buf.writeInt(0);
-        }
     }
 
     @Override
@@ -350,16 +356,6 @@ public class TileGrid extends TileMachine implements IGrid {
         sortingDirection = buf.readInt();
         sortingType = buf.readInt();
         searchBoxMode = buf.readInt();
-
-        List<ItemGroup> groups = new ArrayList<ItemGroup>();
-
-        int size = buf.readInt();
-
-        for (int i = 0; i < size; ++i) {
-            groups.add(new ItemGroup(buf));
-        }
-
-        itemGroups = groups;
     }
 
     @Override

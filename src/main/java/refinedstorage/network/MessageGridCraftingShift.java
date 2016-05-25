@@ -42,7 +42,7 @@ public class MessageGridCraftingShift extends MessageHandlerPlayerToServer<Messa
         TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.x, message.y, message.z));
 
         if (tile instanceof TileGrid && ((TileGrid) tile).getType() == EnumGridType.CRAFTING && player.openContainer instanceof ContainerGrid) {
-            ((ContainerGrid) player.openContainer).getGrid().onCraftedShift((ContainerGrid) player.openContainer, player);
+            ((TileGrid) ((ContainerGrid) player.openContainer).getGrid()).onCraftedShift((ContainerGrid) player.openContainer, player);
         }
     }
 }

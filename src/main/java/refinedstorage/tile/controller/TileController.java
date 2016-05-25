@@ -4,6 +4,8 @@ import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyReceiver;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,12 +14,15 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.block.BlockController;
 import refinedstorage.block.EnumControllerType;
 import refinedstorage.container.ContainerController;
+import refinedstorage.container.ContainerGrid;
 import refinedstorage.item.ItemPattern;
+import refinedstorage.network.MessageGridItems;
 import refinedstorage.storage.IStorage;
 import refinedstorage.storage.IStorageProvider;
 import refinedstorage.storage.ItemGroup;
@@ -73,6 +78,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     private int wirelessGridRange;
 
     private boolean couldRun;
+    private boolean syncing;
 
     private long lastEnergyUpdate;
 
@@ -163,55 +169,6 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
         }
     }
 
-    public void syncMachines() {
-        this.wirelessGridRange = 0;
-        this.energyUsage = 0;
-        this.storages.clear();
-        this.patterns.clear();
-
-        for (TileMachine machine : machines) {
-            if (!machine.mayUpdate()) {
-                continue;
-            }
-
-            if (machine instanceof TileWirelessTransmitter) {
-                this.wirelessGridRange += ((TileWirelessTransmitter) machine).getRange();
-            }
-
-            if (machine instanceof IStorageProvider) {
-                ((IStorageProvider) machine).provide(storages);
-            }
-
-            if (machine instanceof TileCrafter) {
-                TileCrafter crafter = (TileCrafter) machine;
-
-                for (int i = 0; i < TileCrafter.PATTERN_SLOTS; ++i) {
-                    ItemStack pattern = crafter.getPatterns().getStackInSlot(i);
-
-                    if (pattern != null && ItemPattern.isValid(pattern)) {
-                        patterns.add(new CraftingPattern(crafter.getPos().getX(), crafter.getPos().getY(), crafter.getPos().getZ(), ItemPattern.isProcessing(pattern), ItemPattern.getInputs(pattern), ItemPattern.getOutputs(pattern)));
-                    }
-                }
-            }
-
-            this.energyUsage += machine.getEnergyUsage();
-        }
-
-        Collections.sort(storages, new Comparator<IStorage>() {
-            @Override
-            public int compare(IStorage left, IStorage right) {
-                if (left.getPriority() == right.getPriority()) {
-                    return 0;
-                }
-
-                return (left.getPriority() > right.getPriority()) ? -1 : 1;
-            }
-        });
-
-        syncItems();
-    }
-
-
     public void addMachine(TileMachine machine) {
         machinesToAdd.add(machine);
     }
@@ -250,14 +207,6 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
     public List<ItemGroup> getItemGroups() {
         return itemGroups;
-    }
-
-    public void writeItemGroups(ByteBuf buf) {
-        buf.writeInt(itemGroups.size());
-
-        for (ItemGroup group : itemGroups) {
-            group.toBytes(buf, itemGroups.indexOf(group));
-        }
     }
 
     public List<ICraftingTask> getCraftingTasks() {
@@ -310,7 +259,58 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
         return null;
     }
 
+    private void syncMachines() {
+        this.wirelessGridRange = 0;
+        this.energyUsage = 0;
+        this.storages.clear();
+        this.patterns.clear();
+
+        for (TileMachine machine : machines) {
+            if (!machine.mayUpdate()) {
+                continue;
+            }
+
+            if (machine instanceof TileWirelessTransmitter) {
+                this.wirelessGridRange += ((TileWirelessTransmitter) machine).getRange();
+            }
+
+            if (machine instanceof IStorageProvider) {
+                ((IStorageProvider) machine).provide(storages);
+            }
+
+            if (machine instanceof TileCrafter) {
+                TileCrafter crafter = (TileCrafter) machine;
+
+                for (int i = 0; i < TileCrafter.PATTERN_SLOTS; ++i) {
+                    ItemStack pattern = crafter.getPatterns().getStackInSlot(i);
+
+                    if (pattern != null && ItemPattern.isValid(pattern)) {
+                        patterns.add(new CraftingPattern(crafter.getPos().getX(), crafter.getPos().getY(), crafter.getPos().getZ(), ItemPattern.isProcessing(pattern), ItemPattern.getInputs(pattern), ItemPattern.getOutputs(pattern)));
+                    }
+                }
+            }
+
+            this.energyUsage += machine.getEnergyUsage();
+        }
+
+        Collections.sort(storages, new Comparator<IStorage>() {
+            @Override
+            public int compare(IStorage left, IStorage right) {
+                if (left.getPriority() == right.getPriority()) {
+                    return 0;
+                }
+
+                return (left.getPriority() > right.getPriority()) ? -1 : 1;
+            }
+        });
+
+        syncItems();
+        syncItemsWithClients();
+    }
+
     private void syncItems() {
+        this.syncing = true;
+
         itemGroups.clear();
 
         for (IStorage storage : storages) {
@@ -360,6 +360,22 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
         }
 
         itemGroups.removeAll(combinedGroups);
+
+        this.syncing = false;
+    }
+
+    public void syncItemsWithClients() {
+        if (!syncing) {
+            for (EntityPlayer player : worldObj.playerEntities) {
+                if (player.openContainer.getClass() == ContainerGrid.class) {
+                    syncItemsWithClient((EntityPlayerMP) player);
+                }
+            }
+        }
+    }
+
+    public void syncItemsWithClient(EntityPlayerMP player) {
+        RefinedStorage.NETWORK.sendTo(new MessageGridItems(this), player);
     }
 
     public boolean push(ItemStack stack) {
@@ -368,6 +384,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
                 storage.push(stack);
 
                 syncItems();
+                syncItemsWithClients();
 
                 for (int i = 0; i < stack.stackSize; ++i) {
                     if (!craftingTasks.empty()) {
@@ -416,6 +433,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
         if (newStack != null) {
             syncItems();
+            syncItemsWithClients();
         }
 
         return newStack;

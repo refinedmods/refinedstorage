@@ -9,7 +9,6 @@ import refinedstorage.RefinedStorageGui;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.item.ItemWirelessGrid;
-import refinedstorage.network.MessageWirelessGridItems;
 import refinedstorage.tile.grid.WirelessGridConsumer;
 
 import java.util.ArrayList;
@@ -37,10 +36,6 @@ public class WirelessGridHandler {
 
             if (!RefinedStorageUtils.compareStack(consumer.getWirelessGrid(), consumer.getPlayer().getHeldItem(consumer.getHand()))) {
                 consumer.getPlayer().closeScreen(); // This will call onContainerClosed on the Container and remove it from the list
-            } else {
-                if (controller.mayRun()) {
-                    RefinedStorage.NETWORK.sendTo(new MessageWirelessGridItems(controller), (EntityPlayerMP) consumer.getPlayer());
-                }
             }
         }
     }
@@ -53,6 +48,8 @@ public class WirelessGridHandler {
         }
 
         consumers.add(new WirelessGridConsumer(player, hand, player.getHeldItem(hand)));
+
+        controller.syncItemsWithClient((EntityPlayerMP) player);
 
         player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.WIRELESS_GRID, controller.getWorld(), RefinedStorageUtils.getIdFromHand(hand), 0, 0);
 
@@ -99,5 +96,9 @@ public class WirelessGridHandler {
         }
 
         return null;
+    }
+
+    public List<WirelessGridConsumer> getConsumers() {
+        return consumers;
     }
 }
