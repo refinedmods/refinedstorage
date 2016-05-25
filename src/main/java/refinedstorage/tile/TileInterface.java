@@ -9,19 +9,21 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerInterface;
 import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.inventory.BasicItemValidator;
-import refinedstorage.inventory.InterfaceItemHandler;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
 
 public class TileInterface extends TileMachine implements ICompareConfig {
     public static final String NBT_COMPARE = "Compare";
 
-    private BasicItemHandler items = new BasicItemHandler(9 * 3, this);
+    private BasicItemHandler importItems = new BasicItemHandler(9, this);
+    private BasicItemHandler exportSpecimenItems = new BasicItemHandler(9, this);
+    private BasicItemHandler exportItems = new BasicItemHandler(9, this);
     private BasicItemHandler upgrades = new BasicItemHandler(4, this, new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED));
 
     private int compare = 0;
@@ -35,25 +37,25 @@ public class TileInterface extends TileMachine implements ICompareConfig {
 
     @Override
     public void updateMachine() {
-        if (currentSlot > 8) {
+        if (currentSlot >= importItems.getSlots()) {
             currentSlot = 0;
         }
 
-        ItemStack slot = items.getStackInSlot(currentSlot);
+        ItemStack slot = importItems.getStackInSlot(currentSlot);
 
         if (slot == null) {
             currentSlot++;
         } else {
             if (ticks % RefinedStorageUtils.getSpeed(upgrades) == 0) {
                 if (controller.push(ItemHandlerHelper.copyStackWithSize(slot, 1))) {
-                    items.extractItem(currentSlot, 1, false);
+                    importItems.extractItem(currentSlot, 1, false);
                 }
             }
         }
 
-        for (int i = 9; i < 18; ++i) {
-            ItemStack wanted = items.getStackInSlot(i);
-            ItemStack got = items.getStackInSlot(i + 9);
+        for (int i = 0; i < 9; ++i) {
+            ItemStack wanted = exportSpecimenItems.getStackInSlot(i);
+            ItemStack got = exportItems.getStackInSlot(i);
 
             if (wanted != null) {
                 boolean mayTake = false;
@@ -61,7 +63,7 @@ public class TileInterface extends TileMachine implements ICompareConfig {
                 if (got != null) {
                     if (!RefinedStorageUtils.compareStack(wanted, got, compare)) {
                         if (controller.push(got)) {
-                            items.setStackInSlot(i + 9, null);
+                            exportItems.setStackInSlot(i, null);
                         }
                     } else {
                         mayTake = true;
@@ -71,7 +73,7 @@ public class TileInterface extends TileMachine implements ICompareConfig {
                 }
 
                 if (mayTake) {
-                    got = items.getStackInSlot(i + 9);
+                    got = exportItems.getStackInSlot(i);
 
                     int needed = got == null ? wanted.stackSize : wanted.stackSize - got.stackSize;
 
@@ -80,7 +82,7 @@ public class TileInterface extends TileMachine implements ICompareConfig {
 
                         if (took != null) {
                             if (got == null) {
-                                items.setStackInSlot(i + 9, took);
+                                exportItems.setStackInSlot(i, took);
                             } else {
                                 got.stackSize += took.stackSize;
                             }
@@ -89,7 +91,7 @@ public class TileInterface extends TileMachine implements ICompareConfig {
                 }
             } else if (got != null) {
                 if (controller.push(got)) {
-                    items.setStackInSlot(i + 9, null);
+                    exportItems.setStackInSlot(i, null);
                 }
             }
         }
@@ -111,8 +113,10 @@ public class TileInterface extends TileMachine implements ICompareConfig {
     public void read(NBTTagCompound nbt) {
         super.read(nbt);
 
-        RefinedStorageUtils.readItems(items, 0, nbt);
-        RefinedStorageUtils.readItems(upgrades, 1, nbt);
+        RefinedStorageUtils.readItems(importItems, 0, nbt);
+        RefinedStorageUtils.readItems(exportSpecimenItems, 1, nbt);
+        RefinedStorageUtils.readItems(exportItems, 2, nbt);
+        RefinedStorageUtils.readItems(upgrades, 3, nbt);
 
         if (nbt.hasKey(NBT_COMPARE)) {
             compare = nbt.getInteger(NBT_COMPARE);
@@ -123,8 +127,10 @@ public class TileInterface extends TileMachine implements ICompareConfig {
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        RefinedStorageUtils.writeItems(items, 0, tag);
-        RefinedStorageUtils.writeItems(upgrades, 1, tag);
+        RefinedStorageUtils.writeItems(importItems, 0, tag);
+        RefinedStorageUtils.writeItems(exportSpecimenItems, 1, tag);
+        RefinedStorageUtils.writeItems(exportItems, 2, tag);
+        RefinedStorageUtils.writeItems(upgrades, 3, tag);
 
         tag.setInteger(NBT_COMPARE, compare);
 
@@ -151,8 +157,16 @@ public class TileInterface extends TileMachine implements ICompareConfig {
         return ContainerInterface.class;
     }
 
-    public IItemHandler getItems() {
-        return items;
+    public IItemHandler getImportItems() {
+        return importItems;
+    }
+
+    public IItemHandler getExportSpecimenItems() {
+        return exportSpecimenItems;
+    }
+
+    public IItemHandler getExportItems() {
+        return exportItems;
     }
 
     public IItemHandler getUpgrades() {
@@ -161,27 +175,17 @@ public class TileInterface extends TileMachine implements ICompareConfig {
 
     @Override
     public IItemHandler getDroppedItems() {
-        BasicItemHandler dummy = new BasicItemHandler(9 + 9 + 4);
-
-        for (int i = 0; i < 9; ++i) {
-            dummy.setStackInSlot(i, items.getStackInSlot(i));
-        }
-
-        for (int i = 0; i < 9; ++i) {
-            dummy.setStackInSlot(9 + i, items.getStackInSlot(18 + i));
-        }
-
-        for (int i = 0; i < 4; ++i) {
-            dummy.setStackInSlot(18 + i, upgrades.getStackInSlot(i));
-        }
-
-        return dummy;
+        return new CombinedInvWrapper(importItems, exportItems);
     }
 
     @Override
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return (T) new InterfaceItemHandler(items, facing);
+            if (facing == EnumFacing.DOWN) {
+                return (T) exportItems;
+            } else {
+                return (T) importItems;
+            }
         }
 
         return super.getCapability(capability, facing);

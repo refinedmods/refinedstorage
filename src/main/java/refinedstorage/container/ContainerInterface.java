@@ -13,15 +13,15 @@ public class ContainerInterface extends ContainerBase {
         super(player);
 
         for (int i = 0; i < 9; ++i) {
-            addSlotToContainer(new SlotItemHandler(tile.getItems(), i, 8 + (18 * i), 20));
+            addSlotToContainer(new SlotItemHandler(tile.getImportItems(), i, 8 + (18 * i), 20));
         }
 
-        for (int i = 9; i < 18; ++i) {
-            addSlotToContainer(new SlotSpecimen(tile.getItems(), i, 8 + (18 * (i - 9)), 54, SlotSpecimen.SPECIMEN_SIZE));
+        for (int i = 0; i < 9; ++i) {
+            addSlotToContainer(new SlotSpecimen(tile.getExportSpecimenItems(), i, 8 + (18 * i), 54, SlotSpecimen.SPECIMEN_SIZE));
         }
 
-        for (int i = 18; i < 27; ++i) {
-            addSlotToContainer(new SlotOutput(tile.getItems(), i, 8 + (18 * (i - 18)), 100));
+        for (int i = 0; i < 9; ++i) {
+            addSlotToContainer(new SlotOutput(tile.getExportItems(), i, 8 + (18 * i), 100));
         }
 
         for (int i = 0; i < 4; ++i) {

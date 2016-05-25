@@ -67,6 +67,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     private List<ClientSideMachine> clientSideMachines = new ArrayList<ClientSideMachine>();
 
     private List<CraftingPattern> patterns = new ArrayList<CraftingPattern>();
+
     private Stack<ICraftingTask> craftingTasks = new Stack<ICraftingTask>();
     private List<ICraftingTask> craftingTasksToAddAsLast = new ArrayList<ICraftingTask>();
     private List<ICraftingTask> craftingTasksToAdd = new ArrayList<ICraftingTask>();
