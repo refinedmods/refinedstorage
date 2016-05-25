@@ -3,6 +3,7 @@
 ### 0.7.3
 **Bugfixes**
 - Fixed grid performance by not sending grid data so often
+- Fixed silicon + quartz enriched iron not having oredict names
 
 **Features**
 - Crafting tasks are now sorted from new to old in the Crafting Monitor
