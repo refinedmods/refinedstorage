@@ -25,6 +25,7 @@ public class BasicCraftingTask implements ICraftingTask {
     private boolean checked[];
     private boolean childTasks[];
     private List<ItemStack> itemsTook = new ArrayList<ItemStack>();
+    private boolean updatedOnce;
 
     public BasicCraftingTask(CraftingPattern pattern) {
         this.pattern = pattern;
@@ -51,6 +52,8 @@ public class BasicCraftingTask implements ICraftingTask {
     }
 
     public boolean update(TileController controller) {
+        this.updatedOnce = true;
+
         boolean done = true;
 
         for (int i = 0; i < pattern.getInputs().length; ++i) {
@@ -123,6 +126,10 @@ public class BasicCraftingTask implements ICraftingTask {
 
     @Override
     public String getInfo() {
+        if (!updatedOnce) {
+            return "{not_started_yet}";
+        }
+        
         StringBuilder builder = new StringBuilder();
 
         builder.append(TextFormatting.YELLOW).append("{missing_items}").append(TextFormatting.RESET).append("\n");

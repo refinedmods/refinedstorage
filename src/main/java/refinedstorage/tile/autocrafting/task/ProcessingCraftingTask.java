@@ -21,6 +21,7 @@ public class ProcessingCraftingTask implements ICraftingTask {
     private boolean inserted[];
     private boolean childTasks[];
     private boolean satisfied[];
+    private boolean updatedOnce;
 
     public ProcessingCraftingTask(CraftingPattern pattern) {
         this.pattern = pattern;
@@ -43,6 +44,8 @@ public class ProcessingCraftingTask implements ICraftingTask {
 
     @Override
     public boolean update(TileController controller) {
+        this.updatedOnce = true;
+
         TileCrafter crafter = pattern.getCrafter(controller.getWorld());
         IItemHandler handler = RefinedStorageUtils.getItemHandler(crafter.getFacingTile(), crafter.getDirection().getOpposite());
 
@@ -123,6 +126,10 @@ public class ProcessingCraftingTask implements ICraftingTask {
 
     @Override
     public String getInfo() {
+        if (!updatedOnce) {
+            return "{not_started_yet}";
+        }
+
         StringBuilder builder = new StringBuilder();
 
         builder.append(TextFormatting.YELLOW).append("{missing_items}").append(TextFormatting.RESET).append("\n");

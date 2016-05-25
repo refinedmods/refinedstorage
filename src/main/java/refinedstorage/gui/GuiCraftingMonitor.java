@@ -139,6 +139,7 @@ public class GuiCraftingMonitor extends GuiBase {
                                 .replace("{missing_items}", t("gui.refinedstorage:crafting_monitor.missing_items"))
                                 .replace("{items_crafting}", t("gui.refinedstorage:crafting_monitor.items_crafting"))
                                 .replace("{items_processing}", t("gui.refinedstorage:crafting_monitor.items_processing"))
+                                .replace("{not_started_yet}", t("gui.refinedstorage:crafting_monitor.not_started_yet"))
                                 .replace("{none}", t("misc.refinedstorage:none")));
                         }
                     }
