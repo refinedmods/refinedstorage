@@ -1,5 +1,19 @@
 # Refined Storage Changelog
 
+### 0.6.12
+**Bugfixes**
+- [x] Fixed Crafting Grid / Pattern Grid not throwing items on break
+- [x] Fixed NPE in some tiles
+- [x] Fixed going out of crafting GUI not restoring state (scrollbar and search term)
+- [x] Fixed not being able to place cake or string
+- [x] Performance improvement to Grids
+- [x] Fixed Importer getting stuck on slot
+- [ ] Fixed grid performance by not sending grid data so often
+- [x] Fixed silicon + quartz enriched iron not having oredict names
+
+**Features**
+- [x] Crafting tasks are now sorted from new to old in the Crafting Monitor
+
 ### 0.6.11
 **Bugfixes**
 - Fixed crafting patterns crashing when item of an input or output no longer exists

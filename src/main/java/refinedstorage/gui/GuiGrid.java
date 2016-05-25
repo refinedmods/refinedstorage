@@ -56,12 +56,20 @@ public class GuiGrid extends GuiBase {
             addSideButton(new SideButtonRedstoneMode(grid.getRedstoneModeSetting()));
         }
 
-        searchField = new GuiTextField(0, fontRendererObj, x + 80 + 1, y + 6 + 1, 88 - 6, fontRendererObj.FONT_HEIGHT);
-        searchField.setEnableBackgroundDrawing(false);
-        searchField.setVisible(true);
-        searchField.setTextColor(16777215);
-        searchField.setCanLoseFocus(!TileGrid.isSearchBoxModeWithAutoselection(grid.getSearchBoxMode()));
-        searchField.setFocused(TileGrid.isSearchBoxModeWithAutoselection(grid.getSearchBoxMode()));
+        int sx = x + 80 + 1;
+        int sy = y + 6 + 1;
+
+        if (searchField == null) {
+            searchField = new GuiTextField(0, fontRendererObj, x + 80 + 1, y + 6 + 1, 88 - 6, fontRendererObj.FONT_HEIGHT);
+            searchField.setEnableBackgroundDrawing(false);
+            searchField.setVisible(true);
+            searchField.setTextColor(16777215);
+            searchField.setCanLoseFocus(!TileGrid.isSearchBoxModeWithAutoselection(grid.getSearchBoxMode()));
+            searchField.setFocused(TileGrid.isSearchBoxModeWithAutoselection(grid.getSearchBoxMode()));
+        } else {
+            searchField.xPosition = sx;
+            searchField.yPosition = sy;
+        }
 
         addSideButton(new SideButtonGridSortingDirection(grid));
         addSideButton(new SideButtonGridSortingType(grid));
@@ -92,7 +100,7 @@ public class GuiGrid extends GuiBase {
                 while (t.hasNext()) {
                     ItemGroup group = t.next();
 
-                    if (!group.toStack().getDisplayName().toLowerCase().contains(searchField.getText().toLowerCase())) {
+                    if (!group.toCachedStack().getDisplayName().toLowerCase().contains(searchField.getText().toLowerCase())) {
                         t.remove();
                     }
                 }
@@ -102,9 +110,9 @@ public class GuiGrid extends GuiBase {
                 @Override
                 public int compare(ItemGroup left, ItemGroup right) {
                     if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING) {
-                        return right.toStack().getDisplayName().compareTo(left.toStack().getDisplayName());
+                        return right.toCachedStack().getDisplayName().compareTo(left.toCachedStack().getDisplayName());
                     } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
-                        return left.toStack().getDisplayName().compareTo(right.toStack().getDisplayName());
+                        return left.toCachedStack().getDisplayName().compareTo(right.toCachedStack().getDisplayName());
                     }
 
                     return 0;
@@ -251,7 +259,7 @@ public class GuiGrid extends GuiBase {
                     text = String.valueOf(qty);
                 }
 
-                drawItem(x, y, items.get(slot).toStack(), true, text);
+                drawItem(x, y, items.get(slot).toCachedStack(), true, text);
             }
 
             if (inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isConnected()) {
@@ -279,7 +287,7 @@ public class GuiGrid extends GuiBase {
         }
 
         if (isHoveringOverItemInSlot()) {
-            drawTooltip(mouseX, mouseY, items.get(hoveringSlot).toStack());
+            drawTooltip(mouseX, mouseY, items.get(hoveringSlot).toCachedStack());
         }
 
         if (isHoveringOverClear(mouseX, mouseY)) {

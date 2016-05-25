@@ -89,6 +89,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
     private List<CraftingPattern> patterns = new ArrayList<CraftingPattern>();
     private Stack<ICraftingTask> craftingTasks = new Stack<ICraftingTask>();
+    private List<ICraftingTask> craftingTasksToAddAsLast = new ArrayList<ICraftingTask>();
     private List<ICraftingTask> craftingTasksToAdd = new ArrayList<ICraftingTask>();
     private List<ICraftingTask> craftingTasksToCancel = new ArrayList<ICraftingTask>();
 
@@ -100,6 +101,8 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     private long lastEnergyUpdate;
 
     private int wirelessGridRange;
+
+    private EnumControllerType type;
 
     public void addMachine(TileMachine machine) {
         machinesToAdd.add(machine);
@@ -147,6 +150,11 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
                     craftingTasks.push(task);
                 }
                 craftingTasksToAdd.clear();
+
+                for (ICraftingTask task : craftingTasksToAddAsLast) {
+                    craftingTasks.add(0, task);
+                }
+                craftingTasksToAddAsLast.clear();
 
                 if (!craftingTasks.empty()) {
                     ICraftingTask top = craftingTasks.peek();
@@ -255,11 +263,11 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     }
 
     public EnumControllerType getType() {
-        if (worldObj.getBlockState(pos).getBlock() == RefinedStorageBlocks.CONTROLLER) {
-            return (EnumControllerType) worldObj.getBlockState(pos).getValue(BlockController.TYPE);
+        if (type == null && worldObj.getBlockState(pos).getBlock() == RefinedStorageBlocks.CONTROLLER) {
+            this.type = (EnumControllerType) worldObj.getBlockState(pos).getValue(BlockController.TYPE);
         }
 
-        return EnumControllerType.NORMAL;
+        return type == null ? EnumControllerType.NORMAL : type;
     }
 
     public int getWirelessGridRange() {
@@ -288,11 +296,17 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
         markDirty();
     }
 
-    public void addCraftingTask(CraftingPattern pattern) {
+    public void addCraftingTaskAsLast(ICraftingTask task) {
+        craftingTasksToAddAsLast.add(task);
+
+        markDirty();
+    }
+
+    public ICraftingTask createCraftingTask(CraftingPattern pattern) {
         if (pattern.isProcessing()) {
-            addCraftingTask(new ProcessingCraftingTask(pattern));
+            return new ProcessingCraftingTask(pattern);
         } else {
-            addCraftingTask(new BasicCraftingTask(pattern));
+            return new BasicCraftingTask(pattern);
         }
     }
 
@@ -789,7 +803,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
                 }
 
                 while (quantity > 0) {
-                    addCraftingTask(pattern);
+                    addCraftingTask(createCraftingTask(pattern));
 
                     quantity -= quantityPerRequest;
                 }

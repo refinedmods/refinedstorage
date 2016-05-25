@@ -4,7 +4,9 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemBlockSpecial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -20,6 +22,8 @@ import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
+
+import java.lang.reflect.Field;
 
 public class TileConstructor extends TileMachine implements ICompareConfig {
     public static final String NBT_COMPARE = "Compare";
@@ -48,9 +52,24 @@ public class TileConstructor extends TileMachine implements ICompareConfig {
         if (ticks % RefinedStorageUtils.getSpeed(upgrades, BASE_SPEED, 4) == 0 && filter.getStackInSlot(0) != null) {
             BlockPos front = pos.offset(getDirection());
 
-            Block block = ((ItemBlock) filter.getStackInSlot(0).getItem()).getBlock();
+            Item item = filter.getStackInSlot(0).getItem();
+            Block block = null;
 
-            if (block.canPlaceBlockAt(worldObj, front)) {
+            if (item instanceof ItemBlockSpecial) {
+                try {
+                    Field f = ((ItemBlockSpecial) item).getClass().getDeclaredField("block");
+                    f.setAccessible(true);
+                    block = (Block) f.get(item);
+                } catch (IllegalAccessException e) {
+                    // NO OP
+                } catch (NoSuchFieldException e) {
+                    // NO OP
+                }
+            } else if (item instanceof ItemBlock) {
+                block = ((ItemBlock) item).getBlock();
+            }
+
+            if (block != null && block.canPlaceBlockAt(worldObj, front)) {
                 ItemStack took = controller.take(filter.getStackInSlot(0).copy(), compare);
 
                 if (took != null) {

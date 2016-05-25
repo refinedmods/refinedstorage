@@ -23,7 +23,7 @@ public class CraftingTaskScheduler {
         if (pattern != null) {
             scheduledFor = item;
 
-            controller.addCraftingTask(pattern);
+            controller.addCraftingTask(controller.createCraftingTask(pattern));
         }
     }
 

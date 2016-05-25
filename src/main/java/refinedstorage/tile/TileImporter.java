@@ -58,6 +58,8 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
 
                 if (result != null && controller.push(result)) {
                     handler.extractItem(currentSlot, 1, false);
+                } else {
+                    currentSlot++;
                 }
             }
         }

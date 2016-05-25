@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.oredict.OreDictionary;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageItems;
@@ -109,6 +110,9 @@ public class CommonProxy {
         registerItem(RefinedStorageItems.CORE);
         registerItem(RefinedStorageItems.SILICON);
         registerItem(RefinedStorageItems.UPGRADE);
+
+        OreDictionary.registerOre("itemSilicon", RefinedStorageItems.SILICON);
+        OreDictionary.registerOre("ingotQuartzEnrichedIron", RefinedStorageItems.QUARTZ_ENRICHED_IRON);
 
         // Processors
         SoldererRegistry.addRecipe(new SoldererRecipePrintedProcessor(ItemProcessor.TYPE_PRINTED_BASIC));
