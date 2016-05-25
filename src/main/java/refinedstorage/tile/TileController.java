@@ -803,7 +803,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
                 }
 
                 while (quantity > 0) {
-                    addCraftingTask(createCraftingTask(pattern));
+                    addCraftingTaskAsLast(createCraftingTask(pattern));
 
                     quantity -= quantityPerRequest;
                 }
