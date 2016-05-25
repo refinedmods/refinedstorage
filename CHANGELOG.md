@@ -4,6 +4,7 @@
 **Bugfixes**
 - Fixed grid performance by not sending grid data so often
 - Fixed silicon + quartz enriched iron not having oredict names
+- Broke Interface block inventory compability: make sure to take all your items out of your Interface blocks before you apply the update
 
 **Features**
 - Crafting tasks are now sorted from new to old in the Crafting Monitor
