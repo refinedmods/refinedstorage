@@ -79,7 +79,6 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     private int wirelessGridRange;
 
     private boolean couldRun;
-    private boolean syncing;
 
     private long lastEnergyUpdate;
 
@@ -310,8 +309,6 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     }
 
     private void syncItems() {
-        this.syncing = true;
-
         itemGroups.clear();
 
         for (IStorage storage : storages) {
@@ -361,16 +358,12 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
         }
 
         itemGroups.removeAll(combinedGroups);
-
-        this.syncing = false;
     }
 
     public void syncItemsWithClients() {
-        if (!syncing) {
-            for (EntityPlayer player : worldObj.playerEntities) {
-                if (player.openContainer.getClass() == ContainerGrid.class) {
-                    syncItemsWithClient((EntityPlayerMP) player);
-                }
+        for (EntityPlayer player : worldObj.playerEntities) {
+            if (player.openContainer.getClass() == ContainerGrid.class && pos.equals(((ContainerGrid) player.openContainer).getGrid().getControllerPos())) {
+                syncItemsWithClient((EntityPlayerMP) player);
             }
         }
     }

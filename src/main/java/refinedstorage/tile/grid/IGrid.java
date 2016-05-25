@@ -1,5 +1,6 @@
 package refinedstorage.tile.grid;
 
+import net.minecraft.util.math.BlockPos;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.storage.ItemGroup;
 import refinedstorage.tile.config.IRedstoneModeConfig;
@@ -12,6 +13,8 @@ public interface IGrid {
     List<ItemGroup> getItemGroups();
 
     void setItemGroups(List<ItemGroup> groups);
+
+    BlockPos getControllerPos();
 
     void onItemPush(int playerSlot, boolean one);
 

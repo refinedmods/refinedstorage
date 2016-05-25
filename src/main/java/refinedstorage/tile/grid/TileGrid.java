@@ -7,6 +7,7 @@ import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import refinedstorage.RefinedStorage;
@@ -95,6 +96,11 @@ public class TileGrid extends TileMachine implements IGrid {
     @Override
     public void setItemGroups(List<ItemGroup> itemGroups) {
         this.itemGroups = itemGroups;
+    }
+
+    @Override
+    public BlockPos getControllerPos() {
+        return controller != null ? controller.getPos() : null;
     }
 
     public void onGridOpened(EntityPlayer player) {

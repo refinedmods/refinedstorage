@@ -21,8 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WirelessGrid implements IGrid {
-    private ItemStack stack;
     private EnumHand hand;
+    private BlockPos controllerPos;
     private int sortingType;
     private int sortingDirection;
     private int searchBoxMode;
@@ -30,8 +30,8 @@ public class WirelessGrid implements IGrid {
     private long lastUpdate;
 
     public WirelessGrid(ItemStack stack, EnumHand hand) {
-        this.stack = stack;
         this.hand = hand;
+        this.controllerPos = new BlockPos(ItemWirelessGrid.getX(stack), ItemWirelessGrid.getY(stack), ItemWirelessGrid.getZ(stack));
         this.sortingType = ItemWirelessGrid.getSortingType(stack);
         this.sortingDirection = ItemWirelessGrid.getSortingDirection(stack);
         this.searchBoxMode = ItemWirelessGrid.getSearchBoxMode(stack);
@@ -54,17 +54,22 @@ public class WirelessGrid implements IGrid {
     }
 
     @Override
+    public BlockPos getControllerPos() {
+        return controllerPos;
+    }
+
+    @Override
     public void onItemPush(int playerSlot, boolean one) {
-        RefinedStorage.NETWORK.sendToServer(new MessageWirelessGridStoragePush(ItemWirelessGrid.getX(stack), ItemWirelessGrid.getY(stack), ItemWirelessGrid.getZ(stack), playerSlot, one));
+        RefinedStorage.NETWORK.sendToServer(new MessageWirelessGridStoragePush(controllerPos.getX(), controllerPos.getY(), controllerPos.getZ(), playerSlot, one));
     }
 
     @Override
     public void onItemPull(int id, int flags) {
-        RefinedStorage.NETWORK.sendToServer(new MessageWirelessGridStoragePull(ItemWirelessGrid.getX(stack), ItemWirelessGrid.getY(stack), ItemWirelessGrid.getZ(stack), id, flags));
+        RefinedStorage.NETWORK.sendToServer(new MessageWirelessGridStoragePull(controllerPos.getX(), controllerPos.getY(), controllerPos.getZ(), id, flags));
     }
 
     public void onClose(EntityPlayer player) {
-        TileEntity tile = player.worldObj.getTileEntity(new BlockPos(ItemWirelessGrid.getX(stack), ItemWirelessGrid.getY(stack), ItemWirelessGrid.getZ(stack)));
+        TileEntity tile = player.worldObj.getTileEntity(controllerPos);
 
         if (tile instanceof TileController) {
             ((TileController) tile).getWirelessGridHandler().handleClose(player);
@@ -109,7 +114,7 @@ public class WirelessGrid implements IGrid {
 
     @Override
     public void onCraftingRequested(int id, int quantity) {
-        RefinedStorage.NETWORK.sendToServer(new MessageWirelessGridCraftingStart(ItemWirelessGrid.getX(stack), ItemWirelessGrid.getY(stack), ItemWirelessGrid.getZ(stack), id, quantity));
+        RefinedStorage.NETWORK.sendToServer(new MessageWirelessGridCraftingStart(controllerPos.getX(), controllerPos.getY(), controllerPos.getZ(), id, quantity));
     }
 
     @Override
