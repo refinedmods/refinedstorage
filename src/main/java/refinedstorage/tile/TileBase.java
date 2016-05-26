@@ -19,7 +19,6 @@ import refinedstorage.network.MessageTileContainerUpdate;
 import javax.annotation.Nullable;
 
 public abstract class TileBase extends TileEntity implements ITickable {
-    public static final String NBT_UPDATE = "U";
     public static final String NBT_DIRECTION = "Direction";
 
     private EnumFacing direction = EnumFacing.NORTH;
@@ -58,7 +57,6 @@ public abstract class TileBase extends TileEntity implements ITickable {
     }
 
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {
-        tag.setByte(NBT_UPDATE, (byte) 1);
         tag.setInteger(NBT_DIRECTION, direction.ordinal());
 
         return tag;
@@ -75,22 +73,6 @@ public abstract class TileBase extends TileEntity implements ITickable {
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tag) {
-        super.readFromNBT(tag);
-
-        if (tag.hasKey(NBT_UPDATE)) {
-            readUpdate(tag);
-        } else {
-            read(tag);
-        }
-    }
-
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound tag) {
-        return write(super.writeToNBT(tag));
-    }
-
-    @Override
     public NBTTagCompound getUpdateTag() {
         return writeUpdate(super.getUpdateTag());
     }
@@ -104,6 +86,25 @@ public abstract class TileBase extends TileEntity implements ITickable {
     @Override
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
         readUpdate(packet.getNbtCompound());
+    }
+
+    @Override
+    public void handleUpdateTag(NBTTagCompound tag) {
+        super.readFromNBT(tag);
+
+        readUpdate(tag);
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound tag) {
+        super.readFromNBT(tag);
+
+        read(tag);
+    }
+
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+        return write(super.writeToNBT(tag));
     }
 
     @Override

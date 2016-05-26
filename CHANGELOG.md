@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 0.7.4
+**Bugfixes**
+- Updated to Forge 1922
+
 ### 0.7.3
 **Bugfixes**
 - Fixed grid performance by not sending grid data so often
