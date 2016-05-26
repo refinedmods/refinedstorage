@@ -3,6 +3,7 @@ package refinedstorage.gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
+import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerCrafter;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.item.ItemPattern;
@@ -33,11 +34,6 @@ public class GuiCrafter extends GuiBase {
         drawTexture(x, y, 0, 0, width, height);
     }
 
-    private int calculateOffsetOnScale(int pos, float scale) {
-        float multiplier = (pos / scale);
-        return (int) multiplier;
-    }
-
     @Override
     public void drawForeground(int mouseX, int mouseY) {
         drawString(7, 7, t("gui.refinedstorage:crafter"));
@@ -62,12 +58,12 @@ public class GuiCrafter extends GuiBase {
                     text = result.getDisplayName();
                 }
 
-                GlStateManager.pushMatrix();
-
                 float scale = 0.5f;
-                GlStateManager.scale(scale, scale, 1);
-                drawString(calculateOffsetOnScale(x + (ItemPattern.isProcessing(pattern) ? 1 : 20), scale), calculateOffsetOnScale(y + 6, scale), text);
 
+                GlStateManager.pushMatrix();
+                GlStateManager.scale(scale, scale, 1);
+
+                drawString(RefinedStorageUtils.calculateOffsetOnScale(x + (ItemPattern.isProcessing(pattern) ? 1 : 20), scale), RefinedStorageUtils.calculateOffsetOnScale(y + 6, scale), text);
                 GlStateManager.popMatrix();
             }
         }

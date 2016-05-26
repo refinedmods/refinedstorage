@@ -2,6 +2,7 @@ package refinedstorage.gui;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
+import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerController;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.tile.controller.ClientSideMachine;
@@ -58,11 +59,6 @@ public class GuiController extends GuiBase {
         scrollbar.draw(this);
     }
 
-    private int calculateOffsetOnScale(int pos, float scale) {
-        float multiplier = (pos / scale);
-        return (int) multiplier;
-    }
-
     @Override
     public void drawForeground(int mouseX, int mouseY) {
         drawString(7, 7, t("gui.refinedstorage:controller." + controller.getType().getId()));
@@ -85,12 +81,13 @@ public class GuiController extends GuiBase {
 
                 drawItem(x, y + 5, machine.stack);
 
-                GlStateManager.pushMatrix();
-
                 float scale = 0.5f;
+
+                GlStateManager.pushMatrix();
                 GlStateManager.scale(scale, scale, 1);
-                drawString(calculateOffsetOnScale(x + 1, scale), calculateOffsetOnScale(y - 2, scale), machine.stack.getDisplayName());
-                drawString(calculateOffsetOnScale(x + 21, scale), calculateOffsetOnScale(y + 10, scale), t("gui.refinedstorage:controller.machine_amount", machine.amount));
+
+                drawString(RefinedStorageUtils.calculateOffsetOnScale(x + 1, scale), RefinedStorageUtils.calculateOffsetOnScale(y - 2, scale), machine.stack.getDisplayName());
+                drawString(RefinedStorageUtils.calculateOffsetOnScale(x + 21, scale), RefinedStorageUtils.calculateOffsetOnScale(y + 10, scale), t("gui.refinedstorage:controller.machine_amount", machine.amount));
 
                 GlStateManager.popMatrix();
 

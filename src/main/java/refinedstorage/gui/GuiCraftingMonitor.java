@@ -4,6 +4,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import refinedstorage.RefinedStorage;
+import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerCraftingMonitor;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.network.MessageCraftingMonitorCancel;
@@ -85,11 +86,6 @@ public class GuiCraftingMonitor extends GuiBase {
         scrollbar.draw(this);
     }
 
-    private int calculateOffsetOnScale(int pos, float scale) {
-        float multiplier = (pos / scale);
-        return (int) multiplier;
-    }
-
     @Override
     public void drawForeground(int mouseX, int mouseY) {
         drawString(7, 7, t("gui.refinedstorage:crafting_monitor"));
@@ -118,11 +114,12 @@ public class GuiCraftingMonitor extends GuiBase {
 
                 drawItem(x + 4, y + 11, task.output);
 
-                GlStateManager.pushMatrix();
-
                 float scale = 0.5f;
+
+                GlStateManager.pushMatrix();
                 GlStateManager.scale(scale, scale, 1);
-                drawString(calculateOffsetOnScale(x + 5, scale), calculateOffsetOnScale(y + 4, scale), task.output.getDisplayName());
+
+                drawString(RefinedStorageUtils.calculateOffsetOnScale(x + 5, scale), RefinedStorageUtils.calculateOffsetOnScale(y + 4, scale), task.output.getDisplayName());
 
                 GlStateManager.popMatrix();
 

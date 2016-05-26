@@ -239,4 +239,10 @@ public class RefinedStorageUtils {
 
         return handler;
     }
+
+    public static int calculateOffsetOnScale(int pos, float scale) {
+        float multiplier = (pos / scale);
+
+        return (int) multiplier;
+    }
 }
