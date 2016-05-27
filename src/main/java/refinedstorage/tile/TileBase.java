@@ -32,7 +32,7 @@ public abstract class TileBase extends TileEntity implements ITickable {
         if (!worldObj.isRemote) {
             if (this instanceof ISynchronizedContainer) {
                 for (EntityPlayer player : worldObj.playerEntities) {
-                    if (((ISynchronizedContainer) this).getContainer() == player.openContainer.getClass() && ticks % 4 == 0) {
+                    if (((ISynchronizedContainer) this).getContainer() == player.openContainer.getClass()) {
                         RefinedStorage.NETWORK.sendTo(new MessageTileContainerUpdate(this), (EntityPlayerMP) player);
                     }
                 }
