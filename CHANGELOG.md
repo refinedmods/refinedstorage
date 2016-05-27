@@ -3,6 +3,7 @@
 ### 0.7.4
 **Bugfixes**
 - Updated to Forge 1922
+- Performance improvements
 
 ### 0.7.3
 **Bugfixes**
