@@ -104,12 +104,6 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
                     syncMachines();
                 }
 
-                for (TileMachine machine : machines) {
-                    if (machine.mayUpdate()) {
-                        machine.updateMachine();
-                    }
-                }
-
                 for (ICraftingTask taskToCancel : craftingTasksToCancel) {
                     taskToCancel.onCancelled(this);
                 }
