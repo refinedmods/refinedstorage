@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import refinedstorage.RefinedStorage;
@@ -21,7 +22,7 @@ import refinedstorage.network.GridPullFlags;
 import refinedstorage.network.MessageGridCraftingClear;
 import refinedstorage.network.MessageGridCraftingPush;
 import refinedstorage.network.MessageGridPatternCreate;
-import refinedstorage.storage.ItemGroup;
+import refinedstorage.storage.ClientItemGroup;
 import refinedstorage.tile.grid.IGrid;
 import refinedstorage.tile.grid.TileGrid;
 import refinedstorage.tile.grid.WirelessGrid;
@@ -30,15 +31,41 @@ import java.io.IOException;
 import java.util.*;
 
 public class GuiGrid extends GuiBase {
+    private Comparator<ClientItemGroup> quantityComparator = new Comparator<ClientItemGroup>() {
+        @Override
+        public int compare(ClientItemGroup left, ClientItemGroup right) {
+            if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING) {
+                return Integer.valueOf(right.getStack().stackSize).compareTo(left.getStack().stackSize);
+            } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
+                return Integer.valueOf(left.getStack().stackSize).compareTo(right.getStack().stackSize);
+            }
+
+            return 0;
+        }
+    };
+
+    private Comparator<ClientItemGroup> nameComparator = new Comparator<ClientItemGroup>() {
+        @Override
+        public int compare(ClientItemGroup left, ClientItemGroup right) {
+            if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING) {
+                return right.getStack().getDisplayName().compareTo(left.getStack().getDisplayName());
+            } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
+                return left.getStack().getDisplayName().compareTo(right.getStack().getDisplayName());
+            }
+
+            return 0;
+        }
+    };
+
     private ContainerGrid container;
     private IGrid grid;
 
-    private List<ItemGroup> items = new ArrayList<ItemGroup>();
+    private List<ClientItemGroup> items = new ArrayList<ClientItemGroup>();
 
     private GuiTextField searchField;
 
-    private int hoveringSlot;
-    private int hoveringItemId;
+    private int slotNumber;
+    private int slotId;
 
     private Scrollbar scrollbar;
 
@@ -95,43 +122,21 @@ public class GuiGrid extends GuiBase {
             items.addAll(grid.getItemGroups());
 
             if (!searchField.getText().trim().isEmpty()) {
-                Iterator<ItemGroup> t = items.iterator();
+                Iterator<ClientItemGroup> t = items.iterator();
 
                 while (t.hasNext()) {
-                    ItemGroup group = t.next();
+                    ClientItemGroup group = t.next();
 
-                    if (!group.toCachedStack().getDisplayName().toLowerCase().contains(searchField.getText().toLowerCase())) {
+                    if (!group.getStack().getDisplayName().toLowerCase().contains(searchField.getText().toLowerCase())) {
                         t.remove();
                     }
                 }
             }
 
-            Collections.sort(items, new Comparator<ItemGroup>() {
-                @Override
-                public int compare(ItemGroup left, ItemGroup right) {
-                    if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING) {
-                        return right.toCachedStack().getDisplayName().compareTo(left.toCachedStack().getDisplayName());
-                    } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
-                        return left.toCachedStack().getDisplayName().compareTo(right.toCachedStack().getDisplayName());
-                    }
-
-                    return 0;
-                }
-            });
+            Collections.sort(items, nameComparator);
 
             if (grid.getSortingType() == TileGrid.SORTING_TYPE_QUANTITY) {
-                Collections.sort(items, new Comparator<ItemGroup>() {
-                    @Override
-                    public int compare(ItemGroup left, ItemGroup right) {
-                        if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING) {
-                            return Integer.valueOf(right.getQuantity()).compareTo(left.getQuantity());
-                        } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
-                            return Integer.valueOf(left.getQuantity()).compareTo(right.getQuantity());
-                        }
-
-                        return 0;
-                    }
-                });
+                Collections.sort(items, quantityComparator);
             }
         }
 
@@ -150,11 +155,11 @@ public class GuiGrid extends GuiBase {
     }
 
     private boolean isHoveringOverItemInSlot() {
-        return grid.isConnected() && isHoveringOverSlot() && hoveringSlot < items.size();
+        return grid.isConnected() && isHoveringOverSlot() && slotNumber < items.size();
     }
 
     private boolean isHoveringOverSlot() {
-        return hoveringSlot >= 0;
+        return slotNumber >= 0;
     }
 
     public boolean isHoveringOverClear(int mouseX, int mouseY) {
@@ -221,7 +226,7 @@ public class GuiGrid extends GuiBase {
         int x = 8;
         int y = 20;
 
-        this.hoveringSlot = -1;
+        this.slotNumber = -1;
 
         int slot = getOffset() * 9;
 
@@ -229,37 +234,17 @@ public class GuiGrid extends GuiBase {
 
         for (int i = 0; i < 9 * getVisibleRows(); ++i) {
             if (inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isConnected()) {
-                this.hoveringSlot = slot;
+                this.slotNumber = slot;
 
                 if (slot < items.size()) {
-                    // we need to use the ID, because if we filter, the client-side index will change
-                    // while the server-side's index will still be the same.
-                    this.hoveringItemId = items.get(slot).getId();
+                    slotId = items.get(slot).getId();
                 }
             }
 
             if (slot < items.size()) {
-                int qty = items.get(slot).getQuantity();
+                ItemStack stack = items.get(slot).getStack();
 
-                String text;
-
-                if (qty >= 1000000) {
-                    text = String.format("%.1f", (float) qty / 1000000).replace(",", ".").replace(".0", "") + "M";
-                } else if (qty >= 1000) {
-                    text = String.format("%.1f", (float) qty / 1000).replace(",", ".").replace(".0", "") + "K";
-                } else if (qty == 1) {
-                    text = null;
-                } else if (qty == 0) {
-                    text = t("gui.refinedstorage:grid.craft");
-                } else {
-                    text = String.valueOf(qty);
-                }
-
-                if (this.hoveringSlot == slot && GuiScreen.isShiftKeyDown() && qty > 1) {
-                    text = String.valueOf(qty);
-                }
-
-                drawItem(x, y, items.get(slot).toCachedStack(), true, text);
+                drawItem(x, y, stack, true, formatQuantity(stack.stackSize));
             }
 
             if (inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isConnected()) {
@@ -287,7 +272,7 @@ public class GuiGrid extends GuiBase {
         }
 
         if (isHoveringOverItemInSlot()) {
-            drawTooltip(mouseX, mouseY, items.get(hoveringSlot).toCachedStack());
+            drawTooltip(mouseX, mouseY, items.get(slotNumber).getStack());
         }
 
         if (isHoveringOverClear(mouseX, mouseY)) {
@@ -296,6 +281,20 @@ public class GuiGrid extends GuiBase {
 
         if (isHoveringOverCreatePattern(mouseX, mouseY)) {
             drawTooltip(mouseX, mouseY, t("gui.refinedstorage:grid.pattern_create"));
+        }
+    }
+
+    private String formatQuantity(int qty) {
+        if (qty >= 1000000) {
+            return String.format("%.1f", (float) qty / 1000000).replace(",", ".").replace(".0", "") + "M";
+        } else if (qty >= 1000) {
+            return String.format("%.1f", (float) qty / 1000).replace(",", ".").replace(".0", "") + "K";
+        } else if (qty == 1) {
+            return null;
+        } else if (qty == 0) {
+            return t("gui.refinedstorage:grid.craft");
+        } else {
+            return String.valueOf(qty);
         }
     }
 
@@ -316,8 +315,8 @@ public class GuiGrid extends GuiBase {
             if (isHoveringOverSlot() && container.getPlayer().inventory.getItemStack() != null && (clickedButton == 0 || clickedButton == 1)) {
                 grid.onItemPush(-1, clickedButton == 1);
             } else if (isHoveringOverItemInSlot() && container.getPlayer().inventory.getItemStack() == null) {
-                if (items.get(hoveringSlot).getQuantity() == 0 || (GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown())) {
-                    FMLCommonHandler.instance().showGuiScreen(new GuiCraftingSettings(this, hoveringItemId));
+                if (items.get(slotNumber).getStack().stackSize == 0 || (GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown())) {
+                    FMLCommonHandler.instance().showGuiScreen(new GuiCraftingSettings(this, slotId));
                 } else {
                     int flags = 0;
 
@@ -333,7 +332,7 @@ public class GuiGrid extends GuiBase {
                         flags |= GridPullFlags.PULL_ONE;
                     }
 
-                    grid.onItemPull(hoveringItemId, flags);
+                    grid.onItemPull(slotId, flags);
                 }
             } else if (clickedClear) {
                 RefinedStorage.NETWORK.sendToServer(new MessageGridCraftingClear((TileGrid) grid));

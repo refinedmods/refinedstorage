@@ -24,6 +24,7 @@ import refinedstorage.network.MessageGridCraftingStart;
 import refinedstorage.network.MessageGridSettingsUpdate;
 import refinedstorage.network.MessageGridStoragePull;
 import refinedstorage.network.MessageGridStoragePush;
+import refinedstorage.storage.ClientItemGroup;
 import refinedstorage.storage.ItemGroup;
 import refinedstorage.tile.TileMachine;
 import refinedstorage.tile.config.IRedstoneModeConfig;
@@ -69,7 +70,7 @@ public class TileGrid extends TileMachine implements IGrid {
     private int sortingType = SORTING_TYPE_NAME;
     private int searchBoxMode = SEARCH_BOX_MODE_NORMAL;
 
-    private List<ItemGroup> itemGroups = new ArrayList<ItemGroup>();
+    private List<ClientItemGroup> itemGroups = new ArrayList<ClientItemGroup>();
 
     @Override
     public int getEnergyUsage() {
@@ -89,12 +90,12 @@ public class TileGrid extends TileMachine implements IGrid {
     }
 
     @Override
-    public List<ItemGroup> getItemGroups() {
+    public List<ClientItemGroup> getItemGroups() {
         return itemGroups;
     }
 
     @Override
-    public void setItemGroups(List<ItemGroup> itemGroups) {
+    public void setItemGroups(List<ClientItemGroup> itemGroups) {
         this.itemGroups = itemGroups;
     }
 

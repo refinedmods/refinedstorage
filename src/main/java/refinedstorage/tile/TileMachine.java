@@ -132,11 +132,6 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
     }
 
     @Override
-    public BlockPos getMachinePos() {
-        return pos;
-    }
-
-    @Override
     public void readContainerData(ByteBuf buf) {
         redstoneMode = RedstoneMode.getById(buf.readInt());
     }

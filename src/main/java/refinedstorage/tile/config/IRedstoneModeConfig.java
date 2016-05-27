@@ -6,6 +6,4 @@ public interface IRedstoneModeConfig {
     RedstoneMode getRedstoneMode();
 
     void setRedstoneMode(RedstoneMode mode);
-
-    BlockPos getMachinePos();
 }

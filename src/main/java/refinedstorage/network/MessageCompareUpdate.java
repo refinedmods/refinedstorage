@@ -17,9 +17,9 @@ public class MessageCompareUpdate extends MessageHandlerPlayerToServer<MessageCo
     }
 
     public MessageCompareUpdate(ICompareConfig setting, int compare) {
-        this.x = setting.getMachinePos().getX();
-        this.y = setting.getMachinePos().getY();
-        this.z = setting.getMachinePos().getZ();
+        this.x = ((TileEntity) setting).getPos().getX();
+        this.y = ((TileEntity) setting).getPos().getY();
+        this.z = ((TileEntity) setting).getPos().getZ();
         this.compare = compare;
     }
 

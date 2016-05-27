@@ -17,9 +17,9 @@ public class MessageModeToggle extends MessageHandlerPlayerToServer<MessageModeT
     }
 
     public MessageModeToggle(IModeConfig mode) {
-        this.x = mode.getMachinePos().getX();
-        this.y = mode.getMachinePos().getY();
-        this.z = mode.getMachinePos().getZ();
+        this.x = ((TileEntity) mode).getPos().getX();
+        this.y = ((TileEntity) mode).getPos().getY();
+        this.z = ((TileEntity) mode).getPos().getZ();
     }
 
     @Override

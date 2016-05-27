@@ -3,10 +3,13 @@ package refinedstorage.network;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import refinedstorage.container.ContainerGrid;
+import refinedstorage.storage.ClientItemGroup;
 import refinedstorage.storage.ItemGroup;
 import refinedstorage.tile.controller.TileController;
 
@@ -15,7 +18,7 @@ import java.util.List;
 
 public class MessageGridItems implements IMessage, IMessageHandler<MessageGridItems, IMessage> {
     private TileController controller;
-    private List<ItemGroup> groups = new ArrayList<ItemGroup>();
+    private List<ClientItemGroup> groups = new ArrayList<ClientItemGroup>();
 
     public MessageGridItems() {
     }
@@ -29,7 +32,14 @@ public class MessageGridItems implements IMessage, IMessageHandler<MessageGridIt
         int size = buf.readInt();
 
         for (int i = 0; i < size; ++i) {
-            groups.add(new ItemGroup(buf));
+            int id = buf.readInt();
+
+            int quantity = buf.readInt();
+
+            ItemStack stack = ByteBufUtils.readItemStack(buf);
+            stack.stackSize = quantity;
+
+            groups.add(new ClientItemGroup(id, stack));
         }
     }
 
@@ -38,7 +48,9 @@ public class MessageGridItems implements IMessage, IMessageHandler<MessageGridIt
         buf.writeInt(controller.getItemGroups().size());
 
         for (int i = 0; i < controller.getItemGroups().size(); ++i) {
-            controller.getItemGroups().get(i).toBytes(buf, i);
+            buf.writeInt(i);
+            buf.writeInt(controller.getItemGroups().get(i).getQuantity());
+            ByteBufUtils.writeItemStack(buf, controller.getItemGroups().get(i).toStack());
         }
     }
 

@@ -6,6 +6,4 @@ public interface ICompareConfig {
     int getCompare();
 
     void setCompare(int compare);
-
-    BlockPos getMachinePos();
 }

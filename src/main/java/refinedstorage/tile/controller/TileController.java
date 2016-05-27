@@ -545,11 +545,6 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
         markDirty();
     }
 
-    @Override
-    public BlockPos getMachinePos() {
-        return pos;
-    }
-
     public List<ClientSideMachine> getClientSideMachines() {
         return clientSideMachines;
     }

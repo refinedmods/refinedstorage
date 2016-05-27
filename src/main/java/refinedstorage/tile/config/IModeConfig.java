@@ -6,6 +6,4 @@ public interface IModeConfig {
     void setMode(int mode);
 
     int getMode();
-
-    BlockPos getMachinePos();
 }
