@@ -1,0 +1,65 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "orientable",
+    "textures": {
+      "side": "refinedstorage:blocks/side",
+      "top": "refinedstorage:blocks/side",
+      "front": "refinedstorage:blocks/controller_8"
+    }
+  },
+  "variants": {
+    "inventory": [
+      {
+        "y": 0,
+        "transform": "forge:default-block"
+      }
+    ],
+    "energy": {
+      "0": {
+      },
+      "1": {
+      },
+      "2": {
+      },
+      "3": {
+      },
+      "4": {
+      },
+      "5": {
+      },
+      "6": {
+      },
+      "7": {
+      },
+      "8": {
+      }
+    },
+    "type": {
+      "normal": {
+      },
+      "creative": {
+      }
+    },
+    "direction": {
+      "north": {
+        "y": 0
+      },
+      "east": {
+        "y": 90
+      },
+      "south": {
+        "y": 180
+      },
+      "west": {
+        "y": 270
+      },
+      "up": {
+        "x": 270
+      },
+      "down": {
+        "x": 90
+      }
+    }
+  }
+}

@@ -60,6 +60,10 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
 
                 RefinedStorageUtils.updateBlock(worldObj, pos);
             }
+
+            if (isActive()) {
+                updateMachine();
+            }
         }
     }
 
