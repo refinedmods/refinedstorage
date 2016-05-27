@@ -502,9 +502,9 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
     @Override
     public void readUpdate(NBTTagCompound tag) {
-        super.readUpdate(tag);
-
         setEnergyStored(tag.getInteger(NBT_ENERGY));
+
+        super.readUpdate(tag);
     }
 
     @Override

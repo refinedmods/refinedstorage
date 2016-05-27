@@ -136,9 +136,9 @@ public class TileSolderer extends TileMachine {
 
     @Override
     public void readUpdate(NBTTagCompound tag) {
-        super.readUpdate(tag);
-
         working = tag.getBoolean(NBT_WORKING);
+
+        super.readUpdate(tag);
     }
 
     @Override

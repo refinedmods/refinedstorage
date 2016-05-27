@@ -22,7 +22,7 @@ public class TileDetector extends TileMachine implements ICompareConfig {
     public static final String NBT_COMPARE = "Compare";
     public static final String NBT_MODE = "Mode";
     public static final String NBT_AMOUNT = "Amount";
-    public static final String NBT_DESC_POWERED = "Powered";
+    public static final String NBT_POWERED = "Powered";
 
     private BasicItemHandler filter = new BasicItemHandler(1, this);
 
@@ -169,16 +169,16 @@ public class TileDetector extends TileMachine implements ICompareConfig {
 
     @Override
     public void readUpdate(NBTTagCompound tag) {
-        super.readUpdate(tag);
+        powered = tag.getBoolean(NBT_POWERED);
 
-        powered = tag.getBoolean(NBT_DESC_POWERED);
+        super.readUpdate(tag);
     }
 
     @Override
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {
         super.writeUpdate(tag);
 
-        tag.setBoolean(NBT_DESC_POWERED, powered);
+        tag.setBoolean(NBT_POWERED, powered);
 
         return tag;
     }
