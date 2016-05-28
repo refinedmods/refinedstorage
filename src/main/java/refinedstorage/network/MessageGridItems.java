@@ -31,14 +31,10 @@ public class MessageGridItems implements IMessage, IMessageHandler<MessageGridIt
         int size = buf.readInt();
 
         for (int i = 0; i < size; ++i) {
-            int id = buf.readInt();
-
             int quantity = buf.readInt();
-
             ItemStack stack = ByteBufUtils.readItemStack(buf);
             stack.stackSize = quantity;
-
-            groups.add(new ClientItemGroup(id, stack));
+            groups.add(new ClientItemGroup(i, stack));
         }
     }
 
@@ -47,7 +43,6 @@ public class MessageGridItems implements IMessage, IMessageHandler<MessageGridIt
         buf.writeInt(controller.getItemGroups().size());
 
         for (int i = 0; i < controller.getItemGroups().size(); ++i) {
-            buf.writeInt(i);
             buf.writeInt(controller.getItemGroups().get(i).getQuantity());
             ByteBufUtils.writeItemStack(buf, controller.getItemGroups().get(i).toStack());
         }

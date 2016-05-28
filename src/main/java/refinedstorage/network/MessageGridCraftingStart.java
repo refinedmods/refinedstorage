@@ -8,44 +8,44 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import refinedstorage.tile.grid.TileGrid;
 
 public class MessageGridCraftingStart extends MessageHandlerPlayerToServer<MessageGridCraftingStart> implements IMessage {
-    private int gridX;
-    private int gridY;
-    private int gridZ;
+    private int x;
+    private int y;
+    private int z;
     private int id;
     private int quantity;
 
     public MessageGridCraftingStart() {
     }
 
-    public MessageGridCraftingStart(int gridX, int gridY, int gridZ, int id, int quantity) {
-        this.gridX = gridX;
-        this.gridY = gridY;
-        this.gridZ = gridZ;
+    public MessageGridCraftingStart(int x, int y, int z, int id, int quantity) {
+        this.x = x;
+        this.y = z;
+        this.z = z;
         this.id = id;
         this.quantity = quantity;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        gridX = buf.readInt();
-        gridY = buf.readInt();
-        gridZ = buf.readInt();
+        x = buf.readInt();
+        y = buf.readInt();
+        z = buf.readInt();
         id = buf.readInt();
         quantity = buf.readInt();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(gridX);
-        buf.writeInt(gridY);
-        buf.writeInt(gridZ);
+        buf.writeInt(x);
+        buf.writeInt(y);
+        buf.writeInt(z);
         buf.writeInt(id);
         buf.writeInt(quantity);
     }
 
     @Override
     public void handle(MessageGridCraftingStart message, EntityPlayerMP player) {
-        TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.gridX, message.gridY, message.gridZ));
+        TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.x, message.y, message.z));
 
         if (tile instanceof TileGrid && ((TileGrid) tile).isConnected()) {
             ((TileGrid) tile).getController().getStorageHandler().handleCraftingRequest(message.id, message.quantity);

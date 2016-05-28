@@ -5,7 +5,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
 import refinedstorage.tile.grid.TileGrid;
 
@@ -41,8 +40,12 @@ public class MessageGridCraftingShift extends MessageHandlerPlayerToServer<Messa
     public void handle(MessageGridCraftingShift message, EntityPlayerMP player) {
         TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.x, message.y, message.z));
 
-        if (tile instanceof TileGrid && ((TileGrid) tile).getType() == EnumGridType.CRAFTING && player.openContainer instanceof ContainerGrid) {
-            ((TileGrid) ((ContainerGrid) player.openContainer).getGrid()).onCraftedShift((ContainerGrid) player.openContainer, player);
+        if (tile instanceof TileGrid) {
+            TileGrid grid = (TileGrid) tile;
+
+            if (grid.isConnected() && player.openContainer instanceof ContainerGrid) {
+                grid.onCraftedShift((ContainerGrid) player.openContainer, player);
+            }
         }
     }
 }
