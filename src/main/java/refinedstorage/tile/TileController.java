@@ -24,7 +24,6 @@ import refinedstorage.item.ItemPattern;
 import refinedstorage.item.ItemWirelessGrid;
 import refinedstorage.network.GridPullFlags;
 import refinedstorage.network.MessageGridItems;
-import refinedstorage.network.MessageWirelessGridItems;
 import refinedstorage.storage.IStorage;
 import refinedstorage.storage.IStorageProvider;
 import refinedstorage.storage.ItemGroup;
@@ -181,10 +180,6 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
                 if (!RefinedStorageUtils.compareStack(consumer.getWirelessGrid(), consumer.getPlayer().getHeldItem(consumer.getHand()))) {
                     consumer.getPlayer().closeScreen(); // This will call onContainerClosed on the Container and remove it from the list
-                } else {
-                    if (mayRun()) {
-                        RefinedStorage.NETWORK.sendTo(new MessageWirelessGridItems(this), (EntityPlayerMP) consumer.getPlayer());
-                    }
                 }
             }
 
