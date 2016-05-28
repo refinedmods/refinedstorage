@@ -33,6 +33,11 @@
 **Features**
 - Port to Minecraft 1.9.4
 
+### 0.6.14
+**Bugfixes**
+- Performance improvements
+- Fix wrong ascending / descending order in grid
+
 ### 0.6.13
 **Bugfixes**
 - Performance improvements
