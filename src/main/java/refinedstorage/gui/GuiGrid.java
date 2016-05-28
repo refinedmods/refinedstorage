@@ -35,9 +35,9 @@ public class GuiGrid extends GuiBase {
         @Override
         public int compare(ClientItemGroup left, ClientItemGroup right) {
             if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING) {
-                return Integer.valueOf(right.getStack().stackSize).compareTo(left.getStack().stackSize);
-            } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
                 return Integer.valueOf(left.getStack().stackSize).compareTo(right.getStack().stackSize);
+            } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
+                return Integer.valueOf(right.getStack().stackSize).compareTo(left.getStack().stackSize);
             }
 
             return 0;
@@ -48,9 +48,9 @@ public class GuiGrid extends GuiBase {
         @Override
         public int compare(ClientItemGroup left, ClientItemGroup right) {
             if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING) {
-                return right.getStack().getDisplayName().compareTo(left.getStack().getDisplayName());
-            } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
                 return left.getStack().getDisplayName().compareTo(right.getStack().getDisplayName());
+            } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
+                return right.getStack().getDisplayName().compareTo(left.getStack().getDisplayName());
             }
 
             return 0;
