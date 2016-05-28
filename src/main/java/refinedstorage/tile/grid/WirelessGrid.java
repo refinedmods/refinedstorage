@@ -13,6 +13,7 @@ import refinedstorage.network.MessageWirelessGridCraftingStart;
 import refinedstorage.network.MessageWirelessGridSettingsUpdate;
 import refinedstorage.network.MessageWirelessGridStoragePull;
 import refinedstorage.network.MessageWirelessGridStoragePush;
+import refinedstorage.storage.ClientItemGroup;
 import refinedstorage.storage.ItemGroup;
 import refinedstorage.tile.TileController;
 import refinedstorage.tile.config.IRedstoneModeConfig;
@@ -21,18 +22,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WirelessGrid implements IGrid {
-    public static long LAST_ITEM_GROUP_UPDATE = 0;
-    public static List<ItemGroup> ITEM_GROUPS = new ArrayList<ItemGroup>();
-
-    private ItemStack stack;
     private EnumHand hand;
+    private BlockPos controller;
     private int sortingType;
     private int sortingDirection;
     private int searchBoxMode;
+    private long lastUpdate;
+    private List<ClientItemGroup> itemGroups = new ArrayList<ClientItemGroup>();
 
     public WirelessGrid(ItemStack stack, EnumHand hand) {
-        this.stack = stack;
         this.hand = hand;
+        this.controller = new BlockPos(ItemWirelessGrid.getX(stack), ItemWirelessGrid.getY(stack), ItemWirelessGrid.getZ(stack));
         this.sortingType = ItemWirelessGrid.getSortingType(stack);
         this.sortingDirection = ItemWirelessGrid.getSortingDirection(stack);
         this.searchBoxMode = ItemWirelessGrid.getSearchBoxMode(stack);
@@ -44,22 +44,33 @@ public class WirelessGrid implements IGrid {
     }
 
     @Override
-    public List<ItemGroup> getItemGroups() {
-        return ITEM_GROUPS;
+    public List<ClientItemGroup> getItemGroups() {
+        return itemGroups;
+    }
+
+    @Override
+    public void setItemGroups(List<ClientItemGroup> groups) {
+        this.itemGroups = groups;
+        this.lastUpdate = System.currentTimeMillis();
+    }
+
+    @Override
+    public BlockPos getControllerPos() {
+        return controller;
     }
 
     @Override
     public void onItemPush(int playerSlot, boolean one) {
-        RefinedStorage.NETWORK.sendToServer(new MessageWirelessGridStoragePush(ItemWirelessGrid.getX(stack), ItemWirelessGrid.getY(stack), ItemWirelessGrid.getZ(stack), playerSlot, one));
+        RefinedStorage.NETWORK.sendToServer(new MessageWirelessGridStoragePush(controller.getX(), controller.getY(), controller.getZ(), playerSlot, one));
     }
 
     @Override
     public void onItemPull(int id, int flags) {
-        RefinedStorage.NETWORK.sendToServer(new MessageWirelessGridStoragePull(ItemWirelessGrid.getX(stack), ItemWirelessGrid.getY(stack), ItemWirelessGrid.getZ(stack), id, flags));
+        RefinedStorage.NETWORK.sendToServer(new MessageWirelessGridStoragePull(controller.getX(), controller.getY(), controller.getZ(), id, flags));
     }
 
     public void onClose(EntityPlayer player) {
-        TileEntity tile = player.worldObj.getTileEntity(new BlockPos(ItemWirelessGrid.getX(stack), ItemWirelessGrid.getY(stack), ItemWirelessGrid.getZ(stack)));
+        TileEntity tile = player.worldObj.getTileEntity(controller);
 
         if (tile instanceof TileController) {
             ((TileController) tile).onCloseWirelessGrid(player);
@@ -104,7 +115,7 @@ public class WirelessGrid implements IGrid {
 
     @Override
     public void onCraftingRequested(int id, int quantity) {
-        RefinedStorage.NETWORK.sendToServer(new MessageWirelessGridCraftingStart(ItemWirelessGrid.getX(stack), ItemWirelessGrid.getY(stack), ItemWirelessGrid.getZ(stack), id, quantity));
+        RefinedStorage.NETWORK.sendToServer(new MessageWirelessGridCraftingStart(controller.getX(), controller.getY(), controller.getZ(), id, quantity));
     }
 
     @Override
@@ -114,6 +125,6 @@ public class WirelessGrid implements IGrid {
 
     @Override
     public boolean isConnected() {
-        return System.currentTimeMillis() - LAST_ITEM_GROUP_UPDATE < 1000;
+        return System.currentTimeMillis() - lastUpdate < 1000;
     }
 }

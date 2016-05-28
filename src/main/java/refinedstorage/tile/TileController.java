@@ -19,9 +19,11 @@ import refinedstorage.*;
 import refinedstorage.block.BlockController;
 import refinedstorage.block.EnumControllerType;
 import refinedstorage.container.ContainerController;
+import refinedstorage.container.ContainerGrid;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.item.ItemWirelessGrid;
 import refinedstorage.network.GridPullFlags;
+import refinedstorage.network.MessageGridItems;
 import refinedstorage.network.MessageWirelessGridItems;
 import refinedstorage.storage.IStorage;
 import refinedstorage.storage.IStorageProvider;
@@ -254,6 +256,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
         });
 
         syncItems();
+        syncItemsWithClients();
     }
 
     public EnumControllerType getType() {
@@ -382,12 +385,25 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
         itemGroups.removeAll(combinedGroups);
     }
 
+    public void syncItemsWithClients() {
+        for (EntityPlayer player : worldObj.playerEntities) {
+            if (player.openContainer.getClass() == ContainerGrid.class && pos.equals(((ContainerGrid) player.openContainer).getGrid().getControllerPos())) {
+                syncItemsWithClient((EntityPlayerMP) player);
+            }
+        }
+    }
+
+    public void syncItemsWithClient(EntityPlayerMP player) {
+        RefinedStorage.NETWORK.sendTo(new MessageGridItems(this), player);
+    }
+
     public boolean push(ItemStack stack) {
         for (IStorage storage : storages) {
             if (storage.mayPush(stack)) {
                 storage.push(stack);
 
                 syncItems();
+                syncItemsWithClients();
 
                 for (int i = 0; i < stack.stackSize; ++i) {
                     if (!craftingTasks.empty()) {
@@ -436,6 +452,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
         if (newStack != null) {
             syncItems();
+            syncItemsWithClients();
         }
 
         return newStack;
@@ -457,6 +474,8 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
         player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.WIRELESS_GRID, worldObj, RefinedStorageUtils.getIdFromHand(hand), 0, 0);
 
         drainEnergyFromWirelessGrid(player, ItemWirelessGrid.USAGE_OPEN);
+
+        syncItemsWithClient((EntityPlayerMP) player);
 
         return true;
     }
@@ -770,14 +789,6 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
             }
 
             drainEnergyFromWirelessGrid(player, ItemWirelessGrid.USAGE_PUSH);
-        }
-    }
-
-    public void sendItemGroups(ByteBuf buf) {
-        buf.writeInt(getItemGroups().size());
-
-        for (ItemGroup group : getItemGroups()) {
-            group.toBytes(buf, getItemGroups().indexOf(group));
         }
     }
 

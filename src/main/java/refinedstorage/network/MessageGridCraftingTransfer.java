@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
+import refinedstorage.tile.grid.IGrid;
 import refinedstorage.tile.grid.TileGrid;
 
 public class MessageGridCraftingTransfer extends MessageHandlerPlayerToServer<MessageGridCraftingTransfer> implements IMessage {
@@ -35,24 +36,26 @@ public class MessageGridCraftingTransfer extends MessageHandlerPlayerToServer<Me
     @Override
     public void handle(MessageGridCraftingTransfer message, EntityPlayerMP player) {
         if (player.openContainer instanceof ContainerGrid) {
-            TileGrid grid = ((ContainerGrid) player.openContainer).getGrid();
+            IGrid grid = ((ContainerGrid) player.openContainer).getGrid();
 
-            if (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) {
-                ItemStack[][] actualRecipe = new ItemStack[9][];
+            if (grid instanceof TileGrid) {
+                if (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) {
+                    ItemStack[][] actualRecipe = new ItemStack[9][];
 
-                for (int x = 0; x < actualRecipe.length; x++) {
-                    NBTTagList list = message.recipe.getTagList("#" + x, Constants.NBT.TAG_COMPOUND);
+                    for (int x = 0; x < actualRecipe.length; x++) {
+                        NBTTagList list = message.recipe.getTagList("#" + x, Constants.NBT.TAG_COMPOUND);
 
-                    if (list.tagCount() > 0) {
-                        actualRecipe[x] = new ItemStack[list.tagCount()];
+                        if (list.tagCount() > 0) {
+                            actualRecipe[x] = new ItemStack[list.tagCount()];
 
-                        for (int y = 0; y < list.tagCount(); y++) {
-                            actualRecipe[x][y] = ItemStack.loadItemStackFromNBT(list.getCompoundTagAt(y));
+                            for (int y = 0; y < list.tagCount(); y++) {
+                                actualRecipe[x][y] = ItemStack.loadItemStackFromNBT(list.getCompoundTagAt(y));
+                            }
                         }
                     }
-                }
 
-                grid.onRecipeTransfer(actualRecipe);
+                    ((TileGrid) grid).onRecipeTransfer(actualRecipe);
+                }
             }
         }
     }

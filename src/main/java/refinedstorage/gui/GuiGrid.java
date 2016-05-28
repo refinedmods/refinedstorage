@@ -21,6 +21,7 @@ import refinedstorage.network.GridPullFlags;
 import refinedstorage.network.MessageGridCraftingClear;
 import refinedstorage.network.MessageGridCraftingPush;
 import refinedstorage.network.MessageGridPatternCreate;
+import refinedstorage.storage.ClientItemGroup;
 import refinedstorage.storage.ItemGroup;
 import refinedstorage.tile.grid.IGrid;
 import refinedstorage.tile.grid.TileGrid;
@@ -33,7 +34,7 @@ public class GuiGrid extends GuiBase {
     private ContainerGrid container;
     private IGrid grid;
 
-    private List<ItemGroup> items = new ArrayList<ItemGroup>();
+    private List<ClientItemGroup> items = new ArrayList<ClientItemGroup>();
 
     private GuiTextField searchField;
 
@@ -95,24 +96,24 @@ public class GuiGrid extends GuiBase {
             items.addAll(grid.getItemGroups());
 
             if (!searchField.getText().trim().isEmpty()) {
-                Iterator<ItemGroup> t = items.iterator();
+                Iterator<ClientItemGroup> t = items.iterator();
 
                 while (t.hasNext()) {
-                    ItemGroup group = t.next();
+                    ClientItemGroup group = t.next();
 
-                    if (!group.toCachedStack().getDisplayName().toLowerCase().contains(searchField.getText().toLowerCase())) {
+                    if (!group.getStack().getDisplayName().toLowerCase().contains(searchField.getText().toLowerCase())) {
                         t.remove();
                     }
                 }
             }
 
-            Collections.sort(items, new Comparator<ItemGroup>() {
+            Collections.sort(items, new Comparator<ClientItemGroup>() {
                 @Override
-                public int compare(ItemGroup left, ItemGroup right) {
+                public int compare(ClientItemGroup left, ClientItemGroup right) {
                     if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING) {
-                        return right.toCachedStack().getDisplayName().compareTo(left.toCachedStack().getDisplayName());
+                        return right.getStack().getDisplayName().compareTo(left.getStack().getDisplayName());
                     } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
-                        return left.toCachedStack().getDisplayName().compareTo(right.toCachedStack().getDisplayName());
+                        return left.getStack().getDisplayName().compareTo(right.getStack().getDisplayName());
                     }
 
                     return 0;
@@ -120,13 +121,13 @@ public class GuiGrid extends GuiBase {
             });
 
             if (grid.getSortingType() == TileGrid.SORTING_TYPE_QUANTITY) {
-                Collections.sort(items, new Comparator<ItemGroup>() {
+                Collections.sort(items, new Comparator<ClientItemGroup>() {
                     @Override
-                    public int compare(ItemGroup left, ItemGroup right) {
+                    public int compare(ClientItemGroup left, ClientItemGroup right) {
                         if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING) {
-                            return Integer.valueOf(right.getQuantity()).compareTo(left.getQuantity());
+                            return Integer.valueOf(right.getStack().stackSize).compareTo(left.getStack().stackSize);
                         } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
-                            return Integer.valueOf(left.getQuantity()).compareTo(right.getQuantity());
+                            return Integer.valueOf(left.getStack().stackSize).compareTo(right.getStack().stackSize);
                         }
 
                         return 0;
@@ -239,7 +240,7 @@ public class GuiGrid extends GuiBase {
             }
 
             if (slot < items.size()) {
-                int qty = items.get(slot).getQuantity();
+                int qty = items.get(slot).getStack().stackSize;
 
                 String text;
 
@@ -259,7 +260,7 @@ public class GuiGrid extends GuiBase {
                     text = String.valueOf(qty);
                 }
 
-                drawItem(x, y, items.get(slot).toCachedStack(), true, text);
+                drawItem(x, y, items.get(slot).getStack(), true, text);
             }
 
             if (inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isConnected()) {
@@ -287,7 +288,7 @@ public class GuiGrid extends GuiBase {
         }
 
         if (isHoveringOverItemInSlot()) {
-            drawTooltip(mouseX, mouseY, items.get(hoveringSlot).toCachedStack());
+            drawTooltip(mouseX, mouseY, items.get(hoveringSlot).getStack());
         }
 
         if (isHoveringOverClear(mouseX, mouseY)) {
@@ -317,7 +318,7 @@ public class GuiGrid extends GuiBase {
             } else if (isHoveringOverSlot() && container.getPlayer().inventory.getItemStack() != null && (clickedButton == 0 || clickedButton == 1)) {
                 grid.onItemPush(-1, clickedButton == 1);
             } else if (isHoveringOverItemInSlot() && container.getPlayer().inventory.getItemStack() == null) {
-                if (items.get(hoveringSlot).getQuantity() == 0 || (GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown())) {
+                if (items.get(hoveringSlot).getStack().stackSize == 0 || (GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown())) {
                     FMLCommonHandler.instance().showGuiScreen(new GuiCraftingSettings(this, hoveringItemId));
                 } else {
                     int flags = 0;

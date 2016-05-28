@@ -7,22 +7,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import refinedstorage.RefinedStorageUtils;
 
-public class ItemGroup {
+public final class ItemGroup {
     private Item type;
     private int quantity;
     private int damage;
     private NBTTagCompound tag;
-    // Used clientside
-    private int id;
-    private ItemStack cachedStack;
-
-    public ItemGroup(ByteBuf buf) {
-        this.id = buf.readInt();
-        this.type = Item.getItemById(buf.readInt());
-        this.quantity = buf.readInt();
-        this.damage = buf.readInt();
-        this.tag = buf.readBoolean() ? ByteBufUtils.readTag(buf) : null;
-    }
 
     public ItemGroup(Item type, int quantity, int damage, NBTTagCompound tag) {
         this.type = type;
@@ -33,18 +22,6 @@ public class ItemGroup {
 
     public ItemGroup(ItemStack stack) {
         this(stack.getItem(), stack.stackSize, stack.getItemDamage(), stack.getTagCompound());
-    }
-
-    public void toBytes(ByteBuf buf, int id) {
-        buf.writeInt(id);
-        buf.writeInt(Item.getIdFromItem(type));
-        buf.writeInt(quantity);
-        buf.writeInt(damage);
-        buf.writeBoolean(hasTag());
-
-        if (hasTag()) {
-            ByteBufUtils.writeTag(buf, tag);
-        }
     }
 
     public int getQuantity() {
@@ -147,10 +124,6 @@ public class ItemGroup {
         return compare(stack, RefinedStorageUtils.COMPARE_NBT | RefinedStorageUtils.COMPARE_DAMAGE);
     }
 
-    public int getId() {
-        return id;
-    }
-
     public ItemGroup copy() {
         return copy(quantity);
     }
@@ -165,13 +138,5 @@ public class ItemGroup {
         stack.setTagCompound(tag);
 
         return stack;
-    }
-
-    public ItemStack toCachedStack() {
-        if (cachedStack == null) {
-            cachedStack = toStack();
-        }
-
-        return cachedStack;
     }
 }

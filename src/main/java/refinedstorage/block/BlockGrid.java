@@ -6,6 +6,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -62,6 +63,8 @@ public class BlockGrid extends BlockMachine {
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
             player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.GRID, world, pos.getX(), pos.getY(), pos.getZ());
+
+            ((TileGrid) world.getTileEntity(pos)).onGridOpened(player);
         }
 
         return true;

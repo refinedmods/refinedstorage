@@ -2,10 +2,12 @@ package refinedstorage.tile.grid;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import refinedstorage.RefinedStorage;
@@ -22,6 +24,7 @@ import refinedstorage.network.MessageGridCraftingStart;
 import refinedstorage.network.MessageGridSettingsUpdate;
 import refinedstorage.network.MessageGridStoragePull;
 import refinedstorage.network.MessageGridStoragePush;
+import refinedstorage.storage.ClientItemGroup;
 import refinedstorage.storage.ItemGroup;
 import refinedstorage.tile.TileMachine;
 import refinedstorage.tile.config.IRedstoneModeConfig;
@@ -67,7 +70,7 @@ public class TileGrid extends TileMachine implements IGrid {
 
     private EnumGridType type;
 
-    private List<ItemGroup> itemGroups = new ArrayList<ItemGroup>();
+    private List<ClientItemGroup> itemGroups = new ArrayList<ClientItemGroup>();
 
     @Override
     public int getEnergyUsage() {
@@ -87,8 +90,18 @@ public class TileGrid extends TileMachine implements IGrid {
     }
 
     @Override
-    public List<ItemGroup> getItemGroups() {
+    public List<ClientItemGroup> getItemGroups() {
         return itemGroups;
+    }
+
+    @Override
+    public void setItemGroups(List<ClientItemGroup> groups) {
+        this.itemGroups = groups;
+    }
+
+    @Override
+    public BlockPos getControllerPos() {
+        return controller.getPos();
     }
 
     @Override
@@ -333,12 +346,6 @@ public class TileGrid extends TileMachine implements IGrid {
         buf.writeInt(sortingDirection);
         buf.writeInt(sortingType);
         buf.writeInt(searchBoxMode);
-
-        if (connected) {
-            controller.sendItemGroups(buf);
-        } else {
-            buf.writeInt(0);
-        }
     }
 
     @Override
@@ -348,16 +355,6 @@ public class TileGrid extends TileMachine implements IGrid {
         sortingDirection = buf.readInt();
         sortingType = buf.readInt();
         searchBoxMode = buf.readInt();
-
-        List<ItemGroup> groups = new ArrayList<ItemGroup>();
-
-        int size = buf.readInt();
-
-        for (int i = 0; i < size; ++i) {
-            groups.add(new ItemGroup(buf));
-        }
-
-        itemGroups = groups;
     }
 
     @Override
@@ -394,5 +391,11 @@ public class TileGrid extends TileMachine implements IGrid {
 
     public static boolean isValidSortingDirection(int direction) {
         return direction == SORTING_DIRECTION_ASCENDING || direction == SORTING_DIRECTION_DESCENDING;
+    }
+
+    public void onGridOpened(EntityPlayer player) {
+        if (isConnected()) {
+            controller.syncItemsWithClient((EntityPlayerMP) player);
+        }
     }
 }
