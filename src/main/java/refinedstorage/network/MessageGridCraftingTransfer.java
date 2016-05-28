@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
+import refinedstorage.tile.grid.IGrid;
 import refinedstorage.tile.grid.TileGrid;
 
 public class MessageGridCraftingTransfer extends MessageHandlerPlayerToServer<MessageGridCraftingTransfer> implements IMessage {
@@ -35,7 +36,7 @@ public class MessageGridCraftingTransfer extends MessageHandlerPlayerToServer<Me
     @Override
     public void handle(MessageGridCraftingTransfer message, EntityPlayerMP player) {
         if (player.openContainer instanceof ContainerGrid) {
-            TileGrid grid = (TileGrid) ((ContainerGrid) player.openContainer).getGrid();
+            IGrid grid = ((ContainerGrid) player.openContainer).getGrid();
 
             if (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) {
                 ItemStack[][] actualRecipe = new ItemStack[9][];
@@ -52,7 +53,7 @@ public class MessageGridCraftingTransfer extends MessageHandlerPlayerToServer<Me
                     }
                 }
 
-                grid.onRecipeTransfer(actualRecipe);
+                ((TileGrid) grid).onRecipeTransfer(actualRecipe);
             }
         }
     }
