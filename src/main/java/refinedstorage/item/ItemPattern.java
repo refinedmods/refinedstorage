@@ -6,11 +6,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants;
 
+import java.util.Collections;
 import java.util.List;
 
 public class ItemPattern extends ItemBase {
     public static final String NBT_INPUTS = "Inputs";
     public static final String NBT_OUTPUTS = "Outputs";
+    public static final String NBT_BYPRODUCTS = "Byproducts";
     public static final String NBT_PROCESSING = "Processing";
 
     public ItemPattern() {
@@ -44,6 +46,10 @@ public class ItemPattern extends ItemBase {
         add(pattern, stack, NBT_OUTPUTS);
     }
 
+    public static void addByproduct(ItemStack pattern, ItemStack stack) {
+        add(pattern, stack, NBT_BYPRODUCTS);
+    }
+
     private static void add(ItemStack pattern, ItemStack stack, String type) {
         if (pattern.getTagCompound() == null) {
             pattern.setTagCompound(new NBTTagCompound());
@@ -62,6 +68,10 @@ public class ItemPattern extends ItemBase {
 
     public static ItemStack[] getOutputs(ItemStack pattern) {
         return get(pattern, NBT_OUTPUTS);
+    }
+
+    public static ItemStack[] getByproducts(ItemStack pattern) {
+        return get(pattern, NBT_BYPRODUCTS);
     }
 
     private static ItemStack[] get(ItemStack pattern, String type) {

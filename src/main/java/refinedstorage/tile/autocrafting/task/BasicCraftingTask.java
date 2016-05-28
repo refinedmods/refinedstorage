@@ -94,6 +94,12 @@ public class BasicCraftingTask implements ICraftingTask {
         for (ItemStack output : pattern.getOutputs()) {
             controller.push(output);
         }
+
+        if (pattern.getByproducts() != null) {
+            for (ItemStack byproduct : pattern.getByproducts()) {
+                controller.push(byproduct);
+            }
+        }
     }
 
     @Override

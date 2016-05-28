@@ -200,6 +200,12 @@ public class TileGrid extends TileMachine implements IGrid {
 
             ItemStack pattern = new ItemStack(RefinedStorageItems.PATTERN);
 
+            for (ItemStack byproduct : CraftingManager.getInstance().getRemainingItems(matrix, worldObj)) {
+                if (byproduct != null) {
+                    ItemPattern.addByproduct(pattern, byproduct);
+                }
+            }
+
             ItemPattern.addOutput(pattern, result.getStackInSlot(0));
 
             ItemPattern.setProcessing(pattern, false);
