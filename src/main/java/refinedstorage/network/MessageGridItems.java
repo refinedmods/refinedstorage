@@ -10,7 +10,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import refinedstorage.container.ContainerGrid;
 import refinedstorage.storage.ClientItemGroup;
-import refinedstorage.storage.ItemGroup;
 import refinedstorage.tile.controller.TileController;
 
 import java.util.ArrayList;

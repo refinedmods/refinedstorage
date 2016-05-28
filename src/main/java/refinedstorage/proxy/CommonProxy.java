@@ -3,11 +3,8 @@ package refinedstorage.proxy;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -33,8 +30,6 @@ import refinedstorage.tile.autocrafting.TileProcessingPatternEncoder;
 import refinedstorage.tile.controller.TileController;
 import refinedstorage.tile.grid.TileGrid;
 import refinedstorage.tile.solderer.*;
-
-import javax.annotation.Nullable;
 
 import static refinedstorage.RefinedStorage.ID;
 

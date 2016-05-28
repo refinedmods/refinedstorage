@@ -135,7 +135,7 @@ public class BasicCraftingTask implements ICraftingTask {
         if (!updatedOnce) {
             return "{not_started_yet}";
         }
-        
+
         StringBuilder builder = new StringBuilder();
 
         builder.append(TextFormatting.YELLOW).append("{missing_items}").append(TextFormatting.RESET).append("\n");

@@ -3,7 +3,6 @@ package refinedstorage.tile.grid;
 import net.minecraft.util.math.BlockPos;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.storage.ClientItemGroup;
-import refinedstorage.storage.ItemGroup;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 
 import java.util.List;

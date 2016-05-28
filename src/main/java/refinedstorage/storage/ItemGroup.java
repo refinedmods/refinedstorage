@@ -1,10 +1,8 @@
 package refinedstorage.storage;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import refinedstorage.RefinedStorageUtils;
 
 public final class ItemGroup {

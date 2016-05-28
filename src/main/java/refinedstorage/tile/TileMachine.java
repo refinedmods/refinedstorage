@@ -3,7 +3,6 @@ package refinedstorage.tile;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.tile.config.IRedstoneModeConfig;
