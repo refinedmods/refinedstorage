@@ -3,6 +3,7 @@
 ### 0.6.13
 **Bugfixes**
 - Performance improvements
+- Fix wrong ascending / descending order in grid
 
 ### 0.6.12
 This is a bugfix release containing all fixes from the 1.9.4 version.

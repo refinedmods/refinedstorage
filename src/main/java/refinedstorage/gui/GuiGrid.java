@@ -1,5 +1,6 @@
 package refinedstorage.gui;
 
+import com.sun.deploy.util.SessionState;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -31,6 +32,32 @@ import java.io.IOException;
 import java.util.*;
 
 public class GuiGrid extends GuiBase {
+    private Comparator<ClientItemGroup> quantityComparator = new Comparator<ClientItemGroup>() {
+        @Override
+        public int compare(ClientItemGroup left, ClientItemGroup right) {
+            if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING) {
+                return Integer.valueOf(left.getStack().stackSize).compareTo(right.getStack().stackSize);
+            } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
+                return Integer.valueOf(right.getStack().stackSize).compareTo(left.getStack().stackSize);
+            }
+
+            return 0;
+        }
+    };
+
+    private Comparator<ClientItemGroup> nameComparator = new Comparator<ClientItemGroup>() {
+        @Override
+        public int compare(ClientItemGroup left, ClientItemGroup right) {
+            if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING) {
+                return left.getStack().getDisplayName().compareTo(right.getStack().getDisplayName());
+            } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
+                return right.getStack().getDisplayName().compareTo(left.getStack().getDisplayName());
+            }
+
+            return 0;
+        }
+    };
+
     private ContainerGrid container;
     private IGrid grid;
 
@@ -107,32 +134,10 @@ public class GuiGrid extends GuiBase {
                 }
             }
 
-            Collections.sort(items, new Comparator<ClientItemGroup>() {
-                @Override
-                public int compare(ClientItemGroup left, ClientItemGroup right) {
-                    if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING) {
-                        return right.getStack().getDisplayName().compareTo(left.getStack().getDisplayName());
-                    } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
-                        return left.getStack().getDisplayName().compareTo(right.getStack().getDisplayName());
-                    }
-
-                    return 0;
-                }
-            });
+            Collections.sort(items, nameComparator);
 
             if (grid.getSortingType() == TileGrid.SORTING_TYPE_QUANTITY) {
-                Collections.sort(items, new Comparator<ClientItemGroup>() {
-                    @Override
-                    public int compare(ClientItemGroup left, ClientItemGroup right) {
-                        if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING) {
-                            return Integer.valueOf(right.getStack().stackSize).compareTo(left.getStack().stackSize);
-                        } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
-                            return Integer.valueOf(left.getStack().stackSize).compareTo(right.getStack().stackSize);
-                        }
-
-                        return 0;
-                    }
-                });
+                Collections.sort(items, quantityComparator);
             }
         }
 
