@@ -244,7 +244,7 @@ public class GuiGrid extends GuiBase {
             if (slot < items.size()) {
                 ItemStack stack = items.get(slot).getStack();
 
-                drawItem(x, y, stack, true, formatQuantity(stack.stackSize));
+                drawItem(x, y, stack, true, formatQuantity(stack.stackSize, slot));
             }
 
             if (inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isConnected()) {
@@ -284,7 +284,11 @@ public class GuiGrid extends GuiBase {
         }
     }
 
-    private String formatQuantity(int qty) {
+    private String formatQuantity(int qty, int slot) {
+        if (slotNumber == slot && GuiScreen.isShiftKeyDown() && qty > 1) {
+            return String.valueOf(qty);
+        }
+
         if (qty >= 1000000) {
             return String.format("%.1f", (float) qty / 1000000).replace(",", ".").replace(".0", "") + "M";
         } else if (qty >= 1000) {
