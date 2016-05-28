@@ -25,7 +25,6 @@ import refinedstorage.network.MessageGridSettingsUpdate;
 import refinedstorage.network.MessageGridStoragePull;
 import refinedstorage.network.MessageGridStoragePush;
 import refinedstorage.storage.ClientItemGroup;
-import refinedstorage.storage.ItemGroup;
 import refinedstorage.tile.TileMachine;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 

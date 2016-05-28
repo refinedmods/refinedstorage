@@ -1,6 +1,5 @@
 package refinedstorage.gui.sidebutton;
 
-import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.util.text.TextFormatting;
 import refinedstorage.RefinedStorage;
 import refinedstorage.gui.GuiBase;

@@ -14,7 +14,6 @@ import refinedstorage.network.MessageWirelessGridSettingsUpdate;
 import refinedstorage.network.MessageWirelessGridStoragePull;
 import refinedstorage.network.MessageWirelessGridStoragePush;
 import refinedstorage.storage.ClientItemGroup;
-import refinedstorage.storage.ItemGroup;
 import refinedstorage.tile.TileController;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 

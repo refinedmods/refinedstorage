@@ -1,9 +1,13 @@
 # Refined Storage Changelog
 
-### 0.6.13
+### 0.6.14
 **Bugfixes**
 - Performance improvements
 - Fix wrong ascending / descending order in grid
+
+### 0.6.13
+**Bugfixes**
+- Performance improvements
 
 ### 0.6.12
 This is a bugfix release containing all fixes from the 1.9.4 version.
