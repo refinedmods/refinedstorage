@@ -101,7 +101,7 @@ public class TileGrid extends TileMachine implements IGrid {
 
     @Override
     public BlockPos getControllerPos() {
-        return controller.getPos();
+        return controller != null ? controller.getPos() : null;
     }
 
     @Override
