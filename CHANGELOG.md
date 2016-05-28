@@ -1,10 +1,14 @@
 # Refined Storage Changelog
 
+### 0.7.5
+**Bugfixes**
+- Performance improvements
+- Fixed wrong ascending / descending order in Grid
+- Fixed autocrafting not giving back byproducts
+
 ### 0.7.4
 **Bugfixes**
 - Updated to Forge 1922
-- Fixed wrong ascending / descending order in Grid
-- Fixed autocrafting not giving back byproducts
 - Performance improvements
 
 ### 0.7.3
