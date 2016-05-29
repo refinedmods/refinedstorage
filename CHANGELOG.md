@@ -1,9 +1,14 @@
 # Refined Storage Changelog
 
+### 0.6.15
+**Bugfixes**
+- Fixed Solderer sides being weird
+- Fixed Solderer causing too many block updates
+
 ### 0.6.14
 **Bugfixes**
 - Performance improvements
-- Fix wrong ascending / descending order in grid
+- Fixed wrong ascending / descending order in grid
 
 ### 0.6.13
 **Bugfixes**
