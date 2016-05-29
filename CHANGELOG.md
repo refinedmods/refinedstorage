@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 0.7.6
+**Bugfixes**
+- Fixed not being able to start an autocraft
+
 ### 0.7.5
 **Bugfixes**
 - Performance improvements

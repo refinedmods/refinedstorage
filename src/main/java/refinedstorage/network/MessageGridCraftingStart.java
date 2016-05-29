@@ -19,7 +19,7 @@ public class MessageGridCraftingStart extends MessageHandlerPlayerToServer<Messa
 
     public MessageGridCraftingStart(int x, int y, int z, int id, int quantity) {
         this.x = x;
-        this.y = z;
+        this.y = y;
         this.z = z;
         this.id = id;
         this.quantity = quantity;
