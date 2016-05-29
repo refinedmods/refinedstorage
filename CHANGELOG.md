@@ -41,6 +41,11 @@
 **Features**
 - Port to Minecraft 1.9.4
 
+### 0.6.15
+**Bugfixes**
+- Fixed Solderer sides being weird
+- Fixed Solderer causing too many block updates
+
 ### 0.6.14
 **Bugfixes**
 - Performance improvements
