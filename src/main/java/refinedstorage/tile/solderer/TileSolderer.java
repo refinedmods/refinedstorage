@@ -43,7 +43,7 @@ public class TileSolderer extends TileMachine {
         boolean wasWorking = working;
 
         if (newRecipe == null) {
-            reset();
+            stop();
         } else if (newRecipe != recipe) {
             boolean isSameItem = items.getStackInSlot(3) != null ? RefinedStorageUtils.compareStackNoQuantity(items.getStackInSlot(3), newRecipe.getResult()) : false;
 
@@ -70,7 +70,12 @@ public class TileSolderer extends TileMachine {
                     }
                 }
 
-                reset();
+                recipe = null;
+                progress = 0;
+                // Don't set working to false yet, wait till the next update because we may have
+                // another stack waiting.
+
+                markDirty();
             }
         }
 
@@ -83,10 +88,10 @@ public class TileSolderer extends TileMachine {
     public void onDisconnected(World world) {
         super.onDisconnected(world);
 
-        reset();
+        stop();
     }
 
-    public void reset() {
+    public void stop() {
         progress = 0;
         working = false;
         recipe = null;
