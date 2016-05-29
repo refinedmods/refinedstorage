@@ -5,6 +5,8 @@
 - Performance improvements
 - Fixed wrong ascending / descending order in Grid
 - Fixed autocrafting not giving back byproducts
+- Fixed Solderer causing too many chunk updates
+- Fixed Solderer slot sides being weird
 
 ### 0.7.4
 **Bugfixes**
