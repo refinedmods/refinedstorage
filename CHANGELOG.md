@@ -2,6 +2,7 @@
 
 ### 0.7.6
 **Bugfixes**
+- Updated to Forge 1932
 - Fixed not being able to start an autocraft
 
 ### 0.7.5
