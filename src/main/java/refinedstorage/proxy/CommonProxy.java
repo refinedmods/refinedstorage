@@ -416,6 +416,7 @@ public class CommonProxy {
         SoldererRegistry.addRecipe(new SoldererRecipeUpgrade(ItemUpgrade.TYPE_RANGE));
         SoldererRegistry.addRecipe(new SoldererRecipeUpgrade(ItemUpgrade.TYPE_SPEED));
         SoldererRegistry.addRecipe(new SoldererRecipeUpgrade(ItemUpgrade.TYPE_CRAFTING));
+        SoldererRegistry.addRecipe(new SoldererRecipeUpgrade(ItemUpgrade.TYPE_STACK));
 
         // Storage Blocks
         SoldererRegistry.addRecipe(new SoldererRecipeStorage(EnumStorageType.TYPE_1K, ItemStoragePart.TYPE_1K));

@@ -24,7 +24,12 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
     public static final String NBT_MODE = "Mode";
 
     private BasicItemHandler filters = new BasicItemHandler(9, this);
-    private BasicItemHandler upgrades = new BasicItemHandler(4, this, new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED));
+    private BasicItemHandler upgrades = new BasicItemHandler(
+        4,
+        this,
+        new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED),
+        new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_STACK)
+    );
 
     private int compare = 0;
     private int mode = ModeConstants.WHITELIST;
@@ -54,10 +59,12 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
             if (stack == null || !ModeFilter.respectsMode(filters, this, compare, stack)) {
                 currentSlot++;
             } else if (ticks % RefinedStorageUtils.getSpeed(upgrades) == 0) {
-                ItemStack result = handler.extractItem(currentSlot, 1, true);
+                int quantity = RefinedStorageUtils.hasUpgrade(upgrades, ItemUpgrade.TYPE_STACK) ? 64 : 1;
+
+                ItemStack result = handler.extractItem(currentSlot, quantity, true);
 
                 if (result != null && controller.push(result)) {
-                    handler.extractItem(currentSlot, 1, false);
+                    handler.extractItem(currentSlot, quantity, false);
                 } else {
                     currentSlot++;
                 }

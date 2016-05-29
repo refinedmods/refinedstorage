@@ -34,6 +34,8 @@ public class SoldererRecipeUpgrade implements ISoldererRecipe {
                 return new ItemStack(Blocks.REDSTONE_BLOCK);
             case ItemUpgrade.TYPE_CRAFTING:
                 return new ItemStack(Blocks.CRAFTING_TABLE);
+            case ItemUpgrade.TYPE_STACK:
+                return new ItemStack(RefinedStorageItems.UPGRADE, 1, ItemUpgrade.TYPE_SPEED);
         }
 
         return null;

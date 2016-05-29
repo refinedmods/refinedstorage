@@ -139,4 +139,5 @@ item.refinedstorage:upgrade.0.name=Upgrade
 item.refinedstorage:upgrade.1.name=Range Upgrade
 item.refinedstorage:upgrade.2.name=Speed Upgrade
 item.refinedstorage:upgrade.3.name=Crafting Upgrade
+item.refinedstorage:upgrade.4.name=Stack Upgrade
 item.refinedstorage:storage_housing.name=Storage Housing

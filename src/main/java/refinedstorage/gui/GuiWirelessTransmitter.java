@@ -32,7 +32,7 @@ public class GuiWirelessTransmitter extends GuiBase {
     @Override
     public void drawForeground(int mouseX, int mouseY) {
         drawString(7, 7, t("gui.refinedstorage:wireless_transmitter"));
-        drawString(28, 24, t("gui.refinedstorage:wireless_transmitter.distance", wirelessTransmitter.getRange()));
+        drawString(28, 25, t("gui.refinedstorage:wireless_transmitter.distance", wirelessTransmitter.getRange()));
         drawString(7, 43, t("container.inventory"));
     }
 }

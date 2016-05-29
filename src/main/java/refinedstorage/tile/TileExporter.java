@@ -26,7 +26,8 @@ public class TileExporter extends TileMachine implements ICompareConfig {
         4,
         this,
         new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED),
-        new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_CRAFTING)
+        new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_CRAFTING),
+        new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_STACK)
     );
 
     private int compare = 0;
@@ -47,7 +48,9 @@ public class TileExporter extends TileMachine implements ICompareConfig {
                 ItemStack slot = filters.getStackInSlot(i);
 
                 if (slot != null) {
-                    ItemStack took = controller.take(ItemHandlerHelper.copyStackWithSize(slot, 1), compare);
+                    int quantity = RefinedStorageUtils.hasUpgrade(upgrades, ItemUpgrade.TYPE_STACK) ? 64 : 1;
+
+                    ItemStack took = controller.take(ItemHandlerHelper.copyStackWithSize(slot, quantity), compare);
 
                     if (took != null) {
                         scheduler.resetSchedule();
