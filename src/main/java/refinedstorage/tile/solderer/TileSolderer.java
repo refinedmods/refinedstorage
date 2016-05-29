@@ -24,6 +24,7 @@ public class TileSolderer extends TileMachine {
 
     private BasicItemHandler items = new BasicItemHandler(4, this);
     private BasicItemHandler upgrades = new BasicItemHandler(4, this, new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED));
+    private SoldererItemHandler[] itemsFacade = new SoldererItemHandler[EnumFacing.values().length];
 
     private ISoldererRecipe recipe;
 
@@ -179,7 +180,7 @@ public class TileSolderer extends TileMachine {
         return (int) ((float) progress / (float) duration * (float) i);
     }
 
-    public IItemHandler getItems() {
+    public BasicItemHandler getItems() {
         return items;
     }
 
@@ -195,7 +196,13 @@ public class TileSolderer extends TileMachine {
     @Override
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return (T) new SoldererItemHandler(items, facing);
+            int i = facing.ordinal();
+
+            if (itemsFacade[i] == null) {
+                itemsFacade[i] = new SoldererItemHandler(this, facing);
+            }
+
+            return (T) itemsFacade[i];
         }
 
         return super.getCapability(capability, facing);

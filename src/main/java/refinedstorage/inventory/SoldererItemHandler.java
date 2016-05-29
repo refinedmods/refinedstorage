@@ -2,22 +2,29 @@ package refinedstorage.inventory;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import refinedstorage.tile.solderer.TileSolderer;
 
 public class SoldererItemHandler extends ProxyItemHandler {
+    private TileSolderer solderer;
     private EnumFacing side;
 
-    public SoldererItemHandler(BasicItemHandler soldererHandler, EnumFacing side) {
-        super(soldererHandler);
+    public SoldererItemHandler(TileSolderer solderer, EnumFacing side) {
+        super(solderer.getItems());
 
+        this.solderer = solderer;
         this.side = side;
     }
 
     @Override
     public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-        if (((side == EnumFacing.NORTH || side == EnumFacing.EAST) && slot == 0) ||
-            ((side == EnumFacing.SOUTH || side == EnumFacing.WEST) && slot == 2) ||
-            ((side == EnumFacing.UP && slot == 1))) {
-            return super.insertItem(slot, stack, simulate);
+        if (solderer.getDirection() == EnumFacing.DOWN || solderer.getDirection() == EnumFacing.UP) {
+            if (((side == EnumFacing.WEST || side == EnumFacing.SOUTH) && slot == 0) || ((side == EnumFacing.NORTH || side == EnumFacing.EAST) && slot == 2) || (side == EnumFacing.UP && slot == 1)) {
+                return super.insertItem(slot, stack, simulate);
+            }
+        } else {
+            if ((side == solderer.getDirection().rotateY() && slot == 0) || (side == solderer.getDirection().rotateYCCW() && slot == 2) || (side == EnumFacing.UP && slot == 1)) {
+                return super.insertItem(slot, stack, simulate);
+            }
         }
 
         return stack;
