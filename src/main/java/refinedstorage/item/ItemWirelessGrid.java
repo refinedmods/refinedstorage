@@ -193,21 +193,13 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
         if (oldStack.getItem() == newStack.getItem()) {
             if (hasValidNBT(oldStack) && hasValidNBT(newStack)) {
-                int x1 = getX(oldStack);
-                int y1 = getY(oldStack);
-                int z1 = getZ(oldStack);
-                int dim1 = getDimensionId(oldStack);
-                int x2 = getX(newStack);
-                int y2 = getY(newStack);
-                int z2 = getZ(newStack);
-                int dim2 = getDimensionId(newStack);
-
-                if (x1 == x2 && y1 == y2 && z1 == z2 && dim1 == dim2) {
+                if (getX(oldStack) == getX(newStack) && getY(oldStack) == getY(newStack) && getZ(oldStack) == getZ(newStack) && getDimensionId(oldStack) == getDimensionId(newStack)) {
                     return false;
                 }
             }
         }
-        return slotChanged;
+
+        return super.shouldCauseReequipAnimation(oldStack, newStack, slotChanged);
     }
 
     @Override

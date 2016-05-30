@@ -1,5 +1,12 @@
 # Refined Storage Changelog
 
+### 0.7.7
+**Bugfixes**
+- Fix buggy reequip animation on wireless grid
+
+**Features**
+- Added the Stack Upgrade
+
 ### 0.7.6
 **Bugfixes**
 - Updated to Forge 1932
