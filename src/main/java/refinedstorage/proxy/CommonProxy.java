@@ -326,12 +326,12 @@ public class CommonProxy {
         // Storage Parts
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RefinedStorageItems.STORAGE_PART, 1, ItemStoragePart.TYPE_1K),
             "EPE",
-            "SRS",
-            "ESE",
+            "GSG",
+            "EGE",
             'R', new ItemStack(Items.REDSTONE),
             'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
-            'P', "itemSilicon",
-            'S', new ItemStack(Blocks.GLASS)
+            'S', "itemSilicon",
+            'G', new ItemStack(Blocks.GLASS)
         ));
 
         GameRegistry.addRecipe(new ItemStack(RefinedStorageItems.STORAGE_PART, 1, ItemStoragePart.TYPE_4K),
@@ -417,7 +417,14 @@ public class CommonProxy {
         SoldererRegistry.addRecipe(new SoldererRecipeUpgrade(ItemUpgrade.TYPE_RANGE));
         SoldererRegistry.addRecipe(new SoldererRecipeUpgrade(ItemUpgrade.TYPE_SPEED));
         SoldererRegistry.addRecipe(new SoldererRecipeUpgrade(ItemUpgrade.TYPE_CRAFTING));
-        SoldererRegistry.addRecipe(new SoldererRecipeUpgrade(ItemUpgrade.TYPE_STACK));
+
+        GameRegistry.addShapedRecipe(new ItemStack(RefinedStorageItems.UPGRADE, 1, ItemUpgrade.TYPE_STACK),
+            "USU",
+            "SUS",
+            "USU",
+            'U', new ItemStack(Items.SUGAR),
+            'S', new ItemStack(RefinedStorageItems.UPGRADE, 1, ItemUpgrade.TYPE_SPEED)
+        );
 
         // Storage Blocks
         SoldererRegistry.addRecipe(new SoldererRecipeStorage(EnumStorageType.TYPE_1K, ItemStoragePart.TYPE_1K));

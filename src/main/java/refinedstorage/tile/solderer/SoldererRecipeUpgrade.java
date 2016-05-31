@@ -31,11 +31,9 @@ public class SoldererRecipeUpgrade implements ISoldererRecipe {
             case ItemUpgrade.TYPE_RANGE:
                 return new ItemStack(Items.ENDER_PEARL);
             case ItemUpgrade.TYPE_SPEED:
-                return new ItemStack(Blocks.REDSTONE_BLOCK);
+                return new ItemStack(Items.SUGAR);
             case ItemUpgrade.TYPE_CRAFTING:
                 return new ItemStack(Blocks.CRAFTING_TABLE);
-            case ItemUpgrade.TYPE_STACK:
-                return new ItemStack(RefinedStorageItems.UPGRADE, 1, ItemUpgrade.TYPE_SPEED);
         }
 
         return null;
