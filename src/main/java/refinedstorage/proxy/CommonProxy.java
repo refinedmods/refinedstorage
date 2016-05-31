@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageItems;
@@ -164,15 +165,15 @@ public class CommonProxy {
         );
 
         // Controller
-        GameRegistry.addRecipe(new ItemStack(RefinedStorageBlocks.CONTROLLER, 1, EnumControllerType.NORMAL.getId()),
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RefinedStorageBlocks.CONTROLLER, 1, EnumControllerType.NORMAL.getId()),
             "EDE",
-            "SRS",
+            "SMS",
             "ESE",
             'D', new ItemStack(Items.DIAMOND),
             'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
-            'R', new ItemStack(Items.REDSTONE),
-            'S', new ItemStack(RefinedStorageItems.SILICON)
-        );
+            'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
+            'S', "itemSilicon"
+        ));
 
         // Solderer
         GameRegistry.addRecipe(new ItemStack(RefinedStorageBlocks.SOLDERER),
@@ -323,15 +324,15 @@ public class CommonProxy {
         );
 
         // Storage Parts
-        GameRegistry.addRecipe(new ItemStack(RefinedStorageItems.STORAGE_PART, 1, ItemStoragePart.TYPE_1K),
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RefinedStorageItems.STORAGE_PART, 1, ItemStoragePart.TYPE_1K),
             "EPE",
             "SRS",
             "ESE",
             'R', new ItemStack(Items.REDSTONE),
             'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
-            'P', new ItemStack(RefinedStorageItems.SILICON),
+            'P', "itemSilicon",
             'S', new ItemStack(Blocks.GLASS)
-        );
+        ));
 
         GameRegistry.addRecipe(new ItemStack(RefinedStorageItems.STORAGE_PART, 1, ItemStoragePart.TYPE_4K),
             "EPE",
