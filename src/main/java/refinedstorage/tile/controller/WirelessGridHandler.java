@@ -49,9 +49,9 @@ public class WirelessGridHandler {
 
         consumers.add(new WirelessGridConsumer(player, hand, player.getHeldItem(hand)));
 
-        controller.syncItemsWithClient((EntityPlayerMP) player);
-
         player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.WIRELESS_GRID, controller.getWorld(), RefinedStorageUtils.getIdFromHand(hand), 0, 0);
+
+        controller.syncItemsWithClient((EntityPlayerMP) player);
 
         drainEnergy(player, ItemWirelessGrid.USAGE_OPEN);
 
