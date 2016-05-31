@@ -8,6 +8,7 @@
 
 **Features**
 - Added the Stack Upgrade
+- Added French translation by Leventovitch
 
 ### 0.7.6
 **Bugfixes**
