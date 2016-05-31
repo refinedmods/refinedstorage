@@ -16,6 +16,8 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
+import net.minecraftforge.oredict.OreDictionary;
+import org.apache.commons.lang3.ArrayUtils;
 import refinedstorage.item.ItemUpgrade;
 
 public class RefinedStorageUtils {
@@ -94,42 +96,63 @@ public class RefinedStorageUtils {
         }
     }
 
-    public static boolean compareStack(ItemStack first, ItemStack second) {
-        return compareStack(first, second, COMPARE_NBT | COMPARE_DAMAGE | COMPARE_QUANTITY);
+    public static boolean compareStack(ItemStack left, ItemStack right) {
+        return compareStack(left, right, COMPARE_NBT | COMPARE_DAMAGE | COMPARE_QUANTITY);
     }
 
-    public static boolean compareStack(ItemStack first, ItemStack second, int flags) {
-        if (first == null && second == null) {
+    public static boolean compareStack(ItemStack left, ItemStack right, int flags) {
+        if (left == null && right == null) {
             return true;
         }
 
-        if ((first == null && second != null) || (first != null && second == null)) {
+        if ((left == null && right != null) || (left != null && right == null)) {
             return false;
         }
 
         if ((flags & COMPARE_DAMAGE) == COMPARE_DAMAGE) {
-            if (first.getItemDamage() != second.getItemDamage()) {
+            if (left.getItemDamage() != right.getItemDamage()) {
                 return false;
             }
         }
 
         if ((flags & COMPARE_NBT) == COMPARE_NBT) {
-            if (first.hasTagCompound() && !first.getTagCompound().equals(second.getTagCompound())) {
+            if (left.hasTagCompound() && !left.getTagCompound().equals(right.getTagCompound())) {
                 return false;
             }
         }
 
         if ((flags & COMPARE_QUANTITY) == COMPARE_QUANTITY) {
-            if (first.stackSize != second.stackSize) {
+            if (left.stackSize != right.stackSize) {
                 return false;
             }
         }
 
-        return first.getItem() == second.getItem();
+        return left.getItem() == right.getItem();
     }
 
-    public static boolean compareStackNoQuantity(ItemStack first, ItemStack second) {
-        return compareStack(first, second, COMPARE_NBT | COMPARE_DAMAGE);
+    public static boolean compareStackNoQuantity(ItemStack left, ItemStack right) {
+        return compareStack(left, right, COMPARE_NBT | COMPARE_DAMAGE);
+    }
+
+    public static boolean compareStackOreDict(ItemStack left, ItemStack right) {
+        if (left == null && right == null) {
+            return true;
+        }
+
+        if ((left == null && right != null) || (left != null && right == null)) {
+            return false;
+        }
+
+        int[] leftIds = OreDictionary.getOreIDs(left);
+        int[] rightIds = OreDictionary.getOreIDs(right);
+
+        for (int i : rightIds) {
+            if (ArrayUtils.contains(leftIds, i)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static int getSpeed(IItemHandler handler) {

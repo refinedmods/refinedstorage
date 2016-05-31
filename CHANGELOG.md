@@ -2,7 +2,9 @@
 
 ### 0.7.7
 **Bugfixes**
-- Fix buggy reequip animation on wireless grid
+- Fixed buggy reequip animation on wireless grid
+- Fixed solderer not supporting ore dictionary
+- Fixed recipes not supporting ore dictionary
 
 **Features**
 - Added the Stack Upgrade

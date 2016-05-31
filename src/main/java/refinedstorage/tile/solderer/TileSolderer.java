@@ -39,44 +39,48 @@ public class TileSolderer extends TileMachine {
 
     @Override
     public void updateMachine() {
-        ISoldererRecipe newRecipe = SoldererRegistry.getRecipe(items);
-
         boolean wasWorking = working;
 
-        if (newRecipe == null) {
+        if (items.getStackInSlot(1) == null && items.getStackInSlot(2) == null && items.getStackInSlot(3) == null) {
             stop();
-        } else if (newRecipe != recipe) {
-            boolean isSameItem = items.getStackInSlot(3) != null ? RefinedStorageUtils.compareStackNoQuantity(items.getStackInSlot(3), newRecipe.getResult()) : false;
+        } else {
+            ISoldererRecipe newRecipe = SoldererRegistry.getRecipe(items);
 
-            if (items.getStackInSlot(3) == null || (isSameItem && ((items.getStackInSlot(3).stackSize + newRecipe.getResult().stackSize) <= items.getStackInSlot(3).getMaxStackSize()))) {
-                recipe = newRecipe;
-                progress = 0;
-                working = true;
+            if (newRecipe == null) {
+                stop();
+            } else if (newRecipe != recipe) {
+                boolean isSameItem = items.getStackInSlot(3) != null ? RefinedStorageUtils.compareStackNoQuantity(items.getStackInSlot(3), newRecipe.getResult()) : false;
 
-                markDirty();
-            }
-        } else if (working) {
-            progress += 1 + RefinedStorageUtils.getUpgradeCount(upgrades, ItemUpgrade.TYPE_SPEED);
+                if (items.getStackInSlot(3) == null || (isSameItem && ((items.getStackInSlot(3).stackSize + newRecipe.getResult().stackSize) <= items.getStackInSlot(3).getMaxStackSize()))) {
+                    recipe = newRecipe;
+                    progress = 0;
+                    working = true;
 
-            if (progress >= recipe.getDuration()) {
-                if (items.getStackInSlot(3) != null) {
-                    items.getStackInSlot(3).stackSize += recipe.getResult().stackSize;
-                } else {
-                    items.setStackInSlot(3, recipe.getResult());
+                    markDirty();
                 }
+            } else if (working) {
+                progress += 1 + RefinedStorageUtils.getUpgradeCount(upgrades, ItemUpgrade.TYPE_SPEED);
 
-                for (int i = 0; i < 3; ++i) {
-                    if (recipe.getRow(i) != null) {
-                        items.extractItem(i, recipe.getRow(i).stackSize, false);
+                if (progress >= recipe.getDuration()) {
+                    if (items.getStackInSlot(3) != null) {
+                        items.getStackInSlot(3).stackSize += recipe.getResult().stackSize;
+                    } else {
+                        items.setStackInSlot(3, recipe.getResult());
                     }
+
+                    for (int i = 0; i < 3; ++i) {
+                        if (recipe.getRow(i) != null) {
+                            items.extractItem(i, recipe.getRow(i).stackSize, false);
+                        }
+                    }
+
+                    recipe = null;
+                    progress = 0;
+                    // Don't set working to false yet, wait till the next update because we may have
+                    // another stack waiting.
+
+                    markDirty();
                 }
-
-                recipe = null;
-                progress = 0;
-                // Don't set working to false yet, wait till the next update because we may have
-                // another stack waiting.
-
-                markDirty();
             }
         }
 

@@ -69,6 +69,8 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
             if (storage != null && storage.isDirty()) {
                 storage.writeToNBT(disks.getStackInSlot(i).getTagCompound());
                 storage.markClean();
+
+                markDirty();
             }
         }
     }

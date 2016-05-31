@@ -1,6 +1,5 @@
 package refinedstorage.tile.solderer;
 
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorageUtils;
 
@@ -16,31 +15,21 @@ public class SoldererRegistry {
 
     public static ISoldererRecipe getRecipe(IItemHandler items) {
         for (ISoldererRecipe recipe : recipes) {
-            boolean ok = true;
+            boolean found = true;
 
             for (int i = 0; i < 3; ++i) {
-                if (!RefinedStorageUtils.compareStackNoQuantity(recipe.getRow(i), items.getStackInSlot(i))) {
-                    ok = false;
+                if (!RefinedStorageUtils.compareStackNoQuantity(recipe.getRow(i), items.getStackInSlot(i)) && !RefinedStorageUtils.compareStackOreDict(recipe.getRow(i), items.getStackInSlot(i))) {
+                    found = false;
                 }
 
                 if (items.getStackInSlot(i) != null && recipe.getRow(i) != null) {
                     if (items.getStackInSlot(i).stackSize < recipe.getRow(i).stackSize) {
-                        ok = false;
+                        found = false;
                     }
                 }
             }
 
-            if (ok) {
-                return recipe;
-            }
-        }
-
-        return null;
-    }
-
-    public static ISoldererRecipe getRecipe(ItemStack result) {
-        for (ISoldererRecipe recipe : recipes) {
-            if (RefinedStorageUtils.compareStack(result, recipe.getResult())) {
+            if (found) {
                 return recipe;
             }
         }
