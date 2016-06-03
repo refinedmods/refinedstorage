@@ -78,7 +78,7 @@ public abstract class NBTStorage implements IStorage {
 
     @Override
     public void push(ItemStack stack) {
-        tag.setInteger(NBT_STORED, getStored(tag) + stack.stackSize);
+        tag.setInteger(NBT_STORED, getStored() + stack.stackSize);
 
         for (ItemStack s : stacks) {
             if (RefinedStorageUtils.compareStackNoQuantity(s, stack)) {
@@ -109,7 +109,7 @@ public abstract class NBTStorage implements IStorage {
                     s.stackSize -= size;
                 }
 
-                tag.setInteger(NBT_STORED, getStored(tag) - size);
+                tag.setInteger(NBT_STORED, getStored() - size);
 
                 markDirty();
 
@@ -122,7 +122,12 @@ public abstract class NBTStorage implements IStorage {
 
     @Override
     public boolean mayPush(ItemStack stack) {
-        return capacity == -1 || (getStored(tag) + stack.stackSize) <= capacity;
+        return capacity == -1 || (getStored() + stack.stackSize) <= capacity;
+    }
+
+    @Override
+    public int getStored() {
+        return getStoredFromNBT(tag);
     }
 
     public int getCapacity() {
@@ -145,7 +150,7 @@ public abstract class NBTStorage implements IStorage {
         this.dirty = false;
     }
 
-    public static int getStored(NBTTagCompound tag) {
+    public static int getStoredFromNBT(NBTTagCompound tag) {
         return tag.getInteger(NBT_STORED);
     }
 

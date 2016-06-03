@@ -25,9 +25,9 @@ public class ItemBlockStorage extends ItemBlockBase {
             NBTTagCompound tag = stack.getTagCompound().getCompoundTag(TileStorage.NBT_STORAGE);
 
             if (type == EnumStorageType.TYPE_CREATIVE) {
-                list.add(String.format(I18n.format("misc.refinedstorage:storage.stored"), NBTStorage.getStored(tag)));
+                list.add(I18n.format("misc.refinedstorage:storage.stored", NBTStorage.getStoredFromNBT(tag)));
             } else {
-                list.add(String.format(I18n.format("misc.refinedstorage:storage.stored_capacity"), NBTStorage.getStored(tag), type.getCapacity()));
+                list.add(I18n.format("misc.refinedstorage:storage.stored_capacity", NBTStorage.getStoredFromNBT(tag), type.getCapacity()));
             }
         }
     }

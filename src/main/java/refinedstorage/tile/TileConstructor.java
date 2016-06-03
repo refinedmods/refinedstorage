@@ -3,6 +3,7 @@ package refinedstorage.tile;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -52,6 +53,11 @@ public class TileConstructor extends TileMachine implements ICompareConfig {
     public void updateMachine() {
         if (ticks % RefinedStorageUtils.getSpeed(upgrades, BASE_SPEED, 4) == 0 && filter.getStackInSlot(0) != null) {
             BlockPos front = pos.offset(getDirection());
+            IBlockState frontBlockState = worldObj.getBlockState(front);
+
+            if (!frontBlockState.getBlock().isAir(frontBlockState, worldObj, front)) {
+                return;
+            }
 
             Item item = filter.getStackInSlot(0).getItem();
             Block block = null;

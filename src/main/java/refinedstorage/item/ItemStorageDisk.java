@@ -43,15 +43,15 @@ public class ItemStorageDisk extends ItemBase {
         int capacity = EnumStorageType.getById(disk.getItemDamage()).getCapacity();
 
         if (capacity == -1) {
-            list.add(I18n.format("misc.refinedstorage:storage.stored", NBTStorage.getStored(disk.getTagCompound())));
+            list.add(I18n.format("misc.refinedstorage:storage.stored", NBTStorage.getStoredFromNBT(disk.getTagCompound())));
         } else {
-            list.add(I18n.format("misc.refinedstorage:storage.stored_capacity", NBTStorage.getStored(disk.getTagCompound()), capacity));
+            list.add(I18n.format("misc.refinedstorage:storage.stored_capacity", NBTStorage.getStoredFromNBT(disk.getTagCompound()), capacity));
         }
     }
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
-        if (!world.isRemote && player.isSneaking() && NBTStorage.getStored(stack.getTagCompound()) == 0 && stack.getMetadata() != TYPE_CREATIVE) {
+        if (!world.isRemote && player.isSneaking() && NBTStorage.getStoredFromNBT(stack.getTagCompound()) == 0 && stack.getMetadata() != TYPE_CREATIVE) {
             ItemStack storagePart = new ItemStack(RefinedStorageItems.STORAGE_PART, 1, stack.getMetadata());
 
             if (!player.inventory.addItemStackToInventory(storagePart.copy())) {

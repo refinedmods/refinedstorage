@@ -216,7 +216,7 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
             ItemStack stack = disks.getStackInSlot(i);
 
             if (stack != null) {
-                stored += NBTStorage.getStored(stack.getTagCompound());
+                stored += NBTStorage.getStoredFromNBT(stack.getTagCompound());
             }
         }
 

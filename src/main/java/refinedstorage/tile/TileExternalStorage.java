@@ -155,27 +155,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
         buf.writeInt(priority);
 
-        IDeepStorageUnit storageUnit = getStorageUnit();
-
-        if (storageUnit != null) {
-            buf.writeInt(storageUnit.getStoredItemType() == null ? 0 : storageUnit.getStoredItemType().stackSize);
-        } else {
-            IItemHandler handler = getItemHandler();
-
-            if (handler != null) {
-                int amount = 0;
-
-                for (int i = 0; i < handler.getSlots(); ++i) {
-                    if (handler.getStackInSlot(i) != null) {
-                        amount += handler.getStackInSlot(i).stackSize;
-                    }
-                }
-
-                buf.writeInt(amount);
-            } else {
-                buf.writeInt(0);
-            }
-        }
+        buf.writeInt(getStored());
 
         buf.writeInt(compare);
         buf.writeInt(mode);
@@ -290,7 +270,31 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
     @Override
     public int getStored() {
-        return stored;
+        if (worldObj.isRemote) {
+            return stored;
+        }
+
+        IDeepStorageUnit storageUnit = getStorageUnit();
+
+        if (storageUnit != null) {
+            return storageUnit.getStoredItemType() == null ? 0 : storageUnit.getStoredItemType().stackSize;
+        } else {
+            IItemHandler handler = getItemHandler();
+
+            if (handler != null) {
+                int size = 0;
+
+                for (int i = 0; i < handler.getSlots(); ++i) {
+                    if (handler.getStackInSlot(i) != null) {
+                        size += handler.getStackInSlot(i).stackSize;
+                    }
+                }
+
+                return size;
+            } else {
+                return 0;
+            }
+        }
     }
 
     @Override

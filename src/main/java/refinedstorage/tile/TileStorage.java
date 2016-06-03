@@ -114,7 +114,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
     public void writeContainerData(ByteBuf buf) {
         super.writeContainerData(buf);
 
-        buf.writeInt(NBTStorage.getStored(storageTag));
+        buf.writeInt(NBTStorage.getStoredFromNBT(storageTag));
         buf.writeInt(priority);
         buf.writeInt(compare);
         buf.writeInt(mode);

@@ -286,6 +286,20 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
         Collections.sort(storages, new Comparator<IStorage>() {
             @Override
             public int compare(IStorage left, IStorage right) {
+                int leftStored = left.getStored();
+                int rightStored = right.getStored();
+
+                if (leftStored == rightStored) {
+                    return 0;
+                }
+
+                return (leftStored > rightStored) ? -1 : 1;
+            }
+        });
+
+        Collections.sort(storages, new Comparator<IStorage>() {
+            @Override
+            public int compare(IStorage left, IStorage right) {
                 if (left.getPriority() == right.getPriority()) {
                     return 0;
                 }
