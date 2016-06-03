@@ -46,7 +46,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
         IDeepStorageUnit storageUnit = getStorageUnit();
 
         if (storageUnit != null) {
-            if (storageUnit.getStoredItemType() != null) {
+            if (storageUnit.getStoredItemType() != null && storageUnit.getStoredItemType().getItem() != null) {
                 items.add(storageUnit.getStoredItemType().copy());
             }
         } else {
@@ -54,7 +54,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
             if (handler != null) {
                 for (int i = 0; i < handler.getSlots(); ++i) {
-                    if (handler.getStackInSlot(i) != null) {
+                    if (handler.getStackInSlot(i) != null && handler.getStackInSlot(i).getItem() != null) {
                         items.add(handler.getStackInSlot(i).copy());
                     }
                 }

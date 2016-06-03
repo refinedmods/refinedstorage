@@ -335,26 +335,20 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
             ItemStack stack = items.get(i);
 
-            // If the item doesn't exist anymore, remove it from storage to avoid crashes
-            if (stack.getItem() == null) {
-                combinedItems.add(stack);
-                combinedItemsIndices.add(i);
-            } else {
-                for (int j = i + 1; j < items.size(); ++j) {
-                    if (combinedItemsIndices.contains(j)) {
-                        continue;
-                    }
+            for (int j = i + 1; j < items.size(); ++j) {
+                if (combinedItemsIndices.contains(j)) {
+                    continue;
+                }
 
-                    ItemStack otherStack = items.get(j);
+                ItemStack otherStack = items.get(j);
 
-                    if (RefinedStorageUtils.compareStackNoQuantity(stack, otherStack)) {
-                        // We copy here so we don't modify the quantity of the ItemStack IStorage uses.
-                        // We re-get the ItemStack because the stack may change from a previous iteration in this loop
-                        items.set(i, ItemHandlerHelper.copyStackWithSize(items.get(i), items.get(i).stackSize + otherStack.stackSize));
+                if (RefinedStorageUtils.compareStackNoQuantity(stack, otherStack)) {
+                    // We copy here so we don't modify the quantity of the ItemStack IStorage uses.
+                    // We re-get the ItemStack because the stack may change from a previous iteration in this loop
+                    items.set(i, ItemHandlerHelper.copyStackWithSize(items.get(i), items.get(i).stackSize + otherStack.stackSize));
 
-                        combinedItems.add(otherStack);
-                        combinedItemsIndices.add(j);
-                    }
+                    combinedItems.add(otherStack);
+                    combinedItemsIndices.add(j);
                 }
             }
         }

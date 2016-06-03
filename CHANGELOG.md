@@ -6,6 +6,8 @@
 - Fixed solderer not supporting ore dictionary
 - Fixed recipes not supporting ore dictionary
 - Fixed destructor not being able to destroy some blocks
+- Fixed not being able to place or destroy sugar cane
+- New items now go to the first available storage that has items in it already
 - Performance improvements
 
 **Features**

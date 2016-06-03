@@ -47,7 +47,9 @@ public abstract class NBTStorage implements IStorage {
 
             stack.setTagCompound(tag.hasKey(NBT_ITEM_NBT) ? ((NBTTagCompound) tag.getTag(NBT_ITEM_NBT)) : null);
 
-            stacks.add(stack);
+            if (stack.getItem() != null) {
+                stacks.add(stack);
+            }
         }
     }
 
