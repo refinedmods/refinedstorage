@@ -10,7 +10,6 @@ import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerDetector;
 import refinedstorage.inventory.BasicItemHandler;
-import refinedstorage.storage.ItemGroup;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.RedstoneMode;
 
@@ -54,19 +53,19 @@ public class TileDetector extends TileMachine implements ICompareConfig {
             if (slot != null) {
                 boolean foundAny = false;
 
-                for (ItemGroup group : controller.getItemGroups()) {
-                    if (group.compare(slot, compare)) {
+                for (ItemStack stack : controller.getItems()) {
+                    if (RefinedStorageUtils.compareStack(slot, stack, compare)) {
                         foundAny = true;
 
                         switch (mode) {
                             case MODE_UNDER:
-                                powered = group.getQuantity() < amount;
+                                powered = stack.stackSize < amount;
                                 break;
                             case MODE_EQUAL:
-                                powered = group.getQuantity() == amount;
+                                powered = stack.stackSize == amount;
                                 break;
                             case MODE_ABOVE:
-                                powered = group.getQuantity() > amount;
+                                powered = stack.stackSize > amount;
                                 break;
                         }
 
@@ -97,10 +96,6 @@ public class TileDetector extends TileMachine implements ICompareConfig {
 
     public boolean isPowered() {
         return powered;
-    }
-
-    public void setPowered(boolean powered) {
-        this.powered = powered;
     }
 
     @Override

@@ -2,10 +2,10 @@ package refinedstorage.tile.controller;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.item.ItemWirelessGrid;
 import refinedstorage.network.GridPullFlags;
-import refinedstorage.storage.ItemGroup;
 import refinedstorage.tile.autocrafting.CraftingPattern;
 import refinedstorage.tile.autocrafting.task.ICraftingTask;
 
@@ -23,31 +23,31 @@ public class StorageHandler {
             return;
         }
 
-        if (id < 0 || id > controller.getItemGroups().size() - 1) {
+        if (id < 0 || id > controller.getItems().size() - 1) {
             return;
         }
 
-        ItemGroup group = controller.getItemGroups().get(id);
+        ItemStack stack = controller.getItems().get(id);
 
-        int quantity = 64;
+        int size = 64;
 
-        if (GridPullFlags.isPullingHalf(flags) && group.getQuantity() > 1) {
-            quantity = group.getQuantity() / 2;
+        if (GridPullFlags.isPullingHalf(flags) && stack.stackSize > 1) {
+            size = stack.stackSize / 2;
 
-            if (quantity > 32) {
-                quantity = 32;
+            if (size > 32) {
+                size = 32;
             }
         } else if (GridPullFlags.isPullingOne(flags)) {
-            quantity = 1;
+            size = 1;
         } else if (GridPullFlags.isPullingWithShift(flags)) {
             // NO OP, the quantity already set (64) is needed for shift
         }
 
-        if (quantity > group.getType().getItemStackLimit(group.toStack())) {
-            quantity = group.getType().getItemStackLimit(group.toStack());
+        if (size > stack.getItem().getItemStackLimit(stack)) {
+            size = stack.getItem().getItemStackLimit(stack);
         }
 
-        ItemStack took = controller.take(group.copy(quantity).toStack());
+        ItemStack took = controller.take(ItemHandlerHelper.copyStackWithSize(stack, size));
 
         if (took != null) {
             if (GridPullFlags.isPullingWithShift(flags)) {
@@ -102,9 +102,11 @@ public class StorageHandler {
     }
 
     public void handleCraftingRequest(int id, int quantity) {
-        if (id >= 0 && id < controller.getItemGroups().size() && quantity > 0 && quantity <= MAX_CRAFTING_PER_REQUEST) {
-            ItemStack requested = controller.getItemGroups().get(id).toStack();
+        if (id >= 0 && id < controller.getItems().size() && quantity > 0 && quantity <= MAX_CRAFTING_PER_REQUEST) {
+            ItemStack requested = controller.getItems().get(id);
+
             int quantityPerRequest = 0;
+
             CraftingPattern pattern = controller.getPattern(requested);
 
             if (pattern != null) {

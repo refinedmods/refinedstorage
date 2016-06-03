@@ -4,6 +4,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.items.ItemHandlerHelper;
+import refinedstorage.RefinedStorageUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +24,7 @@ public abstract class NBTStorage implements IStorage {
 
     private boolean dirty;
 
-    private List<ItemGroup> groups = new ArrayList<ItemGroup>();
+    private List<ItemStack> stacks = new ArrayList<ItemStack>();
 
     public NBTStorage(NBTTagCompound tag, int capacity) {
         this.tag = tag;
@@ -37,29 +39,30 @@ public abstract class NBTStorage implements IStorage {
         for (int i = 0; i < list.tagCount(); ++i) {
             NBTTagCompound tag = list.getCompoundTagAt(i);
 
-            ItemGroup group = new ItemGroup(
+            ItemStack stack = new ItemStack(
                 Item.getItemById(tag.getInteger(NBT_ITEM_TYPE)),
                 tag.getInteger(NBT_ITEM_QUANTITY),
-                tag.getInteger(NBT_ITEM_DAMAGE),
-                tag.hasKey(NBT_ITEM_NBT) ? ((NBTTagCompound) tag.getTag(NBT_ITEM_NBT)) : null
+                tag.getInteger(NBT_ITEM_DAMAGE)
             );
 
-            groups.add(group);
+            stack.setTagCompound(tag.hasKey(NBT_ITEM_NBT) ? ((NBTTagCompound) tag.getTag(NBT_ITEM_NBT)) : null);
+
+            stacks.add(stack);
         }
     }
 
     public void writeToNBT(NBTTagCompound tag) {
         NBTTagList list = new NBTTagList();
 
-        for (ItemGroup group : groups) {
+        for (ItemStack stack : stacks) {
             NBTTagCompound itemTag = new NBTTagCompound();
 
-            itemTag.setInteger(NBT_ITEM_TYPE, Item.getIdFromItem(group.getType()));
-            itemTag.setInteger(NBT_ITEM_QUANTITY, group.getQuantity());
-            itemTag.setInteger(NBT_ITEM_DAMAGE, group.getDamage());
+            itemTag.setInteger(NBT_ITEM_TYPE, Item.getIdFromItem(stack.getItem()));
+            itemTag.setInteger(NBT_ITEM_QUANTITY, stack.stackSize);
+            itemTag.setInteger(NBT_ITEM_DAMAGE, stack.getItemDamage());
 
-            if (group.hasTag()) {
-                itemTag.setTag(NBT_ITEM_NBT, group.getTag());
+            if (stack.hasTagCompound()) {
+                itemTag.setTag(NBT_ITEM_NBT, stack.getTagCompound());
             }
 
             list.appendTag(itemTag);
@@ -69,17 +72,17 @@ public abstract class NBTStorage implements IStorage {
     }
 
     @Override
-    public void addItems(List<ItemGroup> items) {
-        items.addAll(groups);
+    public void addItems(List<ItemStack> items) {
+        items.addAll(stacks);
     }
 
     @Override
     public void push(ItemStack stack) {
         tag.setInteger(NBT_STORED, getStored(tag) + stack.stackSize);
 
-        for (ItemGroup group : groups) {
-            if (group.compareNoQuantity(stack)) {
-                group.setQuantity(group.getQuantity() + stack.stackSize);
+        for (ItemStack s : stacks) {
+            if (RefinedStorageUtils.compareStackNoQuantity(s, stack)) {
+                s.stackSize += stack.stackSize;
 
                 markDirty();
 
@@ -87,35 +90,32 @@ public abstract class NBTStorage implements IStorage {
             }
         }
 
-        groups.add(new ItemGroup(stack));
+        stacks.add(stack);
 
         markDirty();
     }
 
     @Override
     public ItemStack take(ItemStack stack, int flags) {
-        int quantity = stack.stackSize;
+        int size = stack.stackSize;
 
-        for (ItemGroup group : groups) {
-            if (group.compare(stack, flags)) {
-                if (quantity > group.getQuantity()) {
-                    quantity = group.getQuantity();
+        for (ItemStack s : stacks) {
+            if (RefinedStorageUtils.compareStack(s, stack, flags)) {
+                if (size > s.stackSize) {
+                    size = s.stackSize;
                 }
 
-                if (group.getQuantity() - quantity == 0) {
-                    groups.remove(group);
+                if (s.stackSize - size == 0) {
+                    stacks.remove(s);
                 } else {
-                    group.setQuantity(group.getQuantity() - quantity);
+                    s.stackSize -= size;
                 }
 
-                tag.setInteger(NBT_STORED, getStored(tag) - quantity);
-
-                ItemStack result = group.toStack();
-                result.stackSize = quantity;
+                tag.setInteger(NBT_STORED, getStored(tag) - size);
 
                 markDirty();
 
-                return result;
+                return ItemHandlerHelper.copyStackWithSize(s, size);
             }
         }
 

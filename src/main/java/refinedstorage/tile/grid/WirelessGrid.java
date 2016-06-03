@@ -13,7 +13,7 @@ import refinedstorage.network.MessageWirelessGridCraftingStart;
 import refinedstorage.network.MessageWirelessGridSettingsUpdate;
 import refinedstorage.network.MessageWirelessGridStoragePull;
 import refinedstorage.network.MessageWirelessGridStoragePush;
-import refinedstorage.storage.ClientItemGroup;
+import refinedstorage.storage.ClientItem;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.controller.TileController;
 
@@ -26,7 +26,7 @@ public class WirelessGrid implements IGrid {
     private int sortingType;
     private int sortingDirection;
     private int searchBoxMode;
-    private List<ClientItemGroup> itemGroups = new ArrayList<ClientItemGroup>();
+    private static List<ClientItem> items = new ArrayList<ClientItem>();
     private long lastUpdate;
 
     public WirelessGrid(ItemStack stack, EnumHand hand) {
@@ -43,13 +43,13 @@ public class WirelessGrid implements IGrid {
     }
 
     @Override
-    public List<ClientItemGroup> getItemGroups() {
-        return itemGroups;
+    public List<ClientItem> getItems() {
+        return items;
     }
 
     @Override
-    public void setItemGroups(List<ClientItemGroup> groups) {
-        this.itemGroups = groups;
+    public void setItems(List<ClientItem> items) {
+        this.items = items;
         this.lastUpdate = System.currentTimeMillis();
     }
 

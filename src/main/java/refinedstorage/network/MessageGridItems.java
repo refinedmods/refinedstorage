@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import refinedstorage.container.ContainerGrid;
-import refinedstorage.storage.ClientItemGroup;
+import refinedstorage.storage.ClientItem;
 import refinedstorage.tile.controller.TileController;
 
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import java.util.List;
 
 public class MessageGridItems implements IMessage, IMessageHandler<MessageGridItems, IMessage> {
     private TileController controller;
-    private List<ClientItemGroup> groups = new ArrayList<ClientItemGroup>();
+    private List<ClientItem> items = new ArrayList<ClientItem>();
 
     public MessageGridItems() {
     }
@@ -28,23 +28,25 @@ public class MessageGridItems implements IMessage, IMessageHandler<MessageGridIt
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        int size = buf.readInt();
+        int items = buf.readInt();
 
-        for (int i = 0; i < size; ++i) {
-            int quantity = buf.readInt();
+        for (int i = 0; i < items; ++i) {
+            int size = buf.readInt();
+
             ItemStack stack = ByteBufUtils.readItemStack(buf);
-            stack.stackSize = quantity;
-            groups.add(new ClientItemGroup(i, stack));
+            stack.stackSize = size;
+
+            this.items.add(new ClientItem(i, stack));
         }
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(controller.getItemGroups().size());
+        buf.writeInt(controller.getItems().size());
 
-        for (int i = 0; i < controller.getItemGroups().size(); ++i) {
-            buf.writeInt(controller.getItemGroups().get(i).getQuantity());
-            ByteBufUtils.writeItemStack(buf, controller.getItemGroups().get(i).toStack());
+        for (ItemStack item : controller.getItems()) {
+            buf.writeInt(item.stackSize);
+            ByteBufUtils.writeItemStack(buf, item);
         }
     }
 
@@ -53,7 +55,7 @@ public class MessageGridItems implements IMessage, IMessageHandler<MessageGridIt
         Container container = Minecraft.getMinecraft().thePlayer.openContainer;
 
         if (container instanceof ContainerGrid) {
-            ((ContainerGrid) container).getGrid().setItemGroups(message.groups);
+            ((ContainerGrid) container).getGrid().setItems(message.items);
         }
 
         return null;

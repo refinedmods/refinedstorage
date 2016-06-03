@@ -2,11 +2,11 @@ package refinedstorage.storage;
 
 import net.minecraft.item.ItemStack;
 
-public final class ClientItemGroup {
+public final class ClientItem {
     private int id;
     private ItemStack stack;
 
-    public ClientItemGroup(int id, ItemStack stack) {
+    public ClientItem(int id, ItemStack stack) {
         this.id = id;
         this.stack = stack;
     }

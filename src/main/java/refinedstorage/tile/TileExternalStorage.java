@@ -15,7 +15,6 @@ import refinedstorage.network.MessagePriorityUpdate;
 import refinedstorage.storage.IStorage;
 import refinedstorage.storage.IStorageGui;
 import refinedstorage.storage.IStorageProvider;
-import refinedstorage.storage.ItemGroup;
 import refinedstorage.tile.config.*;
 
 import java.util.List;
@@ -43,12 +42,12 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
     }
 
     @Override
-    public void addItems(List<ItemGroup> items) {
+    public void addItems(List<ItemStack> items) {
         IDeepStorageUnit storageUnit = getStorageUnit();
 
         if (storageUnit != null) {
             if (storageUnit.getStoredItemType() != null) {
-                items.add(new ItemGroup(storageUnit.getStoredItemType().copy()));
+                items.add(storageUnit.getStoredItemType().copy());
             }
         } else {
             IItemHandler handler = getItemHandler();
@@ -56,7 +55,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
             if (handler != null) {
                 for (int i = 0; i < handler.getSlots(); ++i) {
                     if (handler.getStackInSlot(i) != null) {
-                        items.add(new ItemGroup(handler.getStackInSlot(i).copy()));
+                        items.add(handler.getStackInSlot(i).copy());
                     }
                 }
             }

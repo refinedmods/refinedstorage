@@ -5,7 +5,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerController;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
-import refinedstorage.tile.controller.ClientSideMachine;
+import refinedstorage.tile.controller.ClientMachine;
 import refinedstorage.tile.controller.TileController;
 
 import java.util.List;
@@ -71,13 +71,13 @@ public class GuiController extends GuiBase {
 
         RenderHelper.enableGUIStandardItemLighting();
 
-        List<ClientSideMachine> machines = controller.getClientSideMachines();
+        List<ClientMachine> machines = controller.getClientMachines();
 
-        ClientSideMachine machineHovering = null;
+        ClientMachine machineHovering = null;
 
         for (int i = 0; i < 4; ++i) {
             if (slot < machines.size()) {
-                ClientSideMachine machine = machines.get(slot);
+                ClientMachine machine = machines.get(slot);
 
                 drawItem(x, y + 5, machine.stack);
 
@@ -123,7 +123,7 @@ public class GuiController extends GuiBase {
     }
 
     private int getRows() {
-        int max = (int) Math.ceil((float) controller.getClientSideMachines().size() / (float) 2);
+        int max = (int) Math.ceil((float) controller.getClientMachines().size() / (float) 2);
 
         return max < 0 ? 0 : max;
     }

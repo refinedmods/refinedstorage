@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 import java.util.List;
 
 public interface IStorage {
-    void addItems(List<ItemGroup> items);
+    void addItems(List<ItemStack> items);
 
     void push(ItemStack stack);
 

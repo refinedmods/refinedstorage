@@ -3,7 +3,7 @@ package refinedstorage.tile.controller;
 import net.minecraft.item.ItemStack;
 import refinedstorage.RefinedStorageUtils;
 
-public class ClientSideMachine {
+public class ClientMachine {
     public ItemStack stack;
     public int amount;
     public int energyUsage;
@@ -14,11 +14,11 @@ public class ClientSideMachine {
             return true;
         }
 
-        if (!(other instanceof ClientSideMachine)) {
+        if (!(other instanceof ClientMachine)) {
             return false;
         }
 
-        return energyUsage == ((ClientSideMachine) other).energyUsage && RefinedStorageUtils.compareStack(stack, ((ClientSideMachine) other).stack);
+        return energyUsage == ((ClientMachine) other).energyUsage && RefinedStorageUtils.compareStack(stack, ((ClientMachine) other).stack);
     }
 
     @Override

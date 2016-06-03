@@ -13,6 +13,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageUtils;
@@ -24,7 +25,6 @@ import refinedstorage.item.ItemPattern;
 import refinedstorage.network.MessageGridItems;
 import refinedstorage.storage.IStorage;
 import refinedstorage.storage.IStorageProvider;
-import refinedstorage.storage.ItemGroup;
 import refinedstorage.tile.ISynchronizedContainer;
 import refinedstorage.tile.TileBase;
 import refinedstorage.tile.TileMachine;
@@ -50,12 +50,11 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     private StorageHandler storageHandler = new StorageHandler(this);
     private WirelessGridHandler wirelessGridHandler = new WirelessGridHandler(this);
 
-    private List<ItemGroup> itemGroups = new ArrayList<ItemGroup>();
+    private List<ItemStack> items = new ArrayList<ItemStack>();
+    private List<ItemStack> combinedItems = new ArrayList<ItemStack>();
+    private Set<Integer> combinedItemsIndices = new HashSet<Integer>();
 
     private List<IStorage> storages = new ArrayList<IStorage>();
-
-    private Set<Integer> combinedGroupsIndices = new HashSet<Integer>();
-    private List<ItemGroup> combinedGroups = new ArrayList<ItemGroup>();
 
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
@@ -63,7 +62,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     private List<TileMachine> machinesToAdd = new ArrayList<TileMachine>();
     private List<TileMachine> machinesToRemove = new ArrayList<TileMachine>();
 
-    private List<ClientSideMachine> clientSideMachines = new ArrayList<ClientSideMachine>();
+    private List<ClientMachine> clientMachines = new ArrayList<ClientMachine>();
 
     private List<CraftingPattern> patterns = new ArrayList<CraftingPattern>();
 
@@ -76,9 +75,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     private int energyUsage;
 
     private int wirelessGridRange;
-
     private boolean couldRun;
-
     private long lastEnergyUpdate;
 
     @Override
@@ -198,8 +195,8 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
         machines.clear();
     }
 
-    public List<ItemGroup> getItemGroups() {
-        return itemGroups;
+    public List<ItemStack> getItems() {
+        return items;
     }
 
     public List<ICraftingTask> getCraftingTasks() {
@@ -302,55 +299,53 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     }
 
     private void syncItems() {
-        itemGroups.clear();
+        items.clear();
 
         for (IStorage storage : storages) {
-            storage.addItems(itemGroups);
+            storage.addItems(items);
         }
 
         for (CraftingPattern pattern : patterns) {
             for (ItemStack output : pattern.getOutputs()) {
-                ItemGroup patternGroup = new ItemGroup(output);
-                patternGroup.setQuantity(0);
-                itemGroups.add(patternGroup);
+                items.add(ItemHandlerHelper.copyStackWithSize(output, 0));
             }
         }
 
-        combinedGroups.clear();
-        combinedGroupsIndices.clear();
+        combinedItems.clear();
+        combinedItemsIndices.clear();
 
-        for (int i = 0; i < itemGroups.size(); ++i) {
-            if (combinedGroupsIndices.contains(i)) {
+        for (int i = 0; i < items.size(); ++i) {
+            if (combinedItemsIndices.contains(i)) {
                 continue;
             }
 
-            ItemGroup group = itemGroups.get(i);
+            ItemStack stack = items.get(i);
 
             // If the item doesn't exist anymore, remove it from storage to avoid crashes
-            if (group.getType() == null) {
-                combinedGroups.add(group);
-                combinedGroupsIndices.add(i);
+            if (stack.getItem() == null) {
+                combinedItems.add(stack);
+                combinedItemsIndices.add(i);
             } else {
-                for (int j = i + 1; j < itemGroups.size(); ++j) {
-                    if (combinedGroupsIndices.contains(j)) {
+                for (int j = i + 1; j < items.size(); ++j) {
+                    if (combinedItemsIndices.contains(j)) {
                         continue;
                     }
 
-                    ItemGroup otherGroup = itemGroups.get(j);
+                    ItemStack otherStack = items.get(j);
 
-                    if (group.compareNoQuantity(otherGroup)) {
-                        // We copy here so we don't modify the quantity of the item group IStorage uses.
-                        // We re-get the itemgroup with .get(i) because the group may change from a previous iteration in this for loop.
-                        itemGroups.set(i, itemGroups.get(i).copy(itemGroups.get(i).getQuantity() + otherGroup.getQuantity()));
+                    if (RefinedStorageUtils.compareStackNoQuantity(stack, otherStack)) {
+                        // We copy here so we don't modify the quantity of the ItemStack IStorage uses.
+                        // We re-get the ItemStack because the stack may change from a previous iteration in this loop
+                        items.set(i, ItemHandlerHelper.copyStackWithSize(items.get(i), items.get(i).stackSize + otherStack.stackSize));
 
-                        combinedGroups.add(otherGroup);
-                        combinedGroupsIndices.add(j);
+                        combinedItems.add(otherStack);
+                        combinedItemsIndices.add(j);
                     }
                 }
             }
         }
 
-        itemGroups.removeAll(combinedGroups);
+        items.removeAll(combinedItems);
     }
 
     public void syncItemsWithClients() {
@@ -544,8 +539,8 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
         markDirty();
     }
 
-    public List<ClientSideMachine> getClientSideMachines() {
-        return clientSideMachines;
+    public List<ClientMachine> getClientMachines() {
+        return clientMachines;
     }
 
     @Override
@@ -557,12 +552,12 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
         machines.clear();
 
-        List<ClientSideMachine> machines = new ArrayList<ClientSideMachine>();
+        List<ClientMachine> machines = new ArrayList<ClientMachine>();
 
         int size = buf.readInt();
 
         for (int i = 0; i < size; ++i) {
-            ClientSideMachine machine = new ClientSideMachine();
+            ClientMachine machine = new ClientMachine();
             machine.energyUsage = buf.readInt();
             machine.amount = buf.readInt();
             machine.stack = ByteBufUtils.readItemStack(buf);
@@ -570,7 +565,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
             machines.add(machine);
         }
 
-        clientSideMachines = machines;
+        clientMachines = machines;
     }
 
     @Override
@@ -580,20 +575,20 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
         buf.writeInt(redstoneMode.id);
 
-        List<ClientSideMachine> m = new ArrayList<ClientSideMachine>();
+        List<ClientMachine> m = new ArrayList<ClientMachine>();
 
         for (TileMachine machine : machines) {
             if (machine.mayUpdate()) {
                 IBlockState state = worldObj.getBlockState(machine.getPos());
 
-                ClientSideMachine clientMachine = new ClientSideMachine();
+                ClientMachine clientMachine = new ClientMachine();
 
                 clientMachine.energyUsage = machine.getEnergyUsage();
                 clientMachine.amount = 1;
                 clientMachine.stack = new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state));
 
                 if (m.contains(clientMachine)) {
-                    for (ClientSideMachine other : m) {
+                    for (ClientMachine other : m) {
                         if (other.equals(clientMachine)) {
                             other.amount++;
                             break;
@@ -607,7 +602,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
         buf.writeInt(m.size());
 
-        for (ClientSideMachine machine : m) {
+        for (ClientMachine machine : m) {
             buf.writeInt(machine.energyUsage);
             buf.writeInt(machine.amount);
             ByteBufUtils.writeItemStack(buf, machine.stack);

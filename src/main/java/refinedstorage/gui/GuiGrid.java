@@ -22,7 +22,7 @@ import refinedstorage.network.GridPullFlags;
 import refinedstorage.network.MessageGridCraftingClear;
 import refinedstorage.network.MessageGridCraftingPush;
 import refinedstorage.network.MessageGridPatternCreate;
-import refinedstorage.storage.ClientItemGroup;
+import refinedstorage.storage.ClientItem;
 import refinedstorage.tile.grid.IGrid;
 import refinedstorage.tile.grid.TileGrid;
 import refinedstorage.tile.grid.WirelessGrid;
@@ -31,9 +31,9 @@ import java.io.IOException;
 import java.util.*;
 
 public class GuiGrid extends GuiBase {
-    private Comparator<ClientItemGroup> quantityComparator = new Comparator<ClientItemGroup>() {
+    private Comparator<ClientItem> quantityComparator = new Comparator<ClientItem>() {
         @Override
-        public int compare(ClientItemGroup left, ClientItemGroup right) {
+        public int compare(ClientItem left, ClientItem right) {
             if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING) {
                 return Integer.valueOf(left.getStack().stackSize).compareTo(right.getStack().stackSize);
             } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
@@ -44,9 +44,9 @@ public class GuiGrid extends GuiBase {
         }
     };
 
-    private Comparator<ClientItemGroup> nameComparator = new Comparator<ClientItemGroup>() {
+    private Comparator<ClientItem> nameComparator = new Comparator<ClientItem>() {
         @Override
-        public int compare(ClientItemGroup left, ClientItemGroup right) {
+        public int compare(ClientItem left, ClientItem right) {
             if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING) {
                 return left.getStack().getDisplayName().compareTo(right.getStack().getDisplayName());
             } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
@@ -60,7 +60,7 @@ public class GuiGrid extends GuiBase {
     private ContainerGrid container;
     private IGrid grid;
 
-    private List<ClientItemGroup> items = new ArrayList<ClientItemGroup>();
+    private List<ClientItem> items = new ArrayList<ClientItem>();
 
     private GuiTextField searchField;
 
@@ -119,15 +119,15 @@ public class GuiGrid extends GuiBase {
         items.clear();
 
         if (grid.isConnected()) {
-            items.addAll(grid.getItemGroups());
+            items.addAll(grid.getItems());
 
             if (!searchField.getText().trim().isEmpty()) {
-                Iterator<ClientItemGroup> t = items.iterator();
+                Iterator<ClientItem> t = items.iterator();
 
                 while (t.hasNext()) {
-                    ClientItemGroup group = t.next();
+                    ClientItem item = t.next();
 
-                    if (!group.getStack().getDisplayName().toLowerCase().contains(searchField.getText().toLowerCase())) {
+                    if (!item.getStack().getDisplayName().toLowerCase().contains(searchField.getText().toLowerCase())) {
                         t.remove();
                     }
                 }

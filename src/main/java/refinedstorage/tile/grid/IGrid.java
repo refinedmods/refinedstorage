@@ -2,7 +2,7 @@ package refinedstorage.tile.grid;
 
 import net.minecraft.util.math.BlockPos;
 import refinedstorage.block.EnumGridType;
-import refinedstorage.storage.ClientItemGroup;
+import refinedstorage.storage.ClientItem;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 
 import java.util.List;
@@ -10,9 +10,9 @@ import java.util.List;
 public interface IGrid {
     EnumGridType getType();
 
-    List<ClientItemGroup> getItemGroups();
+    List<ClientItem> getItems();
 
-    void setItemGroups(List<ClientItemGroup> groups);
+    void setItems(List<ClientItem> items);
 
     BlockPos getControllerPos();
 
