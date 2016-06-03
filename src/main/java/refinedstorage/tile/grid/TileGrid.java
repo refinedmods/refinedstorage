@@ -149,7 +149,7 @@ public class TileGrid extends TileMachine implements IGrid {
 
                     if (slot != null) {
                         if (slot.stackSize == 1 && isConnected()) {
-                            matrix.setInventorySlotContents(i, controller.take(slot));
+                            matrix.setInventorySlotContents(i, controller.take(slot, 1));
                         } else {
                             matrix.decrStackSize(i, 1);
                         }
@@ -247,7 +247,7 @@ public class TileGrid extends TileMachine implements IGrid {
 
                     if (getType() == EnumGridType.CRAFTING) {
                         for (ItemStack possibility : possibilities) {
-                            ItemStack took = controller.take(possibility);
+                            ItemStack took = controller.take(possibility, 1);
 
                             if (took != null) {
                                 matrix.setInventorySlotContents(i, possibility);

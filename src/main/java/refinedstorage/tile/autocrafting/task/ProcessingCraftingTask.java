@@ -53,7 +53,7 @@ public class ProcessingCraftingTask implements ICraftingTask {
             for (int i = 0; i < inserted.length; ++i) {
                 if (!inserted[i]) {
                     ItemStack input = pattern.getInputs()[i];
-                    ItemStack took = controller.take(input);
+                    ItemStack took = controller.take(input, 1);
 
                     if (took != null) {
                         if (ItemHandlerHelper.insertItem(handler, took, true) == null) {

@@ -385,13 +385,13 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
         return false;
     }
 
-    public ItemStack take(ItemStack stack) {
-        return take(stack, RefinedStorageUtils.COMPARE_DAMAGE | RefinedStorageUtils.COMPARE_NBT);
+    public ItemStack take(ItemStack stack, int size) {
+        return take(stack, size, RefinedStorageUtils.COMPARE_DAMAGE | RefinedStorageUtils.COMPARE_NBT);
     }
 
-    public ItemStack take(ItemStack stack, int flags) {
-        int requested = stack.stackSize;
-        int receiving = 0;
+    public ItemStack take(ItemStack stack, int size, int flags) {
+        int requested = size;
+        int received = 0;
 
         ItemStack newStack = null;
 
@@ -405,10 +405,10 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
                     newStack.stackSize += took.stackSize;
                 }
 
-                receiving += took.stackSize;
+                received += took.stackSize;
             }
 
-            if (requested == receiving) {
+            if (requested == received) {
                 break;
             }
         }

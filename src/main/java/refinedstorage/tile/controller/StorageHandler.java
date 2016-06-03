@@ -2,7 +2,6 @@ package refinedstorage.tile.controller;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.item.ItemWirelessGrid;
 import refinedstorage.network.GridPullFlags;
@@ -45,7 +44,7 @@ public class StorageHandler {
 
         size = Math.min(size, stack.getItem().getItemStackLimit(stack));
 
-        ItemStack took = controller.take(ItemHandlerHelper.copyStackWithSize(stack, size));
+        ItemStack took = controller.take(stack, size);
 
         if (took != null) {
             if (GridPullFlags.isPullingWithShift(flags)) {

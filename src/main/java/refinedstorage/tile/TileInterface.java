@@ -78,7 +78,7 @@ public class TileInterface extends TileMachine implements ICompareConfig {
                     int needed = got == null ? wanted.stackSize : wanted.stackSize - got.stackSize;
 
                     if (needed > 0) {
-                        ItemStack took = controller.take(ItemHandlerHelper.copyStackWithSize(wanted, needed), compare);
+                        ItemStack took = controller.take(wanted, needed, compare);
 
                         if (took != null) {
                             if (got == null) {
