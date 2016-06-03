@@ -43,7 +43,7 @@ public class GuiCraftingMonitor extends GuiBase {
     public void init(int x, int y) {
         addSideButton(new SideButtonRedstoneMode(craftingMonitor));
 
-        String cancel = t("misc.refinedstorage:cancel");
+        String cancel = t("gui.cancel");
         String cancelAll = t("misc.refinedstorage:cancel_all");
 
         int cancelButtonWidth = 14 + fontRendererObj.getStringWidth(cancel);
@@ -137,7 +137,7 @@ public class GuiCraftingMonitor extends GuiBase {
                                 .replace("{items_crafting}", t("gui.refinedstorage:crafting_monitor.items_crafting"))
                                 .replace("{items_processing}", t("gui.refinedstorage:crafting_monitor.items_processing"))
                                 .replace("{not_started_yet}", t("gui.refinedstorage:crafting_monitor.not_started_yet"))
-                                .replace("{none}", t("misc.refinedstorage:none")));
+                                .replace("{none}", t("gui.none")));
                         }
                     }
                 }

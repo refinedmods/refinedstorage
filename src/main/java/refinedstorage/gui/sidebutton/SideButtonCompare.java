@@ -21,9 +21,9 @@ public class SideButtonCompare extends SideButton {
         String tooltip = TextFormatting.YELLOW + gui.t("sidebutton.refinedstorage:compare." + mask) + TextFormatting.RESET + "\n";
 
         if ((config.getCompare() & mask) == mask) {
-            tooltip += gui.t("misc.refinedstorage:yes");
+            tooltip += gui.t("gui.yes");
         } else {
-            tooltip += gui.t("misc.refinedstorage:no");
+            tooltip += gui.t("gui.no");
         }
 
         return tooltip;

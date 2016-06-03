@@ -4,7 +4,7 @@ gui.refinedstorage:controller.0=Contrôleur
 gui.refinedstorage:controller.1=Contrôleur Créatif
 gui.refinedstorage:controller.machine_amount=%dx
 gui.refinedstorage:grid=Grille
-gui.refinedstorage:grid.craft=Grille de Craft
+gui.refinedstorage:grid.craft=Craft
 gui.refinedstorage:grid.pattern=Modèle
 gui.refinedstorage:grid.pattern_create=Modèle Créatif
 gui.refinedstorage:wireless_grid=Grille sans Fil
@@ -46,12 +46,8 @@ misc.refinedstorage:wireless_grid.tooltip.2=Z: %d
 misc.refinedstorage:wireless_grid.out_of_range=Contrôleur hors de portés.
 misc.refinedstorage:wireless_grid.not_found=Contrôleur non trouvé.
 
-misc.refinedstorage:yes=Oui
-misc.refinedstorage:no=Non
 misc.refinedstorage:start=Départ
 misc.refinedstorage:clear=Vider
-misc.refinedstorage:none=Aucun
-misc.refinedstorage:cancel=Annuler
 misc.refinedstorage:cancel_all=Tout Annuler
 misc.refinedstorage:priority=Priorité
 

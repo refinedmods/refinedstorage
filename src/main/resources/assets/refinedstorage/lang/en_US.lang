@@ -47,12 +47,8 @@ misc.refinedstorage:wireless_grid.tooltip.2=Z: %d
 misc.refinedstorage:wireless_grid.out_of_range=Controller out of range.
 misc.refinedstorage:wireless_grid.not_found=Controller not found.
 
-misc.refinedstorage:yes=Yes
-misc.refinedstorage:no=No
 misc.refinedstorage:start=Start
 misc.refinedstorage:clear=Clear
-misc.refinedstorage:none=None
-misc.refinedstorage:cancel=Cancel
 misc.refinedstorage:cancel_all=Cancel All
 misc.refinedstorage:priority=Priority
 
