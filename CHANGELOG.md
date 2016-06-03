@@ -5,6 +5,7 @@
 - Fixed buggy reequip animation on wireless grid
 - Fixed solderer not supporting ore dictionary
 - Fixed recipes not supporting ore dictionary
+- Fixed destructor not being able to destroy some blocks
 
 **Features**
 - Added the Stack Upgrade

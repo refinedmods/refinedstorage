@@ -5,7 +5,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -53,11 +52,11 @@ public class TileDestructor extends TileMachine implements ICompareConfig, IMode
             BlockPos front = pos.offset(getDirection());
 
             IBlockState frontBlockState = worldObj.getBlockState(front);
-            Block frontBlock = frontBlockState.getBlock();
+            ItemStack frontStack = frontBlockState.getBlock().getItem(worldObj, front, frontBlockState);
 
-            if (Item.getItemFromBlock(frontBlock) != null && !frontBlock.isAir(frontBlockState, worldObj, front)) {
-                if (ModeFilter.respectsMode(filters, this, compare, new ItemStack(frontBlock, 1, frontBlock.getMetaFromState(frontBlockState)))) {
-                    List<ItemStack> drops = frontBlock.getDrops(worldObj, front, frontBlockState, 0);
+            if (frontStack != null) {
+                if (ModeFilter.respectsMode(filters, this, compare, frontStack)) {
+                    List<ItemStack> drops = frontBlockState.getBlock().getDrops(worldObj, front, frontBlockState, 0);
 
                     worldObj.playEvent(null, 2001, front, Block.getStateId(frontBlockState));
                     worldObj.setBlockToAir(front);
