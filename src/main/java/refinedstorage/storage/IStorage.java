@@ -9,7 +9,7 @@ public interface IStorage {
 
     void push(ItemStack stack);
 
-    ItemStack take(ItemStack stack, int flags);
+    ItemStack take(ItemStack stack, int size, int flags);
 
     boolean mayPush(ItemStack stack);
 

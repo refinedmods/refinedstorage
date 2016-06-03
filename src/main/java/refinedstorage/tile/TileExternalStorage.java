@@ -82,21 +82,16 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
     }
 
     @Override
-    public ItemStack take(ItemStack stack, int flags) {
-        int quantity = stack.stackSize;
-
+    public ItemStack take(ItemStack stack, int size, int flags) {
         IDeepStorageUnit storageUnit = getStorageUnit();
 
         if (storageUnit != null) {
             if (storageUnit.getStoredItemType() != null && RefinedStorageUtils.compareStackNoQuantity(storageUnit.getStoredItemType(), stack)) {
-                if (quantity > storageUnit.getStoredItemType().stackSize) {
-                    quantity = storageUnit.getStoredItemType().stackSize;
-                }
+                size = Math.min(size, storageUnit.getStoredItemType().stackSize);
 
-                ItemStack took = storageUnit.getStoredItemType().copy();
-                took.stackSize = quantity;
+                ItemStack took = ItemHandlerHelper.copyStackWithSize(storageUnit.getStoredItemType(), size);
 
-                storageUnit.setStoredItemCount(storageUnit.getStoredItemType().stackSize - quantity);
+                storageUnit.setStoredItemCount(storageUnit.getStoredItemType().stackSize - size);
 
                 return took;
             }
@@ -108,13 +103,13 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
                     ItemStack slot = handler.getStackInSlot(i);
 
                     if (slot != null && RefinedStorageUtils.compareStack(slot, stack, flags)) {
-                        if (quantity > slot.stackSize) {
-                            quantity = slot.stackSize;
-                        }
+                        size = Math.min(size, slot.stackSize);
 
-                        handler.extractItem(i, quantity, false);
+                        ItemStack took = ItemHandlerHelper.copyStackWithSize(slot, size);
 
-                        return ItemHandlerHelper.copyStackWithSize(slot, quantity);
+                        handler.extractItem(i, size, false);
+
+                        return took;
                     }
                 }
             }

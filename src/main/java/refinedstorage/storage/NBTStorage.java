@@ -96,9 +96,7 @@ public abstract class NBTStorage implements IStorage {
     }
 
     @Override
-    public ItemStack take(ItemStack stack, int flags) {
-        int size = stack.stackSize;
-
+    public ItemStack take(ItemStack stack, int size, int flags) {
         for (ItemStack s : stacks) {
             if (RefinedStorageUtils.compareStack(s, stack, flags)) {
                 if (size > s.stackSize) {
