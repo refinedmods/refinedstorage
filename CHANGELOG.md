@@ -6,6 +6,7 @@
 - Fixed solderer not supporting ore dictionary
 - Fixed recipes not supporting ore dictionary
 - Fixed destructor not being able to destroy some blocks
+- Performance improvements
 
 **Features**
 - Added the Stack Upgrade
