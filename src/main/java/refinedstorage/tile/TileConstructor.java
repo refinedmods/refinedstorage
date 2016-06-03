@@ -71,7 +71,7 @@ public class TileConstructor extends TileMachine implements ICompareConfig {
             }
 
             if (block != null && block.canPlaceBlockAt(worldObj, front)) {
-                ItemStack took = controller.take(filter.getStackInSlot(0).copy(), compare);
+                ItemStack took = controller.take(filter.getStackInSlot(0), compare);
 
                 if (took != null) {
                     scheduler.resetSchedule();

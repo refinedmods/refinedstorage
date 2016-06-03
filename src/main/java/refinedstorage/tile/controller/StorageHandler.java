@@ -43,9 +43,7 @@ public class StorageHandler {
             // NO OP, the quantity already set (64) is needed for shift
         }
 
-        if (size > stack.getItem().getItemStackLimit(stack)) {
-            size = stack.getItem().getItemStackLimit(stack);
-        }
+        size = Math.min(size, stack.getItem().getItemStackLimit(stack));
 
         ItemStack took = controller.take(ItemHandlerHelper.copyStackWithSize(stack, size));
 

@@ -149,7 +149,7 @@ public class TileGrid extends TileMachine implements IGrid {
 
                     if (slot != null) {
                         if (slot.stackSize == 1 && isConnected()) {
-                            matrix.setInventorySlotContents(i, controller.take(slot.copy()));
+                            matrix.setInventorySlotContents(i, controller.take(slot));
                         } else {
                             matrix.decrStackSize(i, 1);
                         }
