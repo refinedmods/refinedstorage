@@ -106,6 +106,15 @@ public class ItemPattern extends ItemBase {
             }
         }
 
+        ItemStack[] byproducts = getByproducts(pattern);
+        if (byproducts != null) {
+            for (ItemStack byproduct : byproducts) {
+                if (byproduct == null) {
+                    return false;
+                }
+            }
+        }
+
         return true;
     }
 
