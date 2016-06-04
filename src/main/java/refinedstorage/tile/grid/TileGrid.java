@@ -182,7 +182,7 @@ public class TileGrid extends TileMachine implements IGrid {
 
         for (ItemStack craftedItem : craftedItemsList) {
             if (!player.inventory.addItemStackToInventory(craftedItem.copy())) {
-                if (controller != null && controller.push(craftedItem.copy())) {
+                if (controller != null && controller.push(craftedItem)) {
                     // NO OP
                 } else {
                     InventoryHelper.spawnItemStack(player.worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), craftedItem);
