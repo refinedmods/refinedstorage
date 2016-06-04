@@ -402,7 +402,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
         ItemStack newStack = null;
 
         for (IStorage storage : storages) {
-            ItemStack took = storage.take(stack, requested - received, flags);
+            ItemStack took = storage.take(stack, requested, flags);
 
             if (took != null) {
                 if (newStack == null) {

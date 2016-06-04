@@ -92,7 +92,7 @@ public abstract class NBTStorage implements IStorage {
             }
         }
 
-        stacks.add(stack);
+        stacks.add(stack.copy());
 
         markDirty();
     }
