@@ -1,5 +1,10 @@
 # Refined Storage Changelog
 
+### 0.7.8
+**Bugfixes**
+- Improved Grid performance
+- Fixed crash on some worlds
+
 ### 0.7.7
 **Bugfixes**
 - Fixed buggy reequip animation on wireless grid

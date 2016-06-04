@@ -13,7 +13,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageUtils;
@@ -343,7 +342,9 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
                 if (RefinedStorageUtils.compareStackNoQuantity(stack, otherStack)) {
                     // We copy here so we don't modify the quantity of the ItemStack IStorage uses.
                     // We re-get the ItemStack because the stack may change from a previous iteration in this loop
-                    items.set(i, ItemHandlerHelper.copyStackWithSize(items.get(i), items.get(i).stackSize + otherStack.stackSize));
+                    ItemStack newStack = items.get(i).copy();
+                    newStack.stackSize += otherStack.stackSize;
+                    items.set(i, newStack);
 
                     combinedItems.add(otherStack);
                     combinedItemsIndices.add(j);
