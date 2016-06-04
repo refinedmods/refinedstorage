@@ -1,12 +1,11 @@
-package refinedstorage.tile.autocrafting;
+package refinedstorage.tile;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+import refinedstorage.autocrafting.task.ICraftingTask;
 import refinedstorage.container.ContainerCraftingMonitor;
-import refinedstorage.tile.TileMachine;
-import refinedstorage.tile.autocrafting.task.ICraftingTask;
 
 import java.util.ArrayList;
 import java.util.Collections;

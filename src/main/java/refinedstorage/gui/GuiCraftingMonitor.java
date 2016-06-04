@@ -8,7 +8,7 @@ import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerCraftingMonitor;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.network.MessageCraftingMonitorCancel;
-import refinedstorage.tile.autocrafting.TileCraftingMonitor;
+import refinedstorage.tile.TileCraftingMonitor;
 
 import java.io.IOException;
 import java.util.Arrays;

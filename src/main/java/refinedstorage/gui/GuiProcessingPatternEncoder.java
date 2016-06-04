@@ -5,7 +5,7 @@ import net.minecraft.init.SoundEvents;
 import refinedstorage.RefinedStorage;
 import refinedstorage.container.ContainerProcessingPatternEncoder;
 import refinedstorage.network.MessageGridPatternCreate;
-import refinedstorage.tile.autocrafting.TileProcessingPatternEncoder;
+import refinedstorage.tile.TileProcessingPatternEncoder;
 
 import java.io.IOException;
 

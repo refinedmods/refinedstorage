@@ -10,7 +10,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
-import refinedstorage.tile.autocrafting.TileCraftingMonitor;
+import refinedstorage.tile.TileCraftingMonitor;
 
 public class BlockCraftingMonitor extends BlockMachine {
     public BlockCraftingMonitor() {

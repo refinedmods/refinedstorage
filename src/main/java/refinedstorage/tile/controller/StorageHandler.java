@@ -3,10 +3,10 @@ package refinedstorage.tile.controller;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import refinedstorage.RefinedStorageUtils;
+import refinedstorage.autocrafting.CraftingPattern;
+import refinedstorage.autocrafting.task.ICraftingTask;
 import refinedstorage.item.ItemWirelessGrid;
 import refinedstorage.network.GridPullFlags;
-import refinedstorage.tile.autocrafting.CraftingPattern;
-import refinedstorage.tile.autocrafting.task.ICraftingTask;
 
 public class StorageHandler {
     public static final int MAX_CRAFTING_PER_REQUEST = 500;

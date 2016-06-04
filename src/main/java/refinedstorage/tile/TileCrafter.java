@@ -1,4 +1,4 @@
-package refinedstorage.tile.autocrafting;
+package refinedstorage.tile;
 
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
@@ -11,14 +11,13 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
+import refinedstorage.autocrafting.task.ICraftingTask;
 import refinedstorage.container.ContainerCrafter;
 import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.inventory.IItemValidator;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.item.ItemUpgrade;
-import refinedstorage.tile.TileMachine;
-import refinedstorage.tile.autocrafting.task.ICraftingTask;
 
 public class TileCrafter extends TileMachine {
     private BasicItemHandler patterns = new BasicItemHandler(PATTERN_SLOTS, this, new IItemValidator() {

@@ -1,4 +1,4 @@
-package refinedstorage.tile.autocrafting;
+package refinedstorage.tile;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -11,7 +11,6 @@ import refinedstorage.RefinedStorageUtils;
 import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.item.ItemPattern;
-import refinedstorage.tile.TileBase;
 
 public class TileProcessingPatternEncoder extends TileBase {
     private BasicItemHandler patterns = new BasicItemHandler(2, this, new BasicItemValidator(RefinedStorageItems.PATTERN));

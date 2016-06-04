@@ -31,9 +31,6 @@ import refinedstorage.solderer.SoldererRecipeStorage;
 import refinedstorage.solderer.SoldererRecipeUpgrade;
 import refinedstorage.storage.NBTStorage;
 import refinedstorage.tile.*;
-import refinedstorage.tile.autocrafting.TileCrafter;
-import refinedstorage.tile.autocrafting.TileCraftingMonitor;
-import refinedstorage.tile.autocrafting.TileProcessingPatternEncoder;
 import refinedstorage.tile.controller.TileController;
 import refinedstorage.tile.grid.TileGrid;
 

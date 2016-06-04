@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.items.SlotItemHandler;
 import refinedstorage.container.slot.SlotOutput;
 import refinedstorage.container.slot.SlotSpecimen;
-import refinedstorage.tile.autocrafting.TileProcessingPatternEncoder;
+import refinedstorage.tile.TileProcessingPatternEncoder;
 
 public class ContainerProcessingPatternEncoder extends ContainerBase {
     public ContainerProcessingPatternEncoder(EntityPlayer player, TileProcessingPatternEncoder processingPatternEncoder) {

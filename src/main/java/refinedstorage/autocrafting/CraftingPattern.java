@@ -1,4 +1,4 @@
-package refinedstorage.tile.autocrafting;
+package refinedstorage.autocrafting;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -7,6 +7,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import refinedstorage.item.ItemPattern;
+import refinedstorage.tile.TileCrafter;
 
 public class CraftingPattern {
     public static final String NBT = "Pattern";

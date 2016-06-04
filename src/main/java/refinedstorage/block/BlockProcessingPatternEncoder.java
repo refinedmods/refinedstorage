@@ -10,7 +10,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
-import refinedstorage.tile.autocrafting.TileProcessingPatternEncoder;
+import refinedstorage.tile.TileProcessingPatternEncoder;
 
 public class BlockProcessingPatternEncoder extends BlockBase {
     public BlockProcessingPatternEncoder() {

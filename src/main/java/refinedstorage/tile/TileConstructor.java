@@ -18,11 +18,11 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
+import refinedstorage.autocrafting.CraftingTaskScheduler;
 import refinedstorage.container.ContainerConstructor;
 import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.item.ItemUpgrade;
-import refinedstorage.tile.autocrafting.task.CraftingTaskScheduler;
 import refinedstorage.tile.config.ICompareConfig;
 
 import java.lang.reflect.Field;

@@ -1,9 +1,8 @@
-package refinedstorage.tile.autocrafting.task;
+package refinedstorage.autocrafting;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import refinedstorage.RefinedStorageUtils;
-import refinedstorage.tile.autocrafting.CraftingPattern;
 import refinedstorage.tile.controller.TileController;
 
 public class CraftingTaskScheduler {

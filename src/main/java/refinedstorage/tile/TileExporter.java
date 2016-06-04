@@ -11,11 +11,11 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
+import refinedstorage.autocrafting.CraftingTaskScheduler;
 import refinedstorage.container.ContainerExporter;
 import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.item.ItemUpgrade;
-import refinedstorage.tile.autocrafting.task.CraftingTaskScheduler;
 import refinedstorage.tile.config.ICompareConfig;
 
 public class TileExporter extends TileMachine implements ICompareConfig {

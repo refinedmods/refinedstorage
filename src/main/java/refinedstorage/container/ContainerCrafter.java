@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
-import refinedstorage.tile.autocrafting.TileCrafter;
+import refinedstorage.tile.TileCrafter;
 
 public class ContainerCrafter extends ContainerStorage {
     public ContainerCrafter(EntityPlayer player, TileCrafter crafter) {

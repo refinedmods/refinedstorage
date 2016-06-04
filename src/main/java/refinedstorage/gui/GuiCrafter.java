@@ -7,7 +7,7 @@ import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerCrafter;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.item.ItemPattern;
-import refinedstorage.tile.autocrafting.TileCrafter;
+import refinedstorage.tile.TileCrafter;
 
 public class GuiCrafter extends GuiBase {
     private TileCrafter crafter;
