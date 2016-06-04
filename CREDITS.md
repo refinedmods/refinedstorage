@@ -2,7 +2,7 @@
 
 ## Programming
 - raoulvdberge
-- tomevoll
+- tomevoll (providing small patches)
 
 ## Art
 - GustoniaEagle
