@@ -34,10 +34,17 @@ public class GuiGrid extends GuiBase {
     private Comparator<ClientItem> quantityComparator = new Comparator<ClientItem>() {
         @Override
         public int compare(ClientItem left, ClientItem right) {
+            int leftSize = left.getStack().stackSize;
+            int rightSize = right.getStack().stackSize;
+
+            if (leftSize == rightSize) {
+                return 0;
+            }
+
             if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING) {
-                return Integer.valueOf(left.getStack().stackSize).compareTo(right.getStack().stackSize);
+                return (leftSize > rightSize) ? 1 : -1;
             } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
-                return Integer.valueOf(right.getStack().stackSize).compareTo(left.getStack().stackSize);
+                return (rightSize > leftSize) ? 1 : -1;
             }
 
             return 0;
