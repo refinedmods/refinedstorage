@@ -22,4 +22,5 @@ public final class RefinedStorageBlocks {
     public static final BlockWirelessTransmitter WIRELESS_TRANSMITTER = new BlockWirelessTransmitter();
     public static final BlockCrafter CRAFTER = new BlockCrafter();
     public static final BlockProcessingPatternEncoder PROCESSING_PATTERN_ENCODER = new BlockProcessingPatternEncoder();
+    public static final BlockQuartzEnrichedIron QUARTZ_ENRICHED_IRON = new BlockQuartzEnrichedIron();
 }

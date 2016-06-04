@@ -15,6 +15,7 @@
 
 **Features**
 - Added the Stack Upgrade
+- Added Quartz Enriched Iron Block
 - Added French translation by Leventovitch
 
 ### 0.7.6
