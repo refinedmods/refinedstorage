@@ -14,7 +14,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
-import refinedstorage.tile.solderer.TileSolderer;
+import refinedstorage.tile.TileSolderer;
 
 public class BlockSolderer extends BlockMachine {
     public static final PropertyBool WORKING = PropertyBool.create("working");

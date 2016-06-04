@@ -5,7 +5,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
 import refinedstorage.container.slot.SlotOutput;
-import refinedstorage.tile.solderer.TileSolderer;
+import refinedstorage.tile.TileSolderer;
 
 public class ContainerSolderer extends ContainerBase {
     public ContainerSolderer(EntityPlayer player, TileSolderer solderer) {

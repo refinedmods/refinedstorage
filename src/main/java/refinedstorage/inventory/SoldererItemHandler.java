@@ -2,7 +2,7 @@ package refinedstorage.inventory;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import refinedstorage.tile.solderer.TileSolderer;
+import refinedstorage.tile.TileSolderer;
 
 public class SoldererItemHandler extends ProxyItemHandler {
     private TileSolderer solderer;

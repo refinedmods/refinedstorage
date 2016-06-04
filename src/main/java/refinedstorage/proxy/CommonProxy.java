@@ -16,6 +16,8 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageItems;
+import refinedstorage.api.solderer.SoldererRecipeBasic;
+import refinedstorage.api.solderer.SoldererRegistry;
 import refinedstorage.block.BlockBase;
 import refinedstorage.block.EnumControllerType;
 import refinedstorage.block.EnumGridType;
@@ -23,6 +25,10 @@ import refinedstorage.block.EnumStorageType;
 import refinedstorage.gui.GuiHandler;
 import refinedstorage.item.*;
 import refinedstorage.network.*;
+import refinedstorage.solderer.SoldererRecipePrintedProcessor;
+import refinedstorage.solderer.SoldererRecipeProcessor;
+import refinedstorage.solderer.SoldererRecipeStorage;
+import refinedstorage.solderer.SoldererRecipeUpgrade;
 import refinedstorage.storage.NBTStorage;
 import refinedstorage.tile.*;
 import refinedstorage.tile.autocrafting.TileCrafter;
@@ -30,7 +36,6 @@ import refinedstorage.tile.autocrafting.TileCraftingMonitor;
 import refinedstorage.tile.autocrafting.TileProcessingPatternEncoder;
 import refinedstorage.tile.controller.TileController;
 import refinedstorage.tile.grid.TileGrid;
-import refinedstorage.tile.solderer.*;
 
 import static refinedstorage.RefinedStorage.ID;
 

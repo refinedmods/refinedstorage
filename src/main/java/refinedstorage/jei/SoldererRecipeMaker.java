@@ -1,8 +1,8 @@
 package refinedstorage.jei;
 
 import net.minecraft.item.ItemStack;
-import refinedstorage.tile.solderer.ISoldererRecipe;
-import refinedstorage.tile.solderer.SoldererRegistry;
+import refinedstorage.api.solderer.ISoldererRecipe;
+import refinedstorage.api.solderer.SoldererRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
