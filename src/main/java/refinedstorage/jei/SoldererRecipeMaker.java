@@ -11,7 +11,7 @@ public class SoldererRecipeMaker {
     public static List<SoldererRecipeWrapper> getRecipes() {
         List<SoldererRecipeWrapper> recipes = new ArrayList<SoldererRecipeWrapper>();
 
-        for (ISoldererRecipe recipe : SoldererRegistry.recipes) {
+        for (ISoldererRecipe recipe : SoldererRegistry.getRecipes()) {
             List<ItemStack> inputs = new ArrayList<ItemStack>();
 
             inputs.add(recipe.getRow(0));

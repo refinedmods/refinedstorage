@@ -25,19 +25,15 @@ public class SoldererRegistry {
     /**
      * @return An immutable recipe list
      */
-    public ImmutableList<ISoldererRecipe> getRecipes() {
+    public static ImmutableList<ISoldererRecipe> getRecipes() {
         return ImmutableList.copyOf(recipes);
     }
 
     /**
-     * @param items The item handler that has 3 slots
+     * @param items The item handler, where slots 0 - 2 are the row slots
      * @return The recipe
      */
     public static ISoldererRecipe getRecipe(IItemHandler items) {
-        if (items.getSlots() != 3) {
-            throw new IllegalArgumentException("Expected a item handler with 3 slots, got " + items.getSlots() + " slots");
-        }
-
         for (ISoldererRecipe recipe : recipes) {
             boolean found = true;
 
