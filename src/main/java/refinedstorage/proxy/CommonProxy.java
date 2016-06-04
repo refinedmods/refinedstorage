@@ -185,7 +185,13 @@ public class CommonProxy {
         );
 
         // Disk Drive
-        SoldererRegistry.addRecipe(new SoldererRecipeDiskDrive());
+        SoldererRegistry.addRecipe(new SoldererRecipeBasic(
+            new ItemStack(RefinedStorageBlocks.DISK_DRIVE),
+            500,
+            new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
+            new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
+            new ItemStack(Blocks.CHEST)
+        ));
 
         // Cable
         GameRegistry.addRecipe(new ItemStack(RefinedStorageBlocks.CABLE, 6),
@@ -221,10 +227,22 @@ public class CommonProxy {
         );
 
         // Crafting Grid
-        SoldererRegistry.addRecipe(new SoldererRecipeCraftingGrid());
+        SoldererRegistry.addRecipe(new SoldererRecipeBasic(
+            new ItemStack(RefinedStorageBlocks.GRID, 1, EnumGridType.CRAFTING.getId()),
+            500,
+            new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
+            new ItemStack(RefinedStorageBlocks.GRID, 1, EnumGridType.NORMAL.getId()),
+            new ItemStack(Blocks.CRAFTING_TABLE)
+        ));
 
         // Pattern Grid
-        SoldererRegistry.addRecipe(new SoldererRecipePatternGrid());
+        SoldererRegistry.addRecipe(new SoldererRecipeBasic(
+            new ItemStack(RefinedStorageBlocks.GRID, 1, EnumGridType.PATTERN.getId()),
+            500,
+            new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
+            new ItemStack(RefinedStorageBlocks.GRID, 1, EnumGridType.NORMAL.getId()),
+            new ItemStack(RefinedStorageItems.PATTERN)
+        ));
 
         // Wireless Grid
         GameRegistry.addRecipe(new ItemStack(RefinedStorageItems.WIRELESS_GRID, 1, ItemWirelessGrid.TYPE_NORMAL),
@@ -444,7 +462,13 @@ public class CommonProxy {
         );
 
         // Interface
-        SoldererRegistry.addRecipe(new SoldererRecipeInterface());
+        SoldererRegistry.addRecipe(new SoldererRecipeBasic(
+            new ItemStack(RefinedStorageBlocks.INTERFACE),
+            200,
+            new ItemStack(RefinedStorageBlocks.IMPORTER),
+            new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
+            new ItemStack(RefinedStorageBlocks.EXPORTER)
+        ));
     }
 
     public void init(FMLInitializationEvent e) {
