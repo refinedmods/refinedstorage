@@ -2,8 +2,9 @@
 
 ### 0.7.8
 **Bugfixes**
-- Improved Grid performance
+- Updated to Forge 1951
 - Fixed crash on some worlds
+- Improved Grid performance when sorting on quantity
 
 ### 0.7.7
 **Bugfixes**
