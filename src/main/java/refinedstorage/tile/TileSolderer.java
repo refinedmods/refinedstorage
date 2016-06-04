@@ -1,4 +1,4 @@
-package refinedstorage.tile.solderer;
+package refinedstorage.tile;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.Container;
@@ -11,12 +11,13 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.solderer.ISoldererRecipe;
+import refinedstorage.api.solderer.SoldererRegistry;
 import refinedstorage.container.ContainerSolderer;
 import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.inventory.SoldererItemHandler;
 import refinedstorage.item.ItemUpgrade;
-import refinedstorage.tile.TileMachine;
 
 public class TileSolderer extends TileMachine {
     public static final String NBT_WORKING = "Working";
