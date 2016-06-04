@@ -7,7 +7,9 @@
 - Fixed recipes not supporting ore dictionary
 - Fixed destructor not being able to destroy some blocks
 - Fixed not being able to place or destroy sugar cane
+- Fixed storage blocks not being dismantable
 - New items now go to the first available storage that has items in it already
+- Tweak some recipes
 - Performance improvements
 
 **Features**

@@ -325,8 +325,8 @@ public class CommonProxy {
 
         // Storage Parts
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RefinedStorageItems.STORAGE_PART, 1, ItemStoragePart.TYPE_1K),
-            "EPE",
-            "GSG",
+            "ESE",
+            "GRG",
             "EGE",
             'R', new ItemStack(Items.REDSTONE),
             'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),

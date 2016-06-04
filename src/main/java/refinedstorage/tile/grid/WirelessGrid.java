@@ -26,7 +26,7 @@ public class WirelessGrid implements IGrid {
     private int sortingType;
     private int sortingDirection;
     private int searchBoxMode;
-    private static List<ClientItem> items = new ArrayList<ClientItem>();
+    private List<ClientItem> items = new ArrayList<ClientItem>();
     private long lastUpdate;
 
     public WirelessGrid(ItemStack stack, EnumHand hand) {
