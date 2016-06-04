@@ -1,4 +1,4 @@
-package refinedstorage.tile;
+package refinedstorage.tile.solderer;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.Container;
@@ -11,26 +11,18 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
-import refinedstorage.api.solderer.ISoldererRecipe;
-import refinedstorage.api.solderer.SoldererRegistry;
 import refinedstorage.container.ContainerSolderer;
 import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.inventory.SoldererItemHandler;
 import refinedstorage.item.ItemUpgrade;
+import refinedstorage.tile.TileMachine;
 
 public class TileSolderer extends TileMachine {
     public static final String NBT_WORKING = "Working";
     public static final String NBT_PROGRESS = "Progress";
 
-    private BasicItemHandler items = new BasicItemHandler(4, this) {
-        @Override
-        protected void onContentsChanged(int slot) {
-            super.onContentsChanged(slot);
-
-            refresh();
-        }
-    };
+    private BasicItemHandler items = new BasicItemHandler(4, this);
     private BasicItemHandler upgrades = new BasicItemHandler(4, this, new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED));
     private SoldererItemHandler[] itemsFacade = new SoldererItemHandler[EnumFacing.values().length];
 
@@ -47,59 +39,54 @@ public class TileSolderer extends TileMachine {
 
     @Override
     public void updateMachine() {
-        if (working) {
-            progress += 1 + RefinedStorageUtils.getUpgradeCount(upgrades, ItemUpgrade.TYPE_SPEED);
-
-            if (progress >= recipe.getDuration()) {
-                ISoldererRecipe oldRecipe = recipe;
-
-                if (items.getStackInSlot(3) != null) {
-                    items.getStackInSlot(3).stackSize += recipe.getResult().stackSize;
-                } else {
-                    items.setStackInSlot(3, recipe.getResult());
-                }
-
-                for (int i = 0; i < 3; ++i) {
-                    if (oldRecipe.getRow(i) != null) {
-                        items.extractItem(i, oldRecipe.getRow(i).stackSize, false);
-                    }
-                }
-
-                progress = 0;
-                markDirty();
-            }
-        }
-    }
-
-    public void refresh() {
         boolean wasWorking = working;
 
-        ISoldererRecipe newRecipe = SoldererRegistry.getRecipe(items);
-
-        if (newRecipe == null) {
+        if (items.getStackInSlot(1) == null && items.getStackInSlot(2) == null && items.getStackInSlot(3) == null) {
             stop();
-        } else if (newRecipe != recipe) {
-            boolean isSameItem = items.getStackInSlot(3) != null ? RefinedStorageUtils.compareStackNoQuantity(items.getStackInSlot(3), newRecipe.getResult()) : false;
+        } else {
+            ISoldererRecipe newRecipe = SoldererRegistry.getRecipe(items);
 
-            if (items.getStackInSlot(3) == null || (isSameItem && ((items.getStackInSlot(3).stackSize + newRecipe.getResult().stackSize) <= items.getStackInSlot(3).getMaxStackSize()))) {
-                recipe = newRecipe;
-                progress = 0;
-                working = true;
-                markDirty();
+            if (newRecipe == null) {
+                stop();
+            } else if (newRecipe != recipe) {
+                boolean isSameItem = items.getStackInSlot(3) != null ? RefinedStorageUtils.compareStackNoQuantity(items.getStackInSlot(3), newRecipe.getResult()) : false;
+
+                if (items.getStackInSlot(3) == null || (isSameItem && ((items.getStackInSlot(3).stackSize + newRecipe.getResult().stackSize) <= items.getStackInSlot(3).getMaxStackSize()))) {
+                    recipe = newRecipe;
+                    progress = 0;
+                    working = true;
+
+                    markDirty();
+                }
+            } else if (working) {
+                progress += 1 + RefinedStorageUtils.getUpgradeCount(upgrades, ItemUpgrade.TYPE_SPEED);
+
+                if (progress >= recipe.getDuration()) {
+                    if (items.getStackInSlot(3) != null) {
+                        items.getStackInSlot(3).stackSize += recipe.getResult().stackSize;
+                    } else {
+                        items.setStackInSlot(3, recipe.getResult());
+                    }
+
+                    for (int i = 0; i < 3; ++i) {
+                        if (recipe.getRow(i) != null) {
+                            items.extractItem(i, recipe.getRow(i).stackSize, false);
+                        }
+                    }
+
+                    recipe = null;
+                    progress = 0;
+                    // Don't set working to false yet, wait till the next update because we may have
+                    // another stack waiting.
+
+                    markDirty();
+                }
             }
         }
 
-        // We're checking if there is a world because this might be called from readFromNBT
-        if (worldObj != null && wasWorking != working) {
+        if (wasWorking != working) {
             RefinedStorageUtils.updateBlock(worldObj, pos);
         }
-    }
-
-    public void stop() {
-        recipe = null;
-        progress = 0;
-        working = false;
-        markDirty();
     }
 
     @Override
@@ -107,6 +94,14 @@ public class TileSolderer extends TileMachine {
         super.onDisconnected(world);
 
         stop();
+    }
+
+    public void stop() {
+        progress = 0;
+        working = false;
+        recipe = null;
+
+        markDirty();
     }
 
     @Override
