@@ -66,7 +66,7 @@ public class TileSolderer extends TileMachine {
                     if (items.getStackInSlot(3) != null) {
                         items.getStackInSlot(3).stackSize += recipe.getResult().stackSize;
                     } else {
-                        items.setStackInSlot(3, recipe.getResult());
+                        items.setStackInSlot(3, recipe.getResult().copy());
                     }
 
                     for (int i = 0; i < 3; ++i) {

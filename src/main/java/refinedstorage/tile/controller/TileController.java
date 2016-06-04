@@ -317,7 +317,9 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
         for (CraftingPattern pattern : patterns) {
             for (ItemStack output : pattern.getOutputs()) {
-                items.add(ItemHandlerHelper.copyStackWithSize(output, 0));
+                ItemStack patternStack = output.copy();
+                patternStack.stackSize = 0;
+                items.add(patternStack);
             }
         }
 
