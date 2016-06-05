@@ -294,9 +294,9 @@ public class GuiGrid extends GuiBase {
         }
 
         if (qty >= 1000000) {
-            return String.format(Locale.US, "%.1f", Math.floor(qty / 1000000)).replace(".0", "") + "M";
+            return String.format(Locale.US, "%.1f", (float) qty / 1000000).replace(".0", "") + "M";
         } else if (qty >= 1000) {
-            return String.format(Locale.US, "%.1f", Math.floor(qty / 1000)).replace(".0", "") + "K";
+            return String.format(Locale.US, "%.1f", (float) qty / 1000).replace(".0", "") + "K";
         } else if (qty == 1) {
             return null;
         } else if (qty == 0) {
