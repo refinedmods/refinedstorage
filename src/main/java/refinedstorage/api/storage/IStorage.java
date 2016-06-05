@@ -32,9 +32,9 @@ public interface IStorage {
      * For example: this function is called for dirt (64x) while there is only dirt (32x), return the dirt (32x) anyway.
      *
      * @param stack A prototype of the stack to push, do NOT modify this stack
-     * @param size  The amount of that prototype we're pushing
+     * @param size  The amount of that prototype we're taking
      * @param flags On what we are comparing to take the item, see {@link CompareFlags}
-     * @return The ItemStack we took from the system, or null if we didn't take anything
+     * @return null if we didn't take anything, or an ItemStack with the take result
      */
     ItemStack take(ItemStack stack, int size, int flags);
 
