@@ -3,7 +3,7 @@ package refinedstorage.api.storage;
 import java.util.List;
 
 /**
- * Should be implement as a capability on tile entities.
+ * Should be implemented as a capability on tile entities.
  */
 public interface IStorageProvider {
     /**

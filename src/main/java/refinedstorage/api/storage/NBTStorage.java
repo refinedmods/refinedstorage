@@ -29,6 +29,10 @@ public abstract class NBTStorage implements IStorage {
 
     private List<ItemStack> stacks = new ArrayList<ItemStack>();
 
+    /**
+     * @param tag      The NBT tag we are reading from and writing the amount stored to, has to be initialized with {@link NBTStorage#createNBT()}
+     * @param capacity The capacity of this storage
+     */
     public NBTStorage(NBTTagCompound tag, int capacity) {
         this.tag = tag;
         this.capacity = capacity;
@@ -56,6 +60,11 @@ public abstract class NBTStorage implements IStorage {
         }
     }
 
+    /**
+     * Writes the items to the NBT tag, check for {@link NBTStorage#isDirty()} before doing this to be efficient.
+     *
+     * @param tag The tag to write to
+     */
     public void writeToNBT(NBTTagCompound tag) {
         NBTTagList list = new NBTTagList();
 
