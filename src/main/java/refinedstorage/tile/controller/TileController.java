@@ -16,6 +16,7 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.RefinedStorageCapabilities;
 import refinedstorage.autocrafting.CraftingPattern;
 import refinedstorage.autocrafting.task.BasicCraftingTask;
 import refinedstorage.autocrafting.task.ICraftingTask;
@@ -27,7 +28,6 @@ import refinedstorage.container.ContainerGrid;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.network.MessageGridItems;
 import refinedstorage.storage.IStorage;
-import refinedstorage.storage.IStorageProvider;
 import refinedstorage.tile.*;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
@@ -259,8 +259,8 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
                 this.wirelessGridRange += ((TileWirelessTransmitter) machine).getRange();
             }
 
-            if (machine instanceof IStorageProvider) {
-                ((IStorageProvider) machine).provide(storages);
+            if (machine.hasCapability(RefinedStorageCapabilities.STORAGE_PROVIDER_CAPABILITY, EnumFacing.DOWN)) {
+                machine.getCapability(RefinedStorageCapabilities.STORAGE_PROVIDER_CAPABILITY, EnumFacing.DOWN).provide(storages);
             }
 
             if (machine instanceof TileCrafter) {

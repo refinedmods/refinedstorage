@@ -11,12 +11,17 @@ import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.RefinedStorageCapabilities;
+import refinedstorage.api.storage.IStorageProvider;
 import refinedstorage.block.EnumStorageType;
 import refinedstorage.container.ContainerDiskDrive;
 import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.network.MessagePriorityUpdate;
-import refinedstorage.storage.*;
+import refinedstorage.storage.DiskStorage;
+import refinedstorage.storage.IStorage;
+import refinedstorage.storage.IStorageGui;
+import refinedstorage.storage.NBTStorage;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.IModeConfig;
 import refinedstorage.tile.config.IRedstoneModeConfig;
@@ -257,6 +262,8 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return (T) disks;
+        } else if (capability == RefinedStorageCapabilities.STORAGE_PROVIDER_CAPABILITY) {
+            return (T) this;
         }
 
         return super.getCapability(capability, facing);
@@ -264,6 +271,6 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
 
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || capability == RefinedStorageCapabilities.STORAGE_PROVIDER_CAPABILITY || super.hasCapability(capability, facing);
     }
 }

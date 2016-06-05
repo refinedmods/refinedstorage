@@ -30,7 +30,7 @@ public class SoldererRegistry {
     }
 
     /**
-     * @param items The item handler, where slots 0 - 2 are the row slots
+     * @param items An item handler, where slots 0 - 2 are the row slots
      * @return The recipe
      */
     public static ISoldererRecipe getRecipe(IItemHandler items) {

@@ -18,6 +18,7 @@ public abstract class NBTStorage implements IStorage {
     public static final String NBT_ITEM_QUANTITY = "Quantity";
     public static final String NBT_ITEM_DAMAGE = "Damage";
     public static final String NBT_ITEM_NBT = "NBT";
+    public static final String NBT_CAPS = "Caps";
 
     private NBTTagCompound tag;
     private int capacity;

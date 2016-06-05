@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
  */
 public interface ISoldererRecipe {
     /**
-     * @param row The solderer row (between 1 - 3)
+     * @param row The solderer row (between 0 - 2)
      * @return A stack for the given row, can be null for an empty row
      */
     ItemStack getRow(int row);

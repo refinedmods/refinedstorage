@@ -3,16 +3,23 @@ package refinedstorage.tile;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.RefinedStorageCapabilities;
+import refinedstorage.api.storage.IStorageProvider;
 import refinedstorage.block.BlockStorage;
 import refinedstorage.block.EnumStorageType;
 import refinedstorage.container.ContainerStorage;
 import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.network.MessagePriorityUpdate;
-import refinedstorage.storage.*;
+import refinedstorage.storage.IStorage;
+import refinedstorage.storage.IStorageGui;
+import refinedstorage.storage.NBTStorage;
+import refinedstorage.storage.StorageBlockStorage;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.IModeConfig;
 import refinedstorage.tile.config.IRedstoneModeConfig;
@@ -216,5 +223,19 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
     @Override
     public int getCapacity() {
         return getType().getCapacity();
+    }
+
+    @Override
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+        if (capability == RefinedStorageCapabilities.STORAGE_PROVIDER_CAPABILITY) {
+            return (T) this;
+        }
+
+        return super.getCapability(capability, facing);
+    }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+        return capability == RefinedStorageCapabilities.STORAGE_PROVIDER_CAPABILITY || super.hasCapability(capability, facing);
     }
 }
