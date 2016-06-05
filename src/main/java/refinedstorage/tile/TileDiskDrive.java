@@ -12,24 +12,40 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.RefinedStorageCapabilities;
+import refinedstorage.api.storage.IStorage;
 import refinedstorage.api.storage.IStorageProvider;
+import refinedstorage.api.storage.NBTStorage;
 import refinedstorage.block.EnumStorageType;
 import refinedstorage.container.ContainerDiskDrive;
 import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.network.MessagePriorityUpdate;
-import refinedstorage.storage.DiskStorage;
-import refinedstorage.storage.IStorage;
 import refinedstorage.storage.IStorageGui;
-import refinedstorage.storage.NBTStorage;
-import refinedstorage.tile.config.ICompareConfig;
-import refinedstorage.tile.config.IModeConfig;
-import refinedstorage.tile.config.IRedstoneModeConfig;
-import refinedstorage.tile.config.ModeConstants;
+import refinedstorage.tile.config.*;
 
 import java.util.List;
 
 public class TileDiskDrive extends TileMachine implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig {
+    public class DiskStorage extends NBTStorage {
+        public DiskStorage(ItemStack disk) {
+            super(disk.getTagCompound(), EnumStorageType.getById(disk.getItemDamage()).getCapacity());
+        }
+
+        @Override
+        public int getPriority() {
+            return TileDiskDrive.this.getPriority();
+        }
+
+        @Override
+        public ItemStack push(ItemStack stack, boolean simulate) {
+            if (!ModeFilter.respectsMode(getFilters(), getModeConfig(), getCompare(), stack)) {
+                return stack;
+            }
+
+            return super.push(stack, simulate);
+        }
+    }
+
     public static final String NBT_PRIORITY = "Priority";
     public static final String NBT_COMPARE = "Compare";
     public static final String NBT_MODE = "Mode";
@@ -47,7 +63,7 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
         if (disks.getStackInSlot(slot) == null) {
             storages[slot] = null;
         } else if (storages[slot] == null) {
-            storages[slot] = new DiskStorage(disks.getStackInSlot(slot), this);
+            storages[slot] = new DiskStorage(disks.getStackInSlot(slot));
         }
 
         return storages[slot];

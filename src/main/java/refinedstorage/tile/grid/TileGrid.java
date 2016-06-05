@@ -182,11 +182,7 @@ public class TileGrid extends TileMachine implements IGrid {
 
         for (ItemStack craftedItem : craftedItemsList) {
             if (!player.inventory.addItemStackToInventory(craftedItem.copy())) {
-                if (controller != null && controller.push(craftedItem)) {
-                    // NO OP
-                } else {
-                    InventoryHelper.spawnItemStack(player.worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), craftedItem);
-                }
+                InventoryHelper.spawnItemStack(player.worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), craftedItem);
             }
         }
 
@@ -232,8 +228,10 @@ public class TileGrid extends TileMachine implements IGrid {
 
                 if (slot != null) {
                     if (getType() == EnumGridType.CRAFTING) {
-                        if (!controller.push(slot)) {
+                        if (controller.push(slot, true) != null) {
                             return;
+                        } else {
+                            controller.push(slot, false);
                         }
                     }
 

@@ -1,6 +1,7 @@
 package refinedstorage.tile.controller;
 
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.autocrafting.CraftingPattern;
@@ -49,7 +50,7 @@ public class StorageHandler {
         if (took != null) {
             if (GridPullFlags.isPullingWithShift(flags)) {
                 if (!player.inventory.addItemStackToInventory(took.copy())) {
-                    controller.push(took);
+                    InventoryHelper.spawnItemStack(player.worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), took);
                 }
             } else {
                 player.inventory.setItemStack(took);
@@ -74,24 +75,24 @@ public class StorageHandler {
         }
 
         if (stack != null) {
-            boolean success = controller.push(stack);
+            if (playerSlot == -1) {
+                if (one) {
+                    if (controller.push(stack, true) == null) {
+                        controller.push(stack, false);
 
-            if (success) {
-                if (playerSlot == -1) {
-                    if (one) {
                         player.inventory.getItemStack().stackSize--;
 
                         if (player.inventory.getItemStack().stackSize == 0) {
                             player.inventory.setItemStack(null);
                         }
-                    } else {
-                        player.inventory.setItemStack(null);
                     }
-
-                    player.updateHeldItem();
                 } else {
-                    player.inventory.setInventorySlotContents(playerSlot, null);
+                    player.inventory.setItemStack(controller.push(stack, false));
                 }
+
+                player.updateHeldItem();
+            } else {
+                player.inventory.setInventorySlotContents(playerSlot, controller.push(stack, false));
             }
 
             controller.getWirelessGridHandler().drainEnergy(player, ItemWirelessGrid.USAGE_PUSH);

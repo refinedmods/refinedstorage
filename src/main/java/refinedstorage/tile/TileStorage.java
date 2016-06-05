@@ -2,6 +2,7 @@ package refinedstorage.tile;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -10,24 +11,40 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.RefinedStorageCapabilities;
+import refinedstorage.api.storage.IStorage;
 import refinedstorage.api.storage.IStorageProvider;
+import refinedstorage.api.storage.NBTStorage;
 import refinedstorage.block.BlockStorage;
 import refinedstorage.block.EnumStorageType;
 import refinedstorage.container.ContainerStorage;
 import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.network.MessagePriorityUpdate;
-import refinedstorage.storage.IStorage;
 import refinedstorage.storage.IStorageGui;
-import refinedstorage.storage.NBTStorage;
-import refinedstorage.storage.StorageBlockStorage;
-import refinedstorage.tile.config.ICompareConfig;
-import refinedstorage.tile.config.IModeConfig;
-import refinedstorage.tile.config.IRedstoneModeConfig;
-import refinedstorage.tile.config.ModeConstants;
+import refinedstorage.tile.config.*;
 
 import java.util.List;
 
 public class TileStorage extends TileMachine implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig {
+    class StorageBlockStorage extends NBTStorage {
+        public StorageBlockStorage() {
+            super(TileStorage.this.getStorageTag(), TileStorage.this.getCapacity());
+        }
+
+        @Override
+        public int getPriority() {
+            return storage.getPriority();
+        }
+
+        @Override
+        public ItemStack push(ItemStack stack, boolean simulate) {
+            if (!ModeFilter.respectsMode(filters, TileStorage.this, compare, stack)) {
+                return stack;
+            }
+
+            return super.push(stack, simulate);
+        }
+    }
+
     public static final String NBT_STORAGE = "Storage";
     public static final String NBT_PRIORITY = "Priority";
     public static final String NBT_COMPARE = "Compare";
@@ -54,7 +71,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
     @Override
     public void updateMachine() {
         if (storage == null && storageTag != null) {
-            storage = new StorageBlockStorage(this);
+            storage = new StorageBlockStorage();
         }
 
         if (storage != null && storage.isDirty()) {

@@ -1,7 +1,5 @@
 package refinedstorage.api.storage;
 
-import refinedstorage.storage.IStorage;
-
 import java.util.List;
 
 /**

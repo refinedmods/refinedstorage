@@ -11,8 +11,8 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorageItems;
+import refinedstorage.api.storage.NBTStorage;
 import refinedstorage.block.EnumStorageType;
-import refinedstorage.storage.NBTStorage;
 
 import java.util.List;
 

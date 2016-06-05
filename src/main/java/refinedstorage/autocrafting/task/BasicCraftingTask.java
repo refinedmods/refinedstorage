@@ -89,23 +89,25 @@ public class BasicCraftingTask implements ICraftingTask {
         return done;
     }
 
+    // @todo: handle no space
     @Override
     public void onDone(TileController controller) {
         for (ItemStack output : pattern.getOutputs()) {
-            controller.push(output);
+            controller.push(output, false);
         }
 
         if (pattern.getByproducts() != null) {
             for (ItemStack byproduct : pattern.getByproducts()) {
-                controller.push(byproduct);
+                controller.push(byproduct, false);
             }
         }
     }
 
+    // @todo: handle no space
     @Override
     public void onCancelled(TileController controller) {
         for (ItemStack took : itemsTook) {
-            controller.push(took);
+            controller.push(took, false);
         }
     }
 

@@ -1,4 +1,4 @@
-package refinedstorage.storage;
+package refinedstorage.api.storage;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -10,6 +10,9 @@ import refinedstorage.RefinedStorageUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A implementation of {@link IStorage} that stores storage items in NBT.
+ */
 public abstract class NBTStorage implements IStorage {
     public static final String NBT_ITEMS = "Items";
     public static final String NBT_STORED = "Stored";
@@ -18,7 +21,6 @@ public abstract class NBTStorage implements IStorage {
     public static final String NBT_ITEM_QUANTITY = "Quantity";
     public static final String NBT_ITEM_DAMAGE = "Damage";
     public static final String NBT_ITEM_NBT = "NBT";
-    public static final String NBT_CAPS = "Caps";
 
     private NBTTagCompound tag;
     private int capacity;
@@ -80,22 +82,64 @@ public abstract class NBTStorage implements IStorage {
     }
 
     @Override
-    public void push(ItemStack stack) {
-        tag.setInteger(NBT_STORED, getStored() + stack.stackSize);
-
+    public ItemStack push(ItemStack stack, boolean simulate) {
         for (ItemStack s : stacks) {
             if (RefinedStorageUtils.compareStackNoQuantity(s, stack)) {
-                s.stackSize += stack.stackSize;
+                if (!simulate) {
+                    markDirty();
+                }
 
-                markDirty();
+                if (getStored() + stack.stackSize > getCapacity()) {
+                    int overflow = getCapacity() - s.stackSize;
 
-                return;
+                    if (overflow == 0) {
+                        return stack;
+                    }
+
+                    if (!simulate) {
+                        tag.setInteger(NBT_STORED, getStored() + overflow);
+
+                        s.stackSize += overflow;
+                    }
+
+                    return ItemHandlerHelper.copyStackWithSize(s, stack.stackSize - overflow);
+                } else {
+                    if (!simulate) {
+                        tag.setInteger(NBT_STORED, getStored() + stack.stackSize);
+
+                        s.stackSize += stack.stackSize;
+                    }
+
+                    return null;
+                }
             }
         }
 
-        stacks.add(stack.copy());
+        if (!simulate) {
+            markDirty();
+        }
 
-        markDirty();
+        if (getStored() + stack.stackSize > getCapacity()) {
+            int overflow = getCapacity() - stack.stackSize;
+
+            if (overflow == 0) {
+                return stack;
+            }
+
+            if (!simulate) {
+                tag.setInteger(NBT_STORED, getStored() + overflow);
+
+                stacks.add(ItemHandlerHelper.copyStackWithSize(stack, overflow));
+            }
+
+            return ItemHandlerHelper.copyStackWithSize(stack, stack.stackSize - overflow);
+        } else {
+            tag.setInteger(NBT_STORED, getStored() + stack.stackSize);
+
+            stacks.add(stack.copy());
+
+            return null;
+        }
     }
 
     @Override
@@ -121,11 +165,6 @@ public abstract class NBTStorage implements IStorage {
         }
 
         return null;
-    }
-
-    @Override
-    public boolean mayPush(ItemStack stack) {
-        return capacity == -1 || (getStored() + stack.stackSize) <= capacity;
     }
 
     @Override

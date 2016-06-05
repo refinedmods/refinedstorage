@@ -64,8 +64,14 @@ public class TileDestructor extends TileMachine implements ICompareConfig, IMode
                     for (ItemStack drop : drops) {
                         // We check if the controller isn't null here because when a destructor faces a machine block and removes it
                         // it will essentially remove this block itself from the network without knowing
-                        if (controller == null || !controller.push(drop)) {
+                        if (controller == null) {
                             InventoryHelper.spawnItemStack(worldObj, front.getX(), front.getY(), front.getZ(), drop);
+                        } else {
+                            ItemStack remainder = controller.push(drop, false);
+
+                            if (remainder != null) {
+                                InventoryHelper.spawnItemStack(worldObj, front.getX(), front.getY(), front.getZ(), remainder);
+                            }
                         }
                     }
                 }

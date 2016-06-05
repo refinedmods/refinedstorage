@@ -47,9 +47,7 @@ public class TileInterface extends TileMachine implements ICompareConfig {
             currentSlot++;
         } else {
             if (ticks % RefinedStorageUtils.getSpeed(upgrades) == 0) {
-                if (controller.push(ItemHandlerHelper.copyStackWithSize(slot, 1))) {
-                    importItems.extractItem(currentSlot, 1, false);
-                }
+                importItems.setStackInSlot(currentSlot, controller.push(ItemHandlerHelper.copyStackWithSize(slot, 1), false));
             }
         }
 
@@ -62,9 +60,7 @@ public class TileInterface extends TileMachine implements ICompareConfig {
 
                 if (got != null) {
                     if (!RefinedStorageUtils.compareStack(wanted, got, compare)) {
-                        if (controller.push(got)) {
-                            exportItems.setStackInSlot(i, null);
-                        }
+                        exportItems.setStackInSlot(i, controller.push(got, false));
                     } else {
                         mayTake = true;
                     }
@@ -90,9 +86,7 @@ public class TileInterface extends TileMachine implements ICompareConfig {
                     }
                 }
             } else if (got != null) {
-                if (controller.push(got)) {
-                    exportItems.setStackInSlot(i, null);
-                }
+                exportItems.setStackInSlot(i, controller.push(got, false));
             }
         }
     }

@@ -61,7 +61,7 @@ public class TileExporter extends TileMachine implements ICompareConfig {
                             return;
                         }
 
-                        controller.push(took);
+                        controller.push(took, false);
                     } else if (RefinedStorageUtils.hasUpgrade(upgrades, ItemUpgrade.TYPE_CRAFTING)) {
                         if (scheduler.canSchedule(compare, slot)) {
                             scheduler.schedule(controller, compare, slot);

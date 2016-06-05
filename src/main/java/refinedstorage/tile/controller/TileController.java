@@ -17,6 +17,7 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.RefinedStorageCapabilities;
+import refinedstorage.api.storage.IStorage;
 import refinedstorage.autocrafting.CraftingPattern;
 import refinedstorage.autocrafting.task.BasicCraftingTask;
 import refinedstorage.autocrafting.task.ICraftingTask;
@@ -27,7 +28,6 @@ import refinedstorage.container.ContainerController;
 import refinedstorage.container.ContainerGrid;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.network.MessageGridItems;
-import refinedstorage.storage.IStorage;
 import refinedstorage.tile.*;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
@@ -367,29 +367,39 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
         RefinedStorage.NETWORK.sendTo(new MessageGridItems(this), player);
     }
 
-    public boolean push(ItemStack stack) {
+    public ItemStack push(ItemStack stack, boolean simulate) {
+        ItemStack remainder = stack;
+
         for (IStorage storage : storages) {
-            if (storage.mayPush(stack)) {
-                storage.push(stack);
+            remainder = storage.push(remainder, simulate);
 
-                syncItems();
-                syncItemsWithClients();
-
-                for (int i = 0; i < stack.stackSize; ++i) {
-                    if (!craftingTasks.empty()) {
-                        ICraftingTask top = craftingTasks.peek();
-
-                        if (top instanceof ProcessingCraftingTask) {
-                            ((ProcessingCraftingTask) top).onPushed(stack);
-                        }
-                    }
-                }
-
-                return true;
+            if (remainder == null) {
+                break;
             }
         }
 
-        return false;
+        if (!simulate) {
+            syncItems();
+            syncItemsWithClients();
+
+            int sizePushed = stack.stackSize;
+
+            if (remainder != null) {
+                sizePushed = stack.stackSize - remainder.stackSize;
+            }
+
+            for (int i = 0; i < sizePushed; ++i) {
+                if (!craftingTasks.empty()) {
+                    ICraftingTask top = craftingTasks.peek();
+
+                    if (top instanceof ProcessingCraftingTask) {
+                        ((ProcessingCraftingTask) top).onPushed(stack);
+                    }
+                }
+            }
+        }
+
+        return remainder;
     }
 
     public ItemStack take(ItemStack stack, int size) {

@@ -52,9 +52,7 @@ public class MessageGridCraftingPush extends MessageHandlerPlayerToServer<Messag
                 ItemStack stack = grid.getMatrix().getStackInSlot(message.craftingSlot);
 
                 if (stack != null) {
-                    if (grid.getController().push(stack)) {
-                        grid.getMatrix().setInventorySlotContents(message.craftingSlot, null);
-                    }
+                    grid.getMatrix().setInventorySlotContents(message.craftingSlot, grid.getController().push(stack, false));
                 }
             }
         }
