@@ -145,7 +145,9 @@ public abstract class NBTStorage implements IStorage {
         } else {
             tag.setInteger(NBT_STORED, getStored() + stack.stackSize);
 
-            stacks.add(stack.copy());
+            if (!simulate) {
+                stacks.add(stack.copy());
+            }
 
             return null;
         }
