@@ -13,7 +13,7 @@ import refinedstorage.network.MessageWirelessGridCraftingStart;
 import refinedstorage.network.MessageWirelessGridSettingsUpdate;
 import refinedstorage.network.MessageWirelessGridStoragePull;
 import refinedstorage.network.MessageWirelessGridStoragePush;
-import refinedstorage.storage.ClientItem;
+import refinedstorage.tile.ClientItem;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.controller.TileController;
 

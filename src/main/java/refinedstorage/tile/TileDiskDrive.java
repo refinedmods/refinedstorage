@@ -20,7 +20,6 @@ import refinedstorage.container.ContainerDiskDrive;
 import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.network.MessagePriorityUpdate;
-import refinedstorage.storage.IStorageGui;
 import refinedstorage.tile.config.*;
 
 import java.util.List;

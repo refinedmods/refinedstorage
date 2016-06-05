@@ -1,4 +1,4 @@
-package refinedstorage.storage;
+package refinedstorage.tile;
 
 import net.minecraft.item.ItemStack;
 

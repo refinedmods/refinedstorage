@@ -7,7 +7,7 @@ import refinedstorage.container.ContainerStorage;
 import refinedstorage.gui.sidebutton.SideButtonCompare;
 import refinedstorage.gui.sidebutton.SideButtonMode;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
-import refinedstorage.storage.IStorageGui;
+import refinedstorage.tile.IStorageGui;
 
 import java.io.IOException;
 

@@ -17,7 +17,6 @@ import refinedstorage.api.storage.IStorageProvider;
 import refinedstorage.container.ContainerStorage;
 import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.network.MessagePriorityUpdate;
-import refinedstorage.storage.IStorageGui;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.IModeConfig;
 import refinedstorage.tile.config.IRedstoneModeConfig;

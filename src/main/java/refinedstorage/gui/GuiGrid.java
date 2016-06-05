@@ -22,7 +22,7 @@ import refinedstorage.network.GridPullFlags;
 import refinedstorage.network.MessageGridCraftingClear;
 import refinedstorage.network.MessageGridCraftingPush;
 import refinedstorage.network.MessageGridPatternCreate;
-import refinedstorage.storage.ClientItem;
+import refinedstorage.tile.ClientItem;
 import refinedstorage.tile.grid.IGrid;
 import refinedstorage.tile.grid.TileGrid;
 import refinedstorage.tile.grid.WirelessGrid;

@@ -19,7 +19,6 @@ import refinedstorage.block.EnumStorageType;
 import refinedstorage.container.ContainerStorage;
 import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.network.MessagePriorityUpdate;
-import refinedstorage.storage.IStorageGui;
 import refinedstorage.tile.config.*;
 
 import java.util.List;

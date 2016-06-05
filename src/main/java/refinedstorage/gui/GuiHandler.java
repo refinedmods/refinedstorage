@@ -9,7 +9,6 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.*;
-import refinedstorage.storage.IStorageGui;
 import refinedstorage.tile.*;
 import refinedstorage.tile.controller.TileController;
 import refinedstorage.tile.grid.TileGrid;
