@@ -24,7 +24,12 @@ public class TileInterface extends TileMachine implements ICompareConfig {
     private BasicItemHandler importItems = new BasicItemHandler(9, this);
     private BasicItemHandler exportSpecimenItems = new BasicItemHandler(9, this);
     private BasicItemHandler exportItems = new BasicItemHandler(9, this);
-    private BasicItemHandler upgrades = new BasicItemHandler(4, this, new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED));
+    private BasicItemHandler upgrades = new BasicItemHandler(
+        4,
+        this,
+        new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED),
+        new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_STACK)
+    );
 
     private int compare = 0;
 
@@ -47,7 +52,15 @@ public class TileInterface extends TileMachine implements ICompareConfig {
             currentSlot++;
         } else {
             if (ticks % RefinedStorageUtils.getSpeed(upgrades) == 0) {
-                importItems.setStackInSlot(currentSlot, controller.push(ItemHandlerHelper.copyStackWithSize(slot, 1), false));
+                int size = RefinedStorageUtils.hasUpgrade(upgrades, ItemUpgrade.TYPE_STACK) ? 64 : 1;
+                ItemStack push = ItemHandlerHelper.copyStackWithSize(slot, size);
+                ItemStack remainder = controller.push(push, false);
+
+                if (remainder == null) {
+                    importItems.extractItem(currentSlot, size, false);
+                } else {
+                    importItems.extractItem(currentSlot, size - remainder.stackSize, false);
+                }
             }
         }
 
