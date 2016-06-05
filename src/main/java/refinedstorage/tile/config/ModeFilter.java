@@ -4,7 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorageUtils;
 
-public class ModeFilter {
+public final class ModeFilter {
     public static boolean respectsMode(IItemHandler filters, IModeConfig mode, int compare, ItemStack stack) {
         if (mode.getMode() == ModeConstants.WHITELIST) {
             int slots = 0;

@@ -9,7 +9,7 @@ import refinedstorage.tile.TileRelay;
 
 import java.util.Set;
 
-public class ControllerSearcher {
+public final class ControllerSearcher {
     public static TileController search(World world, BlockPos current, Set<String> visited) {
         if (visited.contains(current.getX() + "," + current.getY() + "," + current.getZ())) {
             return null;

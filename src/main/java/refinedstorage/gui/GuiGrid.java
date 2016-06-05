@@ -170,21 +170,18 @@ public class GuiGrid extends GuiBase {
     }
 
     public boolean isHoveringOverClear(int mouseX, int mouseY) {
-        if (grid.getType() == EnumGridType.CRAFTING) {
-            return inBounds(81, 105, 7, 7, mouseX, mouseY);
-        } else if (grid.getType() == EnumGridType.PATTERN) {
-            return inBounds(64, 105, 7, 7, mouseX, mouseY);
+        switch (grid.getType()) {
+            case CRAFTING:
+                return inBounds(81, 105, 7, 7, mouseX, mouseY);
+            case PATTERN:
+                return inBounds(64, 105, 7, 7, mouseX, mouseY);
+            default:
+                return false;
         }
-
-        return false;
     }
 
     public boolean isHoveringOverCreatePattern(int mouseX, int mouseY) {
-        if (grid.getType() == EnumGridType.PATTERN) {
-            return inBounds(152, 124, 16, 16, mouseX, mouseY) && ((TileGrid) grid).mayCreatePattern();
-        }
-
-        return false;
+        return grid.getType() == EnumGridType.PATTERN && inBounds(152, 124, 16, 16, mouseX, mouseY) && ((TileGrid) grid).mayCreatePattern();
     }
 
     @Override
@@ -297,9 +294,9 @@ public class GuiGrid extends GuiBase {
         }
 
         if (qty >= 1000000) {
-            return String.format("%.1f", (float) qty / 1000000).replace(",", ".").replace(".0", "") + "M";
+            return String.format(Locale.US, "%.1f", Math.floor(qty / 1000000)).replace(".0", "") + "M";
         } else if (qty >= 1000) {
-            return String.format("%.1f", (float) qty / 1000).replace(",", ".").replace(".0", "") + "K";
+            return String.format(Locale.US, "%.1f", Math.floor(qty / 1000)).replace(".0", "") + "K";
         } else if (qty == 1) {
             return null;
         } else if (qty == 0) {
