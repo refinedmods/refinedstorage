@@ -4,6 +4,10 @@
 **Bugfixes**
 - Fixed not being able to place sugar cane
 - Fixed not being able to place seeds
+- Fixed stacks not splitting between storages correctly
+
+**Features**
+- Added an API
 
 ### 0.7.8
 **Bugfixes**
