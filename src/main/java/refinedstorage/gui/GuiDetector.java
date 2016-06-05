@@ -3,7 +3,7 @@ package refinedstorage.gui;
 import com.google.common.primitives.Ints;
 import net.minecraft.client.gui.GuiTextField;
 import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.storage.CompareFlags;
 import refinedstorage.container.ContainerDetector;
 import refinedstorage.gui.sidebutton.SideButtonCompare;
 import refinedstorage.gui.sidebutton.SideButtonDetectorMode;
@@ -25,8 +25,8 @@ public class GuiDetector extends GuiBase {
 
     @Override
     public void init(int x, int y) {
-        addSideButton(new SideButtonCompare(detector, RefinedStorageUtils.COMPARE_DAMAGE));
-        addSideButton(new SideButtonCompare(detector, RefinedStorageUtils.COMPARE_NBT));
+        addSideButton(new SideButtonCompare(detector, CompareFlags.COMPARE_DAMAGE));
+        addSideButton(new SideButtonCompare(detector, CompareFlags.COMPARE_NBT));
 
         addSideButton(new SideButtonDetectorMode(detector));
 

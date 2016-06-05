@@ -18,15 +18,12 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.ArrayUtils;
+import refinedstorage.api.storage.CompareFlags;
 import refinedstorage.item.ItemUpgrade;
 
-public class RefinedStorageUtils {
+public final class RefinedStorageUtils {
     public static final String NBT_INVENTORY = "Inventory_%d";
     public static final String NBT_SLOT = "Slot";
-
-    public static final int COMPARE_DAMAGE = 1;
-    public static final int COMPARE_NBT = 2;
-    public static final int COMPARE_QUANTITY = 4;
 
     public static void writeItems(IItemHandler handler, int id, NBTTagCompound nbt) {
         NBTTagList tagList = new NBTTagList();
@@ -97,7 +94,7 @@ public class RefinedStorageUtils {
     }
 
     public static boolean compareStack(ItemStack left, ItemStack right) {
-        return compareStack(left, right, COMPARE_NBT | COMPARE_DAMAGE | COMPARE_QUANTITY);
+        return compareStack(left, right, CompareFlags.COMPARE_NBT | CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_QUANTITY);
     }
 
     public static boolean compareStack(ItemStack left, ItemStack right, int flags) {
@@ -109,19 +106,19 @@ public class RefinedStorageUtils {
             return false;
         }
 
-        if ((flags & COMPARE_DAMAGE) == COMPARE_DAMAGE) {
+        if ((flags & CompareFlags.COMPARE_DAMAGE) == CompareFlags.COMPARE_DAMAGE) {
             if (left.getItemDamage() != right.getItemDamage()) {
                 return false;
             }
         }
 
-        if ((flags & COMPARE_NBT) == COMPARE_NBT) {
+        if ((flags & CompareFlags.COMPARE_NBT) == CompareFlags.COMPARE_NBT) {
             if (left.hasTagCompound() && !left.getTagCompound().equals(right.getTagCompound())) {
                 return false;
             }
         }
 
-        if ((flags & COMPARE_QUANTITY) == COMPARE_QUANTITY) {
+        if ((flags & CompareFlags.COMPARE_QUANTITY) == CompareFlags.COMPARE_QUANTITY) {
             if (left.stackSize != right.stackSize) {
                 return false;
             }
@@ -131,7 +128,7 @@ public class RefinedStorageUtils {
     }
 
     public static boolean compareStackNoQuantity(ItemStack left, ItemStack right) {
-        return compareStack(left, right, COMPARE_NBT | COMPARE_DAMAGE);
+        return compareStack(left, right, CompareFlags.COMPARE_NBT | CompareFlags.COMPARE_DAMAGE);
     }
 
     public static boolean compareStackOreDict(ItemStack left, ItemStack right) {

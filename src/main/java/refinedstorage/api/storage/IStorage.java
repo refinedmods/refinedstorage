@@ -11,7 +11,7 @@ import java.util.List;
 public interface IStorage {
     /**
      * Adds the items to the storage network.
-     * This is called every 20 ticks or when the storage changes.
+     * This is called every 20 ticks or when the storage changes, so don't make this method too resource intensive.
      *
      * @param items A list of previously added items
      */
@@ -33,9 +33,8 @@ public interface IStorage {
      *
      * @param stack A prototype of the stack to push, do NOT modify this stack
      * @param size  The amount of that prototype we're pushing
-     * @param flags The comparison flags, see {@link refinedstorage.RefinedStorageUtils}
+     * @param flags On what we are comparing to take the item, see {@link CompareFlags}
      * @return The ItemStack we took from the system, or null if we didn't take anything
-     * @todo Move the comparison flags to the API package
      */
     ItemStack take(ItemStack stack, int size, int flags);
 

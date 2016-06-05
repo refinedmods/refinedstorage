@@ -17,6 +17,7 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.RefinedStorageCapabilities;
+import refinedstorage.api.storage.CompareFlags;
 import refinedstorage.api.storage.IStorage;
 import refinedstorage.autocrafting.CraftingPattern;
 import refinedstorage.autocrafting.task.BasicCraftingTask;
@@ -229,7 +230,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     }
 
     public CraftingPattern getPattern(ItemStack pattern) {
-        return getPattern(pattern, RefinedStorageUtils.COMPARE_DAMAGE | RefinedStorageUtils.COMPARE_NBT);
+        return getPattern(pattern, CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_NBT);
     }
 
     public CraftingPattern getPattern(ItemStack pattern, int flags) {
@@ -403,7 +404,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     }
 
     public ItemStack take(ItemStack stack, int size) {
-        return take(stack, size, RefinedStorageUtils.COMPARE_DAMAGE | RefinedStorageUtils.COMPARE_NBT);
+        return take(stack, size, CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_NBT);
     }
 
     public ItemStack take(ItemStack stack, int size, int flags) {
