@@ -92,31 +92,31 @@ public abstract class NBTStorage implements IStorage {
 
     @Override
     public ItemStack push(ItemStack stack, boolean simulate) {
-        for (ItemStack s : stacks) {
-            if (RefinedStorageUtils.compareStackNoQuantity(s, stack)) {
+        for (ItemStack otherStack : stacks) {
+            if (RefinedStorageUtils.compareStackNoQuantity(otherStack, stack)) {
                 if (!simulate) {
                     markDirty();
                 }
 
                 if (getStored() + stack.stackSize > getCapacity()) {
-                    int overflow = getCapacity() - s.stackSize;
+                    int remainingSpace = getCapacity() - getStored();
 
-                    if (overflow == 0) {
+                    if (remainingSpace <= 0) {
                         return stack;
                     }
 
                     if (!simulate) {
-                        tag.setInteger(NBT_STORED, getStored() + overflow);
+                        tag.setInteger(NBT_STORED, getStored() + remainingSpace);
 
-                        s.stackSize += overflow;
+                        otherStack.stackSize += remainingSpace;
                     }
 
-                    return ItemHandlerHelper.copyStackWithSize(s, stack.stackSize - overflow);
+                    return ItemHandlerHelper.copyStackWithSize(otherStack, stack.stackSize - remainingSpace);
                 } else {
                     if (!simulate) {
                         tag.setInteger(NBT_STORED, getStored() + stack.stackSize);
 
-                        s.stackSize += stack.stackSize;
+                        otherStack.stackSize += stack.stackSize;
                     }
 
                     return null;
@@ -129,19 +129,19 @@ public abstract class NBTStorage implements IStorage {
         }
 
         if (getStored() + stack.stackSize > getCapacity()) {
-            int overflow = getCapacity() - stack.stackSize;
+            int remainingSpace = getCapacity() - getStored();
 
-            if (overflow == 0) {
+            if (remainingSpace <= 0) {
                 return stack;
             }
 
             if (!simulate) {
-                tag.setInteger(NBT_STORED, getStored() + overflow);
+                tag.setInteger(NBT_STORED, getStored() + remainingSpace);
 
-                stacks.add(ItemHandlerHelper.copyStackWithSize(stack, overflow));
+                stacks.add(ItemHandlerHelper.copyStackWithSize(stack, remainingSpace));
             }
 
-            return ItemHandlerHelper.copyStackWithSize(stack, stack.stackSize - overflow);
+            return ItemHandlerHelper.copyStackWithSize(stack, stack.stackSize - remainingSpace);
         } else {
             tag.setInteger(NBT_STORED, getStored() + stack.stackSize);
 
@@ -153,23 +153,23 @@ public abstract class NBTStorage implements IStorage {
 
     @Override
     public ItemStack take(ItemStack stack, int size, int flags) {
-        for (ItemStack s : stacks) {
-            if (RefinedStorageUtils.compareStack(s, stack, flags)) {
-                if (size > s.stackSize) {
-                    size = s.stackSize;
+        for (ItemStack otherStack : stacks) {
+            if (RefinedStorageUtils.compareStack(otherStack, stack, flags)) {
+                if (size > otherStack.stackSize) {
+                    size = otherStack.stackSize;
                 }
 
-                if (s.stackSize - size == 0) {
-                    stacks.remove(s);
+                if (otherStack.stackSize - size == 0) {
+                    stacks.remove(otherStack);
                 } else {
-                    s.stackSize -= size;
+                    otherStack.stackSize -= size;
                 }
 
                 tag.setInteger(NBT_STORED, getStored() - size);
 
                 markDirty();
 
-                return ItemHandlerHelper.copyStackWithSize(s, size);
+                return ItemHandlerHelper.copyStackWithSize(otherStack, size);
             }
         }
 

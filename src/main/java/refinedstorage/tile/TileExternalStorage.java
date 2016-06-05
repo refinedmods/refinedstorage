@@ -86,7 +86,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
             }
         }
 
-        return null;
+        return stack;
     }
 
     @Override
