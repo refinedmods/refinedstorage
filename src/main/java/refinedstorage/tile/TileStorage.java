@@ -24,14 +24,14 @@ import refinedstorage.tile.config.*;
 import java.util.List;
 
 public class TileStorage extends TileMachine implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig {
-    class StorageBlockStorage extends NBTStorage {
-        public StorageBlockStorage() {
+    class Storage extends NBTStorage {
+        public Storage() {
             super(TileStorage.this.getStorageTag(), TileStorage.this.getCapacity());
         }
 
         @Override
         public int getPriority() {
-            return storage.getPriority();
+            return priority;
         }
 
         @Override
@@ -53,7 +53,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 
     private NBTTagCompound storageTag = NBTStorage.createNBT();
 
-    private StorageBlockStorage storage;
+    private Storage storage;
 
     private EnumStorageType type;
 
@@ -70,7 +70,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
     @Override
     public void updateMachine() {
         if (storage == null && storageTag != null) {
-            storage = new StorageBlockStorage();
+            storage = new Storage();
         }
 
         if (storage != null && storage.isDirty()) {

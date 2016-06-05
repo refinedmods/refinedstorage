@@ -25,14 +25,14 @@ import refinedstorage.tile.config.*;
 import java.util.List;
 
 public class TileDiskDrive extends TileMachine implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig {
-    public class DiskStorage extends NBTStorage {
-        public DiskStorage(ItemStack disk) {
+    public class Storage extends NBTStorage {
+        public Storage(ItemStack disk) {
             super(disk.getTagCompound(), EnumStorageType.getById(disk.getItemDamage()).getCapacity());
         }
 
         @Override
         public int getPriority() {
-            return TileDiskDrive.this.getPriority();
+            return priority;
         }
 
         @Override
@@ -52,17 +52,17 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
     private BasicItemHandler disks = new BasicItemHandler(8, this, new BasicItemValidator(RefinedStorageItems.STORAGE_DISK));
     private BasicItemHandler filters = new BasicItemHandler(9, this);
 
-    private NBTStorage storages[] = new NBTStorage[8];
+    private Storage storages[] = new Storage[8];
 
     private int priority = 0;
     private int compare = 0;
     private int mode = ModeConstants.WHITELIST;
 
-    public NBTStorage getStorage(int slot) {
+    public Storage getStorage(int slot) {
         if (disks.getStackInSlot(slot) == null) {
             storages[slot] = null;
         } else if (storages[slot] == null) {
-            storages[slot] = new DiskStorage(disks.getStackInSlot(slot));
+            storages[slot] = new Storage(disks.getStackInSlot(slot));
         }
 
         return storages[slot];
@@ -84,7 +84,7 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
     @Override
     public void updateMachine() {
         for (int i = 0; i < disks.getSlots(); ++i) {
-            NBTStorage storage = getStorage(i);
+            Storage storage = getStorage(i);
 
             if (storage != null && storage.isDirty()) {
                 storage.writeToNBT(disks.getStackInSlot(i).getTagCompound());
@@ -98,7 +98,7 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
     @Override
     public void provide(List<IStorage> storages) {
         for (int i = 0; i < disks.getSlots(); ++i) {
-            NBTStorage storage = getStorage(i);
+            Storage storage = getStorage(i);
 
             if (storage != null) {
                 storages.add(storage);
