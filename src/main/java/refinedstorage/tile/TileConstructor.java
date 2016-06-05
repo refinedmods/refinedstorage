@@ -1,12 +1,9 @@
 package refinedstorage.tile;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.inventory.Container;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemBlockSpecial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -19,12 +16,11 @@ import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.autocrafting.CraftingTaskScheduler;
 import refinedstorage.container.ContainerConstructor;
+import refinedstorage.container.slot.SlotSpecimen;
 import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
-
-import java.lang.reflect.Field;
 
 public class TileConstructor extends TileMachine implements ICompareConfig {
     public static final String NBT_COMPARE = "Compare";
@@ -36,29 +32,7 @@ public class TileConstructor extends TileMachine implements ICompareConfig {
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            ItemStack stack = getStackInSlot(0);
-
-            if (stack != null) {
-                Item item = stack.getItem();
-
-                if (item instanceof ItemBlockSpecial) {
-                    try {
-                        Field f = ((ItemBlockSpecial) item).getClass().getDeclaredField("block");
-                        f.setAccessible(true);
-                        block = (Block) f.get(item);
-                    } catch (IllegalAccessException e) {
-                        // NO OP
-                    } catch (NoSuchFieldException e) {
-                        // NO OP
-                    }
-                } else if (item instanceof ItemBlock) {
-                    block = ((ItemBlock) item).getBlock();
-                } else {
-                    block = null;
-                }
-            } else {
-                block = null;
-            }
+            block = SlotSpecimen.getBlockState(worldObj, pos.offset(getDirection()), getStackInSlot(0));
         }
     };
     private BasicItemHandler upgrades = new BasicItemHandler(
@@ -69,7 +43,7 @@ public class TileConstructor extends TileMachine implements ICompareConfig {
     );
 
     private int compare = 0;
-    private Block block;
+    private IBlockState block;
 
     private CraftingTaskScheduler scheduler = new CraftingTaskScheduler();
 
@@ -83,14 +57,14 @@ public class TileConstructor extends TileMachine implements ICompareConfig {
         if (block != null && ticks % RefinedStorageUtils.getSpeed(upgrades, BASE_SPEED, 4) == 0) {
             BlockPos front = pos.offset(getDirection());
 
-            if (worldObj.isAirBlock(front) && block.canPlaceBlockAt(worldObj, front)) {
+            if (worldObj.isAirBlock(front) && block.getBlock().canPlaceBlockAt(worldObj, front)) {
                 ItemStack took = controller.take(filter.getStackInSlot(0), 1, compare);
 
                 if (took != null) {
                     scheduler.resetSchedule();
-                    worldObj.setBlockState(front, block.getStateFromMeta(took.getItemDamage()), 1 | 2);
+                    worldObj.setBlockState(front, block.getBlock().getStateFromMeta(took.getMetadata()), 1 | 2);
                     // From ItemBlock.onItemUse
-                    SoundType blockSound = block.getSoundType();
+                    SoundType blockSound = block.getBlock().getSoundType();
                     worldObj.playSound(null, front, blockSound.getPlaceSound(), SoundCategory.BLOCKS, (blockSound.getVolume() + 1.0F) / 2.0F, blockSound.getPitch() * 0.8F);
                 } else if (RefinedStorageUtils.hasUpgrade(upgrades, ItemUpgrade.TYPE_CRAFTING)) {
                     ItemStack craft = filter.getStackInSlot(0);

@@ -1,5 +1,10 @@
 # Refined Storage Changelog
 
+### 0.7.9
+**Bugfixes**
+- Fixed not being able to place sugar cane
+- Fixed not being able to place seeds
+
 ### 0.7.8
 **Bugfixes**
 - Updated to Forge 1951
