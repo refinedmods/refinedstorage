@@ -19,7 +19,7 @@ import refinedstorage.proxy.CommonProxy;
 @Mod(modid = RefinedStorage.ID, version = RefinedStorage.VERSION)
 public final class RefinedStorage {
     public static final String ID = "refinedstorage";
-    public static final String VERSION = "0.7.8";
+    public static final String VERSION = "0.7.9";
 
     public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(ID);
 

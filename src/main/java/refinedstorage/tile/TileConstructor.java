@@ -3,7 +3,6 @@ package refinedstorage.tile;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -32,7 +31,36 @@ public class TileConstructor extends TileMachine implements ICompareConfig {
 
     public static final int BASE_SPEED = 20;
 
-    private BasicItemHandler filter = new BasicItemHandler(1, this);
+    private BasicItemHandler filter = new BasicItemHandler(1, this) {
+        @Override
+        protected void onContentsChanged(int slot) {
+            super.onContentsChanged(slot);
+
+            ItemStack stack = getStackInSlot(0);
+
+            if (stack != null) {
+                Item item = stack.getItem();
+
+                if (item instanceof ItemBlockSpecial) {
+                    try {
+                        Field f = ((ItemBlockSpecial) item).getClass().getDeclaredField("block");
+                        f.setAccessible(true);
+                        block = (Block) f.get(item);
+                    } catch (IllegalAccessException e) {
+                        // NO OP
+                    } catch (NoSuchFieldException e) {
+                        // NO OP
+                    }
+                } else if (item instanceof ItemBlock) {
+                    block = ((ItemBlock) item).getBlock();
+                } else {
+                    block = null;
+                }
+            } else {
+                block = null;
+            }
+        }
+    };
     private BasicItemHandler upgrades = new BasicItemHandler(
         4,
         this,
@@ -41,6 +69,7 @@ public class TileConstructor extends TileMachine implements ICompareConfig {
     );
 
     private int compare = 0;
+    private Block block;
 
     private CraftingTaskScheduler scheduler = new CraftingTaskScheduler();
 
@@ -51,32 +80,10 @@ public class TileConstructor extends TileMachine implements ICompareConfig {
 
     @Override
     public void updateMachine() {
-        if (ticks % RefinedStorageUtils.getSpeed(upgrades, BASE_SPEED, 4) == 0 && filter.getStackInSlot(0) != null) {
+        if (block != null && ticks % RefinedStorageUtils.getSpeed(upgrades, BASE_SPEED, 4) == 0) {
             BlockPos front = pos.offset(getDirection());
-            IBlockState frontBlockState = worldObj.getBlockState(front);
 
-            if (!frontBlockState.getBlock().isAir(frontBlockState, worldObj, front)) {
-                return;
-            }
-
-            Item item = filter.getStackInSlot(0).getItem();
-            Block block = null;
-
-            if (item instanceof ItemBlockSpecial) {
-                try {
-                    Field f = ((ItemBlockSpecial) item).getClass().getDeclaredField("block");
-                    f.setAccessible(true);
-                    block = (Block) f.get(item);
-                } catch (IllegalAccessException e) {
-                    // NO OP
-                } catch (NoSuchFieldException e) {
-                    // NO OP
-                }
-            } else if (item instanceof ItemBlock) {
-                block = ((ItemBlock) item).getBlock();
-            }
-
-            if (block != null && block.canPlaceBlockAt(worldObj, front)) {
+            if (worldObj.isAirBlock(front) && block.canPlaceBlockAt(worldObj, front)) {
                 ItemStack took = controller.take(filter.getStackInSlot(0), 1, compare);
 
                 if (took != null) {
