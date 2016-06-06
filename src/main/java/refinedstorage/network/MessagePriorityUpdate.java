@@ -6,8 +6,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import refinedstorage.tile.TileDiskDrive;
-import refinedstorage.tile.TileExternalStorage;
 import refinedstorage.tile.TileStorage;
+import refinedstorage.tile.externalstorage.TileExternalStorage;
 
 public class MessagePriorityUpdate extends MessageHandlerPlayerToServer<MessagePriorityUpdate> implements IMessage {
     private int x;

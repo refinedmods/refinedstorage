@@ -1,13 +1,11 @@
-package refinedstorage.tile;
+package refinedstorage.tile.externalstorage;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.Container;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.RefinedStorageCapabilities;
@@ -16,11 +14,16 @@ import refinedstorage.api.storage.IStorageProvider;
 import refinedstorage.container.ContainerStorage;
 import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.network.MessagePriorityUpdate;
-import refinedstorage.tile.config.*;
+import refinedstorage.tile.IStorageGui;
+import refinedstorage.tile.TileMachine;
+import refinedstorage.tile.config.ICompareConfig;
+import refinedstorage.tile.config.IModeConfig;
+import refinedstorage.tile.config.IRedstoneModeConfig;
+import refinedstorage.tile.config.ModeConstants;
 
 import java.util.List;
 
-public class TileExternalStorage extends TileMachine implements IStorageProvider, IStorage, IStorageGui, ICompareConfig, IModeConfig {
+public class TileExternalStorage extends TileMachine implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig {
     public static final String NBT_PRIORITY = "Priority";
     public static final String NBT_COMPARE = "Compare";
     public static final String NBT_MODE = "Mode";
@@ -31,7 +34,10 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
     private int compare = 0;
     private int mode = ModeConstants.WHITELIST;
 
-    private int stored = 0;
+    private ExternalStorage storage;
+
+    private int stored;
+    private int capacity;
 
     @Override
     public int getEnergyUsage() {
@@ -40,59 +46,13 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
     @Override
     public void updateMachine() {
-    }
+        IItemHandler handler = RefinedStorageUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
 
-    @Override
-    public void addItems(List<ItemStack> items) {
-        IItemHandler handler = getItemHandler();
-
-        if (handler != null) {
-            for (int i = 0; i < handler.getSlots(); ++i) {
-                if (handler.getStackInSlot(i) != null && handler.getStackInSlot(i).getItem() != null) {
-                    items.add(handler.getStackInSlot(i).copy());
-                }
-            }
+        if (handler == null) {
+            storage = null;
+        } else if (storage == null) {
+            storage = new ItemHandlerStorage(this, handler);
         }
-    }
-
-    @Override
-    public ItemStack push(ItemStack stack, boolean simulate) {
-        if (ModeFilter.respectsMode(filters, this, compare, stack)) {
-            IItemHandler handler = getItemHandler();
-
-            if (handler != null) {
-                return ItemHandlerHelper.insertItem(handler, stack, simulate);
-            }
-        }
-
-        return stack;
-    }
-
-    @Override
-    public ItemStack take(ItemStack stack, int size, int flags) {
-        IItemHandler handler = getItemHandler();
-
-        if (handler != null) {
-            for (int i = 0; i < handler.getSlots(); ++i) {
-                ItemStack slot = handler.getStackInSlot(i);
-
-                if (slot != null && RefinedStorageUtils.compareStack(slot, stack, flags)) {
-                    size = Math.min(size, slot.stackSize);
-
-                    ItemStack took = ItemHandlerHelper.copyStackWithSize(slot, size);
-
-                    handler.extractItem(i, size, false);
-
-                    return took;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    public IItemHandler getItemHandler() {
-        return RefinedStorageUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
     }
 
     @Override
@@ -100,9 +60,8 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
         super.writeContainerData(buf);
 
         buf.writeInt(priority);
-
         buf.writeInt(getStored());
-
+        buf.writeInt(getCapacity());
         buf.writeInt(compare);
         buf.writeInt(mode);
     }
@@ -113,6 +72,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
         priority = buf.readInt();
         stored = buf.readInt();
+        capacity = buf.readInt();
         compare = buf.readInt();
         mode = buf.readInt();
     }
@@ -191,7 +151,9 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
     @Override
     public void provide(List<IStorage> storages) {
-        storages.add(this);
+        if (storage != null) {
+            storages.add(storage);
+        }
     }
 
     @Override
@@ -216,36 +178,12 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
     @Override
     public int getStored() {
-        if (worldObj.isRemote) {
-            return stored;
-        }
-
-        IItemHandler handler = getItemHandler();
-
-        if (handler != null) {
-            int size = 0;
-
-            for (int i = 0; i < handler.getSlots(); ++i) {
-                if (handler.getStackInSlot(i) != null) {
-                    size += handler.getStackInSlot(i).stackSize;
-                }
-            }
-
-            return size;
-        } else {
-            return 0;
-        }
+        return worldObj.isRemote ? stored : (storage != null ? storage.getStored() : 0);
     }
 
     @Override
     public int getCapacity() {
-        IItemHandler handler = getItemHandler();
-
-        if (handler != null) {
-            return handler.getSlots() * 64;
-        }
-
-        return 0;
+        return worldObj.isRemote ? capacity : (storage != null ? storage.getCapacity() : 0);
     }
 
     @Override

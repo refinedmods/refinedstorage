@@ -10,7 +10,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
-import refinedstorage.tile.TileExternalStorage;
+import refinedstorage.tile.externalstorage.TileExternalStorage;
 
 public class BlockExternalStorage extends BlockMachine {
     public BlockExternalStorage() {

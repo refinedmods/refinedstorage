@@ -32,6 +32,7 @@ import refinedstorage.solderer.SoldererRecipeStorage;
 import refinedstorage.solderer.SoldererRecipeUpgrade;
 import refinedstorage.tile.*;
 import refinedstorage.tile.controller.TileController;
+import refinedstorage.tile.externalstorage.TileExternalStorage;
 import refinedstorage.tile.grid.TileGrid;
 
 import static refinedstorage.RefinedStorage.ID;
