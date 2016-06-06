@@ -1,5 +1,7 @@
 package refinedstorage.tile.externalstorage;
 
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
@@ -34,8 +36,6 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
     private int compare = 0;
     private int mode = ModeConstants.WHITELIST;
 
-    private ExternalStorage storage;
-
     private int stored;
     private int capacity;
 
@@ -46,13 +46,6 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
     @Override
     public void updateMachine() {
-        IItemHandler handler = RefinedStorageUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
-
-        if (handler == null) {
-            storage = null;
-        } else if (storage == null) {
-            storage = new ItemHandlerStorage(this, handler);
-        }
     }
 
     @Override
@@ -151,8 +144,40 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
     @Override
     public void provide(List<IStorage> storages) {
-        if (storage != null) {
+        if (getFacingTile() instanceof IDrawerGroup) {
+            stored = 0;
+            capacity = 0;
+
+            IDrawerGroup group = (IDrawerGroup) getFacingTile();
+
+            for (int i = 0; i < group.getDrawerCount(); ++i) {
+                if (group.isDrawerEnabled(i)) {
+                    DrawerStorage storage = new DrawerStorage(this, group.getDrawer(i));
+
+                    storages.add(storage);
+
+                    stored += storage.getStored();
+                    capacity += storage.getCapacity();
+                }
+            }
+        } else if (getFacingTile() instanceof IDrawer) {
+            DrawerStorage storage = new DrawerStorage(this, (IDrawer) getFacingTile());
+
             storages.add(storage);
+
+            stored = storage.getStored();
+            capacity = storage.getCapacity();
+        } else {
+            IItemHandler handler = RefinedStorageUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
+
+            if (handler != null) {
+                ItemHandlerStorage storage = new ItemHandlerStorage(this, handler);
+
+                storages.add(storage);
+
+                stored = storage.getStored();
+                capacity = storage.getCapacity();
+            }
         }
     }
 
@@ -178,12 +203,12 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
     @Override
     public int getStored() {
-        return worldObj.isRemote ? stored : (storage != null ? storage.getStored() : 0);
+        return stored;
     }
 
     @Override
     public int getCapacity() {
-        return worldObj.isRemote ? capacity : (storage != null ? storage.getCapacity() : 0);
+        return capacity;
     }
 
     @Override
