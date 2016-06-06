@@ -8,7 +8,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.RefinedStorageCapabilities;
@@ -45,20 +44,12 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
     @Override
     public void addItems(List<ItemStack> items) {
-        IDeepStorageUnit storageUnit = getStorageUnit();
+        IItemHandler handler = getItemHandler();
 
-        if (storageUnit != null) {
-            if (storageUnit.getStoredItemType() != null && storageUnit.getStoredItemType().getItem() != null) {
-                items.add(storageUnit.getStoredItemType().copy());
-            }
-        } else {
-            IItemHandler handler = getItemHandler();
-
-            if (handler != null) {
-                for (int i = 0; i < handler.getSlots(); ++i) {
-                    if (handler.getStackInSlot(i) != null && handler.getStackInSlot(i).getItem() != null) {
-                        items.add(handler.getStackInSlot(i).copy());
-                    }
+        if (handler != null) {
+            for (int i = 0; i < handler.getSlots(); ++i) {
+                if (handler.getStackInSlot(i) != null && handler.getStackInSlot(i).getItem() != null) {
+                    items.add(handler.getStackInSlot(i).copy());
                 }
             }
         }
@@ -67,21 +58,10 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
     @Override
     public ItemStack push(ItemStack stack, boolean simulate) {
         if (ModeFilter.respectsMode(filters, this, compare, stack)) {
-            IDeepStorageUnit storageUnit = getStorageUnit();
+            IItemHandler handler = getItemHandler();
 
-            // @todo: fix push for deep storage units
-            if (storageUnit != null) {
-                if (storageUnit.getStoredItemType() == null) {
-                    storageUnit.setStoredItemType(stack.copy(), stack.stackSize);
-                } else {
-                    storageUnit.setStoredItemCount(storageUnit.getStoredItemType().stackSize + stack.stackSize);
-                }
-            } else {
-                IItemHandler handler = getItemHandler();
-
-                if (handler != null) {
-                    return ItemHandlerHelper.insertItem(handler, stack, simulate);
-                }
+            if (handler != null) {
+                return ItemHandlerHelper.insertItem(handler, stack, simulate);
             }
         }
 
@@ -90,43 +70,25 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
     @Override
     public ItemStack take(ItemStack stack, int size, int flags) {
-        IDeepStorageUnit storageUnit = getStorageUnit();
+        IItemHandler handler = getItemHandler();
 
-        if (storageUnit != null) {
-            if (storageUnit.getStoredItemType() != null && RefinedStorageUtils.compareStackNoQuantity(storageUnit.getStoredItemType(), stack)) {
-                size = Math.min(size, storageUnit.getStoredItemType().stackSize);
+        if (handler != null) {
+            for (int i = 0; i < handler.getSlots(); ++i) {
+                ItemStack slot = handler.getStackInSlot(i);
 
-                ItemStack took = ItemHandlerHelper.copyStackWithSize(storageUnit.getStoredItemType(), size);
+                if (slot != null && RefinedStorageUtils.compareStack(slot, stack, flags)) {
+                    size = Math.min(size, slot.stackSize);
 
-                storageUnit.setStoredItemCount(storageUnit.getStoredItemType().stackSize - size);
+                    ItemStack took = ItemHandlerHelper.copyStackWithSize(slot, size);
 
-                return took;
-            }
-        } else {
-            IItemHandler handler = getItemHandler();
+                    handler.extractItem(i, size, false);
 
-            if (handler != null) {
-                for (int i = 0; i < handler.getSlots(); ++i) {
-                    ItemStack slot = handler.getStackInSlot(i);
-
-                    if (slot != null && RefinedStorageUtils.compareStack(slot, stack, flags)) {
-                        size = Math.min(size, slot.stackSize);
-
-                        ItemStack took = ItemHandlerHelper.copyStackWithSize(slot, size);
-
-                        handler.extractItem(i, size, false);
-
-                        return took;
-                    }
+                    return took;
                 }
             }
         }
 
         return null;
-    }
-
-    public IDeepStorageUnit getStorageUnit() {
-        return getFacingTile() instanceof IDeepStorageUnit ? (IDeepStorageUnit) getFacingTile() : null;
     }
 
     public IItemHandler getItemHandler() {
@@ -258,41 +220,29 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
             return stored;
         }
 
-        IDeepStorageUnit storageUnit = getStorageUnit();
+        IItemHandler handler = getItemHandler();
 
-        if (storageUnit != null) {
-            return storageUnit.getStoredItemType() == null ? 0 : storageUnit.getStoredItemType().stackSize;
-        } else {
-            IItemHandler handler = getItemHandler();
+        if (handler != null) {
+            int size = 0;
 
-            if (handler != null) {
-                int size = 0;
-
-                for (int i = 0; i < handler.getSlots(); ++i) {
-                    if (handler.getStackInSlot(i) != null) {
-                        size += handler.getStackInSlot(i).stackSize;
-                    }
+            for (int i = 0; i < handler.getSlots(); ++i) {
+                if (handler.getStackInSlot(i) != null) {
+                    size += handler.getStackInSlot(i).stackSize;
                 }
-
-                return size;
-            } else {
-                return 0;
             }
+
+            return size;
+        } else {
+            return 0;
         }
     }
 
     @Override
     public int getCapacity() {
-        IDeepStorageUnit storageUnit = getStorageUnit();
+        IItemHandler handler = getItemHandler();
 
-        if (storageUnit != null) {
-            return storageUnit.getMaxStoredCount();
-        } else {
-            IItemHandler handler = getItemHandler();
-
-            if (handler != null) {
-                return handler.getSlots() * 64;
-            }
+        if (handler != null) {
+            return handler.getSlots() * 64;
         }
 
         return 0;
