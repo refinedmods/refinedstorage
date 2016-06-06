@@ -5,6 +5,7 @@
 - Fixed not being able to place sugar cane
 - Fixed not being able to place seeds
 - Fixed stacks not splitting between storages correctly
+- Fixed storage not saving ItemStack capabilities
 
 **Features**
 - Added an API

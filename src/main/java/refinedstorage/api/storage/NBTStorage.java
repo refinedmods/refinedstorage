@@ -21,6 +21,7 @@ public abstract class NBTStorage implements IStorage {
     public static final String NBT_ITEM_QUANTITY = "Quantity";
     public static final String NBT_ITEM_DAMAGE = "Damage";
     public static final String NBT_ITEM_NBT = "NBT";
+    public static final String NBT_ITEM_CAPS = "Caps";
 
     private NBTTagCompound tag;
     private int capacity;
@@ -49,10 +50,11 @@ public abstract class NBTStorage implements IStorage {
             ItemStack stack = new ItemStack(
                 Item.getItemById(tag.getInteger(NBT_ITEM_TYPE)),
                 tag.getInteger(NBT_ITEM_QUANTITY),
-                tag.getInteger(NBT_ITEM_DAMAGE)
+                tag.getInteger(NBT_ITEM_DAMAGE),
+                tag.hasKey(NBT_ITEM_CAPS) ? tag.getCompoundTag(NBT_ITEM_CAPS) : null
             );
 
-            stack.setTagCompound(tag.hasKey(NBT_ITEM_NBT) ? ((NBTTagCompound) tag.getTag(NBT_ITEM_NBT)) : null);
+            stack.setTagCompound(tag.hasKey(NBT_ITEM_NBT) ? tag.getCompoundTag(NBT_ITEM_NBT) : null);
 
             if (stack.getItem() != null) {
                 stacks.add(stack);
@@ -68,6 +70,9 @@ public abstract class NBTStorage implements IStorage {
     public void writeToNBT(NBTTagCompound tag) {
         NBTTagList list = new NBTTagList();
 
+        // Dummy value for extracting ForgeCaps
+        NBTTagCompound dummy = new NBTTagCompound();
+
         for (ItemStack stack : stacks) {
             NBTTagCompound itemTag = new NBTTagCompound();
 
@@ -78,6 +83,14 @@ public abstract class NBTStorage implements IStorage {
             if (stack.hasTagCompound()) {
                 itemTag.setTag(NBT_ITEM_NBT, stack.getTagCompound());
             }
+
+            stack.writeToNBT(dummy);
+
+            if (dummy.hasKey("ForgeCaps")) {
+                itemTag.setTag(NBT_ITEM_CAPS, dummy.getTag("ForgeCaps"));
+            }
+
+            dummy.removeTag("ForgeCaps");
 
             list.appendTag(itemTag);
         }
