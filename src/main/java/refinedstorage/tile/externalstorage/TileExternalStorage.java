@@ -38,10 +38,11 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
     private int stored;
     private int capacity;
+    private int energyUsage;
 
     @Override
     public int getEnergyUsage() {
-        return 2;
+        return energyUsage;
     }
 
     @Override
@@ -145,10 +146,11 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
     @Override
     public void provide(List<IStorage> storages) {
         if (getFacingTile() instanceof IDrawerGroup) {
+            IDrawerGroup group = (IDrawerGroup) getFacingTile();
+
+            energyUsage = group.getDrawerCount() * 2;
             stored = 0;
             capacity = 0;
-
-            IDrawerGroup group = (IDrawerGroup) getFacingTile();
 
             for (int i = 0; i < group.getDrawerCount(); ++i) {
                 if (group.isDrawerEnabled(i)) {
@@ -165,6 +167,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
             storages.add(storage);
 
+            energyUsage = 2;
             stored = storage.getStored();
             capacity = storage.getCapacity();
         } else {
@@ -175,6 +178,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
                 storages.add(storage);
 
+                energyUsage = 2;
                 stored = storage.getStored();
                 capacity = storage.getCapacity();
             }

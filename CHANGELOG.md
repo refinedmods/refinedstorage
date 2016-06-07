@@ -9,6 +9,7 @@
 
 **Features**
 - Added an API
+- Increased cable recipe to 12 cables
 
 ### 0.7.8
 **Bugfixes**
