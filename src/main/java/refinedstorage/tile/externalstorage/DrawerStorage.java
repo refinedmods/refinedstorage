@@ -85,9 +85,11 @@ public class DrawerStorage extends ExternalStorage {
                 size = drawer.getStoredItemCount();
             }
 
+            ItemStack stored = drawer.getStoredItemPrototype();
+
             drawer.setStoredItemCount(drawer.getStoredItemCount() - size);
 
-            return ItemHandlerHelper.copyStackWithSize(stack, size);
+            return ItemHandlerHelper.copyStackWithSize(stored, size);
         }
 
         return null;
