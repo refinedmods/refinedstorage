@@ -23,6 +23,7 @@ public interface IStorage {
      * @param stack    The stack to push, do NOT modify this stack
      * @param simulate If we are simulating
      * @return null if the push was successful, or an ItemStack with the remainder
+     * @todo make it push(stack, size, simulate)
      */
     ItemStack push(ItemStack stack, boolean simulate);
 

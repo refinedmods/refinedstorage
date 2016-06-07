@@ -50,58 +50,19 @@ public class TileInterface extends TileMachine implements ICompareConfig {
 
         if (slot == null) {
             currentSlot++;
-        } else {
-            if (ticks % RefinedStorageUtils.getSpeed(upgrades) == 0) {
-                int size = RefinedStorageUtils.hasUpgrade(upgrades, ItemUpgrade.TYPE_STACK) ? 64 : 1;
-                ItemStack push = ItemHandlerHelper.copyStackWithSize(slot, size);
-                ItemStack remainder = controller.push(push, false);
+        } else if (ticks % RefinedStorageUtils.getSpeed(upgrades) == 0) {
+            int size = RefinedStorageUtils.hasUpgrade(upgrades, ItemUpgrade.TYPE_STACK) ? 64 : 1;
 
-                if (remainder == null) {
-                    importItems.extractItem(currentSlot, size, false);
-                } else {
-                    importItems.extractItem(currentSlot, size - remainder.stackSize, false);
-                }
+            ItemStack pushing = ItemHandlerHelper.copyStackWithSize(slot, size);
+
+            if (controller.push(pushing, true) == null) {
+                controller.push(pushing, false);
+
+                importItems.extractItem(currentSlot, size, false);
             }
         }
 
-        for (int i = 0; i < 9; ++i) {
-            ItemStack wanted = exportSpecimenItems.getStackInSlot(i);
-            ItemStack got = exportItems.getStackInSlot(i);
-
-            if (wanted != null) {
-                boolean mayTake = false;
-
-                if (got != null) {
-                    if (!RefinedStorageUtils.compareStack(wanted, got, compare)) {
-                        exportItems.setStackInSlot(i, controller.push(got, false));
-                    } else {
-                        mayTake = true;
-                    }
-                } else {
-                    mayTake = true;
-                }
-
-                if (mayTake) {
-                    got = exportItems.getStackInSlot(i);
-
-                    int needed = got == null ? wanted.stackSize : wanted.stackSize - got.stackSize;
-
-                    if (needed > 0) {
-                        ItemStack took = controller.take(wanted, needed, compare);
-
-                        if (took != null) {
-                            if (got == null) {
-                                exportItems.setStackInSlot(i, took);
-                            } else {
-                                got.stackSize += took.stackSize;
-                            }
-                        }
-                    }
-                }
-            } else if (got != null) {
-                exportItems.setStackInSlot(i, controller.push(got, false));
-            }
-        }
+        // @todo: export stuff
     }
 
     @Override
