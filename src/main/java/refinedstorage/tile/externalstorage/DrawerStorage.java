@@ -31,28 +31,8 @@ public class DrawerStorage extends ExternalStorage {
     @Override
     public ItemStack push(ItemStack stack, boolean simulate) {
         if (ModeFilter.respectsMode(externalStorage.getFilters(), externalStorage, externalStorage.getCompare(), stack) && drawer.canItemBeStored(stack)) {
-            if (drawer.isEmpty()) {
-                if (getStored() + stack.stackSize > getCapacity()) {
-                    int remainingSpace = getCapacity() - getStored();
-
-                    if (remainingSpace <= 0) {
-                        return stack;
-                    }
-
-                    if (!simulate) {
-                        drawer.setStoredItem(stack, remainingSpace);
-                    }
-
-                    return ItemHandlerHelper.copyStackWithSize(stack, stack.stackSize - remainingSpace);
-                } else {
-                    if (!simulate) {
-                        drawer.setStoredItem(stack, stack.stackSize);
-                    }
-
-                    return null;
-                }
-            } else {
-                if (getStored() + stack.stackSize > getCapacity()) {
+            if (!drawer.isEmpty()) {
+                if (getStored() + stack.stackSize > drawer.getMaxCapacity(stack)) {
                     int remainingSpace = getCapacity() - getStored();
 
                     if (remainingSpace <= 0) {
@@ -67,6 +47,26 @@ public class DrawerStorage extends ExternalStorage {
                 } else {
                     if (!simulate) {
                         drawer.setStoredItemCount(drawer.getStoredItemCount() + stack.stackSize);
+                    }
+
+                    return null;
+                }
+            } else {
+                if (getStored() + stack.stackSize > drawer.getMaxCapacity(stack)) {
+                    int remainingSpace = getCapacity() - getStored();
+
+                    if (remainingSpace <= 0) {
+                        return stack;
+                    }
+
+                    if (!simulate) {
+                        drawer.setStoredItem(stack, remainingSpace);
+                    }
+
+                    return ItemHandlerHelper.copyStackWithSize(stack, stack.stackSize - remainingSpace);
+                } else {
+                    if (!simulate) {
+                        drawer.setStoredItem(stack, stack.stackSize);
                     }
 
                     return null;
