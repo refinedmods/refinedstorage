@@ -93,12 +93,12 @@ public class BasicCraftingTask implements ICraftingTask {
     @Override
     public void onDone(TileController controller) {
         for (ItemStack output : pattern.getOutputs()) {
-            controller.push(output, false);
+            controller.push(output, output.stackSize, false);
         }
 
         if (pattern.getByproducts() != null) {
             for (ItemStack byproduct : pattern.getByproducts()) {
-                controller.push(byproduct, false);
+                controller.push(byproduct, byproduct.stackSize, false);
             }
         }
     }
@@ -107,7 +107,7 @@ public class BasicCraftingTask implements ICraftingTask {
     @Override
     public void onCancelled(TileController controller) {
         for (ItemStack took : itemsTook) {
-            controller.push(took, false);
+            controller.push(took, took.stackSize, false);
         }
     }
 

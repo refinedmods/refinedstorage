@@ -67,7 +67,7 @@ public class TileDestructor extends TileMachine implements ICompareConfig, IMode
                         if (controller == null) {
                             InventoryHelper.spawnItemStack(worldObj, front.getX(), front.getY(), front.getZ(), drop);
                         } else {
-                            ItemStack remainder = controller.push(drop, false);
+                            ItemStack remainder = controller.push(drop, drop.stackSize, false);
 
                             if (remainder != null) {
                                 InventoryHelper.spawnItemStack(worldObj, front.getX(), front.getY(), front.getZ(), remainder);

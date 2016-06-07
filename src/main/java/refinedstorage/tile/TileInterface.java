@@ -8,7 +8,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
@@ -53,10 +52,9 @@ public class TileInterface extends TileMachine implements ICompareConfig {
         } else if (ticks % RefinedStorageUtils.getSpeed(upgrades) == 0) {
             int size = RefinedStorageUtils.hasUpgrade(upgrades, ItemUpgrade.TYPE_STACK) ? 64 : 1;
 
-            ItemStack pushing = ItemHandlerHelper.copyStackWithSize(slot, size);
-
-            if (controller.push(pushing, true) == null) {
-                controller.push(pushing, false);
+            // @todo: handle remainder better
+            if (controller.push(slot, size, true) == null) {
+                controller.push(slot, size, false);
 
                 importItems.extractItem(currentSlot, size, false);
             }

@@ -36,12 +36,12 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
         }
 
         @Override
-        public ItemStack push(ItemStack stack, boolean simulate) {
+        public ItemStack push(ItemStack stack, int size, boolean simulate) {
             if (!ModeFilter.respectsMode(getFilters(), getModeConfig(), getCompare(), stack)) {
                 return stack;
             }
 
-            return super.push(stack, simulate);
+            return super.push(stack, size, simulate);
         }
     }
 

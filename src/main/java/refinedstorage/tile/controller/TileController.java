@@ -368,14 +368,16 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
         RefinedStorage.NETWORK.sendTo(new MessageGridItems(this), player);
     }
 
-    public ItemStack push(ItemStack stack, boolean simulate) {
+    public ItemStack push(ItemStack stack, int size, boolean simulate) {
         ItemStack remainder = stack;
 
         for (IStorage storage : storages) {
-            remainder = storage.push(remainder, simulate);
+            remainder = storage.push(remainder, size, simulate);
 
             if (remainder == null) {
                 break;
+            } else {
+                size = remainder.stackSize;
             }
         }
 

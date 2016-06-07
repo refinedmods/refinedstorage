@@ -104,14 +104,14 @@ public abstract class NBTStorage implements IStorage {
     }
 
     @Override
-    public ItemStack push(ItemStack stack, boolean simulate) {
+    public ItemStack push(ItemStack stack, int size, boolean simulate) {
         for (ItemStack otherStack : stacks) {
             if (RefinedStorageUtils.compareStackNoQuantity(otherStack, stack)) {
                 if (!simulate) {
                     markDirty();
                 }
 
-                if (getStored() + stack.stackSize > getCapacity()) {
+                if (getStored() + size > getCapacity()) {
                     int remainingSpace = getCapacity() - getStored();
 
                     if (remainingSpace <= 0) {
@@ -124,12 +124,12 @@ public abstract class NBTStorage implements IStorage {
                         otherStack.stackSize += remainingSpace;
                     }
 
-                    return ItemHandlerHelper.copyStackWithSize(otherStack, stack.stackSize - remainingSpace);
+                    return ItemHandlerHelper.copyStackWithSize(otherStack, size - remainingSpace);
                 } else {
                     if (!simulate) {
-                        tag.setInteger(NBT_STORED, getStored() + stack.stackSize);
+                        tag.setInteger(NBT_STORED, getStored() + size);
 
-                        otherStack.stackSize += stack.stackSize;
+                        otherStack.stackSize += size;
                     }
 
                     return null;
@@ -141,7 +141,7 @@ public abstract class NBTStorage implements IStorage {
             markDirty();
         }
 
-        if (getStored() + stack.stackSize > getCapacity()) {
+        if (getStored() + size > getCapacity()) {
             int remainingSpace = getCapacity() - getStored();
 
             if (remainingSpace <= 0) {
@@ -154,12 +154,12 @@ public abstract class NBTStorage implements IStorage {
                 stacks.add(ItemHandlerHelper.copyStackWithSize(stack, remainingSpace));
             }
 
-            return ItemHandlerHelper.copyStackWithSize(stack, stack.stackSize - remainingSpace);
+            return ItemHandlerHelper.copyStackWithSize(stack, size - remainingSpace);
         } else {
-            tag.setInteger(NBT_STORED, getStored() + stack.stackSize);
+            tag.setInteger(NBT_STORED, getStored() + size);
 
             if (!simulate) {
-                stacks.add(stack.copy());
+                stacks.add(ItemHandlerHelper.copyStackWithSize(stack, size));
             }
 
             return null;

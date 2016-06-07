@@ -35,12 +35,12 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
         }
 
         @Override
-        public ItemStack push(ItemStack stack, boolean simulate) {
+        public ItemStack push(ItemStack stack, int size, boolean simulate) {
             if (!ModeFilter.respectsMode(filters, TileStorage.this, compare, stack)) {
                 return stack;
             }
 
-            return super.push(stack, simulate);
+            return super.push(stack, size, simulate);
         }
     }
 

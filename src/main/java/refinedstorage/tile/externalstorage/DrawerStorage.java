@@ -30,10 +30,10 @@ public class DrawerStorage extends ExternalStorage {
     }
 
     @Override
-    public ItemStack push(ItemStack stack, boolean simulate) {
+    public ItemStack push(ItemStack stack, int size, boolean simulate) {
         if (ModeFilter.respectsMode(externalStorage.getFilters(), externalStorage, externalStorage.getCompare(), stack) && drawer.canItemBeStored(stack)) {
             if (!drawer.isEmpty()) {
-                if (getStored() + stack.stackSize > drawer.getMaxCapacity(stack)) {
+                if (getStored() + size > drawer.getMaxCapacity(stack)) {
                     int remainingSpace = getCapacity() - getStored();
 
                     if (remainingSpace <= 0) {
@@ -44,16 +44,16 @@ public class DrawerStorage extends ExternalStorage {
                         drawer.setStoredItemCount(drawer.getStoredItemCount() + remainingSpace);
                     }
 
-                    return ItemHandlerHelper.copyStackWithSize(stack, stack.stackSize - remainingSpace);
+                    return ItemHandlerHelper.copyStackWithSize(stack, size - remainingSpace);
                 } else {
                     if (!simulate) {
-                        drawer.setStoredItemCount(drawer.getStoredItemCount() + stack.stackSize);
+                        drawer.setStoredItemCount(drawer.getStoredItemCount() + size);
                     }
 
                     return null;
                 }
             } else {
-                if (getStored() + stack.stackSize > drawer.getMaxCapacity(stack)) {
+                if (getStored() + size > drawer.getMaxCapacity(stack)) {
                     int remainingSpace = getCapacity() - getStored();
 
                     if (remainingSpace <= 0) {
@@ -64,10 +64,10 @@ public class DrawerStorage extends ExternalStorage {
                         drawer.setStoredItem(stack, remainingSpace);
                     }
 
-                    return ItemHandlerHelper.copyStackWithSize(stack, stack.stackSize - remainingSpace);
+                    return ItemHandlerHelper.copyStackWithSize(stack, size - remainingSpace);
                 } else {
                     if (!simulate) {
-                        drawer.setStoredItem(stack, stack.stackSize);
+                        drawer.setStoredItem(stack, size);
                     }
 
                     return null;

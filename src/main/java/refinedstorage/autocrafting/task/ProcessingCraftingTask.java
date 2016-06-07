@@ -61,7 +61,7 @@ public class ProcessingCraftingTask implements ICraftingTask {
 
                             inserted[i] = true;
                         } else {
-                            controller.push(took, false);
+                            controller.push(took, took.stackSize, false);
                         }
                     } else if (!childTasks[i]) {
                         CraftingPattern pattern = controller.getPattern(input);

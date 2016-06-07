@@ -77,8 +77,8 @@ public class StorageHandler {
         if (stack != null) {
             if (playerSlot == -1) {
                 if (one) {
-                    if (controller.push(stack, true) == null) {
-                        controller.push(stack, false);
+                    if (controller.push(stack, stack.stackSize, true) == null) {
+                        controller.push(stack, stack.stackSize, false);
 
                         player.inventory.getItemStack().stackSize--;
 
@@ -87,12 +87,12 @@ public class StorageHandler {
                         }
                     }
                 } else {
-                    player.inventory.setItemStack(controller.push(stack, false));
+                    player.inventory.setItemStack(controller.push(stack, stack.stackSize, false));
                 }
 
                 player.updateHeldItem();
             } else {
-                player.inventory.setInventorySlotContents(playerSlot, controller.push(stack, false));
+                player.inventory.setInventorySlotContents(playerSlot, controller.push(stack, stack.stackSize, false));
             }
 
             controller.getWirelessGridHandler().drainEnergy(player, ItemWirelessGrid.USAGE_PUSH);

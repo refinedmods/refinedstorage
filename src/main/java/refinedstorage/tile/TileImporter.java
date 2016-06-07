@@ -63,8 +63,8 @@ public class TileImporter extends TileMachine implements ICompareConfig, IModeCo
 
                 ItemStack result = handler.extractItem(currentSlot, quantity, true);
 
-                if (result != null && controller.push(result, true) == null) {
-                    controller.push(result, false);
+                if (result != null && controller.push(result, result.stackSize, true) == null) {
+                    controller.push(result, result.stackSize, false);
 
                     handler.extractItem(currentSlot, quantity, false);
                 } else {

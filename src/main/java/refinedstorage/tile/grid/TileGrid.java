@@ -228,10 +228,10 @@ public class TileGrid extends TileMachine implements IGrid {
 
                 if (slot != null) {
                     if (getType() == EnumGridType.CRAFTING) {
-                        if (controller.push(slot, true) != null) {
+                        if (controller.push(slot, slot.stackSize, true) != null) {
                             return;
                         } else {
-                            controller.push(slot, false);
+                            controller.push(slot, slot.stackSize, false);
                         }
                     }
 
