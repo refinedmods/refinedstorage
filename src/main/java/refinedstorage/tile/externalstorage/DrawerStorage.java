@@ -3,6 +3,7 @@ package refinedstorage.tile.externalstorage;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
+import refinedstorage.RefinedStorageUtils;
 import refinedstorage.tile.config.ModeFilter;
 
 import java.util.List;
@@ -79,6 +80,16 @@ public class DrawerStorage extends ExternalStorage {
 
     @Override
     public ItemStack take(ItemStack stack, int size, int flags) {
+        if (RefinedStorageUtils.compareStack(stack, drawer.getStoredItemPrototype(), flags) && drawer.canItemBeExtracted(stack)) {
+            if (size > drawer.getStoredItemCount()) {
+                size = drawer.getStoredItemCount();
+            }
+
+            drawer.setStoredItemCount(drawer.getStoredItemCount() - size);
+
+            return ItemHandlerHelper.copyStackWithSize(stack, size);
+        }
+
         return null;
     }
 

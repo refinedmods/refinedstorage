@@ -9,6 +9,7 @@
 
 **Features**
 - Added an API
+- Added Storage Drawers integration
 - Increased cable recipe to 12 cables
 
 ### 0.7.8
