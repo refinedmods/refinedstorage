@@ -208,7 +208,7 @@ public class CommonProxy {
         ));
 
         // Cable
-        GameRegistry.addRecipe(new ItemStack(RefinedStorageBlocks.CABLE, 6),
+        GameRegistry.addRecipe(new ItemStack(RefinedStorageBlocks.CABLE, 12),
             "EEE",
             "GRG",
             "EEE",
