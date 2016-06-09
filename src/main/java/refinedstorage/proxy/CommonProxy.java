@@ -103,8 +103,8 @@ public class CommonProxy {
         registerBlock(RefinedStorageBlocks.INTERFACE);
         registerBlock(RefinedStorageBlocks.WIRELESS_TRANSMITTER);
         registerBlock(RefinedStorageBlocks.MACHINE_CASING);
-        registerBlock(RefinedStorageBlocks.CABLE);
         registerBlock(RefinedStorageBlocks.QUARTZ_ENRICHED_IRON);
+        registerBlock(RefinedStorageBlocks.CABLE);
 
         registerItem(RefinedStorageItems.QUARTZ_ENRICHED_IRON);
         registerItem(RefinedStorageItems.STORAGE_DISK);

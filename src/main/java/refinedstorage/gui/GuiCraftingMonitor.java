@@ -126,6 +126,7 @@ public class GuiCraftingMonitor extends GuiBase {
                 if (inBounds(x + 5, y + 10, 16, 16, mouseX, mouseY)) {
                     infoLines = Arrays.asList(task.info.split("\n"));
 
+                    // @todo use utils method for this
                     for (int j = 0; j < infoLines.size(); ++j) {
                         String line = infoLines.get(j);
 
