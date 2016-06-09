@@ -52,11 +52,12 @@ public class TileInterface extends TileMachine implements ICompareConfig {
         } else if (ticks % RefinedStorageUtils.getSpeed(upgrades) == 0) {
             int size = RefinedStorageUtils.hasUpgrade(upgrades, ItemUpgrade.TYPE_STACK) ? 64 : 1;
 
-            // @todo: handle remainder better
-            if (controller.push(slot, size, true) == null) {
-                controller.push(slot, size, false);
+            ItemStack remainder = controller.push(slot, size, false);
 
+            if (remainder == null) {
                 importItems.extractItem(currentSlot, size, false);
+            } else {
+                importItems.extractItem(currentSlot, size - remainder.stackSize, false);
             }
         }
 
