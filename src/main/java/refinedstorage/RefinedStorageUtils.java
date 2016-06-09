@@ -117,7 +117,7 @@ public final class RefinedStorageUtils {
         }
 
         if ((flags & CompareFlags.COMPARE_NBT) == CompareFlags.COMPARE_NBT) {
-            if (left.hasTagCompound() && !left.getTagCompound().equals(right.getTagCompound())) {
+            if (!ItemStack.areItemStackTagsEqual(left, right)) {
                 return false;
             }
         }
