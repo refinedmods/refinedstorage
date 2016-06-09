@@ -441,6 +441,16 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
         return newStack;
     }
 
+    public ItemStack getItem(ItemStack stack, int flags) {
+        for (ItemStack otherStack : items) {
+            if (RefinedStorageUtils.compareStack(otherStack, stack, flags)) {
+                return otherStack;
+            }
+        }
+
+        return null;
+    }
+
     public void setEnergyStored(int amount) {
         energy.setEnergyStored(amount);
     }

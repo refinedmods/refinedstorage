@@ -51,29 +51,21 @@ public class TileDetector extends TileMachine implements ICompareConfig {
             boolean wasPowered = powered;
 
             if (slot != null) {
-                boolean foundAny = false;
+                ItemStack stack = controller.getItem(slot, compare);
 
-                for (ItemStack stack : controller.getItems()) {
-                    if (RefinedStorageUtils.compareStack(slot, stack, compare)) {
-                        foundAny = true;
-
-                        switch (mode) {
-                            case MODE_UNDER:
-                                powered = stack.stackSize < amount;
-                                break;
-                            case MODE_EQUAL:
-                                powered = stack.stackSize == amount;
-                                break;
-                            case MODE_ABOVE:
-                                powered = stack.stackSize > amount;
-                                break;
-                        }
-
-                        break;
+                if (stack != null) {
+                    switch (mode) {
+                        case MODE_UNDER:
+                            powered = stack.stackSize < amount;
+                            break;
+                        case MODE_EQUAL:
+                            powered = stack.stackSize == amount;
+                            break;
+                        case MODE_ABOVE:
+                            powered = stack.stackSize > amount;
+                            break;
                     }
-                }
-
-                if (!foundAny) {
+                } else {
                     if (mode == MODE_UNDER && amount != 0) {
                         powered = true;
                     } else if (mode == MODE_EQUAL && amount == 0) {
