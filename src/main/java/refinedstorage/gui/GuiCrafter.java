@@ -1,19 +1,14 @@
 package refinedstorage.gui;
 
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.item.ItemStack;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerCrafter;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
-import refinedstorage.item.ItemPattern;
 import refinedstorage.tile.TileCrafter;
 
 public class GuiCrafter extends GuiBase {
     private TileCrafter crafter;
 
     public GuiCrafter(ContainerCrafter container, TileCrafter crafter) {
-        super(container, 211, 226);
+        super(container, 211, 137);
 
         this.crafter = crafter;
     }
@@ -37,35 +32,6 @@ public class GuiCrafter extends GuiBase {
     @Override
     public void drawForeground(int mouseX, int mouseY) {
         drawString(7, 7, t("gui.refinedstorage:crafter"));
-        drawString(7, 131, t("container.inventory"));
-
-        RenderHelper.enableGUIStandardItemLighting();
-
-        for (int i = 0; i < TileCrafter.PATTERN_SLOTS; ++i) {
-            int x = 27;
-            int y = 19 + (i * 18);
-
-            ItemStack pattern = crafter.getPatterns().getStackInSlot(i);
-
-            if (pattern != null && ItemPattern.isValid(pattern)) {
-                String text = t("gui.refinedstorage:crafter.processing");
-
-                if (!ItemPattern.isProcessing(pattern)) {
-                    ItemStack result = ItemPattern.getOutputs(pattern)[0];
-
-                    drawItem(x, y, result);
-
-                    text = result.getDisplayName();
-                }
-
-                float scale = 0.5f;
-
-                GlStateManager.pushMatrix();
-                GlStateManager.scale(scale, scale, 1);
-
-                drawString(RefinedStorageUtils.calculateOffsetOnScale(x + (ItemPattern.isProcessing(pattern) ? 1 : 20), scale), RefinedStorageUtils.calculateOffsetOnScale(y + 6, scale), text);
-                GlStateManager.popMatrix();
-            }
-        }
+        drawString(7, 43, t("container.inventory"));
     }
 }

@@ -20,7 +20,7 @@ import refinedstorage.item.ItemPattern;
 import refinedstorage.item.ItemUpgrade;
 
 public class TileCrafter extends TileMachine {
-    private BasicItemHandler patterns = new BasicItemHandler(PATTERN_SLOTS, this, new IItemValidator() {
+    private BasicItemHandler patterns = new BasicItemHandler(9, this, new IItemValidator() {
         @Override
         public boolean valid(ItemStack stack) {
             return stack.getItem() == RefinedStorageItems.PATTERN && ItemPattern.isValid(stack);
@@ -28,8 +28,6 @@ public class TileCrafter extends TileMachine {
     });
 
     private BasicItemHandler upgrades = new BasicItemHandler(4, this, new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED));
-
-    public static final int PATTERN_SLOTS = 6;
 
     @Override
     public int getEnergyUsage() {
