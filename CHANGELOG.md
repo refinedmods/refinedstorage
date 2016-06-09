@@ -7,6 +7,7 @@
 - Fixed stacks not splitting between storages correctly
 - Fixed storage not saving ItemStack capabilities
 - Fixed dropping items into crafting grid with mouse won't work if your mouse is in between items
+- Fixed controller still drawing power even if disabled
 
 **Features**
 - Added an API

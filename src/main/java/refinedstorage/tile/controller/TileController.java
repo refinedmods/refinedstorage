@@ -121,8 +121,11 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
                         craftingTasks.pop();
                     }
                 }
-            } else {
+            } else if (!machines.isEmpty()) {
+                // Machine list should NOT be empty to trigger a disconnect
+                // We need to sync machines again to reset energy usage etc
                 disconnectAll();
+                syncMachines();
             }
 
             if (couldRun != mayRun()) {
