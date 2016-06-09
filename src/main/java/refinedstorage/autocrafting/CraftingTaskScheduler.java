@@ -15,7 +15,7 @@ public class CraftingTaskScheduler {
     }
 
     public void schedule(TileController controller, int compare, ItemStack item) {
-        CraftingPattern pattern = controller.getPattern(item, compare);
+        CraftingPattern pattern = controller.getPatternWithBestScore(item, compare);
 
         if (pattern != null) {
             scheduledItem = item;

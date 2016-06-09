@@ -229,20 +229,55 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
         return patterns;
     }
 
-    public CraftingPattern getPattern(ItemStack pattern) {
+    public List<CraftingPattern> getPattern(ItemStack pattern) {
         return getPattern(pattern, CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_NBT);
     }
 
-    public CraftingPattern getPattern(ItemStack pattern, int flags) {
+    public List<CraftingPattern> getPattern(ItemStack pattern, int flags) {
+        List<CraftingPattern> patterns = new ArrayList<CraftingPattern>();
+
         for (CraftingPattern craftingPattern : getPatterns()) {
             for (ItemStack output : craftingPattern.getOutputs()) {
                 if (RefinedStorageUtils.compareStack(output, pattern, flags)) {
-                    return craftingPattern;
+                    patterns.add(craftingPattern);
                 }
             }
         }
 
-        return null;
+        return patterns;
+    }
+
+    public CraftingPattern getPatternWithBestScore(ItemStack pattern) {
+        return getPatternWithBestScore(pattern, CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_NBT);
+    }
+
+    public CraftingPattern getPatternWithBestScore(ItemStack pattern, int flags) {
+        List<CraftingPattern> patterns = getPattern(pattern, flags);
+
+        if (patterns.isEmpty()) {
+            return null;
+        } else if (patterns.size() == 1) {
+            return patterns.get(0);
+        }
+
+        int[] scores = new int[patterns.size()];
+        int highestScore = 0;
+        int highestPattern = 0;
+
+        for (int i = 0; i < patterns.size(); ++i) {
+            for (ItemStack input : patterns.get(i).getInputs()) {
+                ItemStack stored = getItem(input, CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_NBT);
+
+                scores[i] += stored != null ? stored.stackSize : 0;
+            }
+
+            if (scores[i] > highestScore) {
+                highestScore = scores[i];
+                highestPattern = i;
+            }
+        }
+
+        return patterns.get(highestPattern);
     }
 
     private void syncMachines() {

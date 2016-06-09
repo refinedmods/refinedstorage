@@ -105,7 +105,7 @@ public class StorageHandler {
 
             int quantityPerRequest = 0;
 
-            CraftingPattern pattern = controller.getPattern(requested);
+            CraftingPattern pattern = controller.getPatternWithBestScore(requested);
 
             if (pattern != null) {
                 for (ItemStack output : pattern.getOutputs()) {

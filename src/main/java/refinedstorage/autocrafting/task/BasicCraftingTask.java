@@ -71,7 +71,7 @@ public class BasicCraftingTask implements ICraftingTask {
 
                     satisfied[i] = true;
                 } else if (!childTasks[i]) {
-                    CraftingPattern pattern = controller.getPattern(input);
+                    CraftingPattern pattern = controller.getPatternWithBestScore(input);
 
                     if (pattern != null) {
                         controller.addCraftingTask(controller.createCraftingTask(pattern));
