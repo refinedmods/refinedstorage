@@ -169,6 +169,10 @@ public class GuiGrid extends GuiBase {
         return slotNumber >= 0;
     }
 
+    private boolean isHoveringOverSlotArea(int mouseX, int mouseY) {
+        return inBounds(7, 19, 162, 18 * getVisibleRows(), mouseX, mouseY);
+    }
+
     public boolean isHoveringOverClear(int mouseX, int mouseY) {
         switch (grid.getType()) {
             case CRAFTING:
@@ -320,7 +324,7 @@ public class GuiGrid extends GuiBase {
 
             RefinedStorage.NETWORK.sendToServer(new MessageGridPatternCreate(gridPos.getX(), gridPos.getY(), gridPos.getZ()));
         } else if (grid.isConnected()) {
-            if (isHoveringOverSlot() && container.getPlayer().inventory.getItemStack() != null && (clickedButton == 0 || clickedButton == 1)) {
+            if (isHoveringOverSlotArea(mouseX - guiLeft, mouseY - guiTop) && container.getPlayer().inventory.getItemStack() != null && (clickedButton == 0 || clickedButton == 1)) {
                 grid.onItemPush(-1, clickedButton == 1);
             } else if (isHoveringOverItemInSlot() && container.getPlayer().inventory.getItemStack() == null) {
                 if (items.get(slotNumber).getStack().stackSize == 0 || (GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown())) {
