@@ -61,7 +61,38 @@ public class TileInterface extends TileMachine implements ICompareConfig {
             }
         }
 
-        // @todo: export stuff
+        for (int i = 0; i < 9; ++i) {
+            ItemStack wanted = exportSpecimenItems.getStackInSlot(i);
+            ItemStack got = exportItems.getStackInSlot(i);
+
+            if (wanted == null) {
+                if (got != null) {
+                    exportItems.setStackInSlot(i, controller.push(got, got.stackSize, false));
+                }
+            } else {
+                int delta = got == null ? wanted.stackSize : (wanted.stackSize - got.stackSize);
+
+                if (delta > 0) {
+                    ItemStack result = controller.take(wanted, delta, compare);
+
+                    if (result != null) {
+                        if (got == null) {
+                            exportItems.setStackInSlot(i, result);
+                        } else {
+                            exportItems.getStackInSlot(i).stackSize += result.stackSize;
+                        }
+                    }
+                } else if (delta < 0) {
+                    ItemStack remainder = controller.push(got, Math.abs(delta), false);
+
+                    if (remainder == null) {
+                        exportItems.extractItem(i, Math.abs(delta), false);
+                    } else {
+                        exportItems.extractItem(i, Math.abs(delta) - remainder.stackSize, false);
+                    }
+                }
+            }
+        }
     }
 
     @Override
