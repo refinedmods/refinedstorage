@@ -21,6 +21,10 @@ import org.apache.commons.lang3.ArrayUtils;
 import refinedstorage.api.storage.CompareFlags;
 import refinedstorage.item.ItemUpgrade;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public final class RefinedStorageUtils {
     public static final String NBT_INVENTORY = "Inventory_%d";
     public static final String NBT_SLOT = "Slot";
@@ -264,5 +268,31 @@ public final class RefinedStorageUtils {
         float multiplier = (pos / scale);
 
         return (int) multiplier;
+    }
+
+    public static void combineMultipleItemsInTooltip(List<String> lines, ItemStack... stacks) {
+        Set<Integer> combinedIndices = new HashSet<Integer>();
+
+        for (int i = 0; i < stacks.length; ++i) {
+            if (!combinedIndices.contains(i)) {
+                String data = stacks[i].getDisplayName();
+
+                int amount = stacks[i].stackSize;
+
+                for (int j = i + 1; j < stacks.length; ++j) {
+                    if (RefinedStorageUtils.compareStack(stacks[i], stacks[j])) {
+                        amount += stacks[j].stackSize;
+
+                        combinedIndices.add(j);
+                    }
+                }
+
+                if (amount != 1) {
+                    data += " (" + amount + "x)";
+                }
+
+                lines.add(data);
+            }
+        }
     }
 }

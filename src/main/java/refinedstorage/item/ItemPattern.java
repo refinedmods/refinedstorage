@@ -1,10 +1,14 @@
 package refinedstorage.item;
 
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.Constants;
+import refinedstorage.RefinedStorageUtils;
 
 import java.util.List;
 
@@ -21,19 +25,15 @@ public class ItemPattern extends ItemBase {
     @Override
     public void addInformation(ItemStack pattern, EntityPlayer player, List list, boolean b) {
         if (isValid(pattern)) {
-            if (!isProcessing(pattern)) {
-                for (ItemStack output : getOutputs(pattern)) {
-                    list.add(output.getDisplayName());
-                }
-            } else {
-                for (ItemStack input : getInputs(pattern)) {
-                    list.add(input.getDisplayName());
-                }
+            if (GuiScreen.isShiftKeyDown() || isProcessing(pattern)) {
+                list.add(TextFormatting.YELLOW + I18n.format("misc.refinedstorage:pattern.inputs") + TextFormatting.RESET);
 
-                for (ItemStack output : getOutputs(pattern)) {
-                    list.add("-> " + output.getDisplayName());
-                }
+                RefinedStorageUtils.combineMultipleItemsInTooltip(list, getInputs(pattern));
+
+                list.add(TextFormatting.YELLOW + I18n.format("misc.refinedstorage:pattern.outputs") + TextFormatting.RESET);
             }
+
+            RefinedStorageUtils.combineMultipleItemsInTooltip(list, getOutputs(pattern));
         }
     }
 
