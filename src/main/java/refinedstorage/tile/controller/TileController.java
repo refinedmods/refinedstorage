@@ -2,8 +2,6 @@ package refinedstorage.tile.controller;
 
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyReceiver;
-import ic2.api.energy.tile.IEnergyEmitter;
-import ic2.api.energy.tile.IEnergySink;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -37,7 +35,7 @@ import refinedstorage.tile.config.RedstoneMode;
 
 import java.util.*;
 
-public class TileController extends TileBase implements IEnergyReceiver, IEnergySink, ISynchronizedContainer, IRedstoneModeConfig {
+public class TileController extends TileBase implements IEnergyReceiver, ISynchronizedContainer, IRedstoneModeConfig {
     public static final int ENERGY_CAPACITY = 32000;
 
     public static final String NBT_CRAFTING_TASKS = "CraftingTasks";
@@ -682,25 +680,5 @@ public class TileController extends TileBase implements IEnergyReceiver, IEnergy
     @Override
     public Class<? extends Container> getContainer() {
         return ContainerController.class;
-    }
-
-    @Override
-    public double getDemandedEnergy() {
-        return ENERGY_CAPACITY;
-    }
-
-    @Override
-    public int getSinkTier() {
-        return Integer.MAX_VALUE;
-    }
-
-    @Override
-    public double injectEnergy(EnumFacing facing, double energy, double voltage) {
-        return this.energy.receiveEnergy((int) energy, false);
-    }
-
-    @Override
-    public boolean acceptsEnergyFrom(IEnergyEmitter emitter, EnumFacing facing) {
-        return true;
     }
 }
