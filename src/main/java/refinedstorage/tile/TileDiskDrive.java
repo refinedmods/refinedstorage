@@ -83,6 +83,12 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
 
     @Override
     public void updateMachine() {
+    }
+
+    @Override
+    public void update() {
+        super.update();
+
         for (int i = 0; i < disks.getSlots(); ++i) {
             Storage storage = getStorage(i);
 

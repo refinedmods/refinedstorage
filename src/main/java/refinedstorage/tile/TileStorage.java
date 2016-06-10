@@ -69,6 +69,12 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 
     @Override
     public void updateMachine() {
+    }
+
+    @Override
+    public void update() {
+        super.update();
+
         if (storage == null && storageTag != null) {
             storage = new Storage();
         }
