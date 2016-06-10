@@ -300,8 +300,8 @@ public class TileController extends TileBase implements IEnergyReceiver, IEnergy
                 this.wirelessGridRange += ((TileWirelessTransmitter) machine).getRange();
             }
 
-            if (machine.hasCapability(RefinedStorageCapabilities.STORAGE_PROVIDER_CAPABILITY, EnumFacing.DOWN)) {
-                machine.getCapability(RefinedStorageCapabilities.STORAGE_PROVIDER_CAPABILITY, EnumFacing.DOWN).provide(storages);
+            if (machine.hasCapability(RefinedStorageCapabilities.STORAGE_PROVIDER_CAPABILITY, null)) {
+                machine.getCapability(RefinedStorageCapabilities.STORAGE_PROVIDER_CAPABILITY, null).provide(storages);
             }
 
             if (machine instanceof TileCrafter) {
