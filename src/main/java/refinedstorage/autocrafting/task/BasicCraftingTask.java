@@ -3,7 +3,6 @@ package refinedstorage.autocrafting.task;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.Constants;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.autocrafting.CraftingPattern;
@@ -133,49 +132,43 @@ public class BasicCraftingTask implements ICraftingTask {
     }
 
     @Override
-    public String getInfo() {
+    public List<Object> getInfo() {
+        List<Object> items = new ArrayList<Object>();
+
         if (!updatedOnce) {
-            return "{not_started_yet}";
+            items.add("T=gui.refinedstorage:crafting_monitor.not_started_yet");
+
+            return items;
         }
 
-        StringBuilder builder = new StringBuilder();
-
-        builder.append(TextFormatting.YELLOW).append("{missing_items}").append(TextFormatting.RESET).append("\n");
-
-        int missingItems = 0;
+        boolean areItemsCrafting = false;
 
         for (int i = 0; i < pattern.getInputs().length; ++i) {
-            ItemStack input = pattern.getInputs()[i];
-
-            if (checked[i] && !satisfied[i] && !childTasks[i]) {
-                builder.append("- ").append(input.getDisplayName()).append("\n");
-
-                missingItems++;
-            }
-        }
-
-        if (missingItems == 0) {
-            builder.append(TextFormatting.GRAY).append(TextFormatting.ITALIC).append("{none}").append(TextFormatting.RESET).append("\n");
-        }
-
-        builder.append(TextFormatting.YELLOW).append("{items_crafting}").append(TextFormatting.RESET).append("\n");
-
-        int itemsCrafting = 0;
-
-        for (int i = 0; i < pattern.getInputs().length; ++i) {
-            ItemStack input = pattern.getInputs()[i];
-
             if (!satisfied[i] && childTasks[i]) {
-                builder.append("- ").append(input.getUnlocalizedName()).append(".name").append("\n");
+                if (!areItemsCrafting) {
+                    items.add("T=gui.refinedstorage:crafting_monitor.items_crafting");
 
-                itemsCrafting++;
+                    areItemsCrafting = true;
+                }
+
+                items.add(pattern.getInputs()[i]);
             }
         }
 
-        if (itemsCrafting == 0) {
-            builder.append(TextFormatting.GRAY).append(TextFormatting.ITALIC).append("{none}").append(TextFormatting.RESET).append("\n");
+        boolean hasItemsInQueue = false;
+
+        for (int i = 0; i < pattern.getInputs().length; ++i) {
+            if (!satisfied[i] && !childTasks[i]) {
+                if (!hasItemsInQueue) {
+                    items.add("T=gui.refinedstorage:crafting_monitor.items_in_queue");
+
+                    hasItemsInQueue = true;
+                }
+
+                items.add(pattern.getInputs()[i]);
+            }
         }
 
-        return builder.toString();
+        return items;
     }
 }
