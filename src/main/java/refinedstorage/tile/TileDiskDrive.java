@@ -56,8 +56,6 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
 
             ItemStack disk = getStackInSlot(slot);
 
-            System.out.println("#" + slot + ": " + disk);
-
             if (disk == null) {
                 storages[slot] = null;
             } else {
