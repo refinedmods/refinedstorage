@@ -264,19 +264,20 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
             return patterns.get(0);
         }
 
-        int[] scores = new int[patterns.size()];
         int highestScore = 0;
         int highestPattern = 0;
 
         for (int i = 0; i < patterns.size(); ++i) {
+            int score = 0;
+
             for (ItemStack input : patterns.get(i).getInputs()) {
                 ItemStack stored = getItem(input, CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_NBT);
 
-                scores[i] += stored != null ? stored.stackSize : 0;
+                score += stored != null ? stored.stackSize : 0;
             }
 
-            if (scores[i] > highestScore) {
-                highestScore = scores[i];
+            if (score > highestScore) {
+                highestScore = score;
                 highestPattern = i;
             }
         }
