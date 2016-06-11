@@ -3,16 +3,16 @@ package refinedstorage.gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.item.ItemStack;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerCraftingMonitor;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.network.MessageCraftingMonitorCancel;
-import refinedstorage.network.MessageCraftingMonitorSelect;
 import refinedstorage.tile.TileCraftingMonitor;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 public class GuiCraftingMonitor extends GuiBase {
     public static final int VISIBLE_ROWS = 3;
@@ -25,13 +25,16 @@ public class GuiCraftingMonitor extends GuiBase {
     private GuiButton cancelButton;
     private GuiButton cancelAllButton;
 
-    private int selectionX = Integer.MAX_VALUE;
-    private int selectionY = Integer.MAX_VALUE;
+    private int itemSelected = -1;
+
+    private boolean renderItemSelection;
+    private int renderItemSelectionX;
+    private int renderItemSelectionY;
 
     private Scrollbar scrollbar = new Scrollbar(157, 20, 12, 89);
 
     public GuiCraftingMonitor(ContainerCraftingMonitor container, TileCraftingMonitor craftingMonitor) {
-        super(container, 256, 230);
+        super(container, 176, 230);
 
         this.craftingMonitor = craftingMonitor;
     }
@@ -62,7 +65,11 @@ public class GuiCraftingMonitor extends GuiBase {
         scrollbar.setCanScroll(getRows() > VISIBLE_ROWS);
         scrollbar.setScrollDelta((float) scrollbar.getScrollbarHeight() / (float) getRows());
 
-        cancelButton.enabled = craftingMonitor.hasSelection();
+        if (itemSelected >= craftingMonitor.getTasks().size()) {
+            itemSelected = -1;
+        }
+
+        cancelButton.enabled = itemSelected != -1;
         cancelAllButton.enabled = craftingMonitor.getTasks().size() > 0;
     }
 
@@ -72,11 +79,11 @@ public class GuiCraftingMonitor extends GuiBase {
 
         drawTexture(x, y, 0, 0, width, height);
 
-        scrollbar.draw(this);
-
-        if (craftingMonitor.hasSelection()) {
-            drawRect(x + selectionX, y + selectionY, x + selectionX + ITEM_WIDTH - 1, y + selectionY + ITEM_HEIGHT - 1, 0xFFCCCCCC);
+        if (renderItemSelection) {
+            drawTexture(x + renderItemSelectionX, y + renderItemSelectionY, 178, 0, ITEM_WIDTH, ITEM_HEIGHT);
         }
+
+        scrollbar.draw(this);
     }
 
     @Override
@@ -87,15 +94,20 @@ public class GuiCraftingMonitor extends GuiBase {
         int x = 8;
         int y = 20;
 
-        int id = getOffset() * 2;
+        int item = getOffset() * 2;
 
         RenderHelper.enableGUIStandardItemLighting();
 
+        List<String> infoLines = null;
+
+        renderItemSelection = false;
+
         for (int i = 0; i < 6; ++i) {
-            if (id < craftingMonitor.getTasks().size()) {
-                if (id == craftingMonitor.getSelected()) {
-                    selectionX = x;
-                    selectionY = y;
+            if (item < craftingMonitor.getTasks().size()) {
+                if (item == itemSelected) {
+                    renderItemSelection = true;
+                    renderItemSelectionX = x;
+                    renderItemSelectionY = y;
                 }
 
                 TileCraftingMonitor.ClientSideCraftingTask task = craftingMonitor.getTasks().get(i);
@@ -107,13 +119,29 @@ public class GuiCraftingMonitor extends GuiBase {
                 GlStateManager.pushMatrix();
                 GlStateManager.scale(scale, scale, 1);
 
-                drawString(
-                    RefinedStorageUtils.calculateOffsetOnScale(x + 5, scale),
-                    RefinedStorageUtils.calculateOffsetOnScale(y + 4, scale),
-                    task.output.getDisplayName()
-                );
+                drawString(RefinedStorageUtils.calculateOffsetOnScale(x + 5, scale), RefinedStorageUtils.calculateOffsetOnScale(y + 4, scale), task.output.getDisplayName());
 
                 GlStateManager.popMatrix();
+
+                if (inBounds(x + 5, y + 10, 16, 16, mouseX, mouseY)) {
+                    infoLines = Arrays.asList(task.info.split("\n"));
+
+                    // @todo use utils method for this
+                    for (int j = 0; j < infoLines.size(); ++j) {
+                        String line = infoLines.get(j);
+
+                        if (line.startsWith("- ")) {
+                            infoLines.set(j, "- " + t(line.substring(2)));
+                        } else {
+                            infoLines.set(j, line
+                                .replace("{missing_items}", t("gui.refinedstorage:crafting_monitor.missing_items"))
+                                .replace("{items_crafting}", t("gui.refinedstorage:crafting_monitor.items_crafting"))
+                                .replace("{items_processing}", t("gui.refinedstorage:crafting_monitor.items_processing"))
+                                .replace("{not_started_yet}", t("gui.refinedstorage:crafting_monitor.not_started_yet"))
+                                .replace("{none}", t("gui.none")));
+                        }
+                    }
+                }
             }
 
             if (i == 1 || i == 3) {
@@ -123,46 +151,11 @@ public class GuiCraftingMonitor extends GuiBase {
                 x += ITEM_WIDTH;
             }
 
-            id++;
+            item++;
         }
 
-        if (craftingMonitor.hasSelection()) {
-            float scale = 0.5f;
-
-            x = 179;
-            y = 24;
-
-            for (Object item : craftingMonitor.getInfo()) {
-                if (item instanceof String) {
-                    GlStateManager.pushMatrix();
-                    GlStateManager.scale(scale, scale, 1);
-
-                    String text = (String) item;
-
-                    drawString(
-                        RefinedStorageUtils.calculateOffsetOnScale(x, scale),
-                        RefinedStorageUtils.calculateOffsetOnScale(y, scale),
-                        text.startsWith("T=") ? t(text.substring(2)) : text
-                    );
-
-                    GlStateManager.popMatrix();
-                } else if (item instanceof ItemStack) {
-                    drawItem(x, y, (ItemStack) item);
-
-                    GlStateManager.pushMatrix();
-                    GlStateManager.scale(scale, scale, 1);
-
-                    drawString(
-                        RefinedStorageUtils.calculateOffsetOnScale(x + 20, scale),
-                        RefinedStorageUtils.calculateOffsetOnScale(y + 6, scale),
-                        ((ItemStack) item).getDisplayName()
-                    );
-
-                    GlStateManager.popMatrix();
-                }
-
-                y += item instanceof String ? 7 : 16;
-            }
+        if (infoLines != null) {
+            drawTooltip(mouseX, mouseY, infoLines);
         }
     }
 
@@ -180,8 +173,8 @@ public class GuiCraftingMonitor extends GuiBase {
     protected void actionPerformed(GuiButton button) throws IOException {
         super.actionPerformed(button);
 
-        if (button == cancelButton && craftingMonitor.hasSelection()) {
-            RefinedStorage.NETWORK.sendToServer(new MessageCraftingMonitorCancel(craftingMonitor, craftingMonitor.getTasks().get(craftingMonitor.getSelected()).id));
+        if (button == cancelButton && itemSelected != -1) {
+            RefinedStorage.NETWORK.sendToServer(new MessageCraftingMonitorCancel(craftingMonitor, craftingMonitor.getTasks().get(itemSelected).id));
         } else if (button == cancelAllButton && craftingMonitor.getTasks().size() > 0) {
             RefinedStorage.NETWORK.sendToServer(new MessageCraftingMonitorCancel(craftingMonitor, -1));
         }
@@ -191,33 +184,23 @@ public class GuiCraftingMonitor extends GuiBase {
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         super.mouseClicked(mouseX, mouseY, mouseButton);
 
-        boolean resetSelection = !inBounds(174, 19, 77, 91, mouseX - guiLeft, mouseY - guiTop);
-
         if (mouseButton == 0 && inBounds(8, 20, 144, 90, mouseX - guiLeft, mouseY - guiTop)) {
-            int id = getOffset() * 2;
+            itemSelected = -1;
+
+            int item = getOffset() * 2;
 
             for (int y = 0; y < 3; ++y) {
                 for (int x = 0; x < 2; ++x) {
                     int ix = 8 + (x * ITEM_WIDTH);
                     int iy = 20 + (y * ITEM_HEIGHT);
 
-                    if (inBounds(ix, iy, ITEM_WIDTH, ITEM_HEIGHT, mouseX - guiLeft, mouseY - guiTop) && id < craftingMonitor.getTasks().size()) {
-                        RefinedStorage.NETWORK.sendToServer(new MessageCraftingMonitorSelect(craftingMonitor, craftingMonitor.getTasks().get(id).id));
-
-                        craftingMonitor.setSelected(id);
-
-                        resetSelection = false;
+                    if (inBounds(ix, iy, ITEM_WIDTH, ITEM_HEIGHT, mouseX - guiLeft, mouseY - guiTop) && item < craftingMonitor.getTasks().size()) {
+                        itemSelected = item;
                     }
 
-                    id++;
+                    item++;
                 }
             }
-        }
-
-        if (resetSelection) {
-            RefinedStorage.NETWORK.sendToServer(new MessageCraftingMonitorSelect(craftingMonitor, -1));
-
-            craftingMonitor.setSelected(-1);
         }
     }
 }

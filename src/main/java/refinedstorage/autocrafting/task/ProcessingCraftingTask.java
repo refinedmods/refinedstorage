@@ -2,15 +2,13 @@ package refinedstorage.autocrafting.task;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.autocrafting.CraftingPattern;
 import refinedstorage.tile.TileCrafter;
 import refinedstorage.tile.controller.TileController;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ProcessingCraftingTask implements ICraftingTask {
     public static final int ID = 1;
@@ -127,13 +125,9 @@ public class ProcessingCraftingTask implements ICraftingTask {
     }
 
     @Override
-    public List<Object> getInfo() {
-        List<Object> items = new ArrayList<Object>();
-
-        return items;
-
-        /*if (!updatedOnce) {
-            return Arrays.asList("{not_started_yet}");
+    public String getInfo() {
+        if (!updatedOnce) {
+            return "{not_started_yet}";
         }
 
         StringBuilder builder = new StringBuilder();
@@ -192,6 +186,6 @@ public class ProcessingCraftingTask implements ICraftingTask {
             builder.append(TextFormatting.GRAY).append(TextFormatting.ITALIC).append("{none}").append(TextFormatting.RESET).append("\n");
         }
 
-        return builder.toString();*/
+        return builder.toString();
     }
 }

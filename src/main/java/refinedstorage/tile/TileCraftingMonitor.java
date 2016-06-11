@@ -13,8 +13,6 @@ import java.util.List;
 
 public class TileCraftingMonitor extends TileMachine {
     private List<ClientSideCraftingTask> tasks = new ArrayList<ClientSideCraftingTask>();
-    private int selected = -1;
-    private List<Object> info = new ArrayList<Object>();
 
     @Override
     public int getEnergyUsage() {
@@ -33,6 +31,8 @@ public class TileCraftingMonitor extends TileMachine {
             buf.writeInt(controller.getCraftingTasks().size());
 
             for (ICraftingTask task : controller.getCraftingTasks()) {
+                ByteBufUtils.writeUTF8String(buf, task.getInfo());
+
                 buf.writeInt(task.getPattern().getOutputs().length);
 
                 for (ItemStack output : task.getPattern().getOutputs()) {
@@ -41,18 +41,6 @@ public class TileCraftingMonitor extends TileMachine {
             }
         } else {
             buf.writeInt(0);
-        }
-
-        buf.writeInt(info.size());
-
-        for (Object item : info) {
-            if (item instanceof String) {
-                buf.writeInt(0);
-                ByteBufUtils.writeUTF8String(buf, (String) item);
-            } else if (item instanceof ItemStack) {
-                buf.writeInt(1);
-                ByteBufUtils.writeItemStack(buf, (ItemStack) item);
-            }
         }
     }
 
@@ -65,60 +53,22 @@ public class TileCraftingMonitor extends TileMachine {
         List<ClientSideCraftingTask> newTasks = new ArrayList<ClientSideCraftingTask>();
 
         for (int i = 0; i < size; ++i) {
+            String info = ByteBufUtils.readUTF8String(buf);
+
             int outputs = buf.readInt();
 
             for (int j = 0; j < outputs; ++j) {
-                newTasks.add(new ClientSideCraftingTask(ByteBufUtils.readItemStack(buf), i));
+                newTasks.add(new ClientSideCraftingTask(ByteBufUtils.readItemStack(buf), i, info));
             }
         }
 
         Collections.reverse(newTasks);
 
         tasks = newTasks;
-
-        List<Object> newInfo = new ArrayList<Object>();
-
-        size = buf.readInt();
-
-        for (int i = 0; i < size; ++i) {
-            int type = buf.readInt();
-
-            if (type == 0) {
-                newInfo.add(ByteBufUtils.readUTF8String(buf));
-            } else if (type == 1) {
-                newInfo.add(ByteBufUtils.readItemStack(buf));
-            }
-        }
-
-        info = newInfo;
     }
 
     public List<ClientSideCraftingTask> getTasks() {
         return tasks;
-    }
-
-    public int getSelected() {
-        return selected;
-    }
-
-    public void setSelected(int selected) {
-        this.selected = selected;
-
-        if (!worldObj.isRemote) {
-            if (selected != -1) {
-                info = controller.getCraftingTasks().get(selected).getInfo();
-            } else {
-                info.clear();
-            }
-        }
-    }
-
-    public boolean hasSelection() {
-        return selected != -1;
-    }
-
-    public List<Object> getInfo() {
-        return info;
     }
 
     @Override
@@ -129,10 +79,12 @@ public class TileCraftingMonitor extends TileMachine {
     public class ClientSideCraftingTask {
         public ItemStack output;
         public int id;
+        public String info;
 
-        public ClientSideCraftingTask(ItemStack output, int id) {
+        public ClientSideCraftingTask(ItemStack output, int id, String info) {
             this.output = output;
             this.id = id;
+            this.info = info;
         }
     }
 }
