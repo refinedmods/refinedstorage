@@ -6,7 +6,6 @@ import refinedstorage.container.slot.SlotSpecimen;
 import refinedstorage.tile.TileConstructor;
 
 public class ContainerConstructor extends ContainerBase {
-
     public ContainerConstructor(EntityPlayer player, TileConstructor constructor) {
         super(player);
 

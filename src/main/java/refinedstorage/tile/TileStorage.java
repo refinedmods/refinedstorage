@@ -26,7 +26,7 @@ import java.util.List;
 public class TileStorage extends TileMachine implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig {
     class Storage extends NBTStorage {
         public Storage() {
-            super(TileStorage.this.getStorageTag(), TileStorage.this.getCapacity());
+            super(TileStorage.this.getStorageTag(), TileStorage.this.getCapacity(), TileStorage.this);
         }
 
         @Override
@@ -77,13 +77,6 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 
         if (storage == null && storageTag != null) {
             storage = new Storage();
-        }
-
-        if (storage != null && storage.isDirty()) {
-            storage.writeToNBT(storageTag);
-            storage.markClean();
-
-            markDirty();
         }
     }
 

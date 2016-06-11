@@ -27,7 +27,7 @@ import java.util.List;
 public class TileDiskDrive extends TileMachine implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig {
     public class Storage extends NBTStorage {
         public Storage(ItemStack disk) {
-            super(disk.getTagCompound(), EnumStorageType.getById(disk.getItemDamage()).getCapacity());
+            super(disk.getTagCompound(), EnumStorageType.getById(disk.getItemDamage()).getCapacity(), TileDiskDrive.this);
         }
 
         @Override
@@ -49,7 +49,22 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
     public static final String NBT_COMPARE = "Compare";
     public static final String NBT_MODE = "Mode";
 
-    private BasicItemHandler disks = new BasicItemHandler(8, this, new BasicItemValidator(RefinedStorageItems.STORAGE_DISK));
+    private BasicItemHandler disks = new BasicItemHandler(8, this, new BasicItemValidator(RefinedStorageItems.STORAGE_DISK)) {
+        @Override
+        protected void onContentsChanged(int slot) {
+            super.onContentsChanged(slot);
+
+            ItemStack disk = getStackInSlot(slot);
+
+            System.out.println("#" + slot + ": " + disk);
+
+            if (disk == null) {
+                storages[slot] = null;
+            } else {
+                storages[slot] = new Storage(disk);
+            }
+        }
+    };
     private BasicItemHandler filters = new BasicItemHandler(9, this);
 
     private Storage storages[] = new Storage[8];
@@ -57,17 +72,6 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
     private int priority = 0;
     private int compare = 0;
     private int mode = ModeConstants.WHITELIST;
-
-    public Storage getStorage(int slot) {
-        if (disks.getStackInSlot(slot) == null) {
-            storages[slot] = null;
-        } else if (storages[slot] == null) {
-            System.out.println("[REFINED STORAGE DEBUG] Initialized storage " + slot + " in disk drive, this should only happen ONCE when loading world/ entering a unloaded chunk. If it happens while you're in the same chunk, something is wrong !!!");
-            storages[slot] = new Storage(disks.getStackInSlot(slot));
-        }
-
-        return storages[slot];
-    }
 
     @Override
     public int getEnergyUsage() {
@@ -87,30 +91,8 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
     }
 
     @Override
-    public void update() {
-        super.update();
-
-        if (!worldObj.isRemote) {
-            for (int i = 0; i < disks.getSlots(); ++i) {
-                Storage storage = getStorage(i);
-
-                if (storage != null && storage.isDirty()) {
-                    storage.writeToNBT(disks.getStackInSlot(i).getTagCompound());
-                    storage.markClean();
-
-                    System.out.println("[REFINED STORAGE DEBUG] Disk Drive slot " + i + " is MARKED DIRTY, thus it should save when you leave the area.");
-
-                    markDirty();
-                }
-            }
-        }
-    }
-
-    @Override
     public void provide(List<IStorage> storages) {
-        for (int i = 0; i < disks.getSlots(); ++i) {
-            Storage storage = getStorage(i);
-
+        for (IStorage storage : this.storages) {
             if (storage != null) {
                 storages.add(storage);
             }
@@ -121,7 +103,6 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
     public void read(NBTTagCompound nbt) {
         super.read(nbt);
 
-        System.out.println("[REFINED STORAGE DEBUG] Reading from storage now.");
         RefinedStorageUtils.readItems(disks, 0, nbt);
         RefinedStorageUtils.readItems(filters, 1, nbt);
 

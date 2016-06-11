@@ -4,9 +4,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorageUtils;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,24 +35,24 @@ public abstract class NBTStorage implements IStorage {
 
     private NBTTagCompound tag;
     private int capacity;
-
-    private boolean dirty;
+    private TileEntity tile;
 
     private List<ItemStack> stacks = new ArrayList<ItemStack>();
 
     /**
      * @param tag      The NBT tag we are reading from and writing the amount stored to, has to be initialized with {@link NBTStorage#createNBT()}
      * @param capacity The capacity of this storage
+     * @param tile     A tile that the NBT storage is in, will be marked dirty when storage changes
      */
-    public NBTStorage(NBTTagCompound tag, int capacity) {
+    public NBTStorage(NBTTagCompound tag, int capacity, @Nullable TileEntity tile) {
         this.tag = tag;
         this.capacity = capacity;
+        this.tile = tile;
 
         readFromNBT();
     }
 
     public void readFromNBT() {
-        System.out.println("[REFINED STORAGE DEBUG] Reading from storage, protocol " + tag.getInteger(NBT_PROTOCOL) + ".");
         NBTTagList list = (NBTTagList) tag.getTag(NBT_ITEMS);
 
         for (int i = 0; i < list.tagCount(); ++i) {
@@ -66,18 +68,15 @@ public abstract class NBTStorage implements IStorage {
             stack.setTagCompound(tag.hasKey(NBT_ITEM_NBT) ? tag.getCompoundTag(NBT_ITEM_NBT) : null);
 
             if (stack.getItem() != null) {
-                System.out.println("[REFINED STORAGE DEBUG] Read " + stack);
                 stacks.add(stack);
             }
         }
     }
 
     /**
-     * Writes the items to the NBT tag, check for {@link NBTStorage#isDirty()} before doing this to be efficient.
-     *
-     * @param tag The tag to write to
+     * Writes the items to the NBT tag.
      */
-    public void writeToNBT(NBTTagCompound tag) {
+    public void writeToNBT() {
         NBTTagList list = new NBTTagList();
 
         // Dummy value for extracting ForgeCaps
@@ -118,10 +117,6 @@ public abstract class NBTStorage implements IStorage {
     public ItemStack push(ItemStack stack, int size, boolean simulate) {
         for (ItemStack otherStack : stacks) {
             if (RefinedStorageUtils.compareStackNoQuantity(otherStack, stack)) {
-                if (!simulate) {
-                    markDirty();
-                }
-
                 if (getStored() + size > getCapacity()) {
                     int remainingSpace = getCapacity() - getStored();
 
@@ -133,6 +128,8 @@ public abstract class NBTStorage implements IStorage {
                         tag.setInteger(NBT_STORED, getStored() + remainingSpace);
 
                         otherStack.stackSize += remainingSpace;
+
+                        onStorageChanged();
                     }
 
                     return ItemHandlerHelper.copyStackWithSize(otherStack, size - remainingSpace);
@@ -141,15 +138,13 @@ public abstract class NBTStorage implements IStorage {
                         tag.setInteger(NBT_STORED, getStored() + size);
 
                         otherStack.stackSize += size;
+
+                        onStorageChanged();
                     }
 
                     return null;
                 }
             }
-        }
-
-        if (!simulate) {
-            markDirty();
         }
 
         if (getStored() + size > getCapacity()) {
@@ -163,6 +158,8 @@ public abstract class NBTStorage implements IStorage {
                 tag.setInteger(NBT_STORED, getStored() + remainingSpace);
 
                 stacks.add(ItemHandlerHelper.copyStackWithSize(stack, remainingSpace));
+
+                onStorageChanged();
             }
 
             return ItemHandlerHelper.copyStackWithSize(stack, size - remainingSpace);
@@ -171,6 +168,8 @@ public abstract class NBTStorage implements IStorage {
                 tag.setInteger(NBT_STORED, getStored() + size);
 
                 stacks.add(ItemHandlerHelper.copyStackWithSize(stack, size));
+
+                onStorageChanged();
             }
 
             return null;
@@ -193,13 +192,21 @@ public abstract class NBTStorage implements IStorage {
 
                 tag.setInteger(NBT_STORED, getStored() - size);
 
-                markDirty();
+                onStorageChanged();
 
                 return ItemHandlerHelper.copyStackWithSize(otherStack, size);
             }
         }
 
         return null;
+    }
+
+    public void onStorageChanged() {
+        writeToNBT();
+
+        if (tile != null) {
+            tile.markDirty();
+        }
     }
 
     @Override
@@ -213,18 +220,6 @@ public abstract class NBTStorage implements IStorage {
 
     public NBTTagCompound getTag() {
         return tag;
-    }
-
-    public void markDirty() {
-        this.dirty = true;
-    }
-
-    public boolean isDirty() {
-        return dirty;
-    }
-
-    public void markClean() {
-        this.dirty = false;
     }
 
     public static int getStoredFromNBT(NBTTagCompound tag) {
