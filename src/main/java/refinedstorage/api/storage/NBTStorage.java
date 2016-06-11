@@ -50,6 +50,7 @@ public abstract class NBTStorage implements IStorage {
     }
 
     public void readFromNBT() {
+        System.out.println("[REFINED STORAGE DEBUG] Reading from storage, protocol " + tag.getInteger(NBT_PROTOCOL) + ".");
         NBTTagList list = (NBTTagList) tag.getTag(NBT_ITEMS);
 
         for (int i = 0; i < list.tagCount(); ++i) {
@@ -65,6 +66,7 @@ public abstract class NBTStorage implements IStorage {
             stack.setTagCompound(tag.hasKey(NBT_ITEM_NBT) ? tag.getCompoundTag(NBT_ITEM_NBT) : null);
 
             if (stack.getItem() != null) {
+                System.out.println("[REFINED STORAGE DEBUG] Read " + stack);
                 stacks.add(stack);
             }
         }
@@ -234,6 +236,7 @@ public abstract class NBTStorage implements IStorage {
 
         tag.setTag(NBT_ITEMS, new NBTTagList());
         tag.setInteger(NBT_STORED, 0);
+        tag.setInteger(NBT_PROTOCOL, PROTOCOL);
 
         return tag;
     }

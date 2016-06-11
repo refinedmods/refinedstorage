@@ -62,6 +62,7 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
         if (disks.getStackInSlot(slot) == null) {
             storages[slot] = null;
         } else if (storages[slot] == null) {
+            System.out.println("[REFINED STORAGE DEBUG] Initialized storage " + slot + " in disk drive, this should only happen ONCE when loading world/ entering a unloaded chunk. If it happens while you're in the same chunk, something is wrong !!!");
             storages[slot] = new Storage(disks.getStackInSlot(slot));
         }
 
@@ -89,14 +90,18 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
     public void update() {
         super.update();
 
-        for (int i = 0; i < disks.getSlots(); ++i) {
-            Storage storage = getStorage(i);
+        if (!worldObj.isRemote) {
+            for (int i = 0; i < disks.getSlots(); ++i) {
+                Storage storage = getStorage(i);
 
-            if (storage != null && storage.isDirty()) {
-                storage.writeToNBT(disks.getStackInSlot(i).getTagCompound());
-                storage.markClean();
+                if (storage != null && storage.isDirty()) {
+                    storage.writeToNBT(disks.getStackInSlot(i).getTagCompound());
+                    storage.markClean();
 
-                markDirty();
+                    System.out.println("[REFINED STORAGE DEBUG] Disk Drive slot " + i + " is MARKED DIRTY, thus it should save when you leave the area.");
+
+                    markDirty();
+                }
             }
         }
     }
@@ -116,6 +121,7 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
     public void read(NBTTagCompound nbt) {
         super.read(nbt);
 
+        System.out.println("[REFINED STORAGE DEBUG] Reading from storage now.");
         RefinedStorageUtils.readItems(disks, 0, nbt);
         RefinedStorageUtils.readItems(filters, 1, nbt);
 

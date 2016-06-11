@@ -31,10 +31,10 @@ public class ContainerCrafter extends ContainerStorage {
             stack = slot.getStack().copy();
 
             if (index < 8) {
-                if (!mergeItemStack(stack, 6, inventorySlots.size(), true)) {
+                if (!mergeItemStack(stack, 9, inventorySlots.size(), true)) {
                     return null;
                 }
-            } else if (!mergeItemStack(stack, 0, 6, false)) {
+            } else if (!mergeItemStack(stack, 0, 9, false)) {
                 return null;
             }
 
