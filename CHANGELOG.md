@@ -13,6 +13,8 @@
 - Added an API
 - Added Storage Drawers integration
 - Added handling for patterns that return the same item
+- Added stack splitting between multiple storages
+- Added handling for patterns that give back the same item
 - Increased cable recipe to 12 cables
 
 ### 0.7.8
