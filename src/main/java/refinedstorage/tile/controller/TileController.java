@@ -13,6 +13,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageUtils;
@@ -411,6 +412,15 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
             return null;
         }
 
+        // We copy here because push can not modify the stack
+        // if we return the remainder (that will not be copied if there are no storages)
+        // user code can do something with the uncopied remainder.
+        if (storages.isEmpty()) {
+            return ItemHandlerHelper.copyStackWithSize(stack, size);
+        }
+
+        int orginalSize = size;
+
         ItemStack remainder = stack;
 
         for (IStorage storage : storages) {
@@ -427,11 +437,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
             syncItems();
             syncItemsWithClients();
 
-            int sizePushed = stack.stackSize;
-
-            if (remainder != null) {
-                sizePushed = stack.stackSize - remainder.stackSize;
-            }
+            int sizePushed = remainder != null ? (orginalSize - remainder.stackSize) : orginalSize;
 
             for (int i = 0; i < sizePushed; ++i) {
                 if (!craftingTasks.empty()) {
