@@ -3,6 +3,7 @@ package refinedstorage.gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.util.text.TextFormatting;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerCraftingMonitor;
@@ -12,7 +13,6 @@ import refinedstorage.tile.TileCraftingMonitor;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 
 public class GuiCraftingMonitor extends GuiBase {
     public static final int VISIBLE_ROWS = 3;
@@ -98,7 +98,7 @@ public class GuiCraftingMonitor extends GuiBase {
 
         RenderHelper.enableGUIStandardItemLighting();
 
-        List<String> infoLines = null;
+        String[] lines = null;
 
         renderItemSelection = false;
 
@@ -124,22 +124,18 @@ public class GuiCraftingMonitor extends GuiBase {
                 GlStateManager.popMatrix();
 
                 if (inBounds(x + 5, y + 10, 16, 16, mouseX, mouseY)) {
-                    infoLines = Arrays.asList(task.info.split("\n"));
+                    lines = task.info.split("\n");
 
-                    // @todo use utils method for this
-                    for (int j = 0; j < infoLines.size(); ++j) {
-                        String line = infoLines.get(j);
+                    for (int j = 0; j < lines.length; ++j) {
+                        String line = lines[j];
 
-                        if (line.startsWith("- ")) {
-                            infoLines.set(j, "- " + t(line.substring(2)));
-                        } else {
-                            infoLines.set(j, line
-                                .replace("{missing_items}", t("gui.refinedstorage:crafting_monitor.missing_items"))
-                                .replace("{items_crafting}", t("gui.refinedstorage:crafting_monitor.items_crafting"))
-                                .replace("{items_processing}", t("gui.refinedstorage:crafting_monitor.items_processing"))
-                                .replace("{not_started_yet}", t("gui.refinedstorage:crafting_monitor.not_started_yet"))
-                                .replace("{none}", t("gui.none")));
+                        if (line.startsWith("T=")) {
+                            line = t(line.substring(2));
+                        } else if (line.startsWith("I=")) {
+                            line = TextFormatting.YELLOW + t(line.substring(2));
                         }
+
+                        lines[j] = line;
                     }
                 }
             }
@@ -154,8 +150,8 @@ public class GuiCraftingMonitor extends GuiBase {
             item++;
         }
 
-        if (infoLines != null) {
-            drawTooltip(mouseX, mouseY, infoLines);
+        if (lines != null) {
+            drawTooltip(mouseX, mouseY, Arrays.asList(lines));
         }
     }
 
