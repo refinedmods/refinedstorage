@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorageUtils;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class SoldererRegistry {
      *
      * @param recipe
      */
-    public static void addRecipe(ISoldererRecipe recipe) {
+    public static void addRecipe(@Nonnull ISoldererRecipe recipe) {
         recipes.add(recipe);
     }
 
@@ -33,7 +34,7 @@ public class SoldererRegistry {
      * @param items An item handler, where slots 0 - 2 are the row slots
      * @return The recipe
      */
-    public static ISoldererRecipe getRecipe(IItemHandler items) {
+    public static ISoldererRecipe getRecipe(@Nonnull IItemHandler items) {
         for (ISoldererRecipe recipe : recipes) {
             boolean found = true;
 

@@ -2,6 +2,7 @@ package refinedstorage.api.storage;
 
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -23,9 +24,9 @@ public interface IStorage {
      * @param stack    The stack prototype to push, do NOT modify
      * @param size     The amount of that prototype that has to be pushed
      * @param simulate If we are simulating
-     * @return null if the push was successful, or an ItemStack with the remainder
+     * @return null if the push was successful, or a {@link ItemStack} with the remainder
      */
-    ItemStack push(ItemStack stack, int size, boolean simulate);
+    ItemStack push(@Nonnull ItemStack stack, int size, boolean simulate);
 
     /**
      * Takes an item from storage.
@@ -35,9 +36,9 @@ public interface IStorage {
      * @param stack A prototype of the stack to take, do NOT modify
      * @param size  The amount of that prototype that has to be taken
      * @param flags On what we are comparing to take the item, see {@link CompareFlags}
-     * @return null if we didn't take anything, or an ItemStack with the take result
+     * @return null if we didn't take anything, or a {@link ItemStack} with the result
      */
-    ItemStack take(ItemStack stack, int size, int flags);
+    ItemStack take(@Nonnull ItemStack stack, int size, int flags);
 
     /**
      * @return The amount of items stored in this storage
