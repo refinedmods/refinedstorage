@@ -407,6 +407,10 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     }
 
     public ItemStack push(ItemStack stack, int size, boolean simulate) {
+        if (stack == null || stack.getItem() == null) {
+            return null;
+        }
+
         ItemStack remainder = stack;
 
         for (IStorage storage : storages) {

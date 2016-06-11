@@ -14,6 +14,14 @@ import java.util.List;
  * A implementation of {@link IStorage} that stores storage items in NBT.
  */
 public abstract class NBTStorage implements IStorage {
+    /**
+     * The current save protocol Refined Storage uses, is set to every NBTStorage to allow for
+     * safe backwards compatibility breaks.
+     */
+    public static final int PROTOCOL = 1;
+
+    public static final String NBT_PROTOCOL = "Protocol";
+
     public static final String NBT_ITEMS = "Items";
     public static final String NBT_STORED = "Stored";
 
@@ -96,6 +104,7 @@ public abstract class NBTStorage implements IStorage {
         }
 
         tag.setTag(NBT_ITEMS, list);
+        tag.setInteger(NBT_PROTOCOL, PROTOCOL);
     }
 
     @Override
