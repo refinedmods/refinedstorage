@@ -1,5 +1,10 @@
 # Refined Storage Changelog
 
+### 0.7.10
+**Bugfixes**
+- Fixed inventories not saving correctly
+- Fixed that the player can't shift-click patterns into the last 3 slots of the Crafter
+
 ### 0.7.9
 **Bugfixes**
 - Fixed not being able to place sugar cane
