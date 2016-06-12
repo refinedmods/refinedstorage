@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 0.7.11
+**Bugfixes**
+- Fixed crash using wireless grid
+
 ### 0.7.10
 **Bugfixes**
 - Fixed inventories not saving correctly

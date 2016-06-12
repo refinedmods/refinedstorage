@@ -13,7 +13,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
@@ -140,10 +140,10 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
                 if (((TileController) tile).getWirelessGridHandler().handleOpen(player, hand)) {
                     return new ActionResult(EnumActionResult.SUCCESS, stack);
                 } else {
-                    player.addChatComponentMessage(new TextComponentString(I18n.format("misc.refinedstorage:wireless_grid.out_of_range")));
+                    player.addChatComponentMessage(new TextComponentTranslation("misc.refinedstorage:wireless_grid.out_of_range"));
                 }
             } else {
-                player.addChatComponentMessage(new TextComponentString(I18n.format("misc.refinedstorage:wireless_grid.not_found")));
+                player.addChatComponentMessage(new TextComponentTranslation("misc.refinedstorage:wireless_grid.not_found"));
             }
         }
 
