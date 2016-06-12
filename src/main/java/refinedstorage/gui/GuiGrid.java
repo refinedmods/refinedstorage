@@ -316,6 +316,13 @@ public class GuiGrid extends GuiBase {
 
         searchField.mouseClicked(mouseX, mouseY, clickedButton);
 
+        if (clickedButton == 1 && inBounds(79, 5, 90, 12, mouseX - guiLeft, mouseY - guiTop)) {
+            searchField.setText("");
+            searchField.setFocused(true);
+
+            updateJEI();
+        }
+
         boolean clickedClear = clickedButton == 0 && isHoveringOverClear(mouseX - guiLeft, mouseY - guiTop);
         boolean clickedCreatePattern = clickedButton == 0 && isHoveringOverCreatePattern(mouseX - guiLeft, mouseY - guiTop);
 
@@ -377,11 +384,15 @@ public class GuiGrid extends GuiBase {
     @Override
     protected void keyTyped(char character, int keyCode) throws IOException {
         if (!checkHotbarKeys(keyCode) && searchField.textboxKeyTyped(character, keyCode)) {
-            if (RefinedStorage.hasJei() && (grid.getSearchBoxMode() == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED || grid.getSearchBoxMode() == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED)) {
-                RefinedStorageJEIPlugin.INSTANCE.getRuntime().getItemListOverlay().setFilterText(searchField.getText());
-            }
+            updateJEI();
         } else {
             super.keyTyped(character, keyCode);
+        }
+    }
+
+    private void updateJEI() {
+        if (RefinedStorage.hasJei() && (grid.getSearchBoxMode() == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED || grid.getSearchBoxMode() == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED)) {
+            RefinedStorageJEIPlugin.INSTANCE.getRuntime().getItemListOverlay().setFilterText(searchField.getText());
         }
     }
 

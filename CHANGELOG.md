@@ -2,7 +2,10 @@
 
 ### 0.7.11
 **Bugfixes**
-- Fixed crash using wireless grid
+- Fixed crash with wireless grid
+
+**Features**
+- Right click on grid search bar clears the search query
 
 ### 0.7.10
 **Bugfixes**
