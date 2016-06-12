@@ -110,9 +110,11 @@ public class StorageHandler {
             if (pattern != null) {
                 for (ItemStack output : pattern.getOutputs()) {
                     if (RefinedStorageUtils.compareStackNoQuantity(requested, output)) {
-                        quantityPerRequest = output.stackSize;
+                        quantityPerRequest += output.stackSize;
 
-                        break;
+                        if (!pattern.isProcessing()) {
+                            break;
+                        }
                     }
                 }
 

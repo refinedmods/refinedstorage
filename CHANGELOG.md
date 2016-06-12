@@ -3,6 +3,8 @@
 ### 0.7.11
 **Bugfixes**
 - Fixed crash with wireless grid
+- Fixed high RF/t usage on external storage
+- Fixed that requesting crafting processing task yields too many tasks
 
 **Features**
 - Right click on grid search bar clears the search query
