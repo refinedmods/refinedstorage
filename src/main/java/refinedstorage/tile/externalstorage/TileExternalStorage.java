@@ -148,7 +148,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
         if (getFacingTile() instanceof IDrawerGroup) {
             IDrawerGroup group = (IDrawerGroup) getFacingTile();
 
-            energyUsage = group.getDrawerCount() * 2;
+            energyUsage = group.getDrawerCount();
             stored = 0;
             capacity = 0;
 
@@ -167,7 +167,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
             storages.add(storage);
 
-            energyUsage = 2;
+            energyUsage = 1;
             stored = storage.getStored();
             capacity = storage.getCapacity();
         } else {
@@ -178,9 +178,11 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
                 storages.add(storage);
 
-                energyUsage = 2;
+                energyUsage = 1;
                 stored = storage.getStored();
                 capacity = storage.getCapacity();
+            } else {
+                energyUsage = 0;
             }
         }
     }
