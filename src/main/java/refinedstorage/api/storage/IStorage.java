@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface IStorage {
     /**
-     * Adds the items to the storage network.
+     * Adds the items in this storage to the storage network.
      * This is called every 20 ticks or when the storage changes, so don't make this method too resource intensive.
      *
      * @param items A list of previously added items
@@ -30,8 +30,8 @@ public interface IStorage {
 
     /**
      * Takes an item from storage.
-     * If the stack we found in the system is smaller then the requested size, return the stack anyway.
-     * For example: this function is called for dirt (64x) while there is only dirt (32x), return the dirt (32x) anyway.
+     * If the stack we found in the system is smaller than the requested size, return the stack anyway.
+     * For example: this method is called for dirt (64x) while there is only dirt (32x), return the dirt (32x) anyway.
      *
      * @param stack A prototype of the stack to take, do NOT modify
      * @param size  The amount of that prototype that has to be taken

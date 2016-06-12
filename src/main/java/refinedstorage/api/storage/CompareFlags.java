@@ -1,5 +1,8 @@
 package refinedstorage.api.storage;
 
+/**
+ * Comparison flags.
+ */
 public final class CompareFlags {
     public static final int COMPARE_DAMAGE = 1;
     public static final int COMPARE_NBT = 2;

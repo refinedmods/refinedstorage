@@ -4,6 +4,7 @@ import java.util.List;
 
 /**
  * Should be implemented as a capability on tile entities.
+ * @see refinedstorage.api.RefinedStorageCapabilities#STORAGE_PROVIDER_CAPABILITY
  */
 public interface IStorageProvider {
     /**

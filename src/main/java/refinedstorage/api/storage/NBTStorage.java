@@ -17,7 +17,7 @@ import java.util.List;
  */
 public abstract class NBTStorage implements IStorage {
     /**
-     * The current save protocol Refined Storage uses, is set to every NBTStorage to allow for
+     * The current save protocol that is used. It's set to every {@link NBTStorage} to allow for
      * safe backwards compatibility breaks.
      */
     public static final int PROTOCOL = 1;
@@ -40,9 +40,9 @@ public abstract class NBTStorage implements IStorage {
     private List<ItemStack> stacks = new ArrayList<ItemStack>();
 
     /**
-     * @param tag      The NBT tag we are reading from and writing the amount stored to, has to be initialized with {@link NBTStorage#createNBT()}
+     * @param tag      The NBT tag we are reading from and writing the amount stored to, has to be initialized with {@link NBTStorage#createNBT()} if it doesn't exist yet
      * @param capacity The capacity of this storage
-     * @param tile     A tile that the NBT storage is in, will be marked dirty when storage changes
+     * @param tile     A {@link TileEntity} that the NBT storage is in, will be marked dirty when storage changes
      */
     public NBTStorage(NBTTagCompound tag, int capacity, @Nullable TileEntity tile) {
         this.tag = tag;
@@ -226,6 +226,9 @@ public abstract class NBTStorage implements IStorage {
         return tag.getInteger(NBT_STORED);
     }
 
+    /*
+     * @return A NBT tag initialized with the fields that {@link NBTStorage} uses
+     */
     public static NBTTagCompound createNBT() {
         NBTTagCompound tag = new NBTTagCompound();
 
@@ -236,6 +239,10 @@ public abstract class NBTStorage implements IStorage {
         return tag;
     }
 
+    /**
+     * @param stack The {@link ItemStack} to populate with the NBT tags from {@link NBTStorage#createNBT()}
+     * @return The provided {@link ItemStack} with NBT tags from {@link NBTStorage#createNBT()}
+     */
     public static ItemStack createStackWithNBT(ItemStack stack) {
         stack.setTagCompound(createNBT());
 

@@ -5,6 +5,7 @@ import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorageUtils;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class SoldererRegistry {
     /**
      * Adds a recipe to the registry.
      *
-     * @param recipe
+     * @param recipe The recipe to add
      */
     public static void addRecipe(@Nonnull ISoldererRecipe recipe) {
         recipes.add(recipe);
@@ -32,8 +33,9 @@ public class SoldererRegistry {
 
     /**
      * @param items An item handler, where slots 0 - 2 are the row slots
-     * @return The recipe
+     * @return The recipe, or null if no recipe was found
      */
+    @Nullable
     public static ISoldererRecipe getRecipe(@Nonnull IItemHandler items) {
         for (ISoldererRecipe recipe : recipes) {
             boolean found = true;
