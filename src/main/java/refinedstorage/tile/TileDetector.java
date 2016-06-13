@@ -14,6 +14,8 @@ import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.RedstoneMode;
 
 public class TileDetector extends TileMachine implements ICompareConfig {
+    public static final int SPEED = 5;
+
     public static final int MODE_UNDER = 0;
     public static final int MODE_EQUAL = 1;
     public static final int MODE_ABOVE = 2;
@@ -45,7 +47,7 @@ public class TileDetector extends TileMachine implements ICompareConfig {
 
     @Override
     public void updateMachine() {
-        if (ticks % 5 == 0) {
+        if (ticks % SPEED == 0) {
             ItemStack slot = filter.getStackInSlot(0);
 
             boolean wasPowered = powered;

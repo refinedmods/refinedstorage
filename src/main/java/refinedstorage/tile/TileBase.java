@@ -23,13 +23,13 @@ public abstract class TileBase extends TileEntity implements ITickable {
 
     private EnumFacing direction = EnumFacing.NORTH;
 
-    protected int ticks;
+    protected int ticks = 0;
 
     @Override
     public void update() {
-        ticks++;
-
         if (!worldObj.isRemote) {
+            ticks++;
+
             if (this instanceof ISynchronizedContainer) {
                 for (EntityPlayer player : worldObj.playerEntities) {
                     if (((ISynchronizedContainer) this).getContainer() == player.openContainer.getClass()) {
