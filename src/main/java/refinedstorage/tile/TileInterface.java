@@ -50,7 +50,7 @@ public class TileInterface extends TileMachine implements ICompareConfig {
         if (slot == null) {
             currentSlot++;
         } else if (ticks % RefinedStorageUtils.getSpeed(upgrades) == 0) {
-            int size = RefinedStorageUtils.hasUpgrade(upgrades, ItemUpgrade.TYPE_STACK) ? 64 : 1;
+            int size = Math.min(slot.stackSize, RefinedStorageUtils.hasUpgrade(upgrades, ItemUpgrade.TYPE_STACK) ? 64 : 1);
 
             ItemStack remainder = controller.push(slot, size, false);
 

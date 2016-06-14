@@ -413,9 +413,6 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
             return null;
         }
 
-        // We copy here because push can not modify the stack
-        // if we return the remainder (that will not be copied if there are no storages)
-        // user code can do something with the uncopied remainder.
         if (storages.isEmpty()) {
             return ItemHandlerHelper.copyStackWithSize(stack, size);
         }
