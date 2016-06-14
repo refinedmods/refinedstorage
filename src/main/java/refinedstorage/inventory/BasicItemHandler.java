@@ -21,21 +21,17 @@ public class BasicItemHandler extends ItemStackHandler {
 
     @Override
     public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-        boolean mayInsert = validators.length > 0 ? false : true;
-
-        for (IItemValidator validator : validators) {
-            if (validator.valid(stack)) {
-                mayInsert = true;
-
-                break;
+        if (validators.length > 0) {
+            for (IItemValidator validator : validators) {
+                if (validator.valid(stack)) {
+                    return super.insertItem(slot, stack, simulate);
+                }
             }
+
+            return stack;
         }
 
-        if (mayInsert) {
-            return super.insertItem(slot, stack, simulate);
-        }
-
-        return stack;
+        return super.insertItem(slot, stack, simulate);
     }
 
     @Override
