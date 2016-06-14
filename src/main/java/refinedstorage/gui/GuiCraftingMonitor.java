@@ -123,7 +123,7 @@ public class GuiCraftingMonitor extends GuiBase {
 
                 GlStateManager.popMatrix();
 
-                if (inBounds(x + 5, y + 10, 16, 16, mouseX, mouseY)) {
+                if (inBounds(x + 5, y + 10, 16, 16, mouseX, mouseY) && !task.info.trim().equals("")) {
                     lines = task.info.split("\n");
 
                     for (int j = 0; j < lines.length; ++j) {
