@@ -121,7 +121,7 @@ public abstract class NBTStorage implements IStorage {
                     int remainingSpace = getCapacity() - getStored();
 
                     if (remainingSpace <= 0) {
-                        return stack;
+                        return ItemHandlerHelper.copyStackWithSize(stack, size);
                     }
 
                     if (!simulate) {
@@ -151,7 +151,7 @@ public abstract class NBTStorage implements IStorage {
             int remainingSpace = getCapacity() - getStored();
 
             if (remainingSpace <= 0) {
-                return stack;
+                return ItemHandlerHelper.copyStackWithSize(stack, size);
             }
 
             if (!simulate) {

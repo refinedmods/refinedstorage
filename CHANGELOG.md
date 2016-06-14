@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 0.7.12
+**Bugfixes**
+- Fixed interface overflowing
+
 ### 0.7.11
 **Bugfixes**
 - Fixed crash with wireless grid
