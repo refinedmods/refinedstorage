@@ -118,7 +118,6 @@ public class CommonProxy {
         registerItem(RefinedStorageItems.UPGRADE);
 
         OreDictionary.registerOre("itemSilicon", RefinedStorageItems.SILICON);
-        OreDictionary.registerOre("ingotQuartzEnrichedIron", RefinedStorageItems.QUARTZ_ENRICHED_IRON);
 
         // Processors
         SoldererRegistry.addRecipe(new SoldererRecipePrintedProcessor(ItemProcessor.TYPE_PRINTED_BASIC));

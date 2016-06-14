@@ -2,6 +2,7 @@
 
 ### 0.7.12
 **Bugfixes**
+- Fixed creative storage blocks and disks not working
 - Fixed interface overflowing
 
 ### 0.7.11
