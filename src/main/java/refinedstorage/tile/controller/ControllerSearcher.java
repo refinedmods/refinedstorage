@@ -22,7 +22,7 @@ public final class ControllerSearcher {
         if (tile instanceof TileController) {
             return (TileController) tile;
         } else if (tile instanceof TileMachine) {
-            if (visited.size() > 1 && tile instanceof TileRelay && !((TileRelay) tile).mayUpdate()) {
+            if (visited.size() > 1 && tile instanceof TileRelay && !((TileRelay) tile).canUpdate()) {
                 return null;
             }
 

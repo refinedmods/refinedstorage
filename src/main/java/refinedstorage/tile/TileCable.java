@@ -17,7 +17,7 @@ public class TileCable extends TileMachine {
         return null;
     }
 
-    public boolean maySendConnectivityData() {
+    public boolean canSendConnectivityData() {
         return false;
     }
 }

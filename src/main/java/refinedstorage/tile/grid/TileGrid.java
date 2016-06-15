@@ -137,7 +137,7 @@ public class TileGrid extends TileMachine implements IGrid {
         result.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(matrix, worldObj));
     }
 
-    public void onCrafted(ContainerGrid container) {
+    public void onCrafted(ContainerGrid container, boolean sendChanges) {
         if (!worldObj.isRemote) {
             ItemStack[] remainder = CraftingManager.getInstance().getRemainingItems(matrix, worldObj);
 
@@ -159,7 +159,9 @@ public class TileGrid extends TileMachine implements IGrid {
 
             onCraftingMatrixChanged();
 
-            container.detectAndSendChanges();
+            if (sendChanges) {
+                container.detectAndSendChanges();
+            }
         }
     }
 
@@ -169,7 +171,7 @@ public class TileGrid extends TileMachine implements IGrid {
         ItemStack crafted = result.getStackInSlot(0);
 
         while (true) {
-            onCrafted(container);
+            onCrafted(container, false);
 
             craftedItemsList.add(crafted.copy());
 
@@ -190,7 +192,7 @@ public class TileGrid extends TileMachine implements IGrid {
     }
 
     public void onCreatePattern() {
-        if (mayCreatePattern()) {
+        if (canCreatePattern()) {
             patterns.extractItem(0, 1, false);
 
             ItemStack pattern = new ItemStack(RefinedStorageItems.PATTERN);
@@ -217,7 +219,7 @@ public class TileGrid extends TileMachine implements IGrid {
         }
     }
 
-    public boolean mayCreatePattern() {
+    public boolean canCreatePattern() {
         return result.getStackInSlot(0) != null && patterns.getStackInSlot(1) == null && patterns.getStackInSlot(0) != null;
     }
 

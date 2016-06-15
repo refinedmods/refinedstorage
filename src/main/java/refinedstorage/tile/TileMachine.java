@@ -54,7 +54,7 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
                 searchController(worldObj);
             }
 
-            if (wasConnected != isActive() && maySendConnectivityData()) {
+            if (wasConnected != isActive() && canSendConnectivityData()) {
                 wasConnected = isActive();
 
                 RefinedStorageUtils.updateBlock(worldObj, pos);
@@ -68,16 +68,16 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
         super.update();
     }
 
-    public boolean maySendConnectivityData() {
+    public boolean canSendConnectivityData() {
         return true;
     }
 
-    public boolean mayUpdate() {
+    public boolean canUpdate() {
         return redstoneMode.isEnabled(worldObj, pos);
     }
 
     public boolean isActive() {
-        return connected && mayUpdate();
+        return connected && canUpdate();
     }
 
     public void onConnected(World world, TileController controller) {
@@ -87,7 +87,7 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
     }
 
     private boolean tryConnect(TileController controller) {
-        if (!controller.mayRun()) {
+        if (!controller.canRun()) {
             return false;
         }
 

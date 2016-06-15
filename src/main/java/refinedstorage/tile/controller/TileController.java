@@ -92,7 +92,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
             int lastEnergy = energy.getEnergyStored();
 
-            if (mayRun()) {
+            if (canRun()) {
                 if (ticks % 20 == 0) {
                     syncMachines();
                 }
@@ -129,8 +129,8 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
                 syncMachines();
             }
 
-            if (couldRun != mayRun()) {
-                couldRun = mayRun();
+            if (couldRun != canRun()) {
+                couldRun = canRun();
 
                 worldObj.notifyNeighborsOfStateChange(pos, RefinedStorageBlocks.CONTROLLER);
             }
@@ -292,7 +292,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
         this.patterns.clear();
 
         for (TileMachine machine : machines) {
-            if (!machine.mayUpdate()) {
+            if (!machine.canUpdate()) {
                 continue;
             }
 
@@ -599,7 +599,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
         return true;
     }
 
-    public boolean mayRun() {
+    public boolean canRun() {
         return energy.getEnergyStored() > 0 && energy.getEnergyStored() >= energyUsage && redstoneMode.isEnabled(worldObj, pos);
     }
 
@@ -654,7 +654,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
         List<ClientMachine> m = new ArrayList<ClientMachine>();
 
         for (TileMachine machine : machines) {
-            if (machine.mayUpdate()) {
+            if (machine.canUpdate()) {
                 IBlockState state = worldObj.getBlockState(machine.getPos());
 
                 ClientMachine clientMachine = new ClientMachine();

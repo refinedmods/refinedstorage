@@ -47,7 +47,7 @@ public class MessageWirelessGridCraftingStart extends MessageHandlerPlayerToServ
     public void handle(MessageWirelessGridCraftingStart message, EntityPlayerMP player) {
         TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.controllerX, message.controllerY, message.controllerZ));
 
-        if (tile instanceof TileController && ((TileController) tile).mayRun()) {
+        if (tile instanceof TileController && ((TileController) tile).canRun()) {
             ((TileController) tile).getStorageHandler().handleCraftingRequest(message.id, message.quantity);
         }
     }

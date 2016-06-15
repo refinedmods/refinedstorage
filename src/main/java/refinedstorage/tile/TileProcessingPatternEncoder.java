@@ -35,7 +35,7 @@ public class TileProcessingPatternEncoder extends TileBase {
     }
 
     public void onCreatePattern() {
-        if (mayCreatePattern()) {
+        if (canCreatePattern()) {
             ItemStack pattern = new ItemStack(RefinedStorageItems.PATTERN);
 
             ItemPattern.setProcessing(pattern, true);
@@ -55,7 +55,7 @@ public class TileProcessingPatternEncoder extends TileBase {
         }
     }
 
-    public boolean mayCreatePattern() {
+    public boolean canCreatePattern() {
         int inputsFilled = 0, outputsFilled = 0;
 
         for (int i = 0; i < 9; ++i) {

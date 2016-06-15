@@ -28,6 +28,6 @@ public class SlotGridCraftingResult extends SlotCrafting {
 
         onCrafting(stack);
 
-        grid.onCrafted(container);
+        grid.onCrafted(container, true);
     }
 }

@@ -10,12 +10,12 @@ import refinedstorage.tile.TileProcessingPatternEncoder;
 import java.io.IOException;
 
 public class GuiProcessingPatternEncoder extends GuiBase {
-    private TileProcessingPatternEncoder ppEncoder;
+    private TileProcessingPatternEncoder processingPatternEncoder;
 
-    public GuiProcessingPatternEncoder(ContainerProcessingPatternEncoder container, TileProcessingPatternEncoder ppEncoder) {
+    public GuiProcessingPatternEncoder(ContainerProcessingPatternEncoder container, TileProcessingPatternEncoder processingPatternEncoder) {
         super(container, 176, 172);
 
-        this.ppEncoder = ppEncoder;
+        this.processingPatternEncoder = processingPatternEncoder;
     }
 
     @Override
@@ -27,7 +27,7 @@ public class GuiProcessingPatternEncoder extends GuiBase {
     }
 
     public boolean isHoveringOverCreatePattern(int mouseX, int mouseY) {
-        return inBounds(152, 38, 16, 16, mouseX, mouseY) && ppEncoder.mayCreatePattern();
+        return inBounds(152, 38, 16, 16, mouseX, mouseY) && processingPatternEncoder.canCreatePattern();
     }
 
     @Override
@@ -42,7 +42,7 @@ public class GuiProcessingPatternEncoder extends GuiBase {
             ty = 1;
         }
 
-        if (!ppEncoder.mayCreatePattern()) {
+        if (!processingPatternEncoder.canCreatePattern()) {
             ty = 2;
         }
 
@@ -64,7 +64,7 @@ public class GuiProcessingPatternEncoder extends GuiBase {
         super.mouseClicked(mouseX, mouseY, mouseButton);
 
         if (isHoveringOverCreatePattern(mouseX - guiLeft, mouseY - guiTop)) {
-            RefinedStorage.NETWORK.sendToServer(new MessageGridPatternCreate(ppEncoder.getPos().getX(), ppEncoder.getPos().getY(), ppEncoder.getPos().getZ()));
+            RefinedStorage.NETWORK.sendToServer(new MessageGridPatternCreate(processingPatternEncoder.getPos().getX(), processingPatternEncoder.getPos().getY(), processingPatternEncoder.getPos().getZ()));
 
             mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
         }

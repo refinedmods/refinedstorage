@@ -24,8 +24,8 @@ public class TileRelay extends TileMachine {
     public void update() {
         super.update();
 
-        if (connected && couldUpdate != mayUpdate()) {
-            couldUpdate = mayUpdate();
+        if (connected && couldUpdate != canUpdate()) {
+            couldUpdate = canUpdate();
 
             worldObj.notifyNeighborsOfStateChange(pos, RefinedStorageBlocks.RELAY);
         }
