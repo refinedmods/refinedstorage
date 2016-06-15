@@ -1,15 +1,11 @@
 package refinedstorage.container;
 
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
-import refinedstorage.RefinedStorage;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.slot.*;
-import refinedstorage.network.MessageGridCraftingShift;
 import refinedstorage.tile.grid.IGrid;
 import refinedstorage.tile.grid.TileGrid;
 import refinedstorage.tile.grid.WirelessGrid;
@@ -103,21 +99,6 @@ public class ContainerGrid extends ContainerBase {
     }
 
     @Override
-    public ItemStack slotClick(int id, int clickedButton, ClickType clickType, EntityPlayer player) {
-        Slot slot = id >= 0 ? getSlot(id) : null;
-
-        if (player.worldObj.isRemote && slot instanceof SlotGridCraftingResult && grid.getType() == EnumGridType.CRAFTING && slot.getHasStack()) {
-            if (GuiScreen.isShiftKeyDown()) {
-                RefinedStorage.NETWORK.sendToServer(new MessageGridCraftingShift((TileGrid) grid));
-
-                return null;
-            }
-        }
-
-        return super.slotClick(id, clickedButton, clickType, player);
-    }
-
-    @Override
     public boolean canMergeSlot(ItemStack stack, Slot slot) {
         if (slot == craftingResultSlot || slot == patternResultSlot) {
             return false;
@@ -129,12 +110,18 @@ public class ContainerGrid extends ContainerBase {
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) {
         if (!player.worldObj.isRemote) {
-            ItemStack stack = inventorySlots.get(slotIndex).getStack();
+            Slot slot = inventorySlots.get(slotIndex);
 
-            if (stack != null) {
-                inventorySlots.get(slotIndex).putStack(grid.onItemPush(player, stack));
+            if (slot == craftingResultSlot) {
+                ((TileGrid) grid).onCraftedShift(this, player);
+            } else if (slot != patternResultSlot && !(slot instanceof SlotSpecimenLegacy)) {
+                ItemStack stack = inventorySlots.get(slotIndex).getStack();
 
-                detectAndSendChanges();
+                if (stack != null) {
+                    inventorySlots.get(slotIndex).putStack(grid.onItemPush(player, stack));
+
+                    detectAndSendChanges();
+                }
             }
         }
 

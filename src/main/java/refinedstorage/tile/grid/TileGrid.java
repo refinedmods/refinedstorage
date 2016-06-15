@@ -142,32 +142,26 @@ public class TileGrid extends TileMachine implements IGrid {
         result.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(matrix, worldObj));
     }
 
-    public void onCrafted(ContainerGrid container, boolean sendChanges) {
-        if (!worldObj.isRemote) {
-            ItemStack[] remainder = CraftingManager.getInstance().getRemainingItems(matrix, worldObj);
+    public void onCrafted() {
+        ItemStack[] remainder = CraftingManager.getInstance().getRemainingItems(matrix, worldObj);
 
-            for (int i = 0; i < matrix.getSizeInventory(); ++i) {
-                if (remainder[i] != null) {
-                    matrix.setInventorySlotContents(i, remainder[i].copy());
-                } else {
-                    ItemStack slot = matrix.getStackInSlot(i);
+        for (int i = 0; i < matrix.getSizeInventory(); ++i) {
+            if (remainder[i] != null) {
+                matrix.setInventorySlotContents(i, remainder[i].copy());
+            } else {
+                ItemStack slot = matrix.getStackInSlot(i);
 
-                    if (slot != null) {
-                        if (slot.stackSize == 1 && isConnected()) {
-                            matrix.setInventorySlotContents(i, controller.take(slot, 1));
-                        } else {
-                            matrix.decrStackSize(i, 1);
-                        }
+                if (slot != null) {
+                    if (slot.stackSize == 1 && isConnected()) {
+                        matrix.setInventorySlotContents(i, controller.take(slot, 1));
+                    } else {
+                        matrix.decrStackSize(i, 1);
                     }
                 }
             }
-
-            onCraftingMatrixChanged();
-
-            if (sendChanges) {
-                container.detectAndSendChanges();
-            }
         }
+
+        onCraftingMatrixChanged();
     }
 
     public void onCraftedShift(ContainerGrid container, EntityPlayer player) {
@@ -176,7 +170,7 @@ public class TileGrid extends TileMachine implements IGrid {
         ItemStack crafted = result.getStackInSlot(0);
 
         while (true) {
-            onCrafted(container, false);
+            onCrafted();
 
             craftedItemsList.add(crafted.copy());
 
