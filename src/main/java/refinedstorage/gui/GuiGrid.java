@@ -222,9 +222,9 @@ public class GuiGrid extends GuiBase {
         drawString(7, 7, t(grid instanceof WirelessGrid ? "gui.refinedstorage:wireless_grid" : "gui.refinedstorage:grid"));
 
         if (grid.getType() == EnumGridType.CRAFTING) {
-            drawString(7, 94, t("container.crafting"));
+            drawString(7, 95, t("container.crafting"));
         } else if (grid.getType() == EnumGridType.PATTERN) {
-            drawString(7, 94, t("gui.refinedstorage:grid.pattern"));
+            drawString(7, 95, t("gui.refinedstorage:grid.pattern"));
         }
 
         drawString(7, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 163 : 114, t("container.inventory"));

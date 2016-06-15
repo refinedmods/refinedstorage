@@ -65,25 +65,13 @@ public class ContainerGrid extends ContainerBase {
         return grid;
     }
 
-    @Override
-    public void detectAndSendChanges() {
+    public void sendCraftingSlots() {
         for (int i = 0; i < inventorySlots.size(); ++i) {
-            if (inventorySlots.get(i) instanceof SlotGridCrafting || inventorySlots.get(i) == craftingResultSlot) {
+            Slot slot = inventorySlots.get(i);
+
+            if (slot instanceof SlotGridCrafting || slot == craftingResultSlot) {
                 for (int j = 0; j < listeners.size(); ++j) {
-                    listeners.get(j).sendSlotContents(this, i, inventorySlots.get(i).getStack());
-                }
-            } else {
-                ItemStack current = inventorySlots.get(i).getStack();
-                ItemStack cached = inventoryItemStacks.get(i);
-
-                if (!ItemStack.areItemStacksEqual(cached, current)) {
-                    cached = current == null ? null : current.copy();
-
-                    inventoryItemStacks.set(i, cached);
-
-                    for (int j = 0; j < listeners.size(); ++j) {
-                        listeners.get(j).sendSlotContents(this, i, cached);
-                    }
+                    listeners.get(j).sendSlotContents(this, i, slot.getStack());
                 }
             }
         }
@@ -100,11 +88,7 @@ public class ContainerGrid extends ContainerBase {
 
     @Override
     public boolean canMergeSlot(ItemStack stack, Slot slot) {
-        if (slot == craftingResultSlot || slot == patternResultSlot) {
-            return false;
-        }
-
-        return super.canMergeSlot(stack, slot);
+        return (slot == craftingResultSlot || slot == patternResultSlot) ? false : super.canMergeSlot(stack, slot);
     }
 
     @Override

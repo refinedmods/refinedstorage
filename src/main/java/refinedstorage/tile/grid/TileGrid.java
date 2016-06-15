@@ -187,6 +187,7 @@ public class TileGrid extends TileMachine implements IGrid {
             }
         }
 
+        container.sendCraftingSlots();
         container.detectAndSendChanges();
     }
 
