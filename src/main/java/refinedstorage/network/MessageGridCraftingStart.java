@@ -48,7 +48,7 @@ public class MessageGridCraftingStart extends MessageHandlerPlayerToServer<Messa
         TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.x, message.y, message.z));
 
         if (tile instanceof TileGrid && ((TileGrid) tile).isConnected()) {
-            ((TileGrid) tile).getController().getStorageHandler().handleCraftingRequest(message.id, message.quantity);
+            ((TileGrid) tile).getController().getStorageHandler().onCraftingRequested(message.id, message.quantity);
         }
     }
 }

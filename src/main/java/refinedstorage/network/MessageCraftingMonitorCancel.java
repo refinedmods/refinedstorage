@@ -47,7 +47,7 @@ public class MessageCraftingMonitorCancel extends MessageHandlerPlayerToServer<M
             TileCraftingMonitor monitor = (TileCraftingMonitor) tile;
 
             if (monitor.isConnected()) {
-                monitor.getController().getStorageHandler().handleCraftingCancel(message.id);
+                monitor.getController().getStorageHandler().onCraftingCancelRequested(message.id);
             }
         }
     }

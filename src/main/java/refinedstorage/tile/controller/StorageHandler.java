@@ -18,7 +18,7 @@ public class StorageHandler {
         this.controller = controller;
     }
 
-    public void handlePull(int id, int flags, EntityPlayerMP player) {
+    public void onPull(int id, int flags, EntityPlayerMP player) {
         if (player.inventory.getItemStack() != null) {
             return;
         }
@@ -61,45 +61,34 @@ public class StorageHandler {
         }
     }
 
-    public void handlePush(int playerSlot, boolean one, EntityPlayerMP player) {
-        ItemStack stack;
+    public void onHeldItemPush(boolean one, EntityPlayerMP player) {
+        if (player.inventory.getItemStack() == null) {
+            return;
+        }
 
-        if (playerSlot == -1) {
-            stack = player.inventory.getItemStack().copy();
+        ItemStack stack = player.inventory.getItemStack();
+        int size = one ? 1 : stack.stackSize;
 
-            if (one) {
-                stack.stackSize = 1;
+        if (one) {
+            if (controller.push(stack, size, true) == null) {
+                controller.push(stack, size, false);
+
+                stack.stackSize -= size;
+
+                if (stack.stackSize == 0) {
+                    player.inventory.setItemStack(null);
+                }
             }
         } else {
-            stack = player.inventory.getStackInSlot(playerSlot);
+            player.inventory.setItemStack(controller.push(stack, size, false));
         }
 
-        if (stack != null) {
-            if (playerSlot == -1) {
-                if (one) {
-                    if (controller.push(stack, stack.stackSize, true) == null) {
-                        controller.push(stack, stack.stackSize, false);
+        player.updateHeldItem();
 
-                        player.inventory.getItemStack().stackSize--;
-
-                        if (player.inventory.getItemStack().stackSize == 0) {
-                            player.inventory.setItemStack(null);
-                        }
-                    }
-                } else {
-                    player.inventory.setItemStack(controller.push(stack, stack.stackSize, false));
-                }
-
-                player.updateHeldItem();
-            } else {
-                player.inventory.setInventorySlotContents(playerSlot, controller.push(stack, stack.stackSize, false));
-            }
-
-            controller.getWirelessGridHandler().drainEnergy(player, ItemWirelessGrid.USAGE_PUSH);
-        }
+        controller.getWirelessGridHandler().drainEnergy(player, ItemWirelessGrid.USAGE_PUSH);
     }
 
-    public void handleCraftingRequest(int id, int quantity) {
+    public void onCraftingRequested(int id, int quantity) {
         if (id >= 0 && id < controller.getItems().size() && quantity > 0 && quantity <= MAX_CRAFTING_PER_REQUEST) {
             ItemStack requested = controller.getItems().get(id);
 
@@ -127,7 +116,7 @@ public class StorageHandler {
         }
     }
 
-    public void handleCraftingCancel(int id) {
+    public void onCraftingCancelRequested(int id) {
         if (id >= 0 && id < controller.getCraftingTasks().size()) {
             controller.cancelCraftingTask(controller.getCraftingTasks().get(id));
         } else if (id == -1) {

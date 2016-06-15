@@ -7,21 +7,19 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import refinedstorage.tile.grid.TileGrid;
 
-public class MessageGridStoragePush extends MessageHandlerPlayerToServer<MessageGridStoragePush> implements IMessage {
+public class MessageGridHeldItemPush extends MessageHandlerPlayerToServer<MessageGridHeldItemPush> implements IMessage {
     private int x;
     private int y;
     private int z;
-    private int playerSlot;
     private boolean one;
 
-    public MessageGridStoragePush() {
+    public MessageGridHeldItemPush() {
     }
 
-    public MessageGridStoragePush(int x, int y, int z, int playerSlot, boolean one) {
+    public MessageGridHeldItemPush(int x, int y, int z, boolean one) {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.playerSlot = playerSlot;
         this.one = one;
     }
 
@@ -30,7 +28,6 @@ public class MessageGridStoragePush extends MessageHandlerPlayerToServer<Message
         x = buf.readInt();
         y = buf.readInt();
         z = buf.readInt();
-        playerSlot = buf.readInt();
         one = buf.readBoolean();
     }
 
@@ -39,16 +36,15 @@ public class MessageGridStoragePush extends MessageHandlerPlayerToServer<Message
         buf.writeInt(x);
         buf.writeInt(y);
         buf.writeInt(z);
-        buf.writeInt(playerSlot);
         buf.writeBoolean(one);
     }
 
     @Override
-    public void handle(MessageGridStoragePush message, EntityPlayerMP player) {
+    public void handle(MessageGridHeldItemPush message, EntityPlayerMP player) {
         TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.x, message.y, message.z));
 
         if (tile instanceof TileGrid && ((TileGrid) tile).isConnected()) {
-            ((TileGrid) tile).getController().getStorageHandler().handlePush(message.playerSlot, message.one, player);
+            ((TileGrid) tile).getController().getStorageHandler().onHeldItemPush(message.one, player);
         }
     }
 }

@@ -14,16 +14,11 @@ import refinedstorage.tile.grid.IGrid;
 import refinedstorage.tile.grid.TileGrid;
 import refinedstorage.tile.grid.WirelessGrid;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ContainerGrid extends ContainerBase {
-    private List<SlotGridCrafting> craftingSlots = new ArrayList<SlotGridCrafting>();
-    private SlotGridCraftingResult craftingResultSlot;
-
-    private SlotDisabled patternResultSlot;
-
     private IGrid grid;
+
+    private SlotGridCraftingResult craftingResultSlot;
+    private SlotDisabled patternResultSlot;
 
     public ContainerGrid(EntityPlayer player, IGrid grid) {
         super(player);
@@ -37,11 +32,7 @@ public class ContainerGrid extends ContainerBase {
             int y = 106;
 
             for (int i = 0; i < 9; ++i) {
-                SlotGridCrafting slot = new SlotGridCrafting(((TileGrid) grid).getMatrix(), i, x, y);
-
-                craftingSlots.add(slot);
-
-                addSlotToContainer(slot);
+                addSlotToContainer(new SlotGridCrafting(((TileGrid) grid).getMatrix(), i, x, y));
 
                 x += 18;
 
@@ -78,15 +69,6 @@ public class ContainerGrid extends ContainerBase {
         return grid;
     }
 
-    public List<SlotGridCrafting> getCraftingSlots() {
-        return craftingSlots;
-    }
-
-    /* I'm overriding detectAndSendChanges() here because the default check
-     checks if the item stacks are equal, and if so, then it will only send the new slot contents.
-     The thing is though, when the grid replaces the slots with new items from the storage
-     system, the item stack replaced WILL be the same and thus changes will not be sent!
-     That is why we override here to get rid of the check and ALWAYS send slot changes. */
     @Override
     public void detectAndSendChanges() {
         for (int i = 0; i < inventorySlots.size(); ++i) {
@@ -142,5 +124,20 @@ public class ContainerGrid extends ContainerBase {
         }
 
         return super.canMergeSlot(stack, slot);
+    }
+
+    @Override
+    public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) {
+        if (!player.worldObj.isRemote) {
+            ItemStack stack = inventorySlots.get(slotIndex).getStack();
+
+            if (stack != null) {
+                inventorySlots.get(slotIndex).putStack(grid.onItemPush(player, stack));
+
+                detectAndSendChanges();
+            }
+        }
+
+        return null;
     }
 }

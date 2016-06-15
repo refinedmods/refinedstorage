@@ -64,7 +64,7 @@ public class GuiHandler implements IGuiHandler {
     }
 
     private WirelessGrid getWirelessGrid(EntityPlayer player, int hand) {
-        return new WirelessGrid(player.getHeldItem(RefinedStorageUtils.getHandById(hand)), RefinedStorageUtils.getHandById(hand));
+        return new WirelessGrid(player.worldObj, player.getHeldItem(RefinedStorageUtils.getHandById(hand)), RefinedStorageUtils.getHandById(hand));
     }
 
     private ContainerGrid getWirelessGridContainer(EntityPlayer player, int hand) {

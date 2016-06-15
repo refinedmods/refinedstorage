@@ -1,5 +1,7 @@
 package refinedstorage.tile.grid;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.tile.ClientItem;
@@ -16,7 +18,9 @@ public interface IGrid {
 
     BlockPos getControllerPos();
 
-    void onItemPush(int playerSlot, boolean one);
+    ItemStack onItemPush(EntityPlayer player, ItemStack stack);
+
+    void onHeldItemPush(boolean one);
 
     void onItemPull(int id, int flags);
 

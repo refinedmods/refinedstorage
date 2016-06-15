@@ -43,7 +43,7 @@ public class CommonProxy {
 
         RefinedStorage.NETWORK.registerMessage(MessageTileContainerUpdate.class, MessageTileContainerUpdate.class, id++, Side.CLIENT);
         RefinedStorage.NETWORK.registerMessage(MessageRedstoneModeUpdate.class, MessageRedstoneModeUpdate.class, id++, Side.SERVER);
-        RefinedStorage.NETWORK.registerMessage(MessageGridStoragePush.class, MessageGridStoragePush.class, id++, Side.SERVER);
+        RefinedStorage.NETWORK.registerMessage(MessageGridHeldItemPush.class, MessageGridHeldItemPush.class, id++, Side.SERVER);
         RefinedStorage.NETWORK.registerMessage(MessageGridStoragePull.class, MessageGridStoragePull.class, id++, Side.SERVER);
         RefinedStorage.NETWORK.registerMessage(MessageCompareUpdate.class, MessageCompareUpdate.class, id++, Side.SERVER);
         RefinedStorage.NETWORK.registerMessage(MessageModeToggle.class, MessageModeToggle.class, id++, Side.SERVER);
@@ -52,10 +52,9 @@ public class CommonProxy {
         RefinedStorage.NETWORK.registerMessage(MessageGridCraftingClear.class, MessageGridCraftingClear.class, id++, Side.SERVER);
         RefinedStorage.NETWORK.registerMessage(MessagePriorityUpdate.class, MessagePriorityUpdate.class, id++, Side.SERVER);
         RefinedStorage.NETWORK.registerMessage(MessageGridSettingsUpdate.class, MessageGridSettingsUpdate.class, id++, Side.SERVER);
-        RefinedStorage.NETWORK.registerMessage(MessageGridCraftingPush.class, MessageGridCraftingPush.class, id++, Side.SERVER);
         RefinedStorage.NETWORK.registerMessage(MessageGridCraftingTransfer.class, MessageGridCraftingTransfer.class, id++, Side.SERVER);
         RefinedStorage.NETWORK.registerMessage(MessageWirelessGridSettingsUpdate.class, MessageWirelessGridSettingsUpdate.class, id++, Side.SERVER);
-        RefinedStorage.NETWORK.registerMessage(MessageWirelessGridStoragePush.class, MessageWirelessGridStoragePush.class, id++, Side.SERVER);
+        RefinedStorage.NETWORK.registerMessage(MessageWirelessGridHeldItemPush.class, MessageWirelessGridHeldItemPush.class, id++, Side.SERVER);
         RefinedStorage.NETWORK.registerMessage(MessageWirelessGridStoragePull.class, MessageWirelessGridStoragePull.class, id++, Side.SERVER);
         RefinedStorage.NETWORK.registerMessage(MessageGridCraftingShift.class, MessageGridCraftingShift.class, id++, Side.SERVER);
         RefinedStorage.NETWORK.registerMessage(MessageGridCraftingStart.class, MessageGridCraftingStart.class, id++, Side.SERVER);

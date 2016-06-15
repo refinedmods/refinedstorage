@@ -6,7 +6,6 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -20,7 +19,6 @@ import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.jei.RefinedStorageJEIPlugin;
 import refinedstorage.network.GridPullFlags;
 import refinedstorage.network.MessageGridCraftingClear;
-import refinedstorage.network.MessageGridCraftingPush;
 import refinedstorage.network.MessageGridPatternCreate;
 import refinedstorage.tile.ClientItem;
 import refinedstorage.tile.grid.IGrid;
@@ -331,9 +329,15 @@ public class GuiGrid extends GuiBase {
 
             RefinedStorage.NETWORK.sendToServer(new MessageGridPatternCreate(gridPos.getX(), gridPos.getY(), gridPos.getZ()));
         } else if (grid.isConnected()) {
+            if (clickedClear) {
+                RefinedStorage.NETWORK.sendToServer(new MessageGridCraftingClear((TileGrid) grid));
+            }
+
             if (isHoveringOverSlotArea(mouseX - guiLeft, mouseY - guiTop) && container.getPlayer().inventory.getItemStack() != null && (clickedButton == 0 || clickedButton == 1)) {
-                grid.onItemPush(-1, clickedButton == 1);
-            } else if (isHoveringOverItemInSlot() && container.getPlayer().inventory.getItemStack() == null) {
+                grid.onHeldItemPush(clickedButton == 1);
+            }
+
+            if (isHoveringOverItemInSlot() && container.getPlayer().inventory.getItemStack() == null) {
                 if (items.get(slotNumber).getStack().stackSize == 0 || (GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown())) {
                     FMLCommonHandler.instance().showGuiScreen(new GuiCraftingSettings(this, slotId));
                 } else {
@@ -352,26 +356,6 @@ public class GuiGrid extends GuiBase {
                     }
 
                     grid.onItemPull(slotId, flags);
-                }
-            } else if (clickedClear) {
-                RefinedStorage.NETWORK.sendToServer(new MessageGridCraftingClear((TileGrid) grid));
-            } else {
-                for (Slot slot : container.getPlayerInventorySlots()) {
-                    if (inBounds(slot.xDisplayPosition, slot.yDisplayPosition, 16, 16, mouseX - guiLeft, mouseY - guiTop)) {
-                        if (GuiScreen.isShiftKeyDown()) {
-                            grid.onItemPush(slot.slotNumber, clickedButton == 1);
-                        }
-                    }
-                }
-
-                if (grid.getType() == EnumGridType.CRAFTING) {
-                    for (Slot slot : container.getCraftingSlots()) {
-                        if (inBounds(slot.xDisplayPosition, slot.yDisplayPosition, 16, 16, mouseX - guiLeft, mouseY - guiTop)) {
-                            if (GuiScreen.isShiftKeyDown()) {
-                                RefinedStorage.NETWORK.sendToServer(new MessageGridCraftingPush((TileGrid) grid, slot.getSlotIndex()));
-                            }
-                        }
-                    }
                 }
             }
         }

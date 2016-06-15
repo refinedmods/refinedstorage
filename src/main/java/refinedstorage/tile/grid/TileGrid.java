@@ -21,9 +21,9 @@ import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.network.MessageGridCraftingStart;
+import refinedstorage.network.MessageGridHeldItemPush;
 import refinedstorage.network.MessageGridSettingsUpdate;
 import refinedstorage.network.MessageGridStoragePull;
-import refinedstorage.network.MessageGridStoragePush;
 import refinedstorage.tile.ClientItem;
 import refinedstorage.tile.TileMachine;
 import refinedstorage.tile.config.IRedstoneModeConfig;
@@ -110,8 +110,13 @@ public class TileGrid extends TileMachine implements IGrid {
     }
 
     @Override
-    public void onItemPush(int playerSlot, boolean one) {
-        RefinedStorage.NETWORK.sendToServer(new MessageGridStoragePush(getPos().getX(), getPos().getY(), getPos().getZ(), playerSlot, one));
+    public ItemStack onItemPush(EntityPlayer player, ItemStack stack) {
+        return isConnected() ? controller.push(stack, stack.stackSize, false) : stack;
+    }
+
+    @Override
+    public void onHeldItemPush(boolean one) {
+        RefinedStorage.NETWORK.sendToServer(new MessageGridHeldItemPush(getPos().getX(), getPos().getY(), getPos().getZ(), one));
     }
 
     @Override
