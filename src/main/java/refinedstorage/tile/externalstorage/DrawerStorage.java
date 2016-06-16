@@ -37,7 +37,7 @@ public class DrawerStorage extends ExternalStorage {
                     int remainingSpace = getCapacity() - getStored();
 
                     if (remainingSpace <= 0) {
-                        return stack;
+                        return ItemHandlerHelper.copyStackWithSize(stack, size);
                     }
 
                     if (!simulate) {
@@ -57,7 +57,7 @@ public class DrawerStorage extends ExternalStorage {
                     int remainingSpace = getCapacity() - getStored();
 
                     if (remainingSpace <= 0) {
-                        return stack;
+                        return ItemHandlerHelper.copyStackWithSize(stack, size);
                     }
 
                     if (!simulate) {
