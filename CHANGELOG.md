@@ -1,7 +1,8 @@
 # Refined Storage Changelog
 
 ### 0.7.13
-- Fixed not being able to triple click in grid
+**Features**
+- Added ability to triple click in grid
 
 ### 0.7.12
 **Bugfixes**
