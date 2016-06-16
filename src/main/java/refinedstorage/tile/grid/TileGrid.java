@@ -73,7 +73,16 @@ public class TileGrid extends TileMachine implements IGrid {
 
     @Override
     public int getEnergyUsage() {
-        return 4;
+        switch (getType()) {
+            case NORMAL:
+                return 2;
+            case CRAFTING:
+                return 4;
+            case PATTERN:
+                return 3;
+            default:
+                return 0;
+        }
     }
 
     @Override
