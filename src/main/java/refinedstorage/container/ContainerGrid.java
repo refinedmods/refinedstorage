@@ -38,7 +38,7 @@ public class ContainerGrid extends ContainerBase {
                 }
             }
 
-            addSlotToContainer(craftingResultSlot = new SlotGridCraftingResult(this, player, ((TileGrid) grid).getMatrix(), ((TileGrid) grid).getResult(), (TileGrid) grid, 0, 133 + 4, 120 + 4));
+            addSlotToContainer(craftingResultSlot = new SlotGridCraftingResult(this, player, (TileGrid) grid, 0, 133 + 4, 120 + 4));
         } else if (grid.getType() == EnumGridType.PATTERN) {
             int x = 8;
             int y = 106;
