@@ -50,9 +50,9 @@ public class TileSolderer extends TileMachine {
             if (newRecipe == null) {
                 stop();
             } else if (newRecipe != recipe) {
-                boolean isSameItem = items.getStackInSlot(3) != null ? RefinedStorageUtils.compareStackNoQuantity(items.getStackInSlot(3), newRecipe.getResult()) : false;
+                boolean sameItem = items.getStackInSlot(3) != null ? RefinedStorageUtils.compareStackNoQuantity(items.getStackInSlot(3), newRecipe.getResult()) : false;
 
-                if (items.getStackInSlot(3) == null || (isSameItem && ((items.getStackInSlot(3).stackSize + newRecipe.getResult().stackSize) <= items.getStackInSlot(3).getMaxStackSize()))) {
+                if (items.getStackInSlot(3) == null || (sameItem && ((items.getStackInSlot(3).stackSize + newRecipe.getResult().stackSize) <= items.getStackInSlot(3).getMaxStackSize()))) {
                     recipe = newRecipe;
                     progress = 0;
                     working = true;

@@ -354,9 +354,9 @@ public class CommonProxy {
 
         // Storage Parts
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RefinedStorageItems.STORAGE_PART, 1, ItemStoragePart.TYPE_1K),
-            "ESE",
+            "SES",
             "GRG",
-            "EGE",
+            "SGS",
             'R', new ItemStack(Items.REDSTONE),
             'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
             'S', "itemSilicon",
@@ -364,9 +364,9 @@ public class CommonProxy {
         ));
 
         GameRegistry.addRecipe(new ItemStack(RefinedStorageItems.STORAGE_PART, 1, ItemStoragePart.TYPE_4K),
-            "EPE",
+            "PEP",
             "SRS",
-            "ESE",
+            "PSP",
             'R', new ItemStack(Items.REDSTONE),
             'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
             'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
@@ -374,9 +374,9 @@ public class CommonProxy {
         );
 
         GameRegistry.addRecipe(new ItemStack(RefinedStorageItems.STORAGE_PART, 1, ItemStoragePart.TYPE_16K),
-            "EPE",
+            "PEP",
             "SRS",
-            "ESE",
+            "PSP",
             'R', new ItemStack(Items.REDSTONE),
             'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
             'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED),
@@ -384,9 +384,9 @@ public class CommonProxy {
         );
 
         GameRegistry.addRecipe(new ItemStack(RefinedStorageItems.STORAGE_PART, 1, ItemStoragePart.TYPE_64K),
-            "EPE",
+            "PEP",
             "SRS",
-            "ESE",
+            "PSP",
             'R', new ItemStack(Items.REDSTONE),
             'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
             'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
