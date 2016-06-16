@@ -73,15 +73,15 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
 
     @Override
     public int getEnergyUsage() {
-        int base = 5;
+        int usage = 0;
 
         for (int i = 0; i < disks.getSlots(); ++i) {
             if (disks.getStackInSlot(i) != null) {
-                base += 2;
+                usage += 1;
             }
         }
 
-        return base;
+        return usage;
     }
 
     @Override

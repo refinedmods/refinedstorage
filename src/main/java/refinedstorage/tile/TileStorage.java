@@ -64,7 +64,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
 
     @Override
     public int getEnergyUsage() {
-        return 3;
+        return 1;
     }
 
     @Override
