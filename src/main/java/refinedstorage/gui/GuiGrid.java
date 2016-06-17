@@ -6,9 +6,11 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import org.apache.commons.lang3.StringUtils;
 import refinedstorage.RefinedStorage;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
@@ -126,13 +128,45 @@ public class GuiGrid extends GuiBase {
         if (grid.isConnected()) {
             items.addAll(grid.getItems());
 
-            if (!searchField.getText().trim().isEmpty()) {
+            String query = searchField.getText().trim().toLowerCase();
+
+            if (!query.isEmpty()) {
                 Iterator<ClientItem> t = items.iterator();
 
                 while (t.hasNext()) {
                     ClientItem item = t.next();
 
-                    if (!item.getStack().getDisplayName().toLowerCase().contains(searchField.getText().toLowerCase())) {
+                    if (query.startsWith("@")) {
+                        String[] parts = query.split(" ");
+
+                        String modId = parts[0].substring(1);
+                        String modIdFromItem = Item.REGISTRY.getNameForObject(item.getStack().getItem()).getResourceDomain();
+
+                        if (!modIdFromItem.contains(modId)) {
+                            t.remove();
+                        } else if (parts.length >= 2) {
+                            StringBuilder itemFromMod = new StringBuilder();
+
+                            for (int i = 1; i < parts.length; ++i) {
+                                itemFromMod.append(parts[i]);
+
+                                if (i != parts.length - 1) {
+                                    itemFromMod.append(" ");
+                                }
+                            }
+
+                            if (!item.getStack().getDisplayName().toLowerCase().contains(itemFromMod.toString())) {
+                                t.remove();
+                            }
+                        }
+                    } else if (query.startsWith("#")) {
+                        String tooltip = query.substring(1);
+                        String tooltipFromItem = StringUtils.join(item.getStack().getTooltip(container.getPlayer(), true), "\n");
+
+                        if (!tooltipFromItem.contains(tooltip)) {
+                            t.remove();
+                        }
+                    } else if (!item.getStack().getDisplayName().toLowerCase().contains(query)) {
                         t.remove();
                     }
                 }

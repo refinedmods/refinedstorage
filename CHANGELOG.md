@@ -6,8 +6,9 @@
 
 **Features**
 - Added shift clicking support to every inventory (for upgrades etc)
+- Added grid filtering options: @ for searching on mod items, # for searching on tooltips
 - Tweaked some recipes
-- Tweaked some energy usage in machines
+- Tweaked energy usage in some machines
 
 ### 0.7.13
 **Features**
