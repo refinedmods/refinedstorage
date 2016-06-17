@@ -2,8 +2,8 @@
 
 ### 0.7.14
 **Bugfixes**
-- Fixed item overflow bug with storage drawers and external storage
 - Updated Forge to build 1965
+- Fixed item overflow bug with storage drawers and external storage
 
 **Features**
 - Added shift clicking support to every inventory (for upgrades etc)
