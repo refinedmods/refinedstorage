@@ -36,10 +36,14 @@ public class ContainerSolderer extends ContainerBase {
         Slot slot = getSlot(index);
 
         if (slot != null && slot.getHasStack()) {
-            stack = slot.getStack().copy();
+            stack = slot.getStack();
 
             if (index < 4) {
-                if (!mergeItemStack(stack, 4 + 1, inventorySlots.size(), true)) {
+                if (!mergeItemStack(stack, 4 + 4, inventorySlots.size(), false)) {
+                    return null;
+                }
+            } else if (index < 4 + 4) {
+                if (!mergeItemStack(stack, 4 + 4, inventorySlots.size(), false)) {
                     return null;
                 }
             } else if (!mergeItemStack(stack, 0, 3, false)) { // 0 - 3 because we can't shift click to output slot

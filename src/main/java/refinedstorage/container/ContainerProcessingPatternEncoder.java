@@ -46,10 +46,10 @@ public class ContainerProcessingPatternEncoder extends ContainerBase {
         Slot slot = getSlot(index);
 
         if (slot != null && !(slot instanceof SlotSpecimen) && slot.getHasStack()) {
-            stack = slot.getStack().copy();
+            stack = slot.getStack();
 
             if (index < 2) {
-                if (!mergeItemStack(stack, 2 + 18 + 1, inventorySlots.size(), false)) {
+                if (!mergeItemStack(stack, 2 + 18, inventorySlots.size(), false)) {
                     return null;
                 }
             } else if (!mergeItemStack(stack, 0, 1, false)) {

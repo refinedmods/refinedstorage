@@ -29,7 +29,7 @@ public class ContainerImporter extends ContainerBase {
         Slot slot = getSlot(index);
 
         if (slot != null && slot.getHasStack()) {
-            stack = slot.getStack().copy();
+            stack = slot.getStack();
 
             if (index < 4) {
                 if (!mergeItemStack(stack, 4 + 9, inventorySlots.size(), false)) {
