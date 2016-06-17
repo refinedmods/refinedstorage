@@ -31,7 +31,7 @@ public class ContainerDiskDrive extends ContainerStorage {
             stack = slot.getStack().copy();
 
             if (index < 8) {
-                if (!mergeItemStack(stack, 8, inventorySlots.size(), true)) {
+                if (!mergeItemStack(stack, 8 + 9 + 1, inventorySlots.size(), false)) {
                     return null;
                 }
             } else if (!mergeItemStack(stack, 0, 8, false)) {

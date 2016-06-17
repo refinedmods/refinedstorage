@@ -41,7 +41,7 @@ public class ContainerInterface extends ContainerBase {
             stack = slot.getStack().copy();
 
             if (index < 9) {
-                if (!mergeItemStack(stack, 9, inventorySlots.size(), true)) {
+                if (!mergeItemStack(stack, 9 + 9 + 9 + 4 + 1, inventorySlots.size(), true)) {
                     return null;
                 }
             } else if (!mergeItemStack(stack, 0, 9, false)) {
