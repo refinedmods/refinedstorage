@@ -6,8 +6,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 
 import java.util.List;
@@ -35,6 +40,15 @@ public class ItemPattern extends ItemBase {
 
             RefinedStorageUtils.combineMultipleItemsInTooltip(list, getOutputs(pattern));
         }
+    }
+
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
+        if (!world.isRemote && player.isSneaking()) {
+            return new ActionResult(EnumActionResult.SUCCESS, new ItemStack(RefinedStorageItems.PATTERN));
+        }
+
+        return new ActionResult(EnumActionResult.PASS, stack);
     }
 
     public static void addInput(ItemStack pattern, ItemStack stack) {

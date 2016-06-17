@@ -8,6 +8,7 @@
 **Features**
 - Added shift clicking support to every inventory (for upgrades etc)
 - Added grid filtering options: @ for searching on mod items, # for searching on tooltips
+- Added a way to clear patterns (shift + right click in inventory)
 - Tweaked some recipes
 - Tweaked energy usage in some machines
 
