@@ -8,7 +8,6 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
 import refinedstorage.RefinedStorage;
 import refinedstorage.gui.sidebutton.SideButton;
 
@@ -87,18 +86,20 @@ public abstract class GuiBase extends GuiContainer {
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float renderPartialTicks, int mouseX, int mouseY) {
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
         drawBackground(guiLeft, guiTop, mouseX, mouseY);
 
         if (scrollbar != null) {
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+
             scrollbar.draw(this);
         }
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
         mouseX -= guiLeft;
         mouseY -= guiTop;
@@ -209,7 +210,7 @@ public abstract class GuiBase extends GuiContainer {
         if (text != null) {
             GlStateManager.pushMatrix();
             GlStateManager.translate(x, y, 1);
-            GL11.glScalef(0.5f, 0.5f, 1);
+            GlStateManager.scale(0.5f, 0.5f, 1);
 
             GlStateManager.disableLighting();
             GlStateManager.disableRescaleNormal();
@@ -234,9 +235,9 @@ public abstract class GuiBase extends GuiContainer {
     }
 
     public void drawString(int x, int y, String message, int color) {
-        GL11.glDisable(GL11.GL_LIGHTING);
+        GlStateManager.disableLighting();
         fontRendererObj.drawString(message, x, y, color);
-        GL11.glEnable(GL11.GL_LIGHTING);
+        GlStateManager.enableLighting();
     }
 
     public void drawTooltip(int x, int y, String message) {
@@ -244,15 +245,15 @@ public abstract class GuiBase extends GuiContainer {
     }
 
     public void drawTooltip(int x, int y, List<String> lines) {
-        GL11.glDisable(GL11.GL_LIGHTING);
+        GlStateManager.disableLighting();
         drawHoveringText(lines, x, y);
-        GL11.glEnable(GL11.GL_LIGHTING);
+        GlStateManager.enableLighting();
     }
 
     public void drawTooltip(int x, int y, ItemStack stack) {
-        GL11.glDisable(GL11.GL_LIGHTING);
+        GlStateManager.disableLighting();
         renderToolTip(stack, x, y);
-        GL11.glEnable(GL11.GL_LIGHTING);
+        GlStateManager.enableLighting();
     }
 
     public void drawTexture(int x, int y, int textureX, int textureY, int width, int height) {
