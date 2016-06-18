@@ -20,10 +20,10 @@ public class GuiController extends GuiBase {
     private int barWidth = 16;
     private int barHeight = 59;
 
-    private Scrollbar scrollbar = new Scrollbar(157, 20, 12, 59);
-
     public GuiController(ContainerController container, TileController controller) {
         super(container, 176, 181);
+
+        setScrollbar(new Scrollbar(157, 20, 12, 59));
 
         this.controller = controller;
     }
@@ -34,16 +34,9 @@ public class GuiController extends GuiBase {
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        super.drawScreen(mouseX, mouseY, partialTicks);
-
-        scrollbar.update(this, mouseX - guiLeft, mouseY - guiTop);
-    }
-
-    @Override
     public void update(int x, int y) {
-        scrollbar.setCanScroll(getRows() > VISIBLE_ROWS);
-        scrollbar.setScrollDelta((float) scrollbar.getScrollbarHeight() / (float) getRows());
+        getScrollbar().setCanScroll(getRows() > VISIBLE_ROWS);
+        getScrollbar().setScrollDelta((float) getScrollbar().getScrollbarHeight() / (float) getRows());
     }
 
     @Override
@@ -55,8 +48,6 @@ public class GuiController extends GuiBase {
         int barHeightNew = (int) ((float) controller.getEnergyStored(null) / (float) controller.getMaxEnergyStored(null) * (float) barHeight);
 
         drawTexture(x + barX, y + barY + barHeight - barHeightNew, 178, barHeight - barHeightNew, barWidth, barHeightNew);
-
-        scrollbar.draw(this);
     }
 
     @Override
@@ -119,7 +110,7 @@ public class GuiController extends GuiBase {
     }
 
     public int getOffset() {
-        return (int) (scrollbar.getCurrentScroll() / 59f * (float) getRows());
+        return (int) Math.ceil(getScrollbar().getCurrentScroll() / 59f * (float) getRows());
     }
 
     private int getRows() {

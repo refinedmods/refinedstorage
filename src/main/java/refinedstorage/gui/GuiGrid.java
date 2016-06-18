@@ -74,14 +74,13 @@ public class GuiGrid extends GuiBase {
     private int slotNumber;
     private int slotId;
 
-    private Scrollbar scrollbar;
-
     public GuiGrid(ContainerGrid container, IGrid grid) {
         super(container, 193, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 256 : 208);
 
+        setScrollbar(new Scrollbar(174, 20, 12, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 70 : 88));
+
         this.container = container;
         this.grid = grid;
-        this.scrollbar = new Scrollbar(174, 20, 12, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 70 : 88);
     }
 
     @Override
@@ -108,13 +107,6 @@ public class GuiGrid extends GuiBase {
         addSideButton(new SideButtonGridSortingDirection(grid));
         addSideButton(new SideButtonGridSortingType(grid));
         addSideButton(new SideButtonGridSearchBoxMode(grid));
-    }
-
-    @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        super.drawScreen(mouseX, mouseY, partialTicks);
-
-        scrollbar.update(this, mouseX - guiLeft, mouseY - guiTop);
     }
 
     public IGrid getGrid() {
@@ -179,33 +171,37 @@ public class GuiGrid extends GuiBase {
             }
         }
 
-        scrollbar.setCanScroll(getRows() > getVisibleRows());
-        scrollbar.setScrollDelta((float) scrollbar.getScrollbarHeight() / (float) getRows());
+        getScrollbar().setCanScroll(getRows() > getVisibleRows());
+        getScrollbar().setScrollDelta((float) getScrollbar().getScrollbarHeight() / (float) getRows());
     }
 
     public int getOffset() {
-        return (int) (scrollbar.getCurrentScroll() / 70f * (float) getRows());
+        return (int) Math.ceil(getScrollbar().getCurrentScroll() / 70f * (float) getRows());
     }
 
     public int getRows() {
-        int max = (int) Math.ceil((float) items.size() / (float) 9);
+        int max = (int) Math.ceil((float) items.size() / 9f);
 
         return max < 0 ? 0 : max;
     }
 
-    private boolean isHoveringOverItemInSlot() {
-        return grid.isConnected() && isHoveringOverSlot() && slotNumber < items.size();
+    private boolean isOverSlotWithItem() {
+        return grid.isConnected() && isOverSlot() && slotNumber < items.size();
     }
 
-    private boolean isHoveringOverSlot() {
+    private boolean isOverSlot() {
         return slotNumber >= 0;
     }
 
-    private boolean isHoveringOverSlotArea(int mouseX, int mouseY) {
+    private boolean isOverSlotArea(int mouseX, int mouseY) {
         return inBounds(7, 19, 162, 18 * getVisibleRows(), mouseX, mouseY);
     }
 
-    public boolean isHoveringOverClear(int mouseX, int mouseY) {
+    public int getVisibleRows() {
+        return (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 4 : 5;
+    }
+
+    public boolean isOverClear(int mouseX, int mouseY) {
         switch (grid.getType()) {
             case CRAFTING:
                 return inBounds(81, 105, 7, 7, mouseX, mouseY);
@@ -216,7 +212,7 @@ public class GuiGrid extends GuiBase {
         }
     }
 
-    public boolean isHoveringOverCreatePattern(int mouseX, int mouseY) {
+    public boolean isOverCreatePattern(int mouseX, int mouseY) {
         return grid.getType() == EnumGridType.PATTERN && inBounds(152, 124, 16, 16, mouseX, mouseY) && ((TileGrid) grid).canCreatePattern();
     }
 
@@ -235,7 +231,7 @@ public class GuiGrid extends GuiBase {
         if (grid.getType() == EnumGridType.PATTERN) {
             int ty = 0;
 
-            if (isHoveringOverCreatePattern(mouseX - guiLeft, mouseY - guiTop)) {
+            if (isOverCreatePattern(mouseX - guiLeft, mouseY - guiTop)) {
                 ty = 1;
             }
 
@@ -245,8 +241,6 @@ public class GuiGrid extends GuiBase {
 
             drawTexture(x + 152, y + 124, 195, ty * 16, 16, 16);
         }
-
-        scrollbar.draw(this);
 
         searchField.drawTextBox();
     }
@@ -311,15 +305,15 @@ public class GuiGrid extends GuiBase {
             }
         }
 
-        if (isHoveringOverItemInSlot()) {
+        if (isOverSlotWithItem()) {
             drawTooltip(mouseX, mouseY, items.get(slotNumber).getStack());
         }
 
-        if (isHoveringOverClear(mouseX, mouseY)) {
+        if (isOverClear(mouseX, mouseY)) {
             drawTooltip(mouseX, mouseY, t("misc.refinedstorage:clear"));
         }
 
-        if (isHoveringOverCreatePattern(mouseX, mouseY)) {
+        if (isOverCreatePattern(mouseX, mouseY)) {
             drawTooltip(mouseX, mouseY, t("gui.refinedstorage:grid.pattern_create"));
         }
     }
@@ -355,8 +349,8 @@ public class GuiGrid extends GuiBase {
             updateJEI();
         }
 
-        boolean clickedClear = clickedButton == 0 && isHoveringOverClear(mouseX - guiLeft, mouseY - guiTop);
-        boolean clickedCreatePattern = clickedButton == 0 && isHoveringOverCreatePattern(mouseX - guiLeft, mouseY - guiTop);
+        boolean clickedClear = clickedButton == 0 && isOverClear(mouseX - guiLeft, mouseY - guiTop);
+        boolean clickedCreatePattern = clickedButton == 0 && isOverCreatePattern(mouseX - guiLeft, mouseY - guiTop);
 
         if (clickedCreatePattern) {
             BlockPos gridPos = ((TileGrid) grid).getPos();
@@ -367,11 +361,11 @@ public class GuiGrid extends GuiBase {
                 RefinedStorage.NETWORK.sendToServer(new MessageGridCraftingClear((TileGrid) grid));
             }
 
-            if (isHoveringOverSlotArea(mouseX - guiLeft, mouseY - guiTop) && container.getPlayer().inventory.getItemStack() != null && (clickedButton == 0 || clickedButton == 1)) {
+            if (isOverSlotArea(mouseX - guiLeft, mouseY - guiTop) && container.getPlayer().inventory.getItemStack() != null && (clickedButton == 0 || clickedButton == 1)) {
                 grid.onHeldItemPush(clickedButton == 1);
             }
 
-            if (isHoveringOverItemInSlot() && container.getPlayer().inventory.getItemStack() == null) {
+            if (isOverSlotWithItem() && container.getPlayer().inventory.getItemStack() == null) {
                 if (items.get(slotNumber).getStack().stackSize == 0 || (GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown())) {
                     FMLCommonHandler.instance().showGuiScreen(new GuiCraftingSettings(this, slotId));
                 } else {
@@ -412,9 +406,5 @@ public class GuiGrid extends GuiBase {
         if (RefinedStorage.hasJei() && (grid.getSearchBoxMode() == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED || grid.getSearchBoxMode() == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED)) {
             RefinedStorageJEIPlugin.INSTANCE.getRuntime().getItemListOverlay().setFilterText(searchField.getText());
         }
-    }
-
-    public int getVisibleRows() {
-        return (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 4 : 5;
     }
 }

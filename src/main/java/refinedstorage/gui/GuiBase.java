@@ -7,6 +7,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import refinedstorage.RefinedStorage;
 import refinedstorage.gui.sidebutton.SideButton;
@@ -26,6 +27,8 @@ public abstract class GuiBase extends GuiContainer {
     private int lastSideButtonY = 6;
     private String sideButtonTooltip;
 
+    private Scrollbar scrollbar;
+
     protected int width;
     protected int height;
 
@@ -36,6 +39,14 @@ public abstract class GuiBase extends GuiContainer {
         this.height = height;
         this.xSize = width;
         this.ySize = height;
+    }
+
+    public void setScrollbar(Scrollbar scrollbar) {
+        this.scrollbar = scrollbar;
+    }
+
+    public Scrollbar getScrollbar() {
+        return scrollbar;
     }
 
     @Override
@@ -66,10 +77,23 @@ public abstract class GuiBase extends GuiContainer {
     }
 
     @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        super.drawScreen(mouseX, mouseY, partialTicks);
+
+        if (scrollbar != null) {
+            scrollbar.update(this, mouseX - guiLeft, mouseY - guiTop);
+        }
+    }
+
+    @Override
     protected void drawGuiContainerBackgroundLayer(float renderPartialTicks, int mouseX, int mouseY) {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         drawBackground(guiLeft, guiTop, mouseX, mouseY);
+
+        if (scrollbar != null) {
+            scrollbar.draw(this);
+        }
     }
 
     @Override
@@ -93,6 +117,17 @@ public abstract class GuiBase extends GuiContainer {
 
         if (sideButtonTooltip != null) {
             drawTooltip(mouseX, mouseY, sideButtonTooltip);
+        }
+    }
+
+    @Override
+    public void handleMouseInput() throws IOException {
+        super.handleMouseInput();
+
+        int d = Mouse.getEventDWheel();
+
+        if (d != 0) {
+            scrollbar.wheel(d);
         }
     }
 

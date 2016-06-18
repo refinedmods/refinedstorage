@@ -31,10 +31,10 @@ public class GuiCraftingMonitor extends GuiBase {
     private int renderItemSelectionX;
     private int renderItemSelectionY;
 
-    private Scrollbar scrollbar = new Scrollbar(157, 20, 12, 89);
-
     public GuiCraftingMonitor(ContainerCraftingMonitor container, TileCraftingMonitor craftingMonitor) {
         super(container, 176, 230);
+
+        setScrollbar(new Scrollbar(157, 20, 12, 89));
 
         this.craftingMonitor = craftingMonitor;
     }
@@ -54,16 +54,9 @@ public class GuiCraftingMonitor extends GuiBase {
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        super.drawScreen(mouseX, mouseY, partialTicks);
-
-        scrollbar.update(this, mouseX - guiLeft, mouseY - guiTop);
-    }
-
-    @Override
     public void update(int x, int y) {
-        scrollbar.setCanScroll(getRows() > VISIBLE_ROWS);
-        scrollbar.setScrollDelta((float) scrollbar.getScrollbarHeight() / (float) getRows());
+        getScrollbar().setCanScroll(getRows() > VISIBLE_ROWS);
+        getScrollbar().setScrollDelta((float) getScrollbar().getScrollbarHeight() / (float) getRows());
 
         if (itemSelected >= craftingMonitor.getTasks().size()) {
             itemSelected = -1;
@@ -82,8 +75,6 @@ public class GuiCraftingMonitor extends GuiBase {
         if (renderItemSelection) {
             drawTexture(x + renderItemSelectionX, y + renderItemSelectionY, 178, 0, ITEM_WIDTH, ITEM_HEIGHT);
         }
-
-        scrollbar.draw(this);
     }
 
     @Override
@@ -156,7 +147,7 @@ public class GuiCraftingMonitor extends GuiBase {
     }
 
     public int getOffset() {
-        return (int) (scrollbar.getCurrentScroll() / 89f * (float) getRows());
+        return (int) Math.ceil(getScrollbar().getCurrentScroll() / 89f * (float) getRows());
     }
 
     private int getRows() {
