@@ -8,6 +8,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
@@ -38,7 +39,7 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
         @Override
         public ItemStack push(ItemStack stack, int size, boolean simulate) {
             if (!ModeFilter.respectsMode(getFilters(), getModeConfig(), getCompare(), stack)) {
-                return stack;
+                return ItemHandlerHelper.copyStackWithSize(stack, size);
             }
 
             return super.push(stack, size, simulate);

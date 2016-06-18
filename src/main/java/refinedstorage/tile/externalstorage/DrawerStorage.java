@@ -1,6 +1,7 @@
 package refinedstorage.tile.externalstorage;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorageUtils;
@@ -29,6 +30,10 @@ public class DrawerStorage extends ExternalStorage {
         }
     }
 
+    public boolean isVoidable() {
+        return drawer instanceof IVoidable && ((IVoidable) drawer).isVoid();
+    }
+
     @Override
     public ItemStack push(ItemStack stack, int size, boolean simulate) {
         if (ModeFilter.respectsMode(externalStorage.getFilters(), externalStorage, externalStorage.getCompare(), stack) && drawer.canItemBeStored(stack)) {
@@ -37,14 +42,14 @@ public class DrawerStorage extends ExternalStorage {
                     int remainingSpace = getCapacity() - getStored();
 
                     if (remainingSpace <= 0) {
-                        return ItemHandlerHelper.copyStackWithSize(stack, size);
+                        return isVoidable() ? null : ItemHandlerHelper.copyStackWithSize(stack, size);
                     }
 
                     if (!simulate) {
                         drawer.setStoredItemCount(drawer.getStoredItemCount() + remainingSpace);
                     }
 
-                    return ItemHandlerHelper.copyStackWithSize(stack, size - remainingSpace);
+                    return isVoidable() ? null : ItemHandlerHelper.copyStackWithSize(stack, size - remainingSpace);
                 } else {
                     if (!simulate) {
                         drawer.setStoredItemCount(drawer.getStoredItemCount() + size);
@@ -57,14 +62,14 @@ public class DrawerStorage extends ExternalStorage {
                     int remainingSpace = getCapacity() - getStored();
 
                     if (remainingSpace <= 0) {
-                        return ItemHandlerHelper.copyStackWithSize(stack, size);
+                        return isVoidable() ? null : ItemHandlerHelper.copyStackWithSize(stack, size);
                     }
 
                     if (!simulate) {
                         drawer.setStoredItem(stack, remainingSpace);
                     }
 
-                    return ItemHandlerHelper.copyStackWithSize(stack, size - remainingSpace);
+                    return isVoidable() ? null : ItemHandlerHelper.copyStackWithSize(stack, size - remainingSpace);
                 } else {
                     if (!simulate) {
                         drawer.setStoredItem(stack, size);
@@ -75,7 +80,7 @@ public class DrawerStorage extends ExternalStorage {
             }
         }
 
-        return stack;
+        return ItemHandlerHelper.copyStackWithSize(stack, size);
     }
 
     @Override

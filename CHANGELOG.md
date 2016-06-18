@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 0.7.16
+- Added support for Storage Drawers void upgrade
+
 ### 0.7.15
 **Bugfixes**
 - Fixed not being able to scroll with the scroll wheel using MouseTweaks

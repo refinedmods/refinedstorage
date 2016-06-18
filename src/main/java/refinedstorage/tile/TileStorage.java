@@ -7,6 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageUtils;
@@ -37,7 +38,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
         @Override
         public ItemStack push(ItemStack stack, int size, boolean simulate) {
             if (!ModeFilter.respectsMode(filters, TileStorage.this, compare, stack)) {
-                return stack;
+                return ItemHandlerHelper.copyStackWithSize(stack, size);
             }
 
             return super.push(stack, size, simulate);

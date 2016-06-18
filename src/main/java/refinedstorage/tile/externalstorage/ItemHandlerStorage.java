@@ -37,7 +37,7 @@ public class ItemHandlerStorage extends ExternalStorage {
             return ItemHandlerHelper.insertItem(handler, ItemHandlerHelper.copyStackWithSize(stack, size), simulate);
         }
 
-        return stack;
+        return ItemHandlerHelper.copyStackWithSize(stack, size);
     }
 
     @Override
