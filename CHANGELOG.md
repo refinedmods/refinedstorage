@@ -1,5 +1,10 @@
 # Refined Storage Changelog
 
+### 0.7.15
+**Bugfixes**
+- Fixed not being able to scroll with the scroll wheel using MouseTweaks
+- Fixed grid search box mode only changing after reopening gui
+
 ### 0.7.14
 **Bugfixes**
 - Updated Forge to build 1965

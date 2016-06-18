@@ -97,8 +97,8 @@ public class GuiGrid extends GuiBase {
             searchField.setEnableBackgroundDrawing(false);
             searchField.setVisible(true);
             searchField.setTextColor(16777215);
-            searchField.setCanLoseFocus(!TileGrid.isSearchBoxModeWithAutoselection(grid.getSearchBoxMode()));
-            searchField.setFocused(TileGrid.isSearchBoxModeWithAutoselection(grid.getSearchBoxMode()));
+
+            updateSearchBoxFocus(grid.getSearchBoxMode());
         } else {
             searchField.xPosition = sx;
             searchField.yPosition = sy;
@@ -106,7 +106,7 @@ public class GuiGrid extends GuiBase {
 
         addSideButton(new SideButtonGridSortingDirection(grid));
         addSideButton(new SideButtonGridSortingType(grid));
-        addSideButton(new SideButtonGridSearchBoxMode(grid));
+        addSideButton(new SideButtonGridSearchBoxMode(this));
     }
 
     public IGrid getGrid() {
@@ -247,7 +247,7 @@ public class GuiGrid extends GuiBase {
 
     @Override
     public void drawForeground(int mouseX, int mouseY) {
-        drawString(7, 7, t(grid instanceof WirelessGrid ? "gui.refinedstorage:wireless_grid" : "gui.refinedstorage:grid"));
+        drawString(7, 8, t(grid instanceof WirelessGrid ? "gui.refinedstorage:wireless_grid" : "gui.refinedstorage:grid"));
 
         if (grid.getType() == EnumGridType.CRAFTING) {
             drawString(7, 95, t("container.crafting"));
@@ -406,5 +406,10 @@ public class GuiGrid extends GuiBase {
         if (RefinedStorage.hasJei() && (grid.getSearchBoxMode() == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED || grid.getSearchBoxMode() == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED)) {
             RefinedStorageJEIPlugin.INSTANCE.getRuntime().getItemListOverlay().setFilterText(searchField.getText());
         }
+    }
+
+    public void updateSearchBoxFocus(int mode) {
+        searchField.setCanLoseFocus(!TileGrid.isSearchBoxModeWithAutoselection(mode));
+        searchField.setFocused(TileGrid.isSearchBoxModeWithAutoselection(mode));
     }
 }

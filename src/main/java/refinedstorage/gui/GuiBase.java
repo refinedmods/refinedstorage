@@ -211,8 +211,6 @@ public abstract class GuiBase extends GuiContainer {
             GlStateManager.translate(x, y, 1);
             GL11.glScalef(0.5f, 0.5f, 1);
 
-            int stringWidth = fontRendererObj.getStringWidth(text);
-
             GlStateManager.disableLighting();
             GlStateManager.disableRescaleNormal();
             GlStateManager.depthMask(false);
@@ -220,7 +218,7 @@ public abstract class GuiBase extends GuiContainer {
             GlStateManager.blendFunc(770, 771);
             GlStateManager.disableDepth();
 
-            fontRendererObj.drawStringWithShadow(text, 30 - stringWidth, 22, 16777215);
+            fontRendererObj.drawStringWithShadow(text, 30 - fontRendererObj.getStringWidth(text), 22, 16777215);
 
             GlStateManager.enableDepth();
             GlStateManager.enableTexture2D();

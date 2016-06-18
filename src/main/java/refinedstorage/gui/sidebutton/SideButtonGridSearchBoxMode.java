@@ -3,19 +3,19 @@ package refinedstorage.gui.sidebutton;
 import net.minecraft.util.text.TextFormatting;
 import refinedstorage.RefinedStorage;
 import refinedstorage.gui.GuiBase;
-import refinedstorage.tile.grid.IGrid;
+import refinedstorage.gui.GuiGrid;
 import refinedstorage.tile.grid.TileGrid;
 
 public class SideButtonGridSearchBoxMode extends SideButton {
-    private IGrid grid;
+    private GuiGrid gui;
 
-    public SideButtonGridSearchBoxMode(IGrid grid) {
-        this.grid = grid;
+    public SideButtonGridSearchBoxMode(GuiGrid gui) {
+        this.gui = gui;
     }
 
     @Override
     public String getTooltip(GuiBase gui) {
-        return TextFormatting.YELLOW + gui.t("sidebutton.refinedstorage:grid.search_box_mode") + TextFormatting.RESET + "\n" + gui.t("sidebutton.refinedstorage:grid.search_box_mode." + grid.getSearchBoxMode());
+        return TextFormatting.YELLOW + gui.t("sidebutton.refinedstorage:grid.search_box_mode") + TextFormatting.RESET + "\n" + gui.t("sidebutton.refinedstorage:grid.search_box_mode." + this.gui.getGrid().getSearchBoxMode());
     }
 
     @Override
@@ -26,7 +26,7 @@ public class SideButtonGridSearchBoxMode extends SideButton {
 
     @Override
     public void actionPerformed() {
-        int mode = grid.getSearchBoxMode();
+        int mode = gui.getGrid().getSearchBoxMode();
 
         if (mode == TileGrid.SEARCH_BOX_MODE_NORMAL) {
             mode = TileGrid.SEARCH_BOX_MODE_NORMAL_AUTOSELECTED;
@@ -42,6 +42,8 @@ public class SideButtonGridSearchBoxMode extends SideButton {
             mode = TileGrid.SEARCH_BOX_MODE_NORMAL;
         }
 
-        grid.onSearchBoxModeChanged(mode);
+        gui.getGrid().onSearchBoxModeChanged(mode);
+
+        gui.updateSearchBoxFocus(mode);
     }
 }
