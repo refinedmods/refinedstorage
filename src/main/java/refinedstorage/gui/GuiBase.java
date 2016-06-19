@@ -127,7 +127,7 @@ public abstract class GuiBase extends GuiContainer {
 
         int d = Mouse.getEventDWheel();
 
-        if (d != 0) {
+        if (scrollbar != null && d != 0) {
             scrollbar.wheel(d);
         }
     }

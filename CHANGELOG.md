@@ -5,6 +5,9 @@
 - Added support for Storage Drawers void upgrade
 - Added support for Deep Storage Unit API again
 
+**Bugfixes**
+- Fixed crash when using scroll wheel
+
 ### 0.7.15
 **Bugfixes**
 - Fixed not being able to scroll with the scroll wheel using MouseTweaks
