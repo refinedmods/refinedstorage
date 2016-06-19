@@ -40,7 +40,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {
         super.writeUpdate(tag);
 
-        tag.setInteger(StorageNetwork.NBT_ENERGY, network.getEnergy().getEnergyStored());
+        tag.setInteger(StorageNetwork.NBT_ENERGY, network != null ? network.getEnergy().getEnergyStored() : 0);
 
         return tag;
     }

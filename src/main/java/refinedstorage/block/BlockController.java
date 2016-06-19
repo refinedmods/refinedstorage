@@ -92,7 +92,7 @@ public class BlockController extends BlockBase {
     @Override
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack itemStack) {
         if (!world.isRemote) {
-            StorageNetwork network = new StorageNetwork(world, pos, (EnumControllerType) state.getValue(TYPE));
+            StorageNetwork network = new StorageNetwork(pos, world);
 
             NBTTagCompound tag = itemStack.getTagCompound();
 
@@ -100,7 +100,7 @@ public class BlockController extends BlockBase {
                 network.getEnergy().receiveEnergy(tag.getInteger(StorageNetwork.NBT_ENERGY), false);
             }
 
-            StorageNetworkRegistry.NETWORKS.put(pos, network);
+            StorageNetworkRegistry.addStorageNetwork(network);
 
             ((TileController) world.getTileEntity(pos)).setNetwork(network);
         }

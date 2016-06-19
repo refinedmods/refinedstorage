@@ -97,6 +97,11 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
         return true;
     }
 
+    public void forceConnect(StorageNetwork network) {
+        this.network = network;
+        this.connected = true;
+    }
+
     public void onDisconnected(World world) {
         this.connected = false;
 

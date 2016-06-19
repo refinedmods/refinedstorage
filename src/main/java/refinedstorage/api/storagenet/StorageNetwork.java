@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
@@ -20,6 +21,7 @@ import refinedstorage.autocrafting.CraftingPattern;
 import refinedstorage.autocrafting.task.BasicCraftingTask;
 import refinedstorage.autocrafting.task.ICraftingTask;
 import refinedstorage.autocrafting.task.ProcessingCraftingTask;
+import refinedstorage.block.BlockController;
 import refinedstorage.block.EnumControllerType;
 import refinedstorage.container.ContainerGrid;
 import refinedstorage.item.ItemPattern;
@@ -29,6 +31,7 @@ import refinedstorage.tile.TileMachine;
 import refinedstorage.tile.TileWirelessTransmitter;
 import refinedstorage.tile.config.RedstoneMode;
 import refinedstorage.tile.controller.StorageHandler;
+import refinedstorage.tile.controller.TileController;
 import refinedstorage.tile.controller.WirelessGridHandler;
 
 import java.util.*;
@@ -50,6 +53,7 @@ public class StorageNetwork {
 
     private List<TileMachine> machines = new ArrayList<TileMachine>();
     private List<TileMachine> machinesToAdd = new ArrayList<TileMachine>();
+    private List<BlockPos> machinesToLoad = new ArrayList<BlockPos>();
     private List<TileMachine> machinesToRemove = new ArrayList<TileMachine>();
 
     private List<CraftingPattern> patterns = new ArrayList<CraftingPattern>();
@@ -75,10 +79,14 @@ public class StorageNetwork {
 
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
-    public StorageNetwork(World world, BlockPos pos, EnumControllerType type) {
-        this.world = world;
+    public StorageNetwork(BlockPos pos, World world) {
         this.pos = pos;
-        this.type = type;
+
+        setWorld(world);
+    }
+
+    public StorageNetwork(BlockPos pos) {
+        this.pos = pos;
     }
 
     public RedstoneMode getRedstoneMode() {
@@ -87,6 +95,8 @@ public class StorageNetwork {
 
     public void setRedstoneMode(RedstoneMode mode) {
         this.redstoneMode = mode;
+
+        markDirty();
     }
 
     public EnergyStorage getEnergy() {
@@ -99,6 +109,23 @@ public class StorageNetwork {
 
     public BlockPos getPos() {
         return pos;
+    }
+
+    public void setWorld(World world) {
+        this.world = world;
+        this.type = (EnumControllerType) world.getBlockState(pos).getValue(BlockController.TYPE);
+
+        for (BlockPos machine : machinesToLoad) {
+            TileEntity tile = world.getTileEntity(machine);
+
+            if (tile instanceof TileMachine) {
+                ((TileMachine) tile).forceConnect(this);
+
+                machines.add((TileMachine) tile);
+            }
+        }
+
+        ((TileController) world.getTileEntity(pos)).setNetwork(this);
     }
 
     public World getWorld() {
@@ -196,10 +223,14 @@ public class StorageNetwork {
 
     public void addMachine(TileMachine machine) {
         machinesToAdd.add(machine);
+
+        markDirty();
     }
 
     public void removeMachine(TileMachine machine) {
         machinesToRemove.add(machine);
+
+        markDirty();
     }
 
     public StorageHandler getStorageHandler() {
@@ -232,10 +263,14 @@ public class StorageNetwork {
 
     public void addCraftingTask(ICraftingTask task) {
         craftingTasksToAdd.add(task);
+
+        markDirty();
     }
 
     public void addCraftingTaskAsLast(ICraftingTask task) {
         craftingTasksToAddAsLast.add(task);
+
+        markDirty();
     }
 
     public ICraftingTask createCraftingTask(CraftingPattern pattern) {
@@ -248,6 +283,8 @@ public class StorageNetwork {
 
     public void cancelCraftingTask(ICraftingTask task) {
         craftingTasksToCancel.add(task);
+
+        markDirty();
     }
 
     public List<CraftingPattern> getPatterns() {
@@ -514,34 +551,15 @@ public class StorageNetwork {
         return null;
     }
 
-    public NBTTagCompound write(NBTTagCompound tag) {
-        energy.writeToNBT(tag);
+    public void readFromNBT(NBTTagCompound tag) {
+        energy.readFromNBT(tag);
 
-        tag.setInteger(RedstoneMode.NBT, redstoneMode.id);
-
-        NBTTagList list = new NBTTagList();
-
-        for (ICraftingTask task : craftingTasks) {
-            NBTTagCompound taskTag = new NBTTagCompound();
-            task.writeToNBT(taskTag);
-            list.appendTag(taskTag);
+        if (tag.hasKey(RedstoneMode.NBT)) {
+            redstoneMode = RedstoneMode.getById(tag.getInteger(RedstoneMode.NBT));
         }
 
-        tag.setTag(NBT_CRAFTING_TASKS, list);
-
-        return tag;
-    }
-
-
-    public void read(NBTTagCompound nbt) {
-        energy.readFromNBT(nbt);
-
-        if (nbt.hasKey(RedstoneMode.NBT)) {
-            redstoneMode = RedstoneMode.getById(nbt.getInteger(RedstoneMode.NBT));
-        }
-
-        if (nbt.hasKey(NBT_CRAFTING_TASKS)) {
-            NBTTagList taskList = nbt.getTagList(NBT_CRAFTING_TASKS, Constants.NBT.TAG_COMPOUND);
+        if (tag.hasKey(NBT_CRAFTING_TASKS)) {
+            NBTTagList taskList = tag.getTagList(NBT_CRAFTING_TASKS, Constants.NBT.TAG_COMPOUND);
 
             for (int i = 0; i < taskList.tagCount(); ++i) {
                 NBTTagCompound taskTag = taskList.getCompoundTagAt(i);
@@ -560,5 +578,47 @@ public class StorageNetwork {
                 }
             }
         }
+
+        if (tag.hasKey("Machines")) {
+            NBTTagList machinesTag = tag.getTagList("Machines", Constants.NBT.TAG_COMPOUND);
+
+            for (int i = 0; i < machinesTag.tagCount(); ++i) {
+                NBTTagCompound coords = machinesTag.getCompoundTagAt(i);
+
+                machinesToLoad.add(new BlockPos(coords.getInteger("X"), coords.getInteger("Y"), coords.getInteger("Z")));
+            }
+        }
+    }
+
+    public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+        energy.writeToNBT(tag);
+
+        tag.setInteger(RedstoneMode.NBT, redstoneMode.id);
+
+        NBTTagList list = new NBTTagList();
+
+        for (ICraftingTask task : craftingTasks) {
+            NBTTagCompound taskTag = new NBTTagCompound();
+            task.writeToNBT(taskTag);
+            list.appendTag(taskTag);
+        }
+
+        tag.setTag(NBT_CRAFTING_TASKS, list);
+
+        NBTTagList machinesTag = new NBTTagList();
+        for (TileMachine machine : machines) {
+            NBTTagCompound coords = new NBTTagCompound();
+            coords.setInteger("X", machine.getPos().getX());
+            coords.setInteger("Y", machine.getPos().getY());
+            coords.setInteger("Z", machine.getPos().getZ());
+            machinesTag.appendTag(coords);
+        }
+        tag.setTag("Machines", machinesTag);
+
+        return tag;
+    }
+
+    public void markDirty() {
+        StorageNetworkSavedData.get(world).markDirty();
     }
 }
