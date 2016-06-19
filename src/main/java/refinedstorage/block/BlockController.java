@@ -64,8 +64,10 @@ public class BlockController extends BlockBase {
 
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
+        TileController controller = (TileController) world.getTileEntity(pos);
+
         return super.getActualState(state, world, pos)
-            .withProperty(ENERGY, ((TileController) world.getTileEntity(pos)).getEnergyScaled(8));
+            .withProperty(ENERGY, (int) Math.ceil((float) controller.getEnergy() / (float) StorageNetwork.ENERGY_CAPACITY * 8f));
     }
 
     @Override
@@ -89,8 +91,6 @@ public class BlockController extends BlockBase {
 
     @Override
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack itemStack) {
-        super.onBlockPlacedBy(world, pos, state, player, itemStack);
-
         if (!world.isRemote) {
             StorageNetwork network = new StorageNetwork(world, pos, (EnumControllerType) state.getValue(TYPE));
 
@@ -104,6 +104,8 @@ public class BlockController extends BlockBase {
 
             ((TileController) world.getTileEntity(pos)).setNetwork(network);
         }
+
+        super.onBlockPlacedBy(world, pos, state, player, itemStack);
     }
 
     @Override

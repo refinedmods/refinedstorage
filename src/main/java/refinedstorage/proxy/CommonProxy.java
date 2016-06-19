@@ -5,6 +5,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -19,6 +20,7 @@ import refinedstorage.RefinedStorageItems;
 import refinedstorage.api.solderer.SoldererRecipeBasic;
 import refinedstorage.api.solderer.SoldererRegistry;
 import refinedstorage.api.storage.NBTStorage;
+import refinedstorage.api.storagenet.StorageNetworkTickHandler;
 import refinedstorage.block.BlockBase;
 import refinedstorage.block.EnumControllerType;
 import refinedstorage.block.EnumGridType;
@@ -483,6 +485,7 @@ public class CommonProxy {
     }
 
     public void init(FMLInitializationEvent e) {
+        MinecraftForge.EVENT_BUS.register(new StorageNetworkTickHandler());
     }
 
     public void postInit(FMLPostInitializationEvent e) {

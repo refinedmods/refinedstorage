@@ -3,6 +3,7 @@ package refinedstorage.gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.storagenet.StorageNetwork;
 import refinedstorage.container.ContainerController;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.tile.controller.ClientMachine;
@@ -45,7 +46,7 @@ public class GuiController extends GuiBase {
 
         drawTexture(x, y, 0, 0, width, height);
 
-        int barHeightNew = (int) ((float) controller.getEnergyStored(null) / (float) controller.getMaxEnergyStored(null) * (float) barHeight);
+        int barHeightNew = (int) ((float) controller.getEnergy() / (float) StorageNetwork.ENERGY_CAPACITY * (float) barHeight);
 
         drawTexture(x + barX, y + barY + barHeight - barHeightNew, 178, barHeight - barHeightNew, barWidth, barHeightNew);
     }
@@ -102,7 +103,7 @@ public class GuiController extends GuiBase {
         }
 
         if (inBounds(barX, barY, barWidth, barHeight, mouseX, mouseY)) {
-            drawTooltip(mouseX, mouseY, t("misc.refinedstorage:energy_usage", controller.getEnergyUsage()) + "\n" + t("misc.refinedstorage:energy_stored", controller.getEnergyStored(null), controller.getMaxEnergyStored(null)));
+            drawTooltip(mouseX, mouseY, t("misc.refinedstorage:energy_usage", controller.getEnergyUsage()) + "\n" + t("misc.refinedstorage:energy_stored", controller.getEnergy(), StorageNetwork.ENERGY_CAPACITY));
         }
     }
 

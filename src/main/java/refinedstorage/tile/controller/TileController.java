@@ -63,7 +63,10 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     }
 
     public int getEnergyScaled(int i) {
-        return (int) ((float) network.getEnergy().getEnergyStored() / (float) network.getEnergy().getMaxEnergyStored() * (float) i);
+        float stored = worldObj.isRemote ? energy : network.getEnergy().getEnergyStored();
+        float max = StorageNetwork.ENERGY_CAPACITY;
+
+        return (int) (stored / max * (float) i);
     }
 
     @Override
@@ -78,7 +81,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
     @Override
     public RedstoneMode getRedstoneMode() {
-        return network.getRedstoneMode();
+        return worldObj.isRemote ? redstoneMode : network.getRedstoneMode();
     }
 
     @Override
@@ -110,7 +113,6 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     public void readContainerData(ByteBuf buf) {
         this.energy = buf.readInt();
         this.energyUsage = buf.readInt();
-
         this.redstoneMode = RedstoneMode.getById(buf.readInt());
 
         List<ClientMachine> machines = new ArrayList<ClientMachine>();
@@ -131,10 +133,10 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
     @Override
     public void writeContainerData(ByteBuf buf) {
-        buf.writeInt(getEnergyStored(null));
-        buf.writeInt(energyUsage);
+        buf.writeInt(network.getEnergy().getEnergyStored());
+        buf.writeInt(network.getEnergyUsage());
 
-        buf.writeInt(redstoneMode.id);
+        buf.writeInt(network.getRedstoneMode().id);
 
         List<ClientMachine> m = new ArrayList<ClientMachine>();
 

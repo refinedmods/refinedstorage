@@ -48,8 +48,6 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
         if (!worldObj.isRemote) {
             if (ticks == 0) {
                 block = worldObj.getBlockState(pos).getBlock();
-
-                searchController(worldObj);
             }
 
             if (wasConnected != isActive() && canSendConnectivityData()) {

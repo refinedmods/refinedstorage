@@ -66,6 +66,8 @@ public class StorageNetwork {
     private boolean couldRun;
     private long lastEnergyUpdate;
 
+    private int ticks;
+
     private EnumControllerType type;
 
     private World world;
@@ -91,6 +93,10 @@ public class StorageNetwork {
         return energy;
     }
 
+    public int getEnergyUsage() {
+        return energyUsage;
+    }
+
     public BlockPos getPos() {
         return pos;
     }
@@ -103,7 +109,7 @@ public class StorageNetwork {
         return energy.getEnergyStored() > 0 && energy.getEnergyStored() >= energyUsage && redstoneMode.isEnabled(world, pos);
     }
 
-    public void update(int ticks) {
+    public void update() {
         for (TileMachine machine : machinesToAdd) {
             if (!machines.contains(machine)) {
                 machines.add(machine);
@@ -149,8 +155,6 @@ public class StorageNetwork {
                 }
             }
         } else if (!machines.isEmpty()) {
-            // Machine list should NOT be empty to trigger a disconnect
-            // We need to sync machines again to reset energy usage etc
             disconnectAll();
             syncMachines();
         }
@@ -182,6 +186,8 @@ public class StorageNetwork {
                 RefinedStorageUtils.updateBlock(world, pos);
             }
         }
+
+        ticks++;
     }
 
     public List<TileMachine> getMachines() {
