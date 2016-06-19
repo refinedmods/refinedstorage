@@ -10,7 +10,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.api.storagenet.StorageNetwork;
-import refinedstorage.api.storagenet.StorageNetworkRegistry;
 import refinedstorage.block.BlockController;
 import refinedstorage.block.EnumControllerType;
 import refinedstorage.container.ContainerController;
@@ -24,26 +23,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TileController extends TileBase implements IEnergyReceiver, ISynchronizedContainer, IRedstoneModeConfig {
-    private StorageNetwork network = StorageNetworkRegistry.NETWORKS.get(pos);
+    private StorageNetwork network;
 
+    // Only used client side
     private List<ClientMachine> clientMachines = new ArrayList<ClientMachine>();
     private int energy;
     private int energyUsage;
     private EnumControllerType type;
     private RedstoneMode redstoneMode;
 
-    @Override
-    public NBTTagCompound write(NBTTagCompound tag) {
-        super.write(tag);
-
-        return network.write(tag);
-    }
-
-    @Override
-    public void read(NBTTagCompound tag) {
-        super.read(tag);
-
-        network.read(tag);
+    public void setNetwork(StorageNetwork network) {
+        this.network = network;
     }
 
     @Override
