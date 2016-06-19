@@ -100,7 +100,7 @@ public class BlockController extends BlockBase {
                 network.getEnergy().receiveEnergy(tag.getInteger(StorageNetwork.NBT_ENERGY), false);
             }
 
-            StorageNetworkRegistry.addStorageNetwork(network);
+            StorageNetworkRegistry.add(network, world.provider.getDimension());
 
             ((TileController) world.getTileEntity(pos)).setNetwork(network);
         }

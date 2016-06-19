@@ -45,7 +45,7 @@ public class MessageWirelessGridStoragePull extends MessageHandlerPlayerToServer
 
     @Override
     public void handle(MessageWirelessGridStoragePull message, EntityPlayerMP player) {
-        StorageNetwork network = StorageNetworkRegistry.NETWORKS.get(new BlockPos(message.controllerX, message.controllerY, message.controllerZ));
+        StorageNetwork network = StorageNetworkRegistry.get(new BlockPos(message.controllerX, message.controllerY, message.controllerZ), player.worldObj.provider.getDimension());
 
         if (network != null && network.canRun()) {
             network.getStorageHandler().onPull(message.id, message.flags, player);

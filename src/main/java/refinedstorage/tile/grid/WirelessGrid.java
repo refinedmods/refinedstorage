@@ -63,7 +63,7 @@ public class WirelessGrid implements IGrid {
 
     @Override
     public ItemStack onItemPush(EntityPlayer player, ItemStack stack) {
-        StorageNetwork network = StorageNetworkRegistry.NETWORKS.get(controllerPos);
+        StorageNetwork network = StorageNetworkRegistry.get(controllerPos, player.worldObj.provider.getDimension());
 
         if (network != null && network.canRun()) {
             network.getWirelessGridHandler().drainEnergy(player, ItemWirelessGrid.USAGE_PUSH);
@@ -85,7 +85,7 @@ public class WirelessGrid implements IGrid {
     }
 
     public void onClose(EntityPlayer player) {
-        StorageNetwork network = StorageNetworkRegistry.NETWORKS.get(controllerPos);
+        StorageNetwork network = StorageNetworkRegistry.get(controllerPos, player.worldObj.provider.getDimension());
 
         if (network != null) {
             network.getWirelessGridHandler().handleClose(player);

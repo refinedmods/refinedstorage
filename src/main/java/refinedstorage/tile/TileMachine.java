@@ -83,7 +83,7 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
     }
 
     private boolean tryConnect(TileController controller) {
-        StorageNetwork network = StorageNetworkRegistry.NETWORKS.get(controller.getPos());
+        StorageNetwork network = StorageNetworkRegistry.get(controller.getPos(), worldObj.provider.getDimension());
 
         if (!network.canRun()) {
             return false;

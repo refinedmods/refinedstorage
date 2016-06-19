@@ -1,15 +1,19 @@
 package refinedstorage.api.storagenet;
 
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
+import java.util.Map;
+
 public class StorageNetworkEventHandler {
     @SubscribeEvent
     public void onWorldTick(TickEvent.WorldTickEvent e) {
-        // @todo: !!!
-        if (e.world.provider.getDimension() == 0) {
-            for (StorageNetwork network : StorageNetworkRegistry.NETWORKS.values()) {
+        Map<BlockPos, StorageNetwork> networks = StorageNetworkRegistry.get(e.world.provider.getDimension());
+
+        if (networks != null) {
+            for (StorageNetwork network : networks.values()) {
                 if (network.getWorld() == null) {
                     network.setWorld(e.world);
                 }

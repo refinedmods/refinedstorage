@@ -7,6 +7,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
 import net.minecraftforge.common.util.Constants;
 
+import java.util.Map;
+
 public class StorageNetworkSavedData extends WorldSavedData {
     public static final String NBT_STORAGE_NETWORKS = "StorageNetworks";
 
@@ -26,7 +28,7 @@ public class StorageNetworkSavedData extends WorldSavedData {
             StorageNetwork network = new StorageNetwork(pos);
             network.readFromNBT(networkTag.getCompoundTag("Data"));
 
-            StorageNetworkRegistry.addStorageNetwork(network);
+            StorageNetworkRegistry.add(network, networkTag.getInteger("Dim"));
         }
     }
 
@@ -34,13 +36,16 @@ public class StorageNetworkSavedData extends WorldSavedData {
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         NBTTagList networks = new NBTTagList();
 
-        for (StorageNetwork network : StorageNetworkRegistry.NETWORKS.values()) {
-            NBTTagCompound networkTag = new NBTTagCompound();
-            networkTag.setInteger("X", network.getPos().getX());
-            networkTag.setInteger("Y", network.getPos().getY());
-            networkTag.setInteger("Z", network.getPos().getZ());
-            networkTag.setTag("Data", network.writeToNBT(new NBTTagCompound()));
-            networks.appendTag(networkTag);
+        for (Map.Entry<Integer, Map<BlockPos, StorageNetwork>> entry : StorageNetworkRegistry.NETWORKS.entrySet()) {
+            for (StorageNetwork network : entry.getValue().values()) {
+                NBTTagCompound networkTag = new NBTTagCompound();
+                networkTag.setInteger("X", network.getPos().getX());
+                networkTag.setInteger("Y", network.getPos().getY());
+                networkTag.setInteger("Z", network.getPos().getZ());
+                networkTag.setInteger("Dim", entry.getKey());
+                networkTag.setTag("Data", network.writeToNBT(new NBTTagCompound()));
+                networks.appendTag(networkTag);
+            }
         }
 
         tag.setTag(NBT_STORAGE_NETWORKS, networks);

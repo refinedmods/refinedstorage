@@ -134,7 +134,7 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
         if (!world.isRemote && hasValidNBT(stack) && getDimensionId(stack) == player.dimension) {
-            StorageNetwork network = StorageNetworkRegistry.NETWORKS.get(new BlockPos(getX(stack), getY(stack), getZ(stack)));
+            StorageNetwork network = StorageNetworkRegistry.get(new BlockPos(getX(stack), getY(stack), getZ(stack)), player.worldObj.provider.getDimension());
 
             if (network != null) {
                 if (network.getWirelessGridHandler().handleOpen(player, hand)) {

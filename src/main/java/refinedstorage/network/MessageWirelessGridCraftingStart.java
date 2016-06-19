@@ -45,7 +45,7 @@ public class MessageWirelessGridCraftingStart extends MessageHandlerPlayerToServ
 
     @Override
     public void handle(MessageWirelessGridCraftingStart message, EntityPlayerMP player) {
-        StorageNetwork network = StorageNetworkRegistry.NETWORKS.get(new BlockPos(message.controllerX, message.controllerY, message.controllerZ));
+        StorageNetwork network = StorageNetworkRegistry.get(new BlockPos(message.controllerX, message.controllerY, message.controllerZ), player.worldObj.provider.getDimension());
 
         if (network != null && network.canRun()) {
             network.getStorageHandler().onCraftingRequested(message.id, message.quantity);

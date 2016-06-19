@@ -6,10 +6,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class StorageNetworkRegistry {
-    // @todo: handle multiple dims
-    public static final Map<BlockPos, StorageNetwork> NETWORKS = new HashMap<BlockPos, StorageNetwork>();
+    public static final Map<Integer, Map<BlockPos, StorageNetwork>> NETWORKS = new HashMap<Integer, Map<BlockPos, StorageNetwork>>();
 
-    public static void addStorageNetwork(StorageNetwork network) {
-        NETWORKS.put(network.getPos(), network);
+    public static void add(StorageNetwork network, int dimension) {
+        if (NETWORKS.get(dimension) == null) {
+            NETWORKS.put(dimension, new HashMap<BlockPos, StorageNetwork>());
+        }
+
+        NETWORKS.get(dimension).put(network.getPos(), network);
+    }
+
+    public static StorageNetwork get(BlockPos pos, int dimension) {
+        return get(dimension) == null ? null : get(dimension).get(pos);
+    }
+
+    public static Map<BlockPos, StorageNetwork> get(int dimension) {
+        return NETWORKS.get(dimension);
     }
 }

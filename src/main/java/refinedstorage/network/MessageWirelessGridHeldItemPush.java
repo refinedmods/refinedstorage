@@ -41,7 +41,7 @@ public class MessageWirelessGridHeldItemPush extends MessageHandlerPlayerToServe
 
     @Override
     public void handle(MessageWirelessGridHeldItemPush message, EntityPlayerMP player) {
-        StorageNetwork network = StorageNetworkRegistry.NETWORKS.get(new BlockPos(message.controllerX, message.controllerY, message.controllerZ));
+        StorageNetwork network = StorageNetworkRegistry.get(new BlockPos(message.controllerX, message.controllerY, message.controllerZ), player.worldObj.provider.getDimension());
 
         if (network != null && network.canRun()) {
             network.getStorageHandler().onHeldItemPush(message.one, player);
