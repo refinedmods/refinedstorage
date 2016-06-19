@@ -5,6 +5,8 @@ import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.storagenet.StorageNetwork;
+import refinedstorage.api.storagenet.StorageNetworkRegistry;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
 import refinedstorage.tile.controller.ControllerSearcher;
@@ -19,22 +21,18 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
     protected boolean connected;
     protected boolean wasConnected;
     protected RedstoneMode redstoneMode = RedstoneMode.IGNORE;
-    protected TileController controller;
+    protected StorageNetwork network;
 
     private Block block;
 
     private Set<String> visited = new HashSet<String>();
-
-    public TileController getController() {
-        return controller;
-    }
 
     public void searchController(World world) {
         visited.clear();
 
         TileController newController = ControllerSearcher.search(world, pos, visited);
 
-        if (controller == null) {
+        if (network == null) {
             if (newController != null) {
                 onConnected(world, newController);
             }
@@ -87,14 +85,16 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
     }
 
     private boolean tryConnect(TileController controller) {
-        if (!controller.canRun()) {
+        StorageNetwork network = StorageNetworkRegistry.NETWORKS.get(controller.getPos());
+
+        if (!network.canRun()) {
             return false;
         }
 
-        this.controller = controller;
+        this.network = network;
         this.connected = true;
 
-        controller.addMachine(this);
+        network.addMachine(this);
 
         return true;
     }
@@ -102,12 +102,16 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
     public void onDisconnected(World world) {
         this.connected = false;
 
-        if (this.controller != null) {
-            this.controller.removeMachine(this);
-            this.controller = null;
+        if (this.network != null) {
+            this.network.removeMachine(this);
+            this.network = null;
         }
 
         world.notifyNeighborsOfStateChange(pos, block);
+    }
+
+    public StorageNetwork getNetwork() {
+        return network;
     }
 
     public boolean isConnected() {

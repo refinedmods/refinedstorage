@@ -2,10 +2,10 @@ package refinedstorage.network;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import refinedstorage.tile.controller.TileController;
+import refinedstorage.api.storagenet.StorageNetwork;
+import refinedstorage.api.storagenet.StorageNetworkRegistry;
 
 public class MessageWirelessGridStoragePull extends MessageHandlerPlayerToServer<MessageWirelessGridStoragePull> implements IMessage {
     private int controllerX;
@@ -45,10 +45,10 @@ public class MessageWirelessGridStoragePull extends MessageHandlerPlayerToServer
 
     @Override
     public void handle(MessageWirelessGridStoragePull message, EntityPlayerMP player) {
-        TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.controllerX, message.controllerY, message.controllerZ));
+        StorageNetwork network = StorageNetworkRegistry.NETWORKS.get(new BlockPos(message.controllerX, message.controllerY, message.controllerZ));
 
-        if (tile instanceof TileController && ((TileController) tile).canRun()) {
-            ((TileController) tile).getStorageHandler().onPull(message.id, message.flags, player);
+        if (network != null && network.canRun()) {
+            network.getStorageHandler().onPull(message.id, message.flags, player);
         }
     }
 }

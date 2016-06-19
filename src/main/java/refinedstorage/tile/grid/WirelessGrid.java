@@ -2,12 +2,13 @@ package refinedstorage.tile.grid;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.storagenet.StorageNetwork;
+import refinedstorage.api.storagenet.StorageNetworkRegistry;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.item.ItemWirelessGrid;
 import refinedstorage.network.MessageWirelessGridCraftingStart;
@@ -16,7 +17,6 @@ import refinedstorage.network.MessageWirelessGridSettingsUpdate;
 import refinedstorage.network.MessageWirelessGridStoragePull;
 import refinedstorage.tile.ClientItem;
 import refinedstorage.tile.config.IRedstoneModeConfig;
-import refinedstorage.tile.controller.TileController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,16 +63,12 @@ public class WirelessGrid implements IGrid {
 
     @Override
     public ItemStack onItemPush(EntityPlayer player, ItemStack stack) {
-        TileEntity tile = world.getTileEntity(controllerPos);
+        StorageNetwork network = StorageNetworkRegistry.NETWORKS.get(controllerPos);
 
-        if (tile instanceof TileController) {
-            TileController controller = (TileController) tile;
+        if (network != null && network.canRun()) {
+            network.getWirelessGridHandler().drainEnergy(player, ItemWirelessGrid.USAGE_PUSH);
 
-            if (controller.canRun()) {
-                controller.getWirelessGridHandler().drainEnergy(player, ItemWirelessGrid.USAGE_PUSH);
-
-                return controller.push(stack, stack.stackSize, false);
-            }
+            return network.push(stack, stack.stackSize, false);
         }
 
         return stack;
@@ -89,10 +85,10 @@ public class WirelessGrid implements IGrid {
     }
 
     public void onClose(EntityPlayer player) {
-        TileEntity tile = player.worldObj.getTileEntity(controllerPos);
+        StorageNetwork network = StorageNetworkRegistry.NETWORKS.get(controllerPos);
 
-        if (tile instanceof TileController) {
-            ((TileController) tile).getWirelessGridHandler().handleClose(player);
+        if (network != null) {
+            network.getWirelessGridHandler().handleClose(player);
         }
     }
 

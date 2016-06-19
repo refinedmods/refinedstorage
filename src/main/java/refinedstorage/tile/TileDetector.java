@@ -53,7 +53,7 @@ public class TileDetector extends TileMachine implements ICompareConfig {
             boolean wasPowered = powered;
 
             if (slot != null) {
-                ItemStack stack = controller.getItem(slot, compare);
+                ItemStack stack = network.getItem(slot, compare);
 
                 if (stack != null) {
                     switch (mode) {

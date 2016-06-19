@@ -58,7 +58,7 @@ public class TileConstructor extends TileMachine implements ICompareConfig {
             BlockPos front = pos.offset(getDirection());
 
             if (worldObj.isAirBlock(front) && block.getBlock().canPlaceBlockAt(worldObj, front)) {
-                ItemStack took = controller.take(filter.getStackInSlot(0), 1, compare);
+                ItemStack took = network.take(filter.getStackInSlot(0), 1, compare);
 
                 if (took != null) {
                     scheduler.resetSchedule();
@@ -70,7 +70,7 @@ public class TileConstructor extends TileMachine implements ICompareConfig {
                     ItemStack craft = filter.getStackInSlot(0);
 
                     if (scheduler.canSchedule(compare, craft)) {
-                        scheduler.schedule(controller, compare, craft);
+                        scheduler.schedule(network, compare, craft);
                     }
                 }
             }

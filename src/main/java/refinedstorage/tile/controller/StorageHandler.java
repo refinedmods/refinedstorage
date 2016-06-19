@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.storagenet.StorageNetwork;
 import refinedstorage.autocrafting.CraftingPattern;
 import refinedstorage.autocrafting.task.ICraftingTask;
 import refinedstorage.item.ItemWirelessGrid;
@@ -12,10 +13,10 @@ import refinedstorage.network.GridPullFlags;
 public class StorageHandler {
     public static final int MAX_CRAFTING_PER_REQUEST = 500;
 
-    private TileController controller;
+    private StorageNetwork network;
 
-    public StorageHandler(TileController controller) {
-        this.controller = controller;
+    public StorageHandler(StorageNetwork network) {
+        this.network = network;
     }
 
     public void onPull(int id, int flags, EntityPlayerMP player) {
@@ -23,11 +24,11 @@ public class StorageHandler {
             return;
         }
 
-        if (id < 0 || id > controller.getItems().size() - 1) {
+        if (id < 0 || id > network.getItems().size() - 1) {
             return;
         }
 
-        ItemStack stack = controller.getItems().get(id);
+        ItemStack stack = network.getItems().get(id);
 
         int size = 64;
 
@@ -45,7 +46,7 @@ public class StorageHandler {
 
         size = Math.min(size, stack.getItem().getItemStackLimit(stack));
 
-        ItemStack took = controller.take(stack, size);
+        ItemStack took = network.take(stack, size);
 
         if (took != null) {
             if (GridPullFlags.isPullingWithShift(flags)) {
@@ -57,7 +58,7 @@ public class StorageHandler {
                 player.updateHeldItem();
             }
 
-            controller.getWirelessGridHandler().drainEnergy(player, ItemWirelessGrid.USAGE_PULL);
+            network.getWirelessGridHandler().drainEnergy(player, ItemWirelessGrid.USAGE_PULL);
         }
     }
 
@@ -70,8 +71,8 @@ public class StorageHandler {
         int size = one ? 1 : stack.stackSize;
 
         if (one) {
-            if (controller.push(stack, size, true) == null) {
-                controller.push(stack, size, false);
+            if (network.push(stack, size, true) == null) {
+                network.push(stack, size, false);
 
                 stack.stackSize -= size;
 
@@ -80,21 +81,21 @@ public class StorageHandler {
                 }
             }
         } else {
-            player.inventory.setItemStack(controller.push(stack, size, false));
+            player.inventory.setItemStack(network.push(stack, size, false));
         }
 
         player.updateHeldItem();
 
-        controller.getWirelessGridHandler().drainEnergy(player, ItemWirelessGrid.USAGE_PUSH);
+        network.getWirelessGridHandler().drainEnergy(player, ItemWirelessGrid.USAGE_PUSH);
     }
 
     public void onCraftingRequested(int id, int quantity) {
-        if (id >= 0 && id < controller.getItems().size() && quantity > 0 && quantity <= MAX_CRAFTING_PER_REQUEST) {
-            ItemStack requested = controller.getItems().get(id);
+        if (id >= 0 && id < network.getItems().size() && quantity > 0 && quantity <= MAX_CRAFTING_PER_REQUEST) {
+            ItemStack requested = network.getItems().get(id);
 
             int quantityPerRequest = 0;
 
-            CraftingPattern pattern = controller.getPatternWithBestScore(requested);
+            CraftingPattern pattern = network.getPatternWithBestScore(requested);
 
             if (pattern != null) {
                 for (ItemStack output : pattern.getOutputs()) {
@@ -108,7 +109,7 @@ public class StorageHandler {
                 }
 
                 while (quantity > 0) {
-                    controller.addCraftingTaskAsLast(controller.createCraftingTask(pattern));
+                    network.addCraftingTaskAsLast(network.createCraftingTask(pattern));
 
                     quantity -= quantityPerRequest;
                 }
@@ -117,11 +118,11 @@ public class StorageHandler {
     }
 
     public void onCraftingCancelRequested(int id) {
-        if (id >= 0 && id < controller.getCraftingTasks().size()) {
-            controller.cancelCraftingTask(controller.getCraftingTasks().get(id));
+        if (id >= 0 && id < network.getCraftingTasks().size()) {
+            network.cancelCraftingTask(network.getCraftingTasks().get(id));
         } else if (id == -1) {
-            for (ICraftingTask task : controller.getCraftingTasks()) {
-                controller.cancelCraftingTask(task);
+            for (ICraftingTask task : network.getCraftingTasks()) {
+                network.cancelCraftingTask(task);
             }
         }
     }

@@ -44,7 +44,7 @@ public class MessageGridHeldItemPush extends MessageHandlerPlayerToServer<Messag
         TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.x, message.y, message.z));
 
         if (tile instanceof TileGrid && ((TileGrid) tile).isConnected()) {
-            ((TileGrid) tile).getController().getStorageHandler().onHeldItemPush(message.one, player);
+            ((TileGrid) tile).getNetwork().getStorageHandler().onHeldItemPush(message.one, player);
         }
     }
 }

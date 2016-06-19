@@ -5,8 +5,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants;
 import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.storagenet.StorageNetwork;
 import refinedstorage.autocrafting.CraftingPattern;
-import refinedstorage.tile.controller.TileController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +50,7 @@ public class BasicCraftingTask implements ICraftingTask {
         return pattern;
     }
 
-    public boolean update(TileController controller) {
+    public boolean update(StorageNetwork network) {
         this.updatedOnce = true;
 
         boolean done = true;
@@ -63,17 +63,17 @@ public class BasicCraftingTask implements ICraftingTask {
             if (!satisfied[i]) {
                 done = false;
 
-                ItemStack took = controller.take(input, 1);
+                ItemStack took = network.take(input, 1);
 
                 if (took != null) {
                     itemsTook.add(took);
 
                     satisfied[i] = true;
                 } else if (!childTasks[i]) {
-                    CraftingPattern pattern = controller.getPatternWithBestScore(input);
+                    CraftingPattern pattern = network.getPatternWithBestScore(input);
 
                     if (pattern != null) {
-                        controller.addCraftingTask(controller.createCraftingTask(pattern));
+                        network.addCraftingTask(network.createCraftingTask(pattern));
 
                         childTasks[i] = true;
                     }
@@ -90,23 +90,23 @@ public class BasicCraftingTask implements ICraftingTask {
 
     // @todo: handle no space
     @Override
-    public void onDone(TileController controller) {
+    public void onDone(StorageNetwork network) {
         for (ItemStack output : pattern.getOutputs()) {
-            controller.push(output, output.stackSize, false);
+            network.push(output, output.stackSize, false);
         }
 
         if (pattern.getByproducts() != null) {
             for (ItemStack byproduct : pattern.getByproducts()) {
-                controller.push(byproduct, byproduct.stackSize, false);
+                network.push(byproduct, byproduct.stackSize, false);
             }
         }
     }
 
     // @todo: handle no space
     @Override
-    public void onCancelled(TileController controller) {
+    public void onCancelled(StorageNetwork network) {
         for (ItemStack took : itemsTook) {
-            controller.push(took, took.stackSize, false);
+            network.push(took, took.stackSize, false);
         }
     }
 

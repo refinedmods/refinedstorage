@@ -5,9 +5,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.storagenet.StorageNetwork;
 import refinedstorage.autocrafting.CraftingPattern;
 import refinedstorage.tile.TileCrafter;
-import refinedstorage.tile.controller.TileController;
 
 public class ProcessingCraftingTask implements ICraftingTask {
     public static final int ID = 1;
@@ -42,17 +42,17 @@ public class ProcessingCraftingTask implements ICraftingTask {
     }
 
     @Override
-    public boolean update(TileController controller) {
+    public boolean update(StorageNetwork network) {
         this.updatedOnce = true;
 
-        TileCrafter crafter = pattern.getCrafter(controller.getWorld());
+        TileCrafter crafter = pattern.getCrafter(network.getWorld());
         IItemHandler handler = RefinedStorageUtils.getItemHandler(crafter.getFacingTile(), crafter.getDirection().getOpposite());
 
         if (handler != null) {
             for (int i = 0; i < inserted.length; ++i) {
                 if (!inserted[i]) {
                     ItemStack input = pattern.getInputs()[i];
-                    ItemStack took = controller.take(input, 1);
+                    ItemStack took = network.take(input, 1);
 
                     if (took != null) {
                         if (ItemHandlerHelper.insertItem(handler, took, true) == null) {
@@ -60,15 +60,15 @@ public class ProcessingCraftingTask implements ICraftingTask {
 
                             inserted[i] = true;
                         } else {
-                            controller.push(took, took.stackSize, false);
+                            network.push(took, took.stackSize, false);
                         }
                     } else if (!childTasks[i]) {
-                        CraftingPattern pattern = controller.getPatternWithBestScore(input);
+                        CraftingPattern pattern = network.getPatternWithBestScore(input);
 
                         if (pattern != null) {
                             childTasks[i] = true;
 
-                            controller.addCraftingTask(controller.createCraftingTask(pattern));
+                            network.addCraftingTask(network.createCraftingTask(pattern));
 
                             break;
                         }
@@ -101,12 +101,12 @@ public class ProcessingCraftingTask implements ICraftingTask {
     }
 
     @Override
-    public void onDone(TileController controller) {
+    public void onDone(StorageNetwork network) {
         // NO OP
     }
 
     @Override
-    public void onCancelled(TileController controller) {
+    public void onCancelled(StorageNetwork network) {
         // NO OP
     }
 

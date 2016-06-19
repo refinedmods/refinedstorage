@@ -52,7 +52,7 @@ public class TileInterface extends TileMachine implements ICompareConfig {
         } else if (ticks % RefinedStorageUtils.getSpeed(upgrades) == 0) {
             int size = Math.min(slot.stackSize, RefinedStorageUtils.hasUpgrade(upgrades, ItemUpgrade.TYPE_STACK) ? 64 : 1);
 
-            ItemStack remainder = controller.push(slot, size, false);
+            ItemStack remainder = network.push(slot, size, false);
 
             if (remainder == null) {
                 importItems.extractItem(currentSlot, size, false);
@@ -67,13 +67,13 @@ public class TileInterface extends TileMachine implements ICompareConfig {
 
             if (wanted == null) {
                 if (got != null) {
-                    exportItems.setStackInSlot(i, controller.push(got, got.stackSize, false));
+                    exportItems.setStackInSlot(i, network.push(got, got.stackSize, false));
                 }
             } else {
                 int delta = got == null ? wanted.stackSize : (wanted.stackSize - got.stackSize);
 
                 if (delta > 0) {
-                    ItemStack result = controller.take(wanted, delta, compare);
+                    ItemStack result = network.take(wanted, delta, compare);
 
                     if (result != null) {
                         if (got == null) {
@@ -83,7 +83,7 @@ public class TileInterface extends TileMachine implements ICompareConfig {
                         }
                     }
                 } else if (delta < 0) {
-                    ItemStack remainder = controller.push(got, Math.abs(delta), false);
+                    ItemStack remainder = network.push(got, Math.abs(delta), false);
 
                     if (remainder == null) {
                         exportItems.extractItem(i, Math.abs(delta), false);

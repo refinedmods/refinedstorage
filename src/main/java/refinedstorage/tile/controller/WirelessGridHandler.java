@@ -8,6 +8,7 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.storagenet.StorageNetwork;
 import refinedstorage.item.ItemWirelessGrid;
 import refinedstorage.tile.grid.WirelessGridConsumer;
 
@@ -16,13 +17,13 @@ import java.util.Iterator;
 import java.util.List;
 
 public class WirelessGridHandler {
-    private TileController controller;
+    private StorageNetwork network;
 
     private List<WirelessGridConsumer> consumers = new ArrayList<WirelessGridConsumer>();
     private List<WirelessGridConsumer> consumersToRemove = new ArrayList<WirelessGridConsumer>();
 
-    public WirelessGridHandler(TileController controller) {
-        this.controller = controller;
+    public WirelessGridHandler(StorageNetwork network) {
+        this.network = network;
     }
 
     public void update() {
@@ -41,17 +42,17 @@ public class WirelessGridHandler {
     }
 
     public boolean handleOpen(EntityPlayer player, EnumHand hand) {
-        int distance = (int) Math.sqrt(Math.pow(controller.getPos().getX() - player.posX, 2) + Math.pow(controller.getPos().getY() - player.posY, 2) + Math.pow(controller.getPos().getZ() - player.posZ, 2));
+        int distance = (int) Math.sqrt(Math.pow(network.getPos().getX() - player.posX, 2) + Math.pow(network.getPos().getY() - player.posY, 2) + Math.pow(network.getPos().getZ() - player.posZ, 2));
 
-        if (distance > controller.getWirelessGridRange()) {
+        if (distance > network.getWirelessGridRange()) {
             return false;
         }
 
         consumers.add(new WirelessGridConsumer(player, hand, player.getHeldItem(hand)));
 
-        player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.WIRELESS_GRID, controller.getWorld(), RefinedStorageUtils.getIdFromHand(hand), 0, 0);
+        player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.WIRELESS_GRID, player.worldObj, RefinedStorageUtils.getIdFromHand(hand), 0, 0);
 
-        controller.syncItemsWithClient((EntityPlayerMP) player);
+        network.syncItemsWithClient((EntityPlayerMP) player);
 
         drainEnergy(player, ItemWirelessGrid.USAGE_OPEN);
 

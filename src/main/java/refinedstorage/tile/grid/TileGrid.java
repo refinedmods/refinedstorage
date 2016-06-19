@@ -109,18 +109,18 @@ public class TileGrid extends TileMachine implements IGrid {
 
     @Override
     public BlockPos getControllerPos() {
-        return controller != null ? controller.getPos() : null;
+        return network != null ? network.getPos() : null;
     }
 
     public void onGridOpened(EntityPlayer player) {
         if (isConnected()) {
-            controller.syncItemsWithClient((EntityPlayerMP) player);
+            network.syncItemsWithClient((EntityPlayerMP) player);
         }
     }
 
     @Override
     public ItemStack onItemPush(EntityPlayer player, ItemStack stack) {
-        return isConnected() ? controller.push(stack, stack.stackSize, false) : stack;
+        return isConnected() ? network.push(stack, stack.stackSize, false) : stack;
     }
 
     @Override
@@ -162,7 +162,7 @@ public class TileGrid extends TileMachine implements IGrid {
 
                 if (slot != null) {
                     if (slot.stackSize == 1 && isConnected()) {
-                        matrix.setInventorySlotContents(i, controller.take(slot, 1));
+                        matrix.setInventorySlotContents(i, network.take(slot, 1));
                     } else {
                         matrix.decrStackSize(i, 1);
                     }
@@ -239,10 +239,10 @@ public class TileGrid extends TileMachine implements IGrid {
 
                 if (slot != null) {
                     if (getType() == EnumGridType.CRAFTING) {
-                        if (controller.push(slot, slot.stackSize, true) != null) {
+                        if (network.push(slot, slot.stackSize, true) != null) {
                             return;
                         } else {
-                            controller.push(slot, slot.stackSize, false);
+                            network.push(slot, slot.stackSize, false);
                         }
                     }
 
@@ -256,7 +256,7 @@ public class TileGrid extends TileMachine implements IGrid {
 
                     if (getType() == EnumGridType.CRAFTING) {
                         for (ItemStack possibility : possibilities) {
-                            ItemStack took = controller.take(possibility, 1);
+                            ItemStack took = network.take(possibility, 1);
 
                             if (took != null) {
                                 matrix.setInventorySlotContents(i, possibility);

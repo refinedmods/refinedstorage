@@ -45,9 +45,9 @@ public class TileCrafter extends TileMachine {
 
     @Override
     public void onDisconnected(World world) {
-        for (ICraftingTask task : controller.getCraftingTasks()) {
+        for (ICraftingTask task : network.getCraftingTasks()) {
             if (task.getPattern().getCrafter(worldObj) == this) {
-                controller.cancelCraftingTask(task);
+                network.cancelCraftingTask(task);
             }
         }
 

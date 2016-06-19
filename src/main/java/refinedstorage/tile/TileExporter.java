@@ -50,7 +50,7 @@ public class TileExporter extends TileMachine implements ICompareConfig {
                 if (slot != null) {
                     int size = RefinedStorageUtils.hasUpgrade(upgrades, ItemUpgrade.TYPE_STACK) ? 64 : 1;
 
-                    ItemStack took = controller.take(slot, size, compare);
+                    ItemStack took = network.take(slot, size, compare);
 
                     if (took != null) {
                         scheduler.resetSchedule();
@@ -58,11 +58,11 @@ public class TileExporter extends TileMachine implements ICompareConfig {
                         ItemStack remainder = ItemHandlerHelper.insertItem(handler, took, false);
 
                         if (remainder != null) {
-                            controller.push(remainder, remainder.stackSize, false);
+                            network.push(remainder, remainder.stackSize, false);
                         }
                     } else if (RefinedStorageUtils.hasUpgrade(upgrades, ItemUpgrade.TYPE_CRAFTING)) {
                         if (scheduler.canSchedule(compare, slot)) {
-                            scheduler.schedule(controller, compare, slot);
+                            scheduler.schedule(network, compare, slot);
                         }
                     }
                 }

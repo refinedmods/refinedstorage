@@ -2,10 +2,10 @@ package refinedstorage.network;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import refinedstorage.tile.grid.TileGrid;
+import refinedstorage.api.storagenet.StorageNetwork;
+import refinedstorage.api.storagenet.StorageNetworkRegistry;
 
 public class MessageGridCraftingStart extends MessageHandlerPlayerToServer<MessageGridCraftingStart> implements IMessage {
     private int x;
@@ -45,10 +45,10 @@ public class MessageGridCraftingStart extends MessageHandlerPlayerToServer<Messa
 
     @Override
     public void handle(MessageGridCraftingStart message, EntityPlayerMP player) {
-        TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.x, message.y, message.z));
+        StorageNetwork network = StorageNetworkRegistry.NETWORKS.get(new BlockPos(message.x, message.y, message.z));
 
-        if (tile instanceof TileGrid && ((TileGrid) tile).isConnected()) {
-            ((TileGrid) tile).getController().getStorageHandler().onCraftingRequested(message.id, message.quantity);
+        if (network != null && network.canRun()) {
+            network.getStorageHandler().onCraftingRequested(message.id, message.quantity);
         }
     }
 }

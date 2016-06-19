@@ -8,22 +8,22 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import refinedstorage.api.storagenet.StorageNetwork;
 import refinedstorage.container.ContainerGrid;
 import refinedstorage.tile.ClientItem;
-import refinedstorage.tile.controller.TileController;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MessageGridItems implements IMessage, IMessageHandler<MessageGridItems, IMessage> {
-    private TileController controller;
+    private StorageNetwork network;
     private List<ClientItem> items = new ArrayList<ClientItem>();
 
     public MessageGridItems() {
     }
 
-    public MessageGridItems(TileController controller) {
-        this.controller = controller;
+    public MessageGridItems(StorageNetwork network) {
+        this.network = network;
     }
 
     @Override
@@ -42,9 +42,9 @@ public class MessageGridItems implements IMessage, IMessageHandler<MessageGridIt
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(controller.getItems().size());
+        buf.writeInt(network.getItems().size());
 
-        for (ItemStack item : controller.getItems()) {
+        for (ItemStack item : network.getItems()) {
             buf.writeInt(item.stackSize);
             ByteBufUtils.writeItemStack(buf, item);
         }

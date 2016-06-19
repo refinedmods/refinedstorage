@@ -20,6 +20,8 @@ import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageGui;
+import refinedstorage.api.storagenet.StorageNetwork;
+import refinedstorage.api.storagenet.StorageNetworkRegistry;
 import refinedstorage.item.ItemBlockController;
 import refinedstorage.tile.controller.TileController;
 
@@ -91,12 +93,8 @@ public class BlockController extends BlockBase {
 
         NBTTagCompound tag = itemStack.getTagCompound();
 
-        if (tag != null && tag.hasKey(TileController.NBT_ENERGY)) {
-            TileEntity tile = world.getTileEntity(pos);
-
-            if (tile instanceof TileController) {
-                ((TileController) tile).receiveEnergy(null, tag.getInteger(TileController.NBT_ENERGY), false);
-            }
+        if (tag != null && tag.hasKey(StorageNetwork.NBT_ENERGY)) {
+            StorageNetworkRegistry.NETWORKS.get(pos).getEnergy().receiveEnergy(tag.getInteger(StorageNetwork.NBT_ENERGY), false);
         }
     }
 
@@ -107,7 +105,7 @@ public class BlockController extends BlockBase {
         ItemStack stack = new ItemStack(RefinedStorageBlocks.CONTROLLER, 1, RefinedStorageBlocks.CONTROLLER.getMetaFromState(state));
 
         NBTTagCompound tag = new NBTTagCompound();
-        tag.setInteger(TileController.NBT_ENERGY, ((TileController) world.getTileEntity(pos)).getEnergyStored(null));
+        tag.setInteger(StorageNetwork.NBT_ENERGY, ((TileController) world.getTileEntity(pos)).getEnergyStored(null));
         stack.setTagCompound(tag);
 
         drops.add(stack);

@@ -28,9 +28,9 @@ public class TileCraftingMonitor extends TileMachine {
         super.writeContainerData(buf);
 
         if (connected) {
-            buf.writeInt(controller.getCraftingTasks().size());
+            buf.writeInt(network.getCraftingTasks().size());
 
-            for (ICraftingTask task : controller.getCraftingTasks()) {
+            for (ICraftingTask task : network.getCraftingTasks()) {
                 ByteBufUtils.writeUTF8String(buf, task.getInfo());
 
                 buf.writeInt(task.getPattern().getOutputs().length);
