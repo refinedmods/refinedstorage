@@ -81,7 +81,7 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
     }
 
     public void onConnected(World world, TileController controller) {
-        if (tryConnect(controller)) {
+        if (tryConnect(controller) && block != null) {
             world.notifyNeighborsOfStateChange(pos, block);
         }
     }
