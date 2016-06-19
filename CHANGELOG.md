@@ -6,6 +6,8 @@
 - Added support for Deep Storage Unit API again
 
 **Bugfixes**
+- Fixed NPE in machine searching
+- Fixed a bug with interface giving negative amounts of items
 - Fixed crash when using scroll wheel
 
 ### 0.7.15
