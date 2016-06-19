@@ -1,7 +1,9 @@
 # Refined Storage Changelog
 
 ### 0.7.16
+**Features**
 - Added support for Storage Drawers void upgrade
+- Added support for Deep Storage Unit API again
 
 ### 0.7.15
 **Bugfixes**

@@ -5,9 +5,11 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.IItemHandler;
+import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.RefinedStorageCapabilities;
@@ -145,8 +147,10 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
 
     @Override
     public void provide(List<IStorage> storages) {
-        if (getFacingTile() instanceof IDrawerGroup) {
-            IDrawerGroup group = (IDrawerGroup) getFacingTile();
+        TileEntity facing = getFacingTile();
+
+        if (facing instanceof IDrawerGroup) {
+            IDrawerGroup group = (IDrawerGroup) facing;
 
             energyUsage = group.getDrawerCount();
             stored = 0;
@@ -162,8 +166,16 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
                     capacity += storage.getCapacity();
                 }
             }
-        } else if (getFacingTile() instanceof IDrawer) {
-            DrawerStorage storage = new DrawerStorage(this, (IDrawer) getFacingTile());
+        } else if (facing instanceof IDrawer) {
+            DrawerStorage storage = new DrawerStorage(this, (IDrawer) facing);
+
+            storages.add(storage);
+
+            energyUsage = 1;
+            stored = storage.getStored();
+            capacity = storage.getCapacity();
+        } else if (facing instanceof IDeepStorageUnit) {
+            DeepStorageUnitStorage storage = new DeepStorageUnitStorage(this, (IDeepStorageUnit) facing);
 
             storages.add(storage);
 
@@ -171,7 +183,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
             stored = storage.getStored();
             capacity = storage.getCapacity();
         } else {
-            IItemHandler handler = RefinedStorageUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
+            IItemHandler handler = RefinedStorageUtils.getItemHandler(facing, getDirection().getOpposite());
 
             if (handler != null) {
                 ItemHandlerStorage storage = new ItemHandlerStorage(this, handler);
@@ -183,6 +195,8 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
                 capacity = storage.getCapacity();
             } else {
                 energyUsage = 0;
+                stored = 0;
+                capacity = 0;
             }
         }
     }
