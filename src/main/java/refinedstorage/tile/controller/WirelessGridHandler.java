@@ -42,7 +42,7 @@ public class WirelessGridHandler {
     }
 
     public boolean handleOpen(EntityPlayer player, EnumHand hand) {
-        int distance = (int) Math.sqrt(Math.pow(network.getPos().getX() - player.posX, 2) + Math.pow(network.getPos().getY() - player.posY, 2) + Math.pow(network.getPos().getZ() - player.posZ, 2));
+        int distance = (int) Math.sqrt(Math.pow(network.getPosition().getX() - player.posX, 2) + Math.pow(network.getPosition().getY() - player.posY, 2) + Math.pow(network.getPosition().getZ() - player.posZ, 2));
 
         if (distance > network.getWirelessGridRange()) {
             return false;

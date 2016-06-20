@@ -110,7 +110,7 @@ public class NetworkMaster {
         return energyUsage;
     }
 
-    public BlockPos getPos() {
+    public BlockPos getPosition() {
         return pos;
     }
 
@@ -220,7 +220,7 @@ public class NetworkMaster {
         markDirty();
     }
 
-    public void removeMachine(INetworkSlave slave) {
+    public void removeSlave(INetworkSlave slave) {
         slavesToRemove.add(slave);
 
         markDirty();

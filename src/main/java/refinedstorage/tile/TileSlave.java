@@ -2,6 +2,8 @@ package refinedstorage.tile;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorageUtils;
@@ -10,7 +12,6 @@ import refinedstorage.api.network.NetworkMaster;
 import refinedstorage.api.network.NetworkMasterRegistry;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
-import refinedstorage.tile.controller.ControllerSearcher;
 import refinedstorage.tile.controller.TileController;
 
 import java.util.HashSet;
@@ -67,7 +68,7 @@ public abstract class TileSlave extends TileBase implements ISynchronizedContain
         this.connected = false;
 
         if (this.network != null) {
-            this.network.removeMachine(this);
+            this.network.removeSlave(this);
             this.network = null;
         }
 
@@ -78,7 +79,7 @@ public abstract class TileSlave extends TileBase implements ISynchronizedContain
     public void onNeighborChanged(World world) {
         visited.clear();
 
-        TileController controller = ControllerSearcher.search(world, pos, visited);
+        TileController controller = searchController(world, pos, visited);
 
         if (network == null) {
             if (controller != null) {
@@ -89,6 +90,34 @@ public abstract class TileSlave extends TileBase implements ISynchronizedContain
                 disconnect(world);
             }
         }
+    }
+
+    private TileController searchController(World world, BlockPos current, Set<String> visited) {
+        if (visited.contains(current.getX() + "," + current.getY() + "," + current.getZ())) {
+            return null;
+        }
+
+        visited.add(current.getX() + "," + current.getY() + "," + current.getZ());
+
+        TileEntity tile = world.getTileEntity(current);
+
+        if (tile instanceof TileController) {
+            return (TileController) tile;
+        } else if (tile instanceof TileSlave) {
+            if (visited.size() > 1 && tile instanceof TileRelay && !((TileRelay) tile).canUpdate()) {
+                return null;
+            }
+
+            for (EnumFacing dir : EnumFacing.VALUES) {
+                TileController controller = searchController(world, current.offset(dir), visited);
+
+                if (controller != null) {
+                    return controller;
+                }
+            }
+        }
+
+        return null;
     }
 
     public NetworkMaster getNetwork() {

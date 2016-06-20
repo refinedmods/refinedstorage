@@ -45,9 +45,9 @@ public class NetworkMasterSavedData extends WorldSavedData {
             for (NetworkMaster network : entry.getValue().values()) {
                 NBTTagCompound networkTag = new NBTTagCompound();
 
-                networkTag.setInteger(NBT_NETWORK_X, network.getPos().getX());
-                networkTag.setInteger(NBT_NETWORK_Y, network.getPos().getY());
-                networkTag.setInteger(NBT_NETWORK_Z, network.getPos().getZ());
+                networkTag.setInteger(NBT_NETWORK_X, network.getPosition().getX());
+                networkTag.setInteger(NBT_NETWORK_Y, network.getPosition().getY());
+                networkTag.setInteger(NBT_NETWORK_Z, network.getPosition().getZ());
                 networkTag.setInteger(NBT_NETWORK_DIM, entry.getKey());
 
                 networkTag.setTag(NBT_NETWORK_DATA, network.writeToNBT(new NBTTagCompound()));

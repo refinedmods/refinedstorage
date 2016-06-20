@@ -109,7 +109,7 @@ public class TileGrid extends TileSlave implements IGrid {
 
     @Override
     public BlockPos getControllerPos() {
-        return network != null ? network.getPos() : null;
+        return network != null ? network.getPosition() : null;
     }
 
     public void onGridOpened(EntityPlayer player) {

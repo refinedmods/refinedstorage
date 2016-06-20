@@ -13,7 +13,7 @@ public class NetworkMasterRegistry {
             NETWORKS.put(dimension, new HashMap<BlockPos, NetworkMaster>());
         }
 
-        NETWORKS.get(dimension).put(network.getPos(), network);
+        NETWORKS.get(dimension).put(network.getPosition(), network);
     }
 
     public static void remove(BlockPos pos, int dimension) {
