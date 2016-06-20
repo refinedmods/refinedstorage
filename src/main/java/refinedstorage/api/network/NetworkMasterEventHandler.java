@@ -25,6 +25,6 @@ public class NetworkMasterEventHandler {
 
     @SubscribeEvent
     public void onWorldLoad(WorldEvent.Load e) {
-        NetworkMasterSavedData.get(e.getWorld());
+        NetworkMasterSavedData.getOrLoad(e.getWorld());
     }
 }

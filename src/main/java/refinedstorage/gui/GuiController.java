@@ -6,7 +6,7 @@ import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.network.NetworkMaster;
 import refinedstorage.container.ContainerController;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
-import refinedstorage.tile.controller.ClientMachine;
+import refinedstorage.tile.controller.ClientSlave;
 import refinedstorage.tile.controller.TileController;
 
 import java.util.List;
@@ -63,28 +63,28 @@ public class GuiController extends GuiBase {
 
         RenderHelper.enableGUIStandardItemLighting();
 
-        List<ClientMachine> machines = controller.getClientMachines();
+        List<ClientSlave> slaves = controller.getClientSlaves();
 
-        ClientMachine machineHovering = null;
+        ClientSlave slaveHovering = null;
 
         for (int i = 0; i < 4; ++i) {
-            if (slot < machines.size()) {
-                ClientMachine machine = machines.get(slot);
+            if (slot < slaves.size()) {
+                ClientSlave slave = slaves.get(slot);
 
-                drawItem(x, y + 5, machine.stack);
+                drawItem(x, y + 5, slave.stack);
 
                 float scale = 0.5f;
 
                 GlStateManager.pushMatrix();
                 GlStateManager.scale(scale, scale, 1);
 
-                drawString(RefinedStorageUtils.calculateOffsetOnScale(x + 1, scale), RefinedStorageUtils.calculateOffsetOnScale(y - 2, scale), machine.stack.getDisplayName());
-                drawString(RefinedStorageUtils.calculateOffsetOnScale(x + 21, scale), RefinedStorageUtils.calculateOffsetOnScale(y + 10, scale), t("gui.refinedstorage:controller.machine_amount", machine.amount));
+                drawString(RefinedStorageUtils.calculateOffsetOnScale(x + 1, scale), RefinedStorageUtils.calculateOffsetOnScale(y - 2, scale), slave.stack.getDisplayName());
+                drawString(RefinedStorageUtils.calculateOffsetOnScale(x + 21, scale), RefinedStorageUtils.calculateOffsetOnScale(y + 10, scale), t("gui.refinedstorage:controller.machine_amount", slave.amount));
 
                 GlStateManager.popMatrix();
 
                 if (inBounds(x, y, 16, 16, mouseX, mouseY)) {
-                    machineHovering = machine;
+                    slaveHovering = slave;
                 }
             }
 
@@ -98,8 +98,8 @@ public class GuiController extends GuiBase {
             slot++;
         }
 
-        if (machineHovering != null) {
-            drawTooltip(mouseX, mouseY, t("misc.refinedstorage:energy_usage_minimal", machineHovering.energyUsage));
+        if (slaveHovering != null) {
+            drawTooltip(mouseX, mouseY, t("misc.refinedstorage:energy_usage_minimal", slaveHovering.energyUsage));
         }
 
         if (inBounds(barX, barY, barWidth, barHeight, mouseX, mouseY)) {
@@ -112,7 +112,7 @@ public class GuiController extends GuiBase {
     }
 
     private int getRows() {
-        int max = (int) Math.ceil((float) controller.getClientMachines().size() / (float) 2);
+        int max = (int) Math.ceil((float) controller.getClientSlaves().size() / (float) 2);
 
         return max < 0 ? 0 : max;
     }

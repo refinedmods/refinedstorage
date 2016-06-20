@@ -12,7 +12,7 @@ public interface IRecipeHandler {
     /**
      * Get the recipe ingredient list as an array of objects (usually used for shaped recipes).
      * If your array does not contain ItemStack objects, you will need to register an {@link IIngredientHandler} to
-     * get an ItemStack from them.
+     * getOrLoad an ItemStack from them.
      * <p>
      * If you would prefer to return a List, return null in this method and implement {@link #getInputAsList}.
      *
@@ -24,7 +24,7 @@ public interface IRecipeHandler {
     /**
      * Get the recipe ingredient list as a list of objects (usually used for shapeless recipes).
      * If your list does not contain ItemStack objects, you will need to register an {@link IIngredientHandler} to
-     * get an ItemStack from them.
+     * getOrLoad an ItemStack from them.
      * <p>
      * If you would prefer to return an array, return null in this method and implement {@link #getInputAsArray}.
      *

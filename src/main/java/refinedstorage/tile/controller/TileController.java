@@ -27,7 +27,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     private NetworkMaster network;
 
     // Only used client side
-    private List<ClientMachine> clientMachines = new ArrayList<ClientMachine>();
+    private List<ClientSlave> clientSlaves = new ArrayList<ClientSlave>();
     private int energy;
     private int energyUsage;
     private EnumControllerType type;
@@ -94,8 +94,8 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
         getNetwork().setRedstoneMode(mode);
     }
 
-    public List<ClientMachine> getClientMachines() {
-        return clientMachines;
+    public List<ClientSlave> getClientSlaves() {
+        return clientSlaves;
     }
 
     public int getEnergy() {
@@ -120,20 +120,21 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
         this.energyUsage = buf.readInt();
         this.redstoneMode = RedstoneMode.getById(buf.readInt());
 
-        List<ClientMachine> machines = new ArrayList<ClientMachine>();
+        List<ClientSlave> slaves = new ArrayList<ClientSlave>();
 
         int size = buf.readInt();
 
         for (int i = 0; i < size; ++i) {
-            ClientMachine machine = new ClientMachine();
-            machine.energyUsage = buf.readInt();
-            machine.amount = buf.readInt();
-            machine.stack = ByteBufUtils.readItemStack(buf);
+            ClientSlave slave = new ClientSlave();
 
-            machines.add(machine);
+            slave.energyUsage = buf.readInt();
+            slave.amount = buf.readInt();
+            slave.stack = ByteBufUtils.readItemStack(buf);
+
+            slaves.add(slave);
         }
 
-        this.clientMachines = machines;
+        this.clientSlaves = slaves;
     }
 
     @Override
@@ -143,37 +144,37 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
         buf.writeInt(getNetwork().getRedstoneMode().id);
 
-        List<ClientMachine> m = new ArrayList<ClientMachine>();
+        List<ClientSlave> slaves = new ArrayList<ClientSlave>();
 
-        for (INetworkSlave machine : getNetwork().getSlaves()) {
-            if (machine.canUpdate()) {
-                IBlockState state = worldObj.getBlockState(machine.getPosition());
+        for (INetworkSlave slave : getNetwork().getSlaves()) {
+            if (slave.canUpdate()) {
+                IBlockState state = worldObj.getBlockState(slave.getPosition());
 
-                ClientMachine clientMachine = new ClientMachine();
+                ClientSlave clientSlave = new ClientSlave();
 
-                clientMachine.energyUsage = machine.getEnergyUsage();
-                clientMachine.amount = 1;
-                clientMachine.stack = new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state));
+                clientSlave.energyUsage = slave.getEnergyUsage();
+                clientSlave.amount = 1;
+                clientSlave.stack = new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state));
 
-                if (m.contains(clientMachine)) {
-                    for (ClientMachine other : m) {
-                        if (other.equals(clientMachine)) {
+                if (slaves.contains(clientSlave)) {
+                    for (ClientSlave other : slaves) {
+                        if (other.equals(clientSlave)) {
                             other.amount++;
                             break;
                         }
                     }
                 } else {
-                    m.add(clientMachine);
+                    slaves.add(clientSlave);
                 }
             }
         }
 
-        buf.writeInt(m.size());
+        buf.writeInt(slaves.size());
 
-        for (ClientMachine machine : m) {
-            buf.writeInt(machine.energyUsage);
-            buf.writeInt(machine.amount);
-            ByteBufUtils.writeItemStack(buf, machine.stack);
+        for (ClientSlave slave : slaves) {
+            buf.writeInt(slave.energyUsage);
+            buf.writeInt(slave.amount);
+            ByteBufUtils.writeItemStack(buf, slave.stack);
         }
     }
 

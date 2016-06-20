@@ -10,7 +10,13 @@ import net.minecraftforge.common.util.Constants;
 import java.util.Map;
 
 public class NetworkMasterSavedData extends WorldSavedData {
-    public static final String NBT_STORAGE_NETWORKS = "StorageNetworks";
+    public static final String ID = "RSNetworks";
+    public static final String NBT_NETWORKS = "Networks";
+    public static final String NBT_NETWORK_X = "X";
+    public static final String NBT_NETWORK_Y = "Y";
+    public static final String NBT_NETWORK_Z = "Z";
+    public static final String NBT_NETWORK_DIM = "Dim";
+    public static final String NBT_NETWORK_DATA = "Data";
 
     public NetworkMasterSavedData(String name) {
         super(name);
@@ -18,17 +24,16 @@ public class NetworkMasterSavedData extends WorldSavedData {
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
-        NBTTagList networks = tag.getTagList(NBT_STORAGE_NETWORKS, Constants.NBT.TAG_COMPOUND);
+        NBTTagList networks = tag.getTagList(NBT_NETWORKS, Constants.NBT.TAG_COMPOUND);
 
         for (int i = 0; i < networks.tagCount(); ++i) {
             NBTTagCompound networkTag = networks.getCompoundTagAt(i);
 
-            BlockPos pos = new BlockPos(networkTag.getInteger("X"), networkTag.getInteger("Y"), networkTag.getInteger("Z"));
+            NetworkMaster network = new NetworkMaster(new BlockPos(networkTag.getInteger(NBT_NETWORK_X), networkTag.getInteger(NBT_NETWORK_Y), networkTag.getInteger(NBT_NETWORK_Z)));
 
-            NetworkMaster network = new NetworkMaster(pos);
-            network.readFromNBT(networkTag.getCompoundTag("Data"));
+            network.readFromNBT(networkTag.getCompoundTag(NBT_NETWORK_DATA));
 
-            NetworkMasterRegistry.add(network, networkTag.getInteger("Dim"));
+            NetworkMasterRegistry.add(network, networkTag.getInteger(NBT_NETWORK_DIM));
         }
     }
 
@@ -39,26 +44,30 @@ public class NetworkMasterSavedData extends WorldSavedData {
         for (Map.Entry<Integer, Map<BlockPos, NetworkMaster>> entry : NetworkMasterRegistry.NETWORKS.entrySet()) {
             for (NetworkMaster network : entry.getValue().values()) {
                 NBTTagCompound networkTag = new NBTTagCompound();
-                networkTag.setInteger("X", network.getPos().getX());
-                networkTag.setInteger("Y", network.getPos().getY());
-                networkTag.setInteger("Z", network.getPos().getZ());
-                networkTag.setInteger("Dim", entry.getKey());
-                networkTag.setTag("Data", network.writeToNBT(new NBTTagCompound()));
+
+                networkTag.setInteger(NBT_NETWORK_X, network.getPos().getX());
+                networkTag.setInteger(NBT_NETWORK_Y, network.getPos().getY());
+                networkTag.setInteger(NBT_NETWORK_Z, network.getPos().getZ());
+                networkTag.setInteger(NBT_NETWORK_DIM, entry.getKey());
+
+                networkTag.setTag(NBT_NETWORK_DATA, network.writeToNBT(new NBTTagCompound()));
+
                 networks.appendTag(networkTag);
             }
         }
 
-        tag.setTag(NBT_STORAGE_NETWORKS, networks);
+        tag.setTag(NBT_NETWORKS, networks);
 
         return tag;
     }
 
-    public static NetworkMasterSavedData get(World world) {
-        NetworkMasterSavedData instance = (NetworkMasterSavedData) world.getMapStorage().getOrLoadData(NetworkMasterSavedData.class, "RSStorageNetworks");
+    public static NetworkMasterSavedData getOrLoad(World world) {
+        NetworkMasterSavedData instance = (NetworkMasterSavedData) world.getMapStorage().getOrLoadData(NetworkMasterSavedData.class, ID);
 
         if (instance == null) {
-            instance = new NetworkMasterSavedData("RSStorageNetworks");
-            world.getMapStorage().setData("RSStorageNetworks", instance);
+            instance = new NetworkMasterSavedData(ID);
+
+            world.getMapStorage().setData(ID, instance);
         }
 
         return instance;

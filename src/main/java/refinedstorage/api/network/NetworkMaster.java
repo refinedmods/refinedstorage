@@ -40,6 +40,10 @@ public class NetworkMaster {
 
     public static final String NBT_CRAFTING_TASKS = "CraftingTasks";
     public static final String NBT_ENERGY = "Energy";
+    public static final String NBT_SLAVES = "Slaves";
+    public static final String NBT_SLAVE_X = "X";
+    public static final String NBT_SLAVE_Y = "Y";
+    public static final String NBT_SLAVE_Z = "Z";
 
     private StorageHandler storageHandler = new StorageHandler(this);
     private WirelessGridHandler wirelessGridHandler = new WirelessGridHandler(this);
@@ -446,7 +450,7 @@ public class NetworkMaster {
 
                 if (RefinedStorageUtils.compareStackNoQuantity(stack, otherStack)) {
                     // We copy here so we don't modify the quantity of the ItemStack IStorage uses.
-                    // We re-get the ItemStack because the stack may change from a previous iteration in this loop
+                    // We re-getOrLoad the ItemStack because the stack may change from a previous iteration in this loop
                     ItemStack newStack = items.get(i).copy();
                     newStack.stackSize += otherStack.stackSize;
                     items.set(i, newStack);
@@ -589,13 +593,13 @@ public class NetworkMaster {
             }
         }
 
-        if (tag.hasKey("Machines")) {
-            NBTTagList machinesTag = tag.getTagList("Machines", Constants.NBT.TAG_COMPOUND);
+        if (tag.hasKey(NBT_SLAVES)) {
+            NBTTagList slavesTag = tag.getTagList(NBT_SLAVES, Constants.NBT.TAG_COMPOUND);
 
-            for (int i = 0; i < machinesTag.tagCount(); ++i) {
-                NBTTagCompound coords = machinesTag.getCompoundTagAt(i);
+            for (int i = 0; i < slavesTag.tagCount(); ++i) {
+                NBTTagCompound slave = slavesTag.getCompoundTagAt(i);
 
-                slavesToLoad.add(new BlockPos(coords.getInteger("X"), coords.getInteger("Y"), coords.getInteger("Z")));
+                slavesToLoad.add(new BlockPos(slave.getInteger(NBT_SLAVE_X), slave.getInteger(NBT_SLAVE_Y), slave.getInteger(NBT_SLAVE_Z)));
             }
         }
     }
@@ -615,20 +619,24 @@ public class NetworkMaster {
 
         tag.setTag(NBT_CRAFTING_TASKS, list);
 
-        NBTTagList machinesTag = new NBTTagList();
+        NBTTagList slavesTag = new NBTTagList();
+
         for (INetworkSlave slave : slaves) {
-            NBTTagCompound coords = new NBTTagCompound();
-            coords.setInteger("X", slave.getPosition().getX());
-            coords.setInteger("Y", slave.getPosition().getY());
-            coords.setInteger("Z", slave.getPosition().getZ());
-            machinesTag.appendTag(coords);
+            NBTTagCompound slaveTag = new NBTTagCompound();
+
+            slaveTag.setInteger(NBT_SLAVE_X, slave.getPosition().getX());
+            slaveTag.setInteger(NBT_SLAVE_Y, slave.getPosition().getY());
+            slaveTag.setInteger(NBT_SLAVE_Z, slave.getPosition().getZ());
+
+            slavesTag.appendTag(slaveTag);
         }
-        tag.setTag("Machines", machinesTag);
+
+        tag.setTag(NBT_SLAVES, slavesTag);
 
         return tag;
     }
 
     public void markDirty() {
-        NetworkMasterSavedData.get(world).markDirty();
+        NetworkMasterSavedData.getOrLoad(world).markDirty();
     }
 }
