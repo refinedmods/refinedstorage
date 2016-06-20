@@ -6,7 +6,7 @@ import net.minecraft.world.World;
 /**
  * Represents a slave or machine in the storage network.
  *
- * Make sure you implement {@link Object#hashCode()} or the slave will not getOrLoad properly removed or added by the storage master.
+ * Make sure you implement {@link Object#hashCode()} or the slave will not get properly removed or added by the storage master.
  * Typically the hash code from {@link INetworkSlave#getPosition()} is used.
  */
 public interface INetworkSlave {
@@ -65,7 +65,7 @@ public interface INetworkSlave {
     boolean isConnected();
 
     /**
-     * @return If {@link INetworkSlave#canUpdate()} can getOrLoad called. Typically checks for connection and redstone mode.
+     * @return If {@link INetworkSlave#canUpdate()} can get called. Typically checks for connection and redstone mode.
      */
     boolean canUpdate();
 

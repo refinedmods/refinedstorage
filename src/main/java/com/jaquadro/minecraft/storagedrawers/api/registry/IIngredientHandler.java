@@ -3,7 +3,7 @@ package com.jaquadro.minecraft.storagedrawers.api.registry;
 import net.minecraft.item.ItemStack;
 
 /**
- * Ingredient handlers are used to getOrLoad ItemStacks from ingredients in custom IRecipe implementations.  If you have
+ * Ingredient handlers are used to get ItemStacks from ingredients in custom IRecipe implementations.  If you have
  * registered an IRecipeHandler that returns lists of objects that aren't ItemStacks, then you will need to
  * implement an ingredient handler for those objects.
  */

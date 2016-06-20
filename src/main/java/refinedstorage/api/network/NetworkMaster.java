@@ -450,7 +450,7 @@ public class NetworkMaster {
 
                 if (RefinedStorageUtils.compareStackNoQuantity(stack, otherStack)) {
                     // We copy here so we don't modify the quantity of the ItemStack IStorage uses.
-                    // We re-getOrLoad the ItemStack because the stack may change from a previous iteration in this loop
+                    // We re-get the ItemStack because the stack may change from a previous iteration in this loop
                     ItemStack newStack = items.get(i).copy();
                     newStack.stackSize += otherStack.stackSize;
                     items.set(i, newStack);
