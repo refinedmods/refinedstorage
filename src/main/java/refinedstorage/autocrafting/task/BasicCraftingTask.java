@@ -50,7 +50,7 @@ public class BasicCraftingTask implements ICraftingTask {
         return pattern;
     }
 
-    public boolean update(NetworkMaster master) {
+    public boolean update(NetworkMaster network) {
         this.updatedOnce = true;
 
         boolean done = true;
@@ -63,17 +63,17 @@ public class BasicCraftingTask implements ICraftingTask {
             if (!satisfied[i]) {
                 done = false;
 
-                ItemStack took = master.take(input, 1);
+                ItemStack took = network.take(input, 1);
 
                 if (took != null) {
                     itemsTook.add(took);
 
                     satisfied[i] = true;
                 } else if (!childTasks[i]) {
-                    CraftingPattern pattern = master.getPatternWithBestScore(input);
+                    CraftingPattern pattern = network.getPatternWithBestScore(input);
 
                     if (pattern != null) {
-                        master.addCraftingTask(master.createCraftingTask(pattern));
+                        network.addCraftingTask(network.createCraftingTask(pattern));
 
                         childTasks[i] = true;
                     }
@@ -90,23 +90,23 @@ public class BasicCraftingTask implements ICraftingTask {
 
     // @todo: handle no space
     @Override
-    public void onDone(NetworkMaster master) {
+    public void onDone(NetworkMaster network) {
         for (ItemStack output : pattern.getOutputs()) {
-            master.push(output, output.stackSize, false);
+            network.push(output, output.stackSize, false);
         }
 
         if (pattern.getByproducts() != null) {
             for (ItemStack byproduct : pattern.getByproducts()) {
-                master.push(byproduct, byproduct.stackSize, false);
+                network.push(byproduct, byproduct.stackSize, false);
             }
         }
     }
 
     // @todo: handle no space
     @Override
-    public void onCancelled(NetworkMaster master) {
+    public void onCancelled(NetworkMaster network) {
         for (ItemStack took : itemsTook) {
-            master.push(took, took.stackSize, false);
+            network.push(took, took.stackSize, false);
         }
     }
 

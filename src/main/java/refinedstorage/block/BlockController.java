@@ -92,15 +92,15 @@ public class BlockController extends BlockBase {
     @Override
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack stack) {
         if (!world.isRemote) {
-            NetworkMaster master = new NetworkMaster(pos, world);
+            NetworkMaster network = new NetworkMaster(pos, world);
 
             NBTTagCompound tag = stack.getTagCompound();
 
             if (tag != null && tag.hasKey(NetworkMaster.NBT_ENERGY)) {
-                master.getEnergy().receiveEnergy(tag.getInteger(NetworkMaster.NBT_ENERGY), false);
+                network.getEnergy().receiveEnergy(tag.getInteger(NetworkMaster.NBT_ENERGY), false);
             }
 
-            NetworkMasterRegistry.add(master, world.provider.getDimension());
+            NetworkMasterRegistry.add(network, world.provider.getDimension());
         }
 
         super.onBlockPlacedBy(world, pos, state, player, stack);

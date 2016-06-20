@@ -22,8 +22,8 @@ public class WirelessGridHandler {
     private List<WirelessGridConsumer> consumers = new ArrayList<WirelessGridConsumer>();
     private List<WirelessGridConsumer> consumersToRemove = new ArrayList<WirelessGridConsumer>();
 
-    public WirelessGridHandler(NetworkMaster master) {
-        this.network = master;
+    public WirelessGridHandler(NetworkMaster network) {
+        this.network = network;
     }
 
     public void update() {

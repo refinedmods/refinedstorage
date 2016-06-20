@@ -14,13 +14,13 @@ public class CraftingTaskScheduler {
         return scheduledItem == null || !RefinedStorageUtils.compareStack(scheduledItem, item, compare);
     }
 
-    public void schedule(NetworkMaster master, int compare, ItemStack item) {
-        CraftingPattern pattern = master.getPatternWithBestScore(item, compare);
+    public void schedule(NetworkMaster network, int compare, ItemStack item) {
+        CraftingPattern pattern = network.getPatternWithBestScore(item, compare);
 
         if (pattern != null) {
             scheduledItem = item;
 
-            master.addCraftingTask(master.createCraftingTask(pattern));
+            network.addCraftingTask(network.createCraftingTask(pattern));
         }
     }
 

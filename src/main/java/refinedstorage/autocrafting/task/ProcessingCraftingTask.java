@@ -42,17 +42,17 @@ public class ProcessingCraftingTask implements ICraftingTask {
     }
 
     @Override
-    public boolean update(NetworkMaster master) {
+    public boolean update(NetworkMaster network) {
         this.updatedOnce = true;
 
-        TileCrafter crafter = pattern.getCrafter(master.getWorld());
+        TileCrafter crafter = pattern.getCrafter(network.getWorld());
         IItemHandler handler = RefinedStorageUtils.getItemHandler(crafter.getFacingTile(), crafter.getDirection().getOpposite());
 
         if (handler != null) {
             for (int i = 0; i < inserted.length; ++i) {
                 if (!inserted[i]) {
                     ItemStack input = pattern.getInputs()[i];
-                    ItemStack took = master.take(input, 1);
+                    ItemStack took = network.take(input, 1);
 
                     if (took != null) {
                         if (ItemHandlerHelper.insertItem(handler, took, true) == null) {
@@ -60,15 +60,15 @@ public class ProcessingCraftingTask implements ICraftingTask {
 
                             inserted[i] = true;
                         } else {
-                            master.push(took, took.stackSize, false);
+                            network.push(took, took.stackSize, false);
                         }
                     } else if (!childTasks[i]) {
-                        CraftingPattern pattern = master.getPatternWithBestScore(input);
+                        CraftingPattern pattern = network.getPatternWithBestScore(input);
 
                         if (pattern != null) {
                             childTasks[i] = true;
 
-                            master.addCraftingTask(master.createCraftingTask(pattern));
+                            network.addCraftingTask(network.createCraftingTask(pattern));
 
                             break;
                         }
@@ -101,12 +101,12 @@ public class ProcessingCraftingTask implements ICraftingTask {
     }
 
     @Override
-    public void onDone(NetworkMaster master) {
+    public void onDone(NetworkMaster network) {
         // NO OP
     }
 
     @Override
-    public void onCancelled(NetworkMaster master) {
+    public void onCancelled(NetworkMaster network) {
         // NO OP
     }
 

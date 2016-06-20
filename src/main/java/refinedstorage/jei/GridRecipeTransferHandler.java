@@ -18,7 +18,9 @@ import refinedstorage.network.MessageGridCraftingTransfer;
 import java.util.List;
 import java.util.Map;
 
-// https://github.com/zerofall/EZStorage/blob/master/src/main/java/com/zerofall/ezstorage/jei/RecipeTransferHandler.java
+/**
+ * @link https://github.com/zerofall/EZStorage/blob/master/src/main/java/com/zerofall/ezstorage/jei/RecipeTransferHandler.java
+ */
 public class GridRecipeTransferHandler implements IRecipeTransferHandler {
     @Override
     public Class<? extends Container> getContainerClass() {

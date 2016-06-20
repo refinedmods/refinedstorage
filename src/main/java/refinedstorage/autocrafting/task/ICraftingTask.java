@@ -7,11 +7,11 @@ import refinedstorage.autocrafting.CraftingPattern;
 public interface ICraftingTask {
     CraftingPattern getPattern();
 
-    boolean update(NetworkMaster master);
+    boolean update(NetworkMaster network);
 
-    void onDone(NetworkMaster master);
+    void onDone(NetworkMaster network);
 
-    void onCancelled(NetworkMaster master);
+    void onCancelled(NetworkMaster network);
 
     void writeToNBT(NBTTagCompound tag);
 
