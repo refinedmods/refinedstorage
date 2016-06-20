@@ -1,4 +1,4 @@
-package refinedstorage.api.storagenet;
+package refinedstorage.api.network;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;

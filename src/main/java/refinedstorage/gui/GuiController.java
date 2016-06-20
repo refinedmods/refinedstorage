@@ -3,7 +3,7 @@ package refinedstorage.gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import refinedstorage.RefinedStorageUtils;
-import refinedstorage.api.storagenet.NetworkMaster;
+import refinedstorage.api.network.NetworkMaster;
 import refinedstorage.container.ContainerController;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.tile.controller.ClientMachine;

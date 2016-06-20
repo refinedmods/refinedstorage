@@ -4,8 +4,8 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import refinedstorage.api.storagenet.NetworkMaster;
-import refinedstorage.api.storagenet.NetworkMasterRegistry;
+import refinedstorage.api.network.NetworkMaster;
+import refinedstorage.api.network.NetworkMasterRegistry;
 
 public class MessageWirelessGridCraftingStart extends MessageHandlerPlayerToServer<MessageWirelessGridCraftingStart> implements IMessage {
     private int controllerX;

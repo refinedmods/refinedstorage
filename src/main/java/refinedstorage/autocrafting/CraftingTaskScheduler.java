@@ -3,7 +3,7 @@ package refinedstorage.autocrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import refinedstorage.RefinedStorageUtils;
-import refinedstorage.api.storagenet.NetworkMaster;
+import refinedstorage.api.network.NetworkMaster;
 
 public class CraftingTaskScheduler {
     public static String NBT_SCHEDULED = "CraftingTaskScheduled";

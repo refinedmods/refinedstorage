@@ -1,7 +1,7 @@
 package refinedstorage.autocrafting.task;
 
 import net.minecraft.nbt.NBTTagCompound;
-import refinedstorage.api.storagenet.NetworkMaster;
+import refinedstorage.api.network.NetworkMaster;
 import refinedstorage.autocrafting.CraftingPattern;
 
 public interface ICraftingTask {

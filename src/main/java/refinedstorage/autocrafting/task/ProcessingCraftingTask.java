@@ -5,7 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorageUtils;
-import refinedstorage.api.storagenet.NetworkMaster;
+import refinedstorage.api.network.NetworkMaster;
 import refinedstorage.autocrafting.CraftingPattern;
 import refinedstorage.tile.TileCrafter;
 

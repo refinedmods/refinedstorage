@@ -8,7 +8,7 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
-import refinedstorage.api.storagenet.NetworkMaster;
+import refinedstorage.api.network.NetworkMaster;
 import refinedstorage.item.ItemWirelessGrid;
 import refinedstorage.tile.grid.WirelessGridConsumer;
 

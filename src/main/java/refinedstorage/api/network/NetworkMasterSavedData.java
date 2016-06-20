@@ -1,4 +1,4 @@
-package refinedstorage.api.storagenet;
+package refinedstorage.api.network;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;

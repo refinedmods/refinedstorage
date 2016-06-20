@@ -1,4 +1,4 @@
-package refinedstorage.api.storagenet;
+package refinedstorage.api.network;
 
 import cofh.api.energy.EnergyStorage;
 import net.minecraft.entity.player.EntityPlayer;

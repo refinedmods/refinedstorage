@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import refinedstorage.RefinedStorageUtils;
-import refinedstorage.api.storagenet.NetworkMaster;
+import refinedstorage.api.network.NetworkMaster;
 import refinedstorage.autocrafting.CraftingPattern;
 import refinedstorage.autocrafting.task.ICraftingTask;
 import refinedstorage.item.ItemWirelessGrid;

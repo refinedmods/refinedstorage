@@ -16,8 +16,8 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
-import refinedstorage.api.storagenet.NetworkMaster;
-import refinedstorage.api.storagenet.NetworkMasterRegistry;
+import refinedstorage.api.network.NetworkMaster;
+import refinedstorage.api.network.NetworkMasterRegistry;
 import refinedstorage.tile.grid.TileGrid;
 
 import java.util.List;
