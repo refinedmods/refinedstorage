@@ -155,7 +155,7 @@ public class TileGrid extends TileSlave implements IGrid {
         ItemStack[] remainder = CraftingManager.getInstance().getRemainingItems(matrix, worldObj);
 
         for (int i = 0; i < matrix.getSizeInventory(); ++i) {
-            if (remainder[i] != null) {
+            if (i < remainder.length && remainder[i] != null) {
                 matrix.setInventorySlotContents(i, remainder[i].copy());
             } else {
                 ItemStack slot = matrix.getStackInSlot(i);
