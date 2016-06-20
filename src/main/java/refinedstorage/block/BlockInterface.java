@@ -12,7 +12,7 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.tile.TileInterface;
 
-public class BlockInterface extends BlockMachine {
+public class BlockInterface extends BlockSlave {
     public BlockInterface() {
         super("interface");
     }

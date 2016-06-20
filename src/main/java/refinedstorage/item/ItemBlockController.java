@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorageBlocks;
-import refinedstorage.api.storagenet.StorageNetwork;
+import refinedstorage.api.storagenet.NetworkMaster;
 import refinedstorage.block.EnumControllerType;
 
 import java.util.List;
@@ -21,11 +21,11 @@ public class ItemBlockController extends ItemBlockBase {
         if (stack.getMetadata() != EnumControllerType.CREATIVE.getId()) {
             int energyStored = 0;
 
-            if (stack.getTagCompound() != null && stack.getTagCompound().hasKey(StorageNetwork.NBT_ENERGY)) {
-                energyStored = stack.getTagCompound().getInteger(StorageNetwork.NBT_ENERGY);
+            if (stack.getTagCompound() != null && stack.getTagCompound().hasKey(NetworkMaster.NBT_ENERGY)) {
+                energyStored = stack.getTagCompound().getInteger(NetworkMaster.NBT_ENERGY);
             }
 
-            list.add(I18n.format("misc.refinedstorage:energy_stored", energyStored, StorageNetwork.ENERGY_CAPACITY));
+            list.add(I18n.format("misc.refinedstorage:energy_stored", energyStored, NetworkMaster.ENERGY_CAPACITY));
         }
     }
 
@@ -43,7 +43,7 @@ public class ItemBlockController extends ItemBlockBase {
             tag = new NBTTagCompound();
         }
 
-        tag.setInteger(StorageNetwork.NBT_ENERGY, stack.getMetadata() == EnumControllerType.CREATIVE.getId() ? StorageNetwork.ENERGY_CAPACITY : 0);
+        tag.setInteger(NetworkMaster.NBT_ENERGY, stack.getMetadata() == EnumControllerType.CREATIVE.getId() ? NetworkMaster.ENERGY_CAPACITY : 0);
 
         return stack;
     }

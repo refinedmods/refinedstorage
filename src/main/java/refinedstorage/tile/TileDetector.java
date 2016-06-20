@@ -13,7 +13,7 @@ import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.RedstoneMode;
 
-public class TileDetector extends TileMachine implements ICompareConfig {
+public class TileDetector extends TileSlave implements ICompareConfig {
     public static final int SPEED = 5;
 
     public static final int MODE_UNDER = 0;
@@ -34,10 +34,10 @@ public class TileDetector extends TileMachine implements ICompareConfig {
     private boolean powered = false;
 
     @Override
-    public void onDisconnected(World world) {
-        super.onDisconnected(world);
-
+    public void disconnect(World world) {
         powered = false;
+
+        super.disconnect(world);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class TileDetector extends TileMachine implements ICompareConfig {
     }
 
     @Override
-    public void updateMachine() {
+    public void updateSlave() {
         if (ticks % SPEED == 0) {
             ItemStack slot = filter.getStackInSlot(0);
 

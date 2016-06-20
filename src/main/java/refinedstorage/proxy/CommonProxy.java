@@ -20,7 +20,7 @@ import refinedstorage.RefinedStorageItems;
 import refinedstorage.api.solderer.SoldererRecipeBasic;
 import refinedstorage.api.solderer.SoldererRegistry;
 import refinedstorage.api.storage.NBTStorage;
-import refinedstorage.api.storagenet.StorageNetworkEventHandler;
+import refinedstorage.api.storagenet.NetworkMasterEventHandler;
 import refinedstorage.block.BlockBase;
 import refinedstorage.block.EnumControllerType;
 import refinedstorage.block.EnumGridType;
@@ -485,7 +485,7 @@ public class CommonProxy {
     }
 
     public void init(FMLInitializationEvent e) {
-        MinecraftForge.EVENT_BUS.register(new StorageNetworkEventHandler());
+        MinecraftForge.EVENT_BUS.register(new NetworkMasterEventHandler());
     }
 
     public void postInit(FMLPostInitializationEvent e) {

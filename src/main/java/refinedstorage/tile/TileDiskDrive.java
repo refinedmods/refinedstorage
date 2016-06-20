@@ -12,7 +12,6 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
-import refinedstorage.api.RefinedStorageCapabilities;
 import refinedstorage.api.storage.IStorage;
 import refinedstorage.api.storage.IStorageProvider;
 import refinedstorage.api.storage.NBTStorage;
@@ -25,7 +24,7 @@ import refinedstorage.tile.config.*;
 
 import java.util.List;
 
-public class TileDiskDrive extends TileMachine implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig {
+public class TileDiskDrive extends TileSlave implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig {
     public class Storage extends NBTStorage {
         public Storage(ItemStack disk) {
             super(disk.getTagCompound(), EnumStorageType.getById(disk.getItemDamage()).getCapacity(), TileDiskDrive.this);
@@ -86,7 +85,7 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
     }
 
     @Override
-    public void updateMachine() {
+    public void updateSlave() {
     }
 
     @Override
@@ -269,8 +268,6 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return (T) disks;
-        } else if (capability == RefinedStorageCapabilities.STORAGE_PROVIDER_CAPABILITY) {
-            return (T) this;
         }
 
         return super.getCapability(capability, facing);
@@ -278,6 +275,6 @@ public class TileDiskDrive extends TileMachine implements IStorageProvider, ISto
 
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || capability == RefinedStorageCapabilities.STORAGE_PROVIDER_CAPABILITY || super.hasCapability(capability, facing);
+        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
     }
 }

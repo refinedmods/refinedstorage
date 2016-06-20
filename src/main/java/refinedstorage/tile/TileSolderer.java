@@ -19,7 +19,7 @@ import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.inventory.SoldererItemHandler;
 import refinedstorage.item.ItemUpgrade;
 
-public class TileSolderer extends TileMachine {
+public class TileSolderer extends TileSlave {
     public static final String NBT_WORKING = "Working";
     public static final String NBT_PROGRESS = "Progress";
 
@@ -39,7 +39,7 @@ public class TileSolderer extends TileMachine {
     }
 
     @Override
-    public void updateMachine() {
+    public void updateSlave() {
         boolean wasWorking = working;
 
         if (items.getStackInSlot(1) == null && items.getStackInSlot(2) == null && items.getStackInSlot(3) == null) {
@@ -91,10 +91,10 @@ public class TileSolderer extends TileMachine {
     }
 
     @Override
-    public void onDisconnected(World world) {
-        super.onDisconnected(world);
-
+    public void disconnect(World world) {
         stop();
+
+        super.disconnect(world);
     }
 
     public void stop() {

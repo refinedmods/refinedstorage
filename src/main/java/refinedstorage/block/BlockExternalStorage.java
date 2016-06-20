@@ -12,7 +12,7 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.tile.externalstorage.TileExternalStorage;
 
-public class BlockExternalStorage extends BlockMachine {
+public class BlockExternalStorage extends BlockSlave {
     public BlockExternalStorage() {
         super("external_storage");
     }

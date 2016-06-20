@@ -7,8 +7,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageUtils;
-import refinedstorage.api.storagenet.StorageNetwork;
-import refinedstorage.api.storagenet.StorageNetworkRegistry;
+import refinedstorage.api.storagenet.NetworkMaster;
+import refinedstorage.api.storagenet.NetworkMasterRegistry;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.item.ItemWirelessGrid;
 import refinedstorage.network.MessageWirelessGridCraftingStart;
@@ -63,7 +63,7 @@ public class WirelessGrid implements IGrid {
 
     @Override
     public ItemStack onItemPush(EntityPlayer player, ItemStack stack) {
-        StorageNetwork network = StorageNetworkRegistry.get(controllerPos, player.worldObj.provider.getDimension());
+        NetworkMaster network = NetworkMasterRegistry.get(controllerPos, player.worldObj.provider.getDimension());
 
         if (network != null && network.canRun()) {
             network.getWirelessGridHandler().drainEnergy(player, ItemWirelessGrid.USAGE_PUSH);
@@ -85,7 +85,7 @@ public class WirelessGrid implements IGrid {
     }
 
     public void onClose(EntityPlayer player) {
-        StorageNetwork network = StorageNetworkRegistry.get(controllerPos, player.worldObj.provider.getDimension());
+        NetworkMaster network = NetworkMasterRegistry.get(controllerPos, player.worldObj.provider.getDimension());
 
         if (network != null) {
             network.getWirelessGridHandler().handleClose(player);

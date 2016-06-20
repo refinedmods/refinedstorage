@@ -6,20 +6,17 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.IItemHandler;
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageUtils;
-import refinedstorage.api.RefinedStorageCapabilities;
 import refinedstorage.api.storage.IStorage;
 import refinedstorage.api.storage.IStorageProvider;
 import refinedstorage.container.ContainerStorage;
 import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.network.MessagePriorityUpdate;
 import refinedstorage.tile.IStorageGui;
-import refinedstorage.tile.TileMachine;
+import refinedstorage.tile.TileSlave;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.IModeConfig;
 import refinedstorage.tile.config.IRedstoneModeConfig;
@@ -27,7 +24,7 @@ import refinedstorage.tile.config.ModeConstants;
 
 import java.util.List;
 
-public class TileExternalStorage extends TileMachine implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig {
+public class TileExternalStorage extends TileSlave implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig {
     public static final String NBT_PRIORITY = "Priority";
     public static final String NBT_COMPARE = "Compare";
     public static final String NBT_MODE = "Mode";
@@ -48,7 +45,7 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
     }
 
     @Override
-    public void updateMachine() {
+    public void updateSlave() {
     }
 
     @Override
@@ -239,19 +236,5 @@ public class TileExternalStorage extends TileMachine implements IStorageProvider
     @Override
     public IItemHandler getFilters() {
         return filters;
-    }
-
-    @Override
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-        if (capability == RefinedStorageCapabilities.STORAGE_PROVIDER_CAPABILITY) {
-            return (T) this;
-        }
-
-        return super.getCapability(capability, facing);
-    }
-
-    @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-        return capability == RefinedStorageCapabilities.STORAGE_PROVIDER_CAPABILITY || super.hasCapability(capability, facing);
     }
 }

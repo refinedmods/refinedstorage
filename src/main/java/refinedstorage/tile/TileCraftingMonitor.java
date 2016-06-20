@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class TileCraftingMonitor extends TileMachine {
+public class TileCraftingMonitor extends TileSlave {
     private List<ClientSideCraftingTask> tasks = new ArrayList<ClientSideCraftingTask>();
 
     @Override
@@ -20,7 +20,7 @@ public class TileCraftingMonitor extends TileMachine {
     }
 
     @Override
-    public void updateMachine() {
+    public void updateSlave() {
     }
 
     @Override

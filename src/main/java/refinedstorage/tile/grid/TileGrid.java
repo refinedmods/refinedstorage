@@ -25,13 +25,13 @@ import refinedstorage.network.MessageGridHeldItemPush;
 import refinedstorage.network.MessageGridSettingsUpdate;
 import refinedstorage.network.MessageGridStoragePull;
 import refinedstorage.tile.ClientItem;
-import refinedstorage.tile.TileMachine;
+import refinedstorage.tile.TileSlave;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileGrid extends TileMachine implements IGrid {
+public class TileGrid extends TileSlave implements IGrid {
     public static final String NBT_SORTING_DIRECTION = "SortingDirection";
     public static final String NBT_SORTING_TYPE = "SortingType";
     public static final String NBT_SEARCH_BOX_MODE = "SearchBoxMode";
@@ -86,7 +86,7 @@ public class TileGrid extends TileMachine implements IGrid {
     }
 
     @Override
-    public void updateMachine() {
+    public void updateSlave() {
     }
 
     public EnumGridType getType() {

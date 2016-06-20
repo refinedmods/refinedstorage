@@ -10,16 +10,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import refinedstorage.tile.TileMachine;
-import refinedstorage.tile.controller.ControllerSearcher;
-import refinedstorage.tile.controller.TileController;
+import refinedstorage.tile.TileSlave;
 
-import java.util.HashSet;
-
-public abstract class BlockMachine extends BlockBase {
+public abstract class BlockSlave extends BlockBase {
     public static final PropertyBool CONNECTED = PropertyBool.create("connected");
 
-    public BlockMachine(String name) {
+    public BlockSlave(String name) {
         super(name);
     }
 
@@ -39,7 +35,7 @@ public abstract class BlockMachine extends BlockBase {
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
         return super.getActualState(state, world, pos)
-            .withProperty(CONNECTED, ((TileMachine) world.getTileEntity(pos)).isConnected());
+            .withProperty(CONNECTED, ((TileSlave) world.getTileEntity(pos)).isConnected());
     }
 
     @Override
@@ -47,21 +43,17 @@ public abstract class BlockMachine extends BlockBase {
         super.onBlockPlacedBy(world, pos, state, player, stack);
 
         if (!world.isRemote) {
-            TileController controller = ControllerSearcher.search(world, pos, new HashSet<String>());
-
-            if (controller != null) {
-                ((TileMachine) world.getTileEntity(pos)).onConnected(world, controller);
-            }
+            ((TileSlave) world.getTileEntity(pos)).onNeighborChanged(world);
         }
     }
 
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
         if (!world.isRemote) {
-            TileMachine machine = (TileMachine) world.getTileEntity(pos);
+            TileSlave machine = (TileSlave) world.getTileEntity(pos);
 
             if (machine.isConnected()) {
-                machine.onDisconnected(world);
+                machine.disconnect(world);
             }
         }
 
@@ -73,7 +65,7 @@ public abstract class BlockMachine extends BlockBase {
         super.neighborChanged(state, world, pos, block);
 
         if (!world.isRemote) {
-            ((TileMachine) world.getTileEntity(pos)).searchController(world);
+            ((TileSlave) world.getTileEntity(pos)).onNeighborChanged(world);
         }
     }
 }

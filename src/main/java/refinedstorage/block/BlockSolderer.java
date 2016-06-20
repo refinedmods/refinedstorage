@@ -16,7 +16,7 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.tile.TileSolderer;
 
-public class BlockSolderer extends BlockMachine {
+public class BlockSolderer extends BlockSlave {
     public static final PropertyBool WORKING = PropertyBool.create("working");
 
     public BlockSolderer() {

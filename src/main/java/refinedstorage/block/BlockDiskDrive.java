@@ -12,7 +12,7 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.tile.TileDiskDrive;
 
-public class BlockDiskDrive extends BlockMachine {
+public class BlockDiskDrive extends BlockSlave {
     public BlockDiskDrive() {
         super("disk_drive");
     }

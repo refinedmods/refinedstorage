@@ -19,7 +19,7 @@ import refinedstorage.inventory.IItemValidator;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.item.ItemUpgrade;
 
-public class TileCrafter extends TileMachine {
+public class TileCrafter extends TileSlave {
     private BasicItemHandler patterns = new BasicItemHandler(9, this, new IItemValidator() {
         @Override
         public boolean valid(ItemStack stack) {
@@ -35,7 +35,7 @@ public class TileCrafter extends TileMachine {
     }
 
     @Override
-    public void updateMachine() {
+    public void updateSlave() {
     }
 
     @Override
@@ -44,14 +44,14 @@ public class TileCrafter extends TileMachine {
     }
 
     @Override
-    public void onDisconnected(World world) {
+    public void disconnect(World world) {
         for (ICraftingTask task : network.getCraftingTasks()) {
             if (task.getPattern().getCrafter(worldObj) == this) {
                 network.cancelCraftingTask(task);
             }
         }
 
-        super.onDisconnected(world);
+        super.disconnect(world);
     }
 
     @Override

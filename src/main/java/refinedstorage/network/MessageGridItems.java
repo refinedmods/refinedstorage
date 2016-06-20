@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import refinedstorage.api.storagenet.StorageNetwork;
+import refinedstorage.api.storagenet.NetworkMaster;
 import refinedstorage.container.ContainerGrid;
 import refinedstorage.tile.ClientItem;
 
@@ -16,13 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MessageGridItems implements IMessage, IMessageHandler<MessageGridItems, IMessage> {
-    private StorageNetwork network;
+    private NetworkMaster network;
     private List<ClientItem> items = new ArrayList<ClientItem>();
 
     public MessageGridItems() {
     }
 
-    public MessageGridItems(StorageNetwork network) {
+    public MessageGridItems(NetworkMaster network) {
         this.network = network;
     }
 

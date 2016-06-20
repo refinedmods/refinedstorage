@@ -16,8 +16,8 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
-import refinedstorage.api.storagenet.StorageNetwork;
-import refinedstorage.api.storagenet.StorageNetworkRegistry;
+import refinedstorage.api.storagenet.NetworkMaster;
+import refinedstorage.api.storagenet.NetworkMasterRegistry;
 import refinedstorage.tile.grid.TileGrid;
 
 import java.util.List;
@@ -134,10 +134,10 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
         if (!world.isRemote && hasValidNBT(stack) && getDimensionId(stack) == player.dimension) {
-            StorageNetwork network = StorageNetworkRegistry.get(new BlockPos(getX(stack), getY(stack), getZ(stack)), player.worldObj.provider.getDimension());
+            NetworkMaster master = NetworkMasterRegistry.get(new BlockPos(getX(stack), getY(stack), getZ(stack)), player.worldObj.provider.getDimension());
 
-            if (network != null) {
-                if (network.getWirelessGridHandler().handleOpen(player, hand)) {
+            if (master != null) {
+                if (master.getWirelessGridHandler().handleOpen(player, hand)) {
                     return new ActionResult(EnumActionResult.SUCCESS, stack);
                 } else {
                     player.addChatComponentMessage(new TextComponentTranslation("misc.refinedstorage:wireless_grid.out_of_range"));

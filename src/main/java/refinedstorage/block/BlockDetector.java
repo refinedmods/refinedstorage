@@ -16,7 +16,7 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.tile.TileDetector;
 
-public class BlockDetector extends BlockMachine {
+public class BlockDetector extends BlockSlave {
     public static final PropertyBool POWERED = PropertyBool.create("powered");
 
     public BlockDetector() {

@@ -3,7 +3,7 @@ package refinedstorage.autocrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import refinedstorage.RefinedStorageUtils;
-import refinedstorage.api.storagenet.StorageNetwork;
+import refinedstorage.api.storagenet.NetworkMaster;
 
 public class CraftingTaskScheduler {
     public static String NBT_SCHEDULED = "CraftingTaskScheduled";
@@ -14,13 +14,13 @@ public class CraftingTaskScheduler {
         return scheduledItem == null || !RefinedStorageUtils.compareStack(scheduledItem, item, compare);
     }
 
-    public void schedule(StorageNetwork network, int compare, ItemStack item) {
-        CraftingPattern pattern = network.getPatternWithBestScore(item, compare);
+    public void schedule(NetworkMaster master, int compare, ItemStack item) {
+        CraftingPattern pattern = master.getPatternWithBestScore(item, compare);
 
         if (pattern != null) {
             scheduledItem = item;
 
-            network.addCraftingTask(network.createCraftingTask(pattern));
+            master.addCraftingTask(master.createCraftingTask(pattern));
         }
     }
 

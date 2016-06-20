@@ -9,14 +9,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import refinedstorage.RefinedStorageBlocks;
-import refinedstorage.api.storagenet.StorageNetwork;
-import refinedstorage.api.storagenet.StorageNetworkRegistry;
+import refinedstorage.api.storagenet.INetworkSlave;
+import refinedstorage.api.storagenet.NetworkMaster;
+import refinedstorage.api.storagenet.NetworkMasterRegistry;
 import refinedstorage.block.BlockController;
 import refinedstorage.block.EnumControllerType;
 import refinedstorage.container.ContainerController;
 import refinedstorage.tile.ISynchronizedContainer;
 import refinedstorage.tile.TileBase;
-import refinedstorage.tile.TileMachine;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
 
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TileController extends TileBase implements IEnergyReceiver, ISynchronizedContainer, IRedstoneModeConfig {
-    private StorageNetwork network;
+    private NetworkMaster network;
 
     // Only used client side
     private List<ClientMachine> clientMachines = new ArrayList<ClientMachine>();
@@ -33,9 +33,9 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     private EnumControllerType type;
     private RedstoneMode redstoneMode;
 
-    public StorageNetwork getNetwork() {
+    public NetworkMaster getNetwork() {
         if (network == null) {
-            network = StorageNetworkRegistry.get(pos, worldObj.provider.getDimension());
+            network = NetworkMasterRegistry.get(pos, worldObj.provider.getDimension());
         }
 
         return network;
@@ -45,14 +45,14 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {
         super.writeUpdate(tag);
 
-        tag.setInteger(StorageNetwork.NBT_ENERGY, getNetwork() != null ? getNetwork().getEnergy().getEnergyStored() : 0);
+        tag.setInteger(NetworkMaster.NBT_ENERGY, getNetwork() != null ? getNetwork().getEnergy().getEnergyStored() : 0);
 
         return tag;
     }
 
     @Override
     public void readUpdate(NBTTagCompound tag) {
-        energy = tag.getInteger(StorageNetwork.NBT_ENERGY);
+        energy = tag.getInteger(NetworkMaster.NBT_ENERGY);
 
         super.readUpdate(tag);
     }
@@ -69,7 +69,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
     public int getEnergyScaled(int i) {
         float stored = worldObj.isRemote ? energy : getNetwork().getEnergy().getEnergyStored();
-        float max = StorageNetwork.ENERGY_CAPACITY;
+        float max = NetworkMaster.ENERGY_CAPACITY;
 
         return (int) (stored / max * (float) i);
     }
@@ -145,9 +145,9 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
         List<ClientMachine> m = new ArrayList<ClientMachine>();
 
-        for (TileMachine machine : getNetwork().getMachines()) {
+        for (INetworkSlave machine : getNetwork().getSlaves()) {
             if (machine.canUpdate()) {
-                IBlockState state = worldObj.getBlockState(machine.getPos());
+                IBlockState state = worldObj.getBlockState(machine.getPosition());
 
                 ClientMachine clientMachine = new ClientMachine();
 

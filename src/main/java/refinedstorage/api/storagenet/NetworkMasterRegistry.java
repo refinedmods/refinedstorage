@@ -5,12 +5,12 @@ import net.minecraft.util.math.BlockPos;
 import java.util.HashMap;
 import java.util.Map;
 
-public class StorageNetworkRegistry {
-    public static final Map<Integer, Map<BlockPos, StorageNetwork>> NETWORKS = new HashMap<Integer, Map<BlockPos, StorageNetwork>>();
+public class NetworkMasterRegistry {
+    public static final Map<Integer, Map<BlockPos, NetworkMaster>> NETWORKS = new HashMap<Integer, Map<BlockPos, NetworkMaster>>();
 
-    public static void add(StorageNetwork network, int dimension) {
+    public static void add(NetworkMaster network, int dimension) {
         if (NETWORKS.get(dimension) == null) {
-            NETWORKS.put(dimension, new HashMap<BlockPos, StorageNetwork>());
+            NETWORKS.put(dimension, new HashMap<BlockPos, NetworkMaster>());
         }
 
         NETWORKS.get(dimension).put(network.getPos(), network);
@@ -23,11 +23,11 @@ public class StorageNetworkRegistry {
         }
     }
 
-    public static StorageNetwork get(BlockPos pos, int dimension) {
+    public static NetworkMaster get(BlockPos pos, int dimension) {
         return get(dimension) == null ? null : get(dimension).get(pos);
     }
 
-    public static Map<BlockPos, StorageNetwork> get(int dimension) {
+    public static Map<BlockPos, NetworkMaster> get(int dimension) {
         return NETWORKS.get(dimension);
     }
 }

@@ -17,7 +17,7 @@ import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
 
-public class TileInterface extends TileMachine implements ICompareConfig {
+public class TileInterface extends TileSlave implements ICompareConfig {
     public static final String NBT_COMPARE = "Compare";
 
     private BasicItemHandler importItems = new BasicItemHandler(9, this);
@@ -40,7 +40,7 @@ public class TileInterface extends TileMachine implements ICompareConfig {
     }
 
     @Override
-    public void updateMachine() {
+    public void updateSlave() {
         if (currentSlot >= importItems.getSlots()) {
             currentSlot = 0;
         }

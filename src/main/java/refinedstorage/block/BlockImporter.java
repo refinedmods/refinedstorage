@@ -12,7 +12,7 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.tile.TileImporter;
 
-public class BlockImporter extends BlockMachine {
+public class BlockImporter extends BlockSlave {
     public BlockImporter() {
         super("importer");
     }

@@ -9,10 +9,10 @@ import net.minecraftforge.common.util.Constants;
 
 import java.util.Map;
 
-public class StorageNetworkSavedData extends WorldSavedData {
+public class NetworkMasterSavedData extends WorldSavedData {
     public static final String NBT_STORAGE_NETWORKS = "StorageNetworks";
 
-    public StorageNetworkSavedData(String name) {
+    public NetworkMasterSavedData(String name) {
         super(name);
     }
 
@@ -25,10 +25,10 @@ public class StorageNetworkSavedData extends WorldSavedData {
 
             BlockPos pos = new BlockPos(networkTag.getInteger("X"), networkTag.getInteger("Y"), networkTag.getInteger("Z"));
 
-            StorageNetwork network = new StorageNetwork(pos);
+            NetworkMaster network = new NetworkMaster(pos);
             network.readFromNBT(networkTag.getCompoundTag("Data"));
 
-            StorageNetworkRegistry.add(network, networkTag.getInteger("Dim"));
+            NetworkMasterRegistry.add(network, networkTag.getInteger("Dim"));
         }
     }
 
@@ -36,8 +36,8 @@ public class StorageNetworkSavedData extends WorldSavedData {
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         NBTTagList networks = new NBTTagList();
 
-        for (Map.Entry<Integer, Map<BlockPos, StorageNetwork>> entry : StorageNetworkRegistry.NETWORKS.entrySet()) {
-            for (StorageNetwork network : entry.getValue().values()) {
+        for (Map.Entry<Integer, Map<BlockPos, NetworkMaster>> entry : NetworkMasterRegistry.NETWORKS.entrySet()) {
+            for (NetworkMaster network : entry.getValue().values()) {
                 NBTTagCompound networkTag = new NBTTagCompound();
                 networkTag.setInteger("X", network.getPos().getX());
                 networkTag.setInteger("Y", network.getPos().getY());
@@ -53,11 +53,11 @@ public class StorageNetworkSavedData extends WorldSavedData {
         return tag;
     }
 
-    public static StorageNetworkSavedData get(World world) {
-        StorageNetworkSavedData instance = (StorageNetworkSavedData) world.getMapStorage().getOrLoadData(StorageNetworkSavedData.class, "RSStorageNetworks");
+    public static NetworkMasterSavedData get(World world) {
+        NetworkMasterSavedData instance = (NetworkMasterSavedData) world.getMapStorage().getOrLoadData(NetworkMasterSavedData.class, "RSStorageNetworks");
 
         if (instance == null) {
-            instance = new StorageNetworkSavedData("RSStorageNetworks");
+            instance = new NetworkMasterSavedData("RSStorageNetworks");
             world.getMapStorage().setData("RSStorageNetworks", instance);
         }
 

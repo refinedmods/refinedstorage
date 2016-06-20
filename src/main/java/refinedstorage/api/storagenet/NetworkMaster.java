@@ -17,6 +17,7 @@ import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.RefinedStorageCapabilities;
 import refinedstorage.api.storage.CompareFlags;
 import refinedstorage.api.storage.IStorage;
+import refinedstorage.api.storage.IStorageProvider;
 import refinedstorage.autocrafting.CraftingPattern;
 import refinedstorage.autocrafting.task.BasicCraftingTask;
 import refinedstorage.autocrafting.task.ICraftingTask;
@@ -27,7 +28,6 @@ import refinedstorage.container.ContainerGrid;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.network.MessageGridItems;
 import refinedstorage.tile.TileCrafter;
-import refinedstorage.tile.TileMachine;
 import refinedstorage.tile.TileWirelessTransmitter;
 import refinedstorage.tile.config.RedstoneMode;
 import refinedstorage.tile.controller.StorageHandler;
@@ -35,7 +35,7 @@ import refinedstorage.tile.controller.WirelessGridHandler;
 
 import java.util.*;
 
-public class StorageNetwork {
+public class NetworkMaster {
     public static final int ENERGY_CAPACITY = 32000;
 
     public static final String NBT_CRAFTING_TASKS = "CraftingTasks";
@@ -50,10 +50,10 @@ public class StorageNetwork {
 
     private List<IStorage> storages = new ArrayList<IStorage>();
 
-    private List<TileMachine> machines = new ArrayList<TileMachine>();
-    private List<TileMachine> machinesToAdd = new ArrayList<TileMachine>();
-    private List<BlockPos> machinesToLoad = new ArrayList<BlockPos>();
-    private List<TileMachine> machinesToRemove = new ArrayList<TileMachine>();
+    private List<INetworkSlave> slaves = new ArrayList<INetworkSlave>();
+    private List<INetworkSlave> slavesToAdd = new ArrayList<INetworkSlave>();
+    private List<BlockPos> slavesToLoad = new ArrayList<BlockPos>();
+    private List<INetworkSlave> slavesToRemove = new ArrayList<INetworkSlave>();
 
     private List<CraftingPattern> patterns = new ArrayList<CraftingPattern>();
 
@@ -78,13 +78,13 @@ public class StorageNetwork {
 
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
-    public StorageNetwork(BlockPos pos, World world) {
+    public NetworkMaster(BlockPos pos, World world) {
         this.pos = pos;
 
         onAdded(world);
     }
 
-    public StorageNetwork(BlockPos pos) {
+    public NetworkMaster(BlockPos pos) {
         this.pos = pos;
     }
 
@@ -119,16 +119,23 @@ public class StorageNetwork {
     }
 
     public void update() {
-        for (TileMachine machine : machinesToAdd) {
-            if (!machines.contains(machine)) {
-                machines.add(machine);
+        for (INetworkSlave slave : slavesToAdd) {
+            slaves.add(slave);
+        }
+        slavesToAdd.clear();
+
+        for (INetworkSlave slave : slavesToRemove) {
+            Iterator<INetworkSlave> otherSlave = slaves.iterator();
+
+            while (otherSlave.hasNext()) {
+                if (otherSlave.next().getPosition().equals(slave.getPosition())) {
+                    otherSlave.remove();
+
+                    break;
+                }
             }
         }
-
-        machinesToAdd.clear();
-
-        machines.removeAll(machinesToRemove);
-        machinesToRemove.clear();
+        slavesToRemove.clear();
 
         int lastEnergy = energy.getEnergyStored();
 
@@ -137,8 +144,11 @@ public class StorageNetwork {
                 syncMachines();
             }
 
-            // @todo: If the chunk unloads, and we come back to the chunk
-            // the machine tile will be reset to a new tile instance and nothing will work
+            for (INetworkSlave slave : slaves) {
+                if (slave.canUpdate()) {
+                    slave.updateSlave();
+                }
+            }
 
             for (ICraftingTask taskToCancel : craftingTasksToCancel) {
                 taskToCancel.onCancelled(this);
@@ -166,7 +176,7 @@ public class StorageNetwork {
                     craftingTasks.pop();
                 }
             }
-        } else if (!machines.isEmpty()) {
+        } else if (!slaves.isEmpty()) {
             disconnectAll();
             syncMachines();
         }
@@ -202,18 +212,18 @@ public class StorageNetwork {
         ticks++;
     }
 
-    public List<TileMachine> getMachines() {
-        return machines;
+    public List<INetworkSlave> getSlaves() {
+        return slaves;
     }
 
-    public void addMachine(TileMachine machine) {
-        machinesToAdd.add(machine);
+    public void addSlave(INetworkSlave slave) {
+        slavesToAdd.add(slave);
 
         markDirty();
     }
 
-    public void removeMachine(TileMachine machine) {
-        machinesToRemove.add(machine);
+    public void removeMachine(INetworkSlave slave) {
+        slavesToRemove.add(slave);
 
         markDirty();
     }
@@ -231,11 +241,11 @@ public class StorageNetwork {
     }
 
     public void disconnectAll() {
-        for (TileMachine machine : machines) {
-            machine.onDisconnected(world);
+        for (INetworkSlave slave : slaves) {
+            slave.disconnect(world);
         }
 
-        machines.clear();
+        slaves.clear();
     }
 
     public void onRemoved() {
@@ -246,13 +256,15 @@ public class StorageNetwork {
         this.world = world;
         this.type = (EnumControllerType) world.getBlockState(pos).getValue(BlockController.TYPE);
 
-        for (BlockPos machine : machinesToLoad) {
-            TileEntity tile = world.getTileEntity(machine);
+        for (BlockPos slavePos : slavesToLoad) {
+            TileEntity tile = world.getTileEntity(slavePos);
 
-            if (tile instanceof TileMachine) {
-                ((TileMachine) tile).forceConnect(this);
+            if (tile.hasCapability(RefinedStorageCapabilities.NETWORK_SLAVE_CAPABILITY, null)) {
+                INetworkSlave slave = tile.getCapability(RefinedStorageCapabilities.NETWORK_SLAVE_CAPABILITY, null);
 
-                machines.add((TileMachine) tile);
+                slave.forceConnect(this);
+
+                slaves.add(slave);
             }
         }
     }
@@ -349,21 +361,21 @@ public class StorageNetwork {
         this.storages.clear();
         this.patterns.clear();
 
-        for (TileMachine machine : machines) {
-            if (!machine.canUpdate()) {
+        for (INetworkSlave slave : slaves) {
+            if (!slave.canUpdate()) {
                 continue;
             }
 
-            if (machine instanceof TileWirelessTransmitter) {
-                this.wirelessGridRange += ((TileWirelessTransmitter) machine).getRange();
+            if (slave instanceof TileWirelessTransmitter) {
+                this.wirelessGridRange += ((TileWirelessTransmitter) slave).getRange();
             }
 
-            if (machine.hasCapability(RefinedStorageCapabilities.STORAGE_PROVIDER_CAPABILITY, null)) {
-                machine.getCapability(RefinedStorageCapabilities.STORAGE_PROVIDER_CAPABILITY, null).provide(storages);
+            if (slave instanceof IStorageProvider) {
+                ((IStorageProvider) slave).provide(storages);
             }
 
-            if (machine instanceof TileCrafter) {
-                TileCrafter crafter = (TileCrafter) machine;
+            if (slave instanceof TileCrafter) {
+                TileCrafter crafter = (TileCrafter) slave;
 
                 for (int i = 0; i < crafter.getPatterns().getSlots(); ++i) {
                     ItemStack pattern = crafter.getPatterns().getStackInSlot(i);
@@ -374,7 +386,7 @@ public class StorageNetwork {
                 }
             }
 
-            this.energyUsage += machine.getEnergyUsage();
+            this.energyUsage += slave.getEnergyUsage();
         }
 
         Collections.sort(storages, new Comparator<IStorage>() {
@@ -589,7 +601,7 @@ public class StorageNetwork {
             for (int i = 0; i < machinesTag.tagCount(); ++i) {
                 NBTTagCompound coords = machinesTag.getCompoundTagAt(i);
 
-                machinesToLoad.add(new BlockPos(coords.getInteger("X"), coords.getInteger("Y"), coords.getInteger("Z")));
+                slavesToLoad.add(new BlockPos(coords.getInteger("X"), coords.getInteger("Y"), coords.getInteger("Z")));
             }
         }
     }
@@ -610,11 +622,11 @@ public class StorageNetwork {
         tag.setTag(NBT_CRAFTING_TASKS, list);
 
         NBTTagList machinesTag = new NBTTagList();
-        for (TileMachine machine : machines) {
+        for (INetworkSlave slave : slaves) {
             NBTTagCompound coords = new NBTTagCompound();
-            coords.setInteger("X", machine.getPos().getX());
-            coords.setInteger("Y", machine.getPos().getY());
-            coords.setInteger("Z", machine.getPos().getZ());
+            coords.setInteger("X", slave.getPosition().getX());
+            coords.setInteger("Y", slave.getPosition().getY());
+            coords.setInteger("Z", slave.getPosition().getZ());
             machinesTag.appendTag(coords);
         }
         tag.setTag("Machines", machinesTag);
@@ -623,6 +635,6 @@ public class StorageNetwork {
     }
 
     public void markDirty() {
-        StorageNetworkSavedData.get(world).markDirty();
+        NetworkMasterSavedData.get(world).markDirty();
     }
 }

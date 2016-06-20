@@ -4,8 +4,8 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import refinedstorage.api.storagenet.StorageNetwork;
-import refinedstorage.api.storagenet.StorageNetworkRegistry;
+import refinedstorage.api.storagenet.NetworkMaster;
+import refinedstorage.api.storagenet.NetworkMasterRegistry;
 
 public class MessageWirelessGridStoragePull extends MessageHandlerPlayerToServer<MessageWirelessGridStoragePull> implements IMessage {
     private int controllerX;
@@ -45,7 +45,7 @@ public class MessageWirelessGridStoragePull extends MessageHandlerPlayerToServer
 
     @Override
     public void handle(MessageWirelessGridStoragePull message, EntityPlayerMP player) {
-        StorageNetwork network = StorageNetworkRegistry.get(new BlockPos(message.controllerX, message.controllerY, message.controllerZ), player.worldObj.provider.getDimension());
+        NetworkMaster network = NetworkMasterRegistry.get(new BlockPos(message.controllerX, message.controllerY, message.controllerZ), player.worldObj.provider.getDimension());
 
         if (network != null && network.canRun()) {
             network.getStorageHandler().onPull(message.id, message.flags, player);

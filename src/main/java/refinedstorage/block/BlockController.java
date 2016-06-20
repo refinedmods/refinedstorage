@@ -20,8 +20,8 @@ import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageGui;
-import refinedstorage.api.storagenet.StorageNetwork;
-import refinedstorage.api.storagenet.StorageNetworkRegistry;
+import refinedstorage.api.storagenet.NetworkMaster;
+import refinedstorage.api.storagenet.NetworkMasterRegistry;
 import refinedstorage.item.ItemBlockController;
 import refinedstorage.tile.controller.TileController;
 
@@ -67,7 +67,7 @@ public class BlockController extends BlockBase {
         TileController controller = (TileController) world.getTileEntity(pos);
 
         return super.getActualState(state, world, pos)
-            .withProperty(ENERGY, (int) Math.ceil((float) controller.getEnergy() / (float) StorageNetwork.ENERGY_CAPACITY * 8f));
+            .withProperty(ENERGY, (int) Math.ceil((float) controller.getEnergy() / (float) NetworkMaster.ENERGY_CAPACITY * 8f));
     }
 
     @Override
@@ -92,15 +92,15 @@ public class BlockController extends BlockBase {
     @Override
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack stack) {
         if (!world.isRemote) {
-            StorageNetwork network = new StorageNetwork(pos, world);
+            NetworkMaster master = new NetworkMaster(pos, world);
 
             NBTTagCompound tag = stack.getTagCompound();
 
-            if (tag != null && tag.hasKey(StorageNetwork.NBT_ENERGY)) {
-                network.getEnergy().receiveEnergy(tag.getInteger(StorageNetwork.NBT_ENERGY), false);
+            if (tag != null && tag.hasKey(NetworkMaster.NBT_ENERGY)) {
+                master.getEnergy().receiveEnergy(tag.getInteger(NetworkMaster.NBT_ENERGY), false);
             }
 
-            StorageNetworkRegistry.add(network, world.provider.getDimension());
+            NetworkMasterRegistry.add(master, world.provider.getDimension());
         }
 
         super.onBlockPlacedBy(world, pos, state, player, stack);
@@ -109,7 +109,7 @@ public class BlockController extends BlockBase {
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
         if (!world.isRemote) {
-            StorageNetworkRegistry.remove(pos, world.provider.getDimension());
+            NetworkMasterRegistry.remove(pos, world.provider.getDimension());
         }
 
         super.breakBlock(world, pos, state);
@@ -122,7 +122,7 @@ public class BlockController extends BlockBase {
         ItemStack stack = new ItemStack(RefinedStorageBlocks.CONTROLLER, 1, RefinedStorageBlocks.CONTROLLER.getMetaFromState(state));
 
         NBTTagCompound tag = new NBTTagCompound();
-        tag.setInteger(StorageNetwork.NBT_ENERGY, ((TileController) world.getTileEntity(pos)).getEnergyStored(null));
+        tag.setInteger(NetworkMaster.NBT_ENERGY, ((TileController) world.getTileEntity(pos)).getEnergyStored(null));
         stack.setTagCompound(tag);
 
         drops.add(stack);

@@ -5,7 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants;
 import refinedstorage.RefinedStorageUtils;
-import refinedstorage.api.storagenet.StorageNetwork;
+import refinedstorage.api.storagenet.NetworkMaster;
 import refinedstorage.autocrafting.CraftingPattern;
 
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ public class BasicCraftingTask implements ICraftingTask {
         return pattern;
     }
 
-    public boolean update(StorageNetwork network) {
+    public boolean update(NetworkMaster master) {
         this.updatedOnce = true;
 
         boolean done = true;
@@ -63,17 +63,17 @@ public class BasicCraftingTask implements ICraftingTask {
             if (!satisfied[i]) {
                 done = false;
 
-                ItemStack took = network.take(input, 1);
+                ItemStack took = master.take(input, 1);
 
                 if (took != null) {
                     itemsTook.add(took);
 
                     satisfied[i] = true;
                 } else if (!childTasks[i]) {
-                    CraftingPattern pattern = network.getPatternWithBestScore(input);
+                    CraftingPattern pattern = master.getPatternWithBestScore(input);
 
                     if (pattern != null) {
-                        network.addCraftingTask(network.createCraftingTask(pattern));
+                        master.addCraftingTask(master.createCraftingTask(pattern));
 
                         childTasks[i] = true;
                     }
@@ -90,23 +90,23 @@ public class BasicCraftingTask implements ICraftingTask {
 
     // @todo: handle no space
     @Override
-    public void onDone(StorageNetwork network) {
+    public void onDone(NetworkMaster master) {
         for (ItemStack output : pattern.getOutputs()) {
-            network.push(output, output.stackSize, false);
+            master.push(output, output.stackSize, false);
         }
 
         if (pattern.getByproducts() != null) {
             for (ItemStack byproduct : pattern.getByproducts()) {
-                network.push(byproduct, byproduct.stackSize, false);
+                master.push(byproduct, byproduct.stackSize, false);
             }
         }
     }
 
     // @todo: handle no space
     @Override
-    public void onCancelled(StorageNetwork network) {
+    public void onCancelled(NetworkMaster master) {
         for (ItemStack took : itemsTook) {
-            network.push(took, took.stackSize, false);
+            master.push(took, took.stackSize, false);
         }
     }
 

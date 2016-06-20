@@ -25,7 +25,7 @@ import refinedstorage.tile.config.ModeFilter;
 
 import java.util.List;
 
-public class TileDestructor extends TileMachine implements ICompareConfig, IModeConfig {
+public class TileDestructor extends TileSlave implements ICompareConfig, IModeConfig {
     public static final String NBT_COMPARE = "Compare";
     public static final String NBT_MODE = "Mode";
 
@@ -47,7 +47,7 @@ public class TileDestructor extends TileMachine implements ICompareConfig, IMode
     }
 
     @Override
-    public void updateMachine() {
+    public void updateSlave() {
         if (ticks % RefinedStorageUtils.getSpeed(upgrades, BASE_SPEED, 4) == 0) {
             BlockPos front = pos.offset(getDirection());
 

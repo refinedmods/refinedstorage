@@ -12,7 +12,7 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.tile.TileCraftingMonitor;
 
-public class BlockCraftingMonitor extends BlockMachine {
+public class BlockCraftingMonitor extends BlockSlave {
     public BlockCraftingMonitor() {
         super("crafting_monitor");
     }

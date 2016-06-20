@@ -1,17 +1,17 @@
 package refinedstorage.autocrafting.task;
 
 import net.minecraft.nbt.NBTTagCompound;
-import refinedstorage.api.storagenet.StorageNetwork;
+import refinedstorage.api.storagenet.NetworkMaster;
 import refinedstorage.autocrafting.CraftingPattern;
 
 public interface ICraftingTask {
     CraftingPattern getPattern();
 
-    boolean update(StorageNetwork network);
+    boolean update(NetworkMaster master);
 
-    void onDone(StorageNetwork network);
+    void onDone(NetworkMaster master);
 
-    void onCancelled(StorageNetwork network);
+    void onCancelled(NetworkMaster master);
 
     void writeToNBT(NBTTagCompound tag);
 

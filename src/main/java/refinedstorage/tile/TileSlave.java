@@ -3,10 +3,12 @@ package refinedstorage.tile;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorageUtils;
-import refinedstorage.api.storagenet.StorageNetwork;
-import refinedstorage.api.storagenet.StorageNetworkRegistry;
+import refinedstorage.api.storagenet.INetworkSlave;
+import refinedstorage.api.storagenet.NetworkMaster;
+import refinedstorage.api.storagenet.NetworkMasterRegistry;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
 import refinedstorage.tile.controller.ControllerSearcher;
@@ -15,33 +17,17 @@ import refinedstorage.tile.controller.TileController;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class TileMachine extends TileBase implements ISynchronizedContainer, IRedstoneModeConfig {
+public abstract class TileSlave extends TileBase implements ISynchronizedContainer, IRedstoneModeConfig, INetworkSlave {
     public static final String NBT_CONNECTED = "Connected";
 
     protected boolean connected;
     protected boolean wasConnected;
     protected RedstoneMode redstoneMode = RedstoneMode.IGNORE;
-    protected StorageNetwork network;
+    protected NetworkMaster network;
 
     private Block block;
 
     private Set<String> visited = new HashSet<String>();
-
-    public void searchController(World world) {
-        visited.clear();
-
-        TileController newController = ControllerSearcher.search(world, pos, visited);
-
-        if (network == null) {
-            if (newController != null) {
-                onConnected(world, newController);
-            }
-        } else {
-            if (newController == null) {
-                onDisconnected(world);
-            }
-        }
-    }
 
     @Override
     public void update() {
@@ -50,59 +36,50 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
                 block = worldObj.getBlockState(pos).getBlock();
             }
 
-            if (wasConnected != isActive() && canSendConnectivityData()) {
+            if (wasConnected != isActive() && canSendConnectivityUpdate()) {
                 wasConnected = isActive();
 
                 RefinedStorageUtils.updateBlock(worldObj, pos);
-            }
-
-            if (isActive()) {
-                updateMachine();
             }
         }
 
         super.update();
     }
 
-    public boolean canSendConnectivityData() {
+    @Override
+    public boolean canSendConnectivityUpdate() {
         return true;
     }
 
+    @Override
     public boolean canUpdate() {
         return redstoneMode.isEnabled(worldObj, pos);
     }
 
     public boolean isActive() {
-        return connected && canUpdate();
+        return isConnected() && canUpdate();
     }
 
-    public void onConnected(World world, TileController controller) {
-        if (tryConnect(controller) && block != null) {
+    @Override
+    public void connect(World world, NetworkMaster network) {
+        if (block != null && this.network.canRun()) {
+            this.network = network;
+            this.connected = true;
+
+            this.network.addSlave(this);
+
             world.notifyNeighborsOfStateChange(pos, block);
         }
     }
 
-    private boolean tryConnect(TileController controller) {
-        StorageNetwork network = StorageNetworkRegistry.get(controller.getPos(), worldObj.provider.getDimension());
-
-        if (!network.canRun()) {
-            return false;
-        }
-
-        this.network = network;
-        this.connected = true;
-
-        network.addMachine(this);
-
-        return true;
-    }
-
-    public void forceConnect(StorageNetwork network) {
+    @Override
+    public void forceConnect(NetworkMaster network) {
         this.network = network;
         this.connected = true;
     }
 
-    public void onDisconnected(World world) {
+    @Override
+    public void disconnect(World world) {
         this.connected = false;
 
         if (this.network != null) {
@@ -113,10 +90,33 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
         world.notifyNeighborsOfStateChange(pos, block);
     }
 
-    public StorageNetwork getNetwork() {
+    @Override
+    public void onNeighborChanged(World world) {
+        visited.clear();
+
+        TileController controller = ControllerSearcher.search(world, pos, visited);
+
+        if (network == null) {
+            if (controller != null) {
+                connect(world, NetworkMasterRegistry.get(controller.getPos(), world.provider.getDimension()));
+            }
+        } else {
+            if (controller == null) {
+                disconnect(world);
+            }
+        }
+    }
+
+    public NetworkMaster getNetwork() {
         return network;
     }
 
+    @Override
+    public BlockPos getPosition() {
+        return pos;
+    }
+
+    @Override
     public boolean isConnected() {
         return connected;
     }
@@ -179,21 +179,17 @@ public abstract class TileMachine extends TileBase implements ISynchronizedConta
         connected = tag.getBoolean(NBT_CONNECTED);
     }
 
-    public abstract int getEnergyUsage();
-
-    public abstract void updateMachine();
-
     @Override
     public boolean equals(Object other) {
         if (other == this) {
             return true;
         }
 
-        if (!(other instanceof TileMachine)) {
+        if (!(other instanceof TileSlave)) {
             return false;
         }
 
-        return ((TileMachine) other).getPos().equals(pos);
+        return ((TileSlave) other).getPos().equals(pos);
     }
 
     @Override

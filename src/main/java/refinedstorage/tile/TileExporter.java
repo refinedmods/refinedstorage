@@ -18,7 +18,7 @@ import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
 
-public class TileExporter extends TileMachine implements ICompareConfig {
+public class TileExporter extends TileSlave implements ICompareConfig {
     public static final String NBT_COMPARE = "Compare";
 
     private BasicItemHandler filters = new BasicItemHandler(9, this);
@@ -40,7 +40,7 @@ public class TileExporter extends TileMachine implements ICompareConfig {
     }
 
     @Override
-    public void updateMachine() {
+    public void updateSlave() {
         IItemHandler handler = RefinedStorageUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
 
         if (handler != null && ticks % RefinedStorageUtils.getSpeed(upgrades) == 0) {

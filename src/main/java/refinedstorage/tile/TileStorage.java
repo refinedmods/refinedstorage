@@ -4,14 +4,11 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageUtils;
-import refinedstorage.api.RefinedStorageCapabilities;
 import refinedstorage.api.storage.IStorage;
 import refinedstorage.api.storage.IStorageProvider;
 import refinedstorage.api.storage.NBTStorage;
@@ -24,7 +21,7 @@ import refinedstorage.tile.config.*;
 
 import java.util.List;
 
-public class TileStorage extends TileMachine implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig {
+public class TileStorage extends TileSlave implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig {
     class Storage extends NBTStorage {
         public Storage() {
             super(TileStorage.this.getStorageTag(), TileStorage.this.getCapacity(), TileStorage.this);
@@ -69,7 +66,7 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
     }
 
     @Override
-    public void updateMachine() {
+    public void updateSlave() {
     }
 
     @Override
@@ -239,19 +236,5 @@ public class TileStorage extends TileMachine implements IStorageProvider, IStora
     @Override
     public int getCapacity() {
         return getType().getCapacity();
-    }
-
-    @Override
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-        if (capability == RefinedStorageCapabilities.STORAGE_PROVIDER_CAPABILITY) {
-            return (T) this;
-        }
-
-        return super.getCapability(capability, facing);
-    }
-
-    @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-        return capability == RefinedStorageCapabilities.STORAGE_PROVIDER_CAPABILITY || super.hasCapability(capability, facing);
     }
 }

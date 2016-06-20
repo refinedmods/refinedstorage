@@ -4,8 +4,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import refinedstorage.tile.TileMachine;
 import refinedstorage.tile.TileRelay;
+import refinedstorage.tile.TileSlave;
 
 import java.util.Set;
 
@@ -21,7 +21,7 @@ public final class ControllerSearcher {
 
         if (tile instanceof TileController) {
             return (TileController) tile;
-        } else if (tile instanceof TileMachine) {
+        } else if (tile instanceof TileSlave) {
             if (visited.size() > 1 && tile instanceof TileRelay && !((TileRelay) tile).canUpdate()) {
                 return null;
             }

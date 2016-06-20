@@ -4,8 +4,8 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import refinedstorage.api.storagenet.StorageNetwork;
-import refinedstorage.api.storagenet.StorageNetworkRegistry;
+import refinedstorage.api.storagenet.NetworkMaster;
+import refinedstorage.api.storagenet.NetworkMasterRegistry;
 
 public class MessageGridCraftingStart extends MessageHandlerPlayerToServer<MessageGridCraftingStart> implements IMessage {
     private int x;
@@ -45,7 +45,7 @@ public class MessageGridCraftingStart extends MessageHandlerPlayerToServer<Messa
 
     @Override
     public void handle(MessageGridCraftingStart message, EntityPlayerMP player) {
-        StorageNetwork network = StorageNetworkRegistry.get(new BlockPos(message.x, message.y, message.z), player.worldObj.provider.getDimension());
+        NetworkMaster network = NetworkMasterRegistry.get(new BlockPos(message.x, message.y, message.z), player.worldObj.provider.getDimension());
 
         if (network != null && network.canRun()) {
             network.getStorageHandler().onCraftingRequested(message.id, message.quantity);

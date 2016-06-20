@@ -11,9 +11,9 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.tile.TileCable;
-import refinedstorage.tile.TileMachine;
+import refinedstorage.tile.TileSlave;
 
-public class BlockCable extends BlockMachine {
+public class BlockCable extends BlockSlave {
     public static final AxisAlignedBB CABLE_AABB = new AxisAlignedBB(4 * (1F / 16F), 4 * (1F / 16F), 4 * (1F / 16F), 1 - 4 * (1F / 16F), 1 - 4 * (1F / 16F), 1 - 4 * (1F / 16F));
 
     public static final PropertyBool NORTH = PropertyBool.create("north");
@@ -57,7 +57,7 @@ public class BlockCable extends BlockMachine {
     }
 
     public static boolean hasConnectionWith(IBlockAccess world, BlockPos pos) {
-        return world.getBlockState(pos).getBlock() == RefinedStorageBlocks.CONTROLLER || world.getTileEntity(pos) instanceof TileMachine;
+        return world.getBlockState(pos).getBlock() == RefinedStorageBlocks.CONTROLLER || world.getTileEntity(pos) instanceof TileSlave;
     }
 
     @Override

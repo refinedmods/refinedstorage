@@ -25,7 +25,7 @@ import refinedstorage.tile.TileStorage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BlockStorage extends BlockMachine {
+public class BlockStorage extends BlockSlave {
     public static final PropertyEnum TYPE = PropertyEnum.create("type", EnumStorageType.class);
 
     public BlockStorage() {

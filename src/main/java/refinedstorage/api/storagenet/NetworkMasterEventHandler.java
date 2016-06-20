@@ -7,13 +7,13 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.util.Map;
 
-public class StorageNetworkEventHandler {
+public class NetworkMasterEventHandler {
     @SubscribeEvent
     public void onWorldTick(TickEvent.WorldTickEvent e) {
-        Map<BlockPos, StorageNetwork> networks = StorageNetworkRegistry.get(e.world.provider.getDimension());
+        Map<BlockPos, NetworkMaster> networks = NetworkMasterRegistry.get(e.world.provider.getDimension());
 
         if (networks != null) {
-            for (StorageNetwork network : networks.values()) {
+            for (NetworkMaster network : networks.values()) {
                 if (network.getWorld() == null) {
                     network.onAdded(e.world);
                 }
@@ -25,6 +25,6 @@ public class StorageNetworkEventHandler {
 
     @SubscribeEvent
     public void onWorldLoad(WorldEvent.Load e) {
-        StorageNetworkSavedData.get(e.getWorld());
+        NetworkMasterSavedData.get(e.getWorld());
     }
 }
