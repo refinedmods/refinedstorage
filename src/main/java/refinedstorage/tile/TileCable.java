@@ -10,11 +10,12 @@ public class TileCable extends TileSlave {
 
     @Override
     public void updateSlave() {
+        // NO OP
     }
 
     @Override
-    public boolean canSendConnectivityUpdate() {
-        return false;
+    public void updateConnectivity() {
+        // NO OP
     }
 
     @Override

@@ -5,6 +5,9 @@ import net.minecraft.world.World;
 
 /**
  * Represents a slave or machine in the storage network.
+ *
+ * Make sure you implement {@link Object#hashCode()} or the slave will not get properly removed or added by the storage master.
+ * Typically the hash code from {@link INetworkSlave#getPosition()} is used.
  */
 public interface INetworkSlave {
     /**
@@ -18,9 +21,9 @@ public interface INetworkSlave {
     int getEnergyUsage();
 
     /**
-     * @return If this slave can send connectivity updates and can trigger block updates
+     * Responsible for sending connectivity block updates
      */
-    boolean canSendConnectivityUpdate();
+    void updateConnectivity();
 
     /**
      * @return The position of this slave in the world
@@ -28,14 +31,14 @@ public interface INetworkSlave {
     BlockPos getPosition();
 
     /**
-     * Called when the neighbor of this slave is changed. Typically used to recalculate the network (if there is still a connection)
+     * Called when the neighbor of this slave is changed. Typically used to check if there is still a connection to the network.
      *
      * @param world The world
      */
     void onNeighborChanged(World world);
 
     /**
-     * Called when a connection is found to the storage network
+     * Called when a connection is found to the network
      *
      * @param world   The world
      * @param network The network we're trying to connect to
@@ -50,7 +53,7 @@ public interface INetworkSlave {
     void forceConnect(NetworkMaster network);
 
     /**
-     * Called when a connection is lost to the stoarge network
+     * Called when a connection is lost to the network
      *
      * @param world The world
      */
@@ -62,7 +65,7 @@ public interface INetworkSlave {
     boolean isConnected();
 
     /**
-     * @return If this slave can be updated. Typically returns false when redstone mode doesn't allow it.
+     * @return If {@link INetworkSlave#canUpdate()} can get called. Typically checks for connection and redstone mode.
      */
     boolean canUpdate();
 

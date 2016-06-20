@@ -1,7 +1,6 @@
 package refinedstorage.tile;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -21,35 +20,11 @@ public abstract class TileSlave extends TileBase implements ISynchronizedContain
     public static final String NBT_CONNECTED = "Connected";
 
     protected boolean connected;
-    protected boolean wasConnected;
     protected RedstoneMode redstoneMode = RedstoneMode.IGNORE;
     protected NetworkMaster network;
 
-    private Block block;
-
+    private boolean wasActive;
     private Set<String> visited = new HashSet<String>();
-
-    @Override
-    public void update() {
-        if (!worldObj.isRemote) {
-            if (ticks == 0) {
-                block = worldObj.getBlockState(pos).getBlock();
-            }
-
-            if (wasConnected != isActive() && canSendConnectivityUpdate()) {
-                wasConnected = isActive();
-
-                RefinedStorageUtils.updateBlock(worldObj, pos);
-            }
-        }
-
-        super.update();
-    }
-
-    @Override
-    public boolean canSendConnectivityUpdate() {
-        return true;
-    }
 
     @Override
     public boolean canUpdate() {
@@ -61,14 +36,23 @@ public abstract class TileSlave extends TileBase implements ISynchronizedContain
     }
 
     @Override
+    public void updateConnectivity() {
+        if (wasActive != isActive()) {
+            wasActive = isActive();
+
+            RefinedStorageUtils.updateBlock(worldObj, pos);
+        }
+    }
+
+    @Override
     public void connect(World world, NetworkMaster network) {
-        if (block != null && this.network.canRun()) {
+        if (network.canRun()) {
             this.network = network;
             this.connected = true;
 
             this.network.addSlave(this);
 
-            world.notifyNeighborsOfStateChange(pos, block);
+            world.notifyNeighborsOfStateChange(pos, getBlockType());
         }
     }
 
@@ -87,7 +71,7 @@ public abstract class TileSlave extends TileBase implements ISynchronizedContain
             this.network = null;
         }
 
-        world.notifyNeighborsOfStateChange(pos, block);
+        world.notifyNeighborsOfStateChange(pos, getBlockType());
     }
 
     @Override

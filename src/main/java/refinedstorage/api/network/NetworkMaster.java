@@ -120,21 +120,13 @@ public class NetworkMaster {
 
     public void update() {
         for (INetworkSlave slave : slavesToAdd) {
-            slaves.add(slave);
+            if (!slaves.contains(slave)) {
+                slaves.add(slave);
+            }
         }
         slavesToAdd.clear();
 
-        for (INetworkSlave slave : slavesToRemove) {
-            Iterator<INetworkSlave> otherSlave = slaves.iterator();
-
-            while (otherSlave.hasNext()) {
-                if (otherSlave.next().getPosition().equals(slave.getPosition())) {
-                    otherSlave.remove();
-
-                    break;
-                }
-            }
-        }
+        slaves.removeAll(slavesToRemove);
         slavesToRemove.clear();
 
         int lastEnergy = energy.getEnergyStored();
@@ -148,6 +140,8 @@ public class NetworkMaster {
                 if (slave.canUpdate()) {
                     slave.updateSlave();
                 }
+
+                slave.updateConnectivity();
             }
 
             for (ICraftingTask taskToCancel : craftingTasksToCancel) {

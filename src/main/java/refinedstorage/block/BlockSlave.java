@@ -50,10 +50,10 @@ public abstract class BlockSlave extends BlockBase {
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
         if (!world.isRemote) {
-            TileSlave machine = (TileSlave) world.getTileEntity(pos);
+            TileSlave slave = (TileSlave) world.getTileEntity(pos);
 
-            if (machine.isConnected()) {
-                machine.disconnect(world);
+            if (slave.isConnected()) {
+                slave.disconnect(world);
             }
         }
 
