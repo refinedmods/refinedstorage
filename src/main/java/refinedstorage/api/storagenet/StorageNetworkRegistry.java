@@ -16,6 +16,13 @@ public class StorageNetworkRegistry {
         NETWORKS.get(dimension).put(network.getPos(), network);
     }
 
+    public static void remove(BlockPos pos, int dimension) {
+        if (get(dimension) != null) {
+            get(dimension).get(pos).onRemoved();
+            get(dimension).remove(pos);
+        }
+    }
+
     public static StorageNetwork get(BlockPos pos, int dimension) {
         return get(dimension) == null ? null : get(dimension).get(pos);
     }

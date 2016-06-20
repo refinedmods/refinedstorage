@@ -90,22 +90,29 @@ public class BlockController extends BlockBase {
     }
 
     @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack itemStack) {
+    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack stack) {
         if (!world.isRemote) {
             StorageNetwork network = new StorageNetwork(pos, world);
 
-            NBTTagCompound tag = itemStack.getTagCompound();
+            NBTTagCompound tag = stack.getTagCompound();
 
             if (tag != null && tag.hasKey(StorageNetwork.NBT_ENERGY)) {
                 network.getEnergy().receiveEnergy(tag.getInteger(StorageNetwork.NBT_ENERGY), false);
             }
 
             StorageNetworkRegistry.add(network, world.provider.getDimension());
-
-            ((TileController) world.getTileEntity(pos)).setNetwork(network);
         }
 
-        super.onBlockPlacedBy(world, pos, state, player, itemStack);
+        super.onBlockPlacedBy(world, pos, state, player, stack);
+    }
+
+    @Override
+    public void breakBlock(World world, BlockPos pos, IBlockState state) {
+        if (!world.isRemote) {
+            StorageNetworkRegistry.remove(pos, world.provider.getDimension());
+        }
+
+        super.breakBlock(world, pos, state);
     }
 
     @Override

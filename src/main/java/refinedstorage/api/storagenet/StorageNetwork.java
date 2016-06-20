@@ -31,7 +31,6 @@ import refinedstorage.tile.TileMachine;
 import refinedstorage.tile.TileWirelessTransmitter;
 import refinedstorage.tile.config.RedstoneMode;
 import refinedstorage.tile.controller.StorageHandler;
-import refinedstorage.tile.controller.TileController;
 import refinedstorage.tile.controller.WirelessGridHandler;
 
 import java.util.*;
@@ -82,7 +81,7 @@ public class StorageNetwork {
     public StorageNetwork(BlockPos pos, World world) {
         this.pos = pos;
 
-        setWorld(world);
+        onAdded(world);
     }
 
     public StorageNetwork(BlockPos pos) {
@@ -111,23 +110,6 @@ public class StorageNetwork {
         return pos;
     }
 
-    public void setWorld(World world) {
-        this.world = world;
-        this.type = (EnumControllerType) world.getBlockState(pos).getValue(BlockController.TYPE);
-
-        for (BlockPos machine : machinesToLoad) {
-            TileEntity tile = world.getTileEntity(machine);
-
-            if (tile instanceof TileMachine) {
-                ((TileMachine) tile).forceConnect(this);
-
-                machines.add((TileMachine) tile);
-            }
-        }
-
-        ((TileController) world.getTileEntity(pos)).setNetwork(this);
-    }
-
     public World getWorld() {
         return world;
     }
@@ -154,6 +136,9 @@ public class StorageNetwork {
             if (ticks % 20 == 0) {
                 syncMachines();
             }
+
+            // @todo: If the chunk unloads, and we come back to the chunk
+            // the machine tile will be reset to a new tile instance and nothing will work
 
             for (ICraftingTask taskToCancel : craftingTasksToCancel) {
                 taskToCancel.onCancelled(this);
@@ -245,12 +230,31 @@ public class StorageNetwork {
         return wirelessGridRange;
     }
 
-    private void disconnectAll() {
+    public void disconnectAll() {
         for (TileMachine machine : machines) {
             machine.onDisconnected(world);
         }
 
         machines.clear();
+    }
+
+    public void onRemoved() {
+        markDirty();
+    }
+
+    public void onAdded(World world) {
+        this.world = world;
+        this.type = (EnumControllerType) world.getBlockState(pos).getValue(BlockController.TYPE);
+
+        for (BlockPos machine : machinesToLoad) {
+            TileEntity tile = world.getTileEntity(machine);
+
+            if (tile instanceof TileMachine) {
+                ((TileMachine) tile).forceConnect(this);
+
+                machines.add((TileMachine) tile);
+            }
+        }
     }
 
     public List<ItemStack> getItems() {

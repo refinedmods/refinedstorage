@@ -15,7 +15,7 @@ public class StorageNetworkEventHandler {
         if (networks != null) {
             for (StorageNetwork network : networks.values()) {
                 if (network.getWorld() == null) {
-                    network.setWorld(e.world);
+                    network.onAdded(e.world);
                 }
 
                 network.update();

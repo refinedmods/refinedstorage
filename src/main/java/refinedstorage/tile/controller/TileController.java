@@ -10,6 +10,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.api.storagenet.StorageNetwork;
+import refinedstorage.api.storagenet.StorageNetworkRegistry;
 import refinedstorage.block.BlockController;
 import refinedstorage.block.EnumControllerType;
 import refinedstorage.container.ContainerController;
@@ -32,15 +33,19 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     private EnumControllerType type;
     private RedstoneMode redstoneMode;
 
-    public void setNetwork(StorageNetwork network) {
-        this.network = network;
+    public StorageNetwork getNetwork() {
+        if (network == null) {
+            network = StorageNetworkRegistry.get(pos, worldObj.provider.getDimension());
+        }
+
+        return network;
     }
 
     @Override
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {
         super.writeUpdate(tag);
 
-        tag.setInteger(StorageNetwork.NBT_ENERGY, network != null ? network.getEnergy().getEnergyStored() : 0);
+        tag.setInteger(StorageNetwork.NBT_ENERGY, getNetwork() != null ? getNetwork().getEnergy().getEnergyStored() : 0);
 
         return tag;
     }
@@ -54,16 +59,16 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
     @Override
     public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
-        return network.getEnergy().receiveEnergy(maxReceive, simulate);
+        return getNetwork().getEnergy().receiveEnergy(maxReceive, simulate);
     }
 
     @Override
     public int getEnergyStored(EnumFacing from) {
-        return network.getEnergy().getEnergyStored();
+        return getNetwork().getEnergy().getEnergyStored();
     }
 
     public int getEnergyScaled(int i) {
-        float stored = worldObj.isRemote ? energy : network.getEnergy().getEnergyStored();
+        float stored = worldObj.isRemote ? energy : getNetwork().getEnergy().getEnergyStored();
         float max = StorageNetwork.ENERGY_CAPACITY;
 
         return (int) (stored / max * (float) i);
@@ -71,7 +76,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
     @Override
     public int getMaxEnergyStored(EnumFacing from) {
-        return network.getEnergy().getMaxEnergyStored();
+        return getNetwork().getEnergy().getMaxEnergyStored();
     }
 
     @Override
@@ -81,12 +86,12 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
     @Override
     public RedstoneMode getRedstoneMode() {
-        return worldObj.isRemote ? redstoneMode : network.getRedstoneMode();
+        return worldObj.isRemote ? redstoneMode : getNetwork().getRedstoneMode();
     }
 
     @Override
     public void setRedstoneMode(RedstoneMode mode) {
-        network.setRedstoneMode(mode);
+        getNetwork().setRedstoneMode(mode);
     }
 
     public List<ClientMachine> getClientMachines() {
@@ -133,14 +138,14 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
     @Override
     public void writeContainerData(ByteBuf buf) {
-        buf.writeInt(network.getEnergy().getEnergyStored());
-        buf.writeInt(network.getEnergyUsage());
+        buf.writeInt(getNetwork().getEnergy().getEnergyStored());
+        buf.writeInt(getNetwork().getEnergyUsage());
 
-        buf.writeInt(network.getRedstoneMode().id);
+        buf.writeInt(getNetwork().getRedstoneMode().id);
 
         List<ClientMachine> m = new ArrayList<ClientMachine>();
 
-        for (TileMachine machine : network.getMachines()) {
+        for (TileMachine machine : getNetwork().getMachines()) {
             if (machine.canUpdate()) {
                 IBlockState state = worldObj.getBlockState(machine.getPos());
 
