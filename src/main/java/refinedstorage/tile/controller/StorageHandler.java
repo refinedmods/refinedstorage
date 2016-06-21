@@ -94,12 +94,16 @@ public class StorageHandler {
 
         int quantityPerRequest = 0;
 
+        System.out.println("stack:"+stack);
         CraftingPattern pattern = network.getPatternWithBestScore(stack);
+        System.out.println("pattern: " +pattern);
 
         if (pattern != null) {
             for (ItemStack output : pattern.getOutputs()) {
+                System.out.println("output:"+output);
                 if (RefinedStorageUtils.compareStackNoQuantity(stack, output)) {
                     quantityPerRequest += output.stackSize;
+                    System.out.println("QPR:"+quantityPerRequest);
 
                     if (!pattern.isProcessing()) {
                         break;

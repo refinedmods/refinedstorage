@@ -88,7 +88,12 @@ public abstract class TileSlave extends TileBase implements ISynchronizedContain
 
         if (network == null) {
             if (controller != null) {
-                connect(world, NetworkMasterRegistry.get(controller.getPos(), world.provider.getDimension()));
+                // For backwards compatiblity
+                NetworkMaster network = NetworkMasterRegistry.get(controller.getPos(), world.provider.getDimension());
+
+                if (network != null) {
+                    connect(world, network);
+                }
             }
         } else {
             if (controller == null) {
