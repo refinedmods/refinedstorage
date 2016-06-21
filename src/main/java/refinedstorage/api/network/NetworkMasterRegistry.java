@@ -18,8 +18,13 @@ public class NetworkMasterRegistry {
 
     public static void remove(BlockPos pos, int dimension) {
         if (get(dimension) != null) {
-            get(dimension).get(pos).onRemoved();
-            get(dimension).remove(pos);
+            NetworkMaster network = get(dimension).get(pos);
+
+            if (network != null) {
+                network.onRemoved();
+
+                get(dimension).remove(pos);
+            }
         }
     }
 
