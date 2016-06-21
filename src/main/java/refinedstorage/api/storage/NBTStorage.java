@@ -11,7 +11,6 @@ import refinedstorage.RefinedStorageUtils;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.FutureTask;
 
 /**
  * A implementation of {@link IStorage} that stores storage items in NBT.
