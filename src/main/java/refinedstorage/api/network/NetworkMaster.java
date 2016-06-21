@@ -54,6 +54,7 @@ public class NetworkMaster {
     private List<IStorage> storages = new ArrayList<IStorage>();
 
     private List<BlockPos> slaves = new ArrayList<BlockPos>();
+    private Map<BlockPos, Boolean> slaveConnectivity = new HashMap<BlockPos, Boolean>();
     private List<BlockPos> slavesToAdd = new ArrayList<BlockPos>();
     private List<BlockPos> slavesToLoad = new ArrayList<BlockPos>();
     private List<BlockPos> slavesToRemove = new ArrayList<BlockPos>();
@@ -146,6 +147,16 @@ public class NetworkMaster {
                 if (slave.canUpdate()) {
                     slave.updateSlave();
                 }
+
+                boolean active = slave.canUpdate();
+
+                if (!slaveConnectivity.containsKey(slave.getPosition()) || slaveConnectivity.get(slave.getPosition()) != active) {
+                    slaveConnectivity.put(slave.getPosition(), active);
+
+                    if (slave.canSendConnectivityUpdate()) {
+                        RefinedStorageUtils.updateBlock(world, slave.getPosition());
+                    }
+                }
             }
 
             for (ICraftingTask taskToCancel : craftingTasksToCancel) {
@@ -200,7 +211,7 @@ public class NetworkMaster {
         if (energy.getEnergyStored() != lastEnergy) {
             world.updateComparatorOutputLevel(pos, RefinedStorageBlocks.CONTROLLER);
 
-            if (System.currentTimeMillis() - lastEnergyUpdate > 5000) {
+            if (System.currentTimeMillis() - lastEnergyUpdate > 2500) {
                 lastEnergyUpdate = System.currentTimeMillis();
 
                 RefinedStorageUtils.updateBlock(world, pos);

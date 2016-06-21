@@ -26,7 +26,6 @@ public abstract class TileSlave extends TileBase implements ISynchronizedContain
     protected RedstoneMode redstoneMode = RedstoneMode.IGNORE;
     protected NetworkMaster network;
 
-    private boolean wasActive;
     private Set<String> visited = new HashSet<String>();
 
     @Override
@@ -44,15 +43,6 @@ public abstract class TileSlave extends TileBase implements ISynchronizedContain
     }
 
     @Override
-    public void update() {
-        if (canSendConnectivityUpdate() && wasActive != isActive()) {
-            wasActive = isActive();
-
-            RefinedStorageUtils.updateBlock(worldObj, pos);
-        }
-    }
-
-    @Override
     public void connect(World world, NetworkMaster network) {
         if (network.canRun()) {
             this.network = network;
@@ -61,6 +51,10 @@ public abstract class TileSlave extends TileBase implements ISynchronizedContain
             this.network.addSlave(pos);
 
             world.notifyNeighborsOfStateChange(pos, getBlockType());
+
+            if (canSendConnectivityUpdate()) {
+                RefinedStorageUtils.updateBlock(world, pos);
+            }
         }
     }
 
@@ -80,6 +74,10 @@ public abstract class TileSlave extends TileBase implements ISynchronizedContain
         }
 
         world.notifyNeighborsOfStateChange(pos, getBlockType());
+
+        if (canSendConnectivityUpdate()) {
+            RefinedStorageUtils.updateBlock(world, pos);
+        }
     }
 
     @Override
