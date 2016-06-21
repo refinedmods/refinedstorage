@@ -8,6 +8,7 @@ When updating to this version, you'll have to break and replace your controller.
 - Fixed machines not working when leaving chunk
 - Fixed getting wrong items back in grid
 - Fixed wrong item getting crafted
+- Updated Forge to 1968
 - Rewrote storage networks: they are now saved to disk, so big systems won't lag when rejoining a chunk
 
 **Features**
