@@ -43,13 +43,13 @@ public class TileExporter extends TileSlave implements ICompareConfig {
     public void updateSlave() {
         IItemHandler handler = RefinedStorageUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
 
+        int size = RefinedStorageUtils.hasUpgrade(upgrades, ItemUpgrade.TYPE_STACK) ? 64 : 1;
+
         if (handler != null && ticks % RefinedStorageUtils.getSpeed(upgrades) == 0) {
             for (int i = 0; i < filters.getSlots(); ++i) {
                 ItemStack slot = filters.getStackInSlot(i);
 
                 if (slot != null) {
-                    int size = RefinedStorageUtils.hasUpgrade(upgrades, ItemUpgrade.TYPE_STACK) ? 64 : 1;
-
                     ItemStack took = network.take(slot, size, compare);
 
                     if (took != null) {

@@ -83,13 +83,17 @@ public class BlockStorage extends BlockSlave {
 
     @Override
     public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+        TileStorage storage = (TileStorage) world.getTileEntity(pos);
+
+        if (storage.getStorage() != null) {
+            storage.getStorage().writeToNBT();
+        }
+
         List<ItemStack> drops = new ArrayList<ItemStack>();
 
         ItemStack stack = new ItemStack(RefinedStorageBlocks.STORAGE, 1, RefinedStorageBlocks.STORAGE.getMetaFromState(state));
-
-        NBTTagCompound tag = new NBTTagCompound();
-        tag.setTag(TileStorage.NBT_STORAGE, ((TileStorage) world.getTileEntity(pos)).getStorageTag());
-        stack.setTagCompound(tag);
+        stack.setTagCompound(new NBTTagCompound());
+        stack.getTagCompound().setTag(TileStorage.NBT_STORAGE, storage.getStorageTag());
 
         drops.add(stack);
 

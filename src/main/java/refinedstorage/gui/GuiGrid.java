@@ -73,6 +73,7 @@ public class GuiGrid extends GuiBase {
         super(container, 193, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 256 : 208);
 
         setScrollbar(new Scrollbar(174, 20, 12, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 70 : 88));
+        getScrollbar().setCanScroll(false);
 
         this.container = container;
         this.grid = grid;

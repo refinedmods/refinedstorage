@@ -115,6 +115,11 @@ public class TileStorage extends TileSlave implements IStorageProvider, IStorage
         RefinedStorageUtils.writeItems(filters, 0, tag);
 
         tag.setInteger(NBT_PRIORITY, priority);
+
+        if (storage != null) {
+            storage.writeToNBT();
+        }
+
         tag.setTag(NBT_STORAGE, storageTag);
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_MODE, mode);
@@ -215,6 +220,10 @@ public class TileStorage extends TileSlave implements IStorageProvider, IStorage
 
     public void setStorageTag(NBTTagCompound storageTag) {
         this.storageTag = storageTag;
+    }
+
+    public NBTStorage getStorage() {
+        return storage;
     }
 
     @Override

@@ -6,7 +6,7 @@ import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.network.NetworkMaster;
 
 public class CraftingTaskScheduler {
-    public static String NBT_SCHEDULED = "CraftingTaskScheduled";
+    public static final String NBT_SCHEDULED = "CraftingTaskScheduled";
 
     private ItemStack scheduledItem;
 

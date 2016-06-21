@@ -530,11 +530,11 @@ public class NetworkMaster {
             }
         }
 
-        if (!simulate) {
+        int sizePushed = remainder != null ? (orginalSize - remainder.stackSize) : orginalSize;
+
+        if (!simulate && sizePushed > 0) {
             syncItems();
             syncItemsWithClients();
-
-            int sizePushed = remainder != null ? (orginalSize - remainder.stackSize) : orginalSize;
 
             for (int i = 0; i < sizePushed; ++i) {
                 if (!craftingTasks.empty()) {

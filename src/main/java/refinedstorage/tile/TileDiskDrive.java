@@ -62,6 +62,15 @@ public class TileDiskDrive extends TileSlave implements IStorageProvider, IStora
                 storages[slot] = new Storage(disk);
             }
         }
+
+        @Override
+        public ItemStack extractItem(int slot, int amount, boolean simulate) {
+            if (storages[slot] != null) {
+                storages[slot].writeToNBT();
+            }
+
+            return super.extractItem(slot, amount, simulate);
+        }
     };
     private BasicItemHandler filters = new BasicItemHandler(9, this);
 
@@ -120,6 +129,12 @@ public class TileDiskDrive extends TileSlave implements IStorageProvider, IStora
     @Override
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
+
+        for (int i = 0; i < disks.getSlots(); ++i) {
+            if (storages[i] != null) {
+                storages[i].writeToNBT();
+            }
+        }
 
         RefinedStorageUtils.writeItems(disks, 0, tag);
         RefinedStorageUtils.writeItems(filters, 1, tag);
