@@ -5,9 +5,6 @@ import net.minecraft.world.World;
 
 /**
  * Represents a slave or machine in the storage network.
- *
- * Make sure you implement {@link Object#hashCode()} or the slave will not get properly removed or added by the storage master.
- * Typically the hash code from {@link INetworkSlave#getPosition()} is used.
  */
 public interface INetworkSlave {
     /**
@@ -16,14 +13,14 @@ public interface INetworkSlave {
     void updateSlave();
 
     /**
+     * @return If the slave can send a connectivity update (for most slaves this is true, for cables it's false)
+     */
+    boolean canSendConnectivityUpdate();
+
+    /**
      * @return The energy usage of this slave
      */
     int getEnergyUsage();
-
-    /**
-     * Responsible for sending connectivity block updates
-     */
-    void updateConnectivity();
 
     /**
      * @return The position of this slave in the world

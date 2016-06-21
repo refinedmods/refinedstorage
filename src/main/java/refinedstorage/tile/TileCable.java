@@ -14,8 +14,8 @@ public class TileCable extends TileSlave {
     }
 
     @Override
-    public void updateConnectivity() {
-        // NO OP
+    public boolean canSendConnectivityUpdate() {
+        return false;
     }
 
     @Override

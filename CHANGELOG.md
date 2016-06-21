@@ -1,5 +1,13 @@
 # Refined Storage Changelog
 
+### 0.7.17
+When updating to this version, you'll have to break and replace your controller.
+
+**Bugfixes**
+- Fixed controller not working after leaving chunk
+- Fixed machines not working when leaving chunk
+- Rewrote storage networks: they are now saved to disk, so big systems won't lag when rejoining a chunk
+
 ### 0.7.16
 **Features**
 - Added support for Storage Drawers void upgrade

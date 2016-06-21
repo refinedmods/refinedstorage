@@ -21,6 +21,7 @@ import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class TileController extends TileBase implements IEnergyReceiver, ISynchronizedContainer, IRedstoneModeConfig {
@@ -144,9 +145,12 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
         buf.writeInt(getNetwork().getRedstoneMode().id);
 
-        List<ClientSlave> slaves = new ArrayList<ClientSlave>();
+        List<ClientSlave> clientSlaves = new ArrayList<ClientSlave>();
 
-        for (INetworkSlave slave : getNetwork().getSlaves()) {
+        Iterator<INetworkSlave> slaves = getNetwork().getSlaves();
+        while (slaves.hasNext()) {
+            INetworkSlave slave = slaves.next();
+
             if (slave.canUpdate()) {
                 IBlockState state = worldObj.getBlockState(slave.getPosition());
 
@@ -156,22 +160,22 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
                 clientSlave.amount = 1;
                 clientSlave.stack = new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state));
 
-                if (slaves.contains(clientSlave)) {
-                    for (ClientSlave other : slaves) {
+                if (clientSlaves.contains(clientSlave)) {
+                    for (ClientSlave other : clientSlaves) {
                         if (other.equals(clientSlave)) {
                             other.amount++;
                             break;
                         }
                     }
                 } else {
-                    slaves.add(clientSlave);
+                    clientSlaves.add(clientSlave);
                 }
             }
         }
 
-        buf.writeInt(slaves.size());
+        buf.writeInt(clientSlaves.size());
 
-        for (ClientSlave slave : slaves) {
+        for (ClientSlave slave : clientSlaves) {
             buf.writeInt(slave.energyUsage);
             buf.writeInt(slave.amount);
             ByteBufUtils.writeItemStack(buf, slave.stack);

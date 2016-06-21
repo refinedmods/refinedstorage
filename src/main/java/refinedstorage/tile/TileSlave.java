@@ -6,7 +6,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
 import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.RefinedStorageCapabilities;
 import refinedstorage.api.network.INetworkSlave;
 import refinedstorage.api.network.NetworkMaster;
 import refinedstorage.api.network.NetworkMasterRegistry;
@@ -37,8 +39,13 @@ public abstract class TileSlave extends TileBase implements ISynchronizedContain
     }
 
     @Override
-    public void updateConnectivity() {
-        if (wasActive != isActive()) {
+    public boolean canSendConnectivityUpdate() {
+        return true;
+    }
+
+    @Override
+    public void update() {
+        if (canSendConnectivityUpdate() && wasActive != isActive()) {
             wasActive = isActive();
 
             RefinedStorageUtils.updateBlock(worldObj, pos);
@@ -51,7 +58,7 @@ public abstract class TileSlave extends TileBase implements ISynchronizedContain
             this.network = network;
             this.connected = true;
 
-            this.network.addSlave(this);
+            this.network.addSlave(pos);
 
             world.notifyNeighborsOfStateChange(pos, getBlockType());
         }
@@ -68,7 +75,7 @@ public abstract class TileSlave extends TileBase implements ISynchronizedContain
         this.connected = false;
 
         if (this.network != null) {
-            this.network.removeSlave(this);
+            this.network.removeSlave(pos);
             this.network = null;
         }
 
@@ -93,11 +100,13 @@ public abstract class TileSlave extends TileBase implements ISynchronizedContain
     }
 
     private TileController searchController(World world, BlockPos current, Set<String> visited) {
-        if (visited.contains(current.getX() + "," + current.getY() + "," + current.getZ())) {
+        String id = current.getX() + "," + current.getY() + "," + current.getZ();
+
+        if (visited.contains(id)) {
             return null;
         }
 
-        visited.add(current.getX() + "," + current.getY() + "," + current.getZ());
+        visited.add(id);
 
         TileEntity tile = world.getTileEntity(current);
 
@@ -193,20 +202,16 @@ public abstract class TileSlave extends TileBase implements ISynchronizedContain
     }
 
     @Override
-    public boolean equals(Object other) {
-        if (other == this) {
-            return true;
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+        if (capability == RefinedStorageCapabilities.NETWORK_SLAVE_CAPABILITY) {
+            return (T) this;
         }
 
-        if (!(other instanceof TileSlave)) {
-            return false;
-        }
-
-        return ((TileSlave) other).getPos().equals(pos);
+        return super.getCapability(capability, facing);
     }
 
     @Override
-    public int hashCode() {
-        return pos.hashCode();
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+        return capability == RefinedStorageCapabilities.NETWORK_SLAVE_CAPABILITY || super.hasCapability(capability, facing);
     }
 }
