@@ -140,45 +140,49 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
     @Override
     public void writeContainerData(ByteBuf buf) {
-        buf.writeInt(getNetwork().getEnergy().getEnergyStored());
-        buf.writeInt(getNetwork().getEnergyUsage());
+        buf.writeInt(getNetwork() != null ? getNetwork().getEnergy().getEnergyStored() : 0);
+        buf.writeInt(getNetwork() != null ? getNetwork().getEnergyUsage() : 0);
 
-        buf.writeInt(getNetwork().getRedstoneMode().id);
+        buf.writeInt(getNetwork() != null ? getNetwork().getRedstoneMode().id : RedstoneMode.IGNORE.id);
 
-        List<ClientSlave> clientSlaves = new ArrayList<ClientSlave>();
+        if (getNetwork() != null) {
+            List<ClientSlave> clientSlaves = new ArrayList<ClientSlave>();
 
-        Iterator<INetworkSlave> slaves = getNetwork().getSlaves();
-        while (slaves.hasNext()) {
-            INetworkSlave slave = slaves.next();
+            Iterator<INetworkSlave> slaves = getNetwork().getSlaves();
+            while (slaves.hasNext()) {
+                INetworkSlave slave = slaves.next();
 
-            if (slave.canUpdate()) {
-                IBlockState state = worldObj.getBlockState(slave.getPosition());
+                if (slave.canUpdate()) {
+                    IBlockState state = worldObj.getBlockState(slave.getPosition());
 
-                ClientSlave clientSlave = new ClientSlave();
+                    ClientSlave clientSlave = new ClientSlave();
 
-                clientSlave.energyUsage = slave.getEnergyUsage();
-                clientSlave.amount = 1;
-                clientSlave.stack = new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state));
+                    clientSlave.energyUsage = slave.getEnergyUsage();
+                    clientSlave.amount = 1;
+                    clientSlave.stack = new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state));
 
-                if (clientSlaves.contains(clientSlave)) {
-                    for (ClientSlave other : clientSlaves) {
-                        if (other.equals(clientSlave)) {
-                            other.amount++;
-                            break;
+                    if (clientSlaves.contains(clientSlave)) {
+                        for (ClientSlave other : clientSlaves) {
+                            if (other.equals(clientSlave)) {
+                                other.amount++;
+                                break;
+                            }
                         }
+                    } else {
+                        clientSlaves.add(clientSlave);
                     }
-                } else {
-                    clientSlaves.add(clientSlave);
                 }
             }
-        }
 
-        buf.writeInt(clientSlaves.size());
+            buf.writeInt(clientSlaves.size());
 
-        for (ClientSlave slave : clientSlaves) {
-            buf.writeInt(slave.energyUsage);
-            buf.writeInt(slave.amount);
-            ByteBufUtils.writeItemStack(buf, slave.stack);
+            for (ClientSlave slave : clientSlaves) {
+                buf.writeInt(slave.energyUsage);
+                buf.writeInt(slave.amount);
+                ByteBufUtils.writeItemStack(buf, slave.stack);
+            }
+        } else {
+            buf.writeInt(0);
         }
     }
 
