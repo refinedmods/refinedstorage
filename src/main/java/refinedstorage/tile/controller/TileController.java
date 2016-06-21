@@ -60,7 +60,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
     @Override
     public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
-        return getNetwork().getEnergy().receiveEnergy(maxReceive, simulate);
+        return getNetwork() != null ? getNetwork().getEnergy().receiveEnergy(maxReceive, simulate) : 0;
     }
 
     @Override
@@ -69,7 +69,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     }
 
     public int getEnergyScaled(int i) {
-        float stored = worldObj.isRemote ? energy : getNetwork().getEnergy().getEnergyStored();
+        float stored = worldObj.isRemote ? energy : (getNetwork() != null ? getNetwork().getEnergy().getEnergyStored() : 0);
         float max = NetworkMaster.ENERGY_CAPACITY;
 
         return (int) (stored / max * (float) i);
@@ -77,7 +77,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
     @Override
     public int getMaxEnergyStored(EnumFacing from) {
-        return getNetwork().getEnergy().getMaxEnergyStored();
+        return getNetwork() != null ? getNetwork().getEnergy().getMaxEnergyStored() : 0;
     }
 
     @Override
@@ -87,12 +87,14 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
     @Override
     public RedstoneMode getRedstoneMode() {
-        return worldObj.isRemote ? redstoneMode : getNetwork().getRedstoneMode();
+        return worldObj.isRemote ? redstoneMode : (getNetwork() != null ? getNetwork().getRedstoneMode() : RedstoneMode.IGNORE);
     }
 
     @Override
     public void setRedstoneMode(RedstoneMode mode) {
-        getNetwork().setRedstoneMode(mode);
+        if (getNetwork() != null) {
+            getNetwork().setRedstoneMode(mode);
+        }
     }
 
     public List<ClientSlave> getClientSlaves() {
