@@ -20,13 +20,10 @@ import refinedstorage.container.ContainerGrid;
 import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.item.ItemPattern;
-import refinedstorage.network.MessageGridCraftingStart;
-import refinedstorage.network.MessageGridHeldItemPush;
 import refinedstorage.network.MessageGridSettingsUpdate;
-import refinedstorage.network.MessageGridStoragePull;
-import refinedstorage.tile.ClientItem;
 import refinedstorage.tile.TileSlave;
 import refinedstorage.tile.config.IRedstoneModeConfig;
+import refinedstorage.tile.controller.StorageHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +66,8 @@ public class TileGrid extends TileSlave implements IGrid {
     private int sortingType = SORTING_TYPE_NAME;
     private int searchBoxMode = SEARCH_BOX_MODE_NORMAL;
 
-    private List<ClientItem> items = new ArrayList<ClientItem>();
+    // Used clientside only
+    private List<ItemStack> items = new ArrayList<ItemStack>();
 
     @Override
     public int getEnergyUsage() {
@@ -98,17 +96,17 @@ public class TileGrid extends TileSlave implements IGrid {
     }
 
     @Override
-    public List<ClientItem> getItems() {
+    public List<ItemStack> getItems() {
         return items;
     }
 
     @Override
-    public void setItems(List<ClientItem> items) {
+    public void setItems(List<ItemStack> items) {
         this.items = items;
     }
 
     @Override
-    public BlockPos getControllerPos() {
+    public BlockPos getNetworkPosition() {
         return network != null ? network.getPosition() : null;
     }
 
@@ -119,18 +117,8 @@ public class TileGrid extends TileSlave implements IGrid {
     }
 
     @Override
-    public ItemStack onItemPush(EntityPlayer player, ItemStack stack) {
-        return isConnected() ? network.push(stack, stack.stackSize, false) : stack;
-    }
-
-    @Override
-    public void onHeldItemPush(boolean one) {
-        RefinedStorage.NETWORK.sendToServer(new MessageGridHeldItemPush(getPos().getX(), getPos().getY(), getPos().getZ(), one));
-    }
-
-    @Override
-    public void onItemPull(int id, int flags) {
-        RefinedStorage.NETWORK.sendToServer(new MessageGridStoragePull(getPos().getX(), getPos().getY(), getPos().getZ(), id, flags));
+    public StorageHandler getStorageHandler() {
+        return isConnected() ? network.getStorageHandler() : null;
     }
 
     public InventoryCrafting getMatrix() {
@@ -318,12 +306,7 @@ public class TileGrid extends TileSlave implements IGrid {
     }
 
     @Override
-    public void onCraftingRequested(int id, int quantity) {
-        RefinedStorage.NETWORK.sendToServer(new MessageGridCraftingStart(getPos().getX(), getPos().getY(), getPos().getZ(), id, quantity));
-    }
-
-    @Override
-    public IRedstoneModeConfig getRedstoneModeSetting() {
+    public IRedstoneModeConfig getRedstoneModeConfig() {
         return this;
     }
 

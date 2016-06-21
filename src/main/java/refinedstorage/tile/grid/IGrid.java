@@ -1,28 +1,23 @@
 package refinedstorage.tile.grid;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import refinedstorage.block.EnumGridType;
-import refinedstorage.tile.ClientItem;
 import refinedstorage.tile.config.IRedstoneModeConfig;
+import refinedstorage.tile.controller.StorageHandler;
 
 import java.util.List;
 
 public interface IGrid {
     EnumGridType getType();
 
-    List<ClientItem> getItems();
+    List<ItemStack> getItems();
 
-    void setItems(List<ClientItem> items);
+    void setItems(List<ItemStack> items);
 
-    BlockPos getControllerPos();
+    BlockPos getNetworkPosition();
 
-    ItemStack onItemPush(EntityPlayer player, ItemStack stack);
-
-    void onHeldItemPush(boolean one);
-
-    void onItemPull(int id, int flags);
+    StorageHandler getStorageHandler();
 
     int getSortingType();
 
@@ -36,9 +31,7 @@ public interface IGrid {
 
     void onSearchBoxModeChanged(int searchBoxMode);
 
-    void onCraftingRequested(int id, int quantity);
-
-    IRedstoneModeConfig getRedstoneModeSetting();
+    IRedstoneModeConfig getRedstoneModeConfig();
 
     boolean isConnected();
 }

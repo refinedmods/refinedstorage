@@ -9,39 +9,39 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import refinedstorage.container.ContainerGrid;
 import refinedstorage.tile.controller.StorageHandler;
 
-public class MessageGridCraftingStart extends MessageHandlerPlayerToServer<MessageGridCraftingStart> implements IMessage {
+public class MessageGridPull extends MessageHandlerPlayerToServer<MessageGridPull> implements IMessage {
     private ItemStack stack;
-    private int quantity;
+    private int flags;
 
-    public MessageGridCraftingStart() {
+    public MessageGridPull() {
     }
 
-    public MessageGridCraftingStart(ItemStack stack, int quantity) {
+    public MessageGridPull(ItemStack stack, int flags) {
         this.stack = stack;
-        this.quantity = quantity;
+        this.flags = flags;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         stack = ByteBufUtils.readItemStack(buf);
-        quantity = buf.readInt();
+        flags = buf.readInt();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         ByteBufUtils.writeItemStack(buf, stack);
-        buf.writeInt(quantity);
+        buf.writeInt(flags);
     }
 
     @Override
-    public void handle(MessageGridCraftingStart message, EntityPlayerMP player) {
+    public void handle(MessageGridPull message, EntityPlayerMP player) {
         Container container = player.openContainer;
 
         if (container instanceof ContainerGrid) {
             StorageHandler handler = ((ContainerGrid) container).getGrid().getStorageHandler();
 
             if (handler != null) {
-                handler.onCraftingRequested(message.stack, message.quantity);
+                handler.onPull(message.stack, message.flags, player);
             }
         }
     }

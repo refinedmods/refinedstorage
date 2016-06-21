@@ -11,12 +11,9 @@ import refinedstorage.api.network.NetworkMaster;
 import refinedstorage.api.network.NetworkMasterRegistry;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.item.ItemWirelessGrid;
-import refinedstorage.network.MessageWirelessGridCraftingStart;
-import refinedstorage.network.MessageWirelessGridHeldItemPush;
 import refinedstorage.network.MessageWirelessGridSettingsUpdate;
-import refinedstorage.network.MessageWirelessGridStoragePull;
-import refinedstorage.tile.ClientItem;
 import refinedstorage.tile.config.IRedstoneModeConfig;
+import refinedstorage.tile.controller.StorageHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +25,7 @@ public class WirelessGrid implements IGrid {
     private int sortingType;
     private int sortingDirection;
     private int searchBoxMode;
-    private List<ClientItem> items = new ArrayList<ClientItem>();
+    private List<ItemStack> items = new ArrayList<ItemStack>();
     private long lastUpdate;
 
     public WirelessGrid(World world, ItemStack stack, EnumHand hand) {
@@ -46,46 +43,34 @@ public class WirelessGrid implements IGrid {
     }
 
     @Override
-    public List<ClientItem> getItems() {
+    public List<ItemStack> getItems() {
         return items;
     }
 
     @Override
-    public void setItems(List<ClientItem> items) {
+    public void setItems(List<ItemStack> items) {
         this.items = items;
         this.lastUpdate = System.currentTimeMillis();
     }
 
     @Override
-    public BlockPos getControllerPos() {
+    public BlockPos getNetworkPosition() {
         return controllerPos;
     }
 
     @Override
-    public ItemStack onItemPush(EntityPlayer player, ItemStack stack) {
-        NetworkMaster network = NetworkMasterRegistry.get(controllerPos, player.worldObj.provider.getDimension());
+    public StorageHandler getStorageHandler() {
+        NetworkMaster network = NetworkMasterRegistry.get(controllerPos, world.provider.getDimension());
 
-        if (network != null && network.canRun()) {
-            network.getWirelessGridHandler().drainEnergy(player, ItemWirelessGrid.USAGE_PUSH);
-
-            return network.push(stack, stack.stackSize, false);
+        if (network != null) {
+            return network.getStorageHandler();
         }
 
-        return stack;
-    }
-
-    @Override
-    public void onHeldItemPush(boolean one) {
-        RefinedStorage.NETWORK.sendToServer(new MessageWirelessGridHeldItemPush(controllerPos.getX(), controllerPos.getY(), controllerPos.getZ(), one));
-    }
-
-    @Override
-    public void onItemPull(int id, int flags) {
-        RefinedStorage.NETWORK.sendToServer(new MessageWirelessGridStoragePull(controllerPos.getX(), controllerPos.getY(), controllerPos.getZ(), id, flags));
+        return null;
     }
 
     public void onClose(EntityPlayer player) {
-        NetworkMaster network = NetworkMasterRegistry.get(controllerPos, player.worldObj.provider.getDimension());
+        NetworkMaster network = NetworkMasterRegistry.get(controllerPos, world.provider.getDimension());
 
         if (network != null) {
             network.getWirelessGridHandler().handleClose(player);
@@ -129,12 +114,7 @@ public class WirelessGrid implements IGrid {
     }
 
     @Override
-    public void onCraftingRequested(int id, int quantity) {
-        RefinedStorage.NETWORK.sendToServer(new MessageWirelessGridCraftingStart(controllerPos.getX(), controllerPos.getY(), controllerPos.getZ(), id, quantity));
-    }
-
-    @Override
-    public IRedstoneModeConfig getRedstoneModeSetting() {
+    public IRedstoneModeConfig getRedstoneModeConfig() {
         return null;
     }
 

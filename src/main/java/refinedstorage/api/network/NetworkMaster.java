@@ -486,7 +486,7 @@ public class NetworkMaster {
 
     public void syncItemsWithClients() {
         for (EntityPlayer player : world.playerEntities) {
-            if (player.openContainer.getClass() == ContainerGrid.class && pos.equals(((ContainerGrid) player.openContainer).getGrid().getControllerPos())) {
+            if (player.openContainer.getClass() == ContainerGrid.class && pos.equals(((ContainerGrid) player.openContainer).getGrid().getNetworkPosition())) {
                 syncItemsWithClient((EntityPlayerMP) player);
             }
         }

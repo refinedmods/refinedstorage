@@ -19,10 +19,7 @@ import refinedstorage.gui.sidebutton.SideButtonGridSortingDirection;
 import refinedstorage.gui.sidebutton.SideButtonGridSortingType;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.jei.RefinedStorageJEIPlugin;
-import refinedstorage.network.GridPullFlags;
-import refinedstorage.network.MessageGridCraftingClear;
-import refinedstorage.network.MessageGridPatternCreate;
-import refinedstorage.tile.ClientItem;
+import refinedstorage.network.*;
 import refinedstorage.tile.grid.IGrid;
 import refinedstorage.tile.grid.TileGrid;
 import refinedstorage.tile.grid.WirelessGrid;
@@ -31,11 +28,11 @@ import java.io.IOException;
 import java.util.*;
 
 public class GuiGrid extends GuiBase {
-    private Comparator<ClientItem> quantityComparator = new Comparator<ClientItem>() {
+    private Comparator<ItemStack> quantityComparator = new Comparator<ItemStack>() {
         @Override
-        public int compare(ClientItem left, ClientItem right) {
-            int leftSize = left.getStack().stackSize;
-            int rightSize = right.getStack().stackSize;
+        public int compare(ItemStack left, ItemStack right) {
+            int leftSize = left.stackSize;
+            int rightSize = right.stackSize;
 
             if (leftSize == rightSize) {
                 return 0;
@@ -51,28 +48,26 @@ public class GuiGrid extends GuiBase {
         }
     };
 
-    private Comparator<ClientItem> nameComparator = new Comparator<ClientItem>() {
+    private Comparator<ItemStack> nameComparator = new Comparator<ItemStack>() {
         @Override
-        public int compare(ClientItem left, ClientItem right) {
+        public int compare(ItemStack left, ItemStack right) {
             if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_ASCENDING) {
-                return left.getStack().getDisplayName().compareTo(right.getStack().getDisplayName());
+                return left.getDisplayName().compareTo(right.getDisplayName());
             } else if (grid.getSortingDirection() == TileGrid.SORTING_DIRECTION_DESCENDING) {
-                return right.getStack().getDisplayName().compareTo(left.getStack().getDisplayName());
+                return right.getDisplayName().compareTo(left.getDisplayName());
             }
 
             return 0;
         }
     };
 
-    private ContainerGrid container;
-    private IGrid grid;
-
-    private List<ClientItem> items = new ArrayList<ClientItem>();
-
     private GuiTextField searchField;
 
+    private ContainerGrid container;
+    private List<ItemStack> items = new ArrayList<ItemStack>();
+    private IGrid grid;
+
     private int slotNumber;
-    private int slotId;
 
     public GuiGrid(ContainerGrid container, IGrid grid) {
         super(container, 193, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 256 : 208);
@@ -85,8 +80,8 @@ public class GuiGrid extends GuiBase {
 
     @Override
     public void init(int x, int y) {
-        if (grid.getRedstoneModeSetting() != null) {
-            addSideButton(new SideButtonRedstoneMode(grid.getRedstoneModeSetting()));
+        if (grid.getRedstoneModeConfig() != null) {
+            addSideButton(new SideButtonRedstoneMode(grid.getRedstoneModeConfig()));
         }
 
         int sx = x + 80 + 1;
@@ -123,16 +118,16 @@ public class GuiGrid extends GuiBase {
             String query = searchField.getText().trim().toLowerCase();
 
             if (!query.isEmpty()) {
-                Iterator<ClientItem> t = items.iterator();
+                Iterator<ItemStack> t = items.iterator();
 
                 while (t.hasNext()) {
-                    ClientItem item = t.next();
+                    ItemStack item = t.next();
 
                     if (query.startsWith("@")) {
                         String[] parts = query.split(" ");
 
                         String modId = parts[0].substring(1);
-                        String modIdFromItem = Item.REGISTRY.getNameForObject(item.getStack().getItem()).getResourceDomain();
+                        String modIdFromItem = Item.REGISTRY.getNameForObject(item.getItem()).getResourceDomain();
 
                         if (!modIdFromItem.contains(modId)) {
                             t.remove();
@@ -147,18 +142,18 @@ public class GuiGrid extends GuiBase {
                                 }
                             }
 
-                            if (!item.getStack().getDisplayName().toLowerCase().contains(itemFromMod.toString())) {
+                            if (!item.getDisplayName().toLowerCase().contains(itemFromMod.toString())) {
                                 t.remove();
                             }
                         }
                     } else if (query.startsWith("#")) {
                         String tooltip = query.substring(1);
-                        String tooltipFromItem = StringUtils.join(item.getStack().getTooltip(container.getPlayer(), true), "\n");
+                        String tooltipFromItem = StringUtils.join(item.getTooltip(container.getPlayer(), true), "\n");
 
                         if (!tooltipFromItem.contains(tooltip)) {
                             t.remove();
                         }
-                    } else if (!item.getStack().getDisplayName().toLowerCase().contains(query)) {
+                    } else if (!item.getDisplayName().toLowerCase().contains(query)) {
                         t.remove();
                     }
                 }
@@ -269,14 +264,10 @@ public class GuiGrid extends GuiBase {
         for (int i = 0; i < 9 * getVisibleRows(); ++i) {
             if (inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isConnected()) {
                 this.slotNumber = slot;
-
-                if (slot < items.size()) {
-                    slotId = items.get(slot).getId();
-                }
             }
 
             if (slot < items.size()) {
-                ItemStack stack = items.get(slot).getStack();
+                ItemStack stack = items.get(slot);
 
                 drawItem(x, y, stack, true, formatQuantity(stack.stackSize, slot));
             }
@@ -306,7 +297,7 @@ public class GuiGrid extends GuiBase {
         }
 
         if (isOverSlotWithItem()) {
-            drawTooltip(mouseX, mouseY, items.get(slotNumber).getStack());
+            drawTooltip(mouseX, mouseY, items.get(slotNumber));
         }
 
         if (isOverClear(mouseX, mouseY)) {
@@ -362,12 +353,12 @@ public class GuiGrid extends GuiBase {
             }
 
             if (isOverSlotArea(mouseX - guiLeft, mouseY - guiTop) && container.getPlayer().inventory.getItemStack() != null && (clickedButton == 0 || clickedButton == 1)) {
-                grid.onHeldItemPush(clickedButton == 1);
+                RefinedStorage.NETWORK.sendToServer(new MessageGridHeldPush(clickedButton == 1));
             }
 
             if (isOverSlotWithItem() && container.getPlayer().inventory.getItemStack() == null) {
-                if (items.get(slotNumber).getStack().stackSize == 0 || (GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown())) {
-                    FMLCommonHandler.instance().showGuiScreen(new GuiCraftingSettings(this, slotId));
+                if (items.get(slotNumber).stackSize == 0 || (GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown())) {
+                    FMLCommonHandler.instance().showGuiScreen(new GuiCraftingSettings(this, items.get(slotNumber)));
                 } else {
                     int flags = 0;
 
@@ -383,7 +374,7 @@ public class GuiGrid extends GuiBase {
                         flags |= GridPullFlags.PULL_ONE;
                     }
 
-                    grid.onItemPull(slotId, flags);
+                    RefinedStorage.NETWORK.sendToServer(new MessageGridPull(items.get(slotNumber), flags));
                 }
             }
         }

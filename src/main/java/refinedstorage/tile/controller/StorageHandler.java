@@ -19,16 +19,10 @@ public class StorageHandler {
         this.network = network;
     }
 
-    public void onPull(int id, int flags, EntityPlayerMP player) {
+    public void onPull(ItemStack stack, int flags, EntityPlayerMP player) {
         if (player.inventory.getItemStack() != null) {
             return;
         }
-
-        if (id < 0 || id > network.getItems().size() - 1) {
-            return;
-        }
-
-        ItemStack stack = network.getItems().get(id);
 
         int size = 64;
 
@@ -62,15 +56,19 @@ public class StorageHandler {
         }
     }
 
-    public void onHeldItemPush(boolean one, EntityPlayerMP player) {
+    public ItemStack onPush(ItemStack stack) {
+        return network.push(stack, stack.stackSize, false);
+    }
+
+    public void onHeldItemPush(boolean single, EntityPlayerMP player) {
         if (player.inventory.getItemStack() == null) {
             return;
         }
 
         ItemStack stack = player.inventory.getItemStack();
-        int size = one ? 1 : stack.stackSize;
+        int size = single ? 1 : stack.stackSize;
 
-        if (one) {
+        if (single) {
             if (network.push(stack, size, true) == null) {
                 network.push(stack, size, false);
 
@@ -89,30 +87,30 @@ public class StorageHandler {
         network.getWirelessGridHandler().drainEnergy(player, ItemWirelessGrid.USAGE_PUSH);
     }
 
-    public void onCraftingRequested(int id, int quantity) {
-        if (id >= 0 && id < network.getItems().size() && quantity > 0 && quantity <= MAX_CRAFTING_PER_REQUEST) {
-            ItemStack requested = network.getItems().get(id);
+    public void onCraftingRequested(ItemStack stack, int quantity) {
+        if (quantity <= 0 || quantity > MAX_CRAFTING_PER_REQUEST) {
+            return;
+        }
 
-            int quantityPerRequest = 0;
+        int quantityPerRequest = 0;
 
-            CraftingPattern pattern = network.getPatternWithBestScore(requested);
+        CraftingPattern pattern = network.getPatternWithBestScore(stack);
 
-            if (pattern != null) {
-                for (ItemStack output : pattern.getOutputs()) {
-                    if (RefinedStorageUtils.compareStackNoQuantity(requested, output)) {
-                        quantityPerRequest += output.stackSize;
+        if (pattern != null) {
+            for (ItemStack output : pattern.getOutputs()) {
+                if (RefinedStorageUtils.compareStackNoQuantity(stack, output)) {
+                    quantityPerRequest += output.stackSize;
 
-                        if (!pattern.isProcessing()) {
-                            break;
-                        }
+                    if (!pattern.isProcessing()) {
+                        break;
                     }
                 }
+            }
 
-                while (quantity > 0) {
-                    network.addCraftingTaskAsLast(network.createCraftingTask(pattern));
+            while (quantity > 0) {
+                network.addCraftingTaskAsLast(network.createCraftingTask(pattern));
 
-                    quantity -= quantityPerRequest;
-                }
+                quantity -= quantityPerRequest;
             }
         }
     }

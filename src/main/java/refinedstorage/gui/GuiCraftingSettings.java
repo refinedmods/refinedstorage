@@ -3,9 +3,12 @@ package refinedstorage.gui;
 import com.google.common.primitives.Ints;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import org.lwjgl.input.Keyboard;
+import refinedstorage.RefinedStorage;
 import refinedstorage.container.ContainerDummy;
+import refinedstorage.network.MessageGridCraftingStart;
 import refinedstorage.tile.controller.StorageHandler;
 
 import java.io.IOException;
@@ -13,14 +16,14 @@ import java.io.IOException;
 public class GuiCraftingSettings extends GuiBase {
     private GuiTextField amountField;
     private GuiGrid gridGui;
-    private int id;
+    private ItemStack stack;
     private GuiButton startButton;
 
-    public GuiCraftingSettings(GuiGrid gridGui, int id) {
+    public GuiCraftingSettings(GuiGrid gridGui, ItemStack stack) {
         super(new ContainerDummy(), 143, 61);
 
         this.gridGui = gridGui;
-        this.id = id;
+        this.stack = stack;
     }
 
     @Override
@@ -82,7 +85,7 @@ public class GuiCraftingSettings extends GuiBase {
         Integer quantity = Ints.tryParse(amountField.getText());
 
         if (quantity != null && quantity > 0 && quantity <= StorageHandler.MAX_CRAFTING_PER_REQUEST) {
-            gridGui.getGrid().onCraftingRequested(id, quantity);
+            RefinedStorage.NETWORK.sendToServer(new MessageGridCraftingStart(stack, quantity));
 
             close();
         }

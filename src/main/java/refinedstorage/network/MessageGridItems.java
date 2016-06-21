@@ -10,14 +10,13 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import refinedstorage.api.network.NetworkMaster;
 import refinedstorage.container.ContainerGrid;
-import refinedstorage.tile.ClientItem;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MessageGridItems implements IMessage, IMessageHandler<MessageGridItems, IMessage> {
     private NetworkMaster network;
-    private List<ClientItem> items = new ArrayList<ClientItem>();
+    private List<ItemStack> items = new ArrayList<ItemStack>();
 
     public MessageGridItems() {
     }
@@ -36,7 +35,7 @@ public class MessageGridItems implements IMessage, IMessageHandler<MessageGridIt
             ItemStack stack = ByteBufUtils.readItemStack(buf);
             stack.stackSize = size;
 
-            this.items.add(new ClientItem(i, stack));
+            this.items.add(stack);
         }
     }
 
