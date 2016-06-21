@@ -358,7 +358,7 @@ public class GuiGrid extends GuiBase {
 
             if (isOverSlotWithItem() && container.getPlayer().inventory.getItemStack() == null) {
                 if (items.get(slotNumber).stackSize == 0 || (GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown())) {
-                    FMLCommonHandler.instance().showGuiScreen(new GuiCraftingSettings(this, items.get(slotNumber)));
+                    FMLCommonHandler.instance().showGuiScreen(new GuiCraftingSettings(this, container.getPlayer(), items.get(slotNumber)));
                 } else {
                     int flags = 0;
 

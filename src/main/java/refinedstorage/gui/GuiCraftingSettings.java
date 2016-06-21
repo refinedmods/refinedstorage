@@ -3,40 +3,59 @@ package refinedstorage.gui;
 import com.google.common.primitives.Ints;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import org.lwjgl.input.Keyboard;
 import refinedstorage.RefinedStorage;
-import refinedstorage.container.ContainerDummy;
+import refinedstorage.container.ContainerCraftingSettings;
 import refinedstorage.network.MessageGridCraftingStart;
 import refinedstorage.tile.controller.StorageHandler;
 
 import java.io.IOException;
 
 public class GuiCraftingSettings extends GuiBase {
+    public static final int DEFAULT_AMOUNT = 1;
+
     private GuiTextField amountField;
-    private GuiGrid gridGui;
+    private GuiGrid gui;
     private ItemStack stack;
     private GuiButton startButton;
+    private GuiButton cancelButton;
+    private GuiButton[] incrementButtons = new GuiButton[6];
 
-    public GuiCraftingSettings(GuiGrid gridGui, ItemStack stack) {
-        super(new ContainerDummy(), 143, 61);
+    public GuiCraftingSettings(GuiGrid gui, EntityPlayer player, ItemStack stack) {
+        super(new ContainerCraftingSettings(player, stack), 170, 99);
 
-        this.gridGui = gridGui;
+        this.gui = gui;
         this.stack = stack;
     }
 
     @Override
     public void init(int x, int y) {
-        startButton = addButton(x + 48, y + 35, 50, 20, t("misc.refinedstorage:start"));
+        startButton = addButton(x + 114, y + 33, 50, 20, t("misc.refinedstorage:start"));
+        cancelButton = addButton(x + 114, y + 57, 50, 20, t("gui.cancel"));
 
-        amountField = new GuiTextField(0, fontRendererObj, x + 39 + 1, y + 21 + 1, 69 - 6, fontRendererObj.FONT_HEIGHT);
+        amountField = new GuiTextField(0, fontRendererObj, x + 7 + 1, y + 50 + 1, 69 - 6, fontRendererObj.FONT_HEIGHT);
         amountField.setEnableBackgroundDrawing(false);
         amountField.setVisible(true);
-        amountField.setText("1");
+        amountField.setText(String.valueOf(DEFAULT_AMOUNT));
         amountField.setTextColor(16777215);
         amountField.setCanLoseFocus(false);
         amountField.setFocused(true);
+
+        int[] increments = new int[]{
+            1, 10, 64,
+            -1, -10, -64
+        };
+
+        for (int i = 0; i < 3; ++i) {
+            incrementButtons[i] = addButton(x + 6 + (i * (30 + 3)), y + 20, 30, 20, "+" + increments[i]);
+        }
+
+        for (int i = 0; i < 3; ++i) {
+            incrementButtons[3 + i] = addButton(x + 6 + (i * (30 + 3)), y + 72, 30, 20, String.valueOf(increments[3 + i]));
+        }
     }
 
     @Override
@@ -54,7 +73,7 @@ public class GuiCraftingSettings extends GuiBase {
 
     @Override
     public void drawForeground(int mouseX, int mouseY) {
-        drawString((width - fontRendererObj.getStringWidth(t("container.crafting"))) / 2, 8, t("container.crafting"));
+        drawString(7, 7, t("container.crafting"));
     }
 
     @Override
@@ -78,6 +97,26 @@ public class GuiCraftingSettings extends GuiBase {
 
         if (button.id == startButton.id) {
             startRequest();
+        } else if (button.id == cancelButton.id) {
+            close();
+        } else {
+            for (GuiButton incrementButton : incrementButtons) {
+                if (incrementButton.id == button.id) {
+                    Integer oldAmount = Ints.tryParse(amountField.getText());
+
+                    if (oldAmount == null) {
+                        oldAmount = 0;
+                    }
+
+                    int newAmount = Integer.parseInt(incrementButton.displayString);
+
+                    newAmount = Math.min(Math.max(DEFAULT_AMOUNT, oldAmount + newAmount), StorageHandler.MAX_CRAFTING_PER_REQUEST);
+
+                    amountField.setText(String.valueOf(newAmount));
+
+                    break;
+                }
+            }
         }
     }
 
@@ -92,6 +131,6 @@ public class GuiCraftingSettings extends GuiBase {
     }
 
     private void close() {
-        FMLClientHandler.instance().showGuiScreen(gridGui);
+        FMLClientHandler.instance().showGuiScreen(gui);
     }
 }

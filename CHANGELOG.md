@@ -10,6 +10,9 @@ When updating to this version, you'll have to break and replace your controller.
 - Fixed wrong item getting crafted
 - Rewrote storage networks: they are now saved to disk, so big systems won't lag when rejoining a chunk
 
+**Features**
+- New crafting settings gui
+
 ### 0.7.16
 **Features**
 - Added support for Storage Drawers void upgrade
