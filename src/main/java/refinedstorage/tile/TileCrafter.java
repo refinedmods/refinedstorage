@@ -79,7 +79,7 @@ public class TileCrafter extends TileSlave implements ICraftingPatternContainer 
     }
 
     @Override
-    public IItemHandler getConnectedInventory() {
+    public IItemHandler getConnectedItems() {
         return RefinedStorageUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
     }
 

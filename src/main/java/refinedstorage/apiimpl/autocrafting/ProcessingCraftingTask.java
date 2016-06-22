@@ -47,15 +47,15 @@ public class ProcessingCraftingTask implements ICraftingTask {
 
         ICraftingPatternContainer container = pattern.getContainer(network.getWorld());
 
-        if (container.getConnectedInventory() != null) {
+        if (container.getConnectedItems() != null) {
             for (int i = 0; i < inserted.length; ++i) {
                 if (!inserted[i]) {
                     ItemStack input = pattern.getInputs()[i];
                     ItemStack took = network.take(input, 1);
 
                     if (took != null) {
-                        if (ItemHandlerHelper.insertItem(container.getConnectedInventory(), took, true) == null) {
-                            ItemHandlerHelper.insertItem(container.getConnectedInventory(), took, false);
+                        if (ItemHandlerHelper.insertItem(container.getConnectedItems(), took, true) == null) {
+                            ItemHandlerHelper.insertItem(container.getConnectedItems(), took, false);
 
                             inserted[i] = true;
                         } else {
