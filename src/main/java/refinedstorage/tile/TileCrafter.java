@@ -11,7 +11,8 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
-import refinedstorage.autocrafting.task.ICraftingTask;
+import refinedstorage.api.autocrafting.ICraftingPatternContainer;
+import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.container.ContainerCrafter;
 import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.inventory.BasicItemValidator;
@@ -19,7 +20,7 @@ import refinedstorage.inventory.IItemValidator;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.item.ItemUpgrade;
 
-public class TileCrafter extends TileSlave {
+public class TileCrafter extends TileSlave implements ICraftingPatternContainer {
     private BasicItemHandler patterns = new BasicItemHandler(9, this, new IItemValidator() {
         @Override
         public boolean valid(ItemStack stack) {
@@ -46,7 +47,7 @@ public class TileCrafter extends TileSlave {
     @Override
     public void disconnect(World world) {
         for (ICraftingTask task : network.getCraftingTasks()) {
-            if (task.getPattern().getCrafter(worldObj) == this) {
+            if (task.getPattern().getContainer(world) == this) {
                 network.cancelCraftingTask(task);
             }
         }
@@ -72,8 +73,14 @@ public class TileCrafter extends TileSlave {
         return tag;
     }
 
+    @Override
     public int getSpeed() {
         return 20 - (RefinedStorageUtils.getUpgradeCount(upgrades, ItemUpgrade.TYPE_SPEED) * 4);
+    }
+
+    @Override
+    public IItemHandler getConnectedInventory() {
+        return RefinedStorageUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
     }
 
     public IItemHandler getPatterns() {

@@ -1,8 +1,9 @@
-package refinedstorage.autocrafting;
+package refinedstorage.apiimpl.autocrafting;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.network.INetworkMaster;
 
 public class CraftingTaskScheduler {
@@ -15,7 +16,7 @@ public class CraftingTaskScheduler {
     }
 
     public void schedule(INetworkMaster network, int compare, ItemStack item) {
-        CraftingPattern pattern = network.getPatternWithBestScore(item, compare);
+        ICraftingPattern pattern = network.getPatternWithBestScore(item, compare);
 
         if (pattern != null) {
             scheduledItem = item;

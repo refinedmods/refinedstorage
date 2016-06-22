@@ -6,18 +6,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import refinedstorage.autocrafting.CraftingPattern;
-import refinedstorage.autocrafting.task.ICraftingTask;
-import refinedstorage.tile.config.RedstoneMode;
+import refinedstorage.api.autocrafting.ICraftingPattern;
+import refinedstorage.api.autocrafting.ICraftingTask;
 
 import java.util.Iterator;
 import java.util.List;
 
 public interface INetworkMaster {
-    RedstoneMode getRedstoneMode();
-
-    void setRedstoneMode(RedstoneMode mode);
-
     World getWorld();
 
     void setWorld(World world);
@@ -50,17 +45,17 @@ public interface INetworkMaster {
 
     void addCraftingTaskAsLast(ICraftingTask task);
 
-    ICraftingTask createCraftingTask(CraftingPattern pattern);
+    ICraftingTask createCraftingTask(ICraftingPattern pattern);
 
     void cancelCraftingTask(ICraftingTask task);
 
-    List<CraftingPattern> getPatterns();
+    List<ICraftingPattern> getPatterns();
 
-    List<CraftingPattern> getPattern(ItemStack pattern, int flags);
+    List<ICraftingPattern> getPattern(ItemStack pattern, int flags);
 
-    CraftingPattern getPatternWithBestScore(ItemStack pattern);
+    ICraftingPattern getPatternWithBestScore(ItemStack pattern);
 
-    CraftingPattern getPatternWithBestScore(ItemStack pattern, int flags);
+    ICraftingPattern getPatternWithBestScore(ItemStack pattern, int flags);
 
     void updateItemsWithClient();
 

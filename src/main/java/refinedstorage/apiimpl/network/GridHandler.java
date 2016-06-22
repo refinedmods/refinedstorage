@@ -4,9 +4,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.autocrafting.ICraftingPattern;
+import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.IGridHandler;
-import refinedstorage.autocrafting.CraftingPattern;
-import refinedstorage.autocrafting.task.ICraftingTask;
 import refinedstorage.item.ItemWirelessGrid;
 import refinedstorage.network.GridPullFlags;
 
@@ -98,7 +98,7 @@ public class GridHandler implements IGridHandler {
 
         int quantityPerRequest = 0;
 
-        CraftingPattern pattern = network.getPatternWithBestScore(stack);
+        ICraftingPattern pattern = network.getPatternWithBestScore(stack);
 
         if (pattern != null) {
             for (ItemStack output : pattern.getOutputs()) {

@@ -1,12 +1,13 @@
-package refinedstorage.autocrafting.task;
+package refinedstorage.apiimpl.autocrafting;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants;
 import refinedstorage.RefinedStorageUtils;
-import refinedstorage.apiimpl.network.NetworkMaster;
-import refinedstorage.autocrafting.CraftingPattern;
+import refinedstorage.api.autocrafting.ICraftingPattern;
+import refinedstorage.api.autocrafting.ICraftingTask;
+import refinedstorage.api.network.INetworkMaster;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,21 +20,21 @@ public class BasicCraftingTask implements ICraftingTask {
     public static final String NBT_CHILD_TASKS = "ChildTasks";
     public static final String NBT_TOOK = "Took";
 
-    private CraftingPattern pattern;
+    private ICraftingPattern pattern;
     private boolean satisfied[];
     private boolean checked[];
     private boolean childTasks[];
     private List<ItemStack> itemsTook = new ArrayList<ItemStack>();
     private boolean updatedOnce;
 
-    public BasicCraftingTask(CraftingPattern pattern) {
+    public BasicCraftingTask(ICraftingPattern pattern) {
         this.pattern = pattern;
         this.satisfied = new boolean[pattern.getInputs().length];
         this.checked = new boolean[pattern.getInputs().length];
         this.childTasks = new boolean[pattern.getInputs().length];
     }
 
-    public BasicCraftingTask(NBTTagCompound tag, CraftingPattern pattern) {
+    public BasicCraftingTask(NBTTagCompound tag, ICraftingPattern pattern) {
         this.pattern = pattern;
         this.satisfied = RefinedStorageUtils.readBooleanArray(tag, NBT_SATISFIED);
         this.checked = RefinedStorageUtils.readBooleanArray(tag, NBT_CHECKED);
@@ -46,11 +47,13 @@ public class BasicCraftingTask implements ICraftingTask {
         }
     }
 
-    public CraftingPattern getPattern() {
+    @Override
+    public ICraftingPattern getPattern() {
         return pattern;
     }
 
-    public boolean update(NetworkMaster network) {
+    @Override
+    public boolean update(INetworkMaster network) {
         this.updatedOnce = true;
 
         boolean done = true;
@@ -70,7 +73,7 @@ public class BasicCraftingTask implements ICraftingTask {
 
                     satisfied[i] = true;
                 } else if (!childTasks[i]) {
-                    CraftingPattern pattern = network.getPatternWithBestScore(input);
+                    ICraftingPattern pattern = network.getPatternWithBestScore(input);
 
                     if (pattern != null) {
                         network.addCraftingTask(network.createCraftingTask(pattern));
@@ -90,7 +93,7 @@ public class BasicCraftingTask implements ICraftingTask {
 
     // @todo: handle no space
     @Override
-    public void onDone(NetworkMaster network) {
+    public void onDone(INetworkMaster network) {
         for (ItemStack output : pattern.getOutputs()) {
             network.push(output, output.stackSize, false);
         }
@@ -104,7 +107,7 @@ public class BasicCraftingTask implements ICraftingTask {
 
     // @todo: handle no space
     @Override
-    public void onCancelled(NetworkMaster network) {
+    public void onCancelled(INetworkMaster network) {
         for (ItemStack took : itemsTook) {
             network.push(took, took.stackSize, false);
         }

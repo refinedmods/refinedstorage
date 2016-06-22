@@ -1,4 +1,4 @@
-package refinedstorage.api.storage;
+package refinedstorage.apiimpl.storage;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -7,6 +7,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.storage.IStorage;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;

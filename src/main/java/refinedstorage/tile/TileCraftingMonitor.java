@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import refinedstorage.autocrafting.task.ICraftingTask;
+import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.container.ContainerCraftingMonitor;
 
 import java.util.ArrayList;

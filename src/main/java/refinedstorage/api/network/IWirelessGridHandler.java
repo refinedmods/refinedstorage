@@ -10,6 +10,10 @@ public interface IWirelessGridHandler {
 
     void onClose(EntityPlayer player);
 
+    void setRange(int range);
+
+    int getRange();
+
     void drainEnergy(EntityPlayer player, int energy);
 
     WirelessGridConsumer getConsumer(EntityPlayer player);

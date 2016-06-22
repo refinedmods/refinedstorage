@@ -88,13 +88,13 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
     @Override
     public RedstoneMode getRedstoneMode() {
-        return worldObj.isRemote ? redstoneMode : (getNetwork() != null ? getNetwork().getRedstoneMode() : RedstoneMode.IGNORE);
+        return worldObj.isRemote ? redstoneMode : (getNetwork() != null ? ((NetworkMaster) getNetwork()).getRedstoneMode() : RedstoneMode.IGNORE);
     }
 
     @Override
     public void setRedstoneMode(RedstoneMode mode) {
         if (getNetwork() != null) {
-            getNetwork().setRedstoneMode(mode);
+            ((NetworkMaster) getNetwork()).setRedstoneMode(mode);
         }
     }
 
@@ -146,7 +146,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
         buf.writeInt(getNetwork() != null ? getNetwork().getEnergy().getEnergyStored() : 0);
         buf.writeInt(getNetwork() != null ? getNetwork().getEnergyUsage() : 0);
 
-        buf.writeInt(getNetwork() != null ? getNetwork().getRedstoneMode().id : RedstoneMode.IGNORE.id);
+        buf.writeInt(getNetwork() != null ? ((NetworkMaster) getNetwork()).getRedstoneMode().id : RedstoneMode.IGNORE.id);
 
         if (getNetwork() != null) {
             List<ClientSlave> clientSlaves = new ArrayList<ClientSlave>();

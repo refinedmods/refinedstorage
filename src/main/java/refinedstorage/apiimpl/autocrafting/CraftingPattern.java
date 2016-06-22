@@ -1,4 +1,4 @@
-package refinedstorage.autocrafting;
+package refinedstorage.apiimpl.autocrafting;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -6,10 +6,12 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+import refinedstorage.api.autocrafting.ICraftingPattern;
+import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.tile.TileCrafter;
 
-public class CraftingPattern {
+public class CraftingPattern implements ICraftingPattern {
     public static final String NBT = "Pattern";
     public static final String NBT_CRAFTER_X = "CrafterX";
     public static final String NBT_CRAFTER_Y = "CrafterY";
@@ -34,7 +36,8 @@ public class CraftingPattern {
         this.byproducts = byproducts;
     }
 
-    public TileCrafter getCrafter(World world) {
+    @Override
+    public ICraftingPatternContainer getContainer(World world) {
         if (crafter == null) {
             crafter = (TileCrafter) world.getTileEntity(new BlockPos(crafterX, crafterY, crafterZ));
         }
@@ -42,23 +45,27 @@ public class CraftingPattern {
         return crafter;
     }
 
+    @Override
     public boolean isProcessing() {
         return processing;
     }
 
+    @Override
     public ItemStack[] getInputs() {
         return inputs;
     }
 
+    @Override
     public ItemStack[] getOutputs() {
         return outputs;
     }
 
+    @Override
     public ItemStack[] getByproducts() {
         return byproducts;
     }
 
-    public void writeToNBT(NBTTagCompound tag) {
+    public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         tag.setBoolean(ItemPattern.NBT_PROCESSING, processing);
 
         NBTTagList inputsTag = new NBTTagList();
@@ -84,6 +91,8 @@ public class CraftingPattern {
         tag.setInteger(NBT_CRAFTER_X, crafter.getPos().getX());
         tag.setInteger(NBT_CRAFTER_Y, crafter.getPos().getY());
         tag.setInteger(NBT_CRAFTER_Z, crafter.getPos().getZ());
+
+        return tag;
     }
 
     public static CraftingPattern readFromNBT(NBTTagCompound tag) {

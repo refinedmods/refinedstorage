@@ -11,7 +11,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageItems;
-import refinedstorage.api.storage.NBTStorage;
+import refinedstorage.apiimpl.storage.NBTStorage;
 import refinedstorage.block.EnumStorageType;
 import refinedstorage.tile.TileStorage;
 

@@ -14,6 +14,8 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.RefinedStorageCapabilities;
+import refinedstorage.api.autocrafting.ICraftingPattern;
+import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.IGridHandler;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.INetworkSlave;
@@ -21,10 +23,9 @@ import refinedstorage.api.network.IWirelessGridHandler;
 import refinedstorage.api.storage.CompareFlags;
 import refinedstorage.api.storage.IStorage;
 import refinedstorage.api.storage.IStorageProvider;
-import refinedstorage.autocrafting.CraftingPattern;
-import refinedstorage.autocrafting.task.BasicCraftingTask;
-import refinedstorage.autocrafting.task.ICraftingTask;
-import refinedstorage.autocrafting.task.ProcessingCraftingTask;
+import refinedstorage.apiimpl.autocrafting.BasicCraftingTask;
+import refinedstorage.apiimpl.autocrafting.CraftingPattern;
+import refinedstorage.apiimpl.autocrafting.ProcessingCraftingTask;
 import refinedstorage.block.BlockController;
 import refinedstorage.block.EnumControllerType;
 import refinedstorage.container.ContainerGrid;
@@ -62,7 +63,7 @@ public class NetworkMaster implements INetworkMaster {
     private List<BlockPos> slavesToLoad = new ArrayList<BlockPos>();
     private List<BlockPos> slavesToRemove = new ArrayList<BlockPos>();
 
-    private List<CraftingPattern> patterns = new ArrayList<CraftingPattern>();
+    private List<ICraftingPattern> patterns = new ArrayList<ICraftingPattern>();
 
     private Stack<ICraftingTask> craftingTasks = new Stack<ICraftingTask>();
     private List<ICraftingTask> craftingTasksToAddAsLast = new ArrayList<ICraftingTask>();
@@ -72,7 +73,6 @@ public class NetworkMaster implements INetworkMaster {
     private EnergyStorage energy = new EnergyStorage(ENERGY_CAPACITY);
     private int energyUsage;
 
-    private int wirelessGridRange;
     private boolean couldRun;
     private long lastEnergyUpdate;
 
@@ -105,22 +105,27 @@ public class NetworkMaster implements INetworkMaster {
         markDirty();
     }
 
+    @Override
     public EnergyStorage getEnergy() {
         return energy;
     }
 
+    @Override
     public int getEnergyUsage() {
         return energyUsage;
     }
 
+    @Override
     public BlockPos getPosition() {
         return pos;
     }
 
+    @Override
     public World getWorld() {
         return world;
     }
 
+    @Override
     public void setWorld(World world) {
         this.world = world;
         this.type = (EnumControllerType) world.getBlockState(pos).getValue(BlockController.TYPE);
@@ -138,10 +143,12 @@ public class NetworkMaster implements INetworkMaster {
         this.slavesToLoad.clear();
     }
 
+    @Override
     public boolean canRun() {
         return energy.getEnergyStored() > 0 && energy.getEnergyStored() >= energyUsage && redstoneMode.isEnabled(world, pos);
     }
 
+    @Override
     public void update() {
         for (BlockPos slave : slavesToAdd) {
             if (!slaves.contains(slave)) {
@@ -199,7 +206,7 @@ public class NetworkMaster implements INetworkMaster {
             if (!craftingTasks.empty()) {
                 ICraftingTask top = craftingTasks.peek();
 
-                if (ticks % top.getPattern().getCrafter(world).getSpeed() == 0 && top.update(this)) {
+                if (ticks % top.getPattern().getContainer(world).getSpeed() == 0 && top.update(this)) {
                     top.onDone(this);
 
                     craftingTasks.pop();
@@ -241,6 +248,7 @@ public class NetworkMaster implements INetworkMaster {
         ticks++;
     }
 
+    @Override
     public Iterator<INetworkSlave> getSlaves() {
         return new Iterator<INetworkSlave>() {
             private int index;
@@ -262,18 +270,21 @@ public class NetworkMaster implements INetworkMaster {
         };
     }
 
+    @Override
     public void addSlave(BlockPos slave) {
         slavesToAdd.add(slave);
 
         markDirty();
     }
 
+    @Override
     public void removeSlave(BlockPos slave) {
         slavesToRemove.add(slave);
 
         markDirty();
     }
 
+    @Override
     public IGridHandler getGridHandler() {
         return gridHandler;
     }
@@ -281,10 +292,6 @@ public class NetworkMaster implements INetworkMaster {
     @Override
     public IWirelessGridHandler getWirelessGridHandler() {
         return wirelessGridHandler;
-    }
-
-    public int getWirelessGridRange() {
-        return wirelessGridRange;
     }
 
     public void disconnectAll() {
@@ -297,27 +304,32 @@ public class NetworkMaster implements INetworkMaster {
         this.slaves.clear();
     }
 
+    @Override
     public List<ItemStack> getItems() {
         return items;
     }
 
+    @Override
     public List<ICraftingTask> getCraftingTasks() {
         return craftingTasks;
     }
 
+    @Override
     public void addCraftingTask(ICraftingTask task) {
         craftingTasksToAdd.add(task);
 
         markDirty();
     }
 
+    @Override
     public void addCraftingTaskAsLast(ICraftingTask task) {
         craftingTasksToAddAsLast.add(task);
 
         markDirty();
     }
 
-    public ICraftingTask createCraftingTask(CraftingPattern pattern) {
+    @Override
+    public ICraftingTask createCraftingTask(ICraftingPattern pattern) {
         if (pattern.isProcessing()) {
             return new ProcessingCraftingTask(pattern);
         } else {
@@ -325,20 +337,23 @@ public class NetworkMaster implements INetworkMaster {
         }
     }
 
+    @Override
     public void cancelCraftingTask(ICraftingTask task) {
         craftingTasksToCancel.add(task);
 
         markDirty();
     }
 
-    public List<CraftingPattern> getPatterns() {
+    @Override
+    public List<ICraftingPattern> getPatterns() {
         return patterns;
     }
 
-    public List<CraftingPattern> getPattern(ItemStack pattern, int flags) {
-        List<CraftingPattern> patterns = new ArrayList<CraftingPattern>();
+    @Override
+    public List<ICraftingPattern> getPattern(ItemStack pattern, int flags) {
+        List<ICraftingPattern> patterns = new ArrayList<ICraftingPattern>();
 
-        for (CraftingPattern craftingPattern : getPatterns()) {
+        for (ICraftingPattern craftingPattern : getPatterns()) {
             for (ItemStack output : craftingPattern.getOutputs()) {
                 if (RefinedStorageUtils.compareStack(output, pattern, flags)) {
                     patterns.add(craftingPattern);
@@ -349,12 +364,14 @@ public class NetworkMaster implements INetworkMaster {
         return patterns;
     }
 
-    public CraftingPattern getPatternWithBestScore(ItemStack pattern) {
+    @Override
+    public ICraftingPattern getPatternWithBestScore(ItemStack pattern) {
         return getPatternWithBestScore(pattern, CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_NBT);
     }
 
-    public CraftingPattern getPatternWithBestScore(ItemStack pattern, int flags) {
-        List<CraftingPattern> patterns = getPattern(pattern, flags);
+    @Override
+    public ICraftingPattern getPatternWithBestScore(ItemStack pattern, int flags) {
+        List<ICraftingPattern> patterns = getPattern(pattern, flags);
 
         if (patterns.isEmpty()) {
             return null;
@@ -384,10 +401,11 @@ public class NetworkMaster implements INetworkMaster {
     }
 
     private void updateSlaves() {
-        this.wirelessGridRange = 0;
         this.energyUsage = 0;
         this.storages.clear();
         this.patterns.clear();
+
+        int range = 0;
 
         Iterator<INetworkSlave> slaves = getSlaves();
         while (slaves.hasNext()) {
@@ -398,7 +416,7 @@ public class NetworkMaster implements INetworkMaster {
             }
 
             if (slave instanceof TileWirelessTransmitter) {
-                this.wirelessGridRange += ((TileWirelessTransmitter) slave).getRange();
+                range += ((TileWirelessTransmitter) slave).getRange();
             }
 
             if (slave instanceof IStorageProvider) {
@@ -419,6 +437,8 @@ public class NetworkMaster implements INetworkMaster {
 
             this.energyUsage += slave.getEnergyUsage();
         }
+
+        wirelessGridHandler.setRange(range);
 
         Collections.sort(storages, new Comparator<IStorage>() {
             @Override
@@ -456,7 +476,7 @@ public class NetworkMaster implements INetworkMaster {
             storage.addItems(items);
         }
 
-        for (CraftingPattern pattern : patterns) {
+        for (ICraftingPattern pattern : patterns) {
             for (ItemStack output : pattern.getOutputs()) {
                 ItemStack patternStack = output.copy();
                 patternStack.stackSize = 0;
@@ -497,6 +517,7 @@ public class NetworkMaster implements INetworkMaster {
         items.removeAll(combinedItems);
     }
 
+    @Override
     public void updateItemsWithClient() {
         for (EntityPlayer player : world.playerEntities) {
             if (player.openContainer.getClass() == ContainerGrid.class && pos.equals(((ContainerGrid) player.openContainer).getGrid().getNetworkPosition())) {
@@ -505,10 +526,12 @@ public class NetworkMaster implements INetworkMaster {
         }
     }
 
+    @Override
     public void updateItemsWithClient(EntityPlayerMP player) {
         RefinedStorage.NETWORK.sendTo(new MessageGridItems(this), player);
     }
 
+    @Override
     public ItemStack push(ItemStack stack, int size, boolean simulate) {
         if (stack == null || stack.getItem() == null) {
             return null;
@@ -552,10 +575,12 @@ public class NetworkMaster implements INetworkMaster {
         return remainder;
     }
 
+    @Override
     public ItemStack take(ItemStack stack, int size) {
         return take(stack, size, CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_NBT);
     }
 
+    @Override
     public ItemStack take(ItemStack stack, int size, int flags) {
         int requested = size;
         int received = 0;
@@ -588,6 +613,7 @@ public class NetworkMaster implements INetworkMaster {
         return newStack;
     }
 
+    @Override
     public ItemStack getItem(ItemStack stack, int flags) {
         for (ItemStack otherStack : items) {
             if (RefinedStorageUtils.compareStack(otherStack, stack, flags)) {
@@ -598,6 +624,7 @@ public class NetworkMaster implements INetworkMaster {
         return null;
     }
 
+    @Override
     public void readFromNBT(NBTTagCompound tag) {
         energy.readFromNBT(tag);
 
@@ -637,6 +664,7 @@ public class NetworkMaster implements INetworkMaster {
         }
     }
 
+    @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         energy.writeToNBT(tag);
 

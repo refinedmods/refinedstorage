@@ -8,7 +8,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageItems;
-import refinedstorage.api.storage.NBTStorage;
+import refinedstorage.apiimpl.storage.NBTStorage;
 import refinedstorage.tile.TileStorage;
 
 @JEIPlugin

@@ -11,7 +11,7 @@ import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.storage.IStorage;
 import refinedstorage.api.storage.IStorageProvider;
-import refinedstorage.api.storage.NBTStorage;
+import refinedstorage.apiimpl.storage.NBTStorage;
 import refinedstorage.block.BlockStorage;
 import refinedstorage.block.EnumStorageType;
 import refinedstorage.container.ContainerStorage;

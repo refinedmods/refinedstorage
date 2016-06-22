@@ -19,6 +19,8 @@ import java.util.List;
 public class WirelessGridHandler implements IWirelessGridHandler {
     private NetworkMaster network;
 
+    private int range;
+
     private List<WirelessGridConsumer> consumers = new ArrayList<WirelessGridConsumer>();
     private List<WirelessGridConsumer> consumersToRemove = new ArrayList<WirelessGridConsumer>();
 
@@ -46,7 +48,7 @@ public class WirelessGridHandler implements IWirelessGridHandler {
     public boolean onOpen(EntityPlayer player, EnumHand hand) {
         int distance = (int) Math.sqrt(Math.pow(network.getPosition().getX() - player.posX, 2) + Math.pow(network.getPosition().getY() - player.posY, 2) + Math.pow(network.getPosition().getZ() - player.posZ, 2));
 
-        if (distance > network.getWirelessGridRange()) {
+        if (distance > range) {
             return false;
         }
 
@@ -68,6 +70,16 @@ public class WirelessGridHandler implements IWirelessGridHandler {
         if (consumer != null) {
             consumersToRemove.add(consumer);
         }
+    }
+
+    @Override
+    public int getRange() {
+        return range;
+    }
+
+    @Override
+    public void setRange(int range) {
+        this.range = range;
     }
 
     @Override

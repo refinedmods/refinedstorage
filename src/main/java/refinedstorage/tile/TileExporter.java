@@ -11,7 +11,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
-import refinedstorage.autocrafting.CraftingTaskScheduler;
+import refinedstorage.apiimpl.autocrafting.CraftingTaskScheduler;
 import refinedstorage.container.ContainerExporter;
 import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.inventory.BasicItemValidator;

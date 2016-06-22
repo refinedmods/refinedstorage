@@ -14,7 +14,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
-import refinedstorage.autocrafting.CraftingTaskScheduler;
+import refinedstorage.apiimpl.autocrafting.CraftingTaskScheduler;
 import refinedstorage.container.ContainerConstructor;
 import refinedstorage.container.slot.SlotSpecimen;
 import refinedstorage.inventory.BasicItemHandler;
