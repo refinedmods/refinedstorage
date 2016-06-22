@@ -1,6 +1,7 @@
-package refinedstorage.api.solderer;
+package refinedstorage.apiimpl.solderer;
 
 import net.minecraft.item.ItemStack;
+import refinedstorage.api.solderer.ISoldererRecipe;
 
 import javax.annotation.Nonnull;
 

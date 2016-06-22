@@ -14,6 +14,7 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.network.IGridHandler;
 import refinedstorage.block.BlockGrid;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
@@ -23,7 +24,6 @@ import refinedstorage.item.ItemPattern;
 import refinedstorage.network.MessageGridSettingsUpdate;
 import refinedstorage.tile.TileSlave;
 import refinedstorage.tile.config.IRedstoneModeConfig;
-import refinedstorage.tile.controller.StorageHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,13 +112,13 @@ public class TileGrid extends TileSlave implements IGrid {
 
     public void onGridOpened(EntityPlayer player) {
         if (isConnected()) {
-            network.syncItemsWithClient((EntityPlayerMP) player);
+            network.updateItemsWithClient((EntityPlayerMP) player);
         }
     }
 
     @Override
-    public StorageHandler getStorageHandler() {
-        return isConnected() ? network.getStorageHandler() : null;
+    public IGridHandler getGridHandler() {
+        return isConnected() ? network.getGridHandler() : null;
     }
 
     public InventoryCrafting getMatrix() {

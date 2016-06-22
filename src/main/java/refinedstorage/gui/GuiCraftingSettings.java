@@ -8,9 +8,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import org.lwjgl.input.Keyboard;
 import refinedstorage.RefinedStorage;
+import refinedstorage.apiimpl.network.GridHandler;
 import refinedstorage.container.ContainerCraftingSettings;
 import refinedstorage.network.MessageGridCraftingStart;
-import refinedstorage.tile.controller.StorageHandler;
 
 import java.io.IOException;
 
@@ -110,7 +110,7 @@ public class GuiCraftingSettings extends GuiBase {
 
                     int newAmount = Integer.parseInt(incrementButton.displayString);
 
-                    newAmount = Math.min(Math.max(DEFAULT_AMOUNT, oldAmount + newAmount), StorageHandler.MAX_CRAFTING_PER_REQUEST);
+                    newAmount = Math.min(Math.max(DEFAULT_AMOUNT, oldAmount + newAmount), GridHandler.MAX_CRAFTING_PER_REQUEST);
 
                     amountField.setText(String.valueOf(newAmount));
 
@@ -123,7 +123,7 @@ public class GuiCraftingSettings extends GuiBase {
     private void startRequest() {
         Integer quantity = Ints.tryParse(amountField.getText());
 
-        if (quantity != null && quantity > 0 && quantity <= StorageHandler.MAX_CRAFTING_PER_REQUEST) {
+        if (quantity != null && quantity > 0 && quantity <= GridHandler.MAX_CRAFTING_PER_REQUEST) {
             RefinedStorage.NETWORK.sendToServer(new MessageGridCraftingStart(stack, quantity));
 
             close();

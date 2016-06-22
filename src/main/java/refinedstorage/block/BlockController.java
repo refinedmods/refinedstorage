@@ -21,8 +21,8 @@ import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageGui;
-import refinedstorage.api.network.NetworkMaster;
-import refinedstorage.api.network.NetworkMasterRegistry;
+import refinedstorage.apiimpl.network.NetworkMaster;
+import refinedstorage.apiimpl.network.NetworkMasterRegistry;
 import refinedstorage.item.ItemBlockController;
 import refinedstorage.tile.controller.TileController;
 
@@ -105,7 +105,7 @@ public class BlockController extends BlockBase {
                 network.getEnergy().receiveEnergy(tag.getInteger(NetworkMaster.NBT_ENERGY), false);
             }
 
-            NetworkMasterRegistry.add(network, world.provider.getDimension());
+            NetworkMasterRegistry.add(world, network);
         }
 
         super.onBlockPlacedBy(world, pos, state, player, stack);
@@ -114,7 +114,7 @@ public class BlockController extends BlockBase {
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
         if (!world.isRemote) {
-            NetworkMasterRegistry.remove(pos, world.provider.getDimension());
+            NetworkMasterRegistry.remove(world, pos);
         }
 
         super.breakBlock(world, pos, state);

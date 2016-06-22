@@ -1,24 +1,25 @@
-package refinedstorage.tile.controller;
+package refinedstorage.apiimpl.network;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import refinedstorage.RefinedStorageUtils;
-import refinedstorage.api.network.NetworkMaster;
+import refinedstorage.api.network.IGridHandler;
 import refinedstorage.autocrafting.CraftingPattern;
 import refinedstorage.autocrafting.task.ICraftingTask;
 import refinedstorage.item.ItemWirelessGrid;
 import refinedstorage.network.GridPullFlags;
 
-public class StorageHandler {
+public class GridHandler implements IGridHandler {
     public static final int MAX_CRAFTING_PER_REQUEST = 500;
 
     private NetworkMaster network;
 
-    public StorageHandler(NetworkMaster network) {
+    public GridHandler(NetworkMaster network) {
         this.network = network;
     }
 
+    @Override
     public void onPull(ItemStack stack, int flags, EntityPlayerMP player) {
         if (player.inventory.getItemStack() != null) {
             return;
@@ -56,10 +57,12 @@ public class StorageHandler {
         }
     }
 
+    @Override
     public ItemStack onPush(ItemStack stack) {
         return network.push(stack, stack.stackSize, false);
     }
 
+    @Override
     public void onHeldItemPush(boolean single, EntityPlayerMP player) {
         if (player.inventory.getItemStack() == null) {
             return;
@@ -87,6 +90,7 @@ public class StorageHandler {
         network.getWirelessGridHandler().drainEnergy(player, ItemWirelessGrid.USAGE_PUSH);
     }
 
+    @Override
     public void onCraftingRequested(ItemStack stack, int quantity) {
         if (quantity <= 0 || quantity > MAX_CRAFTING_PER_REQUEST) {
             return;
@@ -115,6 +119,7 @@ public class StorageHandler {
         }
     }
 
+    @Override
     public void onCraftingCancelRequested(int id) {
         if (id >= 0 && id < network.getCraftingTasks().size()) {
             network.cancelCraftingTask(network.getCraftingTasks().get(id));

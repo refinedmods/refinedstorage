@@ -9,9 +9,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.RefinedStorageCapabilities;
+import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.INetworkSlave;
-import refinedstorage.api.network.NetworkMaster;
-import refinedstorage.api.network.NetworkMasterRegistry;
+import refinedstorage.apiimpl.network.NetworkMasterRegistry;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
 import refinedstorage.tile.controller.TileController;
@@ -24,7 +24,7 @@ public abstract class TileSlave extends TileBase implements ISynchronizedContain
 
     protected boolean connected;
     protected RedstoneMode redstoneMode = RedstoneMode.IGNORE;
-    protected NetworkMaster network;
+    protected INetworkMaster network;
 
     private Set<String> visited = new HashSet<String>();
 
@@ -43,7 +43,7 @@ public abstract class TileSlave extends TileBase implements ISynchronizedContain
     }
 
     @Override
-    public void connect(World world, NetworkMaster network) {
+    public void connect(World world, INetworkMaster network) {
         if (network.canRun()) {
             this.network = network;
             this.connected = true;
@@ -61,7 +61,7 @@ public abstract class TileSlave extends TileBase implements ISynchronizedContain
     }
 
     @Override
-    public void forceConnect(NetworkMaster network) {
+    public void forceConnect(INetworkMaster network) {
         this.network = network;
         this.connected = true;
     }
@@ -91,7 +91,7 @@ public abstract class TileSlave extends TileBase implements ISynchronizedContain
         if (network == null) {
             if (controller != null) {
                 // For backwards compatibility
-                NetworkMaster network = NetworkMasterRegistry.get(controller.getPos(), world.provider.getDimension());
+                INetworkMaster network = NetworkMasterRegistry.get(world, controller.getPos());
 
                 if (network != null) {
                     connect(world, network);
@@ -134,7 +134,8 @@ public abstract class TileSlave extends TileBase implements ISynchronizedContain
         return null;
     }
 
-    public NetworkMaster getNetwork() {
+    @Override
+    public INetworkMaster getNetwork() {
         return network;
     }
 

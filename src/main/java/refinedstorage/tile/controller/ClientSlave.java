@@ -3,7 +3,7 @@ package refinedstorage.tile.controller;
 import net.minecraft.item.ItemStack;
 import refinedstorage.RefinedStorageUtils;
 
-public class ClientSlave {
+public final class ClientSlave {
     public ItemStack stack;
     public int amount;
     public int energyUsage;

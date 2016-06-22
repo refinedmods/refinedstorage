@@ -1,4 +1,4 @@
-package refinedstorage.tile.grid;
+package refinedstorage.api.network;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

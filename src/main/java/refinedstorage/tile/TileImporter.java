@@ -43,7 +43,6 @@ public class TileImporter extends TileSlave implements ICompareConfig, IModeConf
 
     @Override
     public void updateSlave() {
-        System.out.println("Update: " + System.currentTimeMillis());
         IItemHandler handler = RefinedStorageUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
 
         if (getFacingTile() instanceof TileDiskDrive || handler == null) {

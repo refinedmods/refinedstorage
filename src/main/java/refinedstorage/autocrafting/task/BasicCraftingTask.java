@@ -5,7 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants;
 import refinedstorage.RefinedStorageUtils;
-import refinedstorage.api.network.NetworkMaster;
+import refinedstorage.apiimpl.network.NetworkMaster;
 import refinedstorage.autocrafting.CraftingPattern;
 
 import java.util.ArrayList;

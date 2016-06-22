@@ -2,9 +2,9 @@ package refinedstorage.tile.grid;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import refinedstorage.api.network.IGridHandler;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.tile.config.IRedstoneModeConfig;
-import refinedstorage.tile.controller.StorageHandler;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public interface IGrid {
 
     BlockPos getNetworkPosition();
 
-    StorageHandler getStorageHandler();
+    IGridHandler getGridHandler();
 
     int getSortingType();
 

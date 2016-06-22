@@ -1,4 +1,4 @@
-package refinedstorage.api.network;
+package refinedstorage.apiimpl.network;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -6,6 +6,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
 import net.minecraftforge.common.util.Constants;
+import refinedstorage.api.network.INetworkMaster;
 
 import java.util.Map;
 
@@ -29,11 +30,11 @@ public class NetworkMasterSavedData extends WorldSavedData {
         for (int i = 0; i < networks.tagCount(); ++i) {
             NBTTagCompound networkTag = networks.getCompoundTagAt(i);
 
-            NetworkMaster network = new NetworkMaster(new BlockPos(networkTag.getInteger(NBT_NETWORK_X), networkTag.getInteger(NBT_NETWORK_Y), networkTag.getInteger(NBT_NETWORK_Z)));
+            INetworkMaster network = new NetworkMaster(new BlockPos(networkTag.getInteger(NBT_NETWORK_X), networkTag.getInteger(NBT_NETWORK_Y), networkTag.getInteger(NBT_NETWORK_Z)));
 
             network.readFromNBT(networkTag.getCompoundTag(NBT_NETWORK_DATA));
 
-            NetworkMasterRegistry.add(network, networkTag.getInteger(NBT_NETWORK_DIM));
+            NetworkMasterRegistry.add(networkTag.getInteger(NBT_NETWORK_DIM), network);
         }
     }
 
@@ -41,8 +42,8 @@ public class NetworkMasterSavedData extends WorldSavedData {
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         NBTTagList networks = new NBTTagList();
 
-        for (Map.Entry<Integer, Map<BlockPos, NetworkMaster>> entry : NetworkMasterRegistry.NETWORKS.entrySet()) {
-            for (NetworkMaster network : entry.getValue().values()) {
+        for (Map.Entry<Integer, Map<BlockPos, INetworkMaster>> entry : NetworkMasterRegistry.NETWORKS.entrySet()) {
+            for (INetworkMaster network : entry.getValue().values()) {
                 NBTTagCompound networkTag = new NBTTagCompound();
 
                 networkTag.setInteger(NBT_NETWORK_X, network.getPosition().getX());

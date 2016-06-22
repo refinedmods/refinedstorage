@@ -4,8 +4,8 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import refinedstorage.api.network.IGridHandler;
 import refinedstorage.container.ContainerGrid;
-import refinedstorage.tile.controller.StorageHandler;
 
 public class MessageGridHeldPush extends MessageHandlerPlayerToServer<MessageGridHeldPush> implements IMessage {
     private boolean single;
@@ -32,7 +32,7 @@ public class MessageGridHeldPush extends MessageHandlerPlayerToServer<MessageGri
         Container container = player.openContainer;
 
         if (container instanceof ContainerGrid) {
-            StorageHandler handler = ((ContainerGrid) container).getGrid().getStorageHandler();
+            IGridHandler handler = ((ContainerGrid) container).getGrid().getGridHandler();
 
             if (handler != null) {
                 handler.onHeldItemPush(message.single, player);

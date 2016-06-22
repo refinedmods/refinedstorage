@@ -9,9 +9,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import refinedstorage.RefinedStorageBlocks;
+import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.INetworkSlave;
-import refinedstorage.api.network.NetworkMaster;
-import refinedstorage.api.network.NetworkMasterRegistry;
+import refinedstorage.apiimpl.network.NetworkMaster;
+import refinedstorage.apiimpl.network.NetworkMasterRegistry;
 import refinedstorage.block.BlockController;
 import refinedstorage.block.EnumControllerType;
 import refinedstorage.container.ContainerController;
@@ -25,7 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class TileController extends TileBase implements IEnergyReceiver, ISynchronizedContainer, IRedstoneModeConfig {
-    private NetworkMaster network;
+    private INetworkMaster network;
 
     // Only used client side
     private List<ClientSlave> clientSlaves = new ArrayList<ClientSlave>();
@@ -34,9 +35,9 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
     private EnumControllerType type;
     private RedstoneMode redstoneMode;
 
-    public NetworkMaster getNetwork() {
+    public INetworkMaster getNetwork() {
         if (network == null) {
-            network = NetworkMasterRegistry.get(pos, worldObj.provider.getDimension());
+            network = NetworkMasterRegistry.get(worldObj, pos);
         }
 
         return network;

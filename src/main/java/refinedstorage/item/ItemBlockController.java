@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorageBlocks;
-import refinedstorage.api.network.NetworkMaster;
+import refinedstorage.apiimpl.network.NetworkMaster;
 import refinedstorage.block.EnumControllerType;
 
 import java.util.List;

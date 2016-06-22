@@ -6,8 +6,8 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import refinedstorage.api.network.IGridHandler;
 import refinedstorage.container.ContainerGrid;
-import refinedstorage.tile.controller.StorageHandler;
 
 public class MessageGridPull extends MessageHandlerPlayerToServer<MessageGridPull> implements IMessage {
     private ItemStack stack;
@@ -38,7 +38,7 @@ public class MessageGridPull extends MessageHandlerPlayerToServer<MessageGridPul
         Container container = player.openContainer;
 
         if (container instanceof ContainerGrid) {
-            StorageHandler handler = ((ContainerGrid) container).getGrid().getStorageHandler();
+            IGridHandler handler = ((ContainerGrid) container).getGrid().getGridHandler();
 
             if (handler != null) {
                 handler.onPull(message.stack, message.flags, player);

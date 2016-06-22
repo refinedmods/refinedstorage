@@ -1,4 +1,4 @@
-package refinedstorage.api.network;
+package refinedstorage.apiimpl.network;
 
 import cofh.api.energy.EnergyStorage;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,6 +14,10 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.RefinedStorageCapabilities;
+import refinedstorage.api.network.IGridHandler;
+import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.api.network.INetworkSlave;
+import refinedstorage.api.network.IWirelessGridHandler;
 import refinedstorage.api.storage.CompareFlags;
 import refinedstorage.api.storage.IStorage;
 import refinedstorage.api.storage.IStorageProvider;
@@ -30,12 +34,10 @@ import refinedstorage.tile.TileCable;
 import refinedstorage.tile.TileCrafter;
 import refinedstorage.tile.TileWirelessTransmitter;
 import refinedstorage.tile.config.RedstoneMode;
-import refinedstorage.tile.controller.StorageHandler;
-import refinedstorage.tile.controller.WirelessGridHandler;
 
 import java.util.*;
 
-public class NetworkMaster {
+public class NetworkMaster implements INetworkMaster {
     public static final int ENERGY_CAPACITY = 32000;
 
     public static final String NBT_CRAFTING_TASKS = "CraftingTasks";
@@ -45,7 +47,7 @@ public class NetworkMaster {
     public static final String NBT_SLAVE_Y = "Y";
     public static final String NBT_SLAVE_Z = "Z";
 
-    private StorageHandler storageHandler = new StorageHandler(this);
+    private GridHandler gridHandler = new GridHandler(this);
     private WirelessGridHandler wirelessGridHandler = new WirelessGridHandler(this);
 
     private List<ItemStack> items = new ArrayList<ItemStack>();
@@ -86,7 +88,7 @@ public class NetworkMaster {
     public NetworkMaster(BlockPos pos, World world) {
         this.pos = pos;
 
-        onAdded(world);
+        setWorld(world);
     }
 
     public NetworkMaster(BlockPos pos) {
@@ -119,6 +121,23 @@ public class NetworkMaster {
         return world;
     }
 
+    public void setWorld(World world) {
+        this.world = world;
+        this.type = (EnumControllerType) world.getBlockState(pos).getValue(BlockController.TYPE);
+
+        for (BlockPos slavePos : slavesToLoad) {
+            INetworkSlave slave = world.getTileEntity(slavePos).getCapability(RefinedStorageCapabilities.NETWORK_SLAVE_CAPABILITY, null);
+
+            slave.forceConnect(this);
+
+            if (!(slave instanceof TileCable)) {
+                slaves.add(slavePos);
+            }
+        }
+
+        this.slavesToLoad.clear();
+    }
+
     public boolean canRun() {
         return energy.getEnergyStored() > 0 && energy.getEnergyStored() >= energyUsage && redstoneMode.isEnabled(world, pos);
     }
@@ -138,7 +157,7 @@ public class NetworkMaster {
 
         if (canRun()) {
             if (ticks % 20 == 0) {
-                syncMachines();
+                updateSlaves();
             }
 
             Iterator<INetworkSlave> slaves = getSlaves();
@@ -188,7 +207,7 @@ public class NetworkMaster {
             }
         } else if (!slaves.isEmpty()) {
             disconnectAll();
-            syncMachines();
+            updateSlaves();
         }
 
         if (couldRun != canRun()) {
@@ -255,11 +274,12 @@ public class NetworkMaster {
         markDirty();
     }
 
-    public StorageHandler getStorageHandler() {
-        return storageHandler;
+    public IGridHandler getGridHandler() {
+        return gridHandler;
     }
 
-    public WirelessGridHandler getWirelessGridHandler() {
+    @Override
+    public IWirelessGridHandler getWirelessGridHandler() {
         return wirelessGridHandler;
     }
 
@@ -275,27 +295,6 @@ public class NetworkMaster {
         }
 
         this.slaves.clear();
-    }
-
-    public void onRemoved() {
-        markDirty();
-    }
-
-    public void onAdded(World world) {
-        this.world = world;
-        this.type = (EnumControllerType) world.getBlockState(pos).getValue(BlockController.TYPE);
-
-        for (BlockPos slavePos : slavesToLoad) {
-            INetworkSlave slave = world.getTileEntity(slavePos).getCapability(RefinedStorageCapabilities.NETWORK_SLAVE_CAPABILITY, null);
-
-            slave.forceConnect(this);
-
-            if (!(slave instanceof TileCable)) {
-                slaves.add(slavePos);
-            }
-        }
-
-        this.slavesToLoad.clear();
     }
 
     public List<ItemStack> getItems() {
@@ -384,7 +383,7 @@ public class NetworkMaster {
         return patterns.get(highestPattern);
     }
 
-    private void syncMachines() {
+    private void updateSlaves() {
         this.wirelessGridRange = 0;
         this.energyUsage = 0;
         this.storages.clear();
@@ -446,11 +445,11 @@ public class NetworkMaster {
             }
         });
 
-        syncItems();
-        syncItemsWithClients();
+        updateItems();
+        updateItemsWithClient();
     }
 
-    private void syncItems() {
+    private void updateItems() {
         items.clear();
 
         for (IStorage storage : storages) {
@@ -498,15 +497,15 @@ public class NetworkMaster {
         items.removeAll(combinedItems);
     }
 
-    public void syncItemsWithClients() {
+    public void updateItemsWithClient() {
         for (EntityPlayer player : world.playerEntities) {
             if (player.openContainer.getClass() == ContainerGrid.class && pos.equals(((ContainerGrid) player.openContainer).getGrid().getNetworkPosition())) {
-                syncItemsWithClient((EntityPlayerMP) player);
+                updateItemsWithClient((EntityPlayerMP) player);
             }
         }
     }
 
-    public void syncItemsWithClient(EntityPlayerMP player) {
+    public void updateItemsWithClient(EntityPlayerMP player) {
         RefinedStorage.NETWORK.sendTo(new MessageGridItems(this), player);
     }
 
@@ -536,8 +535,8 @@ public class NetworkMaster {
         int sizePushed = remainder != null ? (orginalSize - remainder.stackSize) : orginalSize;
 
         if (!simulate && sizePushed > 0) {
-            syncItems();
-            syncItemsWithClients();
+            updateItems();
+            updateItemsWithClient();
 
             for (int i = 0; i < sizePushed; ++i) {
                 if (!craftingTasks.empty()) {
@@ -582,8 +581,8 @@ public class NetworkMaster {
         }
 
         if (newStack != null) {
-            syncItems();
-            syncItemsWithClients();
+            updateItems();
+            updateItemsWithClient();
         }
 
         return newStack;

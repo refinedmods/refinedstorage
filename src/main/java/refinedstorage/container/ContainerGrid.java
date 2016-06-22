@@ -98,8 +98,8 @@ public class ContainerGrid extends ContainerBase {
 
             if (slot == craftingResultSlot) {
                 ((TileGrid) grid).onCraftedShift(this, player);
-            } else if (grid.getStorageHandler() != null && slot != patternResultSlot && !(slot instanceof SlotSpecimenLegacy) && slot.getHasStack()) {
-                slot.putStack(grid.getStorageHandler().onPush(slot.getStack()));
+            } else if (grid.getGridHandler() != null && slot != patternResultSlot && !(slot instanceof SlotSpecimenLegacy) && slot.getHasStack()) {
+                slot.putStack(grid.getGridHandler().onPush(slot.getStack()));
 
                 detectAndSendChanges();
             }

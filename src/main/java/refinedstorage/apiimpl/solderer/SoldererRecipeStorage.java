@@ -1,4 +1,4 @@
-package refinedstorage.solderer;
+package refinedstorage.apiimpl.solderer;
 
 import net.minecraft.item.ItemStack;
 import refinedstorage.RefinedStorageBlocks;

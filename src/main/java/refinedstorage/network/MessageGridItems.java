@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import refinedstorage.api.network.NetworkMaster;
+import refinedstorage.apiimpl.network.NetworkMaster;
 import refinedstorage.container.ContainerGrid;
 
 import java.util.ArrayList;
