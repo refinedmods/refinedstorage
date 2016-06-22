@@ -26,6 +26,7 @@ import refinedstorage.block.EnumControllerType;
 import refinedstorage.container.ContainerGrid;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.network.MessageGridItems;
+import refinedstorage.tile.TileCable;
 import refinedstorage.tile.TileCrafter;
 import refinedstorage.tile.TileWirelessTransmitter;
 import refinedstorage.tile.config.RedstoneMode;
@@ -289,7 +290,9 @@ public class NetworkMaster {
 
             slave.forceConnect(this);
 
-            slaves.add(slavePos);
+            if (!(slave instanceof TileCable)) {
+                slaves.add(slavePos);
+            }
         }
 
         this.slavesToLoad.clear();
@@ -668,6 +671,8 @@ public class NetworkMaster {
     }
 
     public void markDirty() {
-        NetworkMasterSavedData.getOrLoad(world).markDirty();
+        if (world != null) {
+            NetworkMasterSavedData.getOrLoad(world).markDirty();
+        }
     }
 }

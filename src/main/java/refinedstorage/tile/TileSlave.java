@@ -48,7 +48,9 @@ public abstract class TileSlave extends TileBase implements ISynchronizedContain
             this.network = network;
             this.connected = true;
 
-            this.network.addSlave(pos);
+            if (!(this instanceof TileCable)) {
+                this.network.addSlave(pos);
+            }
 
             world.notifyNeighborsOfStateChange(pos, getBlockType());
 

@@ -65,7 +65,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
 
     @Override
     public int getEnergyStored(EnumFacing from) {
-        return getNetwork().getEnergy().getEnergyStored();
+        return getNetwork() != null ? getNetwork().getEnergy().getEnergyStored() : 0;
     }
 
     public int getEnergyScaled(int i) {
