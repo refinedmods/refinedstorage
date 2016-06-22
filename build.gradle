@@ -17,7 +17,7 @@ group = "refinedstorage"
 archivesBaseName = "refinedstorage"
 
 minecraft {
-    version = "1.9.4-12.17.0.1968"
+    version = "1.9.4-12.17.0.1969"
     runDir = "run"
     useDepAts = true
     mappings = "snapshot_20160518"
@@ -30,7 +30,7 @@ repositories {
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.9.4:3.4.+"
+    deobfCompile "mezz.jei:jei_1.9.4:3.6.+"
 }
 
 processResources {

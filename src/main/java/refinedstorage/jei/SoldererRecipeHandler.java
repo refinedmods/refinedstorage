@@ -3,6 +3,8 @@ package refinedstorage.jei;
 import mezz.jei.api.recipe.IRecipeHandler;
 import mezz.jei.api.recipe.IRecipeWrapper;
 
+import javax.annotation.Nonnull;
+
 public class SoldererRecipeHandler implements IRecipeHandler<SoldererRecipeWrapper> {
     @Override
     public Class<SoldererRecipeWrapper> getRecipeClass() {
@@ -11,6 +13,12 @@ public class SoldererRecipeHandler implements IRecipeHandler<SoldererRecipeWrapp
 
     @Override
     public String getRecipeCategoryUid() {
+        return SoldererRecipeCategory.ID;
+    }
+
+    @Nonnull
+    @Override
+    public String getRecipeCategoryUid(@Nonnull SoldererRecipeWrapper recipe) {
         return SoldererRecipeCategory.ID;
     }
 

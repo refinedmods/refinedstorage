@@ -35,4 +35,8 @@ public class NetworkMasterRegistry {
     public static Map<BlockPos, NetworkMaster> get(int dimension) {
         return NETWORKS.get(dimension);
     }
+
+    public static void clear() {
+        NETWORKS.clear();
+    }
 }

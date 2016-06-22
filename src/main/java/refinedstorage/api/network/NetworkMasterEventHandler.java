@@ -27,4 +27,9 @@ public class NetworkMasterEventHandler {
     public void onWorldLoad(WorldEvent.Load e) {
         NetworkMasterSavedData.getOrLoad(e.getWorld());
     }
+
+    @SubscribeEvent
+    public void onWorldUnload(WorldEvent.Unload e) {
+        NetworkMasterRegistry.clear();
+    }
 }

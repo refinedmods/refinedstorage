@@ -55,6 +55,8 @@ misc.refinedstorage:clear=Clear
 misc.refinedstorage:cancel_all=Cancel All
 misc.refinedstorage:priority=Priority
 
+misc.refinedstorage:no_network=This Controller isn't associated with any storage network. If you just upgraded to 0.7.17, this is absolutely normal. In that case, a simple one-time break and replace should fix the issue.
+
 sidebutton.refinedstorage:compare.1=Compare Damage
 sidebutton.refinedstorage:compare.2=Compare NBT
 
