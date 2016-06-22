@@ -19,7 +19,7 @@ import refinedstorage.tile.controller.TileController;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class TileSlave extends TileBase implements ISynchronizedContainer, IRedstoneModeConfig, INetworkSlave {
+public abstract class TileSlave extends TileBase implements INetworkSlave, ISynchronizedContainer, IRedstoneModeConfig {
     public static final String NBT_CONNECTED = "Connected";
 
     protected boolean connected;
