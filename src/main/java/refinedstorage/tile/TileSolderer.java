@@ -11,8 +11,8 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.RefinedStorageAPI;
 import refinedstorage.api.solderer.ISoldererRecipe;
-import refinedstorage.api.solderer.SoldererRegistry;
 import refinedstorage.container.ContainerSolderer;
 import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.inventory.BasicItemValidator;
@@ -45,7 +45,7 @@ public class TileSolderer extends TileSlave {
         if (items.getStackInSlot(1) == null && items.getStackInSlot(2) == null && items.getStackInSlot(3) == null) {
             stop();
         } else {
-            ISoldererRecipe newRecipe = SoldererRegistry.getRecipe(items);
+            ISoldererRecipe newRecipe = RefinedStorageAPI.SOLDERER_REGISTRY.getRecipe(items);
 
             if (newRecipe == null) {
                 stop();
@@ -112,7 +112,7 @@ public class TileSolderer extends TileSlave {
         RefinedStorageUtils.readItems(items, 0, nbt);
         RefinedStorageUtils.readItems(upgrades, 1, nbt);
 
-        recipe = SoldererRegistry.getRecipe(items);
+        recipe = RefinedStorageAPI.SOLDERER_REGISTRY.getRecipe(items);
 
         if (nbt.hasKey(NBT_WORKING)) {
             working = nbt.getBoolean(NBT_WORKING);
