@@ -11,22 +11,26 @@ import java.util.Map;
 public class NetworkMasterEventHandler {
     @SubscribeEvent
     public void onWorldTick(TickEvent.WorldTickEvent e) {
-        Map<BlockPos, INetworkMaster> networks = NetworkMasterRegistry.get(e.world);
+        if (e.phase == TickEvent.Phase.START) {
+            Map<BlockPos, INetworkMaster> networks = NetworkMasterRegistry.get(e.world);
 
-        if (networks != null) {
-            for (INetworkMaster network : networks.values()) {
-                if (network.getWorld() == null) {
-                    network.setWorld(e.world);
+            if (networks != null) {
+                for (INetworkMaster network : networks.values()) {
+                    if (network.getWorld() == null) {
+                        network.setWorld(e.world);
+                    }
+
+                    network.update();
                 }
-
-                network.update();
             }
         }
     }
 
     @SubscribeEvent
     public void onWorldLoad(WorldEvent.Load e) {
-        NetworkMasterSavedData.getOrLoad(e.getWorld());
+        if (!e.getWorld().isRemote) {
+            NetworkMasterSavedData.getOrLoad(e.getWorld());
+        }
     }
 
     @SubscribeEvent

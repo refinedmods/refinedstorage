@@ -172,6 +172,7 @@ public class NetworkMaster implements INetworkMaster {
                 INetworkSlave slave = slaves.next();
 
                 if (slave.canUpdate()) {
+                    System.out.println("Updating slave " + slave);
                     slave.updateSlave();
                 }
 
@@ -185,6 +186,7 @@ public class NetworkMaster implements INetworkMaster {
                     }
                 }
             }
+            System.out.println("===Done===");
 
             for (ICraftingTask taskToCancel : craftingTasksToCancel) {
                 taskToCancel.onCancelled(this);
