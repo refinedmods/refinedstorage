@@ -12,6 +12,8 @@ public class NetworkMasterRegistry {
 
     public static void add(World world, INetworkMaster network) {
         add(world.provider.getDimension(), network);
+
+        NetworkMasterSavedData.getOrLoad(world).markDirty();
     }
 
     public static void add(int dim, INetworkMaster network) {
