@@ -5,6 +5,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -95,6 +96,17 @@ public class TileDiskDrive extends TileSlave implements IStorageProvider, IStora
 
     @Override
     public void updateSlave() {
+    }
+
+    @Override
+    public void disconnect(World world) {
+        super.disconnect(world);
+
+        for (Storage storage : this.storages) {
+            if (storage != null) {
+                storage.writeToNBT();
+            }
+        }
     }
 
     @Override

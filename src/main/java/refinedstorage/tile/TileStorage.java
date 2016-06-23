@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
@@ -75,6 +76,15 @@ public class TileStorage extends TileSlave implements IStorageProvider, IStorage
 
         if (storage == null && storageTag != null) {
             storage = new Storage();
+        }
+    }
+
+    @Override
+    public void disconnect(World world) {
+        super.disconnect(world);
+
+        if (storage != null) {
+            storage.writeToNBT();
         }
     }
 
