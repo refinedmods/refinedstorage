@@ -4,29 +4,21 @@
     "model": "orientable",
     "textures": {
       "side": "refinedstorage:blocks/side",
-      "top": "refinedstorage:blocks/side"
+      "top": "refinedstorage:blocks/side",
+      "front": "refinedstorage:blocks/constructor"
     }
   },
   "variants": {
     "inventory": [
       {
         "y": 0,
-        "transform": "forge:default-block",
-        "textures": {
-          "front": "refinedstorage:blocks/constructor_disconnected"
-        }
+        "transform": "forge:default-block"
       }
     ],
     "connected": {
       "true": {
-        "textures": {
-          "front": "refinedstorage:blocks/constructor_connected"
-        }
       },
       "false": {
-        "textures": {
-          "front": "refinedstorage:blocks/constructor_disconnected"
-        }
       }
     },
     "direction": {

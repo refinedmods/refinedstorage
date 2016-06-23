@@ -4,8 +4,8 @@
     "model": "orientable",
     "textures": {
       "side": "refinedstorage:blocks/side",
-      "top": "refinedstorage:blocks/side",
-      "front": "refinedstorage:blocks/processing_pattern_encoder"
+      "top": "refinedstorage:blocks/processing_pattern_encoder",
+      "front": "refinedstorage:blocks/side"
     }
   },
   "variants": {
