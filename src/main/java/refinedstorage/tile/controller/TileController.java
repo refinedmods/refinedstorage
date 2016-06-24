@@ -496,9 +496,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         int sizePushed = remainder != null ? (orginalSize - remainder.stackSize) : orginalSize;
 
         if (!simulate && sizePushed > 0) {
-            updateItems();
-            updateItemsWithClient();
-
             for (int i = 0; i < sizePushed; ++i) {
                 if (!craftingTasks.empty()) {
                     ICraftingTask top = craftingTasks.peek();
@@ -508,6 +505,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                     }
                 }
             }
+
+            updateItems();
+            updateItemsWithClient();
         }
 
         return remainder;

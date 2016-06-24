@@ -4,6 +4,7 @@
 **Bugfixes**
 - Fixed getting wrong items back in grid
 - Fixed wrong item getting crafted
+- Fixed server lag with exporter and importer
 - Updated Forge to 1969
 - Updated JEI
 
