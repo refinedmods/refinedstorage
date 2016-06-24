@@ -12,7 +12,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -92,11 +91,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     }
 
     @Override
-    public World getWorld() {
-        return worldObj;
-    }
-
-    @Override
     public EnergyStorage getEnergy() {
         return energy;
     }
@@ -151,7 +145,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 if (!craftingTasks.empty()) {
                     ICraftingTask top = craftingTasks.peek();
 
-                    if (ticks % top.getPattern().getContainer(worldObj).getSpeed() == 0 && top.update(this)) {
+                    if (ticks % top.getPattern().getContainer(worldObj).getSpeed() == 0 && top.update(worldObj, this)) {
                         top.onDone(this);
 
                         craftingTasks.pop();

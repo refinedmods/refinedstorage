@@ -2,6 +2,7 @@ package refinedstorage.apiimpl.autocrafting;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.autocrafting.ICraftingPattern;
@@ -42,10 +43,10 @@ public class ProcessingCraftingTask implements ICraftingTask {
     }
 
     @Override
-    public boolean update(INetworkMaster network) {
+    public boolean update(World world, INetworkMaster network) {
         this.updatedOnce = true;
 
-        ICraftingPatternContainer container = pattern.getContainer(network.getWorld());
+        ICraftingPatternContainer container = pattern.getContainer(world);
 
         if (container.getConnectedItems() != null) {
             for (int i = 0; i < inserted.length; ++i) {

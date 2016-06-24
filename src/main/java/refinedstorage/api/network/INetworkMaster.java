@@ -4,7 +4,6 @@ import cofh.api.energy.EnergyStorage;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.storage.CompareFlags;
@@ -13,11 +12,6 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public interface INetworkMaster {
-    /**
-     * @return The world this network is in
-     */
-    World getWorld();
-
     /**
      * @return The energy storage of this network
      */
