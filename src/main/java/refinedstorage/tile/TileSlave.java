@@ -11,7 +11,6 @@ import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.RefinedStorageCapabilities;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.INetworkSlave;
-import refinedstorage.apiimpl.network.NetworkMasterRegistry;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
 import refinedstorage.tile.controller.TileController;
@@ -23,6 +22,7 @@ public abstract class TileSlave extends TileBase implements INetworkSlave, ISync
     public static final String NBT_CONNECTED = "Connected";
 
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
+    private boolean active;
 
     protected boolean connected;
     protected INetworkMaster network;
@@ -42,13 +42,34 @@ public abstract class TileSlave extends TileBase implements INetworkSlave, ISync
     }
 
     @Override
+    public void update() {
+        if (!worldObj.isRemote) {
+            if (ticks == 0) {
+                refreshConnection(worldObj);
+            }
+
+            if (isActive()) {
+                updateSlave();
+            }
+
+            if (active != isActive()) {
+                RefinedStorageUtils.updateBlock(worldObj, pos);
+
+                active = isActive();
+            }
+        }
+
+        super.update();
+    }
+
+    @Override
     public void connect(World world, INetworkMaster network) {
         if (network.canRun()) {
             this.network = network;
             this.connected = true;
 
             if (!(this instanceof TileCable)) {
-                this.network.addSlave(pos);
+                this.network.addSlave(this);
             }
 
             world.notifyNeighborsOfStateChange(pos, getBlockType());
@@ -70,7 +91,7 @@ public abstract class TileSlave extends TileBase implements INetworkSlave, ISync
         this.connected = false;
 
         if (this.network != null) {
-            this.network.removeSlave(pos);
+            this.network.removeSlave(this);
             this.network = null;
         }
 
@@ -87,11 +108,7 @@ public abstract class TileSlave extends TileBase implements INetworkSlave, ISync
 
         if (network == null) {
             if (controller != null) {
-                INetworkMaster network = NetworkMasterRegistry.get(world, controller.getPos());
-
-                if (network != null) {
-                    connect(world, network);
-                }
+                connect(world, network);
             }
         } else {
             if (controller == null) {

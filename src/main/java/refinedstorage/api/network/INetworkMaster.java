@@ -3,7 +3,6 @@ package refinedstorage.api.network;
 import cofh.api.energy.EnergyStorage;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import refinedstorage.api.autocrafting.ICraftingPattern;
@@ -18,14 +17,6 @@ public interface INetworkMaster {
      * @return The world this network is in
      */
     World getWorld();
-
-    /**
-     * Initializes this network.
-     * Starting from this call {@link INetworkMaster#update()} will be called every server tick.
-     *
-     * @param world The world this network is in
-     */
-    void setWorld(World world);
 
     /**
      * @return The energy storage of this network
@@ -60,12 +51,12 @@ public interface INetworkMaster {
     /**
      * @param slave The slave to add
      */
-    void addSlave(BlockPos slave);
+    void addSlave(INetworkSlave slave);
 
     /**
      * @param slave The slave to remove
      */
-    void removeSlave(BlockPos slave);
+    void removeSlave(INetworkSlave slave);
 
     /**
      * @return The grid handler for this network
@@ -203,8 +194,4 @@ public interface INetworkMaster {
      */
     @Nullable
     ItemStack getItem(ItemStack stack, int flags);
-
-    NBTTagCompound writeToNBT(NBTTagCompound tag);
-
-    void readFromNBT(NBTTagCompound tag);
 }

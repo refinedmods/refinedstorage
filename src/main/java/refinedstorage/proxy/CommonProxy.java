@@ -5,7 +5,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -18,7 +17,6 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.api.RefinedStorageAPI;
-import refinedstorage.apiimpl.network.NetworkMasterEventHandler;
 import refinedstorage.apiimpl.solderer.*;
 import refinedstorage.apiimpl.storage.NBTStorage;
 import refinedstorage.block.BlockBase;
@@ -480,7 +478,6 @@ public class CommonProxy {
     }
 
     public void init(FMLInitializationEvent e) {
-        MinecraftForge.EVENT_BUS.register(new NetworkMasterEventHandler());
     }
 
     public void postInit(FMLPostInitializationEvent e) {

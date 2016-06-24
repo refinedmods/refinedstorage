@@ -10,14 +10,14 @@ import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
-import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.apiimpl.network.NetworkMasterRegistry;
+import refinedstorage.tile.controller.TileController;
 import refinedstorage.tile.grid.TileGrid;
 
 import java.util.List;
@@ -134,10 +134,10 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
         if (!world.isRemote && hasValidNBT(stack) && getDimensionId(stack) == player.dimension) {
-            INetworkMaster network = NetworkMasterRegistry.get(player.worldObj, new BlockPos(getX(stack), getY(stack), getZ(stack)));
+            TileEntity tile = world.getTileEntity(new BlockPos(getX(stack), getY(stack), getZ(stack)));
 
-            if (network != null) {
-                if (network.getWirelessGridHandler().onOpen(player, hand)) {
+            if (tile instanceof TileController) {
+                if (((TileController) tile).getWirelessGridHandler().onOpen(player, hand)) {
                     return new ActionResult(EnumActionResult.SUCCESS, stack);
                 } else {
                     player.addChatComponentMessage(new TextComponentTranslation("misc.refinedstorage:wireless_grid.out_of_range"));

@@ -2,18 +2,18 @@ package refinedstorage.tile.grid;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.network.IGridHandler;
-import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.apiimpl.network.NetworkMasterRegistry;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.item.ItemWirelessGrid;
 import refinedstorage.network.MessageWirelessGridSettingsUpdate;
 import refinedstorage.tile.config.IRedstoneModeConfig;
+import refinedstorage.tile.controller.TileController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,21 +60,23 @@ public class WirelessGrid implements IGrid {
 
     @Override
     public IGridHandler getGridHandler() {
-        INetworkMaster network = NetworkMasterRegistry.get(world, controllerPos);
+        TileController controller = getController();
 
-        if (network != null) {
-            return network.getGridHandler();
-        }
-
-        return null;
+        return controller != null ? controller.getGridHandler() : null;
     }
 
     public void onClose(EntityPlayer player) {
-        INetworkMaster network = NetworkMasterRegistry.get(world, controllerPos);
+        TileController controller = getController();
 
-        if (network != null) {
-            network.getWirelessGridHandler().onClose(player);
+        if (controller != null) {
+            controller.getWirelessGridHandler().onClose(player);
         }
+    }
+
+    private TileController getController() {
+        TileEntity tile = world.getTileEntity(controllerPos);
+
+        return tile instanceof TileController ? (TileController) tile : null;
     }
 
     @Override

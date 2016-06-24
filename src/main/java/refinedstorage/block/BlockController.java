@@ -15,14 +15,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageGui;
-import refinedstorage.apiimpl.network.NetworkMaster;
-import refinedstorage.apiimpl.network.NetworkMasterRegistry;
 import refinedstorage.item.ItemBlockController;
 import refinedstorage.tile.controller.TileController;
 
@@ -68,7 +65,7 @@ public class BlockController extends BlockBase {
         TileController controller = (TileController) world.getTileEntity(pos);
 
         return super.getActualState(state, world, pos)
-            .withProperty(ENERGY, (int) Math.ceil((float) controller.getEnergy() / (float) NetworkMaster.ENERGY_CAPACITY * 8f));
+            .withProperty(ENERGY, controller.getEnergyScaled(8));
     }
 
     @Override
@@ -84,11 +81,7 @@ public class BlockController extends BlockBase {
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
-            if (((TileController) world.getTileEntity(pos)).getNetwork() == null) {
-                player.addChatComponentMessage(new TextComponentTranslation("misc.refinedstorage:no_network"));
-            } else {
-                player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.CONTROLLER, world, pos.getX(), pos.getY(), pos.getZ());
-            }
+            player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.CONTROLLER, world, pos.getX(), pos.getY(), pos.getZ());
         }
 
         return true;
@@ -97,15 +90,13 @@ public class BlockController extends BlockBase {
     @Override
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack stack) {
         if (!world.isRemote) {
-            NetworkMaster network = new NetworkMaster(pos, world);
+            TileController controller = (TileController) world.getTileEntity(pos);
 
             NBTTagCompound tag = stack.getTagCompound();
 
-            if (tag != null && tag.hasKey(NetworkMaster.NBT_ENERGY)) {
-                network.getEnergy().receiveEnergy(tag.getInteger(NetworkMaster.NBT_ENERGY), false);
+            if (tag != null && tag.hasKey(TileController.NBT_ENERGY)) {
+                controller.getEnergy().receiveEnergy(tag.getInteger(TileController.NBT_ENERGY), false);
             }
-
-            NetworkMasterRegistry.add(world, network);
         }
 
         super.onBlockPlacedBy(world, pos, state, player, stack);
@@ -114,7 +105,7 @@ public class BlockController extends BlockBase {
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
         if (!world.isRemote) {
-            NetworkMasterRegistry.remove(world, pos);
+            ((TileController) world.getTileEntity(pos)).disconnectAll();
         }
 
         super.breakBlock(world, pos, state);
@@ -126,9 +117,8 @@ public class BlockController extends BlockBase {
 
         ItemStack stack = new ItemStack(RefinedStorageBlocks.CONTROLLER, 1, RefinedStorageBlocks.CONTROLLER.getMetaFromState(state));
 
-        NBTTagCompound tag = new NBTTagCompound();
-        tag.setInteger(NetworkMaster.NBT_ENERGY, ((TileController) world.getTileEntity(pos)).getEnergyStored(null));
-        stack.setTagCompound(tag);
+        stack.setTagCompound(new NBTTagCompound());
+        stack.getTagCompound().setInteger(TileController.NBT_ENERGY, ((TileController) world.getTileEntity(pos)).getEnergy().getEnergyStored());
 
         drops.add(stack);
 
