@@ -12,7 +12,7 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "0.7.18"
+version = "0.7.19"
 group = "refinedstorage"
 archivesBaseName = "refinedstorage"
 
