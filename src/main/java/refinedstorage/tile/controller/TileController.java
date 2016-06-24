@@ -22,7 +22,6 @@ import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class TileController extends TileBase implements IEnergyReceiver, ISynchronizedContainer, IRedstoneModeConfig {
@@ -151,10 +150,7 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
         if (getNetwork() != null) {
             List<ClientSlave> clientSlaves = new ArrayList<ClientSlave>();
 
-            Iterator<INetworkSlave> slaves = getNetwork().getSlaves();
-            while (slaves.hasNext()) {
-                INetworkSlave slave = slaves.next();
-
+            for (INetworkSlave slave : getNetwork().getSlaves()) {
                 if (slave.canUpdate()) {
                     IBlockState state = worldObj.getBlockState(slave.getPosition());
 
@@ -164,10 +160,11 @@ public class TileController extends TileBase implements IEnergyReceiver, ISynchr
                     clientSlave.amount = 1;
                     clientSlave.stack = new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state));
 
-                    if (clientSlaves.contains(clientSlave)) {
+                    if (clientSlave.stack.getItem() != null && clientSlaves.contains(clientSlave)) {
                         for (ClientSlave other : clientSlaves) {
                             if (other.equals(clientSlave)) {
                                 other.amount++;
+
                                 break;
                             }
                         }

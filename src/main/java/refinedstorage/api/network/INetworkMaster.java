@@ -11,7 +11,6 @@ import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.storage.CompareFlags;
 
 import javax.annotation.Nullable;
-import java.util.Iterator;
 import java.util.List;
 
 public interface INetworkMaster {
@@ -54,9 +53,9 @@ public interface INetworkMaster {
     void update();
 
     /**
-     * @return A iterator with all network slaves
+     * @return A list with all network slaves, do NOT modify
      */
-    Iterator<INetworkSlave> getSlaves();
+    List<INetworkSlave> getSlaves();
 
     /**
      * @param slave The slave to add

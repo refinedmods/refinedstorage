@@ -43,7 +43,7 @@ public abstract class BlockSlave extends BlockBase {
         super.onBlockPlacedBy(world, pos, state, player, stack);
 
         if (!world.isRemote) {
-            ((TileSlave) world.getTileEntity(pos)).onNeighborChanged(world);
+            ((TileSlave) world.getTileEntity(pos)).refreshConnection(world);
         }
     }
 
@@ -65,7 +65,7 @@ public abstract class BlockSlave extends BlockBase {
         super.neighborChanged(state, world, pos, block);
 
         if (!world.isRemote) {
-            ((TileSlave) world.getTileEntity(pos)).onNeighborChanged(world);
+            ((TileSlave) world.getTileEntity(pos)).refreshConnection(world);
         }
     }
 }

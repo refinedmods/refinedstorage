@@ -32,7 +32,7 @@ public interface INetworkSlave {
      *
      * @param world The world
      */
-    void onNeighborChanged(World world);
+    void refreshConnection(World world);
 
     /**
      * Called when a connection is found to the network

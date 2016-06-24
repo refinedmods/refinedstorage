@@ -82,7 +82,7 @@ public abstract class TileSlave extends TileBase implements INetworkSlave, ISync
     }
 
     @Override
-    public void onNeighborChanged(World world) {
+    public void refreshConnection(World world) {
         TileController controller = searchController(world, pos, new HashSet<Long>());
 
         if (network == null) {

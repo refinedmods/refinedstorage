@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
@@ -58,6 +59,7 @@ public class NetworkMaster implements INetworkMaster {
     private List<IStorage> storages = new ArrayList<IStorage>();
 
     private List<BlockPos> slaves = new ArrayList<BlockPos>();
+    private List<INetworkSlave> actualSlaves = new ArrayList<INetworkSlave>();
     private Map<BlockPos, Boolean> slaveConnectivity = new HashMap<BlockPos, Boolean>();
     private List<BlockPos> slavesToAdd = new ArrayList<BlockPos>();
     private List<BlockPos> slavesToLoad = new ArrayList<BlockPos>();
@@ -150,11 +152,14 @@ public class NetworkMaster implements INetworkMaster {
 
     @Override
     public void update() {
+        boolean forceUpdate = !slavesToAdd.isEmpty() || !slavesToRemove.isEmpty();
+
         for (BlockPos slave : slavesToAdd) {
             if (!slaves.contains(slave)) {
                 slaves.add(slave);
             }
         }
+
         slavesToAdd.clear();
 
         slaves.removeAll(slavesToRemove);
@@ -163,14 +168,11 @@ public class NetworkMaster implements INetworkMaster {
         int lastEnergy = energy.getEnergyStored();
 
         if (canRun()) {
-            if (ticks % 20 == 0) {
+            if (ticks % 20 == 0 || forceUpdate) {
                 updateSlaves();
             }
 
-            Iterator<INetworkSlave> slaves = getSlaves();
-            while (slaves.hasNext()) {
-                INetworkSlave slave = slaves.next();
-
+            for (INetworkSlave slave : getSlaves()) {
                 if (slave.canUpdate()) {
                     slave.updateSlave();
                 }
@@ -196,11 +198,13 @@ public class NetworkMaster implements INetworkMaster {
             for (ICraftingTask task : craftingTasksToAdd) {
                 craftingTasks.push(task);
             }
+
             craftingTasksToAdd.clear();
 
             for (ICraftingTask task : craftingTasksToAddAsLast) {
                 craftingTasks.add(0, task);
             }
+
             craftingTasksToAddAsLast.clear();
 
             if (!craftingTasks.empty()) {
@@ -249,25 +253,8 @@ public class NetworkMaster implements INetworkMaster {
     }
 
     @Override
-    public Iterator<INetworkSlave> getSlaves() {
-        return new Iterator<INetworkSlave>() {
-            private int index;
-
-            @Override
-            public boolean hasNext() {
-                return index < slaves.size();
-            }
-
-            @Override
-            public INetworkSlave next() {
-                return world.getTileEntity(slaves.get(index++)).getCapability(RefinedStorageCapabilities.NETWORK_SLAVE_CAPABILITY, null);
-            }
-
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException();
-            }
-        };
+    public List<INetworkSlave> getSlaves() {
+        return actualSlaves;
     }
 
     @Override
@@ -295,13 +282,11 @@ public class NetworkMaster implements INetworkMaster {
     }
 
     public void disconnectAll() {
-        Iterator<INetworkSlave> slaves = getSlaves();
-
-        while (slaves.hasNext()) {
-            slaves.next().disconnect(world);
+        for (INetworkSlave slave : getSlaves()) {
+            slave.disconnect(world);
         }
 
-        this.slaves.clear();
+        slaves.clear();
     }
 
     @Override
@@ -402,14 +387,24 @@ public class NetworkMaster implements INetworkMaster {
 
     private void updateSlaves() {
         this.energyUsage = 0;
+        this.actualSlaves.clear();
         this.storages.clear();
         this.patterns.clear();
 
         int range = 0;
 
-        Iterator<INetworkSlave> slaves = getSlaves();
-        while (slaves.hasNext()) {
-            INetworkSlave slave = slaves.next();
+        for (BlockPos slavePos : slaves) {
+            TileEntity tile = world.getTileEntity(slavePos);
+
+            if (tile == null || !tile.hasCapability(RefinedStorageCapabilities.NETWORK_SLAVE_CAPABILITY, null)) {
+                removeSlave(slavePos);
+
+                continue;
+            }
+
+            INetworkSlave slave = tile.getCapability(RefinedStorageCapabilities.NETWORK_SLAVE_CAPABILITY, null);
+
+            actualSlaves.add(slave);
 
             if (!slave.canUpdate()) {
                 continue;
