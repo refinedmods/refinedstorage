@@ -1,16 +1,11 @@
 # Refined Storage Changelog
 
-### 0.7.17-pre1
-When updating to this version, you'll have to break and replace your controller.
-
+### 0.7.17
 **Bugfixes**
-- Fixed controller not working after leaving chunk
-- Fixed machines not working when leaving chunk
 - Fixed getting wrong items back in grid
 - Fixed wrong item getting crafted
 - Updated Forge to 1969
 - Updated JEI
-- Rewrote storage networks: they are now saved to disk, so big systems won't lag when rejoining a chunk
 
 **Features**
 - New crafting settings gui

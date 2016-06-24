@@ -102,7 +102,7 @@ public abstract class TileSlave extends TileBase implements INetworkSlave, ISync
 
         if (network == null) {
             if (controller != null) {
-                connect(world, network);
+                connect(world, controller);
             }
         } else {
             if (controller == null) {
