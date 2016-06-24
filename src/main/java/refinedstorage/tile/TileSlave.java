@@ -52,7 +52,7 @@ public abstract class TileSlave extends TileBase implements INetworkSlave, ISync
                 updateSlave();
             }
 
-            if (active != isActive()) {
+            if (active != isActive() && canSendConnectivityUpdate()) {
                 RefinedStorageUtils.updateBlock(worldObj, pos);
 
                 active = isActive();
@@ -68,9 +68,7 @@ public abstract class TileSlave extends TileBase implements INetworkSlave, ISync
             this.network = network;
             this.connected = true;
 
-            if (!(this instanceof TileCable)) {
-                this.network.addSlave(this);
-            }
+            this.network.addSlave(this);
 
             world.notifyNeighborsOfStateChange(pos, getBlockType());
 
@@ -235,6 +233,6 @@ public abstract class TileSlave extends TileBase implements INetworkSlave, ISync
 
     @Override
     public boolean equals(Object other) {
-        return other instanceof TileSlave && ((TileSlave) other).getPos().equals(pos);
+        return other instanceof TileSlave && ((TileSlave) other).getPosition().equals(getPosition());
     }
 }

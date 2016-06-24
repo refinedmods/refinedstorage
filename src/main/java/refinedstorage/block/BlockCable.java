@@ -10,8 +10,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorageBlocks;
+import refinedstorage.api.RefinedStorageCapabilities;
 import refinedstorage.tile.TileCable;
-import refinedstorage.tile.TileSlave;
 
 public class BlockCable extends BlockSlave {
     public static final AxisAlignedBB CABLE_AABB = new AxisAlignedBB(4 * (1F / 16F), 4 * (1F / 16F), 4 * (1F / 16F), 1 - 4 * (1F / 16F), 1 - 4 * (1F / 16F), 1 - 4 * (1F / 16F));
@@ -57,7 +57,7 @@ public class BlockCable extends BlockSlave {
     }
 
     public static boolean hasConnectionWith(IBlockAccess world, BlockPos pos) {
-        return world.getBlockState(pos).getBlock() == RefinedStorageBlocks.CONTROLLER || world.getTileEntity(pos) instanceof TileSlave;
+        return world.getBlockState(pos).getBlock() == RefinedStorageBlocks.CONTROLLER || (world.getTileEntity(pos) != null && world.getTileEntity(pos).hasCapability(RefinedStorageCapabilities.NETWORK_SLAVE_CAPABILITY, null));
     }
 
     @Override

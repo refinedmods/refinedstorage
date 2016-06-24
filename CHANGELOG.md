@@ -1,5 +1,10 @@
 # Refined Storage Changelog
 
+### 0.7.18
+**Bugfixes**
+- Fixed cables sending updates when not needed
+- Fixed cables not connecting to foreign machines that implement the API
+
 ### 0.7.17
 **Bugfixes**
 - Fixed getting wrong items back in grid
