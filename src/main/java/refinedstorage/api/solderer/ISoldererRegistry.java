@@ -23,7 +23,7 @@ public interface ISoldererRegistry {
     List<ISoldererRecipe> getRecipes();
 
     /**
-     * @param items An item handler, where slots 0 - 2 are the row slots
+     * @param items An item handler, where slots 0 - 2 are the rows
      * @return The recipe, or null if no recipe was found
      */
     @Nullable

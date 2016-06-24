@@ -81,12 +81,6 @@ public abstract class TileSlave extends TileBase implements INetworkSlave, ISync
     }
 
     @Override
-    public void forceConnect(INetworkMaster network) {
-        this.network = network;
-        this.connected = true;
-    }
-
-    @Override
     public void disconnect(World world) {
         this.connected = false;
 

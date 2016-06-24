@@ -6,10 +6,10 @@ import net.minecraft.item.ItemStack;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingTask;
+import refinedstorage.api.network.GridPullFlags;
 import refinedstorage.api.network.IGridHandler;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.item.ItemWirelessGrid;
-import refinedstorage.network.GridPullFlags;
 
 public class GridHandler implements IGridHandler {
     public static final int MAX_CRAFTING_PER_REQUEST = 500;

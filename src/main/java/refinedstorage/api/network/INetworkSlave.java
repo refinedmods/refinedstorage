@@ -8,7 +8,7 @@ import net.minecraft.world.World;
  */
 public interface INetworkSlave {
     /**
-     * Called every server tick.
+     * Called every tile entity tick
      */
     void updateSlave();
 
@@ -40,13 +40,6 @@ public interface INetworkSlave {
      * @param network The network we're trying to connect to
      */
     void connect(World world, INetworkMaster network);
-
-    /**
-     * Called when the slave is loaded from a save file
-     *
-     * @param network The network we have to connected to
-     */
-    void forceConnect(INetworkMaster network);
 
     /**
      * Called when a connection is lost to the network

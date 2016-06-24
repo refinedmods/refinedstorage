@@ -1,4 +1,4 @@
-package refinedstorage.network;
+package refinedstorage.api.network;
 
 public class GridPullFlags {
     public static final int PULL_HALF = 1;

@@ -28,17 +28,12 @@ public interface INetworkMaster {
     BlockPos getPosition();
 
     /**
-     * @return If this network is able to run (usually corresponds to redstone setting)
+     * @return If this network is able to run (usually corresponds to the redstone setting)
      */
     boolean canRun();
 
     /**
-     * Updates this network.
-     */
-    void update();
-
-    /**
-     * @return A list with all network slaves, do NOT modify
+     * @return A list with all network slaves
      */
     List<INetworkSlave> getSlaves();
 
@@ -82,7 +77,7 @@ public interface INetworkMaster {
     /**
      * Adds a crafting task to the bottom of the crafting task stack.
      *
-     * @param task The crafting task to add
+     * @param task The crafting task to add as last
      */
     void addCraftingTaskAsLast(ICraftingTask task);
 
@@ -120,24 +115,20 @@ public interface INetworkMaster {
      * If there are multiple crafting patterns with the same output, it'll return the one
      * where there are the most ingredients of in the network.
      *
-     * @param pattern The item to get a pattern for
+     * @param pattern The {@link ItemStack} to get a pattern for
      * @return The pattern
      */
     ICraftingPattern getPatternWithBestScore(ItemStack pattern);
 
     /**
-     * Returns a crafting pattern from an item stack.
-     * If there are multiple crafting patterns with the same output, it'll return the one
-     * where there are the most ingredients of in the network.
-     *
-     * @param pattern The item to get a pattern for
-     * @param flags   The flags we compare on
+     * @param pattern The {@link ItemStack} to get a pattern for
+     * @param flags   The flags we compare on, see {@link CompareFlags}
      * @return The pattern
      */
     ICraftingPattern getPatternWithBestScore(ItemStack pattern, int flags);
 
     /**
-     * Sends to all clients watching a network (for example a grid) a packet with all the items in this network.
+     * Sends to all clients in a grid a packet with all the items in this network.
      */
     void updateItemsWithClient();
 
@@ -168,10 +159,6 @@ public interface INetworkMaster {
     ItemStack take(ItemStack stack, int size);
 
     /**
-     * Takes an item from storage.
-     * If the stack we found in the system is smaller than the requested size, return the stack anyway.
-     * For example: this method is called for dirt (64x) while there is only dirt (32x), return the dirt (32x) anyway.
-     *
      * @param stack A prototype of the stack to take, do NOT modify
      * @param size  The amount of that prototype that has to be taken
      * @param flags On what we are comparing to take the item, see {@link CompareFlags}
@@ -184,7 +171,7 @@ public interface INetworkMaster {
      *
      * @param stack The stack to search
      * @param flags The flags to compare on
-     * @return The stack we found
+     * @return The {@link ItemStack} we found
      */
     @Nullable
     ItemStack getItem(ItemStack stack, int flags);
