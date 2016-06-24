@@ -105,9 +105,23 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         if (!worldObj.isRemote) {
             boolean forceUpdate = !slavesToAdd.isEmpty() || !slavesToRemove.isEmpty();
 
-            for (INetworkSlave slave : slavesToAdd) {
-                if (!slaves.contains(slave)) {
-                    slaves.add(slave);
+            for (INetworkSlave newSlave : slavesToAdd) {
+                boolean found = false;
+
+                for (int i = 0; i < slaves.size(); ++i) {
+                    INetworkSlave slave = slaves.get(i);
+
+                    if (slave.getPosition().equals(newSlave.getPosition())) {
+                        slaves.set(i, newSlave);
+
+                        found = true;
+
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    slaves.add(newSlave);
                 }
             }
 
