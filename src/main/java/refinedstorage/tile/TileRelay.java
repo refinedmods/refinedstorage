@@ -9,7 +9,7 @@ public class TileRelay extends TileSlave {
     private boolean couldUpdate;
 
     public TileRelay() {
-        this.redstoneMode = RedstoneMode.LOW;
+        setRedstoneMode(RedstoneMode.LOW);
     }
 
     @Override

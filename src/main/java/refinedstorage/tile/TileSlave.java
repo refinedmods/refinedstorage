@@ -22,11 +22,10 @@ import java.util.Set;
 public abstract class TileSlave extends TileBase implements INetworkSlave, ISynchronizedContainer, IRedstoneModeConfig {
     public static final String NBT_CONNECTED = "Connected";
 
-    protected boolean connected;
-    protected RedstoneMode redstoneMode = RedstoneMode.IGNORE;
-    protected INetworkMaster network;
+    private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
-    private Set<String> visited = new HashSet<String>();
+    protected boolean connected;
+    protected INetworkMaster network;
 
     @Override
     public boolean canUpdate() {
@@ -84,13 +83,10 @@ public abstract class TileSlave extends TileBase implements INetworkSlave, ISync
 
     @Override
     public void onNeighborChanged(World world) {
-        visited.clear();
-
-        TileController controller = searchController(world, pos, visited);
+        TileController controller = searchController(world, pos, new HashSet<Long>());
 
         if (network == null) {
             if (controller != null) {
-                // For backwards compatibility
                 INetworkMaster network = NetworkMasterRegistry.get(world, controller.getPos());
 
                 if (network != null) {
@@ -104,26 +100,26 @@ public abstract class TileSlave extends TileBase implements INetworkSlave, ISync
         }
     }
 
-    private TileController searchController(World world, BlockPos current, Set<String> visited) {
-        String id = current.getX() + "," + current.getY() + "," + current.getZ();
+    private TileController searchController(World world, BlockPos current, Set<Long> visits) {
+        long pos = current.toLong();
 
-        if (visited.contains(id)) {
+        if (visits.contains(pos)) {
             return null;
         }
 
-        visited.add(id);
+        visits.add(pos);
 
         TileEntity tile = world.getTileEntity(current);
 
         if (tile instanceof TileController) {
             return (TileController) tile;
         } else if (tile instanceof TileSlave) {
-            if (visited.size() > 1 && tile instanceof TileRelay && !((TileRelay) tile).canUpdate()) {
+            if (visits.size() > 1 && tile instanceof TileRelay && !((TileRelay) tile).canUpdate()) {
                 return null;
             }
 
             for (EnumFacing dir : EnumFacing.VALUES) {
-                TileController controller = searchController(world, current.offset(dir), visited);
+                TileController controller = searchController(world, current.offset(dir), visits);
 
                 if (controller != null) {
                     return controller;

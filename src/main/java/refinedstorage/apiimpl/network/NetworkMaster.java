@@ -238,7 +238,7 @@ public class NetworkMaster implements INetworkMaster {
         if (energy.getEnergyStored() != lastEnergy) {
             world.updateComparatorOutputLevel(pos, RefinedStorageBlocks.CONTROLLER);
 
-            if (System.currentTimeMillis() - lastEnergyUpdate > 2500) {
+            if (System.currentTimeMillis() - lastEnergyUpdate > 1500) {
                 lastEnergyUpdate = System.currentTimeMillis();
 
                 RefinedStorageUtils.updateBlock(world, pos);

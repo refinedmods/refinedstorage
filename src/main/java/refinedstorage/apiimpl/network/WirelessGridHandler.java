@@ -8,6 +8,7 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.IWirelessGridHandler;
 import refinedstorage.api.network.WirelessGridConsumer;
 import refinedstorage.item.ItemWirelessGrid;
@@ -17,14 +18,14 @@ import java.util.Iterator;
 import java.util.List;
 
 public class WirelessGridHandler implements IWirelessGridHandler {
-    private NetworkMaster network;
+    private INetworkMaster network;
 
     private int range;
 
     private List<WirelessGridConsumer> consumers = new ArrayList<WirelessGridConsumer>();
     private List<WirelessGridConsumer> consumersToRemove = new ArrayList<WirelessGridConsumer>();
 
-    public WirelessGridHandler(NetworkMaster network) {
+    public WirelessGridHandler(INetworkMaster network) {
         this.network = network;
     }
 
