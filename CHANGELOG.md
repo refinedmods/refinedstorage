@@ -1,6 +1,6 @@
 # Refined Storage Changelog
 
-### 0.7.17
+### 0.7.17-pre1
 When updating to this version, you'll have to break and replace your controller.
 
 **Bugfixes**
