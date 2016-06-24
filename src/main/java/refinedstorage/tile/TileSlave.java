@@ -233,4 +233,14 @@ public abstract class TileSlave extends TileBase implements INetworkSlave, ISync
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
         return capability == RefinedStorageCapabilities.NETWORK_SLAVE_CAPABILITY || super.hasCapability(capability, facing);
     }
+
+    @Override
+    public int hashCode() {
+        return pos.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return other instanceof TileSlave && ((TileSlave) other).getPos().equals(pos);
+    }
 }

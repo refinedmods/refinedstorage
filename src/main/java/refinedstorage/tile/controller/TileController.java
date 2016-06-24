@@ -152,7 +152,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                     }
                 }
             } else if (!slaves.isEmpty()) {
-                disconnectAll();
+                disconnectSlaves();
+
                 updateSlaves();
             }
 
@@ -207,6 +208,14 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         slavesToRemove.add(slave);
     }
 
+    public void disconnectSlaves() {
+        for (INetworkSlave slave : getSlaves()) {
+            slave.disconnect(worldObj);
+        }
+
+        slaves.clear();
+    }
+
     @Override
     public IGridHandler getGridHandler() {
         return gridHandler;
@@ -217,12 +226,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         return wirelessGridHandler;
     }
 
-    public void disconnectAll() {
-        for (INetworkSlave slave : getSlaves()) {
-            slave.disconnect(worldObj);
-        }
-
-        slaves.clear();
+    @Override
+    public void onChunkUnload() {
+        disconnectSlaves();
     }
 
     @Override
