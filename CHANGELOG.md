@@ -10,11 +10,13 @@
 - Fixed getting wrong items back in grid
 - Fixed wrong item getting crafted
 - Fixed server lag with exporter and importer
+- Fixed machines not working after leaving a chunk
 - Updated Forge to 1969
-- Updated JEI
+- Updated JEI to 3.6.x
 
 **Features**
 - New crafting settings gui
+- Tweaked some textures
 
 ### 0.7.16
 **Features**
