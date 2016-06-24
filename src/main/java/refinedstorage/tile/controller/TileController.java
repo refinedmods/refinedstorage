@@ -564,6 +564,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
+        super.readFromNBT(tag);
+
         energy.readFromNBT(tag);
 
         if (tag.hasKey(RedstoneMode.NBT)) {
@@ -594,6 +596,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+        super.writeToNBT(tag);
+
         energy.writeToNBT(tag);
 
         tag.setInteger(RedstoneMode.NBT, redstoneMode.id);
