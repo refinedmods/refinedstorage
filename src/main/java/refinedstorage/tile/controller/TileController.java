@@ -85,7 +85,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
-    private List<ClientSlave> clientSlaves;
+    private List<ClientSlave> clientSlaves = new ArrayList<ClientSlave>();
 
     @Override
     public BlockPos getPosition() {
@@ -99,7 +99,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public boolean canRun() {
-        return energy.getEnergyStored() > 0 && energy.getEnergyStored() >= energyUsage && redstoneMode.isEnabled(worldObj, pos);
+        return energy.getEnergyStored() > 0 && redstoneMode.isEnabled(worldObj, pos);
     }
 
     @Override
@@ -165,13 +165,11 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                         craftingTasks.pop();
                     }
                 }
-            } else {
-                disconnectSlaves();
             }
 
             wirelessGridHandler.update();
 
-            if (canRun() && getType() == EnumControllerType.NORMAL) {
+            if (getType() == EnumControllerType.NORMAL) {
                 if (energy.getEnergyStored() - energyUsage >= 0) {
                     energy.extractEnergy(energyUsage, false);
                 } else {
@@ -179,6 +177,12 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 }
             } else if (getType() == EnumControllerType.CREATIVE) {
                 energy.setEnergyStored(energy.getMaxEnergyStored());
+            }
+
+            if (!canRun() && !slaves.isEmpty()) {
+                disconnectSlaves();
+
+                updateSlaves();
             }
 
             if (couldRun != canRun()) {
