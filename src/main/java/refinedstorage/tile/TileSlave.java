@@ -66,8 +66,9 @@ public abstract class TileSlave extends TileBase implements INetworkSlave, ISync
     public void connect(World world, INetworkMaster network) {
         if (network.canRun()) {
             this.network = network;
-            this.network.addSlave(this);
             this.connected = true;
+
+            this.network.addSlave(this);
 
             world.notifyNeighborsOfStateChange(pos, getBlockType());
 
