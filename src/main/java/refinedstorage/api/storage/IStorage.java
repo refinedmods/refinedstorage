@@ -33,10 +33,10 @@ public interface IStorage {
      * If the stack we found in the system is smaller than the requested size, return the stack anyway.
      * For example: this method is called for dirt (64x) while there is only dirt (32x), return the dirt (32x) anyway.
      *
-     * @param stack A prototype of the stack to take, do NOT modify
+     * @param stack A prototype of the stack to takeFromNetwork, do NOT modify
      * @param size  The amount of that prototype that has to be taken
-     * @param flags On what we are comparing to take the item, see {@link CompareFlags}
-     * @return null if we didn't take anything, or a {@link ItemStack} with the result
+     * @param flags On what we are comparing to takeFromNetwork the item, see {@link CompareFlags}
+     * @return null if we didn't takeFromNetwork anything, or a {@link ItemStack} with the result
      */
     ItemStack take(@Nonnull ItemStack stack, int size, int flags);
 

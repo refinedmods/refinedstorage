@@ -4,6 +4,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 
+/**
+ * Represents a player using a wireless grid.
+ */
 public class WirelessGridConsumer {
     private EntityPlayer player;
     private EnumHand hand;

@@ -67,14 +67,14 @@ public class BasicCraftingTask implements ICraftingTask {
             if (!satisfied[i]) {
                 done = false;
 
-                ItemStack took = network.take(input, 1);
+                ItemStack took = RefinedStorageUtils.takeFromNetwork(network, input, 1);
 
                 if (took != null) {
                     itemsTook.add(took);
 
                     satisfied[i] = true;
                 } else if (!childTasks[i]) {
-                    ICraftingPattern pattern = network.getPatternWithBestScore(input);
+                    ICraftingPattern pattern = RefinedStorageUtils.getPatternFromNetwork(network, input);
 
                     if (pattern != null) {
                         network.addCraftingTask(network.createCraftingTask(pattern));

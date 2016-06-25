@@ -63,7 +63,7 @@ public interface INetworkMaster {
     List<ItemStack> getItems();
 
     /**
-     * @return The crafting tasks in this, do NOT modify this list
+     * @return The crafting tasks in this network, do NOT modify this list
      */
     List<ICraftingTask> getCraftingTasks();
 
@@ -82,10 +82,10 @@ public interface INetworkMaster {
     void addCraftingTaskAsLast(ICraftingTask task);
 
     /**
-     * Creates a crafting task from a pattern
+     * Creates a crafting task from a pattern.
      *
      * @param pattern The pattern to create a task for
-     * @return The task
+     * @return A task
      */
     ICraftingTask createCraftingTask(ICraftingPattern pattern);
 
@@ -97,7 +97,7 @@ public interface INetworkMaster {
     void cancelCraftingTask(ICraftingTask task);
 
     /**
-     * @return A list of crafting patterns in this network
+     * @return A list of crafting patterns in this network, do NOT modify this list
      */
     List<ICraftingPattern> getPatterns();
 
@@ -105,27 +105,17 @@ public interface INetworkMaster {
      * Returns crafting patterns from an item stack.
      *
      * @param pattern The item to get a pattern for
-     * @param flags   The flags we compare on
+     * @param flags   The flags to compare on, see {@link CompareFlags}
      * @return A list of crafting patterns where the given pattern is one of the outputs
      */
-    List<ICraftingPattern> getPattern(ItemStack pattern, int flags);
-
-    /**
-     * Returns a crafting pattern from an item stack.
-     * If there are multiple crafting patterns with the same output, it'll return the one
-     * where there are the most ingredients of in the network.
-     *
-     * @param pattern The {@link ItemStack} to get a pattern for
-     * @return The pattern
-     */
-    ICraftingPattern getPatternWithBestScore(ItemStack pattern);
+    List<ICraftingPattern> getPatterns(ItemStack pattern, int flags);
 
     /**
      * @param pattern The {@link ItemStack} to get a pattern for
-     * @param flags   The flags we compare on, see {@link CompareFlags}
+     * @param flags   The flags to compare on, see {@link CompareFlags}
      * @return The pattern
      */
-    ICraftingPattern getPatternWithBestScore(ItemStack pattern, int flags);
+    ICraftingPattern getPattern(ItemStack pattern, int flags);
 
     /**
      * Sends to all clients in a grid a packet with all the items in this network.
@@ -148,30 +138,21 @@ public interface INetworkMaster {
     ItemStack push(ItemStack stack, int size, boolean simulate);
 
     /**
-     * Takes an item from storage.
-     * If the stack we found in the system is smaller than the requested size, return the stack anyway.
-     * For example: this method is called for dirt (64x) while there is only dirt (32x), return the dirt (32x) anyway.
+     * Takes an item from this network.
      *
-     * @param stack A prototype of the stack to take, do NOT modify
+     * @param stack A prototype of the stack to takeFromNetwork, do NOT modify
      * @param size  The amount of that prototype that has to be taken
-     * @return null if we didn't take anything, or a {@link ItemStack} with the result
-     */
-    ItemStack take(ItemStack stack, int size);
-
-    /**
-     * @param stack A prototype of the stack to take, do NOT modify
-     * @param size  The amount of that prototype that has to be taken
-     * @param flags On what we are comparing to take the item, see {@link CompareFlags}
-     * @return null if we didn't take anything, or a {@link ItemStack} with the result
+     * @param flags The flags to compare on, see {@link CompareFlags}
+     * @return null if we didn't takeFromNetwork anything, or a {@link ItemStack} with the result
      */
     ItemStack take(ItemStack stack, int size, int flags);
 
     /**
      * Returns an item from storage, based on the given prototype.
      *
-     * @param stack The stack to search
-     * @param flags The flags to compare on
-     * @return The {@link ItemStack} we found
+     * @param stack The stack prototype to search
+     * @param flags The flags to compare on, see {@link CompareFlags}
+     * @return The {@link ItemStack} we found, do NOT modify
      */
     @Nullable
     ItemStack getItem(ItemStack stack, int flags);

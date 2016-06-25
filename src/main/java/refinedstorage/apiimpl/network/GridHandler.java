@@ -29,21 +29,21 @@ public class GridHandler implements IGridHandler {
 
         int size = 64;
 
-        if (GridPullFlags.isPullingHalf(flags) && stack.stackSize > 1) {
+        if ((flags & GridPullFlags.PULL_HALF) == GridPullFlags.PULL_HALF && stack.stackSize > 1) {
             size = stack.stackSize / 2;
 
             if (size > 32) {
                 size = 32;
             }
-        } else if (GridPullFlags.isPullingOne(flags)) {
+        } else if ((flags & GridPullFlags.PULL_ONE) == GridPullFlags.PULL_ONE) {
             size = 1;
-        } else if (GridPullFlags.isPullingWithShift(flags)) {
+        } else if ((flags & GridPullFlags.PULL_SHIFT) == GridPullFlags.PULL_SHIFT) {
             // NO OP, the quantity already set (64) is needed for shift
         }
 
         size = Math.min(size, stack.getItem().getItemStackLimit(stack));
 
-        ItemStack took = network.take(stack, size);
+        ItemStack took = RefinedStorageUtils.takeFromNetwork(network, stack, size);
 
         // Fallback for corner cases where NBT changes
         if (took == null) {
@@ -51,7 +51,7 @@ public class GridHandler implements IGridHandler {
         }
 
         if (took != null) {
-            if (GridPullFlags.isPullingWithShift(flags)) {
+            if ((flags & GridPullFlags.PULL_SHIFT) == GridPullFlags.PULL_SHIFT) {
                 if (!player.inventory.addItemStackToInventory(took.copy())) {
                     InventoryHelper.spawnItemStack(player.worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), took);
                 }
@@ -105,7 +105,7 @@ public class GridHandler implements IGridHandler {
 
         int quantityPerRequest = 0;
 
-        ICraftingPattern pattern = network.getPatternWithBestScore(stack);
+        ICraftingPattern pattern = RefinedStorageUtils.getPatternFromNetwork(network, stack);
 
         if (pattern != null) {
             for (ItemStack output : pattern.getOutputs()) {

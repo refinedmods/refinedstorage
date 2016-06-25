@@ -295,7 +295,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     }
 
     @Override
-    public List<ICraftingPattern> getPattern(ItemStack pattern, int flags) {
+    public List<ICraftingPattern> getPatterns(ItemStack pattern, int flags) {
         List<ICraftingPattern> patterns = new ArrayList<ICraftingPattern>();
 
         for (ICraftingPattern craftingPattern : getPatterns()) {
@@ -310,13 +310,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     }
 
     @Override
-    public ICraftingPattern getPatternWithBestScore(ItemStack pattern) {
-        return getPatternWithBestScore(pattern, CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_NBT);
-    }
-
-    @Override
-    public ICraftingPattern getPatternWithBestScore(ItemStack pattern, int flags) {
-        List<ICraftingPattern> patterns = getPattern(pattern, flags);
+    public ICraftingPattern getPattern(ItemStack pattern, int flags) {
+        List<ICraftingPattern> patterns = getPatterns(pattern, flags);
 
         if (patterns.isEmpty()) {
             return null;
@@ -515,11 +510,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         }
 
         return remainder;
-    }
-
-    @Override
-    public ItemStack take(ItemStack stack, int size) {
-        return take(stack, size, CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_NBT);
     }
 
     @Override

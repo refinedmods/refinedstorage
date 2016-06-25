@@ -52,7 +52,7 @@ public class ProcessingCraftingTask implements ICraftingTask {
             for (int i = 0; i < inserted.length; ++i) {
                 if (!inserted[i]) {
                     ItemStack input = pattern.getInputs()[i];
-                    ItemStack took = network.take(input, 1);
+                    ItemStack took = RefinedStorageUtils.takeFromNetwork(network, input, 1);
 
                     if (took != null) {
                         if (ItemHandlerHelper.insertItem(container.getConnectedItems(), took, true) == null) {
@@ -63,7 +63,7 @@ public class ProcessingCraftingTask implements ICraftingTask {
                             network.push(took, took.stackSize, false);
                         }
                     } else if (!childTasks[i]) {
-                        ICraftingPattern pattern = network.getPatternWithBestScore(input);
+                        ICraftingPattern pattern = RefinedStorageUtils.getPatternFromNetwork(network, input);
 
                         if (pattern != null) {
                             childTasks[i] = true;

@@ -18,6 +18,8 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.ArrayUtils;
+import refinedstorage.api.autocrafting.ICraftingPattern;
+import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.storage.CompareFlags;
 import refinedstorage.item.ItemUpgrade;
 
@@ -294,5 +296,13 @@ public final class RefinedStorageUtils {
                 lines.add(data);
             }
         }
+    }
+
+    public static ItemStack takeFromNetwork(INetworkMaster network, ItemStack stack, int size) {
+        return network.take(stack, size, CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_NBT);
+    }
+
+    public static ICraftingPattern getPatternFromNetwork(INetworkMaster network, ItemStack stack) {
+        return network.getPattern(stack, CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_NBT);
     }
 }

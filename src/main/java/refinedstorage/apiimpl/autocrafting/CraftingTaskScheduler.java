@@ -16,7 +16,7 @@ public class CraftingTaskScheduler {
     }
 
     public void schedule(INetworkMaster network, int compare, ItemStack item) {
-        ICraftingPattern pattern = network.getPatternWithBestScore(item, compare);
+        ICraftingPattern pattern = network.getPattern(item, compare);
 
         if (pattern != null) {
             scheduledItem = item;
