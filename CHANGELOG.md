@@ -1,6 +1,9 @@
 # Refined Storage Changelog
 
 ### 0.8
+**Bugfixes**
+- Fixed solderer not using extra RF/t with upgrades
+
 **Features**
 - Recompile for Minecraft 1.10
 

@@ -35,7 +35,7 @@ public class TileSolderer extends TileSlave {
 
     @Override
     public int getEnergyUsage() {
-        return 3;
+        return 3 + RefinedStorageUtils.getUpgradeEnergyUsage(upgrades);
     }
 
     @Override
