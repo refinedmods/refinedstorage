@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 0.8.1
+**Bugfixes**
+- Fixed upgrades from interface not dropping
+
 ### 0.8
 **Bugfixes**
 - Fixed solderer not using extra RF/t with upgrades

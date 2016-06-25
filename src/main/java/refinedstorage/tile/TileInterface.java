@@ -173,7 +173,7 @@ public class TileInterface extends TileSlave implements ICompareConfig {
 
     @Override
     public IItemHandler getDroppedItems() {
-        return new CombinedInvWrapper(importItems, exportItems);
+        return new CombinedInvWrapper(importItems, exportItems, upgrades);
     }
 
     @Override
