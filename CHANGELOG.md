@@ -1,5 +1,11 @@
 # Refined Storage Changelog
 
+### 0.7.19
+**Bugfixes**
+- Fixed controller being buggy with reconnecting
+- Fixed controller texture updating too slow when energy changes
+- Fixed not being able to take item from grid at times
+
 ### 0.7.18
 **Bugfixes**
 - Fixed cables sending updates when not needed

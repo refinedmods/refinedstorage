@@ -25,7 +25,7 @@ public class DrawerStorage extends ExternalStorage {
 
     @Override
     public void addItems(List<ItemStack> items) {
-        if (!drawer.isEmpty()) {
+        if (!drawer.isEmpty() && drawer.getStoredItemCount() > 0) {
             items.add(drawer.getStoredItemCopy());
         }
     }

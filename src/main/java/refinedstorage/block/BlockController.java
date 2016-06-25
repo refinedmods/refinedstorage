@@ -65,7 +65,7 @@ public class BlockController extends BlockBase {
         TileController controller = (TileController) world.getTileEntity(pos);
 
         return super.getActualState(state, world, pos)
-            .withProperty(ENERGY, controller.getEnergyScaled(8));
+            .withProperty(ENERGY, controller.getEnergyScaledForDisplay());
     }
 
     @Override
@@ -132,7 +132,7 @@ public class BlockController extends BlockBase {
 
     @Override
     public int getComparatorInputOverride(IBlockState state, World world, BlockPos pos) {
-        return ((TileController) world.getTileEntity(pos)).getEnergyScaled(15);
+        return ((TileController) world.getTileEntity(pos)).getEnergyScaledForComparator();
     }
 
     @Override

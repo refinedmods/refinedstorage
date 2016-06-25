@@ -76,8 +76,10 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     private EnergyStorage energy = new EnergyStorage(ENERGY_CAPACITY);
     private int energyUsage;
 
+    private int lastEnergyDisplay;
+    private int lastEnergyComparator;
+
     private boolean couldRun;
-    private long lastEnergyUpdate;
 
     private EnumControllerType type;
 
@@ -130,8 +132,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             slaves.removeAll(slavesToRemove);
             slavesToRemove.clear();
 
-            int lastEnergy = energy.getEnergyStored();
-
             if (canRun()) {
                 if (ticks % 20 == 0 || forceUpdate) {
                     updateSlaves();
@@ -165,21 +165,13 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                         craftingTasks.pop();
                     }
                 }
-            } else if (!slaves.isEmpty()) {
+            } else {
                 disconnectSlaves();
-
-                updateSlaves();
-            }
-
-            if (couldRun != canRun()) {
-                couldRun = canRun();
-
-                worldObj.notifyNeighborsOfStateChange(pos, RefinedStorageBlocks.CONTROLLER);
             }
 
             wirelessGridHandler.update();
 
-            if (getType() == EnumControllerType.NORMAL && energyUsage > 0) {
+            if (canRun() && getType() == EnumControllerType.NORMAL) {
                 if (energy.getEnergyStored() - energyUsage >= 0) {
                     energy.extractEnergy(energyUsage, false);
                 } else {
@@ -189,14 +181,22 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 energy.setEnergyStored(energy.getMaxEnergyStored());
             }
 
-            if (energy.getEnergyStored() != lastEnergy) {
+            if (couldRun != canRun()) {
+                couldRun = canRun();
+
+                worldObj.notifyNeighborsOfStateChange(pos, RefinedStorageBlocks.CONTROLLER);
+            }
+
+            if (getEnergyScaledForDisplay() != lastEnergyDisplay) {
+                lastEnergyDisplay = getEnergyScaledForDisplay();
+
+                RefinedStorageUtils.updateBlock(worldObj, pos);
+            }
+
+            if (getEnergyScaledForComparator() != lastEnergyComparator) {
+                lastEnergyComparator = getEnergyScaledForComparator();
+
                 worldObj.updateComparatorOutputLevel(pos, RefinedStorageBlocks.CONTROLLER);
-
-                if (System.currentTimeMillis() - lastEnergyUpdate > 1500) {
-                    lastEnergyUpdate = System.currentTimeMillis();
-
-                    RefinedStorageUtils.updateBlock(worldObj, pos);
-                }
             }
         }
 
@@ -643,6 +643,14 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     public int getEnergyScaled(int i) {
         return (int) ((float) energy.getEnergyStored() / (float) ENERGY_CAPACITY * (float) i);
+    }
+
+    public int getEnergyScaledForDisplay() {
+        return getEnergyScaled(8);
+    }
+
+    public int getEnergyScaledForComparator() {
+        return getEnergyScaled(15);
     }
 
     @Override
