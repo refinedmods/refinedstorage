@@ -5,6 +5,7 @@
 - Fixed controller being buggy with reconnecting
 - Fixed controller texture updating too slow when energy changes
 - Fixed not being able to take item from grid at times
+- Fixed external storage on storage drawer sending an itemcount of 0 over
 
 ### 0.7.18
 **Bugfixes**
@@ -16,7 +17,6 @@
 - Fixed getting wrong items back in grid
 - Fixed wrong item getting crafted
 - Fixed server lag with exporter and importer
-- Fixed machines not working after leaving a chunk
 - Updated Forge to 1969
 - Updated JEI to 3.6.x
 
