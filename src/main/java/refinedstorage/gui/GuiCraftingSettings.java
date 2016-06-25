@@ -25,7 +25,7 @@ public class GuiCraftingSettings extends GuiBase {
     private GuiButton[] incrementButtons = new GuiButton[6];
 
     public GuiCraftingSettings(GuiGrid gui, EntityPlayer player, ItemStack stack) {
-        super(new ContainerCraftingSettings(player, stack), 170, 99);
+        super(new ContainerCraftingSettings(player, stack), 172, 99);
 
         this.gui = gui;
         this.stack = stack;

@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 0.8
+**Features**
+- Recompile for Minecraft 1.10
+
 ### 0.7.19
 **Bugfixes**
 - Fixed controller being buggy with reconnecting
