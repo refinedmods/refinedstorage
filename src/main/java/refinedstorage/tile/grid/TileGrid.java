@@ -150,7 +150,7 @@ public class TileGrid extends TileSlave implements IGrid {
 
                 if (slot != null) {
                     if (slot.stackSize == 1 && isConnected()) {
-                        matrix.setInventorySlotContents(i, network.take(slot, 1));
+                        matrix.setInventorySlotContents(i, RefinedStorageUtils.takeFromNetwork(network, slot, 1));
                     } else {
                         matrix.decrStackSize(i, 1);
                     }
@@ -244,7 +244,7 @@ public class TileGrid extends TileSlave implements IGrid {
 
                     if (getType() == EnumGridType.CRAFTING) {
                         for (ItemStack possibility : possibilities) {
-                            ItemStack took = network.take(possibility, 1);
+                            ItemStack took = RefinedStorageUtils.takeFromNetwork(network, possibility, 1);
 
                             if (took != null) {
                                 matrix.setInventorySlotContents(i, possibility);
