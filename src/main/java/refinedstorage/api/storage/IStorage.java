@@ -3,6 +3,7 @@ package refinedstorage.api.storage;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -26,6 +27,7 @@ public interface IStorage {
      * @param simulate If we are simulating
      * @return null if the push was successful, or a {@link ItemStack} with the remainder
      */
+    @Nullable
     ItemStack push(@Nonnull ItemStack stack, int size, boolean simulate);
 
     /**
@@ -38,6 +40,7 @@ public interface IStorage {
      * @param flags On what we are comparing to takeFromNetwork the item, see {@link CompareFlags}
      * @return null if we didn't takeFromNetwork anything, or a {@link ItemStack} with the result
      */
+    @Nullable
     ItemStack take(@Nonnull ItemStack stack, int size, int flags);
 
     /**

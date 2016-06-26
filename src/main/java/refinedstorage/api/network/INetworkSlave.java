@@ -36,7 +36,8 @@ public interface INetworkSlave {
 
     /**
      * Called when a connection is found to the network
-     *  @param world   The world
+     *
+     * @param world   The world
      * @param network The network we're trying to connect to
      */
     void connect(World world, INetworkMaster network);

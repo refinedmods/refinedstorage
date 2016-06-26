@@ -8,6 +8,7 @@ import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.storage.CompareFlags;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -40,12 +41,12 @@ public interface INetworkMaster {
     /**
      * @param slave The slave to add
      */
-    void addSlave(INetworkSlave slave);
+    void addSlave(@Nonnull INetworkSlave slave);
 
     /**
      * @param slave The slave to remove
      */
-    void removeSlave(INetworkSlave slave);
+    void removeSlave(@Nonnull INetworkSlave slave);
 
     /**
      * @return The grid handler for this network
@@ -72,14 +73,14 @@ public interface INetworkMaster {
      *
      * @param task The crafting task to add
      */
-    void addCraftingTask(ICraftingTask task);
+    void addCraftingTask(@Nonnull ICraftingTask task);
 
     /**
      * Adds a crafting task to the bottom of the crafting task stack.
      *
      * @param task The crafting task to add as last
      */
-    void addCraftingTaskAsLast(ICraftingTask task);
+    void addCraftingTaskAsLast(@Nonnull ICraftingTask task);
 
     /**
      * Creates a crafting task from a pattern.
@@ -87,14 +88,14 @@ public interface INetworkMaster {
      * @param pattern The pattern to create a task for
      * @return A task
      */
-    ICraftingTask createCraftingTask(ICraftingPattern pattern);
+    ICraftingTask createCraftingTask(@Nonnull ICraftingPattern pattern);
 
     /**
      * Cancels a crafting task.
      *
      * @param task The task to cancel
      */
-    void cancelCraftingTask(ICraftingTask task);
+    void cancelCraftingTask(@Nonnull ICraftingTask task);
 
     /**
      * @return A list of crafting patterns in this network, do NOT modify this list
@@ -113,8 +114,9 @@ public interface INetworkMaster {
     /**
      * @param pattern The {@link ItemStack} to get a pattern for
      * @param flags   The flags to compare on, see {@link CompareFlags}
-     * @return The pattern
+     * @return The pattern, or null if the pattern is not found
      */
+    @Nullable
     ICraftingPattern getPattern(ItemStack pattern, int flags);
 
     /**
@@ -135,7 +137,8 @@ public interface INetworkMaster {
      * @param simulate If we are simulating
      * @return null if the push was successful, or a {@link ItemStack} with the remainder
      */
-    ItemStack push(ItemStack stack, int size, boolean simulate);
+    @Nullable
+    ItemStack push(@Nonnull ItemStack stack, int size, boolean simulate);
 
     /**
      * Takes an item from this network.
@@ -145,7 +148,8 @@ public interface INetworkMaster {
      * @param flags The flags to compare on, see {@link CompareFlags}
      * @return null if we didn't takeFromNetwork anything, or a {@link ItemStack} with the result
      */
-    ItemStack take(ItemStack stack, int size, int flags);
+    @Nullable
+    ItemStack take(@Nonnull ItemStack stack, int size, int flags);
 
     /**
      * Returns an item from storage, based on the given prototype.
@@ -155,5 +159,5 @@ public interface INetworkMaster {
      * @return The {@link ItemStack} we found, do NOT modify
      */
     @Nullable
-    ItemStack getItem(ItemStack stack, int flags);
+    ItemStack getItem(@Nonnull ItemStack stack, int flags);
 }
