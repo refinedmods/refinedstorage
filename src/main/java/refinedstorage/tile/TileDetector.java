@@ -53,7 +53,7 @@ public class TileDetector extends TileSlave implements ICompareConfig {
             boolean wasPowered = powered;
 
             if (slot != null) {
-                ItemStack stack = network.getItem(slot, compare);
+                ItemStack stack = network.getItems().get(slot, compare);
 
                 if (stack != null) {
                     switch (mode) {

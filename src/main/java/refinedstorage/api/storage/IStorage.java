@@ -12,12 +12,9 @@ import java.util.List;
  */
 public interface IStorage {
     /**
-     * Adds the items in this storage to the storage network.
-     * This is called every 20 ticks or when the storage changes, so don't make this method too resource intensive.
-     *
-     * @param items A list of previously added items
+     * @return Items stored in this storage
      */
-    void addItems(List<ItemStack> items);
+    List<ItemStack> getItems();
 
     /**
      * Pushes an item to this storage.

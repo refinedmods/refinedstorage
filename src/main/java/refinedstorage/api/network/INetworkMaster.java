@@ -7,6 +7,7 @@ import net.minecraft.util.math.BlockPos;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.storage.CompareFlags;
+import refinedstorage.api.storage.IItemList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -59,9 +60,9 @@ public interface INetworkMaster {
     IWirelessGridHandler getWirelessGridHandler();
 
     /**
-     * @return The items stored in this network, do NOT modify this list
+     * @return A {@link IItemList} containing all network items.
      */
-    List<ItemStack> getItems();
+    IItemList getItems();
 
     /**
      * @return The crafting tasks in this network, do NOT modify this list
@@ -143,21 +144,11 @@ public interface INetworkMaster {
     /**
      * Takes an item from this network.
      *
-     * @param stack A prototype of the stack to takeFromNetwork, do NOT modify
+     * @param stack A prototype of the stack to take, do NOT modify
      * @param size  The amount of that prototype that has to be taken
      * @param flags The flags to compare on, see {@link CompareFlags}
      * @return null if we didn't takeFromNetwork anything, or a {@link ItemStack} with the result
      */
     @Nullable
     ItemStack take(@Nonnull ItemStack stack, int size, int flags);
-
-    /**
-     * Returns an item from storage, based on the given prototype.
-     *
-     * @param stack The stack prototype to search
-     * @param flags The flags to compare on, see {@link CompareFlags}
-     * @return The {@link ItemStack} we found, do NOT modify
-     */
-    @Nullable
-    ItemStack getItem(@Nonnull ItemStack stack, int flags);
 }
