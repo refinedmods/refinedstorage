@@ -421,7 +421,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             }
         }
 
-        combinedItems.clear();
+        /*combinedItems.clear();
         combinedItemsIndices.clear();
 
         for (int i = 0; i < items.size(); ++i) {
@@ -451,7 +451,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             }
         }
 
-        items.removeAll(combinedItems);
+        items.removeAll(combinedItems);*/
     }
 
     @Override
