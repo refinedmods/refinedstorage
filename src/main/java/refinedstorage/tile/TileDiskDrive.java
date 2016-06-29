@@ -23,6 +23,8 @@ import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.network.MessagePriorityUpdate;
 import refinedstorage.tile.config.*;
 
+import java.util.List;
+
 public class TileDiskDrive extends TileSlave implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig {
     public class Storage extends NBTStorage {
         public Storage(ItemStack disk) {
@@ -59,6 +61,10 @@ public class TileDiskDrive extends TileSlave implements IStorageProvider, IStora
                 storages[slot] = null;
             } else {
                 storages[slot] = new Storage(disk);
+            }
+
+            if (isConnected()) {
+                network.getItems().rebuild(network);
             }
         }
 
@@ -108,8 +114,12 @@ public class TileDiskDrive extends TileSlave implements IStorageProvider, IStora
     }
 
     @Override
-    public IStorage[] getStorages() {
-        return storages;
+    public void addStorages(List<IStorage> storages) {
+        for (IStorage storage : storages) {
+            if (storage != null) {
+                storages.add(storage);
+            }
+        }
     }
 
     @Override

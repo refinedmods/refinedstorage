@@ -8,6 +8,8 @@ import java.util.List;
 public interface IItemList {
     void rebuild(INetworkMaster master);
 
+    List<IStorage> getStorages();
+
     void add(ItemStack stack);
 
     void remove(ItemStack stack);

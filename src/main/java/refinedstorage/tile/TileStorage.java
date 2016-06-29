@@ -20,6 +20,8 @@ import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.network.MessagePriorityUpdate;
 import refinedstorage.tile.config.*;
 
+import java.util.List;
+
 public class TileStorage extends TileSlave implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig {
     class Storage extends NBTStorage {
         public Storage() {
@@ -87,14 +89,11 @@ public class TileStorage extends TileSlave implements IStorageProvider, IStorage
     }
 
     @Override
-    public IStorage[] getStorages() {
-        if (storage != null) {
-            return new IStorage[]{
-                storage
-            };
-        }
 
-        return null;
+    public void addStorages(List<IStorage> storages) {
+        if (storage != null) {
+            storages.add(storage);
+        }
     }
 
     @Override

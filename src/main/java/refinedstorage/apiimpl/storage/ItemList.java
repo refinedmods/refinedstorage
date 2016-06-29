@@ -8,30 +8,35 @@ import refinedstorage.api.storage.IItemList;
 import refinedstorage.api.storage.IStorage;
 import refinedstorage.api.storage.IStorageProvider;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ItemList implements IItemList {
-    private List<ItemStack> stacks;
+    private List<IStorage> storages = new ArrayList<IStorage>();
+    private List<ItemStack> stacks = new ArrayList<ItemStack>();
 
     @Override
     public void rebuild(INetworkMaster master) {
-        stacks.clear();
+        storages.clear();
 
         for (INetworkSlave slave : master.getSlaves()) {
-            if (slave instanceof IStorageProvider) {
-                IStorage[] storages = ((IStorageProvider) slave).getStorages();
-
-                if (storages != null) {
-                    for (IStorage storage : storages) {
-                        if (storage != null) {
-                            for (ItemStack stack : storage.getItems()) {
-                                add(stack);
-                            }
-                        }
-                    }
-                }
+            if (slave.canUpdate() && slave instanceof IStorageProvider) {
+                ((IStorageProvider) slave).addStorages(storages);
             }
         }
+
+        stacks.clear();
+
+        for (IStorage storage : storages) {
+            for (ItemStack stack : storage.getItems()) {
+                add(stack);
+            }
+        }
+    }
+
+    @Override
+    public List<IStorage> getStorages() {
+        return storages;
     }
 
     @Override

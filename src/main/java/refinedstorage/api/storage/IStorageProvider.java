@@ -1,11 +1,15 @@
 package refinedstorage.api.storage;
 
+import java.util.List;
+
 /**
  * Implement this interface on the tile that has a {@link refinedstorage.api.RefinedStorageCapabilities#NETWORK_SLAVE_CAPABILITY} capability.
  */
 public interface IStorageProvider {
     /**
-     * @return The storages that this tile provides.
+     * Adds the storages.
+     *
+     * @param storages The previously added storages
      */
-    IStorage[] getStorages();
+    void addStorages(List<IStorage> storages);
 }
