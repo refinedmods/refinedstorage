@@ -132,6 +132,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             slavesToRemove.clear();
 
             if (rebuildItemList) {
+                System.out.println("Rebuilding item list");
                 items.rebuild(this);
 
                 rebuildItemList = false;
@@ -430,7 +431,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public ItemStack push(ItemStack stack, int size, boolean simulate) {
         if (stack == null || stack.getItem() == null || items.getStorages().isEmpty()) {
-            System.out.println("Cannot push!");
             return ItemHandlerHelper.copyStackWithSize(stack, size);
         }
 

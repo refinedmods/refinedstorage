@@ -89,7 +89,6 @@ public class TileStorage extends TileSlave implements IStorageProvider, IStorage
     }
 
     @Override
-
     public void addStorages(List<IStorage> storages) {
         if (storage != null) {
             storages.add(storage);
