@@ -18,12 +18,20 @@ import java.util.List;
 public class GroupedStorage implements IGroupedStorage {
     private List<IStorage> storages = new ArrayList<IStorage>();
     private Multimap<Item, ItemStack> stacks = ArrayListMultimap.create();
+    private INetworkMaster network;
+    private boolean rebuilding;
+
+    public GroupedStorage(INetworkMaster network) {
+        this.network = network;
+    }
 
     @Override
-    public void rebuild(INetworkMaster master) {
+    public void rebuild() {
+        rebuilding = true;
+
         storages.clear();
 
-        for (INetworkSlave slave : master.getSlaves()) {
+        for (INetworkSlave slave : network.getSlaves()) {
             if (slave.canUpdate() && slave instanceof IStorageProvider) {
                 ((IStorageProvider) slave).addStorages(storages);
             }
@@ -36,6 +44,8 @@ public class GroupedStorage implements IGroupedStorage {
                 add(stack);
             }
         }
+
+        rebuilding = false;
     }
 
     @Override
@@ -54,6 +64,10 @@ public class GroupedStorage implements IGroupedStorage {
         }
 
         stacks.put(stack.getItem(), stack.copy());
+
+        if (!rebuilding) {
+            network.sendStorageDelta(stack, stack.stackSize);
+        }
     }
 
     @Override
@@ -65,6 +79,8 @@ public class GroupedStorage implements IGroupedStorage {
                 if (otherStack.stackSize == 0) {
                     stacks.remove(otherStack.getItem(), otherStack);
                 }
+
+                network.sendStorageDelta(stack, -stack.stackSize);
 
                 return;
             }

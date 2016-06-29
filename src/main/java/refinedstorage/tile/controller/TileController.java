@@ -39,6 +39,7 @@ import refinedstorage.block.EnumControllerType;
 import refinedstorage.container.ContainerController;
 import refinedstorage.container.ContainerGrid;
 import refinedstorage.item.ItemPattern;
+import refinedstorage.network.MessageGridDelta;
 import refinedstorage.network.MessageGridItems;
 import refinedstorage.tile.ISynchronizedContainer;
 import refinedstorage.tile.TileBase;
@@ -58,7 +59,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     private GridHandler gridHandler = new GridHandler(this);
     private WirelessGridHandler wirelessGridHandler = new WirelessGridHandler(this);
 
-    private IGroupedStorage storage = new GroupedStorage();
+    private IGroupedStorage storage = new GroupedStorage(this);
     private boolean rebuildStorage;
 
     private List<INetworkSlave> slaves = new ArrayList<INetworkSlave>();
@@ -132,11 +133,11 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             slavesToRemove.clear();
 
             if (rebuildStorage) {
-                storage.rebuild(this);
+                storage.rebuild();
 
                 rebuildStorage = false;
 
-                updateStorageWithClient();
+                sendStorageToClient();
             }
 
             if (canRun()) {
@@ -413,17 +414,30 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     }
 
     @Override
-    public void updateStorageWithClient() {
+    public void sendStorageToClient() {
         for (EntityPlayer player : worldObj.playerEntities) {
-            if (player.openContainer.getClass() == ContainerGrid.class && pos.equals(((ContainerGrid) player.openContainer).getGrid().getNetworkPosition())) {
-                updateStorageWithClient((EntityPlayerMP) player);
+            if (isWatchingGrid(player)) {
+                sendStorageToClient((EntityPlayerMP) player);
             }
         }
     }
 
     @Override
-    public void updateStorageWithClient(EntityPlayerMP player) {
+    public void sendStorageToClient(EntityPlayerMP player) {
         RefinedStorage.NETWORK.sendTo(new MessageGridItems(this), player);
+    }
+
+    @Override
+    public void sendStorageDelta(ItemStack stack, int amount) {
+        for (EntityPlayer player : worldObj.playerEntities) {
+            if (isWatchingGrid(player)) {
+                RefinedStorage.NETWORK.sendTo(new MessageGridDelta(stack, amount), (EntityPlayerMP) player);
+            }
+        }
+    }
+
+    private boolean isWatchingGrid(EntityPlayer player) {
+        return player.openContainer.getClass() == ContainerGrid.class && pos.equals(((ContainerGrid) player.openContainer).getGrid().getNetworkPosition());
     }
 
     @Override
@@ -460,8 +474,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             }
 
             storage.add(ItemHandlerHelper.copyStackWithSize(stack, sizePushed));
-
-            updateStorageWithClient();
         }
 
         return remainder;
@@ -494,8 +506,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
         if (newStack != null) {
             storage.remove(newStack);
-
-            updateStorageWithClient();
         }
 
         return newStack;

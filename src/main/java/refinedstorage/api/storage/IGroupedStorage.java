@@ -13,10 +13,8 @@ public interface IGroupedStorage {
     /**
      * Rebuilds the storages and items for a network. Typically called when a {@link IStorageProvider} is
      * added or removed from the network.
-     *
-     * @param master The network
      */
-    void rebuild(INetworkMaster master);
+    void rebuild();
 
     /**
      * @return A list of {@link IStorage} connected to this network

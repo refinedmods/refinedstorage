@@ -123,12 +123,20 @@ public interface INetworkMaster {
     /**
      * Sends to all clients in a grid a packet with all the items in this network.
      */
-    void updateStorageWithClient();
+    void sendStorageToClient();
 
     /**
      * Sends a player a packet with all the items in this network.
      */
-    void updateStorageWithClient(EntityPlayerMP player);
+    void sendStorageToClient(EntityPlayerMP player);
+
+    /**
+     * Sends a specific delta to all grid watchers.
+     *
+     * @param stack  The stack
+     * @param amount The amount changed
+     */
+    void sendStorageDelta(ItemStack stack, int amount);
 
     /**
      * Pushes an item to this network.
