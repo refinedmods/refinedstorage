@@ -1,19 +1,23 @@
 package refinedstorage.apiimpl.storage;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.INetworkSlave;
-import refinedstorage.api.storage.IItemList;
+import refinedstorage.api.storage.IGroupedStorage;
 import refinedstorage.api.storage.IStorage;
 import refinedstorage.api.storage.IStorageProvider;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-public class ItemList implements IItemList {
+public class GroupedStorage implements IGroupedStorage {
     private List<IStorage> storages = new ArrayList<IStorage>();
-    private List<ItemStack> stacks = new ArrayList<ItemStack>();
+    private Multimap<Item, ItemStack> stacks = ArrayListMultimap.create();
 
     @Override
     public void rebuild(INetworkMaster master) {
@@ -41,7 +45,7 @@ public class ItemList implements IItemList {
 
     @Override
     public void add(ItemStack stack) {
-        for (ItemStack otherStack : stacks) {
+        for (ItemStack otherStack : stacks.get(stack.getItem())) {
             if (RefinedStorageUtils.compareStackNoQuantity(otherStack, stack)) {
                 otherStack.stackSize += stack.stackSize;
 
@@ -49,17 +53,17 @@ public class ItemList implements IItemList {
             }
         }
 
-        stacks.add(stack.copy());
+        stacks.put(stack.getItem(), stack.copy());
     }
 
     @Override
     public void remove(ItemStack stack) {
-        for (ItemStack otherStack : stacks) {
+        for (ItemStack otherStack : stacks.get(stack.getItem())) {
             if (RefinedStorageUtils.compareStackNoQuantity(otherStack, stack)) {
                 otherStack.stackSize -= stack.stackSize;
 
                 if (otherStack.stackSize == 0) {
-                    stacks.remove(otherStack);
+                    stacks.remove(otherStack.getItem(), otherStack);
                 }
 
                 return;
@@ -69,7 +73,7 @@ public class ItemList implements IItemList {
 
     @Override
     public ItemStack get(ItemStack stack, int flags) {
-        for (ItemStack otherStack : stacks) {
+        for (ItemStack otherStack : stacks.get(stack.getItem())) {
             if (RefinedStorageUtils.compareStack(otherStack, stack, flags)) {
                 return otherStack;
             }
@@ -79,7 +83,7 @@ public class ItemList implements IItemList {
     }
 
     @Override
-    public List<ItemStack> getStacks() {
-        return stacks;
+    public Collection<ItemStack> getStacks() {
+        return stacks.values();
     }
 }

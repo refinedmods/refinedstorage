@@ -65,7 +65,7 @@ public class TileDiskDrive extends TileSlave implements IStorageProvider, IStora
                 }
 
                 if (isConnected()) {
-                    network.getItems().rebuild(network);
+                    network.getStorage().rebuild(network);
                 }
             }
         }

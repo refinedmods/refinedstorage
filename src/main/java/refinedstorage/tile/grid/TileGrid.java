@@ -112,7 +112,7 @@ public class TileGrid extends TileSlave implements IGrid {
 
     public void onGridOpened(EntityPlayer player) {
         if (isConnected()) {
-            network.updateItemsWithClient((EntityPlayerMP) player);
+            network.updateStorageWithClient((EntityPlayerMP) player);
         }
     }
 

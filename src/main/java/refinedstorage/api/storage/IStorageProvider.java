@@ -7,7 +7,7 @@ import java.util.List;
  */
 public interface IStorageProvider {
     /**
-     * Adds the storages.
+     * Adds the storages that this storage provides.
      *
      * @param storages The previously added storages
      */

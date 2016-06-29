@@ -171,7 +171,7 @@ public abstract class TileSlave extends TileBase implements INetworkSlave, ISync
         this.redstoneMode = mode;
 
         if (this instanceof IStorageProvider && isConnected()) {
-            network.getItems().rebuild(network);
+            network.getStorage().rebuild(network);
         }
     }
 

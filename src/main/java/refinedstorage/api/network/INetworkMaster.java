@@ -7,7 +7,7 @@ import net.minecraft.util.math.BlockPos;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.storage.CompareFlags;
-import refinedstorage.api.storage.IItemList;
+import refinedstorage.api.storage.IGroupedStorage;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -60,9 +60,9 @@ public interface INetworkMaster {
     IWirelessGridHandler getWirelessGridHandler();
 
     /**
-     * @return A {@link IItemList} containing all network items.
+     * @return The {@link IGroupedStorage} of this network
      */
-    IItemList getItems();
+    IGroupedStorage getStorage();
 
     /**
      * @return The crafting tasks in this network, do NOT modify this list
@@ -123,12 +123,12 @@ public interface INetworkMaster {
     /**
      * Sends to all clients in a grid a packet with all the items in this network.
      */
-    void updateItemsWithClient();
+    void updateStorageWithClient();
 
     /**
      * Sends a player a packet with all the items in this network.
      */
-    void updateItemsWithClient(EntityPlayerMP player);
+    void updateStorageWithClient(EntityPlayerMP player);
 
     /**
      * Pushes an item to this network.
