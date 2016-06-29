@@ -60,6 +60,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     private List<IStorage> storages = new ArrayList<IStorage>();
     private IItemList items = new ItemList();
+    private boolean rebuildItemList;
 
     private List<INetworkSlave> slaves = new ArrayList<INetworkSlave>();
     private List<INetworkSlave> slavesToAdd = new ArrayList<INetworkSlave>();
@@ -107,14 +108,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             boolean forceUpdate = !slavesToAdd.isEmpty() || !slavesToRemove.isEmpty();
 
             for (INetworkSlave newSlave : slavesToAdd) {
-                if (newSlave instanceof IStorageProvider) {
-                    for (IStorage storage : ((IStorageProvider) newSlave).getStorages()) {
-                        for (ItemStack item : storage.getItems()) {
-                            items.add(item);
-                        }
-                    }
-                }
-
                 boolean found = false;
 
                 for (int i = 0; i < slaves.size(); ++i) {
@@ -192,6 +185,14 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 updateSlaves();
             }
 
+            if (rebuildItemList) {
+                items.rebuild(this);
+
+                rebuildItemList = false;
+
+                updateItemsWithClient();
+            }
+
             if (couldRun != canRun()) {
                 couldRun = canRun();
 
@@ -226,11 +227,19 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public void addSlave(INetworkSlave slave) {
         slavesToAdd.add(slave);
+
+        if (slave instanceof IStorageProvider) {
+            rebuildItemList = true;
+        }
     }
 
     @Override
     public void removeSlave(INetworkSlave slave) {
         slavesToRemove.add(slave);
+
+        if (slave instanceof IStorageProvider) {
+            rebuildItemList = true;
+        }
     }
 
     public void disconnectSlaves() {
@@ -453,6 +462,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             }
 
             items.add(ItemHandlerHelper.copyStackWithSize(stack, sizePushed));
+
+            updateItemsWithClient();
         }
 
         return remainder;
@@ -485,6 +496,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
         if (newStack != null) {
             items.remove(newStack);
+
+            updateItemsWithClient();
         }
 
         return newStack;

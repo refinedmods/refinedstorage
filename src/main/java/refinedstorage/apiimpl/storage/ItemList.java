@@ -2,7 +2,10 @@ package refinedstorage.apiimpl.storage;
 
 import net.minecraft.item.ItemStack;
 import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.api.network.INetworkSlave;
 import refinedstorage.api.storage.IItemList;
+import refinedstorage.api.storage.IStorage;
 import refinedstorage.api.storage.IStorageProvider;
 
 import java.util.List;
@@ -11,8 +14,24 @@ public class ItemList implements IItemList {
     private List<ItemStack> stacks;
 
     @Override
-    public void rebuild(List<IStorageProvider> providers) {
+    public void rebuild(INetworkMaster master) {
         stacks.clear();
+
+        for (INetworkSlave slave : master.getSlaves()) {
+            if (slave instanceof IStorageProvider) {
+                IStorage[] storages = ((IStorageProvider) slave).getStorages();
+
+                if (storages != null) {
+                    for (IStorage storage : storages) {
+                        if (storage != null) {
+                            for (ItemStack stack : storage.getItems()) {
+                                add(stack);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Override

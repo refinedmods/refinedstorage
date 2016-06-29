@@ -22,8 +22,6 @@ import refinedstorage.tile.config.IModeConfig;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.ModeConstants;
 
-import java.util.List;
-
 public class TileExternalStorage extends TileSlave implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig {
     public static final String NBT_PRIORITY = "Priority";
     public static final String NBT_COMPARE = "Compare";
@@ -143,11 +141,13 @@ public class TileExternalStorage extends TileSlave implements IStorageProvider, 
     }
 
     @Override
-    public void provide(List<IStorage> storages) {
+    public IStorage[] getStorages() {
         TileEntity facing = getFacingTile();
 
         if (facing instanceof IDrawerGroup) {
             IDrawerGroup group = (IDrawerGroup) facing;
+
+            IStorage[] storages = new IStorage[group.getDrawerCount()];
 
             energyUsage = group.getDrawerCount();
             stored = 0;
@@ -157,7 +157,7 @@ public class TileExternalStorage extends TileSlave implements IStorageProvider, 
                 if (group.isDrawerEnabled(i)) {
                     DrawerStorage storage = new DrawerStorage(this, group.getDrawer(i));
 
-                    storages.add(storage);
+                    storages[i] = storage;
 
                     stored += storage.getStored();
                     capacity += storage.getCapacity();
@@ -166,36 +166,44 @@ public class TileExternalStorage extends TileSlave implements IStorageProvider, 
         } else if (facing instanceof IDrawer) {
             DrawerStorage storage = new DrawerStorage(this, (IDrawer) facing);
 
-            storages.add(storage);
-
             energyUsage = 1;
             stored = storage.getStored();
             capacity = storage.getCapacity();
+
+            return new IStorage[]{
+                storage
+            };
         } else if (facing instanceof IDeepStorageUnit) {
             DeepStorageUnitStorage storage = new DeepStorageUnitStorage(this, (IDeepStorageUnit) facing);
 
-            storages.add(storage);
-
             energyUsage = 1;
             stored = storage.getStored();
             capacity = storage.getCapacity();
+
+            return new IStorage[]{
+                storage
+            };
         } else {
             IItemHandler handler = RefinedStorageUtils.getItemHandler(facing, getDirection().getOpposite());
 
             if (handler != null) {
                 ItemHandlerStorage storage = new ItemHandlerStorage(this, handler);
 
-                storages.add(storage);
-
                 energyUsage = 1;
                 stored = storage.getStored();
                 capacity = storage.getCapacity();
+
+                return new IStorage[]{
+                    storage
+                };
             } else {
                 energyUsage = 0;
                 stored = 0;
                 capacity = 0;
             }
         }
+
+        return null;
     }
 
     @Override

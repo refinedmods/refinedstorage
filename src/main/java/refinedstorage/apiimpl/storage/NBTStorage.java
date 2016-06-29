@@ -110,8 +110,8 @@ public abstract class NBTStorage implements IStorage {
     }
 
     @Override
-    public void addItems(List<ItemStack> items) {
-        items.addAll(stacks);
+    public List<ItemStack> getItems() {
+        return stacks;
     }
 
     @Override

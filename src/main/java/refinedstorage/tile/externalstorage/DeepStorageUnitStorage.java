@@ -7,6 +7,7 @@ import refinedstorage.RefinedStorageUtils;
 import refinedstorage.tile.config.ModeFilter;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.List;
 
 public class DeepStorageUnitStorage extends ExternalStorage {
@@ -24,10 +25,12 @@ public class DeepStorageUnitStorage extends ExternalStorage {
     }
 
     @Override
-    public void addItems(List<ItemStack> items) {
+    public List<ItemStack> getItems() {
         if (unit.getStoredItemType() != null && unit.getStoredItemType().stackSize > 0) {
-            items.add(unit.getStoredItemType().copy());
+            return Collections.singletonList(unit.getStoredItemType().copy());
         }
+
+        return Collections.emptyList();
     }
 
     @Override

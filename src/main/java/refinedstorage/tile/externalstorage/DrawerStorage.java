@@ -7,6 +7,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.tile.config.ModeFilter;
 
+import java.util.Collections;
 import java.util.List;
 
 public class DrawerStorage extends ExternalStorage {
@@ -24,10 +25,12 @@ public class DrawerStorage extends ExternalStorage {
     }
 
     @Override
-    public void addItems(List<ItemStack> items) {
+    public List<ItemStack> getItems() {
         if (!drawer.isEmpty() && drawer.getStoredItemCount() > 0) {
-            items.add(drawer.getStoredItemCopy());
+            return Collections.singletonList(drawer.getStoredItemCopy());
         }
+
+        return Collections.emptyList();
     }
 
     public boolean isVoidable() {

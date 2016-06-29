@@ -41,9 +41,9 @@ public class MessageGridItems implements IMessage, IMessageHandler<MessageGridIt
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(network.getItems().size());
+        buf.writeInt(network.getItems().getStacks().size());
 
-        for (ItemStack item : network.getItems()) {
+        for (ItemStack item : network.getItems().getStacks()) {
             buf.writeInt(item.stackSize);
             ByteBufUtils.writeItemStack(buf, item);
         }

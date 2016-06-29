@@ -6,6 +6,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.tile.config.ModeFilter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ItemHandlerStorage extends ExternalStorage {
@@ -23,12 +24,16 @@ public class ItemHandlerStorage extends ExternalStorage {
     }
 
     @Override
-    public void addItems(List<ItemStack> items) {
+    public List<ItemStack> getItems() {
+        List<ItemStack> items = new ArrayList<ItemStack>();
+
         for (int i = 0; i < handler.getSlots(); ++i) {
             if (handler.getStackInSlot(i) != null && handler.getStackInSlot(i).getItem() != null) {
                 items.add(handler.getStackInSlot(i).copy());
             }
         }
+
+        return items;
     }
 
     @Override

@@ -11,6 +11,7 @@ import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.RefinedStorageCapabilities;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.INetworkSlave;
+import refinedstorage.api.storage.IStorageProvider;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
 import refinedstorage.tile.controller.TileController;
@@ -168,6 +169,10 @@ public abstract class TileSlave extends TileBase implements INetworkSlave, ISync
         markDirty();
 
         this.redstoneMode = mode;
+
+        if (this instanceof IStorageProvider && isConnected()) {
+            network.getItems().rebuild(network);
+        }
     }
 
     @Override
