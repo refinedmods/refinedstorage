@@ -55,18 +55,12 @@ public class TileDiskDrive extends TileSlave implements IStorageProvider, IStora
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            if (!worldObj.isRemote) {
-                ItemStack disk = getStackInSlot(slot);
+            ItemStack disk = getStackInSlot(slot);
 
-                if (disk == null) {
-                    storages[slot] = null;
-                } else {
-                    storages[slot] = new Storage(disk);
-                }
-
-                if (isConnected()) {
-                    network.getStorage().rebuild();
-                }
+            if (disk == null) {
+                storages[slot] = null;
+            } else {
+                storages[slot] = new Storage(disk);
             }
         }
 

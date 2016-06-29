@@ -27,7 +27,6 @@ import refinedstorage.api.network.IWirelessGridHandler;
 import refinedstorage.api.storage.CompareFlags;
 import refinedstorage.api.storage.IGroupedStorage;
 import refinedstorage.api.storage.IStorage;
-import refinedstorage.api.storage.IStorageProvider;
 import refinedstorage.apiimpl.autocrafting.BasicCraftingTask;
 import refinedstorage.apiimpl.autocrafting.CraftingPattern;
 import refinedstorage.apiimpl.autocrafting.ProcessingCraftingTask;
@@ -39,7 +38,6 @@ import refinedstorage.block.EnumControllerType;
 import refinedstorage.container.ContainerController;
 import refinedstorage.container.ContainerGrid;
 import refinedstorage.item.ItemPattern;
-import refinedstorage.network.MessageGridDelta;
 import refinedstorage.network.MessageGridItems;
 import refinedstorage.tile.ISynchronizedContainer;
 import refinedstorage.tile.TileBase;
@@ -60,7 +58,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     private WirelessGridHandler wirelessGridHandler = new WirelessGridHandler(this);
 
     private IGroupedStorage storage = new GroupedStorage(this);
-    private boolean rebuildStorage;
 
     private List<INetworkSlave> slaves = new ArrayList<INetworkSlave>();
     private List<INetworkSlave> slavesToAdd = new ArrayList<INetworkSlave>();
@@ -131,14 +128,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
             slaves.removeAll(slavesToRemove);
             slavesToRemove.clear();
-
-            if (rebuildStorage) {
-                storage.rebuild();
-
-                rebuildStorage = false;
-
-                sendStorageToClient();
-            }
 
             if (canRun()) {
                 if (ticks % 20 == 0 || forceUpdate) {
@@ -227,19 +216,11 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public void addSlave(INetworkSlave slave) {
         slavesToAdd.add(slave);
-
-        if (slave instanceof IStorageProvider) {
-            rebuildStorage = true;
-        }
     }
 
     @Override
     public void removeSlave(INetworkSlave slave) {
         slavesToRemove.add(slave);
-
-        if (slave instanceof IStorageProvider) {
-            rebuildStorage = true;
-        }
     }
 
     public void disconnectSlaves() {
@@ -411,6 +392,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 return (left.getPriority() > right.getPriority()) ? -1 : 1;
             }
         });
+
+        this.storage.rebuild();
     }
 
     @Override
@@ -425,15 +408,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public void sendStorageToClient(EntityPlayerMP player) {
         RefinedStorage.NETWORK.sendTo(new MessageGridItems(this), player);
-    }
-
-    @Override
-    public void sendStorageDelta(ItemStack stack, int amount) {
-        for (EntityPlayer player : worldObj.playerEntities) {
-            if (isWatchingGrid(player)) {
-                RefinedStorage.NETWORK.sendTo(new MessageGridDelta(stack, amount), (EntityPlayerMP) player);
-            }
-        }
     }
 
     private boolean isWatchingGrid(EntityPlayer player) {

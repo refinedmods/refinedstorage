@@ -131,14 +131,6 @@ public interface INetworkMaster {
     void sendStorageToClient(EntityPlayerMP player);
 
     /**
-     * Sends a specific delta to all grid watchers.
-     *
-     * @param stack  The stack
-     * @param amount The amount changed
-     */
-    void sendStorageDelta(ItemStack stack, int amount);
-
-    /**
      * Pushes an item to this network.
      *
      * @param stack    The stack prototype to push, do NOT modify
