@@ -15,6 +15,7 @@ import java.util.Collection;
 public class GroupedStorage implements IGroupedStorage {
     private INetworkMaster network;
     private Multimap<Item, ItemStack> stacks = ArrayListMultimap.create();
+    private boolean rebuilding;
 
     public GroupedStorage(INetworkMaster network) {
         this.network = network;
@@ -22,6 +23,8 @@ public class GroupedStorage implements IGroupedStorage {
 
     @Override
     public void rebuild() {
+        this.rebuilding = true;
+
         stacks.clear();
 
         for (IStorage storage : network.getStorages()) {
@@ -38,7 +41,14 @@ public class GroupedStorage implements IGroupedStorage {
             }
         }
 
+        this.rebuilding = false;
+
         network.sendStorageToClient();
+    }
+
+    @Override
+    public boolean isRebuilding() {
+        return rebuilding;
     }
 
     @Override

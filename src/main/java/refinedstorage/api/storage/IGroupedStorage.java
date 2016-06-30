@@ -16,6 +16,11 @@ public interface IGroupedStorage {
     void rebuild();
 
     /**
+     * @return If this storage is currently rebuilding
+     */
+    boolean isRebuilding();
+
+    /**
      * Adds an item to the network. Will merge it with another item if it already exists.
      *
      * @param stack The stack to add, do NOT modify
