@@ -8,6 +8,7 @@ import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.storage.CompareFlags;
 import refinedstorage.api.storage.IGroupedStorage;
+import refinedstorage.api.storage.IStorage;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -63,6 +64,11 @@ public interface INetworkMaster {
      * @return The {@link IGroupedStorage} of this network
      */
     IGroupedStorage getStorage();
+
+    /**
+     * @return The storages connected to this network
+     */
+    List<IStorage> getStorages();
 
     /**
      * @return The crafting tasks in this network, do NOT modify this list

@@ -4,7 +4,6 @@ import net.minecraft.item.ItemStack;
 import refinedstorage.api.network.INetworkMaster;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * This holds all items from all the connected storages from a {@link INetworkMaster}.
@@ -14,7 +13,7 @@ public interface IGroupedStorage {
      * Rebuilds the storages and items for a network. Typically called when a {@link IStorageProvider} is
      * added or removed from the network.
      */
-    void rebuild(List<IStorage> storages);
+    void rebuild();
 
     /**
      * Adds an item to the network. Will merge it with another item if it already exists.

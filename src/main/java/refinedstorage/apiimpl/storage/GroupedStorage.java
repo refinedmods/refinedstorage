@@ -11,7 +11,6 @@ import refinedstorage.api.storage.IGroupedStorage;
 import refinedstorage.api.storage.IStorage;
 
 import java.util.Collection;
-import java.util.List;
 
 public class GroupedStorage implements IGroupedStorage {
     private INetworkMaster network;
@@ -22,10 +21,10 @@ public class GroupedStorage implements IGroupedStorage {
     }
 
     @Override
-    public void rebuild(List<IStorage> storages) {
+    public void rebuild() {
         stacks.clear();
 
-        for (IStorage storage : storages) {
+        for (IStorage storage : network.getStorages()) {
             for (ItemStack stack : storage.getItems()) {
                 add(stack);
             }

@@ -253,6 +253,11 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     }
 
     @Override
+    public List<IStorage> getStorages() {
+        return storages;
+    }
+
+    @Override
     public List<ICraftingTask> getCraftingTasks() {
         return craftingTasks;
     }
@@ -400,7 +405,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             }
         });
 
-        this.storage.rebuild(storages);
+        storage.rebuild();
     }
 
     @Override
