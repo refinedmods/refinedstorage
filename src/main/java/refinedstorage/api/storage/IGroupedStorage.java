@@ -14,12 +14,7 @@ public interface IGroupedStorage {
      * Rebuilds the storages and items for a network. Typically called when a {@link IStorageProvider} is
      * added or removed from the network.
      */
-    void rebuild();
-
-    /**
-     * @return A list of {@link IStorage} connected to this network
-     */
-    List<IStorage> getStorages();
+    void rebuild(List<IStorage> storages);
 
     /**
      * Adds an item to the network. Will merge it with another item if it already exists.
