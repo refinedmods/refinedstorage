@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.storage.IGroupedStorage;
 import refinedstorage.api.storage.IStorage;
@@ -30,6 +31,14 @@ public class GroupedStorage implements IGroupedStorage {
             }
         }
 
+        for (ICraftingPattern pattern : network.getPatterns()) {
+            for (ItemStack output : pattern.getOutputs()) {
+                ItemStack patternStack = output.copy();
+                patternStack.stackSize = 0;
+                add(patternStack);
+            }
+        }
+
         network.sendStorageToClient();
     }
 
@@ -40,7 +49,7 @@ public class GroupedStorage implements IGroupedStorage {
                 otherStack.stackSize += stack.stackSize;
 
                 network.sendStorageToClient();
-                
+
                 return;
             }
         }
