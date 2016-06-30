@@ -14,8 +14,6 @@ import refinedstorage.RefinedStorageItems;
 import refinedstorage.apiimpl.storage.NBTStorage;
 import refinedstorage.block.EnumStorageType;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class ItemStorageDisk extends ItemBase {
@@ -53,36 +51,7 @@ public class ItemStorageDisk extends ItemBase {
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
-        if (!world.isRemote) {
-            ItemStack debugDisk = new ItemStack(RefinedStorageItems.STORAGE_DISK, 1, ItemStorageDisk.TYPE_CREATIVE);
-
-            debugDisk.setTagCompound(NBTStorage.createNBT());
-
-            NBTStorage storage = new NBTStorage(debugDisk.getTagCompound(), -1, null) {
-                @Override
-                public int getPriority() {
-                    return 0;
-                }
-            };
-
-            Iterator<Item> it = Item.REGISTRY.iterator();
-
-            while (it.hasNext()) {
-                Item item = it.next();
-
-                List<ItemStack> stacks = new ArrayList<ItemStack>();
-
-                item.getSubItems(item, CreativeTabs.BREWING, stacks);
-
-                for (ItemStack itemStack : stacks) {
-                    storage.push(itemStack, 1000, false);
-                }
-            }
-
-            storage.writeToNBT();
-
-            return new ActionResult(EnumActionResult.SUCCESS, debugDisk);
-        } else if (!world.isRemote && player.isSneaking() && NBTStorage.getStoredFromNBT(stack.getTagCompound()) == 0 && stack.getMetadata() != TYPE_CREATIVE) {
+        if (!world.isRemote && player.isSneaking() && NBTStorage.getStoredFromNBT(stack.getTagCompound()) == 0 && stack.getMetadata() != TYPE_CREATIVE) {
             ItemStack storagePart = new ItemStack(RefinedStorageItems.STORAGE_PART, 1, stack.getMetadata());
 
             if (!player.inventory.addItemStackToInventory(storagePart.copy())) {
