@@ -22,6 +22,7 @@ import refinedstorage.tile.config.IModeConfig;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.ModeConstants;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TileExternalStorage extends TileSlave implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig {
@@ -37,11 +38,12 @@ public class TileExternalStorage extends TileSlave implements IStorageProvider, 
 
     private int stored;
     private int capacity;
-    private int energyUsage;
+
+    private List<ExternalStorage> storages = new ArrayList<ExternalStorage>();
 
     @Override
     public int getEnergyUsage() {
-        return energyUsage;
+        return storages.size();
     }
 
     @Override
@@ -142,61 +144,36 @@ public class TileExternalStorage extends TileSlave implements IStorageProvider, 
         markDirty();
     }
 
-    @Override
-    public void addStorages(List<IStorage> storages) {
+    // Called when the neighbor block changes
+    public void refreshStorage() {
+        storages.clear();
+
         TileEntity facing = getFacingTile();
 
         if (facing instanceof IDrawerGroup) {
             IDrawerGroup group = (IDrawerGroup) facing;
 
-
-            energyUsage = group.getDrawerCount();
-            stored = 0;
-            capacity = 0;
-
             for (int i = 0; i < group.getDrawerCount(); ++i) {
                 if (group.isDrawerEnabled(i)) {
-                    DrawerStorage storage = new DrawerStorage(this, group.getDrawer(i));
-
-                    storages.add(storage);
-
-                    stored += storage.getStored();
-                    capacity += storage.getCapacity();
+                    storages.add(new DrawerStorage(this, group.getDrawer(i)));
                 }
             }
         } else if (facing instanceof IDrawer) {
-            DrawerStorage storage = new DrawerStorage(this, (IDrawer) facing);
-
-            energyUsage = 1;
-            stored = storage.getStored();
-            capacity = storage.getCapacity();
-
-            storages.add(storage);
+            storages.add(new DrawerStorage(this, (IDrawer) facing));
         } else if (facing instanceof IDeepStorageUnit) {
-            DeepStorageUnitStorage storage = new DeepStorageUnitStorage(this, (IDeepStorageUnit) facing);
-
-            energyUsage = 1;
-            stored = storage.getStored();
-            capacity = storage.getCapacity();
-
-            storages.add(storage);
+            storages.add(new DeepStorageUnitStorage(this, (IDeepStorageUnit) facing));
         } else {
             IItemHandler handler = RefinedStorageUtils.getItemHandler(facing, getDirection().getOpposite());
 
             if (handler != null) {
-                ItemHandlerStorage storage = new ItemHandlerStorage(this, handler);
-
-                energyUsage = 1;
-                stored = storage.getStored();
-                capacity = storage.getCapacity();
-
-                storages.add(storage);
-            } else {
-                energyUsage = 0;
-                stored = 0;
-                capacity = 0;
+                storages.add(new ItemHandlerStorage(this, handler));
             }
         }
+    }
+
+    @Override
+    public void addStorages(List<IStorage> storages) {
+        storages.addAll(this.storages);
     }
 
     @Override
@@ -221,11 +198,31 @@ public class TileExternalStorage extends TileSlave implements IStorageProvider, 
 
     @Override
     public int getStored() {
+        if (!worldObj.isRemote) {
+            int stored = 0;
+
+            for (ExternalStorage storage : storages) {
+                stored += storage.getStored();
+            }
+
+            return stored;
+        }
+
         return stored;
     }
 
     @Override
     public int getCapacity() {
+        if (!worldObj.isRemote) {
+            int capacity = 0;
+
+            for (ExternalStorage storage : storages) {
+                capacity += storage.getCapacity();
+            }
+
+            return capacity;
+        }
+
         return capacity;
     }
 

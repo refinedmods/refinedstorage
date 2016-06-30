@@ -1,5 +1,6 @@
 package refinedstorage.block;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -29,6 +30,15 @@ public class BlockExternalStorage extends BlockSlave {
         }
 
         return true;
+    }
+
+    @Override
+    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
+        super.neighborChanged(state, world, pos, block);
+
+        if (!world.isRemote) {
+            ((TileExternalStorage) world.getTileEntity(pos)).refreshStorage();
+        }
     }
 
     @Override
