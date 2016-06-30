@@ -3,6 +3,7 @@
 ### 0.8.1
 **Bugfixes**
 - Fixed upgrades from interface not dropping
+- Fixed lag caused by constantly rebuilding storage
 
 ### 0.8
 **Bugfixes**
