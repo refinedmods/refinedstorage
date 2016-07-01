@@ -9,7 +9,6 @@ import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.GridPullFlags;
 import refinedstorage.api.network.IGridHandler;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.api.storage.CompareFlags;
 import refinedstorage.item.ItemWirelessGrid;
 
 public class GridHandler implements IGridHandler {
@@ -44,11 +43,6 @@ public class GridHandler implements IGridHandler {
         size = Math.min(size, stack.getItem().getItemStackLimit(stack));
 
         ItemStack took = RefinedStorageUtils.takeFromNetwork(network, stack, size);
-
-        // Fallback for corner cases where NBT changes
-        if (took == null) {
-            took = network.take(stack, size, CompareFlags.COMPARE_DAMAGE);
-        }
 
         if (took != null) {
             if ((flags & GridPullFlags.PULL_SHIFT) == GridPullFlags.PULL_SHIFT) {

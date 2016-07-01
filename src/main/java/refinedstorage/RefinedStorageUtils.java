@@ -113,7 +113,7 @@ public final class RefinedStorageUtils {
         }
 
         if ((flags & CompareFlags.COMPARE_DAMAGE) == CompareFlags.COMPARE_DAMAGE) {
-            if (left.getItemDamage() != right.getItemDamage()) {
+            if (left.getMetadata() != right.getMetadata()) {
                 return false;
             }
         }

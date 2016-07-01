@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 0.8.2
+**Bugfixes**
+- Fixed not being able to take items sometimes
+
 ### 0.8.1
 **Bugfixes**
 - Fixed upgrades from interface not dropping
