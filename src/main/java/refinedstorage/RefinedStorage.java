@@ -64,6 +64,7 @@ public final class RefinedStorage {
     public int craftingGridRfUsage;
     public int patternGridRfUsage;
 
+    public int controller;
     public boolean controllerUsesRf;
 
     public int wirelessTransmitterBaseRange;
@@ -104,6 +105,7 @@ public final class RefinedStorage {
         craftingGridRfUsage = config.getInt("craftingGrid", "energy", 4, 0, Integer.MAX_VALUE, "The RF/t used by Crafting Grids");
         patternGridRfUsage = config.getInt("patternGrid", "energy", 3, 0, Integer.MAX_VALUE, "The RF/t used by Pattern Grids");
 
+        controller = config.getInt("controller", "energy", 32000, 0, Integer.MAX_VALUE, "The energy capacity of the controller");
         controllerUsesRf = config.getBoolean("controllerUsesRf", "energy", true, "Whether the controller uses RF");
 
         wirelessTransmitterBaseRange = config.getInt("range", "wirelessTransmitter", 16, 0, Integer.MAX_VALUE, "The base range of the Wireless Transmitter");

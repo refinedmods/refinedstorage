@@ -102,7 +102,7 @@ public class GuiController extends GuiBase {
         }
 
         if (inBounds(barX, barY, barWidth, barHeight, mouseX, mouseY)) {
-            drawTooltip(mouseX, mouseY, t("misc.refinedstorage:energy_usage", controller.getEnergyUsage()) + "\n" + t("misc.refinedstorage:energy_stored", controller.getEnergy().getEnergyStored(), TileController.ENERGY_CAPACITY));
+            drawTooltip(mouseX, mouseY, t("misc.refinedstorage:energy_usage", controller.getEnergyUsage()) + "\n" + t("misc.refinedstorage:energy_stored", controller.getEnergy().getEnergyStored(), controller.getEnergy().getMaxEnergyStored()));
         }
     }
 

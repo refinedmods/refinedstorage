@@ -5,6 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.block.EnumControllerType;
 import refinedstorage.tile.controller.TileController;
@@ -20,12 +21,19 @@ public class ItemBlockController extends ItemBlockBase {
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean b) {
         if (stack.getMetadata() != EnumControllerType.CREATIVE.getId()) {
             int energyStored = 0;
+            int energyCapacity = RefinedStorage.INSTANCE.controller;
 
-            if (stack.getTagCompound() != null && stack.getTagCompound().hasKey(TileController.NBT_ENERGY)) {
-                energyStored = stack.getTagCompound().getInteger(TileController.NBT_ENERGY);
+            if (stack.getTagCompound() != null) {
+                if (stack.getTagCompound().hasKey(TileController.NBT_ENERGY)) {
+                    energyStored = stack.getTagCompound().getInteger(TileController.NBT_ENERGY);
+                }
+
+                if (stack.getTagCompound().hasKey(TileController.NBT_ENERGY_CAPACITY)) {
+                    energyCapacity = stack.getTagCompound().getInteger(TileController.NBT_ENERGY_CAPACITY);
+                }
             }
 
-            list.add(I18n.format("misc.refinedstorage:energy_stored", energyStored, TileController.ENERGY_CAPACITY));
+            list.add(I18n.format("misc.refinedstorage:energy_stored", energyStored, energyCapacity));
         }
     }
 
@@ -43,7 +51,7 @@ public class ItemBlockController extends ItemBlockBase {
             tag = new NBTTagCompound();
         }
 
-        tag.setInteger(TileController.NBT_ENERGY, stack.getMetadata() == EnumControllerType.CREATIVE.getId() ? TileController.ENERGY_CAPACITY : 0);
+        tag.setInteger(TileController.NBT_ENERGY, stack.getMetadata() == EnumControllerType.CREATIVE.getId() ? RefinedStorage.INSTANCE.controller : 0);
 
         return stack;
     }

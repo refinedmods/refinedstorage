@@ -50,10 +50,9 @@ import refinedstorage.tile.config.RedstoneMode;
 import java.util.*;
 
 public class TileController extends TileBase implements INetworkMaster, IEnergyReceiver, ISynchronizedContainer, IRedstoneModeConfig {
-    public static final int ENERGY_CAPACITY = 32000;
-
     public static final String NBT_CRAFTING_TASKS = "CraftingTasks";
     public static final String NBT_ENERGY = "Energy";
+    public static final String NBT_ENERGY_CAPACITY = "EnergyCapacity";
 
     private GridHandler gridHandler = new GridHandler(this);
     private WirelessGridHandler wirelessGridHandler = new WirelessGridHandler(this);
@@ -72,7 +71,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     private List<ICraftingTask> craftingTasksToAdd = new ArrayList<ICraftingTask>();
     private List<ICraftingTask> craftingTasksToCancel = new ArrayList<ICraftingTask>();
 
-    private EnergyStorage energy = new EnergyStorage(ENERGY_CAPACITY);
+    private EnergyStorage energy = new EnergyStorage(RefinedStorage.INSTANCE.controller);
     private int energyUsage;
 
     private int lastEnergyDisplay;
@@ -560,6 +559,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {
         super.writeUpdate(tag);
 
+        tag.setInteger(NBT_ENERGY_CAPACITY, energy.getMaxEnergyStored());
         tag.setInteger(NBT_ENERGY, energy.getEnergyStored());
 
         return tag;
@@ -567,6 +567,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public void readUpdate(NBTTagCompound tag) {
+        energy.setCapacity(tag.getInteger(NBT_ENERGY_CAPACITY));
         energy.setEnergyStored(tag.getInteger(NBT_ENERGY));
 
         super.readUpdate(tag);
@@ -583,7 +584,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     }
 
     public int getEnergyScaled(int i) {
-        return (int) ((float) energy.getEnergyStored() / (float) ENERGY_CAPACITY * (float) i);
+        return (int) ((float) energy.getEnergyStored() / (float) energy.getMaxEnergyStored() * (float) i);
     }
 
     public int getEnergyScaledForDisplay() {
