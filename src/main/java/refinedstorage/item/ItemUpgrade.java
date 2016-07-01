@@ -3,6 +3,7 @@ package refinedstorage.item;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import refinedstorage.RefinedStorage;
 
 import java.util.List;
 
@@ -30,13 +31,13 @@ public class ItemUpgrade extends ItemBase {
     public static int getEnergyUsage(int type) {
         switch (type) {
             case TYPE_RANGE:
-                return 8;
+                return RefinedStorage.INSTANCE.rangeUpgradeRfUsage;
             case TYPE_SPEED:
-                return 2;
+                return RefinedStorage.INSTANCE.speedUpgradeRfUsage;
             case TYPE_CRAFTING:
-                return 5;
+                return RefinedStorage.INSTANCE.craftingUpgradeRfUsage;
             case TYPE_STACK:
-                return 12;
+                return RefinedStorage.INSTANCE.stackUpgradeRfUsage;
             default:
                 return 0;
         }

@@ -6,6 +6,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerWirelessTransmitter;
@@ -14,13 +15,11 @@ import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.item.ItemUpgrade;
 
 public class TileWirelessTransmitter extends TileSlave {
-    public static final int RANGE_PER_UPGRADE = 8;
-
     private BasicItemHandler upgrades = new BasicItemHandler(4, this, new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_RANGE));
 
     @Override
     public int getEnergyUsage() {
-        return 8 + RefinedStorageUtils.getUpgradeEnergyUsage(upgrades);
+        return RefinedStorage.INSTANCE.wirelessTransmitterRfUsage + RefinedStorageUtils.getUpgradeEnergyUsage(upgrades);
     }
 
     @Override
@@ -44,7 +43,7 @@ public class TileWirelessTransmitter extends TileSlave {
     }
 
     public int getRange() {
-        return 16 + (RefinedStorageUtils.getUpgradeCount(upgrades, ItemUpgrade.TYPE_RANGE) * RANGE_PER_UPGRADE);
+        return RefinedStorage.INSTANCE.wirelessTransmitterBaseRange + (RefinedStorageUtils.getUpgradeCount(upgrades, ItemUpgrade.TYPE_RANGE) * RefinedStorage.INSTANCE.wirelessTransmitterRangePerUpgrade);
     }
 
     public BasicItemHandler getUpgrades() {

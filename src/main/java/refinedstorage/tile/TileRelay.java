@@ -1,6 +1,7 @@
 package refinedstorage.tile;
 
 import net.minecraft.inventory.Container;
+import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.container.ContainerRelay;
 import refinedstorage.tile.config.RedstoneMode;
@@ -14,7 +15,7 @@ public class TileRelay extends TileSlave {
 
     @Override
     public int getEnergyUsage() {
-        return 1;
+        return RefinedStorage.INSTANCE.relayRfUsage;
     }
 
     @Override

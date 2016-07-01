@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+import refinedstorage.RefinedStorage;
 import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.container.ContainerCraftingMonitor;
 
@@ -16,7 +17,7 @@ public class TileCraftingMonitor extends TileSlave {
 
     @Override
     public int getEnergyUsage() {
-        return 2;
+        return RefinedStorage.INSTANCE.craftingMonitorRfUsage;
     }
 
     @Override

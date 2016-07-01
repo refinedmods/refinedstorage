@@ -43,7 +43,7 @@ public class TileExternalStorage extends TileSlave implements IStorageProvider, 
 
     @Override
     public int getEnergyUsage() {
-        return storages.size();
+        return RefinedStorage.INSTANCE.externalStorageRfUsage + (storages.size() * RefinedStorage.INSTANCE.externalStoragePerStorageRfUsage);
     }
 
     @Override

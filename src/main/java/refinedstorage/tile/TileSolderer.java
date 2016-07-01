@@ -9,6 +9,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
+import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.RefinedStorageAPI;
@@ -35,7 +36,7 @@ public class TileSolderer extends TileSlave {
 
     @Override
     public int getEnergyUsage() {
-        return 3 + RefinedStorageUtils.getUpgradeEnergyUsage(upgrades);
+        return RefinedStorage.INSTANCE.soldererRfUsage + RefinedStorageUtils.getUpgradeEnergyUsage(upgrades);
     }
 
     @Override
@@ -60,7 +61,7 @@ public class TileSolderer extends TileSlave {
                     markDirty();
                 }
             } else if (working) {
-                progress += 1 + RefinedStorageUtils.getUpgradeCount(upgrades, ItemUpgrade.TYPE_SPEED);
+                progress += 1 + (RefinedStorageUtils.getUpgradeCount(upgrades, ItemUpgrade.TYPE_SPEED) * RefinedStorage.INSTANCE.soldererSpeedIncreasePerUpgrade);
 
                 if (progress >= recipe.getDuration()) {
                     if (items.getStackInSlot(3) != null) {
