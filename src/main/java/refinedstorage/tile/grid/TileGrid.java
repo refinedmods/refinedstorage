@@ -73,11 +73,11 @@ public class TileGrid extends TileSlave implements IGrid {
     public int getEnergyUsage() {
         switch (getType()) {
             case NORMAL:
-                return 2;
+                return RefinedStorage.INSTANCE.gridRfUsage;
             case CRAFTING:
-                return 4;
+                return RefinedStorage.INSTANCE.craftingGridRfUsage;
             case PATTERN:
-                return 3;
+                return RefinedStorage.INSTANCE.patternGridRfUsage;
             default:
                 return 0;
         }
