@@ -73,9 +73,7 @@ public final class RefinedStorage {
     public int speedUpgradeRfUsage;
     public int craftingUpgradeRfUsage;
     public int stackUpgradeRfUsage;
-
     public int wirelessTransmitterRangePerUpgrade;
-    public int soldererSpeedIncreasePerUpgrade;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent e) {
@@ -109,14 +107,12 @@ public final class RefinedStorage {
         controllerUsesRf = config.getBoolean("controllerUsesRf", "energy", true, "Whether the controller uses RF");
 
         wirelessTransmitterBaseRange = config.getInt("range", "wirelessTransmitter", 16, 0, Integer.MAX_VALUE, "The base range of the Wireless Transmitter");
+        wirelessTransmitterRangePerUpgrade = config.getInt("rangePerUpgrade", "wirelessTransmitter", 8, 0, Integer.MAX_VALUE, "The additional range per Range Upgrade in the Wireless Transmitter");
 
         rangeUpgradeRfUsage = config.getInt("range", "upgrades", 8, 0, Integer.MAX_VALUE, "The additional RF/t used per Range Upgrade");
         speedUpgradeRfUsage = config.getInt("speed", "upgrades", 2, 0, Integer.MAX_VALUE, "The additional RF/t used per Speed Upgrade");
         craftingUpgradeRfUsage = config.getInt("crafting", "upgrades", 5, 0, Integer.MAX_VALUE, "The additional RF/t used per Crafting Upgrade");
         stackUpgradeRfUsage = config.getInt("stack", "upgrades", 12, 0, Integer.MAX_VALUE, "The additional RF/t used per Stack Upgrade");
-
-        wirelessTransmitterRangePerUpgrade = config.getInt("rangePerUpgrade", "upgrades", 8, 0, Integer.MAX_VALUE, "The additional range per Range Upgrade in the Wireless Transmitter");
-        soldererSpeedIncreasePerUpgrade = config.getInt("soldererSpeedIncrasePerUpgrade", "upgrades", 1, 0, Integer.MAX_VALUE, "The additional speed increase per Speed Upgrade in the Solderer");
 
         config.save();
     }

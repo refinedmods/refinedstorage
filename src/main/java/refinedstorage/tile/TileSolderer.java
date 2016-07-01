@@ -61,7 +61,7 @@ public class TileSolderer extends TileSlave {
                     markDirty();
                 }
             } else if (working) {
-                progress += 1 + (RefinedStorageUtils.getUpgradeCount(upgrades, ItemUpgrade.TYPE_SPEED) * RefinedStorage.INSTANCE.soldererSpeedIncreasePerUpgrade);
+                progress += 1 + RefinedStorageUtils.getUpgradeCount(upgrades, ItemUpgrade.TYPE_SPEED);
 
                 if (progress >= recipe.getDuration()) {
                     if (items.getStackInSlot(3) != null) {
