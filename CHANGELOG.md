@@ -6,7 +6,7 @@
 
 **Features**
 - It is now possible to use middle click multiple times for the same item in grid
-- Added configuration file
+- Made the mod configurable with a config file
 
 ### 0.8.1
 **Bugfixes**
