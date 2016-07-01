@@ -5,6 +5,6 @@ package refinedstorage.api.network;
  */
 public class GridPullFlags {
     public static final int PULL_HALF = 1;
-    public static final int PULL_ONE = 2;
+    public static final int PULL_SINGLE = 2;
     public static final int PULL_SHIFT = 4;
 }

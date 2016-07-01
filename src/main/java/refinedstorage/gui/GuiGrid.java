@@ -357,11 +357,13 @@ public class GuiGrid extends GuiBase {
                 RefinedStorage.NETWORK.sendToServer(new MessageGridCraftingClear((TileGrid) grid));
             }
 
-            if (isOverSlotArea(mouseX - guiLeft, mouseY - guiTop) && container.getPlayer().inventory.getItemStack() != null && (clickedButton == 0 || clickedButton == 1)) {
+            ItemStack held = container.getPlayer().inventory.getItemStack();
+
+            if (isOverSlotArea(mouseX - guiLeft, mouseY - guiTop) && held != null && (clickedButton == 0 || clickedButton == 1)) {
                 RefinedStorage.NETWORK.sendToServer(new MessageGridHeldPush(clickedButton == 1));
             }
 
-            if (isOverSlotWithItem() && container.getPlayer().inventory.getItemStack() == null) {
+            if (isOverSlotWithItem() && (held == null || (held != null && clickedButton == 2))) {
                 if (items.get(slotNumber).stackSize == 0 || (GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown())) {
                     FMLCommonHandler.instance().showGuiScreen(new GuiCraftingSettings(this, container.getPlayer(), items.get(slotNumber)));
                 } else {
@@ -376,7 +378,7 @@ public class GuiGrid extends GuiBase {
                     }
 
                     if (clickedButton == 2) {
-                        flags |= GridPullFlags.PULL_ONE;
+                        flags |= GridPullFlags.PULL_SINGLE;
                     }
 
                     RefinedStorage.NETWORK.sendToServer(new MessageGridPull(items.get(slotNumber), flags));

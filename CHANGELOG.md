@@ -4,6 +4,9 @@
 **Bugfixes**
 - Fixed not being able to take items sometimes
 
+**Features**
+- It is now possible to use middle click multiple times for the same item in grid
+
 ### 0.8.1
 **Bugfixes**
 - Fixed upgrades from interface not dropping

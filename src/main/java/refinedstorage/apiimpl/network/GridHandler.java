@@ -22,7 +22,15 @@ public class GridHandler implements IGridHandler {
 
     @Override
     public void onPull(ItemStack stack, int flags, EntityPlayerMP player) {
-        if (player.inventory.getItemStack() != null) {
+        boolean single = (flags & GridPullFlags.PULL_SINGLE) == GridPullFlags.PULL_SINGLE;
+
+        ItemStack held = player.inventory.getItemStack();
+
+        if (single) {
+            if (held != null && (!RefinedStorageUtils.compareStackNoQuantity(stack, held) || held.stackSize + 1 > held.getMaxStackSize())) {
+                return;
+            }
+        } else if (player.inventory.getItemStack() != null) {
             return;
         }
 
@@ -34,7 +42,7 @@ public class GridHandler implements IGridHandler {
             if (size > 32) {
                 size = 32;
             }
-        } else if ((flags & GridPullFlags.PULL_ONE) == GridPullFlags.PULL_ONE) {
+        } else if (single) {
             size = 1;
         } else if ((flags & GridPullFlags.PULL_SHIFT) == GridPullFlags.PULL_SHIFT) {
             // NO OP, the quantity already set (64) is needed for shift
@@ -50,7 +58,12 @@ public class GridHandler implements IGridHandler {
                     InventoryHelper.spawnItemStack(player.worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), took);
                 }
             } else {
-                player.inventory.setItemStack(took);
+                if (held != null) {
+                    held.stackSize++;
+                } else {
+                    player.inventory.setItemStack(took);
+                }
+
                 player.updateHeldItem();
             }
 
