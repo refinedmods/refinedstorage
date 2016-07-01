@@ -6,6 +6,7 @@
 
 **Features**
 - It is now possible to use middle click multiple times for the same item in grid
+- Added configuration file
 
 ### 0.8.1
 **Bugfixes**
