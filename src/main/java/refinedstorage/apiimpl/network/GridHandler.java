@@ -58,7 +58,7 @@ public class GridHandler implements IGridHandler {
                     InventoryHelper.spawnItemStack(player.worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), took);
                 }
             } else {
-                if (held != null) {
+                if (single && held != null) {
                     held.stackSize++;
                 } else {
                     player.inventory.setItemStack(took);
