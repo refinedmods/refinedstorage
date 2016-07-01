@@ -32,7 +32,15 @@ public class TileCrafter extends TileSlave implements ICraftingPatternContainer 
 
     @Override
     public int getEnergyUsage() {
-        return 2 + RefinedStorageUtils.getUpgradeEnergyUsage(upgrades);
+        int usage = 2 + RefinedStorageUtils.getUpgradeEnergyUsage(upgrades);
+
+        for (int i = 0; i < patterns.getSlots(); ++i) {
+            if (patterns.getStackInSlot(i) != null) {
+                usage++;
+            }
+        }
+
+        return usage;
     }
 
     @Override
