@@ -4,16 +4,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
- * Represents a slave or machine in the storage network.
+ * Represents a node in the storage network.
  */
 public interface INetworkSlave {
     /**
-     * Called every tile entity tick
+     * Called every tile entity tick.
      */
     void updateSlave();
 
     /**
-     * @return If the slave can send a connectivity update (for most slaves this is true, for cables it's false)
+     * @return If the slave can send a connectivity update
      */
     boolean canSendConnectivityUpdate();
 
@@ -55,7 +55,7 @@ public interface INetworkSlave {
     boolean isConnected();
 
     /**
-     * @return If {@link INetworkSlave#canUpdate()} can get called. Typically checks for connection and redstone mode.
+     * @return If {@link INetworkSlave#canUpdate()} can get called. Typically checks for connection status and redstone mode.
      */
     boolean canUpdate();
 

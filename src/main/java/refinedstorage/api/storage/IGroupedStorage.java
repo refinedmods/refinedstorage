@@ -31,16 +31,16 @@ public interface IGroupedStorage {
     void remove(ItemStack stack);
 
     /**
-     * Gets an item from the network, does not decrement its count.
+     * Gets an item from the network, does not decrement its count like {@link IGroupedStorage#remove(ItemStack)} does.
      *
      * @param stack The stack to find
      * @param flags The flags to compare on, see {@link CompareFlags}
-     * @return The stack, do NOT modify
+     * @return The {@link ItemStack}, do NOT modify
      */
     ItemStack get(ItemStack stack, int flags);
 
     /**
-     * @return All stacks in this storage network
+     * @return All items in this storage network
      */
     Collection<ItemStack> getStacks();
 

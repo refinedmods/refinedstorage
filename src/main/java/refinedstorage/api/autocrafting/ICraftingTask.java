@@ -37,7 +37,7 @@ public interface ICraftingTask {
     /**
      * Writes this crafting task to NBT.
      *
-     * @param tag The NBT tag
+     * @param tag The NBT tag to write to
      */
     void writeToNBT(NBTTagCompound tag);
 

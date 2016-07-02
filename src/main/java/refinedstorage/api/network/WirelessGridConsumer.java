@@ -14,7 +14,7 @@ public class WirelessGridConsumer {
 
     /**
      * @param player       The player using this wireless grid
-     * @param hand         The hand that this wireless grid is in
+     * @param hand         The hand that this wireless grid is opened with
      * @param wirelessGrid The wireless grid {@link ItemStack} in the player's inventory
      */
     public WirelessGridConsumer(EntityPlayer player, EnumHand hand, ItemStack wirelessGrid) {
@@ -31,7 +31,7 @@ public class WirelessGridConsumer {
     }
 
     /**
-     * @return The hand this wireless grid is in
+     * @return The hand this wireless grid is opened with
      */
     public EnumHand getHand() {
         return hand;

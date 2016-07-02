@@ -1,7 +1,7 @@
 package refinedstorage.api.network;
 
 /**
- * Flags for knowing what pull action the player is performing, can be combined.
+ * Flags for knowing what pull action the player is performing, these can be combined.
  */
 public class GridPullFlags {
     public static final int PULL_HALF = 1;

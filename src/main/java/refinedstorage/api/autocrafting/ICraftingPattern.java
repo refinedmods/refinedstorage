@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 public interface ICraftingPattern {
     /**
      * @param world The world
-     * @return Returns the container where the pattern is in
+     * @return The container where the pattern is in
      */
     ICraftingPatternContainer getContainer(World world);
 
@@ -37,8 +37,8 @@ public interface ICraftingPattern {
     /**
      * Writes this pattern to NBT.
      *
-     * @param tag The NBT tag
-     * @return The NBT tag
+     * @param tag The NBT tag to write to
+     * @return The written NBT tag
      */
     NBTTagCompound writeToNBT(NBTTagCompound tag);
 }

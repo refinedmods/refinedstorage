@@ -47,7 +47,7 @@ public interface IWirelessGridHandler {
      * Returns a {@link WirelessGridConsumer} for a player.
      *
      * @param player The player to get the wireless grid consumer for
-     * @return The wireless grid consumer of the player, or null if the player isn't in a wireless grid
+     * @return The {@link IWirelessGridHandler} that corresponds to a player, or null if the player isn't using a wireless grid
      */
     @Nullable
     WirelessGridConsumer getConsumer(EntityPlayer player);

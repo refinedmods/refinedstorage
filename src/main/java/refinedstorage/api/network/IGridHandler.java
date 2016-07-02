@@ -12,23 +12,23 @@ public interface IGridHandler {
     /**
      * Called when a player tries to pull an item from the grid.
      *
-     * @param stack  The stack we're trying to pull
+     * @param stack  The item we're trying to pull
      * @param flags  How we are pulling, see {@link GridPullFlags}
      * @param player The player that is attempting the pull
      */
     void onPull(ItemStack stack, int flags, EntityPlayerMP player);
 
     /**
-     * Called when a player tries to push to the grid
+     * Called when a player tries to push to the grid.
      *
-     * @param stack The stack we're trying to push
-     * @return The remainder, or null if no remainder
+     * @param stack The item we're trying to push
+     * @return The remainder, or null if there is no remainder
      */
     @Nullable
     ItemStack onPush(ItemStack stack);
 
     /**
-     * Called when a player is trying to push an item that it is holding in their hand in the GUI, so not with shift.
+     * Called when a player is trying to push an item that it is holding in their hand in the GUI.
      *
      * @param single If we are only pushing 1 item
      * @param player The player that is attempting the push

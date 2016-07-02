@@ -13,6 +13,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
+/**
+ * Represents a network master, usually is a controller.
+ */
 public interface INetworkMaster {
     /**
      * @return The energy storage of this network
@@ -20,12 +23,12 @@ public interface INetworkMaster {
     EnergyStorage getEnergy();
 
     /**
-     * @return The energy usage of this network
+     * @return The energy usage per tick of this network
      */
     int getEnergyUsage();
 
     /**
-     * @return The position of this network in the world (usually where the controller is)
+     * @return The position of this network in the world
      */
     BlockPos getPosition();
 
@@ -35,7 +38,7 @@ public interface INetworkMaster {
     boolean canRun();
 
     /**
-     * @return A list with all network slaves
+     * @return A list with all the network slaves
      */
     List<INetworkSlave> getSlaves();
 
@@ -50,12 +53,12 @@ public interface INetworkMaster {
     void removeSlave(@Nonnull INetworkSlave slave);
 
     /**
-     * @return The grid handler for this network
+     * @return The {@link IGridHandler} for this network
      */
     IGridHandler getGridHandler();
 
     /**
-     * @return The wireless grid handler for this network
+     * @return The {@link IWirelessGridHandler} for this network
      */
     IWirelessGridHandler getWirelessGridHandler();
 
@@ -84,7 +87,7 @@ public interface INetworkMaster {
     void addCraftingTaskAsLast(@Nonnull ICraftingTask task);
 
     /**
-     * Creates a crafting task from a pattern.
+     * Creates a crafting task from a {@link ICraftingPattern}.
      *
      * @param pattern The pattern to create a task for
      * @return A task
@@ -111,7 +114,7 @@ public interface INetworkMaster {
     /**
      * Returns crafting patterns from an item stack.
      *
-     * @param pattern The item to get a pattern for
+     * @param pattern The {@link ItemStack} to get a pattern for
      * @param flags   The flags to compare on, see {@link CompareFlags}
      * @return A list of crafting patterns where the given pattern is one of the outputs
      */
@@ -126,20 +129,20 @@ public interface INetworkMaster {
     ICraftingPattern getPattern(ItemStack pattern, int flags);
 
     /**
-     * Sends to all clients in a grid a packet with all the items in this network.
+     * Sends a grid packet with all the items to all clients that are watching a grid.
      */
     void sendStorageToClient();
 
     /**
-     * Sends a player a packet with all the items in this network.
+     * Sends a grid packet with all the items to a specific player.
      */
     void sendStorageToClient(EntityPlayerMP player);
 
     /**
-     * Sends a storage change to the client.
+     * Sends a storage change to all clients that are watching a grid.
      *
      * @param stack The stack
-     * @param delta The delta changed
+     * @param delta The delta
      */
     void sendStorageDeltaToClient(ItemStack stack, int delta);
 
@@ -157,10 +160,10 @@ public interface INetworkMaster {
     /**
      * Takes an item from this network.
      *
-     * @param stack A prototype of the stack to take, do NOT modify
+     * @param stack The prototype of the stack to take, do NOT modify
      * @param size  The amount of that prototype that has to be taken
      * @param flags The flags to compare on, see {@link CompareFlags}
-     * @return null if we didn't takeFromNetwork anything, or a {@link ItemStack} with the result
+     * @return null if we didn't take anything, or a {@link ItemStack} with the result
      */
     @Nullable
     ItemStack take(@Nonnull ItemStack stack, int size, int flags);
