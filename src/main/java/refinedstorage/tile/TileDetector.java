@@ -21,10 +21,10 @@ public class TileDetector extends TileSlave implements ICompareConfig {
     public static final int MODE_EQUAL = 1;
     public static final int MODE_ABOVE = 2;
 
-    public static final String NBT_COMPARE = "Compare";
-    public static final String NBT_MODE = "Mode";
-    public static final String NBT_AMOUNT = "Amount";
-    public static final String NBT_POWERED = "Powered";
+    private static final String NBT_COMPARE = "Compare";
+    private static final String NBT_MODE = "Mode";
+    private static final String NBT_AMOUNT = "Amount";
+    private static final String NBT_POWERED = "Powered";
 
     private BasicItemHandler filter = new BasicItemHandler(1, this);
 

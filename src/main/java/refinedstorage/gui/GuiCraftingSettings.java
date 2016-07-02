@@ -15,7 +15,7 @@ import refinedstorage.network.MessageGridCraftingStart;
 import java.io.IOException;
 
 public class GuiCraftingSettings extends GuiBase {
-    public static final int DEFAULT_AMOUNT = 1;
+    private static final int DEFAULT_AMOUNT = 1;
 
     private GuiTextField amountField;
     private GuiGrid gui;

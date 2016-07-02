@@ -13,9 +13,9 @@ import refinedstorage.api.network.INetworkMaster;
 public class ProcessingCraftingTask implements ICraftingTask {
     public static final int ID = 1;
 
-    public static final String NBT_INSERTED = "Inserted";
-    public static final String NBT_CHILD_TASKS = "ChildTasks";
-    public static final String NBT_SATISFIED = "Satisfied";
+    private static final String NBT_INSERTED = "Inserted";
+    private static final String NBT_CHILD_TASKS = "ChildTasks";
+    private static final String NBT_SATISFIED = "Satisfied";
 
     private ICraftingPattern pattern;
     private boolean inserted[];

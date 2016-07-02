@@ -21,18 +21,18 @@ public abstract class NBTStorage implements IStorage {
      * The current save protocol that is used. It's set to every {@link NBTStorage} to allow for
      * safe backwards compatibility breaks.
      */
-    public static final int PROTOCOL = 1;
+    private static final int PROTOCOL = 1;
 
-    public static final String NBT_PROTOCOL = "Protocol";
+    private static final String NBT_PROTOCOL = "Protocol";
 
-    public static final String NBT_ITEMS = "Items";
-    public static final String NBT_STORED = "Stored";
+    private static final String NBT_ITEMS = "Items";
+    private static final String NBT_STORED = "Stored";
 
-    public static final String NBT_ITEM_TYPE = "Type";
-    public static final String NBT_ITEM_QUANTITY = "Quantity";
-    public static final String NBT_ITEM_DAMAGE = "Damage";
-    public static final String NBT_ITEM_NBT = "NBT";
-    public static final String NBT_ITEM_CAPS = "Caps";
+    private static final String NBT_ITEM_TYPE = "Type";
+    private static final String NBT_ITEM_QUANTITY = "Quantity";
+    private static final String NBT_ITEM_DAMAGE = "Damage";
+    private static final String NBT_ITEM_NBT = "NBT";
+    private static final String NBT_ITEM_CAPS = "Caps";
 
     private NBTTagCompound tag;
     private int capacity;

@@ -21,8 +21,8 @@ import refinedstorage.tile.config.ModeConstants;
 import refinedstorage.tile.config.ModeFilter;
 
 public class TileImporter extends TileSlave implements ICompareConfig, IModeConfig {
-    public static final String NBT_COMPARE = "Compare";
-    public static final String NBT_MODE = "Mode";
+    private static final String NBT_COMPARE = "Compare";
+    private static final String NBT_MODE = "Mode";
 
     private BasicItemHandler filters = new BasicItemHandler(9, this);
     private BasicItemHandler upgrades = new BasicItemHandler(

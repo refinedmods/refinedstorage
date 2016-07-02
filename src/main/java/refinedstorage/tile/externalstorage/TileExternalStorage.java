@@ -28,9 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TileExternalStorage extends TileSlave implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig, IConnectionHandler {
-    public static final String NBT_PRIORITY = "Priority";
-    public static final String NBT_COMPARE = "Compare";
-    public static final String NBT_MODE = "Mode";
+    private static final String NBT_PRIORITY = "Priority";
+    private static final String NBT_COMPARE = "Compare";
+    private static final String NBT_MODE = "Mode";
 
     private BasicItemHandler filters = new BasicItemHandler(9, this);
 

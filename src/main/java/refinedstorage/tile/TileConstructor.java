@@ -24,9 +24,9 @@ import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
 
 public class TileConstructor extends TileSlave implements ICompareConfig {
-    public static final String NBT_COMPARE = "Compare";
+    private static final String NBT_COMPARE = "Compare";
 
-    public static final int BASE_SPEED = 20;
+    private static final int BASE_SPEED = 20;
 
     private BasicItemHandler filter = new BasicItemHandler(1, this) {
         @Override

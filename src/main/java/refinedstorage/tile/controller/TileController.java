@@ -50,9 +50,10 @@ import refinedstorage.tile.config.RedstoneMode;
 import java.util.*;
 
 public class TileController extends TileBase implements INetworkMaster, IEnergyReceiver, ISynchronizedContainer, IRedstoneModeConfig {
-    public static final String NBT_CRAFTING_TASKS = "CraftingTasks";
     public static final String NBT_ENERGY = "Energy";
     public static final String NBT_ENERGY_CAPACITY = "EnergyCapacity";
+
+    private static final String NBT_CRAFTING_TASKS = "CraftingTasks";
 
     private GridHandler gridHandler = new GridHandler(this);
     private WirelessGridHandler wirelessGridHandler = new WirelessGridHandler(this);

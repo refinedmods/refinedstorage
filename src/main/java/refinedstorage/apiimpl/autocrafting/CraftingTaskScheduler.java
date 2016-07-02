@@ -7,7 +7,7 @@ import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.network.INetworkMaster;
 
 public class CraftingTaskScheduler {
-    public static final String NBT_SCHEDULED = "CraftingTaskScheduled";
+    private static final String NBT_SCHEDULED = "CraftingTaskScheduled";
 
     private ItemStack scheduledItem;
 

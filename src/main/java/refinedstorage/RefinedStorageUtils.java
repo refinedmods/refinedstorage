@@ -28,8 +28,8 @@ import java.util.List;
 import java.util.Set;
 
 public final class RefinedStorageUtils {
-    public static final String NBT_INVENTORY = "Inventory_%d";
-    public static final String NBT_SLOT = "Slot";
+    private static final String NBT_INVENTORY = "Inventory_%d";
+    private static final String NBT_SLOT = "Slot";
 
     public static void writeItems(IItemHandler handler, int id, NBTTagCompound nbt) {
         NBTTagList tagList = new NBTTagList();

@@ -26,17 +26,18 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
     public static final int TYPE_NORMAL = 0;
     public static final int TYPE_CREATIVE = 1;
 
-    public static final String NBT_CONTROLLER_X = "ControllerX";
-    public static final String NBT_CONTROLLER_Y = "ControllerY";
-    public static final String NBT_CONTROLLER_Z = "ControllerZ";
-    public static final String NBT_DIMENSION_ID = "DimensionID";
+    public static final int USAGE_OPEN = 30;
+    public static final int USAGE_PULL = 3;
+    public static final int USAGE_PUSH = 3;
+
     public static final String NBT_SORTING_TYPE = "SortingType";
     public static final String NBT_SORTING_DIRECTION = "SortingDirection";
     public static final String NBT_SEARCH_BOX_MODE = "SearchBoxMode";
 
-    public static final int USAGE_OPEN = 30;
-    public static final int USAGE_PULL = 3;
-    public static final int USAGE_PUSH = 3;
+    private static final String NBT_CONTROLLER_X = "ControllerX";
+    private static final String NBT_CONTROLLER_Y = "ControllerY";
+    private static final String NBT_CONTROLLER_Z = "ControllerZ";
+    private static final String NBT_DIMENSION_ID = "DimensionID";
 
     public ItemWirelessGrid() {
         super(3200);

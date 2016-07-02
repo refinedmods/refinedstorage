@@ -21,8 +21,8 @@ import refinedstorage.inventory.SoldererItemHandler;
 import refinedstorage.item.ItemUpgrade;
 
 public class TileSolderer extends TileSlave {
-    public static final String NBT_WORKING = "Working";
-    public static final String NBT_PROGRESS = "Progress";
+    private static final String NBT_WORKING = "Working";
+    private static final String NBT_PROGRESS = "Progress";
 
     private BasicItemHandler items = new BasicItemHandler(4, this);
     private BasicItemHandler upgrades = new BasicItemHandler(4, this, new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED));

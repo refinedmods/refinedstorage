@@ -27,10 +27,10 @@ import refinedstorage.tile.config.ModeFilter;
 import java.util.List;
 
 public class TileDestructor extends TileSlave implements ICompareConfig, IModeConfig {
-    public static final String NBT_COMPARE = "Compare";
-    public static final String NBT_MODE = "Mode";
+    private static final String NBT_COMPARE = "Compare";
+    private static final String NBT_MODE = "Mode";
 
-    public static final int BASE_SPEED = 20;
+    private static final int BASE_SPEED = 20;
 
     private BasicItemHandler filters = new BasicItemHandler(9, this);
     private BasicItemHandler upgrades = new BasicItemHandler(

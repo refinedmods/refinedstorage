@@ -47,9 +47,9 @@ public class TileDiskDrive extends TileSlave implements IStorageProvider, IStora
         }
     }
 
-    public static final String NBT_PRIORITY = "Priority";
-    public static final String NBT_COMPARE = "Compare";
-    public static final String NBT_MODE = "Mode";
+    private static final String NBT_PRIORITY = "Priority";
+    private static final String NBT_COMPARE = "Compare";
+    private static final String NBT_MODE = "Mode";
 
     private BasicItemHandler disks = new BasicItemHandler(8, this, new BasicItemValidator(RefinedStorageItems.STORAGE_DISK)) {
         @Override

@@ -29,9 +29,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TileGrid extends TileSlave implements IGrid {
-    public static final String NBT_SORTING_DIRECTION = "SortingDirection";
-    public static final String NBT_SORTING_TYPE = "SortingType";
-    public static final String NBT_SEARCH_BOX_MODE = "SearchBoxMode";
+    private static final String NBT_SORTING_DIRECTION = "SortingDirection";
+    private static final String NBT_SORTING_TYPE = "SortingType";
+    private static final String NBT_SEARCH_BOX_MODE = "SearchBoxMode";
 
     public static final int SORTING_DIRECTION_ASCENDING = 0;
     public static final int SORTING_DIRECTION_DESCENDING = 1;

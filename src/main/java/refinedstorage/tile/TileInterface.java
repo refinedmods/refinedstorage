@@ -19,7 +19,7 @@ import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
 
 public class TileInterface extends TileSlave implements ICompareConfig {
-    public static final String NBT_COMPARE = "Compare";
+    private static final String NBT_COMPARE = "Compare";
 
     private BasicItemHandler importItems = new BasicItemHandler(9, this);
     private BasicItemHandler exportSpecimenItems = new BasicItemHandler(9, this);

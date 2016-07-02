@@ -19,7 +19,7 @@ import refinedstorage.network.MessageTileContainerUpdate;
 import javax.annotation.Nullable;
 
 public abstract class TileBase extends TileEntity implements ITickable {
-    public static final String NBT_DIRECTION = "Direction";
+    private static final String NBT_DIRECTION = "Direction";
 
     private EnumFacing direction = EnumFacing.NORTH;
 

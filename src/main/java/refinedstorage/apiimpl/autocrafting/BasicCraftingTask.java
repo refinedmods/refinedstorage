@@ -16,10 +16,10 @@ import java.util.List;
 public class BasicCraftingTask implements ICraftingTask {
     public static final int ID = 0;
 
-    public static final String NBT_SATISFIED = "Satisfied";
-    public static final String NBT_CHECKED = "Checked";
-    public static final String NBT_CHILD_TASKS = "ChildTasks";
-    public static final String NBT_TOOK = "Took";
+    private static final String NBT_SATISFIED = "Satisfied";
+    private static final String NBT_CHECKED = "Checked";
+    private static final String NBT_CHILD_TASKS = "ChildTasks";
+    private static final String NBT_TOOK = "Took";
 
     private ICraftingPattern pattern;
     private boolean satisfied[];

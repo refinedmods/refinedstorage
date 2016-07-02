@@ -11,7 +11,7 @@ import refinedstorage.tile.controller.TileController;
 import java.util.List;
 
 public class GuiController extends GuiBase {
-    public static final int VISIBLE_ROWS = 2;
+    private static final int VISIBLE_ROWS = 2;
 
     private TileController controller;
 

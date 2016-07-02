@@ -17,8 +17,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class GuiBase extends GuiContainer {
-    public static final int SIDE_BUTTON_WIDTH = 20;
-    public static final int SIDE_BUTTON_HEIGHT = 20;
+    protected static final int SIDE_BUTTON_WIDTH = 20;
+    protected static final int SIDE_BUTTON_HEIGHT = 20;
 
     private List<SideButton> sideButtons = new ArrayList<SideButton>();
 

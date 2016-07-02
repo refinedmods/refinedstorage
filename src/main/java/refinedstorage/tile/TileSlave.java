@@ -19,7 +19,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public abstract class TileSlave extends TileBase implements INetworkSlave, ISynchronizedContainer, IRedstoneModeConfig {
-    public static final String NBT_CONNECTED = "Connected";
+    private static final String NBT_CONNECTED = "Connected";
 
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
     private boolean active;

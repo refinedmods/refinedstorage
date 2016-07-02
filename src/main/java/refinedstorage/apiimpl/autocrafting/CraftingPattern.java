@@ -13,9 +13,9 @@ import refinedstorage.tile.TileCrafter;
 
 public class CraftingPattern implements ICraftingPattern {
     public static final String NBT = "Pattern";
-    public static final String NBT_CRAFTER_X = "CrafterX";
-    public static final String NBT_CRAFTER_Y = "CrafterY";
-    public static final String NBT_CRAFTER_Z = "CrafterZ";
+    private static final String NBT_CRAFTER_X = "CrafterX";
+    private static final String NBT_CRAFTER_Y = "CrafterY";
+    private static final String NBT_CRAFTER_Z = "CrafterZ";
 
     private int crafterX;
     private int crafterY;
