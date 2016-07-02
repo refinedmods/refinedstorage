@@ -9,9 +9,11 @@ import refinedstorage.RefinedStorageGui;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.api.network.INetworkSlave;
 import refinedstorage.api.network.IWirelessGridHandler;
 import refinedstorage.api.network.WirelessGridConsumer;
 import refinedstorage.item.ItemWirelessGrid;
+import refinedstorage.tile.TileWirelessTransmitter;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -19,8 +21,6 @@ import java.util.List;
 
 public class WirelessGridHandler implements IWirelessGridHandler {
     private INetworkMaster network;
-
-    private int range;
 
     private List<WirelessGridConsumer> consumers = new ArrayList<WirelessGridConsumer>();
     private List<WirelessGridConsumer> consumersToRemove = new ArrayList<WirelessGridConsumer>();
@@ -49,7 +49,7 @@ public class WirelessGridHandler implements IWirelessGridHandler {
     public boolean onOpen(EntityPlayer player, EnumHand hand) {
         int distance = (int) Math.sqrt(Math.pow(network.getPosition().getX() - player.posX, 2) + Math.pow(network.getPosition().getY() - player.posY, 2) + Math.pow(network.getPosition().getZ() - player.posZ, 2));
 
-        if (distance > range) {
+        if (distance > getRange()) {
             return false;
         }
 
@@ -75,12 +75,15 @@ public class WirelessGridHandler implements IWirelessGridHandler {
 
     @Override
     public int getRange() {
-        return range;
-    }
+        int range = 0;
 
-    @Override
-    public void setRange(int range) {
-        this.range = range;
+        for (INetworkSlave slave : network.getSlaves()) {
+            if (slave instanceof TileWirelessTransmitter) {
+                range += ((TileWirelessTransmitter) slave).getRange();
+            }
+        }
+
+        return range;
     }
 
     @Override

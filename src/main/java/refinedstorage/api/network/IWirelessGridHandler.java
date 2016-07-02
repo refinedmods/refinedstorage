@@ -31,13 +31,6 @@ public interface IWirelessGridHandler {
     void onClose(EntityPlayer player);
 
     /**
-     * Sets the range of the wireless grid handler.
-     *
-     * @param range The range
-     */
-    void setRange(int range);
-
-    /**
      * @return The range wireless grids in this network can reach
      */
     int getRange();

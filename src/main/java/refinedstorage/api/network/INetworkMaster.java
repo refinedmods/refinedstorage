@@ -110,6 +110,11 @@ public interface INetworkMaster {
     List<ICraftingPattern> getPatterns();
 
     /**
+     * Rebuilds the pattern list.
+     */
+    void rebuildPatterns();
+
+    /**
      * Returns crafting patterns from an item stack.
      *
      * @param pattern The item to get a pattern for

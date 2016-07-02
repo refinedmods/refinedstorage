@@ -43,7 +43,6 @@ import refinedstorage.network.MessageGridItems;
 import refinedstorage.tile.ISynchronizedContainer;
 import refinedstorage.tile.TileBase;
 import refinedstorage.tile.TileCrafter;
-import refinedstorage.tile.TileWirelessTransmitter;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
 
@@ -344,11 +343,35 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         return patterns.get(highestPattern);
     }
 
+    public void rebuildPatterns() {
+        patterns.clear();
+
+        for (INetworkSlave slave : slaves) {
+            if (slave instanceof TileCrafter && slave.canUpdate()) {
+                TileCrafter crafter = (TileCrafter) slave;
+
+                for (int i = 0; i < crafter.getPatterns().getSlots(); ++i) {
+                    ItemStack pattern = crafter.getPatterns().getStackInSlot(i);
+
+                    if (pattern != null && ItemPattern.isValid(pattern)) {
+                        patterns.add(new CraftingPattern(
+                            crafter.getPos().getX(),
+                            crafter.getPos().getY(),
+                            crafter.getPos().getZ(),
+                            ItemPattern.isProcessing(pattern),
+                            ItemPattern.getInputs(pattern),
+                            ItemPattern.getOutputs(pattern),
+                            ItemPattern.getByproducts(pattern)
+                        ));
+                    }
+                }
+            }
+        }
+    }
+
     private void updateSlaves() {
         this.storages.clear();
         this.patterns.clear();
-
-        int range = 0;
 
         for (INetworkSlave slave : slaves) {
             if (!slave.canUpdate()) {
@@ -358,25 +381,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             if (slave instanceof IStorageProvider) {
                 ((IStorageProvider) slave).addStorages(storages);
             }
-
-            if (slave instanceof TileWirelessTransmitter) {
-                range += ((TileWirelessTransmitter) slave).getRange();
-            }
-
-            if (slave instanceof TileCrafter) {
-                TileCrafter crafter = (TileCrafter) slave;
-
-                for (int i = 0; i < crafter.getPatterns().getSlots(); ++i) {
-                    ItemStack pattern = crafter.getPatterns().getStackInSlot(i);
-
-                    if (pattern != null && ItemPattern.isValid(pattern)) {
-                        patterns.add(new CraftingPattern(crafter.getPos().getX(), crafter.getPos().getY(), crafter.getPos().getZ(), ItemPattern.isProcessing(pattern), ItemPattern.getInputs(pattern), ItemPattern.getOutputs(pattern), ItemPattern.getByproducts(pattern)));
-                    }
-                }
-            }
         }
-
-        wirelessGridHandler.setRange(range);
 
         Collections.sort(storages, new Comparator<IStorage>() {
             @Override

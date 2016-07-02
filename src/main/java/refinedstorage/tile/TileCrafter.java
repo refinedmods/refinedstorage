@@ -27,7 +27,16 @@ public class TileCrafter extends TileSlave implements ICraftingPatternContainer 
         public boolean valid(ItemStack stack) {
             return stack.getItem() == RefinedStorageItems.PATTERN && ItemPattern.isValid(stack);
         }
-    });
+    }) {
+        @Override
+        protected void onContentsChanged(int slot) {
+            super.onContentsChanged(slot);
+
+            if (network != null) {
+                network.rebuildPatterns();
+            }
+        }
+    };
 
     private BasicItemHandler upgrades = new BasicItemHandler(4, this, new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED));
 
