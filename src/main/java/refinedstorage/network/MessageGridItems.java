@@ -1,15 +1,13 @@
 package refinedstorage.network;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import refinedstorage.RefinedStorage;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.container.ContainerGrid;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,11 +49,8 @@ public class MessageGridItems implements IMessage, IMessageHandler<MessageGridIt
 
     @Override
     public IMessage onMessage(MessageGridItems message, MessageContext ctx) {
-        Container container = Minecraft.getMinecraft().thePlayer.openContainer;
-
-        if (container instanceof ContainerGrid) {
-            ((ContainerGrid) container).getGrid().setItems(message.items);
-        }
+        RefinedStorage.INSTANCE.items = message.items;
+        RefinedStorage.INSTANCE.lastItemUpdate = System.currentTimeMillis();
 
         return null;
     }

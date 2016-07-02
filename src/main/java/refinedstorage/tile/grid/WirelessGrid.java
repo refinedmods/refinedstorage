@@ -15,9 +15,6 @@ import refinedstorage.network.MessageWirelessGridSettingsUpdate;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.controller.TileController;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class WirelessGrid implements IGrid {
     private EnumHand hand;
     private World world;
@@ -25,8 +22,6 @@ public class WirelessGrid implements IGrid {
     private int sortingType;
     private int sortingDirection;
     private int searchBoxMode;
-    private List<ItemStack> items = new ArrayList<ItemStack>();
-    private long lastUpdate;
 
     public WirelessGrid(World world, ItemStack stack, EnumHand hand) {
         this.hand = hand;
@@ -40,17 +35,6 @@ public class WirelessGrid implements IGrid {
     @Override
     public EnumGridType getType() {
         return EnumGridType.NORMAL;
-    }
-
-    @Override
-    public List<ItemStack> getItems() {
-        return items;
-    }
-
-    @Override
-    public void setItems(List<ItemStack> items) {
-        this.items = items;
-        this.lastUpdate = System.currentTimeMillis();
     }
 
     @Override
@@ -122,6 +106,6 @@ public class WirelessGrid implements IGrid {
 
     @Override
     public boolean isConnected() {
-        return System.currentTimeMillis() - lastUpdate < 1000;
+        return System.currentTimeMillis() - RefinedStorage.INSTANCE.lastItemUpdate < 1000;
     }
 }

@@ -376,6 +376,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 }
             }
         }
+
+        storage.rebuild();
     }
 
     @Override

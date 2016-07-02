@@ -1,5 +1,10 @@
 # Refined Storage Changelog
 
+### 0.8.4
+**Bugfixes**
+- Fixed delay until grid items are visible
+- Performance improvements
+
 ### 0.8.3
 **Bugfixes**
 - Fixed drawer controllers not working with external storage

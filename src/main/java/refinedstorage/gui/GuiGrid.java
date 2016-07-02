@@ -118,7 +118,7 @@ public class GuiGrid extends GuiBase {
         items.clear();
 
         if (grid.isConnected()) {
-            items.addAll(grid.getItems());
+            items.addAll(RefinedStorage.INSTANCE.items);
 
             String query = searchField.getText().trim().toLowerCase();
 

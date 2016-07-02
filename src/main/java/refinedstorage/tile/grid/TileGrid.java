@@ -66,9 +66,6 @@ public class TileGrid extends TileSlave implements IGrid {
     private int sortingType = SORTING_TYPE_NAME;
     private int searchBoxMode = SEARCH_BOX_MODE_NORMAL;
 
-    // Used clientside only
-    private List<ItemStack> items = new ArrayList<ItemStack>();
-
     @Override
     public int getEnergyUsage() {
         switch (getType()) {
@@ -93,16 +90,6 @@ public class TileGrid extends TileSlave implements IGrid {
         }
 
         return type == null ? EnumGridType.NORMAL : type;
-    }
-
-    @Override
-    public List<ItemStack> getItems() {
-        return items;
-    }
-
-    @Override
-    public void setItems(List<ItemStack> items) {
-        this.items = items;
     }
 
     @Override
