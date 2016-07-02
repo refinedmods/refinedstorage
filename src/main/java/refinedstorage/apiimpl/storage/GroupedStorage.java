@@ -27,8 +27,6 @@ public class GroupedStorage implements IGroupedStorage {
 
     @Override
     public void rebuild() {
-        System.out.println("Rebuilding!");
-
         storages.clear();
 
         for (INetworkSlave slave : network.getSlaves()) {
@@ -38,8 +36,6 @@ public class GroupedStorage implements IGroupedStorage {
         }
 
         stacks.clear();
-
-        System.out.println("Storages (" + storages.size() + ")");
 
         for (IStorage storage : storages) {
             for (ItemStack stack : storage.getItems()) {
