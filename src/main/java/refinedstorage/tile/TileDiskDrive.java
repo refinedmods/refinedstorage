@@ -38,12 +38,12 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
         }
 
         @Override
-        public ItemStack push(ItemStack stack, int size, boolean simulate) {
+        public ItemStack insertItem(ItemStack stack, int size, boolean simulate) {
             if (!ModeFilter.respectsMode(getFilters(), getModeConfig(), getCompare(), stack)) {
                 return ItemHandlerHelper.copyStackWithSize(stack, size);
             }
 
-            return super.push(stack, size, simulate);
+            return super.insertItem(stack, size, simulate);
         }
     }
 

@@ -339,7 +339,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             int score = 0;
 
             for (ItemStack input : patterns.get(i).getInputs()) {
-                ItemStack stored = RefinedStorageUtils.getFromNetwork(this, input);
+                ItemStack stored = RefinedStorageUtils.getItem(this, input);
 
                 score += stored != null ? stored.stackSize : 0;
             }
@@ -409,7 +409,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     }
 
     @Override
-    public ItemStack push(ItemStack stack, int size, boolean simulate) {
+    public ItemStack insertItem(ItemStack stack, int size, boolean simulate) {
         if (stack == null || stack.getItem() == null || storage.getStorages().isEmpty()) {
             return ItemHandlerHelper.copyStackWithSize(stack, size);
         }
@@ -419,7 +419,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         ItemStack remainder = stack;
 
         for (IStorage storage : this.storage.getStorages()) {
-            remainder = storage.push(remainder, size, simulate);
+            remainder = storage.insertItem(remainder, size, simulate);
 
             if (remainder == null) {
                 break;
@@ -428,34 +428,34 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             }
         }
 
-        int sizePushed = remainder != null ? (orginalSize - remainder.stackSize) : orginalSize;
+        int inserted = remainder != null ? (orginalSize - remainder.stackSize) : orginalSize;
 
-        if (!simulate && sizePushed > 0) {
-            for (int i = 0; i < sizePushed; ++i) {
+        if (!simulate && inserted > 0) {
+            for (int i = 0; i < inserted; ++i) {
                 if (!craftingTasks.empty()) {
                     ICraftingTask top = craftingTasks.peek();
 
                     if (top instanceof ProcessingCraftingTask) {
-                        ((ProcessingCraftingTask) top).onPushed(stack);
+                        ((ProcessingCraftingTask) top).onInserted(stack);
                     }
                 }
             }
 
-            storage.add(ItemHandlerHelper.copyStackWithSize(stack, sizePushed));
+            storage.add(ItemHandlerHelper.copyStackWithSize(stack, inserted));
         }
 
         return remainder;
     }
 
     @Override
-    public ItemStack take(ItemStack stack, int size, int flags) {
+    public ItemStack extractItem(ItemStack stack, int size, int flags) {
         int requested = size;
         int received = 0;
 
         ItemStack newStack = null;
 
         for (IStorage storage : this.storage.getStorages()) {
-            ItemStack took = storage.take(stack, requested - received, flags);
+            ItemStack took = storage.extractItem(stack, requested - received, flags);
 
             if (took != null) {
                 if (newStack == null) {

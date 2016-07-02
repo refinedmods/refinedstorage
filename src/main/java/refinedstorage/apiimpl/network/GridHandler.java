@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingTask;
-import refinedstorage.api.network.GridPullFlags;
+import refinedstorage.api.network.GridExtractFlags;
 import refinedstorage.api.network.IGridHandler;
 import refinedstorage.api.network.INetworkMaster;
 
@@ -20,8 +20,8 @@ public class GridHandler implements IGridHandler {
     }
 
     @Override
-    public void onPull(ItemStack stack, int flags, EntityPlayerMP player) {
-        ItemStack item = RefinedStorageUtils.getFromNetwork(network, stack);
+    public void onExtract(ItemStack stack, int flags, EntityPlayerMP player) {
+        ItemStack item = RefinedStorageUtils.getItem(network, stack);
 
         if (item == null) {
             return;
@@ -29,7 +29,7 @@ public class GridHandler implements IGridHandler {
 
         int itemSize = item.stackSize;
 
-        boolean single = (flags & GridPullFlags.PULL_SINGLE) == GridPullFlags.PULL_SINGLE;
+        boolean single = (flags & GridExtractFlags.EXTRACT_SINGLE) == GridExtractFlags.EXTRACT_SINGLE;
 
         ItemStack held = player.inventory.getItemStack();
 
@@ -43,7 +43,7 @@ public class GridHandler implements IGridHandler {
 
         int size = 64;
 
-        if ((flags & GridPullFlags.PULL_HALF) == GridPullFlags.PULL_HALF && itemSize > 1) {
+        if ((flags & GridExtractFlags.EXTRACT_HALF) == GridExtractFlags.EXTRACT_HALF && itemSize > 1) {
             size = itemSize / 2;
 
             if (size > 32) {
@@ -51,16 +51,16 @@ public class GridHandler implements IGridHandler {
             }
         } else if (single) {
             size = 1;
-        } else if ((flags & GridPullFlags.PULL_SHIFT) == GridPullFlags.PULL_SHIFT) {
+        } else if ((flags & GridExtractFlags.EXTRACT_SHIFT) == GridExtractFlags.EXTRACT_SHIFT) {
             // NO OP, the quantity already set (64) is needed for shift
         }
 
         size = Math.min(size, stack.getItem().getItemStackLimit(stack));
 
-        ItemStack took = RefinedStorageUtils.takeFromNetwork(network, stack, size);
+        ItemStack took = RefinedStorageUtils.extractItem(network, stack, size);
 
         if (took != null) {
-            if ((flags & GridPullFlags.PULL_SHIFT) == GridPullFlags.PULL_SHIFT) {
+            if ((flags & GridExtractFlags.EXTRACT_SHIFT) == GridExtractFlags.EXTRACT_SHIFT) {
                 if (!player.inventory.addItemStackToInventory(took.copy())) {
                     InventoryHelper.spawnItemStack(player.worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), took);
                 }
@@ -74,17 +74,17 @@ public class GridHandler implements IGridHandler {
                 player.updateHeldItem();
             }
 
-            network.getWirelessGridHandler().drainEnergy(player, WirelessGridHandler.USAGE_PULL);
+            network.getWirelessGridHandler().drainEnergy(player, WirelessGridHandler.USAGE_EXTRACT);
         }
     }
 
     @Override
-    public ItemStack onPush(ItemStack stack) {
-        return network.push(stack, stack.stackSize, false);
+    public ItemStack onInsert(ItemStack stack) {
+        return network.insertItem(stack, stack.stackSize, false);
     }
 
     @Override
-    public void onHeldItemPush(boolean single, EntityPlayerMP player) {
+    public void onInsertHeldItem(boolean single, EntityPlayerMP player) {
         if (player.inventory.getItemStack() == null) {
             return;
         }
@@ -93,8 +93,8 @@ public class GridHandler implements IGridHandler {
         int size = single ? 1 : stack.stackSize;
 
         if (single) {
-            if (network.push(stack, size, true) == null) {
-                network.push(stack, size, false);
+            if (network.insertItem(stack, size, true) == null) {
+                network.insertItem(stack, size, false);
 
                 stack.stackSize -= size;
 
@@ -103,12 +103,12 @@ public class GridHandler implements IGridHandler {
                 }
             }
         } else {
-            player.inventory.setItemStack(network.push(stack, size, false));
+            player.inventory.setItemStack(network.insertItem(stack, size, false));
         }
 
         player.updateHeldItem();
 
-        network.getWirelessGridHandler().drainEnergy(player, WirelessGridHandler.USAGE_PUSH);
+        network.getWirelessGridHandler().drainEnergy(player, WirelessGridHandler.USAGE_INSERT);
     }
 
     @Override
@@ -119,7 +119,7 @@ public class GridHandler implements IGridHandler {
 
         int quantityPerRequest = 0;
 
-        ICraftingPattern pattern = RefinedStorageUtils.getPatternFromNetwork(network, stack);
+        ICraftingPattern pattern = RefinedStorageUtils.getPattern(network, stack);
 
         if (pattern != null) {
             for (ItemStack output : pattern.getOutputs()) {

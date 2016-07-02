@@ -64,8 +64,8 @@ public class TileImporter extends TileNode implements ICompareConfig, IModeConfi
 
                 ItemStack result = handler.extractItem(currentSlot, quantity, true);
 
-                if (result != null && network.push(result, result.stackSize, true) == null) {
-                    network.push(result, result.stackSize, false);
+                if (result != null && network.insertItem(result, result.stackSize, true) == null) {
+                    network.insertItem(result, result.stackSize, false);
 
                     handler.extractItem(currentSlot, quantity, false);
                 } else {

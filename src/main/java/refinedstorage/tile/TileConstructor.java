@@ -59,7 +59,7 @@ public class TileConstructor extends TileNode implements ICompareConfig {
             BlockPos front = pos.offset(getDirection());
 
             if (worldObj.isAirBlock(front) && block.getBlock().canPlaceBlockAt(worldObj, front)) {
-                ItemStack took = network.take(filter.getStackInSlot(0), 1, compare);
+                ItemStack took = network.extractItem(filter.getStackInSlot(0), 1, compare);
 
                 if (took != null) {
                     scheduler.resetSchedule();

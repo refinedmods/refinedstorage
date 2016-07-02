@@ -298,19 +298,19 @@ public final class RefinedStorageUtils {
         }
     }
 
-    public static ItemStack takeFromNetwork(INetworkMaster network, ItemStack stack, int size) {
-        return network.take(stack, size, CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_NBT);
+    public static ItemStack extractItem(INetworkMaster network, ItemStack stack, int size) {
+        return network.extractItem(stack, size, CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_NBT);
     }
 
-    public static ItemStack getFromNetwork(INetworkMaster network, ItemStack stack) {
+    public static ItemStack getItem(INetworkMaster network, ItemStack stack) {
         return network.getStorage().get(stack, CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_NBT);
     }
 
-    public static ICraftingPattern getPatternFromNetwork(INetworkMaster network, ItemStack stack) {
+    public static ICraftingPattern getPattern(INetworkMaster network, ItemStack stack) {
         return network.getPattern(stack, CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_NBT);
     }
 
     public static boolean hasPattern(INetworkMaster network, ItemStack stack) {
-        return RefinedStorageUtils.getPatternFromNetwork(network, stack) != null;
+        return RefinedStorageUtils.getPattern(network, stack) != null;
     }
 }

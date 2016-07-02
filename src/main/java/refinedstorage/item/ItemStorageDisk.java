@@ -68,7 +68,7 @@ public class ItemStorageDisk extends ItemBase {
                     item.getSubItems(item, CreativeTabs.INVENTORY, stacks);
 
                     for (ItemStack itemStack : stacks) {
-                        storage.push(itemStack, 1000, false);
+                        storage.insertItem(itemStack, 1000, false);
                     }
                 }
             }

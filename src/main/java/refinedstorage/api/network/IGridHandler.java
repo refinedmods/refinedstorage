@@ -10,30 +10,30 @@ import javax.annotation.Nullable;
  */
 public interface IGridHandler {
     /**
-     * Called when a player tries to pull an item from the grid.
+     * Called when a player tries to extract an item from the grid.
      *
-     * @param stack  The item we're trying to pull
-     * @param flags  How we are pulling, see {@link GridPullFlags}
-     * @param player The player that is attempting the pull
+     * @param stack  The item we're trying to extract
+     * @param flags  How we are extracting, see {@link GridExtractFlags}
+     * @param player The player that is attempting the extraction
      */
-    void onPull(ItemStack stack, int flags, EntityPlayerMP player);
+    void onExtract(ItemStack stack, int flags, EntityPlayerMP player);
 
     /**
-     * Called when a player tries to push to the grid.
+     * Called when a player tries to insert an item to the grid.
      *
-     * @param stack The item we're trying to push
+     * @param stack The item we're trying to insert
      * @return The remainder, or null if there is no remainder
      */
     @Nullable
-    ItemStack onPush(ItemStack stack);
+    ItemStack onInsert(ItemStack stack);
 
     /**
-     * Called when a player is trying to push an item that it is holding in their hand in the GUI.
+     * Called when a player is trying to insert an item that it is holding in their hand in the GUI.
      *
-     * @param single If we are only pushing 1 item
-     * @param player The player that is attempting the push
+     * @param single If we are only inserting 1 item
+     * @param player The player that is attempting the insert
      */
-    void onHeldItemPush(boolean single, EntityPlayerMP player);
+    void onInsertHeldItem(boolean single, EntityPlayerMP player);
 
     /**
      * Called when a player requested crafting for an item.

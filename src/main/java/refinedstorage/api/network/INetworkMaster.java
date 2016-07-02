@@ -147,24 +147,24 @@ public interface INetworkMaster {
     void sendStorageDeltaToClient(ItemStack stack, int delta);
 
     /**
-     * Pushes an item to this network.
+     * Inserts an item to this network.
      *
-     * @param stack    The stack prototype to push, do NOT modify
-     * @param size     The amount of that prototype that has to be pushed
+     * @param stack    The stack prototype to insert, do NOT modify
+     * @param size     The amount of that prototype that has to be inserted
      * @param simulate If we are simulating
-     * @return null if the push was successful, or a {@link ItemStack} with the remainder
+     * @return null if the insert was successful, or an {@link ItemStack} with the remainder
      */
     @Nullable
-    ItemStack push(@Nonnull ItemStack stack, int size, boolean simulate);
+    ItemStack insertItem(@Nonnull ItemStack stack, int size, boolean simulate);
 
     /**
-     * Takes an item from this network.
+     * Extracts an item from this network.
      *
-     * @param stack The prototype of the stack to take, do NOT modify
-     * @param size  The amount of that prototype that has to be taken
+     * @param stack The prototype of the stack to extract, do NOT modify
+     * @param size  The amount of that prototype that has to be extracted
      * @param flags The flags to compare on, see {@link CompareFlags}
-     * @return null if we didn't take anything, or a {@link ItemStack} with the result
+     * @return null if we didn't extract anything, or a {@link ItemStack} with the result
      */
     @Nullable
-    ItemStack take(@Nonnull ItemStack stack, int size, int flags);
+    ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags);
 }

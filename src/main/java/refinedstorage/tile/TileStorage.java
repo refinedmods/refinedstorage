@@ -35,12 +35,12 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
         }
 
         @Override
-        public ItemStack push(ItemStack stack, int size, boolean simulate) {
+        public ItemStack insertItem(ItemStack stack, int size, boolean simulate) {
             if (!ModeFilter.respectsMode(filters, TileStorage.this, compare, stack)) {
                 return ItemHandlerHelper.copyStackWithSize(stack, size);
             }
 
-            return super.push(stack, size, simulate);
+            return super.insertItem(stack, size, simulate);
         }
     }
 

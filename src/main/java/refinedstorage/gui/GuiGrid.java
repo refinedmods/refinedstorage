@@ -12,7 +12,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.apache.commons.lang3.StringUtils;
 import refinedstorage.RefinedStorage;
-import refinedstorage.api.network.GridPullFlags;
+import refinedstorage.api.network.GridExtractFlags;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
 import refinedstorage.gui.sidebutton.SideButtonGridSearchBoxMode;
@@ -21,7 +21,7 @@ import refinedstorage.gui.sidebutton.SideButtonGridSortingType;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.jei.RefinedStorageJEIPlugin;
 import refinedstorage.network.MessageGridCraftingClear;
-import refinedstorage.network.MessageGridHeldPush;
+import refinedstorage.network.MessageGridInsertHeld;
 import refinedstorage.network.MessageGridPatternCreate;
 import refinedstorage.network.MessageGridPull;
 import refinedstorage.tile.grid.IGrid;
@@ -353,7 +353,7 @@ public class GuiGrid extends GuiBase {
             ItemStack held = container.getPlayer().inventory.getItemStack();
 
             if (isOverSlotArea(mouseX - guiLeft, mouseY - guiTop) && held != null && (clickedButton == 0 || clickedButton == 1)) {
-                RefinedStorage.INSTANCE.network.sendToServer(new MessageGridHeldPush(clickedButton == 1));
+                RefinedStorage.INSTANCE.network.sendToServer(new MessageGridInsertHeld(clickedButton == 1));
             }
 
             if (isOverSlotWithItem() && (held == null || (held != null && clickedButton == 2))) {
@@ -363,15 +363,15 @@ public class GuiGrid extends GuiBase {
                     int flags = 0;
 
                     if (clickedButton == 1) {
-                        flags |= GridPullFlags.PULL_HALF;
+                        flags |= GridExtractFlags.EXTRACT_HALF;
                     }
 
                     if (GuiScreen.isShiftKeyDown()) {
-                        flags |= GridPullFlags.PULL_SHIFT;
+                        flags |= GridExtractFlags.EXTRACT_SHIFT;
                     }
 
                     if (clickedButton == 2) {
-                        flags |= GridPullFlags.PULL_SINGLE;
+                        flags |= GridExtractFlags.EXTRACT_SINGLE;
                     }
 
                     RefinedStorage.INSTANCE.network.sendToServer(new MessageGridPull(items.get(slotNumber), flags));

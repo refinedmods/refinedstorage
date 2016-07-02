@@ -68,7 +68,7 @@ public class TileDestructor extends TileNode implements ICompareConfig, IModeCon
                         if (network == null) {
                             InventoryHelper.spawnItemStack(worldObj, front.getX(), front.getY(), front.getZ(), drop);
                         } else {
-                            ItemStack remainder = network.push(drop, drop.stackSize, false);
+                            ItemStack remainder = network.insertItem(drop, drop.stackSize, false);
 
                             if (remainder != null) {
                                 InventoryHelper.spawnItemStack(worldObj, front.getX(), front.getY(), front.getZ(), remainder);

@@ -52,7 +52,7 @@ public class ProcessingCraftingTask implements ICraftingTask {
             for (int i = 0; i < inserted.length; ++i) {
                 if (!inserted[i]) {
                     ItemStack input = pattern.getInputs()[i];
-                    ItemStack took = RefinedStorageUtils.takeFromNetwork(network, input, 1);
+                    ItemStack took = RefinedStorageUtils.extractItem(network, input, 1);
 
                     if (took != null) {
                         if (ItemHandlerHelper.insertItem(container.getConnectedItems(), took, true) == null) {
@@ -60,10 +60,10 @@ public class ProcessingCraftingTask implements ICraftingTask {
 
                             inserted[i] = true;
                         } else {
-                            network.push(took, took.stackSize, false);
+                            network.insertItem(took, took.stackSize, false);
                         }
                     } else if (!childTasks[i]) {
-                        ICraftingPattern pattern = RefinedStorageUtils.getPatternFromNetwork(network, input);
+                        ICraftingPattern pattern = RefinedStorageUtils.getPattern(network, input);
 
                         if (pattern != null) {
                             childTasks[i] = true;
@@ -90,7 +90,7 @@ public class ProcessingCraftingTask implements ICraftingTask {
         return true;
     }
 
-    public void onPushed(ItemStack inserted) {
+    public void onInserted(ItemStack inserted) {
         for (int i = 0; i < pattern.getOutputs().length; ++i) {
             if (!satisfied[i] && RefinedStorageUtils.compareStackNoQuantity(inserted, pattern.getOutputs()[i])) {
                 satisfied[i] = true;

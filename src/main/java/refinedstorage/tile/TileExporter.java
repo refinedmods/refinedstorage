@@ -51,7 +51,7 @@ public class TileExporter extends TileNode implements ICompareConfig {
                 ItemStack slot = filters.getStackInSlot(i);
 
                 if (slot != null) {
-                    ItemStack took = network.take(slot, size, compare);
+                    ItemStack took = network.extractItem(slot, size, compare);
 
                     if (took != null) {
                         scheduler.resetSchedule();
@@ -59,7 +59,7 @@ public class TileExporter extends TileNode implements ICompareConfig {
                         ItemStack remainder = ItemHandlerHelper.insertItem(handler, took, false);
 
                         if (remainder != null) {
-                            network.push(remainder, remainder.stackSize, false);
+                            network.insertItem(remainder, remainder.stackSize, false);
                         }
                     } else if (RefinedStorageUtils.hasUpgrade(upgrades, ItemUpgrade.TYPE_CRAFTING)) {
                         if (scheduler.canSchedule(compare, slot)) {

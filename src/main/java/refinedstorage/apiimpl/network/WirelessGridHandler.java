@@ -21,8 +21,8 @@ import java.util.List;
 
 public class WirelessGridHandler implements IWirelessGridHandler {
     public static final int USAGE_OPEN = 30;
-    public static final int USAGE_PULL = 3;
-    public static final int USAGE_PUSH = 3;
+    public static final int USAGE_EXTRACT = 3;
+    public static final int USAGE_INSERT = 3;
 
     private INetworkMaster network;
 

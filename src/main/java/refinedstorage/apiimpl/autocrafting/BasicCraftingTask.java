@@ -67,14 +67,14 @@ public class BasicCraftingTask implements ICraftingTask {
             if (!satisfied[i]) {
                 done = false;
 
-                ItemStack took = RefinedStorageUtils.takeFromNetwork(network, input, 1);
+                ItemStack took = RefinedStorageUtils.extractItem(network, input, 1);
 
                 if (took != null) {
                     itemsTook.add(took);
 
                     satisfied[i] = true;
                 } else if (!childTasks[i]) {
-                    ICraftingPattern pattern = RefinedStorageUtils.getPatternFromNetwork(network, input);
+                    ICraftingPattern pattern = RefinedStorageUtils.getPattern(network, input);
 
                     if (pattern != null) {
                         network.addCraftingTask(network.createCraftingTask(pattern));
@@ -96,12 +96,12 @@ public class BasicCraftingTask implements ICraftingTask {
     @Override
     public void onDone(INetworkMaster network) {
         for (ItemStack output : pattern.getOutputs()) {
-            network.push(output, output.stackSize, false);
+            network.insertItem(output, output.stackSize, false);
         }
 
         if (pattern.getByproducts() != null) {
             for (ItemStack byproduct : pattern.getByproducts()) {
-                network.push(byproduct, byproduct.stackSize, false);
+                network.insertItem(byproduct, byproduct.stackSize, false);
             }
         }
     }
@@ -110,7 +110,7 @@ public class BasicCraftingTask implements ICraftingTask {
     @Override
     public void onCancelled(INetworkMaster network) {
         for (ItemStack took : itemsTook) {
-            network.push(took, took.stackSize, false);
+            network.insertItem(took, took.stackSize, false);
         }
     }
 

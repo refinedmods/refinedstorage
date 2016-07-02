@@ -17,28 +17,29 @@ public interface IStorage {
     List<ItemStack> getItems();
 
     /**
-     * Pushes an item to this storage.
+     * Inserts an item to this storage.
      *
-     * @param stack    The stack prototype to push, do NOT modify
-     * @param size     The amount of that prototype that has to be pushed
+     * @param stack    The stack prototype to insert, do NOT modify
+     * @param size     The amount of that prototype that has to be inserted
      * @param simulate If we are simulating
-     * @return null if the push was successful, or a {@link ItemStack} with the remainder
+     * @return null if the insert was successful, or a {@link ItemStack} with the remainder
      */
     @Nullable
-    ItemStack push(@Nonnull ItemStack stack, int size, boolean simulate);
+    ItemStack insertItem(@Nonnull ItemStack stack, int size, boolean simulate);
 
     /**
-     * Takes an item from storage.
+     * Extracts an item from storage.
+     *
      * If the stack we found in the system is smaller than the requested size, return the stack anyway.
      * For example: if this method is called for dirt (64x) while there is only dirt (32x), return the dirt (32x) anyway.
      *
-     * @param stack A prototype of the stack to take, do NOT modify
-     * @param size  The amount of that prototype that has to be taken
-     * @param flags On what we are comparing to take the item, see {@link CompareFlags}
-     * @return null if we didn't take anything, or a {@link ItemStack} with the result
+     * @param stack A prototype of the stack to extract, do NOT modify
+     * @param size  The amount of that prototype that has to be extracted
+     * @param flags On what we are comparing to extract this item, see {@link CompareFlags}
+     * @return null if we didn't extract anything, or an {@link ItemStack} with the result
      */
     @Nullable
-    ItemStack take(@Nonnull ItemStack stack, int size, int flags);
+    ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags);
 
     /**
      * @return The amount of items stored in this storage

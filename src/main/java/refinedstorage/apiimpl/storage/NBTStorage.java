@@ -115,7 +115,7 @@ public abstract class NBTStorage implements IStorage {
     }
 
     @Override
-    public ItemStack push(ItemStack stack, int size, boolean simulate) {
+    public ItemStack insertItem(ItemStack stack, int size, boolean simulate) {
         for (ItemStack otherStack : stacks) {
             if (RefinedStorageUtils.compareStackNoQuantity(otherStack, stack)) {
                 if (getCapacity() != -1 && getStored() + size > getCapacity()) {
@@ -178,7 +178,7 @@ public abstract class NBTStorage implements IStorage {
     }
 
     @Override
-    public ItemStack take(ItemStack stack, int size, int flags) {
+    public ItemStack extractItem(ItemStack stack, int size, int flags) {
         for (ItemStack otherStack : stacks) {
             if (RefinedStorageUtils.compareStack(otherStack, stack, flags)) {
                 if (size > otherStack.stackSize) {
