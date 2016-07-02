@@ -9,7 +9,6 @@ import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.GridPullFlags;
 import refinedstorage.api.network.IGridHandler;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.item.ItemWirelessGrid;
 
 public class GridHandler implements IGridHandler {
     public static final int MAX_CRAFTING_PER_REQUEST = 500;
@@ -75,7 +74,7 @@ public class GridHandler implements IGridHandler {
                 player.updateHeldItem();
             }
 
-            network.getWirelessGridHandler().drainEnergy(player, ItemWirelessGrid.USAGE_PULL);
+            network.getWirelessGridHandler().drainEnergy(player, WirelessGridHandler.USAGE_PULL);
         }
     }
 
@@ -109,7 +108,7 @@ public class GridHandler implements IGridHandler {
 
         player.updateHeldItem();
 
-        network.getWirelessGridHandler().drainEnergy(player, ItemWirelessGrid.USAGE_PUSH);
+        network.getWirelessGridHandler().drainEnergy(player, WirelessGridHandler.USAGE_PUSH);
     }
 
     @Override

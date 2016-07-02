@@ -20,6 +20,10 @@ import java.util.Iterator;
 import java.util.List;
 
 public class WirelessGridHandler implements IWirelessGridHandler {
+    public static final int USAGE_OPEN = 30;
+    public static final int USAGE_PULL = 3;
+    public static final int USAGE_PUSH = 3;
+
     private INetworkMaster network;
 
     private List<WirelessGridConsumer> consumers = new ArrayList<WirelessGridConsumer>();
@@ -40,7 +44,10 @@ public class WirelessGridHandler implements IWirelessGridHandler {
             WirelessGridConsumer consumer = it.next();
 
             if (!RefinedStorageUtils.compareStack(consumer.getWirelessGrid(), consumer.getPlayer().getHeldItem(consumer.getHand()))) {
-                consumer.getPlayer().closeScreen(); // This will call onContainerClosed on the Container and remove it from the list
+                /**
+                 * This will call {@link net.minecraft.inventory.Container#onContainerClosed(EntityPlayer)} so the consumer is removed from the list.
+                 */
+                consumer.getPlayer().closeScreen();
             }
         }
     }
@@ -59,7 +66,7 @@ public class WirelessGridHandler implements IWirelessGridHandler {
 
         network.sendStorageToClient((EntityPlayerMP) player);
 
-        drainEnergy(player, ItemWirelessGrid.USAGE_OPEN);
+        drainEnergy(player, USAGE_OPEN);
 
         return true;
     }
