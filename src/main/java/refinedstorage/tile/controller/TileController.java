@@ -56,8 +56,32 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     private GridHandler gridHandler = new GridHandler(this);
     private WirelessGridHandler wirelessGridHandler = new WirelessGridHandler(this);
 
-    private List<IStorage> storages = new ArrayList<IStorage>();
     private IGroupedStorage storage = new GroupedStorage(this);
+
+    private Comparator<IStorage> sizeComparator = new Comparator<IStorage>() {
+        @Override
+        public int compare(IStorage left, IStorage right) {
+            int leftStored = left.getStored();
+            int rightStored = right.getStored();
+
+            if (leftStored == rightStored) {
+                return 0;
+            }
+
+            return (leftStored > rightStored) ? -1 : 1;
+        }
+    };
+
+    private Comparator<IStorage> priorityComparator = new Comparator<IStorage>() {
+        @Override
+        public int compare(IStorage left, IStorage right) {
+            if (left.getPriority() == right.getPriority()) {
+                return 0;
+            }
+
+            return (left.getPriority() > right.getPriority()) ? -1 : 1;
+        }
+    };
 
     private List<INetworkSlave> slaves = new ArrayList<INetworkSlave>();
     private List<INetworkSlave> slavesToAdd = new ArrayList<INetworkSlave>();
@@ -123,32 +147,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             slavesToRemove.clear();
 
             if (canRun()) {
-                if (ticks % 20 == 0) {
-                    Collections.sort(storages, new Comparator<IStorage>() {
-                        @Override
-                        public int compare(IStorage left, IStorage right) {
-                            int leftStored = left.getStored();
-                            int rightStored = right.getStored();
-
-                            if (leftStored == rightStored) {
-                                return 0;
-                            }
-
-                            return (leftStored > rightStored) ? -1 : 1;
-                        }
-                    });
-
-                    Collections.sort(storages, new Comparator<IStorage>() {
-                        @Override
-                        public int compare(IStorage left, IStorage right) {
-                            if (left.getPriority() == right.getPriority()) {
-                                return 0;
-                            }
-
-                            return (left.getPriority() > right.getPriority()) ? -1 : 1;
-                        }
-                    });
-                }
+                Collections.sort(storage.getStorages(), sizeComparator);
+                Collections.sort(storage.getStorages(), priorityComparator);
 
                 for (ICraftingTask taskToCancel : craftingTasksToCancel) {
                     taskToCancel.onCancelled(this);
@@ -380,20 +380,16 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public void sendStorageToClient() {
-        if (!storage.isRebuilding()) {
-            for (EntityPlayer player : worldObj.playerEntities) {
-                if (isWatchingGrid(player)) {
-                    sendStorageToClient((EntityPlayerMP) player);
-                }
+        for (EntityPlayer player : worldObj.playerEntities) {
+            if (isWatchingGrid(player)) {
+                sendStorageToClient((EntityPlayerMP) player);
             }
         }
     }
 
     @Override
     public void sendStorageToClient(EntityPlayerMP player) {
-        if (!storage.isRebuilding()) {
-            RefinedStorage.NETWORK.sendTo(new MessageGridItems(this), player);
-        }
+        RefinedStorage.NETWORK.sendTo(new MessageGridItems(this), player);
     }
 
     private boolean isWatchingGrid(EntityPlayer player) {
@@ -402,7 +398,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public ItemStack push(ItemStack stack, int size, boolean simulate) {
-        if (stack == null || stack.getItem() == null || storages.isEmpty()) {
+        if (stack == null || stack.getItem() == null || storage.getStorages().isEmpty()) {
             return ItemHandlerHelper.copyStackWithSize(stack, size);
         }
 
@@ -410,7 +406,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
         ItemStack remainder = stack;
 
-        for (IStorage storage : storages) {
+        for (IStorage storage : this.storage.getStorages()) {
             remainder = storage.push(remainder, size, simulate);
 
             if (remainder == null) {
@@ -446,7 +442,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
         ItemStack newStack = null;
 
-        for (IStorage storage : storages) {
+        for (IStorage storage : this.storage.getStorages()) {
             ItemStack took = storage.take(stack, requested - received, flags);
 
             if (took != null) {

@@ -20,7 +20,6 @@ public class GroupedStorage implements IGroupedStorage {
     private INetworkMaster network;
     private List<IStorage> storages = new ArrayList<IStorage>();
     private Multimap<Item, ItemStack> stacks = ArrayListMultimap.create();
-    private boolean rebuilding;
 
     public GroupedStorage(INetworkMaster network) {
         this.network = network;
@@ -28,8 +27,6 @@ public class GroupedStorage implements IGroupedStorage {
 
     @Override
     public void rebuild() {
-        this.rebuilding = true;
-
         storages.clear();
 
         for (INetworkSlave slave : network.getSlaves()) {
@@ -54,14 +51,7 @@ public class GroupedStorage implements IGroupedStorage {
             }
         }
 
-        this.rebuilding = false;
-
         network.sendStorageToClient();
-    }
-
-    @Override
-    public boolean isRebuilding() {
-        return rebuilding;
     }
 
     @Override
