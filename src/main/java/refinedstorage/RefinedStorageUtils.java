@@ -302,6 +302,10 @@ public final class RefinedStorageUtils {
         return network.take(stack, size, CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_NBT);
     }
 
+    public static ItemStack getFromNetwork(INetworkMaster network, ItemStack stack) {
+        return network.getStorage().get(stack, CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_NBT);
+    }
+
     public static ICraftingPattern getPatternFromNetwork(INetworkMaster network, ItemStack stack) {
         return network.getPattern(stack, CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_NBT);
     }

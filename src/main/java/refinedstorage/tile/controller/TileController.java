@@ -24,7 +24,6 @@ import refinedstorage.api.network.IGridHandler;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.INetworkSlave;
 import refinedstorage.api.network.IWirelessGridHandler;
-import refinedstorage.api.storage.CompareFlags;
 import refinedstorage.api.storage.IGroupedStorage;
 import refinedstorage.api.storage.IStorage;
 import refinedstorage.apiimpl.autocrafting.BasicCraftingTask;
@@ -340,7 +339,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             int score = 0;
 
             for (ItemStack input : patterns.get(i).getInputs()) {
-                ItemStack stored = storage.get(input, CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_NBT);
+                ItemStack stored = RefinedStorageUtils.getFromNetwork(this, input);
 
                 score += stored != null ? stored.stackSize : 0;
             }

@@ -9,7 +9,6 @@ import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.GridPullFlags;
 import refinedstorage.api.network.IGridHandler;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.api.storage.CompareFlags;
 import refinedstorage.item.ItemWirelessGrid;
 
 public class GridHandler implements IGridHandler {
@@ -23,7 +22,7 @@ public class GridHandler implements IGridHandler {
 
     @Override
     public void onPull(ItemStack stack, int flags, EntityPlayerMP player) {
-        ItemStack item = network.getStorage().get(stack, CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_NBT);
+        ItemStack item = RefinedStorageUtils.getFromNetwork(network, stack);
 
         if (item == null) {
             return;
