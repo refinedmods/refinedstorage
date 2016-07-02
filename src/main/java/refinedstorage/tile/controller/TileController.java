@@ -170,8 +170,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             if (getType() == EnumControllerType.NORMAL) {
                 if (!RefinedStorage.INSTANCE.controllerUsesRf) {
                     energy.setEnergyStored(energy.getMaxEnergyStored());
-                } else if (energy.getEnergyStored() - energyUsage >= 0) {
-                    energy.extractEnergy(energyUsage, false);
+                } else if (energy.getEnergyStored() - getEnergyUsage() >= 0) {
+                    energy.extractEnergy(getEnergyUsage(), false);
                 } else {
                     energy.setEnergyStored(0);
                 }
@@ -345,7 +345,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     }
 
     private void updateSlaves() {
-        this.energyUsage = 0;
         this.storages.clear();
         this.patterns.clear();
 
@@ -375,8 +374,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                     }
                 }
             }
-
-            this.energyUsage += slave.getEnergyUsage();
         }
 
         wirelessGridHandler.setRange(range);
@@ -616,6 +613,18 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     }
 
     public int getEnergyUsage() {
+        if (!worldObj.isRemote) {
+            int usage = 0;
+
+            for (INetworkSlave slave : slaves) {
+                if (slave.canUpdate()) {
+                    usage += slave.getEnergyUsage();
+                }
+            }
+
+            return usage;
+        }
+
         return energyUsage;
     }
 
@@ -653,7 +662,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public void writeContainerData(ByteBuf buf) {
         buf.writeInt(energy.getEnergyStored());
-        buf.writeInt(energyUsage);
+        buf.writeInt(getEnergyUsage());
 
         buf.writeInt(redstoneMode.id);
 
