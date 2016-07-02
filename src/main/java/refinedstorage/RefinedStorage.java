@@ -46,7 +46,6 @@ public final class RefinedStorage {
     public static RefinedStorage INSTANCE;
 
     public List<ItemStack> items = new ArrayList<ItemStack>();
-    public long lastItemUpdate;
 
     public int cableRfUsage;
     public int constructorRfUsage;

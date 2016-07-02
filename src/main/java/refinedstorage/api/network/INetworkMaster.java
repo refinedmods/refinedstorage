@@ -136,6 +136,14 @@ public interface INetworkMaster {
     void sendStorageToClient(EntityPlayerMP player);
 
     /**
+     * Sends a storage change to the client.
+     *
+     * @param stack The stack
+     * @param delta The delta changed
+     */
+    void sendStorageDeltaToClient(ItemStack stack, int delta);
+
+    /**
      * Pushes an item to this network.
      *
      * @param stack    The stack prototype to push, do NOT modify

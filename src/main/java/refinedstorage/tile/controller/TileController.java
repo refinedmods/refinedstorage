@@ -38,7 +38,8 @@ import refinedstorage.block.EnumControllerType;
 import refinedstorage.container.ContainerController;
 import refinedstorage.container.ContainerGrid;
 import refinedstorage.item.ItemPattern;
-import refinedstorage.network.MessageGridItems;
+import refinedstorage.network.MessageGridDelta;
+import refinedstorage.network.MessageGridUpdate;
 import refinedstorage.tile.IConnectionHandler;
 import refinedstorage.tile.ISynchronizedContainer;
 import refinedstorage.tile.TileBase;
@@ -391,7 +392,16 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public void sendStorageToClient(EntityPlayerMP player) {
-        RefinedStorage.NETWORK.sendTo(new MessageGridItems(this), player);
+        RefinedStorage.NETWORK.sendTo(new MessageGridUpdate(this), player);
+    }
+
+    @Override
+    public void sendStorageDeltaToClient(ItemStack stack, int delta) {
+        for (EntityPlayer player : worldObj.playerEntities) {
+            if (isWatchingGrid(player)) {
+                RefinedStorage.NETWORK.sendTo(new MessageGridDelta(stack, delta, RefinedStorageUtils.getPatternFromNetwork(this, stack) != null), (EntityPlayerMP) player);
+            }
+        }
     }
 
     private boolean isWatchingGrid(EntityPlayer player) {

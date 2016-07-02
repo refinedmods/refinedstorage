@@ -106,6 +106,6 @@ public class WirelessGrid implements IGrid {
 
     @Override
     public boolean isConnected() {
-        return System.currentTimeMillis() - RefinedStorage.INSTANCE.lastItemUpdate < 1000;
+        return true;
     }
 }

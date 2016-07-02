@@ -60,7 +60,7 @@ public class GroupedStorage implements IGroupedStorage {
             if (RefinedStorageUtils.compareStackNoQuantity(otherStack, stack)) {
                 otherStack.stackSize += stack.stackSize;
 
-                network.sendStorageToClient();
+                network.sendStorageDeltaToClient(stack, stack.stackSize);
 
                 return;
             }
@@ -68,7 +68,7 @@ public class GroupedStorage implements IGroupedStorage {
 
         stacks.put(stack.getItem(), stack.copy());
 
-        network.sendStorageToClient();
+        network.sendStorageDeltaToClient(stack, stack.stackSize);
     }
 
     @Override
@@ -83,7 +83,7 @@ public class GroupedStorage implements IGroupedStorage {
                     }
                 }
 
-                network.sendStorageToClient();
+                network.sendStorageDeltaToClient(stack, -stack.stackSize);
 
                 return;
             }
