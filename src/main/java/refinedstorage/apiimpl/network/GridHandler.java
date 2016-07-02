@@ -9,6 +9,7 @@ import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.GridPullFlags;
 import refinedstorage.api.network.IGridHandler;
 import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.api.storage.CompareFlags;
 import refinedstorage.item.ItemWirelessGrid;
 
 public class GridHandler implements IGridHandler {
@@ -22,6 +23,14 @@ public class GridHandler implements IGridHandler {
 
     @Override
     public void onPull(ItemStack stack, int flags, EntityPlayerMP player) {
+        ItemStack item = network.getStorage().get(stack, CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_NBT);
+
+        if (item == null) {
+            return;
+        }
+
+        int itemSize = item.stackSize;
+
         boolean single = (flags & GridPullFlags.PULL_SINGLE) == GridPullFlags.PULL_SINGLE;
 
         ItemStack held = player.inventory.getItemStack();
@@ -36,8 +45,8 @@ public class GridHandler implements IGridHandler {
 
         int size = 64;
 
-        if ((flags & GridPullFlags.PULL_HALF) == GridPullFlags.PULL_HALF && stack.stackSize > 1) {
-            size = stack.stackSize / 2;
+        if ((flags & GridPullFlags.PULL_HALF) == GridPullFlags.PULL_HALF && itemSize > 1) {
+            size = itemSize / 2;
 
             if (size > 32) {
                 size = 32;

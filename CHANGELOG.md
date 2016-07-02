@@ -1,5 +1,10 @@
 # Refined Storage Changelog
 
+### 0.8.3
+**Bugfixes**
+- Fixed drawer controllers not working with external storage
+- Fixed right click taking 64 items instead of 32 items
+
 ### 0.8.2
 **Bugfixes**
 - Fixed not being able to take items sometimes
