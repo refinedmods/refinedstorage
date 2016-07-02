@@ -5,7 +5,6 @@ gui.refinedstorage:controller.1=Contrôleur Créatif
 gui.refinedstorage:controller.machine_amount=%dx
 gui.refinedstorage:grid=Grille
 gui.refinedstorage:grid.craft=Craft
-gui.refinedstorage:grid.pattern=Modèle
 gui.refinedstorage:grid.pattern_create=Modèle Créatif
 gui.refinedstorage:wireless_grid=Grille sans Fil
 gui.refinedstorage:disk_drive=Lecteur de Disque

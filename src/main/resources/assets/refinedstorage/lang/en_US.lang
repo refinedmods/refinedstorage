@@ -5,7 +5,6 @@ gui.refinedstorage:controller.1=Creative Controller
 gui.refinedstorage:controller.machine_amount=%dx
 gui.refinedstorage:grid=Grid
 gui.refinedstorage:grid.craft=Craft
-gui.refinedstorage:grid.pattern=Pattern
 gui.refinedstorage:grid.pattern_create=Create Pattern
 gui.refinedstorage:wireless_grid=Wireless Grid
 gui.refinedstorage:disk_drive=Drive

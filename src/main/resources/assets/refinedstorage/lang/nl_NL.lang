@@ -5,7 +5,6 @@ gui.refinedstorage:controller.1=Creatieve Controller
 gui.refinedstorage:controller.machine_amount=%dx
 gui.refinedstorage:grid=Rooster
 gui.refinedstorage:grid.craft=Craft
-gui.refinedstorage:grid.pattern=Patroon
 gui.refinedstorage:grid.pattern_create=Patroon maken
 gui.refinedstorage:wireless_grid=Draadloos Rooster
 gui.refinedstorage:disk_drive=Schijf
