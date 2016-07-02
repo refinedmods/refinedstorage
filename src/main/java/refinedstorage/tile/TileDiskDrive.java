@@ -13,6 +13,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.storage.IStorage;
 import refinedstorage.api.storage.IStorageProvider;
 import refinedstorage.apiimpl.storage.NBTStorage;
@@ -25,7 +26,7 @@ import refinedstorage.tile.config.*;
 
 import java.util.List;
 
-public class TileDiskDrive extends TileSlave implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig {
+public class TileDiskDrive extends TileSlave implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig, IConnectionHandler {
     public class Storage extends NBTStorage {
         public Storage(ItemStack disk) {
             super(disk.getTagCompound(), EnumStorageType.getById(disk.getItemDamage()).getCapacity(), TileDiskDrive.this);
@@ -61,6 +62,10 @@ public class TileDiskDrive extends TileSlave implements IStorageProvider, IStora
                 storages[slot] = null;
             } else {
                 storages[slot] = new Storage(disk);
+            }
+
+            if (network != null) {
+                network.getStorage().rebuild();
             }
         }
 
@@ -303,5 +308,15 @@ public class TileDiskDrive extends TileSlave implements IStorageProvider, IStora
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
         return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+    }
+
+    @Override
+    public void onConnected(INetworkMaster network) {
+        network.getStorage().rebuild();
+    }
+
+    @Override
+    public void onDisconnected(INetworkMaster network) {
+        network.getStorage().rebuild();
     }
 }

@@ -10,11 +10,13 @@ import net.minecraftforge.items.IItemHandler;
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.storage.IStorage;
 import refinedstorage.api.storage.IStorageProvider;
 import refinedstorage.container.ContainerStorage;
 import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.network.MessagePriorityUpdate;
+import refinedstorage.tile.IConnectionHandler;
 import refinedstorage.tile.IStorageGui;
 import refinedstorage.tile.TileSlave;
 import refinedstorage.tile.config.ICompareConfig;
@@ -25,7 +27,7 @@ import refinedstorage.tile.config.ModeConstants;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileExternalStorage extends TileSlave implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig {
+public class TileExternalStorage extends TileSlave implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig, IConnectionHandler {
     public static final String NBT_PRIORITY = "Priority";
     public static final String NBT_COMPARE = "Compare";
     public static final String NBT_MODE = "Mode";
@@ -246,5 +248,15 @@ public class TileExternalStorage extends TileSlave implements IStorageProvider, 
     @Override
     public IItemHandler getFilters() {
         return filters;
+    }
+
+    @Override
+    public void onConnected(INetworkMaster network) {
+        network.getStorage().rebuild();
+    }
+
+    @Override
+    public void onDisconnected(INetworkMaster network) {
+        network.getStorage().rebuild();
     }
 }

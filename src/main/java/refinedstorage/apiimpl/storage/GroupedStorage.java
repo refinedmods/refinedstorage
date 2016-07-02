@@ -7,13 +7,18 @@ import net.minecraft.item.ItemStack;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.api.network.INetworkSlave;
 import refinedstorage.api.storage.IGroupedStorage;
 import refinedstorage.api.storage.IStorage;
+import refinedstorage.api.storage.IStorageProvider;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class GroupedStorage implements IGroupedStorage {
     private INetworkMaster network;
+    private List<IStorage> storages = new ArrayList<IStorage>();
     private Multimap<Item, ItemStack> stacks = ArrayListMultimap.create();
     private boolean rebuilding;
 
@@ -25,9 +30,17 @@ public class GroupedStorage implements IGroupedStorage {
     public void rebuild() {
         this.rebuilding = true;
 
+        storages.clear();
+
+        for (INetworkSlave slave : network.getSlaves()) {
+            if (slave.canUpdate() && slave instanceof IStorageProvider) {
+                ((IStorageProvider) slave).addStorages(storages);
+            }
+        }
+
         stacks.clear();
 
-        for (IStorage storage : network.getStorages()) {
+        for (IStorage storage : storages) {
             for (ItemStack stack : storage.getItems()) {
                 add(stack);
             }
@@ -101,5 +114,10 @@ public class GroupedStorage implements IGroupedStorage {
     @Override
     public Collection<ItemStack> getStacks() {
         return stacks.values();
+    }
+
+    @Override
+    public List<IStorage> getStorages() {
+        return storages;
     }
 }

@@ -27,7 +27,6 @@ import refinedstorage.api.network.IWirelessGridHandler;
 import refinedstorage.api.storage.CompareFlags;
 import refinedstorage.api.storage.IGroupedStorage;
 import refinedstorage.api.storage.IStorage;
-import refinedstorage.api.storage.IStorageProvider;
 import refinedstorage.apiimpl.autocrafting.BasicCraftingTask;
 import refinedstorage.apiimpl.autocrafting.CraftingPattern;
 import refinedstorage.apiimpl.autocrafting.ProcessingCraftingTask;
@@ -40,6 +39,7 @@ import refinedstorage.container.ContainerController;
 import refinedstorage.container.ContainerGrid;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.network.MessageGridItems;
+import refinedstorage.tile.IConnectionHandler;
 import refinedstorage.tile.ISynchronizedContainer;
 import refinedstorage.tile.TileBase;
 import refinedstorage.tile.TileCrafter;
@@ -102,36 +102,52 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public void update() {
         if (!worldObj.isRemote) {
-            boolean forceUpdate = !slavesToAdd.isEmpty() || !slavesToRemove.isEmpty();
+            for (INetworkSlave slave : slavesToAdd) {
+                slaves.add(slave);
 
-            for (INetworkSlave newSlave : slavesToAdd) {
-                boolean found = false;
-
-                for (int i = 0; i < slaves.size(); ++i) {
-                    INetworkSlave slave = slaves.get(i);
-
-                    if (slave.getPosition().equals(newSlave.getPosition())) {
-                        slaves.set(i, newSlave);
-
-                        found = true;
-
-                        break;
-                    }
-                }
-
-                if (!found) {
-                    slaves.add(newSlave);
+                if (slave instanceof IConnectionHandler) {
+                    ((IConnectionHandler) slave).onConnected(this);
                 }
             }
 
             slavesToAdd.clear();
 
-            slaves.removeAll(slavesToRemove);
+            for (INetworkSlave slave : slavesToRemove) {
+                slaves.remove(slave);
+
+                if (slave instanceof IConnectionHandler) {
+                    ((IConnectionHandler) slave).onDisconnected(this);
+                }
+            }
+
             slavesToRemove.clear();
 
             if (canRun()) {
-                if (ticks % 20 == 0 || forceUpdate) {
-                    updateSlaves();
+                if (ticks % 20 == 0) {
+                    Collections.sort(storages, new Comparator<IStorage>() {
+                        @Override
+                        public int compare(IStorage left, IStorage right) {
+                            int leftStored = left.getStored();
+                            int rightStored = right.getStored();
+
+                            if (leftStored == rightStored) {
+                                return 0;
+                            }
+
+                            return (leftStored > rightStored) ? -1 : 1;
+                        }
+                    });
+
+                    Collections.sort(storages, new Comparator<IStorage>() {
+                        @Override
+                        public int compare(IStorage left, IStorage right) {
+                            if (left.getPriority() == right.getPriority()) {
+                                return 0;
+                            }
+
+                            return (left.getPriority() > right.getPriority()) ? -1 : 1;
+                        }
+                    });
                 }
 
                 for (ICraftingTask taskToCancel : craftingTasksToCancel) {
@@ -180,8 +196,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
             if (!canRun() && !slaves.isEmpty()) {
                 disconnectSlaves();
-
-                updateSlaves();
             }
 
             if (couldRun != canRun()) {
@@ -250,11 +264,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     public IGroupedStorage getStorage() {
         return storage;
-    }
-
-    @Override
-    public List<IStorage> getStorages() {
-        return storages;
     }
 
     @Override
@@ -367,48 +376,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 }
             }
         }
-    }
-
-    private void updateSlaves() {
-        this.storages.clear();
-        this.patterns.clear();
-
-        for (INetworkSlave slave : slaves) {
-            if (!slave.canUpdate()) {
-                continue;
-            }
-
-            if (slave instanceof IStorageProvider) {
-                ((IStorageProvider) slave).addStorages(storages);
-            }
-        }
-
-        Collections.sort(storages, new Comparator<IStorage>() {
-            @Override
-            public int compare(IStorage left, IStorage right) {
-                int leftStored = left.getStored();
-                int rightStored = right.getStored();
-
-                if (leftStored == rightStored) {
-                    return 0;
-                }
-
-                return (leftStored > rightStored) ? -1 : 1;
-            }
-        });
-
-        Collections.sort(storages, new Comparator<IStorage>() {
-            @Override
-            public int compare(IStorage left, IStorage right) {
-                if (left.getPriority() == right.getPriority()) {
-                    return 0;
-                }
-
-                return (left.getPriority() > right.getPriority()) ? -1 : 1;
-            }
-        });
-
-        storage.rebuild();
     }
 
     @Override

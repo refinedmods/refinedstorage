@@ -10,6 +10,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.storage.IStorage;
 import refinedstorage.api.storage.IStorageProvider;
 import refinedstorage.apiimpl.storage.NBTStorage;
@@ -22,7 +23,7 @@ import refinedstorage.tile.config.*;
 
 import java.util.List;
 
-public class TileStorage extends TileSlave implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig {
+public class TileStorage extends TileSlave implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig, IConnectionHandler {
     class Storage extends NBTStorage {
         public Storage() {
             super(TileStorage.this.getStorageTag(), TileStorage.this.getCapacity(), TileStorage.this);
@@ -255,5 +256,15 @@ public class TileStorage extends TileSlave implements IStorageProvider, IStorage
     @Override
     public int getCapacity() {
         return getType().getCapacity();
+    }
+
+    @Override
+    public void onConnected(INetworkMaster network) {
+        network.getStorage().rebuild();
+    }
+
+    @Override
+    public void onDisconnected(INetworkMaster network) {
+        network.getStorage().rebuild();
     }
 }

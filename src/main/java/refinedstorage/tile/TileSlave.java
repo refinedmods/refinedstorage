@@ -23,6 +23,7 @@ public abstract class TileSlave extends TileBase implements INetworkSlave, ISync
 
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
     private boolean active;
+    private boolean update;
 
     protected boolean connected;
     protected INetworkMaster network;
@@ -46,6 +47,19 @@ public abstract class TileSlave extends TileBase implements INetworkSlave, ISync
         if (!worldObj.isRemote) {
             if (ticks == 0) {
                 refreshConnection(worldObj);
+            } else {
+                // @TODO: Fix updating twice on block placement
+                if (update != canUpdate()) {
+                    if (network != null && this instanceof IConnectionHandler) {
+                        if (canUpdate()) {
+                            ((IConnectionHandler) this).onConnected(network);
+                        } else {
+                            ((IConnectionHandler) this).onDisconnected(network);
+                        }
+                    }
+
+                    update = canUpdate();
+                }
             }
 
             if (isActive()) {
@@ -165,9 +179,9 @@ public abstract class TileSlave extends TileBase implements INetworkSlave, ISync
 
     @Override
     public void setRedstoneMode(RedstoneMode mode) {
-        markDirty();
-
         this.redstoneMode = mode;
+
+        markDirty();
     }
 
     @Override

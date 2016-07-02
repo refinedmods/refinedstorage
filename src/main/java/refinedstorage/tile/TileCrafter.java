@@ -14,6 +14,7 @@ import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.autocrafting.ICraftingTask;
+import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.container.ContainerCrafter;
 import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.inventory.BasicItemValidator;
@@ -21,7 +22,7 @@ import refinedstorage.inventory.IItemValidator;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.item.ItemUpgrade;
 
-public class TileCrafter extends TileSlave implements ICraftingPatternContainer {
+public class TileCrafter extends TileSlave implements ICraftingPatternContainer, IConnectionHandler {
     private BasicItemHandler patterns = new BasicItemHandler(9, this, new IItemValidator() {
         @Override
         public boolean valid(ItemStack stack) {
@@ -126,5 +127,15 @@ public class TileCrafter extends TileSlave implements ICraftingPatternContainer 
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
         return (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing != getDirection()) || super.hasCapability(capability, facing);
+    }
+
+    @Override
+    public void onConnected(INetworkMaster network) {
+        network.rebuildPatterns();
+    }
+
+    @Override
+    public void onDisconnected(INetworkMaster network) {
+        network.rebuildPatterns();
     }
 }

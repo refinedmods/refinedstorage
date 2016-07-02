@@ -4,6 +4,7 @@ import net.minecraft.item.ItemStack;
 import refinedstorage.api.network.INetworkMaster;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * This holds all items from all the connected storages from a {@link INetworkMaster}.
@@ -47,4 +48,9 @@ public interface IGroupedStorage {
      * @return All stacks in this storage network
      */
     Collection<ItemStack> getStacks();
+
+    /**
+     * @return The storages connected to this network
+     */
+    List<IStorage> getStorages();
 }
