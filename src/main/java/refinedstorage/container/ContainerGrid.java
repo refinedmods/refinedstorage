@@ -21,11 +21,11 @@ public class ContainerGrid extends ContainerBase {
 
         this.grid = grid;
 
-        addPlayerInventory(8, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 174 : 126);
+        addPlayerInventory(8, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 167 : 126);
 
         if (grid.getType() == EnumGridType.CRAFTING) {
-            int x = 25;
-            int y = 106;
+            int x = 26;
+            int y = 98;
 
             for (int i = 0; i < 9; ++i) {
                 addSlotToContainer(new SlotGridCrafting(((TileGrid) grid).getMatrix(), i, x, y));
@@ -34,14 +34,14 @@ public class ContainerGrid extends ContainerBase {
 
                 if ((i + 1) % 3 == 0) {
                     y += 18;
-                    x = 25;
+                    x = 26;
                 }
             }
 
-            addSlotToContainer(craftingResultSlot = new SlotGridCraftingResult(this, player, (TileGrid) grid, 0, 133 + 4, 120 + 4));
+            addSlotToContainer(craftingResultSlot = new SlotGridCraftingResult(this, player, (TileGrid) grid, 0, 130 + 4, 112 + 4));
         } else if (grid.getType() == EnumGridType.PATTERN) {
             int x = 8;
-            int y = 106;
+            int y = 98;
 
             for (int i = 0; i < 9; ++i) {
                 addSlotToContainer(new SlotSpecimenLegacy(((TileGrid) grid).getMatrix(), i, x, y, false));
@@ -54,10 +54,10 @@ public class ContainerGrid extends ContainerBase {
                 }
             }
 
-            addSlotToContainer(patternResultSlot = new SlotDisabled(((TileGrid) grid).getResult(), 0, 116 + 4, 120 + 4));
+            addSlotToContainer(patternResultSlot = new SlotDisabled(((TileGrid) grid).getResult(), 0, 112 + 4, 112 + 4));
 
-            addSlotToContainer(new SlotItemHandler(((TileGrid) grid).getPatterns(), 0, 152, 104));
-            addSlotToContainer(new SlotOutput(((TileGrid) grid).getPatterns(), 1, 152, 144));
+            addSlotToContainer(new SlotItemHandler(((TileGrid) grid).getPatterns(), 0, 152, 97));
+            addSlotToContainer(new SlotOutput(((TileGrid) grid).getPatterns(), 1, 152, 137));
         }
     }
 
