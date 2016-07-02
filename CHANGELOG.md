@@ -5,6 +5,9 @@
 - Fixed delay until grid items are visible
 - Performance improvements
 
+**Features**
+- Added a debug storage disk
+
 ### 0.8.3
 **Bugfixes**
 - Fixed drawer controllers not working with external storage

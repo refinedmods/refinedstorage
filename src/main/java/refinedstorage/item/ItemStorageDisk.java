@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
@@ -14,6 +15,8 @@ import refinedstorage.RefinedStorageItems;
 import refinedstorage.apiimpl.storage.NBTStorage;
 import refinedstorage.block.EnumStorageType;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class ItemStorageDisk extends ItemBase {
@@ -22,6 +25,9 @@ public class ItemStorageDisk extends ItemBase {
     public static final int TYPE_16K = 2;
     public static final int TYPE_64K = 3;
     public static final int TYPE_CREATIVE = 4;
+    public static final int TYPE_DEBUG = 5;
+
+    private NBTTagCompound debugDiskTag;
 
     public ItemStorageDisk() {
         super("storage_disk");
@@ -33,9 +39,46 @@ public class ItemStorageDisk extends ItemBase {
 
     @Override
     public void getSubItems(Item item, CreativeTabs tab, List list) {
-        for (int i = 0; i < 5; ++i) {
-            list.add(NBTStorage.createStackWithNBT(new ItemStack(item, 1, i)));
+        for (int i = 0; i < 6; ++i) {
+            list.add(i == TYPE_DEBUG ? createDebugDisk() : NBTStorage.createStackWithNBT(new ItemStack(item, 1, i)));
         }
+    }
+
+    private ItemStack createDebugDisk() {
+        ItemStack debugDisk = new ItemStack(RefinedStorageItems.STORAGE_DISK, 1, ItemStorageDisk.TYPE_DEBUG);
+
+        if (debugDiskTag == null) {
+            debugDiskTag = NBTStorage.createNBT();
+
+            NBTStorage storage = new NBTStorage(debugDiskTag, -1, null) {
+                @Override
+                public int getPriority() {
+                    return 0;
+                }
+            };
+
+            Iterator<Item> it = Item.REGISTRY.iterator();
+
+            while (it.hasNext()) {
+                Item item = it.next();
+
+                if (item != RefinedStorageItems.STORAGE_DISK) {
+                    List<ItemStack> stacks = new ArrayList<ItemStack>();
+
+                    item.getSubItems(item, CreativeTabs.INVENTORY, stacks);
+
+                    for (ItemStack itemStack : stacks) {
+                        storage.push(itemStack, 1000, false);
+                    }
+                }
+            }
+
+            storage.writeToNBT();
+        }
+
+        debugDisk.setTagCompound(debugDiskTag.copy());
+
+        return debugDisk;
     }
 
     @Override
