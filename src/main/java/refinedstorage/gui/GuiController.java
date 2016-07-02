@@ -5,7 +5,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerController;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
-import refinedstorage.tile.controller.ClientSlave;
+import refinedstorage.tile.controller.ClientNode;
 import refinedstorage.tile.controller.TileController;
 
 import java.util.List;
@@ -62,28 +62,28 @@ public class GuiController extends GuiBase {
 
         RenderHelper.enableGUIStandardItemLighting();
 
-        List<ClientSlave> slaves = controller.getClientSlaves();
+        List<ClientNode> nodes = controller.getClientNodes();
 
-        ClientSlave slaveHovering = null;
+        ClientNode nodeHovering = null;
 
         for (int i = 0; i < 4; ++i) {
-            if (slot < slaves.size()) {
-                ClientSlave slave = slaves.get(slot);
+            if (slot < nodes.size()) {
+                ClientNode node = nodes.get(slot);
 
-                drawItem(x, y + 5, slave.stack);
+                drawItem(x, y + 5, node.stack);
 
                 float scale = 0.5f;
 
                 GlStateManager.pushMatrix();
                 GlStateManager.scale(scale, scale, 1);
 
-                drawString(RefinedStorageUtils.calculateOffsetOnScale(x + 1, scale), RefinedStorageUtils.calculateOffsetOnScale(y - 2, scale), slave.stack.getDisplayName());
-                drawString(RefinedStorageUtils.calculateOffsetOnScale(x + 21, scale), RefinedStorageUtils.calculateOffsetOnScale(y + 10, scale), t("gui.refinedstorage:controller.machine_amount", slave.amount));
+                drawString(RefinedStorageUtils.calculateOffsetOnScale(x + 1, scale), RefinedStorageUtils.calculateOffsetOnScale(y - 2, scale), node.stack.getDisplayName());
+                drawString(RefinedStorageUtils.calculateOffsetOnScale(x + 21, scale), RefinedStorageUtils.calculateOffsetOnScale(y + 10, scale), t("gui.refinedstorage:controller.machine_amount", node.amount));
 
                 GlStateManager.popMatrix();
 
                 if (inBounds(x, y, 16, 16, mouseX, mouseY)) {
-                    slaveHovering = slave;
+                    nodeHovering = node;
                 }
             }
 
@@ -97,8 +97,8 @@ public class GuiController extends GuiBase {
             slot++;
         }
 
-        if (slaveHovering != null) {
-            drawTooltip(mouseX, mouseY, t("misc.refinedstorage:energy_usage_minimal", slaveHovering.energyUsage));
+        if (nodeHovering != null) {
+            drawTooltip(mouseX, mouseY, t("misc.refinedstorage:energy_usage_minimal", nodeHovering.energyUsage));
         }
 
         if (inBounds(barX, barY, barWidth, barHeight, mouseX, mouseY)) {
@@ -111,7 +111,7 @@ public class GuiController extends GuiBase {
     }
 
     private int getRows() {
-        int max = (int) Math.ceil((float) controller.getClientSlaves().size() / (float) 2);
+        int max = (int) Math.ceil((float) controller.getClientNodes().size() / (float) 2);
 
         return max < 0 ? 0 : max;
     }

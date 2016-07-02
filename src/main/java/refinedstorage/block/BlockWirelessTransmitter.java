@@ -12,7 +12,7 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.tile.TileWirelessTransmitter;
 
-public class BlockWirelessTransmitter extends BlockSlave {
+public class BlockWirelessTransmitter extends BlockNode {
     public BlockWirelessTransmitter() {
         super("wireless_transmitter");
     }

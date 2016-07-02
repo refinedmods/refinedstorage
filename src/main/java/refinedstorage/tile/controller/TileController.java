@@ -22,7 +22,7 @@ import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.IGridHandler;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.api.network.INetworkSlave;
+import refinedstorage.api.network.INetworkNode;
 import refinedstorage.api.network.IWirelessGridHandler;
 import refinedstorage.api.storage.IGroupedStorage;
 import refinedstorage.api.storage.IStorage;
@@ -84,9 +84,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         }
     };
 
-    private List<INetworkSlave> slaves = new ArrayList<INetworkSlave>();
-    private List<INetworkSlave> slavesToAdd = new ArrayList<INetworkSlave>();
-    private List<INetworkSlave> slavesToRemove = new ArrayList<INetworkSlave>();
+    private List<INetworkNode> nodes = new ArrayList<INetworkNode>();
+    private List<INetworkNode> nodesToAdd = new ArrayList<INetworkNode>();
+    private List<INetworkNode> nodesToRemove = new ArrayList<INetworkNode>();
 
     private List<ICraftingPattern> patterns = new ArrayList<ICraftingPattern>();
 
@@ -107,7 +107,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
-    private List<ClientSlave> clientSlaves = new ArrayList<ClientSlave>();
+    private List<ClientNode> clientNodes = new ArrayList<ClientNode>();
 
     @Override
     public BlockPos getPosition() {
@@ -127,25 +127,25 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public void update() {
         if (!worldObj.isRemote) {
-            for (INetworkSlave slave : slavesToAdd) {
-                slaves.add(slave);
+            for (INetworkNode node : nodesToAdd) {
+                nodes.add(node);
 
-                if (slave instanceof IConnectionHandler) {
-                    ((IConnectionHandler) slave).onConnected(this);
+                if (node instanceof IConnectionHandler) {
+                    ((IConnectionHandler) node).onConnected(this);
                 }
             }
 
-            slavesToAdd.clear();
+            nodesToAdd.clear();
 
-            for (INetworkSlave slave : slavesToRemove) {
-                slaves.remove(slave);
+            for (INetworkNode node : nodesToRemove) {
+                nodes.remove(node);
 
-                if (slave instanceof IConnectionHandler) {
-                    ((IConnectionHandler) slave).onDisconnected(this);
+                if (node instanceof IConnectionHandler) {
+                    ((IConnectionHandler) node).onDisconnected(this);
                 }
             }
 
-            slavesToRemove.clear();
+            nodesToRemove.clear();
 
             if (canRun()) {
                 Collections.sort(storage.getStorages(), sizeComparator);
@@ -195,8 +195,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 energy.setEnergyStored(energy.getMaxEnergyStored());
             }
 
-            if (!canRun() && !slaves.isEmpty()) {
-                disconnectSlaves();
+            if (!canRun() && !nodes.isEmpty()) {
+                disconnectNodes();
             }
 
             if (couldRun != canRun()) {
@@ -222,30 +222,30 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     }
 
     @Override
-    public List<INetworkSlave> getSlaves() {
-        return slaves;
+    public List<INetworkNode> getNodes() {
+        return nodes;
     }
 
-    public List<ClientSlave> getClientSlaves() {
-        return clientSlaves;
-    }
-
-    @Override
-    public void addSlave(INetworkSlave slave) {
-        slavesToAdd.add(slave);
+    public List<ClientNode> getClientNodes() {
+        return clientNodes;
     }
 
     @Override
-    public void removeSlave(INetworkSlave slave) {
-        slavesToRemove.add(slave);
+    public void addNode(INetworkNode node) {
+        nodesToAdd.add(node);
     }
 
-    public void disconnectSlaves() {
-        for (INetworkSlave slave : getSlaves()) {
-            slave.disconnect(worldObj);
+    @Override
+    public void removeNode(INetworkNode node) {
+        nodesToRemove.add(node);
+    }
+
+    public void disconnectNodes() {
+        for (INetworkNode node : getNodes()) {
+            node.disconnect(worldObj);
         }
 
-        slaves.clear();
+        nodes.clear();
     }
 
     @Override
@@ -260,7 +260,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public void onChunkUnload() {
-        disconnectSlaves();
+        disconnectNodes();
     }
 
     public IGroupedStorage getStorage() {
@@ -356,9 +356,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     public void rebuildPatterns() {
         patterns.clear();
 
-        for (INetworkSlave slave : slaves) {
-            if (slave instanceof TileCrafter && slave.canUpdate()) {
-                TileCrafter crafter = (TileCrafter) slave;
+        for (INetworkNode node : nodes) {
+            if (node instanceof TileCrafter && node.canUpdate()) {
+                TileCrafter crafter = (TileCrafter) node;
 
                 for (int i = 0; i < crafter.getPatterns().getSlots(); ++i) {
                     ItemStack pattern = crafter.getPatterns().getStackInSlot(i);
@@ -596,9 +596,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         if (!worldObj.isRemote) {
             int usage = 0;
 
-            for (INetworkSlave slave : slaves) {
-                if (slave.canUpdate()) {
-                    usage += slave.getEnergyUsage();
+            for (INetworkNode node : nodes) {
+                if (node.canUpdate()) {
+                    usage += node.getEnergyUsage();
                 }
             }
 
@@ -622,21 +622,21 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         this.energyUsage = buf.readInt();
         this.redstoneMode = RedstoneMode.getById(buf.readInt());
 
-        List<ClientSlave> slaves = new ArrayList<ClientSlave>();
+        List<ClientNode> nodes = new ArrayList<ClientNode>();
 
         int size = buf.readInt();
 
         for (int i = 0; i < size; ++i) {
-            ClientSlave slave = new ClientSlave();
+            ClientNode node = new ClientNode();
 
-            slave.energyUsage = buf.readInt();
-            slave.amount = buf.readInt();
-            slave.stack = ByteBufUtils.readItemStack(buf);
+            node.energyUsage = buf.readInt();
+            node.amount = buf.readInt();
+            node.stack = ByteBufUtils.readItemStack(buf);
 
-            slaves.add(slave);
+            nodes.add(node);
         }
 
-        this.clientSlaves = slaves;
+        this.clientNodes = nodes;
     }
 
     @Override
@@ -646,40 +646,40 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
         buf.writeInt(redstoneMode.id);
 
-        List<ClientSlave> clientSlaves = new ArrayList<ClientSlave>();
+        List<ClientNode> clientNodes = new ArrayList<ClientNode>();
 
-        for (INetworkSlave slave : slaves) {
-            if (slave.canUpdate()) {
-                IBlockState state = worldObj.getBlockState(slave.getPosition());
+        for (INetworkNode node : nodes) {
+            if (node.canUpdate()) {
+                IBlockState state = worldObj.getBlockState(node.getPosition());
 
-                ClientSlave clientSlave = new ClientSlave();
+                ClientNode clientNode = new ClientNode();
 
-                clientSlave.energyUsage = slave.getEnergyUsage();
-                clientSlave.amount = 1;
-                clientSlave.stack = new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state));
+                clientNode.energyUsage = node.getEnergyUsage();
+                clientNode.amount = 1;
+                clientNode.stack = new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state));
 
-                if (clientSlave.stack.getItem() != null) {
-                    if (clientSlaves.contains(clientSlave)) {
-                        for (ClientSlave other : clientSlaves) {
-                            if (other.equals(clientSlave)) {
+                if (clientNode.stack.getItem() != null) {
+                    if (clientNodes.contains(clientNode)) {
+                        for (ClientNode other : clientNodes) {
+                            if (other.equals(clientNode)) {
                                 other.amount++;
 
                                 break;
                             }
                         }
                     } else {
-                        clientSlaves.add(clientSlave);
+                        clientNodes.add(clientNode);
                     }
                 }
             }
         }
 
-        buf.writeInt(clientSlaves.size());
+        buf.writeInt(clientNodes.size());
 
-        for (ClientSlave slave : clientSlaves) {
-            buf.writeInt(slave.energyUsage);
-            buf.writeInt(slave.amount);
-            ByteBufUtils.writeItemStack(buf, slave.stack);
+        for (ClientNode node : clientNodes) {
+            buf.writeInt(node.energyUsage);
+            buf.writeInt(node.amount);
+            ByteBufUtils.writeItemStack(buf, node.stack);
         }
     }
 

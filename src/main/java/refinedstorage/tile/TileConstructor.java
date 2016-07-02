@@ -23,7 +23,7 @@ import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
 
-public class TileConstructor extends TileSlave implements ICompareConfig {
+public class TileConstructor extends TileNode implements ICompareConfig {
     private static final String NBT_COMPARE = "Compare";
 
     private static final int BASE_SPEED = 20;
@@ -54,7 +54,7 @@ public class TileConstructor extends TileSlave implements ICompareConfig {
     }
 
     @Override
-    public void updateSlave() {
+    public void updateNode() {
         if (block != null && ticks % RefinedStorageUtils.getSpeed(upgrades, BASE_SPEED, 4) == 0) {
             BlockPos front = pos.offset(getDirection());
 

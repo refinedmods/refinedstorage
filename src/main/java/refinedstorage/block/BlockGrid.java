@@ -20,7 +20,7 @@ import refinedstorage.tile.grid.TileGrid;
 
 import java.util.List;
 
-public class BlockGrid extends BlockSlave {
+public class BlockGrid extends BlockNode {
     public static final PropertyEnum TYPE = PropertyEnum.create("type", EnumGridType.class);
 
     public BlockGrid() {

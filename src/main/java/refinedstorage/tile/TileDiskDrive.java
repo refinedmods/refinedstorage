@@ -26,7 +26,7 @@ import refinedstorage.tile.config.*;
 
 import java.util.List;
 
-public class TileDiskDrive extends TileSlave implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig, IConnectionHandler {
+public class TileDiskDrive extends TileNode implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig, IConnectionHandler {
     public class Storage extends NBTStorage {
         public Storage(ItemStack disk) {
             super(disk.getTagCompound(), EnumStorageType.getById(disk.getItemDamage()).getCapacity(), TileDiskDrive.this);
@@ -100,7 +100,7 @@ public class TileDiskDrive extends TileSlave implements IStorageProvider, IStora
     }
 
     @Override
-    public void updateSlave() {
+    public void updateNode() {
     }
 
     @Override

@@ -6,29 +6,29 @@ import net.minecraft.world.World;
 /**
  * Represents a node in the storage network.
  */
-public interface INetworkSlave {
+public interface INetworkNode {
     /**
      * Called every tile entity tick.
      */
-    void updateSlave();
+    void updateNode();
 
     /**
-     * @return If the slave can send a connectivity update
+     * @return If this node can send a connectivity update
      */
     boolean canSendConnectivityUpdate();
 
     /**
-     * @return The energy usage of this slave
+     * @return The energy usage of this node
      */
     int getEnergyUsage();
 
     /**
-     * @return The position of this slave in the world
+     * @return The position of this node in the world
      */
     BlockPos getPosition();
 
     /**
-     * Called when the neighbor of this slave is changed. Typically used to check if there is still a connection to the network.
+     * Called when the neighbor of this node is changed. Typically used to check if there is still a connection to the network.
      *
      * @param world The world
      */
@@ -55,7 +55,7 @@ public interface INetworkSlave {
     boolean isConnected();
 
     /**
-     * @return If {@link INetworkSlave#canUpdate()} can get called. Typically checks for connection status and redstone mode.
+     * @return If {@link INetworkNode#canUpdate()} can get called. Typically checks for connection status and redstone mode.
      */
     boolean canUpdate();
 

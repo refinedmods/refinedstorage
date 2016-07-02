@@ -3,14 +3,14 @@ package refinedstorage.tile;
 import net.minecraft.inventory.Container;
 import refinedstorage.RefinedStorage;
 
-public class TileCable extends TileSlave {
+public class TileCable extends TileNode {
     @Override
     public int getEnergyUsage() {
         return RefinedStorage.INSTANCE.cableRfUsage;
     }
 
     @Override
-    public void updateSlave() {
+    public void updateNode() {
         // NO OP
     }
 

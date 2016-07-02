@@ -20,7 +20,7 @@ import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.inventory.SoldererItemHandler;
 import refinedstorage.item.ItemUpgrade;
 
-public class TileSolderer extends TileSlave {
+public class TileSolderer extends TileNode {
     private static final String NBT_WORKING = "Working";
     private static final String NBT_PROGRESS = "Progress";
 
@@ -40,7 +40,7 @@ public class TileSolderer extends TileSlave {
     }
 
     @Override
-    public void updateSlave() {
+    public void updateNode() {
         boolean wasWorking = working;
 
         if (items.getStackInSlot(1) == null && items.getStackInSlot(2) == null && items.getStackInSlot(3) == null) {

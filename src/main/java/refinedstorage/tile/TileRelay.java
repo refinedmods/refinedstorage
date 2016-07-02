@@ -6,7 +6,7 @@ import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.container.ContainerRelay;
 import refinedstorage.tile.config.RedstoneMode;
 
-public class TileRelay extends TileSlave {
+public class TileRelay extends TileNode {
     private boolean couldUpdate;
 
     public TileRelay() {
@@ -19,7 +19,7 @@ public class TileRelay extends TileSlave {
     }
 
     @Override
-    public void updateSlave() {
+    public void updateNode() {
     }
 
     public void update() {

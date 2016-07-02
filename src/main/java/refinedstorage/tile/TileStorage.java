@@ -23,7 +23,7 @@ import refinedstorage.tile.config.*;
 
 import java.util.List;
 
-public class TileStorage extends TileSlave implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig, IConnectionHandler {
+public class TileStorage extends TileNode implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig, IConnectionHandler {
     class Storage extends NBTStorage {
         public Storage() {
             super(TileStorage.this.getStorageTag(), TileStorage.this.getCapacity(), TileStorage.this);
@@ -69,7 +69,7 @@ public class TileStorage extends TileSlave implements IStorageProvider, IStorage
     }
 
     @Override
-    public void updateSlave() {
+    public void updateNode() {
     }
 
     @Override

@@ -12,7 +12,7 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.tile.TileExporter;
 
-public class BlockExporter extends BlockSlave {
+public class BlockExporter extends BlockNode {
     public BlockExporter() {
         super("exporter");
     }

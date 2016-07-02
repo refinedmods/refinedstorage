@@ -38,19 +38,19 @@ public interface INetworkMaster {
     boolean canRun();
 
     /**
-     * @return A list with all the network slaves
+     * @return A list with all the network nodes
      */
-    List<INetworkSlave> getSlaves();
+    List<INetworkNode> getNodes();
 
     /**
-     * @param slave The slave to add
+     * @param node The node to add
      */
-    void addSlave(@Nonnull INetworkSlave slave);
+    void addNode(@Nonnull INetworkNode node);
 
     /**
-     * @param slave The slave to remove
+     * @param node The node to remove
      */
-    void removeSlave(@Nonnull INetworkSlave slave);
+    void removeNode(@Nonnull INetworkNode node);
 
     /**
      * @return The {@link IGridHandler} for this network

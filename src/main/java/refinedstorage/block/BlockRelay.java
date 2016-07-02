@@ -12,7 +12,7 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.tile.TileRelay;
 
-public class BlockRelay extends BlockSlave {
+public class BlockRelay extends BlockNode {
     public BlockRelay() {
         super("relay");
     }

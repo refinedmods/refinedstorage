@@ -10,7 +10,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.RefinedStorageCapabilities;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.api.network.INetworkSlave;
+import refinedstorage.api.network.INetworkNode;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
 import refinedstorage.tile.controller.TileController;
@@ -18,7 +18,7 @@ import refinedstorage.tile.controller.TileController;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class TileSlave extends TileBase implements INetworkSlave, ISynchronizedContainer, IRedstoneModeConfig {
+public abstract class TileNode extends TileBase implements INetworkNode, ISynchronizedContainer, IRedstoneModeConfig {
     private static final String NBT_CONNECTED = "Connected";
 
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
@@ -63,7 +63,7 @@ public abstract class TileSlave extends TileBase implements INetworkSlave, ISync
             }
 
             if (isActive()) {
-                updateSlave();
+                updateNode();
             }
 
             if (active != isActive() && canSendConnectivityUpdate()) {
@@ -82,7 +82,7 @@ public abstract class TileSlave extends TileBase implements INetworkSlave, ISync
             this.network = network;
             this.connected = true;
 
-            this.network.addSlave(this);
+            this.network.addNode(this);
 
             world.notifyNeighborsOfStateChange(pos, getBlockType());
 
@@ -97,7 +97,7 @@ public abstract class TileSlave extends TileBase implements INetworkSlave, ISync
         this.connected = false;
 
         if (this.network != null) {
-            this.network.removeSlave(this);
+            this.network.removeNode(this);
             this.network = null;
         }
 
@@ -136,7 +136,7 @@ public abstract class TileSlave extends TileBase implements INetworkSlave, ISync
 
         if (tile instanceof TileController) {
             return (TileController) tile;
-        } else if (tile instanceof TileSlave) {
+        } else if (tile instanceof TileNode) {
             if (visits.size() > 1 && tile instanceof TileRelay && !((TileRelay) tile).canUpdate()) {
                 return null;
             }
@@ -228,7 +228,7 @@ public abstract class TileSlave extends TileBase implements INetworkSlave, ISync
 
     @Override
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-        if (capability == RefinedStorageCapabilities.NETWORK_SLAVE_CAPABILITY) {
+        if (capability == RefinedStorageCapabilities.NETWORK_NODE_CAPABILITY) {
             return (T) this;
         }
 
@@ -237,7 +237,7 @@ public abstract class TileSlave extends TileBase implements INetworkSlave, ISync
 
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-        return capability == RefinedStorageCapabilities.NETWORK_SLAVE_CAPABILITY || super.hasCapability(capability, facing);
+        return capability == RefinedStorageCapabilities.NETWORK_NODE_CAPABILITY || super.hasCapability(capability, facing);
     }
 
     @Override
@@ -247,6 +247,6 @@ public abstract class TileSlave extends TileBase implements INetworkSlave, ISync
 
     @Override
     public boolean equals(Object other) {
-        return other instanceof TileSlave && ((TileSlave) other).getPosition().equals(getPosition());
+        return other instanceof TileNode && ((TileNode) other).getPosition().equals(getPosition());
     }
 }

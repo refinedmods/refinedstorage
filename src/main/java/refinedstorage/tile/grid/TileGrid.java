@@ -22,13 +22,13 @@ import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.network.MessageGridSettingsUpdate;
-import refinedstorage.tile.TileSlave;
+import refinedstorage.tile.TileNode;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileGrid extends TileSlave implements IGrid {
+public class TileGrid extends TileNode implements IGrid {
     private static final String NBT_SORTING_DIRECTION = "SortingDirection";
     private static final String NBT_SORTING_TYPE = "SortingType";
     private static final String NBT_SEARCH_BOX_MODE = "SearchBoxMode";
@@ -81,7 +81,7 @@ public class TileGrid extends TileSlave implements IGrid {
     }
 
     @Override
-    public void updateSlave() {
+    public void updateNode() {
     }
 
     public EnumGridType getType() {

@@ -14,7 +14,7 @@ import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.item.ItemUpgrade;
 
-public class TileWirelessTransmitter extends TileSlave {
+public class TileWirelessTransmitter extends TileNode {
     private BasicItemHandler upgrades = new BasicItemHandler(4, this, new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_RANGE));
 
     @Override
@@ -23,7 +23,7 @@ public class TileWirelessTransmitter extends TileSlave {
     }
 
     @Override
-    public void updateSlave() {
+    public void updateNode() {
     }
 
     @Override

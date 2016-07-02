@@ -12,7 +12,7 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.tile.TileConstructor;
 
-public class BlockConstructor extends BlockSlave {
+public class BlockConstructor extends BlockNode {
     public BlockConstructor() {
         super("constructor");
     }

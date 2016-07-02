@@ -9,7 +9,7 @@ import refinedstorage.RefinedStorageGui;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.api.network.INetworkSlave;
+import refinedstorage.api.network.INetworkNode;
 import refinedstorage.api.network.IWirelessGridHandler;
 import refinedstorage.api.network.WirelessGridConsumer;
 import refinedstorage.item.ItemWirelessGrid;
@@ -84,9 +84,9 @@ public class WirelessGridHandler implements IWirelessGridHandler {
     public int getRange() {
         int range = 0;
 
-        for (INetworkSlave slave : network.getSlaves()) {
-            if (slave instanceof TileWirelessTransmitter) {
-                range += ((TileWirelessTransmitter) slave).getRange();
+        for (INetworkNode node : network.getNodes()) {
+            if (node instanceof TileWirelessTransmitter) {
+                range += ((TileWirelessTransmitter) node).getRange();
             }
         }
 

@@ -12,7 +12,7 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.tile.TileCrafter;
 
-public class BlockCrafter extends BlockSlave {
+public class BlockCrafter extends BlockNode {
     public BlockCrafter() {
         super("crafter");
     }

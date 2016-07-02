@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.api.network.INetworkSlave;
+import refinedstorage.api.network.INetworkNode;
 import refinedstorage.api.storage.IGroupedStorage;
 import refinedstorage.api.storage.IStorage;
 import refinedstorage.api.storage.IStorageProvider;
@@ -29,9 +29,9 @@ public class GroupedStorage implements IGroupedStorage {
     public void rebuild() {
         storages.clear();
 
-        for (INetworkSlave slave : network.getSlaves()) {
-            if (slave.canUpdate() && slave instanceof IStorageProvider) {
-                ((IStorageProvider) slave).addStorages(storages);
+        for (INetworkNode node : network.getNodes()) {
+            if (node.canUpdate() && node instanceof IStorageProvider) {
+                ((IStorageProvider) node).addStorages(storages);
             }
         }
 

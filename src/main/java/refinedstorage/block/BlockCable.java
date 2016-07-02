@@ -13,7 +13,7 @@ import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.api.RefinedStorageCapabilities;
 import refinedstorage.tile.TileCable;
 
-public class BlockCable extends BlockSlave {
+public class BlockCable extends BlockNode {
     public static final AxisAlignedBB CABLE_AABB = new AxisAlignedBB(4 * (1F / 16F), 4 * (1F / 16F), 4 * (1F / 16F), 1 - 4 * (1F / 16F), 1 - 4 * (1F / 16F), 1 - 4 * (1F / 16F));
 
     public static final PropertyBool NORTH = PropertyBool.create("north");
@@ -57,7 +57,7 @@ public class BlockCable extends BlockSlave {
     }
 
     public static boolean hasConnectionWith(IBlockAccess world, BlockPos pos) {
-        return world.getBlockState(pos).getBlock() == RefinedStorageBlocks.CONTROLLER || (world.getTileEntity(pos) != null && world.getTileEntity(pos).hasCapability(RefinedStorageCapabilities.NETWORK_SLAVE_CAPABILITY, null));
+        return world.getBlockState(pos).getBlock() == RefinedStorageBlocks.CONTROLLER || (world.getTileEntity(pos) != null && world.getTileEntity(pos).hasCapability(RefinedStorageCapabilities.NETWORK_NODE_CAPABILITY, null));
     }
 
     @Override

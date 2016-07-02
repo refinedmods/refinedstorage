@@ -10,12 +10,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import refinedstorage.tile.TileSlave;
+import refinedstorage.tile.TileNode;
 
-public abstract class BlockSlave extends BlockBase {
+public abstract class BlockNode extends BlockBase {
     public static final PropertyBool CONNECTED = PropertyBool.create("connected");
 
-    public BlockSlave(String name) {
+    public BlockNode(String name) {
         super(name);
     }
 
@@ -35,7 +35,7 @@ public abstract class BlockSlave extends BlockBase {
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
         return super.getActualState(state, world, pos)
-            .withProperty(CONNECTED, ((TileSlave) world.getTileEntity(pos)).isConnected());
+            .withProperty(CONNECTED, ((TileNode) world.getTileEntity(pos)).isConnected());
     }
 
     @Override
@@ -43,17 +43,17 @@ public abstract class BlockSlave extends BlockBase {
         super.onBlockPlacedBy(world, pos, state, player, stack);
 
         if (!world.isRemote) {
-            ((TileSlave) world.getTileEntity(pos)).refreshConnection(world);
+            ((TileNode) world.getTileEntity(pos)).refreshConnection(world);
         }
     }
 
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
         if (!world.isRemote) {
-            TileSlave slave = (TileSlave) world.getTileEntity(pos);
+            TileNode node = (TileNode) world.getTileEntity(pos);
 
-            if (slave.isConnected()) {
-                slave.disconnect(world);
+            if (node.isConnected()) {
+                node.disconnect(world);
             }
         }
 
@@ -65,7 +65,7 @@ public abstract class BlockSlave extends BlockBase {
         super.neighborChanged(state, world, pos, block);
 
         if (!world.isRemote) {
-            ((TileSlave) world.getTileEntity(pos)).refreshConnection(world);
+            ((TileNode) world.getTileEntity(pos)).refreshConnection(world);
         }
     }
 }

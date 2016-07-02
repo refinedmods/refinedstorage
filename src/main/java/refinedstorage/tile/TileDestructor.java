@@ -26,7 +26,7 @@ import refinedstorage.tile.config.ModeFilter;
 
 import java.util.List;
 
-public class TileDestructor extends TileSlave implements ICompareConfig, IModeConfig {
+public class TileDestructor extends TileNode implements ICompareConfig, IModeConfig {
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
 
@@ -48,7 +48,7 @@ public class TileDestructor extends TileSlave implements ICompareConfig, IModeCo
     }
 
     @Override
-    public void updateSlave() {
+    public void updateNode() {
         if (ticks % RefinedStorageUtils.getSpeed(upgrades, BASE_SPEED, 4) == 0) {
             BlockPos front = pos.offset(getDirection());
 
@@ -63,7 +63,7 @@ public class TileDestructor extends TileSlave implements ICompareConfig, IModeCo
                     worldObj.setBlockToAir(front);
 
                     for (ItemStack drop : drops) {
-                        // We check if the controller isn't null here because when a destructor faces a slave block and removes it
+                        // We check if the controller isn't null here because when a destructor faces a node and removes it
                         // it will essentially remove this block itself from the network without knowing
                         if (network == null) {
                             InventoryHelper.spawnItemStack(worldObj, front.getX(), front.getY(), front.getZ(), drop);

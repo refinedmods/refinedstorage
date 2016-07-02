@@ -20,7 +20,7 @@ import refinedstorage.tile.config.IModeConfig;
 import refinedstorage.tile.config.ModeConstants;
 import refinedstorage.tile.config.ModeFilter;
 
-public class TileImporter extends TileSlave implements ICompareConfig, IModeConfig {
+public class TileImporter extends TileNode implements ICompareConfig, IModeConfig {
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
 
@@ -43,7 +43,7 @@ public class TileImporter extends TileSlave implements ICompareConfig, IModeConf
     }
 
     @Override
-    public void updateSlave() {
+    public void updateNode() {
         IItemHandler handler = RefinedStorageUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
 
         if (getFacingTile() instanceof TileDiskDrive || handler == null) {

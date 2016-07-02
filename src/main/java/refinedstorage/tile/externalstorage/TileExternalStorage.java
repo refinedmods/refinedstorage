@@ -18,7 +18,7 @@ import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.network.MessagePriorityUpdate;
 import refinedstorage.tile.IConnectionHandler;
 import refinedstorage.tile.IStorageGui;
-import refinedstorage.tile.TileSlave;
+import refinedstorage.tile.TileNode;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.IModeConfig;
 import refinedstorage.tile.config.IRedstoneModeConfig;
@@ -27,7 +27,7 @@ import refinedstorage.tile.config.ModeConstants;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileExternalStorage extends TileSlave implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig, IConnectionHandler {
+public class TileExternalStorage extends TileNode implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig, IConnectionHandler {
     private static final String NBT_PRIORITY = "Priority";
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
@@ -50,7 +50,7 @@ public class TileExternalStorage extends TileSlave implements IStorageProvider, 
     }
 
     @Override
-    public void updateSlave() {
+    public void updateNode() {
     }
 
     @Override

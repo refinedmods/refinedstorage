@@ -22,7 +22,7 @@ import refinedstorage.inventory.IItemValidator;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.item.ItemUpgrade;
 
-public class TileCrafter extends TileSlave implements ICraftingPatternContainer, IConnectionHandler {
+public class TileCrafter extends TileNode implements ICraftingPatternContainer, IConnectionHandler {
     private BasicItemHandler patterns = new BasicItemHandler(9, this, new IItemValidator() {
         @Override
         public boolean valid(ItemStack stack) {
@@ -55,7 +55,7 @@ public class TileCrafter extends TileSlave implements ICraftingPatternContainer,
     }
 
     @Override
-    public void updateSlave() {
+    public void updateNode() {
     }
 
     @Override

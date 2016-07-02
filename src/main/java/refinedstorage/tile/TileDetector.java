@@ -14,7 +14,7 @@ import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.RedstoneMode;
 
-public class TileDetector extends TileSlave implements ICompareConfig {
+public class TileDetector extends TileNode implements ICompareConfig {
     public static final int SPEED = 5;
 
     public static final int MODE_UNDER = 0;
@@ -47,7 +47,7 @@ public class TileDetector extends TileSlave implements ICompareConfig {
     }
 
     @Override
-    public void updateSlave() {
+    public void updateNode() {
         if (ticks % SPEED == 0) {
             ItemStack slot = filter.getStackInSlot(0);
 

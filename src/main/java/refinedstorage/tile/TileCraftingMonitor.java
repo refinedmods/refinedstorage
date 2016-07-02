@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class TileCraftingMonitor extends TileSlave {
+public class TileCraftingMonitor extends TileNode {
     private List<ClientSideCraftingTask> tasks = new ArrayList<ClientSideCraftingTask>();
 
     @Override
@@ -21,7 +21,7 @@ public class TileCraftingMonitor extends TileSlave {
     }
 
     @Override
-    public void updateSlave() {
+    public void updateNode() {
     }
 
     @Override

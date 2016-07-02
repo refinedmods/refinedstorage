@@ -105,7 +105,7 @@ public class BlockController extends BlockBase {
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
         if (!world.isRemote) {
-            ((TileController) world.getTileEntity(pos)).disconnectSlaves();
+            ((TileController) world.getTileEntity(pos)).disconnectNodes();
         }
 
         super.breakBlock(world, pos, state);
