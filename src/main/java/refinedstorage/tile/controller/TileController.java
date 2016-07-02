@@ -392,14 +392,14 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public void sendStorageToClient(EntityPlayerMP player) {
-        RefinedStorage.NETWORK.sendTo(new MessageGridUpdate(this), player);
+        RefinedStorage.INSTANCE.network.sendTo(new MessageGridUpdate(this), player);
     }
 
     @Override
     public void sendStorageDeltaToClient(ItemStack stack, int delta) {
         for (EntityPlayer player : worldObj.playerEntities) {
             if (isWatchingGrid(player)) {
-                RefinedStorage.NETWORK.sendTo(new MessageGridDelta(stack, delta, RefinedStorageUtils.getPatternFromNetwork(this, stack) != null), (EntityPlayerMP) player);
+                RefinedStorage.INSTANCE.network.sendTo(new MessageGridDelta(stack, delta, RefinedStorageUtils.hasPattern(this, stack)), (EntityPlayerMP) player);
             }
         }
     }

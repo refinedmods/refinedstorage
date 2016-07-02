@@ -309,4 +309,8 @@ public final class RefinedStorageUtils {
     public static ICraftingPattern getPatternFromNetwork(INetworkMaster network, ItemStack stack) {
         return network.getPattern(stack, CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_NBT);
     }
+
+    public static boolean hasPattern(INetworkMaster network, ItemStack stack) {
+        return RefinedStorageUtils.getPatternFromNetwork(network, stack) != null;
+    }
 }

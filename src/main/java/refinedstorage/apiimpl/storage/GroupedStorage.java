@@ -78,7 +78,7 @@ public class GroupedStorage implements IGroupedStorage {
                 otherStack.stackSize -= stack.stackSize;
 
                 if (otherStack.stackSize == 0) {
-                    if (RefinedStorageUtils.getPatternFromNetwork(network, otherStack) == null) {
+                    if (!RefinedStorageUtils.hasPattern(network, stack)) {
                         stacks.remove(otherStack.getItem(), otherStack);
                     }
                 }
