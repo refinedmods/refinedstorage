@@ -40,6 +40,7 @@ public class TileExternalStorage extends TileSlave implements IStorageProvider, 
     private int capacity;
 
     private List<ExternalStorage> storages = new ArrayList<ExternalStorage>();
+    private int lastDrawerCount;
 
     @Override
     public int getEnergyUsage() {
@@ -48,6 +49,17 @@ public class TileExternalStorage extends TileSlave implements IStorageProvider, 
 
     @Override
     public void updateSlave() {
+    }
+
+    @Override
+    public void update() {
+        super.update();
+
+        if (getFacingTile() instanceof IDrawerGroup && lastDrawerCount != ((IDrawerGroup) getFacingTile()).getDrawerCount()) {
+            lastDrawerCount = ((IDrawerGroup) getFacingTile()).getDrawerCount();
+
+            updateStorage();
+        }
     }
 
     @Override
@@ -144,8 +156,8 @@ public class TileExternalStorage extends TileSlave implements IStorageProvider, 
         markDirty();
     }
 
-    // Called when the neighbor block changes
-    public void refreshStorage() {
+    // Called when the neighbor block changes or when a drawer is added or removed to a drawer group
+    public void updateStorage() {
         storages.clear();
 
         TileEntity facing = getFacingTile();

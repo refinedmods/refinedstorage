@@ -37,7 +37,7 @@ public class BlockExternalStorage extends BlockSlave {
         super.neighborChanged(state, world, pos, block);
 
         if (!world.isRemote) {
-            ((TileExternalStorage) world.getTileEntity(pos)).refreshStorage();
+            ((TileExternalStorage) world.getTileEntity(pos)).updateStorage();
         }
     }
 
