@@ -64,7 +64,7 @@ public class GuiProcessingPatternEncoder extends GuiBase {
         super.mouseClicked(mouseX, mouseY, mouseButton);
 
         if (isHoveringOverCreatePattern(mouseX - guiLeft, mouseY - guiTop)) {
-            RefinedStorage.NETWORK.sendToServer(new MessageGridPatternCreate(processingPatternEncoder.getPos().getX(), processingPatternEncoder.getPos().getY(), processingPatternEncoder.getPos().getZ()));
+            RefinedStorage.INSTANCE.network.sendToServer(new MessageGridPatternCreate(processingPatternEncoder.getPos().getX(), processingPatternEncoder.getPos().getY(), processingPatternEncoder.getPos().getZ()));
 
             mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
         }

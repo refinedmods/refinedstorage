@@ -33,7 +33,7 @@ public abstract class TileBase extends TileEntity implements ITickable {
             if (this instanceof ISynchronizedContainer) {
                 for (EntityPlayer player : worldObj.playerEntities) {
                     if (((ISynchronizedContainer) this).getContainer() == player.openContainer.getClass()) {
-                        RefinedStorage.NETWORK.sendTo(new MessageTileContainerUpdate(this), (EntityPlayerMP) player);
+                        RefinedStorage.INSTANCE.network.sendTo(new MessageTileContainerUpdate(this), (EntityPlayerMP) player);
                     }
                 }
             }

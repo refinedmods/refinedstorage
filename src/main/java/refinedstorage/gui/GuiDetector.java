@@ -64,7 +64,7 @@ public class GuiDetector extends GuiBase {
             Integer result = Ints.tryParse(amountField.getText());
 
             if (result != null) {
-                RefinedStorage.NETWORK.sendToServer(new MessageDetectorAmountUpdate(detector, result));
+                RefinedStorage.INSTANCE.network.sendToServer(new MessageDetectorAmountUpdate(detector, result));
             }
         } else {
             super.keyTyped(character, keyCode);

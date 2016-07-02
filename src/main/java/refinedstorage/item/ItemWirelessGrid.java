@@ -53,7 +53,7 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
         setMaxDamage(3200);
         setMaxStackSize(1);
         setHasSubtypes(true);
-        setCreativeTab(RefinedStorage.TAB);
+        setCreativeTab(RefinedStorage.INSTANCE.tab);
     }
 
     @Override

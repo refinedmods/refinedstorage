@@ -242,7 +242,7 @@ public class TileExternalStorage extends TileSlave implements IStorageProvider, 
 
     @Override
     public void onPriorityChanged(int priority) {
-        RefinedStorage.NETWORK.sendToServer(new MessagePriorityUpdate(pos, priority));
+        RefinedStorage.INSTANCE.network.sendToServer(new MessagePriorityUpdate(pos, priority));
     }
 
     @Override

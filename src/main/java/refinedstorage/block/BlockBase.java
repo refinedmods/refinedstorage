@@ -35,7 +35,7 @@ public abstract class BlockBase extends Block {
 
         setHardness(1.9F);
         setRegistryName(RefinedStorage.ID, name);
-        setCreativeTab(RefinedStorage.TAB);
+        setCreativeTab(RefinedStorage.INSTANCE.tab);
     }
 
     @Override

@@ -124,7 +124,7 @@ public class GuiCraftingSettings extends GuiBase {
         Integer quantity = Ints.tryParse(amountField.getText());
 
         if (quantity != null && quantity > 0 && quantity <= GridHandler.MAX_CRAFTING_PER_REQUEST) {
-            RefinedStorage.NETWORK.sendToServer(new MessageGridCraftingStart(stack, quantity));
+            RefinedStorage.INSTANCE.network.sendToServer(new MessageGridCraftingStart(stack, quantity));
 
             close();
         }

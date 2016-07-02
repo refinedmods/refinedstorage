@@ -36,6 +36,6 @@ public class SideButtonMode extends SideButton {
 
     @Override
     public void actionPerformed() {
-        RefinedStorage.NETWORK.sendToServer(new MessageModeToggle(config));
+        RefinedStorage.INSTANCE.network.sendToServer(new MessageModeToggle(config));
     }
 }

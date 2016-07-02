@@ -26,6 +26,6 @@ public class SideButtonRedstoneMode extends SideButton {
 
     @Override
     public void actionPerformed() {
-        RefinedStorage.NETWORK.sendToServer(new MessageRedstoneModeUpdate(config));
+        RefinedStorage.INSTANCE.network.sendToServer(new MessageRedstoneModeUpdate(config));
     }
 }

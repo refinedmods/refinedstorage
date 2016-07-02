@@ -48,6 +48,6 @@ public class SideButtonCompare extends SideButton {
 
     @Override
     public void actionPerformed() {
-        RefinedStorage.NETWORK.sendToServer(new MessageCompareUpdate(config, config.getCompare() ^ mask));
+        RefinedStorage.INSTANCE.network.sendToServer(new MessageCompareUpdate(config, config.getCompare() ^ mask));
     }
 }

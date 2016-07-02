@@ -351,16 +351,16 @@ public class GuiGrid extends GuiBase {
         if (clickedCreatePattern) {
             BlockPos gridPos = ((TileGrid) grid).getPos();
 
-            RefinedStorage.NETWORK.sendToServer(new MessageGridPatternCreate(gridPos.getX(), gridPos.getY(), gridPos.getZ()));
+            RefinedStorage.INSTANCE.network.sendToServer(new MessageGridPatternCreate(gridPos.getX(), gridPos.getY(), gridPos.getZ()));
         } else if (grid.isConnected()) {
             if (clickedClear) {
-                RefinedStorage.NETWORK.sendToServer(new MessageGridCraftingClear((TileGrid) grid));
+                RefinedStorage.INSTANCE.network.sendToServer(new MessageGridCraftingClear((TileGrid) grid));
             }
 
             ItemStack held = container.getPlayer().inventory.getItemStack();
 
             if (isOverSlotArea(mouseX - guiLeft, mouseY - guiTop) && held != null && (clickedButton == 0 || clickedButton == 1)) {
-                RefinedStorage.NETWORK.sendToServer(new MessageGridHeldPush(clickedButton == 1));
+                RefinedStorage.INSTANCE.network.sendToServer(new MessageGridHeldPush(clickedButton == 1));
             }
 
             if (isOverSlotWithItem() && (held == null || (held != null && clickedButton == 2))) {
@@ -381,7 +381,7 @@ public class GuiGrid extends GuiBase {
                         flags |= GridPullFlags.PULL_SINGLE;
                     }
 
-                    RefinedStorage.NETWORK.sendToServer(new MessageGridPull(items.get(slotNumber), flags));
+                    RefinedStorage.INSTANCE.network.sendToServer(new MessageGridPull(items.get(slotNumber), flags));
                 }
             }
         }

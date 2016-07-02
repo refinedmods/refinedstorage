@@ -27,6 +27,6 @@ public class SideButtonDetectorMode extends SideButton {
 
     @Override
     public void actionPerformed() {
-        RefinedStorage.NETWORK.sendToServer(new MessageDetectorModeUpdate(detector));
+        RefinedStorage.INSTANCE.network.sendToServer(new MessageDetectorModeUpdate(detector));
     }
 }

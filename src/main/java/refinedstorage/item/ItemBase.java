@@ -11,7 +11,7 @@ public abstract class ItemBase extends Item {
         this.name = name;
 
         setRegistryName(RefinedStorage.ID, name);
-        setCreativeTab(RefinedStorage.TAB);
+        setCreativeTab(RefinedStorage.INSTANCE.tab);
     }
 
     @Override

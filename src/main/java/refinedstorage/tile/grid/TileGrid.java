@@ -279,17 +279,17 @@ public class TileGrid extends TileSlave implements IGrid {
 
     @Override
     public void onSortingTypeChanged(int type) {
-        RefinedStorage.NETWORK.sendToServer(new MessageGridSettingsUpdate(this, sortingDirection, type, searchBoxMode));
+        RefinedStorage.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(this, sortingDirection, type, searchBoxMode));
     }
 
     @Override
     public void onSortingDirectionChanged(int direction) {
-        RefinedStorage.NETWORK.sendToServer(new MessageGridSettingsUpdate(this, direction, sortingType, searchBoxMode));
+        RefinedStorage.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(this, direction, sortingType, searchBoxMode));
     }
 
     @Override
     public void onSearchBoxModeChanged(int searchBoxMode) {
-        RefinedStorage.NETWORK.sendToServer(new MessageGridSettingsUpdate(this, sortingDirection, sortingType, searchBoxMode));
+        RefinedStorage.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(this, sortingDirection, sortingType, searchBoxMode));
     }
 
     @Override

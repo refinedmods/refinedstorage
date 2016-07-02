@@ -63,7 +63,7 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler {
                 }
             }
 
-            RefinedStorage.NETWORK.sendToServer(new MessageGridCraftingTransfer(recipe));
+            RefinedStorage.INSTANCE.network.sendToServer(new MessageGridCraftingTransfer(recipe));
         }
 
         return null;
