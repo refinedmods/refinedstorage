@@ -239,7 +239,7 @@ public class GuiGrid extends GuiBase {
                 ty = 2;
             }
 
-            drawTexture(x + 64, y + 97, 195, ty * 16, 16, 16);
+            drawTexture(x + 152, y + 117, 195, ty * 16, 16, 16);
         }
 
         searchField.drawTextBox();

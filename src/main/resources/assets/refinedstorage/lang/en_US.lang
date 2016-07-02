@@ -13,6 +13,7 @@ gui.refinedstorage:importer=Importer
 gui.refinedstorage:exporter=Exporter
 gui.refinedstorage:detector=Detector
 gui.refinedstorage:solderer=Solderer
+gui.refinedstorage:solderer.progress=%d%%
 gui.refinedstorage:destructor=Destructor
 gui.refinedstorage:constructor=Constructor
 gui.refinedstorage:relay=Relay

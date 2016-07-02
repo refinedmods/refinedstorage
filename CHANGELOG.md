@@ -7,6 +7,8 @@
 
 **Features**
 - Added a debug storage disk
+- Added tooltip to solderer progress bar that shows progress percentage
+- Tweaked grid GUI
 
 ### 0.8.3
 **Bugfixes**
