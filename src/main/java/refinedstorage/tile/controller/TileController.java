@@ -354,6 +354,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         return patterns.get(highestPattern);
     }
 
+    @Override
     public void rebuildPatterns() {
         patterns.clear();
 
@@ -561,6 +562,21 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         return energy.getEnergyStored();
     }
 
+    @Override
+    public long getStoredPower() {
+        return energy.getEnergyStored();
+    }
+
+    @Override
+    public long getCapacity() {
+        return energy.getMaxEnergyStored();
+    }
+
+    @Override
+    public long givePower(long power, boolean simulated) {
+        return energy.receiveEnergy((int) power, simulated);
+    }
+
     public int getEnergyScaled(int i) {
         return (int) ((float) energy.getEnergyStored() / (float) energy.getMaxEnergyStored() * (float) i);
     }
@@ -593,6 +609,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         this.redstoneMode = mode;
     }
 
+    @Override
     public int getEnergyUsage() {
         if (!worldObj.isRemote) {
             int usage = 0;
@@ -701,20 +718,5 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
         return capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER || super.hasCapability(capability, facing);
-    }
-
-    @Override
-    public long getStoredPower() {
-        return energy.getEnergyStored();
-    }
-
-    @Override
-    public long getCapacity() {
-        return energy.getMaxEnergyStored();
-    }
-
-    @Override
-    public long givePower(long power, boolean simulated) {
-        return energy.receiveEnergy((int) power, simulated);
     }
 }

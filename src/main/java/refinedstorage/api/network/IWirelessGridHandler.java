@@ -6,7 +6,7 @@ import net.minecraft.util.EnumHand;
 import javax.annotation.Nullable;
 
 /**
- * Defines behaviour of wireless grids.
+ * Defines behavior of wireless grids.
  */
 public interface IWirelessGridHandler {
     /**
