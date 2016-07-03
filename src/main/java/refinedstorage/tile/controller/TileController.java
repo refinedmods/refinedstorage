@@ -3,6 +3,9 @@ package refinedstorage.tile.controller;
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyReceiver;
 import io.netty.buffer.ByteBuf;
+import net.darkhax.tesla.api.ITeslaConsumer;
+import net.darkhax.tesla.api.ITeslaHolder;
+import net.darkhax.tesla.capability.TeslaCapabilities;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -12,6 +15,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -48,7 +52,7 @@ import refinedstorage.tile.config.RedstoneMode;
 
 import java.util.*;
 
-public class TileController extends TileBase implements INetworkMaster, IEnergyReceiver, ISynchronizedContainer, IRedstoneModeConfig {
+public class TileController extends TileBase implements INetworkMaster, IEnergyReceiver, ITeslaHolder, ITeslaConsumer, ISynchronizedContainer, IRedstoneModeConfig {
     public static final String NBT_ENERGY = "Energy";
     public static final String NBT_ENERGY_CAPACITY = "EnergyCapacity";
 
@@ -62,14 +66,11 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     private Comparator<IStorage> sizeComparator = new Comparator<IStorage>() {
         @Override
         public int compare(IStorage left, IStorage right) {
-            int leftStored = left.getStored();
-            int rightStored = right.getStored();
-
-            if (leftStored == rightStored) {
+            if (left.getStored() == right.getStored()) {
                 return 0;
             }
 
-            return (leftStored > rightStored) ? -1 : 1;
+            return (left.getStored() > right.getStored()) ? -1 : 1;
         }
     };
 
@@ -686,5 +687,34 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public Class<? extends Container> getContainer() {
         return ContainerController.class;
+    }
+
+    @Override
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+        if (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER) {
+            return (T) this;
+        }
+
+        return super.getCapability(capability, facing);
+    }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+        return capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER || super.hasCapability(capability, facing);
+    }
+
+    @Override
+    public long getStoredPower() {
+        return energy.getEnergyStored();
+    }
+
+    @Override
+    public long getCapacity() {
+        return energy.getMaxEnergyStored();
+    }
+
+    @Override
+    public long givePower(long power, boolean simulated) {
+        return energy.receiveEnergy((int) power, simulated);
     }
 }

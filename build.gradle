@@ -17,7 +17,7 @@ group = "refinedstorage"
 archivesBaseName = "refinedstorage"
 
 minecraft {
-    version = "1.10-12.18.0.1992-1.10.0"
+    version = "1.10-12.18.0.2000-1.10.0"
     runDir = "run"
     useDepAts = true
     mappings = "snapshot_20160518"
@@ -27,10 +27,14 @@ repositories {
     maven {
         url "http://dvs1.progwml6.com/files/maven"
     }
+    maven {
+        url "http://maven.epoxide.xyz"
+    }
 }
 
 dependencies {
     deobfCompile "mezz.jei:jei_1.10:3.7.+"
+    compile "net.darkhax.tesla:Tesla:1.9.4-1.1.0.24"
 }
 
 processResources {

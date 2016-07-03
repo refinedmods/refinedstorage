@@ -8,6 +8,7 @@
 **Features**
 - Added a debug storage disk
 - Added tooltip to solderer progress bar that shows progress percentage
+- Added support for the Tesla energy system
 - Tweaked grid GUI
 
 ### 0.8.3
