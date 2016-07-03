@@ -298,6 +298,16 @@ public final class RefinedStorageUtils {
         }
     }
 
+    // Keep this on par with the Forestry generators
+    // 1 EU is worth 4 RF
+    public static int convertIC2ToRF(double amount) {
+        return (int) amount * 4;
+    }
+
+    public static double convertRFToIC2(int amount) {
+        return amount / 4;
+    }
+
     public static ItemStack extractItem(INetworkMaster network, ItemStack stack, int size) {
         return network.extractItem(stack, size, CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_NBT);
     }

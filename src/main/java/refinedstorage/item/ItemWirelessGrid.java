@@ -30,6 +30,9 @@ import refinedstorage.tile.grid.TileGrid;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import static refinedstorage.RefinedStorageUtils.convertIC2ToRF;
+import static refinedstorage.RefinedStorageUtils.convertRFToIC2;
+
 public class ItemWirelessGrid extends ItemEnergyContainer implements ISpecialElectricItem, IElectricItemManager {
     public static final int TYPE_NORMAL = 0;
     public static final int TYPE_CREATIVE = 1;
@@ -229,22 +232,22 @@ public class ItemWirelessGrid extends ItemEnergyContainer implements ISpecialEle
 
     @Override
     public double charge(ItemStack stack, double amount, int tier, boolean ignoreTransferLimit, boolean simulate) {
-        return receiveEnergy(stack, (int) amount, simulate);
+        return convertRFToIC2(receiveEnergy(stack, convertIC2ToRF(amount), simulate));
     }
 
     @Override
     public double discharge(ItemStack stack, double amount, int tier, boolean ignoreTransferLimit, boolean externally, boolean simulate) {
-        return extractEnergy(stack, (int) amount, simulate);
+        return convertRFToIC2(extractEnergy(stack, convertIC2ToRF(amount), simulate));
     }
 
     @Override
     public double getCharge(ItemStack stack) {
-        return getEnergyStored(stack);
+        return convertRFToIC2(getEnergyStored(stack));
     }
 
     @Override
     public double getMaxCharge(ItemStack stack) {
-        return getMaxEnergyStored(stack);
+        return convertRFToIC2(getMaxEnergyStored(stack));
     }
 
     @Override

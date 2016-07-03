@@ -53,6 +53,9 @@ import refinedstorage.tile.config.RedstoneMode;
 
 import java.util.*;
 
+import static refinedstorage.RefinedStorageUtils.convertIC2ToRF;
+import static refinedstorage.RefinedStorageUtils.convertRFToIC2;
+
 public class TileController extends TileBase implements INetworkMaster, IEnergyReceiver, ITeslaHolder, ITeslaConsumer, ISynchronizedContainer, IRedstoneModeConfig {
     public static final String NBT_ENERGY = "Energy";
     public static final String NBT_ENERGY_CAPACITY = "EnergyCapacity";
@@ -98,15 +101,15 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     private List<ICraftingTask> craftingTasksToCancel = new ArrayList<ICraftingTask>();
 
     private EnergyStorage energy = new EnergyStorage(RefinedStorage.INSTANCE.controller);
-    private BasicSink ic2Energy = new BasicSink(this, energy.getMaxEnergyStored(), Integer.MAX_VALUE) {
+    private BasicSink IC2Energy = new BasicSink(this, energy.getMaxEnergyStored(), Integer.MAX_VALUE) {
         @Override
         public double getDemandedEnergy() {
-            return Math.max(0.0D, (double) energy.getMaxEnergyStored() - (double) energy.getEnergyStored());
+            return Math.max(0.0D, convertRFToIC2(energy.getMaxEnergyStored()) - convertRFToIC2(energy.getEnergyStored()));
         }
 
         @Override
         public double injectEnergy(EnumFacing directionFrom, double amount, double voltage) {
-            energy.setEnergyStored(energy.getEnergyStored() + (int) amount);
+            energy.setEnergyStored(energy.getEnergyStored() + convertIC2ToRF(amount));
 
             return 0.0D;
         }
@@ -142,7 +145,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public void update() {
         if (!worldObj.isRemote) {
-            ic2Energy.update();
+            IC2Energy.update();
 
             for (INetworkNode node : nodesToAdd) {
                 nodes.add(node);
@@ -242,7 +245,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     public void invalidate() {
         super.invalidate();
 
-        ic2Energy.invalidate();
+        IC2Energy.invalidate();
     }
 
     @Override
@@ -286,7 +289,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     public void onChunkUnload() {
         disconnectNodes();
 
-        ic2Energy.invalidate();
+        IC2Energy.invalidate();
     }
 
     public IGroupedStorage getStorage() {
