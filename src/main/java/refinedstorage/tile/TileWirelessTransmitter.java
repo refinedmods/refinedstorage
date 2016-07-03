@@ -19,7 +19,7 @@ public class TileWirelessTransmitter extends TileNode {
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.wirelessTransmitterRfUsage + RefinedStorageUtils.getUpgradeEnergyUsage(upgrades);
+        return RefinedStorage.INSTANCE.wirelessTransmitterUsage + RefinedStorageUtils.getUpgradeEnergyUsage(upgrades);
     }
 
     @Override

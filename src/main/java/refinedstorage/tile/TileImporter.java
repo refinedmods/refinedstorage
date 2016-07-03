@@ -39,7 +39,7 @@ public class TileImporter extends TileNode implements ICompareConfig, IModeConfi
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.importerRfUsage + RefinedStorageUtils.getUpgradeEnergyUsage(upgrades);
+        return RefinedStorage.INSTANCE.importerUsage + RefinedStorageUtils.getUpgradeEnergyUsage(upgrades);
     }
 
     @Override

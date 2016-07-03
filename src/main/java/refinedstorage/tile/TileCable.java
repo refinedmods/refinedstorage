@@ -6,7 +6,7 @@ import refinedstorage.RefinedStorage;
 public class TileCable extends TileNode {
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.cableRfUsage;
+        return RefinedStorage.INSTANCE.cableUsage;
     }
 
     @Override

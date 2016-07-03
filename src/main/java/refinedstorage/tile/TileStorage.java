@@ -65,7 +65,7 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.storageRfUsage;
+        return RefinedStorage.INSTANCE.storageUsage;
     }
 
     @Override

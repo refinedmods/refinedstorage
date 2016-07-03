@@ -44,7 +44,7 @@ public class TileDestructor extends TileNode implements ICompareConfig, IModeCon
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.destructorRfUsage + RefinedStorageUtils.getUpgradeEnergyUsage(upgrades);
+        return RefinedStorage.INSTANCE.destructorUsage + RefinedStorageUtils.getUpgradeEnergyUsage(upgrades);
     }
 
     @Override

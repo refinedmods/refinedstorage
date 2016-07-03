@@ -17,7 +17,7 @@ public class TileCraftingMonitor extends TileNode {
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.craftingMonitorRfUsage;
+        return RefinedStorage.INSTANCE.craftingMonitorUsage;
     }
 
     @Override

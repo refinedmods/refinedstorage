@@ -46,7 +46,7 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.externalStorageRfUsage + (storages.size() * RefinedStorage.INSTANCE.externalStoragePerStorageRfUsage);
+        return RefinedStorage.INSTANCE.externalStorageUsage + (storages.size() * RefinedStorage.INSTANCE.externalStoragePerStorageUsage);
     }
 
     @Override

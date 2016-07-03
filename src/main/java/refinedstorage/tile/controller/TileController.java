@@ -184,7 +184,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             wirelessGridHandler.update();
 
             if (getType() == EnumControllerType.NORMAL) {
-                if (!RefinedStorage.INSTANCE.controllerUsesRf) {
+                if (!RefinedStorage.INSTANCE.controllerUsesEnergy) {
                     energy.setEnergyStored(energy.getMaxEnergyStored());
                 } else if (energy.getEnergyStored() - getEnergyUsage() >= 0) {
                     energy.extractEnergy(getEnergyUsage(), false);
