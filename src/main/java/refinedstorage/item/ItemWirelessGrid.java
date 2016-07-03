@@ -1,6 +1,9 @@
 package refinedstorage.item;
 
 import cofh.api.energy.ItemEnergyContainer;
+import net.darkhax.tesla.api.ITeslaConsumer;
+import net.darkhax.tesla.api.ITeslaHolder;
+import net.darkhax.tesla.capability.TeslaCapabilities;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
@@ -15,11 +18,14 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.tile.controller.TileController;
 import refinedstorage.tile.grid.TileGrid;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class ItemWirelessGrid extends ItemEnergyContainer {
@@ -50,6 +56,11 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
         setMaxStackSize(1);
         setHasSubtypes(true);
         setCreativeTab(RefinedStorage.INSTANCE.tab);
+    }
+
+    @Override
+    public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt) {
+        return new WirelessGridCapabilityProvider(stack);
     }
 
     @Override
@@ -207,5 +218,50 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
     @Override
     public String getUnlocalizedName(ItemStack stack) {
         return getUnlocalizedName() + "." + stack.getItemDamage();
+    }
+
+    class TeslaEnergy implements ITeslaHolder, ITeslaConsumer {
+        private ItemStack stack;
+
+        public TeslaEnergy(ItemStack stack) {
+            this.stack = stack;
+        }
+
+        @Override
+        public long getStoredPower() {
+            return getEnergyStored(stack);
+        }
+
+        @Override
+        public long getCapacity() {
+            return getMaxEnergyStored(stack);
+        }
+
+        @Override
+        public long givePower(long power, boolean simulated) {
+            return receiveEnergy(stack, (int) power, simulated);
+        }
+    }
+
+    class WirelessGridCapabilityProvider implements ICapabilityProvider {
+        private ItemStack stack;
+
+        public WirelessGridCapabilityProvider(ItemStack stack) {
+            this.stack = stack;
+        }
+
+        @Override
+        public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+            return capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER;
+        }
+
+        @Override
+        public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+            if (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER) {
+                return (T) new TeslaEnergy(stack);
+            }
+
+            return null;
+        }
     }
 }
