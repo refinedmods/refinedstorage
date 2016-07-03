@@ -13,6 +13,7 @@ gui.refinedstorage:importer=Importeur
 gui.refinedstorage:exporter=Exporteur
 gui.refinedstorage:detector=Detector
 gui.refinedstorage:solderer=Soldeerder
+gui.refinedstorage:solderer.progress=%d%%
 gui.refinedstorage:destructor=Destructor
 gui.refinedstorage:constructor=Constructor
 gui.refinedstorage:relay=Relais
@@ -30,9 +31,9 @@ gui.refinedstorage:crafter.processing=Verwerking
 gui.refinedstorage:processing_pattern_encoder=Verwerkingspatroon Codeerder
 gui.refinedstorage:processing_pattern_encoder.pattern_create=Patroon maken
 
-misc.refinedstorage:energy_stored=%d / %d RF
-misc.refinedstorage:energy_usage=Vebruik: %d RF/t
-misc.refinedstorage:energy_usage_minimal=%d RF/t
+misc.refinedstorage:energy_stored=%d / %d RS
+misc.refinedstorage:energy_usage=Vebruik: %d RS/t
+misc.refinedstorage:energy_usage_minimal=%d RS/t
 
 misc.refinedstorage:storage.stored=Opgeslagen: %d
 misc.refinedstorage:storage.stored_capacity=Opgeslagen: %d / %d
@@ -45,6 +46,9 @@ misc.refinedstorage:wireless_grid.tooltip.1=Y: %d
 misc.refinedstorage:wireless_grid.tooltip.2=Z: %d
 misc.refinedstorage:wireless_grid.out_of_range=Controller buiten bereik.
 misc.refinedstorage:wireless_grid.not_found=Controller niet gevonden.
+
+misc.refinedstorage:pattern.inputs=Inputs
+misc.refinedstorage:pattern.outputs=Outputs
 
 misc.refinedstorage:start=Start
 misc.refinedstorage:clear=Legen
@@ -113,6 +117,7 @@ item.refinedstorage:storage_disk.1.name=4k Opslagschijf
 item.refinedstorage:storage_disk.2.name=16k Opslagschijf
 item.refinedstorage:storage_disk.3.name=64k Opslagschijf
 item.refinedstorage:storage_disk.4.name=Creative Opslagschijf
+item.refinedstorage:storage_disk.5.name=Debug Opslagschijf
 item.refinedstorage:wireless_grid.0.name=Draadloos Rooster
 item.refinedstorage:wireless_grid.1.name=Creatieve Draadloos Rooster
 item.refinedstorage:quartz_enriched_iron.name=Quartz Verrijkte IJzerstaaf

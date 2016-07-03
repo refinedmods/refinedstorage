@@ -13,6 +13,7 @@ gui.refinedstorage:importer=Importeur
 gui.refinedstorage:exporter=Exporteur
 gui.refinedstorage:detector=Détecteur
 gui.refinedstorage:solderer=Soudeur
+gui.refinedstorage:solderer.progress=%d%%
 gui.refinedstorage:destructor=Destructeur
 gui.refinedstorage:constructor=Constructeur
 gui.refinedstorage:relay=Relais
@@ -30,9 +31,9 @@ gui.refinedstorage:crafter.processing=Traitement
 gui.refinedstorage:processing_pattern_encoder=Encodeur de Modèle de Traitement
 gui.refinedstorage:processing_pattern_encoder.pattern_create=Créer Modèle
 
-misc.refinedstorage:energy_stored=%d / %d RF
-misc.refinedstorage:energy_usage=Usage: %d RF/t
-misc.refinedstorage:energy_usage_minimal=%d RF/t
+misc.refinedstorage:energy_stored=%d / %d RS
+misc.refinedstorage:energy_usage=Usage: %d RS/t
+misc.refinedstorage:energy_usage_minimal=%d RS/t
 
 misc.refinedstorage:storage.stored=Stored: %d
 misc.refinedstorage:storage.stored_capacity=Stocké: %d / %d
@@ -45,6 +46,9 @@ misc.refinedstorage:wireless_grid.tooltip.1=Y: %d
 misc.refinedstorage:wireless_grid.tooltip.2=Z: %d
 misc.refinedstorage:wireless_grid.out_of_range=Contrôleur hors de portés.
 misc.refinedstorage:wireless_grid.not_found=Contrôleur non trouvé.
+
+misc.refinedstorage:pattern.inputs=Inputs
+misc.refinedstorage:pattern.outputs=Outputs
 
 misc.refinedstorage:start=Départ
 misc.refinedstorage:clear=Vider
@@ -113,6 +117,7 @@ item.refinedstorage:storage_disk.1.name=Disque de Stockage de 4k
 item.refinedstorage:storage_disk.2.name=Disque de Stockage de 16k
 item.refinedstorage:storage_disk.3.name=Disque de Stockage de 64k
 item.refinedstorage:storage_disk.4.name=Disque de Stockage Créatif
+item.refinedstorage:storage_disk.5.name=Disque de Stockage Debug
 item.refinedstorage:wireless_grid.0.name=Grille sans Fil
 item.refinedstorage:wireless_grid.1.name=Grille sans Fil Créatif
 item.refinedstorage:quartz_enriched_iron.name=Fer Enrichi de Quartz
