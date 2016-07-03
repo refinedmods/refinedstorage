@@ -1,0 +1,144 @@
+itemGroup.refinedstorage=Refined Storage
+
+gui.refinedstorage:controller.0=Controlador
+gui.refinedstorage:controller.1=Controlador Criativo
+gui.refinedstorage:controller.machine_amount=%dx
+gui.refinedstorage:grid=Grade
+gui.refinedstorage:grid.craft=Fabricar
+gui.refinedstorage:grid.pattern_create=Criar Padrão
+gui.refinedstorage:wireless_grid=Grade Sem Fio
+gui.refinedstorage:disk_drive=Drive
+gui.refinedstorage:external_storage=Armazenamento Externo
+gui.refinedstorage:importer=Importador
+gui.refinedstorage:exporter=Exportador
+gui.refinedstorage:detector=Detector
+gui.refinedstorage:solderer=Soldador
+gui.refinedstorage:solderer.progress=%d%%
+gui.refinedstorage:destructor=Destruidor
+gui.refinedstorage:constructor=Construtor
+gui.refinedstorage:relay=Retransmissor
+gui.refinedstorage:interface.import=Importação da Interface
+gui.refinedstorage:interface.export=Exportação da Interface
+gui.refinedstorage:crafting_monitor=Monitor de Fabricação
+gui.refinedstorage:crafting_monitor.missing_items=Itens faltantes
+gui.refinedstorage:crafting_monitor.items_crafting=Itens em construção
+gui.refinedstorage:crafting_monitor.items_processing=Itens em processamento
+gui.refinedstorage:crafting_monitor.not_started_yet=Não iniciado
+gui.refinedstorage:wireless_transmitter=Transmissor Sem Fio
+gui.refinedstorage:wireless_transmitter.distance=%d blocks
+gui.refinedstorage:crafter=Fabricador
+gui.refinedstorage:crafter.processing=Processando
+gui.refinedstorage:processing_pattern_encoder=Codificador de Padrão de Processamento
+gui.refinedstorage:processing_pattern_encoder.pattern_create=Criar Padrão
+
+misc.refinedstorage:energy_stored=%d / %d RS
+misc.refinedstorage:energy_usage=Usage: %d RS/t
+misc.refinedstorage:energy_usage_minimal=%d RS/t
+
+misc.refinedstorage:storage.stored=Stored: %d
+misc.refinedstorage:storage.stored_capacity=Stored: %d / %d
+misc.refinedstorage:storage.stored_minimal=%d
+misc.refinedstorage:storage.stored_capacity_minimal=%d / %d
+misc.refinedstorage:storage.full=%d%% full
+
+misc.refinedstorage:wireless_grid.tooltip.0=X: %d
+misc.refinedstorage:wireless_grid.tooltip.1=Y: %d
+misc.refinedstorage:wireless_grid.tooltip.2=Z: %d
+misc.refinedstorage:wireless_grid.out_of_range=Controlador fora de alcance.
+misc.refinedstorage:wireless_grid.not_found=Controlador não encontrado.
+
+misc.refinedstorage:pattern.inputs=Entrada
+misc.refinedstorage:pattern.outputs=Saída
+
+misc.refinedstorage:start=Começar
+misc.refinedstorage:clear=Limpar
+misc.refinedstorage:cancel_all=Cancelar Tudo
+misc.refinedstorage:priority=Prioridade
+
+sidebutton.refinedstorage:compare.1=Comparar Dano
+sidebutton.refinedstorage:compare.2=Comparar NBT
+
+sidebutton.refinedstorage:redstone_mode=Modo de Redstone
+sidebutton.refinedstorage:redstone_mode.0=Ignorar sinal de redstone
+sidebutton.refinedstorage:redstone_mode.1=Só funcionar com sinal de redstone
+sidebutton.refinedstorage:redstone_mode.2=Só funcionar sem sinal de redstone
+
+sidebutton.refinedstorage:grid.sorting.direction=Direção da Organização
+sidebutton.refinedstorage:grid.sorting.direction.0=Ascendente
+sidebutton.refinedstorage:grid.sorting.direction.1=Descendente
+sidebutton.refinedstorage:grid.sorting.type=Tipo de Organização
+sidebutton.refinedstorage:grid.sorting.type.0=Quantidade
+sidebutton.refinedstorage:grid.sorting.type.1=Nome
+sidebutton.refinedstorage:grid.search_box_mode=Modo da Caixa de Pesquisa
+sidebutton.refinedstorage:grid.search_box_mode.0=Normal
+sidebutton.refinedstorage:grid.search_box_mode.1=Normal (autoseleção)
+sidebutton.refinedstorage:grid.search_box_mode.2=Sincronizado com JEI
+sidebutton.refinedstorage:grid.search_box_mode.3=Sincronizado com JEI (autoseleção)
+
+sidebutton.refinedstorage:mode=Modo
+sidebutton.refinedstorage:mode.whitelist=Lista Branca
+sidebutton.refinedstorage:mode.blacklist=Lista Negra
+
+sidebutton.refinedstorage:detector.mode=Modo
+sidebutton.refinedstorage:detector.mode.0=Emitir sinal quando abaixo da quantidade
+sidebutton.refinedstorage:detector.mode.1=Emitir sinal quando na quantidade
+sidebutton.refinedstorage:detector.mode.2=Emitir sinal quando acima da quantidade
+
+block.refinedstorage:controller.0.name=Controlador
+block.refinedstorage:controller.1.name=Controlador Criativo
+block.refinedstorage:cable.name=Cabo
+block.refinedstorage:grid.0.name=Grade
+block.refinedstorage:grid.1.name=Grade de Fabricação
+block.refinedstorage:grid.2.name=Grade de Padrões
+block.refinedstorage:disk_drive.name=Drive de Disco
+block.refinedstorage:external_storage.name=Armazenamento Externo
+block.refinedstorage:importer.name=Importador
+block.refinedstorage:exporter.name=Exportador
+block.refinedstorage:detector.name=Detector
+block.refinedstorage:machine_casing.name=Carcaça de Máquina
+block.refinedstorage:solderer.name=Soldador
+block.refinedstorage:destructor.name=Destruidor
+block.refinedstorage:constructor.name=Construtor
+block.refinedstorage:storage.0.name=Bloco de Armazenamento 1k
+block.refinedstorage:storage.1.name=Bloco de Armazenamento 4k
+block.refinedstorage:storage.2.name=Bloco de Armazenamento 16k
+block.refinedstorage:storage.3.name=Bloco de Armazenamento 64k
+block.refinedstorage:storage.4.name=Bloco de Armazenamento Criativo
+block.refinedstorage:relay.name=Retransmissor
+block.refinedstorage:interface.name=Interface
+block.refinedstorage:crafting_monitor.name=Monitor de Fabricação
+block.refinedstorage:wireless_transmitter.name=Transmissor Sem Fio
+block.refinedstorage:crafter.name=Fabricador
+block.refinedstorage:processing_pattern_encoder.name=Codificador de Padrão de Processamento
+block.refinedstorage:quartz_enriched_iron_block.name=Bloco de Ferro Enriquecido com Quartzo
+
+item.refinedstorage:storage_disk.0.name=Disco de Armazenamento 1k
+item.refinedstorage:storage_disk.1.name=Disco de Armazenamento 4k
+item.refinedstorage:storage_disk.2.name=Disco de Armazenamento 16k
+item.refinedstorage:storage_disk.3.name=Disco de Armazenamento 64k
+item.refinedstorage:storage_disk.4.name=Disco de Armazenamento Criativo
+item.refinedstorage:storage_disk.5.name=Disco de Armazenamento de Depuração
+item.refinedstorage:wireless_grid.0.name=Grade Sem Fio
+item.refinedstorage:wireless_grid.1.name=Grade Criativa Sem Fio
+item.refinedstorage:quartz_enriched_iron.name=Ferro Enriquecido com Quartzo
+item.refinedstorage:core.0.name=Núcleo de Construção
+item.refinedstorage:core.1.name=Núcleo de Destruição
+item.refinedstorage:silicon.name=Silício
+item.refinedstorage:processor.0.name=Processador Impresso Básico
+item.refinedstorage:processor.1.name=Processador Impresso Aprimorado
+item.refinedstorage:processor.2.name=Processador Impresso Avançado
+item.refinedstorage:processor.3.name=Processador Básico
+item.refinedstorage:processor.4.name=Processador Aprimorado
+item.refinedstorage:processor.5.name=Processador Avançado
+item.refinedstorage:processor.6.name=Silício Impresso
+item.refinedstorage:storage_part.0.name=Parte de Armazenamento 1k
+item.refinedstorage:storage_part.1.name=Parte de Armazenamento 4k
+item.refinedstorage:storage_part.2.name=Parte de Armazenamento 16k
+item.refinedstorage:storage_part.3.name=Parte de Armazenamento 64k
+item.refinedstorage:pattern.name=Padrão
+item.refinedstorage:upgrade.0.name=Aprimoramento
+item.refinedstorage:upgrade.1.name=Aprimoramento de Alcance
+item.refinedstorage:upgrade.2.name=Aprimoramento de Velocidade
+item.refinedstorage:upgrade.3.name=Aprimoramento de Fabricação
+item.refinedstorage:upgrade.4.name=Aprimoramento de Pilha
+item.refinedstorage:storage_housing.name=Alojamento de Armazenação
