@@ -17,7 +17,7 @@ public class SoldererRecipeCategory implements IRecipeCategory {
     private IDrawable background;
 
     public SoldererRecipeCategory(IGuiHelper helper) {
-        background = helper.createDrawable(new ResourceLocation("refinedstorage", "textures/gui/solderer.png"), 8, 5, 162, 89);
+        background = helper.createDrawable(new ResourceLocation("refinedstorage", "textures/gui/solderer.png"), 8, 5, 162, 83);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class SoldererRecipeCategory implements IRecipeCategory {
             y += 18;
         }
 
-        group.init(3, false, 134 - 9, 38 - 6);
+        group.init(3, false, 127 - 9, 38 - 6);
 
         if (recipeWrapper instanceof SoldererRecipeWrapper) {
             for (int i = 0; i < 3; ++i) {
