@@ -24,7 +24,6 @@ public abstract class GuiBase extends GuiContainer {
 
     private int lastButtonId = 0;
     private int lastSideButtonY = 6;
-    private String sideButtonTooltip;
 
     private Scrollbar scrollbar;
 
@@ -104,7 +103,7 @@ public abstract class GuiBase extends GuiContainer {
         mouseX -= guiLeft;
         mouseY -= guiTop;
 
-        sideButtonTooltip = null;
+        String sideButtonTooltip = null;
 
         for (SideButton sideButton : sideButtons) {
             sideButton.draw(this, sideButton.getX() + 2, sideButton.getY() + 1);

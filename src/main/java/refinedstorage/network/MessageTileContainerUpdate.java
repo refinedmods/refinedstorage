@@ -12,9 +12,6 @@ import refinedstorage.tile.ISynchronizedContainer;
 
 public class MessageTileContainerUpdate implements IMessage, IMessageHandler<MessageTileContainerUpdate, IMessage> {
     private TileEntity tile;
-    private int x;
-    private int y;
-    private int z;
 
     public MessageTileContainerUpdate() {
     }
@@ -25,9 +22,9 @@ public class MessageTileContainerUpdate implements IMessage, IMessageHandler<Mes
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        x = buf.readInt();
-        y = buf.readInt();
-        z = buf.readInt();
+        int x = buf.readInt();
+        int y = buf.readInt();
+        int z = buf.readInt();
 
         if (Minecraft.getMinecraft().theWorld != null) {
             tile = ClientProxy.getWorld().getTileEntity(new BlockPos(x, y, z));
