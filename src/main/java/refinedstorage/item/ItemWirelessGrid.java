@@ -1,6 +1,8 @@
 package refinedstorage.item;
 
 import cofh.api.energy.ItemEnergyContainer;
+import ic2.api.item.IElectricItemManager;
+import ic2.api.item.ISpecialElectricItem;
 import net.darkhax.tesla.api.ITeslaConsumer;
 import net.darkhax.tesla.api.ITeslaHolder;
 import net.darkhax.tesla.capability.TeslaCapabilities;
@@ -28,7 +30,7 @@ import refinedstorage.tile.grid.TileGrid;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ItemWirelessGrid extends ItemEnergyContainer {
+public class ItemWirelessGrid extends ItemEnergyContainer implements ISpecialElectricItem, IElectricItemManager {
     public static final int TYPE_NORMAL = 0;
     public static final int TYPE_CREATIVE = 1;
 
@@ -218,6 +220,56 @@ public class ItemWirelessGrid extends ItemEnergyContainer {
     @Override
     public String getUnlocalizedName(ItemStack stack) {
         return getUnlocalizedName() + "." + stack.getItemDamage();
+    }
+
+    @Override
+    public IElectricItemManager getManager(ItemStack stack) {
+        return this;
+    }
+
+    @Override
+    public double charge(ItemStack stack, double amount, int tier, boolean ignoreTransferLimit, boolean simulate) {
+        return receiveEnergy(stack, (int) amount, simulate);
+    }
+
+    @Override
+    public double discharge(ItemStack stack, double amount, int tier, boolean ignoreTransferLimit, boolean externally, boolean simulate) {
+        return extractEnergy(stack, (int) amount, simulate);
+    }
+
+    @Override
+    public double getCharge(ItemStack stack) {
+        return getEnergyStored(stack);
+    }
+
+    @Override
+    public double getMaxCharge(ItemStack stack) {
+        return getMaxEnergyStored(stack);
+    }
+
+    @Override
+    public boolean canUse(ItemStack stack, double amount) {
+        return true;
+    }
+
+    @Override
+    public boolean use(ItemStack stack, double amount, EntityLivingBase entity) {
+        return true;
+    }
+
+    @Override
+    public void chargeFromArmor(ItemStack stack, EntityLivingBase entity) {
+        // NO OP
+    }
+
+    @Override
+    public String getToolTip(ItemStack stack) {
+        return null;
+    }
+
+    @Override
+    public int getTier(ItemStack stack) {
+        return Integer.MAX_VALUE;
     }
 
     class TeslaEnergy implements ITeslaHolder, ITeslaConsumer {

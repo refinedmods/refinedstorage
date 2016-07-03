@@ -30,11 +30,16 @@ repositories {
     maven {
         url "http://maven.epoxide.xyz"
     }
+    maven {
+        name = "ic2"
+        url = "http://maven.ic2.player.to/"
+    }
 }
 
 dependencies {
     deobfCompile "mezz.jei:jei_1.10:3.7.+"
     compile "net.darkhax.tesla:Tesla:1.9.4-1.1.0.24"
+    compile "net.industrial-craft:industrialcraft-2:2.6.7-ex110:api"
 }
 
 processResources {

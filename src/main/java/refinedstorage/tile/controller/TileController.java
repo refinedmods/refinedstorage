@@ -2,6 +2,7 @@ package refinedstorage.tile.controller;
 
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyReceiver;
+import ic2.api.energy.prefab.BasicSink;
 import io.netty.buffer.ByteBuf;
 import net.darkhax.tesla.api.ITeslaConsumer;
 import net.darkhax.tesla.api.ITeslaHolder;
@@ -97,6 +98,19 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     private List<ICraftingTask> craftingTasksToCancel = new ArrayList<ICraftingTask>();
 
     private EnergyStorage energy = new EnergyStorage(RefinedStorage.INSTANCE.controller);
+    private BasicSink ic2Energy = new BasicSink(this, energy.getMaxEnergyStored(), Integer.MAX_VALUE) {
+        @Override
+        public double getDemandedEnergy() {
+            return Math.max(0.0D, (double) energy.getMaxEnergyStored() - (double) energy.getEnergyStored());
+        }
+
+        @Override
+        public double injectEnergy(EnumFacing directionFrom, double amount, double voltage) {
+            energy.setEnergyStored(energy.getEnergyStored() + (int) amount);
+
+            return 0.0D;
+        }
+    };
     private int energyUsage;
 
     private int lastEnergyDisplay;
@@ -128,6 +142,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public void update() {
         if (!worldObj.isRemote) {
+            ic2Energy.update();
+
             for (INetworkNode node : nodesToAdd) {
                 nodes.add(node);
 
@@ -223,6 +239,13 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     }
 
     @Override
+    public void invalidate() {
+        super.invalidate();
+
+        ic2Energy.invalidate();
+    }
+
+    @Override
     public List<INetworkNode> getNodes() {
         return nodes;
     }
@@ -262,6 +285,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public void onChunkUnload() {
         disconnectNodes();
+
+        ic2Energy.invalidate();
     }
 
     public IGroupedStorage getStorage() {
