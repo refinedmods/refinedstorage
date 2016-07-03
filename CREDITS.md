@@ -8,4 +8,5 @@
 - GustoniaEagle
 
 ## Translations
+- ChaoticTabris (Portuguese (Brazilian) translation)
 - Leventovitch (French translation)
