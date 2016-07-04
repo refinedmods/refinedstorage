@@ -286,8 +286,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public void onChunkUnload() {
-        disconnectNodes();
-
         if (IC2Energy != null) {
             IC2Energy.invalidate();
         }
