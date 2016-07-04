@@ -26,7 +26,7 @@ import refinedstorage.tile.config.*;
 
 import java.util.List;
 
-public class TileDiskDrive extends TileNode implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig, IConnectionHandler {
+public class TileDiskDrive extends TileNode implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig {
     public class Storage extends NBTStorage {
         public Storage(ItemStack disk) {
             super(disk.getTagCompound(), EnumStorageType.getById(disk.getItemDamage()).getCapacity(), TileDiskDrive.this);
@@ -104,14 +104,21 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
     }
 
     @Override
-    public void disconnect(World world) {
-        super.disconnect(world);
+    public void onConnectionChange(INetworkMaster network, boolean state) {
+        super.onConnectionChange(network, state);
 
+        network.getStorage().rebuild();
+    }
+
+    @Override
+    public void onBreak(World world) {
         for (Storage storage : this.storages) {
             if (storage != null) {
                 storage.writeToNBT();
             }
         }
+
+        super.onBreak(world);
     }
 
     @Override
@@ -308,15 +315,5 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
         return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
-    }
-
-    @Override
-    public void onConnected(INetworkMaster network) {
-        network.getStorage().rebuild();
-    }
-
-    @Override
-    public void onDisconnected(INetworkMaster network) {
-        network.getStorage().rebuild();
     }
 }

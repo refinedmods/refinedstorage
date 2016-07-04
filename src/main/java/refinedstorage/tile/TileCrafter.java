@@ -4,7 +4,6 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -22,7 +21,7 @@ import refinedstorage.inventory.IItemValidator;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.item.ItemUpgrade;
 
-public class TileCrafter extends TileNode implements ICraftingPatternContainer, IConnectionHandler {
+public class TileCrafter extends TileNode implements ICraftingPatternContainer {
     private BasicItemHandler patterns = new BasicItemHandler(9, this, new IItemValidator() {
         @Override
         public boolean valid(ItemStack stack) {
@@ -64,14 +63,16 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer, 
     }
 
     @Override
-    public void disconnect(World world) {
-        for (ICraftingTask task : network.getCraftingTasks()) {
-            if (task.getPattern().getContainer(world) == this) {
-                network.cancelCraftingTask(task);
+    public void onConnectionChange(INetworkMaster network, boolean state) {
+        if (!state) {
+            for (ICraftingTask task : network.getCraftingTasks()) {
+                if (task.getPattern().getContainer(worldObj) == this) {
+                    network.cancelCraftingTask(task);
+                }
             }
         }
 
-        super.disconnect(world);
+        network.rebuildPatterns();
     }
 
     @Override
@@ -127,15 +128,5 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer, 
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
         return (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing != getDirection()) || super.hasCapability(capability, facing);
-    }
-
-    @Override
-    public void onConnected(INetworkMaster network) {
-        network.rebuildPatterns();
-    }
-
-    @Override
-    public void onDisconnected(INetworkMaster network) {
-        network.rebuildPatterns();
     }
 }

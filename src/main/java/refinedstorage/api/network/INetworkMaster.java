@@ -43,14 +43,9 @@ public interface INetworkMaster {
     List<INetworkNode> getNodes();
 
     /**
-     * @param node The node to add
+     * @param nodes The nodes to set
      */
-    void addNode(@Nonnull INetworkNode node);
-
-    /**
-     * @param node The node to remove
-     */
-    void removeNode(@Nonnull INetworkNode node);
+    void setNodes(List<INetworkNode> nodes);
 
     /**
      * @return The {@link IGridHandler} for this network

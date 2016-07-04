@@ -4,11 +4,11 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.container.ContainerDetector;
 import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.tile.config.ICompareConfig;
@@ -33,13 +33,6 @@ public class TileDetector extends TileNode implements ICompareConfig {
     private int amount = 0;
 
     private boolean powered = false;
-
-    @Override
-    public void disconnect(World world) {
-        powered = false;
-
-        super.disconnect(world);
-    }
 
     @Override
     public int getEnergyUsage() {
@@ -86,6 +79,15 @@ public class TileDetector extends TileNode implements ICompareConfig {
 
                 RefinedStorageUtils.updateBlock(worldObj, pos);
             }
+        }
+    }
+
+    @Override
+    public void onConnectionChange(INetworkMaster network, boolean state) {
+        super.onConnectionChange(network, state);
+
+        if (!state) {
+            powered = false;
         }
     }
 

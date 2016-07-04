@@ -1,6 +1,5 @@
 package refinedstorage.block;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
@@ -43,7 +42,7 @@ public abstract class BlockNode extends BlockBase {
         super.onBlockPlacedBy(world, pos, state, player, stack);
 
         if (!world.isRemote) {
-            ((TileNode) world.getTileEntity(pos)).refreshConnection(world);
+            ((TileNode) world.getTileEntity(pos)).onPlaced(world);
         }
     }
 
@@ -53,19 +52,10 @@ public abstract class BlockNode extends BlockBase {
             TileNode node = (TileNode) world.getTileEntity(pos);
 
             if (node.isConnected()) {
-                node.disconnect(world);
+                node.onBreak(world);
             }
         }
 
         super.breakBlock(world, pos, state);
-    }
-
-    @Override
-    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
-        super.neighborChanged(state, world, pos, block);
-
-        if (!world.isRemote) {
-            ((TileNode) world.getTileEntity(pos)).refreshConnection(world);
-        }
     }
 }

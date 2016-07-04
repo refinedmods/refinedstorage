@@ -44,7 +44,6 @@ import refinedstorage.container.ContainerGrid;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.network.MessageGridDelta;
 import refinedstorage.network.MessageGridUpdate;
-import refinedstorage.tile.IConnectionHandler;
 import refinedstorage.tile.ISynchronizedContainer;
 import refinedstorage.tile.TileBase;
 import refinedstorage.tile.TileCrafter;
@@ -91,8 +90,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     };
 
     private List<INetworkNode> nodes = new ArrayList<INetworkNode>();
-    private List<INetworkNode> nodesToAdd = new ArrayList<INetworkNode>();
-    private List<INetworkNode> nodesToRemove = new ArrayList<INetworkNode>();
 
     private List<ICraftingPattern> patterns = new ArrayList<ICraftingPattern>();
 
@@ -144,26 +141,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 IC2Energy.update();
             }
 
-            for (INetworkNode node : nodesToAdd) {
-                nodes.add(node);
-
-                if (node instanceof IConnectionHandler) {
-                    ((IConnectionHandler) node).onConnected(this);
-                }
-            }
-
-            nodesToAdd.clear();
-
-            for (INetworkNode node : nodesToRemove) {
-                nodes.remove(node);
-
-                if (node instanceof IConnectionHandler) {
-                    ((IConnectionHandler) node).onDisconnected(this);
-                }
-            }
-
-            nodesToRemove.clear();
-
             if (canRun()) {
                 Collections.sort(storage.getStorages(), sizeComparator);
                 Collections.sort(storage.getStorages(), priorityComparator);
@@ -212,10 +189,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 energy.setEnergyStored(energy.getMaxEnergyStored());
             }
 
-            if (!canRun() && !nodes.isEmpty()) {
-                disconnectNodes();
-            }
-
             if (couldRun != canRun()) {
                 couldRun = canRun();
 
@@ -238,6 +211,12 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         super.update();
     }
 
+    public void onBreak() {
+        for (INetworkNode node : nodes) {
+            node.onDisconnected();
+        }
+    }
+
     @Override
     public void invalidate() {
         super.invalidate();
@@ -252,26 +231,13 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         return nodes;
     }
 
+    @Override
+    public void setNodes(List<INetworkNode> nodes) {
+        this.nodes = nodes;
+    }
+
     public List<ClientNode> getClientNodes() {
         return clientNodes;
-    }
-
-    @Override
-    public void addNode(INetworkNode node) {
-        nodesToAdd.add(node);
-    }
-
-    @Override
-    public void removeNode(INetworkNode node) {
-        nodesToRemove.add(node);
-    }
-
-    public void disconnectNodes() {
-        for (INetworkNode node : getNodes()) {
-            node.disconnect(worldObj);
-        }
-
-        nodes.clear();
     }
 
     @Override

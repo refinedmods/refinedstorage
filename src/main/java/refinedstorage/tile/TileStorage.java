@@ -23,7 +23,7 @@ import refinedstorage.tile.config.*;
 
 import java.util.List;
 
-public class TileStorage extends TileNode implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig, IConnectionHandler {
+public class TileStorage extends TileNode implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig {
     class Storage extends NBTStorage {
         public Storage() {
             super(TileStorage.this.getStorageTag(), TileStorage.this.getCapacity(), TileStorage.this);
@@ -82,12 +82,19 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
     }
 
     @Override
-    public void disconnect(World world) {
-        super.disconnect(world);
+    public void onConnectionChange(INetworkMaster network, boolean state) {
+        super.onConnectionChange(network, state);
 
+        network.getStorage().rebuild();
+    }
+
+    @Override
+    public void onBreak(World world) {
         if (storage != null) {
             storage.writeToNBT();
         }
+
+        super.onBreak(world);
     }
 
     @Override
@@ -257,15 +264,5 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
     @Override
     public int getCapacity() {
         return getType().getCapacity();
-    }
-
-    @Override
-    public void onConnected(INetworkMaster network) {
-        network.getStorage().rebuild();
-    }
-
-    @Override
-    public void onDisconnected(INetworkMaster network) {
-        network.getStorage().rebuild();
     }
 }

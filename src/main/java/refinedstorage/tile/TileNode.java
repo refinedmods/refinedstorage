@@ -13,10 +13,8 @@ import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.INetworkNode;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
-import refinedstorage.tile.controller.TileController;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public abstract class TileNode extends TileBase implements INetworkNode, ISynchronizedContainer, IRedstoneModeConfig {
     private static final String NBT_CONNECTED = "Connected";
@@ -45,21 +43,10 @@ public abstract class TileNode extends TileBase implements INetworkNode, ISynchr
     @Override
     public void update() {
         if (!worldObj.isRemote) {
-            if (ticks == 0) {
-                refreshConnection(worldObj);
-            } else {
-                // @TODO: Fix updating twice on block placement
-                if (update != canUpdate()) {
-                    if (network != null && this instanceof IConnectionHandler) {
-                        if (canUpdate()) {
-                            ((IConnectionHandler) this).onConnected(network);
-                        } else {
-                            ((IConnectionHandler) this).onDisconnected(network);
-                        }
-                    }
+            if (update != canUpdate() && network != null) {
+                update = canUpdate();
 
-                    update = canUpdate();
-                }
+                onConnectionChange(network, update);
             }
 
             if (isActive()) {
@@ -77,80 +64,147 @@ public abstract class TileNode extends TileBase implements INetworkNode, ISynchr
     }
 
     @Override
-    public void connect(World world, INetworkMaster network) {
-        if (network.canRun()) {
-            this.network = network;
-            this.connected = true;
+    public void onPlaced(World world) {
+        List<INetworkNode> nodes = new ArrayList<INetworkNode>();
+        Set<BlockPos> nodesPos = new HashSet<BlockPos>();
 
-            this.network.addNode(this);
+        Queue<BlockPos> positions = new ArrayDeque<BlockPos>();
+        Set<BlockPos> checked = new HashSet<BlockPos>();
 
-            world.notifyNeighborsOfStateChange(pos, getBlockType());
+        nodes.add(this);
+        positions.add(pos);
 
-            if (canSendConnectivityUpdate()) {
-                RefinedStorageUtils.updateBlock(world, pos);
-            }
-        }
-    }
+        INetworkMaster master = null;
 
-    @Override
-    public void disconnect(World world) {
-        this.connected = false;
+        BlockPos currentPos;
 
-        if (this.network != null) {
-            this.network.removeNode(this);
-            this.network = null;
-        }
+        while ((currentPos = positions.poll()) != null) {
+            TileEntity tile = world.getTileEntity(currentPos);
 
-        world.notifyNeighborsOfStateChange(pos, getBlockType());
-
-        if (canSendConnectivityUpdate()) {
-            RefinedStorageUtils.updateBlock(world, pos);
-        }
-    }
-
-    @Override
-    public void refreshConnection(World world) {
-        TileController controller = searchController(world, pos, new HashSet<Long>());
-
-        if (network == null) {
-            if (controller != null) {
-                connect(world, controller);
-            }
-        } else {
-            if (controller == null) {
-                disconnect(world);
-            }
-        }
-    }
-
-    private TileController searchController(World world, BlockPos current, Set<Long> visits) {
-        long pos = current.toLong();
-
-        if (visits.contains(pos)) {
-            return null;
-        }
-
-        visits.add(pos);
-
-        TileEntity tile = world.getTileEntity(current);
-
-        if (tile instanceof TileController) {
-            return (TileController) tile;
-        } else if (tile instanceof TileNode) {
-            if (visits.size() > 1 && tile instanceof TileRelay && !((TileRelay) tile).canUpdate()) {
-                return null;
+            if (tile instanceof INetworkMaster) {
+                master = (INetworkMaster) tile;
+                continue;
             }
 
-            for (EnumFacing dir : EnumFacing.VALUES) {
-                TileController controller = searchController(world, current.offset(dir), visits);
+            if (tile == null || !tile.hasCapability(RefinedStorageCapabilities.NETWORK_NODE_CAPABILITY, null)) {
+                continue;
+            }
 
-                if (controller != null) {
-                    return controller;
+            INetworkNode node = tile.getCapability(RefinedStorageCapabilities.NETWORK_NODE_CAPABILITY, null);
+
+            nodes.add(node);
+            nodesPos.add(node.getPosition());
+
+            for (EnumFacing sideOnCurrent : EnumFacing.VALUES) {
+                BlockPos sidePos = currentPos.offset(sideOnCurrent);
+
+                if (checked.add(sidePos)) {
+                    positions.add(sidePos);
                 }
             }
         }
 
-        return null;
+        if (master != null) {
+            for (INetworkNode newNode : nodes) {
+                boolean isNew = false;
+
+                for (INetworkNode oldNode : master.getNodes()) {
+                    if (oldNode.getPosition().equals(newNode.getPosition())) {
+                        isNew = true;
+                        break;
+                    }
+                }
+
+                if (!isNew) {
+                    newNode.onConnected(master);
+                }
+            }
+
+            master.setNodes(nodes);
+        }
+    }
+
+    @Override
+    public void onBreak(World world) {
+        List<INetworkNode> nodes = new ArrayList<INetworkNode>();
+        Set<BlockPos> nodesPos = new HashSet<BlockPos>();
+
+        Queue<BlockPos> positions = new ArrayDeque<BlockPos>();
+        Set<BlockPos> checked = new HashSet<BlockPos>();
+
+        checked.add(pos);
+
+        for (EnumFacing side : EnumFacing.VALUES) {
+            BlockPos sidePos = pos.offset(side);
+
+            if (!checked.add(sidePos)) {
+                continue;
+            }
+
+            positions.add(sidePos);
+
+            BlockPos currentPos;
+
+            while ((currentPos = positions.poll()) != null) {
+                TileEntity tile = world.getTileEntity(currentPos);
+
+                if (tile == null || !tile.hasCapability(RefinedStorageCapabilities.NETWORK_NODE_CAPABILITY, null)) {
+                    continue;
+                }
+
+                INetworkNode node = tile.getCapability(RefinedStorageCapabilities.NETWORK_NODE_CAPABILITY, null);
+
+                nodes.add(node);
+                nodesPos.add(currentPos);
+
+                for (EnumFacing sideOfCurrent : EnumFacing.VALUES) {
+                    BlockPos sideOfCurrentPos = currentPos.offset(sideOfCurrent);
+
+                    if (checked.add(sideOfCurrentPos)) {
+                        positions.add(sideOfCurrentPos);
+                    }
+                }
+            }
+        }
+
+        List<INetworkNode> oldNodes = network.getNodes();
+
+        network.setNodes(nodes);
+
+        for (INetworkNode oldNode : oldNodes) {
+            if (!nodesPos.contains(oldNode.getPosition())) {
+                oldNode.onDisconnected();
+            }
+        }
+    }
+
+    @Override
+    public void onConnected(INetworkMaster network) {
+        onConnectionChange(network, true);
+
+        this.connected = true;
+        this.network = network;
+
+        if (canSendConnectivityUpdate()) {
+            RefinedStorageUtils.updateBlock(worldObj, pos);
+        }
+    }
+
+    @Override
+    public void onDisconnected() {
+        onConnectionChange(network, false);
+
+        this.connected = false;
+        this.network = null;
+
+        if (canSendConnectivityUpdate()) {
+            RefinedStorageUtils.updateBlock(worldObj, pos);
+        }
+    }
+
+    @Override
+    public void onConnectionChange(INetworkMaster network, boolean state) {
+        // NO OP
     }
 
     @Override

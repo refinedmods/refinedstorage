@@ -28,26 +28,32 @@ public interface INetworkNode {
     BlockPos getPosition();
 
     /**
-     * Called when the neighbor of this node is changed. Typically used to check if there is still a connection to the network.
+     * Called when this node is placed in the world.
      *
      * @param world The world
      */
-    void refreshConnection(World world);
+    void onPlaced(World world);
 
     /**
-     * Called when a connection is found to the network
-     *
-     * @param world   The world
-     * @param network The network we're trying to connect to
-     */
-    void connect(World world, INetworkMaster network);
-
-    /**
-     * Called when a connection is lost to the network
+     * Called when this node is removed from the world.
      *
      * @param world The world
      */
-    void disconnect(World world);
+    void onBreak(World world);
+
+    /**
+     * Called when this node is connected to a network.
+     *
+     * @param network The network
+     */
+    void onConnected(INetworkMaster network);
+
+    /**
+     * Called when this node is disconnected from a network.
+     */
+    void onDisconnected();
+
+    void onConnectionChange(INetworkMaster network, boolean state);
 
     /**
      * @return If we are connected
