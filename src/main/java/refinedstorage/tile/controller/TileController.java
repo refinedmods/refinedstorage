@@ -101,7 +101,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     private List<ICraftingTask> craftingTasksToCancel = new ArrayList<ICraftingTask>();
 
     private EnergyStorage energy = new EnergyStorage(RefinedStorage.INSTANCE.controller);
-    private BasicSink IC2Energy = new BasicSink(this, energy.getMaxEnergyStored(), Integer.MAX_VALUE) {
+    private BasicSink IC2Energy = new BasicSink(this, (int) convertRFToIC2(energy.getMaxEnergyStored()), Integer.MAX_VALUE) {
         @Override
         public double getDemandedEnergy() {
             return Math.max(0.0D, convertRFToIC2(energy.getMaxEnergyStored()) - convertRFToIC2(energy.getEnergyStored()));
