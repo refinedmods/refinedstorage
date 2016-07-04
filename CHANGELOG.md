@@ -2,7 +2,7 @@
 
 ### 0.8.4
 **Bugfixes**
-- Fixed delay until grid items are visible
+- Removed delay until grid items are visible
 - Performance improvements
 
 **Features**
@@ -10,6 +10,7 @@
 - Added tooltip to solderer progress bar that shows progress percentage
 - Added support for the Tesla energy system
 - Added support for the IC2 (EU) energy system
+- Added a Portuguese (Brazilian) translation by ChaoticTabris
 - Tweaked grid GUI
 
 ### 0.8.3
