@@ -126,6 +126,10 @@ public abstract class TileNode extends TileBase implements INetworkNode, ISynchr
 
     @Override
     public void onBreak(World world) {
+        if (network == null) {
+            return;
+        }
+
         List<INetworkNode> nodes = new ArrayList<INetworkNode>();
         Set<BlockPos> nodesPos = new HashSet<BlockPos>();
 
@@ -184,10 +188,6 @@ public abstract class TileNode extends TileBase implements INetworkNode, ISynchr
 
         this.connected = true;
         this.network = network;
-
-        if (canSendConnectivityUpdate()) {
-            RefinedStorageUtils.updateBlock(worldObj, pos);
-        }
     }
 
     @Override
@@ -196,10 +196,6 @@ public abstract class TileNode extends TileBase implements INetworkNode, ISynchr
 
         this.connected = false;
         this.network = null;
-
-        if (canSendConnectivityUpdate()) {
-            RefinedStorageUtils.updateBlock(worldObj, pos);
-        }
     }
 
     @Override

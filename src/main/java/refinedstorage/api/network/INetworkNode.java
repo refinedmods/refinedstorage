@@ -53,6 +53,13 @@ public interface INetworkNode {
      */
     void onDisconnected();
 
+    /**
+     * Called when the connection state of this node changes.
+     * This is also called when redstone mode is updated, as opposed to {@link INetworkNode#onConnected(INetworkMaster)} and {@link INetworkNode#onDisconnected()}.
+     *
+     * @param network The network
+     * @param state   The state
+     */
     void onConnectionChange(INetworkMaster network, boolean state);
 
     /**

@@ -49,11 +49,7 @@ public abstract class BlockNode extends BlockBase {
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
         if (!world.isRemote) {
-            TileNode node = (TileNode) world.getTileEntity(pos);
-
-            if (node.isConnected()) {
-                node.onBreak(world);
-            }
+            ((TileNode) world.getTileEntity(pos)).onBreak(world);
         }
 
         super.breakBlock(world, pos, state);
