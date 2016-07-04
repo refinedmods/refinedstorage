@@ -74,7 +74,7 @@ public class GuiGrid extends GuiBase {
     private int slotNumber;
 
     public GuiGrid(ContainerGrid container, IGrid grid) {
-        super(container, 193, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 249 : 208);
+        super(container, 193, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 247 : 208);
 
         setScrollbar(new Scrollbar(174, 20, 12, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 70 : 88));
         getScrollbar().setCanScroll(false);
@@ -204,16 +204,16 @@ public class GuiGrid extends GuiBase {
     public boolean isOverClear(int mouseX, int mouseY) {
         switch (grid.getType()) {
             case CRAFTING:
-                return inBounds(82, 97, 7, 7, mouseX, mouseY);
+                return inBounds(82, 95, 7, 7, mouseX, mouseY);
             case PATTERN:
-                return inBounds(64, 97, 7, 7, mouseX, mouseY);
+                return inBounds(64, 95, 7, 7, mouseX, mouseY);
             default:
                 return false;
         }
     }
 
     public boolean isOverCreatePattern(int mouseX, int mouseY) {
-        return grid.getType() == EnumGridType.PATTERN && inBounds(152, 117, 16, 16, mouseX, mouseY) && ((TileGrid) grid).canCreatePattern();
+        return grid.getType() == EnumGridType.PATTERN && inBounds(152, 114, 16, 16, mouseX, mouseY) && ((TileGrid) grid).canCreatePattern();
     }
 
     @Override
@@ -239,7 +239,7 @@ public class GuiGrid extends GuiBase {
                 ty = 2;
             }
 
-            drawTexture(x + 152, y + 117, 195, ty * 16, 16, 16);
+            drawTexture(x + 152, y + 114, 195, ty * 16, 16, 16);
         }
 
         searchField.drawTextBox();
@@ -248,7 +248,7 @@ public class GuiGrid extends GuiBase {
     @Override
     public void drawForeground(int mouseX, int mouseY) {
         drawString(7, 7, t(grid instanceof WirelessGrid ? "gui.refinedstorage:wireless_grid" : "gui.refinedstorage:grid"));
-        drawString(7, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 155 : 114, t("container.inventory"));
+        drawString(7, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 153 : 114, t("container.inventory"));
 
         int x = 8;
         int y = 20;

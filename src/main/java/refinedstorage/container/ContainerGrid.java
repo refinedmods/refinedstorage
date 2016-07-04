@@ -21,11 +21,11 @@ public class ContainerGrid extends ContainerBase {
 
         this.grid = grid;
 
-        addPlayerInventory(8, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 167 : 126);
+        addPlayerInventory(8, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 165 : 126);
 
         if (grid.getType() == EnumGridType.CRAFTING) {
             int x = 26;
-            int y = 98;
+            int y = 96;
 
             for (int i = 0; i < 9; ++i) {
                 addSlotToContainer(new SlotGridCrafting(((TileGrid) grid).getMatrix(), i, x, y));
@@ -38,10 +38,10 @@ public class ContainerGrid extends ContainerBase {
                 }
             }
 
-            addSlotToContainer(craftingResultSlot = new SlotGridCraftingResult(this, player, (TileGrid) grid, 0, 130 + 4, 112 + 4));
+            addSlotToContainer(craftingResultSlot = new SlotGridCraftingResult(this, player, (TileGrid) grid, 0, 130 + 4, 110 + 4));
         } else if (grid.getType() == EnumGridType.PATTERN) {
             int x = 8;
-            int y = 98;
+            int y = 96;
 
             for (int i = 0; i < 9; ++i) {
                 addSlotToContainer(new SlotSpecimenLegacy(((TileGrid) grid).getMatrix(), i, x, y, false));
@@ -54,10 +54,10 @@ public class ContainerGrid extends ContainerBase {
                 }
             }
 
-            addSlotToContainer(patternResultSlot = new SlotDisabled(((TileGrid) grid).getResult(), 0, 112 + 4, 112 + 4));
+            addSlotToContainer(patternResultSlot = new SlotDisabled(((TileGrid) grid).getResult(), 0, 112 + 4, 110 + 4));
 
-            addSlotToContainer(new SlotItemHandler(((TileGrid) grid).getPatterns(), 0, 152, 97));
-            addSlotToContainer(new SlotOutput(((TileGrid) grid).getPatterns(), 1, 152, 137));
+            addSlotToContainer(new SlotItemHandler(((TileGrid) grid).getPatterns(), 0, 152, 96));
+            addSlotToContainer(new SlotOutput(((TileGrid) grid).getPatterns(), 1, 152, 132));
         }
     }
 
