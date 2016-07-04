@@ -135,4 +135,8 @@ public final class RefinedStorage {
     public static boolean hasJei() {
         return Loader.isModLoaded("JEI");
     }
+
+    public static boolean hasIC2() {
+        return Loader.isModLoaded("IC2");
+    }
 }

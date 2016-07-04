@@ -2,7 +2,6 @@ package refinedstorage.tile.controller;
 
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyReceiver;
-import ic2.api.energy.prefab.BasicSink;
 import io.netty.buffer.ByteBuf;
 import net.darkhax.tesla.api.ITeslaConsumer;
 import net.darkhax.tesla.api.ITeslaHolder;
@@ -18,6 +17,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
@@ -53,9 +53,10 @@ import refinedstorage.tile.config.RedstoneMode;
 
 import java.util.*;
 
-import static refinedstorage.RefinedStorageUtils.convertIC2ToRF;
-import static refinedstorage.RefinedStorageUtils.convertRFToIC2;
-
+@Optional.InterfaceList({
+    @Optional.Interface(iface = "net.darkhax.tesla.api.ITeslaConsumer", modid = "Tesla"),
+    @Optional.Interface(iface = "net.darkhax.tesla.api.ITeslaHolder", modid = "Tesla")
+})
 public class TileController extends TileBase implements INetworkMaster, IEnergyReceiver, ITeslaHolder, ITeslaConsumer, ISynchronizedContainer, IRedstoneModeConfig {
     public static final String NBT_ENERGY = "Energy";
     public static final String NBT_ENERGY_CAPACITY = "EnergyCapacity";
@@ -101,19 +102,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     private List<ICraftingTask> craftingTasksToCancel = new ArrayList<ICraftingTask>();
 
     private EnergyStorage energy = new EnergyStorage(RefinedStorage.INSTANCE.controller);
-    private BasicSink IC2Energy = new BasicSink(this, (int) convertRFToIC2(energy.getMaxEnergyStored()), Integer.MAX_VALUE) {
-        @Override
-        public double getDemandedEnergy() {
-            return Math.max(0.0D, convertRFToIC2(energy.getMaxEnergyStored()) - convertRFToIC2(energy.getEnergyStored()));
-        }
-
-        @Override
-        public double injectEnergy(EnumFacing directionFrom, double amount, double voltage) {
-            energy.setEnergyStored(energy.getEnergyStored() + convertIC2ToRF(amount));
-
-            return 0.0D;
-        }
-    };
+    private IC2Energy IC2Energy;
     private int energyUsage;
 
     private int lastEnergyDisplay;
@@ -126,6 +115,12 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
     private List<ClientNode> clientNodes = new ArrayList<ClientNode>();
+
+    public TileController() {
+        if (RefinedStorage.hasIC2()) {
+            this.IC2Energy = new IC2Energy(this);
+        }
+    }
 
     @Override
     public BlockPos getPosition() {
@@ -145,7 +140,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public void update() {
         if (!worldObj.isRemote) {
-            IC2Energy.update();
+            if (IC2Energy != null) {
+                IC2Energy.update();
+            }
 
             for (INetworkNode node : nodesToAdd) {
                 nodes.add(node);
@@ -245,7 +242,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     public void invalidate() {
         super.invalidate();
 
-        IC2Energy.invalidate();
+        if (IC2Energy != null) {
+            IC2Energy.invalidate();
+        }
     }
 
     @Override
@@ -289,7 +288,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     public void onChunkUnload() {
         disconnectNodes();
 
-        IC2Energy.invalidate();
+        if (IC2Energy != null) {
+            IC2Energy.invalidate();
+        }
     }
 
     public IGroupedStorage getStorage() {
@@ -590,16 +591,19 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         return energy.getEnergyStored();
     }
 
+    @Optional.Method(modid = "Tesla")
     @Override
     public long getStoredPower() {
         return energy.getEnergyStored();
     }
 
+    @Optional.Method(modid = "Tesla")
     @Override
     public long getCapacity() {
         return energy.getMaxEnergyStored();
     }
 
+    @Optional.Method(modid = "Tesla")
     @Override
     public long givePower(long power, boolean simulated) {
         return energy.receiveEnergy((int) power, simulated);
