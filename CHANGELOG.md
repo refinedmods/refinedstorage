@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 0.8.5
+**Bugfixes**
+- Fixed crash when Tesla API is not installed
+
 ### 0.8.4
 **Bugfixes**
 - Removed delay until grid items are visible

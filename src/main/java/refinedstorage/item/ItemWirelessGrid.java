@@ -322,12 +322,12 @@ public class ItemWirelessGrid extends ItemEnergyContainer implements ISpecialEle
 
         @Override
         public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-            return capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER;
+            return RefinedStorage.hasTesla() && (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER);
         }
 
         @Override
         public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-            if (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER) {
+            if (RefinedStorage.hasTesla() && (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER)) {
                 return (T) new TeslaEnergy(stack);
             }
 
