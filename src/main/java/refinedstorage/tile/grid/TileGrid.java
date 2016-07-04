@@ -126,7 +126,7 @@ public class TileGrid extends TileNode implements IGrid {
         result.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(matrix, worldObj));
     }
 
-    public void onCrafted() {
+    public void onCrafted(ContainerGrid container) {
         ItemStack[] remainder = CraftingManager.getInstance().getRemainingItems(matrix, worldObj);
 
         for (int i = 0; i < matrix.getSizeInventory(); ++i) {
@@ -146,6 +146,10 @@ public class TileGrid extends TileNode implements IGrid {
         }
 
         onCraftingMatrixChanged();
+
+        if (container != null) {
+            container.sendCraftingSlots();
+        }
     }
 
     public void onCraftedShift(ContainerGrid container, EntityPlayer player) {
@@ -154,7 +158,7 @@ public class TileGrid extends TileNode implements IGrid {
         ItemStack crafted = result.getStackInSlot(0);
 
         while (true) {
-            onCrafted();
+            onCrafted(null);
 
             craftedItemsList.add(crafted.copy());
 

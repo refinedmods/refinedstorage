@@ -22,6 +22,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.fml.common.Optional;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.tile.controller.TileController;
@@ -33,6 +34,10 @@ import java.util.List;
 import static refinedstorage.RefinedStorageUtils.convertIC2ToRF;
 import static refinedstorage.RefinedStorageUtils.convertRFToIC2;
 
+@Optional.InterfaceList({
+    @Optional.Interface(iface = "ic2.api.item.ISpecialElectricItem", modid = "IC2"),
+    @Optional.Interface(iface = "ic2.api.item.IElectricItemManager", modid = "IC2")
+})
 public class ItemWirelessGrid extends ItemEnergyContainer implements ISpecialElectricItem, IElectricItemManager {
     public static final int TYPE_NORMAL = 0;
     public static final int TYPE_CREATIVE = 1;
@@ -225,51 +230,61 @@ public class ItemWirelessGrid extends ItemEnergyContainer implements ISpecialEle
         return getUnlocalizedName() + "." + stack.getItemDamage();
     }
 
+    @Optional.Method(modid = "IC2")
     @Override
     public IElectricItemManager getManager(ItemStack stack) {
         return this;
     }
 
+    @Optional.Method(modid = "IC2")
     @Override
     public double charge(ItemStack stack, double amount, int tier, boolean ignoreTransferLimit, boolean simulate) {
         return convertRFToIC2(receiveEnergy(stack, convertIC2ToRF(amount), simulate));
     }
 
+    @Optional.Method(modid = "IC2")
     @Override
     public double discharge(ItemStack stack, double amount, int tier, boolean ignoreTransferLimit, boolean externally, boolean simulate) {
         return convertRFToIC2(extractEnergy(stack, convertIC2ToRF(amount), simulate));
     }
 
+    @Optional.Method(modid = "IC2")
     @Override
     public double getCharge(ItemStack stack) {
         return convertRFToIC2(getEnergyStored(stack));
     }
 
+    @Optional.Method(modid = "IC2")
     @Override
     public double getMaxCharge(ItemStack stack) {
         return convertRFToIC2(getMaxEnergyStored(stack));
     }
 
+    @Optional.Method(modid = "IC2")
     @Override
     public boolean canUse(ItemStack stack, double amount) {
         return true;
     }
 
+    @Optional.Method(modid = "IC2")
     @Override
     public boolean use(ItemStack stack, double amount, EntityLivingBase entity) {
         return true;
     }
 
+    @Optional.Method(modid = "IC2")
     @Override
     public void chargeFromArmor(ItemStack stack, EntityLivingBase entity) {
         // NO OP
     }
 
+    @Optional.Method(modid = "IC2")
     @Override
     public String getToolTip(ItemStack stack) {
         return null;
     }
 
+    @Optional.Method(modid = "IC2")
     @Override
     public int getTier(ItemStack stack) {
         return Integer.MAX_VALUE;

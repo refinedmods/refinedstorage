@@ -25,7 +25,7 @@ public class SlotGridCraftingResult extends SlotCrafting {
         onCrafting(stack);
 
         if (!player.worldObj.isRemote) {
-            grid.onCrafted();
+            grid.onCrafted(container);
 
             container.sendCraftingSlots();
         }
