@@ -53,9 +53,14 @@ public interface INetworkNode {
     boolean isConnected();
 
     /**
-     * @return If {@link INetworkNode#canUpdate()} can get called. Typically checks for connection status and redstone mode.
+     * @return If {@link INetworkNode#canUpdate()} can get called, typically checks for connection status and redstone mode
      */
     boolean canUpdate();
+
+    /**
+     * @return Whether this node can conduct a network signal
+     */
+    boolean canConduct();
 
     /**
      * @return The network

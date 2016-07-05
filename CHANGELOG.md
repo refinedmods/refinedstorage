@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 0.8.6
+**Bugfixes**
+- Huge performance improvements to large networks
+
 ### 0.8.5
 **Bugfixes**
 - Fixed crash when Tesla API is not installed

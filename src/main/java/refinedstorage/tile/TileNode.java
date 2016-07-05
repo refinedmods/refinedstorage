@@ -45,14 +45,14 @@ public abstract class TileNode extends TileBase implements INetworkNode, ISynchr
                 onConnectionChange(network, update);
             }
 
-            if (isActive()) {
-                updateNode();
-            }
-
             if (active != isActive() && canSendConnectivityUpdate()) {
                 RefinedStorageUtils.updateBlock(worldObj, pos);
 
                 active = isActive();
+            }
+
+            if (isActive()) {
+                updateNode();
             }
         }
 
@@ -78,6 +78,11 @@ public abstract class TileNode extends TileBase implements INetworkNode, ISynchr
     @Override
     public void onConnectionChange(INetworkMaster network, boolean state) {
         // NO OP
+    }
+
+    @Override
+    public boolean canConduct() {
+        return true;
     }
 
     @Override

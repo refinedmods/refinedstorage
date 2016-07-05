@@ -383,8 +383,10 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         Queue<BlockPos> toCheck = new ArrayDeque<BlockPos>();
 
         for (EnumFacing facing : EnumFacing.VALUES) {
-            checked.add(pos.offset(facing));
-            toCheck.add(pos.offset(facing));
+            BlockPos pos = this.pos.offset(facing);
+
+            checked.add(pos);
+            toCheck.add(pos);
         }
 
         BlockPos currentPos;
@@ -397,14 +399,16 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
             INetworkNode node = tile.getCapability(RefinedStorageCapabilities.NETWORK_NODE_CAPABILITY, null);
 
-            // @TODO: Care about relays
-
             newNodes.add(node);
             newNodesPos.add(node.getPosition());
 
-            for (EnumFacing facing : EnumFacing.VALUES) {
-                if (checked.add(currentPos.offset(facing))) {
-                    toCheck.add(currentPos.offset(facing));
+            if (node.canConduct()) {
+                for (EnumFacing facing : EnumFacing.VALUES) {
+                    BlockPos pos = currentPos.offset(facing);
+
+                    if (checked.add(pos)) {
+                        toCheck.add(pos);
+                    }
                 }
             }
         }
