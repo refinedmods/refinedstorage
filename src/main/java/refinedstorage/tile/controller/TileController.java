@@ -382,7 +382,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public void rebuildNodes() {
-        System.out.println("Rebuilding Nodes");
         List<INetworkNode> newNodes = new ArrayList<INetworkNode>();
         Set<BlockPos> newNodesPos = new HashSet<BlockPos>();
 
