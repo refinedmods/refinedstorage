@@ -4,7 +4,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
@@ -85,16 +84,12 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
     public void onConnectionChange(INetworkMaster network, boolean state) {
         super.onConnectionChange(network, state);
 
-        network.getStorage().rebuild();
-    }
-
-    @Override
-    public void onBreak(World world) {
+        // @TODO
         if (storage != null) {
             storage.writeToNBT();
         }
 
-        super.onBreak(world);
+        network.getStorage().rebuild();
     }
 
     @Override

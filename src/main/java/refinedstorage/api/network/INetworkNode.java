@@ -1,7 +1,6 @@
 package refinedstorage.api.network;
 
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 /**
  * Represents a node in the storage network.
@@ -26,20 +25,6 @@ public interface INetworkNode {
      * @return The position of this node in the world
      */
     BlockPos getPosition();
-
-    /**
-     * Called when this node is placed in the world.
-     *
-     * @param world The world
-     */
-    void onPlaced(World world);
-
-    /**
-     * Called when this node is removed from the world.
-     *
-     * @param world The world
-     */
-    void onBreak(World world);
 
     /**
      * Called when this node is connected to a network.

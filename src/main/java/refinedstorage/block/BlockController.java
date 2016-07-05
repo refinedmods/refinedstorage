@@ -1,5 +1,6 @@
 package refinedstorage.block;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.properties.PropertyInteger;
@@ -97,6 +98,8 @@ public class BlockController extends BlockBase {
             if (tag != null && tag.hasKey(TileController.NBT_ENERGY)) {
                 controller.getEnergy().receiveEnergy(tag.getInteger(TileController.NBT_ENERGY), false);
             }
+
+            controller.rebuildNodes();
         }
 
         super.onBlockPlacedBy(world, pos, state, player, stack);
@@ -109,6 +112,15 @@ public class BlockController extends BlockBase {
         }
 
         super.breakBlock(world, pos, state);
+    }
+
+    @Override
+    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
+        super.neighborChanged(state, world, pos, block);
+
+        if (!world.isRemote) {
+            ((TileController) world.getTileEntity(pos)).rebuildNodes();
+        }
     }
 
     @Override

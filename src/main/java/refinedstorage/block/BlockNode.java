@@ -6,9 +6,12 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.tile.TileNode;
 
 public abstract class BlockNode extends BlockBase {
@@ -42,16 +45,30 @@ public abstract class BlockNode extends BlockBase {
         super.onBlockPlacedBy(world, pos, state, player, stack);
 
         if (!world.isRemote) {
-            ((TileNode) world.getTileEntity(pos)).onPlaced(world);
+            for (EnumFacing facing : EnumFacing.VALUES) {
+                TileEntity tile = world.getTileEntity(pos.offset(facing));
+
+                if (tile instanceof TileNode && ((TileNode) tile).isConnected()) {
+                    ((TileNode) tile).getNetwork().rebuildNodes();
+
+                    break;
+                }
+            }
         }
     }
 
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
+        INetworkMaster network = null;
+
         if (!world.isRemote) {
-            ((TileNode) world.getTileEntity(pos)).onBreak(world);
+            network = ((TileNode) world.getTileEntity(pos)).getNetwork();
         }
 
         super.breakBlock(world, pos, state);
+
+        if (network != null) {
+            network.rebuildNodes();
+        }
     }
 }

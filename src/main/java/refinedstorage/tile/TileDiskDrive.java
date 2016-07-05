@@ -5,7 +5,6 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -107,18 +106,14 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
     public void onConnectionChange(INetworkMaster network, boolean state) {
         super.onConnectionChange(network, state);
 
-        network.getStorage().rebuild();
-    }
-
-    @Override
-    public void onBreak(World world) {
+        // @TODO
         for (Storage storage : this.storages) {
             if (storage != null) {
                 storage.writeToNBT();
             }
         }
 
-        super.onBreak(world);
+        network.getStorage().rebuild();
     }
 
     @Override

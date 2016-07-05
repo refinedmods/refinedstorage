@@ -43,11 +43,6 @@ public interface INetworkMaster {
     List<INetworkNode> getNodes();
 
     /**
-     * @param nodes The nodes to set
-     */
-    void setNodes(List<INetworkNode> nodes);
-
-    /**
      * @return The {@link IGridHandler} for this network
      */
     IGridHandler getGridHandler();
@@ -105,6 +100,11 @@ public interface INetworkMaster {
      * Rebuilds the pattern list.
      */
     void rebuildPatterns();
+
+    /**
+     * Rebuilds the network node list.
+     */
+    void rebuildNodes();
 
     /**
      * Returns crafting patterns from an item stack.

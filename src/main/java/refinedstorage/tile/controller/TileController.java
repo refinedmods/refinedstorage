@@ -13,6 +13,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
@@ -23,6 +24,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.RefinedStorageCapabilities;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.IGridHandler;
@@ -90,6 +92,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     };
 
     private List<INetworkNode> nodes = new ArrayList<INetworkNode>();
+    private Set<BlockPos> nodesPos = new HashSet<BlockPos>();
 
     private List<ICraftingPattern> patterns = new ArrayList<ICraftingPattern>();
 
@@ -231,11 +234,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         return nodes;
     }
 
-    @Override
-    public void setNodes(List<INetworkNode> nodes) {
-        this.nodes = nodes;
-    }
-
     public List<ClientNode> getClientNodes() {
         return clientNodes;
     }
@@ -374,6 +372,57 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         }
 
         storage.rebuild();
+    }
+
+    @Override
+    public void rebuildNodes() {
+        List<INetworkNode> newNodes = new ArrayList<INetworkNode>();
+        Set<BlockPos> newNodesPos = new HashSet<BlockPos>();
+
+        Set<BlockPos> checked = new HashSet<BlockPos>();
+        Queue<BlockPos> toCheck = new ArrayDeque<BlockPos>();
+
+        for (EnumFacing facing : EnumFacing.VALUES) {
+            checked.add(pos.offset(facing));
+            toCheck.add(pos.offset(facing));
+        }
+
+        BlockPos currentPos;
+        while ((currentPos = toCheck.poll()) != null) {
+            TileEntity tile = worldObj.getTileEntity(currentPos);
+
+            if (tile == null || !tile.hasCapability(RefinedStorageCapabilities.NETWORK_NODE_CAPABILITY, null)) {
+                continue;
+            }
+
+            INetworkNode node = tile.getCapability(RefinedStorageCapabilities.NETWORK_NODE_CAPABILITY, null);
+
+            // @TODO: Care about relays
+
+            newNodes.add(node);
+            newNodesPos.add(node.getPosition());
+
+            for (EnumFacing facing : EnumFacing.VALUES) {
+                if (checked.add(currentPos.offset(facing))) {
+                    toCheck.add(currentPos.offset(facing));
+                }
+            }
+        }
+
+        for (INetworkNode newNode : newNodes) {
+            if (!nodesPos.contains(newNode.getPosition())) {
+                newNode.onConnected(this);
+            }
+        }
+
+        for (INetworkNode oldNode : nodes) {
+            if (!newNodesPos.contains(oldNode.getPosition())) {
+                oldNode.onDisconnected();
+            }
+        }
+
+        this.nodes = newNodes;
+        this.nodesPos = newNodesPos;
     }
 
     @Override
