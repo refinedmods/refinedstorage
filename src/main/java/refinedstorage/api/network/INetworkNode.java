@@ -39,6 +39,11 @@ public interface INetworkNode {
     void onDisconnected();
 
     /**
+     * @return Whether the block is removed from the world
+     */
+    boolean isRemoved();
+
+    /**
      * Called when the connection state of this node changes.
      * This is also called when redstone mode is updated, as opposed to {@link INetworkNode#onConnected(INetworkMaster)} and {@link INetworkNode#onDisconnected()}.
      *

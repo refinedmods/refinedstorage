@@ -103,15 +103,19 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
     }
 
     @Override
-    public void onConnectionChange(INetworkMaster network, boolean state) {
-        super.onConnectionChange(network, state);
+    public void onDisconnected() {
+        super.onDisconnected();
 
-        // @TODO
         for (Storage storage : this.storages) {
             if (storage != null) {
                 storage.writeToNBT();
             }
         }
+    }
+
+    @Override
+    public void onConnectionChange(INetworkMaster network, boolean state) {
+        super.onConnectionChange(network, state);
 
         network.getStorage().rebuild();
     }

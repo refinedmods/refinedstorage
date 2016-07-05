@@ -6,6 +6,7 @@ import net.minecraft.util.math.BlockPos;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.INetworkNode;
+import refinedstorage.block.BlockNode;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
 
@@ -70,6 +71,11 @@ public abstract class TileNode extends TileBase implements INetworkNode, ISynchr
 
         this.connected = false;
         this.network = null;
+    }
+
+    @Override
+    public boolean isRemoved() {
+        return !(worldObj.getBlockState(pos).getBlock() instanceof BlockNode);
     }
 
     @Override

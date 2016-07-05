@@ -404,6 +404,10 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
             INetworkNode node = (INetworkNode) tile;
 
+            if (node.isRemoved()) {
+                continue;
+            }
+
             newNodes.add(node);
             newNodesPos.add(node.getPosition());
 

@@ -11,7 +11,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.tile.TileNode;
 
 public abstract class BlockNode extends BlockBase {
@@ -59,16 +58,10 @@ public abstract class BlockNode extends BlockBase {
 
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
-        INetworkMaster network = null;
-
         if (!world.isRemote) {
-            network = ((TileNode) world.getTileEntity(pos)).getNetwork();
+            (((TileNode) world.getTileEntity(pos)).getNetwork()).rebuildNodes();
         }
 
         super.breakBlock(world, pos, state);
-
-        if (network != null) {
-            network.rebuildNodes();
-        }
     }
 }

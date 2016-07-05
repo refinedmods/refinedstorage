@@ -77,17 +77,25 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
 
         if (storage == null && storageTag != null) {
             storage = new Storage();
+
+            if (network != null) {
+                network.getStorage().rebuild();
+            }
+        }
+    }
+
+    @Override
+    public void onDisconnected() {
+        super.onDisconnected();
+
+        if (storage != null) {
+            storage.writeToNBT();
         }
     }
 
     @Override
     public void onConnectionChange(INetworkMaster network, boolean state) {
         super.onConnectionChange(network, state);
-
-        // @TODO
-        if (storage != null) {
-            storage.writeToNBT();
-        }
 
         network.getStorage().rebuild();
     }
