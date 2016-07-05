@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -18,6 +19,8 @@ import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
+
+import java.util.ArrayList;
 
 public class TileInterface extends TileNode implements ICompareConfig {
     private static final String NBT_COMPARE = "Compare";
@@ -37,7 +40,11 @@ public class TileInterface extends TileNode implements ICompareConfig {
 
     private int currentSlot = 0;
 
-    private CraftingTaskScheduler scheduler = new CraftingTaskScheduler();
+    private ArrayList<CraftingTaskScheduler> schedulers = new ArrayList<CraftingTaskScheduler>() {{
+        for (int i = 0; i < 9; i ++) {
+            add(new CraftingTaskScheduler());
+        }
+    }};
 
     @Override
     public int getEnergyUsage() {
@@ -81,15 +88,16 @@ public class TileInterface extends TileNode implements ICompareConfig {
                     ItemStack result = network.extractItem(wanted, delta, compare);
 
                     if (result != null) {
-                        scheduler.resetSchedule();
+                        schedulers.get(i).resetSchedule();
                         if (got == null) {
                             exportItems.setStackInSlot(i, result);
                         } else {
                             exportItems.getStackInSlot(i).stackSize += result.stackSize;
                         }
                     } else if (RefinedStorageUtils.hasUpgrade(upgrades, ItemUpgrade.TYPE_CRAFTING)) {
-                        if (scheduler.canSchedule(compare, wanted)) {
-                            scheduler.schedule(network, compare, wanted);
+
+                        if (schedulers.get(i).canSchedule(compare, wanted)) {
+                            schedulers.get(i).schedule(network, compare, wanted);
                         }
                     }
                 } else if (delta < 0) {
@@ -129,6 +137,12 @@ public class TileInterface extends TileNode implements ICompareConfig {
         if (nbt.hasKey(NBT_COMPARE)) {
             compare = nbt.getInteger(NBT_COMPARE);
         }
+
+        /*
+        for (CraftingTaskScheduler scheduler : schedulers) {
+            scheduler.read(nbt);
+        }
+        */
     }
 
     @Override
@@ -141,6 +155,15 @@ public class TileInterface extends TileNode implements ICompareConfig {
         RefinedStorageUtils.writeItems(upgrades, 3, tag);
 
         tag.setInteger(NBT_COMPARE, compare);
+
+        NBTTagList schedulers_list = new NBTTagList();
+
+        /*
+        for (CraftingTaskScheduler scheduler : schedulers) {
+            schedulers_list.appendTag(scheduler.writeToNBT(););
+            scheduler.writeToNBT(tag);
+        }
+        */
 
         return tag;
     }
