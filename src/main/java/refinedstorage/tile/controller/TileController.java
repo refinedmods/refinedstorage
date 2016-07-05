@@ -24,7 +24,6 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageUtils;
-import refinedstorage.api.RefinedStorageCapabilities;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.IGridHandler;
@@ -399,11 +398,11 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         while ((currentPos = toCheck.poll()) != null) {
             TileEntity tile = worldObj.getTileEntity(currentPos);
 
-            if (tile == null || !tile.hasCapability(RefinedStorageCapabilities.NETWORK_NODE_CAPABILITY, null)) {
+            if (!(tile instanceof INetworkNode)) {
                 continue;
             }
 
-            INetworkNode node = tile.getCapability(RefinedStorageCapabilities.NETWORK_NODE_CAPABILITY, null);
+            INetworkNode node = (INetworkNode) tile;
 
             newNodes.add(node);
             newNodesPos.add(node.getPosition());

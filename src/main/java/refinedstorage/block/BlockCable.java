@@ -10,7 +10,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorageBlocks;
-import refinedstorage.api.RefinedStorageCapabilities;
+import refinedstorage.api.network.INetworkNode;
 import refinedstorage.tile.TileCable;
 
 public class BlockCable extends BlockNode {
@@ -57,7 +57,7 @@ public class BlockCable extends BlockNode {
     }
 
     public static boolean hasConnectionWith(IBlockAccess world, BlockPos pos) {
-        return world.getBlockState(pos).getBlock() == RefinedStorageBlocks.CONTROLLER || (world.getTileEntity(pos) != null && world.getTileEntity(pos).hasCapability(RefinedStorageCapabilities.NETWORK_NODE_CAPABILITY, null));
+        return world.getBlockState(pos).getBlock() == RefinedStorageBlocks.CONTROLLER || world.getTileEntity(pos) instanceof INetworkNode;
     }
 
     @Override

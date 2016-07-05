@@ -2,11 +2,8 @@ package refinedstorage.tile;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.capabilities.Capability;
 import refinedstorage.RefinedStorageUtils;
-import refinedstorage.api.RefinedStorageCapabilities;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.INetworkNode;
 import refinedstorage.tile.config.IRedstoneModeConfig;
@@ -156,20 +153,6 @@ public abstract class TileNode extends TileBase implements INetworkNode, ISynchr
         super.readUpdate(tag);
 
         connected = tag.getBoolean(NBT_CONNECTED);
-    }
-
-    @Override
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-        if (capability == RefinedStorageCapabilities.NETWORK_NODE_CAPABILITY) {
-            return (T) this;
-        }
-
-        return super.getCapability(capability, facing);
-    }
-
-    @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-        return capability == RefinedStorageCapabilities.NETWORK_NODE_CAPABILITY || super.hasCapability(capability, facing);
     }
 
     @Override
