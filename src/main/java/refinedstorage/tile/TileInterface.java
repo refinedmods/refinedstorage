@@ -12,6 +12,7 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
+import refinedstorage.apiimpl.autocrafting.CraftingTaskScheduler;
 import refinedstorage.container.ContainerInterface;
 import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.inventory.BasicItemValidator;
@@ -28,12 +29,15 @@ public class TileInterface extends TileNode implements ICompareConfig {
         4,
         this,
         new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED),
+        new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_CRAFTING),
         new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_STACK)
     );
 
     private int compare = 0;
 
     private int currentSlot = 0;
+
+    private CraftingTaskScheduler scheduler = new CraftingTaskScheduler();
 
     @Override
     public int getEnergyUsage() {
@@ -77,10 +81,15 @@ public class TileInterface extends TileNode implements ICompareConfig {
                     ItemStack result = network.extractItem(wanted, delta, compare);
 
                     if (result != null) {
+                        scheduler.resetSchedule();
                         if (got == null) {
                             exportItems.setStackInSlot(i, result);
                         } else {
                             exportItems.getStackInSlot(i).stackSize += result.stackSize;
+                        }
+                    } else if (RefinedStorageUtils.hasUpgrade(upgrades, ItemUpgrade.TYPE_CRAFTING)) {
+                        if (scheduler.canSchedule(compare, wanted)) {
+                            scheduler.schedule(network, compare, wanted);
                         }
                     }
                 } else if (delta < 0) {
