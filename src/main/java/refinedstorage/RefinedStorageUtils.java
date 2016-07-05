@@ -245,6 +245,7 @@ public final class RefinedStorageUtils {
     }
 
     public static void updateBlock(World world, BlockPos pos) {
+        System.out.println("Updating block @ " + pos);
         world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 1 | 2);
     }
 

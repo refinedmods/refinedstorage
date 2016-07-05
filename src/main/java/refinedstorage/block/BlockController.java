@@ -98,8 +98,6 @@ public class BlockController extends BlockBase {
             if (tag != null && tag.hasKey(TileController.NBT_ENERGY)) {
                 controller.getEnergy().receiveEnergy(tag.getInteger(TileController.NBT_ENERGY), false);
             }
-
-            controller.rebuildNodes();
         }
 
         super.onBlockPlacedBy(world, pos, state, player, stack);
@@ -108,7 +106,7 @@ public class BlockController extends BlockBase {
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
         if (!world.isRemote) {
-            ((TileController) world.getTileEntity(pos)).onBreak();
+            ((TileController) world.getTileEntity(pos)).disconnectAll();
         }
 
         super.breakBlock(world, pos, state);

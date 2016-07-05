@@ -2,6 +2,7 @@
 
 ### 0.8.6
 **Bugfixes**
+- Fixed External Storage disconnecting on world reload
 - Huge performance improvements to large networks
 
 ### 0.8.5

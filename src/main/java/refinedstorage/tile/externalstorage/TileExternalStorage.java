@@ -61,13 +61,15 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
 
     @Override
     public void update() {
-        super.update();
-
-        if (getFacingTile() instanceof IDrawerGroup && lastDrawerCount != ((IDrawerGroup) getFacingTile()).getDrawerCount()) {
+        if (ticks == 0) {
+            updateStorage();
+        } else if (getFacingTile() instanceof IDrawerGroup && lastDrawerCount != ((IDrawerGroup) getFacingTile()).getDrawerCount()) {
             lastDrawerCount = ((IDrawerGroup) getFacingTile()).getDrawerCount();
 
             updateStorage();
         }
+
+        super.update();
     }
 
     @Override

@@ -195,7 +195,11 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             if (couldRun != canRun()) {
                 couldRun = canRun();
 
-                worldObj.notifyNeighborsOfStateChange(pos, RefinedStorageBlocks.CONTROLLER);
+                if (!couldRun && !nodes.isEmpty()) {
+                    disconnectAll();
+                } else if (couldRun) {
+                    rebuildNodes();
+                }
             }
 
             if (getEnergyScaledForDisplay() != lastEnergyDisplay) {
@@ -214,10 +218,12 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         super.update();
     }
 
-    public void onBreak() {
+    public void disconnectAll() {
         for (INetworkNode node : nodes) {
             node.onDisconnected();
         }
+
+        nodes.clear();
     }
 
     @Override
@@ -376,6 +382,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public void rebuildNodes() {
+        System.out.println("Rebuilding Nodes");
         List<INetworkNode> newNodes = new ArrayList<INetworkNode>();
         Set<BlockPos> newNodesPos = new HashSet<BlockPos>();
 
