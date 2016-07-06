@@ -56,11 +56,7 @@ public class WirelessGridHandler implements IWirelessGridHandler {
             if (node instanceof IWirelessTransmitter) {
                 IWirelessTransmitter transmitter = (IWirelessTransmitter) node;
 
-                int distance = (int) Math.sqrt(
-                    Math.pow(transmitter.getOrigin().getX() - player.posX, 2) +
-                        Math.pow(transmitter.getOrigin().getY() - player.posY, 2) +
-                        Math.pow(transmitter.getOrigin().getZ() - player.posZ, 2)
-                );
+                double distance = Math.sqrt(Math.pow(transmitter.getOrigin().getX() - player.posX, 2) + Math.pow(transmitter.getOrigin().getY() - player.posY, 2) + Math.pow(transmitter.getOrigin().getZ() - player.posZ, 2));
 
                 if (distance < transmitter.getRange()) {
                     inRange = true;
