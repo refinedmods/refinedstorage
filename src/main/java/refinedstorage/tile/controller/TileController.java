@@ -398,6 +398,10 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         while ((currentPos = toCheck.poll()) != null) {
             TileEntity tile = worldObj.getTileEntity(currentPos);
 
+            if (tile instanceof TileController && !pos.equals(tile.getPos())) {
+                worldObj.createExplosion(null, tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), 4.5f, true);
+            }
+
             if (!(tile instanceof INetworkNode)) {
                 continue;
             }

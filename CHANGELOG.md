@@ -6,6 +6,9 @@
 - Fixed wireless signal starting from Controller instead of per Wireless Transmitter individually
 - Huge performance improvements to large networks
 
+**Features**
+- Re-added Controllers exploding when two of them are connected to the same network
+
 ### 0.8.5
 **Bugfixes**
 - Fixed crash when Tesla API is not installed
