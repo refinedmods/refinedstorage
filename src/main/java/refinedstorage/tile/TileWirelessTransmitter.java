@@ -3,18 +3,20 @@ package refinedstorage.tile;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.network.IWirelessTransmitter;
 import refinedstorage.container.ContainerWirelessTransmitter;
 import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.item.ItemUpgrade;
 
-public class TileWirelessTransmitter extends TileNode {
+public class TileWirelessTransmitter extends TileNode implements IWirelessTransmitter {
     private BasicItemHandler upgrades = new BasicItemHandler(4, this, new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_RANGE));
 
     @Override
@@ -42,8 +44,14 @@ public class TileWirelessTransmitter extends TileNode {
         return tag;
     }
 
+    @Override
     public int getRange() {
         return RefinedStorage.INSTANCE.wirelessTransmitterBaseRange + (RefinedStorageUtils.getUpgradeCount(upgrades, ItemUpgrade.TYPE_RANGE) * RefinedStorage.INSTANCE.wirelessTransmitterRangePerUpgrade);
+    }
+
+    @Override
+    public BlockPos getOrigin() {
+        return pos;
     }
 
     public BasicItemHandler getUpgrades() {

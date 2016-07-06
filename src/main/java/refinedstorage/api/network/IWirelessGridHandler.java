@@ -31,11 +31,6 @@ public interface IWirelessGridHandler {
     void onClose(EntityPlayer player);
 
     /**
-     * @return The range wireless grids in this network can reach
-     */
-    int getRange();
-
-    /**
      * Drains energy from the wireless grid of a player.
      *
      * @param player The player to drain energy from

@@ -8,12 +8,8 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
-import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.api.network.INetworkNode;
-import refinedstorage.api.network.IWirelessGridHandler;
-import refinedstorage.api.network.WirelessGridConsumer;
+import refinedstorage.api.network.*;
 import refinedstorage.item.ItemWirelessGrid;
-import refinedstorage.tile.TileWirelessTransmitter;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -54,9 +50,27 @@ public class WirelessGridHandler implements IWirelessGridHandler {
 
     @Override
     public boolean onOpen(EntityPlayer player, EnumHand hand) {
-        int distance = (int) Math.sqrt(Math.pow(network.getPosition().getX() - player.posX, 2) + Math.pow(network.getPosition().getY() - player.posY, 2) + Math.pow(network.getPosition().getZ() - player.posZ, 2));
+        boolean inRange = false;
 
-        if (distance > getRange()) {
+        for (INetworkNode node : network.getNodes()) {
+            if (node instanceof IWirelessTransmitter) {
+                IWirelessTransmitter transmitter = (IWirelessTransmitter) node;
+
+                int distance = (int) Math.sqrt(
+                    Math.pow(transmitter.getOrigin().getX() - player.posX, 2) +
+                        Math.pow(transmitter.getOrigin().getY() - player.posY, 2) +
+                        Math.pow(transmitter.getOrigin().getZ() - player.posZ, 2)
+                );
+
+                if (distance < transmitter.getRange()) {
+                    inRange = true;
+
+                    break;
+                }
+            }
+        }
+
+        if (!inRange) {
             return false;
         }
 
@@ -78,19 +92,6 @@ public class WirelessGridHandler implements IWirelessGridHandler {
         if (consumer != null) {
             consumersToRemove.add(consumer);
         }
-    }
-
-    @Override
-    public int getRange() {
-        int range = 0;
-
-        for (INetworkNode node : network.getNodes()) {
-            if (node instanceof TileWirelessTransmitter) {
-                range += ((TileWirelessTransmitter) node).getRange();
-            }
-        }
-
-        return range;
     }
 
     @Override

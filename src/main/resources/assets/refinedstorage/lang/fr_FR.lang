@@ -44,7 +44,7 @@ misc.refinedstorage:storage.full=%d%% plein
 misc.refinedstorage:wireless_grid.tooltip.0=X: %d
 misc.refinedstorage:wireless_grid.tooltip.1=Y: %d
 misc.refinedstorage:wireless_grid.tooltip.2=Z: %d
-misc.refinedstorage:wireless_grid.out_of_range=Contrôleur hors de portés.
+misc.refinedstorage:wireless_grid.out_of_range=Il n'y a pas un Émetteur sans Fil dans la gamme.
 misc.refinedstorage:wireless_grid.not_found=Contrôleur non trouvé.
 
 misc.refinedstorage:pattern.inputs=Inputs
