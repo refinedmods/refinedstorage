@@ -35,13 +35,9 @@ public interface INetworkNode {
 
     /**
      * Called when this node is disconnected from a network.
+     *
      */
     void onDisconnected();
-
-    /**
-     * @return Whether the block is removed from the world
-     */
-    boolean isRemoved();
 
     /**
      * Called when the connection state of this node changes.

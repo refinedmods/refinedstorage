@@ -191,6 +191,10 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
                 storages.add(new ItemHandlerStorage(this, handler));
             }
         }
+
+        if (network != null) {
+            network.getStorage().rebuild();
+        }
     }
 
     @Override

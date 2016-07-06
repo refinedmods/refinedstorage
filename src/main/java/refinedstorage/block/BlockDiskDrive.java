@@ -30,4 +30,11 @@ public class BlockDiskDrive extends BlockNode {
 
         return true;
     }
+
+    @Override
+    public void breakBlock(World world, BlockPos pos, IBlockState state) {
+        ((TileDiskDrive) world.getTileEntity(pos)).onBreak();
+
+        super.breakBlock(world, pos, state);
+    }
 }

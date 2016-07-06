@@ -84,10 +84,7 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
         }
     }
 
-    @Override
-    public void onDisconnected() {
-        super.onDisconnected();
-
+    public void onBreak() {
         if (storage != null) {
             storage.writeToNBT();
         }

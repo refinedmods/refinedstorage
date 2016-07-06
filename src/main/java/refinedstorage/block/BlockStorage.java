@@ -82,6 +82,13 @@ public class BlockStorage extends BlockNode {
     }
 
     @Override
+    public void breakBlock(World world, BlockPos pos, IBlockState state) {
+        ((TileStorage) world.getTileEntity(pos)).onBreak();
+
+        super.breakBlock(world, pos, state);
+    }
+
+    @Override
     public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         TileStorage storage = (TileStorage) world.getTileEntity(pos);
 

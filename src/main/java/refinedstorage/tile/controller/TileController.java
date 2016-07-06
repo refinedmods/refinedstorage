@@ -219,7 +219,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     public void disconnectAll() {
         for (INetworkNode node : nodes) {
-            node.onDisconnected();
+            if (node.isConnected()) {
+                node.onDisconnected();
+            }
         }
 
         nodes.clear();
@@ -407,10 +409,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             }
 
             INetworkNode node = (INetworkNode) tile;
-
-            if (node.isRemoved()) {
-                continue;
-            }
 
             newNodes.add(node);
             newNodesPos.add(node.getPosition());
