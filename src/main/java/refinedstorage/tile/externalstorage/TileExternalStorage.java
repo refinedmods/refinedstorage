@@ -56,6 +56,8 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
     public void onConnectionChange(INetworkMaster network, boolean state) {
         super.onConnectionChange(network, state);
 
+        updateStorage(network);
+
         network.getStorage().rebuild();
     }
 
@@ -175,8 +177,6 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
     }
 
     public void updateStorage(INetworkMaster network) {
-        System.out.println("Updating storages");
-
         storages.clear();
 
         TileEntity facing = getFacingTile();
