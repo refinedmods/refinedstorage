@@ -194,11 +194,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             if (couldRun != canRun()) {
                 couldRun = canRun();
 
-                if (!couldRun && !nodes.isEmpty()) {
-                    disconnectAll();
-                } else if (couldRun) {
-                    rebuildNodes();
-                }
+                rebuildNodes();
             }
 
             if (getEnergyScaledForDisplay() != lastEnergyDisplay) {
@@ -225,6 +221,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         }
 
         nodes.clear();
+        nodesPos.clear();
     }
 
     @Override
@@ -383,6 +380,14 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public void rebuildNodes() {
+        if (!canRun()) {
+            if (!nodes.isEmpty()) {
+                disconnectAll();
+            }
+
+            return;
+        }
+
         List<INetworkNode> newNodes = new ArrayList<INetworkNode>();
         Set<BlockPos> newNodesPos = new HashSet<BlockPos>();
 
@@ -424,20 +429,23 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             }
         }
 
-        for (INetworkNode newNode : newNodes) {
-            if (!nodesPos.contains(newNode.getPosition())) {
+        List<INetworkNode> oldNodes = new ArrayList<INetworkNode>(nodes);
+        Set<BlockPos> oldNodesPos = new HashSet<BlockPos>(nodesPos);
+
+        this.nodes = newNodes;
+        this.nodesPos = newNodesPos;
+
+        for (INetworkNode newNode : nodes) {
+            if (!oldNodesPos.contains(newNode.getPosition())) {
                 newNode.onConnected(this);
             }
         }
 
-        for (INetworkNode oldNode : nodes) {
-            if (!newNodesPos.contains(oldNode.getPosition())) {
+        for (INetworkNode oldNode : oldNodes) {
+            if (!nodesPos.contains(oldNode.getPosition())) {
                 oldNode.onDisconnected();
             }
         }
-
-        this.nodes = newNodes;
-        this.nodesPos = newNodesPos;
     }
 
     @Override
@@ -667,6 +675,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public void setRedstoneMode(RedstoneMode mode) {
         this.redstoneMode = mode;
+
+        markDirty();
     }
 
     @Override

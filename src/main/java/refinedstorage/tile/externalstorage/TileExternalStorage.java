@@ -42,6 +42,7 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
 
     private List<ExternalStorage> storages = new ArrayList<ExternalStorage>();
     private int lastDrawerCount;
+    private boolean updatedOnce;
 
     @Override
     public int getEnergyUsage() {
@@ -57,16 +58,22 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
         super.onConnectionChange(network, state);
 
         network.getStorage().rebuild();
+
+        updatedOnce = false;
     }
 
     @Override
     public void update() {
-        if (ticks == 0) {
-            updateStorage();
-        } else if (getFacingTile() instanceof IDrawerGroup && lastDrawerCount != ((IDrawerGroup) getFacingTile()).getDrawerCount()) {
-            lastDrawerCount = ((IDrawerGroup) getFacingTile()).getDrawerCount();
+        if (isConnected()) {
+            if (!updatedOnce) {
+                updateStorage();
 
-            updateStorage();
+                updatedOnce = true;
+            } else if (getFacingTile() instanceof IDrawerGroup && lastDrawerCount != ((IDrawerGroup) getFacingTile()).getDrawerCount()) {
+                lastDrawerCount = ((IDrawerGroup) getFacingTile()).getDrawerCount();
+
+                updateStorage();
+            }
         }
 
         super.update();
@@ -192,9 +199,7 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
             }
         }
 
-        if (network != null) {
-            network.getStorage().rebuild();
-        }
+        network.getStorage().rebuild();
     }
 
     @Override
