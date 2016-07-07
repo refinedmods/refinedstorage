@@ -36,8 +36,12 @@ public class BlockExternalStorage extends BlockNode {
     public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
         super.neighborChanged(state, world, pos, block);
 
-        if (!world.isRemote && ((TileExternalStorage) world.getTileEntity(pos)).isConnected()) {
-            ((TileExternalStorage) world.getTileEntity(pos)).updateStorage();
+        if (!world.isRemote) {
+            TileExternalStorage externalStorage = (TileExternalStorage) world.getTileEntity(pos);
+
+            if (externalStorage.getNetwork() != null) {
+                externalStorage.updateStorage(externalStorage.getNetwork());
+            }
         }
     }
 

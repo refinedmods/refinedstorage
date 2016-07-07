@@ -327,4 +327,16 @@ public final class RefinedStorageUtils {
     public static boolean hasPattern(INetworkMaster network, ItemStack stack) {
         return RefinedStorageUtils.getPattern(network, stack) != null;
     }
+
+    public static int getItemStackHashCode(ItemStack stack) {
+        return getItemStackHashCode(stack, stack == null ? 0 : stack.stackSize);
+    }
+
+    public static int getItemStackHashCode(ItemStack stack, int stackSize) {
+        if (stack == null) {
+            return 0;
+        }
+
+        return stack.getItem().hashCode() + Math.max(1, stackSize) * (stack.hasTagCompound() ? stack.getTagCompound().hashCode() : 1);
+    }
 }

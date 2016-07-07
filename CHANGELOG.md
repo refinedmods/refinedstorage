@@ -3,8 +3,9 @@
 ### 0.8.6
 **Bugfixes**
 - Fixed External Storage disconnecting on world reload
+- Fixed External Storage not updating correctly
 - Fixed wireless signal starting from Controller instead of per Wireless Transmitter individually
-- Huge performance improvements to large networks
+- Huge performance improvements to large storage networks
 
 **Features**
 - Re-added Controllers exploding when two of them are connected to the same network

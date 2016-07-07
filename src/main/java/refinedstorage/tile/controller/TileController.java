@@ -50,6 +50,7 @@ import refinedstorage.tile.TileBase;
 import refinedstorage.tile.TileCrafter;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
+import refinedstorage.tile.externalstorage.ExternalStorage;
 
 import java.util.*;
 
@@ -488,6 +489,10 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         for (IStorage storage : this.storage.getStorages()) {
             remainder = storage.insertItem(remainder, size, simulate);
 
+            if (storage instanceof ExternalStorage && !simulate) {
+                ((ExternalStorage) storage).setHash();
+            }
+
             if (remainder == null) {
                 break;
             } else {
@@ -523,6 +528,10 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
         for (IStorage storage : this.storage.getStorages()) {
             ItemStack took = storage.extractItem(stack, requested - received, flags);
+
+            if (storage instanceof ExternalStorage) {
+                ((ExternalStorage) storage).setHash();
+            }
 
             if (took != null) {
                 if (newStack == null) {

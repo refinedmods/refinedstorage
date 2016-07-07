@@ -16,11 +16,26 @@ public class ItemHandlerStorage extends ExternalStorage {
     public ItemHandlerStorage(TileExternalStorage externalStorage, IItemHandler handler) {
         this.externalStorage = externalStorage;
         this.handler = handler;
+
+        setHash();
     }
 
     @Override
     public int getCapacity() {
         return handler.getSlots() * 64;
+    }
+
+    @Override
+    public int getHash() {
+        int code = 0;
+
+        for (int i = 0; i < handler.getSlots(); ++i) {
+            if (handler.getStackInSlot(i) != null && handler.getStackInSlot(i).getItem() != null) {
+                code += RefinedStorageUtils.getItemStackHashCode(handler.getStackInSlot(i));
+            }
+        }
+
+        return code;
     }
 
     @Override
