@@ -12,11 +12,6 @@ public interface INetworkNode {
     void updateNode();
 
     /**
-     * @return If this node can send a connectivity update
-     */
-    boolean canSendConnectivityUpdate();
-
-    /**
      * @return The energy usage of this node
      */
     int getEnergyUsage();

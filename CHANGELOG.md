@@ -11,6 +11,7 @@
 **Features**
 - Re-added Controllers exploding when two of them are connected to the same network
 - Limited some blocks to only have a direction on the x-axis
+- Decreased amount of block updates significantly
 
 ### 0.8.5
 **Bugfixes**

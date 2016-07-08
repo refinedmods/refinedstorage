@@ -70,4 +70,8 @@ public class BlockGrid extends BlockNode {
     public Item createItem() {
         return new ItemBlockBase(this, true);
     }
+
+    public boolean canRetrieveConnectivityUpdate() {
+        return true;
+    }
 }

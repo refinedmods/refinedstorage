@@ -25,9 +25,19 @@ public abstract class BlockNode extends BlockBase {
         return true;
     }
 
+    public boolean canRetrieveConnectivityUpdate() {
+        return false;
+    }
+
     @Override
     protected BlockStateContainer.Builder createBlockStateBuilder() {
-        return super.createBlockStateBuilder().add(CONNECTED);
+        BlockStateContainer.Builder builder = super.createBlockStateBuilder();
+
+        if (canRetrieveConnectivityUpdate()) {
+            builder.add(CONNECTED);
+        }
+
+        return builder;
     }
 
     @Override
@@ -37,8 +47,11 @@ public abstract class BlockNode extends BlockBase {
 
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
-        return super.getActualState(state, world, pos)
-            .withProperty(CONNECTED, ((TileNode) world.getTileEntity(pos)).isConnected());
+        if (canRetrieveConnectivityUpdate()) {
+            return super.getActualState(state, world, pos).withProperty(CONNECTED, ((TileNode) world.getTileEntity(pos)).isConnected());
+        }
+
+        return super.getActualState(state, world, pos);
     }
 
     @Override

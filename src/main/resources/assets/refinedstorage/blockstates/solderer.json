@@ -15,12 +15,6 @@
         "transform": "forge:default-block"
       }
     ],
-    "connected": {
-      "true": {
-      },
-      "false": {
-      }
-    },
     "working": {
       "true": {
         "textures": {

@@ -15,12 +15,6 @@
         "y": 0
       }
     ],
-    "connected": {
-      "true": {
-      },
-      "false": {
-      }
-    },
     "direction": {
       "north": {
         "y": 0

@@ -35,4 +35,8 @@ public class BlockCrafter extends BlockNode {
     public EnumDirectionType getDirectionType() {
         return EnumDirectionType.ANY;
     }
+
+    public boolean canRetrieveConnectivityUpdate() {
+        return true;
+    }
 }

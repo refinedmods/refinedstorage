@@ -12,11 +12,8 @@
         "transform": "forge:default-block"
       }
     ],
-    "connected": {
-      "true": {
-      },
-      "false": {
-      }
+    "normal": {
+      "model": "cube_all"
     }
   }
 }

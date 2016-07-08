@@ -15,12 +15,6 @@
         "transform": "forge:default-block"
       }
     ],
-    "connected": {
-      "true": {
-      },
-      "false": {
-      }
-    },
     "direction": {
       "north": {
         "y": 0

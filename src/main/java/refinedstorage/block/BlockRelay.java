@@ -35,4 +35,8 @@ public class BlockRelay extends BlockNode {
     public EnumDirectionType getDirectionType() {
         return null;
     }
+
+    public boolean canRetrieveConnectivityUpdate() {
+        return true;
+    }
 }

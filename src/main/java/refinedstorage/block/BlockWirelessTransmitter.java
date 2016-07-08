@@ -30,4 +30,8 @@ public class BlockWirelessTransmitter extends BlockNode {
 
         return true;
     }
+
+    public boolean canRetrieveConnectivityUpdate() {
+        return true;
+    }
 }

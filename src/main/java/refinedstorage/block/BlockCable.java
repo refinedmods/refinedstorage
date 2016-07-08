@@ -35,7 +35,7 @@ public class BlockCable extends BlockNode {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer.Builder(this)
+        return createBlockStateBuilder()
             .add(NORTH)
             .add(EAST)
             .add(SOUTH)
@@ -47,7 +47,8 @@ public class BlockCable extends BlockNode {
 
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
-        return state.withProperty(NORTH, hasConnectionWith(world, pos.north()))
+        return super.getActualState(state, world, pos)
+            .withProperty(NORTH, hasConnectionWith(world, pos.north()))
             .withProperty(EAST, hasConnectionWith(world, pos.east()))
             .withProperty(SOUTH, hasConnectionWith(world, pos.south()))
             .withProperty(WEST, hasConnectionWith(world, pos.west()))

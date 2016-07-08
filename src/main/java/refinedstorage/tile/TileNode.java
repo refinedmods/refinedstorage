@@ -1,11 +1,13 @@
 package refinedstorage.tile;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.INetworkNode;
+import refinedstorage.block.BlockNode;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
 
@@ -28,9 +30,10 @@ public abstract class TileNode extends TileBase implements INetworkNode, ISynchr
         return isConnected() && canUpdate();
     }
 
-    @Override
-    public boolean canSendConnectivityUpdate() {
-        return true;
+    private boolean canRetrieveConnectivityUpdate() {
+        Block block = getBlockType();
+
+        return block instanceof BlockNode ? ((BlockNode) block).canRetrieveConnectivityUpdate() : false;
     }
 
     @Override
@@ -42,7 +45,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, ISynchr
                 onConnectionChange(network, update);
             }
 
-            if (active != isActive() && canSendConnectivityUpdate()) {
+            if (active != isActive() && canRetrieveConnectivityUpdate()) {
                 RefinedStorageUtils.updateBlock(worldObj, pos);
 
                 active = isActive();
@@ -144,7 +147,9 @@ public abstract class TileNode extends TileBase implements INetworkNode, ISynchr
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {
         super.writeUpdate(tag);
 
-        tag.setBoolean(NBT_CONNECTED, isActive());
+        if (canRetrieveConnectivityUpdate()) {
+            tag.setBoolean(NBT_CONNECTED, isActive());
+        }
 
         return tag;
     }
@@ -152,6 +157,8 @@ public abstract class TileNode extends TileBase implements INetworkNode, ISynchr
     public void readUpdate(NBTTagCompound tag) {
         super.readUpdate(tag);
 
-        connected = tag.getBoolean(NBT_CONNECTED);
+        if (canRetrieveConnectivityUpdate()) {
+            connected = tag.getBoolean(NBT_CONNECTED);
+        }
     }
 }

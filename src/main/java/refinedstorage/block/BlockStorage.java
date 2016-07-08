@@ -29,6 +29,8 @@ public class BlockStorage extends BlockNode {
 
     public BlockStorage() {
         super("storage");
+
+        setHardness(2.8F);
     }
 
     @Override
