@@ -155,10 +155,10 @@ public abstract class TileNode extends TileBase implements INetworkNode, ISynchr
     }
 
     public void readUpdate(NBTTagCompound tag) {
-        super.readUpdate(tag);
-
         if (canSendConnectivityUpdate()) {
             connected = tag.getBoolean(NBT_CONNECTED);
         }
+
+        super.readUpdate(tag);
     }
 }

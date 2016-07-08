@@ -139,22 +139,6 @@ public class TileSolderer extends TileNode {
     }
 
     @Override
-    public NBTTagCompound writeUpdate(NBTTagCompound tag) {
-        super.writeUpdate(tag);
-
-        tag.setBoolean(NBT_WORKING, working);
-
-        return tag;
-    }
-
-    @Override
-    public void readUpdate(NBTTagCompound tag) {
-        working = tag.getBoolean(NBT_WORKING);
-
-        super.readUpdate(tag);
-    }
-
-    @Override
     public void readContainerData(ByteBuf buf) {
         super.readContainerData(buf);
 

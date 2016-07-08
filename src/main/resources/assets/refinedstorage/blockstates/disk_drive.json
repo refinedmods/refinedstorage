@@ -5,7 +5,7 @@
     "textures": {
       "side": "refinedstorage:blocks/side",
       "top": "refinedstorage:blocks/side",
-      "front": "refinedstorage:blocks/disk_drive"
+      "front": "refinedstorage:blocks/disk_drive_0"
     }
   },
   "variants": {
@@ -15,6 +15,48 @@
         "y": 0
       }
     ],
+    "stored": {
+      "0": {
+        "textures": {
+          "front": "refinedstorage:blocks/disk_drive_0"
+        }
+      },
+      "1": {
+        "textures": {
+          "front": "refinedstorage:blocks/disk_drive_1"
+        }
+      },
+      "2": {
+        "textures": {
+          "front": "refinedstorage:blocks/disk_drive_2"
+        }
+      },
+      "3": {
+        "textures": {
+          "front": "refinedstorage:blocks/disk_drive_3"
+        }
+      },
+      "4": {
+        "textures": {
+          "front": "refinedstorage:blocks/disk_drive_4"
+        }
+      },
+      "5": {
+        "textures": {
+          "front": "refinedstorage:blocks/disk_drive_5"
+        }
+      },
+      "6": {
+        "textures": {
+          "front": "refinedstorage:blocks/disk_drive_6"
+        }
+      },
+      "7": {
+        "textures": {
+          "front": "refinedstorage:blocks/disk_drive_7"
+        }
+      }
+    },
     "direction": {
       "north": {
         "y": 0

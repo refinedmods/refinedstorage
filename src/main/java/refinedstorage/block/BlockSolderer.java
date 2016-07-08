@@ -1,7 +1,5 @@
 package refinedstorage.block;
 
-import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -16,8 +14,6 @@ import refinedstorage.RefinedStorageGui;
 import refinedstorage.tile.TileSolderer;
 
 public class BlockSolderer extends BlockNode {
-    public static final PropertyBool WORKING = PropertyBool.create("working");
-
     public BlockSolderer() {
         super("solderer");
     }
@@ -37,15 +33,12 @@ public class BlockSolderer extends BlockNode {
     }
 
     @Override
-    protected BlockStateContainer createBlockState() {
-        return createBlockStateBuilder()
-            .add(WORKING)
-            .build();
+    public boolean isBlockSolid(IBlockAccess worldIn, BlockPos pos, EnumFacing side) {
+        return false;
     }
 
     @Override
-    public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
-        return super.getActualState(state, world, pos)
-            .withProperty(WORKING, ((TileSolderer) world.getTileEntity(pos)).isWorking());
+    public EnumPlacementType getPlacementType() {
+        return null;
     }
 }
