@@ -32,7 +32,7 @@ public class BlockRelay extends BlockNode {
     }
 
     @Override
-    public EnumPlacementType getDirectionType() {
+    public EnumPlacementType getPlacementType() {
         return null;
     }
 

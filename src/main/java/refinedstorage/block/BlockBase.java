@@ -44,7 +44,7 @@ public abstract class BlockBase extends Block {
     protected BlockStateContainer.Builder createBlockStateBuilder() {
         BlockStateContainer.Builder builder = new BlockStateContainer.Builder(this);
 
-        if (getDirectionType() != null) {
+        if (getPlacementType() != null) {
             builder.add(DIRECTION);
         }
 
@@ -72,7 +72,7 @@ public abstract class BlockBase extends Block {
 
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
-        if (getDirectionType() != null) {
+        if (getPlacementType() != null) {
             return state.withProperty(DIRECTION, ((TileBase) world.getTileEntity(pos)).getDirection());
         }
 
@@ -86,10 +86,10 @@ public abstract class BlockBase extends Block {
 
     @Override
     public boolean rotateBlock(World world, BlockPos pos, EnumFacing axis) {
-        if (!world.isRemote && getDirectionType() != null) {
+        if (!world.isRemote && getPlacementType() != null) {
             TileBase tile = (TileBase) world.getTileEntity(pos);
 
-            tile.setDirection(getDirectionType().getNext(tile.getDirection()));
+            tile.setDirection(getPlacementType().getNext(tile.getDirection()));
 
             RefinedStorageUtils.updateBlock(world, pos);
 
@@ -103,12 +103,12 @@ public abstract class BlockBase extends Block {
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack stack) {
         super.onBlockPlacedBy(world, pos, state, player, stack);
 
-        if (getDirectionType() != null) {
+        if (getPlacementType() != null) {
             TileBase tile = (TileBase) world.getTileEntity(pos);
 
-            EnumFacing facing = getDirectionType().getFrom(pos, player);
+            EnumFacing facing = getPlacementType().getFrom(pos, player);
 
-            if (player.isSneaking() && getDirectionType() == EnumPlacementType.ANY) {
+            if (player.isSneaking() && getPlacementType() == EnumPlacementType.ANY) {
                 facing = facing.getOpposite();
             }
 
@@ -145,7 +145,7 @@ public abstract class BlockBase extends Block {
         world.setBlockToAir(pos);
     }
 
-    public EnumPlacementType getDirectionType() {
+    public EnumPlacementType getPlacementType() {
         return EnumPlacementType.HORIZONTAL;
     }
 }

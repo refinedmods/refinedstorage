@@ -71,7 +71,7 @@ public class BlockDetector extends BlockNode {
     }
 
     @Override
-    public EnumPlacementType getDirectionType() {
+    public EnumPlacementType getPlacementType() {
         return EnumPlacementType.ANY;
     }
 }

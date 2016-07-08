@@ -108,7 +108,7 @@ public class BlockStorage extends BlockNode {
     }
 
     @Override
-    public EnumPlacementType getDirectionType() {
+    public EnumPlacementType getPlacementType() {
         return null;
     }
 }

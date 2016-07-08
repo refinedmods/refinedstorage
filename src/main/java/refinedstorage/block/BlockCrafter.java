@@ -32,7 +32,7 @@ public class BlockCrafter extends BlockNode {
     }
 
     @Override
-    public EnumPlacementType getDirectionType() {
+    public EnumPlacementType getPlacementType() {
         return EnumPlacementType.ANY;
     }
 

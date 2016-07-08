@@ -76,7 +76,7 @@ public class BlockCable extends BlockNode {
     }
 
     @Override
-    public EnumPlacementType getDirectionType() {
+    public EnumPlacementType getPlacementType() {
         return null;
     }
 }
