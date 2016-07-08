@@ -10,6 +10,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.INetworkNode;
+import refinedstorage.tile.TileBase;
 import refinedstorage.tile.TileCable;
 
 public class BlockCable extends BlockNode {
@@ -51,18 +52,26 @@ public class BlockCable extends BlockNode {
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
         return super.getActualState(state, world, pos)
-            .withProperty(NORTH, hasConnectionWith(world, pos.north()))
-            .withProperty(EAST, hasConnectionWith(world, pos.east()))
-            .withProperty(SOUTH, hasConnectionWith(world, pos.south()))
-            .withProperty(WEST, hasConnectionWith(world, pos.west()))
-            .withProperty(UP, hasConnectionWith(world, pos.up()))
-            .withProperty(DOWN, hasConnectionWith(world, pos.down()));
+            .withProperty(NORTH, hasConnectionWith(world, pos, pos.north()))
+            .withProperty(EAST, hasConnectionWith(world, pos, pos.east()))
+            .withProperty(SOUTH, hasConnectionWith(world, pos, pos.south()))
+            .withProperty(WEST, hasConnectionWith(world, pos, pos.west()))
+            .withProperty(UP, hasConnectionWith(world, pos, pos.up()))
+            .withProperty(DOWN, hasConnectionWith(world, pos, pos.down()));
     }
 
-    public static boolean hasConnectionWith(IBlockAccess world, BlockPos pos) {
+    private boolean hasConnectionWith(IBlockAccess world, BlockPos basePos, BlockPos pos) {
         TileEntity tile = world.getTileEntity(pos);
 
-        return tile instanceof INetworkMaster || tile instanceof INetworkNode;
+        if (tile instanceof INetworkMaster || tile instanceof INetworkNode) {
+            if (getPlacementType() != null) {
+                return ((TileBase) world.getTileEntity(basePos)).getFacingTile() != tile;
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     @Override
