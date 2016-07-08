@@ -35,4 +35,9 @@ public class BlockProcessingPatternEncoder extends BlockBase {
 
         return true;
     }
+
+    @Override
+    public EnumPlacementType getPlacementType() {
+        return null;
+    }
 }

@@ -74,4 +74,9 @@ public class BlockGrid extends BlockNode {
     public boolean hasConnectivityState() {
         return true;
     }
+
+    @Override
+    public EnumPlacementType getPlacementType() {
+        return EnumPlacementType.ANY;
+    }
 }
