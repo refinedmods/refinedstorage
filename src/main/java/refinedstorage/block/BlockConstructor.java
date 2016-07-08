@@ -32,7 +32,7 @@ public class BlockConstructor extends BlockNode {
     }
 
     @Override
-    public EnumDirectionType getDirectionType() {
-        return EnumDirectionType.ANY;
+    public EnumPlacementType getDirectionType() {
+        return EnumPlacementType.ANY;
     }
 }

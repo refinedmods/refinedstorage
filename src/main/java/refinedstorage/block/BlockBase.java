@@ -108,7 +108,7 @@ public abstract class BlockBase extends Block {
 
             EnumFacing facing = getDirectionType().getFrom(pos, player);
 
-            if (player.isSneaking() && getDirectionType() == EnumDirectionType.ANY) {
+            if (player.isSneaking() && getDirectionType() == EnumPlacementType.ANY) {
                 facing = facing.getOpposite();
             }
 
@@ -145,7 +145,7 @@ public abstract class BlockBase extends Block {
         world.setBlockToAir(pos);
     }
 
-    public EnumDirectionType getDirectionType() {
-        return EnumDirectionType.HORIZONTAL;
+    public EnumPlacementType getDirectionType() {
+        return EnumPlacementType.HORIZONTAL;
     }
 }

@@ -30,10 +30,10 @@ public abstract class TileNode extends TileBase implements INetworkNode, ISynchr
         return isConnected() && canUpdate();
     }
 
-    private boolean canRetrieveConnectivityUpdate() {
+    private boolean canSendConnectivityUpdate() {
         Block block = getBlockType();
 
-        return block instanceof BlockNode ? ((BlockNode) block).canRetrieveConnectivityUpdate() : false;
+        return block instanceof BlockNode ? ((BlockNode) block).hasConnectivityState() : false;
     }
 
     @Override
@@ -45,7 +45,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, ISynchr
                 onConnectionChange(network, update);
             }
 
-            if (active != isActive() && canRetrieveConnectivityUpdate()) {
+            if (active != isActive() && canSendConnectivityUpdate()) {
                 RefinedStorageUtils.updateBlock(worldObj, pos);
 
                 active = isActive();
@@ -147,7 +147,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, ISynchr
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {
         super.writeUpdate(tag);
 
-        if (canRetrieveConnectivityUpdate()) {
+        if (canSendConnectivityUpdate()) {
             tag.setBoolean(NBT_CONNECTED, isActive());
         }
 
@@ -157,7 +157,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, ISynchr
     public void readUpdate(NBTTagCompound tag) {
         super.readUpdate(tag);
 
-        if (canRetrieveConnectivityUpdate()) {
+        if (canSendConnectivityUpdate()) {
             connected = tag.getBoolean(NBT_CONNECTED);
         }
     }

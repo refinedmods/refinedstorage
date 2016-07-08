@@ -30,7 +30,7 @@ public class BlockStorage extends BlockNode {
     public BlockStorage() {
         super("storage");
 
-        setHardness(2.8F);
+        setHardness(5.8F);
     }
 
     @Override
@@ -108,7 +108,7 @@ public class BlockStorage extends BlockNode {
     }
 
     @Override
-    public EnumDirectionType getDirectionType() {
+    public EnumPlacementType getDirectionType() {
         return null;
     }
 }

@@ -6,7 +6,7 @@ public class BlockMachineCasing extends BlockBase {
     }
 
     @Override
-    public EnumDirectionType getDirectionType() {
+    public EnumPlacementType getDirectionType() {
         return null;
     }
 }

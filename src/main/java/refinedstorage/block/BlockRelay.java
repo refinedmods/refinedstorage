@@ -32,11 +32,11 @@ public class BlockRelay extends BlockNode {
     }
 
     @Override
-    public EnumDirectionType getDirectionType() {
+    public EnumPlacementType getDirectionType() {
         return null;
     }
 
-    public boolean canRetrieveConnectivityUpdate() {
+    public boolean hasConnectivityState() {
         return true;
     }
 }

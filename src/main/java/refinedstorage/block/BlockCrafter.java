@@ -32,11 +32,11 @@ public class BlockCrafter extends BlockNode {
     }
 
     @Override
-    public EnumDirectionType getDirectionType() {
-        return EnumDirectionType.ANY;
+    public EnumPlacementType getDirectionType() {
+        return EnumPlacementType.ANY;
     }
 
-    public boolean canRetrieveConnectivityUpdate() {
+    public boolean hasConnectivityState() {
         return true;
     }
 }

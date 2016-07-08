@@ -71,7 +71,7 @@ public class BlockGrid extends BlockNode {
         return new ItemBlockBase(this, true);
     }
 
-    public boolean canRetrieveConnectivityUpdate() {
+    public boolean hasConnectivityState() {
         return true;
     }
 }

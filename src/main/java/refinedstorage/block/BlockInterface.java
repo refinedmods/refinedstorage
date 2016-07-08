@@ -32,7 +32,7 @@ public class BlockInterface extends BlockNode {
     }
 
     @Override
-    public EnumDirectionType getDirectionType() {
+    public EnumPlacementType getDirectionType() {
         return null;
     }
 }
