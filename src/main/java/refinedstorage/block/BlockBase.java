@@ -1,9 +1,7 @@
 package refinedstorage.block;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -43,11 +41,19 @@ public abstract class BlockBase extends Block {
         return "block." + RefinedStorage.ID + ":" + name;
     }
 
+    protected BlockStateContainer.Builder createBlockStateBuilder() {
+        BlockStateContainer.Builder builder = new BlockStateContainer.Builder(this);
+
+        if (getDirectionType() != null) {
+            builder.add(DIRECTION);
+        }
+
+        return builder;
+    }
+
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[]{
-            DIRECTION,
-        });
+        return createBlockStateBuilder().build();
     }
 
     @Override
@@ -62,10 +68,12 @@ public abstract class BlockBase extends Block {
 
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
-        TileEntity tile = world.getTileEntity(pos);
+        if (getDirectionType() != null) {
+            TileEntity tile = world.getTileEntity(pos);
 
-        if (tile instanceof TileBase) {
-            return state.withProperty(DIRECTION, ((TileBase) tile).getDirection());
+            if (tile instanceof TileBase) {
+                return state.withProperty(DIRECTION, ((TileBase) tile).getDirection());
+            }
         }
 
         return state;
@@ -78,41 +86,37 @@ public abstract class BlockBase extends Block {
 
     @Override
     public boolean rotateBlock(World world, BlockPos pos, EnumFacing axis) {
-        TileEntity tile = world.getTileEntity(pos);
+        if (!world.isRemote && getDirectionType() != null) {
+            TileEntity tile = world.getTileEntity(pos);
 
-        if (!world.isRemote && tile instanceof TileBase) {
-            EnumFacing dir = ((TileBase) tile).getDirection();
+            if (tile instanceof TileBase) {
+                ((TileBase) tile).setDirection(getDirectionType().getNext(((TileBase) tile).getDirection()));
 
-            int newDir = dir.ordinal() + 1;
+                RefinedStorageUtils.updateBlock(world, pos);
 
-            if (newDir > EnumFacing.VALUES.length - 1) {
-                newDir = 0;
+                return true;
             }
-
-            ((TileBase) tile).setDirection(EnumFacing.getFront(newDir));
-
-            RefinedStorageUtils.updateBlock(world, pos);
-
-            return true;
         }
 
         return false;
     }
 
     @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack itemStack) {
-        super.onBlockPlacedBy(world, pos, state, player, itemStack);
+    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack stack) {
+        super.onBlockPlacedBy(world, pos, state, player, stack);
 
-        TileEntity tile = world.getTileEntity(pos);
+        if (getDirectionType() != null) {
+            TileEntity tile = world.getTileEntity(pos);
 
-        if (tile instanceof TileBase) {
-            EnumFacing facing = BlockPistonBase.getFacingFromEntity(pos, player);
+            if (tile instanceof TileBase) {
+                EnumFacing facing = getDirectionType().getFrom(pos, player);
 
-            if (player.isSneaking() && hasOppositeFacingOnSneakPlace()) {
-                facing = facing.getOpposite();
+                if (player.isSneaking() && canBePlacedOpposite()) {
+                    facing = facing.getOpposite();
+                }
+
+                ((TileBase) tile).setDirection(facing);
             }
-
-            ((TileBase) tile).setDirection(facing);
         }
     }
 
@@ -135,11 +139,7 @@ public abstract class BlockBase extends Block {
 
     @Override
     public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
-        if (willHarvest) {
-            return true;
-        }
-
-        return super.removedByPlayer(state, world, pos, player, willHarvest);
+        return willHarvest ? true : super.removedByPlayer(state, world, pos, player, willHarvest);
     }
 
     @Override
@@ -153,7 +153,11 @@ public abstract class BlockBase extends Block {
         return new ItemBlockBase(this, false);
     }
 
-    public boolean hasOppositeFacingOnSneakPlace() {
+    public boolean canBePlacedOpposite() {
         return false;
+    }
+
+    public EnumDirectionType getDirectionType() {
+        return EnumDirectionType.HORIZONTAL;
     }
 }

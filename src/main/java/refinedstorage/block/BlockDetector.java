@@ -1,6 +1,5 @@
 package refinedstorage.block;
 
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -25,11 +24,9 @@ public class BlockDetector extends BlockNode {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[]{
-            DIRECTION,
-            CONNECTED,
-            POWERED
-        });
+        return createBlockStateBuilder()
+            .add(POWERED)
+            .build();
     }
 
     @Override
@@ -71,5 +68,10 @@ public class BlockDetector extends BlockNode {
         }
 
         return true;
+    }
+
+    @Override
+    public EnumDirectionType getDirectionType() {
+        return EnumDirectionType.ANY;
     }
 }

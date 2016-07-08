@@ -12,20 +12,6 @@
         "transform": "forge:default-block"
       }
     ],
-    "direction": {
-      "north": {
-      },
-      "east": {
-      },
-      "south": {
-      },
-      "west": {
-      },
-      "up": {
-      },
-      "down": {
-      }
-    },
     "connected": {
       "true": {
         "textures": {

@@ -1,6 +1,5 @@
 package refinedstorage.block;
 
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -36,14 +35,14 @@ public class BlockCable extends BlockNode {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[]{
-            NORTH,
-            EAST,
-            SOUTH,
-            WEST,
-            UP,
-            DOWN,
-        });
+        return new BlockStateContainer.Builder(this)
+            .add(NORTH)
+            .add(EAST)
+            .add(SOUTH)
+            .add(WEST)
+            .add(UP)
+            .add(DOWN)
+            .build();
     }
 
     @Override
@@ -73,5 +72,10 @@ public class BlockCable extends BlockNode {
     @Override
     public boolean isFullCube(IBlockState state) {
         return false;
+    }
+
+    @Override
+    public EnumDirectionType getDirectionType() {
+        return null;
     }
 }

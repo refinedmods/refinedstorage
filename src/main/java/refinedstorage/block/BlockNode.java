@@ -1,6 +1,5 @@
 package refinedstorage.block;
 
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -27,11 +26,13 @@ public abstract class BlockNode extends BlockBase {
     }
 
     @Override
+    protected BlockStateContainer.Builder createBlockStateBuilder() {
+        return super.createBlockStateBuilder().add(CONNECTED);
+    }
+
+    @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[]{
-            DIRECTION,
-            CONNECTED
-        });
+        return createBlockStateBuilder().build();
     }
 
     @Override

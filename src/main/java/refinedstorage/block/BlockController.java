@@ -1,7 +1,6 @@
 package refinedstorage.block;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
@@ -44,11 +43,10 @@ public class BlockController extends BlockBase {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[]{
-            DIRECTION,
-            TYPE,
-            ENERGY
-        });
+        return createBlockStateBuilder()
+            .add(TYPE)
+            .add(ENERGY)
+            .build();
     }
 
     @Override

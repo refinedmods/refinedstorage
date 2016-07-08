@@ -103,7 +103,6 @@ public class ClientProxy extends CommonProxy {
 
         // Blocks
         ModelLoader.setCustomStateMapper(RefinedStorageBlocks.STORAGE, (new StateMap.Builder())
-            .ignore(RefinedStorageBlocks.STORAGE.DIRECTION)
             .ignore(RefinedStorageBlocks.STORAGE.CONNECTED)
             .build()
         );
