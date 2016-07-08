@@ -55,7 +55,7 @@ public class BlockCable extends BlockNode {
             .withProperty(DOWN, hasConnectionWith(world, pos.down()));
     }
 
-    public static boolean hasConnectionWith(IBlockAccess world, BlockPos pos) {
+    private boolean hasConnectionWith(IBlockAccess world, BlockPos pos) {
         return world.getBlockState(pos).getBlock() == RefinedStorageBlocks.CONTROLLER || world.getTileEntity(pos) instanceof INetworkNode;
     }
 

@@ -101,7 +101,7 @@ public class BlockStorage extends BlockNode {
     }
 
     @Override
-    public Item createItemForBlock() {
+    public Item createItem() {
         return new ItemBlockStorage();
     }
 

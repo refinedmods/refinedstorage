@@ -23,7 +23,7 @@ public class BasicItemHandler extends ItemStackHandler {
     public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
         if (validators.length > 0) {
             for (IItemValidator validator : validators) {
-                if (validator.valid(stack)) {
+                if (validator.isValid(stack)) {
                     return super.insertItem(slot, stack, simulate);
                 }
             }

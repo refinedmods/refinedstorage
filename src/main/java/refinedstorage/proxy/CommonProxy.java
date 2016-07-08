@@ -486,7 +486,7 @@ public class CommonProxy {
 
     private void registerBlock(BlockBase block) {
         GameRegistry.<Block>register(block);
-        GameRegistry.register(block.createItemForBlock());
+        GameRegistry.register(block.createItem());
     }
 
     private void registerItem(Item item) {

@@ -145,7 +145,7 @@ public class BlockController extends BlockBase {
     }
 
     @Override
-    public Item createItemForBlock() {
+    public Item createItem() {
         return new ItemBlockController();
     }
 }

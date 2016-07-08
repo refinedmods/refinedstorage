@@ -56,7 +56,7 @@ public abstract class BlockBase extends Block {
         return createBlockStateBuilder().build();
     }
 
-    public Item createItemForBlock() {
+    public Item createItem() {
         return new ItemBlockBase(this, false);
     }
 
@@ -73,11 +73,7 @@ public abstract class BlockBase extends Block {
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
         if (getDirectionType() != null) {
-            TileEntity tile = world.getTileEntity(pos);
-
-            if (tile instanceof TileBase) {
-                return state.withProperty(DIRECTION, ((TileBase) tile).getDirection());
-            }
+            return state.withProperty(DIRECTION, ((TileBase) world.getTileEntity(pos)).getDirection());
         }
 
         return state;
@@ -91,15 +87,13 @@ public abstract class BlockBase extends Block {
     @Override
     public boolean rotateBlock(World world, BlockPos pos, EnumFacing axis) {
         if (!world.isRemote && getDirectionType() != null) {
-            TileEntity tile = world.getTileEntity(pos);
+            TileBase tile = (TileBase) world.getTileEntity(pos);
 
-            if (tile instanceof TileBase) {
-                ((TileBase) tile).setDirection(getDirectionType().getNext(((TileBase) tile).getDirection()));
+            tile.setDirection(getDirectionType().getNext(tile.getDirection()));
 
-                RefinedStorageUtils.updateBlock(world, pos);
+            RefinedStorageUtils.updateBlock(world, pos);
 
-                return true;
-            }
+            return true;
         }
 
         return false;
@@ -110,17 +104,15 @@ public abstract class BlockBase extends Block {
         super.onBlockPlacedBy(world, pos, state, player, stack);
 
         if (getDirectionType() != null) {
-            TileEntity tile = world.getTileEntity(pos);
+            TileBase tile = (TileBase) world.getTileEntity(pos);
 
-            if (tile instanceof TileBase) {
-                EnumFacing facing = getDirectionType().getFrom(pos, player);
+            EnumFacing facing = getDirectionType().getFrom(pos, player);
 
-                if (player.isSneaking() && getDirectionType() == EnumDirectionType.ANY) {
-                    facing = facing.getOpposite();
-                }
-
-                ((TileBase) tile).setDirection(facing);
+            if (player.isSneaking() && getDirectionType() == EnumDirectionType.ANY) {
+                facing = facing.getOpposite();
             }
+
+            tile.setDirection(facing);
         }
     }
 
