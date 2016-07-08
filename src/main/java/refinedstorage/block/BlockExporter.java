@@ -30,12 +30,7 @@ public class BlockExporter extends BlockNode {
 
         return true;
     }
-
-    @Override
-    public boolean canBePlacedOpposite() {
-        return true;
-    }
-
+    
     @Override
     public EnumDirectionType getDirectionType() {
         return EnumDirectionType.ANY;

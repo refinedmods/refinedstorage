@@ -11,6 +11,9 @@
       {
         "transform": "forge:default-block"
       }
-    ]
+    ],
+    "normal": {
+      "model": "cube_all"
+    }
   }
 }

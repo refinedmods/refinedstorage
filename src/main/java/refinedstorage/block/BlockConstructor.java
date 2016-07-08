@@ -32,11 +32,6 @@ public class BlockConstructor extends BlockNode {
     }
 
     @Override
-    public boolean canBePlacedOpposite() {
-        return true;
-    }
-
-    @Override
     public EnumDirectionType getDirectionType() {
         return EnumDirectionType.ANY;
     }

@@ -56,6 +56,10 @@ public abstract class BlockBase extends Block {
         return createBlockStateBuilder().build();
     }
 
+    public Item createItemForBlock() {
+        return new ItemBlockBase(this, false);
+    }
+
     @Override
     public IBlockState getStateFromMeta(int meta) {
         return getDefaultState();
@@ -111,7 +115,7 @@ public abstract class BlockBase extends Block {
             if (tile instanceof TileBase) {
                 EnumFacing facing = getDirectionType().getFrom(pos, player);
 
-                if (player.isSneaking() && canBePlacedOpposite()) {
+                if (player.isSneaking() && getDirectionType() == EnumDirectionType.ANY) {
                     facing = facing.getOpposite();
                 }
 
@@ -147,14 +151,6 @@ public abstract class BlockBase extends Block {
         super.harvestBlock(world, player, pos, state, tile, stack);
 
         world.setBlockToAir(pos);
-    }
-
-    public Item createItemForBlock() {
-        return new ItemBlockBase(this, false);
-    }
-
-    public boolean canBePlacedOpposite() {
-        return false;
     }
 
     public EnumDirectionType getDirectionType() {
