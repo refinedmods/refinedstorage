@@ -8,7 +8,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import refinedstorage.RefinedStorageBlocks;
+import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.INetworkNode;
 import refinedstorage.tile.TileCable;
 
@@ -22,10 +22,14 @@ public class BlockCable extends BlockNode {
     public static final PropertyBool UP = PropertyBool.create("up");
     public static final PropertyBool DOWN = PropertyBool.create("down");
 
-    public BlockCable() {
-        super("cable");
+    public BlockCable(String name) {
+        super(name);
 
         setHardness(0.6F);
+    }
+
+    public BlockCable() {
+        this("cable");
     }
 
     @Override
@@ -34,15 +38,14 @@ public class BlockCable extends BlockNode {
     }
 
     @Override
-    protected BlockStateContainer createBlockState() {
-        return createBlockStateBuilder()
+    protected BlockStateContainer.Builder createBlockStateBuilder() {
+        return super.createBlockStateBuilder()
             .add(NORTH)
             .add(EAST)
             .add(SOUTH)
             .add(WEST)
             .add(UP)
-            .add(DOWN)
-            .build();
+            .add(DOWN);
     }
 
     @Override
@@ -56,8 +59,10 @@ public class BlockCable extends BlockNode {
             .withProperty(DOWN, hasConnectionWith(world, pos.down()));
     }
 
-    private boolean hasConnectionWith(IBlockAccess world, BlockPos pos) {
-        return world.getBlockState(pos).getBlock() == RefinedStorageBlocks.CONTROLLER || world.getTileEntity(pos) instanceof INetworkNode;
+    public static boolean hasConnectionWith(IBlockAccess world, BlockPos pos) {
+        TileEntity tile = world.getTileEntity(pos);
+
+        return tile instanceof INetworkMaster || tile instanceof INetworkNode;
     }
 
     @Override
