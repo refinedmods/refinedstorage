@@ -168,6 +168,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 craftingTasksToAddAsLast.clear();
 
                 if (!craftingTasks.empty()) {
+                    markDirty();
+
                     ICraftingTask top = craftingTasks.peek();
 
                     if (ticks % top.getPattern().getContainer(worldObj).getSpeed() == 0 && top.update(worldObj, this)) {
