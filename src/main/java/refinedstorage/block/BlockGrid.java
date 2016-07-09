@@ -70,13 +70,4 @@ public class BlockGrid extends BlockNode {
     public Item createItem() {
         return new ItemBlockBase(this, true);
     }
-
-    public boolean hasConnectivityState() {
-        return true;
-    }
-
-    @Override
-    public EnumPlacementType getPlacementType() {
-        return EnumPlacementType.ANY;
-    }
 }

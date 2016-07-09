@@ -4,39 +4,17 @@
     "model": "orientable",
     "textures": {
       "side": "refinedstorage:blocks/side",
-      "top": "refinedstorage:blocks/side"
+      "top": "refinedstorage:blocks/side",
+      "front": "refinedstorage:blocks/grid"
     }
   },
   "variants": {
     "inventory": [
       {
-        "textures": {
-          "front": "refinedstorage:blocks/grid_disconnected"
-        },
         "transform": "forge:default-block",
         "y": 0
       }
     ],
-    "type": {
-      "normal": {
-      },
-      "crafting": {
-      },
-      "pattern": {
-      }
-    },
-    "connected": {
-      "true": {
-        "textures": {
-          "front": "refinedstorage:blocks/grid_connected"
-        }
-      },
-      "false": {
-        "textures": {
-          "front": "refinedstorage:blocks/grid_disconnected"
-        }
-      }
-    },
     "direction": {
       "north": {
         "y": 0

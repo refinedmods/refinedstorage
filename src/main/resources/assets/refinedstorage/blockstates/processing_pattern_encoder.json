@@ -6,10 +6,10 @@
       "particle": "refinedstorage:blocks/processing_pattern_encoder",
       "down": "refinedstorage:blocks/side",
       "up": "refinedstorage:blocks/processing_pattern_encoder",
-      "north": "refinedstorage:blocks/side",
-      "east": "refinedstorage:blocks/side",
-      "south": "refinedstorage:blocks/side",
-      "west": "refinedstorage:blocks/side"
+      "north": "refinedstorage:blocks/processing_pattern_encoder_side",
+      "east": "refinedstorage:blocks/processing_pattern_encoder_side",
+      "south": "refinedstorage:blocks/processing_pattern_encoder_side",
+      "west": "refinedstorage:blocks/processing_pattern_encoder_side"
     }
   },
   "variants": {

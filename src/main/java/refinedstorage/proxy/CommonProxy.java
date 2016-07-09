@@ -86,10 +86,11 @@ public class CommonProxy {
         registerBlock(RefinedStorageBlocks.PROCESSING_PATTERN_ENCODER);
         registerBlock(RefinedStorageBlocks.DISK_DRIVE);
         registerBlock(RefinedStorageBlocks.STORAGE);
-        registerBlock(RefinedStorageBlocks.EXTERNAL_STORAGE);
         registerBlock(RefinedStorageBlocks.SOLDERER);
+        registerBlock(RefinedStorageBlocks.CABLE);
         registerBlock(RefinedStorageBlocks.IMPORTER);
         registerBlock(RefinedStorageBlocks.EXPORTER);
+        registerBlock(RefinedStorageBlocks.EXTERNAL_STORAGE);
         registerBlock(RefinedStorageBlocks.CONSTRUCTOR);
         registerBlock(RefinedStorageBlocks.DESTRUCTOR);
         registerBlock(RefinedStorageBlocks.DETECTOR);
@@ -98,7 +99,6 @@ public class CommonProxy {
         registerBlock(RefinedStorageBlocks.WIRELESS_TRANSMITTER);
         registerBlock(RefinedStorageBlocks.MACHINE_CASING);
         registerBlock(RefinedStorageBlocks.QUARTZ_ENRICHED_IRON);
-        registerBlock(RefinedStorageBlocks.CABLE);
 
         registerItem(RefinedStorageItems.QUARTZ_ENRICHED_IRON);
         registerItem(RefinedStorageItems.STORAGE_DISK);

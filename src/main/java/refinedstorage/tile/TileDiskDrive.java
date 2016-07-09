@@ -252,13 +252,15 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
             ItemStack disk = disks.getStackInSlot(i);
 
             if (disk != null) {
+                int capacity = EnumStorageType.getById(disk.getItemDamage()).getCapacity();
+
+                if (capacity == -1) {
+                    return 0;
+                }
+
                 stored += NBTStorage.getStoredFromNBT(disk.getTagCompound());
                 storedMax += EnumStorageType.getById(disk.getItemDamage()).getCapacity();
             }
-        }
-
-        if (storedMax == 0) {
-            return 0;
         }
 
         return (int) Math.floor((stored / storedMax) * 7f);

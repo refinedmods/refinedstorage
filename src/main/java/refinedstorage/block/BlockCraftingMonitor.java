@@ -30,8 +30,4 @@ public class BlockCraftingMonitor extends BlockNode {
 
         return true;
     }
-
-    public boolean hasConnectivityState() {
-        return true;
-    }
 }
