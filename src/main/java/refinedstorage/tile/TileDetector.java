@@ -33,6 +33,7 @@ public class TileDetector extends TileNode implements ICompareConfig {
     private int amount = 0;
 
     private boolean powered = false;
+    private boolean wasPowered;
 
     @Override
     public int getEnergyUsage() {
@@ -43,8 +44,6 @@ public class TileDetector extends TileNode implements ICompareConfig {
     public void updateNode() {
         if (ticks % SPEED == 0) {
             ItemStack slot = filter.getStackInSlot(0);
-
-            boolean wasPowered = powered;
 
             if (slot != null) {
                 ItemStack stack = network.getStorage().get(slot, compare);
@@ -73,13 +72,20 @@ public class TileDetector extends TileNode implements ICompareConfig {
             } else {
                 powered = false;
             }
-
-            if (powered != wasPowered) {
-                worldObj.notifyNeighborsOfStateChange(pos, RefinedStorageBlocks.DETECTOR);
-
-                RefinedStorageUtils.updateBlock(worldObj, pos);
-            }
         }
+    }
+
+    @Override
+    public void update() {
+        if (powered != wasPowered) {
+            wasPowered = powered;
+
+            worldObj.notifyNeighborsOfStateChange(pos, RefinedStorageBlocks.DETECTOR);
+
+            RefinedStorageUtils.updateBlock(worldObj, pos);
+        }
+
+        super.update();
     }
 
     @Override

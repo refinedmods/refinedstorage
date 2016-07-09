@@ -6,6 +6,7 @@
 - Improved the Wireless Transmitter texture
 - Wireless Transmitter is now only bright red when connected
 - Fixed crash with External Storage
+- Fixed Detector not unpowering when disconnected from the network
 - Made the Solderer beams be bright red when they are working
 - Added better hitbox for the Solderer
 
