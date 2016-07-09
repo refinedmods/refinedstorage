@@ -37,7 +37,7 @@ public class BlockDiskDrive extends BlockNode {
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
         return super.getActualState(state, world, pos)
-            .withProperty(STORED, ((TileDiskDrive) world.getTileEntity(pos)).getStoredForDisplay());
+            .withProperty(STORED, ((TileDiskDrive) world.getTileEntity(pos)).getStoredForScaledDisplay());
     }
 
     @Override

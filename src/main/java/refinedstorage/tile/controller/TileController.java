@@ -662,7 +662,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     }
 
     public int getEnergyScaledForDisplay() {
-        return getEnergyScaled(8);
+        return getEnergyScaled(7);
     }
 
     public int getEnergyScaledForComparator() {

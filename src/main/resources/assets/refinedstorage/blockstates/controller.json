@@ -55,11 +55,6 @@
         "textures": {
           "front": "refinedstorage:blocks/controller_7"
         }
-      },
-      "8": {
-        "textures": {
-          "front": "refinedstorage:blocks/controller_8"
-        }
       }
     },
     "type": {
