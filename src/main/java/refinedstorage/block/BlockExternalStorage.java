@@ -7,7 +7,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import refinedstorage.tile.externalstorage.TileExternalStorage;
 
-public class BlockExternalStorage extends BlockNode {
+public class BlockExternalStorage extends BlockCable {
     public BlockExternalStorage() {
         super("external_storage");
     }

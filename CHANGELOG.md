@@ -13,6 +13,9 @@
 - Limited some blocks to only have a direction on the x-axis
 - Decreased amount of block updates significantly
 - Added new textures
+- Added model for External Storage
+- Added model for Importer
+- Added model for Exporter
 
 ### 0.8.5
 **Bugfixes**

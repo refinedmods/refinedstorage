@@ -64,6 +64,7 @@ public class BlockCable extends BlockNode {
         TileEntity tile = world.getTileEntity(pos);
 
         if (tile instanceof INetworkMaster || tile instanceof INetworkNode) {
+            // Do not render a cable extension to on this position when we have a direction (like an exporter, importer or external storage)
             if (getPlacementType() != null) {
                 return ((TileBase) world.getTileEntity(basePos)).getFacingTile() != tile;
             }

@@ -1,38 +1,81 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "orientable",
     "textures": {
-      "side": "refinedstorage:blocks/side",
-      "top": "refinedstorage:blocks/side",
-      "front": "refinedstorage:blocks/external_storage"
-    }
+      "all": "refinedstorage:blocks/cable",
+      "particle": "refinedstorage:blocks/cable",
+      "line": "refinedstorage:blocks/importer_exporter_external_storage"
+    },
+    "model": "refinedstorage:cable_core",
+    "uvlock": true
   },
   "variants": {
     "inventory": [
       {
-        "y": 0,
+        "model": "refinedstorage:external_storage",
         "transform": "forge:default-block"
       }
     ],
     "direction": {
       "north": {
-        "y": 0
+        "submodel": "refinedstorage:external_storage_north"
       },
       "east": {
-        "y": 90
+        "submodel": "refinedstorage:external_storage_east"
       },
       "south": {
-        "y": 180
+        "submodel": "refinedstorage:external_storage_south"
       },
       "west": {
-        "y": 270
+        "submodel": "refinedstorage:external_storage_west"
       },
       "up": {
-        "x": 270
+        "submodel": "refinedstorage:external_storage_up"
       },
       "down": {
-        "x": 90
+        "submodel": "refinedstorage:external_storage_down"
+      }
+    },
+    "north": {
+      "true": {
+        "submodel": "refinedstorage:cable_north"
+      },
+      "false": {
+      }
+    },
+    "east": {
+      "true": {
+        "submodel": "refinedstorage:cable_east"
+      },
+      "false": {
+      }
+    },
+    "south": {
+      "true": {
+        "submodel": "refinedstorage:cable_south"
+      },
+      "false": {
+      }
+    },
+    "west": {
+      "true": {
+        "submodel": "refinedstorage:cable_west"
+      },
+      "false": {
+      }
+    },
+    "up": {
+      "true": {
+        "submodel": "refinedstorage:cable_up"
+      },
+      "false": {
+      }
+    },
+    "down": {
+      "true": {
+        "submodel": "refinedstorage:cable_down"
+      },
+      "false": {
       }
     }
   }

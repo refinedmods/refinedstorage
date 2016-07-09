@@ -294,20 +294,20 @@ public class CommonProxy {
             'H', new ItemStack(Blocks.CHEST),
             'C', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
             'D', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
-            'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
+            'M', new ItemStack(RefinedStorageBlocks.CABLE),
             'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
         );
 
         // Importer
         GameRegistry.addShapelessRecipe(new ItemStack(RefinedStorageBlocks.IMPORTER),
-            new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
+            new ItemStack(RefinedStorageBlocks.CABLE),
             new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
             new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
         );
 
         // Exporter
         GameRegistry.addShapelessRecipe(new ItemStack(RefinedStorageBlocks.EXPORTER),
-            new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
+            new ItemStack(RefinedStorageBlocks.CABLE),
             new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
             new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
         );
