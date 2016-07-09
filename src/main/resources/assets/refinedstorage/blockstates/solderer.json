@@ -2,7 +2,7 @@
   "forge_marker": 1,
   "defaults": {
     "textures": {
-      "particle": "refinedstorage:blocks/quartz_enriched_iron_block"
+      "particle": "refinedstorage:blocks/side_borderless"
     },
     "model": "refinedstorage:solderer",
     "uvlock": true

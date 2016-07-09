@@ -1,9 +1,9 @@
 {
     "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
     "textures": {
-        "0": "refinedstorage:blocks/quartz_enriched_iron_block",
+        "0": "refinedstorage:blocks/side",
         "1": "refinedstorage:blocks/side",
-        "2": "refinedstorage:blocks/quartz_enriched_iron_block",
+        "2": "refinedstorage:blocks/side_borderless",
         "3": "blocks/redstone_block",
         "4": "blocks/redstone_block"
     },

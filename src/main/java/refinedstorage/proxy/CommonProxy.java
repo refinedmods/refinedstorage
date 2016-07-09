@@ -98,7 +98,6 @@ public class CommonProxy {
         registerBlock(RefinedStorageBlocks.INTERFACE);
         registerBlock(RefinedStorageBlocks.WIRELESS_TRANSMITTER);
         registerBlock(RefinedStorageBlocks.MACHINE_CASING);
-        registerBlock(RefinedStorageBlocks.QUARTZ_ENRICHED_IRON);
 
         registerItem(RefinedStorageItems.QUARTZ_ENRICHED_IRON);
         registerItem(RefinedStorageItems.STORAGE_DISK);
@@ -132,16 +131,6 @@ public class CommonProxy {
             "IQ",
             'I', new ItemStack(Items.IRON_INGOT),
             'Q', new ItemStack(Items.QUARTZ)
-        );
-
-        GameRegistry.addShapelessRecipe(new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON, 9), new ItemStack(RefinedStorageBlocks.QUARTZ_ENRICHED_IRON));
-
-        // Quartz Enriched Iron Block
-        GameRegistry.addRecipe(new ItemStack(RefinedStorageBlocks.QUARTZ_ENRICHED_IRON),
-            "EEE",
-            "EEE",
-            "EEE",
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
         );
 
         // Machine Casing

@@ -17,6 +17,7 @@
 - Added model for External Storage
 - Added model for Importer
 - Added model for Exporter
+- Added model for Detector
 
 ### 0.8.5
 **Bugfixes**

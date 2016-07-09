@@ -110,7 +110,6 @@ block.refinedstorage:crafting_monitor.name=Crafting Monitor
 block.refinedstorage:wireless_transmitter.name=Wireless Transmitter
 block.refinedstorage:crafter.name=Crafter
 block.refinedstorage:processing_pattern_encoder.name=Processing Pattern Encoder
-block.refinedstorage:quartz_enriched_iron_block.name=Quartz Enriched Iron Block
 
 item.refinedstorage:storage_disk.0.name=1k Storage Disk
 item.refinedstorage:storage_disk.1.name=4k Storage Disk

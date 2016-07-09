@@ -42,13 +42,7 @@ public class BlockDetector extends BlockNode {
 
     @Override
     public int getWeakPower(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
-        TileDetector detector = (TileDetector) world.getTileEntity(pos);
-
-        if (detector.getDirection() == side.getOpposite()) {
-            return detector.isPowered() ? 15 : 0;
-        }
-
-        return 0;
+        return ((TileDetector) world.getTileEntity(pos)).isPowered() ? 15 : 0;
     }
 
     @Override
@@ -71,7 +65,17 @@ public class BlockDetector extends BlockNode {
     }
 
     @Override
+    public boolean isOpaqueCube(IBlockState state) {
+        return false;
+    }
+
+    @Override
+    public boolean isFullCube(IBlockState state) {
+        return false;
+    }
+
+    @Override
     public EnumPlacementType getPlacementType() {
-        return EnumPlacementType.ANY;
+        return null;
     }
 }
