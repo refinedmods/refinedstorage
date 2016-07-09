@@ -102,11 +102,6 @@ public class ClientProxy extends CommonProxy {
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_STACK, new ModelResourceLocation("refinedstorage:stack_upgrade", "inventory"));
 
         // Blocks
-        ModelLoader.setCustomStateMapper(RefinedStorageBlocks.SOLDERER, (new StateMap.Builder())
-            .ignore(RefinedStorageBlocks.SOLDERER.WORKING)
-            .build()
-        );
-
         ModelLoader.setCustomStateMapper(RefinedStorageBlocks.GRID, (new StateMap.Builder())
             .ignore(RefinedStorageBlocks.GRID.TYPE)
             .build());

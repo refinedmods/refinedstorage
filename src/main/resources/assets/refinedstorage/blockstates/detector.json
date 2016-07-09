@@ -3,10 +3,9 @@
   "defaults": {
     "textures": {
       "particle": "refinedstorage:blocks/side_borderless",
-      "2": "refinedstorage:blocks/detector_unpowered"
+      "torch": "refinedstorage:blocks/wireless_transmitter_disconnected"
     },
-    "model": "refinedstorage:detector",
-    "uvlock": true
+    "model": "refinedstorage:detector"
   },
   "variants": {
     "inventory": [
@@ -17,7 +16,7 @@
     "powered": {
       "true": {
         "textures": {
-          "2": "refinedstorage:blocks/detector_powered"
+          "torch": "refinedstorage:blocks/wireless_transmitter_connected"
         }
       },
       "false": {

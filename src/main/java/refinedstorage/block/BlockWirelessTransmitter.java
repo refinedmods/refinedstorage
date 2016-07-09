@@ -77,6 +77,11 @@ public class BlockWirelessTransmitter extends BlockNode {
     }
 
     @Override
+    public boolean hasConnectivityState() {
+        return true;
+    }
+
+    @Override
     public EnumPlacementType getPlacementType() {
         return null;
     }

@@ -1,5 +1,12 @@
 # Refined Storage Changelog
 
+### 0.8.7
+**Bugfixes**
+- Improved detector model, add a better hitbox for it
+- Improved the Wireless Transmitter texture
+- Made the Solderer beams be bright red when they are working
+- Added better hitbox for the Solderer
+
 ### 0.8.6
 **Bugfixes**
 - Fixed External Storage disconnecting on world reload

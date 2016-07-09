@@ -8,13 +8,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.tile.TileSolderer;
 
 public class BlockSolderer extends BlockNode {
+    public static final AxisAlignedBB AABB_SOLDERER = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 14D / 16D, 1.0D);
+
     public static final PropertyBool WORKING = PropertyBool.create("working");
 
     public BlockSolderer() {
@@ -36,10 +40,21 @@ public class BlockSolderer extends BlockNode {
     }
 
     @Override
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+        return AABB_SOLDERER;
+    }
+
+    @Override
     protected BlockStateContainer createBlockState() {
         return super.createBlockStateBuilder()
             .add(WORKING)
             .build();
+    }
+
+    @Override
+    public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
+        return super.getActualState(state, world, pos)
+            .withProperty(WORKING, ((TileSolderer) world.getTileEntity(pos)).isWorking());
     }
 
     @Override

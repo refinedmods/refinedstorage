@@ -3,9 +3,7 @@
     "textures": {
         "0": "refinedstorage:blocks/side",
         "1": "refinedstorage:blocks/side",
-        "2": "refinedstorage:blocks/side_borderless",
-        "3": "blocks/redstone_block",
-        "4": "blocks/redstone_block"
+        "2": "refinedstorage:blocks/side_borderless"
     },
     "elements": [
         {

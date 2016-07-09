@@ -6,8 +6,10 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -16,6 +18,8 @@ import refinedstorage.RefinedStorageGui;
 import refinedstorage.tile.TileDetector;
 
 public class BlockDetector extends BlockNode {
+    public static final AxisAlignedBB AABB_DETECTOR = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 4D / 16D, 1.0D);
+
     public static final PropertyBool POWERED = PropertyBool.create("powered");
 
     public BlockDetector() {
@@ -33,6 +37,11 @@ public class BlockDetector extends BlockNode {
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
         return super.getActualState(state, world, pos)
             .withProperty(POWERED, ((TileDetector) world.getTileEntity(pos)).isPowered());
+    }
+
+    @Override
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+        return AABB_DETECTOR;
     }
 
     @Override
@@ -72,6 +81,11 @@ public class BlockDetector extends BlockNode {
     @Override
     public boolean isFullCube(IBlockState state) {
         return false;
+    }
+
+    @Override
+    public BlockRenderLayer getBlockLayer() {
+        return BlockRenderLayer.CUTOUT;
     }
 
     @Override

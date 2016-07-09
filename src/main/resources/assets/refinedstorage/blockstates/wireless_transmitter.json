@@ -3,7 +3,7 @@
   "defaults": {
     "model": "torch",
     "textures": {
-      "torch": "refinedstorage:blocks/wireless_transmitter"
+      "torch": "refinedstorage:blocks/wireless_transmitter_disconnected"
     }
   },
   "variants": {
@@ -12,8 +12,14 @@
         "transform": "forge:default-block"
       }
     ],
-    "normal": {
-      "model": "torch"
+    "connected": {
+      "true": {
+        "textures": {
+          "torch": "refinedstorage:blocks/wireless_transmitter_connected"
+        }
+      },
+      "false": {
+      }
     }
   }
 }
