@@ -68,7 +68,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, ISynchr
     }
 
     @Override
-    public void onDisconnected() {
+    public void onDisconnected(INetworkMaster network) {
         onConnectionChange(network, false);
 
         this.connected = false;

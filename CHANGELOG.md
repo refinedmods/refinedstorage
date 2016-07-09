@@ -4,6 +4,8 @@
 **Bugfixes**
 - Improved detector model, add a better hitbox for it
 - Improved the Wireless Transmitter texture
+- Wireless Transmitter is now only bright red when connected
+- Fixed crash with External Storage
 - Made the Solderer beams be bright red when they are working
 - Added better hitbox for the Solderer
 
