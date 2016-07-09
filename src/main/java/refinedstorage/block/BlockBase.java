@@ -104,15 +104,7 @@ public abstract class BlockBase extends Block {
         super.onBlockPlacedBy(world, pos, state, player, stack);
 
         if (getPlacementType() != null) {
-            TileBase tile = (TileBase) world.getTileEntity(pos);
-
-            EnumFacing facing = getPlacementType().getFrom(pos, player);
-
-            if (player.isSneaking() && getPlacementType() == EnumPlacementType.ANY) {
-                facing = facing.getOpposite();
-            }
-
-            tile.setDirection(facing);
+            ((TileBase) world.getTileEntity(pos)).setDirection(getPlacementType().getFrom(pos, player));
         }
     }
 

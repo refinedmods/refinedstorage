@@ -18,6 +18,8 @@
 - Added model for Importer
 - Added model for Exporter
 - Added model for Detector
+- Removed opposite facing on placement mechanic
+- Removed Quartz Enriched Iron Block
 
 ### 0.8.5
 **Bugfixes**
