@@ -25,6 +25,7 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.autocrafting.ICraftingPattern;
+import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.IGridHandler;
 import refinedstorage.api.network.INetworkMaster;
@@ -172,7 +173,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
                     ICraftingTask top = craftingTasks.peek();
 
-                    if (ticks % top.getPattern().getContainer(worldObj).getSpeed() == 0 && top.update(worldObj, this)) {
+                    ICraftingPatternContainer container = top.getPattern().getContainer(worldObj);
+
+                    if (container != null && (ticks % container.getSpeed()) == 0 && top.update(worldObj, this)) {
                         top.onDone(this);
 
                         craftingTasks.pop();
@@ -365,9 +368,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
                     if (pattern != null && ItemPattern.isValid(pattern)) {
                         patterns.add(new CraftingPattern(
-                            crafter.getPos().getX(),
-                            crafter.getPos().getY(),
-                            crafter.getPos().getZ(),
+                            crafter.getPos(),
                             ItemPattern.isProcessing(pattern),
                             ItemPattern.getInputs(pattern),
                             ItemPattern.getOutputs(pattern),

@@ -17,19 +17,15 @@ public class CraftingPattern implements ICraftingPattern {
     private static final String NBT_CRAFTER_Y = "CrafterY";
     private static final String NBT_CRAFTER_Z = "CrafterZ";
 
-    private int crafterX;
-    private int crafterY;
-    private int crafterZ;
+    private BlockPos crafterPos;
     private TileCrafter crafter;
     private boolean processing;
     private ItemStack[] inputs;
     private ItemStack[] outputs;
     private ItemStack[] byproducts;
 
-    public CraftingPattern(int crafterX, int crafterY, int crafterZ, boolean processing, ItemStack[] inputs, ItemStack[] outputs, ItemStack[] byproducts) {
-        this.crafterX = crafterX;
-        this.crafterY = crafterY;
-        this.crafterZ = crafterZ;
+    public CraftingPattern(BlockPos crafterPos, boolean processing, ItemStack[] inputs, ItemStack[] outputs, ItemStack[] byproducts) {
+        this.crafterPos = crafterPos;
         this.processing = processing;
         this.inputs = inputs;
         this.outputs = outputs;
@@ -39,10 +35,15 @@ public class CraftingPattern implements ICraftingPattern {
     @Override
     public ICraftingPatternContainer getContainer(World world) {
         if (crafter == null) {
-            crafter = (TileCrafter) world.getTileEntity(new BlockPos(crafterX, crafterY, crafterZ));
+            crafter = (TileCrafter) world.getTileEntity(crafterPos);
         }
 
         return crafter;
+    }
+
+    @Override
+    public BlockPos getContainerPosition() {
+        return crafterPos;
     }
 
     @Override
@@ -88,17 +89,15 @@ public class CraftingPattern implements ICraftingPattern {
             tag.setTag(ItemPattern.NBT_BYPRODUCTS, byproductsTag);
         }
 
-        tag.setInteger(NBT_CRAFTER_X, crafter.getPos().getX());
-        tag.setInteger(NBT_CRAFTER_Y, crafter.getPos().getY());
-        tag.setInteger(NBT_CRAFTER_Z, crafter.getPos().getZ());
+        tag.setInteger(NBT_CRAFTER_X, crafterPos.getX());
+        tag.setInteger(NBT_CRAFTER_Y, crafterPos.getY());
+        tag.setInteger(NBT_CRAFTER_Z, crafterPos.getZ());
 
         return tag;
     }
 
     public static CraftingPattern readFromNBT(NBTTagCompound tag) {
-        int cx = tag.getInteger(NBT_CRAFTER_X);
-        int cy = tag.getInteger(NBT_CRAFTER_Y);
-        int cz = tag.getInteger(NBT_CRAFTER_Z);
+        BlockPos crafterPos = new BlockPos(tag.getInteger(NBT_CRAFTER_X), tag.getInteger(NBT_CRAFTER_Y), tag.getInteger(NBT_CRAFTER_Z));
 
         boolean processing = tag.getBoolean(ItemPattern.NBT_PROCESSING);
 
@@ -139,6 +138,6 @@ public class CraftingPattern implements ICraftingPattern {
             }
         }
 
-        return new CraftingPattern(cx, cy, cz, processing, inputs, outputs, byproducts);
+        return new CraftingPattern(crafterPos, processing, inputs, outputs, byproducts);
     }
 }

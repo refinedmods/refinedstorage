@@ -6,6 +6,7 @@
 - Fixed External Storage not updating correctly
 - Fixed wireless signal starting from Controller instead of per Wireless Transmitter individually
 - Fixed Controller's redstone state not saving
+- Fixed crafting tasks not saving properly
 - Huge performance improvements to large storage networks
 
 **Features**
