@@ -263,6 +263,10 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
             }
         }
 
+        if (storedMax == 0) {
+            return 0;
+        }
+
         return (int) Math.floor((stored / storedMax) * 7f);
     }
 
