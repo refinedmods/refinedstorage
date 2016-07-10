@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 0.8.8
+**Bugfixes**
+- Use ore dictionary for recipes with glass
+
 ### 0.8.7
 **Bugfixes**
 - Improved detector model, add a better hitbox for it

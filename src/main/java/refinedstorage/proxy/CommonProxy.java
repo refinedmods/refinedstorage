@@ -190,14 +190,14 @@ public class CommonProxy {
         ));
 
         // Cable
-        GameRegistry.addRecipe(new ItemStack(RefinedStorageBlocks.CABLE, 12),
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RefinedStorageBlocks.CABLE, 12),
             "EEE",
             "GRG",
             "EEE",
             'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
-            'G', new ItemStack(Blocks.GLASS),
+            'G', "blockGlass",
             'R', new ItemStack(Items.REDSTONE)
-        );
+        ));
 
         // Wireless Transmitter
         GameRegistry.addRecipe(new ItemStack(RefinedStorageBlocks.WIRELESS_TRANSMITTER),
@@ -345,7 +345,7 @@ public class CommonProxy {
             'R', new ItemStack(Items.REDSTONE),
             'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
             'S', "itemSilicon",
-            'G', new ItemStack(Blocks.GLASS)
+            'G', "blockGlass"
         ));
 
         GameRegistry.addRecipe(new ItemStack(RefinedStorageItems.STORAGE_PART, 1, ItemStoragePart.TYPE_4K),
@@ -379,28 +379,28 @@ public class CommonProxy {
         );
 
         // Storage Housing
-        GameRegistry.addRecipe(NBTStorage.createStackWithNBT(new ItemStack(RefinedStorageItems.STORAGE_HOUSING)),
+        GameRegistry.addRecipe(new ShapedOreRecipe(NBTStorage.createStackWithNBT(new ItemStack(RefinedStorageItems.STORAGE_HOUSING)),
             "GRG",
             "R R",
             "EEE",
-            'G', new ItemStack(Blocks.GLASS),
+            'G', "blockGlass",
             'R', new ItemStack(Items.REDSTONE),
             'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
-        );
+        ));
 
         // Storage Disks
         for (int type = 0; type <= 3; ++type) {
             ItemStack disk = NBTStorage.createStackWithNBT(new ItemStack(RefinedStorageItems.STORAGE_DISK, 1, type));
 
-            GameRegistry.addRecipe(disk,
+            GameRegistry.addRecipe(new ShapedOreRecipe(disk,
                 "GRG",
                 "RPR",
                 "EEE",
-                'G', new ItemStack(Blocks.GLASS),
+                'G', "blockGlass",
                 'R', new ItemStack(Items.REDSTONE),
                 'P', new ItemStack(RefinedStorageItems.STORAGE_PART, 1, type),
                 'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
-            );
+            ));
 
             GameRegistry.addShapelessRecipe(disk,
                 new ItemStack(RefinedStorageItems.STORAGE_HOUSING),
@@ -409,24 +409,24 @@ public class CommonProxy {
         }
 
         // Pattern
-        GameRegistry.addRecipe(new ItemStack(RefinedStorageItems.PATTERN),
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RefinedStorageItems.PATTERN),
             "GRG",
             "RGR",
             "EEE",
-            'G', new ItemStack(Blocks.GLASS),
+            'G', "blockGlass",
             'R', new ItemStack(Items.REDSTONE),
             'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
-        );
+        ));
 
         // Upgrade
-        GameRegistry.addRecipe(new ItemStack(RefinedStorageItems.UPGRADE, 1, 0),
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RefinedStorageItems.UPGRADE, 1, 0),
             "EGE",
             "EPE",
             "EGE",
-            'G', new ItemStack(Blocks.GLASS),
+            'G', "blockGlass",
             'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED),
             'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
-        );
+        ));
 
         RefinedStorageAPI.SOLDERER_REGISTRY.addRecipe(new SoldererRecipeUpgrade(ItemUpgrade.TYPE_RANGE));
         RefinedStorageAPI.SOLDERER_REGISTRY.addRecipe(new SoldererRecipeUpgrade(ItemUpgrade.TYPE_SPEED));
@@ -447,15 +447,15 @@ public class CommonProxy {
         RefinedStorageAPI.SOLDERER_REGISTRY.addRecipe(new SoldererRecipeStorage(EnumStorageType.TYPE_64K, ItemStoragePart.TYPE_64K));
 
         // Crafting Monitor
-        GameRegistry.addRecipe(new ItemStack(RefinedStorageBlocks.CRAFTING_MONITOR),
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RefinedStorageBlocks.CRAFTING_MONITOR),
             "EGE",
             "GMG",
             "EPE",
             'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
             'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
-            'G', new ItemStack(Blocks.GLASS),
+            'G', "blockGlass",
             'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
-        );
+        ));
 
         // Interface
         RefinedStorageAPI.SOLDERER_REGISTRY.addRecipe(new SoldererRecipeBasic(
