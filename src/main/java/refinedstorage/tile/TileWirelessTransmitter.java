@@ -69,6 +69,11 @@ public class TileWirelessTransmitter extends TileNode implements IWirelessTransm
     }
 
     @Override
+    public boolean canConduct() {
+        return false;
+    }
+
+    @Override
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return (T) upgrades;
