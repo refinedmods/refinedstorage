@@ -17,7 +17,7 @@
       ],
       "faces": {
         "north": {
-          "texture": "#ine",
+          "texture": "#line",
           "uv": [
             0.0,
             0.0,
@@ -26,7 +26,7 @@
           ]
         },
         "east": {
-          "texture": "#ine",
+          "texture": "#line",
           "uv": [
             0.0,
             0.0,
@@ -35,7 +35,7 @@
           ]
         },
         "south": {
-          "texture": "#ine",
+          "texture": "#line",
           "uv": [
             0.0,
             0.0,
@@ -44,7 +44,7 @@
           ]
         },
         "west": {
-          "texture": "#ine",
+          "texture": "#line",
           "uv": [
             0.0,
             0.0,
@@ -53,7 +53,7 @@
           ]
         },
         "up": {
-          "texture": "#ine",
+          "texture": "#line",
           "uv": [
             0.0,
             0.0,
@@ -62,7 +62,7 @@
           ]
         },
         "down": {
-          "texture": "#ine",
+          "texture": "#line",
           "uv": [
             0.0,
             0.0,
@@ -86,57 +86,57 @@
       ],
       "faces": {
         "north": {
-          "texture": "#ine",
+          "texture": "#line",
           "uv": [
             0.0,
             0.0,
-            10.0,
-            10.0
+            16.0,
+            16.0
           ]
         },
         "east": {
-          "texture": "#ine",
+          "texture": "#line",
           "uv": [
             0.0,
             0.0,
-            2.0,
-            10.0
+            16.0,
+            16.0
           ]
         },
         "south": {
-          "texture": "#ine",
+          "texture": "#line",
           "uv": [
             0.0,
             0.0,
-            10.0,
-            10.0
+            16.0,
+            16.0
           ]
         },
         "west": {
-          "texture": "#ine",
+          "texture": "#line",
           "uv": [
             0.0,
             0.0,
-            2.0,
-            10.0
+            16.0,
+            16.0
           ]
         },
         "up": {
-          "texture": "#ine",
+          "texture": "#line",
           "uv": [
             0.0,
             0.0,
-            10.0,
-            2.0
+            16.0,
+            16.0
           ]
         },
         "down": {
-          "texture": "#ine",
+          "texture": "#front",
           "uv": [
             0.0,
             0.0,
-            10.0,
-            2.0
+            16.0,
+            16.0
           ]
         }
       }
