@@ -4,6 +4,7 @@
 **Bugfixes**
 - Several models / texture tweaks
 - Fixed bug where Grid doesn't handle remainder sometimes
+- Fixed caching issues with External Storage
 
 ### 0.8.8
 **Bugfixes**

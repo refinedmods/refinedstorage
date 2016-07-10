@@ -493,7 +493,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             remainder = storage.insertItem(remainder, size, simulate);
 
             if (storage instanceof ExternalStorage && !simulate) {
-                ((ExternalStorage) storage).setHash();
+                ((ExternalStorage) storage).updateCacheForcefully();
             }
 
             if (remainder == null) {
@@ -532,11 +532,11 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         for (IStorage storage : this.storage.getStorages()) {
             ItemStack took = storage.extractItem(stack, requested - received, flags);
 
-            if (storage instanceof ExternalStorage) {
-                ((ExternalStorage) storage).setHash();
-            }
-
             if (took != null) {
+                if (storage instanceof ExternalStorage) {
+                    ((ExternalStorage) storage).updateCacheForcefully();
+                }
+
                 if (newStack == null) {
                     newStack = took;
                 } else {

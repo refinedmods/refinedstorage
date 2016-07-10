@@ -64,11 +64,19 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
     @Override
     public void update() {
         if (!worldObj.isRemote && network != null) {
-            for (ExternalStorage storage : storages) {
-                if (storage.isDirty()) {
-                    updateStorage(network);
+            if (ticks % (20 * 4) == 0) {
+                boolean shouldRebuild = false;
 
-                    break;
+                for (ExternalStorage storage : storages) {
+                    if (storage.updateCache()) {
+                        shouldRebuild = true;
+                    }
+                }
+
+                if (shouldRebuild) {
+                    System.out.println("Rebuilding ext storage");
+
+                    network.getStorage().rebuild();
                 }
             }
 

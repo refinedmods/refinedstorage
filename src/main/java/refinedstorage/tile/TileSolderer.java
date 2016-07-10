@@ -78,7 +78,7 @@ public class TileSolderer extends TileNode {
 
                     recipe = null;
                     progress = 0;
-                    // Don't set working to false yet, wait till the next update because we may have another stack waiting.
+                    // Don't set working to false yet, wait till the next shouldUpdateCache because we may have another stack waiting.
 
                     markDirty();
                 }
