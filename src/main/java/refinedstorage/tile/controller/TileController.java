@@ -516,7 +516,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 }
             }
 
-            storage.add(ItemHandlerHelper.copyStackWithSize(stack, inserted));
+            storage.add(ItemHandlerHelper.copyStackWithSize(stack, inserted), false);
         }
 
         return remainder;

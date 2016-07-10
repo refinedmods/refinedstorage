@@ -39,7 +39,7 @@ public class GroupedStorage implements IGroupedStorage {
 
         for (IStorage storage : storages) {
             for (ItemStack stack : storage.getItems()) {
-                add(stack);
+                add(stack, true);
             }
         }
 
@@ -47,7 +47,7 @@ public class GroupedStorage implements IGroupedStorage {
             for (ItemStack output : pattern.getOutputs()) {
                 ItemStack patternStack = output.copy();
                 patternStack.stackSize = 0;
-                add(patternStack);
+                add(patternStack, true);
             }
         }
 
@@ -55,12 +55,14 @@ public class GroupedStorage implements IGroupedStorage {
     }
 
     @Override
-    public void add(ItemStack stack) {
+    public void add(ItemStack stack, boolean rebuilding) {
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
             if (RefinedStorageUtils.compareStackNoQuantity(otherStack, stack)) {
                 otherStack.stackSize += stack.stackSize;
 
-                network.sendStorageDeltaToClient(stack, stack.stackSize);
+                if (!rebuilding) {
+                    network.sendStorageDeltaToClient(stack, stack.stackSize);
+                }
 
                 return;
             }
@@ -68,7 +70,9 @@ public class GroupedStorage implements IGroupedStorage {
 
         stacks.put(stack.getItem(), stack.copy());
 
-        network.sendStorageDeltaToClient(stack, stack.stackSize);
+        if (!rebuilding) {
+            network.sendStorageDeltaToClient(stack, stack.stackSize);
+        }
     }
 
     @Override

@@ -74,8 +74,6 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
                 }
 
                 if (shouldRebuild) {
-                    System.out.println("Rebuilding ext storage");
-
                     network.getStorage().rebuild();
                 }
             }

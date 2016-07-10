@@ -4,18 +4,19 @@ import net.minecraft.item.ItemStack;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.storage.IStorage;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ExternalStorage implements IStorage {
-    private List<ItemStack> cache = new ArrayList<ItemStack>();
+    private List<ItemStack> cache;
 
     public abstract int getCapacity();
 
     public boolean updateCache() {
         List<ItemStack> items = getItems();
 
-        if (items.size() != cache.size()) {
+        if (cache == null) {
+            cache = items;
+        } else if (items.size() != cache.size()) {
             cache = items;
 
             return true;
