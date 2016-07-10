@@ -5,7 +5,7 @@
     "textures": {
       "side": "refinedstorage:blocks/side",
       "top": "refinedstorage:blocks/side",
-      "front": "refinedstorage:blocks/grid"
+      "front": "refinedstorage:blocks/grid_disconnected"
     }
   },
   "variants": {
@@ -15,6 +15,15 @@
         "y": 0
       }
     ],
+    "connected": {
+      "true": {
+        "textures": {
+          "front": "refinedstorage:blocks/grid_connected"
+        }
+      },
+      "false": {
+      }
+    },
     "direction": {
       "north": {
         "y": 0

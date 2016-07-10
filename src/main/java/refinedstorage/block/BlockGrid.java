@@ -67,6 +67,11 @@ public class BlockGrid extends BlockNode {
     }
 
     @Override
+    public boolean hasConnectivityState() {
+        return true;
+    }
+
+    @Override
     public Item createItem() {
         return new ItemBlockBase(this, true);
     }
