@@ -1,44 +1,81 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "orientable",
     "textures": {
-      "side": "refinedstorage:blocks/side",
-      "top": "refinedstorage:blocks/side",
-      "front": "refinedstorage:blocks/importer"
-    }
+      "all": "refinedstorage:blocks/cable",
+      "particle": "refinedstorage:blocks/cable",
+      "line": "refinedstorage:blocks/importer_exporter_external_storage"
+    },
+    "model": "refinedstorage:cable_core",
+    "uvlock": true
   },
   "variants": {
     "inventory": [
       {
-        "y": 0,
+        "model": "refinedstorage:importer",
         "transform": "forge:default-block"
       }
     ],
-    "connected": {
+    "direction": {
+      "north": {
+        "submodel": "refinedstorage:importer_north"
+      },
+      "east": {
+        "submodel": "refinedstorage:importer_east"
+      },
+      "south": {
+        "submodel": "refinedstorage:importer_south"
+      },
+      "west": {
+        "submodel": "refinedstorage:importer_west"
+      },
+      "up": {
+        "submodel": "refinedstorage:importer_up"
+      },
+      "down": {
+        "submodel": "refinedstorage:importer_down"
+      }
+    },
+    "north": {
       "true": {
+        "submodel": "refinedstorage:cable_north"
       },
       "false": {
       }
     },
-    "direction": {
-      "north": {
-        "y": 0
+    "east": {
+      "true": {
+        "submodel": "refinedstorage:cable_east"
       },
-      "east": {
-        "y": 90
+      "false": {
+      }
+    },
+    "south": {
+      "true": {
+        "submodel": "refinedstorage:cable_south"
       },
-      "south": {
-        "y": 180
+      "false": {
+      }
+    },
+    "west": {
+      "true": {
+        "submodel": "refinedstorage:cable_west"
       },
-      "west": {
-        "y": 270
+      "false": {
+      }
+    },
+    "up": {
+      "true": {
+        "submodel": "refinedstorage:cable_up"
       },
-      "up": {
-        "x": 270
+      "false": {
+      }
+    },
+    "down": {
+      "true": {
+        "submodel": "refinedstorage:cable_down"
       },
-      "down": {
-        "x": 90
+      "false": {
       }
     }
   }

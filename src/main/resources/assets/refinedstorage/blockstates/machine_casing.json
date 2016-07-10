@@ -12,19 +12,8 @@
         "transform": "forge:default-block"
       }
     ],
-    "direction": {
-      "north": {
-      },
-      "east": {
-      },
-      "south": {
-      },
-      "west": {
-      },
-      "up": {
-      },
-      "down": {
-      }
+    "normal": {
+      "model": "cube_all"
     }
   }
 }

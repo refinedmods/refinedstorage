@@ -32,7 +32,7 @@ public class BlockDestructor extends BlockNode {
     }
 
     @Override
-    public boolean hasOppositeFacingOnSneakPlace() {
-        return true;
+    public EnumPlacementType getPlacementType() {
+        return EnumPlacementType.ANY;
     }
 }

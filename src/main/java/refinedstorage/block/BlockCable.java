@@ -1,6 +1,5 @@
 package refinedstorage.block;
 
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -9,12 +8,13 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import refinedstorage.RefinedStorageBlocks;
+import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.INetworkNode;
+import refinedstorage.tile.TileBase;
 import refinedstorage.tile.TileCable;
 
 public class BlockCable extends BlockNode {
-    public static final AxisAlignedBB CABLE_AABB = new AxisAlignedBB(4 * (1F / 16F), 4 * (1F / 16F), 4 * (1F / 16F), 1 - 4 * (1F / 16F), 1 - 4 * (1F / 16F), 1 - 4 * (1F / 16F));
+    private static final AxisAlignedBB CABLE_AABB = new AxisAlignedBB(4 * (1F / 16F), 4 * (1F / 16F), 4 * (1F / 16F), 1 - 4 * (1F / 16F), 1 - 4 * (1F / 16F), 1 - 4 * (1F / 16F));
 
     public static final PropertyBool NORTH = PropertyBool.create("north");
     public static final PropertyBool EAST = PropertyBool.create("east");
@@ -23,10 +23,14 @@ public class BlockCable extends BlockNode {
     public static final PropertyBool UP = PropertyBool.create("up");
     public static final PropertyBool DOWN = PropertyBool.create("down");
 
-    public BlockCable() {
-        super("cable");
+    public BlockCable(String name) {
+        super(name);
 
         setHardness(0.6F);
+    }
+
+    public BlockCable() {
+        this("cable");
     }
 
     @Override
@@ -35,29 +39,40 @@ public class BlockCable extends BlockNode {
     }
 
     @Override
-    protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[]{
-            NORTH,
-            EAST,
-            SOUTH,
-            WEST,
-            UP,
-            DOWN,
-        });
+    protected BlockStateContainer.Builder createBlockStateBuilder() {
+        return super.createBlockStateBuilder()
+            .add(NORTH)
+            .add(EAST)
+            .add(SOUTH)
+            .add(WEST)
+            .add(UP)
+            .add(DOWN);
     }
 
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
-        return state.withProperty(NORTH, hasConnectionWith(world, pos.north()))
-            .withProperty(EAST, hasConnectionWith(world, pos.east()))
-            .withProperty(SOUTH, hasConnectionWith(world, pos.south()))
-            .withProperty(WEST, hasConnectionWith(world, pos.west()))
-            .withProperty(UP, hasConnectionWith(world, pos.up()))
-            .withProperty(DOWN, hasConnectionWith(world, pos.down()));
+        return super.getActualState(state, world, pos)
+            .withProperty(NORTH, hasConnectionWith(world, pos, pos.north()))
+            .withProperty(EAST, hasConnectionWith(world, pos, pos.east()))
+            .withProperty(SOUTH, hasConnectionWith(world, pos, pos.south()))
+            .withProperty(WEST, hasConnectionWith(world, pos, pos.west()))
+            .withProperty(UP, hasConnectionWith(world, pos, pos.up()))
+            .withProperty(DOWN, hasConnectionWith(world, pos, pos.down()));
     }
 
-    public static boolean hasConnectionWith(IBlockAccess world, BlockPos pos) {
-        return world.getBlockState(pos).getBlock() == RefinedStorageBlocks.CONTROLLER || world.getTileEntity(pos) instanceof INetworkNode;
+    private boolean hasConnectionWith(IBlockAccess world, BlockPos basePos, BlockPos pos) {
+        TileEntity tile = world.getTileEntity(pos);
+
+        if (tile instanceof INetworkMaster || tile instanceof INetworkNode) {
+            // Do not render a cable extension to on this position when we have a direction (like an exporter, importer or external storage)
+            if (getPlacementType() != null) {
+                return ((TileBase) world.getTileEntity(basePos)).getFacingTile() != tile;
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -73,5 +88,10 @@ public class BlockCable extends BlockNode {
     @Override
     public boolean isFullCube(IBlockState state) {
         return false;
+    }
+
+    @Override
+    public EnumPlacementType getPlacementType() {
+        return null;
     }
 }

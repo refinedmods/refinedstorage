@@ -49,6 +49,7 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
     private static final String NBT_PRIORITY = "Priority";
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
+    private static final String NBT_STORED = "Stored";
 
     private BasicItemHandler disks = new BasicItemHandler(8, this, new BasicItemValidator(RefinedStorageItems.STORAGE_DISK)) {
         @Override
@@ -84,6 +85,20 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
     private int priority = 0;
     private int compare = 0;
     private int mode = ModeConstants.WHITELIST;
+    private int stored = 0;
+
+    @Override
+    public void update() {
+        if (!worldObj.isRemote) {
+            if (stored != getStoredForDisplayServer()) {
+                stored = getStoredForDisplayServer();
+
+                RefinedStorageUtils.updateBlock(worldObj, pos);
+            }
+        }
+
+        super.update();
+    }
 
     @Override
     public int getEnergyUsage() {
@@ -167,6 +182,22 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
     }
 
     @Override
+    public NBTTagCompound writeUpdate(NBTTagCompound tag) {
+        super.writeUpdate(tag);
+
+        tag.setInteger(NBT_STORED, stored);
+
+        return tag;
+    }
+
+    @Override
+    public void readUpdate(NBTTagCompound tag) {
+        stored = tag.getInteger(NBT_STORED);
+
+        super.readUpdate(tag);
+    }
+
+    @Override
     public void writeContainerData(ByteBuf buf) {
         super.writeContainerData(buf);
 
@@ -211,6 +242,36 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
         this.mode = mode;
 
         markDirty();
+    }
+
+    public int getStoredForDisplayServer() {
+        float stored = 0;
+        float storedMax = 0;
+
+        for (int i = 0; i < disks.getSlots(); ++i) {
+            ItemStack disk = disks.getStackInSlot(i);
+
+            if (disk != null) {
+                int capacity = EnumStorageType.getById(disk.getItemDamage()).getCapacity();
+
+                if (capacity == -1) {
+                    return 0;
+                }
+
+                stored += NBTStorage.getStoredFromNBT(disk.getTagCompound());
+                storedMax += EnumStorageType.getById(disk.getItemDamage()).getCapacity();
+            }
+        }
+
+        if (storedMax == 0) {
+            return 0;
+        }
+
+        return (int) Math.floor((stored / storedMax) * 7f);
+    }
+
+    public int getStoredForScaledDisplay() {
+        return stored;
     }
 
     @Override

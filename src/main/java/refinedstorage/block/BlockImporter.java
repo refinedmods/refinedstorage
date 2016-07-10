@@ -12,7 +12,7 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.tile.TileImporter;
 
-public class BlockImporter extends BlockNode {
+public class BlockImporter extends BlockCable {
     public BlockImporter() {
         super("importer");
     }
@@ -32,7 +32,7 @@ public class BlockImporter extends BlockNode {
     }
 
     @Override
-    public boolean hasOppositeFacingOnSneakPlace() {
-        return true;
+    public EnumPlacementType getPlacementType() {
+        return EnumPlacementType.ANY;
     }
 }

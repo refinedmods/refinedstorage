@@ -1,53 +1,29 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "orientable",
     "textures": {
-      "side": "refinedstorage:blocks/side",
-      "top": "refinedstorage:blocks/side",
-      "front": "refinedstorage:blocks/solderer"
-    }
+      "particle": "refinedstorage:blocks/side_borderless",
+      "3": "refinedstorage:blocks/solderer_laser",
+      "4": "refinedstorage:blocks/solderer_laser"
+    },
+    "model": "refinedstorage:solderer",
+    "uvlock": true
   },
   "variants": {
     "inventory": [
       {
-        "y": 0,
+        "model": "refinedstorage:solderer",
         "transform": "forge:default-block"
       }
     ],
-    "connected": {
-      "true": {
-      },
-      "false": {
-      }
-    },
     "working": {
       "true": {
         "textures": {
-          "front": "refinedstorage:blocks/solderer_working"
+          "3": "refinedstorage:blocks/solderer_laser_working",
+          "4": "refinedstorage:blocks/solderer_laser_working"
         }
       },
       "false": {
-      }
-    },
-    "direction": {
-      "north": {
-        "y": 0
-      },
-      "east": {
-        "y": 90
-      },
-      "south": {
-        "y": 180
-      },
-      "west": {
-        "y": 270
-      },
-      "up": {
-        "x": 270
-      },
-      "down": {
-        "x": 90
       }
     }
   }

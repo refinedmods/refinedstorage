@@ -110,7 +110,6 @@ block.refinedstorage:crafting_monitor.name=Monitor de Fabricação
 block.refinedstorage:wireless_transmitter.name=Transmissor Sem Fio
 block.refinedstorage:crafter.name=Fabricador
 block.refinedstorage:processing_pattern_encoder.name=Codificador de Padrão de Processamento
-block.refinedstorage:quartz_enriched_iron_block.name=Bloco de Ferro Enriquecido com Quartzo
 
 item.refinedstorage:storage_disk.0.name=Disco de Armazenamento 1k
 item.refinedstorage:storage_disk.1.name=Disco de Armazenamento 4k

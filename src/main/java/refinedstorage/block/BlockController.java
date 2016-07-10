@@ -1,7 +1,6 @@
 package refinedstorage.block;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
@@ -29,7 +28,7 @@ import java.util.List;
 
 public class BlockController extends BlockBase {
     public static final PropertyEnum TYPE = PropertyEnum.create("type", EnumControllerType.class);
-    public static final PropertyInteger ENERGY = PropertyInteger.create("energy", 0, 8);
+    public static final PropertyInteger ENERGY = PropertyInteger.create("energy", 0, 7);
 
     public BlockController() {
         super("controller");
@@ -44,11 +43,10 @@ public class BlockController extends BlockBase {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[]{
-            DIRECTION,
-            TYPE,
-            ENERGY
-        });
+        return createBlockStateBuilder()
+            .add(TYPE)
+            .add(ENERGY)
+            .build();
     }
 
     @Override
@@ -147,7 +145,7 @@ public class BlockController extends BlockBase {
     }
 
     @Override
-    public Item createItemForBlock() {
+    public Item createItem() {
         return new ItemBlockController();
     }
 }

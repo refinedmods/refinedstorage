@@ -25,6 +25,7 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.autocrafting.ICraftingPattern;
+import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.IGridHandler;
 import refinedstorage.api.network.INetworkMaster;
@@ -50,6 +51,7 @@ import refinedstorage.tile.TileBase;
 import refinedstorage.tile.TileCrafter;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
+import refinedstorage.tile.externalstorage.ExternalStorage;
 
 import java.util.*;
 
@@ -167,9 +169,13 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 craftingTasksToAddAsLast.clear();
 
                 if (!craftingTasks.empty()) {
+                    markDirty();
+
                     ICraftingTask top = craftingTasks.peek();
 
-                    if (ticks % top.getPattern().getContainer(worldObj).getSpeed() == 0 && top.update(worldObj, this)) {
+                    ICraftingPatternContainer container = top.getPattern().getContainer(worldObj);
+
+                    if (container != null && (ticks % container.getSpeed()) == 0 && top.update(worldObj, this)) {
                         top.onDone(this);
 
                         craftingTasks.pop();
@@ -194,11 +200,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             if (couldRun != canRun()) {
                 couldRun = canRun();
 
-                if (!couldRun && !nodes.isEmpty()) {
-                    disconnectAll();
-                } else if (couldRun) {
-                    rebuildNodes();
-                }
+                rebuildNodes();
             }
 
             if (getEnergyScaledForDisplay() != lastEnergyDisplay) {
@@ -220,11 +222,12 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     public void disconnectAll() {
         for (INetworkNode node : nodes) {
             if (node.isConnected()) {
-                node.onDisconnected();
+                node.onDisconnected(this);
             }
         }
 
         nodes.clear();
+        nodesPos.clear();
     }
 
     @Override
@@ -365,9 +368,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
                     if (pattern != null && ItemPattern.isValid(pattern)) {
                         patterns.add(new CraftingPattern(
-                            crafter.getPos().getX(),
-                            crafter.getPos().getY(),
-                            crafter.getPos().getZ(),
+                            crafter.getPos(),
                             ItemPattern.isProcessing(pattern),
                             ItemPattern.getInputs(pattern),
                             ItemPattern.getOutputs(pattern),
@@ -383,6 +384,14 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public void rebuildNodes() {
+        if (!canRun()) {
+            if (!nodes.isEmpty()) {
+                disconnectAll();
+            }
+
+            return;
+        }
+
         List<INetworkNode> newNodes = new ArrayList<INetworkNode>();
         Set<BlockPos> newNodesPos = new HashSet<BlockPos>();
 
@@ -424,20 +433,23 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             }
         }
 
-        for (INetworkNode newNode : newNodes) {
-            if (!nodesPos.contains(newNode.getPosition())) {
+        List<INetworkNode> oldNodes = new ArrayList<INetworkNode>(nodes);
+        Set<BlockPos> oldNodesPos = new HashSet<BlockPos>(nodesPos);
+
+        this.nodes = newNodes;
+        this.nodesPos = newNodesPos;
+
+        for (INetworkNode newNode : nodes) {
+            if (!oldNodesPos.contains(newNode.getPosition())) {
                 newNode.onConnected(this);
             }
         }
 
-        for (INetworkNode oldNode : nodes) {
-            if (!newNodesPos.contains(oldNode.getPosition())) {
-                oldNode.onDisconnected();
+        for (INetworkNode oldNode : oldNodes) {
+            if (!nodesPos.contains(oldNode.getPosition())) {
+                oldNode.onDisconnected(this);
             }
         }
-
-        this.nodes = newNodes;
-        this.nodesPos = newNodesPos;
     }
 
     @Override
@@ -480,6 +492,10 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         for (IStorage storage : this.storage.getStorages()) {
             remainder = storage.insertItem(remainder, size, simulate);
 
+            if (storage instanceof ExternalStorage && !simulate) {
+                ((ExternalStorage) storage).setHash();
+            }
+
             if (remainder == null) {
                 break;
             } else {
@@ -515,6 +531,10 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
         for (IStorage storage : this.storage.getStorages()) {
             ItemStack took = storage.extractItem(stack, requested - received, flags);
+
+            if (storage instanceof ExternalStorage) {
+                ((ExternalStorage) storage).setHash();
+            }
 
             if (took != null) {
                 if (newStack == null) {
@@ -642,7 +662,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     }
 
     public int getEnergyScaledForDisplay() {
-        return getEnergyScaled(8);
+        return getEnergyScaled(7);
     }
 
     public int getEnergyScaledForComparator() {
@@ -667,6 +687,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public void setRedstoneMode(RedstoneMode mode) {
         this.redstoneMode = mode;
+
+        markDirty();
     }
 
     @Override

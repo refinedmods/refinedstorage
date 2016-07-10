@@ -30,4 +30,13 @@ public class BlockRelay extends BlockNode {
 
         return true;
     }
+
+    @Override
+    public EnumPlacementType getPlacementType() {
+        return null;
+    }
+
+    public boolean hasConnectivityState() {
+        return true;
+    }
 }

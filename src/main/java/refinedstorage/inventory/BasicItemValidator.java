@@ -17,7 +17,7 @@ public class BasicItemValidator implements IItemValidator {
     }
 
     @Override
-    public boolean valid(ItemStack stack) {
+    public boolean isValid(ItemStack stack) {
         if (stack.getItem() == item) {
             if (damage != -1 && stack.getItemDamage() != damage) {
                 return false;

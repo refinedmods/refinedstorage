@@ -56,17 +56,27 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
     public void onConnectionChange(INetworkMaster network, boolean state) {
         super.onConnectionChange(network, state);
 
+        updateStorage(network);
+
         network.getStorage().rebuild();
     }
 
     @Override
     public void update() {
-        if (ticks == 0) {
-            updateStorage();
-        } else if (getFacingTile() instanceof IDrawerGroup && lastDrawerCount != ((IDrawerGroup) getFacingTile()).getDrawerCount()) {
-            lastDrawerCount = ((IDrawerGroup) getFacingTile()).getDrawerCount();
+        if (!worldObj.isRemote && network != null) {
+            for (ExternalStorage storage : storages) {
+                if (storage.isDirty()) {
+                    updateStorage(network);
 
-            updateStorage();
+                    break;
+                }
+            }
+
+            if (getFacingTile() instanceof IDrawerGroup && lastDrawerCount != ((IDrawerGroup) getFacingTile()).getDrawerCount()) {
+                lastDrawerCount = ((IDrawerGroup) getFacingTile()).getDrawerCount();
+
+                updateStorage(network);
+            }
         }
 
         super.update();
@@ -166,8 +176,7 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
         markDirty();
     }
 
-    // Called when the neighbor block changes or when a drawer is added or removed to a drawer group
-    public void updateStorage() {
+    public void updateStorage(INetworkMaster network) {
         storages.clear();
 
         TileEntity facing = getFacingTile();
@@ -192,9 +201,7 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
             }
         }
 
-        if (network != null) {
-            network.getStorage().rebuild();
-        }
+        network.getStorage().rebuild();
     }
 
     @Override

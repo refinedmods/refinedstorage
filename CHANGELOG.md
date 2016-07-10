@@ -1,13 +1,39 @@
 # Refined Storage Changelog
 
+### 0.8.8
+**Bugfixes**
+- Use ore dictionary for recipes with glass
+
+### 0.8.7
+**Bugfixes**
+- Improved detector model, add a better hitbox for it
+- Improved the Wireless Transmitter texture
+- Wireless Transmitter is now only bright red when connected
+- Fixed crash with External Storage
+- Fixed Detector not unpowering when disconnected from the network
+- Made the Solderer beams be bright red when they are working
+- Added better hitbox for the Solderer
+
 ### 0.8.6
 **Bugfixes**
 - Fixed External Storage disconnecting on world reload
+- Fixed External Storage not updating correctly
 - Fixed wireless signal starting from Controller instead of per Wireless Transmitter individually
-- Huge performance improvements to large networks
+- Fixed Controller's redstone state not saving
+- Fixed crafting tasks not saving properly
+- Huge performance improvements to large storage networks
 
 **Features**
 - Re-added Controllers exploding when two of them are connected to the same network
+- Limited some blocks to only have a direction on the x-axis
+- Decreased amount of block updates significantly
+- Added new textures
+- Added model for External Storage
+- Added model for Importer
+- Added model for Exporter
+- Added model for Detector
+- Removed opposite facing on placement mechanic
+- Removed Quartz Enriched Iron Block
 
 ### 0.8.5
 **Bugfixes**

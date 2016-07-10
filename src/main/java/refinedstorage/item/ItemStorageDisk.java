@@ -2,6 +2,7 @@ package refinedstorage.item;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
@@ -39,14 +40,25 @@ public class ItemStorageDisk extends ItemBase {
 
     @Override
     public void getSubItems(Item item, CreativeTabs tab, List list) {
-        for (int i = 0; i < 6; ++i) {
-            list.add(i == TYPE_DEBUG ? createDebugDisk() : NBTStorage.createStackWithNBT(new ItemStack(item, 1, i)));
+        for (int i = 0; i < 5; ++i) {
+            list.add(NBTStorage.createStackWithNBT(new ItemStack(item, 1, i)));
         }
     }
 
-    private ItemStack createDebugDisk() {
-        ItemStack debugDisk = new ItemStack(RefinedStorageItems.STORAGE_DISK, 1, ItemStorageDisk.TYPE_DEBUG);
+    @Override
+    public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+        super.onUpdate(stack, world, entity, slot, selected);
 
+        if (!stack.hasTagCompound()) {
+            if (stack.getItemDamage() == 5) {
+                applyDebugDiskData(stack);
+            } else {
+                NBTStorage.createStackWithNBT(stack);
+            }
+        }
+    }
+
+    private void applyDebugDiskData(ItemStack stack) {
         if (debugDiskTag == null) {
             debugDiskTag = NBTStorage.createNBT();
 
@@ -76,9 +88,7 @@ public class ItemStorageDisk extends ItemBase {
             storage.writeToNBT();
         }
 
-        debugDisk.setTagCompound(debugDiskTag.copy());
-
-        return debugDisk;
+        stack.setTagCompound(debugDiskTag.copy());
     }
 
     @Override

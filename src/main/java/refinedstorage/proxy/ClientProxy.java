@@ -102,11 +102,9 @@ public class ClientProxy extends CommonProxy {
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_STACK, new ModelResourceLocation("refinedstorage:stack_upgrade", "inventory"));
 
         // Blocks
-        ModelLoader.setCustomStateMapper(RefinedStorageBlocks.STORAGE, (new StateMap.Builder())
-            .ignore(RefinedStorageBlocks.STORAGE.DIRECTION)
-            .ignore(RefinedStorageBlocks.STORAGE.CONNECTED)
-            .build()
-        );
+        ModelLoader.setCustomStateMapper(RefinedStorageBlocks.GRID, (new StateMap.Builder())
+            .ignore(RefinedStorageBlocks.GRID.TYPE)
+            .build());
 
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.CABLE), 0, new ModelResourceLocation("refinedstorage:cable", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.GRID), EnumGridType.NORMAL.getId(), new ModelResourceLocation("refinedstorage:grid", "inventory"));
@@ -134,6 +132,5 @@ public class ClientProxy extends CommonProxy {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.STORAGE), EnumStorageType.TYPE_16K.getId(), new ModelResourceLocation("refinedstorage:storage", "type=16k"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.STORAGE), EnumStorageType.TYPE_64K.getId(), new ModelResourceLocation("refinedstorage:storage", "type=64k"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.STORAGE), EnumStorageType.TYPE_CREATIVE.getId(), new ModelResourceLocation("refinedstorage:storage", "type=creative"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.QUARTZ_ENRICHED_IRON), 0, new ModelResourceLocation("refinedstorage:quartz_enriched_iron_block", "inventory"));
     }
 }

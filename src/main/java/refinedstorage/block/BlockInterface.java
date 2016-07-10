@@ -30,4 +30,9 @@ public class BlockInterface extends BlockNode {
 
         return true;
     }
+
+    @Override
+    public EnumPlacementType getPlacementType() {
+        return null;
+    }
 }

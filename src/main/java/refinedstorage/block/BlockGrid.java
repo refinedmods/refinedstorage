@@ -1,6 +1,5 @@
 package refinedstorage.block;
 
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -41,11 +40,9 @@ public class BlockGrid extends BlockNode {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[]{
-            DIRECTION,
-            CONNECTED,
-            TYPE
-        });
+        return createBlockStateBuilder()
+            .add(TYPE)
+            .build();
     }
 
     @Override
@@ -70,7 +67,7 @@ public class BlockGrid extends BlockNode {
     }
 
     @Override
-    public Item createItemForBlock() {
+    public Item createItem() {
         return new ItemBlockBase(this, true);
     }
 }

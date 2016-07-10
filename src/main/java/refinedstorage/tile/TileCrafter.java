@@ -24,7 +24,7 @@ import refinedstorage.item.ItemUpgrade;
 public class TileCrafter extends TileNode implements ICraftingPatternContainer {
     private BasicItemHandler patterns = new BasicItemHandler(9, this, new IItemValidator() {
         @Override
-        public boolean valid(ItemStack stack) {
+        public boolean isValid(ItemStack stack) {
             return stack.getItem() == RefinedStorageItems.PATTERN && ItemPattern.isValid(stack);
         }
     }) {
@@ -66,7 +66,7 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
     public void onConnectionChange(INetworkMaster network, boolean state) {
         if (!state) {
             for (ICraftingTask task : network.getCraftingTasks()) {
-                if (task.getPattern().getContainer(worldObj) == this) {
+                if (task.getPattern().getContainerPosition().equals(pos)) {
                     network.cancelCraftingTask(task);
                 }
             }

@@ -32,7 +32,11 @@ public class BlockCrafter extends BlockNode {
     }
 
     @Override
-    public boolean hasOppositeFacingOnSneakPlace() {
+    public EnumPlacementType getPlacementType() {
+        return EnumPlacementType.ANY;
+    }
+
+    public boolean hasConnectivityState() {
         return true;
     }
 }

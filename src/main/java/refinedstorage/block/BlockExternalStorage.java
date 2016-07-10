@@ -13,7 +13,7 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.tile.externalstorage.TileExternalStorage;
 
-public class BlockExternalStorage extends BlockNode {
+public class BlockExternalStorage extends BlockCable {
     public BlockExternalStorage() {
         super("external_storage");
     }
@@ -37,12 +37,16 @@ public class BlockExternalStorage extends BlockNode {
         super.neighborChanged(state, world, pos, block);
 
         if (!world.isRemote) {
-            ((TileExternalStorage) world.getTileEntity(pos)).updateStorage();
+            TileExternalStorage externalStorage = (TileExternalStorage) world.getTileEntity(pos);
+
+            if (externalStorage.getNetwork() != null) {
+                externalStorage.updateStorage(externalStorage.getNetwork());
+            }
         }
     }
 
     @Override
-    public boolean hasOppositeFacingOnSneakPlace() {
-        return true;
+    public EnumPlacementType getPlacementType() {
+        return EnumPlacementType.ANY;
     }
 }

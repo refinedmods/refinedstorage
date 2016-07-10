@@ -12,11 +12,6 @@ public interface INetworkNode {
     void updateNode();
 
     /**
-     * @return If this node can send a connectivity update
-     */
-    boolean canSendConnectivityUpdate();
-
-    /**
      * @return The energy usage of this node
      */
     int getEnergyUsage();
@@ -36,8 +31,9 @@ public interface INetworkNode {
     /**
      * Called when this node is disconnected from a network.
      *
+     * @param network The network
      */
-    void onDisconnected();
+    void onDisconnected(INetworkMaster network);
 
     /**
      * Called when the connection state of this node changes.

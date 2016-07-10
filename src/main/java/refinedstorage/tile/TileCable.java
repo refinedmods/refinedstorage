@@ -15,11 +15,6 @@ public class TileCable extends TileNode {
     }
 
     @Override
-    public boolean canSendConnectivityUpdate() {
-        return false;
-    }
-
-    @Override
     public Class<? extends Container> getContainer() {
         return null;
     }

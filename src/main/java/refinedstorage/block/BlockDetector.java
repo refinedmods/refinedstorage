@@ -1,14 +1,15 @@
 package refinedstorage.block;
 
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -17,6 +18,8 @@ import refinedstorage.RefinedStorageGui;
 import refinedstorage.tile.TileDetector;
 
 public class BlockDetector extends BlockNode {
+    public static final AxisAlignedBB AABB_DETECTOR = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 4D / 16D, 1.0D);
+
     public static final PropertyBool POWERED = PropertyBool.create("powered");
 
     public BlockDetector() {
@@ -25,11 +28,9 @@ public class BlockDetector extends BlockNode {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[]{
-            DIRECTION,
-            CONNECTED,
-            POWERED
-        });
+        return createBlockStateBuilder()
+            .add(POWERED)
+            .build();
     }
 
     @Override
@@ -39,19 +40,18 @@ public class BlockDetector extends BlockNode {
     }
 
     @Override
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+        return AABB_DETECTOR;
+    }
+
+    @Override
     public TileEntity createTileEntity(World world, IBlockState state) {
         return new TileDetector();
     }
 
     @Override
     public int getWeakPower(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
-        TileDetector detector = (TileDetector) world.getTileEntity(pos);
-
-        if (detector.getDirection() == side.getOpposite()) {
-            return detector.isPowered() ? 15 : 0;
-        }
-
-        return 0;
+        return ((TileDetector) world.getTileEntity(pos)).isPowered() ? 15 : 0;
     }
 
     @Override
@@ -71,5 +71,25 @@ public class BlockDetector extends BlockNode {
         }
 
         return true;
+    }
+
+    @Override
+    public boolean isOpaqueCube(IBlockState state) {
+        return false;
+    }
+
+    @Override
+    public boolean isFullCube(IBlockState state) {
+        return false;
+    }
+
+    @Override
+    public BlockRenderLayer getBlockLayer() {
+        return BlockRenderLayer.CUTOUT;
+    }
+
+    @Override
+    public EnumPlacementType getPlacementType() {
+        return null;
     }
 }

@@ -1,11 +1,13 @@
 package refinedstorage.tile;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.INetworkNode;
+import refinedstorage.block.BlockNode;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
 
@@ -28,9 +30,10 @@ public abstract class TileNode extends TileBase implements INetworkNode, ISynchr
         return isConnected() && canUpdate();
     }
 
-    @Override
-    public boolean canSendConnectivityUpdate() {
-        return true;
+    private boolean canSendConnectivityUpdate() {
+        Block block = getBlockType();
+
+        return block instanceof BlockNode ? ((BlockNode) block).hasConnectivityState() : false;
     }
 
     @Override
@@ -65,7 +68,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, ISynchr
     }
 
     @Override
-    public void onDisconnected() {
+    public void onDisconnected(INetworkMaster network) {
         onConnectionChange(network, false);
 
         this.connected = false;
@@ -144,14 +147,18 @@ public abstract class TileNode extends TileBase implements INetworkNode, ISynchr
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {
         super.writeUpdate(tag);
 
-        tag.setBoolean(NBT_CONNECTED, isActive());
+        if (canSendConnectivityUpdate()) {
+            tag.setBoolean(NBT_CONNECTED, isActive());
+        }
 
         return tag;
     }
 
     public void readUpdate(NBTTagCompound tag) {
-        super.readUpdate(tag);
+        if (canSendConnectivityUpdate()) {
+            connected = tag.getBoolean(NBT_CONNECTED);
+        }
 
-        connected = tag.getBoolean(NBT_CONNECTED);
+        super.readUpdate(tag);
     }
 }

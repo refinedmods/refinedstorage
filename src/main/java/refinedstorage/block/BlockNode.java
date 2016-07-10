@@ -1,6 +1,5 @@
 package refinedstorage.block;
 
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -26,18 +25,33 @@ public abstract class BlockNode extends BlockBase {
         return true;
     }
 
+    public boolean hasConnectivityState() {
+        return false;
+    }
+
+    @Override
+    protected BlockStateContainer.Builder createBlockStateBuilder() {
+        BlockStateContainer.Builder builder = super.createBlockStateBuilder();
+
+        if (hasConnectivityState()) {
+            builder.add(CONNECTED);
+        }
+
+        return builder;
+    }
+
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[]{
-            DIRECTION,
-            CONNECTED
-        });
+        return createBlockStateBuilder().build();
     }
 
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
-        return super.getActualState(state, world, pos)
-            .withProperty(CONNECTED, ((TileNode) world.getTileEntity(pos)).isConnected());
+        if (hasConnectivityState()) {
+            return super.getActualState(state, world, pos).withProperty(CONNECTED, ((TileNode) world.getTileEntity(pos)).isConnected());
+        }
+
+        return super.getActualState(state, world, pos);
     }
 
     @Override

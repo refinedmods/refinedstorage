@@ -1,6 +1,7 @@
 package refinedstorage.item;
 
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
@@ -62,6 +63,15 @@ public class ItemBlockStorage extends ItemBlockBase {
 
     private static boolean isValid(ItemStack stack) {
         return stack.getTagCompound() != null && stack.getTagCompound().hasKey(TileStorage.NBT_STORAGE);
+    }
+
+    @Override
+    public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+        super.onUpdate(stack, world, entity, slot, selected);
+
+        if (!stack.hasTagCompound()) {
+            initNBT(stack);
+        }
     }
 
     @Override

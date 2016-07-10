@@ -5,7 +5,7 @@
     "textures": {
       "side": "refinedstorage:blocks/side",
       "top": "refinedstorage:blocks/side",
-      "front": "refinedstorage:blocks/controller_8"
+      "front": "refinedstorage:blocks/controller_7"
     }
   },
   "variants": {
@@ -31,8 +31,6 @@
       "6": {
       },
       "7": {
-      },
-      "8": {
       }
     },
     "type": {
