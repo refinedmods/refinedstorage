@@ -1,5 +1,10 @@
 # Refined Storage Changelog
 
+### 0.8.9
+**Bugfixes**
+- Several models / texture tweaks
+- Fixed bug where Grid doesn't handle remainder sometimes
+
 ### 0.8.8
 **Bugfixes**
 - Use ore dictionary for recipes with glass
