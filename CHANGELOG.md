@@ -2,9 +2,14 @@
 
 ### 0.8.9
 **Bugfixes**
-- Several models / texture tweaks
 - Fixed bug where Grid doesn't handle remainder sometimes
 - Fixed caching issues with External Storage
+
+**Features**
+- Added a model for the Constructor
+- Added a model for the Destructor
+- Wireless Transmitters next to each other without any cable or without being connected to a machine won't work anymore, they need to be explictly connected to a cable or other machine
+- Several models / texture tweaks
 
 ### 0.8.8
 **Bugfixes**

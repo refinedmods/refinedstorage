@@ -43,7 +43,7 @@ public abstract class NBTStorage implements IStorage {
     /**
      * @param tag      The NBT tag we are reading from and writing the amount stored to, has to be initialized with {@link NBTStorage#createNBT()} if it doesn't exist yet
      * @param capacity The capacity of this storage, -1 for infinite capacity
-     * @param tile     A {@link TileEntity} that the NBT storage is in, will be marked dirty when storage changes
+     * @param tile     A {@link TileEntity} that the NBT storage is in, will be marked dirty when the storage changes
      */
     public NBTStorage(NBTTagCompound tag, int capacity, @Nullable TileEntity tile) {
         this.tag = tag;
