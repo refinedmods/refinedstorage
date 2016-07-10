@@ -14,7 +14,6 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import refinedstorage.item.ItemStorageDisk;
 import refinedstorage.proxy.CommonProxy;
 
 import java.util.ArrayList;
@@ -36,7 +35,7 @@ public final class RefinedStorage {
     public final CreativeTabs tab = new CreativeTabs(ID) {
         @Override
         public ItemStack getIconItemStack() {
-            return new ItemStack(RefinedStorageItems.STORAGE_DISK, 1, ItemStorageDisk.TYPE_1K);
+            return new ItemStack(RefinedStorageItems.STORAGE_HOUSING);
         }
 
         @Override
