@@ -205,7 +205,7 @@ public class CommonProxy {
             "GRG",
             "EEE",
             'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
-            'G', new ItemStack(Blocks.GLASS),
+            'G', "blockGlass",
             'R', new ItemStack(Items.REDSTONE)
         );
 
@@ -355,7 +355,7 @@ public class CommonProxy {
             'R', new ItemStack(Items.REDSTONE),
             'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
             'S', "itemSilicon",
-            'G', new ItemStack(Blocks.GLASS)
+            'G', "blockGlass"
         ));
 
         GameRegistry.addRecipe(new ItemStack(RefinedStorageItems.STORAGE_PART, 1, ItemStoragePart.TYPE_4K),
@@ -393,7 +393,7 @@ public class CommonProxy {
             "GRG",
             "R R",
             "EEE",
-            'G', new ItemStack(Blocks.GLASS),
+            'G', "blockGlass",
             'R', new ItemStack(Items.REDSTONE),
             'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
         );
@@ -406,7 +406,7 @@ public class CommonProxy {
                 "GRG",
                 "RPR",
                 "EEE",
-                'G', new ItemStack(Blocks.GLASS),
+                'G', "blockGlass",
                 'R', new ItemStack(Items.REDSTONE),
                 'P', new ItemStack(RefinedStorageItems.STORAGE_PART, 1, type),
                 'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
@@ -423,7 +423,7 @@ public class CommonProxy {
             "GRG",
             "RGR",
             "EEE",
-            'G', new ItemStack(Blocks.GLASS),
+            'G', "blockGlass",
             'R', new ItemStack(Items.REDSTONE),
             'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
         );
@@ -433,7 +433,7 @@ public class CommonProxy {
             "EGE",
             "EPE",
             "EGE",
-            'G', new ItemStack(Blocks.GLASS),
+            'G', "blockGlass",
             'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED),
             'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
         );
@@ -463,7 +463,7 @@ public class CommonProxy {
             "EPE",
             'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
             'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
-            'G', new ItemStack(Blocks.GLASS),
+            'G', "blockGlass",
             'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
         );
 
