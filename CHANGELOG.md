@@ -5,6 +5,9 @@
 - Use ore dictionary for recipes with glass
 - Fixed solderer not working with automation anymore
 
+**Features**
+- Texture tweaks
+
 ### 0.8.7
 **Bugfixes**
 - Improved detector model, add a better hitbox for it
