@@ -104,7 +104,8 @@ public class ClientProxy extends CommonProxy {
         // Blocks
         ModelLoader.setCustomStateMapper(RefinedStorageBlocks.GRID, (new StateMap.Builder())
             .ignore(RefinedStorageBlocks.GRID.TYPE)
-            .build());
+            .build()
+        );
 
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.CABLE), 0, new ModelResourceLocation("refinedstorage:cable", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.GRID), EnumGridType.NORMAL.getId(), new ModelResourceLocation("refinedstorage:grid", "inventory"));

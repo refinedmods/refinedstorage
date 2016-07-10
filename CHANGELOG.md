@@ -3,6 +3,7 @@
 ### 0.8.8
 **Bugfixes**
 - Use ore dictionary for recipes with glass
+- Fixed solderer not working with automation anymore
 
 ### 0.8.7
 **Bugfixes**
