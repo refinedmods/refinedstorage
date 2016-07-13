@@ -309,7 +309,7 @@ public class CommonProxy {
             'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
             'D', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
             'R', new ItemStack(Items.REDSTONE),
-            'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
+            'M', new ItemStack(RefinedStorageBlocks.CABLE),
             'I', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
         );
 
@@ -321,7 +321,7 @@ public class CommonProxy {
             'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
             'C', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
             'R', new ItemStack(Items.REDSTONE),
-            'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
+            'M', new ItemStack(RefinedStorageBlocks.CABLE),
             'I', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
         );
 
