@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 0.8.10
+**Bugfixes**
+- Fixed not being able to get some items out of Grid
+
 ### 0.8.9
 **Bugfixes**
 - Fixed bug where Grid crafting doesn't handle remainder sometimes

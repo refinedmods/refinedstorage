@@ -295,7 +295,7 @@ public class GuiGrid extends GuiBase {
         }
 
         if (isOverSlotWithItem()) {
-            drawTooltip(mouseX, mouseY, items.get(slotNumber));
+            drawTooltip(mouseX, mouseY, items.get(slotNumber).copy());
         }
 
         if (isOverClear(mouseX, mouseY)) {
