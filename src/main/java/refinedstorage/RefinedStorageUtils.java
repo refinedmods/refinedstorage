@@ -112,6 +112,10 @@ public final class RefinedStorageUtils {
             return false;
         }
 
+        if (left.getItem() != right.getItem()) {
+            return false;
+        }
+
         if ((flags & CompareFlags.COMPARE_DAMAGE) == CompareFlags.COMPARE_DAMAGE) {
             if (left.getMetadata() != right.getMetadata()) {
                 return false;
@@ -119,7 +123,7 @@ public final class RefinedStorageUtils {
         }
 
         if ((flags & CompareFlags.COMPARE_NBT) == CompareFlags.COMPARE_NBT) {
-            if (!ItemStack.areItemStackTagsEqual(left, right)) {
+            if (!compareNbt(left, right)) {
                 return false;
             }
         }
@@ -130,7 +134,21 @@ public final class RefinedStorageUtils {
             }
         }
 
-        return left.getItem() == right.getItem();
+        return true;
+    }
+
+    public static boolean compareNbt(ItemStack left, ItemStack right) {
+        if (!ItemStack.areItemStackTagsEqual(left, right)) {
+            if (left.hasTagCompound() && !right.hasTagCompound() && left.getTagCompound().hasNoTags()) {
+                return true;
+            } else if (!left.hasTagCompound() && right.hasTagCompound() && right.getTagCompound().hasNoTags()) {
+                return true;
+            }
+
+            return false;
+        }
+
+        return true;
     }
 
     public static boolean compareStackNoQuantity(ItemStack left, ItemStack right) {
