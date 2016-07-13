@@ -298,8 +298,7 @@ public class GuiGrid extends GuiBase {
         if (isOverSlotWithItem()) {
             /**
              * Some mods modify the NBT tag in {@link Item#addInformation(ItemStack, EntityPlayer, List, boolean)}
-             * and that would cause a client and server desync between the items and
-             * that makes pulling fail.
+             * and that would cause a client and server desync between the items and that makes pulling fail.
              */
             drawTooltip(mouseX, mouseY, items.get(slotNumber).copy());
         }
