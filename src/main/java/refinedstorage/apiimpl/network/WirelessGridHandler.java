@@ -22,8 +22,8 @@ public class WirelessGridHandler implements IWirelessGridHandler {
 
     private INetworkMaster network;
 
-    private List<WirelessGridConsumer> consumers = new ArrayList<WirelessGridConsumer>();
-    private List<WirelessGridConsumer> consumersToRemove = new ArrayList<WirelessGridConsumer>();
+    private List<IWirelessGridConsumer> consumers = new ArrayList<IWirelessGridConsumer>();
+    private List<IWirelessGridConsumer> consumersToRemove = new ArrayList<IWirelessGridConsumer>();
 
     public WirelessGridHandler(INetworkMaster network) {
         this.network = network;
@@ -34,12 +34,12 @@ public class WirelessGridHandler implements IWirelessGridHandler {
         consumers.removeAll(consumersToRemove);
         consumersToRemove.clear();
 
-        Iterator<WirelessGridConsumer> it = consumers.iterator();
+        Iterator<IWirelessGridConsumer> it = consumers.iterator();
 
         while (it.hasNext()) {
-            WirelessGridConsumer consumer = it.next();
+            IWirelessGridConsumer consumer = it.next();
 
-            if (!RefinedStorageUtils.compareStack(consumer.getWirelessGrid(), consumer.getPlayer().getHeldItem(consumer.getHand()))) {
+            if (!RefinedStorageUtils.compareStack(consumer.getStack(), consumer.getPlayer().getHeldItem(consumer.getHand()))) {
                 /**
                  * This will call {@link net.minecraft.inventory.Container#onContainerClosed(EntityPlayer)} so the consumer is removed from the list.
                  */
@@ -83,7 +83,7 @@ public class WirelessGridHandler implements IWirelessGridHandler {
 
     @Override
     public void onClose(EntityPlayer player) {
-        WirelessGridConsumer consumer = getConsumer(player);
+        IWirelessGridConsumer consumer = getConsumer(player);
 
         if (consumer != null) {
             consumersToRemove.add(consumer);
@@ -92,7 +92,7 @@ public class WirelessGridHandler implements IWirelessGridHandler {
 
     @Override
     public void drainEnergy(EntityPlayer player, int energy) {
-        WirelessGridConsumer consumer = getConsumer(player);
+        IWirelessGridConsumer consumer = getConsumer(player);
 
         if (consumer != null) {
             ItemWirelessGrid item = RefinedStorageItems.WIRELESS_GRID;
@@ -110,11 +110,11 @@ public class WirelessGridHandler implements IWirelessGridHandler {
     }
 
     @Override
-    public WirelessGridConsumer getConsumer(EntityPlayer player) {
-        Iterator<WirelessGridConsumer> it = consumers.iterator();
+    public IWirelessGridConsumer getConsumer(EntityPlayer player) {
+        Iterator<IWirelessGridConsumer> it = consumers.iterator();
 
         while (it.hasNext()) {
-            WirelessGridConsumer consumer = it.next();
+            IWirelessGridConsumer consumer = it.next();
 
             if (consumer.getPlayer() == player) {
                 return consumer;
