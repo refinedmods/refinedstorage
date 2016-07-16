@@ -242,7 +242,7 @@ public class TileGrid extends TileNode implements IGrid {
                             ItemStack took = RefinedStorageUtils.extractItem(network, possibility, 1);
 
                             if (took != null) {
-                                matrix.setInventorySlotContents(i, possibility);
+                                matrix.setInventorySlotContents(i, took);
 
                                 break;
                             }
