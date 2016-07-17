@@ -176,11 +176,11 @@ public class GuiGrid extends GuiBase {
         getScrollbar().setScrollDelta((float) getScrollbar().getScrollbarHeight() / (float) getRows());
     }
 
-    public int getOffset() {
+    private int getOffset() {
         return (int) Math.ceil(getScrollbar().getCurrentScroll() / 70f * (float) getRows());
     }
 
-    public int getRows() {
+    private int getRows() {
         int max = (int) Math.ceil((float) items.size() / 9f);
 
         return max < 0 ? 0 : max;
@@ -198,11 +198,11 @@ public class GuiGrid extends GuiBase {
         return inBounds(7, 19, 162, 18 * getVisibleRows(), mouseX, mouseY);
     }
 
-    public int getVisibleRows() {
+    private int getVisibleRows() {
         return (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 4 : 5;
     }
 
-    public boolean isOverClear(int mouseX, int mouseY) {
+    private boolean isOverClear(int mouseX, int mouseY) {
         switch (grid.getType()) {
             case CRAFTING:
                 return inBounds(82, 95, 7, 7, mouseX, mouseY);
@@ -213,7 +213,7 @@ public class GuiGrid extends GuiBase {
         }
     }
 
-    public boolean isOverCreatePattern(int mouseX, int mouseY) {
+    private boolean isOverCreatePattern(int mouseX, int mouseY) {
         return grid.getType() == EnumGridType.PATTERN && inBounds(152, 114, 16, 16, mouseX, mouseY) && ((TileGrid) grid).canCreatePattern();
     }
 

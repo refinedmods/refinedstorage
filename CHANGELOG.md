@@ -6,6 +6,9 @@
 - Fixed exporter crafting upgrades taking priority over other tasks
 - Fixed NPE with incorrectly initialized disks
 
+**Features**
+- Added X button to Processing Pattern Encoder to clear configuration of inputs and outputs
+
 ### 0.8.10
 **Bugfixes**
 - Fixed not being able to get some items out of Grid
