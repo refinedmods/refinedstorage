@@ -46,7 +46,7 @@ public class TileConstructor extends TileNode implements ICompareConfig {
     private int compare = 0;
     private IBlockState block;
 
-    private CraftingTaskScheduler scheduler = new CraftingTaskScheduler();
+    private CraftingTaskScheduler scheduler = new CraftingTaskScheduler(this);
 
     @Override
     public int getEnergyUsage() {

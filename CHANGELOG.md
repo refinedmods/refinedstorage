@@ -1,5 +1,10 @@
 # Refined Storage Changelog
 
+### 0.8.11
+**Bugfixes**
+- Fixed minor dupe bug with JEI transferring
+- Fixed exporter crafting upgrades taking priority over other tasks
+
 ### 0.8.10
 **Bugfixes**
 - Fixed not being able to get some items out of Grid

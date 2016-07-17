@@ -33,7 +33,7 @@ public class TileExporter extends TileNode implements ICompareConfig {
 
     private int compare = 0;
 
-    private CraftingTaskScheduler scheduler = new CraftingTaskScheduler();
+    private CraftingTaskScheduler scheduler = new CraftingTaskScheduler(this);
 
     @Override
     public int getEnergyUsage() {
