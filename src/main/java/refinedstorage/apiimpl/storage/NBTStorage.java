@@ -238,6 +238,10 @@ public abstract class NBTStorage implements IStorage {
         return tag;
     }
 
+    public static boolean isValid(ItemStack stack) {
+        return stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_ITEMS) && stack.getTagCompound().hasKey(NBT_STORED);
+    }
+
     /**
      * @param stack The {@link ItemStack} to populate with the NBT tags from {@link NBTStorage#createNBT()}
      * @return The provided {@link ItemStack} with NBT tags from {@link NBTStorage#createNBT()}

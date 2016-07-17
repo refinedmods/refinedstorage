@@ -4,6 +4,7 @@
 **Bugfixes**
 - Fixed minor dupe bug with JEI transferring
 - Fixed exporter crafting upgrades taking priority over other tasks
+- Fixed NPE with incorrectly initialized disks
 
 ### 0.8.10
 **Bugfixes**

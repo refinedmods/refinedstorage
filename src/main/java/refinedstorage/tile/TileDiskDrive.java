@@ -53,7 +53,12 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
     private static final String NBT_MODE = "Mode";
     private static final String NBT_STORED = "Stored";
 
-    private BasicItemHandler disks = new BasicItemHandler(8, this, new BasicItemValidator(RefinedStorageItems.STORAGE_DISK)) {
+    private BasicItemHandler disks = new BasicItemHandler(8, this, new BasicItemValidator(RefinedStorageItems.STORAGE_DISK) {
+        @Override
+        public boolean isValid(ItemStack disk) {
+            return super.isValid(disk) && NBTStorage.isValid(disk);
+        }
+    }) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
