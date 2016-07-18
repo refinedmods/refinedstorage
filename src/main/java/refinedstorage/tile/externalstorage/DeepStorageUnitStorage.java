@@ -17,18 +17,11 @@ public class DeepStorageUnitStorage extends ExternalStorage {
     public DeepStorageUnitStorage(TileExternalStorage externalStorage, IDeepStorageUnit unit) {
         this.externalStorage = externalStorage;
         this.unit = unit;
-
-        setHash();
     }
 
     @Override
     public int getCapacity() {
         return unit.getMaxStoredCount();
-    }
-
-    @Override
-    public int getHash() {
-        return RefinedStorageUtils.getItemStackHashCode(unit.getStoredItemType());
     }
 
     @Override

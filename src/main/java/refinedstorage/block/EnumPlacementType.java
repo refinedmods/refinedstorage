@@ -25,7 +25,9 @@ public enum EnumPlacementType {
     EnumFacing getFrom(BlockPos pos, EntityLivingBase entity) {
         switch (this) {
             case ANY:
-                return BlockPistonBase.getFacingFromEntity(pos, entity);
+                EnumFacing facing = BlockPistonBase.getFacingFromEntity(pos, entity);
+                
+                return entity.isSneaking() ? facing.getOpposite() : facing;
             case HORIZONTAL:
                 return entity.getHorizontalFacing().getOpposite();
             default:

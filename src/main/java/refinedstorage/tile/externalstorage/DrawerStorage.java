@@ -17,18 +17,11 @@ public class DrawerStorage extends ExternalStorage {
     public DrawerStorage(TileExternalStorage externalStorage, IDrawer drawer) {
         this.externalStorage = externalStorage;
         this.drawer = drawer;
-
-        setHash();
     }
 
     @Override
     public int getCapacity() {
         return drawer.getMaxCapacity();
-    }
-
-    @Override
-    public int getHash() {
-        return RefinedStorageUtils.getItemStackHashCode(drawer.getStoredItemPrototype(), drawer.getStoredItemCount());
     }
 
     @Override

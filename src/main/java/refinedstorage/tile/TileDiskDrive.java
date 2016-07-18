@@ -6,6 +6,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -51,21 +53,31 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
     private static final String NBT_MODE = "Mode";
     private static final String NBT_STORED = "Stored";
 
-    private BasicItemHandler disks = new BasicItemHandler(8, this, new BasicItemValidator(RefinedStorageItems.STORAGE_DISK)) {
+    private BasicItemHandler disks = new BasicItemHandler(8, this, new BasicItemValidator(RefinedStorageItems.STORAGE_DISK) {
+        @Override
+        public boolean isValid(ItemStack disk) {
+            return super.isValid(disk) && NBTStorage.isValid(disk);
+        }
+    }) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            ItemStack disk = getStackInSlot(slot);
+            /**
+             * Can't use {@link net.minecraft.world.World#isRemote} here because when {@link TileDiskDrive#readFromNBT(NBTTagCompound)} is called there is no world set yet.
+             */
+            if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
+                ItemStack disk = getStackInSlot(slot);
 
-            if (disk == null) {
-                storages[slot] = null;
-            } else {
-                storages[slot] = new Storage(disk);
-            }
+                if (disk == null) {
+                    storages[slot] = null;
+                } else {
+                    storages[slot] = new Storage(disk);
+                }
 
-            if (network != null) {
-                network.getStorage().rebuild();
+                if (network != null) {
+                    network.getStorage().rebuild();
+                }
             }
         }
 

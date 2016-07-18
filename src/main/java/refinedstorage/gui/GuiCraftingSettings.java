@@ -4,11 +4,11 @@ import com.google.common.primitives.Ints;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import org.lwjgl.input.Keyboard;
 import refinedstorage.RefinedStorage;
 import refinedstorage.apiimpl.network.GridHandler;
+import refinedstorage.apiimpl.storage.ClientStack;
 import refinedstorage.container.ContainerCraftingSettings;
 import refinedstorage.network.MessageGridCraftingStart;
 
@@ -19,13 +19,13 @@ public class GuiCraftingSettings extends GuiBase {
 
     private GuiTextField amountField;
     private GuiGrid gui;
-    private ItemStack stack;
+    private ClientStack stack;
     private GuiButton startButton;
     private GuiButton cancelButton;
     private GuiButton[] incrementButtons = new GuiButton[6];
 
-    public GuiCraftingSettings(GuiGrid gui, EntityPlayer player, ItemStack stack) {
-        super(new ContainerCraftingSettings(player, stack), 172, 99);
+    public GuiCraftingSettings(GuiGrid gui, EntityPlayer player, ClientStack stack) {
+        super(new ContainerCraftingSettings(player, stack.getStack()), 172, 99);
 
         this.gui = gui;
         this.stack = stack;
@@ -124,7 +124,7 @@ public class GuiCraftingSettings extends GuiBase {
         Integer quantity = Ints.tryParse(amountField.getText());
 
         if (quantity != null && quantity > 0 && quantity <= GridHandler.MAX_CRAFTING_PER_REQUEST) {
-            RefinedStorage.INSTANCE.network.sendToServer(new MessageGridCraftingStart(stack, quantity));
+            RefinedStorage.INSTANCE.network.sendToServer(new MessageGridCraftingStart(stack.getId(), quantity));
 
             close();
         }

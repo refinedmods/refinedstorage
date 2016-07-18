@@ -126,15 +126,23 @@ public class TileGrid extends TileNode implements IGrid {
         result.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(matrix, worldObj));
     }
 
-    public void onCrafted() {
+    public void onCrafted(EntityPlayer player) {
         ItemStack[] remainder = CraftingManager.getInstance().getRemainingItems(matrix, worldObj);
 
         for (int i = 0; i < matrix.getSizeInventory(); ++i) {
-            if (i < remainder.length && remainder[i] != null) {
-                matrix.setInventorySlotContents(i, remainder[i].copy());
-            } else {
-                ItemStack slot = matrix.getStackInSlot(i);
+            ItemStack slot = matrix.getStackInSlot(i);
 
+            if (i < remainder.length && remainder[i] != null) {
+                if (slot != null && slot.stackSize > 1) {
+                    if (!player.inventory.addItemStackToInventory(remainder[i].copy())) {
+                        InventoryHelper.spawnItemStack(player.worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), remainder[i].copy());
+                    }
+
+                    matrix.decrStackSize(i, 1);
+                } else {
+                    matrix.setInventorySlotContents(i, remainder[i].copy());
+                }
+            } else {
                 if (slot != null) {
                     if (slot.stackSize == 1 && isConnected()) {
                         matrix.setInventorySlotContents(i, RefinedStorageUtils.extractItem(network, slot, 1));
@@ -154,7 +162,7 @@ public class TileGrid extends TileNode implements IGrid {
         ItemStack crafted = result.getStackInSlot(0);
 
         while (true) {
-            onCrafted();
+            onCrafted(player);
 
             craftedItemsList.add(crafted.copy());
 
@@ -234,7 +242,7 @@ public class TileGrid extends TileNode implements IGrid {
                             ItemStack took = RefinedStorageUtils.extractItem(network, possibility, 1);
 
                             if (took != null) {
-                                matrix.setInventorySlotContents(i, possibility);
+                                matrix.setInventorySlotContents(i, took);
 
                                 break;
                             }

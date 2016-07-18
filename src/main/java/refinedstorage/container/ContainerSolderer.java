@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
+import refinedstorage.RefinedStorageItems;
 import refinedstorage.container.slot.SlotOutput;
 import refinedstorage.tile.TileSolderer;
 
@@ -46,8 +47,12 @@ public class ContainerSolderer extends ContainerBase {
                 if (!mergeItemStack(stack, 4 + 4, inventorySlots.size(), false)) {
                     return null;
                 }
-            } else if (!mergeItemStack(stack, 0, 3, false)) { // 0 - 3 because we can't shift click to output slot
-                return null;
+            } else {
+                if (stack.getItem() != RefinedStorageItems.UPGRADE || !mergeItemStack(stack, 4, 4 + 4, false)) {
+                    if (!mergeItemStack(stack, 0, 3, false)) { // 0 - 3 because we can't shift click to output slot
+                        return null;
+                    }
+                }
             }
 
             if (stack.stackSize == 0) {

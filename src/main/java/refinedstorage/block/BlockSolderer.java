@@ -69,6 +69,6 @@ public class BlockSolderer extends BlockNode {
 
     @Override
     public EnumPlacementType getPlacementType() {
-        return null;
+        return EnumPlacementType.HORIZONTAL;
     }
 }

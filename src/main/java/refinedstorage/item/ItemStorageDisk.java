@@ -93,19 +93,21 @@ public class ItemStorageDisk extends ItemBase {
 
     @Override
     public void addInformation(ItemStack disk, EntityPlayer player, List list, boolean b) {
-        int capacity = EnumStorageType.getById(disk.getItemDamage()).getCapacity();
+        if (NBTStorage.isValid(disk)) {
+            int capacity = EnumStorageType.getById(disk.getItemDamage()).getCapacity();
 
-        if (capacity == -1) {
-            list.add(I18n.format("misc.refinedstorage:storage.stored", NBTStorage.getStoredFromNBT(disk.getTagCompound())));
-        } else {
-            list.add(I18n.format("misc.refinedstorage:storage.stored_capacity", NBTStorage.getStoredFromNBT(disk.getTagCompound()), capacity));
+            if (capacity == -1) {
+                list.add(I18n.format("misc.refinedstorage:storage.stored", NBTStorage.getStoredFromNBT(disk.getTagCompound())));
+            } else {
+                list.add(I18n.format("misc.refinedstorage:storage.stored_capacity", NBTStorage.getStoredFromNBT(disk.getTagCompound()), capacity));
+            }
         }
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
-        if (!world.isRemote && player.isSneaking() && NBTStorage.getStoredFromNBT(stack.getTagCompound()) == 0 && stack.getMetadata() != TYPE_CREATIVE) {
-            ItemStack storagePart = new ItemStack(RefinedStorageItems.STORAGE_PART, 1, stack.getMetadata());
+    public ActionResult<ItemStack> onItemRightClick(ItemStack disk, World world, EntityPlayer player, EnumHand hand) {
+        if (!world.isRemote && player.isSneaking() && NBTStorage.isValid(disk) && NBTStorage.getStoredFromNBT(disk.getTagCompound()) == 0 && disk.getMetadata() != TYPE_CREATIVE) {
+            ItemStack storagePart = new ItemStack(RefinedStorageItems.STORAGE_PART, 1, disk.getMetadata());
 
             if (!player.inventory.addItemStackToInventory(storagePart.copy())) {
                 InventoryHelper.spawnItemStack(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), storagePart);
@@ -114,7 +116,7 @@ public class ItemStorageDisk extends ItemBase {
             return new ActionResult(EnumActionResult.SUCCESS, new ItemStack(RefinedStorageItems.STORAGE_HOUSING));
         }
 
-        return new ActionResult(EnumActionResult.PASS, stack);
+        return new ActionResult(EnumActionResult.PASS, disk);
     }
 
     @Override

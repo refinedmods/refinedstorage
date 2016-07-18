@@ -20,8 +20,8 @@ public class GridHandler implements IGridHandler {
     }
 
     @Override
-    public void onExtract(ItemStack stack, int flags, EntityPlayerMP player) {
-        ItemStack item = RefinedStorageUtils.getItem(network, stack);
+    public void onExtract(int id, int flags, EntityPlayerMP player) {
+        ItemStack item = network.getStorage().get(id);
 
         if (item == null) {
             return;
@@ -34,7 +34,7 @@ public class GridHandler implements IGridHandler {
         ItemStack held = player.inventory.getItemStack();
 
         if (single) {
-            if (held != null && (!RefinedStorageUtils.compareStackNoQuantity(stack, held) || held.stackSize + 1 > held.getMaxStackSize())) {
+            if (held != null && (!RefinedStorageUtils.compareStackNoQuantity(item, held) || held.stackSize + 1 > held.getMaxStackSize())) {
                 return;
             }
         } else if (player.inventory.getItemStack() != null) {
@@ -55,9 +55,9 @@ public class GridHandler implements IGridHandler {
             // NO OP, the quantity already set (64) is needed for shift
         }
 
-        size = Math.min(size, stack.getItem().getItemStackLimit(stack));
+        size = Math.min(size, item.getItem().getItemStackLimit(item));
 
-        ItemStack took = RefinedStorageUtils.extractItem(network, stack, size);
+        ItemStack took = RefinedStorageUtils.extractItem(network, item, size);
 
         if (took != null) {
             if ((flags & GridExtractFlags.EXTRACT_SHIFT) == GridExtractFlags.EXTRACT_SHIFT) {
@@ -112,8 +112,14 @@ public class GridHandler implements IGridHandler {
     }
 
     @Override
-    public void onCraftingRequested(ItemStack stack, int quantity) {
+    public void onCraftingRequested(int id, int quantity) {
         if (quantity <= 0 || quantity > MAX_CRAFTING_PER_REQUEST) {
+            return;
+        }
+
+        ItemStack stack = network.getStorage().get(id);
+
+        if (stack == null) {
             return;
         }
 

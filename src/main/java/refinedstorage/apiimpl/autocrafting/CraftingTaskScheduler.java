@@ -2,6 +2,7 @@ package refinedstorage.apiimpl.autocrafting;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.network.INetworkMaster;
@@ -9,7 +10,12 @@ import refinedstorage.api.network.INetworkMaster;
 public class CraftingTaskScheduler {
     private static final String NBT_SCHEDULED = "CraftingTaskScheduled";
 
+    private TileEntity tile;
     private ItemStack scheduledItem;
+
+    public CraftingTaskScheduler(TileEntity tile) {
+        this.tile = tile;
+    }
 
     public boolean canSchedule(int compare, ItemStack item) {
         return scheduledItem == null || !RefinedStorageUtils.compareStack(scheduledItem, item, compare);
@@ -21,12 +27,16 @@ public class CraftingTaskScheduler {
         if (pattern != null) {
             scheduledItem = item;
 
-            network.addCraftingTask(network.createCraftingTask(pattern));
+            network.addCraftingTaskAsLast(network.createCraftingTask(pattern));
+
+            tile.markDirty();
         }
     }
 
     public void resetSchedule() {
-        this.scheduledItem = null;
+        scheduledItem = null;
+
+        tile.markDirty();
     }
 
     public void writeToNBT(NBTTagCompound tag) {

@@ -39,11 +39,11 @@ public interface IWirelessGridHandler {
     void drainEnergy(EntityPlayer player, int energy);
 
     /**
-     * Returns a {@link WirelessGridConsumer} for a player.
+     * Returns a {@link IWirelessGridConsumer} for a player.
      *
      * @param player The player to get the wireless grid consumer for
-     * @return The {@link IWirelessGridHandler} that corresponds to a player, or null if the player isn't using a wireless grid
+     * @return The {@link IWirelessGridConsumer} that corresponds to a player, or null if the player isn't using a wireless grid
      */
     @Nullable
-    WirelessGridConsumer getConsumer(EntityPlayer player);
+    IWirelessGridConsumer getConsumer(EntityPlayer player);
 }

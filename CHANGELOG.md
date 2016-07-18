@@ -1,8 +1,40 @@
 # Refined Storage Changelog
 
+### 0.8.11
+**Bugfixes**
+- Fixed minor dupe bug with JEI transferring
+- Fixed exporter crafting upgrades taking priority over other tasks
+- Fixed NPE with incorrectly initialized disks
+
+**Features**
+- Added X button to Processing Pattern Encoder to clear configuration of inputs and outputs
+- Re-added opposite facing on shift click functionality
+- Updated to Forge 2014
+
+### 0.8.10
+**Bugfixes**
+- Fixed not being able to get some items out of Grid
+- Fixed slight glitch in Constructor and Destructor model
+
+### 0.8.9
+**Bugfixes**
+- Fixed bug where Grid crafting doesn't handle remainder sometimes
+- Fixed caching issues with External Storage
+- Fixed possible crash with Disk Drives
+
+**Features**
+- Added a model for the Constructor
+- Added a model for the Destructor
+- Wireless Transmitters next to each other without any cable or without being connected to a machine won't work anymore, they need to be explictly connected to a cable or other machine
+- Some models / texture tweaks
+
 ### 0.8.8
 **Bugfixes**
 - Use ore dictionary for recipes with glass
+- Fixed solderer not working with automation anymore
+
+**Features**
+- Texture tweaks
 
 ### 0.8.7
 **Bugfixes**

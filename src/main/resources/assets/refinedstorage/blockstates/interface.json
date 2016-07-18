@@ -3,7 +3,7 @@
   "defaults": {
     "model": "cube_all",
     "textures": {
-      "all": "refinedstorage:blocks/interface"
+      "all": "refinedstorage:blocks/interface_disconnected"
     }
   },
   "variants": {
@@ -12,8 +12,14 @@
         "transform": "forge:default-block"
       }
     ],
-    "normal": {
-      "model": "cube_all"
+    "connected": {
+      "true": {
+        "textures": {
+          "all": "refinedstorage:blocks/interface_connected"
+        }
+      },
+      "false": {
+      }
     }
   }
 }

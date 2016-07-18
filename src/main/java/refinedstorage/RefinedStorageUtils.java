@@ -112,14 +112,18 @@ public final class RefinedStorageUtils {
             return false;
         }
 
+        if (left.getItem() != right.getItem()) {
+            return false;
+        }
+
         if ((flags & CompareFlags.COMPARE_DAMAGE) == CompareFlags.COMPARE_DAMAGE) {
-            if (left.getMetadata() != right.getMetadata()) {
+            if (left.getItemDamage() != right.getItemDamage()) {
                 return false;
             }
         }
 
         if ((flags & CompareFlags.COMPARE_NBT) == CompareFlags.COMPARE_NBT) {
-            if (!ItemStack.areItemStackTagsEqual(left, right)) {
+            if (!compareNbt(left, right)) {
                 return false;
             }
         }
@@ -130,7 +134,21 @@ public final class RefinedStorageUtils {
             }
         }
 
-        return left.getItem() == right.getItem();
+        return true;
+    }
+
+    public static boolean compareNbt(ItemStack left, ItemStack right) {
+        if (!ItemStack.areItemStackTagsEqual(left, right)) {
+            if (left.hasTagCompound() && !right.hasTagCompound() && left.getTagCompound().hasNoTags()) {
+                return true;
+            } else if (!left.hasTagCompound() && right.hasTagCompound() && right.getTagCompound().hasNoTags()) {
+                return true;
+            }
+
+            return false;
+        }
+
+        return true;
     }
 
     public static boolean compareStackNoQuantity(ItemStack left, ItemStack right) {
@@ -316,10 +334,6 @@ public final class RefinedStorageUtils {
         return network.extractItem(stack, size, CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_NBT);
     }
 
-    public static ItemStack getItem(INetworkMaster network, ItemStack stack) {
-        return network.getStorage().get(stack, CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_NBT);
-    }
-
     public static ICraftingPattern getPattern(INetworkMaster network, ItemStack stack) {
         return network.getPattern(stack, CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_NBT);
     }
@@ -329,14 +343,6 @@ public final class RefinedStorageUtils {
     }
 
     public static int getItemStackHashCode(ItemStack stack) {
-        return getItemStackHashCode(stack, stack == null ? 0 : stack.stackSize);
-    }
-
-    public static int getItemStackHashCode(ItemStack stack, int stackSize) {
-        if (stack == null) {
-            return 0;
-        }
-
-        return stack.getItem().hashCode() + Math.max(1, stackSize) * (stack.hasTagCompound() ? stack.getTagCompound().hashCode() : 1);
+        return stack.getItem().hashCode() * (stack.getItemDamage() + 1) * (stack.hasTagCompound() ? stack.getTagCompound().hashCode() : 1);
     }
 }

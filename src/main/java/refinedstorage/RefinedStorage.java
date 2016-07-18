@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import refinedstorage.item.ItemStorageDisk;
+import refinedstorage.apiimpl.storage.ClientStack;
 import refinedstorage.proxy.CommonProxy;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import java.util.List;
 @Mod(modid = RefinedStorage.ID, version = RefinedStorage.VERSION)
 public final class RefinedStorage {
     public static final String ID = "refinedstorage";
-    public static final String VERSION = "0.8.8";
+    public static final String VERSION = "0.8.11";
 
     @SidedProxy(clientSide = "refinedstorage.proxy.ClientProxy", serverSide = "refinedstorage.proxy.ServerProxy")
     public static CommonProxy PROXY;
@@ -36,7 +36,7 @@ public final class RefinedStorage {
     public final CreativeTabs tab = new CreativeTabs(ID) {
         @Override
         public ItemStack getIconItemStack() {
-            return new ItemStack(RefinedStorageItems.STORAGE_DISK, 1, ItemStorageDisk.TYPE_1K);
+            return new ItemStack(RefinedStorageItems.STORAGE_HOUSING);
         }
 
         @Override
@@ -45,7 +45,7 @@ public final class RefinedStorage {
         }
     };
 
-    public List<ItemStack> items = new ArrayList<ItemStack>();
+    public List<ClientStack> items = new ArrayList<ClientStack>();
 
     public int cableUsage;
     public int constructorUsage;

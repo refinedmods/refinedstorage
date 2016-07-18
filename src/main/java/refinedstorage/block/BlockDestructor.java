@@ -12,7 +12,7 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.tile.TileDestructor;
 
-public class BlockDestructor extends BlockNode {
+public class BlockDestructor extends BlockCable {
     public BlockDestructor() {
         super("destructor");
     }

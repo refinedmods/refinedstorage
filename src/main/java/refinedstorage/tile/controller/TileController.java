@@ -31,6 +31,7 @@ import refinedstorage.api.network.IGridHandler;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.INetworkNode;
 import refinedstorage.api.network.IWirelessGridHandler;
+import refinedstorage.api.storage.CompareFlags;
 import refinedstorage.api.storage.IGroupedStorage;
 import refinedstorage.api.storage.IStorage;
 import refinedstorage.apiimpl.autocrafting.BasicCraftingTask;
@@ -168,19 +169,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
                 craftingTasksToAddAsLast.clear();
 
-                if (!craftingTasks.empty()) {
-                    markDirty();
-
-                    ICraftingTask top = craftingTasks.peek();
-
-                    ICraftingPatternContainer container = top.getPattern().getContainer(worldObj);
-
-                    if (container != null && (ticks % container.getSpeed()) == 0 && top.update(worldObj, this)) {
-                        top.onDone(this);
-
-                        craftingTasks.pop();
-                    }
-                }
+                updateTopCraftingTask(true);
             }
 
             wirelessGridHandler.update();
@@ -217,6 +206,22 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         }
 
         super.update();
+    }
+
+    private void updateTopCraftingTask(boolean withSpeed) {
+        if (!craftingTasks.empty()) {
+            markDirty();
+
+            ICraftingTask top = craftingTasks.peek();
+
+            ICraftingPatternContainer container = top.getPattern().getContainer(worldObj);
+
+            if (container != null && (!withSpeed || (ticks % container.getSpeed()) == 0) && top.update(worldObj, this)) {
+                top.onDone(this);
+
+                craftingTasks.pop();
+            }
+        }
     }
 
     public void disconnectAll() {
@@ -341,7 +346,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             int score = 0;
 
             for (ItemStack input : patterns.get(i).getInputs()) {
-                ItemStack stored = RefinedStorageUtils.getItem(this, input);
+                ItemStack stored = storage.get(input, CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_NBT);
 
                 score += stored != null ? stored.stackSize : 0;
             }
@@ -470,7 +475,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     public void sendStorageDeltaToClient(ItemStack stack, int delta) {
         for (EntityPlayer player : worldObj.playerEntities) {
             if (isWatchingGrid(player)) {
-                RefinedStorage.INSTANCE.network.sendTo(new MessageGridDelta(stack, delta, RefinedStorageUtils.hasPattern(this, stack)), (EntityPlayerMP) player);
+                RefinedStorage.INSTANCE.network.sendTo(new MessageGridDelta(this, stack, delta), (EntityPlayerMP) player);
             }
         }
     }
@@ -493,7 +498,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             remainder = storage.insertItem(remainder, size, simulate);
 
             if (storage instanceof ExternalStorage && !simulate) {
-                ((ExternalStorage) storage).setHash();
+                ((ExternalStorage) storage).updateCacheForcefully();
             }
 
             if (remainder == null) {
@@ -507,16 +512,14 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
         if (!simulate && inserted > 0) {
             for (int i = 0; i < inserted; ++i) {
-                if (!craftingTasks.empty()) {
-                    ICraftingTask top = craftingTasks.peek();
-
-                    if (top instanceof ProcessingCraftingTask) {
-                        ((ProcessingCraftingTask) top).onInserted(stack);
+                if (!craftingTasks.empty() && craftingTasks.peek() instanceof ProcessingCraftingTask) {
+                    if (((ProcessingCraftingTask) craftingTasks.peek()).onInserted(stack)) {
+                        updateTopCraftingTask(false);
                     }
                 }
             }
 
-            storage.add(ItemHandlerHelper.copyStackWithSize(stack, inserted));
+            storage.add(ItemHandlerHelper.copyStackWithSize(stack, inserted), false);
         }
 
         return remainder;
@@ -532,11 +535,11 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         for (IStorage storage : this.storage.getStorages()) {
             ItemStack took = storage.extractItem(stack, requested - received, flags);
 
-            if (storage instanceof ExternalStorage) {
-                ((ExternalStorage) storage).setHash();
-            }
-
             if (took != null) {
+                if (storage instanceof ExternalStorage) {
+                    ((ExternalStorage) storage).updateCacheForcefully();
+                }
+
                 if (newStack == null) {
                     newStack = took;
                 } else {

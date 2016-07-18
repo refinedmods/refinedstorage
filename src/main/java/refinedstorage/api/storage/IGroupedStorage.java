@@ -19,9 +19,10 @@ public interface IGroupedStorage {
     /**
      * Adds an item to the network. Will merge it with another item if it already exists.
      *
-     * @param stack The stack to add, do NOT modify
+     * @param stack      The stack to add, do NOT modify
+     * @param rebuilding Whether this method is called while the storage is rebuilding
      */
-    void add(ItemStack stack);
+    void add(ItemStack stack, boolean rebuilding);
 
     /**
      * Removes a item from the network.
@@ -38,6 +39,13 @@ public interface IGroupedStorage {
      * @return The {@link ItemStack}, do NOT modify
      */
     ItemStack get(ItemStack stack, int flags);
+
+    /**
+     * Gets an item from the network by ID.
+     *
+     * @return The {@link ItemStack}, do NOT modify
+     */
+    ItemStack get(int id);
 
     /**
      * @return All items in this storage network
