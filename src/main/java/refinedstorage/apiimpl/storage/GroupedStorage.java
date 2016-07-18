@@ -106,6 +106,17 @@ public class GroupedStorage implements IGroupedStorage {
     }
 
     @Override
+    public ItemStack get(int id) {
+        for (ItemStack stack : this.stacks.values()) {
+            if (RefinedStorageUtils.getItemStackHashCode(stack) == id) {
+                return stack;
+            }
+        }
+
+        return null;
+    }
+
+    @Override
     public Collection<ItemStack> getStacks() {
         return stacks.values();
     }

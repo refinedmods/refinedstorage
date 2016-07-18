@@ -2,19 +2,20 @@ package refinedstorage.network;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import refinedstorage.RefinedStorage;
+import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.apiimpl.storage.ClientStack;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MessageGridUpdate implements IMessage, IMessageHandler<MessageGridUpdate, IMessage> {
     private INetworkMaster network;
-    private List<ItemStack> items = new ArrayList<ItemStack>();
+    private List<ClientStack> items = new ArrayList<ClientStack>();
 
     public MessageGridUpdate() {
     }
@@ -28,10 +29,7 @@ public class MessageGridUpdate implements IMessage, IMessageHandler<MessageGridU
         int items = buf.readInt();
 
         for (int i = 0; i < items; ++i) {
-            ItemStack stack = ByteBufUtils.readItemStack(buf);
-            stack.stackSize = buf.readInt();
-
-            this.items.add(stack);
+            this.items.add(RefinedStorageUtils.readClientStack(buf));
         }
     }
 
@@ -40,8 +38,7 @@ public class MessageGridUpdate implements IMessage, IMessageHandler<MessageGridU
         buf.writeInt(network.getStorage().getStacks().size());
 
         for (ItemStack stack : network.getStorage().getStacks()) {
-            ByteBufUtils.writeItemStack(buf, stack);
-            buf.writeInt(stack.stackSize);
+            RefinedStorageUtils.writeClientStack(buf, network, stack);
         }
     }
 

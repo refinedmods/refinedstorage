@@ -2,57 +2,57 @@ package refinedstorage.network;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.apiimpl.storage.ClientStack;
 
 public class MessageGridDelta implements IMessage, IMessageHandler<MessageGridDelta, IMessage> {
+    private INetworkMaster network;
     private ItemStack stack;
     private int delta;
-    private boolean craftable;
+
+    private ClientStack clientStack;
 
     public MessageGridDelta() {
     }
 
-    public MessageGridDelta(ItemStack stack, int delta, boolean craftable) {
+    public MessageGridDelta(INetworkMaster network, ItemStack stack, int delta) {
+        this.network = network;
         this.stack = stack;
         this.delta = delta;
-        this.craftable = craftable;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        stack = ByteBufUtils.readItemStack(buf);
+        clientStack = RefinedStorageUtils.readClientStack(buf);
         delta = buf.readInt();
-        craftable = buf.readBoolean();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        ByteBufUtils.writeItemStack(buf, stack);
+        RefinedStorageUtils.writeClientStack(buf, network, stack);
         buf.writeInt(delta);
-        buf.writeBoolean(craftable);
     }
 
     @Override
     public IMessage onMessage(MessageGridDelta message, MessageContext ctx) {
-        for (ItemStack stack : RefinedStorage.INSTANCE.items) {
-            if (RefinedStorageUtils.compareStackNoQuantity(stack, message.stack)) {
-                if (stack.stackSize + message.delta == 0 && !message.craftable) {
+        for (ClientStack stack : RefinedStorage.INSTANCE.items) {
+            if (stack.equals(message.clientStack)) {
+                if (stack.getStack().stackSize + message.delta == 0 && !message.clientStack.isCraftable()) {
                     RefinedStorage.INSTANCE.items.remove(stack);
                 } else {
-                    stack.stackSize += message.delta;
+                    stack.getStack().stackSize += message.delta;
                 }
 
                 return null;
             }
         }
 
-        RefinedStorage.INSTANCE.items.add(ItemHandlerHelper.copyStackWithSize(message.stack, message.delta));
+        RefinedStorage.INSTANCE.items.add(message.clientStack);
 
         return null;
     }

@@ -1,7 +1,9 @@
 package refinedstorage;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
@@ -12,6 +14,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
@@ -21,6 +24,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.storage.CompareFlags;
+import refinedstorage.apiimpl.storage.ClientStack;
 import refinedstorage.item.ItemUpgrade;
 
 import java.util.HashSet;
@@ -334,15 +338,31 @@ public final class RefinedStorageUtils {
         return network.extractItem(stack, size, CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_NBT);
     }
 
-    public static ItemStack getItem(INetworkMaster network, ItemStack stack) {
-        return network.getStorage().get(stack, CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_NBT);
-    }
-
     public static ICraftingPattern getPattern(INetworkMaster network, ItemStack stack) {
         return network.getPattern(stack, CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_NBT);
     }
 
     public static boolean hasPattern(INetworkMaster network, ItemStack stack) {
         return RefinedStorageUtils.getPattern(network, stack) != null;
+    }
+
+    public static void writeClientStack(ByteBuf buf, INetworkMaster network, ItemStack stack) {
+        buf.writeInt(Item.getIdFromItem(stack.getItem()));
+        buf.writeInt(stack.stackSize);
+        buf.writeInt(stack.getItemDamage());
+        ByteBufUtils.writeTag(buf, stack.getTagCompound());
+        buf.writeInt(getItemStackHashCode(stack));
+        buf.writeBoolean(RefinedStorageUtils.hasPattern(network, stack));
+    }
+
+    public static ClientStack readClientStack(ByteBuf buf) {
+        ItemStack stack = new ItemStack(Item.getItemById(buf.readInt()), buf.readInt(), buf.readInt());
+        stack.setTagCompound(ByteBufUtils.readTag(buf));
+
+        return new ClientStack(buf.readInt(), stack, buf.readBoolean());
+    }
+
+    public static int getItemStackHashCode(ItemStack stack) {
+        return stack.getItem().hashCode() * (stack.getItemDamage() + 1) * (stack.hasTagCompound() ? stack.getTagCompound().hashCode() : 1);
     }
 }

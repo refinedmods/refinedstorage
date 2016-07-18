@@ -41,6 +41,13 @@ public interface IGroupedStorage {
     ItemStack get(ItemStack stack, int flags);
 
     /**
+     * Gets an item from the network by ID.
+     *
+     * @return The {@link ItemStack}, do NOT modify
+     */
+    ItemStack get(int id);
+
+    /**
      * @return All items in this storage network
      */
     Collection<ItemStack> getStacks();

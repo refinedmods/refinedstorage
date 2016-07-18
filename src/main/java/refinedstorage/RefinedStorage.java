@@ -14,6 +14,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import refinedstorage.apiimpl.storage.ClientStack;
 import refinedstorage.proxy.CommonProxy;
 
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public final class RefinedStorage {
         }
     };
 
-    public List<ItemStack> items = new ArrayList<ItemStack>();
+    public List<ClientStack> items = new ArrayList<ClientStack>();
 
     public int cableUsage;
     public int constructorUsage;

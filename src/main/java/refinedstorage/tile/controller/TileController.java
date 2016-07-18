@@ -31,6 +31,7 @@ import refinedstorage.api.network.IGridHandler;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.INetworkNode;
 import refinedstorage.api.network.IWirelessGridHandler;
+import refinedstorage.api.storage.CompareFlags;
 import refinedstorage.api.storage.IGroupedStorage;
 import refinedstorage.api.storage.IStorage;
 import refinedstorage.apiimpl.autocrafting.BasicCraftingTask;
@@ -345,7 +346,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             int score = 0;
 
             for (ItemStack input : patterns.get(i).getInputs()) {
-                ItemStack stored = RefinedStorageUtils.getItem(this, input);
+                ItemStack stored = storage.get(input, CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_NBT);
 
                 score += stored != null ? stored.stackSize : 0;
             }
@@ -474,7 +475,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     public void sendStorageDeltaToClient(ItemStack stack, int delta) {
         for (EntityPlayer player : worldObj.playerEntities) {
             if (isWatchingGrid(player)) {
-                RefinedStorage.INSTANCE.network.sendTo(new MessageGridDelta(stack, delta, RefinedStorageUtils.hasPattern(this, stack)), (EntityPlayerMP) player);
+                RefinedStorage.INSTANCE.network.sendTo(new MessageGridDelta(this, stack, delta), (EntityPlayerMP) player);
             }
         }
     }
