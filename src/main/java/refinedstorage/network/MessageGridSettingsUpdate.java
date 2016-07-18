@@ -11,6 +11,7 @@ public class MessageGridSettingsUpdate extends MessageHandlerPlayerToServer<Mess
     private int x;
     private int y;
     private int z;
+    private int viewType;
     private int sortingDirection;
     private int sortingType;
     private int searchBoxMode;
@@ -18,10 +19,11 @@ public class MessageGridSettingsUpdate extends MessageHandlerPlayerToServer<Mess
     public MessageGridSettingsUpdate() {
     }
 
-    public MessageGridSettingsUpdate(TileGrid grid, int sortingDirection, int sortingType, int searchBoxMode) {
+    public MessageGridSettingsUpdate(TileGrid grid, int viewType, int sortingDirection, int sortingType, int searchBoxMode) {
         this.x = grid.getPos().getX();
         this.y = grid.getPos().getY();
         this.z = grid.getPos().getZ();
+        this.viewType = viewType;
         this.sortingDirection = sortingDirection;
         this.sortingType = sortingType;
         this.searchBoxMode = searchBoxMode;
@@ -32,6 +34,7 @@ public class MessageGridSettingsUpdate extends MessageHandlerPlayerToServer<Mess
         x = buf.readInt();
         y = buf.readInt();
         z = buf.readInt();
+        viewType = buf.readInt();
         sortingDirection = buf.readInt();
         sortingType = buf.readInt();
         searchBoxMode = buf.readInt();
@@ -42,6 +45,7 @@ public class MessageGridSettingsUpdate extends MessageHandlerPlayerToServer<Mess
         buf.writeInt(x);
         buf.writeInt(y);
         buf.writeInt(z);
+        buf.writeInt(viewType);
         buf.writeInt(sortingDirection);
         buf.writeInt(sortingType);
         buf.writeInt(searchBoxMode);
@@ -52,6 +56,10 @@ public class MessageGridSettingsUpdate extends MessageHandlerPlayerToServer<Mess
         TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.x, message.y, message.z));
 
         if (tile instanceof TileGrid) {
+            if (TileGrid.isValidViewType(message.viewType)) {
+                ((TileGrid) tile).setViewType(message.viewType);
+            }
+
             if (TileGrid.isValidSortingDirection(message.sortingDirection)) {
                 ((TileGrid) tile).setSortingDirection(message.sortingDirection);
             }

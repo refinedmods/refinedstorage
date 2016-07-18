@@ -16,10 +16,7 @@ import refinedstorage.api.network.GridExtractFlags;
 import refinedstorage.apiimpl.storage.ClientStack;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
-import refinedstorage.gui.sidebutton.SideButtonGridSearchBoxMode;
-import refinedstorage.gui.sidebutton.SideButtonGridSortingDirection;
-import refinedstorage.gui.sidebutton.SideButtonGridSortingType;
-import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
+import refinedstorage.gui.sidebutton.*;
 import refinedstorage.jei.RefinedStorageJEIPlugin;
 import refinedstorage.network.MessageGridCraftingClear;
 import refinedstorage.network.MessageGridInsertHeld;
@@ -105,6 +102,7 @@ public class GuiGrid extends GuiBase {
             searchField.yPosition = sy;
         }
 
+        addSideButton(new SideButtonGridViewType(grid));
         addSideButton(new SideButtonGridSortingDirection(grid));
         addSideButton(new SideButtonGridSortingType(grid));
         addSideButton(new SideButtonGridSearchBoxMode(this));
@@ -127,13 +125,32 @@ public class GuiGrid extends GuiBase {
                 Iterator<ClientStack> t = items.iterator();
 
                 while (t.hasNext()) {
-                    ItemStack item = t.next().getStack();
+                    ClientStack stack = t.next();
+
+                    switch (grid.getViewType()) {
+                        case TileGrid.VIEW_TYPE_NORMAL:
+                            break;
+                        case TileGrid.VIEW_TYPE_NON_CRAFTABLES:
+                            if (stack.isCraftable()) {
+                                t.remove();
+
+                                continue;
+                            }
+                            break;
+                        case TileGrid.VIEW_TYPE_CRAFTABLES:
+                            if (!stack.isCraftable()) {
+                                t.remove();
+
+                                continue;
+                            }
+                            break;
+                    }
 
                     if (query.startsWith("@")) {
                         String[] parts = query.split(" ");
 
                         String modId = parts[0].substring(1);
-                        String modIdFromItem = Item.REGISTRY.getNameForObject(item.getItem()).getResourceDomain();
+                        String modIdFromItem = Item.REGISTRY.getNameForObject(stack.getStack().getItem()).getResourceDomain();
 
                         if (!modIdFromItem.contains(modId)) {
                             t.remove();
@@ -148,18 +165,18 @@ public class GuiGrid extends GuiBase {
                                 }
                             }
 
-                            if (!item.getDisplayName().toLowerCase().contains(itemFromMod.toString())) {
+                            if (!stack.getStack().getDisplayName().toLowerCase().contains(itemFromMod.toString())) {
                                 t.remove();
                             }
                         }
                     } else if (query.startsWith("#")) {
                         String tooltip = query.substring(1);
-                        String tooltipFromItem = StringUtils.join(item.getTooltip(container.getPlayer(), true), "\n");
+                        String tooltipFromItem = StringUtils.join(stack.getStack().getTooltip(container.getPlayer(), true), "\n");
 
                         if (!tooltipFromItem.contains(tooltip)) {
                             t.remove();
                         }
-                    } else if (!item.getDisplayName().toLowerCase().contains(query)) {
+                    } else if (!stack.getStack().getDisplayName().toLowerCase().contains(query)) {
                         t.remove();
                     }
                 }

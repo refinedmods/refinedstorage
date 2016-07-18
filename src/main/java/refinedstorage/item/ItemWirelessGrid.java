@@ -42,10 +42,6 @@ public class ItemWirelessGrid extends ItemEnergyContainer implements ISpecialEle
     public static final int TYPE_NORMAL = 0;
     public static final int TYPE_CREATIVE = 1;
 
-    public static final String NBT_SORTING_TYPE = "SortingType";
-    public static final String NBT_SORTING_DIRECTION = "SortingDirection";
-    public static final String NBT_SEARCH_BOX_MODE = "SearchBoxMode";
-
     private static final String NBT_CONTROLLER_X = "ControllerX";
     private static final String NBT_CONTROLLER_Y = "ControllerY";
     private static final String NBT_CONTROLLER_Z = "ControllerZ";
@@ -137,9 +133,10 @@ public class ItemWirelessGrid extends ItemEnergyContainer implements ISpecialEle
             tag.setInteger(NBT_CONTROLLER_Y, pos.getY());
             tag.setInteger(NBT_CONTROLLER_Z, pos.getZ());
             tag.setInteger(NBT_DIMENSION_ID, player.dimension);
-            tag.setInteger(NBT_SORTING_DIRECTION, TileGrid.SORTING_DIRECTION_DESCENDING);
-            tag.setInteger(NBT_SORTING_TYPE, TileGrid.SORTING_TYPE_NAME);
-            tag.setInteger(NBT_SEARCH_BOX_MODE, TileGrid.SEARCH_BOX_MODE_NORMAL);
+            tag.setInteger(TileGrid.NBT_VIEW_TYPE, TileGrid.VIEW_TYPE_NORMAL);
+            tag.setInteger(TileGrid.NBT_SORTING_DIRECTION, TileGrid.SORTING_DIRECTION_DESCENDING);
+            tag.setInteger(TileGrid.NBT_SORTING_TYPE, TileGrid.SORTING_TYPE_NAME);
+            tag.setInteger(TileGrid.NBT_SEARCH_BOX_MODE, TileGrid.SEARCH_BOX_MODE_NORMAL);
 
             stack.setTagCompound(tag);
 
@@ -184,16 +181,20 @@ public class ItemWirelessGrid extends ItemEnergyContainer implements ISpecialEle
         return stack.getTagCompound().getInteger(NBT_CONTROLLER_Z);
     }
 
+    public static int getViewType(ItemStack stack) {
+        return stack.getTagCompound().getInteger(TileGrid.NBT_VIEW_TYPE);
+    }
+
     public static int getSortingType(ItemStack stack) {
-        return stack.getTagCompound().getInteger(NBT_SORTING_TYPE);
+        return stack.getTagCompound().getInteger(TileGrid.NBT_SORTING_TYPE);
     }
 
     public static int getSortingDirection(ItemStack stack) {
-        return stack.getTagCompound().getInteger(NBT_SORTING_DIRECTION);
+        return stack.getTagCompound().getInteger(TileGrid.NBT_SORTING_DIRECTION);
     }
 
     public static int getSearchBoxMode(ItemStack stack) {
-        return stack.getTagCompound().getInteger(NBT_SEARCH_BOX_MODE);
+        return stack.getTagCompound().getInteger(TileGrid.NBT_SEARCH_BOX_MODE);
     }
 
     private static boolean hasValidNBT(ItemStack stack) {
@@ -202,9 +203,10 @@ public class ItemWirelessGrid extends ItemEnergyContainer implements ISpecialEle
             && stack.getTagCompound().hasKey(NBT_CONTROLLER_Y)
             && stack.getTagCompound().hasKey(NBT_CONTROLLER_Z)
             && stack.getTagCompound().hasKey(NBT_DIMENSION_ID)
-            && stack.getTagCompound().hasKey(NBT_SORTING_DIRECTION)
-            && stack.getTagCompound().hasKey(NBT_SORTING_TYPE)
-            && stack.getTagCompound().hasKey(NBT_SEARCH_BOX_MODE);
+            && stack.getTagCompound().hasKey(TileGrid.NBT_VIEW_TYPE)
+            && stack.getTagCompound().hasKey(TileGrid.NBT_SORTING_DIRECTION)
+            && stack.getTagCompound().hasKey(TileGrid.NBT_SORTING_TYPE)
+            && stack.getTagCompound().hasKey(TileGrid.NBT_SEARCH_BOX_MODE);
     }
 
     @Override

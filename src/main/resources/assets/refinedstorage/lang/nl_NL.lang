@@ -63,6 +63,10 @@ sidebutton.refinedstorage:redstone_mode.0=Redstone negeren
 sidebutton.refinedstorage:redstone_mode.1=Alleen werken met redstone signaal
 sidebutton.refinedstorage:redstone_mode.2=Alleen werken zonder redstone signaal
 
+sidebutton.refinedstorage:grid.view_type=Weergave
+sidebutton.refinedstorage:grid.view_type.0=Normaal
+sidebutton.refinedstorage:grid.view_type.1=Geen craftables
+sidebutton.refinedstorage:grid.view_type.2=Alleen craftables
 sidebutton.refinedstorage:grid.sorting.direction=Sorteer Richting
 sidebutton.refinedstorage:grid.sorting.direction.0=Oplopend
 sidebutton.refinedstorage:grid.sorting.direction.1=Aflopend

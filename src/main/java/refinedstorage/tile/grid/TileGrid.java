@@ -29,9 +29,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TileGrid extends TileNode implements IGrid {
-    private static final String NBT_SORTING_DIRECTION = "SortingDirection";
-    private static final String NBT_SORTING_TYPE = "SortingType";
-    private static final String NBT_SEARCH_BOX_MODE = "SearchBoxMode";
+    public static final String NBT_VIEW_TYPE = "ViewType";
+    public static final String NBT_SORTING_DIRECTION = "SortingDirection";
+    public static final String NBT_SORTING_TYPE = "SortingType";
+    public static final String NBT_SEARCH_BOX_MODE = "SearchBoxMode";
 
     public static final int SORTING_DIRECTION_ASCENDING = 0;
     public static final int SORTING_DIRECTION_DESCENDING = 1;
@@ -43,6 +44,10 @@ public class TileGrid extends TileNode implements IGrid {
     public static final int SEARCH_BOX_MODE_NORMAL_AUTOSELECTED = 1;
     public static final int SEARCH_BOX_MODE_JEI_SYNCHRONIZED = 2;
     public static final int SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED = 3;
+
+    public static final int VIEW_TYPE_NORMAL = 0;
+    public static final int VIEW_TYPE_NON_CRAFTABLES = 1;
+    public static final int VIEW_TYPE_CRAFTABLES = 2;
 
     private Container craftingContainer = new Container() {
         @Override
@@ -62,6 +67,7 @@ public class TileGrid extends TileNode implements IGrid {
 
     private EnumGridType type;
 
+    private int viewType = VIEW_TYPE_NORMAL;
     private int sortingDirection = SORTING_DIRECTION_DESCENDING;
     private int sortingType = SORTING_TYPE_NAME;
     private int searchBoxMode = SEARCH_BOX_MODE_NORMAL;
@@ -255,6 +261,17 @@ public class TileGrid extends TileNode implements IGrid {
         }
     }
 
+    @Override
+    public int getViewType() {
+        return viewType;
+    }
+
+    public void setViewType(int type) {
+        this.viewType = type;
+
+        markDirty();
+    }
+
     public int getSortingDirection() {
         return sortingDirection;
     }
@@ -286,18 +303,23 @@ public class TileGrid extends TileNode implements IGrid {
     }
 
     @Override
+    public void onViewTypeChanged(int type) {
+        RefinedStorage.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(this, sortingDirection, sortingType, searchBoxMode, type));
+    }
+
+    @Override
     public void onSortingTypeChanged(int type) {
-        RefinedStorage.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(this, sortingDirection, type, searchBoxMode));
+        RefinedStorage.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(this, sortingDirection, type, searchBoxMode, viewType));
     }
 
     @Override
     public void onSortingDirectionChanged(int direction) {
-        RefinedStorage.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(this, direction, sortingType, searchBoxMode));
+        RefinedStorage.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(this, direction, sortingType, searchBoxMode, viewType));
     }
 
     @Override
     public void onSearchBoxModeChanged(int searchBoxMode) {
-        RefinedStorage.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(this, sortingDirection, sortingType, searchBoxMode));
+        RefinedStorage.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(this, sortingDirection, sortingType, searchBoxMode, viewType));
     }
 
     @Override
@@ -306,22 +328,26 @@ public class TileGrid extends TileNode implements IGrid {
     }
 
     @Override
-    public void read(NBTTagCompound nbt) {
-        super.read(nbt);
+    public void read(NBTTagCompound tag) {
+        super.read(tag);
 
-        RefinedStorageUtils.readItemsLegacy(matrix, 0, nbt);
-        RefinedStorageUtils.readItems(patterns, 1, nbt);
+        RefinedStorageUtils.readItemsLegacy(matrix, 0, tag);
+        RefinedStorageUtils.readItems(patterns, 1, tag);
 
-        if (nbt.hasKey(NBT_SORTING_DIRECTION)) {
-            sortingDirection = nbt.getInteger(NBT_SORTING_DIRECTION);
+        if (tag.hasKey(NBT_VIEW_TYPE)) {
+            viewType = tag.getInteger(NBT_VIEW_TYPE);
         }
 
-        if (nbt.hasKey(NBT_SORTING_TYPE)) {
-            sortingType = nbt.getInteger(NBT_SORTING_TYPE);
+        if (tag.hasKey(NBT_SORTING_DIRECTION)) {
+            sortingDirection = tag.getInteger(NBT_SORTING_DIRECTION);
         }
 
-        if (nbt.hasKey(NBT_SEARCH_BOX_MODE)) {
-            searchBoxMode = nbt.getInteger(NBT_SEARCH_BOX_MODE);
+        if (tag.hasKey(NBT_SORTING_TYPE)) {
+            sortingType = tag.getInteger(NBT_SORTING_TYPE);
+        }
+
+        if (tag.hasKey(NBT_SEARCH_BOX_MODE)) {
+            searchBoxMode = tag.getInteger(NBT_SEARCH_BOX_MODE);
         }
     }
 
@@ -332,6 +358,7 @@ public class TileGrid extends TileNode implements IGrid {
         RefinedStorageUtils.writeItemsLegacy(matrix, 0, tag);
         RefinedStorageUtils.writeItems(patterns, 1, tag);
 
+        tag.setInteger(NBT_VIEW_TYPE, viewType);
         tag.setInteger(NBT_SORTING_DIRECTION, sortingDirection);
         tag.setInteger(NBT_SORTING_TYPE, sortingType);
         tag.setInteger(NBT_SEARCH_BOX_MODE, searchBoxMode);
@@ -344,6 +371,7 @@ public class TileGrid extends TileNode implements IGrid {
         super.writeContainerData(buf);
 
         buf.writeBoolean(isConnected());
+        buf.writeInt(viewType);
         buf.writeInt(sortingDirection);
         buf.writeInt(sortingType);
         buf.writeInt(searchBoxMode);
@@ -354,6 +382,7 @@ public class TileGrid extends TileNode implements IGrid {
         super.readContainerData(buf);
 
         connected = buf.readBoolean();
+        viewType = buf.readInt();
         sortingDirection = buf.readInt();
         sortingType = buf.readInt();
         searchBoxMode = buf.readInt();
@@ -374,6 +403,12 @@ public class TileGrid extends TileNode implements IGrid {
             default:
                 return null;
         }
+    }
+
+    public static boolean isValidViewType(int type) {
+        return type == VIEW_TYPE_NORMAL ||
+            type == VIEW_TYPE_CRAFTABLES ||
+            type == VIEW_TYPE_NON_CRAFTABLES;
     }
 
     public static boolean isValidSearchBoxMode(int mode) {

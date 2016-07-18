@@ -12,11 +12,15 @@ public interface IGrid {
 
     IGridHandler getGridHandler();
 
+    int getViewType();
+
     int getSortingType();
 
     int getSortingDirection();
 
     int getSearchBoxMode();
+
+    void onViewTypeChanged(int type);
 
     void onSortingTypeChanged(int type);
 
