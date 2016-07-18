@@ -304,22 +304,22 @@ public class TileGrid extends TileNode implements IGrid {
 
     @Override
     public void onViewTypeChanged(int type) {
-        RefinedStorage.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(this, sortingDirection, sortingType, searchBoxMode, type));
+        RefinedStorage.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(this, type, sortingDirection, sortingType, searchBoxMode));
     }
 
     @Override
     public void onSortingTypeChanged(int type) {
-        RefinedStorage.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(this, sortingDirection, type, searchBoxMode, viewType));
+        RefinedStorage.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(this, viewType, sortingDirection, type, searchBoxMode));
     }
 
     @Override
     public void onSortingDirectionChanged(int direction) {
-        RefinedStorage.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(this, direction, sortingType, searchBoxMode, viewType));
+        RefinedStorage.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(this, viewType, direction, sortingType, searchBoxMode));
     }
 
     @Override
     public void onSearchBoxModeChanged(int searchBoxMode) {
-        RefinedStorage.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(this, sortingDirection, sortingType, searchBoxMode, viewType));
+        RefinedStorage.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(this, viewType, sortingDirection, sortingType, searchBoxMode));
     }
 
     @Override

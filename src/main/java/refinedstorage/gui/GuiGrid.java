@@ -121,64 +121,49 @@ public class GuiGrid extends GuiBase {
 
             String query = searchField.getText().trim().toLowerCase();
 
-            if (!query.isEmpty()) {
-                Iterator<ClientStack> t = items.iterator();
+            Iterator<ClientStack> t = items.iterator();
 
-                while (t.hasNext()) {
-                    ClientStack stack = t.next();
+            while (t.hasNext()) {
+                ClientStack stack = t.next();
 
-                    switch (grid.getViewType()) {
-                        case TileGrid.VIEW_TYPE_NORMAL:
-                            break;
-                        case TileGrid.VIEW_TYPE_NON_CRAFTABLES:
-                            if (stack.isCraftable()) {
-                                t.remove();
+                if (grid.getViewType() == TileGrid.VIEW_TYPE_NON_CRAFTABLES && stack.isCraftable()) {
+                    t.remove();
+                } else if (grid.getViewType() == TileGrid.VIEW_TYPE_CRAFTABLES && !stack.isCraftable()) {
+                    t.remove();
+                }
 
-                                continue;
+                if (query.startsWith("@")) {
+                    String[] parts = query.split(" ");
+
+                    String modId = parts[0].substring(1);
+                    String modIdFromItem = Item.REGISTRY.getNameForObject(stack.getStack().getItem()).getResourceDomain();
+
+                    if (!modIdFromItem.contains(modId)) {
+                        t.remove();
+                    } else if (parts.length >= 2) {
+                        StringBuilder itemFromMod = new StringBuilder();
+
+                        for (int i = 1; i < parts.length; ++i) {
+                            itemFromMod.append(parts[i]);
+
+                            if (i != parts.length - 1) {
+                                itemFromMod.append(" ");
                             }
-                            break;
-                        case TileGrid.VIEW_TYPE_CRAFTABLES:
-                            if (!stack.isCraftable()) {
-                                t.remove();
+                        }
 
-                                continue;
-                            }
-                            break;
+                        if (!stack.getStack().getDisplayName().toLowerCase().contains(itemFromMod.toString())) {
+                            t.remove();
+                        }
                     }
+                } else if (query.startsWith("#")) {
+                    String tooltip = query.substring(1);
+                    String tooltipFromItem = StringUtils.join(stack.getStack().getTooltip(container.getPlayer(), true), "\n");
 
-                    if (query.startsWith("@")) {
-                        String[] parts = query.split(" ");
-
-                        String modId = parts[0].substring(1);
-                        String modIdFromItem = Item.REGISTRY.getNameForObject(stack.getStack().getItem()).getResourceDomain();
-
-                        if (!modIdFromItem.contains(modId)) {
-                            t.remove();
-                        } else if (parts.length >= 2) {
-                            StringBuilder itemFromMod = new StringBuilder();
-
-                            for (int i = 1; i < parts.length; ++i) {
-                                itemFromMod.append(parts[i]);
-
-                                if (i != parts.length - 1) {
-                                    itemFromMod.append(" ");
-                                }
-                            }
-
-                            if (!stack.getStack().getDisplayName().toLowerCase().contains(itemFromMod.toString())) {
-                                t.remove();
-                            }
-                        }
-                    } else if (query.startsWith("#")) {
-                        String tooltip = query.substring(1);
-                        String tooltipFromItem = StringUtils.join(stack.getStack().getTooltip(container.getPlayer(), true), "\n");
-
-                        if (!tooltipFromItem.contains(tooltip)) {
-                            t.remove();
-                        }
-                    } else if (!stack.getStack().getDisplayName().toLowerCase().contains(query)) {
+                    if (!tooltipFromItem.contains(tooltip)) {
                         t.remove();
                     }
+                } else if (!stack.getStack().getDisplayName().toLowerCase().contains(query)) {
+                    t.remove();
                 }
             }
 
