@@ -5,9 +5,12 @@
 - Fixed minor dupe bug with JEI transferring
 - Fixed exporter crafting upgrades taking priority over other tasks
 - Fixed NPE with incorrectly initialized disks
+- Fixed not being able to take out items of Grid 2K16
+- Fixed not being able to start autocrafting for certain items (most notably IC2 items)
 
 **Features**
 - Added X button to Processing Pattern Encoder to clear configuration of inputs and outputs
+- Added Grid view toggle buttons (regular, craftable items only, no craftable items)
 - Re-added opposite facing on shift click functionality
 - Updated to Forge 2014
 
