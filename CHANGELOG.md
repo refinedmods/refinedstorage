@@ -9,6 +9,7 @@
 **Features**
 - Added X button to Processing Pattern Encoder to clear configuration of inputs and outputs
 - Re-added opposite facing on shift click functionality
+- Updated to Forge 2014
 
 ### 0.8.10
 **Bugfixes**
