@@ -90,9 +90,9 @@ public class ProcessingCraftingTask implements ICraftingTask {
         return true;
     }
 
-    public boolean onInserted(ItemStack item) {
+    public boolean onInserted(ItemStack stack) {
         for (int i = 0; i < pattern.getOutputs().length; ++i) {
-            if (!satisfied[i] && RefinedStorageUtils.compareStackNoQuantity(item, pattern.getOutputs()[i])) {
+            if (!satisfied[i] && RefinedStorageUtils.compareStackNoQuantity(stack, pattern.getOutputs()[i])) {
                 satisfied[i] = true;
 
                 return true;
