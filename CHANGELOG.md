@@ -4,6 +4,7 @@
 **Bugfixes**
 - Fixed minor dupe bug with JEI transferring
 - Fixed exporter crafting upgrades taking priority over other tasks
+- Solderer upgrades go to upgrades slots first now when shift clicking
 - Fixed NPE with incorrectly initialized disks
 - Fixed not being able to take out items of Grid 2K16
 - Fixed not being able to start autocrafting for certain items (most notably IC2 items)
