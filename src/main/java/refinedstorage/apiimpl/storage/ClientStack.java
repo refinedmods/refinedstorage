@@ -1,6 +1,11 @@
 package refinedstorage.apiimpl.storage;
 
+import io.netty.buffer.ByteBuf;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.network.INetworkMaster;
 
 public class ClientStack {
     private int id;
@@ -11,6 +16,13 @@ public class ClientStack {
         this.id = id;
         this.stack = stack;
         this.craftable = craftable;
+    }
+
+    public ClientStack(ByteBuf buf) {
+        stack = new ItemStack(Item.getItemById(buf.readInt()), buf.readInt(), buf.readInt());
+        stack.setTagCompound(ByteBufUtils.readTag(buf));
+        id = buf.readInt();
+        craftable = buf.readBoolean();
     }
 
     public int getId() {
@@ -28,5 +40,14 @@ public class ClientStack {
     @Override
     public boolean equals(Object obj) {
         return obj instanceof ClientStack && ((ClientStack) obj).getId() == id;
+    }
+
+    public static void write(ByteBuf buf, INetworkMaster network, ItemStack stack) {
+        buf.writeInt(Item.getIdFromItem(stack.getItem()));
+        buf.writeInt(stack.stackSize);
+        buf.writeInt(stack.getItemDamage());
+        ByteBufUtils.writeTag(buf, stack.getTagCompound());
+        buf.writeInt(RefinedStorageUtils.getItemStackHashCode(stack));
+        buf.writeBoolean(RefinedStorageUtils.hasPattern(network, stack));
     }
 }

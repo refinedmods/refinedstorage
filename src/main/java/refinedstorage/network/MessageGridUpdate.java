@@ -6,7 +6,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.apiimpl.storage.ClientStack;
 
@@ -29,7 +28,7 @@ public class MessageGridUpdate implements IMessage, IMessageHandler<MessageGridU
         int items = buf.readInt();
 
         for (int i = 0; i < items; ++i) {
-            this.items.add(RefinedStorageUtils.readClientStack(buf));
+            this.items.add(new ClientStack(buf));
         }
     }
 
@@ -38,7 +37,7 @@ public class MessageGridUpdate implements IMessage, IMessageHandler<MessageGridU
         buf.writeInt(network.getStorage().getStacks().size());
 
         for (ItemStack stack : network.getStorage().getStacks()) {
-            RefinedStorageUtils.writeClientStack(buf, network, stack);
+            ClientStack.write(buf, network, stack);
         }
     }
 
