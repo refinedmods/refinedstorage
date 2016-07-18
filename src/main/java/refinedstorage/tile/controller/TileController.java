@@ -168,19 +168,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
                 craftingTasksToAddAsLast.clear();
 
-                if (!craftingTasks.empty()) {
-                    markDirty();
-
-                    ICraftingTask top = craftingTasks.peek();
-
-                    ICraftingPatternContainer container = top.getPattern().getContainer(worldObj);
-
-                    if (container != null && (ticks % container.getSpeed()) == 0 && top.update(worldObj, this)) {
-                        top.onDone(this);
-
-                        craftingTasks.pop();
-                    }
-                }
+                updateTopCraftingTask(true);
             }
 
             wirelessGridHandler.update();
@@ -217,6 +205,22 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         }
 
         super.update();
+    }
+
+    private void updateTopCraftingTask(boolean withSpeed) {
+        if (!craftingTasks.empty()) {
+            markDirty();
+
+            ICraftingTask top = craftingTasks.peek();
+
+            ICraftingPatternContainer container = top.getPattern().getContainer(worldObj);
+
+            if (container != null && (!withSpeed || (ticks % container.getSpeed()) == 0) && top.update(worldObj, this)) {
+                top.onDone(this);
+
+                craftingTasks.pop();
+            }
+        }
     }
 
     public void disconnectAll() {
@@ -507,11 +511,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
         if (!simulate && inserted > 0) {
             for (int i = 0; i < inserted; ++i) {
-                if (!craftingTasks.empty()) {
-                    ICraftingTask top = craftingTasks.peek();
-
-                    if (top instanceof ProcessingCraftingTask) {
-                        ((ProcessingCraftingTask) top).onInserted(stack);
+                if (!craftingTasks.empty() && craftingTasks.peek() instanceof ProcessingCraftingTask) {
+                    if (((ProcessingCraftingTask) craftingTasks.peek()).onInserted(stack)) {
+                        updateTopCraftingTask(false);
                     }
                 }
             }
