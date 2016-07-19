@@ -17,7 +17,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.item.ItemBlockBase;
 import refinedstorage.tile.TileBase;
 
@@ -91,7 +90,7 @@ public abstract class BlockBase extends Block {
 
             tile.setDirection(getPlacementType().getNext(tile.getDirection()));
 
-            RefinedStorageUtils.updateBlock(world, pos);
+            tile.updateBlock();
 
             return true;
         }

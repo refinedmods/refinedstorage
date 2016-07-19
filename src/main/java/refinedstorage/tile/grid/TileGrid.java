@@ -16,6 +16,7 @@ import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.network.IGridHandler;
 import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.apiimpl.network.NetworkUtils;
 import refinedstorage.block.BlockGrid;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
@@ -152,7 +153,7 @@ public class TileGrid extends TileNode implements IGrid {
             } else {
                 if (slot != null) {
                     if (slot.stackSize == 1 && isConnected()) {
-                        matrix.setInventorySlotContents(i, RefinedStorageUtils.extractItem(network, slot, 1));
+                        matrix.setInventorySlotContents(i, NetworkUtils.extractItem(network, slot, 1));
                     } else {
                         matrix.decrStackSize(i, 1);
                     }
@@ -246,7 +247,7 @@ public class TileGrid extends TileNode implements IGrid {
 
                     if (getType() == EnumGridType.CRAFTING) {
                         for (ItemStack possibility : possibilities) {
-                            ItemStack took = RefinedStorageUtils.extractItem(network, possibility, 1);
+                            ItemStack took = NetworkUtils.extractItem(network, possibility, 1);
 
                             if (took != null) {
                                 matrix.setInventorySlotContents(i, took);

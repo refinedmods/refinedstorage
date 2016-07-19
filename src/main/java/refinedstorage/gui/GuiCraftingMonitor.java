@@ -5,7 +5,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.text.TextFormatting;
 import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerCraftingMonitor;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.network.MessageCraftingMonitorCancel;
@@ -110,7 +109,7 @@ public class GuiCraftingMonitor extends GuiBase {
                 GlStateManager.pushMatrix();
                 GlStateManager.scale(scale, scale, 1);
 
-                drawString(RefinedStorageUtils.calculateOffsetOnScale(x + 5, scale), RefinedStorageUtils.calculateOffsetOnScale(y + 4, scale), task.output.getDisplayName());
+                drawString(calculateOffsetOnScale(x + 5, scale), calculateOffsetOnScale(y + 4, scale), task.output.getDisplayName());
 
                 GlStateManager.popMatrix();
 

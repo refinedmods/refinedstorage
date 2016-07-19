@@ -9,20 +9,11 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
-import refinedstorage.api.autocrafting.ICraftingPattern;
-import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.api.storage.CompareUtils;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 public final class RefinedStorageUtils {
     private static final String NBT_INVENTORY = "Inventory_%d";
@@ -140,10 +131,6 @@ public final class RefinedStorageUtils {
         }
     }
 
-    public static void updateBlock(World world, BlockPos pos) {
-        world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 1 | 2);
-    }
-
     public static IItemHandler getItemHandler(TileEntity tile, EnumFacing side) {
         if (tile == null) {
             return null;
@@ -160,67 +147,5 @@ public final class RefinedStorageUtils {
         }
 
         return handler;
-    }
-
-    public static int calculateOffsetOnScale(int pos, float scale) {
-        float multiplier = (pos / scale);
-
-        return (int) multiplier;
-    }
-
-    public static void combineMultipleItemsInTooltip(List<String> lines, ItemStack... stacks) {
-        Set<Integer> combinedIndices = new HashSet<Integer>();
-
-        for (int i = 0; i < stacks.length; ++i) {
-            if (!combinedIndices.contains(i)) {
-                String data = stacks[i].getDisplayName();
-
-                int amount = stacks[i].stackSize;
-
-                for (int j = i + 1; j < stacks.length; ++j) {
-                    if (CompareUtils.compareStack(stacks[i], stacks[j])) {
-                        amount += stacks[j].stackSize;
-
-                        combinedIndices.add(j);
-                    }
-                }
-
-                if (amount != 1) {
-                    data += " (" + amount + "x)";
-                }
-
-                lines.add(data);
-            }
-        }
-    }
-
-    // Keep this on par with the Forestry generators (1 EU is worth 4 RF)
-    public static int convertIC2ToRF(double amount) {
-        // IC2 passes infinity sometimes as a simulate test
-        if (amount >= Double.POSITIVE_INFINITY) {
-            return Integer.MAX_VALUE;
-        }
-
-        return (int) Math.floor(amount) * 4;
-    }
-
-    public static double convertRFToIC2(int amount) {
-        return Math.floor(amount / 4);
-    }
-
-    public static ItemStack extractItem(INetworkMaster network, ItemStack stack, int size) {
-        return network.extractItem(stack, size, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
-    }
-
-    public static ICraftingPattern getPattern(INetworkMaster network, ItemStack stack) {
-        return network.getPattern(stack, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
-    }
-
-    public static boolean hasPattern(INetworkMaster network, ItemStack stack) {
-        return RefinedStorageUtils.getPattern(network, stack) != null;
-    }
-
-    public static int getItemStackHashCode(ItemStack stack) {
-        return stack.getItem().hashCode() * (stack.getItemDamage() + 1) * (stack.hasTagCompound() ? stack.getTagCompound().hashCode() : 1);
     }
 }

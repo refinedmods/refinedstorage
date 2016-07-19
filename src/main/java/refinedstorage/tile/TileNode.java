@@ -4,7 +4,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.INetworkNode;
 import refinedstorage.block.BlockNode;
@@ -46,7 +45,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, ISynchr
             }
 
             if (active != isActive() && canSendConnectivityUpdate()) {
-                RefinedStorageUtils.updateBlock(worldObj, pos);
+                updateBlock();
 
                 active = isActive();
             }

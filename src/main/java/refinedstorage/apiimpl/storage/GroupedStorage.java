@@ -4,7 +4,6 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.INetworkNode;
@@ -12,6 +11,7 @@ import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.api.storage.IGroupedStorage;
 import refinedstorage.api.storage.IStorage;
 import refinedstorage.api.storage.IStorageProvider;
+import refinedstorage.apiimpl.network.NetworkUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -83,7 +83,7 @@ public class GroupedStorage implements IGroupedStorage {
                 otherStack.stackSize -= stack.stackSize;
 
                 if (otherStack.stackSize == 0) {
-                    if (!RefinedStorageUtils.hasPattern(network, stack)) {
+                    if (!NetworkUtils.hasPattern(network, stack)) {
                         stacks.remove(otherStack.getItem(), otherStack);
                     }
                 }
@@ -109,7 +109,7 @@ public class GroupedStorage implements IGroupedStorage {
     @Override
     public ItemStack get(int id) {
         for (ItemStack stack : this.stacks.values()) {
-            if (RefinedStorageUtils.getItemStackHashCode(stack) == id) {
+            if (NetworkUtils.getItemStackHashCode(stack) == id) {
                 return stack;
             }
         }

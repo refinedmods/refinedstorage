@@ -82,7 +82,7 @@ public class TileDetector extends TileNode implements ICompareConfig {
 
             worldObj.notifyNeighborsOfStateChange(pos, RefinedStorageBlocks.DETECTOR);
 
-            RefinedStorageUtils.updateBlock(worldObj, pos);
+            updateBlock();
         }
 
         super.update();

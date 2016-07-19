@@ -23,7 +23,6 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.autocrafting.ICraftingTask;
@@ -195,7 +194,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             if (getEnergyScaledForDisplay() != lastEnergyDisplay) {
                 lastEnergyDisplay = getEnergyScaledForDisplay();
 
-                RefinedStorageUtils.updateBlock(worldObj, pos);
+                updateBlock();
             }
 
             if (getEnergyScaledForComparator() != lastEnergyComparator) {

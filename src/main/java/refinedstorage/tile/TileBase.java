@@ -13,7 +13,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.network.MessageTileContainerUpdate;
 
 import javax.annotation.Nullable;
@@ -38,6 +37,10 @@ public abstract class TileBase extends TileEntity implements ITickable {
                 }
             }
         }
+    }
+
+    public void updateBlock() {
+        worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 1 | 2);
     }
 
     public void setDirection(EnumFacing direction) {
@@ -69,7 +72,7 @@ public abstract class TileBase extends TileEntity implements ITickable {
     public void readUpdate(NBTTagCompound tag) {
         direction = EnumFacing.getFront(tag.getInteger(NBT_DIRECTION));
 
-        RefinedStorageUtils.updateBlock(worldObj, pos);
+        updateBlock();
     }
 
     @Override

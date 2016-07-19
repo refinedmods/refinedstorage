@@ -86,7 +86,7 @@ public class TileSolderer extends TileNode {
         }
 
         if (wasWorking != working) {
-            RefinedStorageUtils.updateBlock(worldObj, pos);
+            updateBlock();
         }
     }
 

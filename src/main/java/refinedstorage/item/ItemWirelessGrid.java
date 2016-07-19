@@ -31,8 +31,8 @@ import refinedstorage.tile.grid.TileGrid;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import static refinedstorage.RefinedStorageUtils.convertIC2ToRF;
-import static refinedstorage.RefinedStorageUtils.convertRFToIC2;
+import static refinedstorage.apiimpl.network.NetworkUtils.convertIC2ToRF;
+import static refinedstorage.apiimpl.network.NetworkUtils.convertRFToIC2;
 
 @Optional.InterfaceList({
     @Optional.Interface(iface = "ic2.api.item.ISpecialElectricItem", modid = "IC2"),

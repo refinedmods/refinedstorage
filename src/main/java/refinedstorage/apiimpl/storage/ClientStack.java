@@ -4,8 +4,8 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.apiimpl.network.NetworkUtils;
 
 public class ClientStack {
     private int id;
@@ -47,7 +47,7 @@ public class ClientStack {
         buf.writeInt(stack.stackSize);
         buf.writeInt(stack.getItemDamage());
         ByteBufUtils.writeTag(buf, stack.getTagCompound());
-        buf.writeInt(RefinedStorageUtils.getItemStackHashCode(stack));
-        buf.writeBoolean(RefinedStorageUtils.hasPattern(network, stack));
+        buf.writeInt(NetworkUtils.getItemStackHashCode(stack));
+        buf.writeBoolean(NetworkUtils.hasPattern(network, stack));
     }
 }

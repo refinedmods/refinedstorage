@@ -3,8 +3,8 @@ package refinedstorage.tile.controller;
 import ic2.api.energy.prefab.BasicSink;
 import net.minecraft.util.EnumFacing;
 
-import static refinedstorage.RefinedStorageUtils.convertIC2ToRF;
-import static refinedstorage.RefinedStorageUtils.convertRFToIC2;
+import static refinedstorage.apiimpl.network.NetworkUtils.convertIC2ToRF;
+import static refinedstorage.apiimpl.network.NetworkUtils.convertRFToIC2;
 
 public class IC2Energy {
     private BasicSink sink;

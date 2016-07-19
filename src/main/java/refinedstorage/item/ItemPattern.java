@@ -13,9 +13,11 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import refinedstorage.RefinedStorageItems;
-import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.storage.CompareUtils;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ItemPattern extends ItemBase {
     public static final String NBT_INPUTS = "Inputs";
@@ -33,12 +35,38 @@ public class ItemPattern extends ItemBase {
             if (GuiScreen.isShiftKeyDown() || isProcessing(pattern)) {
                 list.add(TextFormatting.YELLOW + I18n.format("misc.refinedstorage:pattern.inputs") + TextFormatting.RESET);
 
-                RefinedStorageUtils.combineMultipleItemsInTooltip(list, getInputs(pattern));
+                combineItems(list, getInputs(pattern));
 
                 list.add(TextFormatting.YELLOW + I18n.format("misc.refinedstorage:pattern.outputs") + TextFormatting.RESET);
             }
 
-            RefinedStorageUtils.combineMultipleItemsInTooltip(list, getOutputs(pattern));
+            combineItems(list, getOutputs(pattern));
+        }
+    }
+
+    private void combineItems(List<String> lines, ItemStack... stacks) {
+        Set<Integer> combinedIndices = new HashSet<Integer>();
+
+        for (int i = 0; i < stacks.length; ++i) {
+            if (!combinedIndices.contains(i)) {
+                String data = stacks[i].getDisplayName();
+
+                int amount = stacks[i].stackSize;
+
+                for (int j = i + 1; j < stacks.length; ++j) {
+                    if (CompareUtils.compareStack(stacks[i], stacks[j])) {
+                        amount += stacks[j].stackSize;
+
+                        combinedIndices.add(j);
+                    }
+                }
+
+                if (amount != 1) {
+                    data += " (" + amount + "x)";
+                }
+
+                lines.add(data);
+            }
         }
     }
 

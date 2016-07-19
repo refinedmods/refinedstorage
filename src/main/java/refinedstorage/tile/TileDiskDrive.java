@@ -105,7 +105,7 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
             if (stored != getStoredForDisplayServer()) {
                 stored = getStoredForDisplayServer();
 
-                RefinedStorageUtils.updateBlock(worldObj, pos);
+                updateBlock();
             }
         }
 

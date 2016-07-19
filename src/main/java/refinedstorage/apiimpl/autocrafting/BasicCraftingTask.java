@@ -9,6 +9,7 @@ import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.apiimpl.network.NetworkUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,14 +68,14 @@ public class BasicCraftingTask implements ICraftingTask {
             if (!satisfied[i]) {
                 done = false;
 
-                ItemStack took = RefinedStorageUtils.extractItem(network, input, 1);
+                ItemStack took = NetworkUtils.extractItem(network, input, 1);
 
                 if (took != null) {
                     itemsTook.add(took);
 
                     satisfied[i] = true;
                 } else if (!childTasks[i]) {
-                    ICraftingPattern pattern = RefinedStorageUtils.getPattern(network, input);
+                    ICraftingPattern pattern = NetworkUtils.getPattern(network, input);
 
                     if (pattern != null) {
                         network.addCraftingTask(network.createCraftingTask(pattern));

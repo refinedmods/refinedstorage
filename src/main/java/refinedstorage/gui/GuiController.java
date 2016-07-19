@@ -2,7 +2,6 @@ package refinedstorage.gui;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerController;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.tile.controller.ClientNode;
@@ -77,8 +76,8 @@ public class GuiController extends GuiBase {
                 GlStateManager.pushMatrix();
                 GlStateManager.scale(scale, scale, 1);
 
-                drawString(RefinedStorageUtils.calculateOffsetOnScale(x + 1, scale), RefinedStorageUtils.calculateOffsetOnScale(y - 2, scale), node.stack.getDisplayName());
-                drawString(RefinedStorageUtils.calculateOffsetOnScale(x + 21, scale), RefinedStorageUtils.calculateOffsetOnScale(y + 10, scale), t("gui.refinedstorage:controller.machine_amount", node.amount));
+                drawString(calculateOffsetOnScale(x + 1, scale), calculateOffsetOnScale(y - 2, scale), node.stack.getDisplayName());
+                drawString(calculateOffsetOnScale(x + 21, scale), calculateOffsetOnScale(y + 10, scale), t("gui.refinedstorage:controller.machine_amount", node.amount));
 
                 GlStateManager.popMatrix();
 
