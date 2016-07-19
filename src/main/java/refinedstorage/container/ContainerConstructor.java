@@ -34,7 +34,7 @@ public class ContainerConstructor extends ContainerBase {
                     return null;
                 }
             } else if (!mergeItemStack(stack, 0, 4, false)) {
-                return null;
+                return mergeItemStackToSpecimen(stack, 4, 4 + 1);
             }
 
             if (stack.stackSize == 0) {

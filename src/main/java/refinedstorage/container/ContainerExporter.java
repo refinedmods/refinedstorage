@@ -36,7 +36,7 @@ public class ContainerExporter extends ContainerBase {
                     return null;
                 }
             } else if (!mergeItemStack(stack, 0, 4, false)) {
-                return null;
+                return mergeItemStackToSpecimen(stack, 4, 4 + 9);
             }
 
             if (stack.stackSize == 0) {

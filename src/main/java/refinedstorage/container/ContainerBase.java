@@ -6,6 +6,8 @@ import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.ItemHandlerHelper;
+import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.slot.SlotDisabled;
 import refinedstorage.container.slot.SlotSpecimen;
 import refinedstorage.container.slot.SlotSpecimenLegacy;
@@ -103,6 +105,25 @@ public abstract class ContainerBase extends Container {
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) {
+        return null;
+    }
+
+    public ItemStack mergeItemStackToSpecimen(ItemStack stack, int begin, int end) {
+        for (int i = begin; i < end; ++i) {
+            if (RefinedStorageUtils.compareStackNoQuantity(getSlot(i).getStack(), stack)) {
+                return null;
+            }
+        }
+
+        for (int i = begin; i < end; ++i) {
+            if (!getSlot(i).getHasStack()) {
+                getSlot(i).putStack(ItemHandlerHelper.copyStackWithSize(stack, 1));
+                getSlot(i).onSlotChanged();
+
+                return null;
+            }
+        }
+
         return null;
     }
 

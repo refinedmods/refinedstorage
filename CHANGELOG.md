@@ -12,6 +12,7 @@
 **Features**
 - Added X button to Processing Pattern Encoder to clear configuration of inputs and outputs
 - Added Grid view toggle buttons (regular, craftable items only, no craftable items)
+- Added ability to shift click items into Importer, Exporter, Constructor, Destructor and Detector to set up whitelist / blacklist configurations easier
 - Re-added opposite facing on shift click functionality
 - Updated to Forge 2014
 
