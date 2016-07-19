@@ -3,7 +3,7 @@ package refinedstorage.api.storage;
 import java.util.List;
 
 /**
- * Implement this interface on the tile that has a {@link refinedstorage.api.RefinedStorageCapabilities#NETWORK_NODE_CAPABILITY} capability.
+ * Represents a tile that provides storage to the network. Implement this on a tile that implements {@link refinedstorage.api.network.INetworkNode}.
  */
 public interface IStorageProvider {
     /**
