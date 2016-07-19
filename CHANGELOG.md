@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 0.8.12
+**Bugfixes**
+- Fixed dupe bug when shift clicking output slot in grid
+
 ### 0.8.11
 **Bugfixes**
 - Fixed minor dupe bug with JEI transferring
