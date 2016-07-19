@@ -1,7 +1,7 @@
 package refinedstorage.tile.externalstorage;
 
 import net.minecraft.item.ItemStack;
-import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.api.storage.IStorage;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public abstract class ExternalStorage implements IStorage {
             return true;
         } else {
             for (int i = 0; i < items.size(); ++i) {
-                if (!RefinedStorageUtils.compareStack(items.get(i), cache.get(i))) {
+                if (!CompareUtils.compareStack(items.get(i), cache.get(i))) {
                     cache = items;
 
                     return true;

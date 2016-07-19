@@ -13,6 +13,7 @@ import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.RefinedStorageAPI;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.solderer.ISoldererRecipe;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.container.ContainerSolderer;
 import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.inventory.SoldererItemHandler;
@@ -50,7 +51,7 @@ public class TileSolderer extends TileNode {
             if (newRecipe == null) {
                 stop();
             } else if (newRecipe != recipe) {
-                boolean sameItem = items.getStackInSlot(3) != null ? RefinedStorageUtils.compareStackNoQuantity(items.getStackInSlot(3), newRecipe.getResult()) : false;
+                boolean sameItem = items.getStackInSlot(3) != null ? CompareUtils.compareStackNoQuantity(items.getStackInSlot(3), newRecipe.getResult()) : false;
 
                 if (items.getStackInSlot(3) == null || (sameItem && ((items.getStackInSlot(3).stackSize + newRecipe.getResult().stackSize) <= items.getStackInSlot(3).getMaxStackSize()))) {
                     recipe = newRecipe;

@@ -3,7 +3,7 @@ package refinedstorage.tile.externalstorage;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.tile.config.ModeFilter;
 
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ public class ItemHandlerStorage extends ExternalStorage {
         for (int i = 0; i < handler.getSlots(); ++i) {
             ItemStack slot = handler.getStackInSlot(i);
 
-            if (slot != null && RefinedStorageUtils.compareStack(slot, stack, flags)) {
+            if (slot != null && CompareUtils.compareStack(slot, stack, flags)) {
                 size = Math.min(size, slot.stackSize);
 
                 ItemStack took = ItemHandlerHelper.copyStackWithSize(slot, size);

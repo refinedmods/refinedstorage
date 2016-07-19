@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingTask;
-import refinedstorage.api.storage.CompareFlags;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.api.storage.IGroupedStorage;
 
 import javax.annotation.Nonnull;
@@ -110,14 +110,14 @@ public interface INetworkMaster {
      * Returns crafting patterns from an item stack.
      *
      * @param pattern The {@link ItemStack} to get a pattern for
-     * @param flags   The flags to compare on, see {@link CompareFlags}
+     * @param flags   The flags to compare on, see {@link CompareUtils}
      * @return A list of crafting patterns where the given pattern is one of the outputs
      */
     List<ICraftingPattern> getPatterns(ItemStack pattern, int flags);
 
     /**
      * @param pattern The {@link ItemStack} to get a pattern for
-     * @param flags   The flags to compare on, see {@link CompareFlags}
+     * @param flags   The flags to compare on, see {@link CompareUtils}
      * @return The pattern, or null if the pattern is not found
      */
     @Nullable
@@ -157,7 +157,7 @@ public interface INetworkMaster {
      *
      * @param stack The prototype of the stack to extract, do NOT modify
      * @param size  The amount of that prototype that has to be extracted
-     * @param flags The flags to compare on, see {@link CompareFlags}
+     * @param flags The flags to compare on, see {@link CompareUtils}
      * @return null if we didn't extract anything, or a {@link ItemStack} with the result
      */
     @Nullable

@@ -35,7 +35,7 @@ public interface IGroupedStorage {
      * Gets an item from the network, does not decrement its count like {@link IGroupedStorage#remove(ItemStack)} does.
      *
      * @param stack The stack to find
-     * @param flags The flags to compare on, see {@link CompareFlags}
+     * @param flags The flags to compare on, see {@link CompareUtils}
      * @return The {@link ItemStack}, do NOT modify
      */
     ItemStack get(ItemStack stack, int flags);

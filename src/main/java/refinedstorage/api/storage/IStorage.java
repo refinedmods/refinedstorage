@@ -35,7 +35,7 @@ public interface IStorage {
      *
      * @param stack A prototype of the stack to extract, do NOT modify
      * @param size  The amount of that prototype that has to be extracted
-     * @param flags On what we are comparing to extract this item, see {@link CompareFlags}
+     * @param flags On what we are comparing to extract this item, see {@link CompareUtils}
      * @return null if we didn't extract anything, or an {@link ItemStack} with the result
      */
     @Nullable

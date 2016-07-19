@@ -1,7 +1,7 @@
 package refinedstorage.tile.controller;
 
 import net.minecraft.item.ItemStack;
-import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.storage.CompareUtils;
 
 public final class ClientNode {
     public ItemStack stack;
@@ -18,7 +18,7 @@ public final class ClientNode {
             return false;
         }
 
-        return energyUsage == ((ClientNode) other).energyUsage && RefinedStorageUtils.compareStack(stack, ((ClientNode) other).stack);
+        return energyUsage == ((ClientNode) other).energyUsage && CompareUtils.compareStack(stack, ((ClientNode) other).stack);
     }
 
     @Override

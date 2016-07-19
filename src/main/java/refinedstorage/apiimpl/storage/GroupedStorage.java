@@ -8,6 +8,7 @@ import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.INetworkNode;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.api.storage.IGroupedStorage;
 import refinedstorage.api.storage.IStorage;
 import refinedstorage.api.storage.IStorageProvider;
@@ -57,7 +58,7 @@ public class GroupedStorage implements IGroupedStorage {
     @Override
     public void add(ItemStack stack, boolean rebuilding) {
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
-            if (RefinedStorageUtils.compareStackNoQuantity(otherStack, stack)) {
+            if (CompareUtils.compareStackNoQuantity(otherStack, stack)) {
                 otherStack.stackSize += stack.stackSize;
 
                 if (!rebuilding) {
@@ -78,7 +79,7 @@ public class GroupedStorage implements IGroupedStorage {
     @Override
     public void remove(ItemStack stack) {
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
-            if (RefinedStorageUtils.compareStackNoQuantity(otherStack, stack)) {
+            if (CompareUtils.compareStackNoQuantity(otherStack, stack)) {
                 otherStack.stackSize -= stack.stackSize;
 
                 if (otherStack.stackSize == 0) {
@@ -97,7 +98,7 @@ public class GroupedStorage implements IGroupedStorage {
     @Override
     public ItemStack get(ItemStack stack, int flags) {
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
-            if (RefinedStorageUtils.compareStack(otherStack, stack, flags)) {
+            if (CompareUtils.compareStack(otherStack, stack, flags)) {
                 return otherStack;
             }
         }

@@ -1,6 +1,6 @@
 package refinedstorage.gui;
 
-import refinedstorage.api.storage.CompareFlags;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.container.ContainerDestructor;
 import refinedstorage.gui.sidebutton.SideButtonCompare;
 import refinedstorage.gui.sidebutton.SideButtonMode;
@@ -22,8 +22,8 @@ public class GuiDestructor extends GuiBase {
 
         addSideButton(new SideButtonMode(destructor));
 
-        addSideButton(new SideButtonCompare(destructor, CompareFlags.COMPARE_DAMAGE));
-        addSideButton(new SideButtonCompare(destructor, CompareFlags.COMPARE_NBT));
+        addSideButton(new SideButtonCompare(destructor, CompareUtils.COMPARE_DAMAGE));
+        addSideButton(new SideButtonCompare(destructor, CompareUtils.COMPARE_NBT));
     }
 
     @Override

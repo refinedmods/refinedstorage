@@ -16,11 +16,9 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
-import net.minecraftforge.oredict.OreDictionary;
-import org.apache.commons.lang3.ArrayUtils;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.api.storage.CompareFlags;
+import refinedstorage.api.storage.CompareUtils;
 
 import java.util.HashSet;
 import java.util.List;
@@ -96,83 +94,6 @@ public final class RefinedStorageUtils {
                 inventory.setInventorySlotContents(slot, stack);
             }
         }
-    }
-
-    public static boolean compareStack(ItemStack left, ItemStack right) {
-        return compareStack(left, right, CompareFlags.COMPARE_NBT | CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_QUANTITY);
-    }
-
-    public static boolean compareStack(ItemStack left, ItemStack right, int flags) {
-        if (left == null && right == null) {
-            return true;
-        }
-
-        if ((left == null && right != null) || (left != null && right == null)) {
-            return false;
-        }
-
-        if (left.getItem() != right.getItem()) {
-            return false;
-        }
-
-        if ((flags & CompareFlags.COMPARE_DAMAGE) == CompareFlags.COMPARE_DAMAGE) {
-            if (left.getItemDamage() != right.getItemDamage()) {
-                return false;
-            }
-        }
-
-        if ((flags & CompareFlags.COMPARE_NBT) == CompareFlags.COMPARE_NBT) {
-            if (!compareNbt(left, right)) {
-                return false;
-            }
-        }
-
-        if ((flags & CompareFlags.COMPARE_QUANTITY) == CompareFlags.COMPARE_QUANTITY) {
-            if (left.stackSize != right.stackSize) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    public static boolean compareNbt(ItemStack left, ItemStack right) {
-        if (!ItemStack.areItemStackTagsEqual(left, right)) {
-            if (left.hasTagCompound() && !right.hasTagCompound() && left.getTagCompound().hasNoTags()) {
-                return true;
-            } else if (!left.hasTagCompound() && right.hasTagCompound() && right.getTagCompound().hasNoTags()) {
-                return true;
-            }
-
-            return false;
-        }
-
-        return true;
-    }
-
-    public static boolean compareStackNoQuantity(ItemStack left, ItemStack right) {
-        return compareStack(left, right, CompareFlags.COMPARE_NBT | CompareFlags.COMPARE_DAMAGE);
-    }
-
-    public static boolean compareStackOreDict(ItemStack left, ItemStack right) {
-        if (left == null && right == null) {
-            return true;
-        }
-
-        if ((left == null && right != null) || (left != null && right == null)) {
-            return false;
-        }
-
-        int[] leftIds = OreDictionary.getOreIDs(left);
-        int[] rightIds = OreDictionary.getOreIDs(right);
-
-        for (int i : rightIds) {
-            if (ArrayUtils.contains(leftIds, i)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     public static void writeBooleanArray(NBTTagCompound tag, String name, boolean[] array) {
@@ -257,7 +178,7 @@ public final class RefinedStorageUtils {
                 int amount = stacks[i].stackSize;
 
                 for (int j = i + 1; j < stacks.length; ++j) {
-                    if (RefinedStorageUtils.compareStack(stacks[i], stacks[j])) {
+                    if (CompareUtils.compareStack(stacks[i], stacks[j])) {
                         amount += stacks[j].stackSize;
 
                         combinedIndices.add(j);
@@ -288,11 +209,11 @@ public final class RefinedStorageUtils {
     }
 
     public static ItemStack extractItem(INetworkMaster network, ItemStack stack, int size) {
-        return network.extractItem(stack, size, CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_NBT);
+        return network.extractItem(stack, size, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
     }
 
     public static ICraftingPattern getPattern(INetworkMaster network, ItemStack stack) {
-        return network.getPattern(stack, CompareFlags.COMPARE_DAMAGE | CompareFlags.COMPARE_NBT);
+        return network.getPattern(stack, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
     }
 
     public static boolean hasPattern(INetworkMaster network, ItemStack stack) {

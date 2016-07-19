@@ -2,7 +2,7 @@ package refinedstorage.tile.config;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
-import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.storage.CompareUtils;
 
 public final class ModeFilter {
     public static boolean respectsMode(IItemHandler filters, IModeConfig mode, int compare, ItemStack stack) {
@@ -15,7 +15,7 @@ public final class ModeFilter {
                 if (slot != null) {
                     slots++;
 
-                    if (RefinedStorageUtils.compareStack(slot, stack, compare)) {
+                    if (CompareUtils.compareStack(slot, stack, compare)) {
                         return true;
                     }
                 }
@@ -26,7 +26,7 @@ public final class ModeFilter {
             for (int i = 0; i < filters.getSlots(); ++i) {
                 ItemStack slot = filters.getStackInSlot(i);
 
-                if (slot != null && RefinedStorageUtils.compareStack(slot, stack, compare)) {
+                if (slot != null && CompareUtils.compareStack(slot, stack, compare)) {
                     return false;
                 }
             }

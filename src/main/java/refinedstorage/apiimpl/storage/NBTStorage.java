@@ -6,7 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.items.ItemHandlerHelper;
-import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.api.storage.IStorage;
 
 import javax.annotation.Nullable;
@@ -117,7 +117,7 @@ public abstract class NBTStorage implements IStorage {
     @Override
     public ItemStack insertItem(ItemStack stack, int size, boolean simulate) {
         for (ItemStack otherStack : stacks) {
-            if (RefinedStorageUtils.compareStackNoQuantity(otherStack, stack)) {
+            if (CompareUtils.compareStackNoQuantity(otherStack, stack)) {
                 if (getCapacity() != -1 && getStored() + size > getCapacity()) {
                     int remainingSpace = getCapacity() - getStored();
 
@@ -180,7 +180,7 @@ public abstract class NBTStorage implements IStorage {
     @Override
     public ItemStack extractItem(ItemStack stack, int size, int flags) {
         for (ItemStack otherStack : stacks) {
-            if (RefinedStorageUtils.compareStack(otherStack, stack, flags)) {
+            if (CompareUtils.compareStack(otherStack, stack, flags)) {
                 if (size > otherStack.stackSize) {
                     size = otherStack.stackSize;
                 }

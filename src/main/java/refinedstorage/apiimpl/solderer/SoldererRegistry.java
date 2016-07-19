@@ -1,9 +1,9 @@
 package refinedstorage.apiimpl.solderer;
 
 import net.minecraftforge.items.IItemHandler;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.solderer.ISoldererRecipe;
 import refinedstorage.api.solderer.ISoldererRegistry;
+import refinedstorage.api.storage.CompareUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,7 +30,7 @@ public class SoldererRegistry implements ISoldererRegistry {
             boolean found = true;
 
             for (int i = 0; i < 3; ++i) {
-                if (!RefinedStorageUtils.compareStackNoQuantity(recipe.getRow(i), items.getStackInSlot(i)) && !RefinedStorageUtils.compareStackOreDict(recipe.getRow(i), items.getStackInSlot(i))) {
+                if (!CompareUtils.compareStackNoQuantity(recipe.getRow(i), items.getStackInSlot(i)) && !CompareUtils.compareStackOreDict(recipe.getRow(i), items.getStackInSlot(i))) {
                     found = false;
                 }
 

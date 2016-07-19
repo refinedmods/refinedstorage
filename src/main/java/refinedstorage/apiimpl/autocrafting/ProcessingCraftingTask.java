@@ -9,6 +9,7 @@ import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.api.storage.CompareUtils;
 
 public class ProcessingCraftingTask implements ICraftingTask {
     public static final int ID = 1;
@@ -92,7 +93,7 @@ public class ProcessingCraftingTask implements ICraftingTask {
 
     public boolean onInserted(ItemStack stack) {
         for (int i = 0; i < pattern.getOutputs().length; ++i) {
-            if (!satisfied[i] && RefinedStorageUtils.compareStackNoQuantity(stack, pattern.getOutputs()[i])) {
+            if (!satisfied[i] && CompareUtils.compareStackNoQuantity(stack, pattern.getOutputs()[i])) {
                 satisfied[i] = true;
 
                 return true;

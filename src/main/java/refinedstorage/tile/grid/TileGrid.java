@@ -15,6 +15,7 @@ import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.network.IGridHandler;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.block.BlockGrid;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
@@ -174,7 +175,7 @@ public class TileGrid extends TileNode implements IGrid {
 
             craftedItems += crafted.stackSize;
 
-            if (!RefinedStorageUtils.compareStack(crafted, result.getStackInSlot(0)) || craftedItems + crafted.stackSize > crafted.getMaxStackSize()) {
+            if (!CompareUtils.compareStack(crafted, result.getStackInSlot(0)) || craftedItems + crafted.stackSize > crafted.getMaxStackSize()) {
                 break;
             }
         }

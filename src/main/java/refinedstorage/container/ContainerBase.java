@@ -7,7 +7,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
-import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.container.slot.SlotDisabled;
 import refinedstorage.container.slot.SlotSpecimen;
 import refinedstorage.container.slot.SlotSpecimenLegacy;
@@ -110,7 +110,7 @@ public abstract class ContainerBase extends Container {
 
     public ItemStack mergeItemStackToSpecimen(ItemStack stack, int begin, int end) {
         for (int i = begin; i < end; ++i) {
-            if (RefinedStorageUtils.compareStackNoQuantity(getSlot(i).getStack(), stack)) {
+            if (CompareUtils.compareStackNoQuantity(getSlot(i).getStack(), stack)) {
                 return null;
             }
         }

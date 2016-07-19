@@ -9,6 +9,7 @@ import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.GridExtractFlags;
 import refinedstorage.api.network.IGridHandler;
 import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.api.storage.CompareUtils;
 
 public class GridHandler implements IGridHandler {
     public static final int MAX_CRAFTING_PER_REQUEST = 500;
@@ -34,7 +35,7 @@ public class GridHandler implements IGridHandler {
         ItemStack held = player.inventory.getItemStack();
 
         if (single) {
-            if (held != null && (!RefinedStorageUtils.compareStackNoQuantity(item, held) || held.stackSize + 1 > held.getMaxStackSize())) {
+            if (held != null && (!CompareUtils.compareStackNoQuantity(item, held) || held.stackSize + 1 > held.getMaxStackSize())) {
                 return;
             }
         } else if (player.inventory.getItemStack() != null) {
@@ -129,7 +130,7 @@ public class GridHandler implements IGridHandler {
 
         if (pattern != null) {
             for (ItemStack output : pattern.getOutputs()) {
-                if (RefinedStorageUtils.compareStackNoQuantity(stack, output)) {
+                if (CompareUtils.compareStackNoQuantity(stack, output)) {
                     quantityPerRequest += output.stackSize;
 
                     if (!pattern.isProcessing()) {

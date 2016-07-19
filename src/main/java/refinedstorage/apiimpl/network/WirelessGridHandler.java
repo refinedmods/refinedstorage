@@ -9,6 +9,7 @@ import refinedstorage.RefinedStorageGui;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.network.*;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.item.ItemWirelessGrid;
 
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class WirelessGridHandler implements IWirelessGridHandler {
         while (it.hasNext()) {
             IWirelessGridConsumer consumer = it.next();
 
-            if (!RefinedStorageUtils.compareStack(consumer.getStack(), consumer.getPlayer().getHeldItem(consumer.getHand()))) {
+            if (!CompareUtils.compareStack(consumer.getStack(), consumer.getPlayer().getHeldItem(consumer.getHand()))) {
                 /**
                  * This will call {@link net.minecraft.inventory.Container#onContainerClosed(EntityPlayer)} so the consumer is removed from the list.
                  */
