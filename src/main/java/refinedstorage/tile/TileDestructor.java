@@ -13,7 +13,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerDestructor;
 import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.inventory.UpgradeItemHandler;
@@ -111,8 +110,8 @@ public class TileDestructor extends TileNode implements ICompareConfig, IModeCon
             mode = nbt.getInteger(NBT_MODE);
         }
 
-        RefinedStorageUtils.readItems(filters, 0, nbt);
-        RefinedStorageUtils.readItems(upgrades, 1, nbt);
+        TileBase.readItems(filters, 0, nbt);
+        TileBase.readItems(upgrades, 1, nbt);
     }
 
     @Override
@@ -122,8 +121,8 @@ public class TileDestructor extends TileNode implements ICompareConfig, IModeCon
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_MODE, mode);
 
-        RefinedStorageUtils.writeItems(filters, 0, tag);
-        RefinedStorageUtils.writeItems(upgrades, 1, tag);
+        TileBase.writeItems(filters, 0, tag);
+        TileBase.writeItems(upgrades, 1, tag);
 
         return tag;
     }

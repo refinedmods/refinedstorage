@@ -7,7 +7,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.container.ContainerDetector;
 import refinedstorage.inventory.BasicItemHandler;
@@ -149,7 +148,7 @@ public class TileDetector extends TileNode implements ICompareConfig {
             amount = nbt.getInteger(NBT_AMOUNT);
         }
 
-        RefinedStorageUtils.readItems(filter, 0, nbt);
+        TileBase.readItems(filter, 0, nbt);
     }
 
     @Override
@@ -160,7 +159,7 @@ public class TileDetector extends TileNode implements ICompareConfig {
         tag.setInteger(NBT_MODE, mode);
         tag.setInteger(NBT_AMOUNT, amount);
 
-        RefinedStorageUtils.writeItems(filter, 0, tag);
+        TileBase.writeItems(filter, 0, tag);
 
         return tag;
     }

@@ -10,7 +10,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.apiimpl.autocrafting.CraftingTaskScheduler;
 import refinedstorage.container.ContainerExporter;
 import refinedstorage.inventory.BasicItemHandler;
@@ -35,7 +34,7 @@ public class TileExporter extends TileNode implements ICompareConfig {
 
     @Override
     public void updateNode() {
-        IItemHandler handler = RefinedStorageUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
+        IItemHandler handler = TileBase.getItemHandler(getFacingTile(), getDirection().getOpposite());
 
         int size = upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK) ? 64 : 1;
 
@@ -84,8 +83,8 @@ public class TileExporter extends TileNode implements ICompareConfig {
             compare = nbt.getInteger(NBT_COMPARE);
         }
 
-        RefinedStorageUtils.readItems(filters, 0, nbt);
-        RefinedStorageUtils.readItems(upgrades, 1, nbt);
+        TileBase.readItems(filters, 0, nbt);
+        TileBase.readItems(upgrades, 1, nbt);
 
         scheduler.read(nbt);
     }
@@ -96,8 +95,8 @@ public class TileExporter extends TileNode implements ICompareConfig {
 
         tag.setInteger(NBT_COMPARE, compare);
 
-        RefinedStorageUtils.writeItems(filters, 0, tag);
-        RefinedStorageUtils.writeItems(upgrades, 1, tag);
+        TileBase.writeItems(filters, 0, tag);
+        TileBase.writeItems(upgrades, 1, tag);
 
         scheduler.writeToNBT(tag);
 

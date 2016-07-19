@@ -9,7 +9,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerImporter;
 import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.inventory.UpgradeItemHandler;
@@ -38,7 +37,7 @@ public class TileImporter extends TileNode implements ICompareConfig, IModeConfi
 
     @Override
     public void updateNode() {
-        IItemHandler handler = RefinedStorageUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
+        IItemHandler handler = TileBase.getItemHandler(getFacingTile(), getDirection().getOpposite());
 
         if (getFacingTile() instanceof TileDiskDrive || handler == null) {
             return;
@@ -105,8 +104,8 @@ public class TileImporter extends TileNode implements ICompareConfig, IModeConfi
             mode = nbt.getInteger(NBT_MODE);
         }
 
-        RefinedStorageUtils.readItems(filters, 0, nbt);
-        RefinedStorageUtils.readItems(upgrades, 1, nbt);
+        TileBase.readItems(filters, 0, nbt);
+        TileBase.readItems(upgrades, 1, nbt);
     }
 
     @Override
@@ -116,8 +115,8 @@ public class TileImporter extends TileNode implements ICompareConfig, IModeConfi
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_MODE, mode);
 
-        RefinedStorageUtils.writeItems(filters, 0, tag);
-        RefinedStorageUtils.writeItems(upgrades, 1, tag);
+        TileBase.writeItems(filters, 0, tag);
+        TileBase.writeItems(upgrades, 1, tag);
 
         return tag;
     }

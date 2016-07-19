@@ -8,7 +8,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.network.IWirelessTransmitter;
 import refinedstorage.container.ContainerWirelessTransmitter;
 import refinedstorage.inventory.BasicItemHandler;
@@ -31,14 +30,14 @@ public class TileWirelessTransmitter extends TileNode implements IWirelessTransm
     public void read(NBTTagCompound nbt) {
         super.read(nbt);
 
-        RefinedStorageUtils.readItems(upgrades, 0, nbt);
+        TileBase.readItems(upgrades, 0, nbt);
     }
 
     @Override
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        RefinedStorageUtils.writeItems(upgrades, 0, tag);
+        TileBase.writeItems(upgrades, 0, tag);
 
         return tag;
     }

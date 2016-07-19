@@ -8,7 +8,6 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.storage.IStorage;
 import refinedstorage.api.storage.IStorageProvider;
@@ -108,7 +107,7 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
     public void read(NBTTagCompound nbt) {
         super.read(nbt);
 
-        RefinedStorageUtils.readItems(filters, 0, nbt);
+        TileBase.readItems(filters, 0, nbt);
 
         if (nbt.hasKey(NBT_PRIORITY)) {
             priority = nbt.getInteger(NBT_PRIORITY);
@@ -131,7 +130,7 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        RefinedStorageUtils.writeItems(filters, 0, tag);
+        TileBase.writeItems(filters, 0, tag);
 
         tag.setInteger(NBT_PRIORITY, priority);
 

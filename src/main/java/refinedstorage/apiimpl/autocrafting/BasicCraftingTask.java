@@ -2,10 +2,10 @@ package refinedstorage.apiimpl.autocrafting;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.INetworkMaster;
@@ -38,9 +38,9 @@ public class BasicCraftingTask implements ICraftingTask {
 
     public BasicCraftingTask(NBTTagCompound tag, ICraftingPattern pattern) {
         this.pattern = pattern;
-        this.satisfied = RefinedStorageUtils.readBooleanArray(tag, NBT_SATISFIED);
-        this.checked = RefinedStorageUtils.readBooleanArray(tag, NBT_CHECKED);
-        this.childTasks = RefinedStorageUtils.readBooleanArray(tag, NBT_CHILD_TASKS);
+        this.satisfied = readBooleanArray(tag, NBT_SATISFIED);
+        this.checked = readBooleanArray(tag, NBT_CHECKED);
+        this.childTasks = readBooleanArray(tag, NBT_CHILD_TASKS);
 
         NBTTagList tookList = tag.getTagList(NBT_TOOK, Constants.NBT.TAG_COMPOUND);
 
@@ -121,9 +121,9 @@ public class BasicCraftingTask implements ICraftingTask {
         pattern.writeToNBT(patternTag);
         tag.setTag(CraftingPattern.NBT, patternTag);
 
-        RefinedStorageUtils.writeBooleanArray(tag, NBT_SATISFIED, satisfied);
-        RefinedStorageUtils.writeBooleanArray(tag, NBT_CHECKED, checked);
-        RefinedStorageUtils.writeBooleanArray(tag, NBT_CHILD_TASKS, childTasks);
+        writeBooleanArray(tag, NBT_SATISFIED, satisfied);
+        writeBooleanArray(tag, NBT_CHECKED, checked);
+        writeBooleanArray(tag, NBT_CHILD_TASKS, childTasks);
 
         NBTTagList tookList = new NBTTagList();
 
@@ -177,5 +177,27 @@ public class BasicCraftingTask implements ICraftingTask {
         }
 
         return builder.toString();
+    }
+
+    public static void writeBooleanArray(NBTTagCompound tag, String name, boolean[] array) {
+        int[] intArray = new int[array.length];
+
+        for (int i = 0; i < intArray.length; ++i) {
+            intArray[i] = array[i] ? 1 : 0;
+        }
+
+        tag.setTag(name, new NBTTagIntArray(intArray));
+    }
+
+    public static boolean[] readBooleanArray(NBTTagCompound tag, String name) {
+        int[] intArray = tag.getIntArray(name);
+
+        boolean array[] = new boolean[intArray.length];
+
+        for (int i = 0; i < intArray.length; ++i) {
+            array[i] = intArray[i] == 1 ? true : false;
+        }
+
+        return array;
     }
 }

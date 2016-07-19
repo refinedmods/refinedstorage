@@ -9,7 +9,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.items.IItemHandler;
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.storage.IStorage;
 import refinedstorage.api.storage.IStorageProvider;
@@ -17,6 +16,7 @@ import refinedstorage.container.ContainerStorage;
 import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.network.MessagePriorityUpdate;
 import refinedstorage.tile.IStorageGui;
+import refinedstorage.tile.TileBase;
 import refinedstorage.tile.TileNode;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.IModeConfig;
@@ -119,7 +119,7 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
     public void read(NBTTagCompound nbt) {
         super.read(nbt);
 
-        RefinedStorageUtils.readItems(filters, 0, nbt);
+        TileBase.readItems(filters, 0, nbt);
 
         if (nbt.hasKey(NBT_PRIORITY)) {
             priority = nbt.getInteger(NBT_PRIORITY);
@@ -138,7 +138,7 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        RefinedStorageUtils.writeItems(filters, 0, tag);
+        TileBase.writeItems(filters, 0, tag);
 
         tag.setInteger(NBT_PRIORITY, priority);
         tag.setInteger(NBT_COMPARE, compare);
@@ -200,7 +200,7 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
         } else if (facing instanceof IDeepStorageUnit) {
             storages.add(new DeepStorageUnitStorage(this, (IDeepStorageUnit) facing));
         } else {
-            IItemHandler handler = RefinedStorageUtils.getItemHandler(facing, getDirection().getOpposite());
+            IItemHandler handler = TileBase.getItemHandler(facing, getDirection().getOpposite());
 
             if (handler != null) {
                 storages.add(new ItemHandlerStorage(this, handler));

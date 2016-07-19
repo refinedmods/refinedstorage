@@ -4,7 +4,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.items.ItemHandlerHelper;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.autocrafting.ICraftingTask;
@@ -34,9 +33,9 @@ public class ProcessingCraftingTask implements ICraftingTask {
 
     public ProcessingCraftingTask(NBTTagCompound tag, ICraftingPattern pattern) {
         this.pattern = pattern;
-        this.inserted = RefinedStorageUtils.readBooleanArray(tag, NBT_INSERTED);
-        this.childTasks = RefinedStorageUtils.readBooleanArray(tag, NBT_CHILD_TASKS);
-        this.satisfied = RefinedStorageUtils.readBooleanArray(tag, NBT_SATISFIED);
+        this.inserted = BasicCraftingTask.readBooleanArray(tag, NBT_INSERTED);
+        this.childTasks = BasicCraftingTask.readBooleanArray(tag, NBT_CHILD_TASKS);
+        this.satisfied = BasicCraftingTask.readBooleanArray(tag, NBT_SATISFIED);
     }
 
     @Override
@@ -120,9 +119,9 @@ public class ProcessingCraftingTask implements ICraftingTask {
         pattern.writeToNBT(patternTag);
         tag.setTag(CraftingPattern.NBT, patternTag);
 
-        RefinedStorageUtils.writeBooleanArray(tag, NBT_INSERTED, inserted);
-        RefinedStorageUtils.writeBooleanArray(tag, NBT_CHILD_TASKS, childTasks);
-        RefinedStorageUtils.writeBooleanArray(tag, NBT_SATISFIED, satisfied);
+        BasicCraftingTask.writeBooleanArray(tag, NBT_INSERTED, inserted);
+        BasicCraftingTask.writeBooleanArray(tag, NBT_CHILD_TASKS, childTasks);
+        BasicCraftingTask.writeBooleanArray(tag, NBT_SATISFIED, satisfied);
 
         tag.setInteger("Type", ID);
     }

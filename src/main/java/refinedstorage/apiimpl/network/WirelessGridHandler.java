@@ -7,7 +7,6 @@ import net.minecraft.util.EnumHand;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.RefinedStorageItems;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.network.*;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.item.ItemWirelessGrid;
@@ -73,7 +72,7 @@ public class WirelessGridHandler implements IWirelessGridHandler {
 
         consumers.add(new WirelessGridConsumer(player, hand, player.getHeldItem(hand)));
 
-        player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.WIRELESS_GRID, player.worldObj, RefinedStorageUtils.getIdFromHand(hand), 0, 0);
+        player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.WIRELESS_GRID, player.worldObj, hand.ordinal(), 0, 0);
 
         network.sendStorageToClient((EntityPlayerMP) player);
 

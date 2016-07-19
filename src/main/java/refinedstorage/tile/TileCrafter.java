@@ -10,7 +10,6 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageItems;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.INetworkMaster;
@@ -79,16 +78,16 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
     public void read(NBTTagCompound nbt) {
         super.read(nbt);
 
-        RefinedStorageUtils.readItems(patterns, 0, nbt);
-        RefinedStorageUtils.readItems(upgrades, 1, nbt);
+        TileBase.readItems(patterns, 0, nbt);
+        TileBase.readItems(upgrades, 1, nbt);
     }
 
     @Override
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        RefinedStorageUtils.writeItems(patterns, 0, tag);
-        RefinedStorageUtils.writeItems(upgrades, 1, tag);
+        TileBase.writeItems(patterns, 0, tag);
+        TileBase.writeItems(upgrades, 1, tag);
 
         return tag;
     }
@@ -100,7 +99,7 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
 
     @Override
     public IItemHandler getConnectedItems() {
-        return RefinedStorageUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
+        return TileBase.getItemHandler(getFacingTile(), getDirection().getOpposite());
     }
 
     public IItemHandler getPatterns() {

@@ -13,7 +13,6 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageItems;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.storage.IStorage;
 import refinedstorage.api.storage.IStorageProvider;
@@ -157,8 +156,8 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
     public void read(NBTTagCompound nbt) {
         super.read(nbt);
 
-        RefinedStorageUtils.readItems(disks, 0, nbt);
-        RefinedStorageUtils.readItems(filters, 1, nbt);
+        TileBase.readItems(disks, 0, nbt);
+        TileBase.readItems(filters, 1, nbt);
 
         if (nbt.hasKey(NBT_PRIORITY)) {
             priority = nbt.getInteger(NBT_PRIORITY);
@@ -183,8 +182,8 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
             }
         }
 
-        RefinedStorageUtils.writeItems(disks, 0, tag);
-        RefinedStorageUtils.writeItems(filters, 1, tag);
+        TileBase.writeItems(disks, 0, tag);
+        TileBase.writeItems(filters, 1, tag);
 
         tag.setInteger(NBT_PRIORITY, priority);
         tag.setInteger(NBT_COMPARE, compare);

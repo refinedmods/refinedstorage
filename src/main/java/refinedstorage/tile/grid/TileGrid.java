@@ -13,7 +13,6 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageItems;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.network.IGridHandler;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.apiimpl.network.NetworkUtils;
@@ -24,6 +23,7 @@ import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.network.MessageGridSettingsUpdate;
+import refinedstorage.tile.TileBase;
 import refinedstorage.tile.TileNode;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 
@@ -333,8 +333,8 @@ public class TileGrid extends TileNode implements IGrid {
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        RefinedStorageUtils.readItemsLegacy(matrix, 0, tag);
-        RefinedStorageUtils.readItems(patterns, 1, tag);
+        TileBase.readItemsLegacy(matrix, 0, tag);
+        TileBase.readItems(patterns, 1, tag);
 
         if (tag.hasKey(NBT_VIEW_TYPE)) {
             viewType = tag.getInteger(NBT_VIEW_TYPE);
@@ -357,8 +357,8 @@ public class TileGrid extends TileNode implements IGrid {
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        RefinedStorageUtils.writeItemsLegacy(matrix, 0, tag);
-        RefinedStorageUtils.writeItems(patterns, 1, tag);
+        TileBase.writeItemsLegacy(matrix, 0, tag);
+        TileBase.writeItems(patterns, 1, tag);
 
         tag.setInteger(NBT_VIEW_TYPE, viewType);
         tag.setInteger(NBT_SORTING_DIRECTION, sortingDirection);

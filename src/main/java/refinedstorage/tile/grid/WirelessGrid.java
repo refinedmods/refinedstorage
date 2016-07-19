@@ -7,7 +7,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.network.IGridHandler;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.item.ItemWirelessGrid;
@@ -73,28 +72,28 @@ public class WirelessGrid implements IGrid {
 
     @Override
     public void onViewTypeChanged(int type) {
-        RefinedStorage.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(RefinedStorageUtils.getIdFromHand(hand), type, getSortingDirection(), getSortingType(), getSearchBoxMode()));
+        RefinedStorage.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(hand.ordinal(), type, getSortingDirection(), getSortingType(), getSearchBoxMode()));
 
         this.viewType = type;
     }
 
     @Override
     public void onSortingTypeChanged(int type) {
-        RefinedStorage.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(RefinedStorageUtils.getIdFromHand(hand), getViewType(), getSortingDirection(), type, getSearchBoxMode()));
+        RefinedStorage.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(hand.ordinal(), getViewType(), getSortingDirection(), type, getSearchBoxMode()));
 
         this.sortingType = type;
     }
 
     @Override
     public void onSortingDirectionChanged(int direction) {
-        RefinedStorage.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(RefinedStorageUtils.getIdFromHand(hand), getViewType(), direction, getSortingType(), getSearchBoxMode()));
+        RefinedStorage.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(hand.ordinal(), getViewType(), direction, getSortingType(), getSearchBoxMode()));
 
         this.sortingDirection = direction;
     }
 
     @Override
     public void onSearchBoxModeChanged(int searchBoxMode) {
-        RefinedStorage.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(RefinedStorageUtils.getIdFromHand(hand), getViewType(), getSortingDirection(), getSortingType(), searchBoxMode));
+        RefinedStorage.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(hand.ordinal(), getViewType(), getSortingDirection(), getSortingType(), searchBoxMode));
 
         this.searchBoxMode = searchBoxMode;
     }

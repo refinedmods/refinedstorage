@@ -13,7 +13,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.apiimpl.autocrafting.CraftingTaskScheduler;
 import refinedstorage.container.ContainerConstructor;
 import refinedstorage.container.slot.SlotSpecimen;
@@ -92,8 +91,8 @@ public class TileConstructor extends TileNode implements ICompareConfig {
             compare = tag.getInteger(NBT_COMPARE);
         }
 
-        RefinedStorageUtils.readItems(filter, 0, tag);
-        RefinedStorageUtils.readItems(upgrades, 1, tag);
+        TileBase.readItems(filter, 0, tag);
+        TileBase.readItems(upgrades, 1, tag);
 
         scheduler.read(tag);
     }
@@ -104,8 +103,8 @@ public class TileConstructor extends TileNode implements ICompareConfig {
 
         tag.setInteger(NBT_COMPARE, compare);
 
-        RefinedStorageUtils.writeItems(filter, 0, tag);
-        RefinedStorageUtils.writeItems(upgrades, 1, tag);
+        TileBase.writeItems(filter, 0, tag);
+        TileBase.writeItems(upgrades, 1, tag);
 
         scheduler.writeToNBT(tag);
 

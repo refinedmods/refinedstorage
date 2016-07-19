@@ -7,7 +7,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorageItems;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.item.ItemPattern;
@@ -20,8 +19,8 @@ public class TileProcessingPatternEncoder extends TileBase {
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        RefinedStorageUtils.writeItems(patterns, 0, tag);
-        RefinedStorageUtils.writeItems(configuration, 1, tag);
+        TileBase.writeItems(patterns, 0, tag);
+        TileBase.writeItems(configuration, 1, tag);
 
         return tag;
     }
@@ -30,8 +29,8 @@ public class TileProcessingPatternEncoder extends TileBase {
     public void read(NBTTagCompound nbt) {
         super.read(nbt);
 
-        RefinedStorageUtils.readItems(patterns, 0, nbt);
-        RefinedStorageUtils.readItems(configuration, 1, nbt);
+        TileBase.readItems(patterns, 0, nbt);
+        TileBase.readItems(configuration, 1, nbt);
     }
 
     public void onCreatePattern() {

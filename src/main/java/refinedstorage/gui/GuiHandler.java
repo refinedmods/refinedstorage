@@ -3,11 +3,11 @@ package refinedstorage.gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import refinedstorage.RefinedStorageGui;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.*;
 import refinedstorage.tile.*;
 import refinedstorage.tile.controller.TileController;
@@ -64,7 +64,7 @@ public class GuiHandler implements IGuiHandler {
     }
 
     private WirelessGrid getWirelessGrid(EntityPlayer player, int hand) {
-        return new WirelessGrid(player.worldObj, player.getHeldItem(RefinedStorageUtils.getHandById(hand)), RefinedStorageUtils.getHandById(hand));
+        return new WirelessGrid(player.worldObj, player.getHeldItem(EnumHand.values()[hand]), EnumHand.values()[hand]);
     }
 
     private ContainerGrid getWirelessGridContainer(EntityPlayer player, int hand) {

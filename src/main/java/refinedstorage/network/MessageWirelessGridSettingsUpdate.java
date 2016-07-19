@@ -3,9 +3,9 @@ package refinedstorage.network;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import refinedstorage.RefinedStorageItems;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.tile.grid.TileGrid;
 
 public class MessageWirelessGridSettingsUpdate extends MessageHandlerPlayerToServer<MessageWirelessGridSettingsUpdate> implements IMessage {
@@ -46,7 +46,7 @@ public class MessageWirelessGridSettingsUpdate extends MessageHandlerPlayerToSer
 
     @Override
     public void handle(MessageWirelessGridSettingsUpdate message, EntityPlayerMP player) {
-        ItemStack held = player.getHeldItem(RefinedStorageUtils.getHandById(message.hand));
+        ItemStack held = player.getHeldItem((message.hand < 0 || message.hand > EnumHand.values().length - 1) ? EnumHand.MAIN_HAND : EnumHand.values()[message.hand]);
 
         if (held != null && held.getItem() == RefinedStorageItems.WIRELESS_GRID && held.getTagCompound() != null) {
             if (TileGrid.isValidViewType(message.viewType)) {
