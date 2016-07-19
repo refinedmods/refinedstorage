@@ -21,7 +21,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.storage.CompareFlags;
-import refinedstorage.item.ItemUpgrade;
 
 import java.util.HashSet;
 import java.util.List;
@@ -174,48 +173,6 @@ public final class RefinedStorageUtils {
         }
 
         return false;
-    }
-
-    public static int getSpeed(IItemHandler handler) {
-        return getSpeed(handler, 9, 2);
-    }
-
-    public static int getSpeed(IItemHandler handler, int speed, int speedIncrease) {
-        for (int i = 0; i < handler.getSlots(); ++i) {
-            if (handler.getStackInSlot(i) != null && handler.getStackInSlot(i).getMetadata() == ItemUpgrade.TYPE_SPEED) {
-                speed -= speedIncrease;
-            }
-        }
-
-        return speed;
-    }
-
-    public static boolean hasUpgrade(IItemHandler handler, int type) {
-        return getUpgradeCount(handler, type) > 0;
-    }
-
-    public static int getUpgradeCount(IItemHandler handler, int type) {
-        int upgrades = 0;
-
-        for (int i = 0; i < handler.getSlots(); ++i) {
-            if (handler.getStackInSlot(i) != null && handler.getStackInSlot(i).getMetadata() == type) {
-                upgrades++;
-            }
-        }
-
-        return upgrades;
-    }
-
-    public static int getUpgradeEnergyUsage(IItemHandler handler) {
-        int usage = 0;
-
-        for (int i = 0; i < handler.getSlots(); ++i) {
-            if (handler.getStackInSlot(i) != null) {
-                usage += ItemUpgrade.getEnergyUsage(handler.getStackInSlot(i).getMetadata());
-            }
-        }
-
-        return usage;
     }
 
     public static void writeBooleanArray(NBTTagCompound tag, String name, boolean[] array) {

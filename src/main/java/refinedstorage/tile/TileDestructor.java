@@ -13,11 +13,10 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerDestructor;
 import refinedstorage.inventory.BasicItemHandler;
-import refinedstorage.inventory.BasicItemValidator;
+import refinedstorage.inventory.UpgradeItemHandler;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.IModeConfig;
@@ -33,23 +32,19 @@ public class TileDestructor extends TileNode implements ICompareConfig, IModeCon
     private static final int BASE_SPEED = 20;
 
     private BasicItemHandler filters = new BasicItemHandler(9, this);
-    private BasicItemHandler upgrades = new BasicItemHandler(
-        4,
-        this,
-        new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED)
-    );
+    private UpgradeItemHandler upgrades = new UpgradeItemHandler(4, this, ItemUpgrade.TYPE_SPEED);
 
     private int compare = 0;
     private int mode = ModeConstants.WHITELIST;
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.destructorUsage + RefinedStorageUtils.getUpgradeEnergyUsage(upgrades);
+        return RefinedStorage.INSTANCE.destructorUsage + upgrades.getEnergyUsage();
     }
 
     @Override
     public void updateNode() {
-        if (ticks % RefinedStorageUtils.getSpeed(upgrades, BASE_SPEED, 4) == 0) {
+        if (ticks % upgrades.getSpeed(BASE_SPEED, 4) == 0) {
             BlockPos front = pos.offset(getDirection());
 
             IBlockState frontBlockState = worldObj.getBlockState(front);

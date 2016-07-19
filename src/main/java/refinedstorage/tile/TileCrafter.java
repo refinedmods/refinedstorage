@@ -16,8 +16,8 @@ import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.container.ContainerCrafter;
 import refinedstorage.inventory.BasicItemHandler;
-import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.inventory.IItemValidator;
+import refinedstorage.inventory.UpgradeItemHandler;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.item.ItemUpgrade;
 
@@ -38,11 +38,11 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
         }
     };
 
-    private BasicItemHandler upgrades = new BasicItemHandler(4, this, new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED));
+    private UpgradeItemHandler upgrades = new UpgradeItemHandler(4, this, ItemUpgrade.TYPE_SPEED);
 
     @Override
     public int getEnergyUsage() {
-        int usage = RefinedStorage.INSTANCE.crafterUsage + RefinedStorageUtils.getUpgradeEnergyUsage(upgrades);
+        int usage = RefinedStorage.INSTANCE.crafterUsage + upgrades.getEnergyUsage();
 
         for (int i = 0; i < patterns.getSlots(); ++i) {
             if (patterns.getStackInSlot(i) != null) {
@@ -95,7 +95,7 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
 
     @Override
     public int getSpeed() {
-        return 20 - (RefinedStorageUtils.getUpgradeCount(upgrades, ItemUpgrade.TYPE_SPEED) * 4);
+        return 20 - (upgrades.getUpgradeCount(ItemUpgrade.TYPE_SPEED) * 4);
     }
 
     @Override

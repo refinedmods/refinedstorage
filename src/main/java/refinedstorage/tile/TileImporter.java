@@ -9,11 +9,10 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerImporter;
 import refinedstorage.inventory.BasicItemHandler;
-import refinedstorage.inventory.BasicItemValidator;
+import refinedstorage.inventory.UpgradeItemHandler;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.IModeConfig;
@@ -25,12 +24,7 @@ public class TileImporter extends TileNode implements ICompareConfig, IModeConfi
     private static final String NBT_MODE = "Mode";
 
     private BasicItemHandler filters = new BasicItemHandler(9, this);
-    private BasicItemHandler upgrades = new BasicItemHandler(
-        4,
-        this,
-        new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED),
-        new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_STACK)
-    );
+    private UpgradeItemHandler upgrades = new UpgradeItemHandler(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK);
 
     private int compare = 0;
     private int mode = ModeConstants.WHITELIST;
@@ -39,7 +33,7 @@ public class TileImporter extends TileNode implements ICompareConfig, IModeConfi
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.importerUsage + RefinedStorageUtils.getUpgradeEnergyUsage(upgrades);
+        return RefinedStorage.INSTANCE.importerUsage + upgrades.getEnergyUsage();
     }
 
     @Override
@@ -59,8 +53,8 @@ public class TileImporter extends TileNode implements ICompareConfig, IModeConfi
 
             if (stack == null || !ModeFilter.respectsMode(filters, this, compare, stack)) {
                 currentSlot++;
-            } else if (ticks % RefinedStorageUtils.getSpeed(upgrades) == 0) {
-                int quantity = RefinedStorageUtils.hasUpgrade(upgrades, ItemUpgrade.TYPE_STACK) ? 64 : 1;
+            } else if (ticks % upgrades.getSpeed() == 0) {
+                int quantity = upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK) ? 64 : 1;
 
                 ItemStack result = handler.extractItem(currentSlot, quantity, true);
 

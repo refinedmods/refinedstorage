@@ -9,15 +9,14 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.RefinedStorageAPI;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.solderer.ISoldererRecipe;
 import refinedstorage.container.ContainerSolderer;
 import refinedstorage.inventory.BasicItemHandler;
-import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.inventory.SoldererItemHandler;
+import refinedstorage.inventory.UpgradeItemHandler;
 import refinedstorage.item.ItemUpgrade;
 
 public class TileSolderer extends TileNode {
@@ -25,7 +24,7 @@ public class TileSolderer extends TileNode {
     private static final String NBT_PROGRESS = "Progress";
 
     private BasicItemHandler items = new BasicItemHandler(4, this);
-    private BasicItemHandler upgrades = new BasicItemHandler(4, this, new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED));
+    private UpgradeItemHandler upgrades = new UpgradeItemHandler(4, this, ItemUpgrade.TYPE_SPEED);
     private SoldererItemHandler[] itemsFacade = new SoldererItemHandler[EnumFacing.values().length];
 
     private ISoldererRecipe recipe;
@@ -36,7 +35,7 @@ public class TileSolderer extends TileNode {
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.soldererUsage + RefinedStorageUtils.getUpgradeEnergyUsage(upgrades);
+        return RefinedStorage.INSTANCE.soldererUsage + upgrades.getEnergyUsage();
     }
 
     @Override
@@ -61,7 +60,7 @@ public class TileSolderer extends TileNode {
                     markDirty();
                 }
             } else if (working) {
-                progress += 1 + RefinedStorageUtils.getUpgradeCount(upgrades, ItemUpgrade.TYPE_SPEED);
+                progress += 1 + upgrades.getUpgradeCount(ItemUpgrade.TYPE_SPEED);
 
                 if (progress >= recipe.getDuration()) {
                     if (items.getStackInSlot(3) != null) {

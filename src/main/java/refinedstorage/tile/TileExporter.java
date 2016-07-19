@@ -10,12 +10,11 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.apiimpl.autocrafting.CraftingTaskScheduler;
 import refinedstorage.container.ContainerExporter;
 import refinedstorage.inventory.BasicItemHandler;
-import refinedstorage.inventory.BasicItemValidator;
+import refinedstorage.inventory.UpgradeItemHandler;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
 
@@ -23,13 +22,7 @@ public class TileExporter extends TileNode implements ICompareConfig {
     private static final String NBT_COMPARE = "Compare";
 
     private BasicItemHandler filters = new BasicItemHandler(9, this);
-    private BasicItemHandler upgrades = new BasicItemHandler(
-        4,
-        this,
-        new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED),
-        new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_CRAFTING),
-        new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_STACK)
-    );
+    private UpgradeItemHandler upgrades = new UpgradeItemHandler(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_CRAFTING, ItemUpgrade.TYPE_STACK);
 
     private int compare = 0;
 
@@ -37,16 +30,16 @@ public class TileExporter extends TileNode implements ICompareConfig {
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.exporterUsage + RefinedStorageUtils.getUpgradeEnergyUsage(upgrades);
+        return RefinedStorage.INSTANCE.exporterUsage + upgrades.getEnergyUsage();
     }
 
     @Override
     public void updateNode() {
         IItemHandler handler = RefinedStorageUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
 
-        int size = RefinedStorageUtils.hasUpgrade(upgrades, ItemUpgrade.TYPE_STACK) ? 64 : 1;
+        int size = upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK) ? 64 : 1;
 
-        if (handler != null && ticks % RefinedStorageUtils.getSpeed(upgrades) == 0) {
+        if (handler != null && ticks % upgrades.getSpeed() == 0) {
             for (int i = 0; i < filters.getSlots(); ++i) {
                 ItemStack slot = filters.getStackInSlot(i);
 
@@ -61,7 +54,7 @@ public class TileExporter extends TileNode implements ICompareConfig {
                         if (remainder != null) {
                             network.insertItem(remainder, remainder.stackSize, false);
                         }
-                    } else if (RefinedStorageUtils.hasUpgrade(upgrades, ItemUpgrade.TYPE_CRAFTING)) {
+                    } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
                         if (scheduler.canSchedule(compare, slot)) {
                             scheduler.schedule(network, compare, slot);
                         }

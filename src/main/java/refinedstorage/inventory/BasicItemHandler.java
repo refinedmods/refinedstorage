@@ -6,7 +6,8 @@ import net.minecraftforge.items.ItemStackHandler;
 
 public class BasicItemHandler extends ItemStackHandler {
     private TileEntity tile;
-    private IItemValidator[] validators;
+
+    protected IItemValidator[] validators;
 
     public BasicItemHandler(int size, TileEntity tile, IItemValidator... validators) {
         super(size);

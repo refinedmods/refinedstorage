@@ -10,11 +10,10 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerInterface;
 import refinedstorage.inventory.BasicItemHandler;
-import refinedstorage.inventory.BasicItemValidator;
+import refinedstorage.inventory.UpgradeItemHandler;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
 
@@ -24,12 +23,7 @@ public class TileInterface extends TileNode implements ICompareConfig {
     private BasicItemHandler importItems = new BasicItemHandler(9, this);
     private BasicItemHandler exportSpecimenItems = new BasicItemHandler(9, this);
     private BasicItemHandler exportItems = new BasicItemHandler(9, this);
-    private BasicItemHandler upgrades = new BasicItemHandler(
-        4,
-        this,
-        new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED),
-        new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_STACK)
-    );
+    private UpgradeItemHandler upgrades = new UpgradeItemHandler(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK);
 
     private int compare = 0;
 
@@ -37,7 +31,7 @@ public class TileInterface extends TileNode implements ICompareConfig {
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.interfaceUsage + RefinedStorageUtils.getUpgradeEnergyUsage(upgrades);
+        return RefinedStorage.INSTANCE.interfaceUsage + upgrades.getEnergyUsage();
     }
 
     @Override
@@ -50,8 +44,8 @@ public class TileInterface extends TileNode implements ICompareConfig {
 
         if (slot == null) {
             currentSlot++;
-        } else if (ticks % RefinedStorageUtils.getSpeed(upgrades) == 0) {
-            int size = Math.min(slot.stackSize, RefinedStorageUtils.hasUpgrade(upgrades, ItemUpgrade.TYPE_STACK) ? 64 : 1);
+        } else if (ticks % upgrades.getSpeed() == 0) {
+            int size = Math.min(slot.stackSize, upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK) ? 64 : 1);
 
             ItemStack remainder = network.insertItem(slot, size, false);
 

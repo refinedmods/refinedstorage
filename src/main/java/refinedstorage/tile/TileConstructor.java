@@ -13,13 +13,12 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageItems;
 import refinedstorage.RefinedStorageUtils;
 import refinedstorage.apiimpl.autocrafting.CraftingTaskScheduler;
 import refinedstorage.container.ContainerConstructor;
 import refinedstorage.container.slot.SlotSpecimen;
 import refinedstorage.inventory.BasicItemHandler;
-import refinedstorage.inventory.BasicItemValidator;
+import refinedstorage.inventory.UpgradeItemHandler;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
 
@@ -36,12 +35,7 @@ public class TileConstructor extends TileNode implements ICompareConfig {
             block = SlotSpecimen.getBlockState(worldObj, pos.offset(getDirection()), getStackInSlot(0));
         }
     };
-    private BasicItemHandler upgrades = new BasicItemHandler(
-        4,
-        this,
-        new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED),
-        new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_CRAFTING)
-    );
+    private UpgradeItemHandler upgrades = new UpgradeItemHandler(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_CRAFTING);
 
     private int compare = 0;
     private IBlockState block;
@@ -50,12 +44,12 @@ public class TileConstructor extends TileNode implements ICompareConfig {
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.constructorUsage + RefinedStorageUtils.getUpgradeEnergyUsage(upgrades);
+        return RefinedStorage.INSTANCE.constructorUsage + upgrades.getEnergyUsage();
     }
 
     @Override
     public void updateNode() {
-        if (block != null && ticks % RefinedStorageUtils.getSpeed(upgrades, BASE_SPEED, 4) == 0) {
+        if (block != null && ticks % upgrades.getSpeed(BASE_SPEED, 4) == 0) {
             BlockPos front = pos.offset(getDirection());
 
             if (worldObj.isAirBlock(front) && block.getBlock().canPlaceBlockAt(worldObj, front)) {
@@ -67,7 +61,7 @@ public class TileConstructor extends TileNode implements ICompareConfig {
                     // From ItemBlock.onItemUse
                     SoundType blockSound = block.getBlock().getSoundType();
                     worldObj.playSound(null, front, blockSound.getPlaceSound(), SoundCategory.BLOCKS, (blockSound.getVolume() + 1.0F) / 2.0F, blockSound.getPitch() * 0.8F);
-                } else if (RefinedStorageUtils.hasUpgrade(upgrades, ItemUpgrade.TYPE_CRAFTING)) {
+                } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
                     ItemStack craft = filter.getStackInSlot(0);
 
                     if (scheduler.canSchedule(compare, craft)) {
