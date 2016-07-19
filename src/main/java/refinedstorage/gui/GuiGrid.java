@@ -128,8 +128,12 @@ public class GuiGrid extends GuiBase {
 
                 if (grid.getViewType() == TileGrid.VIEW_TYPE_NON_CRAFTABLES && stack.isCraftable()) {
                     t.remove();
+
+                    continue;
                 } else if (grid.getViewType() == TileGrid.VIEW_TYPE_CRAFTABLES && !stack.isCraftable()) {
                     t.remove();
+
+                    continue;
                 }
 
                 if (query.startsWith("@")) {

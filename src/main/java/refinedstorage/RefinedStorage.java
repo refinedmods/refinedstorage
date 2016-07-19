@@ -34,11 +34,9 @@ public final class RefinedStorage {
     public final SimpleNetworkWrapper network = NetworkRegistry.INSTANCE.newSimpleChannel(ID);
 
     public final CreativeTabs tab = new CreativeTabs(ID) {
-        private ItemStack icon = new ItemStack(RefinedStorageItems.STORAGE_HOUSING);
-
         @Override
         public ItemStack getIconItemStack() {
-            return icon;
+            return new ItemStack(RefinedStorageItems.STORAGE_HOUSING);
         }
 
         @Override
