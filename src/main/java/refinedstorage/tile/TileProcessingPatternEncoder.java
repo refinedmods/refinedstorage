@@ -19,8 +19,8 @@ public class TileProcessingPatternEncoder extends TileBase {
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        TileBase.writeItems(patterns, 0, tag);
-        TileBase.writeItems(configuration, 1, tag);
+        writeItems(patterns, 0, tag);
+        writeItems(configuration, 1, tag);
 
         return tag;
     }
@@ -29,8 +29,8 @@ public class TileProcessingPatternEncoder extends TileBase {
     public void read(NBTTagCompound nbt) {
         super.read(nbt);
 
-        TileBase.readItems(patterns, 0, nbt);
-        TileBase.readItems(configuration, 1, nbt);
+        readItems(patterns, 0, nbt);
+        readItems(configuration, 1, nbt);
     }
 
     public void onCreatePattern() {

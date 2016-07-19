@@ -37,7 +37,7 @@ public class TileImporter extends TileNode implements ICompareConfig, IModeConfi
 
     @Override
     public void updateNode() {
-        IItemHandler handler = TileBase.getItemHandler(getFacingTile(), getDirection().getOpposite());
+        IItemHandler handler = getItemHandler(getFacingTile(), getDirection().getOpposite());
 
         if (getFacingTile() instanceof TileDiskDrive || handler == null) {
             return;
@@ -104,8 +104,8 @@ public class TileImporter extends TileNode implements ICompareConfig, IModeConfi
             mode = nbt.getInteger(NBT_MODE);
         }
 
-        TileBase.readItems(filters, 0, nbt);
-        TileBase.readItems(upgrades, 1, nbt);
+        readItems(filters, 0, nbt);
+        readItems(upgrades, 1, nbt);
     }
 
     @Override
@@ -115,8 +115,8 @@ public class TileImporter extends TileNode implements ICompareConfig, IModeConfi
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_MODE, mode);
 
-        TileBase.writeItems(filters, 0, tag);
-        TileBase.writeItems(upgrades, 1, tag);
+        writeItems(filters, 0, tag);
+        writeItems(upgrades, 1, tag);
 
         return tag;
     }

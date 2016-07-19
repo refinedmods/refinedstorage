@@ -110,8 +110,8 @@ public class TileSolderer extends TileNode {
     public void read(NBTTagCompound nbt) {
         super.read(nbt);
 
-        TileBase.readItems(items, 0, nbt);
-        TileBase.readItems(upgrades, 1, nbt);
+        readItems(items, 0, nbt);
+        readItems(upgrades, 1, nbt);
 
         recipe = RefinedStorageAPI.SOLDERER_REGISTRY.getRecipe(items);
 
@@ -128,8 +128,8 @@ public class TileSolderer extends TileNode {
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        TileBase.writeItems(items, 0, tag);
-        TileBase.writeItems(upgrades, 1, tag);
+        writeItems(items, 0, tag);
+        writeItems(upgrades, 1, tag);
 
         tag.setBoolean(NBT_WORKING, working);
         tag.setInteger(NBT_PROGRESS, progress);

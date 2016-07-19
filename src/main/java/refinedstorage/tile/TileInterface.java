@@ -105,10 +105,10 @@ public class TileInterface extends TileNode implements ICompareConfig {
     public void read(NBTTagCompound nbt) {
         super.read(nbt);
 
-        TileBase.readItems(importItems, 0, nbt);
-        TileBase.readItems(exportSpecimenItems, 1, nbt);
-        TileBase.readItems(exportItems, 2, nbt);
-        TileBase.readItems(upgrades, 3, nbt);
+        readItems(importItems, 0, nbt);
+        readItems(exportSpecimenItems, 1, nbt);
+        readItems(exportItems, 2, nbt);
+        readItems(upgrades, 3, nbt);
 
         if (nbt.hasKey(NBT_COMPARE)) {
             compare = nbt.getInteger(NBT_COMPARE);
@@ -119,10 +119,10 @@ public class TileInterface extends TileNode implements ICompareConfig {
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        TileBase.writeItems(importItems, 0, tag);
-        TileBase.writeItems(exportSpecimenItems, 1, tag);
-        TileBase.writeItems(exportItems, 2, tag);
-        TileBase.writeItems(upgrades, 3, tag);
+        writeItems(importItems, 0, tag);
+        writeItems(exportSpecimenItems, 1, tag);
+        writeItems(exportItems, 2, tag);
+        writeItems(upgrades, 3, tag);
 
         tag.setInteger(NBT_COMPARE, compare);
 

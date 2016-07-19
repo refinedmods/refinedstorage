@@ -148,7 +148,7 @@ public class TileDetector extends TileNode implements ICompareConfig {
             amount = nbt.getInteger(NBT_AMOUNT);
         }
 
-        TileBase.readItems(filter, 0, nbt);
+        readItems(filter, 0, nbt);
     }
 
     @Override
@@ -159,7 +159,7 @@ public class TileDetector extends TileNode implements ICompareConfig {
         tag.setInteger(NBT_MODE, mode);
         tag.setInteger(NBT_AMOUNT, amount);
 
-        TileBase.writeItems(filter, 0, tag);
+        writeItems(filter, 0, tag);
 
         return tag;
     }

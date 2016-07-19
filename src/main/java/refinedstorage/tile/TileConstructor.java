@@ -91,8 +91,8 @@ public class TileConstructor extends TileNode implements ICompareConfig {
             compare = tag.getInteger(NBT_COMPARE);
         }
 
-        TileBase.readItems(filter, 0, tag);
-        TileBase.readItems(upgrades, 1, tag);
+        readItems(filter, 0, tag);
+        readItems(upgrades, 1, tag);
 
         scheduler.read(tag);
     }
@@ -103,8 +103,8 @@ public class TileConstructor extends TileNode implements ICompareConfig {
 
         tag.setInteger(NBT_COMPARE, compare);
 
-        TileBase.writeItems(filter, 0, tag);
-        TileBase.writeItems(upgrades, 1, tag);
+        writeItems(filter, 0, tag);
+        writeItems(upgrades, 1, tag);
 
         scheduler.writeToNBT(tag);
 

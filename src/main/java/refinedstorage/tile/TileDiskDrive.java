@@ -156,8 +156,8 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
     public void read(NBTTagCompound nbt) {
         super.read(nbt);
 
-        TileBase.readItems(disks, 0, nbt);
-        TileBase.readItems(filters, 1, nbt);
+        readItems(disks, 0, nbt);
+        readItems(filters, 1, nbt);
 
         if (nbt.hasKey(NBT_PRIORITY)) {
             priority = nbt.getInteger(NBT_PRIORITY);
@@ -182,8 +182,8 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
             }
         }
 
-        TileBase.writeItems(disks, 0, tag);
-        TileBase.writeItems(filters, 1, tag);
+        writeItems(disks, 0, tag);
+        writeItems(filters, 1, tag);
 
         tag.setInteger(NBT_PRIORITY, priority);
         tag.setInteger(NBT_COMPARE, compare);

@@ -34,7 +34,7 @@ public class TileExporter extends TileNode implements ICompareConfig {
 
     @Override
     public void updateNode() {
-        IItemHandler handler = TileBase.getItemHandler(getFacingTile(), getDirection().getOpposite());
+        IItemHandler handler = getItemHandler(getFacingTile(), getDirection().getOpposite());
 
         int size = upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK) ? 64 : 1;
 
@@ -83,8 +83,8 @@ public class TileExporter extends TileNode implements ICompareConfig {
             compare = nbt.getInteger(NBT_COMPARE);
         }
 
-        TileBase.readItems(filters, 0, nbt);
-        TileBase.readItems(upgrades, 1, nbt);
+        readItems(filters, 0, nbt);
+        readItems(upgrades, 1, nbt);
 
         scheduler.read(nbt);
     }
@@ -95,8 +95,8 @@ public class TileExporter extends TileNode implements ICompareConfig {
 
         tag.setInteger(NBT_COMPARE, compare);
 
-        TileBase.writeItems(filters, 0, tag);
-        TileBase.writeItems(upgrades, 1, tag);
+        writeItems(filters, 0, tag);
+        writeItems(upgrades, 1, tag);
 
         scheduler.writeToNBT(tag);
 

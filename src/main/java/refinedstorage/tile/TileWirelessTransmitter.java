@@ -30,14 +30,14 @@ public class TileWirelessTransmitter extends TileNode implements IWirelessTransm
     public void read(NBTTagCompound nbt) {
         super.read(nbt);
 
-        TileBase.readItems(upgrades, 0, nbt);
+        readItems(upgrades, 0, nbt);
     }
 
     @Override
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        TileBase.writeItems(upgrades, 0, tag);
+        writeItems(upgrades, 0, tag);
 
         return tag;
     }

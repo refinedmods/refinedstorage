@@ -23,7 +23,6 @@ import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.network.MessageGridSettingsUpdate;
-import refinedstorage.tile.TileBase;
 import refinedstorage.tile.TileNode;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 
@@ -333,8 +332,8 @@ public class TileGrid extends TileNode implements IGrid {
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        TileBase.readItemsLegacy(matrix, 0, tag);
-        TileBase.readItems(patterns, 1, tag);
+        readItemsLegacy(matrix, 0, tag);
+        readItems(patterns, 1, tag);
 
         if (tag.hasKey(NBT_VIEW_TYPE)) {
             viewType = tag.getInteger(NBT_VIEW_TYPE);
@@ -357,8 +356,8 @@ public class TileGrid extends TileNode implements IGrid {
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        TileBase.writeItemsLegacy(matrix, 0, tag);
-        TileBase.writeItems(patterns, 1, tag);
+        writeItemsLegacy(matrix, 0, tag);
+        writeItems(patterns, 1, tag);
 
         tag.setInteger(NBT_VIEW_TYPE, viewType);
         tag.setInteger(NBT_SORTING_DIRECTION, sortingDirection);

@@ -107,7 +107,7 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
     public void read(NBTTagCompound nbt) {
         super.read(nbt);
 
-        TileBase.readItems(filters, 0, nbt);
+        readItems(filters, 0, nbt);
 
         if (nbt.hasKey(NBT_PRIORITY)) {
             priority = nbt.getInteger(NBT_PRIORITY);
@@ -130,7 +130,7 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        TileBase.writeItems(filters, 0, tag);
+        writeItems(filters, 0, tag);
 
         tag.setInteger(NBT_PRIORITY, priority);
 

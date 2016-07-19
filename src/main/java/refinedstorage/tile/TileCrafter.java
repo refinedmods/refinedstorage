@@ -78,16 +78,16 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
     public void read(NBTTagCompound nbt) {
         super.read(nbt);
 
-        TileBase.readItems(patterns, 0, nbt);
-        TileBase.readItems(upgrades, 1, nbt);
+        readItems(patterns, 0, nbt);
+        readItems(upgrades, 1, nbt);
     }
 
     @Override
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        TileBase.writeItems(patterns, 0, tag);
-        TileBase.writeItems(upgrades, 1, tag);
+        writeItems(patterns, 0, tag);
+        writeItems(upgrades, 1, tag);
 
         return tag;
     }
@@ -99,7 +99,7 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
 
     @Override
     public IItemHandler getConnectedItems() {
-        return TileBase.getItemHandler(getFacingTile(), getDirection().getOpposite());
+        return getItemHandler(getFacingTile(), getDirection().getOpposite());
     }
 
     public IItemHandler getPatterns() {
