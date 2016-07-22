@@ -281,7 +281,7 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
         return (int) Math.floor((stored / storedMax) * 7f);
     }
 
-    public int getStoredForScaledDisplay() {
+    public int getStoredForDisplay() {
         return stored;
     }
 
