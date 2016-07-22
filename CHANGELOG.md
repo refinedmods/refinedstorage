@@ -1,5 +1,10 @@
 # Refined Storage Changelog
 
+### 0.8.13
+**Bugfixes**
+- Fixed rendering crash with Disk Drive
+- Fixed crash when quickly toggling sorting direction in Grid
+
 ### 0.8.12
 **Bugfixes**
 - Fixed dupe bug when shift clicking output slot in grid

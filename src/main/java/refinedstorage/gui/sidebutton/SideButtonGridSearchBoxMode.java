@@ -3,7 +3,7 @@ package refinedstorage.gui.sidebutton;
 import net.minecraft.util.text.TextFormatting;
 import refinedstorage.RefinedStorage;
 import refinedstorage.gui.GuiBase;
-import refinedstorage.gui.GuiGrid;
+import refinedstorage.gui.grid.GuiGrid;
 import refinedstorage.tile.grid.TileGrid;
 
 public class SideButtonGridSearchBoxMode extends SideButton {

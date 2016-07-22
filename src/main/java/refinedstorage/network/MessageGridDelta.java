@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import refinedstorage.RefinedStorage;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.apiimpl.storage.ClientStack;
+import refinedstorage.gui.grid.ClientStack;
 
 public class MessageGridDelta implements IMessage, IMessageHandler<MessageGridDelta, IMessage> {
     private INetworkMaster network;

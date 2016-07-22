@@ -1,4 +1,4 @@
-package refinedstorage.gui;
+package refinedstorage.gui.grid;
 
 import com.google.common.primitives.Ints;
 import net.minecraft.client.gui.GuiButton;
@@ -8,8 +8,8 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 import org.lwjgl.input.Keyboard;
 import refinedstorage.RefinedStorage;
 import refinedstorage.apiimpl.network.GridHandler;
-import refinedstorage.apiimpl.storage.ClientStack;
 import refinedstorage.container.ContainerCraftingSettings;
+import refinedstorage.gui.GuiBase;
 import refinedstorage.network.MessageGridCraftingStart;
 
 import java.io.IOException;

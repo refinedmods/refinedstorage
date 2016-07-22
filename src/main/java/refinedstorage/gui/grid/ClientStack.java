@@ -1,4 +1,4 @@
-package refinedstorage.apiimpl.storage;
+package refinedstorage.gui.grid;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.Item;
@@ -11,12 +11,6 @@ public class ClientStack {
     private int id;
     private ItemStack stack;
     private boolean craftable;
-
-    public ClientStack(int id, ItemStack stack, boolean craftable) {
-        this.id = id;
-        this.stack = stack;
-        this.craftable = craftable;
-    }
 
     public ClientStack(ByteBuf buf) {
         stack = new ItemStack(Item.getItemById(buf.readInt()), buf.readInt(), buf.readInt());
