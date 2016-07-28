@@ -37,7 +37,7 @@ public interface INetworkNode {
 
     /**
      * Called when the connection state of this node changes.
-     * This is also called when redstone mode is updated, as opposed to {@link INetworkNode#onConnected(INetworkMaster)} and {@link INetworkNode#onDisconnected()}.
+     * This is also called when redstone mode is updated, as opposed to {@link INetworkNode#onConnected(INetworkMaster)} and {@link INetworkNode#onDisconnected(INetworkMaster)}.
      *
      * @param network The network
      * @param state   The state
@@ -50,7 +50,7 @@ public interface INetworkNode {
     boolean isConnected();
 
     /**
-     * @return If {@link INetworkNode#canUpdate()} can get called, typically checks for connection status and redstone mode
+     * @return If {@link INetworkNode#updateNode()} can get called, typically checks for connection status and redstone mode
      */
     boolean canUpdate();
 

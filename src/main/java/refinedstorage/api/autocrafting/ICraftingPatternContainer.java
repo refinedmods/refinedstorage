@@ -9,7 +9,7 @@ public interface ICraftingPatternContainer {
     /**
      * This usually corresponds to the amount of speed upgrades in a crafter.
      *
-     * @return The speed of this pattern
+     * @return The speed of this container
      */
     int getSpeed();
 
