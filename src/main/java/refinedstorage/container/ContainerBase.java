@@ -1,6 +1,5 @@
 package refinedstorage.container;
 
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
@@ -48,23 +47,15 @@ public abstract class ContainerBase extends Container {
         if (slot instanceof SlotSpecimen) {
             if (((SlotSpecimen) slot).isWithSize()) {
                 if (slot.getStack() != null) {
-                    if (GuiScreen.isShiftKeyDown()) {
+                    if (clickType == ClickType.QUICK_MOVE) {
                         slot.putStack(null);
                     } else {
                         int amount = slot.getStack().stackSize;
 
                         if (clickedButton == 0) {
-                            amount--;
-
-                            if (amount < 1) {
-                                amount = 1;
-                            }
+                            amount = Math.max(1, --amount);
                         } else if (clickedButton == 1) {
-                            amount++;
-
-                            if (amount > 64) {
-                                amount = 64;
-                            }
+                            amount = Math.min(64, ++amount);
                         }
 
                         slot.getStack().stackSize = amount;
@@ -72,14 +63,7 @@ public abstract class ContainerBase extends Container {
                 } else if (player.inventory.getItemStack() != null) {
                     int amount = player.inventory.getItemStack().stackSize;
 
-                    if (clickedButton == 1) {
-                        amount = 1;
-                    }
-
-                    ItemStack toPut = player.inventory.getItemStack().copy();
-                    toPut.stackSize = amount;
-
-                    slot.putStack(toPut);
+                    slot.putStack(ItemHandlerHelper.copyStackWithSize(player.inventory.getItemStack(), clickedButton == 1 ? 1 : amount));
                 }
             } else if (player.inventory.getItemStack() == null) {
                 slot.putStack(null);
