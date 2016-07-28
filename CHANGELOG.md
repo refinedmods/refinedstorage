@@ -4,7 +4,7 @@
 **Bugfixes**
 - Fixed rendering crash with Disk Drive
 - Fixed crash when quickly toggling sorting direction in Grid
-- Fixed not being able to clear configurations in GUIs
+- Fixed not being able to clear exporter row in interface
 
 ### 0.8.12
 **Bugfixes**
