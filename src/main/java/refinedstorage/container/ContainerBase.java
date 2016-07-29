@@ -10,6 +10,7 @@ import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.container.slot.SlotDisabled;
 import refinedstorage.container.slot.SlotSpecimen;
 import refinedstorage.container.slot.SlotSpecimenLegacy;
+import refinedstorage.tile.grid.WirelessGrid;
 
 public abstract class ContainerBase extends Container {
     private EntityPlayer player;
@@ -29,7 +30,7 @@ public abstract class ContainerBase extends Container {
             int x = xInventory + i * 18;
             int y = yInventory + 4 + (3 * 18);
 
-            if (ContainerBase.this instanceof ContainerGridFilter && i == ((ContainerGridFilter) ContainerBase.this).slot) {
+            if (i == player.inventory.currentItem && (ContainerBase.this instanceof ContainerGridFilter || (ContainerBase.this instanceof ContainerGrid && ((ContainerGrid) ContainerBase.this).getGrid() instanceof WirelessGrid))) {
                 addSlotToContainer(new SlotDisabled(player.inventory, id, x, y));
             } else {
                 addSlotToContainer(new Slot(player.inventory, id, x, y));

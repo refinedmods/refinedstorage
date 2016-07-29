@@ -2,13 +2,11 @@ package refinedstorage.apiimpl.network;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.api.network.*;
-import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.item.ItemWirelessGrid;
 
 import java.util.ArrayList;
@@ -33,19 +31,6 @@ public class WirelessGridHandler implements IWirelessGridHandler {
     public void update() {
         consumers.removeAll(consumersToRemove);
         consumersToRemove.clear();
-
-        Iterator<IWirelessGridConsumer> it = consumers.iterator();
-
-        while (it.hasNext()) {
-            IWirelessGridConsumer consumer = it.next();
-
-            if (!CompareUtils.compareStack(consumer.getStack(), consumer.getPlayer().getHeldItem(consumer.getHand()))) {
-                /**
-                 * This will call {@link net.minecraft.inventory.Container#onContainerClosed(EntityPlayer)} so the consumer is removed from the list.
-                 */
-                consumer.getPlayer().closeScreen();
-            }
-        }
     }
 
     @Override
@@ -70,7 +55,7 @@ public class WirelessGridHandler implements IWirelessGridHandler {
             return false;
         }
 
-        consumers.add(new WirelessGridConsumer(player, hand, player.getHeldItem(hand)));
+        consumers.add(new WirelessGridConsumer(player, player.getHeldItem(hand)));
 
         player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.WIRELESS_GRID, player.worldObj, hand.ordinal(), 0, 0);
 
@@ -96,13 +81,13 @@ public class WirelessGridHandler implements IWirelessGridHandler {
 
         if (consumer != null) {
             ItemWirelessGrid item = RefinedStorageItems.WIRELESS_GRID;
-            ItemStack held = consumer.getPlayer().getHeldItem(consumer.getHand());
 
-            if (held.getItemDamage() != ItemWirelessGrid.TYPE_CREATIVE) {
-                item.extractEnergy(held, energy, false);
+            if (consumer.getStack().getItemDamage() != ItemWirelessGrid.TYPE_CREATIVE) {
+                item.extractEnergy(consumer.getStack(), energy, false);
 
-                if (item.getEnergyStored(held) <= 0) {
+                if (item.getEnergyStored(consumer.getStack()) <= 0) {
                     onClose(player);
+
                     consumer.getPlayer().closeScreen();
                 }
             }

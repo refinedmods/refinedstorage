@@ -6,15 +6,15 @@ import net.minecraftforge.items.ItemStackHandler;
 import refinedstorage.tile.TileBase;
 
 public class GridFilterItemHandler extends ItemStackHandler {
-    private ItemStack filter;
+    private ItemStack stack;
 
-    public GridFilterItemHandler(ItemStack filter) {
+    public GridFilterItemHandler(ItemStack stack) {
         super(9 * 3);
 
-        this.filter = filter;
+        this.stack = stack;
 
-        if (filter.hasTagCompound()) {
-            TileBase.readItems(this, 0, filter.getTagCompound());
+        if (stack.hasTagCompound()) {
+            TileBase.readItems(this, 0, stack.getTagCompound());
         }
     }
 
@@ -22,10 +22,10 @@ public class GridFilterItemHandler extends ItemStackHandler {
     protected void onContentsChanged(int slot) {
         super.onContentsChanged(slot);
 
-        if (!filter.hasTagCompound()) {
-            filter.setTagCompound(new NBTTagCompound());
+        if (!stack.hasTagCompound()) {
+            stack.setTagCompound(new NBTTagCompound());
         }
 
-        TileBase.writeItems(this, 0, filter.getTagCompound());
+        TileBase.writeItems(this, 0, stack.getTagCompound());
     }
 }

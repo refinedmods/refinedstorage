@@ -66,26 +66,6 @@ public class GuiHandler implements IGuiHandler {
         return getContainer(ID, player, world.getTileEntity(new BlockPos(x, y, z)));
     }
 
-    private ContainerGridFilter getGridFilterContainer(EntityPlayer player, int hand) {
-        return new ContainerGridFilter(player, player.getHeldItem(EnumHand.values()[hand]), player.inventory.currentItem);
-    }
-
-    private WirelessGrid getWirelessGrid(EntityPlayer player, int hand) {
-        return new WirelessGrid(player.worldObj, player.getHeldItem(EnumHand.values()[hand]), EnumHand.values()[hand]);
-    }
-
-    private ContainerGrid getWirelessGridContainer(EntityPlayer player, int hand) {
-        WirelessGrid wirelessGrid = getWirelessGrid(player, hand);
-
-        return new ContainerGrid(player, wirelessGrid);
-    }
-
-    private GuiGrid getWirelessGridGui(EntityPlayer player, int hand) {
-        WirelessGrid wirelessGrid = getWirelessGrid(player, hand);
-
-        return new GuiGrid(new ContainerGrid(player, wirelessGrid), wirelessGrid);
-    }
-
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
@@ -130,5 +110,25 @@ public class GuiHandler implements IGuiHandler {
             default:
                 return null;
         }
+    }
+
+    private ContainerGridFilter getGridFilterContainer(EntityPlayer player, int hand) {
+        return new ContainerGridFilter(player, player.getHeldItem(EnumHand.values()[hand]));
+    }
+
+    private WirelessGrid getWirelessGrid(EntityPlayer player, int hand) {
+        return new WirelessGrid(player.worldObj, player.getHeldItem(EnumHand.values()[hand]), EnumHand.values()[hand]);
+    }
+
+    private ContainerGrid getWirelessGridContainer(EntityPlayer player, int hand) {
+        WirelessGrid wirelessGrid = getWirelessGrid(player, hand);
+
+        return new ContainerGrid(player, wirelessGrid);
+    }
+
+    private GuiGrid getWirelessGridGui(EntityPlayer player, int hand) {
+        WirelessGrid wirelessGrid = getWirelessGrid(player, hand);
+
+        return new GuiGrid(new ContainerGrid(player, wirelessGrid), wirelessGrid);
     }
 }

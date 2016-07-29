@@ -7,21 +7,18 @@ import refinedstorage.container.slot.SlotSpecimen;
 import refinedstorage.inventory.GridFilterItemHandler;
 
 public class ContainerGridFilter extends ContainerBase {
-    private GridFilterItemHandler itemHandler;
+    private GridFilterItemHandler filter;
 
-    protected int slot;
-
-    public ContainerGridFilter(EntityPlayer player, ItemStack gridFilter, int slot) {
+    public ContainerGridFilter(EntityPlayer player, ItemStack stack) {
         super(player);
 
-        this.slot = slot;
-        this.itemHandler = new GridFilterItemHandler(gridFilter);
+        this.filter = new GridFilterItemHandler(stack);
 
         int x = 8;
         int y = 20;
 
         for (int i = 0; i < 9 * 3; ++i) {
-            addSlotToContainer(new SlotSpecimen(itemHandler, i, x, y));
+            addSlotToContainer(new SlotSpecimen(filter, i, x, y));
 
             if ((i + 1) % 9 == 0) {
                 y += 18;
