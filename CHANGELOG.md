@@ -9,7 +9,8 @@
 
 **Features**
 - Added config option to set the base energy usage of the Controller (default is 0)
-- Added Grid Filter item
+- Added Grid Filter item to filter items in any Grid
+- Changed Relay recipe to use redstone torch instead of Basic Processor
 
 ### 0.8.12
 **Bugfixes**

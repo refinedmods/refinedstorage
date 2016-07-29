@@ -157,9 +157,9 @@ public class CommonProxy {
 
         // Relay
         GameRegistry.addShapelessRecipe(new ItemStack(RefinedStorageBlocks.RELAY),
-            new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
             new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
-            new ItemStack(RefinedStorageBlocks.CABLE)
+            new ItemStack(RefinedStorageBlocks.CABLE),
+            new ItemStack(Blocks.REDSTONE_TORCH)
         );
 
         // Controller
