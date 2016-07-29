@@ -467,6 +467,16 @@ public class CommonProxy {
             new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
             new ItemStack(RefinedStorageBlocks.EXPORTER)
         ));
+
+        // Grid Filter
+        GameRegistry.addShapedRecipe(new ItemStack(RefinedStorageItems.GRID_FILTER),
+            "EPE",
+            "PHP",
+            "EPE",
+            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+            'P', new ItemStack(Items.PAPER),
+            'H', new ItemStack(Blocks.HOPPER)
+        );
     }
 
     public void init(FMLInitializationEvent e) {
