@@ -23,6 +23,7 @@ import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.inventory.BasicItemValidator;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.network.MessageGridSettingsUpdate;
+import refinedstorage.tile.TileBase;
 import refinedstorage.tile.TileNode;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 
@@ -65,6 +66,31 @@ public class TileGrid extends TileNode implements IGrid {
     private InventoryCraftResult result = new InventoryCraftResult();
 
     private BasicItemHandler patterns = new BasicItemHandler(2, this, new BasicItemValidator(RefinedStorageItems.PATTERN));
+    private BasicItemHandler filter = new BasicItemHandler(1, this, new BasicItemValidator(RefinedStorageItems.GRID_FILTER)) {
+        @Override
+        protected void onContentsChanged(int slot) {
+            super.onContentsChanged(slot);
+
+            filteredItems.clear();
+
+            ItemStack stack = getStackInSlot(slot);
+
+            if (stack != null && stack.hasTagCompound()) {
+                BasicItemHandler items = new BasicItemHandler(9 * 3);
+
+                TileBase.readItems(items, 0, stack.getTagCompound());
+
+                for (int i = 0; i < items.getSlots(); ++i) {
+                    ItemStack item = items.getStackInSlot(i);
+
+                    if (item != null) {
+                        filteredItems.add(item);
+                    }
+                }
+            }
+        }
+    };
+    private List<ItemStack> filteredItems = new ArrayList<ItemStack>();
 
     private EnumGridType type;
 
@@ -125,6 +151,14 @@ public class TileGrid extends TileNode implements IGrid {
 
     public IItemHandler getPatterns() {
         return patterns;
+    }
+
+    public BasicItemHandler getFilter() {
+        return filter;
+    }
+
+    public List<ItemStack> getFilteredItems() {
+        return filteredItems;
     }
 
     public void onCraftingMatrixChanged() {
@@ -334,6 +368,7 @@ public class TileGrid extends TileNode implements IGrid {
 
         readItemsLegacy(matrix, 0, tag);
         readItems(patterns, 1, tag);
+        readItems(filter, 2, tag);
 
         if (tag.hasKey(NBT_VIEW_TYPE)) {
             viewType = tag.getInteger(NBT_VIEW_TYPE);
@@ -358,6 +393,7 @@ public class TileGrid extends TileNode implements IGrid {
 
         writeItemsLegacy(matrix, 0, tag);
         writeItems(patterns, 1, tag);
+        writeItems(filter, 2, tag);
 
         tag.setInteger(NBT_VIEW_TYPE, viewType);
         tag.setInteger(NBT_SORTING_DIRECTION, sortingDirection);

@@ -13,6 +13,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.apache.commons.lang3.StringUtils;
 import refinedstorage.RefinedStorage;
 import refinedstorage.api.network.GridExtractFlags;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
 import refinedstorage.gui.GuiBase;
@@ -45,7 +46,7 @@ public class GuiGrid extends GuiBase {
     private int slotNumber;
 
     public GuiGrid(ContainerGrid container, IGrid grid) {
-        super(container, 193, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 247 : 208);
+        super(container, !(grid instanceof WirelessGrid) ? 227 : 193, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 247 : 208);
 
         setScrollbar(new Scrollbar(174, 20, 12, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 70 : 88));
         getScrollbar().setCanScroll(false);
@@ -98,6 +99,26 @@ public class GuiGrid extends GuiBase {
 
             while (t.hasNext()) {
                 ClientStack stack = t.next();
+
+                if (!(grid instanceof WirelessGrid)) {
+                    List<ItemStack> filteredItems = ((TileGrid) grid).getFilteredItems();
+
+                    boolean found = filteredItems.isEmpty();
+
+                    for (ItemStack item : filteredItems) {
+                        if (CompareUtils.compareStackNoQuantity(stack.getStack(), item)) {
+                            found = true;
+
+                            break;
+                        }
+                    }
+
+                    if (!found) {
+                        t.remove();
+
+                        continue;
+                    }
+                }
 
                 if (grid.getViewType() == TileGrid.VIEW_TYPE_NON_CRAFTABLES && stack.isCraftable()) {
                     t.remove();
@@ -222,7 +243,7 @@ public class GuiGrid extends GuiBase {
                 ty = 2;
             }
 
-            drawTexture(x + 152, y + 114, 195, ty * 16, 16, 16);
+            drawTexture(x + 152, y + 114, 240, ty * 16, 16, 16);
         }
 
         searchField.drawTextBox();
