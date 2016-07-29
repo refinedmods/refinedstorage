@@ -21,9 +21,9 @@ import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
 import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.inventory.BasicItemValidator;
+import refinedstorage.inventory.GridFilterInGridItemHandler;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.network.MessageGridSettingsUpdate;
-import refinedstorage.tile.TileBase;
 import refinedstorage.tile.TileNode;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 
@@ -66,31 +66,8 @@ public class TileGrid extends TileNode implements IGrid {
     private InventoryCraftResult result = new InventoryCraftResult();
 
     private BasicItemHandler patterns = new BasicItemHandler(2, this, new BasicItemValidator(RefinedStorageItems.PATTERN));
-    private BasicItemHandler filter = new BasicItemHandler(1, this, new BasicItemValidator(RefinedStorageItems.GRID_FILTER)) {
-        @Override
-        protected void onContentsChanged(int slot) {
-            super.onContentsChanged(slot);
-
-            filteredItems.clear();
-
-            ItemStack stack = getStackInSlot(slot);
-
-            if (stack != null && stack.hasTagCompound()) {
-                BasicItemHandler items = new BasicItemHandler(9 * 3);
-
-                TileBase.readItems(items, 0, stack.getTagCompound());
-
-                for (int i = 0; i < items.getSlots(); ++i) {
-                    ItemStack item = items.getStackInSlot(i);
-
-                    if (item != null) {
-                        filteredItems.add(item);
-                    }
-                }
-            }
-        }
-    };
     private List<ItemStack> filteredItems = new ArrayList<ItemStack>();
+    private GridFilterInGridItemHandler filter = new GridFilterInGridItemHandler(filteredItems);
 
     private EnumGridType type;
 
@@ -153,10 +130,12 @@ public class TileGrid extends TileNode implements IGrid {
         return patterns;
     }
 
+    @Override
     public BasicItemHandler getFilter() {
         return filter;
     }
 
+    @Override
     public List<ItemStack> getFilteredItems() {
         return filteredItems;
     }

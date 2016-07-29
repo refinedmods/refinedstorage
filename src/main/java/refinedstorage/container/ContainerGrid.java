@@ -60,9 +60,7 @@ public class ContainerGrid extends ContainerBase {
             addSlotToContainer(new SlotOutput(((TileGrid) grid).getPatterns(), 1, 152, 132));
         }
 
-        if (!(grid instanceof WirelessGrid)) {
-            addSlotToContainer(new SlotItemHandler(((TileGrid) grid).getFilter(), 0, 204, 6));
-        }
+        addSlotToContainer(new SlotItemHandler(grid.getFilter(), 0, 204, 6));
     }
 
     public IGrid getGrid() {

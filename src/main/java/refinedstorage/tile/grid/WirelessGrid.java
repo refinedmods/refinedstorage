@@ -2,6 +2,7 @@ package refinedstorage.tile.grid;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -9,28 +10,62 @@ import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.api.network.IGridHandler;
 import refinedstorage.block.EnumGridType;
+import refinedstorage.inventory.BasicItemHandler;
+import refinedstorage.inventory.GridFilterInGridItemHandler;
 import refinedstorage.item.ItemWirelessGrid;
 import refinedstorage.network.MessageWirelessGridSettingsUpdate;
+import refinedstorage.tile.TileBase;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.controller.TileController;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class WirelessGrid implements IGrid {
-    private EnumHand hand;
     private World world;
-    private BlockPos controllerPos;
+
+    private EnumHand hand;
+    private ItemStack stack;
+
+    private BlockPos controller;
+
     private int viewType;
     private int sortingType;
     private int sortingDirection;
     private int searchBoxMode;
 
+    private List<ItemStack> filteredItems = new ArrayList<ItemStack>();
+    private GridFilterInGridItemHandler filter = new GridFilterInGridItemHandler(filteredItems) {
+        @Override
+        protected void onContentsChanged(int slot) {
+            super.onContentsChanged(slot);
+
+            if (!world.isRemote) {
+                if (!stack.hasTagCompound()) {
+                    stack.setTagCompound(new NBTTagCompound());
+                }
+
+                TileBase.writeItems(this, 0, stack.getTagCompound());
+            }
+        }
+    };
+
     public WirelessGrid(World world, ItemStack stack, EnumHand hand) {
-        this.hand = hand;
         this.world = world;
-        this.controllerPos = new BlockPos(ItemWirelessGrid.getX(stack), ItemWirelessGrid.getY(stack), ItemWirelessGrid.getZ(stack));
+
+        this.stack = stack;
+        this.hand = hand;
+
+        this.controller = new BlockPos(ItemWirelessGrid.getX(stack), ItemWirelessGrid.getY(stack), ItemWirelessGrid.getZ(stack));
+
         this.viewType = ItemWirelessGrid.getViewType(stack);
         this.sortingType = ItemWirelessGrid.getSortingType(stack);
         this.sortingDirection = ItemWirelessGrid.getSortingDirection(stack);
         this.searchBoxMode = ItemWirelessGrid.getSearchBoxMode(stack);
+
+        if (stack.hasTagCompound()) {
+            TileBase.readItems(filter, 0, stack.getTagCompound());
+        }
     }
 
     @Override
@@ -40,7 +75,7 @@ public class WirelessGrid implements IGrid {
 
     @Override
     public BlockPos getNetworkPosition() {
-        return controllerPos;
+        return controller;
     }
 
     @Override
@@ -99,6 +134,16 @@ public class WirelessGrid implements IGrid {
     }
 
     @Override
+    public List<ItemStack> getFilteredItems() {
+        return filteredItems;
+    }
+
+    @Override
+    public BasicItemHandler getFilter() {
+        return filter;
+    }
+
+    @Override
     public IRedstoneModeConfig getRedstoneModeConfig() {
         return null;
     }
@@ -117,7 +162,7 @@ public class WirelessGrid implements IGrid {
     }
 
     private TileController getController() {
-        TileEntity tile = world.getTileEntity(controllerPos);
+        TileEntity tile = world.getTileEntity(controller);
 
         return tile instanceof TileController ? (TileController) tile : null;
     }

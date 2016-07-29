@@ -46,7 +46,7 @@ public class GuiGrid extends GuiBase {
     private int slotNumber;
 
     public GuiGrid(ContainerGrid container, IGrid grid) {
-        super(container, !(grid instanceof WirelessGrid) ? 227 : 193, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 247 : 208);
+        super(container, 227, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 247 : 208);
 
         setScrollbar(new Scrollbar(174, 20, 12, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 70 : 88));
         getScrollbar().setCanScroll(false);
@@ -100,24 +100,22 @@ public class GuiGrid extends GuiBase {
             while (t.hasNext()) {
                 ClientStack stack = t.next();
 
-                if (!(grid instanceof WirelessGrid)) {
-                    List<ItemStack> filteredItems = ((TileGrid) grid).getFilteredItems();
+                List<ItemStack> filteredItems = grid.getFilteredItems();
 
-                    boolean found = filteredItems.isEmpty();
+                boolean found = filteredItems.isEmpty();
 
-                    for (ItemStack item : filteredItems) {
-                        if (CompareUtils.compareStackNoQuantity(stack.getStack(), item)) {
-                            found = true;
+                for (ItemStack item : filteredItems) {
+                    if (CompareUtils.compareStackNoQuantity(stack.getStack(), item)) {
+                        found = true;
 
-                            break;
-                        }
+                        break;
                     }
+                }
 
-                    if (!found) {
-                        t.remove();
+                if (!found) {
+                    t.remove();
 
-                        continue;
-                    }
+                    continue;
                 }
 
                 if (grid.getViewType() == TileGrid.VIEW_TYPE_NON_CRAFTABLES && stack.isCraftable()) {
@@ -175,8 +173,33 @@ public class GuiGrid extends GuiBase {
             }
         }
 
-        getScrollbar().setCanScroll(getRows() > getVisibleRows());
-        getScrollbar().setScrollDelta((float) getScrollbar().getScrollbarHeight() / (float) getRows());
+        getScrollbar()
+
+            .
+
+                setCanScroll(getRows()
+
+                    >
+
+                    getVisibleRows()
+
+                );
+
+        getScrollbar()
+
+            .
+
+                setScrollDelta((float) getScrollbar
+
+                    ().
+
+                    getScrollbarHeight()
+
+                    / (float)
+
+                    getRows()
+
+                );
     }
 
     private int getOffset() {
