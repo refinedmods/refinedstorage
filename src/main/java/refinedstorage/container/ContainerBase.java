@@ -26,7 +26,14 @@ public abstract class ContainerBase extends Container {
         int id = 0;
 
         for (int i = 0; i < 9; i++) {
-            addSlotToContainer(new Slot(player.inventory, id, xInventory + i * 18, yInventory + 4 + (3 * 18)));
+            int x = xInventory + i * 18;
+            int y = yInventory + 4 + (3 * 18);
+
+            if (ContainerBase.this instanceof ContainerGridFilter && i == ((ContainerGridFilter) ContainerBase.this).slot) {
+                addSlotToContainer(new SlotDisabled(player.inventory, id, x, y));
+            } else {
+                addSlotToContainer(new Slot(player.inventory, id, x, y));
+            }
 
             id++;
         }

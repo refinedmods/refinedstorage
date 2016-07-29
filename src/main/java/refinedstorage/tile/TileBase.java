@@ -134,7 +134,7 @@ public abstract class TileBase extends TileEntity implements ITickable {
         return null;
     }
 
-    protected void writeItems(IItemHandler handler, int id, NBTTagCompound nbt) {
+    public static void writeItems(IItemHandler handler, int id, NBTTagCompound nbt) {
         NBTTagList tagList = new NBTTagList();
 
         for (int i = 0; i < handler.getSlots(); i++) {
@@ -152,7 +152,7 @@ public abstract class TileBase extends TileEntity implements ITickable {
         nbt.setTag(String.format(NBT_INVENTORY, id), tagList);
     }
 
-    protected void readItems(IItemHandler handler, int id, NBTTagCompound nbt) {
+    public static void readItems(IItemHandler handler, int id, NBTTagCompound nbt) {
         String name = String.format(NBT_INVENTORY, id);
 
         if (nbt.hasKey(name)) {
@@ -168,7 +168,7 @@ public abstract class TileBase extends TileEntity implements ITickable {
         }
     }
 
-    protected void writeItemsLegacy(IInventory inventory, int id, NBTTagCompound nbt) {
+    public static void writeItemsLegacy(IInventory inventory, int id, NBTTagCompound nbt) {
         NBTTagList tagList = new NBTTagList();
 
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
@@ -186,7 +186,7 @@ public abstract class TileBase extends TileEntity implements ITickable {
         nbt.setTag(String.format(NBT_INVENTORY, id), tagList);
     }
 
-    protected void readItemsLegacy(IInventory inventory, int id, NBTTagCompound nbt) {
+    public static void readItemsLegacy(IInventory inventory, int id, NBTTagCompound nbt) {
         String name = String.format(NBT_INVENTORY, id);
 
         if (nbt.hasKey(name)) {

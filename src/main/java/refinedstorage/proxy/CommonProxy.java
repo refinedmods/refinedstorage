@@ -110,6 +110,7 @@ public class CommonProxy {
         registerItem(RefinedStorageItems.CORE);
         registerItem(RefinedStorageItems.SILICON);
         registerItem(RefinedStorageItems.UPGRADE);
+        registerItem(RefinedStorageItems.GRID_FILTER);
 
         OreDictionary.registerOre("itemSilicon", RefinedStorageItems.SILICON);
 

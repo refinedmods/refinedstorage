@@ -30,6 +30,7 @@ gui.refinedstorage:crafter=Crafter
 gui.refinedstorage:crafter.processing=Processing
 gui.refinedstorage:processing_pattern_encoder=Processing Pattern Encoder
 gui.refinedstorage:processing_pattern_encoder.pattern_create=Create Pattern
+gui.refinedstorage:grid_filter=Grid Filter
 
 misc.refinedstorage:energy_stored=%d / %d RS
 misc.refinedstorage:energy_usage=Usage: %d RS/t
@@ -145,3 +146,4 @@ item.refinedstorage:upgrade.2.name=Speed Upgrade
 item.refinedstorage:upgrade.3.name=Crafting Upgrade
 item.refinedstorage:upgrade.4.name=Stack Upgrade
 item.refinedstorage:storage_housing.name=Storage Housing
+item.refinedstorage:grid_filter.name=Grid Filter

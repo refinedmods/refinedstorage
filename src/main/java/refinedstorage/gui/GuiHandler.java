@@ -59,9 +59,15 @@ public class GuiHandler implements IGuiHandler {
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         if (ID == RefinedStorageGui.WIRELESS_GRID) {
             return getWirelessGridContainer(player, x);
+        } else if (ID == RefinedStorageGui.GRID_FILTER) {
+            return getGridFilterContainer(player, x);
         }
 
         return getContainer(ID, player, world.getTileEntity(new BlockPos(x, y, z)));
+    }
+
+    private ContainerGridFilter getGridFilterContainer(EntityPlayer player, int hand) {
+        return new ContainerGridFilter(player, player.getHeldItem(EnumHand.values()[hand]), player.inventory.currentItem);
     }
 
     private WirelessGrid getWirelessGrid(EntityPlayer player, int hand) {
@@ -119,6 +125,8 @@ public class GuiHandler implements IGuiHandler {
                 return new GuiCrafter((ContainerCrafter) getContainer(ID, player, tile), (TileCrafter) tile);
             case RefinedStorageGui.PROCESSING_PATTERN_ENCODER:
                 return new GuiProcessingPatternEncoder((ContainerProcessingPatternEncoder) getContainer(ID, player, tile), (TileProcessingPatternEncoder) tile);
+            case RefinedStorageGui.GRID_FILTER:
+                return new GuiGridFilter(getGridFilterContainer(player, x));
             default:
                 return null;
         }
