@@ -8,6 +8,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
+import refinedstorage.RefinedStorageItems;
 
 public class ItemGridFilter extends ItemBase {
     public ItemGridFilter() {
@@ -19,6 +20,10 @@ public class ItemGridFilter extends ItemBase {
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
         if (!world.isRemote) {
+            if (player.isSneaking()) {
+                return new ActionResult(EnumActionResult.SUCCESS, new ItemStack(RefinedStorageItems.GRID_FILTER));
+            }
+
             player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.GRID_FILTER, world, hand.ordinal(), 0, 0);
 
             return new ActionResult(EnumActionResult.SUCCESS, stack);
