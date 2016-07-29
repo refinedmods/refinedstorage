@@ -173,33 +173,8 @@ public class GuiGrid extends GuiBase {
             }
         }
 
-        getScrollbar()
-
-            .
-
-                setCanScroll(getRows()
-
-                    >
-
-                    getVisibleRows()
-
-                );
-
-        getScrollbar()
-
-            .
-
-                setScrollDelta((float) getScrollbar
-
-                    ().
-
-                    getScrollbarHeight()
-
-                    / (float)
-
-                    getRows()
-
-                );
+        getScrollbar().setCanScroll(getRows() > getVisibleRows());
+        getScrollbar().setScrollDelta((float) getScrollbar().getScrollbarHeight() / (float) getRows());
     }
 
     private int getOffset() {
