@@ -9,6 +9,7 @@
 
 **Features**
 - Added config option to set the base energy usage of the Controller (default is 0)
+- Added Grid Filter item
 
 ### 0.8.12
 **Bugfixes**
