@@ -9,6 +9,7 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
@@ -413,11 +414,11 @@ public class TileGrid extends TileNode implements IGrid {
     public IItemHandler getDroppedItems() {
         switch (getType()) {
             case CRAFTING:
-                return new InvWrapper(matrix);
+                return new CombinedInvWrapper(filter, new InvWrapper(matrix));
             case PATTERN:
-                return patterns;
+                return new CombinedInvWrapper(filter, patterns);
             default:
-                return null;
+                return new CombinedInvWrapper(filter);
         }
     }
 
