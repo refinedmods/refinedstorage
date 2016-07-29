@@ -87,7 +87,7 @@ public final class RefinedStorage {
 
         Configuration config = new Configuration(e.getSuggestedConfigurationFile());
 
-        controllerUsage = config.getInt("controller", "energy", 20, 0, Integer.MAX_VALUE, "The base energy used by the Controller");
+        controllerUsage = config.getInt("controller", "energy", 0, 0, Integer.MAX_VALUE, "The base energy used by the Controller");
         cableUsage = config.getInt("cable", "energy", 0, 0, Integer.MAX_VALUE, "The energy used by Cables");
         constructorUsage = config.getInt("constructor", "energy", 1, 0, Integer.MAX_VALUE, "The energy used by Constructors");
         crafterUsage = config.getInt("crafter", "energy", 2, 0, Integer.MAX_VALUE, "The base energy used by Crafters");
