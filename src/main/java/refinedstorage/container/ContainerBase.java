@@ -53,9 +53,9 @@ public abstract class ContainerBase extends Container {
                         int amount = slot.getStack().stackSize;
 
                         if (clickedButton == 0) {
-                            amount = Math.max(1, --amount);
+                            amount = Math.max(1, amount - 1);
                         } else if (clickedButton == 1) {
-                            amount = Math.min(64, ++amount);
+                            amount = Math.min(64, amount + 1);
                         }
 
                         slot.getStack().stackSize = amount;

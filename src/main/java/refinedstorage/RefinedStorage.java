@@ -47,6 +47,7 @@ public final class RefinedStorage {
 
     public List<ClientStack> items = new ArrayList<ClientStack>();
 
+    public int controllerUsage;
     public int cableUsage;
     public int constructorUsage;
     public int crafterUsage;
@@ -69,7 +70,7 @@ public final class RefinedStorage {
     public int craftingGridUsage;
     public int patternGridUsage;
 
-    public int controller;
+    public int controllerCapacity;
     public boolean controllerUsesEnergy;
 
     public int wirelessTransmitterBaseRange;
@@ -86,6 +87,7 @@ public final class RefinedStorage {
 
         Configuration config = new Configuration(e.getSuggestedConfigurationFile());
 
+        controllerUsage = config.getInt("controller", "energy", 20, 0, Integer.MAX_VALUE, "The base energy used by the Controller");
         cableUsage = config.getInt("cable", "energy", 0, 0, Integer.MAX_VALUE, "The energy used by Cables");
         constructorUsage = config.getInt("constructor", "energy", 1, 0, Integer.MAX_VALUE, "The energy used by Constructors");
         crafterUsage = config.getInt("crafter", "energy", 2, 0, Integer.MAX_VALUE, "The base energy used by Crafters");
@@ -108,8 +110,8 @@ public final class RefinedStorage {
         craftingGridUsage = config.getInt("craftingGrid", "energy", 4, 0, Integer.MAX_VALUE, "The energy used by Crafting Grids");
         patternGridUsage = config.getInt("patternGrid", "energy", 3, 0, Integer.MAX_VALUE, "The energy used by Pattern Grids");
 
-        controller = config.getInt("controller", "energy", 32000, 0, Integer.MAX_VALUE, "The energy capacity of the controller");
-        controllerUsesEnergy = config.getBoolean("controllerUsesEnergy", "energy", true, "Whether the controller uses RF");
+        controllerCapacity = config.getInt("capacity", "controller", 32000, 0, Integer.MAX_VALUE, "The energy capacity of the Controller");
+        controllerUsesEnergy = config.getBoolean("usesEnergy", "controller", true, "Whether the Controller uses energy");
 
         wirelessTransmitterBaseRange = config.getInt("range", "wirelessTransmitter", 16, 0, Integer.MAX_VALUE, "The base range of the Wireless Transmitter");
         wirelessTransmitterRangePerUpgrade = config.getInt("rangePerUpgrade", "wirelessTransmitter", 8, 0, Integer.MAX_VALUE, "The additional range per Range Upgrade in the Wireless Transmitter");

@@ -102,7 +102,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     private List<ICraftingTask> craftingTasksToAdd = new ArrayList<ICraftingTask>();
     private List<ICraftingTask> craftingTasksToCancel = new ArrayList<ICraftingTask>();
 
-    private EnergyStorage energy = new EnergyStorage(RefinedStorage.INSTANCE.controller);
+    private EnergyStorage energy = new EnergyStorage(RefinedStorage.INSTANCE.controllerCapacity);
     private IC2Energy IC2Energy;
     private int energyUsage;
 
@@ -696,7 +696,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public int getEnergyUsage() {
         if (!worldObj.isRemote) {
-            int usage = 0;
+            int usage = RefinedStorage.INSTANCE.controllerUsage;
 
             for (INetworkNode node : nodes) {
                 if (node.canUpdate()) {

@@ -21,7 +21,7 @@ public class ItemBlockController extends ItemBlockBase {
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean b) {
         if (stack.getMetadata() != EnumControllerType.CREATIVE.getId()) {
             int energyStored = 0;
-            int energyCapacity = RefinedStorage.INSTANCE.controller;
+            int energyCapacity = RefinedStorage.INSTANCE.controllerCapacity;
 
             if (stack.getTagCompound() != null) {
                 if (stack.getTagCompound().hasKey(TileController.NBT_ENERGY)) {
@@ -51,7 +51,7 @@ public class ItemBlockController extends ItemBlockBase {
             tag = new NBTTagCompound();
         }
 
-        tag.setInteger(TileController.NBT_ENERGY, stack.getMetadata() == EnumControllerType.CREATIVE.getId() ? RefinedStorage.INSTANCE.controller : 0);
+        tag.setInteger(TileController.NBT_ENERGY, stack.getMetadata() == EnumControllerType.CREATIVE.getId() ? RefinedStorage.INSTANCE.controllerCapacity : 0);
 
         return stack;
     }
