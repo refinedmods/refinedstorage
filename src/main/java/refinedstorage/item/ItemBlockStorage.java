@@ -24,16 +24,16 @@ public class ItemBlockStorage extends ItemBlockBase {
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean b) {
+    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
         EnumStorageType type = EnumStorageType.getById(stack.getMetadata());
 
         if (type != null && isValid(stack)) {
             NBTTagCompound tag = stack.getTagCompound().getCompoundTag(TileStorage.NBT_STORAGE);
 
             if (type == EnumStorageType.TYPE_CREATIVE) {
-                list.add(I18n.format("misc.refinedstorage:storage.stored", NBTStorage.getStoredFromNBT(tag)));
+                tooltip.add(I18n.format("misc.refinedstorage:storage.stored", NBTStorage.getStoredFromNBT(tag)));
             } else {
-                list.add(I18n.format("misc.refinedstorage:storage.stored_capacity", NBTStorage.getStoredFromNBT(tag), type.getCapacity()));
+                tooltip.add(I18n.format("misc.refinedstorage:storage.stored_capacity", NBTStorage.getStoredFromNBT(tag), type.getCapacity()));
             }
         }
     }

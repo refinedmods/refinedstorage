@@ -106,15 +106,15 @@ public class ItemWirelessGrid extends ItemEnergyContainer implements ISpecialEle
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean b) {
+    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
         if (stack.getItemDamage() != TYPE_CREATIVE) {
-            list.add(I18n.format("misc.refinedstorage:energy_stored", getEnergyStored(stack), getMaxEnergyStored(stack)));
+            tooltip.add(I18n.format("misc.refinedstorage:energy_stored", getEnergyStored(stack), getMaxEnergyStored(stack)));
         }
 
         if (hasValidNBT(stack)) {
-            list.add(I18n.format("misc.refinedstorage:wireless_grid.tooltip.0", getX(stack)));
-            list.add(I18n.format("misc.refinedstorage:wireless_grid.tooltip.1", getY(stack)));
-            list.add(I18n.format("misc.refinedstorage:wireless_grid.tooltip.2", getZ(stack)));
+            tooltip.add(I18n.format("misc.refinedstorage:wireless_grid.tooltip.0", getX(stack)));
+            tooltip.add(I18n.format("misc.refinedstorage:wireless_grid.tooltip.1", getY(stack)));
+            tooltip.add(I18n.format("misc.refinedstorage:wireless_grid.tooltip.2", getZ(stack)));
         }
     }
 

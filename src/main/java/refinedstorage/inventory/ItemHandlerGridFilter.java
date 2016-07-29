@@ -28,4 +28,8 @@ public class ItemHandlerGridFilter extends ItemStackHandler {
 
         TileBase.writeItems(this, 0, stack.getTagCompound());
     }
+
+    public ItemStack[] getFilteredItems() {
+        return stacks;
+    }
 }

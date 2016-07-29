@@ -30,25 +30,25 @@ public class ItemPattern extends ItemBase {
     }
 
     @Override
-    public void addInformation(ItemStack pattern, EntityPlayer player, List list, boolean b) {
+    public void addInformation(ItemStack pattern, EntityPlayer player, List<String> tooltip, boolean advanced) {
         if (isValid(pattern)) {
             if (GuiScreen.isShiftKeyDown() || isProcessing(pattern)) {
-                list.add(TextFormatting.YELLOW + I18n.format("misc.refinedstorage:pattern.inputs") + TextFormatting.RESET);
+                tooltip.add(TextFormatting.YELLOW + I18n.format("misc.refinedstorage:pattern.inputs") + TextFormatting.RESET);
 
-                combineItems(list, getInputs(pattern));
+                combineItems(tooltip, getInputs(pattern));
 
-                list.add(TextFormatting.YELLOW + I18n.format("misc.refinedstorage:pattern.outputs") + TextFormatting.RESET);
+                tooltip.add(TextFormatting.YELLOW + I18n.format("misc.refinedstorage:pattern.outputs") + TextFormatting.RESET);
             }
 
-            combineItems(list, getOutputs(pattern));
+            combineItems(tooltip, getOutputs(pattern));
         }
     }
 
-    private void combineItems(List<String> lines, ItemStack... stacks) {
+    public static void combineItems(List<String> tooltip, ItemStack... stacks) {
         Set<Integer> combinedIndices = new HashSet<Integer>();
 
         for (int i = 0; i < stacks.length; ++i) {
-            if (!combinedIndices.contains(i)) {
+            if (stacks[i] != null && !combinedIndices.contains(i)) {
                 String data = stacks[i].getDisplayName();
 
                 int amount = stacks[i].stackSize;
@@ -65,7 +65,7 @@ public class ItemPattern extends ItemBase {
                     data += " (" + amount + "x)";
                 }
 
-                lines.add(data);
+                tooltip.add(data);
             }
         }
     }

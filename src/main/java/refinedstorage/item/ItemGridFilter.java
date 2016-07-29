@@ -9,6 +9,9 @@ import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.RefinedStorageItems;
+import refinedstorage.inventory.ItemHandlerGridFilter;
+
+import java.util.List;
 
 public class ItemGridFilter extends ItemBase {
     public ItemGridFilter() {
@@ -30,5 +33,14 @@ public class ItemGridFilter extends ItemBase {
         }
 
         return new ActionResult(EnumActionResult.PASS, stack);
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
+        super.addInformation(stack, player, tooltip, advanced);
+
+        ItemHandlerGridFilter items = new ItemHandlerGridFilter(stack);
+
+        ItemPattern.combineItems(tooltip, items.getFilteredItems());
     }
 }

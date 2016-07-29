@@ -92,14 +92,14 @@ public class ItemStorageDisk extends ItemBase {
     }
 
     @Override
-    public void addInformation(ItemStack disk, EntityPlayer player, List list, boolean b) {
+    public void addInformation(ItemStack disk, EntityPlayer player, List<String> tooltip, boolean advanced) {
         if (NBTStorage.isValid(disk)) {
             int capacity = EnumStorageType.getById(disk.getItemDamage()).getCapacity();
 
             if (capacity == -1) {
-                list.add(I18n.format("misc.refinedstorage:storage.stored", NBTStorage.getStoredFromNBT(disk.getTagCompound())));
+                tooltip.add(I18n.format("misc.refinedstorage:storage.stored", NBTStorage.getStoredFromNBT(disk.getTagCompound())));
             } else {
-                list.add(I18n.format("misc.refinedstorage:storage.stored_capacity", NBTStorage.getStoredFromNBT(disk.getTagCompound()), capacity));
+                tooltip.add(I18n.format("misc.refinedstorage:storage.stored_capacity", NBTStorage.getStoredFromNBT(disk.getTagCompound()), capacity));
             }
         }
     }

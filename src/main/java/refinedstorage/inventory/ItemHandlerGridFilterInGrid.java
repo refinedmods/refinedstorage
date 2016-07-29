@@ -2,7 +2,6 @@ package refinedstorage.inventory;
 
 import net.minecraft.item.ItemStack;
 import refinedstorage.RefinedStorageItems;
-import refinedstorage.tile.TileBase;
 
 import java.util.List;
 
@@ -23,14 +22,10 @@ public class ItemHandlerGridFilterInGrid extends ItemHandlerBasic {
 
         ItemStack stack = getStackInSlot(slot);
 
-        if (stack != null && stack.hasTagCompound()) {
-            ItemHandlerBasic items = new ItemHandlerBasic(9 * 3);
+        if (stack != null) {
+            ItemHandlerGridFilter items = new ItemHandlerGridFilter(stack);
 
-            TileBase.readItems(items, 0, stack.getTagCompound());
-
-            for (int i = 0; i < items.getSlots(); ++i) {
-                ItemStack item = items.getStackInSlot(i);
-
+            for (ItemStack item : items.getFilteredItems()) {
                 if (item != null) {
                     filteredItems.add(item);
                 }
