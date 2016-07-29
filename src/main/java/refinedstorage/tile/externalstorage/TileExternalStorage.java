@@ -13,7 +13,7 @@ import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.storage.IStorage;
 import refinedstorage.api.storage.IStorageProvider;
 import refinedstorage.container.ContainerStorage;
-import refinedstorage.inventory.BasicItemHandler;
+import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.network.MessagePriorityUpdate;
 import refinedstorage.tile.IStorageGui;
 import refinedstorage.tile.TileNode;
@@ -30,7 +30,7 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
 
-    private BasicItemHandler filters = new BasicItemHandler(9, this);
+    private ItemHandlerBasic filters = new ItemHandlerBasic(9, this);
 
     private int priority = 0;
     private int compare = 0;

@@ -14,18 +14,18 @@ import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.solderer.ISoldererRecipe;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.container.ContainerSolderer;
-import refinedstorage.inventory.BasicItemHandler;
-import refinedstorage.inventory.SoldererItemHandler;
-import refinedstorage.inventory.UpgradeItemHandler;
+import refinedstorage.inventory.ItemHandlerBasic;
+import refinedstorage.inventory.ItemHandlerSolderer;
+import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemUpgrade;
 
 public class TileSolderer extends TileNode {
     private static final String NBT_WORKING = "Working";
     private static final String NBT_PROGRESS = "Progress";
 
-    private BasicItemHandler items = new BasicItemHandler(4, this);
-    private UpgradeItemHandler upgrades = new UpgradeItemHandler(4, this, ItemUpgrade.TYPE_SPEED);
-    private SoldererItemHandler[] itemsFacade = new SoldererItemHandler[EnumFacing.values().length];
+    private ItemHandlerBasic items = new ItemHandlerBasic(4, this);
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED);
+    private ItemHandlerSolderer[] itemsFacade = new ItemHandlerSolderer[EnumFacing.values().length];
 
     private ISoldererRecipe recipe;
 
@@ -186,7 +186,7 @@ public class TileSolderer extends TileNode {
         return (int) ((float) progress / (float) duration * (float) i);
     }
 
-    public BasicItemHandler getItems() {
+    public ItemHandlerBasic getItems() {
         return items;
     }
 
@@ -209,7 +209,7 @@ public class TileSolderer extends TileNode {
             int i = facing.ordinal();
 
             if (itemsFacade[i] == null) {
-                itemsFacade[i] = new SoldererItemHandler(this, facing);
+                itemsFacade[i] = new ItemHandlerSolderer(this, facing);
             }
 
             return (T) itemsFacade[i];

@@ -5,10 +5,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.items.ItemStackHandler;
 import refinedstorage.tile.TileBase;
 
-public class GridFilterItemHandler extends ItemStackHandler {
+public class ItemHandlerGridFilter extends ItemStackHandler {
     private ItemStack stack;
 
-    public GridFilterItemHandler(ItemStack stack) {
+    public ItemHandlerGridFilter(ItemStack stack) {
         super(9 * 3);
 
         this.stack = stack;

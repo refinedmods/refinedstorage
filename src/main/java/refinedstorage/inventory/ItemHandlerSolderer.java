@@ -4,11 +4,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import refinedstorage.tile.TileSolderer;
 
-public class SoldererItemHandler extends ProxyItemHandler {
+public class ItemHandlerSolderer extends ItemHandlerProxy {
     private TileSolderer solderer;
     private EnumFacing side;
 
-    public SoldererItemHandler(TileSolderer solderer, EnumFacing side) {
+    public ItemHandlerSolderer(TileSolderer solderer, EnumFacing side) {
         super(solderer.getItems());
 
         this.solderer = solderer;

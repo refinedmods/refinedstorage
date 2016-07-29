@@ -4,15 +4,15 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import refinedstorage.container.slot.SlotSpecimen;
-import refinedstorage.inventory.GridFilterItemHandler;
+import refinedstorage.inventory.ItemHandlerGridFilter;
 
 public class ContainerGridFilter extends ContainerBase {
-    private GridFilterItemHandler filter;
+    private ItemHandlerGridFilter filter;
 
     public ContainerGridFilter(EntityPlayer player, ItemStack stack) {
         super(player);
 
-        this.filter = new GridFilterItemHandler(stack);
+        this.filter = new ItemHandlerGridFilter(stack);
 
         int x = 8;
         int y = 20;

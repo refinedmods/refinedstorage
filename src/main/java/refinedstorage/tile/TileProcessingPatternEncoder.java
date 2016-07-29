@@ -7,13 +7,13 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorageItems;
-import refinedstorage.inventory.BasicItemHandler;
-import refinedstorage.inventory.BasicItemValidator;
+import refinedstorage.inventory.ItemHandlerBasic;
+import refinedstorage.inventory.ItemValidatorBasic;
 import refinedstorage.item.ItemPattern;
 
 public class TileProcessingPatternEncoder extends TileBase {
-    private BasicItemHandler patterns = new BasicItemHandler(2, this, new BasicItemValidator(RefinedStorageItems.PATTERN));
-    private BasicItemHandler configuration = new BasicItemHandler(9 * 2, this);
+    private ItemHandlerBasic patterns = new ItemHandlerBasic(2, this, new ItemValidatorBasic(RefinedStorageItems.PATTERN));
+    private ItemHandlerBasic configuration = new ItemHandlerBasic(9 * 2, this);
 
     @Override
     public NBTTagCompound write(NBTTagCompound tag) {
@@ -72,11 +72,11 @@ public class TileProcessingPatternEncoder extends TileBase {
         return inputsFilled > 0 && outputsFilled > 0 && patterns.getStackInSlot(0) != null && patterns.getStackInSlot(1) == null;
     }
 
-    public BasicItemHandler getPatterns() {
+    public ItemHandlerBasic getPatterns() {
         return patterns;
     }
 
-    public BasicItemHandler getConfiguration() {
+    public ItemHandlerBasic getConfiguration() {
         return configuration;
     }
 

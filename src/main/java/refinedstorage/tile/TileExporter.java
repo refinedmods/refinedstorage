@@ -12,16 +12,16 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.apiimpl.autocrafting.CraftingTaskScheduler;
 import refinedstorage.container.ContainerExporter;
-import refinedstorage.inventory.BasicItemHandler;
-import refinedstorage.inventory.UpgradeItemHandler;
+import refinedstorage.inventory.ItemHandlerBasic;
+import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
 
 public class TileExporter extends TileNode implements ICompareConfig {
     private static final String NBT_COMPARE = "Compare";
 
-    private BasicItemHandler filters = new BasicItemHandler(9, this);
-    private UpgradeItemHandler upgrades = new UpgradeItemHandler(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_CRAFTING, ItemUpgrade.TYPE_STACK);
+    private ItemHandlerBasic filters = new ItemHandlerBasic(9, this);
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_CRAFTING, ItemUpgrade.TYPE_STACK);
 
     private int compare = 0;
 

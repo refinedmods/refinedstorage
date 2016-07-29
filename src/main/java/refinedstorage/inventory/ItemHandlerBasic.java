@@ -4,19 +4,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class BasicItemHandler extends ItemStackHandler {
+public class ItemHandlerBasic extends ItemStackHandler {
     private TileEntity tile;
 
     protected IItemValidator[] validators;
 
-    public BasicItemHandler(int size, TileEntity tile, IItemValidator... validators) {
+    public ItemHandlerBasic(int size, TileEntity tile, IItemValidator... validators) {
         super(size);
 
         this.tile = tile;
         this.validators = validators;
     }
 
-    public BasicItemHandler(int size, IItemValidator... validators) {
+    public ItemHandlerBasic(int size, IItemValidator... validators) {
         this(size, null, validators);
     }
 

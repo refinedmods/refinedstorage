@@ -3,15 +3,15 @@ package refinedstorage.inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-public class BasicItemValidator implements IItemValidator {
+public class ItemValidatorBasic implements IItemValidator {
     private Item item;
     private int damage = -1;
 
-    public BasicItemValidator(Item item) {
+    public ItemValidatorBasic(Item item) {
         this.item = item;
     }
 
-    public BasicItemValidator(Item item, int damage) {
+    public ItemValidatorBasic(Item item, int damage) {
         this.item = item;
         this.damage = damage;
     }

@@ -6,11 +6,11 @@ import refinedstorage.tile.TileBase;
 
 import java.util.List;
 
-public class GridFilterInGridItemHandler extends BasicItemHandler {
+public class ItemHandlerGridFilterInGrid extends ItemHandlerBasic {
     private List<ItemStack> filteredItems;
 
-    public GridFilterInGridItemHandler(List<ItemStack> filteredItems) {
-        super(1, new BasicItemValidator(RefinedStorageItems.GRID_FILTER));
+    public ItemHandlerGridFilterInGrid(List<ItemStack> filteredItems) {
+        super(1, new ItemValidatorBasic(RefinedStorageItems.GRID_FILTER));
 
         this.filteredItems = filteredItems;
     }
@@ -24,7 +24,7 @@ public class GridFilterInGridItemHandler extends BasicItemHandler {
         ItemStack stack = getStackInSlot(slot);
 
         if (stack != null && stack.hasTagCompound()) {
-            BasicItemHandler items = new BasicItemHandler(9 * 3);
+            ItemHandlerBasic items = new ItemHandlerBasic(9 * 3);
 
             TileBase.readItems(items, 0, stack.getTagCompound());
 

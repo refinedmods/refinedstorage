@@ -6,10 +6,10 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
-public class ProxyItemHandler implements IItemHandler, IItemHandlerModifiable, INBTSerializable<NBTTagCompound> {
-    private BasicItemHandler proxy;
+public class ItemHandlerProxy implements IItemHandler, IItemHandlerModifiable, INBTSerializable<NBTTagCompound> {
+    private ItemHandlerBasic proxy;
 
-    public ProxyItemHandler(BasicItemHandler proxy) {
+    public ItemHandlerProxy(ItemHandlerBasic proxy) {
         this.proxy = proxy;
     }
 

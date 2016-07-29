@@ -9,7 +9,7 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.container.ContainerDetector;
-import refinedstorage.inventory.BasicItemHandler;
+import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.RedstoneMode;
 
@@ -25,7 +25,7 @@ public class TileDetector extends TileNode implements ICompareConfig {
     private static final String NBT_AMOUNT = "Amount";
     private static final String NBT_POWERED = "Powered";
 
-    private BasicItemHandler filter = new BasicItemHandler(1, this);
+    private ItemHandlerBasic filter = new ItemHandlerBasic(1, this);
 
     private int compare = 0;
     private int mode = MODE_EQUAL;

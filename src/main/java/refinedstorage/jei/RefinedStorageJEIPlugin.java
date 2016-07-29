@@ -17,7 +17,7 @@ public class RefinedStorageJEIPlugin implements IModPlugin {
     public void register(IModRegistry registry) {
         INSTANCE = this;
 
-        registry.getRecipeTransferRegistry().addRecipeTransferHandler(new GridRecipeTransferHandler());
+        registry.getRecipeTransferRegistry().addRecipeTransferHandler(new RecipeTransferHandlerGrid());
 
         registry.addRecipeCategories(new SoldererRecipeCategory(registry.getJeiHelpers().getGuiHelper()));
 

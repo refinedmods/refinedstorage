@@ -19,9 +19,9 @@ import refinedstorage.apiimpl.network.NetworkUtils;
 import refinedstorage.block.BlockGrid;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
-import refinedstorage.inventory.BasicItemHandler;
-import refinedstorage.inventory.BasicItemValidator;
-import refinedstorage.inventory.GridFilterInGridItemHandler;
+import refinedstorage.inventory.ItemHandlerBasic;
+import refinedstorage.inventory.ItemHandlerGridFilterInGrid;
+import refinedstorage.inventory.ItemValidatorBasic;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.network.MessageGridSettingsUpdate;
 import refinedstorage.tile.TileNode;
@@ -65,9 +65,9 @@ public class TileGrid extends TileNode implements IGrid {
     private InventoryCrafting matrix = new InventoryCrafting(craftingContainer, 3, 3);
     private InventoryCraftResult result = new InventoryCraftResult();
 
-    private BasicItemHandler patterns = new BasicItemHandler(2, this, new BasicItemValidator(RefinedStorageItems.PATTERN));
+    private ItemHandlerBasic patterns = new ItemHandlerBasic(2, this, new ItemValidatorBasic(RefinedStorageItems.PATTERN));
     private List<ItemStack> filteredItems = new ArrayList<ItemStack>();
-    private GridFilterInGridItemHandler filter = new GridFilterInGridItemHandler(filteredItems);
+    private ItemHandlerGridFilterInGrid filter = new ItemHandlerGridFilterInGrid(filteredItems);
 
     private EnumGridType type;
 
@@ -131,7 +131,7 @@ public class TileGrid extends TileNode implements IGrid {
     }
 
     @Override
-    public BasicItemHandler getFilter() {
+    public ItemHandlerBasic getFilter() {
         return filter;
     }
 

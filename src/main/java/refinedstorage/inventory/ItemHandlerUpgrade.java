@@ -4,12 +4,12 @@ import net.minecraft.tileentity.TileEntity;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.item.ItemUpgrade;
 
-public class UpgradeItemHandler extends BasicItemHandler {
-    public UpgradeItemHandler(int size, TileEntity tile, int... supportedUpgrades) {
+public class ItemHandlerUpgrade extends ItemHandlerBasic {
+    public ItemHandlerUpgrade(int size, TileEntity tile, int... supportedUpgrades) {
         super(size, tile, new IItemValidator[supportedUpgrades.length]);
 
         for (int i = 0; i < supportedUpgrades.length; ++i) {
-            this.validators[i] = new BasicItemValidator(RefinedStorageItems.UPGRADE, supportedUpgrades[i]);
+            this.validators[i] = new ItemValidatorBasic(RefinedStorageItems.UPGRADE, supportedUpgrades[i]);
         }
     }
 

@@ -10,8 +10,8 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorage;
 import refinedstorage.container.ContainerImporter;
-import refinedstorage.inventory.BasicItemHandler;
-import refinedstorage.inventory.UpgradeItemHandler;
+import refinedstorage.inventory.ItemHandlerBasic;
+import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.IModeConfig;
@@ -22,8 +22,8 @@ public class TileImporter extends TileNode implements ICompareConfig, IModeConfi
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
 
-    private BasicItemHandler filters = new BasicItemHandler(9, this);
-    private UpgradeItemHandler upgrades = new UpgradeItemHandler(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK);
+    private ItemHandlerBasic filters = new ItemHandlerBasic(9, this);
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK);
 
     private int compare = 0;
     private int mode = ModeConstants.WHITELIST;

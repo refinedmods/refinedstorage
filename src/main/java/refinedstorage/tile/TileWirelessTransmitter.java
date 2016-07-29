@@ -10,12 +10,12 @@ import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorage;
 import refinedstorage.api.network.IWirelessTransmitter;
 import refinedstorage.container.ContainerWirelessTransmitter;
-import refinedstorage.inventory.BasicItemHandler;
-import refinedstorage.inventory.UpgradeItemHandler;
+import refinedstorage.inventory.ItemHandlerBasic;
+import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemUpgrade;
 
 public class TileWirelessTransmitter extends TileNode implements IWirelessTransmitter {
-    private UpgradeItemHandler upgrades = new UpgradeItemHandler(4, this, ItemUpgrade.TYPE_RANGE);
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_RANGE);
 
     @Override
     public int getEnergyUsage() {
@@ -52,7 +52,7 @@ public class TileWirelessTransmitter extends TileNode implements IWirelessTransm
         return pos;
     }
 
-    public BasicItemHandler getUpgrades() {
+    public ItemHandlerBasic getUpgrades() {
         return upgrades;
     }
 

@@ -19,8 +19,8 @@ import refinedstorage.api.storage.IStorageProvider;
 import refinedstorage.apiimpl.storage.NBTStorage;
 import refinedstorage.block.EnumStorageType;
 import refinedstorage.container.ContainerDiskDrive;
-import refinedstorage.inventory.BasicItemHandler;
-import refinedstorage.inventory.BasicItemValidator;
+import refinedstorage.inventory.ItemHandlerBasic;
+import refinedstorage.inventory.ItemValidatorBasic;
 import refinedstorage.network.MessagePriorityUpdate;
 import refinedstorage.tile.config.*;
 
@@ -52,7 +52,7 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
     private static final String NBT_MODE = "Mode";
     private static final String NBT_STORED = "Stored";
 
-    private BasicItemHandler disks = new BasicItemHandler(8, this, new BasicItemValidator(RefinedStorageItems.STORAGE_DISK) {
+    private ItemHandlerBasic disks = new ItemHandlerBasic(8, this, new ItemValidatorBasic(RefinedStorageItems.STORAGE_DISK) {
         @Override
         public boolean isValid(ItemStack disk) {
             return super.isValid(disk) && NBTStorage.isValid(disk);
@@ -89,7 +89,7 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
             return super.extractItem(slot, amount, simulate);
         }
     };
-    private BasicItemHandler filters = new BasicItemHandler(9, this);
+    private ItemHandlerBasic filters = new ItemHandlerBasic(9, this);
 
     private Storage storages[] = new Storage[8];
 

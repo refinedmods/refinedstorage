@@ -16,8 +16,8 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.apiimpl.autocrafting.CraftingTaskScheduler;
 import refinedstorage.container.ContainerConstructor;
 import refinedstorage.container.slot.SlotSpecimen;
-import refinedstorage.inventory.BasicItemHandler;
-import refinedstorage.inventory.UpgradeItemHandler;
+import refinedstorage.inventory.ItemHandlerBasic;
+import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
 
@@ -26,7 +26,7 @@ public class TileConstructor extends TileNode implements ICompareConfig {
 
     private static final int BASE_SPEED = 20;
 
-    private BasicItemHandler filter = new BasicItemHandler(1, this) {
+    private ItemHandlerBasic filter = new ItemHandlerBasic(1, this) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -34,7 +34,7 @@ public class TileConstructor extends TileNode implements ICompareConfig {
             block = SlotSpecimen.getBlockState(worldObj, pos.offset(getDirection()), getStackInSlot(0));
         }
     };
-    private UpgradeItemHandler upgrades = new UpgradeItemHandler(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_CRAFTING);
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_CRAFTING);
 
     private int compare = 0;
     private IBlockState block;

@@ -10,8 +10,8 @@ import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.api.network.IGridHandler;
 import refinedstorage.block.EnumGridType;
-import refinedstorage.inventory.BasicItemHandler;
-import refinedstorage.inventory.GridFilterInGridItemHandler;
+import refinedstorage.inventory.ItemHandlerBasic;
+import refinedstorage.inventory.ItemHandlerGridFilterInGrid;
 import refinedstorage.item.ItemWirelessGrid;
 import refinedstorage.network.MessageWirelessGridSettingsUpdate;
 import refinedstorage.tile.TileBase;
@@ -35,7 +35,7 @@ public class WirelessGrid implements IGrid {
     private int searchBoxMode;
 
     private List<ItemStack> filteredItems = new ArrayList<ItemStack>();
-    private GridFilterInGridItemHandler filter = new GridFilterInGridItemHandler(filteredItems) {
+    private ItemHandlerGridFilterInGrid filter = new ItemHandlerGridFilterInGrid(filteredItems) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -139,7 +139,7 @@ public class WirelessGrid implements IGrid {
     }
 
     @Override
-    public BasicItemHandler getFilter() {
+    public ItemHandlerBasic getFilter() {
         return filter;
     }
 

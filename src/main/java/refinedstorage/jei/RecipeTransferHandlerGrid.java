@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * @link https://github.com/zerofall/EZStorage/blob/master/src/main/java/com/zerofall/ezstorage/jei/RecipeTransferHandler.java
  */
-public class GridRecipeTransferHandler implements IRecipeTransferHandler {
+public class RecipeTransferHandlerGrid implements IRecipeTransferHandler {
     @Override
     public Class<? extends Container> getContainerClass() {
         return ContainerGrid.class;

@@ -4,7 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import refinedstorage.api.network.IGridHandler;
 import refinedstorage.block.EnumGridType;
-import refinedstorage.inventory.BasicItemHandler;
+import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 
 import java.util.List;
@@ -34,7 +34,7 @@ public interface IGrid {
 
     List<ItemStack> getFilteredItems();
 
-    BasicItemHandler getFilter();
+    ItemHandlerBasic getFilter();
 
     IRedstoneModeConfig getRedstoneModeConfig();
 

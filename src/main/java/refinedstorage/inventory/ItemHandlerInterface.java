@@ -3,11 +3,11 @@ package refinedstorage.inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class InterfaceItemHandler extends ItemStackHandler {
-    private BasicItemHandler importItems;
-    private BasicItemHandler exportItems;
+public class ItemHandlerInterface extends ItemStackHandler {
+    private ItemHandlerBasic importItems;
+    private ItemHandlerBasic exportItems;
 
-    public InterfaceItemHandler(BasicItemHandler importItems, BasicItemHandler exportItems) {
+    public ItemHandlerInterface(ItemHandlerBasic importItems, ItemHandlerBasic exportItems) {
         this.importItems = importItems;
         this.exportItems = exportItems;
     }

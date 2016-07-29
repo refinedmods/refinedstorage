@@ -14,14 +14,14 @@ import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.container.ContainerCrafter;
-import refinedstorage.inventory.BasicItemHandler;
 import refinedstorage.inventory.IItemValidator;
-import refinedstorage.inventory.UpgradeItemHandler;
+import refinedstorage.inventory.ItemHandlerBasic;
+import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.item.ItemUpgrade;
 
 public class TileCrafter extends TileNode implements ICraftingPatternContainer {
-    private BasicItemHandler patterns = new BasicItemHandler(9, this, new IItemValidator() {
+    private ItemHandlerBasic patterns = new ItemHandlerBasic(9, this, new IItemValidator() {
         @Override
         public boolean isValid(ItemStack stack) {
             return stack.getItem() == RefinedStorageItems.PATTERN && ItemPattern.isValid(stack);
@@ -37,7 +37,7 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
         }
     };
 
-    private UpgradeItemHandler upgrades = new UpgradeItemHandler(4, this, ItemUpgrade.TYPE_SPEED);
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED);
 
     @Override
     public int getEnergyUsage() {

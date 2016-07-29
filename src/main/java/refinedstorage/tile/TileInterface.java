@@ -11,20 +11,20 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.container.ContainerInterface;
-import refinedstorage.inventory.BasicItemHandler;
-import refinedstorage.inventory.InterfaceItemHandler;
-import refinedstorage.inventory.UpgradeItemHandler;
+import refinedstorage.inventory.ItemHandlerBasic;
+import refinedstorage.inventory.ItemHandlerInterface;
+import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
 
 public class TileInterface extends TileNode implements ICompareConfig {
     private static final String NBT_COMPARE = "Compare";
 
-    private BasicItemHandler importItems = new BasicItemHandler(9, this);
-    private BasicItemHandler exportSpecimenItems = new BasicItemHandler(9, this);
-    private BasicItemHandler exportItems = new BasicItemHandler(9, this);
-    private InterfaceItemHandler itemHandler = new InterfaceItemHandler(importItems, exportItems);
-    private UpgradeItemHandler upgrades = new UpgradeItemHandler(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK);
+    private ItemHandlerBasic importItems = new ItemHandlerBasic(9, this);
+    private ItemHandlerBasic exportSpecimenItems = new ItemHandlerBasic(9, this);
+    private ItemHandlerBasic exportItems = new ItemHandlerBasic(9, this);
+    private ItemHandlerInterface itemHandler = new ItemHandlerInterface(importItems, exportItems);
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK);
 
     private int compare = 0;
 
