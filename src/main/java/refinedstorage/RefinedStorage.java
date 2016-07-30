@@ -47,7 +47,7 @@ public final class RefinedStorage {
 
     public List<ClientStack> items = new ArrayList<ClientStack>();
 
-    public int controllerUsage;
+    public int controllerBaseUsage;
     public int cableUsage;
     public int constructorUsage;
     public int crafterUsage;
@@ -87,7 +87,7 @@ public final class RefinedStorage {
 
         Configuration config = new Configuration(e.getSuggestedConfigurationFile());
 
-        controllerUsage = config.getInt("controller", "energy", 0, 0, Integer.MAX_VALUE, "The base energy used by the Controller");
+        controllerBaseUsage = config.getInt("controllerBase", "energy", 0, 0, Integer.MAX_VALUE, "The base energy used by the Controller");
         cableUsage = config.getInt("cable", "energy", 0, 0, Integer.MAX_VALUE, "The energy used by Cables");
         constructorUsage = config.getInt("constructor", "energy", 1, 0, Integer.MAX_VALUE, "The energy used by Constructors");
         crafterUsage = config.getInt("crafter", "energy", 2, 0, Integer.MAX_VALUE, "The base energy used by Crafters");

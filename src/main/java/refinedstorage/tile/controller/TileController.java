@@ -696,7 +696,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public int getEnergyUsage() {
         if (!worldObj.isRemote) {
-            int usage = RefinedStorage.INSTANCE.controllerUsage;
+            int usage = RefinedStorage.INSTANCE.controllerBaseUsage;
 
             for (INetworkNode node : nodes) {
                 if (node.canUpdate()) {
