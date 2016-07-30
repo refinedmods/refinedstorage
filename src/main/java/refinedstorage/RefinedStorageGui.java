@@ -19,4 +19,5 @@ public final class RefinedStorageGui {
     public static final int CRAFTER = 15;
     public static final int PROCESSING_PATTERN_ENCODER = 16;
     public static final int GRID_FILTER = 17;
+    public static final int NETWORK_TRANSMITTER = 18;
 }

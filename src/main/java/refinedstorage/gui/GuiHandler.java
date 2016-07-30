@@ -50,6 +50,8 @@ public class GuiHandler implements IGuiHandler {
                 return new ContainerCrafter(player, (TileCrafter) tile);
             case RefinedStorageGui.PROCESSING_PATTERN_ENCODER:
                 return new ContainerProcessingPatternEncoder(player, (TileProcessingPatternEncoder) tile);
+            case RefinedStorageGui.NETWORK_TRANSMITTER:
+                return new ContainerNetworkTransmitter(player, (TileNetworkTransmitter) tile);
             default:
                 return null;
         }
@@ -107,6 +109,8 @@ public class GuiHandler implements IGuiHandler {
                 return new GuiProcessingPatternEncoder((ContainerProcessingPatternEncoder) getContainer(ID, player, tile), (TileProcessingPatternEncoder) tile);
             case RefinedStorageGui.GRID_FILTER:
                 return new GuiGridFilter(getGridFilterContainer(player, x));
+            case RefinedStorageGui.NETWORK_TRANSMITTER:
+                return new GuiNetworkTransmitter((ContainerNetworkTransmitter) getContainer(ID, player, tile), (TileNetworkTransmitter) tile);
             default:
                 return null;
         }

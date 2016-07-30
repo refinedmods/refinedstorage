@@ -5,7 +5,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import refinedstorage.tile.TileNetworkReceiver;
 
-public class BlockNetworkReceiver extends BlockBase {
+public class BlockNetworkReceiver extends BlockNode {
     public BlockNetworkReceiver() {
         super("network_receiver");
     }
