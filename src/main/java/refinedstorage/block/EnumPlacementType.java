@@ -1,9 +1,7 @@
 package refinedstorage.block;
 
-import net.minecraft.block.BlockPistonBase;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 
 public enum EnumPlacementType {
     ANY(
@@ -22,12 +20,10 @@ public enum EnumPlacementType {
         this.allowed = allowed;
     }
 
-    EnumFacing getFrom(BlockPos pos, EntityLivingBase entity) {
+    EnumFacing getFrom(EnumFacing facing, EntityLivingBase entity) {
         switch (this) {
             case ANY:
-                EnumFacing facing = BlockPistonBase.getFacingFromEntity(pos, entity);
-                
-                return entity.isSneaking() ? facing.getOpposite() : facing;
+                return facing.getOpposite();
             case HORIZONTAL:
                 return entity.getHorizontalFacing().getOpposite();
             default:

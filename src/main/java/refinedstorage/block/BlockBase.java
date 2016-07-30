@@ -99,11 +99,22 @@ public abstract class BlockBase extends Block {
     }
 
     @Override
+    public IBlockState onBlockPlaced(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase entity) {
+        IBlockState state = super.onBlockPlaced(world, pos, facing, hitX, hitY, hitZ, meta, entity);
+
+        if (getPlacementType() != null) {
+            return state.withProperty(DIRECTION, getPlacementType().getFrom(facing, entity));
+        }
+
+        return state;
+    }
+
+    @Override
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack stack) {
         super.onBlockPlacedBy(world, pos, state, player, stack);
 
         if (getPlacementType() != null) {
-            ((TileBase) world.getTileEntity(pos)).setDirection(getPlacementType().getFrom(pos, player));
+            ((TileBase) world.getTileEntity(pos)).setDirection(state.getValue(DIRECTION));
         }
     }
 
