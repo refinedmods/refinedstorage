@@ -79,6 +79,8 @@ public class CommonProxy {
         GameRegistry.registerTileEntity(TileCrafter.class, ID + ":crafter");
         GameRegistry.registerTileEntity(TileProcessingPatternEncoder.class, ID + ":processing_pattern_encoder");
         GameRegistry.registerTileEntity(TileCable.class, ID + ":cable");
+        GameRegistry.registerTileEntity(TileNetworkReceiver.class, ID + ":network_receiver");
+        GameRegistry.registerTileEntity(TileNetworkTransmitter.class, ID + ":network_transmitter");
 
         registerBlock(RefinedStorageBlocks.CONTROLLER);
         registerBlock(RefinedStorageBlocks.GRID);
@@ -99,6 +101,8 @@ public class CommonProxy {
         registerBlock(RefinedStorageBlocks.INTERFACE);
         registerBlock(RefinedStorageBlocks.WIRELESS_TRANSMITTER);
         registerBlock(RefinedStorageBlocks.MACHINE_CASING);
+        registerBlock(RefinedStorageBlocks.NETWORK_TRANSMITTER);
+        registerBlock(RefinedStorageBlocks.NETWORK_RECEIVER);
 
         registerItem(RefinedStorageItems.QUARTZ_ENRICHED_IRON);
         registerItem(RefinedStorageItems.STORAGE_DISK);
@@ -111,6 +115,7 @@ public class CommonProxy {
         registerItem(RefinedStorageItems.SILICON);
         registerItem(RefinedStorageItems.UPGRADE);
         registerItem(RefinedStorageItems.GRID_FILTER);
+        registerItem(RefinedStorageItems.NETWORK_CARD);
 
         OreDictionary.registerOre("itemSilicon", RefinedStorageItems.SILICON);
 

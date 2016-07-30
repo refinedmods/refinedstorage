@@ -115,6 +115,8 @@ block.refinedstorage:crafting_monitor.name=Crafting Monitor
 block.refinedstorage:wireless_transmitter.name=Wireless Transmitter
 block.refinedstorage:crafter.name=Crafter
 block.refinedstorage:processing_pattern_encoder.name=Processing Pattern Encoder
+block.refinedstorage:network_receiver.name=Wireless Receiver
+block.refinedstorage:network_transmitter.name=Wireless Transmitter
 
 item.refinedstorage:storage_disk.0.name=1k Storage Disk
 item.refinedstorage:storage_disk.1.name=4k Storage Disk
@@ -147,3 +149,4 @@ item.refinedstorage:upgrade.3.name=Crafting Upgrade
 item.refinedstorage:upgrade.4.name=Stack Upgrade
 item.refinedstorage:storage_housing.name=Storage Housing
 item.refinedstorage:grid_filter.name=Grid Filter
+item.refinedstorage:network_card.name=Network Card

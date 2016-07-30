@@ -115,6 +115,8 @@ block.refinedstorage:crafting_monitor.name=Crafting Monitor
 block.refinedstorage:wireless_transmitter.name=Draadloze Zender
 block.refinedstorage:crafter.name=Crafter
 block.refinedstorage:processing_pattern_encoder.name=Verwerkingspatroon Codeerder
+block.refinedstorage:network_receiver.name=Draadloze Networkontvanger
+block.refinedstorage:network_transmitter.name=Draadloze Netwerkzender
 
 item.refinedstorage:storage_disk.0.name=1k Opslagschijf
 item.refinedstorage:storage_disk.1.name=4k Opslagschijf
@@ -147,3 +149,4 @@ item.refinedstorage:upgrade.3.name=Crafting Upgrade
 item.refinedstorage:upgrade.4.name=Stack Upgrade
 item.refinedstorage:storage_housing.name=Opslagomhulsel
 item.refinedstorage:grid_filter.name=Rooster Filter
+item.refinedstorage:network_card.name=Netwerk Kaart
