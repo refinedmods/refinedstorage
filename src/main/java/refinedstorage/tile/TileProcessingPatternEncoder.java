@@ -6,6 +6,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemValidatorBasic;
@@ -26,11 +27,11 @@ public class TileProcessingPatternEncoder extends TileBase {
     }
 
     @Override
-    public void read(NBTTagCompound nbt) {
-        super.read(nbt);
+    public void read(NBTTagCompound tag) {
+        super.read(tag);
 
-        readItems(patterns, 0, nbt);
-        readItems(configuration, 1, nbt);
+        readItems(patterns, 0, tag);
+        readItems(configuration, 1, tag);
     }
 
     public void onCreatePattern() {
@@ -41,10 +42,12 @@ public class TileProcessingPatternEncoder extends TileBase {
 
             for (int i = 0; i < 18; ++i) {
                 if (configuration.getStackInSlot(i) != null) {
-                    if (i >= 9) {
-                        ItemPattern.addOutput(pattern, configuration.getStackInSlot(i));
-                    } else {
-                        ItemPattern.addInput(pattern, configuration.getStackInSlot(i));
+                    for (int j = 0; j < configuration.getStackInSlot(i).stackSize; ++j) {
+                        if (i >= 9) {
+                            ItemPattern.addOutput(pattern, ItemHandlerHelper.copyStackWithSize(configuration.getStackInSlot(i), 1));
+                        } else {
+                            ItemPattern.addInput(pattern, ItemHandlerHelper.copyStackWithSize(configuration.getStackInSlot(i), 1));
+                        }
                     }
                 }
             }

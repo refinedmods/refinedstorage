@@ -104,16 +104,16 @@ public class TileInterface extends TileNode implements ICompareConfig {
     }
 
     @Override
-    public void read(NBTTagCompound nbt) {
-        super.read(nbt);
+    public void read(NBTTagCompound tag) {
+        super.read(tag);
 
-        readItems(importItems, 0, nbt);
-        readItems(exportSpecimenItems, 1, nbt);
-        readItems(exportItems, 2, nbt);
-        readItems(upgrades, 3, nbt);
+        readItems(importItems, 0, tag);
+        readItems(exportSpecimenItems, 1, tag);
+        readItems(exportItems, 2, tag);
+        readItems(upgrades, 3, tag);
 
-        if (nbt.hasKey(NBT_COMPARE)) {
-            compare = nbt.getInteger(NBT_COMPARE);
+        if (tag.hasKey(NBT_COMPARE)) {
+            compare = tag.getInteger(NBT_COMPARE);
         }
     }
 

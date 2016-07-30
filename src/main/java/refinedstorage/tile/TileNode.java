@@ -126,11 +126,11 @@ public abstract class TileNode extends TileBase implements INetworkNode, ISynchr
     }
 
     @Override
-    public void read(NBTTagCompound nbt) {
-        super.read(nbt);
+    public void read(NBTTagCompound tag) {
+        super.read(tag);
 
-        if (nbt.hasKey(RedstoneMode.NBT)) {
-            redstoneMode = RedstoneMode.getById(nbt.getInteger(RedstoneMode.NBT));
+        if (tag.hasKey(RedstoneMode.NBT)) {
+            redstoneMode = RedstoneMode.getById(tag.getInteger(RedstoneMode.NBT));
         }
     }
 

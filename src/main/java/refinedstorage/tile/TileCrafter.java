@@ -75,11 +75,11 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
     }
 
     @Override
-    public void read(NBTTagCompound nbt) {
-        super.read(nbt);
+    public void read(NBTTagCompound tag) {
+        super.read(tag);
 
-        readItems(patterns, 0, nbt);
-        readItems(upgrades, 1, nbt);
+        readItems(patterns, 0, tag);
+        readItems(upgrades, 1, tag);
     }
 
     @Override

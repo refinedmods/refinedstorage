@@ -133,22 +133,22 @@ public class TileDetector extends TileNode implements ICompareConfig {
     }
 
     @Override
-    public void read(NBTTagCompound nbt) {
-        super.read(nbt);
+    public void read(NBTTagCompound tag) {
+        super.read(tag);
 
-        if (nbt.hasKey(NBT_COMPARE)) {
-            compare = nbt.getInteger(NBT_COMPARE);
+        if (tag.hasKey(NBT_COMPARE)) {
+            compare = tag.getInteger(NBT_COMPARE);
         }
 
-        if (nbt.hasKey(NBT_MODE)) {
-            mode = nbt.getInteger(NBT_MODE);
+        if (tag.hasKey(NBT_MODE)) {
+            mode = tag.getInteger(NBT_MODE);
         }
 
-        if (nbt.hasKey(NBT_AMOUNT)) {
-            amount = nbt.getInteger(NBT_AMOUNT);
+        if (tag.hasKey(NBT_AMOUNT)) {
+            amount = tag.getInteger(NBT_AMOUNT);
         }
 
-        readItems(filter, 0, nbt);
+        readItems(filter, 0, tag);
     }
 
     @Override

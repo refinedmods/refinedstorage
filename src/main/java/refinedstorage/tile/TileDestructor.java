@@ -99,19 +99,19 @@ public class TileDestructor extends TileNode implements ICompareConfig, IModeCon
     }
 
     @Override
-    public void read(NBTTagCompound nbt) {
-        super.read(nbt);
+    public void read(NBTTagCompound tag) {
+        super.read(tag);
 
-        if (nbt.hasKey(NBT_COMPARE)) {
-            compare = nbt.getInteger(NBT_COMPARE);
+        if (tag.hasKey(NBT_COMPARE)) {
+            compare = tag.getInteger(NBT_COMPARE);
         }
 
-        if (nbt.hasKey(NBT_MODE)) {
-            mode = nbt.getInteger(NBT_MODE);
+        if (tag.hasKey(NBT_MODE)) {
+            mode = tag.getInteger(NBT_MODE);
         }
 
-        readItems(filters, 0, nbt);
-        readItems(upgrades, 1, nbt);
+        readItems(filters, 0, tag);
+        readItems(upgrades, 1, tag);
     }
 
     @Override

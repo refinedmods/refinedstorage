@@ -76,17 +76,17 @@ public class TileExporter extends TileNode implements ICompareConfig {
     }
 
     @Override
-    public void read(NBTTagCompound nbt) {
-        super.read(nbt);
+    public void read(NBTTagCompound tag) {
+        super.read(tag);
 
-        if (nbt.hasKey(NBT_COMPARE)) {
-            compare = nbt.getInteger(NBT_COMPARE);
+        if (tag.hasKey(NBT_COMPARE)) {
+            compare = tag.getInteger(NBT_COMPARE);
         }
 
-        readItems(filters, 0, nbt);
-        readItems(upgrades, 1, nbt);
+        readItems(filters, 0, tag);
+        readItems(upgrades, 1, tag);
 
-        scheduler.read(nbt);
+        scheduler.read(tag);
     }
 
     @Override
