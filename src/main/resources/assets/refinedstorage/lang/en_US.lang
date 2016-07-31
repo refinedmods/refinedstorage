@@ -34,7 +34,9 @@ gui.refinedstorage:grid_filter=Grid Filter
 gui.refinedstorage:network_transmitter=Network Transmitter
 gui.refinedstorage:network_transmitter.distance=%d blocks
 gui.refinedstorage:network_transmitter.missing_card=Missing Network Card
+gui.refinedstorage:network_transmitter.missing_receiver=Receiver not found
 gui.refinedstorage:network_transmitter.different_dimension=Different dimension
+gui.refinedstorage:network_receiver=Network Receiver
 
 misc.refinedstorage:energy_stored=%d / %d RS
 misc.refinedstorage:energy_usage=Usage: %d RS/t

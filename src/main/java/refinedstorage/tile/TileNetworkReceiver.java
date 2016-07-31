@@ -2,6 +2,7 @@ package refinedstorage.tile;
 
 import net.minecraft.inventory.Container;
 import refinedstorage.RefinedStorage;
+import refinedstorage.container.ContainerNetworkReceiver;
 
 public class TileNetworkReceiver extends TileNode {
     public TileNetworkReceiver() {
@@ -19,6 +20,6 @@ public class TileNetworkReceiver extends TileNode {
 
     @Override
     public Class<? extends Container> getContainer() {
-        return null;
+        return ContainerNetworkReceiver.class;
     }
 }
