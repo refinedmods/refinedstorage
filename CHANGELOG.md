@@ -5,7 +5,6 @@
 - Fixed rendering crash with Disk Drive
 - Fixed crash when quickly toggling sorting direction in Grid
 - Fixed not being able to clear exporter row in interface
-- Fixed interface having weird extraction / insertion rules. It can now take items from any side, or extract items from any side depending on the block that is inserting or extracting the item (like conduits).
 
 **Features**
 - Added config option to set the base energy usage of the Controller (default is 0)

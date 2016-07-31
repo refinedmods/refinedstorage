@@ -12,7 +12,6 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.container.ContainerInterface;
 import refinedstorage.inventory.ItemHandlerBasic;
-import refinedstorage.inventory.ItemHandlerInterface;
 import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
@@ -23,7 +22,6 @@ public class TileInterface extends TileNode implements ICompareConfig {
     private ItemHandlerBasic importItems = new ItemHandlerBasic(9, this);
     private ItemHandlerBasic exportSpecimenItems = new ItemHandlerBasic(9, this);
     private ItemHandlerBasic exportItems = new ItemHandlerBasic(9, this);
-    private ItemHandlerInterface itemHandler = new ItemHandlerInterface(importItems, exportItems);
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK);
 
     private int compare = 0;
@@ -175,7 +173,11 @@ public class TileInterface extends TileNode implements ICompareConfig {
     @Override
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return (T) itemHandler;
+            if (facing == EnumFacing.DOWN) {
+                return (T) exportItems;
+            } else {
+                return (T) importItems;
+            }
         }
 
         return super.getCapability(capability, facing);
