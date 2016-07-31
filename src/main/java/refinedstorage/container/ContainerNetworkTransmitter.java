@@ -25,11 +25,11 @@ public class ContainerNetworkTransmitter extends ContainerBase {
         if (slot != null && slot.getHasStack()) {
             stack = slot.getStack();
 
-            if (index == 0) {
-                if (!mergeItemStack(stack, 1, inventorySlots.size(), false)) {
+            if (index <= 1) {
+                if (!mergeItemStack(stack, 2, inventorySlots.size(), false)) {
                     return null;
                 }
-            } else if (!mergeItemStack(stack, 0, 1, false)) {
+            } else if (!mergeItemStack(stack, 0, 2, false)) {
                 return null;
             }
 

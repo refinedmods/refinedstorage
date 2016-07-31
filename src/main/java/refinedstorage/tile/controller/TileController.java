@@ -373,7 +373,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public void sendStorageToClient() {
-        for (EntityPlayer player : worldObj.playerEntities) {
+        for (EntityPlayer player : worldObj.getMinecraftServer().getPlayerList().getPlayerList()) {
             if (isWatchingGrid(player)) {
                 sendStorageToClient((EntityPlayerMP) player);
             }
@@ -387,7 +387,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public void sendStorageDeltaToClient(ItemStack stack, int delta) {
-        for (EntityPlayer player : worldObj.playerEntities) {
+        for (EntityPlayer player : worldObj.getMinecraftServer().getPlayerList().getPlayerList()) {
             if (isWatchingGrid(player)) {
                 RefinedStorage.INSTANCE.network.sendTo(new MessageGridDelta(this, stack, delta), (EntityPlayerMP) player);
             }
