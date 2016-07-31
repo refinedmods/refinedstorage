@@ -37,6 +37,8 @@ my $t1 = write_keys(BASE_LANG, $base_keys);
 my $lang_keys = lang_keys(lang_file($lang));
 my $t2 = write_keys($lang, $lang_keys);
 
+unlink(OUTPUT_FILE);
+
 system("diff -s -y $t1 $t2 > " . OUTPUT_FILE);
 
 unlink($t1, $t2);
