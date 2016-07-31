@@ -1,3 +1,7 @@
+# Utility for comparing language translation keys of BASE_LANG and a given language.
+# Usage: perl translation-diff.pl $lang
+# Will output a translation-diff.diff file that compares the lang keys of BASE_LANG to $lang.
+
 use constant {
     BASE_LANG => "en_US",
     OUTPUT_FILE => "translation-diff.diff"
