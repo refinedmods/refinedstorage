@@ -36,7 +36,6 @@ gui.refinedstorage:network_transmitter.distance=%d blocks
 gui.refinedstorage:network_transmitter.missing_card=Missing Network Card
 gui.refinedstorage:network_transmitter.missing_receiver=Receiver not found
 gui.refinedstorage:network_transmitter.different_dimension=Different dimension
-gui.refinedstorage:network_receiver=Network Receiver
 
 misc.refinedstorage:energy_stored=%d / %d RS
 misc.refinedstorage:energy_usage=Usage: %d RS/t
@@ -48,15 +47,11 @@ misc.refinedstorage:storage.stored_minimal=%d
 misc.refinedstorage:storage.stored_capacity_minimal=%d / %d
 misc.refinedstorage:storage.full=%d%% full
 
-misc.refinedstorage:wireless_grid.tooltip.0=X: %d
-misc.refinedstorage:wireless_grid.tooltip.1=Y: %d
-misc.refinedstorage:wireless_grid.tooltip.2=Z: %d
+misc.refinedstorage:wireless_grid.tooltip=Linked to %d, %d, %d.
 misc.refinedstorage:wireless_grid.out_of_range=There is no Wireless Transmitter in range.
 misc.refinedstorage:wireless_grid.not_found=Controller not found.
 
-misc.refinedstorage:network_card.tooltip.0=X: %d
-misc.refinedstorage:network_card.tooltip.1=Y: %d
-misc.refinedstorage:network_card.tooltip.2=Z: %d
+misc.refinedstorage:network_card.tooltip=Linked to %d, %d, %d.
 
 misc.refinedstorage:pattern.inputs=Inputs
 misc.refinedstorage:pattern.outputs=Outputs

@@ -41,9 +41,6 @@ misc.refinedstorage:storage.stored_minimal=%d
 misc.refinedstorage:storage.stored_capacity_minimal=%d / %d
 misc.refinedstorage:storage.full=%d%% full
 
-misc.refinedstorage:wireless_grid.tooltip.0=X: %d
-misc.refinedstorage:wireless_grid.tooltip.1=Y: %d
-misc.refinedstorage:wireless_grid.tooltip.2=Z: %d
 misc.refinedstorage:wireless_grid.out_of_range=Não há Transmissor Sem Fio na gama.
 misc.refinedstorage:wireless_grid.not_found=Controlador não encontrado.
 

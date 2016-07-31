@@ -112,9 +112,7 @@ public class ItemWirelessGrid extends ItemEnergyContainer implements ISpecialEle
         }
 
         if (hasValidNBT(stack)) {
-            tooltip.add(I18n.format("misc.refinedstorage:wireless_grid.tooltip.0", getX(stack)));
-            tooltip.add(I18n.format("misc.refinedstorage:wireless_grid.tooltip.1", getY(stack)));
-            tooltip.add(I18n.format("misc.refinedstorage:wireless_grid.tooltip.2", getZ(stack)));
+            tooltip.add(I18n.format("misc.refinedstorage:wireless_grid.tooltip", getX(stack), getY(stack), getZ(stack)));
         }
     }
 

@@ -46,9 +46,7 @@ public class ItemNetworkCard extends ItemBase {
         BlockPos pos = getReceiver(stack);
 
         if (pos != null) {
-            tooltip.add(I18n.format("misc.refinedstorage:network_card.tooltip.0", pos.getX()));
-            tooltip.add(I18n.format("misc.refinedstorage:network_card.tooltip.1", pos.getY()));
-            tooltip.add(I18n.format("misc.refinedstorage:network_card.tooltip.2", pos.getZ()));
+            tooltip.add(I18n.format("misc.refinedstorage:network_card.tooltip", pos.getX(), pos.getY(), pos.getZ()));
         }
     }
 
