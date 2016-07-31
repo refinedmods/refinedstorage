@@ -31,14 +31,17 @@ sub lang_keys {
     return $keys;
 }
 
-my $base_keys = lang_keys(lang_file(BASE_LANG));
+my $f1 = lang_file(BASE_LANG);
+my $f2 = lang_file($lang);
+
+my $base_keys = lang_keys($f1);
 my $t1 = write_keys(BASE_LANG, $base_keys);
 
-my $lang_keys = lang_keys(lang_file($lang));
+my $lang_keys = lang_keys($f2);
 my $t2 = write_keys($lang, $lang_keys);
-
-unlink(OUTPUT_FILE);
 
 system("diff -s -y $t1 $t2 > " . OUTPUT_FILE);
 
 unlink($t1, $t2);
+
+close($f1, $f2);
