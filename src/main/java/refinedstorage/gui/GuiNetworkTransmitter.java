@@ -8,7 +8,7 @@ public class GuiNetworkTransmitter extends GuiBase {
     private TileNetworkTransmitter networkTransmitter;
 
     public GuiNetworkTransmitter(ContainerNetworkTransmitter container, TileNetworkTransmitter networkTransmitter) {
-        super(container, 176, 137);
+        super(container, 210, 137);
 
         this.networkTransmitter = networkTransmitter;
     }

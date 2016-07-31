@@ -9,10 +9,13 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.container.ContainerNetworkTransmitter;
 import refinedstorage.inventory.ItemHandlerBasic;
+import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.inventory.ItemValidatorBasic;
 import refinedstorage.item.ItemNetworkCard;
+import refinedstorage.item.ItemUpgrade;
 
 public class TileNetworkTransmitter extends TileNode {
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(1, this, ItemUpgrade.TYPE_INTERDIMENSION);
     private ItemHandlerBasic networkCard = new ItemHandlerBasic(1, this, new ItemValidatorBasic(RefinedStorageItems.NETWORK_CARD)) {
         @Override
         protected void onContentsChanged(int slot) {
@@ -57,6 +60,7 @@ public class TileNetworkTransmitter extends TileNode {
         super.write(tag);
 
         writeItems(networkCard, 0, tag);
+        writeItems(upgrades, 1, tag);
 
         return tag;
     }
@@ -66,6 +70,7 @@ public class TileNetworkTransmitter extends TileNode {
         super.read(tag);
 
         readItems(networkCard, 0, tag);
+        readItems(upgrades, 1, tag);
     }
 
     @Override
@@ -96,6 +101,10 @@ public class TileNetworkTransmitter extends TileNode {
 
     public ItemHandlerBasic getNetworkCard() {
         return networkCard;
+    }
+
+    public ItemHandlerUpgrade getUpgrades() {
+        return upgrades;
     }
 
     public BlockPos getReceiver() {

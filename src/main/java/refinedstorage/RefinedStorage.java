@@ -77,12 +77,13 @@ public final class RefinedStorage {
     public boolean controllerUsesEnergy;
 
     public int wirelessTransmitterBaseRange;
+    public int wirelessTransmitterRangePerUpgrade;
 
     public int rangeUpgradeUsage;
     public int speedUpgradeUsage;
     public int craftingUpgradeUsage;
     public int stackUpgradeUsage;
-    public int wirelessTransmitterRangePerUpgrade;
+    public int interdimensionUpgradeUsage;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent e) {
@@ -126,6 +127,7 @@ public final class RefinedStorage {
         speedUpgradeUsage = config.getInt("speed", "upgrades", 2, 0, Integer.MAX_VALUE, "The additional energy used per Speed Upgrade");
         craftingUpgradeUsage = config.getInt("crafting", "upgrades", 5, 0, Integer.MAX_VALUE, "The additional energy used per Crafting Upgrade");
         stackUpgradeUsage = config.getInt("stack", "upgrades", 12, 0, Integer.MAX_VALUE, "The additional energy used per Stack Upgrade");
+        interdimensionUpgradeUsage = config.getInt("interdimension", "upgrades", 1000, 0, Integer.MAX_VALUE, "The energy used by the Interdimension Upgrade");
 
         config.save();
     }
