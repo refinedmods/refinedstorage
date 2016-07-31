@@ -18,6 +18,7 @@ public class ItemNetworkCard extends ItemBase {
     private static final String NBT_RECEIVER_X = "ReceiverX";
     private static final String NBT_RECEIVER_Y = "ReceiverY";
     private static final String NBT_RECEIVER_Z = "ReceiverZ";
+    private static final String NBT_DIMENSION = "Dimension";
 
     public ItemNetworkCard() {
         super("network_card");
@@ -28,7 +29,7 @@ public class ItemNetworkCard extends ItemBase {
         Block block = world.getBlockState(pos).getBlock();
 
         if (block == RefinedStorageBlocks.NETWORK_RECEIVER) {
-            setReceiver(stack, pos);
+            setReceiver(stack, pos, world.provider.getDimension());
 
             return EnumActionResult.SUCCESS;
         }
@@ -57,12 +58,17 @@ public class ItemNetworkCard extends ItemBase {
         return null;
     }
 
-    public static void setReceiver(ItemStack stack, BlockPos pos) {
+    public static int getDimension(ItemStack stack) {
+        return (stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_DIMENSION)) ? stack.getTagCompound().getInteger(NBT_DIMENSION) : 0;
+    }
+
+    public static void setReceiver(ItemStack stack, BlockPos pos, int dimension) {
         NBTTagCompound tag = new NBTTagCompound();
 
         tag.setInteger(NBT_RECEIVER_X, pos.getX());
         tag.setInteger(NBT_RECEIVER_Y, pos.getY());
         tag.setInteger(NBT_RECEIVER_Z, pos.getZ());
+        tag.setInteger(NBT_DIMENSION, dimension);
 
         stack.setTagCompound(tag);
     }

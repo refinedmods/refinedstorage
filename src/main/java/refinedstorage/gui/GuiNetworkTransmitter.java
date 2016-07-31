@@ -8,7 +8,7 @@ public class GuiNetworkTransmitter extends GuiBase {
     private TileNetworkTransmitter networkTransmitter;
 
     public GuiNetworkTransmitter(ContainerNetworkTransmitter container, TileNetworkTransmitter networkTransmitter) {
-        super(container, 211, 137);
+        super(container, 176, 137);
 
         this.networkTransmitter = networkTransmitter;
     }
@@ -35,8 +35,10 @@ public class GuiNetworkTransmitter extends GuiBase {
 
         String distance;
 
-        if (networkTransmitter.getReceiver() == null) {
-            distance = t("gui.refinedstorage:network_transmitter.distance_missing");
+        if (!networkTransmitter.isInSameDimension()) {
+            distance = t("gui.refinedstorage:network_transmitter.different_dimension");
+        } else if (networkTransmitter.getDistance() == -1) {
+            distance = t("gui.refinedstorage:network_transmitter.missing_card");
         } else {
             distance = t("gui.refinedstorage:network_transmitter.distance", networkTransmitter.getDistance());
         }

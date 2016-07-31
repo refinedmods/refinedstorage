@@ -33,7 +33,8 @@ gui.refinedstorage:processing_pattern_encoder.pattern_create=Create Pattern
 gui.refinedstorage:grid_filter=Grid Filter
 gui.refinedstorage:network_transmitter=Network Transmitter
 gui.refinedstorage:network_transmitter.distance=%d blocks
-gui.refinedstorage:network_transmitter.distance_missing=Missing Network Card
+gui.refinedstorage:network_transmitter.missing_card=Missing Network Card
+gui.refinedstorage:network_transmitter.different_dimension=Different dimension
 
 misc.refinedstorage:energy_stored=%d / %d RS
 misc.refinedstorage:energy_usage=Usage: %d RS/t

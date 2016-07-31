@@ -24,6 +24,7 @@ public class TileNetworkTransmitter extends TileNode {
                 receiver = null;
             } else {
                 receiver = ItemNetworkCard.getReceiver(card);
+                receiverDimension = ItemNetworkCard.getDimension(card);
             }
 
             if (network != null) {
@@ -31,11 +32,15 @@ public class TileNetworkTransmitter extends TileNode {
             }
         }
     };
-    private ItemHandlerBasic upgrade = new ItemHandlerBasic(1, this);
 
     private BlockPos receiver;
+    private int receiverDimension;
 
     private boolean couldUpdate;
+
+    // Used clientside
+    private int distance;
+    private boolean inSameDimension;
 
     @Override
     public void updateNode() {
@@ -51,9 +56,8 @@ public class TileNetworkTransmitter extends TileNode {
         }
     }
 
-    @Override
-    public boolean canConduct() {
-        return canUpdate();
+    public boolean canTransmit() {
+        return receiver != null && worldObj.getTileEntity(receiver) instanceof TileNetworkReceiver && isInSameDimension();
     }
 
     @Override
@@ -61,7 +65,6 @@ public class TileNetworkTransmitter extends TileNode {
         super.write(tag);
 
         writeItems(networkCard, 0, tag);
-        writeItems(upgrade, 1, tag);
 
         return tag;
     }
@@ -71,29 +74,22 @@ public class TileNetworkTransmitter extends TileNode {
         super.read(tag);
 
         readItems(networkCard, 0, tag);
-        readItems(upgrade, 1, tag);
     }
 
     @Override
     public void writeContainerData(ByteBuf buf) {
         super.writeContainerData(buf);
 
-        buf.writeBoolean(receiver != null);
-
-        if (receiver != null) {
-            buf.writeLong(receiver.toLong());
-        }
+        buf.writeInt((receiver != null && isInSameDimension()) ? getDistance() : -1);
+        buf.writeBoolean(isInSameDimension());
     }
 
     @Override
     public void readContainerData(ByteBuf buf) {
         super.readContainerData(buf);
 
-        if (buf.readBoolean()) {
-            receiver = BlockPos.fromLong(buf.readLong());
-        } else {
-            receiver = null;
-        }
+        distance = buf.readInt();
+        inSameDimension = buf.readBoolean();
     }
 
     @Override
@@ -106,10 +102,6 @@ public class TileNetworkTransmitter extends TileNode {
         return ContainerNetworkTransmitter.class;
     }
 
-    public ItemHandlerBasic getUpgrade() {
-        return upgrade;
-    }
-
     public ItemHandlerBasic getNetworkCard() {
         return networkCard;
     }
@@ -119,10 +111,18 @@ public class TileNetworkTransmitter extends TileNode {
     }
 
     public int getDistance() {
+        if (worldObj.isRemote) {
+            return distance;
+        }
+
         if (receiver == null) {
             return 0;
         }
 
         return (int) Math.sqrt(Math.pow(pos.getX() - receiver.getX(), 2) + Math.pow(pos.getY() - receiver.getY(), 2) + Math.pow(pos.getZ() - receiver.getZ(), 2));
+    }
+
+    public boolean isInSameDimension() {
+        return worldObj.isRemote ? inSameDimension : worldObj.provider.getDimension() == receiverDimension;
     }
 }

@@ -46,7 +46,10 @@ import refinedstorage.container.ContainerGrid;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.network.MessageGridDelta;
 import refinedstorage.network.MessageGridUpdate;
-import refinedstorage.tile.*;
+import refinedstorage.tile.ISynchronizedContainer;
+import refinedstorage.tile.TileBase;
+import refinedstorage.tile.TileCrafter;
+import refinedstorage.tile.TileNetworkTransmitter;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
 import refinedstorage.tile.externalstorage.ExternalStorage;
@@ -424,15 +427,15 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             newNodes.add(node);
             newNodesPos.add(node.getPosition());
 
-            if (node.canConduct()) {
-                if (tile instanceof TileNetworkTransmitter) {
-                    BlockPos receiver = ((TileNetworkTransmitter) tile).getReceiver();
+            if (tile instanceof TileNetworkTransmitter) {
+                BlockPos receiver = ((TileNetworkTransmitter) tile).getReceiver();
 
-                    if (receiver != null && worldObj.getTileEntity(receiver) instanceof TileNetworkReceiver && checked.add(receiver)) {
-                        toCheck.add(receiver);
-                    }
+                if (((TileNetworkTransmitter) tile).canTransmit() && checked.add(receiver)) {
+                    toCheck.add(receiver);
                 }
+            }
 
+            if (node.canConduct()) {
                 for (EnumFacing facing : EnumFacing.VALUES) {
                     BlockPos pos = currentPos.offset(facing);
 
