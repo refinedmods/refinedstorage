@@ -11,6 +11,7 @@
 - Added config option to set the base energy usage of the Controller (default is 0)
 - Added Grid Filter item to filter items in any Grid
 - Added support for processing patterns with big stacksizes
+- Added Network Transmitter, Network Receiver and Network Cards
 - The slot where the Wireless Grid is in in the Wireless Grid GUI is now disabled, so the item can't be thrown out of the inventory by accident
 - Changed Relay recipe to use redstone torch instead of Basic Processor
 - Placed machines now face the block they are placed on, like hoppers
