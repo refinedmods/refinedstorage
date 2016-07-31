@@ -28,7 +28,7 @@ public class TileNetworkTransmitter extends TileNode {
             }
 
             if (network != null) {
-                network.rebuildNodes();
+                network.getNodeGraph().rebuild(network.getPosition());
             }
         }
     };
@@ -39,7 +39,6 @@ public class TileNetworkTransmitter extends TileNode {
     // Used clientside
     private int distance;
     private boolean inSameDimension;
-    private boolean receiverValid;
 
     public TileNetworkTransmitter() {
         rebuildOnUpdateChange = true;
@@ -50,10 +49,7 @@ public class TileNetworkTransmitter extends TileNode {
     }
 
     public boolean canTransmit() {
-        return canUpdate()
-            && receiver != null
-            && isInSameDimension()
-            && isReceiverValid();
+        return canUpdate() && receiver != null;
     }
 
     @Override
@@ -78,7 +74,6 @@ public class TileNetworkTransmitter extends TileNode {
 
         buf.writeInt((receiver != null && isInSameDimension()) ? getDistance() : -1);
         buf.writeBoolean(isInSameDimension());
-        buf.writeBoolean(isReceiverValid());
     }
 
     @Override
@@ -87,7 +82,6 @@ public class TileNetworkTransmitter extends TileNode {
 
         distance = buf.readInt();
         inSameDimension = buf.readBoolean();
-        receiverValid = buf.readBoolean();
     }
 
     @Override
@@ -108,6 +102,10 @@ public class TileNetworkTransmitter extends TileNode {
         return receiver;
     }
 
+    public int getReceiverDimension() {
+        return receiverDimension;
+    }
+
     public int getDistance() {
         if (worldObj.isRemote) {
             return distance;
@@ -122,9 +120,5 @@ public class TileNetworkTransmitter extends TileNode {
 
     public boolean isInSameDimension() {
         return worldObj.isRemote ? inSameDimension : worldObj.provider.getDimension() == receiverDimension;
-    }
-
-    public boolean isReceiverValid() {
-        return worldObj.isRemote ? receiverValid : (receiver != null && isInSameDimension() && worldObj.getTileEntity(receiver) instanceof TileNetworkReceiver);
     }
 }

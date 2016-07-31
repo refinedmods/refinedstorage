@@ -13,7 +13,6 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
@@ -26,10 +25,7 @@ import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.autocrafting.ICraftingTask;
-import refinedstorage.api.network.IGridHandler;
-import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.api.network.INetworkNode;
-import refinedstorage.api.network.IWirelessGridHandler;
+import refinedstorage.api.network.*;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.api.storage.IGroupedStorage;
 import refinedstorage.api.storage.IStorage;
@@ -37,6 +33,7 @@ import refinedstorage.apiimpl.autocrafting.BasicCraftingTask;
 import refinedstorage.apiimpl.autocrafting.CraftingPattern;
 import refinedstorage.apiimpl.autocrafting.ProcessingCraftingTask;
 import refinedstorage.apiimpl.network.GridHandler;
+import refinedstorage.apiimpl.network.NetworkNodeGraph;
 import refinedstorage.apiimpl.network.WirelessGridHandler;
 import refinedstorage.apiimpl.storage.GroupedStorage;
 import refinedstorage.block.BlockController;
@@ -49,7 +46,6 @@ import refinedstorage.network.MessageGridUpdate;
 import refinedstorage.tile.ISynchronizedContainer;
 import refinedstorage.tile.TileBase;
 import refinedstorage.tile.TileCrafter;
-import refinedstorage.tile.TileNetworkTransmitter;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
 import refinedstorage.tile.externalstorage.ExternalStorage;
@@ -93,8 +89,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         }
     };
 
-    private List<INetworkNode> nodes = new ArrayList<INetworkNode>();
-    private Set<BlockPos> nodesPos = new HashSet<BlockPos>();
+    private INetworkNodeGraph nodeGraph = new NetworkNodeGraph(this);
 
     private List<ICraftingPattern> patterns = new ArrayList<ICraftingPattern>();
 
@@ -137,6 +132,11 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public boolean canRun() {
         return energy.getEnergyStored() > 0 && redstoneMode.isEnabled(worldObj, pos);
+    }
+
+    @Override
+    public INetworkNodeGraph getNodeGraph() {
+        return nodeGraph;
     }
 
     @Override
@@ -189,7 +189,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             if (couldRun != canRun()) {
                 couldRun = canRun();
 
-                rebuildNodes();
+                nodeGraph.rebuild(pos);
             }
 
             if (getEnergyScaledForDisplay() != lastEnergyDisplay) {
@@ -224,17 +224,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         }
     }
 
-    public void disconnectAll() {
-        for (INetworkNode node : nodes) {
-            if (node.isConnected()) {
-                node.onDisconnected(this);
-            }
-        }
-
-        nodes.clear();
-        nodesPos.clear();
-    }
-
     @Override
     public void invalidate() {
         super.invalidate();
@@ -242,11 +231,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         if (IC2Energy != null) {
             IC2Energy.invalidate();
         }
-    }
-
-    @Override
-    public List<INetworkNode> getNodes() {
-        return nodes;
     }
 
     public List<ClientNode> getClientNodes() {
@@ -364,7 +348,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     public void rebuildPatterns() {
         patterns.clear();
 
-        for (INetworkNode node : nodes) {
+        for (INetworkNode node : nodeGraph.all()) {
             if (node instanceof TileCrafter && node.canUpdate()) {
                 TileCrafter crafter = (TileCrafter) node;
 
@@ -385,84 +369,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         }
 
         storage.rebuild();
-    }
-
-    @Override
-    public void rebuildNodes() {
-        if (!canRun()) {
-            if (!nodes.isEmpty()) {
-                disconnectAll();
-            }
-
-            return;
-        }
-
-        List<INetworkNode> newNodes = new ArrayList<INetworkNode>();
-        Set<BlockPos> newNodesPos = new HashSet<BlockPos>();
-
-        Set<BlockPos> checked = new HashSet<BlockPos>();
-        Queue<BlockPos> toCheck = new ArrayDeque<BlockPos>();
-
-        for (EnumFacing facing : EnumFacing.VALUES) {
-            BlockPos pos = this.pos.offset(facing);
-
-            checked.add(pos);
-            toCheck.add(pos);
-        }
-
-        BlockPos currentPos;
-        while ((currentPos = toCheck.poll()) != null) {
-            TileEntity tile = worldObj.getTileEntity(currentPos);
-
-            if (tile instanceof TileController && !pos.equals(tile.getPos())) {
-                worldObj.createExplosion(null, tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), 4.5f, true);
-            }
-
-            if (!(tile instanceof INetworkNode)) {
-                continue;
-            }
-
-            INetworkNode node = (INetworkNode) tile;
-
-            newNodes.add(node);
-            newNodesPos.add(node.getPosition());
-
-            if (tile instanceof TileNetworkTransmitter) {
-                BlockPos receiver = ((TileNetworkTransmitter) tile).getReceiver();
-
-                if (((TileNetworkTransmitter) tile).canTransmit() && checked.add(receiver)) {
-                    toCheck.add(receiver);
-                }
-            }
-
-            if (node.canConduct()) {
-                for (EnumFacing facing : EnumFacing.VALUES) {
-                    BlockPos pos = currentPos.offset(facing);
-
-                    if (checked.add(pos)) {
-                        toCheck.add(pos);
-                    }
-                }
-            }
-        }
-
-        List<INetworkNode> oldNodes = new ArrayList<INetworkNode>(nodes);
-        Set<BlockPos> oldNodesPos = new HashSet<BlockPos>(nodesPos);
-
-        this.nodes = newNodes;
-        this.nodesPos = newNodesPos;
-
-        for (INetworkNode newNode : nodes) {
-            if (!oldNodesPos.contains(newNode.getPosition())) {
-                newNode.onConnected(this);
-            }
-        }
-
-        for (INetworkNode oldNode : oldNodes) {
-            if (!nodesPos.contains(oldNode.getPosition())) {
-                oldNode.onDisconnected(this);
-            }
-        }
     }
 
     @Override
@@ -707,7 +613,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         if (!worldObj.isRemote) {
             int usage = RefinedStorage.INSTANCE.controllerBaseUsage;
 
-            for (INetworkNode node : nodes) {
+            for (INetworkNode node : nodeGraph.all()) {
                 if (node.canUpdate()) {
                     usage += node.getEnergyUsage();
                 }
@@ -759,7 +665,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
         List<ClientNode> clientNodes = new ArrayList<ClientNode>();
 
-        for (INetworkNode node : nodes) {
+        for (INetworkNode node : nodeGraph.all()) {
             if (node.canUpdate()) {
                 IBlockState state = worldObj.getBlockState(node.getPosition());
 

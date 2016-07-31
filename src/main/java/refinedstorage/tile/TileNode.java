@@ -45,7 +45,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, ISynchr
                 onConnectionChange(network, update);
 
                 if (rebuildOnUpdateChange) {
-                    network.rebuildNodes();
+                    network.getNodeGraph().rebuild(network.getPosition());
                 }
             }
 

@@ -63,7 +63,7 @@ public abstract class BlockNode extends BlockBase {
                 TileEntity tile = world.getTileEntity(pos.offset(facing));
 
                 if (tile instanceof TileNode && ((TileNode) tile).isConnected()) {
-                    ((TileNode) tile).getNetwork().rebuildNodes();
+                    ((TileNode) tile).getNetwork().getNodeGraph().rebuild(((TileNode) tile).getNetwork().getPosition());
 
                     break;
                 }
@@ -86,7 +86,7 @@ public abstract class BlockNode extends BlockBase {
         super.breakBlock(world, pos, state);
 
         if (network != null) {
-            network.rebuildNodes();
+            network.getNodeGraph().rebuild(network.getPosition());
         }
     }
 }

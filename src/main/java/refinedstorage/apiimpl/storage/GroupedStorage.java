@@ -30,7 +30,7 @@ public class GroupedStorage implements IGroupedStorage {
     public void rebuild() {
         storages.clear();
 
-        for (INetworkNode node : network.getNodes()) {
+        for (INetworkNode node : network.getNodeGraph().all()) {
             if (node.canUpdate() && node instanceof IStorageProvider) {
                 ((IStorageProvider) node).addStorages(storages);
             }

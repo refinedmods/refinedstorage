@@ -38,9 +38,9 @@ public interface INetworkMaster {
     boolean canRun();
 
     /**
-     * @return A list with all the network nodes
+     * @return A graph of connected nodes to this network
      */
-    List<INetworkNode> getNodes();
+    INetworkNodeGraph getNodeGraph();
 
     /**
      * @return The {@link IGridHandler} for this network
@@ -100,11 +100,6 @@ public interface INetworkMaster {
      * Rebuilds the pattern list.
      */
     void rebuildPatterns();
-
-    /**
-     * Rebuilds the network node list.
-     */
-    void rebuildNodes();
 
     /**
      * Returns crafting patterns from an item stack.

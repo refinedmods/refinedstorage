@@ -37,7 +37,7 @@ public class WirelessGridHandler implements IWirelessGridHandler {
     public boolean onOpen(EntityPlayer player, EnumHand hand) {
         boolean inRange = false;
 
-        for (INetworkNode node : network.getNodes()) {
+        for (INetworkNode node : network.getNodeGraph().all()) {
             if (node instanceof IWirelessTransmitter) {
                 IWirelessTransmitter transmitter = (IWirelessTransmitter) node;
 

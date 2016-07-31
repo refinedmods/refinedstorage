@@ -104,7 +104,7 @@ public class BlockController extends BlockBase {
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
         if (!world.isRemote) {
-            ((TileController) world.getTileEntity(pos)).disconnectAll();
+            ((TileController) world.getTileEntity(pos)).getNodeGraph().disconnectAll();
         }
 
         super.breakBlock(world, pos, state);
@@ -115,7 +115,7 @@ public class BlockController extends BlockBase {
         super.neighborChanged(state, world, pos, block);
 
         if (!world.isRemote) {
-            ((TileController) world.getTileEntity(pos)).rebuildNodes();
+            ((TileController) world.getTileEntity(pos)).getNodeGraph().rebuild(pos);
         }
     }
 
