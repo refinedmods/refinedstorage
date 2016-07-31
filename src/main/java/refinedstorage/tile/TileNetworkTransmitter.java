@@ -125,6 +125,6 @@ public class TileNetworkTransmitter extends TileNode {
     }
 
     public boolean isReceiverValid() {
-        return worldObj.isRemote ? receiverValid : (receiver != null && isInSameDimension() && worldObj.getTileEntity(receiver) instanceof TileNetworkReceiver && ((TileNetworkReceiver) worldObj.getTileEntity(receiver)).canUpdate());
+        return worldObj.isRemote ? receiverValid : (receiver != null && isInSameDimension() && worldObj.getTileEntity(receiver) instanceof TileNetworkReceiver);
     }
 }

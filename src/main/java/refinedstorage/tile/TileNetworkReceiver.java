@@ -2,13 +2,9 @@ package refinedstorage.tile;
 
 import net.minecraft.inventory.Container;
 import refinedstorage.RefinedStorage;
-import refinedstorage.container.ContainerNetworkReceiver;
+import refinedstorage.tile.config.RedstoneMode;
 
 public class TileNetworkReceiver extends TileNode {
-    public TileNetworkReceiver() {
-        rebuildOnUpdateChange = true;
-    }
-
     @Override
     public void updateNode() {
     }
@@ -20,6 +16,11 @@ public class TileNetworkReceiver extends TileNode {
 
     @Override
     public Class<? extends Container> getContainer() {
-        return ContainerNetworkReceiver.class;
+        return null;
+    }
+
+    @Override
+    public void setRedstoneMode(RedstoneMode mode) {
+        // NO OP
     }
 }
