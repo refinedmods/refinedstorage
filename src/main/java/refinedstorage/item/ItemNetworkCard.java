@@ -22,6 +22,8 @@ public class ItemNetworkCard extends ItemBase {
 
     public ItemNetworkCard() {
         super("network_card");
+
+        setMaxStackSize(1);
     }
 
     @Override
