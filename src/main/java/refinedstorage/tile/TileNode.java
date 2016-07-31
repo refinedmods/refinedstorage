@@ -17,6 +17,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, ISynchr
     private boolean active;
     private boolean update;
 
+    protected boolean rebuildOnUpdateChange;
     protected boolean connected;
     protected INetworkMaster network;
 
@@ -42,6 +43,10 @@ public abstract class TileNode extends TileBase implements INetworkNode, ISynchr
                 update = canUpdate();
 
                 onConnectionChange(network, update);
+
+                if (rebuildOnUpdateChange) {
+                    network.rebuildNodes();
+                }
             }
 
             if (active != isActive() && canSendConnectivityUpdate()) {

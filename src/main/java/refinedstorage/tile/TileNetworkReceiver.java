@@ -4,6 +4,10 @@ import net.minecraft.inventory.Container;
 import refinedstorage.RefinedStorage;
 
 public class TileNetworkReceiver extends TileNode {
+    public TileNetworkReceiver() {
+        rebuildOnUpdateChange = true;
+    }
+
     @Override
     public void updateNode() {
     }

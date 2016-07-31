@@ -6,10 +6,10 @@ import refinedstorage.container.ContainerRelay;
 import refinedstorage.tile.config.RedstoneMode;
 
 public class TileRelay extends TileNode {
-    private boolean couldUpdate;
-
     public TileRelay() {
         setRedstoneMode(RedstoneMode.LOW);
+
+        rebuildOnUpdateChange = true;
     }
 
     @Override
@@ -19,16 +19,6 @@ public class TileRelay extends TileNode {
 
     @Override
     public void updateNode() {
-    }
-
-    public void update() {
-        super.update();
-
-        if (network != null && couldUpdate != canUpdate()) {
-            couldUpdate = canUpdate();
-
-            network.rebuildNodes();
-        }
     }
 
     @Override

@@ -36,28 +36,24 @@ public class TileNetworkTransmitter extends TileNode {
     private BlockPos receiver;
     private int receiverDimension;
 
-    private boolean couldUpdate;
-
     // Used clientside
     private int distance;
     private boolean inSameDimension;
+
+    public TileNetworkTransmitter() {
+        rebuildOnUpdateChange = true;
+    }
 
     @Override
     public void updateNode() {
     }
 
-    public void update() {
-        super.update();
-
-        if (network != null && couldUpdate != canUpdate()) {
-            couldUpdate = canUpdate();
-
-            network.rebuildNodes();
-        }
-    }
-
     public boolean canTransmit() {
-        return receiver != null && worldObj.getTileEntity(receiver) instanceof TileNetworkReceiver && isInSameDimension();
+        return canUpdate()
+            && receiver != null
+            && isInSameDimension()
+            && worldObj.getTileEntity(receiver) instanceof TileNetworkReceiver
+            && ((TileNetworkReceiver) worldObj.getTileEntity(receiver)).canUpdate();
     }
 
     @Override
