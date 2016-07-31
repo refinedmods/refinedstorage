@@ -5,6 +5,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
+import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.container.ContainerNetworkTransmitter;
 import refinedstorage.inventory.ItemHandlerBasic;
@@ -24,14 +25,35 @@ public class TileNetworkTransmitter extends TileNode {
             } else {
                 receiver = ItemNetworkCard.getReceiver(card);
             }
+
+            if (network != null) {
+                network.rebuildNodes();
+            }
         }
     };
     private ItemHandlerBasic upgrade = new ItemHandlerBasic(1, this);
 
     private BlockPos receiver;
 
+    private boolean couldUpdate;
+
     @Override
     public void updateNode() {
+    }
+
+    public void update() {
+        super.update();
+
+        if (network != null && couldUpdate != canUpdate()) {
+            couldUpdate = canUpdate();
+
+            network.rebuildNodes();
+        }
+    }
+
+    @Override
+    public boolean canConduct() {
+        return canUpdate();
     }
 
     @Override
@@ -76,7 +98,7 @@ public class TileNetworkTransmitter extends TileNode {
 
     @Override
     public int getEnergyUsage() {
-        return 0;
+        return RefinedStorage.INSTANCE.networkTransmitterUsage + (int) Math.ceil(RefinedStorage.INSTANCE.networkTransmitterPerBlockUsage * getDistance());
     }
 
     @Override

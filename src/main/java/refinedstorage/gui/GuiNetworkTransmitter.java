@@ -41,7 +41,7 @@ public class GuiNetworkTransmitter extends GuiBase {
             distance = t("gui.refinedstorage:network_transmitter.distance", networkTransmitter.getDistance());
         }
 
-        drawString(50, 24, distance);
+        drawString(51, 24, distance);
         drawString(7, 42, t("container.inventory"));
     }
 }

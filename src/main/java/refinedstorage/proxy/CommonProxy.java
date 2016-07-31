@@ -482,6 +482,40 @@ public class CommonProxy {
             'P', new ItemStack(Items.PAPER),
             'H', new ItemStack(Blocks.HOPPER)
         );
+
+        // Network Card
+        GameRegistry.addShapedRecipe(new ItemStack(RefinedStorageItems.NETWORK_CARD),
+            "EEE",
+            "PAP",
+            "EEE",
+            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+            'P', new ItemStack(Items.PAPER),
+            'A', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)
+        );
+
+        // Network Transmitter
+        GameRegistry.addShapedRecipe(new ItemStack(RefinedStorageBlocks.NETWORK_TRANSMITTER),
+            "EEE",
+            "CMD",
+            "AAA",
+            'E', new ItemStack(Items.ENDER_PEARL),
+            'C', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
+            'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
+            'D', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
+            'A', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)
+        );
+
+        // Network Receiver
+        GameRegistry.addShapedRecipe(new ItemStack(RefinedStorageBlocks.NETWORK_RECEIVER),
+            "AAA",
+            "CMD",
+            "EEE",
+            'E', new ItemStack(Items.ENDER_PEARL),
+            'C', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
+            'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
+            'D', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
+            'A', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)
+        );
     }
 
     public void init(FMLInitializationEvent e) {

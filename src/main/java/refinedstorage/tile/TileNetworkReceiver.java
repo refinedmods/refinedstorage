@@ -1,6 +1,7 @@
 package refinedstorage.tile;
 
 import net.minecraft.inventory.Container;
+import refinedstorage.RefinedStorage;
 
 public class TileNetworkReceiver extends TileNode {
     @Override
@@ -9,7 +10,7 @@ public class TileNetworkReceiver extends TileNode {
 
     @Override
     public int getEnergyUsage() {
-        return 0;
+        return RefinedStorage.INSTANCE.networkReceiverUsage;
     }
 
     @Override
