@@ -62,7 +62,7 @@ public class ClientProxy extends CommonProxy {
             new ResourceLocation("refinedstorage:range_upgrade"),
             new ResourceLocation("refinedstorage:speed_upgrade"),
             new ResourceLocation("refinedstorage:stack_upgrade"),
-            new ResourceLocation("refinedstorage:interdimension_upgrade")
+            new ResourceLocation("refinedstorage:interdimensional_upgrade")
         );
 
         // Items
@@ -103,7 +103,7 @@ public class ClientProxy extends CommonProxy {
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED, new ModelResourceLocation("refinedstorage:speed_upgrade", "inventory"));
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_CRAFTING, new ModelResourceLocation("refinedstorage:crafting_upgrade", "inventory"));
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_STACK, new ModelResourceLocation("refinedstorage:stack_upgrade", "inventory"));
-        ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_INTERDIMENSION, new ModelResourceLocation("refinedstorage:interdimension_upgrade", "inventory"));
+        ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_INTERDIMENSIONAL, new ModelResourceLocation("refinedstorage:interdimensional_upgrade", "inventory"));
 
         // Blocks
         ModelLoader.setCustomStateMapper(RefinedStorageBlocks.GRID, (new StateMap.Builder())

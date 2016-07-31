@@ -14,7 +14,7 @@ public class ItemUpgrade extends ItemBase {
     public static final int TYPE_SPEED = 2;
     public static final int TYPE_CRAFTING = 3;
     public static final int TYPE_STACK = 4;
-    public static final int TYPE_INTERDIMENSION = 5;
+    public static final int TYPE_INTERDIMENSIONAL = 5;
 
     public ItemUpgrade() {
         super("upgrade");
@@ -41,8 +41,8 @@ public class ItemUpgrade extends ItemBase {
                 return RefinedStorage.INSTANCE.craftingUpgradeUsage;
             case TYPE_STACK:
                 return RefinedStorage.INSTANCE.stackUpgradeUsage;
-            case TYPE_INTERDIMENSION:
-                return RefinedStorage.INSTANCE.interdimensionUpgradeUsage;
+            case TYPE_INTERDIMENSIONAL:
+                return RefinedStorage.INSTANCE.interdimensionalUpgradeUsage;
             default:
                 return 0;
         }
@@ -56,7 +56,7 @@ public class ItemUpgrade extends ItemBase {
                 return new ItemStack(Items.SUGAR);
             case ItemUpgrade.TYPE_CRAFTING:
                 return new ItemStack(Blocks.CRAFTING_TABLE);
-            case ItemUpgrade.TYPE_INTERDIMENSION:
+            case ItemUpgrade.TYPE_INTERDIMENSIONAL:
                 return new ItemStack(Items.NETHER_STAR);
             default:
                 return null;

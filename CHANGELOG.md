@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 0.8.14
+**Features**
+- Added Interdimensional Upgrade so the Network Transmitter can work over different dimensions
+
 ### 0.8.13
 **Bugfixes**
 - Fixed rendering crash with Disk Drive

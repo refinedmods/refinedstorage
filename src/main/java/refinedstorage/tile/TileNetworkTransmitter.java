@@ -15,7 +15,17 @@ import refinedstorage.item.ItemNetworkCard;
 import refinedstorage.item.ItemUpgrade;
 
 public class TileNetworkTransmitter extends TileNode {
-    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(1, this, ItemUpgrade.TYPE_INTERDIMENSION);
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(1, this, ItemUpgrade.TYPE_INTERDIMENSIONAL) {
+        @Override
+        protected void onContentsChanged(int slot) {
+            super.onContentsChanged(slot);
+
+            if (network != null) {
+                network.getNodeGraph().rebuild(network.getPosition());
+            }
+        }
+    };
+
     private ItemHandlerBasic networkCard = new ItemHandlerBasic(1, this, new ItemValidatorBasic(RefinedStorageItems.NETWORK_CARD)) {
         @Override
         protected void onContentsChanged(int slot) {
@@ -41,7 +51,7 @@ public class TileNetworkTransmitter extends TileNode {
 
     // Used clientside
     private int distance;
-    private boolean inSameDimension;
+    private boolean dimensionSupported;
 
     public TileNetworkTransmitter() {
         rebuildOnUpdateChange = true;
@@ -52,7 +62,7 @@ public class TileNetworkTransmitter extends TileNode {
     }
 
     public boolean canTransmit() {
-        return canUpdate() && receiver != null;
+        return canUpdate() && receiver != null && isDimensionSupported();
     }
 
     @Override
@@ -77,8 +87,9 @@ public class TileNetworkTransmitter extends TileNode {
     public void writeContainerData(ByteBuf buf) {
         super.writeContainerData(buf);
 
-        buf.writeInt((receiver != null && isInSameDimension()) ? getDistance() : -1);
-        buf.writeBoolean(isInSameDimension());
+        buf.writeInt((receiver != null && isSameDimension()) ? getDistance() : -1);
+        buf.writeInt(receiverDimension);
+        buf.writeBoolean(isDimensionSupported());
     }
 
     @Override
@@ -86,12 +97,13 @@ public class TileNetworkTransmitter extends TileNode {
         super.readContainerData(buf);
 
         distance = buf.readInt();
-        inSameDimension = buf.readBoolean();
+        receiverDimension = buf.readInt();
+        dimensionSupported = buf.readBoolean();
     }
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.networkTransmitterUsage + (int) Math.ceil(RefinedStorage.INSTANCE.networkTransmitterPerBlockUsage * getDistance());
+        return RefinedStorage.INSTANCE.networkTransmitterUsage + (isSameDimension() ? (int) Math.ceil(RefinedStorage.INSTANCE.networkTransmitterPerBlockUsage * getDistance()) : 0) + upgrades.getEnergyUsage();
     }
 
     @Override
@@ -127,7 +139,11 @@ public class TileNetworkTransmitter extends TileNode {
         return (int) Math.sqrt(Math.pow(pos.getX() - receiver.getX(), 2) + Math.pow(pos.getY() - receiver.getY(), 2) + Math.pow(pos.getZ() - receiver.getZ(), 2));
     }
 
-    public boolean isInSameDimension() {
-        return worldObj.isRemote ? inSameDimension : worldObj.provider.getDimension() == receiverDimension;
+    public boolean isSameDimension() {
+        return worldObj.provider.getDimension() == receiverDimension;
+    }
+
+    public boolean isDimensionSupported() {
+        return worldObj.isRemote ? dimensionSupported : (isSameDimension() || upgrades.hasUpgrade(ItemUpgrade.TYPE_INTERDIMENSIONAL));
     }
 }

@@ -72,7 +72,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
                 final TileNetworkTransmitter transmitter = (TileNetworkTransmitter) tile;
 
                 if (transmitter.canTransmit()) {
-                    if (!transmitter.isInSameDimension()) {
+                    if (!transmitter.isSameDimension()) {
                         NetworkNodeGraph dimensionGraph = new NetworkNodeGraph(controller) {
                             @Override
                             public World getWorld() {
