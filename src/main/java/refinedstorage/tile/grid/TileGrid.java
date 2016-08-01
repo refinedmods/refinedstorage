@@ -387,7 +387,6 @@ public class TileGrid extends TileNode implements IGrid {
     public void writeContainerData(ByteBuf buf) {
         super.writeContainerData(buf);
 
-        buf.writeBoolean(isConnected());
         buf.writeInt(viewType);
         buf.writeInt(sortingDirection);
         buf.writeInt(sortingType);
@@ -398,7 +397,6 @@ public class TileGrid extends TileNode implements IGrid {
     public void readContainerData(ByteBuf buf) {
         super.readContainerData(buf);
 
-        connected = buf.readBoolean();
         viewType = buf.readInt();
         sortingDirection = buf.readInt();
         sortingType = buf.readInt();
