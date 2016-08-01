@@ -68,5 +68,5 @@ public interface INetworkNode {
     /**
      * @return The world where this node is in
      */
-    World getWorld();
+    World getNodeWorld();
 }

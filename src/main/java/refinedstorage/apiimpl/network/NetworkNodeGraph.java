@@ -118,13 +118,13 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
         if (notify) {
             for (INetworkNode newNode : nodes) {
-                if (!oldNodeHashes.contains(hashNode(newNode.getWorld(), newNode))) {
+                if (!oldNodeHashes.contains(hashNode(newNode.getNodeWorld(), newNode))) {
                     newNode.onConnected(controller);
                 }
             }
 
             for (INetworkNode oldNode : oldNodes) {
-                if (!nodeHashes.contains(hashNode(oldNode.getWorld(), oldNode))) {
+                if (!nodeHashes.contains(hashNode(oldNode.getNodeWorld(), oldNode))) {
                     oldNode.onDisconnected(controller);
                 }
             }
