@@ -16,14 +16,20 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
     private TileController controller;
 
     private List<INetworkNode> nodes = new ArrayList<INetworkNode>();
-    private Set<BlockPos> nodesPos = new HashSet<BlockPos>();
+    private Set<Integer> nodeHashes = new HashSet<Integer>();
 
     public NetworkNodeGraph(TileController controller) {
         this.controller = controller;
     }
 
+    private int hashNode(World world, INetworkNode node) {
+        int result = node.getPosition().hashCode();
+        result = 31 * result + world.provider.getDimension();
+        return result;
+    }
+
     @Override
-    public void rebuild(BlockPos start) {
+    public void rebuild(BlockPos start, boolean notify) {
         if (!controller.canRun()) {
             if (!nodes.isEmpty()) {
                 disconnectAll();
@@ -35,8 +41,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
         World world = getWorld();
 
         List<INetworkNode> newNodes = new ArrayList<INetworkNode>();
-        List<INetworkNode> interDimensionalNodes = new ArrayList<INetworkNode>();
-        Set<BlockPos> newNodesPos = new HashSet<BlockPos>();
+        Set<Integer> newNodeHashes = new HashSet<Integer>();
 
         Set<BlockPos> checked = new HashSet<BlockPos>();
         Queue<BlockPos> toCheck = new ArrayDeque<BlockPos>();
@@ -66,7 +71,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
             INetworkNode node = (INetworkNode) tile;
 
             newNodes.add(node);
-            newNodesPos.add(node.getPosition());
+            newNodeHashes.add(hashNode(world, node));
 
             if (tile instanceof TileNetworkTransmitter) {
                 final TileNetworkTransmitter transmitter = (TileNetworkTransmitter) tile;
@@ -80,9 +85,10 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
                             }
                         };
 
-                        dimensionGraph.rebuild(transmitter.getReceiver());
+                        dimensionGraph.rebuild(transmitter.getReceiver(), false);
 
-                        interDimensionalNodes.addAll(dimensionGraph.all());
+                        newNodes.addAll(dimensionGraph.all());
+                        newNodeHashes.addAll(dimensionGraph.allHashes());
                     } else {
                         BlockPos receiver = transmitter.getReceiver();
 
@@ -105,29 +111,34 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
         }
 
         List<INetworkNode> oldNodes = new ArrayList<INetworkNode>(nodes);
-        Set<BlockPos> oldNodesPos = new HashSet<BlockPos>(nodesPos);
+        Set<Integer> oldNodeHashes = new HashSet<Integer>(nodeHashes);
 
         this.nodes = newNodes;
-        this.nodesPos = newNodesPos;
+        this.nodeHashes = newNodeHashes;
 
-        for (INetworkNode newNode : nodes) {
-            if (!oldNodesPos.contains(newNode.getPosition())) {
-                newNode.onConnected(controller);
+        if (notify) {
+            for (INetworkNode newNode : nodes) {
+                if (!oldNodeHashes.contains(hashNode(newNode.getWorld(), newNode))) {
+                    newNode.onConnected(controller);
+                }
+            }
+
+            for (INetworkNode oldNode : oldNodes) {
+                if (!nodeHashes.contains(hashNode(oldNode.getWorld(), oldNode))) {
+                    oldNode.onDisconnected(controller);
+                }
             }
         }
-
-        for (INetworkNode oldNode : oldNodes) {
-            if (!nodesPos.contains(oldNode.getPosition())) {
-                oldNode.onDisconnected(controller);
-            }
-        }
-
-        this.nodes.addAll(interDimensionalNodes);
     }
 
     @Override
     public List<INetworkNode> all() {
         return nodes;
+    }
+
+    @Override
+    public Set<Integer> allHashes() {
+        return nodeHashes;
     }
 
     @Override
@@ -139,7 +150,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
         }
 
         nodes.clear();
-        nodesPos.clear();
+        nodeHashes.clear();
     }
 
     public World getWorld() {

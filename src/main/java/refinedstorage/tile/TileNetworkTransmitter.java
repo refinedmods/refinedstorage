@@ -7,6 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageItems;
+import refinedstorage.apiimpl.network.NetworkUtils;
 import refinedstorage.container.ContainerNetworkTransmitter;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerUpgrade;
@@ -21,7 +22,7 @@ public class TileNetworkTransmitter extends TileNode {
             super.onContentsChanged(slot);
 
             if (network != null) {
-                network.getNodeGraph().rebuild(network.getPosition());
+                NetworkUtils.rebuildGraph(network);
             }
         }
     };
@@ -41,7 +42,7 @@ public class TileNetworkTransmitter extends TileNode {
             }
 
             if (network != null) {
-                network.getNodeGraph().rebuild(network.getPosition());
+                NetworkUtils.rebuildGraph(network);
             }
         }
     };

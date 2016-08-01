@@ -26,6 +26,10 @@ public final class NetworkUtils {
         return getPattern(network, stack) != null;
     }
 
+    public static void rebuildGraph(INetworkMaster network) {
+        network.getNodeGraph().rebuild(network.getPosition(), true);
+    }
+
     public static int getItemStackHashCode(ItemStack stack) {
         return stack.getItem().hashCode() * (stack.getItemDamage() + 1) * (stack.hasTagCompound() ? stack.getTagCompound().hashCode() : 1);
     }

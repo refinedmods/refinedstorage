@@ -6,6 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.INetworkNode;
+import refinedstorage.apiimpl.network.NetworkUtils;
 import refinedstorage.block.BlockNode;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
@@ -45,7 +46,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, ISynchr
                 onConnectionChange(network, update);
 
                 if (rebuildOnUpdateChange) {
-                    network.getNodeGraph().rebuild(network.getPosition());
+                    NetworkUtils.rebuildGraph(network);
                 }
             }
 

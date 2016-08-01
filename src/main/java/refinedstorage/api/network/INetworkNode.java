@@ -1,6 +1,7 @@
 package refinedstorage.api.network;
 
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 /**
  * Represents a node in the storage network.
@@ -63,4 +64,9 @@ public interface INetworkNode {
      * @return The network
      */
     INetworkMaster getNetwork();
+
+    /**
+     * @return The world where this node is in
+     */
+    World getWorld();
 }
