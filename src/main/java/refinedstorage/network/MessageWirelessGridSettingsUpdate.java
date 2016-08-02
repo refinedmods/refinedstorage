@@ -3,13 +3,13 @@ package refinedstorage.network;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import refinedstorage.RefinedStorageItems;
+import refinedstorage.container.ContainerGrid;
+import refinedstorage.tile.grid.IGrid;
 import refinedstorage.tile.grid.TileGrid;
+import refinedstorage.tile.grid.WirelessGrid;
 
 public class MessageWirelessGridSettingsUpdate extends MessageHandlerPlayerToServer<MessageWirelessGridSettingsUpdate> implements IMessage {
-    private int hand;
     private int viewType;
     private int sortingDirection;
     private int sortingType;
@@ -18,8 +18,7 @@ public class MessageWirelessGridSettingsUpdate extends MessageHandlerPlayerToSer
     public MessageWirelessGridSettingsUpdate() {
     }
 
-    public MessageWirelessGridSettingsUpdate(int hand, int viewType, int sortingDirection, int sortingType, int searchBoxMode) {
-        this.hand = hand;
+    public MessageWirelessGridSettingsUpdate(int viewType, int sortingDirection, int sortingType, int searchBoxMode) {
         this.viewType = viewType;
         this.sortingDirection = sortingDirection;
         this.sortingType = sortingType;
@@ -28,7 +27,6 @@ public class MessageWirelessGridSettingsUpdate extends MessageHandlerPlayerToSer
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        hand = buf.readInt();
         viewType = buf.readInt();
         sortingDirection = buf.readInt();
         sortingType = buf.readInt();
@@ -37,7 +35,6 @@ public class MessageWirelessGridSettingsUpdate extends MessageHandlerPlayerToSer
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(hand);
         buf.writeInt(viewType);
         buf.writeInt(sortingDirection);
         buf.writeInt(sortingType);
@@ -46,23 +43,27 @@ public class MessageWirelessGridSettingsUpdate extends MessageHandlerPlayerToSer
 
     @Override
     public void handle(MessageWirelessGridSettingsUpdate message, EntityPlayerMP player) {
-        ItemStack held = player.getHeldItem((message.hand < 0 || message.hand > EnumHand.values().length - 1) ? EnumHand.MAIN_HAND : EnumHand.values()[message.hand]);
+        if (player.openContainer instanceof ContainerGrid) {
+            IGrid grid = ((ContainerGrid) player.openContainer).getGrid();
 
-        if (held != null && held.getItem() == RefinedStorageItems.WIRELESS_GRID && held.getTagCompound() != null) {
-            if (TileGrid.isValidViewType(message.viewType)) {
-                held.getTagCompound().setInteger(TileGrid.NBT_VIEW_TYPE, message.viewType);
-            }
+            if (grid instanceof WirelessGrid) {
+                ItemStack stack = ((WirelessGrid) grid).getStack();
 
-            if (TileGrid.isValidSortingDirection(message.sortingDirection)) {
-                held.getTagCompound().setInteger(TileGrid.NBT_SORTING_DIRECTION, message.sortingDirection);
-            }
+                if (TileGrid.isValidViewType(message.viewType)) {
+                    stack.getTagCompound().setInteger(TileGrid.NBT_VIEW_TYPE, message.viewType);
+                }
 
-            if (TileGrid.isValidSortingType(message.sortingType)) {
-                held.getTagCompound().setInteger(TileGrid.NBT_SORTING_TYPE, message.sortingType);
-            }
+                if (TileGrid.isValidSortingDirection(message.sortingDirection)) {
+                    stack.getTagCompound().setInteger(TileGrid.NBT_SORTING_DIRECTION, message.sortingDirection);
+                }
 
-            if (TileGrid.isValidSearchBoxMode(message.searchBoxMode)) {
-                held.getTagCompound().setInteger(TileGrid.NBT_SEARCH_BOX_MODE, message.searchBoxMode);
+                if (TileGrid.isValidSortingType(message.sortingType)) {
+                    stack.getTagCompound().setInteger(TileGrid.NBT_SORTING_TYPE, message.sortingType);
+                }
+
+                if (TileGrid.isValidSearchBoxMode(message.searchBoxMode)) {
+                    stack.getTagCompound().setInteger(TileGrid.NBT_SEARCH_BOX_MODE, message.searchBoxMode);
+                }
             }
         }
     }

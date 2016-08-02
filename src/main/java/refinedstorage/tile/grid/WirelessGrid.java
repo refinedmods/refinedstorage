@@ -4,7 +4,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
@@ -24,7 +23,6 @@ import java.util.List;
 public class WirelessGrid implements IGrid {
     private World world;
 
-    private EnumHand hand;
     private ItemStack stack;
 
     private BlockPos controller;
@@ -50,11 +48,10 @@ public class WirelessGrid implements IGrid {
         }
     };
 
-    public WirelessGrid(World world, ItemStack stack, EnumHand hand) {
+    public WirelessGrid(World world, ItemStack stack) {
         this.world = world;
 
         this.stack = stack;
-        this.hand = hand;
 
         this.controller = new BlockPos(ItemWirelessGrid.getX(stack), ItemWirelessGrid.getY(stack), ItemWirelessGrid.getZ(stack));
 
@@ -68,6 +65,10 @@ public class WirelessGrid implements IGrid {
                 TileBase.readItems(filter, i, stack.getTagCompound());
             }
         }
+    }
+
+    public ItemStack getStack() {
+        return stack;
     }
 
     @Override
@@ -109,28 +110,28 @@ public class WirelessGrid implements IGrid {
 
     @Override
     public void onViewTypeChanged(int type) {
-        RefinedStorage.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(hand.ordinal(), type, getSortingDirection(), getSortingType(), getSearchBoxMode()));
+        RefinedStorage.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(type, getSortingDirection(), getSortingType(), getSearchBoxMode()));
 
         this.viewType = type;
     }
 
     @Override
     public void onSortingTypeChanged(int type) {
-        RefinedStorage.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(hand.ordinal(), getViewType(), getSortingDirection(), type, getSearchBoxMode()));
+        RefinedStorage.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(getViewType(), getSortingDirection(), type, getSearchBoxMode()));
 
         this.sortingType = type;
     }
 
     @Override
     public void onSortingDirectionChanged(int direction) {
-        RefinedStorage.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(hand.ordinal(), getViewType(), direction, getSortingType(), getSearchBoxMode()));
+        RefinedStorage.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(getViewType(), direction, getSortingType(), getSearchBoxMode()));
 
         this.sortingDirection = direction;
     }
 
     @Override
     public void onSearchBoxModeChanged(int searchBoxMode) {
-        RefinedStorage.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(hand.ordinal(), getViewType(), getSortingDirection(), getSortingType(), searchBoxMode));
+        RefinedStorage.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), searchBoxMode));
 
         this.searchBoxMode = searchBoxMode;
     }

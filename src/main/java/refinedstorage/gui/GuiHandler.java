@@ -57,6 +57,18 @@ public class GuiHandler implements IGuiHandler {
         }
     }
 
+    private WirelessGrid getWirelessGrid(EntityPlayer player, int hand) {
+        return new WirelessGrid(player.worldObj, player.getHeldItem(EnumHand.values()[hand]));
+    }
+
+    private ContainerGrid getWirelessGridContainer(EntityPlayer player, int hand) {
+        return new ContainerGrid(player, getWirelessGrid(player, hand));
+    }
+
+    private ContainerGridFilter getGridFilterContainer(EntityPlayer player, int hand) {
+        return new ContainerGridFilter(player, player.getHeldItem(EnumHand.values()[hand]));
+    }
+
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         if (ID == RefinedStorageGui.WIRELESS_GRID) {
@@ -114,20 +126,6 @@ public class GuiHandler implements IGuiHandler {
             default:
                 return null;
         }
-    }
-
-    private ContainerGridFilter getGridFilterContainer(EntityPlayer player, int hand) {
-        return new ContainerGridFilter(player, player.getHeldItem(EnumHand.values()[hand]));
-    }
-
-    private WirelessGrid getWirelessGrid(EntityPlayer player, int hand) {
-        return new WirelessGrid(player.worldObj, player.getHeldItem(EnumHand.values()[hand]), EnumHand.values()[hand]);
-    }
-
-    private ContainerGrid getWirelessGridContainer(EntityPlayer player, int hand) {
-        WirelessGrid wirelessGrid = getWirelessGrid(player, hand);
-
-        return new ContainerGrid(player, wirelessGrid);
     }
 
     private GuiGrid getWirelessGridGui(EntityPlayer player, int hand) {
