@@ -1,14 +1,20 @@
 package refinedstorage.gui;
 
+import net.minecraftforge.fml.client.config.GuiCheckBox;
 import refinedstorage.container.ContainerGridFilter;
 
 public class GuiGridFilter extends GuiBase {
+    private GuiCheckBox compareDamage;
+    private GuiCheckBox compareNBT;
+
     public GuiGridFilter(ContainerGridFilter container) {
-        super(container, 176, 148);
+        super(container, 176, 152);
     }
 
     @Override
     public void init(int x, int y) {
+        compareDamage = addCheckBox(x + 7, y + 41, t("gui.refinedstorage:grid_filter.compare_damage"), false);
+        compareNBT = addCheckBox(x + 7 + compareDamage.getButtonWidth() + 4, y + 41, t("gui.refinedstorage:grid_filter.compare_nbt"), false);
     }
 
     @Override
@@ -25,6 +31,6 @@ public class GuiGridFilter extends GuiBase {
     @Override
     public void drawForeground(int mouseX, int mouseY) {
         drawString(7, 7, t("gui.refinedstorage:grid_filter"));
-        drawString(7, 55, t("container.inventory"));
+        drawString(7, 58, t("container.inventory"));
     }
 }

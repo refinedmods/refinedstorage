@@ -18,7 +18,7 @@ public class ContainerGridFilter extends ContainerBase {
             addSlotToContainer(new SlotSpecimen(filter, i, 8 + (i * 18), 20));
         }
 
-        addPlayerInventory(8, 61);
+        addPlayerInventory(8, 70);
     }
 
     @Override
