@@ -4,6 +4,9 @@
 **Bugfixes**
 - Fixed issue with IC2 integration causing console spam
 
+**Features**
+- Added German translation by ChillUpX
+
 ### 0.8.15
 **Bugfixes**
 - Fixed server startup crash
