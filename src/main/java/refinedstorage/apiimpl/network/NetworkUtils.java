@@ -6,16 +6,7 @@ import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.storage.CompareUtils;
 
 // @TODO: Move this class to API
-// @TODO: Move IC2-specific stuff to special IC2 integration class, along with the IC2 wrapper class
 public final class NetworkUtils {
-    public static int convertIC2ToRF(double amount) {
-        return amount >= Double.POSITIVE_INFINITY ? Integer.MAX_VALUE : ((int) Math.floor(amount) * 4);
-    }
-
-    public static double convertRFToIC2(int amount) {
-        return Math.floor(amount / 4);
-    }
-
     public static ItemStack extractItem(INetworkMaster network, ItemStack stack, int size) {
         return network.extractItem(stack, size, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
     }

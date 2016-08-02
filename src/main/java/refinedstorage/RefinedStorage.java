@@ -146,10 +146,6 @@ public final class RefinedStorage {
         return Loader.isModLoaded("JEI");
     }
 
-    public static boolean hasIC2() {
-        return Loader.isModLoaded("IC2");
-    }
-
     public static boolean hasTesla() {
         return Loader.isModLoaded("Tesla");
     }

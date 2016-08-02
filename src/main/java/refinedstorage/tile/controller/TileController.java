@@ -41,6 +41,10 @@ import refinedstorage.block.BlockController;
 import refinedstorage.block.EnumControllerType;
 import refinedstorage.container.ContainerController;
 import refinedstorage.container.ContainerGrid;
+import refinedstorage.integration.ic2.IC2EnergyController;
+import refinedstorage.integration.ic2.IC2EnergyControllerNone;
+import refinedstorage.integration.ic2.IC2Integration;
+import refinedstorage.integration.ic2.IIC2EnergyController;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.network.MessageGridDelta;
 import refinedstorage.network.MessageGridUpdate;
@@ -100,7 +104,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     private List<ICraftingTask> craftingTasksToCancel = new ArrayList<ICraftingTask>();
 
     private EnergyStorage energy = new EnergyStorage(RefinedStorage.INSTANCE.controllerCapacity);
-    private IC2Energy IC2Energy;
+    private IIC2EnergyController energyEU;
     private int energyUsage;
 
     private int lastEnergyDisplay;
@@ -115,8 +119,10 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     private List<ClientNode> clientNodes = new ArrayList<ClientNode>();
 
     public TileController() {
-        if (RefinedStorage.hasIC2()) {
-            this.IC2Energy = new IC2Energy(this);
+        if (IC2Integration.isLoaded()) {
+            this.energyEU = new IC2EnergyController(this);
+        } else {
+            this.energyEU = new IC2EnergyControllerNone();
         }
     }
 
@@ -143,9 +149,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public void update() {
         if (!worldObj.isRemote) {
-            if (IC2Energy != null) {
-                IC2Energy.update();
-            }
+            energyEU.update();
 
             if (canRun()) {
                 Collections.sort(storage.getStorages(), sizeComparator);
@@ -227,11 +231,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public void invalidate() {
-        super.invalidate();
+        energyEU.invalidate();
 
-        if (IC2Energy != null) {
-            IC2Energy.invalidate();
-        }
+        super.invalidate();
     }
 
     public List<ClientNode> getClientNodes() {
@@ -250,9 +252,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public void onChunkUnload() {
-        if (IC2Energy != null) {
-            IC2Energy.invalidate();
-        }
+        super.onChunkUnload();
+
+        energyEU.onChunkUnload();
     }
 
     public IGroupedStorage getStorage() {

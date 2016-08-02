@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 0.8.16
+**Bugfixes**
+- Fixed issue with IC2 integration causing console spam
+
 ### 0.8.15
 **Bugfixes**
 - Fixed server startup crash

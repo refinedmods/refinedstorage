@@ -25,14 +25,12 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.common.Optional;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
+import refinedstorage.integration.ic2.IC2Integration;
 import refinedstorage.tile.controller.TileController;
 import refinedstorage.tile.grid.TileGrid;
 
 import javax.annotation.Nullable;
 import java.util.List;
-
-import static refinedstorage.apiimpl.network.NetworkUtils.convertIC2ToRF;
-import static refinedstorage.apiimpl.network.NetworkUtils.convertRFToIC2;
 
 @Optional.InterfaceList({
     @Optional.Interface(iface = "ic2.api.item.ISpecialElectricItem", modid = "IC2"),
@@ -239,25 +237,25 @@ public class ItemWirelessGrid extends ItemEnergyContainer implements ISpecialEle
     @Optional.Method(modid = "IC2")
     @Override
     public double charge(ItemStack stack, double amount, int tier, boolean ignoreTransferLimit, boolean simulate) {
-        return convertRFToIC2(receiveEnergy(stack, convertIC2ToRF(amount), simulate));
+        return IC2Integration.toEU(receiveEnergy(stack, IC2Integration.toRS(amount), simulate));
     }
 
     @Optional.Method(modid = "IC2")
     @Override
     public double discharge(ItemStack stack, double amount, int tier, boolean ignoreTransferLimit, boolean externally, boolean simulate) {
-        return convertRFToIC2(extractEnergy(stack, convertIC2ToRF(amount), simulate));
+        return IC2Integration.toEU(extractEnergy(stack, IC2Integration.toRS(amount), simulate));
     }
 
     @Optional.Method(modid = "IC2")
     @Override
     public double getCharge(ItemStack stack) {
-        return convertRFToIC2(getEnergyStored(stack));
+        return IC2Integration.toEU(getEnergyStored(stack));
     }
 
     @Optional.Method(modid = "IC2")
     @Override
     public double getMaxCharge(ItemStack stack) {
-        return convertRFToIC2(getMaxEnergyStored(stack));
+        return IC2Integration.toEU(getMaxEnergyStored(stack));
     }
 
     @Optional.Method(modid = "IC2")
