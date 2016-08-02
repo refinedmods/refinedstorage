@@ -10,6 +10,7 @@ import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.RefinedStorageItems;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.inventory.ItemHandlerGridFilter;
 
 import java.util.List;
@@ -48,7 +49,7 @@ public class ItemGridFilter extends ItemBase {
     }
 
     public static int getCompare(ItemStack stack) {
-        return (stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_COMPARE)) ? stack.getTagCompound().getInteger(NBT_COMPARE) : 0;
+        return (stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_COMPARE)) ? stack.getTagCompound().getInteger(NBT_COMPARE) : (CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
     }
 
     public static void setCompare(ItemStack stack, int compare) {

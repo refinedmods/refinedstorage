@@ -20,6 +20,7 @@ import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.block.BlockGrid;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
+import refinedstorage.gui.grid.GridFilteredItem;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerGridFilterInGrid;
 import refinedstorage.inventory.ItemValidatorBasic;
@@ -67,7 +68,7 @@ public class TileGrid extends TileNode implements IGrid {
     private InventoryCraftResult result = new InventoryCraftResult();
 
     private ItemHandlerBasic patterns = new ItemHandlerBasic(2, this, new ItemValidatorBasic(RefinedStorageItems.PATTERN));
-    private List<ItemStack> filteredItems = new ArrayList<ItemStack>();
+    private List<GridFilteredItem> filteredItems = new ArrayList<GridFilteredItem>();
     private ItemHandlerGridFilterInGrid filter = new ItemHandlerGridFilterInGrid(filteredItems);
 
     private EnumGridType type;
@@ -137,7 +138,7 @@ public class TileGrid extends TileNode implements IGrid {
     }
 
     @Override
-    public List<ItemStack> getFilteredItems() {
+    public List<GridFilteredItem> getFilteredItems() {
         return filteredItems;
     }
 

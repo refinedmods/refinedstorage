@@ -9,6 +9,7 @@ import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.api.network.IGridHandler;
 import refinedstorage.block.EnumGridType;
+import refinedstorage.gui.grid.GridFilteredItem;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerGridFilterInGrid;
 import refinedstorage.item.ItemWirelessGrid;
@@ -32,7 +33,7 @@ public class WirelessGrid implements IGrid {
     private int sortingDirection;
     private int searchBoxMode;
 
-    private List<ItemStack> filteredItems = new ArrayList<ItemStack>();
+    private List<GridFilteredItem> filteredItems = new ArrayList<GridFilteredItem>();
     private ItemHandlerGridFilterInGrid filter = new ItemHandlerGridFilterInGrid(filteredItems) {
         @Override
         protected void onContentsChanged(int slot) {
@@ -137,7 +138,7 @@ public class WirelessGrid implements IGrid {
     }
 
     @Override
-    public List<ItemStack> getFilteredItems() {
+    public List<GridFilteredItem> getFilteredItems() {
         return filteredItems;
     }
 

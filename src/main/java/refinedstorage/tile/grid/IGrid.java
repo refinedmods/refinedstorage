@@ -1,9 +1,9 @@
 package refinedstorage.tile.grid;
 
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import refinedstorage.api.network.IGridHandler;
 import refinedstorage.block.EnumGridType;
+import refinedstorage.gui.grid.GridFilteredItem;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 
@@ -32,7 +32,7 @@ public interface IGrid {
 
     void onSearchBoxModeChanged(int searchBoxMode);
 
-    List<ItemStack> getFilteredItems();
+    List<GridFilteredItem> getFilteredItems();
 
     ItemHandlerBasic getFilter();
 

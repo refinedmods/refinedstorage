@@ -100,12 +100,12 @@ public class GuiGrid extends GuiBase {
             while (t.hasNext()) {
                 ClientStack stack = t.next();
 
-                List<ItemStack> filteredItems = grid.getFilteredItems();
+                List<GridFilteredItem> filteredItems = grid.getFilteredItems();
 
                 boolean found = filteredItems.isEmpty();
 
-                for (ItemStack item : filteredItems) {
-                    if (CompareUtils.compareStackNoQuantity(stack.getStack(), item)) {
+                for (GridFilteredItem filteredItem : filteredItems) {
+                    if (CompareUtils.compareStack(stack.getStack(), filteredItem.getStack(), filteredItem.getCompare())) {
                         found = true;
 
                         break;
