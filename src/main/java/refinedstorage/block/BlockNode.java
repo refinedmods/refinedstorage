@@ -11,7 +11,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.apiimpl.network.NetworkUtils;
+import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.tile.TileNode;
 
 public abstract class BlockNode extends BlockBase {

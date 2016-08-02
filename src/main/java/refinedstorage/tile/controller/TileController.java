@@ -34,7 +34,6 @@ import refinedstorage.apiimpl.autocrafting.CraftingPattern;
 import refinedstorage.apiimpl.autocrafting.ProcessingCraftingTask;
 import refinedstorage.apiimpl.network.GridHandler;
 import refinedstorage.apiimpl.network.NetworkNodeGraph;
-import refinedstorage.apiimpl.network.NetworkUtils;
 import refinedstorage.apiimpl.network.WirelessGridHandler;
 import refinedstorage.apiimpl.storage.GroupedStorage;
 import refinedstorage.block.BlockController;

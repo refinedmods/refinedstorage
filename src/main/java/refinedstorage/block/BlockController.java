@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageGui;
-import refinedstorage.apiimpl.network.NetworkUtils;
+import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.item.ItemBlockController;
 import refinedstorage.tile.controller.TileController;
 

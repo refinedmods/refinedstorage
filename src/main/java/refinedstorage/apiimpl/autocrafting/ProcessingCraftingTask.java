@@ -8,8 +8,8 @@ import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.api.storage.CompareUtils;
-import refinedstorage.apiimpl.network.NetworkUtils;
 
 public class ProcessingCraftingTask implements ICraftingTask {
     public static final int ID = 1;

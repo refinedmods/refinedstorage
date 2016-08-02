@@ -9,7 +9,7 @@ import net.minecraftforge.common.util.Constants;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.apiimpl.network.NetworkUtils;
+import refinedstorage.api.network.NetworkUtils;
 
 import java.util.ArrayList;
 import java.util.List;

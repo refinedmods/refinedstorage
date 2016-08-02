@@ -8,6 +8,7 @@ import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.GridExtractFlags;
 import refinedstorage.api.network.IGridHandler;
 import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.api.storage.CompareUtils;
 
 public class GridHandler implements IGridHandler {

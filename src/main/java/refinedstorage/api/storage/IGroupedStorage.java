@@ -56,7 +56,7 @@ public interface IGroupedStorage {
     ItemStack get(@Nonnull ItemStack stack, int flags);
 
     /**
-     * Gets an item from the network by hash.
+     * Gets an item from the network by hash, see {@link refinedstorage.api.network.NetworkUtils#getItemStackHashCode(ItemStack)}.
      *
      * @return Null if no item is found matching the hash, or the {@link ItemStack}, do NOT modify
      */

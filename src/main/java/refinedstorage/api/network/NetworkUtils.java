@@ -1,11 +1,12 @@
-package refinedstorage.apiimpl.network;
+package refinedstorage.api.network;
 
 import net.minecraft.item.ItemStack;
 import refinedstorage.api.autocrafting.ICraftingPattern;
-import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.storage.CompareUtils;
 
-// @TODO: Move this class to API
+/**
+ * Utilities for network manipulation.
+ */
 public final class NetworkUtils {
     public static ItemStack extractItem(INetworkMaster network, ItemStack stack, int size) {
         return network.extractItem(stack, size, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);

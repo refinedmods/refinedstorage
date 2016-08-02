@@ -7,11 +7,11 @@ import net.minecraft.item.ItemStack;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.INetworkNode;
+import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.api.storage.IGroupedStorage;
 import refinedstorage.api.storage.IStorage;
 import refinedstorage.api.storage.IStorageProvider;
-import refinedstorage.apiimpl.network.NetworkUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -5,7 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.apiimpl.network.NetworkUtils;
+import refinedstorage.api.network.NetworkUtils;
 
 public class ClientStack {
     private int id;

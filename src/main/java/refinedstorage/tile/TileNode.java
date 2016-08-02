@@ -7,7 +7,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.INetworkNode;
-import refinedstorage.apiimpl.network.NetworkUtils;
+import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.block.BlockNode;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
