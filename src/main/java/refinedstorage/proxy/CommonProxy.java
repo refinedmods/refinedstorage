@@ -58,6 +58,7 @@ public class CommonProxy {
         RefinedStorage.INSTANCE.network.registerMessage(MessageGridUpdate.class, MessageGridUpdate.class, id++, Side.CLIENT);
         RefinedStorage.INSTANCE.network.registerMessage(MessageGridDelta.class, MessageGridDelta.class, id++, Side.CLIENT);
         RefinedStorage.INSTANCE.network.registerMessage(MessageProcessingPatternEncoderClear.class, MessageProcessingPatternEncoderClear.class, id++, Side.SERVER);
+        RefinedStorage.INSTANCE.network.registerMessage(MessageGridFilterUpdate.class, MessageGridFilterUpdate.class, id++, Side.SERVER);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(RefinedStorage.INSTANCE, new GuiHandler());
 

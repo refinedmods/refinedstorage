@@ -8,10 +8,12 @@ import refinedstorage.inventory.ItemHandlerGridFilter;
 
 public class ContainerGridFilter extends ContainerBase {
     private ItemHandlerGridFilter filter;
+    private ItemStack stack;
 
     public ContainerGridFilter(EntityPlayer player, ItemStack stack) {
         super(player);
 
+        this.stack = stack;
         this.filter = new ItemHandlerGridFilter(stack);
 
         for (int i = 0; i < 9; ++i) {
@@ -19,6 +21,10 @@ public class ContainerGridFilter extends ContainerBase {
         }
 
         addPlayerInventory(8, 70);
+    }
+
+    public ItemStack getStack() {
+        return stack;
     }
 
     @Override

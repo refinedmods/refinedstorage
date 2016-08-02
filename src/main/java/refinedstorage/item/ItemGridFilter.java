@@ -2,6 +2,7 @@ package refinedstorage.item;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
@@ -14,6 +15,8 @@ import refinedstorage.inventory.ItemHandlerGridFilter;
 import java.util.List;
 
 public class ItemGridFilter extends ItemBase {
+    private static final String NBT_COMPARE = "Compare";
+
     public ItemGridFilter() {
         super("grid_filter");
 
@@ -42,5 +45,17 @@ public class ItemGridFilter extends ItemBase {
         ItemHandlerGridFilter items = new ItemHandlerGridFilter(stack);
 
         ItemPattern.combineItems(tooltip, items.getFilteredItems());
+    }
+
+    public static int getCompare(ItemStack stack) {
+        return (stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_COMPARE)) ? stack.getTagCompound().getInteger(NBT_COMPARE) : 0;
+    }
+
+    public static void setCompare(ItemStack stack, int compare) {
+        if (!stack.hasTagCompound()) {
+            stack.setTagCompound(new NBTTagCompound());
+        }
+
+        stack.getTagCompound().setInteger(NBT_COMPARE, compare);
     }
 }
