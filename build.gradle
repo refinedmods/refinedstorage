@@ -12,12 +12,12 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "0.8.15"
+version = "0.8.16"
 group = "refinedstorage"
 archivesBaseName = "refinedstorage"
 
 minecraft {
-    version = "1.10.2-12.18.1.2014"
+    version = "1.10.2-12.18.1.2044"
     runDir = "run"
     useDepAts = true
     mappings = "snapshot_20160518"
@@ -39,7 +39,7 @@ repositories {
 dependencies {
     deobfCompile "mezz.jei:jei_1.10.2:3.7.+"
     compile "net.darkhax.tesla:Tesla:1.10-1.2.0.34"
-    compile "net.industrial-craft:industrialcraft-2:2.6.9-ex110:api"
+    compile "net.industrial-craft:industrialcraft-2:2.6.26-ex110:api"
 }
 
 processResources {
