@@ -13,6 +13,8 @@ import refinedstorage.api.storage.IStorage;
 import refinedstorage.api.storage.IStorageProvider;
 import refinedstorage.apiimpl.network.NetworkUtils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -56,7 +58,7 @@ public class GroupedStorage implements IGroupedStorage {
     }
 
     @Override
-    public void add(ItemStack stack, boolean rebuilding) {
+    public void add(@Nonnull ItemStack stack, boolean rebuilding) {
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
             if (CompareUtils.compareStackNoQuantity(otherStack, stack)) {
                 otherStack.stackSize += stack.stackSize;
@@ -77,7 +79,7 @@ public class GroupedStorage implements IGroupedStorage {
     }
 
     @Override
-    public void remove(ItemStack stack) {
+    public void remove(@Nonnull ItemStack stack) {
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
             if (CompareUtils.compareStackNoQuantity(otherStack, stack)) {
                 otherStack.stackSize -= stack.stackSize;
@@ -96,7 +98,8 @@ public class GroupedStorage implements IGroupedStorage {
     }
 
     @Override
-    public ItemStack get(ItemStack stack, int flags) {
+    @Nullable
+    public ItemStack get(@Nonnull ItemStack stack, int flags) {
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
             if (CompareUtils.compareStack(otherStack, stack, flags)) {
                 return otherStack;
@@ -107,9 +110,10 @@ public class GroupedStorage implements IGroupedStorage {
     }
 
     @Override
-    public ItemStack get(int id) {
+    @Nullable
+    public ItemStack get(int hash) {
         for (ItemStack stack : this.stacks.values()) {
-            if (NetworkUtils.getItemStackHashCode(stack) == id) {
+            if (NetworkUtils.getItemStackHashCode(stack) == hash) {
                 return stack;
             }
         }
