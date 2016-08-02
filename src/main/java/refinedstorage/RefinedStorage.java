@@ -142,10 +142,6 @@ public final class RefinedStorage {
         PROXY.postInit(e);
     }
 
-    public static boolean hasJei() {
-        return Loader.isModLoaded("JEI");
-    }
-
     public static boolean hasTesla() {
         return Loader.isModLoaded("Tesla");
     }

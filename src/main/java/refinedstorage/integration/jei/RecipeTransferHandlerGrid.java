@@ -1,4 +1,4 @@
-package refinedstorage.jei;
+package refinedstorage.integration.jei;
 
 import mezz.jei.api.gui.IGuiIngredient;
 import mezz.jei.api.gui.IRecipeLayout;

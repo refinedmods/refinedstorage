@@ -1,15 +1,16 @@
-package refinedstorage.jei;
+package refinedstorage.integration.jei;
 
 import mezz.jei.api.IJeiRuntime;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
 import mezz.jei.api.JEIPlugin;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.Loader;
 import refinedstorage.RefinedStorageBlocks;
 
 @JEIPlugin
-public class RefinedStorageJEIPlugin implements IModPlugin {
-    public static RefinedStorageJEIPlugin INSTANCE;
+public class JEIIntegration implements IModPlugin {
+    public static JEIIntegration INSTANCE;
 
     private IJeiRuntime runtime;
 
@@ -35,5 +36,9 @@ public class RefinedStorageJEIPlugin implements IModPlugin {
 
     public IJeiRuntime getRuntime() {
         return runtime;
+    }
+
+    public static boolean isLoaded() {
+        return Loader.isModLoaded("JEI");
     }
 }
