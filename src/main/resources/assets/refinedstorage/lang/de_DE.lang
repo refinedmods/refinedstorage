@@ -93,6 +93,7 @@ sidebutton.refinedstorage:detector.mode=Modus
 sidebutton.refinedstorage:detector.mode.0=Signal geben, wenn Wert unterschritten wird
 sidebutton.refinedstorage:detector.mode.1=Signal geben, wenn genauer Wert erreicht wird
 sidebutton.refinedstorage:detector.mode.2=Signal geben, wenn Wert überschritten wird
+
 block.refinedstorage:controller.0.name=Controller
 block.refinedstorage:controller.1.name=Kreativer Controller
 block.refinedstorage:cable.name=Kabel
