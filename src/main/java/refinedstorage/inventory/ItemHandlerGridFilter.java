@@ -9,7 +9,7 @@ public class ItemHandlerGridFilter extends ItemStackHandler {
     private ItemStack stack;
 
     public ItemHandlerGridFilter(ItemStack stack) {
-        super(9 * 3);
+        super(9);
 
         this.stack = stack;
 

@@ -60,7 +60,9 @@ public class ContainerGrid extends ContainerBase {
             addSlotToContainer(new SlotOutput(((TileGrid) grid).getPatterns(), 1, 152, 132));
         }
 
-        addSlotToContainer(new SlotItemHandler(grid.getFilter(), 0, 204, 6));
+        for (int i = 0; i < 4; ++i) {
+            addSlotToContainer(new SlotItemHandler(grid.getFilter(), i, 204, 6 + (18 * i)));
+        }
     }
 
     public IGrid getGrid() {

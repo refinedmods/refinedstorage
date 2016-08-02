@@ -14,21 +14,11 @@ public class ContainerGridFilter extends ContainerBase {
 
         this.filter = new ItemHandlerGridFilter(stack);
 
-        int x = 8;
-        int y = 20;
-
-        for (int i = 0; i < 9 * 3; ++i) {
-            addSlotToContainer(new SlotSpecimen(filter, i, x, y));
-
-            if ((i + 1) % 9 == 0) {
-                y += 18;
-                x = 8;
-            } else {
-                x += 18;
-            }
+        for (int i = 0; i < 9; ++i) {
+            addSlotToContainer(new SlotSpecimen(filter, i, 8 + (i * 18), 20));
         }
 
-        addPlayerInventory(8, 91);
+        addPlayerInventory(8, 61);
     }
 
     @Override
@@ -40,8 +30,8 @@ public class ContainerGridFilter extends ContainerBase {
         if (slot != null && slot.getHasStack()) {
             stack = slot.getStack();
 
-            if (index > (9 * 3) - 1) {
-                return mergeItemStackToSpecimen(stack, 0, 9 * 3);
+            if (index > 9 - 1) {
+                return mergeItemStackToSpecimen(stack, 0, 9);
             }
 
             return null;

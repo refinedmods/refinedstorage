@@ -45,7 +45,7 @@ public class WirelessGrid implements IGrid {
                     stack.setTagCompound(new NBTTagCompound());
                 }
 
-                TileBase.writeItems(this, 0, stack.getTagCompound());
+                TileBase.writeItems(this, slot, stack.getTagCompound());
             }
         }
     };
@@ -64,7 +64,9 @@ public class WirelessGrid implements IGrid {
         this.searchBoxMode = ItemWirelessGrid.getSearchBoxMode(stack);
 
         if (stack.hasTagCompound()) {
-            TileBase.readItems(filter, 0, stack.getTagCompound());
+            for (int i = 0; i < 4; ++i) {
+                TileBase.readItems(filter, i, stack.getTagCompound());
+            }
         }
     }
 

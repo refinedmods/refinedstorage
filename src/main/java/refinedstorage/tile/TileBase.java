@@ -163,7 +163,9 @@ public abstract class TileBase extends TileEntity implements ITickable {
 
                 ItemStack stack = ItemStack.loadItemStackFromNBT(tagList.getCompoundTagAt(i));
 
-                handler.insertItem(slot, stack, false);
+                if (slot >= 0 && slot < handler.getSlots()) {
+                    handler.insertItem(slot, stack, false);
+                }
             }
         }
     }

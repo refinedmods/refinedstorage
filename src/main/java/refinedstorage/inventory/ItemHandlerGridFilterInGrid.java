@@ -9,7 +9,7 @@ public class ItemHandlerGridFilterInGrid extends ItemHandlerBasic {
     private List<ItemStack> filteredItems;
 
     public ItemHandlerGridFilterInGrid(List<ItemStack> filteredItems) {
-        super(1, new ItemValidatorBasic(RefinedStorageItems.GRID_FILTER));
+        super(4, new ItemValidatorBasic(RefinedStorageItems.GRID_FILTER));
 
         this.filteredItems = filteredItems;
     }
@@ -20,14 +20,16 @@ public class ItemHandlerGridFilterInGrid extends ItemHandlerBasic {
 
         filteredItems.clear();
 
-        ItemStack stack = getStackInSlot(slot);
+        for (int i = 0; i < getSlots(); ++i) {
+            ItemStack stack = getStackInSlot(i);
 
-        if (stack != null) {
-            ItemHandlerGridFilter items = new ItemHandlerGridFilter(stack);
+            if (stack != null) {
+                ItemHandlerGridFilter items = new ItemHandlerGridFilter(stack);
 
-            for (ItemStack item : items.getFilteredItems()) {
-                if (item != null) {
-                    filteredItems.add(item);
+                for (ItemStack item : items.getFilteredItems()) {
+                    if (item != null) {
+                        filteredItems.add(item);
+                    }
                 }
             }
         }

@@ -4,7 +4,7 @@ import refinedstorage.container.ContainerGridFilter;
 
 public class GuiGridFilter extends GuiBase {
     public GuiGridFilter(ContainerGridFilter container) {
-        super(container, 176, 183);
+        super(container, 176, 148);
     }
 
     @Override
@@ -25,6 +25,6 @@ public class GuiGridFilter extends GuiBase {
     @Override
     public void drawForeground(int mouseX, int mouseY) {
         drawString(7, 7, t("gui.refinedstorage:grid_filter"));
-        drawString(7, 79, t("container.inventory"));
+        drawString(7, 55, t("container.inventory"));
     }
 }
