@@ -9,6 +9,8 @@
 - Each Grid Filter can now only filter 9 items
 - Each Grid allows 4 Grid Filters instead of 1
 - Grid Filters can now be configured to compare on NBT and/ or damage
+- Updated to Forge 2045
+- Updated Tesla
 
 ### 0.8.15
 **Bugfixes**
