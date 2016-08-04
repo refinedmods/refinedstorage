@@ -11,7 +11,6 @@ import refinedstorage.RefinedStorageGui;
 import refinedstorage.container.*;
 import refinedstorage.gui.grid.GuiGrid;
 import refinedstorage.tile.*;
-import refinedstorage.tile.controller.TileController;
 import refinedstorage.tile.grid.TileGrid;
 import refinedstorage.tile.grid.WirelessGrid;
 

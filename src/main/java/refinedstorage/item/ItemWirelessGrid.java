@@ -26,7 +26,7 @@ import net.minecraftforge.fml.common.Optional;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.integration.ic2.IC2Integration;
-import refinedstorage.tile.controller.TileController;
+import refinedstorage.tile.TileController;
 import refinedstorage.tile.grid.TileGrid;
 
 import javax.annotation.Nullable;

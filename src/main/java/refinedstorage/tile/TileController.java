@@ -1,4 +1,4 @@
-package refinedstorage.tile.controller;
+package refinedstorage.tile;
 
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyReceiver;
@@ -47,9 +47,6 @@ import refinedstorage.integration.ic2.IIC2EnergyController;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.network.MessageGridDelta;
 import refinedstorage.network.MessageGridUpdate;
-import refinedstorage.tile.ISynchronizedContainer;
-import refinedstorage.tile.TileBase;
-import refinedstorage.tile.TileCrafter;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
 import refinedstorage.tile.externalstorage.ExternalStorage;
@@ -57,8 +54,8 @@ import refinedstorage.tile.externalstorage.ExternalStorage;
 import java.util.*;
 
 @Optional.InterfaceList({
-    @Optional.Interface(iface = "net.darkhax.tesla.api.ITeslaConsumer", modid = "Tesla"),
-    @Optional.Interface(iface = "net.darkhax.tesla.api.ITeslaHolder", modid = "Tesla")
+    @Optional.Interface(iface = "net.darkhax.tesla.api.ITeslaConsumer", modid = "tesla"),
+    @Optional.Interface(iface = "net.darkhax.tesla.api.ITeslaHolder", modid = "tesla")
 })
 public class TileController extends TileBase implements INetworkMaster, IEnergyReceiver, ITeslaHolder, ITeslaConsumer, ISynchronizedContainer, IRedstoneModeConfig {
     public static final String NBT_ENERGY = "Energy";
@@ -66,12 +63,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     private static final String NBT_CRAFTING_TASKS = "CraftingTasks";
 
-    private GridHandler gridHandler = new GridHandler(this);
-    private WirelessGridHandler wirelessGridHandler = new WirelessGridHandler(this);
-
-    private IGroupedStorage storage = new GroupedStorage(this);
-
-    private Comparator<IStorage> sizeComparator = new Comparator<IStorage>() {
+    private static final Comparator<IStorage> SIZE_COMPARATOR = new Comparator<IStorage>() {
         @Override
         public int compare(IStorage left, IStorage right) {
             if (left.getStored() == right.getStored()) {
@@ -82,7 +74,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         }
     };
 
-    private Comparator<IStorage> priorityComparator = new Comparator<IStorage>() {
+    private static final Comparator<IStorage> PRIORITY_COMPARATOR = new Comparator<IStorage>() {
         @Override
         public int compare(IStorage left, IStorage right) {
             if (left.getPriority() == right.getPriority()) {
@@ -93,7 +85,11 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         }
     };
 
+    private GridHandler gridHandler = new GridHandler(this);
+    private WirelessGridHandler wirelessGridHandler = new WirelessGridHandler(this);
+
     private INetworkNodeGraph nodeGraph = new NetworkNodeGraph(this);
+    private IGroupedStorage storage = new GroupedStorage(this);
 
     private List<ICraftingPattern> patterns = new ArrayList<ICraftingPattern>();
 
@@ -151,8 +147,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             energyEU.update();
 
             if (canRun()) {
-                Collections.sort(storage.getStorages(), sizeComparator);
-                Collections.sort(storage.getStorages(), priorityComparator);
+                Collections.sort(storage.getStorages(), SIZE_COMPARATOR);
+                Collections.sort(storage.getStorages(), PRIORITY_COMPARATOR);
 
                 for (ICraftingTask taskToCancel : craftingTasksToCancel) {
                     taskToCancel.onCancelled(this);
@@ -719,5 +715,31 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
         return (RefinedStorage.hasTesla() && (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER)) || super.hasCapability(capability, facing);
+    }
+
+    public class ClientNode {
+        public ItemStack stack;
+        public int amount;
+        public int energyUsage;
+
+        @Override
+        public boolean equals(Object other) {
+            if (this == other) {
+                return true;
+            }
+
+            if (!(other instanceof ClientNode)) {
+                return false;
+            }
+
+            return energyUsage == ((ClientNode) other).energyUsage && CompareUtils.compareStack(stack, ((ClientNode) other).stack);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = stack.hashCode();
+            result = 31 * result + energyUsage;
+            return result;
+        }
     }
 }

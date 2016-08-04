@@ -7,8 +7,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import refinedstorage.api.network.INetworkNode;
 import refinedstorage.api.network.INetworkNodeGraph;
+import refinedstorage.tile.TileController;
 import refinedstorage.tile.TileNetworkTransmitter;
-import refinedstorage.tile.controller.TileController;
 
 import java.util.*;
 

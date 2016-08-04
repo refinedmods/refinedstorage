@@ -27,7 +27,6 @@ import refinedstorage.gui.GuiHandler;
 import refinedstorage.item.*;
 import refinedstorage.network.*;
 import refinedstorage.tile.*;
-import refinedstorage.tile.controller.TileController;
 import refinedstorage.tile.externalstorage.TileExternalStorage;
 import refinedstorage.tile.grid.TileGrid;
 

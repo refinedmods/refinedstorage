@@ -2,7 +2,7 @@ package refinedstorage.integration.ic2;
 
 import ic2.api.energy.prefab.BasicSink;
 import net.minecraft.util.EnumFacing;
-import refinedstorage.tile.controller.TileController;
+import refinedstorage.tile.TileController;
 
 public class IC2EnergyController implements IIC2EnergyController {
     private BasicSink sink;
