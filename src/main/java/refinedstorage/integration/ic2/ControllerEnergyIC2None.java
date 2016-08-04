@@ -1,6 +1,6 @@
 package refinedstorage.integration.ic2;
 
-public class IC2EnergyControllerNone implements IIC2EnergyController {
+public class ControllerEnergyIC2None implements IControllerEnergyIC2 {
     @Override
     public void invalidate() {
     }

@@ -2,7 +2,7 @@ package refinedstorage.integration.ic2;
 
 import net.minecraftforge.fml.common.Loader;
 
-public final class IC2Integration {
+public final class IntegrationIC2 {
     public static boolean isLoaded() {
         return Loader.isModLoaded("IC2");
     }

@@ -3,8 +3,6 @@ package refinedstorage.item;
 import cofh.api.energy.ItemEnergyContainer;
 import ic2.api.item.IElectricItemManager;
 import ic2.api.item.ISpecialElectricItem;
-import net.darkhax.tesla.api.ITeslaConsumer;
-import net.darkhax.tesla.api.ITeslaHolder;
 import net.darkhax.tesla.capability.TeslaCapabilities;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
@@ -25,7 +23,9 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.common.Optional;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
-import refinedstorage.integration.ic2.IC2Integration;
+import refinedstorage.integration.ic2.IntegrationIC2;
+import refinedstorage.integration.tesla.IntegrationTesla;
+import refinedstorage.integration.tesla.WirelessGridEnergyTesla;
 import refinedstorage.tile.TileController;
 import refinedstorage.tile.grid.TileGrid;
 
@@ -51,7 +51,7 @@ public class ItemWirelessGrid extends ItemEnergyContainer implements ISpecialEle
         addPropertyOverride(new ResourceLocation("connected"), new IItemPropertyGetter() {
             @Override
             public float apply(ItemStack stack, World world, EntityLivingBase entity) {
-                return (entity != null && hasValidNBT(stack) && getDimensionId(stack) == entity.dimension) ? 1.0f : 0.0f;
+                return (entity != null && isValid(stack) && getDimensionId(stack) == entity.dimension) ? 1.0f : 0.0f;
             }
         });
 
@@ -79,7 +79,7 @@ public class ItemWirelessGrid extends ItemEnergyContainer implements ISpecialEle
 
     @Override
     public double getDurabilityForDisplay(ItemStack stack) {
-        return 1d - ((double) getEnergyStored(stack) / (double) getMaxEnergyStored(stack));
+        return 1D - ((double) getEnergyStored(stack) / (double) getMaxEnergyStored(stack));
     }
 
     @Override
@@ -109,7 +109,7 @@ public class ItemWirelessGrid extends ItemEnergyContainer implements ISpecialEle
             tooltip.add(I18n.format("misc.refinedstorage:energy_stored", getEnergyStored(stack), getMaxEnergyStored(stack)));
         }
 
-        if (hasValidNBT(stack)) {
+        if (isValid(stack)) {
             tooltip.add(I18n.format("misc.refinedstorage:wireless_grid.tooltip", getX(stack), getY(stack), getZ(stack)));
         }
     }
@@ -144,7 +144,7 @@ public class ItemWirelessGrid extends ItemEnergyContainer implements ISpecialEle
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
-        if (!world.isRemote && hasValidNBT(stack) && getDimensionId(stack) == player.dimension) {
+        if (!world.isRemote && isValid(stack) && getDimensionId(stack) == player.dimension) {
             TileEntity tile = world.getTileEntity(new BlockPos(getX(stack), getY(stack), getZ(stack)));
 
             if (tile instanceof TileController) {
@@ -193,7 +193,7 @@ public class ItemWirelessGrid extends ItemEnergyContainer implements ISpecialEle
         return stack.getTagCompound().getInteger(TileGrid.NBT_SEARCH_BOX_MODE);
     }
 
-    private static boolean hasValidNBT(ItemStack stack) {
+    private static boolean isValid(ItemStack stack) {
         return stack.hasTagCompound()
             && stack.getTagCompound().hasKey(NBT_CONTROLLER_X)
             && stack.getTagCompound().hasKey(NBT_CONTROLLER_Y)
@@ -208,7 +208,7 @@ public class ItemWirelessGrid extends ItemEnergyContainer implements ISpecialEle
     @Override
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
         if (oldStack.getItem() == newStack.getItem()) {
-            if (hasValidNBT(oldStack) && hasValidNBT(newStack)) {
+            if (isValid(oldStack) && isValid(newStack)) {
                 if (getX(oldStack) == getX(newStack) && getY(oldStack) == getY(newStack) && getZ(oldStack) == getZ(newStack) && getDimensionId(oldStack) == getDimensionId(newStack)) {
                     return false;
                 }
@@ -237,25 +237,25 @@ public class ItemWirelessGrid extends ItemEnergyContainer implements ISpecialEle
     @Optional.Method(modid = "IC2")
     @Override
     public double charge(ItemStack stack, double amount, int tier, boolean ignoreTransferLimit, boolean simulate) {
-        return IC2Integration.toEU(receiveEnergy(stack, IC2Integration.toRS(amount), simulate));
+        return IntegrationIC2.toEU(receiveEnergy(stack, IntegrationIC2.toRS(amount), simulate));
     }
 
     @Optional.Method(modid = "IC2")
     @Override
     public double discharge(ItemStack stack, double amount, int tier, boolean ignoreTransferLimit, boolean externally, boolean simulate) {
-        return IC2Integration.toEU(extractEnergy(stack, IC2Integration.toRS(amount), simulate));
+        return IntegrationIC2.toEU(extractEnergy(stack, IntegrationIC2.toRS(amount), simulate));
     }
 
     @Optional.Method(modid = "IC2")
     @Override
     public double getCharge(ItemStack stack) {
-        return IC2Integration.toEU(getEnergyStored(stack));
+        return IntegrationIC2.toEU(getEnergyStored(stack));
     }
 
     @Optional.Method(modid = "IC2")
     @Override
     public double getMaxCharge(ItemStack stack) {
-        return IC2Integration.toEU(getMaxEnergyStored(stack));
+        return IntegrationIC2.toEU(getMaxEnergyStored(stack));
     }
 
     @Optional.Method(modid = "IC2")
@@ -288,29 +288,6 @@ public class ItemWirelessGrid extends ItemEnergyContainer implements ISpecialEle
         return Integer.MAX_VALUE;
     }
 
-    class TeslaEnergy implements ITeslaHolder, ITeslaConsumer {
-        private ItemStack stack;
-
-        public TeslaEnergy(ItemStack stack) {
-            this.stack = stack;
-        }
-
-        @Override
-        public long getStoredPower() {
-            return getEnergyStored(stack);
-        }
-
-        @Override
-        public long getCapacity() {
-            return getMaxEnergyStored(stack);
-        }
-
-        @Override
-        public long givePower(long power, boolean simulated) {
-            return receiveEnergy(stack, (int) power, simulated);
-        }
-    }
-
     class WirelessGridCapabilityProvider implements ICapabilityProvider {
         private ItemStack stack;
 
@@ -320,13 +297,13 @@ public class ItemWirelessGrid extends ItemEnergyContainer implements ISpecialEle
 
         @Override
         public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-            return RefinedStorage.hasTesla() && (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER);
+            return IntegrationTesla.isLoaded() && (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER);
         }
 
         @Override
         public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-            if (RefinedStorage.hasTesla() && (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER)) {
-                return (T) new TeslaEnergy(stack);
+            if (IntegrationTesla.isLoaded() && (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER)) {
+                return (T) new WirelessGridEnergyTesla(ItemWirelessGrid.this, stack);
             }
 
             return null;

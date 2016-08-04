@@ -3,8 +3,6 @@ package refinedstorage.tile;
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyReceiver;
 import io.netty.buffer.ByteBuf;
-import net.darkhax.tesla.api.ITeslaConsumer;
-import net.darkhax.tesla.api.ITeslaHolder;
 import net.darkhax.tesla.capability.TeslaCapabilities;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,7 +15,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
@@ -40,10 +37,12 @@ import refinedstorage.block.BlockController;
 import refinedstorage.block.EnumControllerType;
 import refinedstorage.container.ContainerController;
 import refinedstorage.container.ContainerGrid;
-import refinedstorage.integration.ic2.IC2EnergyController;
-import refinedstorage.integration.ic2.IC2EnergyControllerNone;
-import refinedstorage.integration.ic2.IC2Integration;
-import refinedstorage.integration.ic2.IIC2EnergyController;
+import refinedstorage.integration.ic2.ControllerEnergyIC2;
+import refinedstorage.integration.ic2.ControllerEnergyIC2None;
+import refinedstorage.integration.ic2.IControllerEnergyIC2;
+import refinedstorage.integration.ic2.IntegrationIC2;
+import refinedstorage.integration.tesla.ControllerEnergyTesla;
+import refinedstorage.integration.tesla.IntegrationTesla;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.network.MessageGridDelta;
 import refinedstorage.network.MessageGridUpdate;
@@ -53,11 +52,7 @@ import refinedstorage.tile.externalstorage.ExternalStorage;
 
 import java.util.*;
 
-@Optional.InterfaceList({
-    @Optional.Interface(iface = "net.darkhax.tesla.api.ITeslaConsumer", modid = "tesla"),
-    @Optional.Interface(iface = "net.darkhax.tesla.api.ITeslaHolder", modid = "tesla")
-})
-public class TileController extends TileBase implements INetworkMaster, IEnergyReceiver, ITeslaHolder, ITeslaConsumer, ISynchronizedContainer, IRedstoneModeConfig {
+public class TileController extends TileBase implements INetworkMaster, IEnergyReceiver, ISynchronizedContainer, IRedstoneModeConfig {
     public static final String NBT_ENERGY = "Energy";
     public static final String NBT_ENERGY_CAPACITY = "EnergyCapacity";
 
@@ -99,7 +94,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     private List<ICraftingTask> craftingTasksToCancel = new ArrayList<ICraftingTask>();
 
     private EnergyStorage energy = new EnergyStorage(RefinedStorage.INSTANCE.controllerCapacity);
-    private IIC2EnergyController energyEU;
+    private IControllerEnergyIC2 energyEU;
+    private ControllerEnergyTesla energyTesla;
     private int energyUsage;
 
     private int lastEnergyDisplay;
@@ -114,10 +110,14 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     private List<ClientNode> clientNodes = new ArrayList<ClientNode>();
 
     public TileController() {
-        if (IC2Integration.isLoaded()) {
-            this.energyEU = new IC2EnergyController(this);
+        if (IntegrationIC2.isLoaded()) {
+            this.energyEU = new ControllerEnergyIC2(this);
         } else {
-            this.energyEU = new IC2EnergyControllerNone();
+            this.energyEU = new ControllerEnergyIC2None();
+        }
+
+        if (IntegrationTesla.isLoaded()) {
+            this.energyTesla = new ControllerEnergyTesla(energy);
         }
     }
 
@@ -554,24 +554,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         return energy.getEnergyStored();
     }
 
-    @Optional.Method(modid = "tesla")
-    @Override
-    public long getStoredPower() {
-        return energy.getEnergyStored();
-    }
-
-    @Optional.Method(modid = "tesla")
-    @Override
-    public long getCapacity() {
-        return energy.getMaxEnergyStored();
-    }
-
-    @Optional.Method(modid = "tesla")
-    @Override
-    public long givePower(long power, boolean simulated) {
-        return energy.receiveEnergy((int) power, simulated);
-    }
-
     public int getEnergyScaled(int i) {
         return (int) ((float) energy.getEnergyStored() / (float) energy.getMaxEnergyStored() * (float) i);
     }
@@ -705,8 +687,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-        if (RefinedStorage.hasTesla() && (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER)) {
-            return (T) this;
+        if (energyTesla != null && (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER)) {
+            return (T) energyTesla;
         }
 
         return super.getCapability(capability, facing);
@@ -714,7 +696,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-        return (RefinedStorage.hasTesla() && (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER)) || super.hasCapability(capability, facing);
+        return (energyTesla != null && (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER)) || super.hasCapability(capability, facing);
     }
 
     public class ClientNode {

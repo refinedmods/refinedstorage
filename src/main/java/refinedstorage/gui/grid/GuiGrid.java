@@ -21,7 +21,7 @@ import refinedstorage.gui.Scrollbar;
 import refinedstorage.gui.grid.sorting.GridSortingName;
 import refinedstorage.gui.grid.sorting.GridSortingQuantity;
 import refinedstorage.gui.sidebutton.*;
-import refinedstorage.integration.jei.JEIIntegration;
+import refinedstorage.integration.jei.IntegrationJEI;
 import refinedstorage.network.MessageGridCraftingClear;
 import refinedstorage.network.MessageGridInsertHeld;
 import refinedstorage.network.MessageGridPatternCreate;
@@ -394,8 +394,8 @@ public class GuiGrid extends GuiBase {
     }
 
     private void updateJEI() {
-        if (JEIIntegration.isLoaded() && (grid.getSearchBoxMode() == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED || grid.getSearchBoxMode() == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED)) {
-            JEIIntegration.INSTANCE.getRuntime().getItemListOverlay().setFilterText(searchField.getText());
+        if (IntegrationJEI.isLoaded() && (grid.getSearchBoxMode() == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED || grid.getSearchBoxMode() == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED)) {
+            IntegrationJEI.INSTANCE.getRuntime().getItemListOverlay().setFilterText(searchField.getText());
         }
     }
 

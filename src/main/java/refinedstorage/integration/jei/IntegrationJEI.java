@@ -9,8 +9,8 @@ import net.minecraftforge.fml.common.Loader;
 import refinedstorage.RefinedStorageBlocks;
 
 @JEIPlugin
-public class JEIIntegration implements IModPlugin {
-    public static JEIIntegration INSTANCE;
+public class IntegrationJEI implements IModPlugin {
+    public static IntegrationJEI INSTANCE;
 
     private IJeiRuntime runtime;
 

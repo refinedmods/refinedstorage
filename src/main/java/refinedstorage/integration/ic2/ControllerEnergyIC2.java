@@ -4,19 +4,19 @@ import ic2.api.energy.prefab.BasicSink;
 import net.minecraft.util.EnumFacing;
 import refinedstorage.tile.TileController;
 
-public class IC2EnergyController implements IIC2EnergyController {
+public class ControllerEnergyIC2 implements IControllerEnergyIC2 {
     private BasicSink sink;
 
-    public IC2EnergyController(final TileController controller) {
-        this.sink = new BasicSink(controller, (int) IC2Integration.toEU(controller.getEnergy().getMaxEnergyStored()), Integer.MAX_VALUE) {
+    public ControllerEnergyIC2(final TileController controller) {
+        this.sink = new BasicSink(controller, (int) IntegrationIC2.toEU(controller.getEnergy().getMaxEnergyStored()), Integer.MAX_VALUE) {
             @Override
             public double getDemandedEnergy() {
-                return Math.max(0.0D, IC2Integration.toEU(controller.getEnergy().getMaxEnergyStored()) - IC2Integration.toEU(controller.getEnergy().getEnergyStored()));
+                return Math.max(0.0D, IntegrationIC2.toEU(controller.getEnergy().getMaxEnergyStored()) - IntegrationIC2.toEU(controller.getEnergy().getEnergyStored()));
             }
 
             @Override
             public double injectEnergy(EnumFacing directionFrom, double amount, double voltage) {
-                controller.getEnergy().setEnergyStored(controller.getEnergy().getEnergyStored() + IC2Integration.toRS(amount));
+                controller.getEnergy().setEnergyStored(controller.getEnergy().getEnergyStored() + IntegrationIC2.toRS(amount));
 
                 return 0.0D;
             }

@@ -4,7 +4,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -140,9 +139,5 @@ public final class RefinedStorage {
     @EventHandler
     public void postInit(FMLPostInitializationEvent e) {
         PROXY.postInit(e);
-    }
-
-    public static boolean hasTesla() {
-        return Loader.isModLoaded("tesla");
     }
 }
