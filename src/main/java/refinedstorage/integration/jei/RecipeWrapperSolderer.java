@@ -6,11 +6,11 @@ import net.minecraft.item.ItemStack;
 import java.util.Collections;
 import java.util.List;
 
-public class SoldererRecipeWrapper extends VanillaRecipeWrapper {
+public class RecipeWrapperSolderer extends VanillaRecipeWrapper {
     private List<ItemStack> inputs;
     private ItemStack output;
 
-    public SoldererRecipeWrapper(List<ItemStack> inputs, ItemStack output) {
+    public RecipeWrapperSolderer(List<ItemStack> inputs, ItemStack output) {
         this.inputs = inputs;
         this.output = output;
     }
@@ -27,11 +27,11 @@ public class SoldererRecipeWrapper extends VanillaRecipeWrapper {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof SoldererRecipeWrapper)) {
+        if (!(obj instanceof RecipeWrapperSolderer)) {
             return false;
         }
 
-        SoldererRecipeWrapper other = (SoldererRecipeWrapper) obj;
+        RecipeWrapperSolderer other = (RecipeWrapperSolderer) obj;
 
         for (int i = 0; i < inputs.size(); i++) {
             if (!ItemStack.areItemStacksEqual(inputs.get(i), other.inputs.get(i))) {

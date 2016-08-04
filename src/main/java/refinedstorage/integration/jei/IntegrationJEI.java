@@ -20,13 +20,13 @@ public class IntegrationJEI implements IModPlugin {
 
         registry.getRecipeTransferRegistry().addRecipeTransferHandler(new RecipeTransferHandlerGrid());
 
-        registry.addRecipeCategories(new SoldererRecipeCategory(registry.getJeiHelpers().getGuiHelper()));
+        registry.addRecipeCategories(new RecipeCategorySolderer(registry.getJeiHelpers().getGuiHelper()));
 
-        registry.addRecipeHandlers(new SoldererRecipeHandler());
+        registry.addRecipeHandlers(new RecipeHandlerSolderer());
 
-        registry.addRecipes(SoldererRecipeMaker.getRecipes());
+        registry.addRecipes(RecipeMakerSolderer.getRecipes());
 
-        registry.addRecipeCategoryCraftingItem(new ItemStack(RefinedStorageBlocks.SOLDERER), SoldererRecipeCategory.ID);
+        registry.addRecipeCategoryCraftingItem(new ItemStack(RefinedStorageBlocks.SOLDERER), RecipeCategorySolderer.ID);
     }
 
     @Override

@@ -11,12 +11,12 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-public class SoldererRecipeCategory implements IRecipeCategory {
+public class RecipeCategorySolderer implements IRecipeCategory {
     public static final String ID = "refinedstorage.solderer";
 
     private IDrawable background;
 
-    public SoldererRecipeCategory(IGuiHelper helper) {
+    public RecipeCategorySolderer(IGuiHelper helper) {
         background = helper.createDrawable(new ResourceLocation("refinedstorage", "textures/gui/solderer.png"), 8, 5, 162, 83);
     }
 
@@ -58,7 +58,7 @@ public class SoldererRecipeCategory implements IRecipeCategory {
 
         group.init(3, false, 127 - 9, 38 - 6);
 
-        if (recipeWrapper instanceof SoldererRecipeWrapper) {
+        if (recipeWrapper instanceof RecipeWrapperSolderer) {
             for (int i = 0; i < 3; ++i) {
                 group.set(i, (ItemStack) recipeWrapper.getInputs().get(i));
             }

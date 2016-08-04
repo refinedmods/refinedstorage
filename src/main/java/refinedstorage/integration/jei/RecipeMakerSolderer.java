@@ -7,9 +7,9 @@ import refinedstorage.api.solderer.ISoldererRecipe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SoldererRecipeMaker {
-    public static List<SoldererRecipeWrapper> getRecipes() {
-        List<SoldererRecipeWrapper> recipes = new ArrayList<SoldererRecipeWrapper>();
+public final class RecipeMakerSolderer {
+    public static List<RecipeWrapperSolderer> getRecipes() {
+        List<RecipeWrapperSolderer> recipes = new ArrayList<RecipeWrapperSolderer>();
 
         for (ISoldererRecipe recipe : RefinedStorageAPI.SOLDERER_REGISTRY.getRecipes()) {
             List<ItemStack> inputs = new ArrayList<ItemStack>();
@@ -20,7 +20,7 @@ public class SoldererRecipeMaker {
 
             ItemStack output = recipe.getResult();
 
-            recipes.add(new SoldererRecipeWrapper(inputs, output));
+            recipes.add(new RecipeWrapperSolderer(inputs, output));
         }
 
         return recipes;
