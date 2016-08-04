@@ -554,19 +554,19 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         return energy.getEnergyStored();
     }
 
-    @Optional.Method(modid = "Tesla")
+    @Optional.Method(modid = "tesla")
     @Override
     public long getStoredPower() {
         return energy.getEnergyStored();
     }
 
-    @Optional.Method(modid = "Tesla")
+    @Optional.Method(modid = "tesla")
     @Override
     public long getCapacity() {
         return energy.getMaxEnergyStored();
     }
 
-    @Optional.Method(modid = "Tesla")
+    @Optional.Method(modid = "tesla")
     @Override
     public long givePower(long power, boolean simulated) {
         return energy.receiveEnergy((int) power, simulated);
