@@ -1,19 +1,21 @@
 package refinedstorage.tile;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataSerializers;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.gui.GuiDetector;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.tile.config.IComparable;
 import refinedstorage.tile.config.RedstoneMode;
-import refinedstorage.tile.data.ITileDataConsumer;
-import refinedstorage.tile.data.ITileDataProducer;
-import refinedstorage.tile.data.TileDataManager;
-import refinedstorage.tile.data.TileDataParameter;
+import refinedstorage.tile.data.*;
 
 public class TileDetector extends TileNode implements IComparable {
     public static final TileDataParameter COMPARE = IComparable.createParameter();
@@ -34,7 +36,7 @@ public class TileDetector extends TileNode implements IComparable {
         }
     });
 
-    public static final TileDataParameter AMOUNT = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileDetector>() {
+    public static final TileDataParameter<Integer> AMOUNT = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileDetector>() {
         @Override
         public Integer getValue(TileDetector tile) {
             return tile.amount;
@@ -45,6 +47,17 @@ public class TileDetector extends TileNode implements IComparable {
             tile.amount = value;
 
             tile.markDirty();
+        }
+    }, new ITileDataListener() {
+        @Override
+        public void onChanged() {
+            if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+                GuiScreen gui = Minecraft.getMinecraft().currentScreen;
+
+                if (gui instanceof GuiDetector) {
+                    ((GuiDetector) gui).AMOUNT.setText(String.valueOf(AMOUNT.getValue()));
+                }
+            }
         }
     });
 

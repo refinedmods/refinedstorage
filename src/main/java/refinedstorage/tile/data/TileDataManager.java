@@ -29,7 +29,11 @@ public class TileDataManager {
     }
 
     public static TileDataParameter createParameter(DataSerializer serializer, ITileDataProducer producer, ITileDataConsumer consumer) {
-        TileDataParameter parameter = new TileDataParameter(PARAMETER_ID++, serializer, producer, consumer);
+        return createParameter(serializer, producer, consumer, null);
+    }
+
+    public static TileDataParameter createParameter(DataSerializer serializer, ITileDataProducer producer, ITileDataConsumer consumer, ITileDataListener listener) {
+        TileDataParameter parameter = new TileDataParameter(PARAMETER_ID++, serializer, producer, consumer, listener);
 
         PARAMETER_MAP.put(parameter.getId(), parameter);
 
