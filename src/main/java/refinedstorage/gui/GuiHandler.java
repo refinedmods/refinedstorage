@@ -121,7 +121,7 @@ public class GuiHandler implements IGuiHandler {
             case RefinedStorageGui.GRID_FILTER:
                 return new GuiGridFilter(getGridFilterContainer(player, x));
             case RefinedStorageGui.NETWORK_TRANSMITTER:
-                return new GuiNetworkTransmitter((ContainerNetworkTransmitter) getContainer(ID, player, tile));
+                return new GuiNetworkTransmitter((ContainerNetworkTransmitter) getContainer(ID, player, tile), (TileNetworkTransmitter) tile);
             default:
                 return null;
         }

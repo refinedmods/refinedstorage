@@ -17,14 +17,14 @@ import refinedstorage.tile.data.TileDataManager;
 import refinedstorage.tile.data.TileDataParameter;
 
 public class TileNetworkTransmitter extends TileNode {
-    public static final TileDataParameter DISTANCE = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileNetworkTransmitter>() {
+    public static final TileDataParameter<Integer> DISTANCE = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileNetworkTransmitter>() {
         @Override
         public Integer getValue(TileNetworkTransmitter tile) {
             return (tile.receiver != null && tile.isSameDimension()) ? tile.getDistance() : -1;
         }
     });
 
-    public static final TileDataParameter RECEIVER_DIMENSION = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileNetworkTransmitter>() {
+    public static final TileDataParameter<Integer> RECEIVER_DIMENSION = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileNetworkTransmitter>() {
         @Override
         public Integer getValue(TileNetworkTransmitter tile) {
             return tile.receiverDimension;

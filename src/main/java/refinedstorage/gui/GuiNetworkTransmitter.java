@@ -5,8 +5,12 @@ import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.tile.TileNetworkTransmitter;
 
 public class GuiNetworkTransmitter extends GuiBase {
-    public GuiNetworkTransmitter(ContainerNetworkTransmitter container) {
+    private TileNetworkTransmitter networkTransmitter;
+
+    public GuiNetworkTransmitter(ContainerNetworkTransmitter container, TileNetworkTransmitter networkTransmitter) {
         super(container, 210, 137);
+
+        this.networkTransmitter = networkTransmitter;
     }
 
     @Override
@@ -29,19 +33,17 @@ public class GuiNetworkTransmitter extends GuiBase {
     public void drawForeground(int mouseX, int mouseY) {
         drawString(7, 7, t("gui.refinedstorage:network_transmitter"));
 
-        String distance = t("gui.refinedstorage:network_transmitter.missing_card");
+        String distance;
 
-        // @TODO: ...
-        /*
         if (networkTransmitter.getNetworkCard().getStackInSlot(0) == null) {
             distance = t("gui.refinedstorage:network_transmitter.missing_card");
         } else if (!TileNetworkTransmitter.RECEIVER_DIMENSION_SUPPORTED.getValue()) {
             distance = t("gui.refinedstorage:network_transmitter.missing_upgrade");
-        } else if (!networkTransmitter.isSameDimension()) {
-            distance = t("gui.refinedstorage:network_transmitter.dimension", networkTransmitter.getReceiverDimension());
+        } else if (TileNetworkTransmitter.RECEIVER_DIMENSION.getValue() != networkTransmitter.getWorld().provider.getDimension()) {
+            distance = t("gui.refinedstorage:network_transmitter.dimension", TileNetworkTransmitter.RECEIVER_DIMENSION.getValue());
         } else {
-            distance = t("gui.refinedstorage:network_transmitter.distance", networkTransmitter.getDistance());
-        }*/
+            distance = t("gui.refinedstorage:network_transmitter.distance", TileNetworkTransmitter.DISTANCE.getValue());
+        }
 
         drawString(51, 24, distance);
         drawString(7, 42, t("container.inventory"));
