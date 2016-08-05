@@ -40,7 +40,7 @@ public class GuiGrid extends GuiBase {
     public static GuiTextField SEARCH_FIELD;
 
     private ContainerGrid container;
-    private List<ClientStack> items = new ArrayList<ClientStack>();
+    private List<ClientStack> items = new ArrayList<>();
     private IGrid grid;
 
     private int slotNumber;

@@ -21,7 +21,7 @@ public abstract class GuiBase extends GuiContainer {
     protected static final int SIDE_BUTTON_WIDTH = 20;
     protected static final int SIDE_BUTTON_HEIGHT = 20;
 
-    private List<SideButton> sideButtons = new ArrayList<SideButton>();
+    private List<SideButton> sideButtons = new ArrayList<>();
 
     private int lastButtonId = 0;
     private int lastSideButtonY = 6;
@@ -136,11 +136,7 @@ public abstract class GuiBase extends GuiContainer {
     protected void actionPerformed(GuiButton button) throws IOException {
         super.actionPerformed(button);
 
-        for (SideButton sideButton : sideButtons) {
-            if (sideButton.getId() == button.id) {
-                sideButton.actionPerformed();
-            }
-        }
+        sideButtons.stream().filter(b -> b.getId() == button.id).findFirst().ifPresent(s -> s.actionPerformed());
     }
 
     public GuiButton addButton(int x, int y, int w, int h) {

@@ -39,7 +39,7 @@ public class ItemStorageDisk extends ItemBase {
     }
 
     @Override
-    public void getSubItems(Item item, CreativeTabs tab, List list) {
+    public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
         for (int i = 0; i < 5; ++i) {
             list.add(NBTStorage.createStackWithNBT(new ItemStack(item, 1, i)));
         }
@@ -75,7 +75,7 @@ public class ItemStorageDisk extends ItemBase {
                 Item item = it.next();
 
                 if (item != RefinedStorageItems.STORAGE_DISK) {
-                    List<ItemStack> stacks = new ArrayList<ItemStack>();
+                    List<ItemStack> stacks = new ArrayList<>();
 
                     item.getSubItems(item, CreativeTabs.INVENTORY, stacks);
 
@@ -113,10 +113,10 @@ public class ItemStorageDisk extends ItemBase {
                 InventoryHelper.spawnItemStack(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), storagePart);
             }
 
-            return new ActionResult(EnumActionResult.SUCCESS, new ItemStack(RefinedStorageItems.STORAGE_HOUSING));
+            return new ActionResult<>(EnumActionResult.SUCCESS, new ItemStack(RefinedStorageItems.STORAGE_HOUSING));
         }
 
-        return new ActionResult(EnumActionResult.PASS, disk);
+        return new ActionResult<>(EnumActionResult.PASS, disk);
     }
 
     @Override

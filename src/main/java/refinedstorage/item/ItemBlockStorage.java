@@ -55,10 +55,10 @@ public class ItemBlockStorage extends ItemBlockBase {
                 InventoryHelper.spawnItemStack(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), processor);
             }
 
-            return new ActionResult(EnumActionResult.SUCCESS, new ItemStack(RefinedStorageBlocks.MACHINE_CASING));
+            return new ActionResult<>(EnumActionResult.SUCCESS, new ItemStack(RefinedStorageBlocks.MACHINE_CASING));
         }
 
-        return new ActionResult(EnumActionResult.PASS, stack);
+        return new ActionResult<>(EnumActionResult.PASS, stack);
     }
 
     private static boolean isValid(ItemStack stack) {

@@ -13,7 +13,7 @@ import refinedstorage.tile.config.RedstoneMode;
 import refinedstorage.tile.data.TileDataParameter;
 
 public abstract class TileNode extends TileBase implements INetworkNode, IRedstoneConfigurable {
-    public static final TileDataParameter REDSTONE_MODE = RedstoneMode.createParameter();
+    public static final TileDataParameter<Integer> REDSTONE_MODE = RedstoneMode.createParameter();
 
     private static final String NBT_CONNECTED = "Connected";
 

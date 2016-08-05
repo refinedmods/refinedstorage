@@ -17,12 +17,12 @@ import java.util.Map;
 
 public class TileDataManager {
     private static int PARAMETER_ID = 0;
-    private static Map<Integer, TileDataParameter> PARAMETER_MAP = new HashMap<Integer, TileDataParameter>();
+    private static Map<Integer, TileDataParameter> PARAMETER_MAP = new HashMap<>();
 
-    private List<TileDataParameter> parameters = new ArrayList<TileDataParameter>();
+    private List<TileDataParameter> parameters = new ArrayList<>();
 
-    private List<TileDataParameter> watchedParameters = new ArrayList<TileDataParameter>();
-    private List<Object> watchedParametersCache = new ArrayList<Object>();
+    private List<TileDataParameter> watchedParameters = new ArrayList<>();
+    private List<Object> watchedParametersCache = new ArrayList<>();
 
     public static <T> TileDataParameter<T> createParameter(DataSerializer<T> serializer, ITileDataProducer producer) {
         return createParameter(serializer, producer, null);

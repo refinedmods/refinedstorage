@@ -33,7 +33,7 @@ public class MessageTileDataParameterUpdate extends MessageHandlerPlayerToServer
         if (parameter != null) {
             try {
                 value = parameter.getSerializer().read(new PacketBuffer(buf));
-            } catch (IOException e) {
+            } catch (IOException ignored) {
             }
         }
     }

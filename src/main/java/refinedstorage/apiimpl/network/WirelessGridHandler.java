@@ -20,8 +20,8 @@ public class WirelessGridHandler implements IWirelessGridHandler {
 
     private INetworkMaster network;
 
-    private List<IWirelessGridConsumer> consumers = new ArrayList<IWirelessGridConsumer>();
-    private List<IWirelessGridConsumer> consumersToRemove = new ArrayList<IWirelessGridConsumer>();
+    private List<IWirelessGridConsumer> consumers = new ArrayList<>();
+    private List<IWirelessGridConsumer> consumersToRemove = new ArrayList<>();
 
     public WirelessGridHandler(INetworkMaster network) {
         this.network = network;

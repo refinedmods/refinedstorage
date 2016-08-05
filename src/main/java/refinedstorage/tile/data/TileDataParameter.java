@@ -1,16 +1,17 @@
 package refinedstorage.tile.data;
 
 import net.minecraft.network.datasync.DataSerializer;
+import net.minecraft.tileentity.TileEntity;
 
 public class TileDataParameter<T> {
     private int id;
     private DataSerializer<T> serializer;
-    private ITileDataProducer valueProducer;
-    private ITileDataConsumer valueConsumer;
-    private ITileDataListener listener;
+    private ITileDataProducer<T, ? extends TileEntity> valueProducer;
+    private ITileDataConsumer<T, ? extends TileEntity> valueConsumer;
+    private ITileDataListener<T> listener;
     private T value;
 
-    public TileDataParameter(int id, DataSerializer<T> serializer, ITileDataProducer producer, ITileDataConsumer consumer, ITileDataListener listener) {
+    public TileDataParameter(int id, DataSerializer<T> serializer, ITileDataProducer<T, ? extends TileEntity> producer, ITileDataConsumer<T, ? extends TileEntity> consumer, ITileDataListener<T> listener) {
         this.id = id;
         this.serializer = serializer;
         this.valueProducer = producer;
@@ -26,11 +27,11 @@ public class TileDataParameter<T> {
         return serializer;
     }
 
-    public ITileDataProducer getValueProducer() {
+    public ITileDataProducer<T, ? extends TileEntity> getValueProducer() {
         return valueProducer;
     }
 
-    public ITileDataConsumer getValueConsumer() {
+    public ITileDataConsumer<T, ? extends TileEntity> getValueConsumer() {
         return valueConsumer;
     }
 

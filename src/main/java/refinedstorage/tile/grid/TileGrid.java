@@ -141,7 +141,7 @@ public class TileGrid extends TileNode implements IGrid {
     private InventoryCraftResult result = new InventoryCraftResult();
 
     private ItemHandlerBasic patterns = new ItemHandlerBasic(2, this, new ItemValidatorBasic(RefinedStorageItems.PATTERN));
-    private List<GridFilteredItem> filteredItems = new ArrayList<GridFilteredItem>();
+    private List<GridFilteredItem> filteredItems = new ArrayList<>();
     private ItemHandlerGridFilterInGrid filter = new ItemHandlerGridFilterInGrid(filteredItems);
 
     private EnumGridType type;
@@ -259,7 +259,7 @@ public class TileGrid extends TileNode implements IGrid {
     }
 
     public void onCraftedShift(ContainerGrid container, EntityPlayer player) {
-        List<ItemStack> craftedItemsList = new ArrayList<ItemStack>();
+        List<ItemStack> craftedItemsList = new ArrayList<>();
         int craftedItems = 0;
         ItemStack crafted = result.getStackInSlot(0);
 

@@ -9,7 +9,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -48,18 +47,12 @@ public class ItemWirelessGrid extends ItemEnergyContainer implements ISpecialEle
     public ItemWirelessGrid() {
         super(3200);
 
-        addPropertyOverride(new ResourceLocation("connected"), new IItemPropertyGetter() {
-            @Override
-            public float apply(ItemStack stack, World world, EntityLivingBase entity) {
-                return (entity != null && isValid(stack) && getDimensionId(stack) == entity.dimension) ? 1.0f : 0.0f;
-            }
-        });
-
         setRegistryName(RefinedStorage.ID, "wireless_grid");
         setMaxDamage(3200);
         setMaxStackSize(1);
         setHasSubtypes(true);
         setCreativeTab(RefinedStorage.INSTANCE.tab);
+        addPropertyOverride(new ResourceLocation("connected"), (stack, world, entity) -> (entity != null && isValid(stack) && getDimensionId(stack) == entity.dimension) ? 1.0f : 0.0f);
     }
 
     @Override
@@ -93,7 +86,7 @@ public class ItemWirelessGrid extends ItemEnergyContainer implements ISpecialEle
     }
 
     @Override
-    public void getSubItems(Item item, CreativeTabs tab, List list) {
+    public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
         list.add(new ItemStack(item, 1, TYPE_NORMAL));
 
         ItemStack fullyCharged = new ItemStack(item, 1, TYPE_NORMAL);
@@ -149,7 +142,7 @@ public class ItemWirelessGrid extends ItemEnergyContainer implements ISpecialEle
 
             if (tile instanceof TileController) {
                 if (((TileController) tile).getWirelessGridHandler().onOpen(player, hand)) {
-                    return new ActionResult(EnumActionResult.SUCCESS, stack);
+                    return new ActionResult<>(EnumActionResult.SUCCESS, stack);
                 } else {
                     player.addChatComponentMessage(new TextComponentTranslation("misc.refinedstorage:wireless_grid.out_of_range"));
                 }
@@ -158,7 +151,7 @@ public class ItemWirelessGrid extends ItemEnergyContainer implements ISpecialEle
             }
         }
 
-        return new ActionResult(EnumActionResult.PASS, stack);
+        return new ActionResult<>(EnumActionResult.PASS, stack);
     }
 
     public static int getDimensionId(ItemStack stack) {

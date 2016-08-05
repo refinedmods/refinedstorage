@@ -14,7 +14,7 @@ import java.util.List;
 
 public class MessageGridUpdate implements IMessage, IMessageHandler<MessageGridUpdate, IMessage> {
     private INetworkMaster network;
-    private List<ClientStack> items = new ArrayList<ClientStack>();
+    private List<ClientStack> items = new ArrayList<>();
 
     public MessageGridUpdate() {
     }

@@ -8,7 +8,7 @@ import java.util.List;
 
 // @TODO: Make this work!
 public class TileCraftingMonitor extends TileNode {
-    private List<ClientSideCraftingTask> tasks = new ArrayList<ClientSideCraftingTask>();
+    private List<ClientSideCraftingTask> tasks = new ArrayList<>();
 
     @Override
     public int getEnergyUsage() {

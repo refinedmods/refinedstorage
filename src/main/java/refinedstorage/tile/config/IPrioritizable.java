@@ -7,10 +7,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import refinedstorage.gui.GuiStorage;
-import refinedstorage.tile.data.*;
+import refinedstorage.tile.data.ITileDataConsumer;
+import refinedstorage.tile.data.ITileDataProducer;
+import refinedstorage.tile.data.TileDataManager;
+import refinedstorage.tile.data.TileDataParameter;
 
 public interface IPrioritizable {
-    static <T extends TileEntity> TileDataParameter createParameter() {
+    static <T extends TileEntity> TileDataParameter<Integer> createParameter() {
         return TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, T>() {
             @Override
             public Integer getValue(T tile) {
@@ -21,15 +24,12 @@ public interface IPrioritizable {
             public void setValue(T tile, Integer value) {
                 ((IPrioritizable) tile).setPriority(value);
             }
-        }, new ITileDataListener<Integer>() {
-            @Override
-            public void onChanged(TileDataParameter<Integer> parameter) {
-                if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
-                    GuiScreen gui = Minecraft.getMinecraft().currentScreen;
+        }, parameter -> {
+            if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+                GuiScreen gui = Minecraft.getMinecraft().currentScreen;
 
-                    if (gui instanceof GuiStorage) {
-                        ((GuiStorage) gui).PRIORITY.setText(String.valueOf(parameter.getValue()));
-                    }
+                if (gui instanceof GuiStorage) {
+                    ((GuiStorage) gui).PRIORITY.setText(String.valueOf(parameter.getValue()));
                 }
             }
         });

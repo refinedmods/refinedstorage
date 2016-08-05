@@ -53,7 +53,7 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
     private int compare = 0;
     private int mode = IFilterable.WHITELIST;
 
-    private List<ExternalStorage> storages = new ArrayList<ExternalStorage>();
+    private List<ExternalStorage> storages = new ArrayList<>();
     private int lastDrawerCount;
 
     public TileExternalStorage() {

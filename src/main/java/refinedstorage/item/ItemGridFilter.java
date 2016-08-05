@@ -28,15 +28,15 @@ public class ItemGridFilter extends ItemBase {
     public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
         if (!world.isRemote) {
             if (player.isSneaking()) {
-                return new ActionResult(EnumActionResult.SUCCESS, new ItemStack(RefinedStorageItems.GRID_FILTER));
+                return new ActionResult<>(EnumActionResult.SUCCESS, new ItemStack(RefinedStorageItems.GRID_FILTER));
             }
 
             player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.GRID_FILTER, world, hand.ordinal(), 0, 0);
 
-            return new ActionResult(EnumActionResult.SUCCESS, stack);
+            return new ActionResult<>(EnumActionResult.SUCCESS, stack);
         }
 
-        return new ActionResult(EnumActionResult.PASS, stack);
+        return new ActionResult<>(EnumActionResult.PASS, stack);
     }
 
     @Override

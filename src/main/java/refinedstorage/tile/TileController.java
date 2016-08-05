@@ -102,12 +102,12 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     private INetworkNodeGraph nodeGraph = new NetworkNodeGraph(this);
     private IGroupedStorage storage = new GroupedStorage(this);
 
-    private List<ICraftingPattern> patterns = new ArrayList<ICraftingPattern>();
+    private List<ICraftingPattern> patterns = new ArrayList<>();
 
-    private Stack<ICraftingTask> craftingTasks = new Stack<ICraftingTask>();
-    private List<ICraftingTask> craftingTasksToAddAsLast = new ArrayList<ICraftingTask>();
-    private List<ICraftingTask> craftingTasksToAdd = new ArrayList<ICraftingTask>();
-    private List<ICraftingTask> craftingTasksToCancel = new ArrayList<ICraftingTask>();
+    private Stack<ICraftingTask> craftingTasks = new Stack<>();
+    private List<ICraftingTask> craftingTasksToAddAsLast = new ArrayList<>();
+    private List<ICraftingTask> craftingTasksToAdd = new ArrayList<>();
+    private List<ICraftingTask> craftingTasksToCancel = new ArrayList<>();
 
     private EnergyStorage energy = new EnergyStorage(RefinedStorage.INSTANCE.controllerCapacity);
     private IControllerEnergyIC2 energyEU;
@@ -122,7 +122,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
-    private List<ClientNode> clientNodes = new ArrayList<ClientNode>();
+    private List<ClientNode> clientNodes = new ArrayList<>();
 
     public TileController() {
         dataManager.addWatchedParameter(REDSTONE_MODE);
@@ -318,7 +318,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public List<ICraftingPattern> getPatterns(ItemStack pattern, int flags) {
-        List<ICraftingPattern> patterns = new ArrayList<ICraftingPattern>();
+        List<ICraftingPattern> patterns = new ArrayList<>();
 
         for (ICraftingPattern craftingPattern : getPatterns()) {
             for (ItemStack output : craftingPattern.getOutputs()) {
@@ -391,11 +391,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public void sendStorageToClient() {
-        for (EntityPlayer player : worldObj.getMinecraftServer().getPlayerList().getPlayerList()) {
-            if (isWatchingGrid(player)) {
-                sendStorageToClient((EntityPlayerMP) player);
-            }
-        }
+        worldObj.getMinecraftServer().getPlayerList().getPlayerList().stream().filter(player -> isWatchingGrid(player)).forEach(player -> {
+            sendStorageToClient(player);
+        });
     }
 
     @Override
@@ -405,11 +403,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public void sendStorageDeltaToClient(ItemStack stack, int delta) {
-        for (EntityPlayer player : worldObj.getMinecraftServer().getPlayerList().getPlayerList()) {
-            if (isWatchingGrid(player)) {
-                RefinedStorage.INSTANCE.network.sendTo(new MessageGridDelta(this, stack, delta), (EntityPlayerMP) player);
-            }
-        }
+        worldObj.getMinecraftServer().getPlayerList().getPlayerList().stream().filter(player -> isWatchingGrid(player)).forEach(player -> {
+            RefinedStorage.INSTANCE.network.sendTo(new MessageGridDelta(this, stack, delta), player);
+        });
     }
 
     private boolean isWatchingGrid(EntityPlayer player) {

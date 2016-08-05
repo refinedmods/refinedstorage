@@ -26,7 +26,7 @@ public class BasicCraftingTask implements ICraftingTask {
     private boolean satisfied[];
     private boolean checked[];
     private boolean childTasks[];
-    private List<ItemStack> itemsTook = new ArrayList<ItemStack>();
+    private List<ItemStack> itemsTook = new ArrayList<>();
     private boolean updatedOnce;
 
     public BasicCraftingTask(ICraftingPattern pattern) {

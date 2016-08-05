@@ -251,7 +251,7 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
 
     @Override
     public int getStored() {
-        return (int) STORED.getValue();
+        return STORED.getValue();
     }
 
     @Override

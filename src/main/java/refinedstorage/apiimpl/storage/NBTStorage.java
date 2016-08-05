@@ -38,7 +38,7 @@ public abstract class NBTStorage implements IStorage {
     private int capacity;
     private TileEntity tile;
 
-    private List<ItemStack> stacks = new ArrayList<ItemStack>();
+    private List<ItemStack> stacks = new ArrayList<>();
 
     /**
      * @param tag      The NBT tag we are reading from and writing the amount stored to, has to be initialized with {@link NBTStorage#createNBT()} if it doesn't exist yet

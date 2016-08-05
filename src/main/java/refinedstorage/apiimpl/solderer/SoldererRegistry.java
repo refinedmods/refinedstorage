@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SoldererRegistry implements ISoldererRegistry {
-    private List<ISoldererRecipe> recipes = new ArrayList<ISoldererRecipe>();
+    private List<ISoldererRecipe> recipes = new ArrayList<>();
 
     @Override
     public void addRecipe(@Nonnull ISoldererRecipe recipe) {

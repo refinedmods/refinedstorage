@@ -15,8 +15,8 @@ import java.util.*;
 public class NetworkNodeGraph implements INetworkNodeGraph {
     private TileController controller;
 
-    private List<INetworkNode> nodes = new ArrayList<INetworkNode>();
-    private Set<Integer> nodeHashes = new HashSet<Integer>();
+    private List<INetworkNode> nodes = new ArrayList<>();
+    private Set<Integer> nodeHashes = new HashSet<>();
 
     public NetworkNodeGraph(TileController controller) {
         this.controller = controller;
@@ -40,11 +40,11 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
         World world = getWorld();
 
-        List<INetworkNode> newNodes = new ArrayList<INetworkNode>();
-        Set<Integer> newNodeHashes = new HashSet<Integer>();
+        List<INetworkNode> newNodes = new ArrayList<>();
+        Set<Integer> newNodeHashes = new HashSet<>();
 
-        Set<BlockPos> checked = new HashSet<BlockPos>();
-        Queue<BlockPos> toCheck = new ArrayDeque<BlockPos>();
+        Set<BlockPos> checked = new HashSet<>();
+        Queue<BlockPos> toCheck = new ArrayDeque<>();
 
         checked.add(start);
         toCheck.add(start);
@@ -110,8 +110,8 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
             }
         }
 
-        List<INetworkNode> oldNodes = new ArrayList<INetworkNode>(nodes);
-        Set<Integer> oldNodeHashes = new HashSet<Integer>(nodeHashes);
+        List<INetworkNode> oldNodes = new ArrayList<>(nodes);
+        Set<Integer> oldNodeHashes = new HashSet<>(nodeHashes);
 
         this.nodes = newNodes;
         this.nodeHashes = newNodeHashes;

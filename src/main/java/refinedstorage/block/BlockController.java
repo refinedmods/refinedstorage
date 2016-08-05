@@ -36,7 +36,7 @@ public class BlockController extends BlockBase {
     }
 
     @Override
-    public void getSubBlocks(Item item, CreativeTabs tab, List subItems) {
+    public void getSubBlocks(Item item, CreativeTabs tab, List<ItemStack> subItems) {
         for (int i = 0; i <= 1; i++) {
             subItems.add(ItemBlockController.createStackWithNBT(new ItemStack(item, 1, i)));
         }
@@ -122,7 +122,7 @@ public class BlockController extends BlockBase {
 
     @Override
     public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
-        List<ItemStack> drops = new ArrayList<ItemStack>();
+        List<ItemStack> drops = new ArrayList<>();
 
         ItemStack stack = new ItemStack(RefinedStorageBlocks.CONTROLLER, 1, RefinedStorageBlocks.CONTROLLER.getMetaFromState(state));
 

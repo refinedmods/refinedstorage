@@ -34,7 +34,7 @@ public class WirelessGrid implements IGrid {
     private int sortingDirection;
     private int searchBoxMode;
 
-    private List<GridFilteredItem> filteredItems = new ArrayList<GridFilteredItem>();
+    private List<GridFilteredItem> filteredItems = new ArrayList<>();
     private ItemHandlerGridFilterInGrid filter = new ItemHandlerGridFilterInGrid(filteredItems) {
         @Override
         protected void onContentsChanged(int slot) {

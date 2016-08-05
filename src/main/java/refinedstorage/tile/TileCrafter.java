@@ -9,7 +9,6 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
-import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerUpgrade;
@@ -50,11 +49,9 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
     @Override
     public void onConnectionChange(INetworkMaster network, boolean state) {
         if (!state) {
-            for (ICraftingTask task : network.getCraftingTasks()) {
-                if (task.getPattern().getContainerPosition().equals(pos)) {
-                    network.cancelCraftingTask(task);
-                }
-            }
+            network.getCraftingTasks().stream()
+                .filter(task -> task.getPattern().getContainerPosition().equals(pos))
+                .forEach(network::cancelCraftingTask);
         }
 
         network.rebuildPatterns();

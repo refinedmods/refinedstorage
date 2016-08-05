@@ -25,7 +25,7 @@ public class ItemHandlerStorage extends ExternalStorage {
 
     @Override
     public List<ItemStack> getItems() {
-        List<ItemStack> items = new ArrayList<ItemStack>();
+        List<ItemStack> items = new ArrayList<>();
 
         for (int i = 0; i < handler.getSlots(); ++i) {
             if (handler.getStackInSlot(i) != null && handler.getStackInSlot(i).getItem() != null) {

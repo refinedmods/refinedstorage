@@ -67,9 +67,7 @@ public class SlotSpecimen extends SlotItemHandler {
                     Field f = ((ItemBlockSpecial) item).getClass().getDeclaredField("block");
                     f.setAccessible(true);
                     return ((Block) f.get(item)).getDefaultState();
-                } catch (IllegalAccessException e) {
-                    // NO OP
-                } catch (NoSuchFieldException e) {
+                } catch (IllegalAccessException | NoSuchFieldException e) {
                     // NO OP
                 }
             } else if (item instanceof ItemBlock) {

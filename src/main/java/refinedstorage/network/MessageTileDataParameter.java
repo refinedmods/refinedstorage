@@ -32,7 +32,7 @@ public class MessageTileDataParameter implements IMessage, IMessageHandler<Messa
         if (parameter != null) {
             try {
                 parameter.setValue(parameter.getSerializer().read(new PacketBuffer(buf)));
-            } catch (IOException e) {
+            } catch (IOException ignored) {
             }
         }
     }

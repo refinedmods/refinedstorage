@@ -45,7 +45,7 @@ public class ItemPattern extends ItemBase {
     }
 
     public static void combineItems(List<String> tooltip, ItemStack... stacks) {
-        Set<Integer> combinedIndices = new HashSet<Integer>();
+        Set<Integer> combinedIndices = new HashSet<>();
 
         for (int i = 0; i < stacks.length; ++i) {
             if (stacks[i] != null && !combinedIndices.contains(i)) {
@@ -73,10 +73,10 @@ public class ItemPattern extends ItemBase {
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
         if (!world.isRemote && player.isSneaking()) {
-            return new ActionResult(EnumActionResult.SUCCESS, new ItemStack(RefinedStorageItems.PATTERN));
+            return new ActionResult<>(EnumActionResult.SUCCESS, new ItemStack(RefinedStorageItems.PATTERN));
         }
 
-        return new ActionResult(EnumActionResult.PASS, stack);
+        return new ActionResult<>(EnumActionResult.PASS, stack);
     }
 
     public static void addInput(ItemStack pattern, ItemStack stack) {

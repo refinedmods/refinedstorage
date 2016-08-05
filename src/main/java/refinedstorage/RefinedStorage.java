@@ -44,7 +44,7 @@ public final class RefinedStorage {
         }
     };
 
-    public List<ClientStack> items = new ArrayList<ClientStack>();
+    public List<ClientStack> items = new ArrayList<>();
 
     public int controllerBaseUsage;
     public int cableUsage;
