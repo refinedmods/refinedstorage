@@ -21,7 +21,6 @@ import refinedstorage.inventory.ItemValidatorBasic;
 import refinedstorage.tile.config.IComparable;
 import refinedstorage.tile.config.IFilterable;
 import refinedstorage.tile.config.IPrioritizable;
-import refinedstorage.tile.data.TileDataManager;
 import refinedstorage.tile.data.TileDataParameter;
 
 import java.util.List;
@@ -284,28 +283,28 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
     }
 
     @Override
-    public TileDataParameter<Integer> getRedstoneModeConfig() {
+    public TileDataParameter<Integer> getRedstoneModeParameter() {
         return REDSTONE_MODE;
     }
 
     @Override
-    public TileDataParameter<Integer> getCompareConfig() {
+    public TileDataParameter<Integer> getCompareParameter() {
         return COMPARE;
     }
 
     @Override
-    public TileDataParameter<Integer> getModeConfig() {
+    public TileDataParameter<Integer> getFilterParameter() {
         return MODE;
+    }
+
+    @Override
+    public TileDataParameter<Integer> getPriorityParameter() {
+        return PRIORITY;
     }
 
     @Override
     public int getPriority() {
         return priority;
-    }
-
-    @Override
-    public void onPriorityChanged(int priority) {
-        TileDataManager.setParameter(PRIORITY, priority);
     }
 
     @Override

@@ -3,6 +3,9 @@
 ### 0.8.16
 **Bugfixes**
 - Fixed issue with IC2 integration causing console spam
+- Slight performance improvement in GUI's
+- Fixed not being able to change some configs in blocks
+- Fixed serverside configs not syncing up with clientside sometimes
 
 **Features**
 - Added German translation by ChillUpX

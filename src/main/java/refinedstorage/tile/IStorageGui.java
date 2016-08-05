@@ -6,17 +6,15 @@ import refinedstorage.tile.data.TileDataParameter;
 public interface IStorageGui {
     String getGuiTitle();
 
-    int getPriority();
-
-    void onPriorityChanged(int priority);
-
     IItemHandler getFilters();
 
-    TileDataParameter<Integer> getRedstoneModeConfig();
+    TileDataParameter<Integer> getRedstoneModeParameter();
 
-    TileDataParameter<Integer> getCompareConfig();
+    TileDataParameter<Integer> getCompareParameter();
 
-    TileDataParameter<Integer> getModeConfig();
+    TileDataParameter<Integer> getFilterParameter();
+
+    TileDataParameter<Integer> getPriorityParameter();
 
     int getStored();
 

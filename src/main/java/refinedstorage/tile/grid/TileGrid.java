@@ -8,6 +8,8 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.items.wrapper.InvWrapper;
@@ -21,15 +23,13 @@ import refinedstorage.block.BlockGrid;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
 import refinedstorage.gui.grid.GridFilteredItem;
+import refinedstorage.gui.grid.GuiGrid;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerGridFilterInGrid;
 import refinedstorage.inventory.ItemValidatorBasic;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.tile.TileNode;
-import refinedstorage.tile.data.ITileDataConsumer;
-import refinedstorage.tile.data.ITileDataProducer;
-import refinedstorage.tile.data.TileDataManager;
-import refinedstorage.tile.data.TileDataParameter;
+import refinedstorage.tile.data.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,6 +95,13 @@ public class TileGrid extends TileNode implements IGrid {
                 tile.searchBoxMode = value;
 
                 tile.markDirty();
+            }
+        }
+    }, new ITileDataListener<Integer>() {
+        @Override
+        public void onChanged(TileDataParameter<Integer> parameter) {
+            if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+                GuiGrid.updateSearchFieldFocus(parameter.getValue());
             }
         }
     });

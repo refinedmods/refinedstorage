@@ -171,11 +171,6 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
     }
 
     @Override
-    public void onPriorityChanged(int priority) {
-        TileDataManager.setParameter(PRIORITY, priority);
-    }
-
-    @Override
     public void setPriority(int priority) {
         this.priority = priority;
 
@@ -221,18 +216,23 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
     }
 
     @Override
-    public TileDataParameter<Integer> getRedstoneModeConfig() {
+    public TileDataParameter<Integer> getRedstoneModeParameter() {
         return REDSTONE_MODE;
     }
 
     @Override
-    public TileDataParameter<Integer> getCompareConfig() {
+    public TileDataParameter<Integer> getCompareParameter() {
         return COMPARE;
     }
 
     @Override
-    public TileDataParameter<Integer> getModeConfig() {
+    public TileDataParameter<Integer> getFilterParameter() {
         return MODE;
+    }
+
+    @Override
+    public TileDataParameter<Integer> getPriorityParameter() {
+        return PRIORITY;
     }
 
     @Override

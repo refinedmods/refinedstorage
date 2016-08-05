@@ -43,7 +43,5 @@ public class SideButtonGridSearchBoxMode extends SideButton {
         }
 
         gui.getGrid().onSearchBoxModeChanged(mode);
-
-        gui.updateSearchBoxFocus(mode);
     }
 }

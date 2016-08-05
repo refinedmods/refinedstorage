@@ -8,6 +8,7 @@ import refinedstorage.gui.sidebutton.SideButtonCompare;
 import refinedstorage.gui.sidebutton.SideButtonMode;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.tile.IStorageGui;
+import refinedstorage.tile.data.TileDataManager;
 
 import java.io.IOException;
 
@@ -15,7 +16,7 @@ public class GuiStorage extends GuiBase {
     private IStorageGui gui;
     private String texture;
 
-    private GuiTextField priorityField;
+    public static GuiTextField PRIORITY;
 
     private int barX = 8;
     private int barY = 54;
@@ -35,27 +36,26 @@ public class GuiStorage extends GuiBase {
 
     @Override
     public void init(int x, int y) {
-        if (gui.getRedstoneModeConfig() != null) {
-            addSideButton(new SideButtonRedstoneMode(gui.getRedstoneModeConfig()));
+        if (gui.getRedstoneModeParameter() != null) {
+            addSideButton(new SideButtonRedstoneMode(gui.getRedstoneModeParameter()));
         }
 
-        if (gui.getModeConfig() != null) {
-            addSideButton(new SideButtonMode(gui.getModeConfig()));
+        if (gui.getFilterParameter() != null) {
+            addSideButton(new SideButtonMode(gui.getFilterParameter()));
         }
 
-        if (gui.getCompareConfig() != null) {
-            addSideButton(new SideButtonCompare(gui.getCompareConfig(), CompareUtils.COMPARE_DAMAGE));
-            addSideButton(new SideButtonCompare(gui.getCompareConfig(), CompareUtils.COMPARE_NBT));
+        if (gui.getCompareParameter() != null) {
+            addSideButton(new SideButtonCompare(gui.getCompareParameter(), CompareUtils.COMPARE_DAMAGE));
+            addSideButton(new SideButtonCompare(gui.getCompareParameter(), CompareUtils.COMPARE_NBT));
         }
 
-        priorityField = new GuiTextField(0, fontRendererObj, x + 98 + 1, y + 54 + 1, 25, fontRendererObj.FONT_HEIGHT);
-        // @TODO: Only change this when packet is received
-        priorityField.setText(String.valueOf(gui.getPriority()));
-        priorityField.setEnableBackgroundDrawing(false);
-        priorityField.setVisible(true);
-        priorityField.setTextColor(16777215);
-        priorityField.setCanLoseFocus(true);
-        priorityField.setFocused(false);
+        PRIORITY = new GuiTextField(0, fontRendererObj, x + 98 + 1, y + 54 + 1, 25, fontRendererObj.FONT_HEIGHT);
+        PRIORITY.setText(String.valueOf(gui.getPriorityParameter().getValue()));
+        PRIORITY.setEnableBackgroundDrawing(false);
+        PRIORITY.setVisible(true);
+        PRIORITY.setTextColor(16777215);
+        PRIORITY.setCanLoseFocus(true);
+        PRIORITY.setFocused(false);
     }
 
     @Override
@@ -72,7 +72,7 @@ public class GuiStorage extends GuiBase {
 
         drawTexture(x + barX, y + barY + barHeight - barHeightNew, 179, barHeight - barHeightNew, barWidth, barHeightNew);
 
-        priorityField.drawTextBox();
+        PRIORITY.drawTextBox();
     }
 
     @Override
@@ -97,16 +97,16 @@ public class GuiStorage extends GuiBase {
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         super.mouseClicked(mouseX, mouseY, mouseButton);
 
-        priorityField.mouseClicked(mouseX, mouseY, mouseButton);
+        PRIORITY.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     @Override
     protected void keyTyped(char character, int keyCode) throws IOException {
-        if (!checkHotbarKeys(keyCode) && priorityField.textboxKeyTyped(character, keyCode)) {
-            Integer result = Ints.tryParse(priorityField.getText());
+        if (!checkHotbarKeys(keyCode) && PRIORITY.textboxKeyTyped(character, keyCode)) {
+            Integer result = Ints.tryParse(PRIORITY.getText());
 
             if (result != null) {
-                gui.onPriorityChanged(result);
+                TileDataManager.setParameter(gui.getPriorityParameter(), result);
             }
         } else {
             super.keyTyped(character, keyCode);

@@ -35,15 +35,11 @@ public class TileDataParameter<T> {
         return valueConsumer;
     }
 
-    public ITileDataListener getListener() {
-        return listener;
-    }
-
     public void setValue(T value) {
         this.value = value;
 
         if (listener != null) {
-            listener.onChanged();
+            listener.onChanged(this);
         }
     }
 

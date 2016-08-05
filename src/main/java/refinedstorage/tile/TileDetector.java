@@ -48,14 +48,14 @@ public class TileDetector extends TileNode implements IComparable {
 
             tile.markDirty();
         }
-    }, new ITileDataListener() {
+    }, new ITileDataListener<Integer>() {
         @Override
-        public void onChanged() {
+        public void onChanged(TileDataParameter<Integer> parameter) {
             if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
                 GuiScreen gui = Minecraft.getMinecraft().currentScreen;
 
                 if (gui instanceof GuiDetector) {
-                    ((GuiDetector) gui).AMOUNT.setText(String.valueOf(AMOUNT.getValue()));
+                    ((GuiDetector) gui).AMOUNT.setText(String.valueOf(parameter.getValue()));
                 }
             }
         }
