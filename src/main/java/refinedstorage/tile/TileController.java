@@ -52,7 +52,7 @@ import refinedstorage.tile.externalstorage.ExternalStorage;
 import java.util.*;
 
 public class TileController extends TileBase implements INetworkMaster, IEnergyReceiver, IRedstoneConfigurable {
-    public static final TileDataParameter REDSTONE_MODE = RedstoneMode.createParameter();
+    public static final TileDataParameter<Integer> REDSTONE_MODE = RedstoneMode.createParameter();
 
     public static final TileDataParameter<Integer> ENERGY_USAGE = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileController>() {
         @Override

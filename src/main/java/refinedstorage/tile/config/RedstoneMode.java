@@ -31,7 +31,7 @@ public enum RedstoneMode {
         return id < 0 || id >= values().length ? IGNORE : values()[id];
     }
 
-    public static <T extends TileEntity> TileDataParameter createParameter() {
+    public static <T extends TileEntity> TileDataParameter<Integer> createParameter() {
         return TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, T>() {
             @Override
             public Integer getValue(T tile) {

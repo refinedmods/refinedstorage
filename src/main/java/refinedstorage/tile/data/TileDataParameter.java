@@ -2,7 +2,6 @@ package refinedstorage.tile.data;
 
 import net.minecraft.network.datasync.DataSerializer;
 
-// @TODO: Annotate me better!
 public class TileDataParameter<T> {
     private int id;
     private DataSerializer<T> serializer;

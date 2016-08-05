@@ -15,7 +15,7 @@ import refinedstorage.tile.config.IComparable;
 import refinedstorage.tile.data.TileDataParameter;
 
 public class TileInterface extends TileNode implements IComparable {
-    public static final TileDataParameter COMPARE = IComparable.createParameter();
+    public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
 
     private static final String NBT_COMPARE = "Compare";
 

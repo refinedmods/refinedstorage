@@ -15,10 +15,13 @@ import refinedstorage.gui.GuiDetector;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.tile.config.IComparable;
 import refinedstorage.tile.config.RedstoneMode;
-import refinedstorage.tile.data.*;
+import refinedstorage.tile.data.ITileDataConsumer;
+import refinedstorage.tile.data.ITileDataProducer;
+import refinedstorage.tile.data.TileDataManager;
+import refinedstorage.tile.data.TileDataParameter;
 
 public class TileDetector extends TileNode implements IComparable {
-    public static final TileDataParameter COMPARE = IComparable.createParameter();
+    public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
 
     public static final TileDataParameter<Integer> MODE = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileDetector>() {
         @Override
@@ -48,15 +51,12 @@ public class TileDetector extends TileNode implements IComparable {
 
             tile.markDirty();
         }
-    }, new ITileDataListener<Integer>() {
-        @Override
-        public void onChanged(TileDataParameter<Integer> parameter) {
-            if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
-                GuiScreen gui = Minecraft.getMinecraft().currentScreen;
+    }, parameter -> {
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+            GuiScreen gui = Minecraft.getMinecraft().currentScreen;
 
-                if (gui instanceof GuiDetector) {
-                    ((GuiDetector) gui).AMOUNT.setText(String.valueOf(parameter.getValue()));
-                }
+            if (gui instanceof GuiDetector) {
+                ((GuiDetector) gui).AMOUNT.setText(String.valueOf(parameter.getValue()));
             }
         }
     });

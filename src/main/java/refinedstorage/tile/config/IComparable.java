@@ -8,7 +8,7 @@ import refinedstorage.tile.data.TileDataManager;
 import refinedstorage.tile.data.TileDataParameter;
 
 public interface IComparable {
-    static <T extends TileEntity> TileDataParameter createParameter() {
+    static <T extends TileEntity> TileDataParameter<Integer> createParameter() {
         return TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, T>() {
             @Override
             public Integer getValue(T tile) {

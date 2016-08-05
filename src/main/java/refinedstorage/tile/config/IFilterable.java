@@ -14,7 +14,7 @@ public interface IFilterable {
     int WHITELIST = 0;
     int BLACKLIST = 1;
 
-    static <T extends TileEntity> TileDataParameter createParameter() {
+    static <T extends TileEntity> TileDataParameter<Integer> createParameter() {
         return TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, T>() {
             @Override
             public Integer getValue(T tile) {

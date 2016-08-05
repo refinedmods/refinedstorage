@@ -15,8 +15,8 @@ import refinedstorage.tile.config.IFilterable;
 import refinedstorage.tile.data.TileDataParameter;
 
 public class TileImporter extends TileNode implements IComparable, IFilterable {
-    public static final TileDataParameter COMPARE = IComparable.createParameter();
-    public static final TileDataParameter MODE = IFilterable.createParameter();
+    public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
+    public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
 
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";

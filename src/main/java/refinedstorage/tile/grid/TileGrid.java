@@ -29,7 +29,10 @@ import refinedstorage.inventory.ItemHandlerGridFilterInGrid;
 import refinedstorage.inventory.ItemValidatorBasic;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.tile.TileNode;
-import refinedstorage.tile.data.*;
+import refinedstorage.tile.data.ITileDataConsumer;
+import refinedstorage.tile.data.ITileDataProducer;
+import refinedstorage.tile.data.TileDataManager;
+import refinedstorage.tile.data.TileDataParameter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,12 +100,9 @@ public class TileGrid extends TileNode implements IGrid {
                 tile.markDirty();
             }
         }
-    }, new ITileDataListener<Integer>() {
-        @Override
-        public void onChanged(TileDataParameter<Integer> parameter) {
-            if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
-                GuiGrid.updateSearchFieldFocus(parameter.getValue());
-            }
+    }, parameter -> {
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+            GuiGrid.updateSearchFieldFocus(parameter.getValue());
         }
     });
 
