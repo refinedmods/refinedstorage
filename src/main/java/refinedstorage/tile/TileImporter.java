@@ -10,14 +10,13 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemUpgrade;
-import refinedstorage.tile.config.ICompareConfig;
-import refinedstorage.tile.config.IModeConfig;
-import refinedstorage.tile.config.ModeFilter;
+import refinedstorage.tile.config.IComparable;
+import refinedstorage.tile.config.IFilterable;
 import refinedstorage.tile.data.TileDataParameter;
 
-public class TileImporter extends TileNode implements ICompareConfig, IModeConfig {
-    public static final TileDataParameter COMPARE = ICompareConfig.createConfigParameter();
-    public static final TileDataParameter MODE = IModeConfig.createConfigParameter();
+public class TileImporter extends TileNode implements IComparable, IFilterable {
+    public static final TileDataParameter COMPARE = IComparable.createParameter();
+    public static final TileDataParameter MODE = IFilterable.createParameter();
 
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
@@ -26,7 +25,7 @@ public class TileImporter extends TileNode implements ICompareConfig, IModeConfi
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK);
 
     private int compare = 0;
-    private int mode = IModeConfig.WHITELIST;
+    private int mode = IFilterable.WHITELIST;
 
     private int currentSlot;
 
@@ -55,7 +54,7 @@ public class TileImporter extends TileNode implements ICompareConfig, IModeConfi
         if (handler.getSlots() > 0) {
             ItemStack stack = handler.getStackInSlot(currentSlot);
 
-            if (stack == null || !ModeFilter.respectsMode(filters, mode, compare, stack)) {
+            if (stack == null || !IFilterable.canTake(filters, mode, compare, stack)) {
                 currentSlot++;
             } else if (ticks % upgrades.getSpeed() == 0) {
                 int quantity = upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK) ? 64 : 1;

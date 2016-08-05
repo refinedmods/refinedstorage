@@ -2,7 +2,6 @@ package refinedstorage.gui.sidebutton;
 
 import net.minecraft.util.text.TextFormatting;
 import refinedstorage.gui.GuiBase;
-import refinedstorage.tile.config.RedstoneMode;
 import refinedstorage.tile.data.TileDataManager;
 import refinedstorage.tile.data.TileDataParameter;
 
@@ -26,6 +25,6 @@ public class SideButtonRedstoneMode extends SideButton {
 
     @Override
     public void actionPerformed() {
-        TileDataManager.setParameter(parameter, RedstoneMode.getById(parameter.getValue()).next().id);
+        TileDataManager.setParameter(parameter, parameter.getValue() + 1);
     }
 }

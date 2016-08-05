@@ -14,16 +14,15 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemUpgrade;
-import refinedstorage.tile.config.ICompareConfig;
-import refinedstorage.tile.config.IModeConfig;
-import refinedstorage.tile.config.ModeFilter;
+import refinedstorage.tile.config.IComparable;
+import refinedstorage.tile.config.IFilterable;
 import refinedstorage.tile.data.TileDataParameter;
 
 import java.util.List;
 
-public class TileDestructor extends TileNode implements ICompareConfig, IModeConfig {
-    public static final TileDataParameter COMPARE = ICompareConfig.createConfigParameter();
-    public static final TileDataParameter MODE = IModeConfig.createConfigParameter();
+public class TileDestructor extends TileNode implements IComparable, IFilterable {
+    public static final TileDataParameter COMPARE = IComparable.createParameter();
+    public static final TileDataParameter MODE = IFilterable.createParameter();
 
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
@@ -34,7 +33,7 @@ public class TileDestructor extends TileNode implements ICompareConfig, IModeCon
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED);
 
     private int compare = 0;
-    private int mode = IModeConfig.WHITELIST;
+    private int mode = IFilterable.WHITELIST;
 
     public TileDestructor() {
         dataManager.addWatchedParameter(COMPARE);
@@ -55,7 +54,7 @@ public class TileDestructor extends TileNode implements ICompareConfig, IModeCon
             ItemStack frontStack = frontBlockState.getBlock().getItem(worldObj, front, frontBlockState);
 
             if (frontStack != null) {
-                if (ModeFilter.respectsMode(filters, mode, compare, frontStack)) {
+                if (IFilterable.canTake(filters, mode, compare, frontStack)) {
                     List<ItemStack> drops = frontBlockState.getBlock().getDrops(worldObj, front, frontBlockState, 0);
 
                     worldObj.playEvent(null, 2001, front, Block.getStateId(frontBlockState));

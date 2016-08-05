@@ -14,20 +14,19 @@ import refinedstorage.apiimpl.storage.NBTStorage;
 import refinedstorage.block.BlockStorage;
 import refinedstorage.block.EnumStorageType;
 import refinedstorage.inventory.ItemHandlerBasic;
-import refinedstorage.tile.config.ICompareConfig;
-import refinedstorage.tile.config.IModeConfig;
+import refinedstorage.tile.config.IComparable;
+import refinedstorage.tile.config.IFilterable;
 import refinedstorage.tile.config.IPrioritizable;
-import refinedstorage.tile.config.ModeFilter;
 import refinedstorage.tile.data.ITileDataProducer;
 import refinedstorage.tile.data.TileDataManager;
 import refinedstorage.tile.data.TileDataParameter;
 
 import java.util.List;
 
-public class TileStorage extends TileNode implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig, IPrioritizable {
-    public static final TileDataParameter PRIORITY = IPrioritizable.createConfigParameter();
-    public static final TileDataParameter COMPARE = ICompareConfig.createConfigParameter();
-    public static final TileDataParameter MODE = IModeConfig.createConfigParameter();
+public class TileStorage extends TileNode implements IStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable {
+    public static final TileDataParameter PRIORITY = IPrioritizable.createParameter();
+    public static final TileDataParameter COMPARE = IComparable.createParameter();
+    public static final TileDataParameter MODE = IFilterable.createParameter();
     public static final TileDataParameter STORED = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileStorage>() {
         @Override
         public Integer getValue(TileStorage tile) {
@@ -47,7 +46,7 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
 
         @Override
         public ItemStack insertItem(ItemStack stack, int size, boolean simulate) {
-            if (!ModeFilter.respectsMode(filters, mode, compare, stack)) {
+            if (!IFilterable.canTake(filters, mode, compare, stack)) {
                 return ItemHandlerHelper.copyStackWithSize(stack, size);
             }
 
@@ -71,7 +70,7 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
 
     private int priority = 0;
     private int compare = 0;
-    private int mode = IModeConfig.WHITELIST;
+    private int mode = IFilterable.WHITELIST;
 
     public TileStorage() {
         dataManager.addWatchedParameter(PRIORITY);

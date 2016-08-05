@@ -4,7 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.api.storage.CompareUtils;
-import refinedstorage.tile.config.ModeFilter;
+import refinedstorage.tile.config.IFilterable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,7 @@ public class ItemHandlerStorage extends ExternalStorage {
 
     @Override
     public ItemStack insertItem(ItemStack stack, int size, boolean simulate) {
-        if (ModeFilter.respectsMode(externalStorage.getFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack)) {
+        if (IFilterable.canTake(externalStorage.getFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack)) {
             return ItemHandlerHelper.insertItem(handler, ItemHandlerHelper.copyStackWithSize(stack, size), simulate);
         }
 

@@ -8,7 +8,7 @@ import refinedstorage.tile.data.TileDataManager;
 import refinedstorage.tile.data.TileDataParameter;
 
 public interface IPrioritizable {
-    static <T extends TileEntity> TileDataParameter createConfigParameter() {
+    static <T extends TileEntity> TileDataParameter createParameter() {
         return TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, T>() {
             @Override
             public Integer getValue(T tile) {

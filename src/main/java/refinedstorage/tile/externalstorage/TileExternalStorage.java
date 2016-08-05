@@ -14,8 +14,8 @@ import refinedstorage.api.storage.IStorageProvider;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.tile.IStorageGui;
 import refinedstorage.tile.TileNode;
-import refinedstorage.tile.config.ICompareConfig;
-import refinedstorage.tile.config.IModeConfig;
+import refinedstorage.tile.config.IComparable;
+import refinedstorage.tile.config.IFilterable;
 import refinedstorage.tile.config.IPrioritizable;
 import refinedstorage.tile.data.ITileDataProducer;
 import refinedstorage.tile.data.TileDataManager;
@@ -24,10 +24,10 @@ import refinedstorage.tile.data.TileDataParameter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileExternalStorage extends TileNode implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig, IPrioritizable {
-    public static final TileDataParameter PRIORITY = IPrioritizable.createConfigParameter();
-    public static final TileDataParameter COMPARE = ICompareConfig.createConfigParameter();
-    public static final TileDataParameter MODE = IModeConfig.createConfigParameter();
+public class TileExternalStorage extends TileNode implements IStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable {
+    public static final TileDataParameter PRIORITY = IPrioritizable.createParameter();
+    public static final TileDataParameter COMPARE = IComparable.createParameter();
+    public static final TileDataParameter MODE = IFilterable.createParameter();
 
     public static final TileDataParameter STORED = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileExternalStorage>() {
         @Override
@@ -51,7 +51,7 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
 
     private int priority = 0;
     private int compare = 0;
-    private int mode = IModeConfig.WHITELIST;
+    private int mode = IFilterable.WHITELIST;
 
     private List<ExternalStorage> storages = new ArrayList<ExternalStorage>();
     private int lastDrawerCount;

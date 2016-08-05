@@ -2,36 +2,18 @@ package refinedstorage.tile;
 
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.INetworkNode;
 import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.block.BlockNode;
-import refinedstorage.tile.config.IRedstoneModeConfig;
+import refinedstorage.tile.config.IRedstoneConfigurable;
 import refinedstorage.tile.config.RedstoneMode;
-import refinedstorage.tile.data.ITileDataConsumer;
-import refinedstorage.tile.data.ITileDataProducer;
-import refinedstorage.tile.data.TileDataManager;
 import refinedstorage.tile.data.TileDataParameter;
 
-public abstract class TileNode extends TileBase implements INetworkNode, IRedstoneModeConfig {
-    public static final TileDataParameter REDSTONE_MODE = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileNode>() {
-        @Override
-        public Integer getValue(TileNode tile) {
-            return tile.redstoneMode.id;
-        }
-    }, new ITileDataConsumer<Integer, TileNode>() {
-        @Override
-        public void setValue(TileNode tile, Integer value) {
-            RedstoneMode mode = RedstoneMode.getById(value);
-
-            if (mode != null) {
-                tile.redstoneMode = mode;
-            }
-        }
-    });
+public abstract class TileNode extends TileBase implements INetworkNode, IRedstoneConfigurable {
+    public static final TileDataParameter REDSTONE_MODE = RedstoneMode.createParameter();
 
     private static final String NBT_CONNECTED = "Connected";
 
@@ -164,7 +146,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        tag.setInteger(RedstoneMode.NBT, redstoneMode.id);
+        tag.setInteger(RedstoneMode.NBT, redstoneMode.ordinal());
 
         return tag;
     }

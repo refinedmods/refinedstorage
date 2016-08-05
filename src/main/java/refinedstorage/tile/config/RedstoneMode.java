@@ -1,30 +1,18 @@
 package refinedstorage.tile.config;
 
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import refinedstorage.tile.data.ITileDataConsumer;
+import refinedstorage.tile.data.ITileDataProducer;
+import refinedstorage.tile.data.TileDataManager;
+import refinedstorage.tile.data.TileDataParameter;
 
 public enum RedstoneMode {
-    IGNORE(0),
-    HIGH(1),
-    LOW(2);
+    IGNORE, HIGH, LOW;
 
     public static final String NBT = "RedstoneMode";
-
-    public final int id;
-
-    RedstoneMode(int id) {
-        this.id = id;
-    }
-
-    public RedstoneMode next() {
-        RedstoneMode next = getById(id + 1);
-
-        if (next == null) {
-            return getById(0);
-        }
-
-        return next;
-    }
 
     public boolean isEnabled(World world, BlockPos pos) {
         switch (this) {
@@ -39,14 +27,21 @@ public enum RedstoneMode {
         return false;
     }
 
-    // @TOOD: Remove id field
     public static RedstoneMode getById(int id) {
-        for (RedstoneMode control : values()) {
-            if (control.id == id) {
-                return control;
-            }
-        }
+        return id < 0 || id >= values().length ? IGNORE : values()[id];
+    }
 
-        return null;
+    public static <T extends TileEntity> TileDataParameter createParameter() {
+        return TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, T>() {
+            @Override
+            public Integer getValue(T tile) {
+                return ((IRedstoneConfigurable) tile).getRedstoneMode().ordinal();
+            }
+        }, new ITileDataConsumer<Integer, T>() {
+            @Override
+            public void setValue(T tile, Integer value) {
+                ((IRedstoneConfigurable) tile).setRedstoneMode(RedstoneMode.getById(value));
+            }
+        });
     }
 }

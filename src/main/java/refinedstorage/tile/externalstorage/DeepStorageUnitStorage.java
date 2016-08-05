@@ -4,7 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 import refinedstorage.api.storage.CompareUtils;
-import refinedstorage.tile.config.ModeFilter;
+import refinedstorage.tile.config.IFilterable;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
@@ -35,7 +35,7 @@ public class DeepStorageUnitStorage extends ExternalStorage {
 
     @Override
     public ItemStack insertItem(@Nonnull ItemStack stack, int size, boolean simulate) {
-        if (ModeFilter.respectsMode(externalStorage.getFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack)) {
+        if (IFilterable.canTake(externalStorage.getFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack)) {
             if (unit.getStoredItemType() != null) {
                 if (CompareUtils.compareStackNoQuantity(unit.getStoredItemType(), stack)) {
                     if (getStored() + size > unit.getMaxStoredCount()) {

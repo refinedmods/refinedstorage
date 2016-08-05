@@ -1,6 +1,6 @@
 package refinedstorage.tile.config;
 
-public interface IRedstoneModeConfig {
+public interface IRedstoneConfigurable {
     RedstoneMode getRedstoneMode();
 
     void setRedstoneMode(RedstoneMode mode);

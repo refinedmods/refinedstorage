@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
@@ -41,13 +42,39 @@ import refinedstorage.integration.tesla.IntegrationTesla;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.network.MessageGridDelta;
 import refinedstorage.network.MessageGridUpdate;
-import refinedstorage.tile.config.IRedstoneModeConfig;
+import refinedstorage.tile.config.IRedstoneConfigurable;
 import refinedstorage.tile.config.RedstoneMode;
+import refinedstorage.tile.data.ITileDataProducer;
+import refinedstorage.tile.data.TileDataManager;
+import refinedstorage.tile.data.TileDataParameter;
 import refinedstorage.tile.externalstorage.ExternalStorage;
 
 import java.util.*;
 
-public class TileController extends TileBase implements INetworkMaster, IEnergyReceiver, IRedstoneModeConfig {
+public class TileController extends TileBase implements INetworkMaster, IEnergyReceiver, IRedstoneConfigurable {
+    public static final TileDataParameter REDSTONE_MODE = RedstoneMode.createParameter();
+
+    public static final TileDataParameter<Integer> ENERGY_USAGE = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileController>() {
+        @Override
+        public Integer getValue(TileController tile) {
+            return tile.getEnergyUsage();
+        }
+    });
+
+    public static final TileDataParameter<Integer> ENERGY_STORED = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileController>() {
+        @Override
+        public Integer getValue(TileController tile) {
+            return tile.getEnergy().getEnergyStored();
+        }
+    });
+
+    public static final TileDataParameter<Integer> ENERGY_CAPACITY = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileController>() {
+        @Override
+        public Integer getValue(TileController tile) {
+            return tile.getEnergy().getMaxEnergyStored();
+        }
+    });
+
     public static final String NBT_ENERGY = "Energy";
     public static final String NBT_ENERGY_CAPACITY = "EnergyCapacity";
 
@@ -85,7 +112,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     private EnergyStorage energy = new EnergyStorage(RefinedStorage.INSTANCE.controllerCapacity);
     private IControllerEnergyIC2 energyEU;
     private ControllerEnergyTesla energyTesla;
-    private int energyUsage;
 
     private int lastEnergyDisplay;
     private int lastEnergyComparator;
@@ -99,6 +125,11 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     private List<ClientNode> clientNodes = new ArrayList<ClientNode>();
 
     public TileController() {
+        dataManager.addWatchedParameter(REDSTONE_MODE);
+        dataManager.addWatchedParameter(ENERGY_USAGE);
+        dataManager.addWatchedParameter(ENERGY_STORED);
+        dataManager.addParameter(ENERGY_CAPACITY);
+
         if (IntegrationIC2.isLoaded()) {
             this.energyEU = new ControllerEnergyIC2(this);
         } else {
@@ -500,7 +531,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
         energy.writeToNBT(tag);
 
-        tag.setInteger(RedstoneMode.NBT, redstoneMode.id);
+        tag.setInteger(RedstoneMode.NBT, redstoneMode.ordinal());
 
         NBTTagList list = new NBTTagList();
 
@@ -579,19 +610,15 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public int getEnergyUsage() {
-        if (!worldObj.isRemote) {
-            int usage = RefinedStorage.INSTANCE.controllerBaseUsage;
+        int usage = RefinedStorage.INSTANCE.controllerBaseUsage;
 
-            for (INetworkNode node : nodeGraph.all()) {
-                if (node.canUpdate()) {
-                    usage += node.getEnergyUsage();
-                }
+        for (INetworkNode node : nodeGraph.all()) {
+            if (node.canUpdate()) {
+                usage += node.getEnergyUsage();
             }
-
-            return usage;
         }
 
-        return energyUsage;
+        return usage;
     }
 
     public EnumControllerType getType() {
@@ -602,7 +629,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         return type == null ? EnumControllerType.NORMAL : type;
     }
 
-    // @TODO: Make this work as well
+    // @TODO: Sync client nodes
     /*@Override
     public void readContainerData(ByteBuf buf) {
         energy.setEnergyStored(buf.readInt());

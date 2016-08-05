@@ -3,6 +3,7 @@ package refinedstorage.gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import refinedstorage.container.ContainerController;
+import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.tile.TileController;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public class GuiController extends GuiBase {
 
     @Override
     public void init(int x, int y) {
-        //addSideButton(new SideButtonRedstoneMode(controller));
+        addSideButton(new SideButtonRedstoneMode(TileController.REDSTONE_MODE));
     }
 
     @Override
@@ -99,7 +100,7 @@ public class GuiController extends GuiBase {
         }
 
         if (inBounds(barX, barY, barWidth, barHeight, mouseX, mouseY)) {
-            drawTooltip(mouseX, mouseY, t("misc.refinedstorage:energy_usage", controller.getEnergyUsage()) + "\n" + t("misc.refinedstorage:energy_stored", controller.getEnergy().getEnergyStored(), controller.getEnergy().getMaxEnergyStored()));
+            drawTooltip(mouseX, mouseY, t("misc.refinedstorage:energy_usage", TileController.ENERGY_USAGE.getValue()) + "\n" + t("misc.refinedstorage:energy_stored", TileController.ENERGY_STORED.getValue(), TileController.ENERGY_CAPACITY.getValue()));
         }
     }
 

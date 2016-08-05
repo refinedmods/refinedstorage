@@ -8,15 +8,15 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.inventory.ItemHandlerBasic;
-import refinedstorage.tile.config.ICompareConfig;
+import refinedstorage.tile.config.IComparable;
 import refinedstorage.tile.config.RedstoneMode;
 import refinedstorage.tile.data.ITileDataConsumer;
 import refinedstorage.tile.data.ITileDataProducer;
 import refinedstorage.tile.data.TileDataManager;
 import refinedstorage.tile.data.TileDataParameter;
 
-public class TileDetector extends TileNode implements ICompareConfig {
-    public static final TileDataParameter COMPARE = ICompareConfig.createConfigParameter();
+public class TileDetector extends TileNode implements IComparable {
+    public static final TileDataParameter COMPARE = IComparable.createParameter();
 
     public static final TileDataParameter<Integer> MODE = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileDetector>() {
         @Override

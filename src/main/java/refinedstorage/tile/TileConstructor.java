@@ -16,11 +16,11 @@ import refinedstorage.container.slot.SlotSpecimen;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemUpgrade;
-import refinedstorage.tile.config.ICompareConfig;
+import refinedstorage.tile.config.IComparable;
 import refinedstorage.tile.data.TileDataParameter;
 
-public class TileConstructor extends TileNode implements ICompareConfig {
-    public static final TileDataParameter COMPARE = ICompareConfig.createConfigParameter();
+public class TileConstructor extends TileNode implements IComparable {
+    public static final TileDataParameter COMPARE = IComparable.createParameter();
 
     private static final String NBT_COMPARE = "Compare";
 

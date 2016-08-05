@@ -5,7 +5,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.api.storage.CompareUtils;
-import refinedstorage.tile.config.ModeFilter;
+import refinedstorage.tile.config.IFilterable;
 
 import java.util.Collections;
 import java.util.List;
@@ -39,7 +39,7 @@ public class DrawerStorage extends ExternalStorage {
 
     @Override
     public ItemStack insertItem(ItemStack stack, int size, boolean simulate) {
-        if (ModeFilter.respectsMode(externalStorage.getFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack) && drawer.canItemBeStored(stack)) {
+        if (IFilterable.canTake(externalStorage.getFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack) && drawer.canItemBeStored(stack)) {
             if (!drawer.isEmpty()) {
                 if (getStored() + size > drawer.getMaxCapacity(stack)) {
                     int remainingSpace = getCapacity() - getStored();

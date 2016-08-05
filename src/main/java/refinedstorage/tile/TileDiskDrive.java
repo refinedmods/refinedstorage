@@ -18,19 +18,18 @@ import refinedstorage.apiimpl.storage.NBTStorage;
 import refinedstorage.block.EnumStorageType;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemValidatorBasic;
-import refinedstorage.tile.config.ICompareConfig;
-import refinedstorage.tile.config.IModeConfig;
+import refinedstorage.tile.config.IComparable;
+import refinedstorage.tile.config.IFilterable;
 import refinedstorage.tile.config.IPrioritizable;
-import refinedstorage.tile.config.ModeFilter;
 import refinedstorage.tile.data.TileDataManager;
 import refinedstorage.tile.data.TileDataParameter;
 
 import java.util.List;
 
-public class TileDiskDrive extends TileNode implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig, IPrioritizable {
-    public static final TileDataParameter PRIORITY = IPrioritizable.createConfigParameter();
-    public static final TileDataParameter COMPARE = ICompareConfig.createConfigParameter();
-    public static final TileDataParameter MODE = IModeConfig.createConfigParameter();
+public class TileDiskDrive extends TileNode implements IStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable {
+    public static final TileDataParameter PRIORITY = IPrioritizable.createParameter();
+    public static final TileDataParameter COMPARE = IComparable.createParameter();
+    public static final TileDataParameter MODE = IFilterable.createParameter();
 
     public class Storage extends NBTStorage {
         public Storage(ItemStack disk) {
@@ -44,7 +43,7 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
 
         @Override
         public ItemStack insertItem(ItemStack stack, int size, boolean simulate) {
-            if (!ModeFilter.respectsMode(getFilters(), mode, getCompare(), stack)) {
+            if (!IFilterable.canTake(getFilters(), mode, getCompare(), stack)) {
                 return ItemHandlerHelper.copyStackWithSize(stack, size);
             }
 
@@ -101,7 +100,7 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
 
     private int priority = 0;
     private int compare = 0;
-    private int mode = IModeConfig.WHITELIST;
+    private int mode = IFilterable.WHITELIST;
     private int stored = 0;
 
     public TileDiskDrive() {
