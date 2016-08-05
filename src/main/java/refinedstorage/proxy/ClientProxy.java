@@ -1,29 +1,52 @@
 package refinedstorage.proxy;
 
-import net.minecraft.client.Minecraft;
+import com.google.common.base.Predicate;
+import mcmultipart.client.multipart.ModelMultipartContainer;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.item.Item;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageItems;
+import refinedstorage.block.BlockCable;
 import refinedstorage.block.EnumControllerType;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.block.EnumStorageType;
 import refinedstorage.item.*;
 
+import javax.annotation.Nullable;
+
 public class ClientProxy extends CommonProxy {
-    public static World getWorld() {
-        return Minecraft.getMinecraft().theWorld;
+    @SubscribeEvent
+    public void onModelBake(ModelBakeEvent e) {
+        System.out.println("Model bake event called.");
+        for (ModelResourceLocation model : e.getModelRegistry().getKeys()) {
+            for (BlockCable cable : cables) {
+                if (model.getResourceDomain().equals(RefinedStorage.ID) && model.getResourcePath().equals(cable.getName()) && !model.getVariant().equals("inventory")) {
+                    e.getModelRegistry().putObject(model, new ModelMultipartContainer(e.getModelRegistry().getObject(model), new Predicate<BlockRenderLayer>() {
+                        @Override
+                        public boolean apply(@Nullable BlockRenderLayer input) {
+                            return cable.canRenderInLayer(input);
+                        }
+                    }));
+                }
+            }
+        }
     }
 
     @Override
     public void preInit(FMLPreInitializationEvent e) {
         super.preInit(e);
+
+        MinecraftForge.EVENT_BUS.register(this);
 
         // Item Variants
         ModelBakery.registerItemVariants(RefinedStorageItems.STORAGE_DISK,

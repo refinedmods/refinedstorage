@@ -15,7 +15,7 @@ import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.IComparable;
 import refinedstorage.tile.data.TileDataParameter;
 
-public class TileExporter extends TileNode implements IComparable {
+public class TileExporter extends TileMultipartNode implements IComparable {
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
 
     private static final String NBT_COMPARE = "Compare";

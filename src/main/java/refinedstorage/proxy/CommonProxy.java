@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -20,10 +21,7 @@ import refinedstorage.RefinedStorageItems;
 import refinedstorage.api.RefinedStorageAPI;
 import refinedstorage.apiimpl.solderer.*;
 import refinedstorage.apiimpl.storage.NBTStorage;
-import refinedstorage.block.BlockBase;
-import refinedstorage.block.EnumControllerType;
-import refinedstorage.block.EnumGridType;
-import refinedstorage.block.EnumStorageType;
+import refinedstorage.block.*;
 import refinedstorage.gui.GuiHandler;
 import refinedstorage.item.*;
 import refinedstorage.network.*;
@@ -32,9 +30,14 @@ import refinedstorage.tile.data.ContainerListener;
 import refinedstorage.tile.externalstorage.TileExternalStorage;
 import refinedstorage.tile.grid.TileGrid;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static refinedstorage.RefinedStorage.ID;
 
 public class CommonProxy {
+    protected List<BlockCable> cables = new ArrayList<>();
+
     public void preInit(FMLPreInitializationEvent e) {
         RefinedStorageAPI.SOLDERER_REGISTRY = new SoldererRegistry();
 
@@ -526,6 +529,13 @@ public class CommonProxy {
     private void registerBlock(BlockBase block) {
         GameRegistry.<Block>register(block);
         GameRegistry.register(block.createItem());
+    }
+
+    private void registerBlock(BlockCable cable) {
+        GameRegistry.<Block>register(cable);
+        GameRegistry.register(new ItemBlock(cable).setRegistryName(cable.getRegistryName()));
+
+        cables.add(cable);
     }
 
     private void registerItem(Item item) {

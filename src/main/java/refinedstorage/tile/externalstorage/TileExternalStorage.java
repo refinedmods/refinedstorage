@@ -13,7 +13,7 @@ import refinedstorage.api.storage.IStorage;
 import refinedstorage.api.storage.IStorageProvider;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.tile.IStorageGui;
-import refinedstorage.tile.TileNode;
+import refinedstorage.tile.TileMultipartNode;
 import refinedstorage.tile.config.IComparable;
 import refinedstorage.tile.config.IFilterable;
 import refinedstorage.tile.config.IPrioritizable;
@@ -24,7 +24,7 @@ import refinedstorage.tile.data.TileDataParameter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileExternalStorage extends TileNode implements IStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable {
+public class TileExternalStorage extends TileMultipartNode implements IStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable {
     public static final TileDataParameter<Integer> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();

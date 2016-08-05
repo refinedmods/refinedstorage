@@ -17,7 +17,7 @@ group = "refinedstorage"
 archivesBaseName = "refinedstorage"
 
 minecraft {
-    version = "1.10.2-12.18.1.2045"
+    version = "1.10.2-12.18.1.2046"
     runDir = "run"
     useDepAts = true
     mappings = "snapshot_20160518"
@@ -34,12 +34,16 @@ repositories {
         name = "ic2"
         url = "http://maven.ic2.player.to/"
     }
+    maven {
+        url "http://maven.amadornes.com/"
+    }
 }
 
 dependencies {
     deobfCompile "mezz.jei:jei_1.10.2:3.7.+"
     compile "net.darkhax.tesla:Tesla:1.10-1.2.+"
     compile "net.industrial-craft:industrialcraft-2:2.6.27-ex110:api"
+    deobfCompile "MCMultiPart:MCMultiPart:1.2.+:universal"
 }
 
 processResources {

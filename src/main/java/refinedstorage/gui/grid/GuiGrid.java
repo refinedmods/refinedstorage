@@ -398,6 +398,7 @@ public class GuiGrid extends GuiBase {
         }
     }
 
+    // @TODO: This is buggy...
     public static void updateSearchFieldFocus(int mode) {
         SEARCH_FIELD.setCanLoseFocus(!TileGrid.isSearchBoxModeWithAutoselection(mode));
         SEARCH_FIELD.setFocused(TileGrid.isSearchBoxModeWithAutoselection(mode));

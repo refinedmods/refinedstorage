@@ -14,7 +14,7 @@ import refinedstorage.tile.config.IComparable;
 import refinedstorage.tile.config.IFilterable;
 import refinedstorage.tile.data.TileDataParameter;
 
-public class TileImporter extends TileNode implements IComparable, IFilterable {
+public class TileImporter extends TileMultipartNode implements IComparable, IFilterable {
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
 

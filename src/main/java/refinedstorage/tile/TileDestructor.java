@@ -20,7 +20,7 @@ import refinedstorage.tile.data.TileDataParameter;
 
 import java.util.List;
 
-public class TileDestructor extends TileNode implements IComparable, IFilterable {
+public class TileDestructor extends TileMultipartNode implements IComparable, IFilterable {
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
 

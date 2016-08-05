@@ -23,7 +23,7 @@ public class BlockDestructor extends BlockCable {
     }
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivatedDefault(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
             player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.DESTRUCTOR, world, pos.getX(), pos.getY(), pos.getZ());
         }
