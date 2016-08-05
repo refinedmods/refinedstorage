@@ -5,7 +5,7 @@ import refinedstorage.api.network.IGridHandler;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.gui.grid.GridFilteredItem;
 import refinedstorage.inventory.ItemHandlerBasic;
-import refinedstorage.tile.config.IRedstoneModeConfig;
+import refinedstorage.tile.data.TileDataParameter;
 
 import java.util.List;
 
@@ -36,7 +36,7 @@ public interface IGrid {
 
     ItemHandlerBasic getFilter();
 
-    IRedstoneModeConfig getRedstoneModeConfig();
+    TileDataParameter<Integer> getRedstoneModeConfig();
 
     boolean isConnected();
 }

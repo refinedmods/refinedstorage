@@ -18,7 +18,10 @@ import refinedstorage.apiimpl.storage.NBTStorage;
 import refinedstorage.block.EnumStorageType;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemValidatorBasic;
-import refinedstorage.tile.config.*;
+import refinedstorage.tile.config.ICompareConfig;
+import refinedstorage.tile.config.IModeConfig;
+import refinedstorage.tile.config.IPrioritizable;
+import refinedstorage.tile.config.ModeFilter;
 import refinedstorage.tile.data.TileDataManager;
 import refinedstorage.tile.data.TileDataParameter;
 
@@ -41,7 +44,7 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
 
         @Override
         public ItemStack insertItem(ItemStack stack, int size, boolean simulate) {
-            if (!ModeFilter.respectsMode(getFilters(), getModeConfig(), getCompare(), stack)) {
+            if (!ModeFilter.respectsMode(getFilters(), mode, getCompare(), stack)) {
                 return ItemHandlerHelper.copyStackWithSize(stack, size);
             }
 
@@ -224,13 +227,9 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
 
     @Override
     public void setCompare(int compare) {
-        if (worldObj.isRemote) {
-            TileDataManager.setParameter(COMPARE, compare);
-        } else {
-            this.compare = compare;
+        this.compare = compare;
 
-            markDirty();
-        }
+        markDirty();
     }
 
     @Override
@@ -240,13 +239,9 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
 
     @Override
     public void setMode(int mode) {
-        if (worldObj.isRemote) {
-            TileDataManager.setParameter(MODE, mode);
-        } else {
-            this.mode = mode;
+        this.mode = mode;
 
-            markDirty();
-        }
+        markDirty();
     }
 
     public int getStoredForDisplayServer() {
@@ -290,18 +285,18 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
     }
 
     @Override
-    public IRedstoneModeConfig getRedstoneModeConfig() {
-        return this;
+    public TileDataParameter<Integer> getRedstoneModeConfig() {
+        return REDSTONE_MODE;
     }
 
     @Override
-    public ICompareConfig getCompareConfig() {
-        return this;
+    public TileDataParameter<Integer> getCompareConfig() {
+        return COMPARE;
     }
 
     @Override
-    public IModeConfig getModeConfig() {
-        return this;
+    public TileDataParameter<Integer> getModeConfig() {
+        return MODE;
     }
 
     @Override

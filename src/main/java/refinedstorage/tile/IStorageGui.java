@@ -1,9 +1,7 @@
 package refinedstorage.tile;
 
 import net.minecraftforge.items.IItemHandler;
-import refinedstorage.tile.config.ICompareConfig;
-import refinedstorage.tile.config.IModeConfig;
-import refinedstorage.tile.config.IRedstoneModeConfig;
+import refinedstorage.tile.data.TileDataParameter;
 
 public interface IStorageGui {
     String getGuiTitle();
@@ -14,11 +12,11 @@ public interface IStorageGui {
 
     IItemHandler getFilters();
 
-    IRedstoneModeConfig getRedstoneModeConfig();
+    TileDataParameter<Integer> getRedstoneModeConfig();
 
-    ICompareConfig getCompareConfig();
+    TileDataParameter<Integer> getCompareConfig();
 
-    IModeConfig getModeConfig();
+    TileDataParameter<Integer> getModeConfig();
 
     int getStored();
 

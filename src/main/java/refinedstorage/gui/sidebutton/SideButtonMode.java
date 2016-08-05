@@ -3,36 +3,30 @@ package refinedstorage.gui.sidebutton;
 import net.minecraft.util.text.TextFormatting;
 import refinedstorage.gui.GuiBase;
 import refinedstorage.tile.config.IModeConfig;
+import refinedstorage.tile.data.TileDataManager;
+import refinedstorage.tile.data.TileDataParameter;
 
 public class SideButtonMode extends SideButton {
-    private IModeConfig config;
+    private TileDataParameter<Integer> parameter;
 
-    public SideButtonMode(IModeConfig config) {
-        this.config = config;
+    public SideButtonMode(TileDataParameter<Integer> parameter) {
+        this.parameter = parameter;
     }
 
     @Override
     public String getTooltip(GuiBase gui) {
-        return TextFormatting.GREEN + gui.t("sidebutton.refinedstorage:mode") + TextFormatting.RESET + "\n" + gui.t("sidebutton.refinedstorage:mode." + (config.getMode() == IModeConfig.WHITELIST ? "whitelist" : "blacklist"));
+        return TextFormatting.GREEN + gui.t("sidebutton.refinedstorage:mode") + TextFormatting.RESET + "\n" + gui.t("sidebutton.refinedstorage:mode." + (parameter.getValue() == IModeConfig.WHITELIST ? "whitelist" : "blacklist"));
     }
 
     @Override
     public void draw(GuiBase gui, int x, int y) {
         gui.bindTexture("icons.png");
 
-        int tx = 0;
-
-        if (config.getMode() == IModeConfig.WHITELIST) {
-            tx = 0;
-        } else if (config.getMode() == IModeConfig.BLACKLIST) {
-            tx = 16;
-        }
-
-        gui.drawTexture(x, y + 1, tx, 64, 16, 16);
+        gui.drawTexture(x, y + 1, parameter.getValue() == IModeConfig.WHITELIST ? 0 : 16, 64, 16, 16);
     }
 
     @Override
     public void actionPerformed() {
-        config.setMode(config.getMode() == IModeConfig.WHITELIST ? IModeConfig.BLACKLIST : IModeConfig.WHITELIST);
+        TileDataManager.setParameter(parameter, parameter.getValue() == IModeConfig.WHITELIST ? IModeConfig.BLACKLIST : IModeConfig.WHITELIST);
     }
 }

@@ -6,28 +6,25 @@ import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.container.ContainerDetector;
 import refinedstorage.gui.sidebutton.SideButtonCompare;
 import refinedstorage.gui.sidebutton.SideButtonDetectorMode;
+import refinedstorage.tile.TileDestructor;
 import refinedstorage.tile.TileDetector;
 import refinedstorage.tile.data.TileDataManager;
 
 import java.io.IOException;
 
 public class GuiDetector extends GuiBase {
-    private TileDetector detector;
-
     private GuiTextField amountField;
 
-    public GuiDetector(ContainerDetector container, TileDetector detector) {
+    public GuiDetector(ContainerDetector container) {
         super(container, 176, 137);
-
-        this.detector = detector;
     }
 
     @Override
     public void init(int x, int y) {
-        addSideButton(new SideButtonCompare(detector, CompareUtils.COMPARE_DAMAGE));
-        addSideButton(new SideButtonCompare(detector, CompareUtils.COMPARE_NBT));
+        addSideButton(new SideButtonCompare(TileDestructor.COMPARE, CompareUtils.COMPARE_DAMAGE));
+        addSideButton(new SideButtonCompare(TileDestructor.COMPARE, CompareUtils.COMPARE_NBT));
 
-        addSideButton(new SideButtonDetectorMode(detector));
+        addSideButton(new SideButtonDetectorMode());
 
         amountField = new GuiTextField(0, fontRendererObj, x + 62 + 1, y + 23 + 1, 25, fontRendererObj.FONT_HEIGHT);
         // @TODO: Change when the packet is received instead

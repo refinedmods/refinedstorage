@@ -39,6 +39,7 @@ public enum RedstoneMode {
         return false;
     }
 
+    // @TOOD: Remove id field
     public static RedstoneMode getById(int id) {
         for (RedstoneMode control : values()) {
             if (control.id == id) {

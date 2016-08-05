@@ -17,7 +17,6 @@ import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.IModeConfig;
 import refinedstorage.tile.config.ModeFilter;
-import refinedstorage.tile.data.TileDataManager;
 import refinedstorage.tile.data.TileDataParameter;
 
 import java.util.List;
@@ -56,7 +55,7 @@ public class TileDestructor extends TileNode implements ICompareConfig, IModeCon
             ItemStack frontStack = frontBlockState.getBlock().getItem(worldObj, front, frontBlockState);
 
             if (frontStack != null) {
-                if (ModeFilter.respectsMode(filters, this, compare, frontStack)) {
+                if (ModeFilter.respectsMode(filters, mode, compare, frontStack)) {
                     List<ItemStack> drops = frontBlockState.getBlock().getDrops(worldObj, front, frontBlockState, 0);
 
                     worldObj.playEvent(null, 2001, front, Block.getStateId(frontBlockState));
@@ -87,13 +86,9 @@ public class TileDestructor extends TileNode implements ICompareConfig, IModeCon
 
     @Override
     public void setCompare(int compare) {
-        if (worldObj.isRemote) {
-            TileDataManager.setParameter(COMPARE, compare);
-        } else {
-            this.compare = compare;
+        this.compare = compare;
 
-            markDirty();
-        }
+        markDirty();
     }
 
     @Override
@@ -103,13 +98,9 @@ public class TileDestructor extends TileNode implements ICompareConfig, IModeCon
 
     @Override
     public void setMode(int mode) {
-        if (worldObj.isRemote) {
-            TileDataManager.setParameter(MODE, mode);
-        } else {
-            this.mode = mode;
+        this.mode = mode;
 
-            markDirty();
-        }
+        markDirty();
     }
 
     @Override

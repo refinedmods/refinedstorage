@@ -7,20 +7,16 @@ import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.tile.TileConstructor;
 
 public class GuiConstructor extends GuiBase {
-    private TileConstructor constructor;
-
-    public GuiConstructor(ContainerConstructor container, TileConstructor constructor) {
+    public GuiConstructor(ContainerConstructor container) {
         super(container, 211, 137);
-
-        this.constructor = constructor;
     }
 
     @Override
     public void init(int x, int y) {
-        addSideButton(new SideButtonRedstoneMode(constructor));
+        addSideButton(new SideButtonRedstoneMode(TileConstructor.REDSTONE_MODE));
 
-        addSideButton(new SideButtonCompare(constructor, CompareUtils.COMPARE_DAMAGE));
-        addSideButton(new SideButtonCompare(constructor, CompareUtils.COMPARE_NBT));
+        addSideButton(new SideButtonCompare(TileConstructor.COMPARE, CompareUtils.COMPARE_DAMAGE));
+        addSideButton(new SideButtonCompare(TileConstructor.COMPARE, CompareUtils.COMPARE_NBT));
     }
 
     @Override

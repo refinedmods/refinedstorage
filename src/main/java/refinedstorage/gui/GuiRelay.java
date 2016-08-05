@@ -5,17 +5,13 @@ import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.tile.TileRelay;
 
 public class GuiRelay extends GuiBase {
-    private TileRelay relay;
-
-    public GuiRelay(ContainerRelay container, TileRelay relay) {
+    public GuiRelay(ContainerRelay container) {
         super(container, 176, 131);
-
-        this.relay = relay;
     }
 
     @Override
     public void init(int x, int y) {
-        addSideButton(new SideButtonRedstoneMode(relay));
+        addSideButton(new SideButtonRedstoneMode(TileRelay.REDSTONE_MODE));
     }
 
     @Override

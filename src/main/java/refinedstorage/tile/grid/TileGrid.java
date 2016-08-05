@@ -26,7 +26,6 @@ import refinedstorage.inventory.ItemHandlerGridFilterInGrid;
 import refinedstorage.inventory.ItemValidatorBasic;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.tile.TileNode;
-import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.data.ITileDataConsumer;
 import refinedstorage.tile.data.ITileDataProducer;
 import refinedstorage.tile.data.TileDataManager;
@@ -392,8 +391,8 @@ public class TileGrid extends TileNode implements IGrid {
     }
 
     @Override
-    public IRedstoneModeConfig getRedstoneModeConfig() {
-        return this;
+    public TileDataParameter<Integer> getRedstoneModeConfig() {
+        return REDSTONE_MODE;
     }
 
     @Override

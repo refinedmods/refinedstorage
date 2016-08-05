@@ -8,22 +8,18 @@ import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.tile.TileDestructor;
 
 public class GuiDestructor extends GuiBase {
-    private TileDestructor destructor;
-
-    public GuiDestructor(ContainerDestructor container, TileDestructor destructor) {
+    public GuiDestructor(ContainerDestructor container) {
         super(container, 211, 137);
-
-        this.destructor = destructor;
     }
 
     @Override
     public void init(int x, int y) {
-        addSideButton(new SideButtonRedstoneMode(destructor));
+        addSideButton(new SideButtonRedstoneMode(TileDestructor.REDSTONE_MODE));
 
-        addSideButton(new SideButtonMode(destructor));
+        addSideButton(new SideButtonMode(TileDestructor.MODE));
 
-        addSideButton(new SideButtonCompare(destructor, CompareUtils.COMPARE_DAMAGE));
-        addSideButton(new SideButtonCompare(destructor, CompareUtils.COMPARE_NBT));
+        addSideButton(new SideButtonCompare(TileDestructor.COMPARE, CompareUtils.COMPARE_DAMAGE));
+        addSideButton(new SideButtonCompare(TileDestructor.COMPARE, CompareUtils.COMPARE_NBT));
     }
 
     @Override

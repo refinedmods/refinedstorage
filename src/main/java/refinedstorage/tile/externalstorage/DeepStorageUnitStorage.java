@@ -35,7 +35,7 @@ public class DeepStorageUnitStorage extends ExternalStorage {
 
     @Override
     public ItemStack insertItem(@Nonnull ItemStack stack, int size, boolean simulate) {
-        if (ModeFilter.respectsMode(externalStorage.getFilters(), externalStorage, externalStorage.getCompare(), stack)) {
+        if (ModeFilter.respectsMode(externalStorage.getFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack)) {
             if (unit.getStoredItemType() != null) {
                 if (CompareUtils.compareStackNoQuantity(unit.getStoredItemType(), stack)) {
                     if (getStored() + size > unit.getMaxStoredCount()) {

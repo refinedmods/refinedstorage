@@ -7,12 +7,6 @@ import refinedstorage.gui.GuiBase;
 import refinedstorage.tile.TileDetector;
 
 public class SideButtonDetectorMode extends SideButton {
-    private TileDetector detector;
-
-    public SideButtonDetectorMode(TileDetector detector) {
-        this.detector = detector;
-    }
-
     @Override
     public String getTooltip(GuiBase gui) {
         return TextFormatting.GREEN + gui.t("sidebutton.refinedstorage:detector.mode") + TextFormatting.RESET + "\n" + gui.t("sidebutton.refinedstorage:detector.mode." + TileDetector.MODE.getValue());

@@ -13,7 +13,6 @@ import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
-import refinedstorage.tile.data.TileDataManager;
 import refinedstorage.tile.data.TileDataParameter;
 
 public class TileExporter extends TileNode implements ICompareConfig {
@@ -75,13 +74,9 @@ public class TileExporter extends TileNode implements ICompareConfig {
 
     @Override
     public void setCompare(int compare) {
-        if (worldObj.isRemote) {
-            TileDataManager.setParameter(COMPARE, compare);
-        } else {
-            this.compare = compare;
+        this.compare = compare;
 
-            markDirty();
-        }
+        markDirty();
     }
 
     @Override

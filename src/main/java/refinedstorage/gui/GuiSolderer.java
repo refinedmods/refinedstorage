@@ -15,7 +15,7 @@ public class GuiSolderer extends GuiBase {
 
     @Override
     public void init(int x, int y) {
-        addSideButton(new SideButtonRedstoneMode(solderer));
+        addSideButton(new SideButtonRedstoneMode(TileSolderer.REDSTONE_MODE));
     }
 
     @Override

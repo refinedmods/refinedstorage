@@ -147,13 +147,9 @@ public class TileDetector extends TileNode implements ICompareConfig {
 
     @Override
     public void setCompare(int compare) {
-        if (worldObj.isRemote) {
-            TileDataManager.setParameter(COMPARE, compare);
-        } else {
-            this.compare = compare;
+        this.compare = compare;
 
-            markDirty();
-        }
+        markDirty();
     }
 
     @Override

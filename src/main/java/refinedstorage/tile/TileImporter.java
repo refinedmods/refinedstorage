@@ -13,7 +13,6 @@ import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.IModeConfig;
 import refinedstorage.tile.config.ModeFilter;
-import refinedstorage.tile.data.TileDataManager;
 import refinedstorage.tile.data.TileDataParameter;
 
 public class TileImporter extends TileNode implements ICompareConfig, IModeConfig {
@@ -56,7 +55,7 @@ public class TileImporter extends TileNode implements ICompareConfig, IModeConfi
         if (handler.getSlots() > 0) {
             ItemStack stack = handler.getStackInSlot(currentSlot);
 
-            if (stack == null || !ModeFilter.respectsMode(filters, this, compare, stack)) {
+            if (stack == null || !ModeFilter.respectsMode(filters, mode, compare, stack)) {
                 currentSlot++;
             } else if (ticks % upgrades.getSpeed() == 0) {
                 int quantity = upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK) ? 64 : 1;
@@ -81,13 +80,9 @@ public class TileImporter extends TileNode implements ICompareConfig, IModeConfi
 
     @Override
     public void setCompare(int compare) {
-        if (worldObj.isRemote) {
-            TileDataManager.setParameter(COMPARE, compare);
-        } else {
-            this.compare = compare;
+        this.compare = compare;
 
-            markDirty();
-        }
+        markDirty();
     }
 
     @Override
@@ -97,13 +92,9 @@ public class TileImporter extends TileNode implements ICompareConfig, IModeConfi
 
     @Override
     public void setMode(int mode) {
-        if (worldObj.isRemote) {
-            TileDataManager.setParameter(MODE, mode);
-        } else {
-            this.mode = mode;
+        this.mode = mode;
 
-            markDirty();
-        }
+        markDirty();
     }
 
     @Override

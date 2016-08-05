@@ -3,7 +3,6 @@ package refinedstorage.gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import refinedstorage.container.ContainerController;
-import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.tile.TileController;
 
 import java.util.List;
@@ -28,7 +27,7 @@ public class GuiController extends GuiBase {
 
     @Override
     public void init(int x, int y) {
-        addSideButton(new SideButtonRedstoneMode(controller));
+        //addSideButton(new SideButtonRedstoneMode(controller));
     }
 
     @Override

@@ -7,20 +7,16 @@ import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.tile.TileInterface;
 
 public class GuiInterface extends GuiBase {
-    private TileInterface tile;
-
-    public GuiInterface(ContainerInterface container, TileInterface tile) {
+    public GuiInterface(ContainerInterface container) {
         super(container, 211, 217);
-
-        this.tile = tile;
     }
 
     @Override
     public void init(int x, int y) {
-        addSideButton(new SideButtonRedstoneMode(tile));
+        addSideButton(new SideButtonRedstoneMode(TileInterface.REDSTONE_MODE));
 
-        addSideButton(new SideButtonCompare(tile, CompareUtils.COMPARE_DAMAGE));
-        addSideButton(new SideButtonCompare(tile, CompareUtils.COMPARE_NBT));
+        addSideButton(new SideButtonCompare(TileInterface.COMPARE, CompareUtils.COMPARE_DAMAGE));
+        addSideButton(new SideButtonCompare(TileInterface.COMPARE, CompareUtils.COMPARE_NBT));
     }
 
     @Override

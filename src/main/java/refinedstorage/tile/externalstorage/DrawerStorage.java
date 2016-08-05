@@ -39,7 +39,7 @@ public class DrawerStorage extends ExternalStorage {
 
     @Override
     public ItemStack insertItem(ItemStack stack, int size, boolean simulate) {
-        if (ModeFilter.respectsMode(externalStorage.getFilters(), externalStorage, externalStorage.getCompare(), stack) && drawer.canItemBeStored(stack)) {
+        if (ModeFilter.respectsMode(externalStorage.getFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack) && drawer.canItemBeStored(stack)) {
             if (!drawer.isEmpty()) {
                 if (getStored() + size > drawer.getMaxCapacity(stack)) {
                     int remainingSpace = getCapacity() - getStored();

@@ -3,14 +3,15 @@ package refinedstorage.gui.sidebutton;
 import net.minecraft.util.text.TextFormatting;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.gui.GuiBase;
-import refinedstorage.tile.config.ICompareConfig;
+import refinedstorage.tile.data.TileDataManager;
+import refinedstorage.tile.data.TileDataParameter;
 
 public class SideButtonCompare extends SideButton {
-    private ICompareConfig config;
+    private TileDataParameter<Integer> parameter;
     private int mask;
 
-    public SideButtonCompare(ICompareConfig config, int mask) {
-        this.config = config;
+    public SideButtonCompare(TileDataParameter<Integer> parameter, int mask) {
+        this.parameter = parameter;
         this.mask = mask;
     }
 
@@ -18,7 +19,7 @@ public class SideButtonCompare extends SideButton {
     public String getTooltip(GuiBase gui) {
         String tooltip = TextFormatting.YELLOW + gui.t("sidebutton.refinedstorage:compare." + mask) + TextFormatting.RESET + "\n";
 
-        if ((config.getCompare() & mask) == mask) {
+        if ((parameter.getValue() & mask) == mask) {
             tooltip += gui.t("gui.yes");
         } else {
             tooltip += gui.t("gui.no");
@@ -39,13 +40,13 @@ public class SideButtonCompare extends SideButton {
             ty = 48;
         }
 
-        int tx = (config.getCompare() & mask) == mask ? 0 : 16;
+        int tx = (parameter.getValue() & mask) == mask ? 0 : 16;
 
         gui.drawTexture(x, y + 1, tx, ty, 16, 16);
     }
 
     @Override
     public void actionPerformed() {
-        config.setCompare(config.getCompare() ^ mask);
+        TileDataManager.setParameter(parameter, parameter.getValue() ^ mask);
     }
 }

@@ -17,7 +17,6 @@ import refinedstorage.tile.TileNode;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.IModeConfig;
 import refinedstorage.tile.config.IPrioritizable;
-import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.data.ITileDataProducer;
 import refinedstorage.tile.data.TileDataManager;
 import refinedstorage.tile.data.TileDataParameter;
@@ -222,18 +221,18 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
     }
 
     @Override
-    public IRedstoneModeConfig getRedstoneModeConfig() {
-        return this;
+    public TileDataParameter<Integer> getRedstoneModeConfig() {
+        return REDSTONE_MODE;
     }
 
     @Override
-    public ICompareConfig getCompareConfig() {
-        return this;
+    public TileDataParameter<Integer> getCompareConfig() {
+        return COMPARE;
     }
 
     @Override
-    public IModeConfig getModeConfig() {
-        return this;
+    public TileDataParameter<Integer> getModeConfig() {
+        return MODE;
     }
 
     @Override

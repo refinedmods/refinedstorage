@@ -5,17 +5,13 @@ import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.tile.TileCrafter;
 
 public class GuiCrafter extends GuiBase {
-    private TileCrafter crafter;
-
-    public GuiCrafter(ContainerCrafter container, TileCrafter crafter) {
+    public GuiCrafter(ContainerCrafter container) {
         super(container, 211, 137);
-
-        this.crafter = crafter;
     }
 
     @Override
     public void init(int x, int y) {
-        addSideButton(new SideButtonRedstoneMode(crafter));
+        addSideButton(new SideButtonRedstoneMode(TileCrafter.REDSTONE_MODE));
     }
 
     @Override

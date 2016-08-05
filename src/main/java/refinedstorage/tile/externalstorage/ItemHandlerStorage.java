@@ -38,7 +38,7 @@ public class ItemHandlerStorage extends ExternalStorage {
 
     @Override
     public ItemStack insertItem(ItemStack stack, int size, boolean simulate) {
-        if (ModeFilter.respectsMode(externalStorage.getFilters(), externalStorage, externalStorage.getCompare(), stack)) {
+        if (ModeFilter.respectsMode(externalStorage.getFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack)) {
             return ItemHandlerHelper.insertItem(handler, ItemHandlerHelper.copyStackWithSize(stack, size), simulate);
         }
 

@@ -16,7 +16,7 @@ import refinedstorage.item.ItemWirelessGrid;
 import refinedstorage.network.MessageWirelessGridSettingsUpdate;
 import refinedstorage.tile.TileBase;
 import refinedstorage.tile.TileController;
-import refinedstorage.tile.config.IRedstoneModeConfig;
+import refinedstorage.tile.data.TileDataParameter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -148,7 +148,7 @@ public class WirelessGrid implements IGrid {
     }
 
     @Override
-    public IRedstoneModeConfig getRedstoneModeConfig() {
+    public TileDataParameter<Integer> getRedstoneModeConfig() {
         return null;
     }
 
