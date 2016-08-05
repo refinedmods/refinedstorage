@@ -18,39 +18,39 @@ public class GuiHandler implements IGuiHandler {
     private Container getContainer(int ID, EntityPlayer player, TileEntity tile) {
         switch (ID) {
             case RefinedStorageGui.CONTROLLER:
-                return new ContainerController(player);
+                return new ContainerController((TileController) tile, player);
             case RefinedStorageGui.GRID:
-                return new ContainerGrid(player, (TileGrid) tile);
+                return new ContainerGrid((TileGrid) tile, player);
             case RefinedStorageGui.DISK_DRIVE:
-                return new ContainerDiskDrive(player, (TileDiskDrive) tile);
+                return new ContainerDiskDrive((TileDiskDrive) tile, player);
             case RefinedStorageGui.IMPORTER:
-                return new ContainerImporter(player, (TileImporter) tile);
+                return new ContainerImporter((TileImporter) tile, player);
             case RefinedStorageGui.EXPORTER:
-                return new ContainerExporter(player, (TileExporter) tile);
+                return new ContainerExporter((TileExporter) tile, player);
             case RefinedStorageGui.DETECTOR:
-                return new ContainerDetector(player, (TileDetector) tile);
+                return new ContainerDetector((TileDetector) tile, player);
             case RefinedStorageGui.SOLDERER:
-                return new ContainerSolderer(player, (TileSolderer) tile);
+                return new ContainerSolderer((TileSolderer) tile, player);
             case RefinedStorageGui.DESTRUCTOR:
-                return new ContainerDestructor(player, (TileDestructor) tile);
+                return new ContainerDestructor((TileDestructor) tile, player);
             case RefinedStorageGui.CONSTRUCTOR:
-                return new ContainerConstructor(player, (TileConstructor) tile);
+                return new ContainerConstructor((TileConstructor) tile, player);
             case RefinedStorageGui.STORAGE:
-                return new ContainerStorage(player, ((IStorageGui) tile).getFilters());
+                return new ContainerStorage((TileBase) tile, player, ((IStorageGui) tile).getFilters());
             case RefinedStorageGui.RELAY:
-                return new ContainerRelay(player);
+                return new ContainerRelay((TileRelay) tile, player);
             case RefinedStorageGui.INTERFACE:
-                return new ContainerInterface(player, (TileInterface) tile);
+                return new ContainerInterface((TileInterface) tile, player);
             case RefinedStorageGui.CRAFTING_MONITOR:
-                return new ContainerCraftingMonitor(player);
+                return new ContainerCraftingMonitor((TileCraftingMonitor) tile, player);
             case RefinedStorageGui.WIRELESS_TRANSMITTER:
-                return new ContainerWirelessTransmitter(player, (TileWirelessTransmitter) tile);
+                return new ContainerWirelessTransmitter((TileWirelessTransmitter) tile, player);
             case RefinedStorageGui.CRAFTER:
-                return new ContainerCrafter(player, (TileCrafter) tile);
+                return new ContainerCrafter((TileCrafter) tile, player);
             case RefinedStorageGui.PROCESSING_PATTERN_ENCODER:
-                return new ContainerProcessingPatternEncoder(player, (TileProcessingPatternEncoder) tile);
+                return new ContainerProcessingPatternEncoder((TileProcessingPatternEncoder) tile, player);
             case RefinedStorageGui.NETWORK_TRANSMITTER:
-                return new ContainerNetworkTransmitter(player, (TileNetworkTransmitter) tile);
+                return new ContainerNetworkTransmitter((TileNetworkTransmitter) tile, player);
             default:
                 return null;
         }
@@ -61,7 +61,7 @@ public class GuiHandler implements IGuiHandler {
     }
 
     private ContainerGrid getWirelessGridContainer(EntityPlayer player, int hand) {
-        return new ContainerGrid(player, getWirelessGrid(player, hand));
+        return new ContainerGrid(getWirelessGrid(player, hand), player);
     }
 
     private ContainerGridFilter getGridFilterContainer(EntityPlayer player, int hand) {
@@ -128,8 +128,8 @@ public class GuiHandler implements IGuiHandler {
     }
 
     private GuiGrid getWirelessGridGui(EntityPlayer player, int hand) {
-        WirelessGrid wirelessGrid = getWirelessGrid(player, hand);
+        WirelessGrid grid = getWirelessGrid(player, hand);
 
-        return new GuiGrid(new ContainerGrid(player, wirelessGrid), wirelessGrid);
+        return new GuiGrid(new ContainerGrid(grid, player), grid);
     }
 }

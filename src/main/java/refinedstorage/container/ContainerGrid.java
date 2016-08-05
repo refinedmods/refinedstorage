@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.slot.*;
+import refinedstorage.tile.TileBase;
 import refinedstorage.tile.grid.IGrid;
 import refinedstorage.tile.grid.TileGrid;
 import refinedstorage.tile.grid.WirelessGrid;
@@ -16,8 +17,8 @@ public class ContainerGrid extends ContainerBase {
     private SlotGridCraftingResult craftingResultSlot;
     private SlotDisabled patternResultSlot;
 
-    public ContainerGrid(EntityPlayer player, IGrid grid) {
-        super(player);
+    public ContainerGrid(IGrid grid, EntityPlayer player) {
+        super(grid instanceof TileBase ? (TileBase) grid : null, player);
 
         this.grid = grid;
 

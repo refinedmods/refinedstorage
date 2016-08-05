@@ -11,7 +11,7 @@ public class ContainerGridFilter extends ContainerBase {
     private ItemStack stack;
 
     public ContainerGridFilter(EntityPlayer player, ItemStack stack) {
-        super(player);
+        super(null, player);
 
         this.stack = stack;
         this.filter = new ItemHandlerGridFilter(stack);

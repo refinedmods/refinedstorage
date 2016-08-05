@@ -3,14 +3,15 @@ package refinedstorage.container;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.container.slot.SlotSpecimen;
+import refinedstorage.tile.TileBase;
 
 public class ContainerStorage extends ContainerBase {
-    public ContainerStorage(EntityPlayer player) {
-        super(player);
+    public ContainerStorage(TileBase tile, EntityPlayer player) {
+        super(tile, player);
     }
 
-    public ContainerStorage(EntityPlayer player, IItemHandler filters) {
-        this(player);
+    public ContainerStorage(TileBase tile, EntityPlayer player, IItemHandler filters) {
+        this(tile, player);
 
         addSpecimenAndPlayerInventorySlots(filters);
     }

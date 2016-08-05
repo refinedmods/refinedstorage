@@ -7,8 +7,8 @@ import net.minecraftforge.items.SlotItemHandler;
 import refinedstorage.tile.TileWirelessTransmitter;
 
 public class ContainerWirelessTransmitter extends ContainerBase {
-    public ContainerWirelessTransmitter(EntityPlayer player, TileWirelessTransmitter wirelessTransmitter) {
-        super(player);
+    public ContainerWirelessTransmitter(TileWirelessTransmitter wirelessTransmitter, EntityPlayer player) {
+        super(wirelessTransmitter, player);
 
         for (int i = 0; i < 4; ++i) {
             addSlotToContainer(new SlotItemHandler(wirelessTransmitter.getUpgrades(), i, 187, 6 + (i * 18)));

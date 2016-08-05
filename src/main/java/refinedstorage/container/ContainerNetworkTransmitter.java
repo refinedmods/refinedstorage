@@ -7,10 +7,11 @@ import net.minecraftforge.items.SlotItemHandler;
 import refinedstorage.tile.TileNetworkTransmitter;
 
 public class ContainerNetworkTransmitter extends ContainerBase {
-    public ContainerNetworkTransmitter(EntityPlayer player, TileNetworkTransmitter networkTransmitter) {
-        super(player);
+    public ContainerNetworkTransmitter(TileNetworkTransmitter networkTransmitter, EntityPlayer player) {
+        super(networkTransmitter, player);
 
         addSlotToContainer(new SlotItemHandler(networkTransmitter.getNetworkCard(), 0, 8, 20));
+
         addSlotToContainer(new SlotItemHandler(networkTransmitter.getUpgrades(), 0, 187, 6));
 
         addPlayerInventory(8, 55);

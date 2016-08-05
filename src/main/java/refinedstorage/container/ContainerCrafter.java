@@ -7,8 +7,8 @@ import net.minecraftforge.items.SlotItemHandler;
 import refinedstorage.tile.TileCrafter;
 
 public class ContainerCrafter extends ContainerStorage {
-    public ContainerCrafter(EntityPlayer player, TileCrafter crafter) {
-        super(player);
+    public ContainerCrafter(TileCrafter crafter, EntityPlayer player) {
+        super(crafter, player);
 
         for (int i = 0; i < 9; ++i) {
             addSlotToContainer(new SlotItemHandler(crafter.getPatterns(), i, 8 + (18 * i), 20));

@@ -10,17 +10,24 @@ import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.container.slot.SlotDisabled;
 import refinedstorage.container.slot.SlotSpecimen;
 import refinedstorage.container.slot.SlotSpecimenLegacy;
+import refinedstorage.tile.TileBase;
 import refinedstorage.tile.grid.WirelessGrid;
 
 public abstract class ContainerBase extends Container {
+    private TileBase tile;
     private EntityPlayer player;
 
-    public ContainerBase(EntityPlayer player) {
+    public ContainerBase(TileBase tile, EntityPlayer player) {
+        this.tile = tile;
         this.player = player;
     }
 
     public EntityPlayer getPlayer() {
         return player;
+    }
+
+    public TileBase getTile() {
+        return tile;
     }
 
     protected void addPlayerInventory(int xInventory, int yInventory) {

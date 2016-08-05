@@ -22,6 +22,7 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.network.MessageTileContainerUpdate;
+import refinedstorage.tile.data.TileDataManager;
 
 import javax.annotation.Nullable;
 
@@ -33,6 +34,7 @@ public abstract class TileBase extends TileEntity implements ITickable {
 
     private EnumFacing direction = EnumFacing.NORTH;
 
+    protected TileDataManager dataManager = new TileDataManager(this);
     protected int ticks = 0;
 
     @Override
@@ -62,6 +64,10 @@ public abstract class TileBase extends TileEntity implements ITickable {
 
     public EnumFacing getDirection() {
         return direction;
+    }
+
+    public TileDataManager getDataManager() {
+        return dataManager;
     }
 
     public NBTTagCompound write(NBTTagCompound tag) {

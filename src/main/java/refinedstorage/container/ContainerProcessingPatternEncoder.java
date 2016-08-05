@@ -9,8 +9,8 @@ import refinedstorage.container.slot.SlotSpecimen;
 import refinedstorage.tile.TileProcessingPatternEncoder;
 
 public class ContainerProcessingPatternEncoder extends ContainerBase {
-    public ContainerProcessingPatternEncoder(EntityPlayer player, TileProcessingPatternEncoder processingPatternEncoder) {
-        super(player);
+    public ContainerProcessingPatternEncoder(TileProcessingPatternEncoder processingPatternEncoder, EntityPlayer player) {
+        super(processingPatternEncoder, player);
 
         addSlotToContainer(new SlotItemHandler(processingPatternEncoder.getPatterns(), 0, 152, 18));
         addSlotToContainer(new SlotOutput(processingPatternEncoder.getPatterns(), 1, 152, 58));

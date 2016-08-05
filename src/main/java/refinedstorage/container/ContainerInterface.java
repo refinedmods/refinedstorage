@@ -9,8 +9,8 @@ import refinedstorage.container.slot.SlotSpecimen;
 import refinedstorage.tile.TileInterface;
 
 public class ContainerInterface extends ContainerBase {
-    public ContainerInterface(EntityPlayer player, TileInterface tile) {
-        super(player);
+    public ContainerInterface(TileInterface tile, EntityPlayer player) {
+        super(tile, player);
 
         for (int i = 0; i < 9; ++i) {
             addSlotToContainer(new SlotItemHandler(tile.getImportItems(), i, 8 + (18 * i), 20));

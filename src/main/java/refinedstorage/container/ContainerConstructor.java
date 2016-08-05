@@ -8,8 +8,8 @@ import refinedstorage.container.slot.SlotSpecimen;
 import refinedstorage.tile.TileConstructor;
 
 public class ContainerConstructor extends ContainerBase {
-    public ContainerConstructor(EntityPlayer player, TileConstructor constructor) {
-        super(player);
+    public ContainerConstructor(TileConstructor constructor, EntityPlayer player) {
+        super(constructor, player);
 
         for (int i = 0; i < 4; ++i) {
             addSlotToContainer(new SlotItemHandler(constructor.getUpgrades(), i, 187, 6 + (i * 18)));
