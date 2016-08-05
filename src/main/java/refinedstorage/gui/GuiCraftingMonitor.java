@@ -13,6 +13,7 @@ import refinedstorage.tile.TileCraftingMonitor;
 import java.io.IOException;
 import java.util.Arrays;
 
+// @TODO: Make it work
 public class GuiCraftingMonitor extends GuiBase {
     private static final int VISIBLE_ROWS = 3;
 

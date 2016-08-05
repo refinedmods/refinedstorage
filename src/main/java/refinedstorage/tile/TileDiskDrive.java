@@ -1,7 +1,5 @@
 package refinedstorage.tile;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -18,15 +16,19 @@ import refinedstorage.api.storage.IStorage;
 import refinedstorage.api.storage.IStorageProvider;
 import refinedstorage.apiimpl.storage.NBTStorage;
 import refinedstorage.block.EnumStorageType;
-import refinedstorage.container.ContainerDiskDrive;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemValidatorBasic;
-import refinedstorage.network.MessagePriorityUpdate;
 import refinedstorage.tile.config.*;
+import refinedstorage.tile.data.TileDataManager;
+import refinedstorage.tile.data.TileDataParameter;
 
 import java.util.List;
 
-public class TileDiskDrive extends TileNode implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig {
+public class TileDiskDrive extends TileNode implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig, IPrioritizable {
+    public static final TileDataParameter PRIORITY = IPrioritizable.createConfigParameter();
+    public static final TileDataParameter COMPARE = ICompareConfig.createConfigParameter();
+    public static final TileDataParameter MODE = IModeConfig.createConfigParameter();
+
     public class Storage extends NBTStorage {
         public Storage(ItemStack disk) {
             super(disk.getTagCompound(), EnumStorageType.getById(disk.getItemDamage()).getCapacity(), TileDiskDrive.this);
@@ -89,14 +91,21 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
             return super.extractItem(slot, amount, simulate);
         }
     };
+
     private ItemHandlerBasic filters = new ItemHandlerBasic(9, this);
 
     private Storage storages[] = new Storage[8];
 
     private int priority = 0;
     private int compare = 0;
-    private int mode = ModeConstants.WHITELIST;
+    private int mode = IModeConfig.WHITELIST;
     private int stored = 0;
+
+    public TileDiskDrive() {
+        dataManager.addWatchedParameter(PRIORITY);
+        dataManager.addWatchedParameter(COMPARE);
+        dataManager.addWatchedParameter(MODE);
+    }
 
     @Override
     public void update() {
@@ -209,38 +218,19 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
     }
 
     @Override
-    public void writeContainerData(ByteBuf buf) {
-        super.writeContainerData(buf);
-
-        buf.writeInt(priority);
-        buf.writeInt(compare);
-        buf.writeInt(mode);
-    }
-
-    @Override
-    public void readContainerData(ByteBuf buf) {
-        super.readContainerData(buf);
-
-        priority = buf.readInt();
-        compare = buf.readInt();
-        mode = buf.readInt();
-    }
-
-    @Override
-    public Class<? extends Container> getContainer() {
-        return ContainerDiskDrive.class;
-    }
-
-    @Override
     public int getCompare() {
         return compare;
     }
 
     @Override
     public void setCompare(int compare) {
-        this.compare = compare;
+        if (worldObj.isRemote) {
+            TileDataManager.setParameter(COMPARE, compare);
+        } else {
+            this.compare = compare;
 
-        markDirty();
+            markDirty();
+        }
     }
 
     @Override
@@ -250,9 +240,13 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
 
     @Override
     public void setMode(int mode) {
-        this.mode = mode;
+        if (worldObj.isRemote) {
+            TileDataManager.setParameter(MODE, mode);
+        } else {
+            this.mode = mode;
 
-        markDirty();
+            markDirty();
+        }
     }
 
     public int getStoredForDisplayServer() {
@@ -311,15 +305,16 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
     }
 
     @Override
-    public void onPriorityChanged(int priority) {
-        RefinedStorage.INSTANCE.network.sendToServer(new MessagePriorityUpdate(pos, priority));
-    }
-
-    @Override
     public int getPriority() {
         return priority;
     }
 
+    @Override
+    public void onPriorityChanged(int priority) {
+        TileDataManager.setParameter(PRIORITY, priority);
+    }
+
+    @Override
     public void setPriority(int priority) {
         this.priority = priority;
 

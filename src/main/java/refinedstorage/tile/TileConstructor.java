@@ -1,9 +1,7 @@
 package refinedstorage.tile;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -14,14 +12,17 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorage;
 import refinedstorage.apiimpl.autocrafting.CraftingTaskScheduler;
-import refinedstorage.container.ContainerConstructor;
 import refinedstorage.container.slot.SlotSpecimen;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
+import refinedstorage.tile.data.TileDataManager;
+import refinedstorage.tile.data.TileDataParameter;
 
 public class TileConstructor extends TileNode implements ICompareConfig {
+    public static final TileDataParameter COMPARE = ICompareConfig.createConfigParameter();
+
     private static final String NBT_COMPARE = "Compare";
 
     private static final int BASE_SPEED = 20;
@@ -34,12 +35,17 @@ public class TileConstructor extends TileNode implements ICompareConfig {
             block = SlotSpecimen.getBlockState(worldObj, pos.offset(getDirection()), getStackInSlot(0));
         }
     };
+
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_CRAFTING);
 
     private int compare = 0;
     private IBlockState block;
 
     private CraftingTaskScheduler scheduler = new CraftingTaskScheduler(this);
+
+    public TileConstructor() {
+        dataManager.addWatchedParameter(COMPARE);
+    }
 
     @Override
     public int getEnergyUsage() {
@@ -78,9 +84,13 @@ public class TileConstructor extends TileNode implements ICompareConfig {
 
     @Override
     public void setCompare(int compare) {
-        this.compare = compare;
+        if (worldObj.isRemote) {
+            TileDataManager.setParameter(COMPARE, compare);
+        } else {
+            this.compare = compare;
 
-        markDirty();
+            markDirty();
+        }
     }
 
     @Override
@@ -109,25 +119,6 @@ public class TileConstructor extends TileNode implements ICompareConfig {
         scheduler.writeToNBT(tag);
 
         return tag;
-    }
-
-    @Override
-    public void readContainerData(ByteBuf buf) {
-        super.readContainerData(buf);
-
-        compare = buf.readInt();
-    }
-
-    @Override
-    public void writeContainerData(ByteBuf buf) {
-        super.writeContainerData(buf);
-
-        buf.writeInt(compare);
-    }
-
-    @Override
-    public Class<? extends Container> getContainer() {
-        return ContainerConstructor.class;
     }
 
     public IItemHandler getUpgrades() {

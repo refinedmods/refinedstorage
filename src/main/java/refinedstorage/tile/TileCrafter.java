@@ -1,7 +1,5 @@
 package refinedstorage.tile;
 
-import net.minecraft.inventory.Container;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -13,20 +11,13 @@ import refinedstorage.RefinedStorageItems;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.container.ContainerCrafter;
-import refinedstorage.inventory.IItemValidator;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.item.ItemUpgrade;
 
 public class TileCrafter extends TileNode implements ICraftingPatternContainer {
-    private ItemHandlerBasic patterns = new ItemHandlerBasic(9, this, new IItemValidator() {
-        @Override
-        public boolean isValid(ItemStack stack) {
-            return stack.getItem() == RefinedStorageItems.PATTERN && ItemPattern.isValid(stack);
-        }
-    }) {
+    private ItemHandlerBasic patterns = new ItemHandlerBasic(9, this, stack -> (stack.getItem() == RefinedStorageItems.PATTERN && ItemPattern.isValid(stack))) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -54,11 +45,6 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
 
     @Override
     public void updateNode() {
-    }
-
-    @Override
-    public Class<? extends Container> getContainer() {
-        return ContainerCrafter.class;
     }
 
     @Override

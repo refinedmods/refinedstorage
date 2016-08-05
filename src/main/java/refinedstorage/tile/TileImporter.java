@@ -1,7 +1,5 @@
 package refinedstorage.tile;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -9,16 +7,19 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorage;
-import refinedstorage.container.ContainerImporter;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.IModeConfig;
-import refinedstorage.tile.config.ModeConstants;
 import refinedstorage.tile.config.ModeFilter;
+import refinedstorage.tile.data.TileDataManager;
+import refinedstorage.tile.data.TileDataParameter;
 
 public class TileImporter extends TileNode implements ICompareConfig, IModeConfig {
+    public static final TileDataParameter COMPARE = ICompareConfig.createConfigParameter();
+    public static final TileDataParameter MODE = IModeConfig.createConfigParameter();
+
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
 
@@ -26,9 +27,14 @@ public class TileImporter extends TileNode implements ICompareConfig, IModeConfi
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK);
 
     private int compare = 0;
-    private int mode = ModeConstants.WHITELIST;
+    private int mode = IModeConfig.WHITELIST;
 
     private int currentSlot;
+
+    public TileImporter() {
+        dataManager.addWatchedParameter(COMPARE);
+        dataManager.addWatchedParameter(MODE);
+    }
 
     @Override
     public int getEnergyUsage() {
@@ -75,9 +81,13 @@ public class TileImporter extends TileNode implements ICompareConfig, IModeConfi
 
     @Override
     public void setCompare(int compare) {
-        this.compare = compare;
+        if (worldObj.isRemote) {
+            TileDataManager.setParameter(COMPARE, compare);
+        } else {
+            this.compare = compare;
 
-        markDirty();
+            markDirty();
+        }
     }
 
     @Override
@@ -87,9 +97,13 @@ public class TileImporter extends TileNode implements ICompareConfig, IModeConfi
 
     @Override
     public void setMode(int mode) {
-        this.mode = mode;
+        if (worldObj.isRemote) {
+            TileDataManager.setParameter(MODE, mode);
+        } else {
+            this.mode = mode;
 
-        markDirty();
+            markDirty();
+        }
     }
 
     @Override
@@ -119,27 +133,6 @@ public class TileImporter extends TileNode implements ICompareConfig, IModeConfi
         writeItems(upgrades, 1, tag);
 
         return tag;
-    }
-
-    @Override
-    public void readContainerData(ByteBuf buf) {
-        super.readContainerData(buf);
-
-        compare = buf.readInt();
-        mode = buf.readInt();
-    }
-
-    @Override
-    public void writeContainerData(ByteBuf buf) {
-        super.writeContainerData(buf);
-
-        buf.writeInt(compare);
-        buf.writeInt(mode);
-    }
-
-    @Override
-    public Class<? extends Container> getContainer() {
-        return ContainerImporter.class;
     }
 
     public IItemHandler getUpgrades() {

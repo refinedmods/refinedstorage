@@ -6,7 +6,7 @@ import refinedstorage.api.storage.CompareUtils;
 
 public final class ModeFilter {
     public static boolean respectsMode(IItemHandler filters, IModeConfig mode, int compare, ItemStack stack) {
-        if (mode.getMode() == ModeConstants.WHITELIST) {
+        if (mode.getMode() == IModeConfig.WHITELIST) {
             int slots = 0;
 
             for (int i = 0; i < filters.getSlots(); ++i) {
@@ -22,7 +22,7 @@ public final class ModeFilter {
             }
 
             return slots == 0;
-        } else if (mode.getMode() == ModeConstants.BLACKLIST) {
+        } else if (mode.getMode() == IModeConfig.BLACKLIST) {
             for (int i = 0; i < filters.getSlots(); ++i) {
                 ItemStack slot = filters.getStackInSlot(i);
 

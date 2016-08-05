@@ -29,7 +29,7 @@ public class GuiSolderer extends GuiBase {
         drawTexture(x, y, 0, 0, width, height);
 
         if (solderer.isWorking()) {
-            drawTexture(x + 83, y + 38 - 1, 212, 0, solderer.getProgressScaled(22), 15);
+            drawTexture(x + 83, y + 38 - 1, 212, 0, getProgressScaled(22), 15);
         }
     }
 
@@ -39,7 +39,18 @@ public class GuiSolderer extends GuiBase {
         drawString(7, 77, t("container.inventory"));
 
         if (inBounds(83, 38, 22, 15, mouseX, mouseY) && solderer.isWorking()) {
-            drawTooltip(mouseX, mouseY, t("gui.refinedstorage:solderer.progress", solderer.getProgressScaled(100)));
+            drawTooltip(mouseX, mouseY, t("gui.refinedstorage:solderer.progress", getProgressScaled(100)));
         }
+    }
+
+    private int getProgressScaled(int scale) {
+        float progress = TileSolderer.PROGRESS.getValue();
+        float duration = TileSolderer.DURATION.getValue();
+
+        if (progress > duration) {
+            return scale;
+        }
+
+        return (int) (progress / duration * (float) scale);
     }
 }

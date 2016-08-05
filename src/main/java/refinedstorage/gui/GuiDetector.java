@@ -2,13 +2,12 @@ package refinedstorage.gui;
 
 import com.google.common.primitives.Ints;
 import net.minecraft.client.gui.GuiTextField;
-import refinedstorage.RefinedStorage;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.container.ContainerDetector;
 import refinedstorage.gui.sidebutton.SideButtonCompare;
 import refinedstorage.gui.sidebutton.SideButtonDetectorMode;
-import refinedstorage.network.MessageDetectorAmountUpdate;
 import refinedstorage.tile.TileDetector;
+import refinedstorage.tile.data.TileDataManager;
 
 import java.io.IOException;
 
@@ -31,7 +30,8 @@ public class GuiDetector extends GuiBase {
         addSideButton(new SideButtonDetectorMode(detector));
 
         amountField = new GuiTextField(0, fontRendererObj, x + 62 + 1, y + 23 + 1, 25, fontRendererObj.FONT_HEIGHT);
-        amountField.setText(String.valueOf(detector.getAmount()));
+        // @TODO: Change when the packet is received instead
+        amountField.setText(String.valueOf(TileDetector.AMOUNT.getValue()));
         amountField.setEnableBackgroundDrawing(false);
         amountField.setVisible(true);
         amountField.setTextColor(16777215);
@@ -64,7 +64,7 @@ public class GuiDetector extends GuiBase {
             Integer result = Ints.tryParse(amountField.getText());
 
             if (result != null) {
-                RefinedStorage.INSTANCE.network.sendToServer(new MessageDetectorAmountUpdate(detector, result));
+                TileDataManager.setParameter(TileDetector.AMOUNT, result);
             }
         } else {
             super.keyTyped(character, keyCode);

@@ -1,8 +1,7 @@
 package refinedstorage.tile;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -13,13 +12,29 @@ import refinedstorage.api.RefinedStorageAPI;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.solderer.ISoldererRecipe;
 import refinedstorage.api.storage.CompareUtils;
-import refinedstorage.container.ContainerSolderer;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerSolderer;
 import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemUpgrade;
+import refinedstorage.tile.data.ITileDataProducer;
+import refinedstorage.tile.data.TileDataManager;
+import refinedstorage.tile.data.TileDataParameter;
 
 public class TileSolderer extends TileNode {
+    public static final TileDataParameter<Integer> DURATION = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileSolderer>() {
+        @Override
+        public Integer getValue(TileSolderer tile) {
+            return tile.recipe != null ? tile.recipe.getDuration() : 0;
+        }
+    });
+
+    public static final TileDataParameter<Integer> PROGRESS = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileSolderer>() {
+        @Override
+        public Integer getValue(TileSolderer tile) {
+            return tile.progress;
+        }
+    });
+
     private static final String NBT_WORKING = "Working";
     private static final String NBT_PROGRESS = "Progress";
 
@@ -31,7 +46,11 @@ public class TileSolderer extends TileNode {
 
     private boolean working = false;
     private int progress = 0;
-    private int duration;
+
+    public TileSolderer() {
+        dataManager.addWatchedParameter(DURATION);
+        dataManager.addWatchedParameter(PROGRESS);
+    }
 
     @Override
     public int getEnergyUsage() {
@@ -153,37 +172,8 @@ public class TileSolderer extends TileNode {
         super.readUpdate(tag);
     }
 
-    @Override
-    public void readContainerData(ByteBuf buf) {
-        super.readContainerData(buf);
-
-        progress = buf.readInt();
-        duration = buf.readInt();
-    }
-
-    @Override
-    public void writeContainerData(ByteBuf buf) {
-        super.writeContainerData(buf);
-
-        buf.writeInt(progress);
-        buf.writeInt(recipe != null ? recipe.getDuration() : 0);
-    }
-
-    @Override
-    public Class<? extends Container> getContainer() {
-        return ContainerSolderer.class;
-    }
-
     public boolean isWorking() {
         return working;
-    }
-
-    public int getProgressScaled(int i) {
-        if (progress > duration) {
-            return i;
-        }
-
-        return (int) ((float) progress / (float) duration * (float) i);
     }
 
     public ItemHandlerBasic getItems() {

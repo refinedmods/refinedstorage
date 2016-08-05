@@ -1,12 +1,12 @@
 package refinedstorage.tile.grid;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
@@ -25,14 +25,81 @@ import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerGridFilterInGrid;
 import refinedstorage.inventory.ItemValidatorBasic;
 import refinedstorage.item.ItemPattern;
-import refinedstorage.network.MessageGridSettingsUpdate;
 import refinedstorage.tile.TileNode;
 import refinedstorage.tile.config.IRedstoneModeConfig;
+import refinedstorage.tile.data.ITileDataConsumer;
+import refinedstorage.tile.data.ITileDataProducer;
+import refinedstorage.tile.data.TileDataManager;
+import refinedstorage.tile.data.TileDataParameter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TileGrid extends TileNode implements IGrid {
+    public static final TileDataParameter<Integer> VIEW_TYPE = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileGrid>() {
+        @Override
+        public Integer getValue(TileGrid tile) {
+            return tile.viewType;
+        }
+    }, new ITileDataConsumer<Integer, TileGrid>() {
+        @Override
+        public void setValue(TileGrid tile, Integer value) {
+            if (isValidViewType(value)) {
+                tile.viewType = value;
+
+                tile.markDirty();
+            }
+        }
+    });
+
+    public static final TileDataParameter<Integer> SORTING_DIRECTION = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileGrid>() {
+        @Override
+        public Integer getValue(TileGrid tile) {
+            return tile.sortingDirection;
+        }
+    }, new ITileDataConsumer<Integer, TileGrid>() {
+        @Override
+        public void setValue(TileGrid tile, Integer value) {
+            if (isValidSortingDirection(value)) {
+                tile.sortingDirection = value;
+
+                tile.markDirty();
+            }
+        }
+    });
+
+    public static final TileDataParameter<Integer> SORTING_TYPE = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileGrid>() {
+        @Override
+        public Integer getValue(TileGrid tile) {
+            return tile.sortingType;
+        }
+    }, new ITileDataConsumer<Integer, TileGrid>() {
+        @Override
+        public void setValue(TileGrid tile, Integer value) {
+            if (isValidSortingType(value)) {
+                tile.sortingType = value;
+
+                tile.markDirty();
+            }
+        }
+    });
+
+    public static final TileDataParameter<Integer> SEARCH_BOX_MODE = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileGrid>() {
+        @Override
+        public Integer getValue(TileGrid tile) {
+            return tile.searchBoxMode;
+        }
+    }, new ITileDataConsumer<Integer, TileGrid>() {
+        @Override
+        public void setValue(TileGrid tile, Integer value) {
+            if (isValidSearchBoxMode(value)) {
+                tile.searchBoxMode = value;
+
+                tile.markDirty();
+            }
+        }
+    });
+
     public static final String NBT_VIEW_TYPE = "ViewType";
     public static final String NBT_SORTING_DIRECTION = "SortingDirection";
     public static final String NBT_SORTING_TYPE = "SortingType";
@@ -77,6 +144,13 @@ public class TileGrid extends TileNode implements IGrid {
     private int sortingDirection = SORTING_DIRECTION_DESCENDING;
     private int sortingType = SORTING_TYPE_NAME;
     private int searchBoxMode = SEARCH_BOX_MODE_NORMAL;
+
+    public TileGrid() {
+        dataManager.addWatchedParameter(VIEW_TYPE);
+        dataManager.addWatchedParameter(SORTING_DIRECTION);
+        dataManager.addWatchedParameter(SORTING_TYPE);
+        dataManager.addWatchedParameter(SEARCH_BOX_MODE);
+    }
 
     @Override
     public int getEnergyUsage() {
@@ -279,63 +353,42 @@ public class TileGrid extends TileNode implements IGrid {
 
     @Override
     public int getViewType() {
-        return viewType;
+        return worldObj.isRemote ? VIEW_TYPE.getValue() : viewType;
     }
 
-    public void setViewType(int type) {
-        this.viewType = type;
-
-        markDirty();
-    }
-
+    @Override
     public int getSortingDirection() {
-        return sortingDirection;
+        return worldObj.isRemote ? SORTING_DIRECTION.getValue() : sortingDirection;
     }
 
-    public void setSortingDirection(int sortingDirection) {
-        this.sortingDirection = sortingDirection;
-
-        markDirty();
-    }
-
+    @Override
     public int getSortingType() {
-        return sortingType;
+        return worldObj.isRemote ? SORTING_TYPE.getValue() : sortingType;
     }
 
-    public void setSortingType(int sortingType) {
-        this.sortingType = sortingType;
-
-        markDirty();
-    }
-
+    @Override
     public int getSearchBoxMode() {
-        return searchBoxMode;
-    }
-
-    public void setSearchBoxMode(int searchBoxMode) {
-        this.searchBoxMode = searchBoxMode;
-
-        markDirty();
+        return worldObj.isRemote ? SEARCH_BOX_MODE.getValue() : searchBoxMode;
     }
 
     @Override
     public void onViewTypeChanged(int type) {
-        RefinedStorage.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(this, type, sortingDirection, sortingType, searchBoxMode));
+        TileDataManager.setParameter(VIEW_TYPE, type);
     }
 
     @Override
     public void onSortingTypeChanged(int type) {
-        RefinedStorage.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(this, viewType, sortingDirection, type, searchBoxMode));
+        TileDataManager.setParameter(SORTING_TYPE, type);
     }
 
     @Override
     public void onSortingDirectionChanged(int direction) {
-        RefinedStorage.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(this, viewType, direction, sortingType, searchBoxMode));
+        TileDataManager.setParameter(SORTING_DIRECTION, direction);
     }
 
     @Override
     public void onSearchBoxModeChanged(int searchBoxMode) {
-        RefinedStorage.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(this, viewType, sortingDirection, sortingType, searchBoxMode));
+        TileDataManager.setParameter(SEARCH_BOX_MODE, searchBoxMode);
     }
 
     @Override
@@ -382,31 +435,6 @@ public class TileGrid extends TileNode implements IGrid {
         tag.setInteger(NBT_SEARCH_BOX_MODE, searchBoxMode);
 
         return tag;
-    }
-
-    @Override
-    public void writeContainerData(ByteBuf buf) {
-        super.writeContainerData(buf);
-
-        buf.writeInt(viewType);
-        buf.writeInt(sortingDirection);
-        buf.writeInt(sortingType);
-        buf.writeInt(searchBoxMode);
-    }
-
-    @Override
-    public void readContainerData(ByteBuf buf) {
-        super.readContainerData(buf);
-
-        viewType = buf.readInt();
-        sortingDirection = buf.readInt();
-        sortingType = buf.readInt();
-        searchBoxMode = buf.readInt();
-    }
-
-    @Override
-    public Class<? extends Container> getContainer() {
-        return ContainerGrid.class;
     }
 
     @Override

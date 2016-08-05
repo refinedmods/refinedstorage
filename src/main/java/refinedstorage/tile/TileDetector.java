@@ -1,20 +1,54 @@
 package refinedstorage.tile;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.container.ContainerDetector;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.RedstoneMode;
+import refinedstorage.tile.data.ITileDataConsumer;
+import refinedstorage.tile.data.ITileDataProducer;
+import refinedstorage.tile.data.TileDataManager;
+import refinedstorage.tile.data.TileDataParameter;
 
 public class TileDetector extends TileNode implements ICompareConfig {
-    public static final int SPEED = 5;
+    public static final TileDataParameter COMPARE = ICompareConfig.createConfigParameter();
+
+    public static final TileDataParameter<Integer> MODE = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileDetector>() {
+        @Override
+        public Integer getValue(TileDetector tile) {
+            return tile.mode;
+        }
+    }, new ITileDataConsumer<Integer, TileDetector>() {
+        @Override
+        public void setValue(TileDetector tile, Integer value) {
+            if (value == MODE_UNDER || value == MODE_EQUAL || value == MODE_ABOVE) {
+                tile.mode = value;
+
+                tile.markDirty();
+            }
+        }
+    });
+
+    public static final TileDataParameter AMOUNT = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileDetector>() {
+        @Override
+        public Integer getValue(TileDetector tile) {
+            return tile.amount;
+        }
+    }, new ITileDataConsumer<Integer, TileDetector>() {
+        @Override
+        public void setValue(TileDetector tile, Integer value) {
+            tile.amount = value;
+
+            tile.markDirty();
+        }
+    });
+
+    private static final int SPEED = 5;
 
     public static final int MODE_UNDER = 0;
     public static final int MODE_EQUAL = 1;
@@ -33,6 +67,12 @@ public class TileDetector extends TileNode implements ICompareConfig {
 
     private boolean powered = false;
     private boolean wasPowered;
+
+    public TileDetector() {
+        dataManager.addWatchedParameter(COMPARE);
+        dataManager.addWatchedParameter(MODE);
+        dataManager.addWatchedParameter(AMOUNT);
+    }
 
     @Override
     public int getEnergyUsage() {
@@ -107,29 +147,13 @@ public class TileDetector extends TileNode implements ICompareConfig {
 
     @Override
     public void setCompare(int compare) {
-        this.compare = compare;
+        if (worldObj.isRemote) {
+            TileDataManager.setParameter(COMPARE, compare);
+        } else {
+            this.compare = compare;
 
-        markDirty();
-    }
-
-    public int getMode() {
-        return mode;
-    }
-
-    public void setMode(int mode) {
-        this.mode = mode;
-
-        markDirty();
-    }
-
-    public int getAmount() {
-        return amount;
-    }
-
-    public void setAmount(int amount) {
-        this.amount = amount;
-
-        markDirty();
+            markDirty();
+        }
     }
 
     @Override
@@ -178,29 +202,6 @@ public class TileDetector extends TileNode implements ICompareConfig {
         tag.setBoolean(NBT_POWERED, powered);
 
         return tag;
-    }
-
-    @Override
-    public void writeContainerData(ByteBuf buf) {
-        super.writeContainerData(buf);
-
-        buf.writeInt(compare);
-        buf.writeInt(mode);
-        buf.writeInt(amount);
-    }
-
-    @Override
-    public void readContainerData(ByteBuf buf) {
-        super.readContainerData(buf);
-
-        compare = buf.readInt();
-        mode = buf.readInt();
-        amount = buf.readInt();
-    }
-
-    @Override
-    public Class<? extends Container> getContainer() {
-        return ContainerDetector.class;
     }
 
     public IItemHandler getInventory() {

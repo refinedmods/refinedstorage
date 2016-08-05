@@ -70,6 +70,7 @@ public class GuiGrid extends GuiBase {
             searchField.setVisible(true);
             searchField.setTextColor(16777215);
 
+            // @TODO: Only do this after packet
             updateSearchBoxFocus(grid.getSearchBoxMode());
         } else {
             searchField.xPosition = sx;

@@ -1,8 +1,6 @@
 package refinedstorage.tile;
 
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -20,8 +18,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
-import refinedstorage.RefinedStorage;
-import refinedstorage.network.MessageTileContainerUpdate;
 import refinedstorage.tile.data.TileDataManager;
 
 import javax.annotation.Nullable;
@@ -42,13 +38,7 @@ public abstract class TileBase extends TileEntity implements ITickable {
         if (!worldObj.isRemote) {
             ticks++;
 
-            if (this instanceof ISynchronizedContainer) {
-                for (EntityPlayer player : worldObj.playerEntities) {
-                    if (((ISynchronizedContainer) this).getContainer() == player.openContainer.getClass()) {
-                        RefinedStorage.INSTANCE.network.sendTo(new MessageTileContainerUpdate(this), (EntityPlayerMP) player);
-                    }
-                }
-            }
+            dataManager.detectAndSendChanges();
         }
     }
 

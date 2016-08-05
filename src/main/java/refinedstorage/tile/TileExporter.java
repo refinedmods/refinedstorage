@@ -1,7 +1,5 @@
 package refinedstorage.tile;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -11,13 +9,16 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.apiimpl.autocrafting.CraftingTaskScheduler;
-import refinedstorage.container.ContainerExporter;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
+import refinedstorage.tile.data.TileDataManager;
+import refinedstorage.tile.data.TileDataParameter;
 
 public class TileExporter extends TileNode implements ICompareConfig {
+    public static final TileDataParameter COMPARE = ICompareConfig.createConfigParameter();
+
     private static final String NBT_COMPARE = "Compare";
 
     private ItemHandlerBasic filters = new ItemHandlerBasic(9, this);
@@ -26,6 +27,10 @@ public class TileExporter extends TileNode implements ICompareConfig {
     private int compare = 0;
 
     private CraftingTaskScheduler scheduler = new CraftingTaskScheduler(this);
+
+    public TileExporter() {
+        dataManager.addWatchedParameter(COMPARE);
+    }
 
     @Override
     public int getEnergyUsage() {
@@ -70,9 +75,13 @@ public class TileExporter extends TileNode implements ICompareConfig {
 
     @Override
     public void setCompare(int compare) {
-        this.compare = compare;
+        if (worldObj.isRemote) {
+            TileDataManager.setParameter(COMPARE, compare);
+        } else {
+            this.compare = compare;
 
-        markDirty();
+            markDirty();
+        }
     }
 
     @Override
@@ -101,25 +110,6 @@ public class TileExporter extends TileNode implements ICompareConfig {
         scheduler.writeToNBT(tag);
 
         return tag;
-    }
-
-    @Override
-    public void readContainerData(ByteBuf buf) {
-        super.readContainerData(buf);
-
-        compare = buf.readInt();
-    }
-
-    @Override
-    public void writeContainerData(ByteBuf buf) {
-        super.writeContainerData(buf);
-
-        buf.writeInt(compare);
-    }
-
-    @Override
-    public Class<? extends Container> getContainer() {
-        return ContainerExporter.class;
     }
 
     public IItemHandler getFilters() {

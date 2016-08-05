@@ -1,17 +1,12 @@
 package refinedstorage.tile;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import refinedstorage.RefinedStorage;
-import refinedstorage.api.autocrafting.ICraftingTask;
-import refinedstorage.container.ContainerCraftingMonitor;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+// @TODO: Make this work!
 public class TileCraftingMonitor extends TileNode {
     private List<ClientSideCraftingTask> tasks = new ArrayList<ClientSideCraftingTask>();
 
@@ -24,7 +19,7 @@ public class TileCraftingMonitor extends TileNode {
     public void updateNode() {
     }
 
-    @Override
+    /*@Override
     public void writeContainerData(ByteBuf buf) {
         super.writeContainerData(buf);
 
@@ -66,15 +61,10 @@ public class TileCraftingMonitor extends TileNode {
         Collections.reverse(newTasks);
 
         tasks = newTasks;
-    }
+    }*/
 
     public List<ClientSideCraftingTask> getTasks() {
         return tasks;
-    }
-
-    @Override
-    public Class<? extends Container> getContainer() {
-        return ContainerCraftingMonitor.class;
     }
 
     public class ClientSideCraftingTask {

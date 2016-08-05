@@ -1,21 +1,43 @@
 package refinedstorage.tile;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.math.BlockPos;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.api.network.NetworkUtils;
-import refinedstorage.container.ContainerNetworkTransmitter;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.inventory.ItemValidatorBasic;
 import refinedstorage.item.ItemNetworkCard;
 import refinedstorage.item.ItemUpgrade;
+import refinedstorage.tile.data.ITileDataProducer;
+import refinedstorage.tile.data.TileDataManager;
+import refinedstorage.tile.data.TileDataParameter;
 
 public class TileNetworkTransmitter extends TileNode {
+    public static final TileDataParameter DISTANCE = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileNetworkTransmitter>() {
+        @Override
+        public Integer getValue(TileNetworkTransmitter tile) {
+            return (tile.receiver != null && tile.isSameDimension()) ? tile.getDistance() : -1;
+        }
+    });
+
+    public static final TileDataParameter RECEIVER_DIMENSION = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileNetworkTransmitter>() {
+        @Override
+        public Integer getValue(TileNetworkTransmitter tile) {
+            return tile.receiverDimension;
+        }
+    });
+
+    public static final TileDataParameter<Boolean> RECEIVER_DIMENSION_SUPPORTED = TileDataManager.createParameter(DataSerializers.BOOLEAN, new ITileDataProducer<Boolean, TileNetworkTransmitter>() {
+        @Override
+        public Boolean getValue(TileNetworkTransmitter tile) {
+            return tile.isDimensionSupported();
+        }
+    });
+
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(1, this, ItemUpgrade.TYPE_INTERDIMENSIONAL) {
         @Override
         protected void onContentsChanged(int slot) {
@@ -50,11 +72,11 @@ public class TileNetworkTransmitter extends TileNode {
     private BlockPos receiver;
     private int receiverDimension;
 
-    // Used clientside
-    private int distance;
-    private boolean dimensionSupported;
-
     public TileNetworkTransmitter() {
+        dataManager.addWatchedParameter(DISTANCE);
+        dataManager.addWatchedParameter(RECEIVER_DIMENSION);
+        dataManager.addWatchedParameter(RECEIVER_DIMENSION_SUPPORTED);
+
         rebuildOnUpdateChange = true;
     }
 
@@ -85,31 +107,8 @@ public class TileNetworkTransmitter extends TileNode {
     }
 
     @Override
-    public void writeContainerData(ByteBuf buf) {
-        super.writeContainerData(buf);
-
-        buf.writeInt((receiver != null && isSameDimension()) ? getDistance() : -1);
-        buf.writeInt(receiverDimension);
-        buf.writeBoolean(isDimensionSupported());
-    }
-
-    @Override
-    public void readContainerData(ByteBuf buf) {
-        super.readContainerData(buf);
-
-        distance = buf.readInt();
-        receiverDimension = buf.readInt();
-        dimensionSupported = buf.readBoolean();
-    }
-
-    @Override
     public int getEnergyUsage() {
         return RefinedStorage.INSTANCE.networkTransmitterUsage + (isSameDimension() ? (int) Math.ceil(RefinedStorage.INSTANCE.networkTransmitterPerBlockUsage * getDistance()) : 0) + upgrades.getEnergyUsage();
-    }
-
-    @Override
-    public Class<? extends Container> getContainer() {
-        return ContainerNetworkTransmitter.class;
     }
 
     public ItemHandlerBasic getNetworkCard() {
@@ -129,10 +128,6 @@ public class TileNetworkTransmitter extends TileNode {
     }
 
     public int getDistance() {
-        if (worldObj.isRemote) {
-            return distance;
-        }
-
         if (receiver == null) {
             return 0;
         }
@@ -145,6 +140,6 @@ public class TileNetworkTransmitter extends TileNode {
     }
 
     public boolean isDimensionSupported() {
-        return worldObj.isRemote ? dimensionSupported : (isSameDimension() || upgrades.hasUpgrade(ItemUpgrade.TYPE_INTERDIMENSIONAL));
+        return isSameDimension() || upgrades.hasUpgrade(ItemUpgrade.TYPE_INTERDIMENSIONAL);
     }
 }

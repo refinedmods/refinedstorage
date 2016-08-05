@@ -49,6 +49,7 @@ public class GuiStorage extends GuiBase {
         }
 
         priorityField = new GuiTextField(0, fontRendererObj, x + 98 + 1, y + 54 + 1, 25, fontRendererObj.FONT_HEIGHT);
+        // @TODO: Only change this when packet is received
         priorityField.setText(String.valueOf(gui.getPriority()));
         priorityField.setEnableBackgroundDrawing(false);
         priorityField.setVisible(true);

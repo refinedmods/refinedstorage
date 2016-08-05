@@ -1,9 +1,7 @@
 package refinedstorage.gui.sidebutton;
 
 import net.minecraft.util.text.TextFormatting;
-import refinedstorage.RefinedStorage;
 import refinedstorage.gui.GuiBase;
-import refinedstorage.network.MessageRedstoneModeUpdate;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 
 public class SideButtonRedstoneMode extends SideButton {
@@ -26,6 +24,6 @@ public class SideButtonRedstoneMode extends SideButton {
 
     @Override
     public void actionPerformed() {
-        RefinedStorage.INSTANCE.network.sendToServer(new MessageRedstoneModeUpdate(config));
+        config.setRedstoneMode(config.getRedstoneMode().next());
     }
 }

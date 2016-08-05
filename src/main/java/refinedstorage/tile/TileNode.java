@@ -1,8 +1,8 @@
 package refinedstorage.tile;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import refinedstorage.api.network.INetworkMaster;
@@ -11,8 +11,28 @@ import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.block.BlockNode;
 import refinedstorage.tile.config.IRedstoneModeConfig;
 import refinedstorage.tile.config.RedstoneMode;
+import refinedstorage.tile.data.ITileDataConsumer;
+import refinedstorage.tile.data.ITileDataProducer;
+import refinedstorage.tile.data.TileDataManager;
+import refinedstorage.tile.data.TileDataParameter;
 
-public abstract class TileNode extends TileBase implements INetworkNode, ISynchronizedContainer, IRedstoneModeConfig {
+public abstract class TileNode extends TileBase implements INetworkNode, IRedstoneModeConfig {
+    public static final TileDataParameter REDSTONE_MODE = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileNode>() {
+        @Override
+        public Integer getValue(TileNode tile) {
+            return tile.redstoneMode.id;
+        }
+    }, new ITileDataConsumer<Integer, TileNode>() {
+        @Override
+        public void setValue(TileNode tile, Integer value) {
+            RedstoneMode mode = RedstoneMode.getById(value);
+
+            if (mode != null) {
+                tile.redstoneMode = mode;
+            }
+        }
+    });
+
     private static final String NBT_CONNECTED = "Connected";
 
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
@@ -22,6 +42,10 @@ public abstract class TileNode extends TileBase implements INetworkNode, ISynchr
     protected boolean rebuildOnUpdateChange;
     protected boolean connected;
     protected INetworkMaster network;
+
+    public TileNode() {
+        dataManager.addWatchedParameter(REDSTONE_MODE);
+    }
 
     @Override
     public boolean canUpdate() {
@@ -125,16 +149,6 @@ public abstract class TileNode extends TileBase implements INetworkNode, ISynchr
         this.redstoneMode = mode;
 
         markDirty();
-    }
-
-    @Override
-    public void readContainerData(ByteBuf buf) {
-        redstoneMode = RedstoneMode.getById(buf.readInt());
-    }
-
-    @Override
-    public void writeContainerData(ByteBuf buf) {
-        buf.writeInt(redstoneMode.id);
     }
 
     @Override

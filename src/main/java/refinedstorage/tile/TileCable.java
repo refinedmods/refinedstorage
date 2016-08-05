@@ -1,6 +1,5 @@
 package refinedstorage.tile;
 
-import net.minecraft.inventory.Container;
 import refinedstorage.RefinedStorage;
 
 public class TileCable extends TileNode {
@@ -12,10 +11,5 @@ public class TileCable extends TileNode {
     @Override
     public void updateNode() {
         // NO OP
-    }
-
-    @Override
-    public Class<? extends Container> getContainer() {
-        return null;
     }
 }

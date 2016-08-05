@@ -1,7 +1,7 @@
 package refinedstorage.tile;
 
-import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
@@ -9,12 +9,21 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorage;
 import refinedstorage.api.network.IWirelessTransmitter;
-import refinedstorage.container.ContainerWirelessTransmitter;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemUpgrade;
+import refinedstorage.tile.data.ITileDataProducer;
+import refinedstorage.tile.data.TileDataManager;
+import refinedstorage.tile.data.TileDataParameter;
 
 public class TileWirelessTransmitter extends TileNode implements IWirelessTransmitter {
+    public static final TileDataParameter<Integer> RANGE = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileWirelessTransmitter>() {
+        @Override
+        public Integer getValue(TileWirelessTransmitter tile) {
+            return tile.getRange();
+        }
+    });
+
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_RANGE);
 
     @Override
@@ -54,11 +63,6 @@ public class TileWirelessTransmitter extends TileNode implements IWirelessTransm
 
     public ItemHandlerBasic getUpgrades() {
         return upgrades;
-    }
-
-    @Override
-    public Class<? extends Container> getContainer() {
-        return ContainerWirelessTransmitter.class;
     }
 
     @Override

@@ -1,9 +1,7 @@
 package refinedstorage.tile;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,18 +11,21 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorage;
-import refinedstorage.container.ContainerDestructor;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.IModeConfig;
-import refinedstorage.tile.config.ModeConstants;
 import refinedstorage.tile.config.ModeFilter;
+import refinedstorage.tile.data.TileDataManager;
+import refinedstorage.tile.data.TileDataParameter;
 
 import java.util.List;
 
 public class TileDestructor extends TileNode implements ICompareConfig, IModeConfig {
+    public static final TileDataParameter COMPARE = ICompareConfig.createConfigParameter();
+    public static final TileDataParameter MODE = IModeConfig.createConfigParameter();
+
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
 
@@ -34,7 +35,12 @@ public class TileDestructor extends TileNode implements ICompareConfig, IModeCon
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED);
 
     private int compare = 0;
-    private int mode = ModeConstants.WHITELIST;
+    private int mode = IModeConfig.WHITELIST;
+
+    public TileDestructor() {
+        dataManager.addWatchedParameter(COMPARE);
+        dataManager.addWatchedParameter(MODE);
+    }
 
     @Override
     public int getEnergyUsage() {
@@ -81,9 +87,13 @@ public class TileDestructor extends TileNode implements ICompareConfig, IModeCon
 
     @Override
     public void setCompare(int compare) {
-        this.compare = compare;
+        if (worldObj.isRemote) {
+            TileDataManager.setParameter(COMPARE, compare);
+        } else {
+            this.compare = compare;
 
-        markDirty();
+            markDirty();
+        }
     }
 
     @Override
@@ -93,9 +103,13 @@ public class TileDestructor extends TileNode implements ICompareConfig, IModeCon
 
     @Override
     public void setMode(int mode) {
-        this.mode = mode;
+        if (worldObj.isRemote) {
+            TileDataManager.setParameter(MODE, mode);
+        } else {
+            this.mode = mode;
 
-        markDirty();
+            markDirty();
+        }
     }
 
     @Override
@@ -125,26 +139,6 @@ public class TileDestructor extends TileNode implements ICompareConfig, IModeCon
         writeItems(upgrades, 1, tag);
 
         return tag;
-    }
-
-    @Override
-    public void readContainerData(ByteBuf buf) {
-        super.readContainerData(buf);
-
-        compare = buf.readInt();
-        mode = buf.readInt();
-    }
-
-    @Override
-    public void writeContainerData(ByteBuf buf) {
-        super.writeContainerData(buf);
-
-        buf.writeInt(compare);
-        buf.writeInt(mode);
-    }
-
-    public Class<? extends Container> getContainer() {
-        return ContainerDestructor.class;
     }
 
     public IItemHandler getUpgrades() {

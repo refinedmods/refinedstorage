@@ -1,9 +1,8 @@
 package refinedstorage.tile;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
@@ -14,14 +13,25 @@ import refinedstorage.api.storage.IStorageProvider;
 import refinedstorage.apiimpl.storage.NBTStorage;
 import refinedstorage.block.BlockStorage;
 import refinedstorage.block.EnumStorageType;
-import refinedstorage.container.ContainerStorage;
 import refinedstorage.inventory.ItemHandlerBasic;
-import refinedstorage.network.MessagePriorityUpdate;
 import refinedstorage.tile.config.*;
+import refinedstorage.tile.data.ITileDataProducer;
+import refinedstorage.tile.data.TileDataManager;
+import refinedstorage.tile.data.TileDataParameter;
 
 import java.util.List;
 
-public class TileStorage extends TileNode implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig {
+public class TileStorage extends TileNode implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig, IPrioritizable {
+    public static final TileDataParameter PRIORITY = IPrioritizable.createConfigParameter();
+    public static final TileDataParameter COMPARE = ICompareConfig.createConfigParameter();
+    public static final TileDataParameter MODE = IModeConfig.createConfigParameter();
+    public static final TileDataParameter STORED = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileStorage>() {
+        @Override
+        public Integer getValue(TileStorage tile) {
+            return NBTStorage.getStoredFromNBT(tile.storageTag);
+        }
+    });
+
     class Storage extends NBTStorage {
         public Storage() {
             super(TileStorage.this.getStorageTag(), TileStorage.this.getCapacity(), TileStorage.this);
@@ -58,8 +68,14 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
 
     private int priority = 0;
     private int compare = 0;
-    private int mode = ModeConstants.WHITELIST;
-    private int stored;
+    private int mode = IModeConfig.WHITELIST;
+
+    public TileStorage() {
+        dataManager.addWatchedParameter(PRIORITY);
+        dataManager.addWatchedParameter(COMPARE);
+        dataManager.addWatchedParameter(MODE);
+        dataManager.addWatchedParameter(STORED);
+    }
 
     @Override
     public int getEnergyUsage() {
@@ -154,40 +170,19 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
     }
 
     @Override
-    public void writeContainerData(ByteBuf buf) {
-        super.writeContainerData(buf);
-
-        buf.writeInt(NBTStorage.getStoredFromNBT(storageTag));
-        buf.writeInt(priority);
-        buf.writeInt(compare);
-        buf.writeInt(mode);
-    }
-
-    @Override
-    public void readContainerData(ByteBuf buf) {
-        super.readContainerData(buf);
-
-        stored = buf.readInt();
-        priority = buf.readInt();
-        compare = buf.readInt();
-        mode = buf.readInt();
-    }
-
-    @Override
-    public Class<? extends Container> getContainer() {
-        return ContainerStorage.class;
-    }
-
-    @Override
     public int getCompare() {
         return compare;
     }
 
     @Override
     public void setCompare(int compare) {
-        this.compare = compare;
+        if (worldObj.isRemote) {
+            TileDataManager.setParameter(COMPARE, compare);
+        } else {
+            this.compare = compare;
 
-        markDirty();
+            markDirty();
+        }
     }
 
     @Override
@@ -197,9 +192,13 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
 
     @Override
     public void setMode(int mode) {
-        this.mode = mode;
+        if (worldObj.isRemote) {
+            TileDataManager.setParameter(MODE, mode);
+        } else {
+            this.mode = mode;
 
-        markDirty();
+            markDirty();
+        }
     }
 
     @Override
@@ -227,11 +226,6 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
         return this;
     }
 
-    @Override
-    public void onPriorityChanged(int priority) {
-        RefinedStorage.INSTANCE.network.sendToServer(new MessagePriorityUpdate(pos, priority));
-    }
-
     public NBTTagCompound getStorageTag() {
         return storageTag;
     }
@@ -249,6 +243,12 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
         return priority;
     }
 
+    @Override
+    public void onPriorityChanged(int priority) {
+        TileDataManager.setParameter(PRIORITY, priority);
+    }
+
+    @Override
     public void setPriority(int priority) {
         this.priority = priority;
 
@@ -257,7 +257,7 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
 
     @Override
     public int getStored() {
-        return stored;
+        return (int) STORED.getValue();
     }
 
     @Override

@@ -1,10 +1,8 @@
 package refinedstorage.gui.sidebutton;
 
 import net.minecraft.util.text.TextFormatting;
-import refinedstorage.RefinedStorage;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.gui.GuiBase;
-import refinedstorage.network.MessageCompareUpdate;
 import refinedstorage.tile.config.ICompareConfig;
 
 public class SideButtonCompare extends SideButton {
@@ -48,6 +46,6 @@ public class SideButtonCompare extends SideButton {
 
     @Override
     public void actionPerformed() {
-        RefinedStorage.INSTANCE.network.sendToServer(new MessageCompareUpdate(config, config.getCompare() ^ mask));
+        config.setCompare(config.getCompare() ^ mask);
     }
 }

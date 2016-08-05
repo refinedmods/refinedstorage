@@ -2,9 +2,8 @@ package refinedstorage.tile.externalstorage;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.items.IItemHandler;
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
@@ -12,20 +11,39 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.storage.IStorage;
 import refinedstorage.api.storage.IStorageProvider;
-import refinedstorage.container.ContainerStorage;
 import refinedstorage.inventory.ItemHandlerBasic;
-import refinedstorage.network.MessagePriorityUpdate;
 import refinedstorage.tile.IStorageGui;
 import refinedstorage.tile.TileNode;
 import refinedstorage.tile.config.ICompareConfig;
 import refinedstorage.tile.config.IModeConfig;
+import refinedstorage.tile.config.IPrioritizable;
 import refinedstorage.tile.config.IRedstoneModeConfig;
-import refinedstorage.tile.config.ModeConstants;
+import refinedstorage.tile.data.ITileDataProducer;
+import refinedstorage.tile.data.TileDataManager;
+import refinedstorage.tile.data.TileDataParameter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileExternalStorage extends TileNode implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig {
+public class TileExternalStorage extends TileNode implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig, IPrioritizable {
+    public static final TileDataParameter PRIORITY = IPrioritizable.createConfigParameter();
+    public static final TileDataParameter COMPARE = ICompareConfig.createConfigParameter();
+    public static final TileDataParameter MODE = IModeConfig.createConfigParameter();
+
+    public static final TileDataParameter STORED = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileExternalStorage>() {
+        @Override
+        public Integer getValue(TileExternalStorage tile) {
+            return tile.getStored();
+        }
+    });
+
+    public static final TileDataParameter CAPACITY = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileExternalStorage>() {
+        @Override
+        public Integer getValue(TileExternalStorage tile) {
+            return tile.getCapacity();
+        }
+    });
+
     private static final String NBT_PRIORITY = "Priority";
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
@@ -34,13 +52,18 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
 
     private int priority = 0;
     private int compare = 0;
-    private int mode = ModeConstants.WHITELIST;
-
-    private int stored;
-    private int capacity;
+    private int mode = IModeConfig.WHITELIST;
 
     private List<ExternalStorage> storages = new ArrayList<ExternalStorage>();
     private int lastDrawerCount;
+
+    public TileExternalStorage() {
+        dataManager.addWatchedParameter(PRIORITY);
+        dataManager.addWatchedParameter(COMPARE);
+        dataManager.addWatchedParameter(MODE);
+        dataManager.addWatchedParameter(STORED);
+        dataManager.addWatchedParameter(CAPACITY);
+    }
 
     @Override
     public int getEnergyUsage() {
@@ -85,33 +108,6 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
         }
 
         super.update();
-    }
-
-    @Override
-    public void writeContainerData(ByteBuf buf) {
-        super.writeContainerData(buf);
-
-        buf.writeInt(priority);
-        buf.writeInt(getStored());
-        buf.writeInt(getCapacity());
-        buf.writeInt(compare);
-        buf.writeInt(mode);
-    }
-
-    @Override
-    public void readContainerData(ByteBuf buf) {
-        super.readContainerData(buf);
-
-        priority = buf.readInt();
-        stored = buf.readInt();
-        capacity = buf.readInt();
-        compare = buf.readInt();
-        mode = buf.readInt();
-    }
-
-    @Override
-    public Class<? extends Container> getContainer() {
-        return ContainerStorage.class;
     }
 
     @Override
@@ -175,6 +171,12 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
         return priority;
     }
 
+    @Override
+    public void onPriorityChanged(int priority) {
+        TileDataManager.setParameter(PRIORITY, priority);
+    }
+
+    @Override
     public void setPriority(int priority) {
         this.priority = priority;
 
@@ -236,14 +238,10 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
 
     @Override
     public int getStored() {
-        if (!worldObj.isRemote) {
-            int stored = 0;
+        int stored = 0;
 
-            for (ExternalStorage storage : storages) {
-                stored += storage.getStored();
-            }
-
-            return stored;
+        for (ExternalStorage storage : storages) {
+            stored += storage.getStored();
         }
 
         return stored;
@@ -251,22 +249,13 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
 
     @Override
     public int getCapacity() {
-        if (!worldObj.isRemote) {
-            int capacity = 0;
+        int capacity = 0;
 
-            for (ExternalStorage storage : storages) {
-                capacity += storage.getCapacity();
-            }
-
-            return capacity;
+        for (ExternalStorage storage : storages) {
+            capacity += storage.getCapacity();
         }
 
         return capacity;
-    }
-
-    @Override
-    public void onPriorityChanged(int priority) {
-        RefinedStorage.INSTANCE.network.sendToServer(new MessagePriorityUpdate(pos, priority));
     }
 
     @Override

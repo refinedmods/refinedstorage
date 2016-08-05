@@ -1,8 +1,6 @@
 package refinedstorage.tile;
 
-import net.minecraft.inventory.Container;
 import refinedstorage.RefinedStorage;
-import refinedstorage.container.ContainerRelay;
 import refinedstorage.tile.config.RedstoneMode;
 
 public class TileRelay extends TileNode {
@@ -24,10 +22,5 @@ public class TileRelay extends TileNode {
     @Override
     public boolean canConduct() {
         return canUpdate();
-    }
-
-    @Override
-    public Class<? extends Container> getContainer() {
-        return ContainerRelay.class;
     }
 }

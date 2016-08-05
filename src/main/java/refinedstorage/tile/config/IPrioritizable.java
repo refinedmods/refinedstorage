@@ -7,22 +7,22 @@ import refinedstorage.tile.data.ITileDataProducer;
 import refinedstorage.tile.data.TileDataManager;
 import refinedstorage.tile.data.TileDataParameter;
 
-public interface ICompareConfig {
+public interface IPrioritizable {
     static <T extends TileEntity> TileDataParameter createConfigParameter() {
         return TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, T>() {
             @Override
             public Integer getValue(T tile) {
-                return ((ICompareConfig) tile).getCompare();
+                return ((IPrioritizable) tile).getPriority();
             }
         }, new ITileDataConsumer<Integer, T>() {
             @Override
             public void setValue(T tile, Integer value) {
-                ((ICompareConfig) tile).setCompare(value);
+                ((IPrioritizable) tile).setPriority(value);
             }
         });
     }
 
-    int getCompare();
+    int getPriority();
 
-    void setCompare(int compare);
+    void setPriority(int priority);
 }
