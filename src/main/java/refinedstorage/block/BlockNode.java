@@ -15,7 +15,7 @@ import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.tile.TileNode;
 
 public abstract class BlockNode extends BlockBase {
-    public static final PropertyBool CONNECTED = PropertyBool.create("connected");
+    private static final PropertyBool CONNECTED = PropertyBool.create("connected");
 
     public BlockNode(String name) {
         super(name);

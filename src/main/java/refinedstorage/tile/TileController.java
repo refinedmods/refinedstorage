@@ -391,9 +391,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public void sendStorageToClient() {
-        worldObj.getMinecraftServer().getPlayerList().getPlayerList().stream().filter(player -> isWatchingGrid(player)).forEach(player -> {
-            sendStorageToClient(player);
-        });
+        worldObj.getMinecraftServer().getPlayerList().getPlayerList().stream()
+            .filter(this::isWatchingGrid)
+            .forEach(this::sendStorageToClient);
     }
 
     @Override
@@ -403,9 +403,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public void sendStorageDeltaToClient(ItemStack stack, int delta) {
-        worldObj.getMinecraftServer().getPlayerList().getPlayerList().stream().filter(player -> isWatchingGrid(player)).forEach(player -> {
-            RefinedStorage.INSTANCE.network.sendTo(new MessageGridDelta(this, stack, delta), player);
-        });
+        worldObj.getMinecraftServer().getPlayerList().getPlayerList().stream()
+            .filter(this::isWatchingGrid)
+            .forEach(player -> RefinedStorage.INSTANCE.network.sendTo(new MessageGridDelta(this, stack, delta), player));
     }
 
     private boolean isWatchingGrid(EntityPlayer player) {

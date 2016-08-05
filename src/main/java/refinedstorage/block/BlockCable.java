@@ -16,12 +16,12 @@ import refinedstorage.tile.TileCable;
 public class BlockCable extends BlockNode {
     private static final AxisAlignedBB CABLE_AABB = new AxisAlignedBB(4 * (1F / 16F), 4 * (1F / 16F), 4 * (1F / 16F), 1 - 4 * (1F / 16F), 1 - 4 * (1F / 16F), 1 - 4 * (1F / 16F));
 
-    public static final PropertyBool NORTH = PropertyBool.create("north");
-    public static final PropertyBool EAST = PropertyBool.create("east");
-    public static final PropertyBool SOUTH = PropertyBool.create("south");
-    public static final PropertyBool WEST = PropertyBool.create("west");
-    public static final PropertyBool UP = PropertyBool.create("up");
-    public static final PropertyBool DOWN = PropertyBool.create("down");
+    private static final PropertyBool NORTH = PropertyBool.create("north");
+    private static final PropertyBool EAST = PropertyBool.create("east");
+    private static final PropertyBool SOUTH = PropertyBool.create("south");
+    private static final PropertyBool WEST = PropertyBool.create("west");
+    private static final PropertyBool UP = PropertyBool.create("up");
+    private static final PropertyBool DOWN = PropertyBool.create("down");
 
     public BlockCable(String name) {
         super(name);
@@ -91,7 +91,7 @@ public class BlockCable extends BlockNode {
     }
 
     @Override
-    public EnumPlacementType getPlacementType() {
+    protected EnumPlacementType getPlacementType() {
         return null;
     }
 }

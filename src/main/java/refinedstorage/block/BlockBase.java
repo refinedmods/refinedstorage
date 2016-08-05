@@ -21,7 +21,7 @@ import refinedstorage.item.ItemBlockBase;
 import refinedstorage.tile.TileBase;
 
 public abstract class BlockBase extends Block {
-    public static final PropertyDirection DIRECTION = PropertyDirection.create("direction");
+    private static final PropertyDirection DIRECTION = PropertyDirection.create("direction");
 
     private String name;
 
@@ -147,7 +147,7 @@ public abstract class BlockBase extends Block {
         world.setBlockToAir(pos);
     }
 
-    public EnumPlacementType getPlacementType() {
+    protected EnumPlacementType getPlacementType() {
         return EnumPlacementType.HORIZONTAL;
     }
 }

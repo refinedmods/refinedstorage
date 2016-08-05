@@ -104,7 +104,7 @@ public class GuiController extends GuiBase {
         }
     }
 
-    public int getOffset() {
+    private int getOffset() {
         return (int) Math.ceil(getScrollbar().getCurrentScroll() / 59f * (float) getRows());
     }
 

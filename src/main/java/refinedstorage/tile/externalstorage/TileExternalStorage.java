@@ -25,18 +25,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TileExternalStorage extends TileNode implements IStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable {
-    public static final TileDataParameter PRIORITY = IPrioritizable.createParameter();
-    public static final TileDataParameter COMPARE = IComparable.createParameter();
-    public static final TileDataParameter MODE = IFilterable.createParameter();
+    public static final TileDataParameter<Integer> PRIORITY = IPrioritizable.createParameter();
+    public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
+    public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
 
-    public static final TileDataParameter STORED = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileExternalStorage>() {
+    public static final TileDataParameter<Integer> STORED = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileExternalStorage>() {
         @Override
         public Integer getValue(TileExternalStorage tile) {
             return tile.getStored();
         }
     });
 
-    public static final TileDataParameter CAPACITY = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileExternalStorage>() {
+    public static final TileDataParameter<Integer> CAPACITY = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileExternalStorage>() {
         @Override
         public Integer getValue(TileExternalStorage tile) {
             return tile.getCapacity();

@@ -33,7 +33,7 @@ public class DrawerStorage extends ExternalStorage {
         return Collections.emptyList();
     }
 
-    public boolean isVoidable() {
+    private boolean isVoidable() {
         return drawer instanceof IVoidable && ((IVoidable) drawer).isVoid();
     }
 

@@ -16,7 +16,7 @@ import refinedstorage.RefinedStorageGui;
 import refinedstorage.tile.TileDiskDrive;
 
 public class BlockDiskDrive extends BlockNode {
-    public static final PropertyInteger STORED = PropertyInteger.create("stored", 0, 7);
+    private static final PropertyInteger STORED = PropertyInteger.create("stored", 0, 7);
 
     public BlockDiskDrive() {
         super("disk_drive");

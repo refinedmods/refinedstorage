@@ -29,7 +29,8 @@ import java.util.List;
 
 public class BlockController extends BlockBase {
     public static final PropertyEnum TYPE = PropertyEnum.create("type", EnumControllerType.class);
-    public static final PropertyInteger ENERGY = PropertyInteger.create("energy", 0, 7);
+
+    private static final PropertyInteger ENERGY = PropertyInteger.create("energy", 0, 7);
 
     public BlockController() {
         super("controller");

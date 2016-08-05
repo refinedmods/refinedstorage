@@ -14,7 +14,7 @@ public enum EnumPlacementType {
         EnumFacing.WEST
     );
 
-    public final EnumFacing[] allowed;
+    final EnumFacing[] allowed;
 
     EnumPlacementType(EnumFacing... allowed) {
         this.allowed = allowed;

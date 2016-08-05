@@ -136,7 +136,7 @@ public abstract class GuiBase extends GuiContainer {
     protected void actionPerformed(GuiButton button) throws IOException {
         super.actionPerformed(button);
 
-        sideButtons.stream().filter(b -> b.getId() == button.id).findFirst().ifPresent(s -> s.actionPerformed());
+        sideButtons.stream().filter(b -> b.getId() == button.id).findFirst().ifPresent(SideButton::actionPerformed);
     }
 
     public GuiButton addButton(int x, int y, int w, int h) {

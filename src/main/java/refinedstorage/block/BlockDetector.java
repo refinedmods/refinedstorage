@@ -18,9 +18,9 @@ import refinedstorage.RefinedStorageGui;
 import refinedstorage.tile.TileDetector;
 
 public class BlockDetector extends BlockNode {
-    public static final AxisAlignedBB AABB_DETECTOR = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 4D / 16D, 1.0D);
+    private static final AxisAlignedBB AABB_DETECTOR = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 4D / 16D, 1.0D);
 
-    public static final PropertyBool POWERED = PropertyBool.create("powered");
+    private static final PropertyBool POWERED = PropertyBool.create("powered");
 
     public BlockDetector() {
         super("detector");

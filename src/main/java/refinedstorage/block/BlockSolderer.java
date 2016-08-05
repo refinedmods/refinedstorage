@@ -17,9 +17,9 @@ import refinedstorage.RefinedStorageGui;
 import refinedstorage.tile.TileSolderer;
 
 public class BlockSolderer extends BlockNode {
-    public static final AxisAlignedBB AABB_SOLDERER = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 14D / 16D, 1.0D);
+    private static final AxisAlignedBB AABB_SOLDERER = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 14D / 16D, 1.0D);
 
-    public static final PropertyBool WORKING = PropertyBool.create("working");
+    private static final PropertyBool WORKING = PropertyBool.create("working");
 
     public BlockSolderer() {
         super("solderer");

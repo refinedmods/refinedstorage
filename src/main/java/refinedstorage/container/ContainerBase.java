@@ -107,7 +107,7 @@ public abstract class ContainerBase extends Container {
         return null;
     }
 
-    public ItemStack mergeItemStackToSpecimen(ItemStack stack, int begin, int end) {
+    protected ItemStack mergeItemStackToSpecimen(ItemStack stack, int begin, int end) {
         for (int i = begin; i < end; ++i) {
             if (CompareUtils.compareStackNoQuantity(getSlot(i).getStack(), stack)) {
                 return null;
