@@ -21,8 +21,8 @@ public class BlockConstructor extends BlockCable {
     public static final AxisAlignedBB HOLDER_EAST_AABB = createAABB(10, 7, 7, 14, 9, 9);
     public static final AxisAlignedBB HOLDER_SOUTH_AABB = createAABB(7, 7, 10, 9, 9, 14);
     public static final AxisAlignedBB HOLDER_WEST_AABB = createAABB(2, 7, 7, 6, 9, 9);
-    public static final AxisAlignedBB HOLDER_DOWN_AABB = createAABB(7, 2, 7, 9, 6, 9);
     public static final AxisAlignedBB HOLDER_UP_AABB = createAABB(7, 10, 7, 9, 14, 9);
+    public static final AxisAlignedBB HOLDER_DOWN_AABB = createAABB(7, 2, 7, 9, 6, 9);
 
     public static final AxisAlignedBB HEAD_NORTH_AABB = createAABB(0, 0, 0, 16, 16, 2);
     public static final AxisAlignedBB HEAD_EAST_AABB = createAABB(14, 0, 0, 16, 16, 16);
@@ -35,6 +35,7 @@ public class BlockConstructor extends BlockCable {
         super("constructor");
     }
 
+    @Override
     public List<AxisAlignedBB> getNonUnionizedCollisionBoxes(IBlockState state) {
         List<AxisAlignedBB> boxes = new ArrayList<>();
 

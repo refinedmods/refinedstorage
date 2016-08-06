@@ -26,6 +26,7 @@ public class BlockDestructor extends BlockCable {
         return new TileDestructor();
     }
 
+    @Override
     public List<AxisAlignedBB> getNonUnionizedCollisionBoxes(IBlockState state) {
         return RefinedStorageBlocks.CONSTRUCTOR.getNonUnionizedCollisionBoxes(state);
     }
