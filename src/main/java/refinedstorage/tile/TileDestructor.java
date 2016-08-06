@@ -1,5 +1,6 @@
 package refinedstorage.tile;
 
+import mcmultipart.microblock.IMicroblock;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.inventory.InventoryHelper;
@@ -38,6 +39,11 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
     public TileDestructor() {
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(MODE);
+    }
+
+    @Override
+    public boolean canAddMicroblock(IMicroblock microblock) {
+        return !isBlockingMicroblock(microblock, getDirection());
     }
 
     @Override

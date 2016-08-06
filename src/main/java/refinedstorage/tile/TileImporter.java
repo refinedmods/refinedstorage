@@ -1,5 +1,6 @@
 package refinedstorage.tile;
 
+import mcmultipart.microblock.IMicroblock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -32,6 +33,11 @@ public class TileImporter extends TileMultipartNode implements IComparable, IFil
     public TileImporter() {
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(MODE);
+    }
+
+    @Override
+    public boolean canAddMicroblock(IMicroblock microblock) {
+        return !isBlockingMicroblock(microblock, getDirection());
     }
 
     @Override

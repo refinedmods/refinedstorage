@@ -1,5 +1,6 @@
 package refinedstorage.tile;
 
+import mcmultipart.microblock.IMicroblock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
@@ -44,6 +45,11 @@ public class TileConstructor extends TileMultipartNode implements IComparable {
 
     public TileConstructor() {
         dataManager.addWatchedParameter(COMPARE);
+    }
+
+    @Override
+    public boolean canAddMicroblock(IMicroblock microblock) {
+        return !isBlockingMicroblock(microblock, getDirection());
     }
 
     @Override

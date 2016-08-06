@@ -82,17 +82,23 @@ public abstract class TileMultipartNode extends TileNode implements IMicroblockC
 
         if (tile instanceof TileMultipartNode) {
             for (IMicroblock microblock : ((TileMultipartNode) tile).getMicroblockContainer().getParts()) {
-                if (microblock instanceof IMicroblock.IFaceMicroblock) {
-                    IMicroblock.IFaceMicroblock faceMicroblock = (IMicroblock.IFaceMicroblock) microblock;
-
-                    if (faceMicroblock.getFace() == direction && !faceMicroblock.isFaceHollow()) {
-                        return true;
-                    }
+                if (isBlockingMicroblock(microblock, direction)) {
+                    return true;
                 }
             }
         }
 
         return false;
+    }
+
+    public static boolean isBlockingMicroblock(IMicroblock microblock, EnumFacing direction) {
+        if (!(microblock instanceof IMicroblock.IFaceMicroblock)) {
+            return false;
+        }
+
+        IMicroblock.IFaceMicroblock faceMicroblock = (IMicroblock.IFaceMicroblock) microblock;
+
+        return faceMicroblock.getFace() == direction && !faceMicroblock.isFaceHollow();
     }
 
     @Override
