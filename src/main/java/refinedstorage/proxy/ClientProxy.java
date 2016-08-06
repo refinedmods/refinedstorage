@@ -19,6 +19,7 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.GL11;
 import refinedstorage.RefinedStorage;
@@ -44,7 +45,7 @@ public class ClientProxy extends CommonProxy {
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onBlockDrawHighlight(DrawBlockHighlightEvent e) {
         if (e.getTarget() == null || e.getTarget().getBlockPos() == null) {
             return;
