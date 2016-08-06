@@ -110,15 +110,16 @@ public class BlockCable extends BlockCoverable {
     }
 
     private boolean hasConnectionWith(IBlockAccess world, BlockPos pos, EnumFacing direction) {
+        TileMultipartNode tile = (TileMultipartNode) world.getTileEntity(pos);
         TileEntity facing = world.getTileEntity(pos.offset(direction));
 
         if (facing instanceof INetworkMaster || facing instanceof INetworkNode) {
-            /*// Do not render a cable extension to on this position when we have a direction (like an exporter, importer or external storage)
+            // Do not render a cable extension where our cable "head" is (e.g. importer, exporter, external storage cubes).
             if (getPlacementType() != null) {
                 return tile.getFacingTile() != facing;
-            }*/
+            }
 
-            return !TileMultipartNode.hasBlockingMicroblock(world, pos, direction);
+            return !TileMultipartNode.hasBlockingMicroblock(world, pos, direction) && !TileMultipartNode.hasBlockingMicroblock(world, pos.offset(direction), direction.getOpposite());
         }
 
         return false;
