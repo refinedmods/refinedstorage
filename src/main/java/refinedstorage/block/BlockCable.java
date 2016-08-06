@@ -42,20 +42,20 @@ public class BlockCable extends BlockCoverable {
         return new AxisAlignedBB((float) fromX / 16F, (float) fromY / 16F, (float) fromZ / 16F, (float) toX / 16F, (float) toY / 16F, (float) toZ / 16F);
     }
 
-    private static AxisAlignedBB CORE_AABB = createAABB(6, 6, 6, 10, 10, 10);
-    private static AxisAlignedBB NORTH_AABB = createAABB(6, 6, 0, 10, 10, 6);
-    private static AxisAlignedBB EAST_AABB = createAABB(10, 6, 6, 16, 10, 10);
-    private static AxisAlignedBB SOUTH_AABB = createAABB(6, 6, 10, 10, 10, 16);
-    private static AxisAlignedBB WEST_AABB = createAABB(0, 6, 6, 6, 10, 10);
-    private static AxisAlignedBB UP_AABB = createAABB(6, 10, 6, 10, 16, 10);
-    private static AxisAlignedBB DOWN_AABB = createAABB(6, 0, 6, 10, 6, 10);
+    protected static AxisAlignedBB CORE_AABB = createAABB(6, 6, 6, 10, 10, 10);
+    protected static AxisAlignedBB NORTH_AABB = createAABB(6, 6, 0, 10, 10, 6);
+    protected static AxisAlignedBB EAST_AABB = createAABB(10, 6, 6, 16, 10, 10);
+    protected static AxisAlignedBB SOUTH_AABB = createAABB(6, 6, 10, 10, 10, 16);
+    protected static AxisAlignedBB WEST_AABB = createAABB(0, 6, 6, 6, 10, 10);
+    protected static AxisAlignedBB UP_AABB = createAABB(6, 10, 6, 10, 16, 10);
+    protected static AxisAlignedBB DOWN_AABB = createAABB(6, 0, 6, 10, 6, 10);
 
-    private static final PropertyBool NORTH = PropertyBool.create("north");
-    private static final PropertyBool EAST = PropertyBool.create("east");
-    private static final PropertyBool SOUTH = PropertyBool.create("south");
-    private static final PropertyBool WEST = PropertyBool.create("west");
-    private static final PropertyBool UP = PropertyBool.create("up");
-    private static final PropertyBool DOWN = PropertyBool.create("down");
+    protected static final PropertyBool NORTH = PropertyBool.create("north");
+    protected static final PropertyBool EAST = PropertyBool.create("east");
+    protected static final PropertyBool SOUTH = PropertyBool.create("south");
+    protected static final PropertyBool WEST = PropertyBool.create("west");
+    protected static final PropertyBool UP = PropertyBool.create("up");
+    protected static final PropertyBool DOWN = PropertyBool.create("down");
 
     private String name;
 
@@ -141,6 +141,22 @@ public class BlockCable extends BlockCoverable {
         }
 
         return false;
+    }
+
+    private boolean isInAABB(AxisAlignedBB aabb, float hitX, float hitY, float hitZ) {
+        return hitX >= aabb.minX && hitX <= aabb.maxX && hitY >= aabb.minY && hitY <= aabb.maxY && hitZ >= aabb.minZ && hitZ <= aabb.maxZ;
+    }
+
+    protected boolean hitCablePart(IBlockState state, World world, BlockPos pos, float hitX, float hitY, float hitZ) {
+        state = getActualState(state, world, pos);
+
+        return isInAABB(CORE_AABB, hitX, hitY, hitZ) ||
+            (state.getValue(NORTH) && isInAABB(NORTH_AABB, hitX, hitY, hitZ)) ||
+            (state.getValue(EAST) && isInAABB(EAST_AABB, hitX, hitY, hitZ)) ||
+            (state.getValue(SOUTH) && isInAABB(SOUTH_AABB, hitX, hitY, hitZ)) ||
+            (state.getValue(WEST) && isInAABB(WEST_AABB, hitX, hitY, hitZ)) ||
+            (state.getValue(UP) && isInAABB(UP_AABB, hitX, hitY, hitZ)) ||
+            (state.getValue(DOWN) && isInAABB(DOWN_AABB, hitX, hitY, hitZ));
     }
 
     public List<AxisAlignedBB> getUnionizedCollisionBoxes(IBlockState state) {
