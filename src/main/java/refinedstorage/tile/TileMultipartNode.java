@@ -63,7 +63,7 @@ public abstract class TileMultipartNode extends TileNode implements IMicroblockC
 
     @Override
     public boolean canAddMicroblock(IMicroblock microblock) {
-        return microblock instanceof IMicroblock.IFaceMicroblock;
+        return true;
     }
 
     @Override
