@@ -2,7 +2,6 @@ package refinedstorage.block;
 
 import mcmultipart.block.BlockCoverable;
 import mcmultipart.block.BlockMultipartContainer;
-import mcmultipart.microblock.IMicroblock;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
@@ -96,12 +95,12 @@ public class BlockCable extends BlockCoverable {
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
         state = super.getActualState(state, world, pos)
-            .withProperty(NORTH, hasConnectionWith(world, pos, pos.north()))
-            .withProperty(EAST, hasConnectionWith(world, pos, pos.east()))
-            .withProperty(SOUTH, hasConnectionWith(world, pos, pos.south()))
-            .withProperty(WEST, hasConnectionWith(world, pos, pos.west()))
-            .withProperty(UP, hasConnectionWith(world, pos, pos.up()))
-            .withProperty(DOWN, hasConnectionWith(world, pos, pos.down()));
+            .withProperty(NORTH, hasConnectionWith(world, pos, EnumFacing.NORTH))
+            .withProperty(EAST, hasConnectionWith(world, pos, EnumFacing.EAST))
+            .withProperty(SOUTH, hasConnectionWith(world, pos, EnumFacing.SOUTH))
+            .withProperty(WEST, hasConnectionWith(world, pos, EnumFacing.WEST))
+            .withProperty(UP, hasConnectionWith(world, pos, EnumFacing.UP))
+            .withProperty(DOWN, hasConnectionWith(world, pos, EnumFacing.DOWN));
 
         if (getPlacementType() != null) {
             state = state.withProperty(DIRECTION, ((TileNode) world.getTileEntity(pos)).getDirection());
@@ -110,24 +109,16 @@ public class BlockCable extends BlockCoverable {
         return state;
     }
 
-    private boolean hasConnectionWith(IBlockAccess world, BlockPos basePos, BlockPos pos) {
-        TileMultipartNode baseTile = (TileMultipartNode) world.getTileEntity(basePos);
-        TileEntity tile = world.getTileEntity(pos);
+    private boolean hasConnectionWith(IBlockAccess world, BlockPos pos, EnumFacing direction) {
+        TileEntity facing = world.getTileEntity(pos.offset(direction));
 
-        if (tile instanceof INetworkMaster || tile instanceof INetworkNode) {
-            // Do not render a cable extension if the tile is blocked by a multipart
-            for (IMicroblock microblock : baseTile.getMicroblockContainer().getParts()) {
-                if (microblock instanceof IMicroblock.IFaceMicroblock && baseTile.getPos().offset(((IMicroblock.IFaceMicroblock) microblock).getFace()).equals(pos)) {
-                    return false;
-                }
-            }
-
-            // Do not render a cable extension to on this position when we have a direction (like an exporter, importer or external storage)
+        if (facing instanceof INetworkMaster || facing instanceof INetworkNode) {
+            /*// Do not render a cable extension to on this position when we have a direction (like an exporter, importer or external storage)
             if (getPlacementType() != null) {
-                return baseTile.getFacingTile() != tile;
-            }
+                return tile.getFacingTile() != facing;
+            }*/
 
-            return true;
+            return !TileMultipartNode.hasBlockingMicroblock(world, pos, direction);
         }
 
         return false;
@@ -171,12 +162,17 @@ public class BlockCable extends BlockCoverable {
             ((TileBase) world.getTileEntity(pos)).setDirection(state.getValue(DIRECTION));
         }
 
+        attemptConnect(world, pos);
+    }
+
+    public void attemptConnect(World world, BlockPos pos) {
         if (!world.isRemote) {
             for (EnumFacing facing : EnumFacing.VALUES) {
                 TileEntity tile = world.getTileEntity(pos.offset(facing));
 
                 if (tile instanceof TileNode && ((TileNode) tile).isConnected()) {
                     NetworkUtils.rebuildGraph(((TileNode) tile).getNetwork());
+
                     break;
                 }
             }

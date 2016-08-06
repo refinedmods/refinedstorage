@@ -6,13 +6,18 @@ import mcmultipart.microblock.IMicroblock;
 import mcmultipart.microblock.IMicroblockContainerTile;
 import mcmultipart.microblock.MicroblockContainer;
 import mcmultipart.multipart.IMultipart;
+import mcmultipart.multipart.IMultipartContainer;
 import mcmultipart.multipart.PartSlot;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import refinedstorage.RefinedStorageBlocks;
+import refinedstorage.api.network.NetworkUtils;
 
 public abstract class TileMultipartNode extends TileNode implements IMicroblockContainerTile, ISlottedCapabilityProvider {
     private MicroblockContainer container;
@@ -29,7 +34,30 @@ public abstract class TileMultipartNode extends TileNode implements IMicroblockC
 
     @Override
     public MicroblockContainer getMicroblockContainer() {
-        return container != null ? container : (container = new MicroblockContainer(this));
+        if (container == null) {
+            container = new MicroblockContainer(this);
+            container.getPartContainer().setListener(new IMultipartContainer.IMultipartContainerListener() {
+                @Override
+                public void onAddPartPre(IMultipart part) {
+                }
+
+                @Override
+                public void onAddPartPost(IMultipart part) {
+                    onMicroblocksChanged();
+                }
+
+                @Override
+                public void onRemovePartPre(IMultipart part) {
+                }
+
+                @Override
+                public void onRemovePartPost(IMultipart part) {
+                    onMicroblocksChanged();
+                }
+            });
+        }
+
+        return container;
     }
 
     @Override
@@ -40,6 +68,35 @@ public abstract class TileMultipartNode extends TileNode implements IMicroblockC
     @Override
     public void onMicroblocksChanged() {
         markDirty();
+
+        if (network != null) {
+            NetworkUtils.rebuildGraph(network);
+        } else {
+            RefinedStorageBlocks.CABLE.attemptConnect(worldObj, pos);
+        }
+    }
+
+    public static boolean hasBlockingMicroblock(IBlockAccess world, BlockPos pos, EnumFacing direction) {
+        TileEntity tile = world.getTileEntity(pos);
+
+        if (tile instanceof TileMultipartNode) {
+            for (IMicroblock microblock : ((TileMultipartNode) tile).getMicroblockContainer().getParts()) {
+                if (microblock instanceof IMicroblock.IFaceMicroblock) {
+                    IMicroblock.IFaceMicroblock faceMicroblock = (IMicroblock.IFaceMicroblock) microblock;
+
+                    if (faceMicroblock.getFace() == direction && !faceMicroblock.isFaceHollow()) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean canConduct(EnumFacing direction) {
+        return !hasBlockingMicroblock(worldObj, pos, direction) && !hasBlockingMicroblock(worldObj, pos.offset(direction), direction.getOpposite());
     }
 
     @Override

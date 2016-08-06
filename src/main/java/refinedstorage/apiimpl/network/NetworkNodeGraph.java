@@ -99,8 +99,8 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
                 }
             }
 
-            if (node.canConduct()) {
-                for (EnumFacing facing : EnumFacing.VALUES) {
+            for (EnumFacing facing : EnumFacing.VALUES) {
+                if (node.canConduct(facing)) {
                     BlockPos pos = currentPos.offset(facing);
 
                     if (checked.add(pos)) {

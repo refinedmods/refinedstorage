@@ -2,6 +2,7 @@ package refinedstorage.tile;
 
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import refinedstorage.api.network.INetworkMaster;
@@ -93,7 +94,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
     }
 
     @Override
-    public boolean canConduct() {
+    public boolean canConduct(EnumFacing direction) {
         return true;
     }
 

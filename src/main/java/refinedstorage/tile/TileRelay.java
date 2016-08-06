@@ -1,5 +1,6 @@
 package refinedstorage.tile;
 
+import net.minecraft.util.EnumFacing;
 import refinedstorage.RefinedStorage;
 import refinedstorage.tile.config.RedstoneMode;
 
@@ -20,7 +21,7 @@ public class TileRelay extends TileNode {
     }
 
     @Override
-    public boolean canConduct() {
+    public boolean canConduct(EnumFacing direction) {
         return canUpdate();
     }
 }

@@ -71,7 +71,7 @@ public class TileWirelessTransmitter extends TileNode implements IWirelessTransm
     }
 
     @Override
-    public boolean canConduct() {
+    public boolean canConduct(EnumFacing direction) {
         return false;
     }
 

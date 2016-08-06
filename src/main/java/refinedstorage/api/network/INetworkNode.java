@@ -1,5 +1,6 @@
 package refinedstorage.api.network;
 
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -56,9 +57,10 @@ public interface INetworkNode {
     boolean canUpdate();
 
     /**
+     * @param direction The direction to conduct to
      * @return Whether this node can conduct a network signal
      */
-    boolean canConduct();
+    boolean canConduct(EnumFacing direction);
 
     /**
      * @return The network
