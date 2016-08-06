@@ -1,12 +1,10 @@
 package refinedstorage.proxy;
 
-import com.google.common.base.Predicate;
 import mcmultipart.client.multipart.ModelMultipartContainer;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.item.Item;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.ModelLoader;
@@ -22,21 +20,13 @@ import refinedstorage.block.EnumGridType;
 import refinedstorage.block.EnumStorageType;
 import refinedstorage.item.*;
 
-import javax.annotation.Nullable;
-
 public class ClientProxy extends CommonProxy {
     @SubscribeEvent
     public void onModelBake(ModelBakeEvent e) {
-        System.out.println("Model bake event called.");
         for (ModelResourceLocation model : e.getModelRegistry().getKeys()) {
             for (BlockCable cable : cables) {
                 if (model.getResourceDomain().equals(RefinedStorage.ID) && model.getResourcePath().equals(cable.getName()) && !model.getVariant().equals("inventory")) {
-                    e.getModelRegistry().putObject(model, new ModelMultipartContainer(e.getModelRegistry().getObject(model), new Predicate<BlockRenderLayer>() {
-                        @Override
-                        public boolean apply(@Nullable BlockRenderLayer input) {
-                            return cable.canRenderInLayer(input);
-                        }
-                    }));
+                    e.getModelRegistry().putObject(model, new ModelMultipartContainer(e.getModelRegistry().getObject(model), input -> cable.canRenderInLayer(input)));
                 }
             }
         }

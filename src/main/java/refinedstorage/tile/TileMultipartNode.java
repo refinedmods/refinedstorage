@@ -36,6 +36,7 @@ public abstract class TileMultipartNode extends TileNode implements IMicroblockC
     public MicroblockContainer getMicroblockContainer() {
         if (container == null) {
             container = new MicroblockContainer(this);
+
             container.getPartContainer().setListener(new IMultipartContainer.IMultipartContainerListener() {
                 @Override
                 public void onAddPartPre(IMultipart part) {

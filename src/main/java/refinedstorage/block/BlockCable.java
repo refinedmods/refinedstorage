@@ -74,6 +74,7 @@ public class BlockCable extends BlockCoverable {
         return new TileCable();
     }
 
+    @Override
     protected BlockStateContainer createBlockState() {
         BlockStateContainer.Builder builder = new BlockStateContainer.Builder(this);
 
@@ -113,7 +114,7 @@ public class BlockCable extends BlockCoverable {
         TileEntity facing = world.getTileEntity(pos.offset(direction));
 
         if (facing instanceof INetworkMaster || facing instanceof INetworkNode) {
-            // Do not render a cable extension where our cable "head" is (e.g. importer, exporter, external storage cubes).
+            // Do not render a cable extension where our cable "head" is (e.g. importer, exporter, external storage heads).
             if (getPlacementType() != null) {
                 return ((TileMultipartNode) world.getTileEntity(pos)).getFacingTile() != facing;
             }
