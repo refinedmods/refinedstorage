@@ -375,7 +375,7 @@ public class TileGrid extends TileNode implements IGrid {
 
     @Override
     public int getSearchBoxMode() {
-        return (worldObj != null && worldObj.isRemote) ? SEARCH_BOX_MODE.getValue() : searchBoxMode;
+        return worldObj.isRemote ? SEARCH_BOX_MODE.getValue() : searchBoxMode;
     }
 
     @Override

@@ -3,20 +3,21 @@
 ### 0.8.16
 **Bugfixes**
 - Fixed issue with IC2 integration causing console spam
-- Slight performance improvement in GUI's
+- Slight performance increase and network efficiency improvement in all GUI's
+- Slight performance increase in Grid GUI
 - Fixed not being able to change some configs in blocks
 - Fixed serverside configs not syncing up with clientside
 - Fixed not being able to move inventory items in Grid GUI's to hotbar via the number keys
+- Improved collisions of Cable parts
 
 **Features**
 - Added German translation by ChillUpX
-- Each Grid Filter can now only filter 9 items
-- Each Grid allows 4 Grid Filters instead of 1
+- Grid Filters can now only filter 9 items, but, Grids take 4 filters now instead
 - Grid Filters can now be configured to compare on NBT and/ or damage
 - Updated to Forge 2046
 - Updated Tesla
 - Java 8 is now a requirement
-- Added MCMultiPart integration
+- Added MCMultiPart integration for Cables
 
 ### 0.8.15
 **Bugfixes**
