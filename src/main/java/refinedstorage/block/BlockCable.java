@@ -32,10 +32,11 @@ import refinedstorage.tile.TileMultipartNode;
 import refinedstorage.tile.TileNode;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class BlockCable extends BlockCoverable {
-    private static final PropertyDirection DIRECTION = PropertyDirection.create("direction");
+    protected static final PropertyDirection DIRECTION = PropertyDirection.create("direction");
 
     protected static AxisAlignedBB createAABB(int fromX, int fromY, int fromZ, int toX, int toY, int toZ) {
         return new AxisAlignedBB((float) fromX / 16F, (float) fromY / 16F, (float) fromZ / 16F, (float) toX / 16F, (float) toY / 16F, (float) toZ / 16F);
@@ -142,7 +143,7 @@ public class BlockCable extends BlockCoverable {
         return false;
     }
 
-    public static List<AxisAlignedBB> getCollisionBoxes(IBlockState state) {
+    public List<AxisAlignedBB> getUnionizedCollisionBoxes(IBlockState state) {
         List<AxisAlignedBB> boxes = new ArrayList<>();
 
         boxes.add(CORE_AABB);
@@ -174,6 +175,18 @@ public class BlockCable extends BlockCoverable {
         return boxes;
     }
 
+    public List<AxisAlignedBB> getNonUnionizedCollisionBoxes(IBlockState state) {
+        return Collections.emptyList();
+    }
+
+    public List<AxisAlignedBB> getCollisionBoxes(IBlockState state) {
+        List<AxisAlignedBB> boxes = new ArrayList<>();
+
+        boxes.addAll(getUnionizedCollisionBoxes(state));
+        boxes.addAll(getNonUnionizedCollisionBoxes(state));
+
+        return boxes;
+    }
 
     @Override
     public void addCollisionBoxToListDefault(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entityIn) {

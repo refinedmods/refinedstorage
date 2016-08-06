@@ -50,22 +50,23 @@ public class ClientProxy extends CommonProxy {
             return;
         }
 
+        EntityPlayer player = e.getPlayer();
+
         BlockPos pos = e.getTarget().getBlockPos();
 
-        IBlockState state = e.getPlayer().getEntityWorld().getBlockState(pos);
+        IBlockState state = player.worldObj.getBlockState(pos);
 
         if (!(state.getBlock() instanceof BlockCable)) {
             return;
         }
 
+        state = ((BlockCable) state.getBlock()).getActualState(state, player.worldObj, pos);
+
+        List<AxisAlignedBB> unionized = ((BlockCable) state.getBlock()).getUnionizedCollisionBoxes(state);
+        List<AxisAlignedBB> nonUnionized = ((BlockCable) state.getBlock()).getNonUnionizedCollisionBoxes(state);
+
         e.setCanceled(true);
 
-        state = ((BlockCable) state.getBlock()).getActualState(state, e.getPlayer().worldObj, pos);
-
-        drawSelectionBox(e.getPlayer(), BlockCable.getCollisionBoxes(state), e.getPartialTicks(), pos);
-    }
-
-    private void drawSelectionBox(EntityPlayer player, List<AxisAlignedBB> boxes, float partialTicks, BlockPos pos) {
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
         GlStateManager.color(0.0F, 0.0F, 0.0F, 0.4F);
@@ -73,17 +74,21 @@ public class ClientProxy extends CommonProxy {
         GlStateManager.disableTexture2D();
         GlStateManager.depthMask(false);
 
-        double d0 = player.lastTickPosX + (player.posX - player.lastTickPosX) * (double) partialTicks;
-        double d1 = player.lastTickPosY + (player.posY - player.lastTickPosY) * (double) partialTicks;
-        double d2 = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * (double) partialTicks;
+        double d0 = player.lastTickPosX + (player.posX - player.lastTickPosX) * (double) e.getPartialTicks();
+        double d1 = player.lastTickPosY + (player.posY - player.lastTickPosY) * (double) e.getPartialTicks();
+        double d2 = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * (double) e.getPartialTicks();
 
-        AxisAlignedBB aabb = boxes.get(0);
+        AxisAlignedBB unionizedAabb = unionized.get(0);
 
-        for (int i = 1; i < boxes.size(); ++i) {
-            aabb = aabb.union(boxes.get(i));
+        for (int i = 1; i < unionized.size(); ++i) {
+            unionizedAabb = unionizedAabb.union(unionized.get(i));
         }
 
-        drawSelectionBoundingBox(aabb.expand(0.0020000000949949026D, 0.0020000000949949026D, 0.0020000000949949026D).offset(-d0, -d1, -d2).offset(pos.getX(), pos.getY(), pos.getZ()));
+        drawSelectionBoundingBox(unionizedAabb.expand(0.0020000000949949026D, 0.0020000000949949026D, 0.0020000000949949026D).offset(-d0, -d1, -d2).offset(pos.getX(), pos.getY(), pos.getZ()));
+
+        for (AxisAlignedBB aabb : nonUnionized) {
+            drawSelectionBoundingBox(aabb.expand(0.0020000000949949026D, 0.0020000000949949026D, 0.0020000000949949026D).offset(-d0, -d1, -d2).offset(pos.getX(), pos.getY(), pos.getZ()));
+        }
 
         GlStateManager.depthMask(true);
         GlStateManager.enableTexture2D();

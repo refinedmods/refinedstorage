@@ -6,11 +6,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
+import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.tile.TileDestructor;
+
+import java.util.List;
 
 public class BlockDestructor extends BlockCable {
     public BlockDestructor() {
@@ -20,6 +24,10 @@ public class BlockDestructor extends BlockCable {
     @Override
     public TileEntity createTileEntity(World world, IBlockState state) {
         return new TileDestructor();
+    }
+
+    public List<AxisAlignedBB> getNonUnionizedCollisionBoxes(IBlockState state) {
+        return RefinedStorageBlocks.CONSTRUCTOR.getNonUnionizedCollisionBoxes(state);
     }
 
     @Override
