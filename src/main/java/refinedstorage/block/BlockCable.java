@@ -1,5 +1,6 @@
 package refinedstorage.block;
 
+import com.google.common.collect.Lists;
 import mcmultipart.block.BlockCoverable;
 import mcmultipart.block.BlockMultipartContainer;
 import net.minecraft.block.material.Material;
@@ -7,6 +8,7 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
@@ -15,6 +17,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
@@ -26,6 +30,8 @@ import refinedstorage.tile.TileBase;
 import refinedstorage.tile.TileCable;
 import refinedstorage.tile.TileMultipartNode;
 import refinedstorage.tile.TileNode;
+
+import java.util.List;
 
 public class BlockCable extends BlockCoverable {
     private static final PropertyDirection DIRECTION = PropertyDirection.create("direction");
@@ -125,9 +131,81 @@ public class BlockCable extends BlockCoverable {
         return false;
     }
 
-    @Override
+    /*@Override
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
         return CABLE_AABB;
+    }*/
+
+    private static AxisAlignedBB createaabb(int fromx, int fromy, int fromz, int tox, int toy, int toz) {
+        return new AxisAlignedBB((float) fromx / 16F, (float) fromy / 16F, (float) fromz / 16F, (float) tox / 16F, (float) toy / 16F, (float) toz / 16F);
+    }
+
+    private static AxisAlignedBB core = createaabb(6, 6, 6, 10, 10, 10);
+    private static AxisAlignedBB north = createaabb(6, 6, 0, 10, 10, 6);
+    private static AxisAlignedBB east = createaabb(10, 6, 6, 16, 10, 10);
+    private static AxisAlignedBB south = createaabb(6, 6, 10, 10, 10, 16);
+    private static AxisAlignedBB west = createaabb(0, 6, 6, 6, 10, 10);
+    private static AxisAlignedBB up = createaabb(6, 10, 6, 10, 16, 10);
+    private static AxisAlignedBB down = createaabb(6, 0, 6, 10, 6, 10);
+
+    private static List<AxisAlignedBB> getCollisionBoxList(IBlockState bstate) {
+        List<AxisAlignedBB> list = Lists.<AxisAlignedBB>newArrayList();
+
+        list.add(core);
+
+        if (bstate.getValue(NORTH) == true) {
+            list.add(north);
+        }
+        if (bstate.getValue(EAST) == true) {
+            list.add(east);
+        }
+        if (bstate.getValue(SOUTH) == true) {
+            list.add(south);
+        }
+        if (bstate.getValue(WEST) == true) {
+            list.add(west);
+        }
+        if (bstate.getValue(UP) == true) {
+            list.add(up);
+        }
+        if (bstate.getValue(DOWN) == true) {
+            list.add(down);
+        }
+
+        return list;
+    }
+
+
+    @Override
+    public void addCollisionBoxToListDefault(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entityIn) {
+        for (AxisAlignedBB axisalignedbb : getCollisionBoxList(this.getActualState(state, world, pos))) {
+            addCollisionBoxToList(pos, entityBox, collidingBoxes, axisalignedbb);
+        }
+    }
+
+    @Override
+    public RayTraceResult collisionRayTraceDefault(IBlockState state, World world, BlockPos pos, Vec3d start, Vec3d end) {
+        List<RayTraceResult> list = Lists.<RayTraceResult>newArrayList();
+
+        for (AxisAlignedBB axisalignedbb : getCollisionBoxList(this.getActualState(state, world, pos))) {
+            list.add(this.rayTrace(pos, start, end, axisalignedbb));
+        }
+
+        RayTraceResult raytraceresult1 = null;
+        double d1 = 0.0D;
+
+        for (RayTraceResult raytraceresult : list) {
+            if (raytraceresult != null) {
+                double d0 = raytraceresult.hitVec.squareDistanceTo(end);
+
+                if (d0 > d1) {
+                    raytraceresult1 = raytraceresult;
+                    d1 = d0;
+                }
+            }
+        }
+
+        return raytraceresult1;
     }
 
     @Override
