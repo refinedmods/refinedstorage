@@ -1,7 +1,6 @@
 package refinedstorage.tile.config;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -25,12 +24,8 @@ public interface IPrioritizable {
                 ((IPrioritizable) tile).setPriority(value);
             }
         }, parameter -> {
-            if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
-                GuiScreen gui = Minecraft.getMinecraft().currentScreen;
-
-                if (gui instanceof GuiStorage) {
-                    ((GuiStorage) gui).PRIORITY.setText(String.valueOf(parameter.getValue()));
-                }
+            if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT && Minecraft.getMinecraft().currentScreen instanceof GuiStorage) {
+                ((GuiStorage) Minecraft.getMinecraft().currentScreen).updatePriority(parameter.getValue());
             }
         });
     }

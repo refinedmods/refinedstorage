@@ -6,6 +6,7 @@
 - Slight performance improvement in GUI's
 - Fixed not being able to change some configs in blocks
 - Fixed serverside configs not syncing up with clientside
+- Fixed not being able to move inventory items in Grid GUI's to hotbar via the number keys
 
 **Features**
 - Added German translation by ChillUpX

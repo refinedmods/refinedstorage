@@ -1,5 +1,6 @@
 package refinedstorage.tile.grid;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.*;
@@ -101,8 +102,8 @@ public class TileGrid extends TileNode implements IGrid {
             }
         }
     }, parameter -> {
-        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
-            GuiGrid.updateSearchFieldFocus(parameter.getValue());
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT && Minecraft.getMinecraft().currentScreen instanceof GuiGrid) {
+            ((GuiGrid) Minecraft.getMinecraft().currentScreen).updateSearchFieldFocus(parameter.getValue());
         }
     });
 

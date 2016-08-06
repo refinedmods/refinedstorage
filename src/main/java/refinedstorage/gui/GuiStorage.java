@@ -16,7 +16,7 @@ public class GuiStorage extends GuiBase {
     private IStorageGui gui;
     private String texture;
 
-    public static GuiTextField PRIORITY;
+    private GuiTextField priorityField;
 
     private int barX = 8;
     private int barY = 54;
@@ -49,13 +49,14 @@ public class GuiStorage extends GuiBase {
             addSideButton(new SideButtonCompare(gui.getCompareParameter(), CompareUtils.COMPARE_NBT));
         }
 
-        PRIORITY = new GuiTextField(0, fontRendererObj, x + 98 + 1, y + 54 + 1, 25, fontRendererObj.FONT_HEIGHT);
-        PRIORITY.setText(String.valueOf(gui.getPriorityParameter().getValue()));
-        PRIORITY.setEnableBackgroundDrawing(false);
-        PRIORITY.setVisible(true);
-        PRIORITY.setTextColor(16777215);
-        PRIORITY.setCanLoseFocus(true);
-        PRIORITY.setFocused(false);
+        priorityField = new GuiTextField(0, fontRendererObj, x + 98 + 1, y + 54 + 1, 25, fontRendererObj.FONT_HEIGHT);
+        priorityField.setEnableBackgroundDrawing(false);
+        priorityField.setVisible(true);
+        priorityField.setTextColor(16777215);
+        priorityField.setCanLoseFocus(true);
+        priorityField.setFocused(false);
+
+        updatePriority(gui.getPriorityParameter().getValue());
     }
 
     @Override
@@ -72,7 +73,7 @@ public class GuiStorage extends GuiBase {
 
         drawTexture(x + barX, y + barY + barHeight - barHeightNew, 179, barHeight - barHeightNew, barWidth, barHeightNew);
 
-        PRIORITY.drawTextBox();
+        priorityField.drawTextBox();
     }
 
     @Override
@@ -97,13 +98,15 @@ public class GuiStorage extends GuiBase {
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         super.mouseClicked(mouseX, mouseY, mouseButton);
 
-        PRIORITY.mouseClicked(mouseX, mouseY, mouseButton);
+        priorityField.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     @Override
     protected void keyTyped(char character, int keyCode) throws IOException {
-        if (!checkHotbarKeys(keyCode) && PRIORITY.textboxKeyTyped(character, keyCode)) {
-            Integer result = Ints.tryParse(PRIORITY.getText());
+        if (checkHotbarKeys(keyCode)) {
+            // NO OP
+        } else if (priorityField.textboxKeyTyped(character, keyCode)) {
+            Integer result = Ints.tryParse(priorityField.getText());
 
             if (result != null) {
                 TileDataManager.setParameter(gui.getPriorityParameter(), result);
@@ -111,5 +114,9 @@ public class GuiStorage extends GuiBase {
         } else {
             super.keyTyped(character, keyCode);
         }
+    }
+
+    public void updatePriority(int priority) {
+        priorityField.setText(String.valueOf(priority));
     }
 }

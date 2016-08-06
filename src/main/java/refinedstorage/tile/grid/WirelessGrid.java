@@ -10,7 +10,6 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.api.network.IGridHandler;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.gui.grid.GridFilteredItem;
-import refinedstorage.gui.grid.GuiGrid;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerGridFilterInGrid;
 import refinedstorage.item.ItemWirelessGrid;
@@ -136,8 +135,6 @@ public class WirelessGrid implements IGrid {
         RefinedStorage.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), searchBoxMode));
 
         this.searchBoxMode = searchBoxMode;
-
-        GuiGrid.updateSearchFieldFocus(searchBoxMode);
     }
 
     @Override

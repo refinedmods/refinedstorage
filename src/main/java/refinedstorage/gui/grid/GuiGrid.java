@@ -37,7 +37,7 @@ public class GuiGrid extends GuiBase {
     private GridSortingQuantity quantitySorting = new GridSortingQuantity();
     private GridSortingName nameSorting = new GridSortingName();
 
-    public static GuiTextField SEARCH_FIELD;
+    private GuiTextField searchField;
 
     private ContainerGrid container;
     private List<ClientStack> items = new ArrayList<>();
@@ -64,15 +64,16 @@ public class GuiGrid extends GuiBase {
         int sx = x + 80 + 1;
         int sy = y + 6 + 1;
 
-        if (SEARCH_FIELD == null) {
-            SEARCH_FIELD = new GuiTextField(0, fontRendererObj, sx, sy, 88 - 6, fontRendererObj.FONT_HEIGHT);
-            SEARCH_FIELD.setEnableBackgroundDrawing(false);
-            SEARCH_FIELD.setVisible(true);
-            SEARCH_FIELD.setTextColor(16777215);
+        if (searchField == null) {
+            searchField = new GuiTextField(0, fontRendererObj, sx, sy, 88 - 6, fontRendererObj.FONT_HEIGHT);
+            searchField.setEnableBackgroundDrawing(false);
+            searchField.setVisible(true);
+            searchField.setTextColor(16777215);
+
             updateSearchFieldFocus(grid.getSearchBoxMode());
         } else {
-            SEARCH_FIELD.xPosition = sx;
-            SEARCH_FIELD.yPosition = sy;
+            searchField.xPosition = sx;
+            searchField.yPosition = sy;
         }
 
         addSideButton(new SideButtonGridViewType(grid));
@@ -92,7 +93,7 @@ public class GuiGrid extends GuiBase {
         if (grid.isConnected()) {
             items.addAll(RefinedStorage.INSTANCE.items);
 
-            String query = SEARCH_FIELD.getText().trim().toLowerCase();
+            String query = searchField.getText().trim().toLowerCase();
 
             Iterator<ClientStack> t = items.iterator();
 
@@ -243,7 +244,7 @@ public class GuiGrid extends GuiBase {
             drawTexture(x + 152, y + 114, 240, ty * 16, 16, 16);
         }
 
-        SEARCH_FIELD.drawTextBox();
+        searchField.drawTextBox();
     }
 
     @Override
@@ -328,11 +329,11 @@ public class GuiGrid extends GuiBase {
     public void mouseClicked(int mouseX, int mouseY, int clickedButton) throws IOException {
         super.mouseClicked(mouseX, mouseY, clickedButton);
 
-        SEARCH_FIELD.mouseClicked(mouseX, mouseY, clickedButton);
+        searchField.mouseClicked(mouseX, mouseY, clickedButton);
 
         if (clickedButton == 1 && inBounds(79, 5, 90, 12, mouseX - guiLeft, mouseY - guiTop)) {
-            SEARCH_FIELD.setText("");
-            SEARCH_FIELD.setFocused(true);
+            searchField.setText("");
+            searchField.setFocused(true);
 
             updateJEI();
         }
@@ -385,7 +386,9 @@ public class GuiGrid extends GuiBase {
 
     @Override
     protected void keyTyped(char character, int keyCode) throws IOException {
-        if (!checkHotbarKeys(keyCode) && SEARCH_FIELD.textboxKeyTyped(character, keyCode)) {
+        if (checkHotbarKeys(keyCode)) {
+            // NO OP
+        } else if (searchField.textboxKeyTyped(character, keyCode)) {
             updateJEI();
         } else {
             super.keyTyped(character, keyCode);
@@ -394,13 +397,12 @@ public class GuiGrid extends GuiBase {
 
     private void updateJEI() {
         if (IntegrationJEI.isLoaded() && (grid.getSearchBoxMode() == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED || grid.getSearchBoxMode() == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED)) {
-            IntegrationJEI.INSTANCE.getRuntime().getItemListOverlay().setFilterText(SEARCH_FIELD.getText());
+            IntegrationJEI.INSTANCE.getRuntime().getItemListOverlay().setFilterText(searchField.getText());
         }
     }
 
-    // @TODO: This is buggy...
-    public static void updateSearchFieldFocus(int mode) {
-        SEARCH_FIELD.setCanLoseFocus(!TileGrid.isSearchBoxModeWithAutoselection(mode));
-        SEARCH_FIELD.setFocused(TileGrid.isSearchBoxModeWithAutoselection(mode));
+    public void updateSearchFieldFocus(int mode) {
+        searchField.setCanLoseFocus(!TileGrid.isSearchBoxModeWithAutoselection(mode));
+        searchField.setFocused(TileGrid.isSearchBoxModeWithAutoselection(mode));
     }
 }
