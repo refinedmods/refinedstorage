@@ -133,8 +133,8 @@ public class BlockCable extends BlockCoverable {
 
         if (facing instanceof INetworkMaster || facing instanceof INetworkNode) {
             // Do not render a cable extension where our cable "head" is (e.g. importer, exporter, external storage heads).
-            if (getPlacementType() != null) {
-                return ((TileMultipartNode) world.getTileEntity(pos)).getFacingTile() != facing;
+            if (getPlacementType() != null && ((TileMultipartNode) world.getTileEntity(pos)).getFacingTile() == facing) {
+                return false;
             }
 
             return !TileMultipartNode.hasBlockingMicroblock(world, pos, direction) && !TileMultipartNode.hasBlockingMicroblock(world, pos.offset(direction), direction.getOpposite());

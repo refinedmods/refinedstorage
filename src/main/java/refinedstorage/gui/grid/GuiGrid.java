@@ -99,6 +99,10 @@ public class GuiGrid extends GuiBase {
 
         GuiGrid gui = (GuiGrid) screen;
 
+        if (gui.searchField == null) {
+            return;
+        }
+
         SORTED_ITEMS.clear();
 
         if (gui.getGrid().isConnected()) {
