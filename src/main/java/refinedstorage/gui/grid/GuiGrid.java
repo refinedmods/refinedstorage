@@ -1,5 +1,6 @@
 package refinedstorage.gui.grid;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -10,7 +11,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import org.apache.commons.lang3.StringUtils;
 import refinedstorage.RefinedStorage;
 import refinedstorage.api.network.GridExtractFlags;
 import refinedstorage.api.storage.CompareUtils;
@@ -34,13 +34,15 @@ import java.io.IOException;
 import java.util.*;
 
 public class GuiGrid extends GuiBase {
-    private GridSortingQuantity quantitySorting = new GridSortingQuantity();
-    private GridSortingName nameSorting = new GridSortingName();
+    public static final GridSortingQuantity SORTING_QUANTITY = new GridSortingQuantity();
+    public static final GridSortingName SORTING_NAME = new GridSortingName();
+
+    public static List<ClientStack> ITEMS = new ArrayList<>();
+    public static List<ClientStack> SORTED_ITEMS = new ArrayList<>();
 
     private GuiTextField searchField;
 
     private ContainerGrid container;
-    private List<ClientStack> items = new ArrayList<>();
     private IGrid grid;
 
     private int slotNumber;
@@ -80,27 +82,38 @@ public class GuiGrid extends GuiBase {
         addSideButton(new SideButtonGridSortingDirection(grid));
         addSideButton(new SideButtonGridSortingType(grid));
         addSideButton(new SideButtonGridSearchBoxMode(this));
+
+        sortItems();
     }
 
     public IGrid getGrid() {
         return grid;
     }
 
-    @Override
-    public void update(int x, int y) {
-        items.clear();
+    public static void sortItems() {
+        GuiScreen screen = Minecraft.getMinecraft().currentScreen;
 
-        if (grid.isConnected()) {
-            items.addAll(RefinedStorage.INSTANCE.items);
+        if (!(screen instanceof GuiGrid)) {
+            return;
+        }
 
-            String query = searchField.getText().trim().toLowerCase();
+        GuiGrid gui = (GuiGrid) screen;
 
-            Iterator<ClientStack> t = items.iterator();
+        System.out.println("Resorting!");
+
+        SORTED_ITEMS.clear();
+
+        if (gui.getGrid().isConnected()) {
+            SORTED_ITEMS.addAll(ITEMS);
+
+            String query = gui.searchField.getText().trim().toLowerCase();
+
+            Iterator<ClientStack> t = SORTED_ITEMS.iterator();
 
             while (t.hasNext()) {
                 ClientStack stack = t.next();
 
-                List<GridFilteredItem> filteredItems = grid.getFilteredItems();
+                List<GridFilteredItem> filteredItems = gui.getGrid().getFilteredItems();
 
                 boolean found = filteredItems.isEmpty();
 
@@ -118,11 +131,11 @@ public class GuiGrid extends GuiBase {
                     continue;
                 }
 
-                if (grid.getViewType() == TileGrid.VIEW_TYPE_NON_CRAFTABLES && stack.isCraftable()) {
+                if (gui.getGrid().getViewType() == TileGrid.VIEW_TYPE_NON_CRAFTABLES && stack.isCraftable()) {
                     t.remove();
 
                     continue;
-                } else if (grid.getViewType() == TileGrid.VIEW_TYPE_CRAFTABLES && !stack.isCraftable()) {
+                } else if (gui.getGrid().getViewType() == TileGrid.VIEW_TYPE_CRAFTABLES && !stack.isCraftable()) {
                     t.remove();
 
                     continue;
@@ -151,30 +164,27 @@ public class GuiGrid extends GuiBase {
                             t.remove();
                         }
                     }
-                } else if (query.startsWith("#")) {
-                    String tooltip = query.substring(1);
-                    String tooltipFromItem = StringUtils.join(stack.getStack().getTooltip(container.getPlayer(), true), "\n");
-
-                    if (!tooltipFromItem.contains(tooltip)) {
-                        t.remove();
-                    }
                 } else if (!stack.getStack().getDisplayName().toLowerCase().contains(query)) {
                     t.remove();
                 }
             }
 
-            nameSorting.setSortingDirection(grid.getSortingDirection());
-            quantitySorting.setSortingDirection(grid.getSortingDirection());
+            SORTING_NAME.setSortingDirection(gui.getGrid().getSortingDirection());
+            SORTING_QUANTITY.setSortingDirection(gui.getGrid().getSortingDirection());
 
-            Collections.sort(items, nameSorting);
+            Collections.sort(SORTED_ITEMS, SORTING_NAME);
 
-            if (grid.getSortingType() == TileGrid.SORTING_TYPE_QUANTITY) {
-                Collections.sort(items, quantitySorting);
+            if (gui.getGrid().getSortingType() == TileGrid.SORTING_TYPE_QUANTITY) {
+                Collections.sort(SORTED_ITEMS, SORTING_QUANTITY);
             }
         }
 
-        getScrollbar().setCanScroll(getRows() > getVisibleRows());
-        getScrollbar().setScrollDelta((float) getScrollbar().getScrollbarHeight() / (float) getRows());
+        gui.getScrollbar().setCanScroll(gui.getRows() > gui.getVisibleRows());
+        gui.getScrollbar().setScrollDelta((float) gui.getScrollbar().getScrollbarHeight() / (float) gui.getRows());
+    }
+
+    @Override
+    public void update(int x, int y) {
     }
 
     private int getOffset() {
@@ -182,13 +192,13 @@ public class GuiGrid extends GuiBase {
     }
 
     private int getRows() {
-        int max = (int) Math.ceil((float) items.size() / 9f);
+        int max = (int) Math.ceil((float) SORTED_ITEMS.size() / 9f);
 
         return max < 0 ? 0 : max;
     }
 
     private boolean isOverSlotWithItem() {
-        return grid.isConnected() && isOverSlot() && slotNumber < items.size();
+        return grid.isConnected() && isOverSlot() && slotNumber < SORTED_ITEMS.size();
     }
 
     private boolean isOverSlot() {
@@ -266,8 +276,8 @@ public class GuiGrid extends GuiBase {
                 this.slotNumber = slot;
             }
 
-            if (slot < items.size()) {
-                drawItem(x, y, items.get(slot).getStack(), true, formatQuantity(items.get(slot).getStack().stackSize, slot));
+            if (slot < SORTED_ITEMS.size()) {
+                drawItem(x, y, SORTED_ITEMS.get(slot).getStack(), true, formatQuantity(SORTED_ITEMS.get(slot).getStack().stackSize, slot));
             }
 
             if (inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isConnected()) {
@@ -295,7 +305,7 @@ public class GuiGrid extends GuiBase {
         }
 
         if (isOverSlotWithItem()) {
-            drawTooltip(mouseX, mouseY, items.get(slotNumber).getStack());
+            drawTooltip(mouseX, mouseY, SORTED_ITEMS.get(slotNumber).getStack());
         }
 
         if (isOverClear(mouseX, mouseY)) {
@@ -335,6 +345,8 @@ public class GuiGrid extends GuiBase {
             searchField.setText("");
             searchField.setFocused(true);
 
+            sortItems();
+
             updateJEI();
         }
 
@@ -357,8 +369,8 @@ public class GuiGrid extends GuiBase {
             }
 
             if (isOverSlotWithItem() && (held == null || (held != null && clickedButton == 2))) {
-                if (items.get(slotNumber).isCraftable() && (items.get(slotNumber).getStack().stackSize == 0 || (GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown()))) {
-                    FMLCommonHandler.instance().showGuiScreen(new GuiCraftingSettings(this, container.getPlayer(), items.get(slotNumber)));
+                if (SORTED_ITEMS.get(slotNumber).isCraftable() && (SORTED_ITEMS.get(slotNumber).getStack().stackSize == 0 || (GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown()))) {
+                    FMLCommonHandler.instance().showGuiScreen(new GuiCraftingSettings(this, container.getPlayer(), SORTED_ITEMS.get(slotNumber)));
                 } else {
                     int flags = 0;
 
@@ -374,7 +386,7 @@ public class GuiGrid extends GuiBase {
                         flags |= GridExtractFlags.EXTRACT_SINGLE;
                     }
 
-                    RefinedStorage.INSTANCE.network.sendToServer(new MessageGridPull(items.get(slotNumber).getId(), flags));
+                    RefinedStorage.INSTANCE.network.sendToServer(new MessageGridPull(SORTED_ITEMS.get(slotNumber).getId(), flags));
                 }
             }
         }
@@ -390,6 +402,8 @@ public class GuiGrid extends GuiBase {
             // NO OP
         } else if (searchField.textboxKeyTyped(character, keyCode)) {
             updateJEI();
+
+            sortItems();
         } else {
             super.keyTyped(character, keyCode);
         }

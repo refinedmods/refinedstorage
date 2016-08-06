@@ -13,11 +13,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import refinedstorage.gui.grid.ClientStack;
 import refinedstorage.proxy.CommonProxy;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Mod(modid = RefinedStorage.ID, version = RefinedStorage.VERSION)
 public final class RefinedStorage {
@@ -43,8 +39,6 @@ public final class RefinedStorage {
             return null;
         }
     };
-
-    public List<ClientStack> items = new ArrayList<>();
 
     public int controllerBaseUsage;
     public int cableUsage;

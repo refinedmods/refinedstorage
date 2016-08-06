@@ -5,9 +5,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import refinedstorage.RefinedStorage;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.gui.grid.ClientStack;
+import refinedstorage.gui.grid.GuiGrid;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,8 @@ public class MessageGridUpdate implements IMessage, IMessageHandler<MessageGridU
 
     @Override
     public IMessage onMessage(MessageGridUpdate message, MessageContext ctx) {
-        RefinedStorage.INSTANCE.items = message.items;
+        GuiGrid.ITEMS = message.items;
+        GuiGrid.sortItems();
 
         return null;
     }

@@ -5,9 +5,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import refinedstorage.RefinedStorage;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.gui.grid.ClientStack;
+import refinedstorage.gui.grid.GuiGrid;
 
 public class MessageGridDelta implements IMessage, IMessageHandler<MessageGridDelta, IMessage> {
     private INetworkMaster network;
@@ -39,19 +39,22 @@ public class MessageGridDelta implements IMessage, IMessageHandler<MessageGridDe
 
     @Override
     public IMessage onMessage(MessageGridDelta message, MessageContext ctx) {
-        for (ClientStack stack : RefinedStorage.INSTANCE.items) {
+        for (ClientStack stack : GuiGrid.ITEMS) {
             if (stack.equals(message.clientStack)) {
                 if (stack.getStack().stackSize + message.delta == 0 && !message.clientStack.isCraftable()) {
-                    RefinedStorage.INSTANCE.items.remove(stack);
+                    GuiGrid.ITEMS.remove(stack);
                 } else {
                     stack.getStack().stackSize += message.delta;
                 }
+
+                GuiGrid.sortItems();
 
                 return null;
             }
         }
 
-        RefinedStorage.INSTANCE.items.add(message.clientStack);
+        GuiGrid.ITEMS.add(message.clientStack);
+        GuiGrid.sortItems();
 
         return null;
     }
