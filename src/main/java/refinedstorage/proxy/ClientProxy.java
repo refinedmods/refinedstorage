@@ -77,9 +77,13 @@ public class ClientProxy extends CommonProxy {
         double d1 = player.lastTickPosY + (player.posY - player.lastTickPosY) * (double) partialTicks;
         double d2 = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * (double) partialTicks;
 
-        for (AxisAlignedBB aabb : boxes) {
-            drawSelectionBoundingBox(aabb.expand(0.0020000000949949026D, 0.0020000000949949026D, 0.0020000000949949026D).offset(-d0, -d1, -d2).offset(pos.getX(), pos.getY(), pos.getZ()));
+        AxisAlignedBB aabb = boxes.get(0);
+
+        for (int i = 1; i < boxes.size(); ++i) {
+            aabb = aabb.union(boxes.get(i));
         }
+
+        drawSelectionBoundingBox(aabb.expand(0.0020000000949949026D, 0.0020000000949949026D, 0.0020000000949949026D).offset(-d0, -d1, -d2).offset(pos.getX(), pos.getY(), pos.getZ()));
 
         GlStateManager.depthMask(true);
         GlStateManager.enableTexture2D();
@@ -89,33 +93,36 @@ public class ClientProxy extends CommonProxy {
     private void drawSelectionBoundingBox(AxisAlignedBB aabb) {
         Tessellator tessellator = Tessellator.getInstance();
 
-        VertexBuffer vertexbuffer = tessellator.getBuffer();
+        VertexBuffer buffer = tessellator.getBuffer();
 
-        vertexbuffer.begin(3, DefaultVertexFormats.POSITION);
-        vertexbuffer.pos(aabb.minX, aabb.minY, aabb.minZ).endVertex();
-        vertexbuffer.pos(aabb.maxX, aabb.minY, aabb.minZ).endVertex();
-        vertexbuffer.pos(aabb.maxX, aabb.minY, aabb.maxZ).endVertex();
-        vertexbuffer.pos(aabb.minX, aabb.minY, aabb.maxZ).endVertex();
-        vertexbuffer.pos(aabb.minX, aabb.minY, aabb.minZ).endVertex();
+        buffer.begin(3, DefaultVertexFormats.POSITION);
+        buffer.pos(aabb.minX, aabb.minY, aabb.minZ).endVertex();
+        buffer.pos(aabb.maxX, aabb.minY, aabb.minZ).endVertex();
+        buffer.pos(aabb.maxX, aabb.minY, aabb.maxZ).endVertex();
+        buffer.pos(aabb.minX, aabb.minY, aabb.maxZ).endVertex();
+        buffer.pos(aabb.minX, aabb.minY, aabb.minZ).endVertex();
+
         tessellator.draw();
 
-        vertexbuffer.begin(3, DefaultVertexFormats.POSITION);
-        vertexbuffer.pos(aabb.minX, aabb.maxY, aabb.minZ).endVertex();
-        vertexbuffer.pos(aabb.maxX, aabb.maxY, aabb.minZ).endVertex();
-        vertexbuffer.pos(aabb.maxX, aabb.maxY, aabb.maxZ).endVertex();
-        vertexbuffer.pos(aabb.minX, aabb.maxY, aabb.maxZ).endVertex();
-        vertexbuffer.pos(aabb.minX, aabb.maxY, aabb.minZ).endVertex();
+        buffer.begin(3, DefaultVertexFormats.POSITION);
+        buffer.pos(aabb.minX, aabb.maxY, aabb.minZ).endVertex();
+        buffer.pos(aabb.maxX, aabb.maxY, aabb.minZ).endVertex();
+        buffer.pos(aabb.maxX, aabb.maxY, aabb.maxZ).endVertex();
+        buffer.pos(aabb.minX, aabb.maxY, aabb.maxZ).endVertex();
+        buffer.pos(aabb.minX, aabb.maxY, aabb.minZ).endVertex();
+
         tessellator.draw();
 
-        vertexbuffer.begin(1, DefaultVertexFormats.POSITION);
-        vertexbuffer.pos(aabb.minX, aabb.minY, aabb.minZ).endVertex();
-        vertexbuffer.pos(aabb.minX, aabb.maxY, aabb.minZ).endVertex();
-        vertexbuffer.pos(aabb.maxX, aabb.minY, aabb.minZ).endVertex();
-        vertexbuffer.pos(aabb.maxX, aabb.maxY, aabb.minZ).endVertex();
-        vertexbuffer.pos(aabb.maxX, aabb.minY, aabb.maxZ).endVertex();
-        vertexbuffer.pos(aabb.maxX, aabb.maxY, aabb.maxZ).endVertex();
-        vertexbuffer.pos(aabb.minX, aabb.minY, aabb.maxZ).endVertex();
-        vertexbuffer.pos(aabb.minX, aabb.maxY, aabb.maxZ).endVertex();
+        buffer.begin(1, DefaultVertexFormats.POSITION);
+        buffer.pos(aabb.minX, aabb.minY, aabb.minZ).endVertex();
+        buffer.pos(aabb.minX, aabb.maxY, aabb.minZ).endVertex();
+        buffer.pos(aabb.maxX, aabb.minY, aabb.minZ).endVertex();
+        buffer.pos(aabb.maxX, aabb.maxY, aabb.minZ).endVertex();
+        buffer.pos(aabb.maxX, aabb.minY, aabb.maxZ).endVertex();
+        buffer.pos(aabb.maxX, aabb.maxY, aabb.maxZ).endVertex();
+        buffer.pos(aabb.minX, aabb.minY, aabb.maxZ).endVertex();
+        buffer.pos(aabb.minX, aabb.maxY, aabb.maxZ).endVertex();
+
         tessellator.draw();
     }
 
