@@ -1,16 +1,26 @@
 package refinedstorage.proxy;
 
 import mcmultipart.client.multipart.ModelMultipartContainer;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMap;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.lwjgl.opengl.GL11;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageItems;
@@ -19,6 +29,8 @@ import refinedstorage.block.EnumControllerType;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.block.EnumStorageType;
 import refinedstorage.item.*;
+
+import java.util.List;
 
 public class ClientProxy extends CommonProxy {
     @SubscribeEvent
@@ -30,6 +42,81 @@ public class ClientProxy extends CommonProxy {
                 }
             }
         }
+    }
+
+    @SubscribeEvent
+    public void onBlockDrawHighlight(DrawBlockHighlightEvent e) {
+        if (e.getTarget() == null || e.getTarget().getBlockPos() == null) {
+            return;
+        }
+
+        BlockPos pos = e.getTarget().getBlockPos();
+
+        IBlockState state = e.getPlayer().getEntityWorld().getBlockState(pos);
+
+        if (!(state.getBlock() instanceof BlockCable)) {
+            return;
+        }
+
+        e.setCanceled(true);
+
+        state = ((BlockCable) state.getBlock()).getActualState(state, e.getPlayer().worldObj, pos);
+
+        drawSelectionBox(e.getPlayer(), BlockCable.getCollisionBoxes(state), e.getPartialTicks(), pos);
+    }
+
+    private void drawSelectionBox(EntityPlayer player, List<AxisAlignedBB> boxes, float partialTicks, BlockPos pos) {
+        GlStateManager.enableBlend();
+        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+        GlStateManager.color(0.0F, 0.0F, 0.0F, 0.4F);
+        GL11.glLineWidth(2.0F);
+        GlStateManager.disableTexture2D();
+        GlStateManager.depthMask(false);
+
+        double d0 = player.lastTickPosX + (player.posX - player.lastTickPosX) * (double) partialTicks;
+        double d1 = player.lastTickPosY + (player.posY - player.lastTickPosY) * (double) partialTicks;
+        double d2 = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * (double) partialTicks;
+
+        for (AxisAlignedBB aabb : boxes) {
+            drawSelectionBoundingBox(aabb.expand(0.0020000000949949026D, 0.0020000000949949026D, 0.0020000000949949026D).offset(-d0, -d1, -d2).offset(pos.getX(), pos.getY(), pos.getZ()));
+        }
+
+        GlStateManager.depthMask(true);
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
+    }
+
+    private void drawSelectionBoundingBox(AxisAlignedBB aabb) {
+        Tessellator tessellator = Tessellator.getInstance();
+
+        VertexBuffer vertexbuffer = tessellator.getBuffer();
+
+        vertexbuffer.begin(3, DefaultVertexFormats.POSITION);
+        vertexbuffer.pos(aabb.minX, aabb.minY, aabb.minZ).endVertex();
+        vertexbuffer.pos(aabb.maxX, aabb.minY, aabb.minZ).endVertex();
+        vertexbuffer.pos(aabb.maxX, aabb.minY, aabb.maxZ).endVertex();
+        vertexbuffer.pos(aabb.minX, aabb.minY, aabb.maxZ).endVertex();
+        vertexbuffer.pos(aabb.minX, aabb.minY, aabb.minZ).endVertex();
+        tessellator.draw();
+
+        vertexbuffer.begin(3, DefaultVertexFormats.POSITION);
+        vertexbuffer.pos(aabb.minX, aabb.maxY, aabb.minZ).endVertex();
+        vertexbuffer.pos(aabb.maxX, aabb.maxY, aabb.minZ).endVertex();
+        vertexbuffer.pos(aabb.maxX, aabb.maxY, aabb.maxZ).endVertex();
+        vertexbuffer.pos(aabb.minX, aabb.maxY, aabb.maxZ).endVertex();
+        vertexbuffer.pos(aabb.minX, aabb.maxY, aabb.minZ).endVertex();
+        tessellator.draw();
+
+        vertexbuffer.begin(1, DefaultVertexFormats.POSITION);
+        vertexbuffer.pos(aabb.minX, aabb.minY, aabb.minZ).endVertex();
+        vertexbuffer.pos(aabb.minX, aabb.maxY, aabb.minZ).endVertex();
+        vertexbuffer.pos(aabb.maxX, aabb.minY, aabb.minZ).endVertex();
+        vertexbuffer.pos(aabb.maxX, aabb.maxY, aabb.minZ).endVertex();
+        vertexbuffer.pos(aabb.maxX, aabb.minY, aabb.maxZ).endVertex();
+        vertexbuffer.pos(aabb.maxX, aabb.maxY, aabb.maxZ).endVertex();
+        vertexbuffer.pos(aabb.minX, aabb.minY, aabb.maxZ).endVertex();
+        vertexbuffer.pos(aabb.minX, aabb.maxY, aabb.maxZ).endVertex();
+        tessellator.draw();
     }
 
     @Override

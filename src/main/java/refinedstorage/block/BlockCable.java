@@ -1,8 +1,8 @@
 package refinedstorage.block;
 
-import com.google.common.collect.Lists;
 import mcmultipart.block.BlockCoverable;
 import mcmultipart.block.BlockMultipartContainer;
+import mcmultipart.raytrace.RayTraceUtils;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
@@ -31,12 +31,23 @@ import refinedstorage.tile.TileCable;
 import refinedstorage.tile.TileMultipartNode;
 import refinedstorage.tile.TileNode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BlockCable extends BlockCoverable {
     private static final PropertyDirection DIRECTION = PropertyDirection.create("direction");
 
-    private static final AxisAlignedBB CABLE_AABB = new AxisAlignedBB(4 * (1F / 16F), 4 * (1F / 16F), 4 * (1F / 16F), 1 - 4 * (1F / 16F), 1 - 4 * (1F / 16F), 1 - 4 * (1F / 16F));
+    protected static AxisAlignedBB createAABB(int fromX, int fromY, int fromZ, int toX, int toY, int toZ) {
+        return new AxisAlignedBB((float) fromX / 16F, (float) fromY / 16F, (float) fromZ / 16F, (float) toX / 16F, (float) toY / 16F, (float) toZ / 16F);
+    }
+
+    private static AxisAlignedBB CORE_AABB = createAABB(6, 6, 6, 10, 10, 10);
+    private static AxisAlignedBB NORTH_AABB = createAABB(6, 6, 0, 10, 10, 6);
+    private static AxisAlignedBB EAST_AABB = createAABB(10, 6, 6, 16, 10, 10);
+    private static AxisAlignedBB SOUTH_AABB = createAABB(6, 6, 10, 10, 10, 16);
+    private static AxisAlignedBB WEST_AABB = createAABB(0, 6, 6, 6, 10, 10);
+    private static AxisAlignedBB UP_AABB = createAABB(6, 10, 6, 10, 16, 10);
+    private static AxisAlignedBB DOWN_AABB = createAABB(6, 0, 6, 10, 6, 10);
 
     private static final PropertyBool NORTH = PropertyBool.create("north");
     private static final PropertyBool EAST = PropertyBool.create("east");
@@ -131,81 +142,51 @@ public class BlockCable extends BlockCoverable {
         return false;
     }
 
-    /*@Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
-        return CABLE_AABB;
-    }*/
+    public static List<AxisAlignedBB> getCollisionBoxes(IBlockState state) {
+        List<AxisAlignedBB> boxes = new ArrayList<>();
 
-    private static AxisAlignedBB createaabb(int fromx, int fromy, int fromz, int tox, int toy, int toz) {
-        return new AxisAlignedBB((float) fromx / 16F, (float) fromy / 16F, (float) fromz / 16F, (float) tox / 16F, (float) toy / 16F, (float) toz / 16F);
-    }
+        boxes.add(CORE_AABB);
 
-    private static AxisAlignedBB core = createaabb(6, 6, 6, 10, 10, 10);
-    private static AxisAlignedBB north = createaabb(6, 6, 0, 10, 10, 6);
-    private static AxisAlignedBB east = createaabb(10, 6, 6, 16, 10, 10);
-    private static AxisAlignedBB south = createaabb(6, 6, 10, 10, 10, 16);
-    private static AxisAlignedBB west = createaabb(0, 6, 6, 6, 10, 10);
-    private static AxisAlignedBB up = createaabb(6, 10, 6, 10, 16, 10);
-    private static AxisAlignedBB down = createaabb(6, 0, 6, 10, 6, 10);
-
-    private static List<AxisAlignedBB> getCollisionBoxList(IBlockState bstate) {
-        List<AxisAlignedBB> list = Lists.<AxisAlignedBB>newArrayList();
-
-        list.add(core);
-
-        if (bstate.getValue(NORTH) == true) {
-            list.add(north);
-        }
-        if (bstate.getValue(EAST) == true) {
-            list.add(east);
-        }
-        if (bstate.getValue(SOUTH) == true) {
-            list.add(south);
-        }
-        if (bstate.getValue(WEST) == true) {
-            list.add(west);
-        }
-        if (bstate.getValue(UP) == true) {
-            list.add(up);
-        }
-        if (bstate.getValue(DOWN) == true) {
-            list.add(down);
+        if (state.getValue(NORTH)) {
+            boxes.add(NORTH_AABB);
         }
 
-        return list;
+        if (state.getValue(EAST)) {
+            boxes.add(EAST_AABB);
+        }
+
+        if (state.getValue(SOUTH)) {
+            boxes.add(SOUTH_AABB);
+        }
+
+        if (state.getValue(WEST)) {
+            boxes.add(WEST_AABB);
+        }
+
+        if (state.getValue(UP)) {
+            boxes.add(UP_AABB);
+        }
+
+        if (state.getValue(DOWN)) {
+            boxes.add(DOWN_AABB);
+        }
+
+        return boxes;
     }
 
 
     @Override
     public void addCollisionBoxToListDefault(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entityIn) {
-        for (AxisAlignedBB axisalignedbb : getCollisionBoxList(this.getActualState(state, world, pos))) {
-            addCollisionBoxToList(pos, entityBox, collidingBoxes, axisalignedbb);
+        for (AxisAlignedBB aabb : getCollisionBoxes(this.getActualState(state, world, pos))) {
+            addCollisionBoxToList(pos, entityBox, collidingBoxes, aabb);
         }
     }
 
     @Override
     public RayTraceResult collisionRayTraceDefault(IBlockState state, World world, BlockPos pos, Vec3d start, Vec3d end) {
-        List<RayTraceResult> list = Lists.<RayTraceResult>newArrayList();
+        RayTraceUtils.AdvancedRayTraceResult result = RayTraceUtils.collisionRayTrace(world, pos, start, end, getCollisionBoxes(this.getActualState(state, world, pos)));
 
-        for (AxisAlignedBB axisalignedbb : getCollisionBoxList(this.getActualState(state, world, pos))) {
-            list.add(this.rayTrace(pos, start, end, axisalignedbb));
-        }
-
-        RayTraceResult raytraceresult1 = null;
-        double d1 = 0.0D;
-
-        for (RayTraceResult raytraceresult : list) {
-            if (raytraceresult != null) {
-                double d0 = raytraceresult.hitVec.squareDistanceTo(end);
-
-                if (d0 > d1) {
-                    raytraceresult1 = raytraceresult;
-                    d1 = d0;
-                }
-            }
-        }
-
-        return raytraceresult1;
+        return result != null ? result.hit : null;
     }
 
     @Override
