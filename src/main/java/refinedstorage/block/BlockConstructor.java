@@ -74,10 +74,6 @@ public class BlockConstructor extends BlockCable {
         return new TileConstructor();
     }
 
-    private boolean isInAABB(AxisAlignedBB aabb, float hitX, float hitY, float hitZ) {
-        return hitX >= aabb.minX && hitX <= aabb.maxX && hitY >= aabb.minY && hitY <= aabb.maxY && hitZ >= aabb.minZ && hitZ <= aabb.maxZ;
-    }
-
     @Override
     public boolean onBlockActivatedDefault(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (hitCablePart(state, world, pos, hitX, hitY, hitZ)) {
