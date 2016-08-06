@@ -198,7 +198,7 @@ public class BlockCable extends BlockCoverable {
     @Override
     public RayTraceResult collisionRayTraceDefault(IBlockState state, World world, BlockPos pos, Vec3d start, Vec3d end) {
         RayTraceUtils.AdvancedRayTraceResult result = RayTraceUtils.collisionRayTrace(world, pos, start, end, getCollisionBoxes(this.getActualState(state, world, pos)));
-
+//test?
         return result != null ? result.hit : null;
     }
 
