@@ -99,8 +99,6 @@ public class GuiGrid extends GuiBase {
 
         GuiGrid gui = (GuiGrid) screen;
 
-        System.out.println("Resorting!");
-
         SORTED_ITEMS.clear();
 
         if (gui.getGrid().isConnected()) {
