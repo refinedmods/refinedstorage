@@ -16,6 +16,9 @@ version = "0.8.16"
 group = "refinedstorage"
 archivesBaseName = "refinedstorage"
 
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
 minecraft {
     version = "1.10.2-12.18.1.2046"
     runDir = "run"

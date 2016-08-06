@@ -5,15 +5,17 @@
 - Fixed issue with IC2 integration causing console spam
 - Slight performance improvement in GUI's
 - Fixed not being able to change some configs in blocks
-- Fixed serverside configs not syncing up with clientside sometimes
+- Fixed serverside configs not syncing up with clientside
 
 **Features**
 - Added German translation by ChillUpX
 - Each Grid Filter can now only filter 9 items
 - Each Grid allows 4 Grid Filters instead of 1
 - Grid Filters can now be configured to compare on NBT and/ or damage
-- Updated to Forge 2045
+- Updated to Forge 2046
 - Updated Tesla
+- Java 8 is now a requirement
+- Added MCMultiPart integration
 
 ### 0.8.15
 **Bugfixes**
