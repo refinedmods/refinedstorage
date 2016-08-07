@@ -4,6 +4,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import refinedstorage.container.ContainerController;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
+import refinedstorage.tile.ClientNode;
 import refinedstorage.tile.TileController;
 
 import java.util.List;
@@ -43,7 +44,7 @@ public class GuiController extends GuiBase {
 
         drawTexture(x, y, 0, 0, width, height);
 
-        int barHeightNew = controller.getEnergyScaled(barHeight);
+        int barHeightNew = TileController.getEnergyScaled(TileController.ENERGY_STORED.getValue(), TileController.ENERGY_CAPACITY.getValue(), barHeight);
 
         drawTexture(x + barX, y + barY + barHeight - barHeightNew, 178, barHeight - barHeightNew, barWidth, barHeightNew);
     }
@@ -60,23 +61,23 @@ public class GuiController extends GuiBase {
 
         RenderHelper.enableGUIStandardItemLighting();
 
-        List<TileController.ClientNode> nodes = controller.getClientNodes();
+        List<ClientNode> nodes = TileController.NODES.getValue();
 
-        TileController.ClientNode nodeHovering = null;
+        ClientNode nodeHovering = null;
 
         for (int i = 0; i < 4; ++i) {
             if (slot < nodes.size()) {
-                TileController.ClientNode node = nodes.get(slot);
+                ClientNode node = nodes.get(slot);
 
-                drawItem(x, y + 5, node.stack);
+                drawItem(x, y + 5, node.getStack());
 
                 float scale = 0.5f;
 
                 GlStateManager.pushMatrix();
                 GlStateManager.scale(scale, scale, 1);
 
-                drawString(calculateOffsetOnScale(x + 1, scale), calculateOffsetOnScale(y - 2, scale), node.stack.getDisplayName());
-                drawString(calculateOffsetOnScale(x + 21, scale), calculateOffsetOnScale(y + 10, scale), t("gui.refinedstorage:controller.machine_amount", node.amount));
+                drawString(calculateOffsetOnScale(x + 1, scale), calculateOffsetOnScale(y - 2, scale), node.getStack().getDisplayName());
+                drawString(calculateOffsetOnScale(x + 21, scale), calculateOffsetOnScale(y + 10, scale), t("gui.refinedstorage:controller.machine_amount", node.getAmount()));
 
                 GlStateManager.popMatrix();
 
@@ -96,7 +97,7 @@ public class GuiController extends GuiBase {
         }
 
         if (nodeHovering != null) {
-            drawTooltip(mouseX, mouseY, t("misc.refinedstorage:energy_usage_minimal", nodeHovering.energyUsage));
+            drawTooltip(mouseX, mouseY, t("misc.refinedstorage:energy_usage_minimal", nodeHovering.getEnergyUsage()));
         }
 
         if (inBounds(barX, barY, barWidth, barHeight, mouseX, mouseY)) {
@@ -109,7 +110,7 @@ public class GuiController extends GuiBase {
     }
 
     private int getRows() {
-        int max = (int) Math.ceil((float) controller.getClientNodes().size() / (float) 2);
+        int max = (int) Math.ceil((float) TileController.NODES.getValue().size() / (float) 2);
 
         return max < 0 ? 0 : max;
     }

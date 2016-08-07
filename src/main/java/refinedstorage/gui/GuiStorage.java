@@ -117,6 +117,8 @@ public class GuiStorage extends GuiBase {
     }
 
     public void updatePriority(int priority) {
-        priorityField.setText(String.valueOf(priority));
+        if (priorityField != null) {
+            priorityField.setText(String.valueOf(priority));
+        }
     }
 }

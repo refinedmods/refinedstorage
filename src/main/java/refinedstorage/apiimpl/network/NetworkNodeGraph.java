@@ -117,16 +117,26 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
         this.nodeHashes = newNodeHashes;
 
         if (notify) {
+            boolean changed = false;
+
             for (INetworkNode newNode : nodes) {
                 if (!oldNodeHashes.contains(hashNode(newNode.getNodeWorld(), newNode))) {
                     newNode.onConnected(controller);
+
+                    changed = true;
                 }
             }
 
             for (INetworkNode oldNode : oldNodes) {
                 if (!nodeHashes.contains(hashNode(oldNode.getNodeWorld(), oldNode))) {
                     oldNode.onDisconnected(controller);
+
+                    changed = true;
                 }
+            }
+
+            if (changed) {
+                controller.getDataManager().sendParameterToWatchers(TileController.NODES);
             }
         }
     }
@@ -151,6 +161,8 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
         nodes.clear();
         nodeHashes.clear();
+
+        controller.getDataManager().sendParameterToWatchers(TileController.NODES);
     }
 
     public World getWorld() {

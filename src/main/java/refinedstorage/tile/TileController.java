@@ -3,6 +3,7 @@ package refinedstorage.tile;
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyReceiver;
 import net.darkhax.tesla.capability.TeslaCapabilities;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -45,6 +46,7 @@ import refinedstorage.network.MessageGridUpdate;
 import refinedstorage.tile.config.IRedstoneConfigurable;
 import refinedstorage.tile.config.RedstoneMode;
 import refinedstorage.tile.data.ITileDataProducer;
+import refinedstorage.tile.data.RefinedStorageSerializers;
 import refinedstorage.tile.data.TileDataManager;
 import refinedstorage.tile.data.TileDataParameter;
 import refinedstorage.tile.externalstorage.ExternalStorage;
@@ -72,6 +74,41 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         @Override
         public Integer getValue(TileController tile) {
             return tile.getEnergy().getMaxEnergyStored();
+        }
+    });
+
+    public static final TileDataParameter<List<ClientNode>> NODES = TileDataManager.createParameter(RefinedStorageSerializers.CLIENT_NODE_SERIALIZER, new ITileDataProducer<List<ClientNode>, TileController>() {
+        @Override
+        public List<ClientNode> getValue(TileController tile) {
+            List<ClientNode> nodes = new ArrayList<>();
+
+            for (INetworkNode node : tile.nodeGraph.all()) {
+                if (node.canUpdate()) {
+                    IBlockState state = tile.worldObj.getBlockState(node.getPosition());
+
+                    ClientNode clientNode = new ClientNode(
+                        new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state)),
+                        1,
+                        node.getEnergyUsage()
+                    );
+
+                    if (clientNode.getStack().getItem() != null) {
+                        if (nodes.contains(clientNode)) {
+                            for (ClientNode other : nodes) {
+                                if (other.equals(clientNode)) {
+                                    other.setAmount(other.getAmount() + 1);
+
+                                    break;
+                                }
+                            }
+                        } else {
+                            nodes.add(clientNode);
+                        }
+                    }
+                }
+            }
+
+            return nodes;
         }
     });
 
@@ -122,13 +159,12 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
-    private List<ClientNode> clientNodes = new ArrayList<>();
-
     public TileController() {
         dataManager.addWatchedParameter(REDSTONE_MODE);
         dataManager.addWatchedParameter(ENERGY_USAGE);
         dataManager.addWatchedParameter(ENERGY_STORED);
         dataManager.addParameter(ENERGY_CAPACITY);
+        dataManager.addParameter(NODES);
 
         if (IntegrationIC2.isLoaded()) {
             this.energyEU = new ControllerEnergyIC2(this);
@@ -249,10 +285,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         energyEU.invalidate();
 
         super.invalidate();
-    }
-
-    public List<ClientNode> getClientNodes() {
-        return clientNodes;
     }
 
     @Override
@@ -570,16 +602,16 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         return energy.getEnergyStored();
     }
 
-    public int getEnergyScaled(int i) {
-        return (int) ((float) energy.getEnergyStored() / (float) energy.getMaxEnergyStored() * (float) i);
+    public static int getEnergyScaled(int stored, int capacity, int scale) {
+        return (int) ((float) stored / (float) capacity * (float) scale);
     }
 
     public int getEnergyScaledForDisplay() {
-        return getEnergyScaled(7);
+        return getEnergyScaled(energy.getEnergyStored(), energy.getMaxEnergyStored(), 7);
     }
 
     public int getEnergyScaledForComparator() {
-        return getEnergyScaled(15);
+        return getEnergyScaled(energy.getEnergyStored(), energy.getMaxEnergyStored(), 15);
     }
 
     @Override
@@ -625,79 +657,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         return type == null ? EnumControllerType.NORMAL : type;
     }
 
-    // @TODO: Sync client nodes
-    /*@Override
-    public void readContainerData(ByteBuf buf) {
-        energy.setEnergyStored(buf.readInt());
-        this.energyUsage = buf.readInt();
-        this.redstoneMode = RedstoneMode.getById(buf.readInt());
-
-        List<ClientNode> nodes = new ArrayList<ClientNode>();
-
-        int size = buf.readInt();
-
-        for (int i = 0; i < size; ++i) {
-            ClientNode node = new ClientNode();
-
-            node.energyUsage = buf.readInt();
-            node.amount = buf.readInt();
-            node.stack = ByteBufUtils.readItemStack(buf);
-
-            nodes.add(node);
-        }
-
-        this.clientNodes = nodes;
-    }
-
-    @Override
-    public void writeContainerData(ByteBuf buf) {
-        buf.writeInt(energy.getEnergyStored());
-        buf.writeInt(getEnergyUsage());
-
-        buf.writeInt(redstoneMode.id);
-
-        List<ClientNode> clientNodes = new ArrayList<ClientNode>();
-
-        for (INetworkNode node : nodeGraph.all()) {
-            if (node.canUpdate()) {
-                IBlockState state = worldObj.getBlockState(node.getPosition());
-
-                ClientNode clientNode = new ClientNode();
-
-                clientNode.energyUsage = node.getEnergyUsage();
-                clientNode.amount = 1;
-                clientNode.stack = new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state));
-
-                if (clientNode.stack.getItem() != null) {
-                    if (clientNodes.contains(clientNode)) {
-                        for (ClientNode other : clientNodes) {
-                            if (other.equals(clientNode)) {
-                                other.amount++;
-
-                                break;
-                            }
-                        }
-                    } else {
-                        clientNodes.add(clientNode);
-                    }
-                }
-            }
-        }
-
-        buf.writeInt(clientNodes.size());
-
-        for (ClientNode node : clientNodes) {
-            buf.writeInt(node.energyUsage);
-            buf.writeInt(node.amount);
-            ByteBufUtils.writeItemStack(buf, node.stack);
-        }
-    }
-
-    @Override
-    public Class<? extends Container> getContainer() {
-        return ContainerController.class;
-    }*/
-
     @Override
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
         if (energyTesla != null && (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER)) {
@@ -710,31 +669,5 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
         return (energyTesla != null && (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER)) || super.hasCapability(capability, facing);
-    }
-
-    public class ClientNode {
-        public ItemStack stack;
-        public int amount;
-        public int energyUsage;
-
-        @Override
-        public boolean equals(Object other) {
-            if (this == other) {
-                return true;
-            }
-
-            if (!(other instanceof ClientNode)) {
-                return false;
-            }
-
-            return energyUsage == ((ClientNode) other).energyUsage && CompareUtils.compareStack(stack, ((ClientNode) other).stack);
-        }
-
-        @Override
-        public int hashCode() {
-            int result = stack.hashCode();
-            result = 31 * result + energyUsage;
-            return result;
-        }
     }
 }
