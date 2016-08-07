@@ -1,6 +1,8 @@
 package refinedstorage.proxy;
 
 import mcmultipart.client.multipart.ModelMultipartContainer;
+import mcmultipart.raytrace.PartMOP;
+import mcmultipart.raytrace.RayTraceUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -62,6 +64,10 @@ public class ClientProxy extends CommonProxy {
         }
 
         state = ((BlockCable) state.getBlock()).getActualState(state, player.worldObj, pos);
+
+        if (((BlockCable) state.getBlock()).collisionRayTrace(state, player.worldObj, pos, RayTraceUtils.getStart(player), RayTraceUtils.getEnd(player)) instanceof PartMOP) {
+            return;
+        }
 
         List<AxisAlignedBB> unionized = ((BlockCable) state.getBlock()).getUnionizedCollisionBoxes(state);
         List<AxisAlignedBB> nonUnionized = ((BlockCable) state.getBlock()).getNonUnionizedCollisionBoxes(state);
