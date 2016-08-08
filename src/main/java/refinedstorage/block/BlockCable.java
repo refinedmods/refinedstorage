@@ -210,6 +210,7 @@ public class BlockCable extends BlockCoverable {
         }
     }
 
+    // @TODO: MCMP issue #40
     @Override
     public AxisAlignedBB getSelectedBoundingBoxDefault(IBlockState state, World world, BlockPos pos) {
         return state.getBoundingBox(world, pos).offset(pos);
