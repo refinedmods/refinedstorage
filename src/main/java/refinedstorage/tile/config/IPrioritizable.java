@@ -27,7 +27,7 @@ public interface IPrioritizable {
             if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT && Minecraft.getMinecraft().currentScreen instanceof GuiStorage) {
                 ((GuiStorage) Minecraft.getMinecraft().currentScreen).updatePriority(parameter.getValue());
             }
-        });
+        }, 0);
     }
 
     int getPriority();

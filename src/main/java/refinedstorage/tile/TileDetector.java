@@ -59,7 +59,7 @@ public class TileDetector extends TileNode implements IComparable {
                 ((GuiDetector) gui).AMOUNT.setText(String.valueOf(parameter.getValue()));
             }
         }
-    });
+    }, 0);
 
     private static final int SPEED = 5;
 

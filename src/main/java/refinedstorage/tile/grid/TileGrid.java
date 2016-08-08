@@ -105,7 +105,7 @@ public class TileGrid extends TileNode implements IGrid {
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT && Minecraft.getMinecraft().currentScreen instanceof GuiGrid) {
             ((GuiGrid) Minecraft.getMinecraft().currentScreen).updateSearchFieldFocus(parameter.getValue());
         }
-    });
+    }, 0);
 
     public static final String NBT_VIEW_TYPE = "ViewType";
     public static final String NBT_SORTING_DIRECTION = "SortingDirection";
