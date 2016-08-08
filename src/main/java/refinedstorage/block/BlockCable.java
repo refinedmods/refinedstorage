@@ -211,8 +211,8 @@ public class BlockCable extends BlockCoverable {
     }
 
     @Override
-    public AxisAlignedBB getSelectedBoundingBoxDefault(IBlockState state, World worldIn, BlockPos pos) {
-        return state.getBoundingBox(worldIn, pos).offset(pos);
+    public AxisAlignedBB getSelectedBoundingBoxDefault(IBlockState state, World world, BlockPos pos) {
+        return state.getBoundingBox(world, pos).offset(pos);
     }
 
     @Override
