@@ -32,7 +32,7 @@ public enum RedstoneMode {
     }
 
     public static <T extends TileEntity> TileDataParameter<Integer> createParameter() {
-        return TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, T>() {
+        return TileDataManager.createParameter(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, T>() {
             @Override
             public Integer getValue(T tile) {
                 return ((IRedstoneConfigurable) tile).getRedstoneMode().ordinal();

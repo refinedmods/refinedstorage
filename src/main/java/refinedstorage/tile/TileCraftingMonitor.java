@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class TileCraftingMonitor extends TileNode {
-    public static final TileDataParameter<List<ClientCraftingTask>> TASKS = TileDataManager.createParameter(RefinedStorageSerializers.CLIENT_CRAFTING_TASK_SERIALIZER, new ITileDataProducer<List<ClientCraftingTask>, TileCraftingMonitor>() {
+    public static final TileDataParameter<List<ClientCraftingTask>> TASKS = TileDataManager.createParameter(RefinedStorageSerializers.CLIENT_CRAFTING_TASK_SERIALIZER, new ArrayList<>(), new ITileDataProducer<List<ClientCraftingTask>, TileCraftingMonitor>() {
         @Override
         public List<ClientCraftingTask> getValue(TileCraftingMonitor tile) {
             if (tile.connected) {
@@ -26,7 +26,7 @@ public class TileCraftingMonitor extends TileNode {
                 return Collections.emptyList();
             }
         }
-    }, new ArrayList<>());
+    });
 
     public TileCraftingMonitor() {
         dataManager.addParameter(TASKS);

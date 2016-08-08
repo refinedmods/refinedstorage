@@ -25,19 +25,15 @@ public class TileDataManager {
     private List<TileDataParameter> watchedParameters = new ArrayList<>();
     private List<Object> watchedParametersCache = new ArrayList<>();
 
-    public static <T> TileDataParameter<T> createParameter(DataSerializer<T> serializer, ITileDataProducer producer) {
-        return createParameter(serializer, producer, null, null, null);
+    public static <T> TileDataParameter<T> createParameter(DataSerializer<T> serializer, T defaultValue, ITileDataProducer producer) {
+        return createParameter(serializer, defaultValue, producer);
     }
 
-    public static <T> TileDataParameter<T> createParameter(DataSerializer<T> serializer, ITileDataProducer producer, T defaultValue) {
-        return createParameter(serializer, producer, null, null, defaultValue);
+    public static <T> TileDataParameter<T> createParameter(DataSerializer<T> serializer, T defaultValue, ITileDataProducer producer, ITileDataConsumer consumer) {
+        return createParameter(serializer, defaultValue, producer, consumer);
     }
 
-    public static <T> TileDataParameter<T> createParameter(DataSerializer<T> serializer, ITileDataProducer producer, ITileDataConsumer consumer) {
-        return createParameter(serializer, producer, consumer, null, null);
-    }
-
-    public static <T> TileDataParameter<T> createParameter(DataSerializer<T> serializer, ITileDataProducer producer, ITileDataConsumer consumer, ITileDataListener<T> listener, T defaultValue) {
+    public static <T> TileDataParameter<T> createParameter(DataSerializer<T> serializer, T defaultValue, ITileDataProducer producer, ITileDataConsumer consumer, ITileDataListener<T> listener) {
         TileDataParameter<T> parameter = new TileDataParameter<>(PARAMETER_ID++, defaultValue, serializer, producer, consumer, listener);
 
         PARAMETER_MAP.put(parameter.getId(), parameter);

@@ -56,28 +56,28 @@ import java.util.*;
 public class TileController extends TileBase implements INetworkMaster, IEnergyReceiver, IRedstoneConfigurable {
     public static final TileDataParameter<Integer> REDSTONE_MODE = RedstoneMode.createParameter();
 
-    public static final TileDataParameter<Integer> ENERGY_USAGE = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileController>() {
+    public static final TileDataParameter<Integer> ENERGY_USAGE = TileDataManager.createParameter(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileController>() {
         @Override
         public Integer getValue(TileController tile) {
             return tile.getEnergyUsage();
         }
     });
 
-    public static final TileDataParameter<Integer> ENERGY_STORED = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileController>() {
+    public static final TileDataParameter<Integer> ENERGY_STORED = TileDataManager.createParameter(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileController>() {
         @Override
         public Integer getValue(TileController tile) {
             return tile.getEnergy().getEnergyStored();
         }
     });
 
-    public static final TileDataParameter<Integer> ENERGY_CAPACITY = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileController>() {
+    public static final TileDataParameter<Integer> ENERGY_CAPACITY = TileDataManager.createParameter(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileController>() {
         @Override
         public Integer getValue(TileController tile) {
             return tile.getEnergy().getMaxEnergyStored();
         }
     });
 
-    public static final TileDataParameter<List<ClientNode>> NODES = TileDataManager.createParameter(RefinedStorageSerializers.CLIENT_NODE_SERIALIZER, new ITileDataProducer<List<ClientNode>, TileController>() {
+    public static final TileDataParameter<List<ClientNode>> NODES = TileDataManager.createParameter(RefinedStorageSerializers.CLIENT_NODE_SERIALIZER, new ArrayList<>(), new ITileDataProducer<List<ClientNode>, TileController>() {
         @Override
         public List<ClientNode> getValue(TileController tile) {
             List<ClientNode> nodes = new ArrayList<>();
@@ -110,7 +110,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
             return nodes;
         }
-    }, new ArrayList<>());
+    });
 
     public static final String NBT_ENERGY = "Energy";
     public static final String NBT_ENERGY_CAPACITY = "EnergyCapacity";

@@ -30,14 +30,14 @@ public class TileExternalStorage extends TileMultipartNode implements IStoragePr
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
 
-    public static final TileDataParameter<Integer> STORED = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileExternalStorage>() {
+    public static final TileDataParameter<Integer> STORED = TileDataManager.createParameter(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileExternalStorage>() {
         @Override
         public Integer getValue(TileExternalStorage tile) {
             return tile.getStored();
         }
     });
 
-    public static final TileDataParameter<Integer> CAPACITY = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileExternalStorage>() {
+    public static final TileDataParameter<Integer> CAPACITY = TileDataManager.createParameter(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileExternalStorage>() {
         @Override
         public Integer getValue(TileExternalStorage tile) {
             return tile.getCapacity();

@@ -39,7 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TileGrid extends TileNode implements IGrid {
-    public static final TileDataParameter<Integer> VIEW_TYPE = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileGrid>() {
+    public static final TileDataParameter<Integer> VIEW_TYPE = TileDataManager.createParameter(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileGrid>() {
         @Override
         public Integer getValue(TileGrid tile) {
             return tile.viewType;
@@ -55,7 +55,7 @@ public class TileGrid extends TileNode implements IGrid {
         }
     });
 
-    public static final TileDataParameter<Integer> SORTING_DIRECTION = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileGrid>() {
+    public static final TileDataParameter<Integer> SORTING_DIRECTION = TileDataManager.createParameter(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileGrid>() {
         @Override
         public Integer getValue(TileGrid tile) {
             return tile.sortingDirection;
@@ -71,7 +71,7 @@ public class TileGrid extends TileNode implements IGrid {
         }
     });
 
-    public static final TileDataParameter<Integer> SORTING_TYPE = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileGrid>() {
+    public static final TileDataParameter<Integer> SORTING_TYPE = TileDataManager.createParameter(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileGrid>() {
         @Override
         public Integer getValue(TileGrid tile) {
             return tile.sortingType;
@@ -87,7 +87,7 @@ public class TileGrid extends TileNode implements IGrid {
         }
     });
 
-    public static final TileDataParameter<Integer> SEARCH_BOX_MODE = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileGrid>() {
+    public static final TileDataParameter<Integer> SEARCH_BOX_MODE = TileDataManager.createParameter(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileGrid>() {
         @Override
         public Integer getValue(TileGrid tile) {
             return tile.searchBoxMode;
@@ -105,7 +105,7 @@ public class TileGrid extends TileNode implements IGrid {
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT && Minecraft.getMinecraft().currentScreen instanceof GuiGrid) {
             ((GuiGrid) Minecraft.getMinecraft().currentScreen).updateSearchFieldFocus(parameter.getValue());
         }
-    }, 0);
+    });
 
     public static final String NBT_VIEW_TYPE = "ViewType";
     public static final String NBT_SORTING_DIRECTION = "SortingDirection";

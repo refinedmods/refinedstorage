@@ -21,14 +21,14 @@ import refinedstorage.tile.data.TileDataManager;
 import refinedstorage.tile.data.TileDataParameter;
 
 public class TileSolderer extends TileNode {
-    public static final TileDataParameter<Integer> DURATION = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileSolderer>() {
+    public static final TileDataParameter<Integer> DURATION = TileDataManager.createParameter(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileSolderer>() {
         @Override
         public Integer getValue(TileSolderer tile) {
             return tile.recipe != null ? tile.recipe.getDuration() : 0;
         }
     });
 
-    public static final TileDataParameter<Integer> PROGRESS = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileSolderer>() {
+    public static final TileDataParameter<Integer> PROGRESS = TileDataManager.createParameter(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileSolderer>() {
         @Override
         public Integer getValue(TileSolderer tile) {
             return tile.progress;

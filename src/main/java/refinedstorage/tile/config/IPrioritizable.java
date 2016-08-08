@@ -13,7 +13,7 @@ import refinedstorage.tile.data.TileDataParameter;
 
 public interface IPrioritizable {
     static <T extends TileEntity> TileDataParameter<Integer> createParameter() {
-        return TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, T>() {
+        return TileDataManager.createParameter(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, T>() {
             @Override
             public Integer getValue(T tile) {
                 return ((IPrioritizable) tile).getPriority();
@@ -27,7 +27,7 @@ public interface IPrioritizable {
             if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT && Minecraft.getMinecraft().currentScreen instanceof GuiStorage) {
                 ((GuiStorage) Minecraft.getMinecraft().currentScreen).updatePriority(parameter.getValue());
             }
-        }, 0);
+        });
     }
 
     int getPriority();

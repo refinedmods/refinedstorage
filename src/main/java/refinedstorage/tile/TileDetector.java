@@ -23,7 +23,7 @@ import refinedstorage.tile.data.TileDataParameter;
 public class TileDetector extends TileNode implements IComparable {
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
 
-    public static final TileDataParameter<Integer> MODE = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileDetector>() {
+    public static final TileDataParameter<Integer> MODE = TileDataManager.createParameter(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileDetector>() {
         @Override
         public Integer getValue(TileDetector tile) {
             return tile.mode;
@@ -39,7 +39,7 @@ public class TileDetector extends TileNode implements IComparable {
         }
     });
 
-    public static final TileDataParameter<Integer> AMOUNT = TileDataManager.createParameter(DataSerializers.VARINT, new ITileDataProducer<Integer, TileDetector>() {
+    public static final TileDataParameter<Integer> AMOUNT = TileDataManager.createParameter(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileDetector>() {
         @Override
         public Integer getValue(TileDetector tile) {
             return tile.amount;
@@ -59,7 +59,7 @@ public class TileDetector extends TileNode implements IComparable {
                 ((GuiDetector) gui).AMOUNT.setText(String.valueOf(parameter.getValue()));
             }
         }
-    }, 0);
+    });
 
     private static final int SPEED = 5;
 
