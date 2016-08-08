@@ -84,7 +84,7 @@ public class TileProcessingPatternEncoder extends TileBase {
     }
 
     @Override
-    public IItemHandler getDroppedItems() {
+    public IItemHandler getDrops() {
         return patterns;
     }
 

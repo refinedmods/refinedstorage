@@ -126,7 +126,7 @@ public abstract class TileBase extends TileEntity implements ITickable {
         return worldObj.getTileEntity(pos.offset(direction));
     }
 
-    public IItemHandler getDroppedItems() {
+    public IItemHandler getDrops() {
         return null;
     }
 

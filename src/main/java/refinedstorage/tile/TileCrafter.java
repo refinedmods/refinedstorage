@@ -94,7 +94,7 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
     }
 
     @Override
-    public IItemHandler getDroppedItems() {
+    public IItemHandler getDrops() {
         return new CombinedInvWrapper(patterns, upgrades);
     }
 

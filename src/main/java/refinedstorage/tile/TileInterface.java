@@ -150,7 +150,7 @@ public class TileInterface extends TileNode implements IComparable {
     }
 
     @Override
-    public IItemHandler getDroppedItems() {
+    public IItemHandler getDrops() {
         return new CombinedInvWrapper(importItems, exportItems, upgrades);
     }
 

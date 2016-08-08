@@ -11,8 +11,9 @@ public class TileDataParameter<T> {
     private ITileDataListener<T> listener;
     private T value;
 
-    public TileDataParameter(int id, DataSerializer<T> serializer, ITileDataProducer<T, ? extends TileEntity> producer, ITileDataConsumer<T, ? extends TileEntity> consumer, ITileDataListener<T> listener) {
+    public TileDataParameter(int id, T defaultValue, DataSerializer<T> serializer, ITileDataProducer<T, ? extends TileEntity> producer, ITileDataConsumer<T, ? extends TileEntity> consumer, ITileDataListener<T> listener) {
         this.id = id;
+        this.value = defaultValue;
         this.serializer = serializer;
         this.valueProducer = producer;
         this.valueConsumer = consumer;

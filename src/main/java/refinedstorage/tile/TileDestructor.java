@@ -146,7 +146,7 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
     }
 
     @Override
-    public IItemHandler getDroppedItems() {
+    public IItemHandler getDrops() {
         return upgrades;
     }
 

@@ -110,7 +110,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
             return nodes;
         }
-    });
+    }, new ArrayList<>());
 
     public static final String NBT_ENERGY = "Energy";
     public static final String NBT_ENERGY_CAPACITY = "EnergyCapacity";

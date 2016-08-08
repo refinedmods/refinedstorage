@@ -10,7 +10,6 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -279,8 +278,8 @@ public class BlockCable extends BlockCoverable {
                 network = ((TileNode) tile).getNetwork();
             }
 
-            if (tile instanceof TileBase && ((TileBase) tile).getDroppedItems() != null) {
-                IItemHandler handler = ((TileBase) tile).getDroppedItems();
+            if (tile instanceof TileBase && ((TileBase) tile).getDrops() != null) {
+                IItemHandler handler = ((TileBase) tile).getDrops();
 
                 for (int i = 0; i < handler.getSlots(); ++i) {
                     if (handler.getStackInSlot(i) != null) {
@@ -298,15 +297,24 @@ public class BlockCable extends BlockCoverable {
     }
 
     @Override
-    public boolean removedByPlayerDefault(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
-        return willHarvest ? true : super.removedByPlayerDefault(state, world, pos, player, willHarvest);
-    }
+    public List<ItemStack> getDropsDefault(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+        List<ItemStack> drops = new ArrayList<>();
 
-    @Override
-    public void harvestBlockDefault(World world, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity tile, ItemStack stack) {
-        super.harvestBlockDefault(world, player, pos, state, tile, stack);
+        drops.add(new ItemStack(this, 1, getMetaFromState(state)));
 
-        world.setBlockToAir(pos);
+        TileEntity tile = world.getTileEntity(pos);
+
+        if (tile instanceof TileBase && ((TileBase) tile).getDrops() != null) {
+            IItemHandler handler = ((TileBase) tile).getDrops();
+
+            for (int i = 0; i < handler.getSlots(); ++i) {
+                if (handler.getStackInSlot(i) != null) {
+                    drops.add(handler.getStackInSlot(i));
+                }
+            }
+        }
+
+        return drops;
     }
 
     @Override

@@ -122,8 +122,8 @@ public abstract class BlockBase extends Block {
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
         TileEntity tile = world.getTileEntity(pos);
 
-        if (tile instanceof TileBase && ((TileBase) tile).getDroppedItems() != null) {
-            IItemHandler handler = ((TileBase) tile).getDroppedItems();
+        if (tile instanceof TileBase && ((TileBase) tile).getDrops() != null) {
+            IItemHandler handler = ((TileBase) tile).getDrops();
 
             for (int i = 0; i < handler.getSlots(); ++i) {
                 if (handler.getStackInSlot(i) != null) {

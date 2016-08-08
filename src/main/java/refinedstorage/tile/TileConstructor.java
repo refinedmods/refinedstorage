@@ -131,7 +131,7 @@ public class TileConstructor extends TileMultipartNode implements IComparable {
     }
 
     @Override
-    public IItemHandler getDroppedItems() {
+    public IItemHandler getDrops() {
         return upgrades;
     }
 

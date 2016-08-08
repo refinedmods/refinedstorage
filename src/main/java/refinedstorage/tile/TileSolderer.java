@@ -185,7 +185,7 @@ public class TileSolderer extends TileNode {
     }
 
     @Override
-    public IItemHandler getDroppedItems() {
+    public IItemHandler getDrops() {
         return new CombinedInvWrapper(items, upgrades);
     }
 

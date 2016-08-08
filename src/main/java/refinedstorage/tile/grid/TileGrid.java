@@ -445,7 +445,7 @@ public class TileGrid extends TileNode implements IGrid {
     }
 
     @Override
-    public IItemHandler getDroppedItems() {
+    public IItemHandler getDrops() {
         switch (getType()) {
             case CRAFTING:
                 return new CombinedInvWrapper(filter, new InvWrapper(matrix));

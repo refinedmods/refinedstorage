@@ -26,15 +26,19 @@ public class TileDataManager {
     private List<Object> watchedParametersCache = new ArrayList<>();
 
     public static <T> TileDataParameter<T> createParameter(DataSerializer<T> serializer, ITileDataProducer producer) {
-        return createParameter(serializer, producer, null);
+        return createParameter(serializer, producer, null, null, null);
+    }
+
+    public static <T> TileDataParameter<T> createParameter(DataSerializer<T> serializer, ITileDataProducer producer, T defaultValue) {
+        return createParameter(serializer, producer, null, null, defaultValue);
     }
 
     public static <T> TileDataParameter<T> createParameter(DataSerializer<T> serializer, ITileDataProducer producer, ITileDataConsumer consumer) {
-        return createParameter(serializer, producer, consumer, null);
+        return createParameter(serializer, producer, consumer, null, null);
     }
 
-    public static <T> TileDataParameter<T> createParameter(DataSerializer<T> serializer, ITileDataProducer producer, ITileDataConsumer consumer, ITileDataListener<T> listener) {
-        TileDataParameter<T> parameter = new TileDataParameter<>(PARAMETER_ID++, serializer, producer, consumer, listener);
+    public static <T> TileDataParameter<T> createParameter(DataSerializer<T> serializer, ITileDataProducer producer, ITileDataConsumer consumer, ITileDataListener<T> listener, T defaultValue) {
+        TileDataParameter<T> parameter = new TileDataParameter<>(PARAMETER_ID++, defaultValue, serializer, producer, consumer, listener);
 
         PARAMETER_MAP.put(parameter.getId(), parameter);
 
@@ -55,11 +59,11 @@ public class TileDataManager {
         this.tile = tile;
     }
 
-    public void addParameter(TileDataParameter parameter) {
+    public void addParameter(TileDataParameter<?> parameter) {
         parameters.add(parameter);
     }
 
-    public void addWatchedParameter(TileDataParameter parameter) {
+    public void addWatchedParameter(TileDataParameter<?> parameter) {
         addParameter(parameter);
 
         watchedParameters.add(parameter);
@@ -87,11 +91,11 @@ public class TileDataManager {
         }
     }
 
-    public void sendParameter(EntityPlayerMP player, TileDataParameter parameter) {
+    public void sendParameter(EntityPlayerMP player, TileDataParameter<?> parameter) {
         RefinedStorage.INSTANCE.network.sendTo(new MessageTileDataParameter(tile, parameter), player);
     }
 
-    public void sendParameterToWatchers(TileDataParameter parameter) {
+    public void sendParameterToWatchers(TileDataParameter<?> parameter) {
         for (EntityPlayer player : tile.getWorld().playerEntities) {
             Container container = player.openContainer;
 

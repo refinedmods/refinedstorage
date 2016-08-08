@@ -140,7 +140,7 @@ public class TileImporter extends TileMultipartNode implements IComparable, IFil
     }
 
     @Override
-    public IItemHandler getDroppedItems() {
+    public IItemHandler getDrops() {
         return upgrades;
     }
 

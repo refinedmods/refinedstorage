@@ -6,6 +6,7 @@ import refinedstorage.tile.data.RefinedStorageSerializers;
 import refinedstorage.tile.data.TileDataManager;
 import refinedstorage.tile.data.TileDataParameter;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +26,7 @@ public class TileCraftingMonitor extends TileNode {
                 return Collections.emptyList();
             }
         }
-    });
+    }, new ArrayList<>());
 
     public TileCraftingMonitor() {
         dataManager.addParameter(TASKS);
