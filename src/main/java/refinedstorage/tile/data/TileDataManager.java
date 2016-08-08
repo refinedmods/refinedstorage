@@ -26,11 +26,11 @@ public class TileDataManager {
     private List<Object> watchedParametersCache = new ArrayList<>();
 
     public static <T> TileDataParameter<T> createParameter(DataSerializer<T> serializer, T defaultValue, ITileDataProducer producer) {
-        return createParameter(serializer, defaultValue, producer);
+        return createParameter(serializer, defaultValue, producer, null);
     }
 
     public static <T> TileDataParameter<T> createParameter(DataSerializer<T> serializer, T defaultValue, ITileDataProducer producer, ITileDataConsumer consumer) {
-        return createParameter(serializer, defaultValue, producer, consumer);
+        return createParameter(serializer, defaultValue, producer, consumer, null);
     }
 
     public static <T> TileDataParameter<T> createParameter(DataSerializer<T> serializer, T defaultValue, ITileDataProducer producer, ITileDataConsumer consumer, ITileDataListener<T> listener) {
