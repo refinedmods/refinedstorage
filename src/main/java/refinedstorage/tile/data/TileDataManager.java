@@ -9,6 +9,7 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.container.ContainerBase;
 import refinedstorage.network.MessageTileDataParameter;
 import refinedstorage.network.MessageTileDataParameterUpdate;
+import refinedstorage.tile.TileBase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -94,8 +95,12 @@ public class TileDataManager {
         for (EntityPlayer player : tile.getWorld().playerEntities) {
             Container container = player.openContainer;
 
-            if (container instanceof ContainerBase && ((ContainerBase) container).getTile().getPos().equals(tile.getPos())) {
-                sendParameter((EntityPlayerMP) player, parameter);
+            if (container instanceof ContainerBase) {
+                TileBase tile = ((ContainerBase) container).getTile();
+
+                if (tile != null && tile.getPos().equals(this.tile.getPos())) {
+                    sendParameter((EntityPlayerMP) player, parameter);
+                }
             }
         }
     }
