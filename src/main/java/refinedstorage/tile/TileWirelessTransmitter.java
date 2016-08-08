@@ -26,6 +26,10 @@ public class TileWirelessTransmitter extends TileNode implements IWirelessTransm
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_RANGE);
 
+    public TileWirelessTransmitter() {
+        dataManager.addWatchedParameter(RANGE);
+    }
+
     @Override
     public int getEnergyUsage() {
         return RefinedStorage.INSTANCE.wirelessTransmitterUsage + upgrades.getEnergyUsage();
