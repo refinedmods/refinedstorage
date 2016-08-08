@@ -9,6 +9,7 @@
 - Fixed serverside configs not syncing up with clientside
 - Fixed not being able to move inventory items in Grid GUI's to hotbar via the number keys
 - Fixed Relays when being in "Ignore Redstone" mode using up energy
+- Fixed Crafter facing bottom side on placement
 - Improved collisions of Cable parts
 - You now have to click the actual cable part head in order to get the GUI open
 

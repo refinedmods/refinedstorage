@@ -103,7 +103,7 @@ public abstract class BlockBase extends Block {
         IBlockState state = super.onBlockPlaced(world, pos, facing, hitX, hitY, hitZ, meta, entity);
 
         if (getPlacementType() != null) {
-            return state.withProperty(DIRECTION, getPlacementType().getFrom(facing, entity));
+            return state.withProperty(DIRECTION, getPlacementType().getFrom(facing, pos, entity));
         }
 
         return state;
