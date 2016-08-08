@@ -12,11 +12,11 @@ public interface IGridHandler {
     /**
      * Called when a player tries to extract an item from the grid.
      *
-     * @param id     The ID of the item we're trying to extract
+     * @param hash   The hash of the item we're trying to extract, see {@link refinedstorage.api.network.NetworkUtils#getItemStackHashCode(ItemStack)}
      * @param flags  How we are extracting, see {@link GridExtractFlags}
      * @param player The player that is attempting the extraction
      */
-    void onExtract(int id, int flags, EntityPlayerMP player);
+    void onExtract(int hash, int flags, EntityPlayerMP player);
 
     /**
      * Called when a player tries to insert an item to the grid.
@@ -38,10 +38,10 @@ public interface IGridHandler {
     /**
      * Called when a player requested crafting for an item.
      *
-     * @param id       The ID of the item we're requesting crafting for
+     * @param hash     The hash of the item we're requesting crafting for, see {@link refinedstorage.api.network.NetworkUtils#getItemStackHashCode(ItemStack)}
      * @param quantity The amount of that item that has to be crafted
      */
-    void onCraftingRequested(int id, int quantity);
+    void onCraftingRequested(int hash, int quantity);
 
     /**
      * Called when a player wants to cancel a crafting task.

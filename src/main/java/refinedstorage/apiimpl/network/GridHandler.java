@@ -21,8 +21,8 @@ public class GridHandler implements IGridHandler {
     }
 
     @Override
-    public void onExtract(int id, int flags, EntityPlayerMP player) {
-        ItemStack item = network.getStorage().get(id);
+    public void onExtract(int hash, int flags, EntityPlayerMP player) {
+        ItemStack item = network.getStorage().get(hash);
 
         if (item == null) {
             return;
@@ -113,12 +113,12 @@ public class GridHandler implements IGridHandler {
     }
 
     @Override
-    public void onCraftingRequested(int id, int quantity) {
+    public void onCraftingRequested(int hash, int quantity) {
         if (quantity <= 0 || quantity > MAX_CRAFTING_PER_REQUEST) {
             return;
         }
 
-        ItemStack stack = network.getStorage().get(id);
+        ItemStack stack = network.getStorage().get(hash);
 
         if (stack == null) {
             return;
