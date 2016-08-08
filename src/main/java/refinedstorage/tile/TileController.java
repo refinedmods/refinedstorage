@@ -206,6 +206,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 Collections.sort(storage.getStorages(), SIZE_COMPARATOR);
                 Collections.sort(storage.getStorages(), PRIORITY_COMPARATOR);
 
+                boolean craftingTasksChanged = !craftingTasksToAdd.isEmpty() || !craftingTasksToAddAsLast.isEmpty() || !craftingTasksToCancel.isEmpty();
+
                 for (ICraftingTask taskToCancel : craftingTasksToCancel) {
                     taskToCancel.onCancelled(this);
                 }
@@ -226,6 +228,10 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 craftingTasksToAddAsLast.clear();
 
                 updateTopCraftingTask(true);
+
+                if (craftingTasksChanged) {
+                    updateCraftingTasks();
+                }
             }
 
             wirelessGridHandler.update();
@@ -264,6 +270,14 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         super.update();
     }
 
+    private void updateCraftingTasks() {
+        for (INetworkNode node : nodeGraph.all()) {
+            if (node instanceof TileCraftingMonitor) {
+                ((TileCraftingMonitor) node).dataManager.sendParameterToWatchers(TileCraftingMonitor.TASKS);
+            }
+        }
+    }
+
     private void updateTopCraftingTask(boolean withSpeed) {
         if (!craftingTasks.empty()) {
             markDirty();
@@ -276,6 +290,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 top.onDone(this);
 
                 craftingTasks.pop();
+
+                updateCraftingTasks();
             }
         }
     }

@@ -1,14 +1,35 @@
 package refinedstorage.tile;
 
-import net.minecraft.item.ItemStack;
 import refinedstorage.RefinedStorage;
+import refinedstorage.tile.data.ITileDataProducer;
+import refinedstorage.tile.data.RefinedStorageSerializers;
+import refinedstorage.tile.data.TileDataManager;
+import refinedstorage.tile.data.TileDataParameter;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
-// @TODO: Make this work!
 public class TileCraftingMonitor extends TileNode {
-    private List<ClientSideCraftingTask> tasks = new ArrayList<>();
+    public static final TileDataParameter<List<ClientCraftingTask>> TASKS = TileDataManager.createParameter(RefinedStorageSerializers.CLIENT_CRAFTING_TASK_SERIALIZER, new ITileDataProducer<List<ClientCraftingTask>, TileCraftingMonitor>() {
+        @Override
+        public List<ClientCraftingTask> getValue(TileCraftingMonitor tile) {
+            if (tile.connected) {
+                List<ClientCraftingTask> tasks = tile.network.getCraftingTasks().stream().map(t -> new ClientCraftingTask(
+                    t.getInfo(),
+                    t.getPattern().getOutputs()
+                )).collect(Collectors.toList());
+
+                return tasks;
+            } else {
+                return Collections.emptyList();
+            }
+        }
+    });
+
+    public TileCraftingMonitor() {
+        dataManager.addParameter(TASKS);
+    }
 
     @Override
     public int getEnergyUsage() {
@@ -17,65 +38,5 @@ public class TileCraftingMonitor extends TileNode {
 
     @Override
     public void updateNode() {
-    }
-
-    /*@Override
-    public void writeContainerData(ByteBuf buf) {
-        super.writeContainerData(buf);
-
-        if (connected) {
-            buf.writeInt(network.getCraftingTasks().size());
-
-            for (ICraftingTask task : network.getCraftingTasks()) {
-                ByteBufUtils.writeUTF8String(buf, task.getInfo());
-
-                buf.writeInt(task.getPattern().getOutputs().length);
-
-                for (ItemStack output : task.getPattern().getOutputs()) {
-                    ByteBufUtils.writeItemStack(buf, output);
-                }
-            }
-        } else {
-            buf.writeInt(0);
-        }
-    }
-
-    @Override
-    public void readContainerData(ByteBuf buf) {
-        super.readContainerData(buf);
-
-        int size = buf.readInt();
-
-        List<ClientSideCraftingTask> newTasks = new ArrayList<ClientSideCraftingTask>();
-
-        for (int i = 0; i < size; ++i) {
-            String info = ByteBufUtils.readUTF8String(buf);
-
-            int outputs = buf.readInt();
-
-            for (int j = 0; j < outputs; ++j) {
-                newTasks.add(new ClientSideCraftingTask(ByteBufUtils.readItemStack(buf), i, info));
-            }
-        }
-
-        Collections.reverse(newTasks);
-
-        tasks = newTasks;
-    }*/
-
-    public List<ClientSideCraftingTask> getTasks() {
-        return tasks;
-    }
-
-    public class ClientSideCraftingTask {
-        public ItemStack output;
-        public int id;
-        public String info;
-
-        public ClientSideCraftingTask(ItemStack output, int id, String info) {
-            this.output = output;
-            this.id = id;
-            this.info = info;
-        }
     }
 }
