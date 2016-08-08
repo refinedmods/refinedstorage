@@ -9,8 +9,6 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.items.wrapper.InvWrapper;
@@ -53,7 +51,7 @@ public class TileGrid extends TileNode implements IGrid {
                 tile.markDirty();
             }
         }
-    });
+    }, parameter -> GuiGrid.sortItems());
 
     public static final TileDataParameter<Integer> SORTING_DIRECTION = TileDataManager.createParameter(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileGrid>() {
         @Override
@@ -69,7 +67,7 @@ public class TileGrid extends TileNode implements IGrid {
                 tile.markDirty();
             }
         }
-    });
+    }, parameter -> GuiGrid.sortItems());
 
     public static final TileDataParameter<Integer> SORTING_TYPE = TileDataManager.createParameter(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileGrid>() {
         @Override
@@ -85,7 +83,7 @@ public class TileGrid extends TileNode implements IGrid {
                 tile.markDirty();
             }
         }
-    });
+    }, parameter -> GuiGrid.sortItems());
 
     public static final TileDataParameter<Integer> SEARCH_BOX_MODE = TileDataManager.createParameter(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileGrid>() {
         @Override
@@ -102,7 +100,7 @@ public class TileGrid extends TileNode implements IGrid {
             }
         }
     }, parameter -> {
-        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT && Minecraft.getMinecraft().currentScreen instanceof GuiGrid) {
+        if (Minecraft.getMinecraft().currentScreen instanceof GuiGrid) {
             ((GuiGrid) Minecraft.getMinecraft().currentScreen).updateSearchFieldFocus(parameter.getValue());
         }
     });

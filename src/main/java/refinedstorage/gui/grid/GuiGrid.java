@@ -103,14 +103,14 @@ public class GuiGrid extends GuiBase {
             return;
         }
 
-        SORTED_ITEMS.clear();
+        List<ClientStack> sortedItems = new ArrayList<>();
 
         if (gui.getGrid().isConnected()) {
-            SORTED_ITEMS.addAll(ITEMS);
+            sortedItems.addAll(ITEMS);
 
             String query = gui.searchField.getText().trim().toLowerCase();
 
-            Iterator<ClientStack> t = SORTED_ITEMS.iterator();
+            Iterator<ClientStack> t = sortedItems.iterator();
 
             while (t.hasNext()) {
                 ClientStack stack = t.next();
@@ -174,12 +174,14 @@ public class GuiGrid extends GuiBase {
             SORTING_NAME.setSortingDirection(gui.getGrid().getSortingDirection());
             SORTING_QUANTITY.setSortingDirection(gui.getGrid().getSortingDirection());
 
-            Collections.sort(SORTED_ITEMS, SORTING_NAME);
+            Collections.sort(sortedItems, SORTING_NAME);
 
             if (gui.getGrid().getSortingType() == TileGrid.SORTING_TYPE_QUANTITY) {
-                Collections.sort(SORTED_ITEMS, SORTING_QUANTITY);
+                Collections.sort(sortedItems, SORTING_QUANTITY);
             }
         }
+
+        SORTED_ITEMS = sortedItems;
 
         gui.getScrollbar().setCanScroll(gui.getRows() > gui.getVisibleRows());
         gui.getScrollbar().setScrollDelta((float) gui.getScrollbar().getScrollbarHeight() / (float) gui.getRows());
