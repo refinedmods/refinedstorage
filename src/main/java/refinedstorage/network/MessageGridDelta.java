@@ -47,14 +47,14 @@ public class MessageGridDelta implements IMessage, IMessageHandler<MessageGridDe
                     stack.getStack().stackSize += message.delta;
                 }
 
-                GuiGrid.sortItems();
+                GuiGrid.markedForSorting = true;
 
                 return null;
             }
         }
 
         GuiGrid.ITEMS.add(message.clientStack);
-        GuiGrid.sortItems();
+        GuiGrid.markedForSorting = true;
 
         return null;
     }

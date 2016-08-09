@@ -44,7 +44,7 @@ public class MessageGridUpdate implements IMessage, IMessageHandler<MessageGridU
     @Override
     public IMessage onMessage(MessageGridUpdate message, MessageContext ctx) {
         GuiGrid.ITEMS = message.items;
-        GuiGrid.sortItems();
+        GuiGrid.markedForSorting = true;
 
         return null;
     }

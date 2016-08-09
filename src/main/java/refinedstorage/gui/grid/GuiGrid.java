@@ -1,6 +1,5 @@
 package refinedstorage.gui.grid;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -39,6 +38,8 @@ public class GuiGrid extends GuiBase {
 
     public static List<ClientStack> ITEMS = new ArrayList<>();
     public static List<ClientStack> SORTED_ITEMS = new ArrayList<>();
+
+    public static boolean markedForSorting;
 
     private GuiTextField searchField;
 
@@ -90,32 +91,20 @@ public class GuiGrid extends GuiBase {
         return grid;
     }
 
-    public static void sortItems() {
-        GuiScreen screen = Minecraft.getMinecraft().currentScreen;
-
-        if (!(screen instanceof GuiGrid)) {
-            return;
-        }
-
-        GuiGrid gui = (GuiGrid) screen;
-
-        if (gui.searchField == null) {
-            return;
-        }
-
+    private void sortItems() {
         List<ClientStack> sortedItems = new ArrayList<>();
 
-        if (gui.getGrid().isConnected()) {
+        if (grid.isConnected()) {
             sortedItems.addAll(ITEMS);
 
-            String query = gui.searchField.getText().trim().toLowerCase();
+            String query = searchField.getText().trim().toLowerCase();
 
             Iterator<ClientStack> t = sortedItems.iterator();
 
             while (t.hasNext()) {
                 ClientStack stack = t.next();
 
-                List<GridFilteredItem> filteredItems = gui.getGrid().getFilteredItems();
+                List<GridFilteredItem> filteredItems = grid.getFilteredItems();
 
                 boolean found = filteredItems.isEmpty();
 
@@ -133,11 +122,11 @@ public class GuiGrid extends GuiBase {
                     continue;
                 }
 
-                if (gui.getGrid().getViewType() == TileGrid.VIEW_TYPE_NON_CRAFTABLES && stack.isCraftable()) {
+                if (grid.getViewType() == TileGrid.VIEW_TYPE_NON_CRAFTABLES && stack.isCraftable()) {
                     t.remove();
 
                     continue;
-                } else if (gui.getGrid().getViewType() == TileGrid.VIEW_TYPE_CRAFTABLES && !stack.isCraftable()) {
+                } else if (grid.getViewType() == TileGrid.VIEW_TYPE_CRAFTABLES && !stack.isCraftable()) {
                     t.remove();
 
                     continue;
@@ -171,24 +160,29 @@ public class GuiGrid extends GuiBase {
                 }
             }
 
-            SORTING_NAME.setSortingDirection(gui.getGrid().getSortingDirection());
-            SORTING_QUANTITY.setSortingDirection(gui.getGrid().getSortingDirection());
+            SORTING_NAME.setSortingDirection(grid.getSortingDirection());
+            SORTING_QUANTITY.setSortingDirection(grid.getSortingDirection());
 
             Collections.sort(sortedItems, SORTING_NAME);
 
-            if (gui.getGrid().getSortingType() == TileGrid.SORTING_TYPE_QUANTITY) {
+            if (grid.getSortingType() == TileGrid.SORTING_TYPE_QUANTITY) {
                 Collections.sort(sortedItems, SORTING_QUANTITY);
             }
         }
 
         SORTED_ITEMS = sortedItems;
 
-        gui.getScrollbar().setCanScroll(gui.getRows() > gui.getVisibleRows());
-        gui.getScrollbar().setScrollDelta((float) gui.getScrollbar().getScrollbarHeight() / (float) gui.getRows());
+        getScrollbar().setCanScroll(getRows() > getVisibleRows());
+        getScrollbar().setScrollDelta((float) getScrollbar().getScrollbarHeight() / (float) getRows());
     }
 
     @Override
     public void update(int x, int y) {
+        if (markedForSorting) {
+            markedForSorting = false;
+
+            sortItems();
+        }
     }
 
     private int getOffset() {

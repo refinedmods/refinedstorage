@@ -116,7 +116,7 @@ public class WirelessGrid implements IGrid {
 
         this.viewType = type;
 
-        GuiGrid.sortItems();
+        GuiGrid.markedForSorting = true;
     }
 
     @Override
@@ -125,7 +125,7 @@ public class WirelessGrid implements IGrid {
 
         this.sortingType = type;
 
-        GuiGrid.sortItems();
+        GuiGrid.markedForSorting = true;
     }
 
     @Override
@@ -134,7 +134,7 @@ public class WirelessGrid implements IGrid {
 
         this.sortingDirection = direction;
 
-        GuiGrid.sortItems();
+        GuiGrid.markedForSorting = true;
     }
 
     @Override

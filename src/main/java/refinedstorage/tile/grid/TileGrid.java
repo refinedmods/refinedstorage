@@ -51,7 +51,8 @@ public class TileGrid extends TileNode implements IGrid {
                 tile.markDirty();
             }
         }
-    }, parameter -> GuiGrid.sortItems());
+    }, parameter ->
+        GuiGrid.markedForSorting = true);
 
     public static final TileDataParameter<Integer> SORTING_DIRECTION = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileGrid>() {
         @Override
@@ -67,7 +68,7 @@ public class TileGrid extends TileNode implements IGrid {
                 tile.markDirty();
             }
         }
-    }, parameter -> GuiGrid.sortItems());
+    }, parameter -> GuiGrid.markedForSorting = true);
 
     public static final TileDataParameter<Integer> SORTING_TYPE = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileGrid>() {
         @Override
@@ -83,7 +84,7 @@ public class TileGrid extends TileNode implements IGrid {
                 tile.markDirty();
             }
         }
-    }, parameter -> GuiGrid.sortItems());
+    }, parameter -> GuiGrid.markedForSorting = true);
 
     public static final TileDataParameter<Integer> SEARCH_BOX_MODE = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileGrid>() {
         @Override
