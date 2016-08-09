@@ -150,8 +150,7 @@ public class ClientProxy extends CommonProxy {
             new ResourceLocation("refinedstorage:4k_storage_disk"),
             new ResourceLocation("refinedstorage:16k_storage_disk"),
             new ResourceLocation("refinedstorage:64k_storage_disk"),
-            new ResourceLocation("refinedstorage:creative_storage_disk"),
-            new ResourceLocation("refinedstorage:debug_storage_disk")
+            new ResourceLocation("refinedstorage:creative_storage_disk")
         );
 
         ModelBakery.registerItemVariants(RefinedStorageItems.STORAGE_PART,

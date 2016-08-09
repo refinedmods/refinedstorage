@@ -3,8 +3,6 @@ package refinedstorage.tile.config;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
 import refinedstorage.gui.GuiStorage;
 import refinedstorage.tile.data.ITileDataConsumer;
 import refinedstorage.tile.data.ITileDataProducer;
@@ -24,7 +22,7 @@ public interface IPrioritizable {
                 ((IPrioritizable) tile).setPriority(value);
             }
         }, parameter -> {
-            if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT && Minecraft.getMinecraft().currentScreen instanceof GuiStorage) {
+            if (Minecraft.getMinecraft().currentScreen instanceof GuiStorage) {
                 ((GuiStorage) Minecraft.getMinecraft().currentScreen).updatePriority(parameter.getValue());
             }
         });

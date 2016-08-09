@@ -82,6 +82,11 @@ public class BlockCable extends BlockCoverable {
     }
 
     @Override
+    public boolean canProvidePower(IBlockState state) {
+        return false;
+    }
+
+    @Override
     public boolean hasTileEntity(IBlockState state) {
         return true;
     }
@@ -208,12 +213,6 @@ public class BlockCable extends BlockCoverable {
         for (AxisAlignedBB aabb : getCollisionBoxes(this.getActualState(state, world, pos))) {
             addCollisionBoxToList(pos, entityBox, collidingBoxes, aabb);
         }
-    }
-
-    // @TODO: MCMP issue #40
-    @Override
-    public AxisAlignedBB getSelectedBoundingBoxDefault(IBlockState state, World world, BlockPos pos) {
-        return state.getBoundingBox(world, pos).offset(pos);
     }
 
     @Override
