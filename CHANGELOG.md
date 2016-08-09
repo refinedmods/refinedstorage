@@ -17,10 +17,11 @@
 - Added German translation by ChillUpX
 - Grid Filters can now only filter 9 items, but, Grids take 4 filters now instead
 - Grid Filters can now be configured to compare on NBT and/ or damage
+- It is now possible to shift click items to the Storage Device filters
 - Updated to Forge 2046
 - Updated Tesla
 - Java 8 is now a requirement
-- Added MCMultiPart integration for Cables
+- Added MCMultiPart integration for Cable Parts
 
 ### 0.8.15
 **Bugfixes**

@@ -35,7 +35,7 @@ public class ContainerDiskDrive extends ContainerStorage {
                     return null;
                 }
             } else if (!mergeItemStack(stack, 0, 8, false)) {
-                return null;
+                return mergeItemStackToSpecimen(stack, 8, 8 + 9);
             }
 
             if (stack.stackSize == 0) {

@@ -1,6 +1,8 @@
 package refinedstorage.container;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.container.slot.SlotSpecimen;
 import refinedstorage.tile.TileBase;
@@ -22,5 +24,16 @@ public class ContainerStorage extends ContainerBase {
         }
 
         addPlayerInventory(8, 129);
+    }
+
+    @Override
+    public ItemStack transferStackInSlot(EntityPlayer player, int index) {
+        Slot slot = getSlot(index);
+
+        if (slot != null && slot.getHasStack() && index >= 8) {
+            return mergeItemStackToSpecimen(slot.getStack(), 0, 9);
+        }
+
+        return null;
     }
 }
