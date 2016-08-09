@@ -33,14 +33,26 @@ public class TileExternalStorage extends TileMultipartNode implements IStoragePr
     public static final TileDataParameter<Integer> STORED = TileDataManager.createParameter(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileExternalStorage>() {
         @Override
         public Integer getValue(TileExternalStorage tile) {
-            return tile.getStored();
+            int stored = 0;
+
+            for (ExternalStorage storage : tile.storages) {
+                stored += storage.getStored();
+            }
+
+            return stored;
         }
     });
 
     public static final TileDataParameter<Integer> CAPACITY = TileDataManager.createParameter(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileExternalStorage>() {
         @Override
         public Integer getValue(TileExternalStorage tile) {
-            return tile.getCapacity();
+            int capacity = 0;
+
+            for (ExternalStorage storage : tile.storages) {
+                capacity += storage.getCapacity();
+            }
+
+            return capacity;
         }
     });
 
@@ -241,26 +253,12 @@ public class TileExternalStorage extends TileMultipartNode implements IStoragePr
         return PRIORITY;
     }
 
-    @Override
     public int getStored() {
-        int stored = 0;
-
-        for (ExternalStorage storage : storages) {
-            stored += storage.getStored();
-        }
-
-        return stored;
+        return STORED.getValue();
     }
 
-    @Override
     public int getCapacity() {
-        int capacity = 0;
-
-        for (ExternalStorage storage : storages) {
-            capacity += storage.getCapacity();
-        }
-
-        return capacity;
+        return CAPACITY.getValue();
     }
 
     @Override
