@@ -35,16 +35,16 @@ public class ItemPattern extends ItemBase {
             if (GuiScreen.isShiftKeyDown() || isProcessing(pattern)) {
                 tooltip.add(TextFormatting.YELLOW + I18n.format("misc.refinedstorage:pattern.inputs") + TextFormatting.RESET);
 
-                combineItems(tooltip, getInputs(pattern));
+                combineItems(tooltip, true, getInputs(pattern));
 
                 tooltip.add(TextFormatting.YELLOW + I18n.format("misc.refinedstorage:pattern.outputs") + TextFormatting.RESET);
             }
 
-            combineItems(tooltip, getOutputs(pattern));
+            combineItems(tooltip, true, getOutputs(pattern));
         }
     }
 
-    public static void combineItems(List<String> tooltip, ItemStack... stacks) {
+    public static void combineItems(List<String> tooltip, boolean displayAmount, ItemStack... stacks) {
         Set<Integer> combinedIndices = new HashSet<>();
 
         for (int i = 0; i < stacks.length; ++i) {
@@ -61,9 +61,7 @@ public class ItemPattern extends ItemBase {
                     }
                 }
 
-                if (amount != 1) {
-                    data += " (" + amount + "x)";
-                }
+                data = (displayAmount ? (TextFormatting.WHITE + String.valueOf(amount) + " ") : "") + TextFormatting.GRAY + data;
 
                 tooltip.add(data);
             }

@@ -45,7 +45,7 @@ public class ItemGridFilter extends ItemBase {
 
         ItemHandlerGridFilter items = new ItemHandlerGridFilter(stack);
 
-        ItemPattern.combineItems(tooltip, items.getFilteredItems());
+        ItemPattern.combineItems(tooltip, false, items.getFilteredItems());
     }
 
     public static int getCompare(ItemStack stack) {
