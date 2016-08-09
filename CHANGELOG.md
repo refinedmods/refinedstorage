@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 0.8.17
+**Bugfixes**
+- Fixed Grid causing sorting lag on the client
+
 ### 0.8.16
 **Bugfixes**
 - Fixed issue with IC2 integration causing console spam

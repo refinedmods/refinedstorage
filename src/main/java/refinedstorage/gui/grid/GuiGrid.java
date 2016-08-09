@@ -1,5 +1,7 @@
 package refinedstorage.gui.grid;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -36,10 +38,10 @@ public class GuiGrid extends GuiBase {
     public static final GridSortingQuantity SORTING_QUANTITY = new GridSortingQuantity();
     public static final GridSortingName SORTING_NAME = new GridSortingName();
 
-    public static List<ClientStack> ITEMS = new ArrayList<>();
+    public static Multimap<Item, ClientStack> ITEMS = ArrayListMultimap.create();
     public static List<ClientStack> SORTED_ITEMS = new ArrayList<>();
 
-    public static boolean markedForSorting;
+    private static boolean markedForSorting;
 
     private GuiTextField searchField;
 
@@ -47,6 +49,10 @@ public class GuiGrid extends GuiBase {
     private IGrid grid;
 
     private int slotNumber;
+
+    public static void markForSorting() {
+        markedForSorting = true;
+    }
 
     public GuiGrid(ContainerGrid container, IGrid grid) {
         super(container, 227, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 247 : 208);
@@ -95,7 +101,7 @@ public class GuiGrid extends GuiBase {
         List<ClientStack> sortedItems = new ArrayList<>();
 
         if (grid.isConnected()) {
-            sortedItems.addAll(ITEMS);
+            sortedItems.addAll(ITEMS.values());
 
             String query = searchField.getText().trim().toLowerCase();
 

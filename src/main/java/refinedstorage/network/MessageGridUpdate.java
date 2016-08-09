@@ -43,8 +43,13 @@ public class MessageGridUpdate implements IMessage, IMessageHandler<MessageGridU
 
     @Override
     public IMessage onMessage(MessageGridUpdate message, MessageContext ctx) {
-        GuiGrid.ITEMS = message.items;
-        GuiGrid.markedForSorting = true;
+        GuiGrid.ITEMS.clear();
+
+        for (ClientStack item : message.items) {
+            GuiGrid.ITEMS.put(item.getStack().getItem(), item);
+        }
+
+        GuiGrid.markForSorting();
 
         return null;
     }
