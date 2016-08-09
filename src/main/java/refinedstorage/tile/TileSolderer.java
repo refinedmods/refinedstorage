@@ -17,18 +17,17 @@ import refinedstorage.inventory.ItemHandlerSolderer;
 import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.data.ITileDataProducer;
-import refinedstorage.tile.data.TileDataManager;
 import refinedstorage.tile.data.TileDataParameter;
 
 public class TileSolderer extends TileNode {
-    public static final TileDataParameter<Integer> DURATION = TileDataManager.createParameter(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileSolderer>() {
+    public static final TileDataParameter<Integer> DURATION = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileSolderer>() {
         @Override
         public Integer getValue(TileSolderer tile) {
             return tile.recipe != null ? tile.recipe.getDuration() : 0;
         }
     });
 
-    public static final TileDataParameter<Integer> PROGRESS = TileDataManager.createParameter(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileSolderer>() {
+    public static final TileDataParameter<Integer> PROGRESS = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileSolderer>() {
         @Override
         public Integer getValue(TileSolderer tile) {
             return tile.progress;

@@ -13,25 +13,24 @@ import refinedstorage.inventory.ItemValidatorBasic;
 import refinedstorage.item.ItemNetworkCard;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.data.ITileDataProducer;
-import refinedstorage.tile.data.TileDataManager;
 import refinedstorage.tile.data.TileDataParameter;
 
 public class TileNetworkTransmitter extends TileNode {
-    public static final TileDataParameter<Integer> DISTANCE = TileDataManager.createParameter(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileNetworkTransmitter>() {
+    public static final TileDataParameter<Integer> DISTANCE = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileNetworkTransmitter>() {
         @Override
         public Integer getValue(TileNetworkTransmitter tile) {
             return (tile.receiver != null && tile.isSameDimension()) ? tile.getDistance() : -1;
         }
     });
 
-    public static final TileDataParameter<Integer> RECEIVER_DIMENSION = TileDataManager.createParameter(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileNetworkTransmitter>() {
+    public static final TileDataParameter<Integer> RECEIVER_DIMENSION = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileNetworkTransmitter>() {
         @Override
         public Integer getValue(TileNetworkTransmitter tile) {
             return tile.receiverDimension;
         }
     });
 
-    public static final TileDataParameter<Boolean> RECEIVER_DIMENSION_SUPPORTED = TileDataManager.createParameter(DataSerializers.BOOLEAN, false, new ITileDataProducer<Boolean, TileNetworkTransmitter>() {
+    public static final TileDataParameter<Boolean> RECEIVER_DIMENSION_SUPPORTED = new TileDataParameter<>(DataSerializers.BOOLEAN, false, new ITileDataProducer<Boolean, TileNetworkTransmitter>() {
         @Override
         public Boolean getValue(TileNetworkTransmitter tile) {
             return tile.isDimensionSupported();

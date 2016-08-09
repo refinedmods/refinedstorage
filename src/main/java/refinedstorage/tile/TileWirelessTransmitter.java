@@ -13,11 +13,10 @@ import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.data.ITileDataProducer;
-import refinedstorage.tile.data.TileDataManager;
 import refinedstorage.tile.data.TileDataParameter;
 
 public class TileWirelessTransmitter extends TileNode implements IWirelessTransmitter {
-    public static final TileDataParameter<Integer> RANGE = TileDataManager.createParameter(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileWirelessTransmitter>() {
+    public static final TileDataParameter<Integer> RANGE = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileWirelessTransmitter>() {
         @Override
         public Integer getValue(TileWirelessTransmitter tile) {
             return tile.getRange();

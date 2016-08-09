@@ -6,7 +6,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import refinedstorage.tile.data.ITileDataConsumer;
 import refinedstorage.tile.data.ITileDataProducer;
-import refinedstorage.tile.data.TileDataManager;
 import refinedstorage.tile.data.TileDataParameter;
 
 public enum RedstoneMode {
@@ -32,7 +31,7 @@ public enum RedstoneMode {
     }
 
     public static <T extends TileEntity> TileDataParameter<Integer> createParameter() {
-        return TileDataManager.createParameter(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, T>() {
+        return new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, T>() {
             @Override
             public Integer getValue(T tile) {
                 return ((IRedstoneConfigurable) tile).getRedstoneMode().ordinal();

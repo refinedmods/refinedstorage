@@ -18,7 +18,6 @@ import refinedstorage.tile.config.IComparable;
 import refinedstorage.tile.config.IFilterable;
 import refinedstorage.tile.config.IPrioritizable;
 import refinedstorage.tile.data.ITileDataProducer;
-import refinedstorage.tile.data.TileDataManager;
 import refinedstorage.tile.data.TileDataParameter;
 
 import java.util.List;
@@ -27,7 +26,7 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
     public static final TileDataParameter<Integer> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
-    public static final TileDataParameter<Integer> STORED = TileDataManager.createParameter(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileStorage>() {
+    public static final TileDataParameter<Integer> STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileStorage>() {
         @Override
         public Integer getValue(TileStorage tile) {
             return NBTStorage.getStoredFromNBT(tile.storageTag);

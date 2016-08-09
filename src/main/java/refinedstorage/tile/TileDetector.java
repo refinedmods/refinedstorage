@@ -17,13 +17,12 @@ import refinedstorage.tile.config.IComparable;
 import refinedstorage.tile.config.RedstoneMode;
 import refinedstorage.tile.data.ITileDataConsumer;
 import refinedstorage.tile.data.ITileDataProducer;
-import refinedstorage.tile.data.TileDataManager;
 import refinedstorage.tile.data.TileDataParameter;
 
 public class TileDetector extends TileNode implements IComparable {
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
 
-    public static final TileDataParameter<Integer> MODE = TileDataManager.createParameter(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileDetector>() {
+    public static final TileDataParameter<Integer> MODE = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileDetector>() {
         @Override
         public Integer getValue(TileDetector tile) {
             return tile.mode;
@@ -39,7 +38,7 @@ public class TileDetector extends TileNode implements IComparable {
         }
     });
 
-    public static final TileDataParameter<Integer> AMOUNT = TileDataManager.createParameter(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileDetector>() {
+    public static final TileDataParameter<Integer> AMOUNT = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileDetector>() {
         @Override
         public Integer getValue(TileDetector tile) {
             return tile.amount;

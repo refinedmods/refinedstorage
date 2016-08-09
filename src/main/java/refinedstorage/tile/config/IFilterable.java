@@ -7,7 +7,6 @@ import net.minecraftforge.items.IItemHandler;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.tile.data.ITileDataConsumer;
 import refinedstorage.tile.data.ITileDataProducer;
-import refinedstorage.tile.data.TileDataManager;
 import refinedstorage.tile.data.TileDataParameter;
 
 public interface IFilterable {
@@ -15,7 +14,7 @@ public interface IFilterable {
     int BLACKLIST = 1;
 
     static <T extends TileEntity> TileDataParameter<Integer> createParameter() {
-        return TileDataManager.createParameter(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, T>() {
+        return new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, T>() {
             @Override
             public Integer getValue(T tile) {
                 return ((IFilterable) tile).getMode();

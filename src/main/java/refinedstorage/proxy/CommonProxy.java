@@ -27,13 +27,12 @@ import refinedstorage.item.*;
 import refinedstorage.network.*;
 import refinedstorage.tile.*;
 import refinedstorage.tile.data.ContainerListener;
+import refinedstorage.tile.data.TileDataManager;
 import refinedstorage.tile.externalstorage.TileExternalStorage;
 import refinedstorage.tile.grid.TileGrid;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static refinedstorage.RefinedStorage.ID;
 
 public class CommonProxy {
     protected List<BlockCable> cables = new ArrayList<>();
@@ -62,26 +61,26 @@ public class CommonProxy {
 
         MinecraftForge.EVENT_BUS.register(new ContainerListener());
 
-        GameRegistry.registerTileEntity(TileController.class, ID + ":controller");
-        GameRegistry.registerTileEntity(TileGrid.class, ID + ":grid");
-        GameRegistry.registerTileEntity(TileDiskDrive.class, ID + ":disk_drive");
-        GameRegistry.registerTileEntity(TileExternalStorage.class, ID + ":external_storage");
-        GameRegistry.registerTileEntity(TileImporter.class, ID + ":importer");
-        GameRegistry.registerTileEntity(TileExporter.class, ID + ":exporter");
-        GameRegistry.registerTileEntity(TileDetector.class, ID + ":detector");
-        GameRegistry.registerTileEntity(TileSolderer.class, ID + ":solderer");
-        GameRegistry.registerTileEntity(TileDestructor.class, ID + ":destructor");
-        GameRegistry.registerTileEntity(TileConstructor.class, ID + ":constructor");
-        GameRegistry.registerTileEntity(TileStorage.class, ID + ":storage");
-        GameRegistry.registerTileEntity(TileRelay.class, ID + ":relay");
-        GameRegistry.registerTileEntity(TileInterface.class, ID + ":interface");
-        GameRegistry.registerTileEntity(TileCraftingMonitor.class, ID + ":crafting_monitor");
-        GameRegistry.registerTileEntity(TileWirelessTransmitter.class, ID + ":wireless_transmitter");
-        GameRegistry.registerTileEntity(TileCrafter.class, ID + ":crafter");
-        GameRegistry.registerTileEntity(TileProcessingPatternEncoder.class, ID + ":processing_pattern_encoder");
-        GameRegistry.registerTileEntity(TileCable.class, ID + ":cable");
-        GameRegistry.registerTileEntity(TileNetworkReceiver.class, ID + ":network_receiver");
-        GameRegistry.registerTileEntity(TileNetworkTransmitter.class, ID + ":network_transmitter");
+        registerTile(TileController.class, "controller");
+        registerTile(TileGrid.class, "grid");
+        registerTile(TileDiskDrive.class, "disk_drive");
+        registerTile(TileExternalStorage.class, "external_storage");
+        registerTile(TileImporter.class, "importer");
+        registerTile(TileExporter.class, "exporter");
+        registerTile(TileDetector.class, "detector");
+        registerTile(TileSolderer.class, "solderer");
+        registerTile(TileDestructor.class, "destructor");
+        registerTile(TileConstructor.class, "constructor");
+        registerTile(TileStorage.class, "storage");
+        registerTile(TileRelay.class, "relay");
+        registerTile(TileInterface.class, "interface");
+        registerTile(TileCraftingMonitor.class, "crafting_monitor");
+        registerTile(TileWirelessTransmitter.class, "wireless_transmitter");
+        registerTile(TileCrafter.class, "crafter");
+        registerTile(TileProcessingPatternEncoder.class, "processing_pattern_encoder");
+        registerTile(TileCable.class, "cable");
+        registerTile(TileNetworkReceiver.class, "network_receiver");
+        registerTile(TileNetworkTransmitter.class, "network_transmitter");
 
         registerBlock(RefinedStorageBlocks.CONTROLLER);
         registerBlock(RefinedStorageBlocks.GRID);
@@ -536,6 +535,18 @@ public class CommonProxy {
         GameRegistry.register(new ItemBlock(cable).setRegistryName(cable.getRegistryName()));
 
         cables.add(cable);
+    }
+
+    private void registerTile(Class<? extends TileBase> tile, String id) {
+        GameRegistry.registerTileEntity(tile, RefinedStorage.ID + ":" + id);
+
+        try {
+            TileBase tileInstance = tile.newInstance();
+
+            tileInstance.getDataManager().getParameters().forEach(TileDataManager::registerParameter);
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     private void registerItem(Item item) {

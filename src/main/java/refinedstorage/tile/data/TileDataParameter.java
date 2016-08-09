@@ -11,13 +11,24 @@ public class TileDataParameter<T> {
     private ITileDataListener<T> listener;
     private T value;
 
-    public TileDataParameter(int id, T defaultValue, DataSerializer<T> serializer, ITileDataProducer<T, ? extends TileEntity> producer, ITileDataConsumer<T, ? extends TileEntity> consumer, ITileDataListener<T> listener) {
-        this.id = id;
+    public TileDataParameter(DataSerializer<T> serializer, T defaultValue, ITileDataProducer<T, ? extends TileEntity> producer) {
+        this(serializer, defaultValue, producer, null);
+    }
+
+    public TileDataParameter(DataSerializer<T> serializer, T defaultValue, ITileDataProducer<T, ? extends TileEntity> producer, ITileDataConsumer<T, ? extends TileEntity> consumer) {
+        this(serializer, defaultValue, producer, consumer, null);
+    }
+
+    public TileDataParameter(DataSerializer<T> serializer, T defaultValue, ITileDataProducer<T, ? extends TileEntity> producer, ITileDataConsumer<T, ? extends TileEntity> consumer, ITileDataListener<T> listener) {
         this.value = defaultValue;
         this.serializer = serializer;
         this.valueProducer = producer;
         this.valueConsumer = consumer;
         this.listener = listener;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getId() {

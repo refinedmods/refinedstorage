@@ -19,7 +19,6 @@ import refinedstorage.tile.config.IComparable;
 import refinedstorage.tile.config.IFilterable;
 import refinedstorage.tile.config.IPrioritizable;
 import refinedstorage.tile.data.ITileDataProducer;
-import refinedstorage.tile.data.TileDataManager;
 import refinedstorage.tile.data.TileDataParameter;
 
 import java.util.ArrayList;
@@ -30,7 +29,7 @@ public class TileExternalStorage extends TileMultipartNode implements IStoragePr
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
 
-    public static final TileDataParameter<Integer> STORED = TileDataManager.createParameter(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileExternalStorage>() {
+    public static final TileDataParameter<Integer> STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileExternalStorage>() {
         @Override
         public Integer getValue(TileExternalStorage tile) {
             int stored = 0;
@@ -43,7 +42,7 @@ public class TileExternalStorage extends TileMultipartNode implements IStoragePr
         }
     });
 
-    public static final TileDataParameter<Integer> CAPACITY = TileDataManager.createParameter(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileExternalStorage>() {
+    public static final TileDataParameter<Integer> CAPACITY = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileExternalStorage>() {
         @Override
         public Integer getValue(TileExternalStorage tile) {
             int capacity = 0;
