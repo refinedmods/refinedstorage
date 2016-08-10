@@ -1,7 +1,8 @@
-package refinedstorage.api.storage;
+package refinedstorage.api.storage.item;
 
 import net.minecraft.item.ItemStack;
 import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.api.storage.IStorageProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -12,10 +13,10 @@ import java.util.List;
  * This holds all items from all the connected storages from a {@link INetworkMaster}.
  * <p>
  * Refined Storage uses this class mainly for use in Grids and Detectors to avoid querying
- * individual {@link IStorage} constantly (performance impact) and to send and detect storage changes
+ * individual {@link IItemStorage} constantly (performance impact) and to send and detect storage changes
  * more efficiently.
  */
-public interface IGroupedStorage {
+public interface IGroupedItemStorage {
     /**
      * Rebuilds the storages and items for a network. Typically called when a {@link IStorageProvider} is
      * added or removed from the network.
@@ -71,5 +72,5 @@ public interface IGroupedStorage {
     /**
      * @return The storages connected to this network
      */
-    List<IStorage> getStorages();
+    List<IItemStorage> getStorages();
 }

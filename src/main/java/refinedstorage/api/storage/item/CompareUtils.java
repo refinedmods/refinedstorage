@@ -1,4 +1,4 @@
-package refinedstorage.api.storage;
+package refinedstorage.api.storage.item;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;

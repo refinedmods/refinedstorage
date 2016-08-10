@@ -8,9 +8,9 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.api.storage.IStorage;
 import refinedstorage.api.storage.IStorageProvider;
-import refinedstorage.apiimpl.storage.NBTStorage;
+import refinedstorage.api.storage.item.IItemStorage;
+import refinedstorage.apiimpl.storage.NBTItemStorage;
 import refinedstorage.block.BlockStorage;
 import refinedstorage.block.EnumStorageType;
 import refinedstorage.inventory.ItemHandlerBasic;
@@ -29,12 +29,12 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
     public static final TileDataParameter<Integer> STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileStorage>() {
         @Override
         public Integer getValue(TileStorage tile) {
-            return NBTStorage.getStoredFromNBT(tile.storageTag);
+            return NBTItemStorage.getStoredFromNBT(tile.storageTag);
         }
     });
 
-    class Storage extends NBTStorage {
-        public Storage() {
+    class ItemStorage extends NBTItemStorage {
+        public ItemStorage() {
             super(TileStorage.this.getStorageTag(), TileStorage.this.getCapacity(), TileStorage.this);
         }
 
@@ -61,9 +61,9 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
 
     private ItemHandlerBasic filters = new ItemHandlerBasic(9, this);
 
-    private NBTTagCompound storageTag = NBTStorage.createNBT();
+    private NBTTagCompound storageTag = NBTItemStorage.createNBT();
 
-    private Storage storage;
+    private ItemStorage storage;
 
     private EnumStorageType type;
 
@@ -92,7 +92,7 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
         super.update();
 
         if (storage == null && storageTag != null) {
-            storage = new Storage();
+            storage = new ItemStorage();
 
             if (network != null) {
                 network.getStorage().rebuild();
@@ -114,7 +114,7 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
     }
 
     @Override
-    public void addStorages(List<IStorage> storages) {
+    public void addItemStorages(List<IItemStorage> storages) {
         if (storage != null) {
             storages.add(storage);
         }
@@ -232,7 +232,7 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
         this.storageTag = storageTag;
     }
 
-    public NBTStorage getStorage() {
+    public NBTItemStorage getStorage() {
         return storage;
     }
 

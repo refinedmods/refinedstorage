@@ -7,10 +7,10 @@ import net.minecraft.item.ItemStack;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.NetworkUtils;
-import refinedstorage.api.storage.CompareUtils;
-import refinedstorage.api.storage.IGroupedStorage;
-import refinedstorage.api.storage.IStorage;
 import refinedstorage.api.storage.IStorageProvider;
+import refinedstorage.api.storage.item.CompareUtils;
+import refinedstorage.api.storage.item.IGroupedItemStorage;
+import refinedstorage.api.storage.item.IItemStorage;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -18,12 +18,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class GroupedStorage implements IGroupedStorage {
+public class GroupedItemStorage implements IGroupedItemStorage {
     private INetworkMaster network;
-    private List<IStorage> storages = new ArrayList<>();
+    private List<IItemStorage> storages = new ArrayList<>();
     private Multimap<Item, ItemStack> stacks = ArrayListMultimap.create();
 
-    public GroupedStorage(INetworkMaster network) {
+    public GroupedItemStorage(INetworkMaster network) {
         this.network = network;
     }
 
@@ -33,11 +33,11 @@ public class GroupedStorage implements IGroupedStorage {
 
         network.getNodeGraph().all().stream()
             .filter(node -> node.canUpdate() && node instanceof IStorageProvider)
-            .forEach(node -> ((IStorageProvider) node).addStorages(storages));
+            .forEach(node -> ((IStorageProvider) node).addItemStorages(storages));
 
         stacks.clear();
 
-        for (IStorage storage : storages) {
+        for (IItemStorage storage : storages) {
             for (ItemStack stack : storage.getItems()) {
                 add(stack, true);
             }
@@ -124,7 +124,7 @@ public class GroupedStorage implements IGroupedStorage {
     }
 
     @Override
-    public List<IStorage> getStorages() {
+    public List<IItemStorage> getStorages() {
         return storages;
     }
 }

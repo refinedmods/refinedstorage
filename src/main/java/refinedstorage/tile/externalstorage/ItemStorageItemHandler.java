@@ -3,17 +3,17 @@ package refinedstorage.tile.externalstorage;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.api.storage.item.CompareUtils;
 import refinedstorage.tile.config.IFilterable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemHandlerStorage extends ExternalStorage {
+public class ItemStorageItemHandler extends ItemStorageExternal {
     private TileExternalStorage externalStorage;
     private IItemHandler handler;
 
-    public ItemHandlerStorage(TileExternalStorage externalStorage, IItemHandler handler) {
+    public ItemStorageItemHandler(TileExternalStorage externalStorage, IItemHandler handler) {
         this.externalStorage = externalStorage;
         this.handler = handler;
     }

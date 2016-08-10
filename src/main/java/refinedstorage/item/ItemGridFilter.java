@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.RefinedStorageItems;
-import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.api.storage.item.CompareUtils;
 import refinedstorage.inventory.ItemHandlerGridFilter;
 
 import java.util.List;

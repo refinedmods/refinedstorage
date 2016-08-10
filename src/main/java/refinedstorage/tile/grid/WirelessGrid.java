@@ -7,7 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
-import refinedstorage.api.network.IGridHandler;
+import refinedstorage.api.network.grid.IItemGridHandler;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.gui.grid.GridFilteredItem;
 import refinedstorage.gui.grid.GuiGrid;
@@ -84,7 +84,7 @@ public class WirelessGrid implements IGrid {
     }
 
     @Override
-    public IGridHandler getGridHandler() {
+    public IItemGridHandler getGridHandler() {
         TileController controller = getController();
 
         return controller != null ? controller.getGridHandler() : null;

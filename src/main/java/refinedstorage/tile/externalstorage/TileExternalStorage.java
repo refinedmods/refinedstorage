@@ -10,8 +10,8 @@ import net.minecraftforge.items.IItemHandler;
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 import refinedstorage.RefinedStorage;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.api.storage.IStorage;
 import refinedstorage.api.storage.IStorageProvider;
+import refinedstorage.api.storage.item.IItemStorage;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.tile.IStorageGui;
 import refinedstorage.tile.TileMultipartNode;
@@ -34,7 +34,7 @@ public class TileExternalStorage extends TileMultipartNode implements IStoragePr
         public Integer getValue(TileExternalStorage tile) {
             int stored = 0;
 
-            for (ExternalStorage storage : tile.storages) {
+            for (ItemStorageExternal storage : tile.storages) {
                 stored += storage.getStored();
             }
 
@@ -47,7 +47,7 @@ public class TileExternalStorage extends TileMultipartNode implements IStoragePr
         public Integer getValue(TileExternalStorage tile) {
             int capacity = 0;
 
-            for (ExternalStorage storage : tile.storages) {
+            for (ItemStorageExternal storage : tile.storages) {
                 capacity += storage.getCapacity();
             }
 
@@ -65,7 +65,7 @@ public class TileExternalStorage extends TileMultipartNode implements IStoragePr
     private int compare = 0;
     private int mode = IFilterable.WHITELIST;
 
-    private List<ExternalStorage> storages = new ArrayList<>();
+    private List<ItemStorageExternal> storages = new ArrayList<>();
     private int lastDrawerCount;
 
     public TileExternalStorage() {
@@ -105,7 +105,7 @@ public class TileExternalStorage extends TileMultipartNode implements IStoragePr
             if (ticks % (20 * 4) == 0) {
                 boolean shouldRebuild = false;
 
-                for (ExternalStorage storage : storages) {
+                for (ItemStorageExternal storage : storages) {
                     if (storage.updateCache()) {
                         shouldRebuild = true;
                     }
@@ -204,18 +204,18 @@ public class TileExternalStorage extends TileMultipartNode implements IStoragePr
 
             for (int i = 0; i < group.getDrawerCount(); ++i) {
                 if (group.isDrawerEnabled(i)) {
-                    storages.add(new DrawerStorage(this, group.getDrawer(i)));
+                    storages.add(new ItemStorageDrawer(this, group.getDrawer(i)));
                 }
             }
         } else if (facing instanceof IDrawer) {
-            storages.add(new DrawerStorage(this, (IDrawer) facing));
+            storages.add(new ItemStorageDrawer(this, (IDrawer) facing));
         } else if (facing instanceof IDeepStorageUnit) {
-            storages.add(new DeepStorageUnitStorage(this, (IDeepStorageUnit) facing));
+            storages.add(new ItemStorageDSU(this, (IDeepStorageUnit) facing));
         } else {
             IItemHandler handler = getItemHandler(facing, getDirection().getOpposite());
 
             if (handler != null) {
-                storages.add(new ItemHandlerStorage(this, handler));
+                storages.add(new ItemStorageItemHandler(this, handler));
             }
         }
 
@@ -223,7 +223,7 @@ public class TileExternalStorage extends TileMultipartNode implements IStoragePr
     }
 
     @Override
-    public void addStorages(List<IStorage> storages) {
+    public void addItemStorages(List<IItemStorage> storages) {
         storages.addAll(this.storages);
     }
 

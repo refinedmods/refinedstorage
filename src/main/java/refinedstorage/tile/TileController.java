@@ -21,16 +21,17 @@ import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.*;
-import refinedstorage.api.storage.CompareUtils;
-import refinedstorage.api.storage.IGroupedStorage;
-import refinedstorage.api.storage.IStorage;
+import refinedstorage.api.network.grid.IItemGridHandler;
+import refinedstorage.api.storage.item.CompareUtils;
+import refinedstorage.api.storage.item.IGroupedItemStorage;
+import refinedstorage.api.storage.item.IItemStorage;
 import refinedstorage.apiimpl.autocrafting.BasicCraftingTask;
 import refinedstorage.apiimpl.autocrafting.CraftingPattern;
 import refinedstorage.apiimpl.autocrafting.ProcessingCraftingTask;
-import refinedstorage.apiimpl.network.GridHandler;
+import refinedstorage.apiimpl.network.ItemGridHandler;
 import refinedstorage.apiimpl.network.NetworkNodeGraph;
 import refinedstorage.apiimpl.network.WirelessGridHandler;
-import refinedstorage.apiimpl.storage.GroupedStorage;
+import refinedstorage.apiimpl.storage.GroupedItemStorage;
 import refinedstorage.block.BlockController;
 import refinedstorage.block.EnumControllerType;
 import refinedstorage.container.ContainerGrid;
@@ -48,7 +49,7 @@ import refinedstorage.tile.config.RedstoneMode;
 import refinedstorage.tile.data.ITileDataProducer;
 import refinedstorage.tile.data.RefinedStorageSerializers;
 import refinedstorage.tile.data.TileDataParameter;
-import refinedstorage.tile.externalstorage.ExternalStorage;
+import refinedstorage.tile.externalstorage.ItemStorageExternal;
 
 import java.util.*;
 
@@ -116,7 +117,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     private static final String NBT_CRAFTING_TASKS = "CraftingTasks";
 
-    private static final Comparator<IStorage> SIZE_COMPARATOR = (left, right) -> {
+    private static final Comparator<IItemStorage> SIZE_COMPARATOR = (left, right) -> {
         if (left.getStored() == right.getStored()) {
             return 0;
         }
@@ -124,7 +125,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         return (left.getStored() > right.getStored()) ? -1 : 1;
     };
 
-    private static final Comparator<IStorage> PRIORITY_COMPARATOR = (left, right) -> {
+    private static final Comparator<IItemStorage> PRIORITY_COMPARATOR = (left, right) -> {
         if (left.getPriority() == right.getPriority()) {
             return 0;
         }
@@ -132,11 +133,11 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         return (left.getPriority() > right.getPriority()) ? -1 : 1;
     };
 
-    private GridHandler gridHandler = new GridHandler(this);
+    private ItemGridHandler gridHandler = new ItemGridHandler(this);
     private WirelessGridHandler wirelessGridHandler = new WirelessGridHandler(this);
 
     private INetworkNodeGraph nodeGraph = new NetworkNodeGraph(this);
-    private IGroupedStorage storage = new GroupedStorage(this);
+    private IGroupedItemStorage storage = new GroupedItemStorage(this);
 
     private List<ICraftingPattern> patterns = new ArrayList<>();
 
@@ -303,7 +304,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     }
 
     @Override
-    public IGridHandler getGridHandler() {
+    public IItemGridHandler getGridHandler() {
         return gridHandler;
     }
 
@@ -319,7 +320,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         energyEU.onChunkUnload();
     }
 
-    public IGroupedStorage getStorage() {
+    public IGroupedItemStorage getStorage() {
         return storage;
     }
 
@@ -469,11 +470,11 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
         ItemStack remainder = stack;
 
-        for (IStorage storage : this.storage.getStorages()) {
+        for (IItemStorage storage : this.storage.getStorages()) {
             remainder = storage.insertItem(remainder, size, simulate);
 
-            if (storage instanceof ExternalStorage && !simulate) {
-                ((ExternalStorage) storage).updateCacheForcefully();
+            if (storage instanceof ItemStorageExternal && !simulate) {
+                ((ItemStorageExternal) storage).updateCacheForcefully();
             }
 
             if (remainder == null) {
@@ -507,12 +508,12 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
         ItemStack newStack = null;
 
-        for (IStorage storage : this.storage.getStorages()) {
+        for (IItemStorage storage : this.storage.getStorages()) {
             ItemStack took = storage.extractItem(stack, requested - received, flags);
 
             if (took != null) {
-                if (storage instanceof ExternalStorage) {
-                    ((ExternalStorage) storage).updateCacheForcefully();
+                if (storage instanceof ItemStorageExternal) {
+                    ((ItemStorageExternal) storage).updateCacheForcefully();
                 }
 
                 if (newStack == null) {

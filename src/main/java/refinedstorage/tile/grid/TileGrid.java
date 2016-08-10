@@ -15,9 +15,9 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageItems;
-import refinedstorage.api.network.IGridHandler;
 import refinedstorage.api.network.NetworkUtils;
-import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.api.network.grid.IItemGridHandler;
+import refinedstorage.api.storage.item.CompareUtils;
 import refinedstorage.block.BlockGrid;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
@@ -195,7 +195,7 @@ public class TileGrid extends TileNode implements IGrid {
     }
 
     @Override
-    public IGridHandler getGridHandler() {
+    public IItemGridHandler getGridHandler() {
         return isConnected() ? network.getGridHandler() : null;
     }
 

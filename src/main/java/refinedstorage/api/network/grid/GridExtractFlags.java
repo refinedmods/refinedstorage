@@ -1,4 +1,4 @@
-package refinedstorage.api.network;
+package refinedstorage.api.network.grid;
 
 /**
  * Flags for knowing what extract action the player is performing, these can be combined.

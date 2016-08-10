@@ -2,7 +2,7 @@ package refinedstorage.api.network;
 
 import net.minecraft.item.ItemStack;
 import refinedstorage.api.autocrafting.ICraftingPattern;
-import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.api.storage.item.CompareUtils;
 
 /**
  * Utilities for network manipulation.

@@ -1,7 +1,7 @@
 package refinedstorage.gui.sidebutton;
 
 import net.minecraft.util.text.TextFormatting;
-import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.api.storage.item.CompareUtils;
 import refinedstorage.gui.GuiBase;
 import refinedstorage.tile.data.TileDataManager;
 import refinedstorage.tile.data.TileDataParameter;

@@ -1,12 +1,12 @@
 package refinedstorage.tile.externalstorage;
 
 import net.minecraft.item.ItemStack;
-import refinedstorage.api.storage.CompareUtils;
-import refinedstorage.api.storage.IStorage;
+import refinedstorage.api.storage.item.CompareUtils;
+import refinedstorage.api.storage.item.IItemStorage;
 
 import java.util.List;
 
-public abstract class ExternalStorage implements IStorage {
+public abstract class ItemStorageExternal implements IItemStorage {
     private List<ItemStack> cache;
 
     public abstract int getCapacity();

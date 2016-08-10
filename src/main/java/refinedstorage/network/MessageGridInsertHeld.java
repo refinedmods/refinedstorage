@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import refinedstorage.api.network.IGridHandler;
+import refinedstorage.api.network.grid.IItemGridHandler;
 import refinedstorage.container.ContainerGrid;
 
 public class MessageGridInsertHeld extends MessageHandlerPlayerToServer<MessageGridInsertHeld> implements IMessage {
@@ -32,7 +32,7 @@ public class MessageGridInsertHeld extends MessageHandlerPlayerToServer<MessageG
         Container container = player.openContainer;
 
         if (container instanceof ContainerGrid) {
-            IGridHandler handler = ((ContainerGrid) container).getGrid().getGridHandler();
+            IItemGridHandler handler = ((ContainerGrid) container).getGrid().getGridHandler();
 
             if (handler != null) {
                 handler.onInsertHeldItem(message.single, player);

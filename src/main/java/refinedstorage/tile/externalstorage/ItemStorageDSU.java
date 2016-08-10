@@ -3,18 +3,18 @@ package refinedstorage.tile.externalstorage;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
-import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.api.storage.item.CompareUtils;
 import refinedstorage.tile.config.IFilterable;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 
-public class DeepStorageUnitStorage extends ExternalStorage {
+public class ItemStorageDSU extends ItemStorageExternal {
     private TileExternalStorage externalStorage;
     private IDeepStorageUnit unit;
 
-    public DeepStorageUnitStorage(TileExternalStorage externalStorage, IDeepStorageUnit unit) {
+    public ItemStorageDSU(TileExternalStorage externalStorage, IDeepStorageUnit unit) {
         this.externalStorage = externalStorage;
         this.unit = unit;
     }

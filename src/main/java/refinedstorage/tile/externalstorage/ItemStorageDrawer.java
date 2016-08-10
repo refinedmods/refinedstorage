@@ -4,17 +4,17 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
-import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.api.storage.item.CompareUtils;
 import refinedstorage.tile.config.IFilterable;
 
 import java.util.Collections;
 import java.util.List;
 
-public class DrawerStorage extends ExternalStorage {
+public class ItemStorageDrawer extends ItemStorageExternal {
     private TileExternalStorage externalStorage;
     private IDrawer drawer;
 
-    public DrawerStorage(TileExternalStorage externalStorage, IDrawer drawer) {
+    public ItemStorageDrawer(TileExternalStorage externalStorage, IDrawer drawer) {
         this.externalStorage = externalStorage;
         this.drawer = drawer;
     }

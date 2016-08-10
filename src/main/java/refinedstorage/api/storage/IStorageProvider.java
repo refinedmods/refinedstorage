@@ -1,5 +1,7 @@
 package refinedstorage.api.storage;
 
+import refinedstorage.api.storage.item.IItemStorage;
+
 import java.util.List;
 
 /**
@@ -7,9 +9,9 @@ import java.util.List;
  */
 public interface IStorageProvider {
     /**
-     * Adds the storages that this storage provider provides.
+     * Adds the item storages that this storage provider provides.
      *
-     * @param storages The previously added storages
+     * @param storages The previously added item storages
      */
-    void addStorages(List<IStorage> storages);
+    void addItemStorages(List<IItemStorage> storages);
 }

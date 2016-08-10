@@ -1,6 +1,7 @@
-package refinedstorage.api.storage;
+package refinedstorage.api.storage.item;
 
 import net.minecraft.item.ItemStack;
+import refinedstorage.api.storage.IStorageProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -10,7 +11,7 @@ import java.util.List;
  * Represents a storage sink for the storage network.
  * Provide this through an {@link IStorageProvider}.
  */
-public interface IStorage {
+public interface IItemStorage {
     /**
      * @return Items stored in this storage
      */

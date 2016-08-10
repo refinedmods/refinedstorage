@@ -5,18 +5,18 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingTask;
-import refinedstorage.api.network.GridExtractFlags;
-import refinedstorage.api.network.IGridHandler;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.NetworkUtils;
-import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.api.network.grid.GridExtractFlags;
+import refinedstorage.api.network.grid.IItemGridHandler;
+import refinedstorage.api.storage.item.CompareUtils;
 
-public class GridHandler implements IGridHandler {
+public class ItemGridHandler implements IItemGridHandler {
     public static final int MAX_CRAFTING_PER_REQUEST = 500;
 
     private INetworkMaster network;
 
-    public GridHandler(INetworkMaster network) {
+    public ItemGridHandler(INetworkMaster network) {
         this.network = network;
     }
 

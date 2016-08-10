@@ -12,9 +12,9 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.api.storage.IStorage;
 import refinedstorage.api.storage.IStorageProvider;
-import refinedstorage.apiimpl.storage.NBTStorage;
+import refinedstorage.api.storage.item.IItemStorage;
+import refinedstorage.apiimpl.storage.NBTItemStorage;
 import refinedstorage.block.EnumStorageType;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemValidatorBasic;
@@ -30,8 +30,8 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
 
-    public class Storage extends NBTStorage {
-        public Storage(ItemStack disk) {
+    public class ItemStorage extends NBTItemStorage {
+        public ItemStorage(ItemStack disk) {
             super(disk.getTagCompound(), EnumStorageType.getById(disk.getItemDamage()).getCapacity(), TileDiskDrive.this);
         }
 
@@ -58,7 +58,7 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
     private ItemHandlerBasic disks = new ItemHandlerBasic(8, this, new ItemValidatorBasic(RefinedStorageItems.STORAGE_DISK) {
         @Override
         public boolean isValid(ItemStack disk) {
-            return super.isValid(disk) && NBTStorage.isValid(disk);
+            return super.isValid(disk) && NBTItemStorage.isValid(disk);
         }
     }) {
         @Override
@@ -74,7 +74,7 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
                 if (disk == null) {
                     storages[slot] = null;
                 } else {
-                    storages[slot] = new Storage(disk);
+                    storages[slot] = new ItemStorage(disk);
                 }
 
                 if (network != null) {
@@ -95,7 +95,7 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
 
     private ItemHandlerBasic filters = new ItemHandlerBasic(9, this);
 
-    private Storage storages[] = new Storage[8];
+    private ItemStorage storages[] = new ItemStorage[8];
 
     private int priority = 0;
     private int compare = 0;
@@ -139,7 +139,7 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
     }
 
     public void onBreak() {
-        for (Storage storage : this.storages) {
+        for (ItemStorage storage : this.storages) {
             if (storage != null) {
                 storage.writeToNBT();
             }
@@ -154,8 +154,8 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
     }
 
     @Override
-    public void addStorages(List<IStorage> storages) {
-        for (IStorage storage : this.storages) {
+    public void addItemStorages(List<IItemStorage> storages) {
+        for (IItemStorage storage : this.storages) {
             if (storage != null) {
                 storages.add(storage);
             }
@@ -256,7 +256,7 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
                     return 0;
                 }
 
-                stored += NBTStorage.getStoredFromNBT(disk.getTagCompound());
+                stored += NBTItemStorage.getStoredFromNBT(disk.getTagCompound());
                 storedMax += EnumStorageType.getById(disk.getItemDamage()).getCapacity();
             }
         }
@@ -322,7 +322,7 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
             ItemStack stack = disks.getStackInSlot(i);
 
             if (stack != null) {
-                stored += NBTStorage.getStoredFromNBT(stack.getTagCompound());
+                stored += NBTItemStorage.getStoredFromNBT(stack.getTagCompound());
             }
         }
 

@@ -6,19 +6,19 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.items.ItemHandlerHelper;
-import refinedstorage.api.storage.CompareUtils;
-import refinedstorage.api.storage.IStorage;
+import refinedstorage.api.storage.item.CompareUtils;
+import refinedstorage.api.storage.item.IItemStorage;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A implementation of {@link IStorage} that stores storage items in NBT.
+ * A implementation of {@link IItemStorage} that stores storage items in NBT.
  */
-public abstract class NBTStorage implements IStorage {
+public abstract class NBTItemStorage implements IItemStorage {
     /**
-     * The current save protocol that is used. It's set to every {@link NBTStorage} to allow for
+     * The current save protocol that is used. It's set to every {@link NBTItemStorage} to allow for
      * safe backwards compatibility breaks.
      */
     private static final int PROTOCOL = 1;
@@ -41,11 +41,11 @@ public abstract class NBTStorage implements IStorage {
     private List<ItemStack> stacks = new ArrayList<>();
 
     /**
-     * @param tag      The NBT tag we are reading from and writing the amount stored to, has to be initialized with {@link NBTStorage#createNBT()} if it doesn't exist yet
+     * @param tag      The NBT tag we are reading from and writing the amount stored to, has to be initialized with {@link NBTItemStorage#createNBT()} if it doesn't exist yet
      * @param capacity The capacity of this storage, -1 for infinite capacity
      * @param tile     A {@link TileEntity} that the NBT storage is in, will be marked dirty when the storage changes
      */
-    public NBTStorage(NBTTagCompound tag, int capacity, @Nullable TileEntity tile) {
+    public NBTItemStorage(NBTTagCompound tag, int capacity, @Nullable TileEntity tile) {
         this.tag = tag;
         this.capacity = capacity;
         this.tile = tile;
@@ -243,8 +243,8 @@ public abstract class NBTStorage implements IStorage {
     }
 
     /**
-     * @param stack The {@link ItemStack} to populate with the NBT tags from {@link NBTStorage#createNBT()}
-     * @return The provided {@link ItemStack} with NBT tags from {@link NBTStorage#createNBT()}
+     * @param stack The {@link ItemStack} to populate with the NBT tags from {@link NBTItemStorage#createNBT()}
+     * @return The provided {@link ItemStack} with NBT tags from {@link NBTItemStorage#createNBT()}
      */
     public static ItemStack createStackWithNBT(ItemStack stack) {
         stack.setTagCompound(createNBT());

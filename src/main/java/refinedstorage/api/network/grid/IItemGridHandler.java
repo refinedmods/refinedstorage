@@ -1,4 +1,4 @@
-package refinedstorage.api.network;
+package refinedstorage.api.network.grid;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 /**
  * Defines the behavior of grids.
  */
-public interface IGridHandler {
+public interface IItemGridHandler {
     /**
      * Called when a player tries to extract an item from the grid.
      *

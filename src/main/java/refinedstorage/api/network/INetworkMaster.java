@@ -6,8 +6,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingTask;
-import refinedstorage.api.storage.CompareUtils;
-import refinedstorage.api.storage.IGroupedStorage;
+import refinedstorage.api.network.grid.IItemGridHandler;
+import refinedstorage.api.storage.item.CompareUtils;
+import refinedstorage.api.storage.item.IGroupedItemStorage;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -43,9 +44,9 @@ public interface INetworkMaster {
     INetworkNodeGraph getNodeGraph();
 
     /**
-     * @return The {@link IGridHandler} for this network
+     * @return The {@link IItemGridHandler} for this network
      */
-    IGridHandler getGridHandler();
+    IItemGridHandler getGridHandler();
 
     /**
      * @return The {@link IWirelessGridHandler} for this network
@@ -53,9 +54,9 @@ public interface INetworkMaster {
     IWirelessGridHandler getWirelessGridHandler();
 
     /**
-     * @return The {@link IGroupedStorage} of this network
+     * @return The {@link IGroupedItemStorage} of this network
      */
-    IGroupedStorage getStorage();
+    IGroupedItemStorage getStorage();
 
     /**
      * @return The crafting tasks in this network, do NOT modify this list

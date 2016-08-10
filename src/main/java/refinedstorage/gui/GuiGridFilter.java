@@ -3,7 +3,7 @@ package refinedstorage.gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 import refinedstorage.RefinedStorage;
-import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.api.storage.item.CompareUtils;
 import refinedstorage.container.ContainerGridFilter;
 import refinedstorage.item.ItemGridFilter;
 import refinedstorage.network.MessageGridFilterUpdate;
