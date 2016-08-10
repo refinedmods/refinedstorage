@@ -34,8 +34,8 @@ public class GuiController extends GuiBase {
 
     @Override
     public void update(int x, int y) {
-        getScrollbar().setCanScroll(getRows() > VISIBLE_ROWS);
-        getScrollbar().setScrollDelta((float) getScrollbar().getScrollbarHeight() / (float) getRows());
+        getScrollbar().setEnabled(getRows() > VISIBLE_ROWS);
+        getScrollbar().setMaxOffset(getRows() - VISIBLE_ROWS);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class GuiController extends GuiBase {
         int x = 33;
         int y = 26;
 
-        int slot = getOffset() * 2;
+        int slot = getScrollbar().getOffset() * 2;
 
         RenderHelper.enableGUIStandardItemLighting();
 
@@ -105,13 +105,7 @@ public class GuiController extends GuiBase {
         }
     }
 
-    private int getOffset() {
-        return (int) Math.ceil(getScrollbar().getCurrentScroll() / 59f * (float) getRows());
-    }
-
     private int getRows() {
-        int max = (int) Math.ceil((float) TileController.NODES.getValue().size() / (float) 2);
-
-        return max < 0 ? 0 : max;
+        return Math.max(0, (int) Math.ceil((float) TileController.NODES.getValue().size() / 2F));
     }
 }

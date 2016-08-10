@@ -56,8 +56,8 @@ public class GuiCraftingMonitor extends GuiBase {
 
     @Override
     public void update(int x, int y) {
-        getScrollbar().setCanScroll(getRows() > VISIBLE_ROWS);
-        getScrollbar().setScrollDelta((float) getScrollbar().getScrollbarHeight() / (float) getRows());
+        getScrollbar().setEnabled(getRows() > VISIBLE_ROWS);
+        getScrollbar().setMaxOffset(getRows() - VISIBLE_ROWS);
 
         if (itemSelected >= getTasks().size()) {
             itemSelected = -1;
@@ -86,7 +86,7 @@ public class GuiCraftingMonitor extends GuiBase {
         int x = 8;
         int y = 20;
 
-        int item = getOffset() * 2;
+        int item = getScrollbar().getOffset() * 2;
 
         RenderHelper.enableGUIStandardItemLighting();
 
@@ -147,14 +147,8 @@ public class GuiCraftingMonitor extends GuiBase {
         }
     }
 
-    private int getOffset() {
-        return (int) Math.ceil(getScrollbar().getCurrentScroll() / 89f * (float) getRows());
-    }
-
     private int getRows() {
-        int max = (int) Math.ceil((float) getTasks().size() / (float) 2);
-
-        return max < 0 ? 0 : max;
+        return Math.max(0, (int) Math.ceil((float) getTasks().size() / (float) 2));
     }
 
     @Override
@@ -175,7 +169,7 @@ public class GuiCraftingMonitor extends GuiBase {
         if (mouseButton == 0 && inBounds(8, 20, 144, 90, mouseX - guiLeft, mouseY - guiTop)) {
             itemSelected = -1;
 
-            int item = getOffset() * 2;
+            int item = getScrollbar().getOffset() * 2;
 
             for (int y = 0; y < 3; ++y) {
                 for (int x = 0; x < 2; ++x) {

@@ -58,7 +58,6 @@ public class GuiGrid extends GuiBase {
         super(container, 227, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 247 : 208);
 
         setScrollbar(new Scrollbar(174, 20, 12, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 70 : 88));
-        getScrollbar().setCanScroll(false);
 
         this.container = container;
         this.grid = grid;
@@ -178,8 +177,8 @@ public class GuiGrid extends GuiBase {
 
         SORTED_ITEMS = sortedItems;
 
-        getScrollbar().setCanScroll(getRows() > getVisibleRows());
-        getScrollbar().setScrollDelta((float) getScrollbar().getScrollbarHeight() / (float) getRows());
+        getScrollbar().setEnabled(getRows() > getVisibleRows());
+        getScrollbar().setMaxOffset(getRows() - getVisibleRows());
     }
 
     @Override
@@ -191,14 +190,8 @@ public class GuiGrid extends GuiBase {
         }
     }
 
-    private int getOffset() {
-        return (int) Math.ceil(getScrollbar().getCurrentScroll() / 70f * (float) getRows());
-    }
-
     private int getRows() {
-        int max = (int) Math.ceil((float) SORTED_ITEMS.size() / 9f);
-
-        return max < 0 ? 0 : max;
+        return Math.max(0, (int) Math.ceil((float) SORTED_ITEMS.size() / 9F));
     }
 
     private boolean isOverSlotWithItem() {
@@ -271,7 +264,7 @@ public class GuiGrid extends GuiBase {
 
         this.slotNumber = -1;
 
-        int slot = getOffset() * 9;
+        int slot = getScrollbar().getOffset() * 9;
 
         RenderHelper.enableGUIStandardItemLighting();
 

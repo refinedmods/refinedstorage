@@ -50,7 +50,7 @@ public class ItemStorageDisk extends ItemBase {
         super.onUpdate(stack, world, entity, slot, selected);
 
         if (!stack.hasTagCompound()) {
-            if (stack.getItemDamage() == 5) {
+            if (stack.getItemDamage() == TYPE_DEBUG) {
                 applyDebugDiskData(stack);
             } else {
                 NBTStorage.createStackWithNBT(stack);

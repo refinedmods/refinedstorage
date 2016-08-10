@@ -3,6 +3,7 @@
 ### 0.8.18
 **Bugfixes**
 - Fixed detector mode not persisting
+- Fixed bug where scrollbar didn't scroll correctly and thus hiding some items
 
 ### 0.8.17
 **Bugfixes**

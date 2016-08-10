@@ -3,80 +3,56 @@ package refinedstorage.gui;
 import org.lwjgl.input.Mouse;
 
 public class Scrollbar {
-    private boolean canScroll = true;
+    private static final int SCROLLER_HEIGHT = 15;
 
     private int x;
     private int y;
-    private int scrollbarWidth;
-    private int scrollbarHeight;
+    private int width;
+    private int height;
+    private boolean enabled = false;
 
-    private float scrollDelta = 15f;
+    private int offset;
+    private int maxOffset;
 
-    private float currentScroll;
     private boolean wasClicking = false;
     private boolean isScrolling = false;
 
-    public Scrollbar(int x, int y, int scrollbarWidth, int scrollbarHeight) {
+    public Scrollbar(int x, int y, int width, int height) {
         this.x = x;
         this.y = y;
-        this.scrollbarWidth = scrollbarWidth;
-        this.scrollbarHeight = scrollbarHeight;
+        this.width = width;
+        this.height = height;
     }
 
-    public int getScrollbarWidth() {
-        return scrollbarWidth;
+    public int getWidth() {
+        return width;
     }
 
-    public int getScrollbarHeight() {
-        return scrollbarHeight;
+    public int getHeight() {
+        return height;
     }
 
-    public void setCanScroll(boolean canScroll) {
-        this.canScroll = canScroll;
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
-    public boolean canScroll() {
-        return canScroll;
-    }
-
-    public float getCurrentScroll() {
-        return currentScroll;
-    }
-
-    public void setCurrentScroll(float newCurrentScroll) {
-        if (newCurrentScroll < 0) {
-            newCurrentScroll = 0;
-        }
-
-        int scrollbarItselfHeight = 12;
-
-        int max = scrollbarHeight - scrollbarItselfHeight - 3;
-
-        if (newCurrentScroll > max) {
-            newCurrentScroll = max;
-        }
-
-        currentScroll = newCurrentScroll;
-    }
-
-    public void setScrollDelta(float delta) {
-        this.scrollDelta = delta;
+    public boolean isEnabled() {
+        return enabled;
     }
 
     public void draw(GuiBase gui) {
         gui.bindTexture("icons.png");
-        gui.drawTexture(gui.getGuiLeft() + x, gui.getGuiTop() + y + (int) currentScroll, canScroll() ? 232 : 244, 0, 12, 15);
+        gui.drawTexture(gui.getGuiLeft() + x, gui.getGuiTop() + y + (int) Math.min(height - SCROLLER_HEIGHT, (float) offset / (float) maxOffset * (float) (height - SCROLLER_HEIGHT)), isEnabled() ? 232 : 244, 0, 12, 15);
     }
 
     public void update(GuiBase gui, int mouseX, int mouseY) {
-        if (!canScroll()) {
+        if (!isEnabled()) {
             isScrolling = false;
             wasClicking = false;
-            currentScroll = 0;
         } else {
             boolean down = Mouse.isButtonDown(0);
 
-            if (!wasClicking && down && gui.inBounds(x, y, scrollbarWidth, scrollbarHeight, mouseX, mouseY)) {
+            if (!wasClicking && down && gui.inBounds(x, y, width, height, mouseX, mouseY)) {
                 isScrolling = true;
             }
 
@@ -87,20 +63,32 @@ public class Scrollbar {
             wasClicking = down;
 
             if (isScrolling) {
-                setCurrentScroll(mouseY - 20);
+                setOffset((int) Math.floor((float) (mouseY - SCROLLER_HEIGHT) / (float) (height - SCROLLER_HEIGHT) * (float) maxOffset));
             }
         }
     }
 
     public void wheel(int delta) {
-        if (canScroll()) {
-            delta = Math.max(Math.min(-delta, 1), -1);
+        if (isEnabled()) {
+            setOffset(offset + Math.max(Math.min(-delta, 1), -1));
+        }
+    }
 
-            if (delta == -1) {
-                setCurrentScroll(currentScroll - scrollDelta);
-            } else if (delta == 1) {
-                setCurrentScroll(currentScroll + scrollDelta);
-            }
+    public void setMaxOffset(int maxOffset) {
+        this.maxOffset = maxOffset;
+
+        if (offset > maxOffset) {
+            this.offset = Math.max(0, maxOffset);
+        }
+    }
+
+    public int getOffset() {
+        return offset;
+    }
+
+    public void setOffset(int offset) {
+        if (offset >= 0 && offset <= maxOffset) {
+            this.offset = offset;
         }
     }
 }
