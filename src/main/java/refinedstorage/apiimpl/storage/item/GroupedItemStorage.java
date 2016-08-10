@@ -7,8 +7,8 @@ import net.minecraft.item.ItemStack;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.NetworkUtils;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.api.storage.IStorageProvider;
-import refinedstorage.api.storage.item.CompareUtils;
 import refinedstorage.api.storage.item.IGroupedItemStorage;
 import refinedstorage.api.storage.item.IItemStorage;
 

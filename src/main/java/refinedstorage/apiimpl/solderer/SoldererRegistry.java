@@ -3,7 +3,7 @@ package refinedstorage.apiimpl.solderer;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.api.solderer.ISoldererRecipe;
 import refinedstorage.api.solderer.ISoldererRegistry;
-import refinedstorage.api.storage.item.CompareUtils;
+import refinedstorage.api.storage.CompareUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

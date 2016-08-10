@@ -1,11 +1,11 @@
-package refinedstorage.api.storage.item;
+package refinedstorage.api.storage;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.ArrayUtils;
 
 /**
- * Utilities for comparing {@link ItemStack}.
+ * Utilities for comparing.
  */
 public final class CompareUtils {
     public static final int COMPARE_DAMAGE = 1;

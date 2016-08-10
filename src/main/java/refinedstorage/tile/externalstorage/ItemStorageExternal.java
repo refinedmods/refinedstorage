@@ -1,7 +1,7 @@
 package refinedstorage.tile.externalstorage;
 
 import net.minecraft.item.ItemStack;
-import refinedstorage.api.storage.item.CompareUtils;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.api.storage.item.IItemStorage;
 
 import java.util.List;

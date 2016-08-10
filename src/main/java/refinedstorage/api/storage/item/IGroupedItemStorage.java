@@ -2,6 +2,7 @@ package refinedstorage.api.storage.item;
 
 import net.minecraft.item.ItemStack;
 import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.api.storage.IStorageProvider;
 
 import javax.annotation.Nonnull;
@@ -18,8 +19,7 @@ import java.util.List;
  */
 public interface IGroupedItemStorage {
     /**
-     * Rebuilds the storages and items for a network. Typically called when a {@link IStorageProvider} is
-     * added or removed from the network.
+     * Rebuilds the global item list. Typically called when a {@link IStorageProvider} is added or removed from the network.
      */
     void rebuild();
 
@@ -70,7 +70,7 @@ public interface IGroupedItemStorage {
     Collection<ItemStack> getStacks();
 
     /**
-     * @return The storages connected to this network
+     * @return The item storages connected to this network
      */
     List<IItemStorage> getStorages();
 }

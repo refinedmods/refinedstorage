@@ -13,7 +13,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import refinedstorage.RefinedStorageItems;
-import refinedstorage.api.storage.item.CompareUtils;
+import refinedstorage.api.storage.CompareUtils;
 
 import java.util.HashSet;
 import java.util.List;

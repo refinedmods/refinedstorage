@@ -4,7 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.items.IItemHandler;
-import refinedstorage.api.storage.item.CompareUtils;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.tile.data.ITileDataConsumer;
 import refinedstorage.tile.data.ITileDataProducer;
 import refinedstorage.tile.data.TileDataParameter;

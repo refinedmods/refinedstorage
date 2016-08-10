@@ -36,7 +36,7 @@ public class MessageGridPull extends MessageHandlerPlayerToServer<MessageGridPul
         Container container = player.openContainer;
 
         if (container instanceof ContainerGrid) {
-            IItemGridHandler handler = ((ContainerGrid) container).getGrid().getGridHandler();
+            IItemGridHandler handler = ((ContainerGrid) container).getGrid().getHandler();
 
             if (handler != null) {
                 handler.onExtract(message.id, message.flags, player);

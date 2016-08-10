@@ -7,7 +7,7 @@ import net.minecraft.util.math.BlockPos;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.grid.IItemGridHandler;
-import refinedstorage.api.storage.item.CompareUtils;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.api.storage.item.IGroupedItemStorage;
 
 import javax.annotation.Nonnull;

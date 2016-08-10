@@ -1,7 +1,7 @@
 package refinedstorage.api.network;
 
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.WorldProvider;
+import net.minecraft.world.World;
 
 import java.util.List;
 import java.util.Set;
@@ -24,9 +24,7 @@ public interface INetworkNodeGraph {
     List<INetworkNode> all();
 
     /**
-     * These hashes are calculated like this: 31 * {@link BlockPos#hashCode()} + {@link WorldProvider#getDimension()}
-     *
-     * @return A set of hashes of all connected nodes
+     * @return A set of hashes of all connected nodes, see {@link NetworkUtils#getNodeHashCode(World, INetworkNode)}
      */
     Set<Integer> allHashes();
 

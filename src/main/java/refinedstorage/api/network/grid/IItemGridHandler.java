@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import javax.annotation.Nullable;
 
 /**
- * Defines the behavior of grids.
+ * Defines the behavior of item grids.
  */
 public interface IItemGridHandler {
     /**

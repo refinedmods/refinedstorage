@@ -14,7 +14,7 @@ public interface IGrid {
 
     BlockPos getNetworkPosition();
 
-    IItemGridHandler getGridHandler();
+    IItemGridHandler getHandler();
 
     int getViewType();
 

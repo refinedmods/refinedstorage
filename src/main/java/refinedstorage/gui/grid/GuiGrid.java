@@ -14,7 +14,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import refinedstorage.RefinedStorage;
 import refinedstorage.api.network.grid.GridExtractFlags;
-import refinedstorage.api.storage.item.CompareUtils;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
 import refinedstorage.gui.GuiBase;

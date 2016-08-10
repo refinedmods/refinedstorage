@@ -11,7 +11,7 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.api.RefinedStorageAPI;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.solderer.ISoldererRecipe;
-import refinedstorage.api.storage.item.CompareUtils;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerSolderer;
 import refinedstorage.inventory.ItemHandlerUpgrade;

@@ -1,8 +1,9 @@
 package refinedstorage.api.network;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import refinedstorage.api.autocrafting.ICraftingPattern;
-import refinedstorage.api.storage.item.CompareUtils;
+import refinedstorage.api.storage.CompareUtils;
 
 /**
  * Utilities for network manipulation.
@@ -26,5 +27,11 @@ public final class NetworkUtils {
 
     public static int getItemStackHashCode(ItemStack stack) {
         return stack.getItem().hashCode() * (stack.getItemDamage() + 1) * (stack.hasTagCompound() ? stack.getTagCompound().hashCode() : 1);
+    }
+
+    public static int getNodeHashCode(World world, INetworkNode node) {
+        int result = node.getPosition().hashCode();
+        result = 31 * result + world.provider.getDimension();
+        return result;
     }
 }

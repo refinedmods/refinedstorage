@@ -2,7 +2,7 @@ package refinedstorage.gui;
 
 import com.google.common.primitives.Ints;
 import net.minecraft.client.gui.GuiTextField;
-import refinedstorage.api.storage.item.CompareUtils;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.container.ContainerStorage;
 import refinedstorage.gui.sidebutton.SideButtonCompare;
 import refinedstorage.gui.sidebutton.SideButtonMode;

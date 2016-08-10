@@ -1,7 +1,7 @@
 package refinedstorage.tile;
 
 import net.minecraft.item.ItemStack;
-import refinedstorage.api.storage.item.CompareUtils;
+import refinedstorage.api.storage.CompareUtils;
 
 public class ClientNode {
     private ItemStack stack;

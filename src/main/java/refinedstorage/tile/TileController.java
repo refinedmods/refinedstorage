@@ -22,7 +22,7 @@ import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.*;
 import refinedstorage.api.network.grid.IItemGridHandler;
-import refinedstorage.api.storage.item.CompareUtils;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.api.storage.item.IGroupedItemStorage;
 import refinedstorage.api.storage.item.IItemStorage;
 import refinedstorage.apiimpl.autocrafting.BasicCraftingTask;

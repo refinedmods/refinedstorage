@@ -32,7 +32,7 @@ public class MessageGridInsertHeld extends MessageHandlerPlayerToServer<MessageG
         Container container = player.openContainer;
 
         if (container instanceof ContainerGrid) {
-            IItemGridHandler handler = ((ContainerGrid) container).getGrid().getGridHandler();
+            IItemGridHandler handler = ((ContainerGrid) container).getGrid().getHandler();
 
             if (handler != null) {
                 handler.onInsertHeldItem(message.single, player);

@@ -84,7 +84,7 @@ public class WirelessGrid implements IGrid {
     }
 
     @Override
-    public IItemGridHandler getGridHandler() {
+    public IItemGridHandler getHandler() {
         TileController controller = getController();
 
         return controller != null ? controller.getItemGridHandler() : null;

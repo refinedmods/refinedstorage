@@ -7,6 +7,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import refinedstorage.api.network.INetworkNode;
 import refinedstorage.api.network.INetworkNodeGraph;
+import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.tile.TileController;
 import refinedstorage.tile.TileNetworkTransmitter;
 
@@ -20,12 +21,6 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
     public NetworkNodeGraph(TileController controller) {
         this.controller = controller;
-    }
-
-    private int hashNode(World world, INetworkNode node) {
-        int result = node.getPosition().hashCode();
-        result = 31 * result + world.provider.getDimension();
-        return result;
     }
 
     @Override
@@ -71,7 +66,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
             INetworkNode node = (INetworkNode) tile;
 
             newNodes.add(node);
-            newNodeHashes.add(hashNode(world, node));
+            newNodeHashes.add(NetworkUtils.getNodeHashCode(world, node));
 
             if (tile instanceof TileNetworkTransmitter) {
                 final TileNetworkTransmitter transmitter = (TileNetworkTransmitter) tile;
@@ -120,7 +115,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
             boolean changed = false;
 
             for (INetworkNode newNode : nodes) {
-                if (!oldNodeHashes.contains(hashNode(newNode.getNodeWorld(), newNode))) {
+                if (!oldNodeHashes.contains(NetworkUtils.getNodeHashCode(newNode.getNodeWorld(), newNode))) {
                     newNode.onConnected(controller);
 
                     changed = true;
@@ -128,7 +123,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
             }
 
             for (INetworkNode oldNode : oldNodes) {
-                if (!nodeHashes.contains(hashNode(oldNode.getNodeWorld(), oldNode))) {
+                if (!nodeHashes.contains(NetworkUtils.getNodeHashCode(oldNode.getNodeWorld(), oldNode))) {
                     oldNode.onDisconnected(controller);
 
                     changed = true;

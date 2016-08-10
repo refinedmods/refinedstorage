@@ -36,7 +36,7 @@ public class MessageGridCraftingStart extends MessageHandlerPlayerToServer<Messa
         Container container = player.openContainer;
 
         if (container instanceof ContainerGrid) {
-            IItemGridHandler handler = ((ContainerGrid) container).getGrid().getGridHandler();
+            IItemGridHandler handler = ((ContainerGrid) container).getGrid().getHandler();
 
             if (handler != null) {
                 handler.onCraftingRequested(message.id, message.quantity);

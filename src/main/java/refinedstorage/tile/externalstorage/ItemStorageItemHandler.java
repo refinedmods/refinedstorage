@@ -3,7 +3,7 @@ package refinedstorage.tile.externalstorage;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import refinedstorage.api.storage.item.CompareUtils;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.tile.config.IFilterable;
 
 import java.util.ArrayList;
