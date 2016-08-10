@@ -5,6 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import refinedstorage.gui.GuiBase;
 import refinedstorage.tile.TileDetector;
+import refinedstorage.tile.data.TileDataManager;
 
 public class SideButtonDetectorMode extends SideButton {
     @Override
@@ -29,6 +30,6 @@ public class SideButtonDetectorMode extends SideButton {
             mode = TileDetector.MODE_EQUAL;
         }
 
-        TileDetector.MODE.setValue(mode);
+        TileDataManager.setParameter(TileDetector.MODE, mode);
     }
 }

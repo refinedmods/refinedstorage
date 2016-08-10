@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 0.8.18
+**Bugfixes**
+- Fixed detector mode not persisting
+
 ### 0.8.17
 **Bugfixes**
 - Fixed Grid causing sorting lag on the client
