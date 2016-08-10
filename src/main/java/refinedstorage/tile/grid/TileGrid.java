@@ -190,13 +190,13 @@ public class TileGrid extends TileNode implements IGrid {
 
     public void onGridOpened(EntityPlayer player) {
         if (isConnected()) {
-            network.sendStorageToClient((EntityPlayerMP) player);
+            network.sendItemStorageToClient((EntityPlayerMP) player);
         }
     }
 
     @Override
     public IItemGridHandler getGridHandler() {
-        return isConnected() ? network.getGridHandler() : null;
+        return isConnected() ? network.getItemGridHandler() : null;
     }
 
     public InventoryCrafting getMatrix() {

@@ -46,7 +46,7 @@ public interface INetworkMaster {
     /**
      * @return The {@link IItemGridHandler} for this network
      */
-    IItemGridHandler getGridHandler();
+    IItemGridHandler getItemGridHandler();
 
     /**
      * @return The {@link IWirelessGridHandler} for this network
@@ -56,7 +56,7 @@ public interface INetworkMaster {
     /**
      * @return The {@link IGroupedItemStorage} of this network
      */
-    IGroupedItemStorage getStorage();
+    IGroupedItemStorage getItemStorage();
 
     /**
      * @return The crafting tasks in this network, do NOT modify this list
@@ -122,12 +122,12 @@ public interface INetworkMaster {
     /**
      * Sends a grid packet with all the items to all clients that are watching a grid.
      */
-    void sendStorageToClient();
+    void sendItemStorageToClient();
 
     /**
      * Sends a grid packet with all the items to a specific player.
      */
-    void sendStorageToClient(EntityPlayerMP player);
+    void sendItemStorageToClient(EntityPlayerMP player);
 
     /**
      * Sends a storage change to all clients that are watching a grid.
@@ -135,7 +135,7 @@ public interface INetworkMaster {
      * @param stack The stack
      * @param delta The delta
      */
-    void sendStorageDeltaToClient(ItemStack stack, int delta);
+    void sendItemStorageDeltaToClient(ItemStack stack, int delta);
 
     /**
      * Inserts an item to this network.

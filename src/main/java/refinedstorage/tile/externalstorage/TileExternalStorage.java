@@ -96,7 +96,7 @@ public class TileExternalStorage extends TileMultipartNode implements IStoragePr
 
         updateStorage(network);
 
-        network.getStorage().rebuild();
+        network.getItemStorage().rebuild();
     }
 
     @Override
@@ -112,7 +112,7 @@ public class TileExternalStorage extends TileMultipartNode implements IStoragePr
                 }
 
                 if (shouldRebuild) {
-                    network.getStorage().rebuild();
+                    network.getItemStorage().rebuild();
                 }
             }
 
@@ -219,7 +219,7 @@ public class TileExternalStorage extends TileMultipartNode implements IStoragePr
             }
         }
 
-        network.getStorage().rebuild();
+        network.getItemStorage().rebuild();
     }
 
     @Override

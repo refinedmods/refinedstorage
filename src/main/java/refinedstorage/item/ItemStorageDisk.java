@@ -13,7 +13,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorageItems;
-import refinedstorage.apiimpl.storage.NBTItemStorage;
+import refinedstorage.apiimpl.storage.item.ItemStorageNBT;
 import refinedstorage.block.EnumStorageType;
 
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public class ItemStorageDisk extends ItemBase {
     @Override
     public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
         for (int i = 0; i < 5; ++i) {
-            list.add(NBTItemStorage.createStackWithNBT(new ItemStack(item, 1, i)));
+            list.add(ItemStorageNBT.createStackWithNBT(new ItemStack(item, 1, i)));
         }
     }
 
@@ -53,16 +53,16 @@ public class ItemStorageDisk extends ItemBase {
             if (stack.getItemDamage() == TYPE_DEBUG) {
                 applyDebugDiskData(stack);
             } else {
-                NBTItemStorage.createStackWithNBT(stack);
+                ItemStorageNBT.createStackWithNBT(stack);
             }
         }
     }
 
     private void applyDebugDiskData(ItemStack stack) {
         if (debugDiskTag == null) {
-            debugDiskTag = NBTItemStorage.createNBT();
+            debugDiskTag = ItemStorageNBT.createNBT();
 
-            NBTItemStorage storage = new NBTItemStorage(debugDiskTag, -1, null) {
+            ItemStorageNBT storage = new ItemStorageNBT(debugDiskTag, -1, null) {
                 @Override
                 public int getPriority() {
                     return 0;
@@ -93,20 +93,20 @@ public class ItemStorageDisk extends ItemBase {
 
     @Override
     public void addInformation(ItemStack disk, EntityPlayer player, List<String> tooltip, boolean advanced) {
-        if (NBTItemStorage.isValid(disk)) {
+        if (ItemStorageNBT.isValid(disk)) {
             int capacity = EnumStorageType.getById(disk.getItemDamage()).getCapacity();
 
             if (capacity == -1) {
-                tooltip.add(I18n.format("misc.refinedstorage:storage.stored", NBTItemStorage.getStoredFromNBT(disk.getTagCompound())));
+                tooltip.add(I18n.format("misc.refinedstorage:storage.stored", ItemStorageNBT.getStoredFromNBT(disk.getTagCompound())));
             } else {
-                tooltip.add(I18n.format("misc.refinedstorage:storage.stored_capacity", NBTItemStorage.getStoredFromNBT(disk.getTagCompound()), capacity));
+                tooltip.add(I18n.format("misc.refinedstorage:storage.stored_capacity", ItemStorageNBT.getStoredFromNBT(disk.getTagCompound()), capacity));
             }
         }
     }
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack disk, World world, EntityPlayer player, EnumHand hand) {
-        if (!world.isRemote && player.isSneaking() && NBTItemStorage.isValid(disk) && NBTItemStorage.getStoredFromNBT(disk.getTagCompound()) == 0 && disk.getMetadata() != TYPE_CREATIVE) {
+        if (!world.isRemote && player.isSneaking() && ItemStorageNBT.isValid(disk) && ItemStorageNBT.getStoredFromNBT(disk.getTagCompound()) == 0 && disk.getMetadata() != TYPE_CREATIVE) {
             ItemStack storagePart = new ItemStack(RefinedStorageItems.STORAGE_PART, 1, disk.getMetadata());
 
             if (!player.inventory.addItemStackToInventory(storagePart.copy())) {
@@ -123,6 +123,6 @@ public class ItemStorageDisk extends ItemBase {
     public void onCreated(ItemStack stack, World world, EntityPlayer player) {
         super.onCreated(stack, world, player);
 
-        NBTItemStorage.createStackWithNBT(stack);
+        ItemStorageNBT.createStackWithNBT(stack);
     }
 }

@@ -1,4 +1,4 @@
-package refinedstorage.apiimpl.storage;
+package refinedstorage.apiimpl.storage.item;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -51,7 +51,7 @@ public class GroupedItemStorage implements IGroupedItemStorage {
             }
         }
 
-        network.sendStorageToClient();
+        network.sendItemStorageToClient();
     }
 
     @Override
@@ -61,7 +61,7 @@ public class GroupedItemStorage implements IGroupedItemStorage {
                 otherStack.stackSize += stack.stackSize;
 
                 if (!rebuilding) {
-                    network.sendStorageDeltaToClient(stack, stack.stackSize);
+                    network.sendItemStorageDeltaToClient(stack, stack.stackSize);
                 }
 
                 return;
@@ -71,7 +71,7 @@ public class GroupedItemStorage implements IGroupedItemStorage {
         stacks.put(stack.getItem(), stack.copy());
 
         if (!rebuilding) {
-            network.sendStorageDeltaToClient(stack, stack.stackSize);
+            network.sendItemStorageDeltaToClient(stack, stack.stackSize);
         }
     }
 
@@ -87,7 +87,7 @@ public class GroupedItemStorage implements IGroupedItemStorage {
                     }
                 }
 
-                network.sendStorageDeltaToClient(stack, -stack.stackSize);
+                network.sendItemStorageDeltaToClient(stack, -stack.stackSize);
 
                 return;
             }

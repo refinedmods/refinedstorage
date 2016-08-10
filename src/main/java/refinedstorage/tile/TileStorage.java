@@ -10,7 +10,7 @@ import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.storage.IStorageProvider;
 import refinedstorage.api.storage.item.IItemStorage;
-import refinedstorage.apiimpl.storage.NBTItemStorage;
+import refinedstorage.apiimpl.storage.item.ItemStorageNBT;
 import refinedstorage.block.BlockStorage;
 import refinedstorage.block.EnumStorageType;
 import refinedstorage.inventory.ItemHandlerBasic;
@@ -29,11 +29,11 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
     public static final TileDataParameter<Integer> STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileStorage>() {
         @Override
         public Integer getValue(TileStorage tile) {
-            return NBTItemStorage.getStoredFromNBT(tile.storageTag);
+            return ItemStorageNBT.getStoredFromNBT(tile.storageTag);
         }
     });
 
-    class ItemStorage extends NBTItemStorage {
+    class ItemStorage extends ItemStorageNBT {
         public ItemStorage() {
             super(TileStorage.this.getStorageTag(), TileStorage.this.getCapacity(), TileStorage.this);
         }
@@ -61,7 +61,7 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
 
     private ItemHandlerBasic filters = new ItemHandlerBasic(9, this);
 
-    private NBTTagCompound storageTag = NBTItemStorage.createNBT();
+    private NBTTagCompound storageTag = ItemStorageNBT.createNBT();
 
     private ItemStorage storage;
 
@@ -95,7 +95,7 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
             storage = new ItemStorage();
 
             if (network != null) {
-                network.getStorage().rebuild();
+                network.getItemStorage().rebuild();
             }
         }
     }
@@ -110,7 +110,7 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
     public void onConnectionChange(INetworkMaster network, boolean state) {
         super.onConnectionChange(network, state);
 
-        network.getStorage().rebuild();
+        network.getItemStorage().rebuild();
     }
 
     @Override
@@ -232,7 +232,7 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
         this.storageTag = storageTag;
     }
 
-    public NBTItemStorage getStorage() {
+    public ItemStorageNBT getStorage() {
         return storage;
     }
 

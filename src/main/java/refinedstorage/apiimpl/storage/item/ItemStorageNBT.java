@@ -1,4 +1,4 @@
-package refinedstorage.apiimpl.storage;
+package refinedstorage.apiimpl.storage.item;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -16,9 +16,9 @@ import java.util.List;
 /**
  * A implementation of {@link IItemStorage} that stores storage items in NBT.
  */
-public abstract class NBTItemStorage implements IItemStorage {
+public abstract class ItemStorageNBT implements IItemStorage {
     /**
-     * The current save protocol that is used. It's set to every {@link NBTItemStorage} to allow for
+     * The current save protocol that is used. It's set to every {@link ItemStorageNBT} to allow for
      * safe backwards compatibility breaks.
      */
     private static final int PROTOCOL = 1;
@@ -41,11 +41,11 @@ public abstract class NBTItemStorage implements IItemStorage {
     private List<ItemStack> stacks = new ArrayList<>();
 
     /**
-     * @param tag      The NBT tag we are reading from and writing the amount stored to, has to be initialized with {@link NBTItemStorage#createNBT()} if it doesn't exist yet
+     * @param tag      The NBT tag we are reading from and writing the amount stored to, has to be initialized with {@link ItemStorageNBT#createNBT()} if it doesn't exist yet
      * @param capacity The capacity of this storage, -1 for infinite capacity
      * @param tile     A {@link TileEntity} that the NBT storage is in, will be marked dirty when the storage changes
      */
-    public NBTItemStorage(NBTTagCompound tag, int capacity, @Nullable TileEntity tile) {
+    public ItemStorageNBT(NBTTagCompound tag, int capacity, @Nullable TileEntity tile) {
         this.tag = tag;
         this.capacity = capacity;
         this.tile = tile;
@@ -243,8 +243,8 @@ public abstract class NBTItemStorage implements IItemStorage {
     }
 
     /**
-     * @param stack The {@link ItemStack} to populate with the NBT tags from {@link NBTItemStorage#createNBT()}
-     * @return The provided {@link ItemStack} with NBT tags from {@link NBTItemStorage#createNBT()}
+     * @param stack The {@link ItemStack} to populate with the NBT tags from {@link ItemStorageNBT#createNBT()}
+     * @return The provided {@link ItemStack} with NBT tags from {@link ItemStorageNBT#createNBT()}
      */
     public static ItemStack createStackWithNBT(ItemStack stack) {
         stack.setTagCompound(createNBT());

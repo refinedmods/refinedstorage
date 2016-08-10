@@ -31,7 +31,7 @@ import refinedstorage.apiimpl.autocrafting.ProcessingCraftingTask;
 import refinedstorage.apiimpl.network.ItemGridHandler;
 import refinedstorage.apiimpl.network.NetworkNodeGraph;
 import refinedstorage.apiimpl.network.WirelessGridHandler;
-import refinedstorage.apiimpl.storage.GroupedItemStorage;
+import refinedstorage.apiimpl.storage.item.GroupedItemStorage;
 import refinedstorage.block.BlockController;
 import refinedstorage.block.EnumControllerType;
 import refinedstorage.container.ContainerGrid;
@@ -133,11 +133,11 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         return (left.getPriority() > right.getPriority()) ? -1 : 1;
     };
 
-    private ItemGridHandler gridHandler = new ItemGridHandler(this);
+    private ItemGridHandler itemGridHandler = new ItemGridHandler(this);
     private WirelessGridHandler wirelessGridHandler = new WirelessGridHandler(this);
 
     private INetworkNodeGraph nodeGraph = new NetworkNodeGraph(this);
-    private IGroupedItemStorage storage = new GroupedItemStorage(this);
+    private IGroupedItemStorage itemStorage = new GroupedItemStorage(this);
 
     private List<ICraftingPattern> patterns = new ArrayList<>();
 
@@ -203,8 +203,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             energyEU.update();
 
             if (canRun()) {
-                Collections.sort(storage.getStorages(), SIZE_COMPARATOR);
-                Collections.sort(storage.getStorages(), PRIORITY_COMPARATOR);
+                Collections.sort(itemStorage.getStorages(), SIZE_COMPARATOR);
+                Collections.sort(itemStorage.getStorages(), PRIORITY_COMPARATOR);
 
                 boolean craftingTasksChanged = !craftingTasksToAdd.isEmpty() || !craftingTasksToAddAsLast.isEmpty() || !craftingTasksToCancel.isEmpty();
 
@@ -304,8 +304,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     }
 
     @Override
-    public IItemGridHandler getGridHandler() {
-        return gridHandler;
+    public IItemGridHandler getItemGridHandler() {
+        return itemGridHandler;
     }
 
     @Override
@@ -320,8 +320,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         energyEU.onChunkUnload();
     }
 
-    public IGroupedItemStorage getStorage() {
-        return storage;
+    public IGroupedItemStorage getItemStorage() {
+        return itemStorage;
     }
 
     @Override
@@ -396,7 +396,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             int score = 0;
 
             for (ItemStack input : patterns.get(i).getInputs()) {
-                ItemStack stored = storage.get(input, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
+                ItemStack stored = itemStorage.get(input, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
 
                 score += stored != null ? stored.stackSize : 0;
             }
@@ -434,23 +434,23 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             }
         }
 
-        storage.rebuild();
+        itemStorage.rebuild();
     }
 
     @Override
-    public void sendStorageToClient() {
+    public void sendItemStorageToClient() {
         worldObj.getMinecraftServer().getPlayerList().getPlayerList().stream()
             .filter(this::isWatchingGrid)
-            .forEach(this::sendStorageToClient);
+            .forEach(this::sendItemStorageToClient);
     }
 
     @Override
-    public void sendStorageToClient(EntityPlayerMP player) {
+    public void sendItemStorageToClient(EntityPlayerMP player) {
         RefinedStorage.INSTANCE.network.sendTo(new MessageGridUpdate(this), player);
     }
 
     @Override
-    public void sendStorageDeltaToClient(ItemStack stack, int delta) {
+    public void sendItemStorageDeltaToClient(ItemStack stack, int delta) {
         worldObj.getMinecraftServer().getPlayerList().getPlayerList().stream()
             .filter(this::isWatchingGrid)
             .forEach(player -> RefinedStorage.INSTANCE.network.sendTo(new MessageGridDelta(this, stack, delta), player));
@@ -462,7 +462,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public ItemStack insertItem(ItemStack stack, int size, boolean simulate) {
-        if (stack == null || stack.getItem() == null || storage.getStorages().isEmpty()) {
+        if (stack == null || stack.getItem() == null || itemStorage.getStorages().isEmpty()) {
             return ItemHandlerHelper.copyStackWithSize(stack, size);
         }
 
@@ -470,7 +470,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
         ItemStack remainder = stack;
 
-        for (IItemStorage storage : this.storage.getStorages()) {
+        for (IItemStorage storage : this.itemStorage.getStorages()) {
             remainder = storage.insertItem(remainder, size, simulate);
 
             if (storage instanceof ItemStorageExternal && !simulate) {
@@ -495,7 +495,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 }
             }
 
-            storage.add(ItemHandlerHelper.copyStackWithSize(stack, inserted), false);
+            itemStorage.add(ItemHandlerHelper.copyStackWithSize(stack, inserted), false);
         }
 
         return remainder;
@@ -508,7 +508,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
         ItemStack newStack = null;
 
-        for (IItemStorage storage : this.storage.getStorages()) {
+        for (IItemStorage storage : this.itemStorage.getStorages()) {
             ItemStack took = storage.extractItem(stack, requested - received, flags);
 
             if (took != null) {
@@ -531,7 +531,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         }
 
         if (newStack != null) {
-            storage.remove(newStack);
+            itemStorage.remove(newStack);
         }
 
         return newStack;

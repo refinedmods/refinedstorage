@@ -59,7 +59,7 @@ public class WirelessGridHandler implements IWirelessGridHandler {
 
         player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.WIRELESS_GRID, player.worldObj, hand.ordinal(), 0, 0);
 
-        network.sendStorageToClient((EntityPlayerMP) player);
+        network.sendItemStorageToClient((EntityPlayerMP) player);
 
         drainEnergy(player, USAGE_OPEN);
 

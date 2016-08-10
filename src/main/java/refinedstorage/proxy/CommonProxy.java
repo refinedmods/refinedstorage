@@ -20,7 +20,7 @@ import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.api.RefinedStorageAPI;
 import refinedstorage.apiimpl.solderer.*;
-import refinedstorage.apiimpl.storage.NBTItemStorage;
+import refinedstorage.apiimpl.storage.item.ItemStorageNBT;
 import refinedstorage.block.*;
 import refinedstorage.gui.GuiHandler;
 import refinedstorage.item.*;
@@ -386,7 +386,7 @@ public class CommonProxy {
         );
 
         // Storage Housing
-        GameRegistry.addRecipe(new ShapedOreRecipe(NBTItemStorage.createStackWithNBT(new ItemStack(RefinedStorageItems.STORAGE_HOUSING)),
+        GameRegistry.addRecipe(new ShapedOreRecipe(ItemStorageNBT.createStackWithNBT(new ItemStack(RefinedStorageItems.STORAGE_HOUSING)),
             "GRG",
             "R R",
             "EEE",
@@ -397,7 +397,7 @@ public class CommonProxy {
 
         // Storage Disks
         for (int type = 0; type <= 3; ++type) {
-            ItemStack disk = NBTItemStorage.createStackWithNBT(new ItemStack(RefinedStorageItems.STORAGE_DISK, 1, type));
+            ItemStack disk = ItemStorageNBT.createStackWithNBT(new ItemStack(RefinedStorageItems.STORAGE_DISK, 1, type));
 
             GameRegistry.addRecipe(new ShapedOreRecipe(disk,
                 "GRG",

@@ -97,7 +97,7 @@ public class TileDetector extends TileNode implements IComparable {
             ItemStack slot = filter.getStackInSlot(0);
 
             if (slot != null) {
-                ItemStack stack = network.getStorage().get(slot, compare);
+                ItemStack stack = network.getItemStorage().get(slot, compare);
 
                 if (stack != null) {
                     switch (mode) {
