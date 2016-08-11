@@ -5,7 +5,7 @@ import refinedstorage.api.storage.item.IItemStorage;
 import java.util.List;
 
 /**
- * Represents a tile that provides storage to the network. Implement this on a tile that implements {@link refinedstorage.api.network.INetworkNode}.
+ * Represents a tile that provides storage to the network. Implement this on a tile that is a {@link refinedstorage.api.network.INetworkNode}.
  */
 public interface IStorageProvider {
     /**

@@ -19,7 +19,7 @@ public interface IItemStorage {
     List<ItemStack> getItems();
 
     /**
-     * Inserts an item to the storage network.
+     * Inserts an item to this storage.
      *
      * @param stack    The stack prototype to insert, do NOT modify
      * @param size     The amount of that prototype that has to be inserted
@@ -30,7 +30,7 @@ public interface IItemStorage {
     ItemStack insertItem(@Nonnull ItemStack stack, int size, boolean simulate);
 
     /**
-     * Extracts an item from the storage network.
+     * Extracts an item from this storage.
      * <p>
      * If the stack we found in the system is smaller than the requested size, return the stack anyway.
      * For example: if this method is called for dirt (64x) while there is only dirt (32x), return the dirt (32x) anyway.
