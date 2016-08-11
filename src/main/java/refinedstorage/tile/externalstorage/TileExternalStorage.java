@@ -252,10 +252,12 @@ public class TileExternalStorage extends TileMultipartNode implements IStoragePr
         return PRIORITY;
     }
 
+    @Override
     public int getStored() {
         return STORED.getValue();
     }
 
+    @Override
     public int getCapacity() {
         return CAPACITY.getValue();
     }
