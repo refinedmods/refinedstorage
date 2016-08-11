@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * Represents a storage sink for the storage network.
+ * Represents an item storage sink for the storage network.
  * Provide this through an {@link IStorageProvider}.
  */
 public interface IItemStorage {

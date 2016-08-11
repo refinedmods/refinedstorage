@@ -4,6 +4,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.api.network.NetworkUtils;
@@ -116,6 +118,11 @@ public class TileNetworkTransmitter extends TileNode {
 
     public ItemHandlerUpgrade getUpgrades() {
         return upgrades;
+    }
+
+    @Override
+    public IItemHandler getDrops() {
+        return new CombinedInvWrapper(networkCard, upgrades);
     }
 
     public BlockPos getReceiver() {

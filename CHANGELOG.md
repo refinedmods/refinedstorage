@@ -2,8 +2,9 @@
 
 ### 0.8.18
 **Bugfixes**
-- Fixed detector mode not persisting
+- Fixed Detector mode not persisting
 - Fixed bug where scrollbar didn't scroll correctly and thus hiding some items
+- Fixed Network Transmitter not dropping inventory when broken
 
 ### 0.8.17
 **Bugfixes**
