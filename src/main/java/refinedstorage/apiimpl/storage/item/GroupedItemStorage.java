@@ -81,7 +81,7 @@ public class GroupedItemStorage implements IGroupedItemStorage {
             if (CompareUtils.compareStackNoQuantity(otherStack, stack)) {
                 otherStack.stackSize -= stack.stackSize;
 
-                if (otherStack.stackSize <= 0) {
+                if (otherStack.stackSize == 0) {
                     if (!NetworkUtils.hasPattern(network, stack)) {
                         stacks.remove(otherStack.getItem(), otherStack);
                     }
