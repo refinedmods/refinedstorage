@@ -1,5 +1,10 @@
 # Refined Storage Changelog
 
+### 0.8.19
+**Bugfixes**
+- Fixed item duplication bug with External Storage
+- Fixed External Storage taking too long to update storage
+
 ### 0.8.18
 **Bugfixes**
 - Fixed Detector mode not persisting

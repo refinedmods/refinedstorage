@@ -47,21 +47,33 @@ public class ItemStorageItemHandler extends ItemStorageExternal {
 
     @Override
     public ItemStack extractItem(ItemStack stack, int size, int flags) {
+        int remaining = size;
+
+        ItemStack received = null;
+
         for (int i = 0; i < handler.getSlots(); ++i) {
             ItemStack slot = handler.getStackInSlot(i);
 
             if (slot != null && CompareUtils.compareStack(slot, stack, flags)) {
-                size = Math.min(size, slot.stackSize);
+                ItemStack got = handler.extractItem(i, remaining, false);
 
-                ItemStack took = ItemHandlerHelper.copyStackWithSize(slot, size);
+                if (got != null) {
+                    if (received == null) {
+                        received = got;
+                    } else {
+                        received.stackSize += got.stackSize;
+                    }
 
-                handler.extractItem(i, size, false);
+                    remaining -= got.stackSize;
 
-                return took;
+                    if (remaining == 0) {
+                        break;
+                    }
+                }
             }
         }
 
-        return null;
+        return received;
     }
 
     @Override

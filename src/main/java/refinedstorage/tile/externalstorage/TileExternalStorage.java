@@ -102,18 +102,16 @@ public class TileExternalStorage extends TileMultipartNode implements IStoragePr
     @Override
     public void update() {
         if (!worldObj.isRemote && network != null) {
-            if (ticks % (20 * 4) == 0) {
-                boolean shouldRebuild = false;
+            boolean changeDetected = false;
 
-                for (ItemStorageExternal storage : storages) {
-                    if (storage.updateCache()) {
-                        shouldRebuild = true;
-                    }
+            for (ItemStorageExternal storage : storages) {
+                if (storage.updateCache()) {
+                    changeDetected = true;
                 }
+            }
 
-                if (shouldRebuild) {
-                    network.getItemStorage().rebuild();
-                }
+            if (changeDetected) {
+                network.getItemStorage().rebuild();
             }
 
             if (getFacingTile() instanceof IDrawerGroup && lastDrawerCount != ((IDrawerGroup) getFacingTile()).getDrawerCount()) {
