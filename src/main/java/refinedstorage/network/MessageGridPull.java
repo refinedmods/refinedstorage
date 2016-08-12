@@ -8,26 +8,26 @@ import refinedstorage.api.network.grid.IItemGridHandler;
 import refinedstorage.container.ContainerGrid;
 
 public class MessageGridPull extends MessageHandlerPlayerToServer<MessageGridPull> implements IMessage {
-    private int id;
+    private int hash;
     private int flags;
 
     public MessageGridPull() {
     }
 
-    public MessageGridPull(int id, int flags) {
-        this.id = id;
+    public MessageGridPull(int hash, int flags) {
+        this.hash = hash;
         this.flags = flags;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        id = buf.readInt();
+        hash = buf.readInt();
         flags = buf.readInt();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(id);
+        buf.writeInt(hash);
         buf.writeInt(flags);
     }
 
@@ -39,7 +39,7 @@ public class MessageGridPull extends MessageHandlerPlayerToServer<MessageGridPul
             IItemGridHandler handler = ((ContainerGrid) container).getGrid().getHandler();
 
             if (handler != null) {
-                handler.onExtract(message.id, message.flags, player);
+                handler.onExtract(message.hash, message.flags, player);
             }
         }
     }

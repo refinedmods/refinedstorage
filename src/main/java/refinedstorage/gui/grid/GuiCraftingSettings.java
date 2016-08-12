@@ -10,6 +10,7 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.apiimpl.network.grid.ItemGridHandler;
 import refinedstorage.container.ContainerCraftingSettings;
 import refinedstorage.gui.GuiBase;
+import refinedstorage.gui.grid.stack.ClientStackItem;
 import refinedstorage.network.MessageGridCraftingStart;
 
 import java.io.IOException;
@@ -19,12 +20,12 @@ public class GuiCraftingSettings extends GuiBase {
 
     private GuiTextField amountField;
     private GuiGrid gui;
-    private ClientStack stack;
+    private ClientStackItem stack;
     private GuiButton startButton;
     private GuiButton cancelButton;
     private GuiButton[] incrementButtons = new GuiButton[6];
 
-    public GuiCraftingSettings(GuiGrid gui, EntityPlayer player, ClientStack stack) {
+    public GuiCraftingSettings(GuiGrid gui, EntityPlayer player, ClientStackItem stack) {
         super(new ContainerCraftingSettings(player, stack.getStack()), 172, 99);
 
         this.gui = gui;
@@ -124,7 +125,7 @@ public class GuiCraftingSettings extends GuiBase {
         Integer quantity = Ints.tryParse(amountField.getText());
 
         if (quantity != null && quantity > 0 && quantity <= ItemGridHandler.MAX_CRAFTING_PER_REQUEST) {
-            RefinedStorage.INSTANCE.network.sendToServer(new MessageGridCraftingStart(stack.getId(), quantity));
+            RefinedStorage.INSTANCE.network.sendToServer(new MessageGridCraftingStart(stack.getHash(), quantity));
 
             close();
         }

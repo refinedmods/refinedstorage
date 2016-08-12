@@ -1,13 +1,13 @@
 package refinedstorage.gui.grid.sorting;
 
-import refinedstorage.gui.grid.ClientStack;
+import refinedstorage.gui.grid.stack.IClientStack;
 import refinedstorage.tile.grid.TileGrid;
 
 public class GridSortingName extends GridSorting {
     @Override
-    public int compare(ClientStack left, ClientStack right) {
-        String leftName = left.getStack().getDisplayName();
-        String rightName = right.getStack().getDisplayName();
+    public int compare(IClientStack left, IClientStack right) {
+        String leftName = left.getName();
+        String rightName = right.getName();
 
         if (sortingDirection == TileGrid.SORTING_DIRECTION_ASCENDING) {
             return leftName.compareTo(rightName);

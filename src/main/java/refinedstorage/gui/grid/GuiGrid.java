@@ -21,6 +21,8 @@ import refinedstorage.gui.GuiBase;
 import refinedstorage.gui.Scrollbar;
 import refinedstorage.gui.grid.sorting.GridSortingName;
 import refinedstorage.gui.grid.sorting.GridSortingQuantity;
+import refinedstorage.gui.grid.stack.ClientStackItem;
+import refinedstorage.gui.grid.stack.IClientStack;
 import refinedstorage.gui.sidebutton.*;
 import refinedstorage.integration.jei.IntegrationJEI;
 import refinedstorage.network.MessageGridCraftingClear;
@@ -32,14 +34,17 @@ import refinedstorage.tile.grid.TileGrid;
 import refinedstorage.tile.grid.WirelessGrid;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 public class GuiGrid extends GuiBase {
     public static final GridSortingQuantity SORTING_QUANTITY = new GridSortingQuantity();
     public static final GridSortingName SORTING_NAME = new GridSortingName();
 
-    public static Multimap<Item, ClientStack> ITEMS = ArrayListMultimap.create();
-    public static List<ClientStack> SORTED_ITEMS = new ArrayList<>();
+    public static Multimap<Item, IClientStack> ITEMS = ArrayListMultimap.create();
+    public static List<IClientStack> SORTED_ITEMS = new ArrayList<>();
 
     private static boolean markedForSorting;
 
@@ -97,24 +102,24 @@ public class GuiGrid extends GuiBase {
     }
 
     private void sortItems() {
-        List<ClientStack> sortedItems = new ArrayList<>();
+        List<IClientStack> sortedItems = new ArrayList<>();
 
         if (grid.isConnected()) {
             sortedItems.addAll(ITEMS.values());
 
             String query = searchField.getText().trim().toLowerCase();
 
-            Iterator<ClientStack> t = sortedItems.iterator();
+            Iterator<IClientStack> t = sortedItems.iterator();
 
             while (t.hasNext()) {
-                ClientStack stack = t.next();
+                IClientStack stack = t.next();
 
                 List<GridFilteredItem> filteredItems = grid.getFilteredItems();
 
                 boolean found = filteredItems.isEmpty();
 
                 for (GridFilteredItem filteredItem : filteredItems) {
-                    if (CompareUtils.compareStack(stack.getStack(), filteredItem.getStack(), filteredItem.getCompare())) {
+                    if (CompareUtils.compareStack(((ClientStackItem) stack).getStack(), filteredItem.getStack(), filteredItem.getCompare())) {
                         found = true;
 
                         break;
@@ -141,7 +146,7 @@ public class GuiGrid extends GuiBase {
                     String[] parts = query.split(" ");
 
                     String modId = parts[0].substring(1);
-                    String modIdFromItem = Item.REGISTRY.getNameForObject(stack.getStack().getItem()).getResourceDomain();
+                    String modIdFromItem = stack.getModId();
 
                     if (!modIdFromItem.contains(modId)) {
                         t.remove();
@@ -156,11 +161,11 @@ public class GuiGrid extends GuiBase {
                             }
                         }
 
-                        if (!stack.getStack().getDisplayName().toLowerCase().contains(itemFromMod.toString())) {
+                        if (!stack.getName().toLowerCase().contains(itemFromMod.toString())) {
                             t.remove();
                         }
                     }
-                } else if (!stack.getStack().getDisplayName().toLowerCase().contains(query)) {
+                } else if (!stack.getName().toLowerCase().contains(query)) {
                     t.remove();
                 }
             }
@@ -274,7 +279,7 @@ public class GuiGrid extends GuiBase {
             }
 
             if (slot < SORTED_ITEMS.size()) {
-                drawItem(x, y, SORTED_ITEMS.get(slot).getStack(), true, formatQuantity(SORTED_ITEMS.get(slot).getStack().stackSize, slot));
+                SORTED_ITEMS.get(slot).draw(this, x, y, GuiScreen.isShiftKeyDown() && slotNumber == slot);
             }
 
             if (inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isConnected()) {
@@ -302,7 +307,7 @@ public class GuiGrid extends GuiBase {
         }
 
         if (isOverSlotWithItem()) {
-            drawTooltip(mouseX, mouseY, SORTED_ITEMS.get(slotNumber).getStack());
+            drawTooltip(mouseX, mouseY, SORTED_ITEMS.get(slotNumber).getTooltip());
         }
 
         if (isOverClear(mouseX, mouseY)) {
@@ -311,24 +316,6 @@ public class GuiGrid extends GuiBase {
 
         if (isOverCreatePattern(mouseX, mouseY)) {
             drawTooltip(mouseX, mouseY, t("gui.refinedstorage:grid.pattern_create"));
-        }
-    }
-
-    private String formatQuantity(int qty, int slot) {
-        if (slotNumber == slot && GuiScreen.isShiftKeyDown() && qty > 1) {
-            return String.valueOf(qty);
-        }
-
-        if (qty >= 1000000) {
-            return String.format(Locale.US, "%.1f", (float) qty / 1000000).replace(".0", "") + "M";
-        } else if (qty >= 1000) {
-            return String.format(Locale.US, "%.1f", (float) qty / 1000).replace(".0", "") + "K";
-        } else if (qty == 1) {
-            return null;
-        } else if (qty == 0) {
-            return t("gui.refinedstorage:grid.craft");
-        } else {
-            return String.valueOf(qty);
         }
     }
 
@@ -361,13 +348,15 @@ public class GuiGrid extends GuiBase {
 
             ItemStack held = container.getPlayer().inventory.getItemStack();
 
+            ClientStackItem stack = (ClientStackItem) SORTED_ITEMS.get(slotNumber);
+
             if (isOverSlotArea(mouseX - guiLeft, mouseY - guiTop) && held != null && (clickedButton == 0 || clickedButton == 1)) {
                 RefinedStorage.INSTANCE.network.sendToServer(new MessageGridInsertHeld(clickedButton == 1));
             }
 
             if (isOverSlotWithItem() && (held == null || (held != null && clickedButton == 2))) {
-                if (SORTED_ITEMS.get(slotNumber).isCraftable() && (SORTED_ITEMS.get(slotNumber).getStack().stackSize == 0 || (GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown()))) {
-                    FMLCommonHandler.instance().showGuiScreen(new GuiCraftingSettings(this, container.getPlayer(), SORTED_ITEMS.get(slotNumber)));
+                if (SORTED_ITEMS.get(slotNumber).isCraftable() && (stack.getQuantity() == 0 || (GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown()))) {
+                    FMLCommonHandler.instance().showGuiScreen(new GuiCraftingSettings(this, container.getPlayer(), stack));
                 } else {
                     int flags = 0;
 
@@ -383,7 +372,7 @@ public class GuiGrid extends GuiBase {
                         flags |= IItemGridHandler.EXTRACT_SINGLE;
                     }
 
-                    RefinedStorage.INSTANCE.network.sendToServer(new MessageGridPull(SORTED_ITEMS.get(slotNumber).getId(), flags));
+                    RefinedStorage.INSTANCE.network.sendToServer(new MessageGridPull(stack.getHash(), flags));
                 }
             }
         }
