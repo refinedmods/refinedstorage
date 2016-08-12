@@ -4,15 +4,15 @@ import net.minecraft.item.ItemStack;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.api.solderer.ISoldererRecipe;
-import refinedstorage.block.EnumStorageType;
+import refinedstorage.block.EnumItemStorageType;
 import refinedstorage.item.ItemBlockStorage;
 import refinedstorage.item.ItemProcessor;
 
 public class SoldererRecipeStorage implements ISoldererRecipe {
-    private EnumStorageType type;
+    private EnumItemStorageType type;
     private ItemStack[] rows;
 
-    public SoldererRecipeStorage(EnumStorageType type, int storagePart) {
+    public SoldererRecipeStorage(EnumItemStorageType type, int storagePart) {
         this.type = type;
         this.rows = new ItemStack[]{
             new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),

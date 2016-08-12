@@ -12,7 +12,7 @@ import refinedstorage.api.storage.item.IItemStorage;
 import refinedstorage.api.storage.item.IItemStorageProvider;
 import refinedstorage.apiimpl.storage.item.ItemStorageNBT;
 import refinedstorage.block.BlockStorage;
-import refinedstorage.block.EnumStorageType;
+import refinedstorage.block.EnumItemStorageType;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.tile.config.IComparable;
 import refinedstorage.tile.config.IFilterable;
@@ -65,7 +65,7 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
 
     private ItemStorage storage;
 
-    private EnumStorageType type;
+    private EnumItemStorageType type;
 
     private int priority = 0;
     private int compare = 0;
@@ -162,12 +162,12 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
         return tag;
     }
 
-    public EnumStorageType getType() {
+    public EnumItemStorageType getType() {
         if (type == null && worldObj.getBlockState(pos).getBlock() == RefinedStorageBlocks.STORAGE) {
-            this.type = ((EnumStorageType) worldObj.getBlockState(pos).getValue(BlockStorage.TYPE));
+            this.type = ((EnumItemStorageType) worldObj.getBlockState(pos).getValue(BlockStorage.TYPE));
         }
 
-        return type == null ? EnumStorageType.TYPE_1K : type;
+        return type == null ? EnumItemStorageType.TYPE_1K : type;
     }
 
     @Override

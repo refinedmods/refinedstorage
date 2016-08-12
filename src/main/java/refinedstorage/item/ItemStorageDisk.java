@@ -14,7 +14,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.apiimpl.storage.item.ItemStorageNBT;
-import refinedstorage.block.EnumStorageType;
+import refinedstorage.block.EnumItemStorageType;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -94,7 +94,7 @@ public class ItemStorageDisk extends ItemBase {
     @Override
     public void addInformation(ItemStack disk, EntityPlayer player, List<String> tooltip, boolean advanced) {
         if (ItemStorageNBT.isValid(disk)) {
-            int capacity = EnumStorageType.getById(disk.getItemDamage()).getCapacity();
+            int capacity = EnumItemStorageType.getById(disk.getItemDamage()).getCapacity();
 
             if (capacity == -1) {
                 tooltip.add(I18n.format("misc.refinedstorage:storage.stored", ItemStorageNBT.getStoredFromNBT(disk.getTagCompound())));

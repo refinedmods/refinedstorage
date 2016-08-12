@@ -15,7 +15,7 @@ import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.storage.item.IItemStorage;
 import refinedstorage.api.storage.item.IItemStorageProvider;
 import refinedstorage.apiimpl.storage.item.ItemStorageNBT;
-import refinedstorage.block.EnumStorageType;
+import refinedstorage.block.EnumItemStorageType;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemValidatorBasic;
 import refinedstorage.tile.config.IComparable;
@@ -32,7 +32,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, ISt
 
     public class ItemStorage extends ItemStorageNBT {
         public ItemStorage(ItemStack disk) {
-            super(disk.getTagCompound(), EnumStorageType.getById(disk.getItemDamage()).getCapacity(), TileDiskDrive.this);
+            super(disk.getTagCompound(), EnumItemStorageType.getById(disk.getItemDamage()).getCapacity(), TileDiskDrive.this);
         }
 
         @Override
@@ -250,14 +250,14 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, ISt
             ItemStack disk = disks.getStackInSlot(i);
 
             if (disk != null) {
-                int capacity = EnumStorageType.getById(disk.getItemDamage()).getCapacity();
+                int capacity = EnumItemStorageType.getById(disk.getItemDamage()).getCapacity();
 
                 if (capacity == -1) {
                     return 0;
                 }
 
                 stored += ItemStorageNBT.getStoredFromNBT(disk.getTagCompound());
-                storedMax += EnumStorageType.getById(disk.getItemDamage()).getCapacity();
+                storedMax += EnumItemStorageType.getById(disk.getItemDamage()).getCapacity();
             }
         }
 
@@ -337,7 +337,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, ISt
             ItemStack stack = disks.getStackInSlot(i);
 
             if (stack != null) {
-                int diskCapacity = EnumStorageType.getById(stack.getItemDamage()).getCapacity();
+                int diskCapacity = EnumItemStorageType.getById(stack.getItemDamage()).getCapacity();
 
                 if (diskCapacity == -1) {
                     return -1;
