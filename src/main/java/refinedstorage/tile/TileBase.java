@@ -205,7 +205,7 @@ public abstract class TileBase extends TileEntity implements ITickable {
             return null;
         }
 
-        IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side);
+        IItemHandler handler = tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side) ? tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side) : null;
 
         if (handler == null) {
             if (side != null && tile instanceof ISidedInventory) {
