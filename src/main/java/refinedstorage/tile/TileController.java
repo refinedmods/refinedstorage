@@ -40,6 +40,7 @@ import refinedstorage.apiimpl.storage.fluid.GroupedFluidStorage;
 import refinedstorage.apiimpl.storage.item.GroupedItemStorage;
 import refinedstorage.block.BlockController;
 import refinedstorage.block.EnumControllerType;
+import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
 import refinedstorage.integration.ic2.ControllerEnergyIC2;
 import refinedstorage.integration.ic2.ControllerEnergyIC2None;
@@ -48,14 +49,17 @@ import refinedstorage.integration.ic2.IntegrationIC2;
 import refinedstorage.integration.tesla.ControllerEnergyTesla;
 import refinedstorage.integration.tesla.IntegrationTesla;
 import refinedstorage.item.ItemPattern;
-import refinedstorage.network.MessageGridDelta;
-import refinedstorage.network.MessageGridUpdate;
+import refinedstorage.network.MessageGridFluidDelta;
+import refinedstorage.network.MessageGridFluidUpdate;
+import refinedstorage.network.MessageGridItemDelta;
+import refinedstorage.network.MessageGridItemUpdate;
 import refinedstorage.tile.config.IRedstoneConfigurable;
 import refinedstorage.tile.config.RedstoneMode;
 import refinedstorage.tile.data.ITileDataProducer;
 import refinedstorage.tile.data.RefinedStorageSerializers;
 import refinedstorage.tile.data.TileDataParameter;
 import refinedstorage.tile.externalstorage.ItemStorageExternal;
+import refinedstorage.tile.grid.IGrid;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -177,7 +181,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         dataManager.addParameter(NODES);
 
         fluidStorage.add(new FluidStack(FluidRegistry.WATER, 1000 * 32), false);
-        fluidStorage.add(new FluidStack(FluidRegistry.LAVA, 1000 * 32), false);
+        fluidStorage.add(new FluidStack(FluidRegistry.LAVA, 1000 * 64), false);
 
         if (IntegrationIC2.isLoaded()) {
             this.energyEU = new ControllerEnergyIC2(this);
@@ -458,24 +462,51 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public void sendItemStorageToClient() {
         worldObj.getMinecraftServer().getPlayerList().getPlayerList().stream()
-            .filter(this::isWatchingGrid)
+            .filter(player -> isWatchingGrid(player, EnumGridType.NORMAL, EnumGridType.CRAFTING, EnumGridType.PATTERN))
             .forEach(this::sendItemStorageToClient);
     }
 
     @Override
     public void sendItemStorageToClient(EntityPlayerMP player) {
-        RefinedStorage.INSTANCE.network.sendTo(new MessageGridUpdate(this), player);
+        RefinedStorage.INSTANCE.network.sendTo(new MessageGridItemUpdate(this), player);
     }
 
     @Override
     public void sendItemStorageDeltaToClient(ItemStack stack, int delta) {
         worldObj.getMinecraftServer().getPlayerList().getPlayerList().stream()
-            .filter(this::isWatchingGrid)
-            .forEach(player -> RefinedStorage.INSTANCE.network.sendTo(new MessageGridDelta(this, stack, delta), player));
+            .filter(player -> isWatchingGrid(player, EnumGridType.NORMAL, EnumGridType.CRAFTING, EnumGridType.PATTERN))
+            .forEach(player -> RefinedStorage.INSTANCE.network.sendTo(new MessageGridItemDelta(this, stack, delta), player));
     }
 
-    private boolean isWatchingGrid(EntityPlayer player) {
-        return player.openContainer.getClass() == ContainerGrid.class && pos.equals(((ContainerGrid) player.openContainer).getGrid().getNetworkPosition());
+    @Override
+    public void sendFluidStorageToClient() {
+        worldObj.getMinecraftServer().getPlayerList().getPlayerList().stream()
+            .filter(player -> isWatchingGrid(player, EnumGridType.FLUID))
+            .forEach(this::sendFluidStorageToClient);
+    }
+
+    @Override
+    public void sendFluidStorageToClient(EntityPlayerMP player) {
+        RefinedStorage.INSTANCE.network.sendTo(new MessageGridFluidUpdate(this), player);
+    }
+
+    @Override
+    public void sendFluidStorageDeltaToClient(FluidStack stack, int delta) {
+        worldObj.getMinecraftServer().getPlayerList().getPlayerList().stream()
+            .filter(player -> isWatchingGrid(player, EnumGridType.FLUID))
+            .forEach(player -> RefinedStorage.INSTANCE.network.sendTo(new MessageGridFluidDelta(stack, delta), player));
+    }
+
+    private boolean isWatchingGrid(EntityPlayer player, EnumGridType... types) {
+        if (player.openContainer.getClass() == ContainerGrid.class) {
+            IGrid grid = ((ContainerGrid) player.openContainer).getGrid();
+
+            if (pos.equals(grid.getNetworkPosition())) {
+                return Arrays.asList(types).contains(grid.getType());
+            }
+        }
+
+        return false;
     }
 
     @Override

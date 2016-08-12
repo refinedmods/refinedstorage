@@ -212,26 +212,30 @@ public abstract class GuiBase extends GuiContainer {
         itemRender.renderItemOverlayIntoGUI(fontRendererObj, stack, x, y, "");
 
         if (text != null) {
-            GlStateManager.pushMatrix();
-            GlStateManager.translate(x, y, 1);
-            GlStateManager.scale(0.5f, 0.5f, 1);
-
-            GlStateManager.disableLighting();
-            GlStateManager.disableRescaleNormal();
-            GlStateManager.depthMask(false);
-            GlStateManager.enableBlend();
-            GlStateManager.blendFunc(770, 771);
-            GlStateManager.disableDepth();
-
-            fontRendererObj.drawStringWithShadow(text, 30 - fontRendererObj.getStringWidth(text), 22, 16777215);
-
-            GlStateManager.enableDepth();
-            GlStateManager.enableTexture2D();
-            GlStateManager.depthMask(true);
-            GlStateManager.enableLighting();
-            GlStateManager.disableBlend();
-            GlStateManager.popMatrix();
+            drawQuantity(x, y, text);
         }
+    }
+
+    public void drawQuantity(int x, int y, String qty) {
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x, y, 1);
+        GlStateManager.scale(0.5f, 0.5f, 1);
+
+        GlStateManager.disableLighting();
+        GlStateManager.disableRescaleNormal();
+        GlStateManager.depthMask(false);
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(770, 771);
+        GlStateManager.disableDepth();
+
+        fontRendererObj.drawStringWithShadow(qty, 30 - fontRendererObj.getStringWidth(qty), 22, 16777215);
+
+        GlStateManager.enableDepth();
+        GlStateManager.enableTexture2D();
+        GlStateManager.depthMask(true);
+        GlStateManager.enableLighting();
+        GlStateManager.disableBlend();
+        GlStateManager.popMatrix();
     }
 
     public void drawString(int x, int y, String message) {

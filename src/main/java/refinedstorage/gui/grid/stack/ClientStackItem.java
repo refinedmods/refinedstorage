@@ -32,7 +32,6 @@ public class ClientStackItem implements IClientStack {
         return stack;
     }
 
-    @Override
     public boolean isCraftable() {
         return craftable;
     }

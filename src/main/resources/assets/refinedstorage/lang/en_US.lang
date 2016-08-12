@@ -102,6 +102,7 @@ block.refinedstorage:cable.name=Cable
 block.refinedstorage:grid.0.name=Grid
 block.refinedstorage:grid.1.name=Crafting Grid
 block.refinedstorage:grid.2.name=Pattern Grid
+block.refinedstorage:grid.3.name=Fluid Grid
 block.refinedstorage:disk_drive.name=Disk Drive
 block.refinedstorage:external_storage.name=External Storage
 block.refinedstorage:importer.name=Importer

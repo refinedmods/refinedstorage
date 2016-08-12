@@ -137,12 +137,30 @@ public interface INetworkMaster {
     void sendItemStorageToClient(EntityPlayerMP player);
 
     /**
-     * Sends a storage change to all clients that are watching a grid.
+     * Sends a item storage change to all clients that are watching a grid.
      *
      * @param stack The stack
      * @param delta The delta
      */
     void sendItemStorageDeltaToClient(ItemStack stack, int delta);
+
+    /**
+     * Sends a grid packet with all the fluids to all clients that are watching a grid.
+     */
+    void sendFluidStorageToClient();
+
+    /**
+     * Sends a grid packet with all the fluids to a specific player.
+     */
+    void sendFluidStorageToClient(EntityPlayerMP player);
+
+    /**
+     * Sends a fluids storage change to all clients that are watching a grid.
+     *
+     * @param stack The stack
+     * @param delta The delta
+     */
+    void sendFluidStorageDeltaToClient(FluidStack stack, int delta);
 
     /**
      * Inserts an item to this network.

@@ -9,19 +9,18 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.gui.grid.GuiGrid;
 import refinedstorage.gui.grid.stack.ClientStackItem;
-import refinedstorage.gui.grid.stack.IClientStack;
 
-public class MessageGridDelta implements IMessage, IMessageHandler<MessageGridDelta, IMessage> {
+public class MessageGridItemDelta implements IMessage, IMessageHandler<MessageGridItemDelta, IMessage> {
     private INetworkMaster network;
     private ItemStack stack;
     private int delta;
 
     private ClientStackItem clientStack;
 
-    public MessageGridDelta() {
+    public MessageGridItemDelta() {
     }
 
-    public MessageGridDelta(INetworkMaster network, ItemStack stack, int delta) {
+    public MessageGridItemDelta(INetworkMaster network, ItemStack stack, int delta) {
         this.network = network;
         this.stack = stack;
         this.delta = delta;
@@ -40,12 +39,10 @@ public class MessageGridDelta implements IMessage, IMessageHandler<MessageGridDe
     }
 
     @Override
-    public IMessage onMessage(MessageGridDelta message, MessageContext ctx) {
+    public IMessage onMessage(MessageGridItemDelta message, MessageContext ctx) {
         Item item = message.clientStack.getStack().getItem();
 
-        for (IClientStack anyStack : GuiGrid.ITEMS.get(item)) {
-            ClientStackItem stack = (ClientStackItem) anyStack;
-
+        for (ClientStackItem stack : GuiGrid.ITEMS.get(item)) {
             if (stack.equals(message.clientStack)) {
                 if (stack.getStack().stackSize + message.delta == 0 && !message.clientStack.isCraftable()) {
                     GuiGrid.ITEMS.remove(item, stack);

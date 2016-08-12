@@ -39,6 +39,8 @@ public class GroupedFluidStorage implements IGroupedFluidStorage {
                 add(stack, true);
             }
         }
+
+        network.sendFluidStorageToClient();
     }
 
     @Override
@@ -47,11 +49,19 @@ public class GroupedFluidStorage implements IGroupedFluidStorage {
             if (otherStack.isFluidEqual(stack)) {
                 otherStack.amount += stack.amount;
 
+                if (!rebuilding) {
+                    network.sendFluidStorageDeltaToClient(stack, stack.amount);
+                }
+
                 return;
             }
         }
 
         stacks.put(stack.getFluid(), stack.copy());
+
+        if (!rebuilding) {
+            network.sendFluidStorageDeltaToClient(stack, stack.amount);
+        }
     }
 
     @Override
@@ -63,6 +73,8 @@ public class GroupedFluidStorage implements IGroupedFluidStorage {
                 if (otherStack.amount == 0) {
                     stacks.remove(otherStack.getFluid(), otherStack);
                 }
+
+                network.sendFluidStorageDeltaToClient(stack, -stack.amount);
 
                 return;
             }

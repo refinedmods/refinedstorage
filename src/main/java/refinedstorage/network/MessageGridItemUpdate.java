@@ -12,14 +12,14 @@ import refinedstorage.gui.grid.stack.ClientStackItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MessageGridUpdate implements IMessage, IMessageHandler<MessageGridUpdate, IMessage> {
+public class MessageGridItemUpdate implements IMessage, IMessageHandler<MessageGridItemUpdate, IMessage> {
     private INetworkMaster network;
-    private List<ClientStackItem> items = new ArrayList<>();
+    private List<ClientStackItem> stacks = new ArrayList<>();
 
-    public MessageGridUpdate() {
+    public MessageGridItemUpdate() {
     }
 
-    public MessageGridUpdate(INetworkMaster network) {
+    public MessageGridItemUpdate(INetworkMaster network) {
         this.network = network;
     }
 
@@ -28,7 +28,7 @@ public class MessageGridUpdate implements IMessage, IMessageHandler<MessageGridU
         int items = buf.readInt();
 
         for (int i = 0; i < items; ++i) {
-            this.items.add(new ClientStackItem(buf));
+            this.stacks.add(new ClientStackItem(buf));
         }
     }
 
@@ -42,10 +42,10 @@ public class MessageGridUpdate implements IMessage, IMessageHandler<MessageGridU
     }
 
     @Override
-    public IMessage onMessage(MessageGridUpdate message, MessageContext ctx) {
+    public IMessage onMessage(MessageGridItemUpdate message, MessageContext ctx) {
         GuiGrid.ITEMS.clear();
 
-        for (ClientStackItem item : message.items) {
+        for (ClientStackItem item : message.stacks) {
             GuiGrid.ITEMS.put(item.getStack().getItem(), item);
         }
 

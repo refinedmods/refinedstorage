@@ -61,8 +61,10 @@ public class ContainerGrid extends ContainerBase {
             addSlotToContainer(new SlotOutput(((TileGrid) grid).getPatterns(), 1, 152, 132));
         }
 
-        for (int i = 0; i < 4; ++i) {
-            addSlotToContainer(new SlotItemHandler(grid.getFilter(), i, 204, 6 + (18 * i)));
+        if (grid.getType() != EnumGridType.FLUID) {
+            for (int i = 0; i < 4; ++i) {
+                addSlotToContainer(new SlotItemHandler(grid.getFilter(), i, 204, 6 + (18 * i)));
+            }
         }
     }
 
@@ -104,7 +106,7 @@ public class ContainerGrid extends ContainerBase {
             if (slot.getHasStack()) {
                 if (slot == craftingResultSlot) {
                     ((TileGrid) grid).onCraftedShift(this, player);
-                } else if (grid.getHandler() != null && slot != patternResultSlot && !(slot instanceof SlotSpecimenLegacy)) {
+                } else if (grid.getHandler() != null && slot != patternResultSlot && !(slot instanceof SlotSpecimenLegacy) && grid.getType() != EnumGridType.FLUID) {
                     slot.putStack(grid.getHandler().onInsert(slot.getStack()));
 
                     detectAndSendChanges();

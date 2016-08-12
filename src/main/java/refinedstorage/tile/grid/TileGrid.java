@@ -190,7 +190,11 @@ public class TileGrid extends TileNode implements IGrid {
 
     public void onGridOpened(EntityPlayer player) {
         if (isConnected()) {
-            network.sendItemStorageToClient((EntityPlayerMP) player);
+            if (getType() == EnumGridType.FLUID) {
+                network.sendFluidStorageToClient((EntityPlayerMP) player);
+            } else {
+                network.sendItemStorageToClient((EntityPlayerMP) player);
+            }
         }
     }
 
