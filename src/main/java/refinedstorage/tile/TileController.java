@@ -14,6 +14,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
@@ -23,14 +24,18 @@ import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.*;
 import refinedstorage.api.network.grid.IItemGridHandler;
 import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.api.storage.fluid.IFluidStorage;
+import refinedstorage.api.storage.fluid.IGroupedFluidStorage;
 import refinedstorage.api.storage.item.IGroupedItemStorage;
 import refinedstorage.api.storage.item.IItemStorage;
 import refinedstorage.apiimpl.autocrafting.BasicCraftingTask;
 import refinedstorage.apiimpl.autocrafting.CraftingPattern;
 import refinedstorage.apiimpl.autocrafting.ProcessingCraftingTask;
-import refinedstorage.apiimpl.network.ItemGridHandler;
 import refinedstorage.apiimpl.network.NetworkNodeGraph;
 import refinedstorage.apiimpl.network.WirelessGridHandler;
+import refinedstorage.apiimpl.network.grid.ItemGridHandler;
+import refinedstorage.apiimpl.storage.fluid.FluidUtils;
+import refinedstorage.apiimpl.storage.fluid.GroupedFluidStorage;
 import refinedstorage.apiimpl.storage.item.GroupedItemStorage;
 import refinedstorage.block.BlockController;
 import refinedstorage.block.EnumControllerType;
@@ -51,6 +56,8 @@ import refinedstorage.tile.data.RefinedStorageSerializers;
 import refinedstorage.tile.data.TileDataParameter;
 import refinedstorage.tile.externalstorage.ItemStorageExternal;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 
 public class TileController extends TileBase implements INetworkMaster, IEnergyReceiver, IRedstoneConfigurable {
@@ -137,7 +144,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     private WirelessGridHandler wirelessGridHandler = new WirelessGridHandler(this);
 
     private INetworkNodeGraph nodeGraph = new NetworkNodeGraph(this);
+
     private IGroupedItemStorage itemStorage = new GroupedItemStorage(this);
+    private IGroupedFluidStorage fluidStorage = new GroupedFluidStorage(this);
 
     private List<ICraftingPattern> patterns = new ArrayList<>();
 
@@ -322,6 +331,11 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     public IGroupedItemStorage getItemStorage() {
         return itemStorage;
+    }
+
+    @Override
+    public IGroupedFluidStorage getFluidStorage() {
+        return fluidStorage;
     }
 
     @Override
@@ -532,6 +546,69 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
         if (newStack != null) {
             itemStorage.remove(newStack);
+        }
+
+        return newStack;
+    }
+
+    @Nullable
+    @Override
+    public FluidStack insertFluid(@Nonnull FluidStack stack, int size, boolean simulate) {
+        if (stack == null || fluidStorage.getStorages().isEmpty()) {
+            return FluidUtils.copyStackWithSize(stack, size);
+        }
+
+        int orginalSize = size;
+
+        FluidStack remainder = stack;
+
+        for (IFluidStorage storage : this.fluidStorage.getStorages()) {
+            remainder = storage.insertFluid(remainder, size, simulate);
+
+            if (remainder == null) {
+                break;
+            } else {
+                size = remainder.amount;
+            }
+        }
+
+        int inserted = remainder != null ? (orginalSize - remainder.amount) : orginalSize;
+
+        if (!simulate && inserted > 0) {
+            fluidStorage.add(FluidUtils.copyStackWithSize(stack, inserted), false);
+        }
+
+        return remainder;
+    }
+
+    @Nullable
+    @Override
+    public FluidStack extractFluid(@Nonnull FluidStack stack, int size, int flags) {
+        int requested = size;
+        int received = 0;
+
+        FluidStack newStack = null;
+
+        for (IFluidStorage storage : this.fluidStorage.getStorages()) {
+            FluidStack took = storage.extractFluid(stack, requested - received, flags);
+
+            if (took != null) {
+                if (newStack == null) {
+                    newStack = took;
+                } else {
+                    newStack.amount += took.amount;
+                }
+
+                received += took.amount;
+            }
+
+            if (requested == received) {
+                break;
+            }
+        }
+
+        if (newStack != null) {
+            fluidStorage.remove(newStack);
         }
 
         return newStack;

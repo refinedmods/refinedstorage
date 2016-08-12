@@ -7,7 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import org.lwjgl.input.Keyboard;
 import refinedstorage.RefinedStorage;
-import refinedstorage.apiimpl.network.ItemGridHandler;
+import refinedstorage.apiimpl.network.grid.ItemGridHandler;
 import refinedstorage.container.ContainerCraftingSettings;
 import refinedstorage.gui.GuiBase;
 import refinedstorage.network.MessageGridCraftingStart;

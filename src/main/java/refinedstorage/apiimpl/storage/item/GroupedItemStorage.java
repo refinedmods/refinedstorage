@@ -8,9 +8,9 @@ import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.api.storage.CompareUtils;
-import refinedstorage.api.storage.IStorageProvider;
 import refinedstorage.api.storage.item.IGroupedItemStorage;
 import refinedstorage.api.storage.item.IItemStorage;
+import refinedstorage.api.storage.item.IItemStorageProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,8 +32,8 @@ public class GroupedItemStorage implements IGroupedItemStorage {
         storages.clear();
 
         network.getNodeGraph().all().stream()
-            .filter(node -> node.canUpdate() && node instanceof IStorageProvider)
-            .forEach(node -> ((IStorageProvider) node).addItemStorages(storages));
+            .filter(node -> node.canUpdate() && node instanceof IItemStorageProvider)
+            .forEach(node -> ((IItemStorageProvider) node).addItemStorages(storages));
 
         stacks.clear();
 

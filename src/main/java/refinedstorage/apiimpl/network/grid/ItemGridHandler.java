@@ -1,4 +1,4 @@
-package refinedstorage.apiimpl.network;
+package refinedstorage.apiimpl.network.grid;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryHelper;
@@ -7,9 +7,9 @@ import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.NetworkUtils;
-import refinedstorage.api.network.grid.GridExtractFlags;
 import refinedstorage.api.network.grid.IItemGridHandler;
 import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.apiimpl.network.WirelessGridHandler;
 
 public class ItemGridHandler implements IItemGridHandler {
     public static final int MAX_CRAFTING_PER_REQUEST = 500;
@@ -30,7 +30,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
         int itemSize = item.stackSize;
 
-        boolean single = (flags & GridExtractFlags.EXTRACT_SINGLE) == GridExtractFlags.EXTRACT_SINGLE;
+        boolean single = (flags & EXTRACT_SINGLE) == EXTRACT_SINGLE;
 
         ItemStack held = player.inventory.getItemStack();
 
@@ -44,7 +44,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
         int size = 64;
 
-        if ((flags & GridExtractFlags.EXTRACT_HALF) == GridExtractFlags.EXTRACT_HALF && itemSize > 1) {
+        if ((flags & EXTRACT_HALF) == EXTRACT_HALF && itemSize > 1) {
             size = itemSize / 2;
 
             if (size > 32) {
@@ -52,7 +52,7 @@ public class ItemGridHandler implements IItemGridHandler {
             }
         } else if (single) {
             size = 1;
-        } else if ((flags & GridExtractFlags.EXTRACT_SHIFT) == GridExtractFlags.EXTRACT_SHIFT) {
+        } else if ((flags & EXTRACT_SHIFT) == EXTRACT_SHIFT) {
             // NO OP, the quantity already set (64) is needed for shift
         }
 
@@ -61,7 +61,7 @@ public class ItemGridHandler implements IItemGridHandler {
         ItemStack took = NetworkUtils.extractItem(network, item, size);
 
         if (took != null) {
-            if ((flags & GridExtractFlags.EXTRACT_SHIFT) == GridExtractFlags.EXTRACT_SHIFT) {
+            if ((flags & EXTRACT_SHIFT) == EXTRACT_SHIFT) {
                 if (!player.inventory.addItemStackToInventory(took.copy())) {
                     InventoryHelper.spawnItemStack(player.worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), took);
                 }

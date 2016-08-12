@@ -4,10 +4,12 @@ import cofh.api.energy.EnergyStorage;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fluids.FluidStack;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.grid.IItemGridHandler;
 import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.api.storage.fluid.IGroupedFluidStorage;
 import refinedstorage.api.storage.item.IGroupedItemStorage;
 
 import javax.annotation.Nonnull;
@@ -57,6 +59,11 @@ public interface INetworkMaster {
      * @return The {@link IGroupedItemStorage} of this network
      */
     IGroupedItemStorage getItemStorage();
+
+    /**
+     * @return The {@link IGroupedFluidStorage} of this network
+     */
+    IGroupedFluidStorage getFluidStorage();
 
     /**
      * @return The crafting tasks in this network, do NOT modify this list
@@ -158,4 +165,26 @@ public interface INetworkMaster {
      */
     @Nullable
     ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags);
+
+    /**
+     * Inserts a fluid to this network.
+     *
+     * @param stack    The stack prototype to insert, do NOT modify
+     * @param size     The amount of that prototype that has to be inserted
+     * @param simulate If we are simulating
+     * @return null if the insert was successful, or an {@link FluidStack} with the remainder
+     */
+    @Nullable
+    FluidStack insertFluid(@Nonnull FluidStack stack, int size, boolean simulate);
+
+    /**
+     * Extracts a fluid from this network.
+     *
+     * @param stack The prototype of the stack to extract, do NOT modify
+     * @param size  The amount of that prototype that has to be extracted
+     * @param flags The flags to compare on, see {@link CompareUtils}
+     * @return null if we didn't extract anything, or a {@link FluidStack} with the result
+     */
+    @Nullable
+    FluidStack extractFluid(@Nonnull FluidStack stack, int size, int flags);
 }

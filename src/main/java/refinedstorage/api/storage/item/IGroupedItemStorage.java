@@ -3,7 +3,6 @@ package refinedstorage.api.storage.item;
 import net.minecraft.item.ItemStack;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.storage.CompareUtils;
-import refinedstorage.api.storage.IStorageProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -19,7 +18,7 @@ import java.util.List;
  */
 public interface IGroupedItemStorage {
     /**
-     * Rebuilds the global item list. Typically called when a {@link IStorageProvider} is added or removed from the network.
+     * Rebuilds the global item list. Typically called when a {@link IItemStorageProvider} is added or removed from the network.
      */
     void rebuild();
 

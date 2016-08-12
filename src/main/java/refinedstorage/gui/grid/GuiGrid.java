@@ -13,7 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import refinedstorage.RefinedStorage;
-import refinedstorage.api.network.grid.GridExtractFlags;
+import refinedstorage.api.network.grid.IItemGridHandler;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
@@ -372,15 +372,15 @@ public class GuiGrid extends GuiBase {
                     int flags = 0;
 
                     if (clickedButton == 1) {
-                        flags |= GridExtractFlags.EXTRACT_HALF;
+                        flags |= IItemGridHandler.EXTRACT_HALF;
                     }
 
                     if (GuiScreen.isShiftKeyDown()) {
-                        flags |= GridExtractFlags.EXTRACT_SHIFT;
+                        flags |= IItemGridHandler.EXTRACT_SHIFT;
                     }
 
                     if (clickedButton == 2) {
-                        flags |= GridExtractFlags.EXTRACT_SINGLE;
+                        flags |= IItemGridHandler.EXTRACT_SINGLE;
                     }
 
                     RefinedStorage.INSTANCE.network.sendToServer(new MessageGridPull(SORTED_ITEMS.get(slotNumber).getId(), flags));

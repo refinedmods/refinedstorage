@@ -9,11 +9,15 @@ import javax.annotation.Nullable;
  * Defines the behavior of item grids.
  */
 public interface IItemGridHandler {
+    int EXTRACT_HALF = 1;
+    int EXTRACT_SINGLE = 2;
+    int EXTRACT_SHIFT = 4;
+
     /**
      * Called when a player tries to extract an item from the grid.
      *
      * @param hash   The hash of the item we're trying to extract, see {@link refinedstorage.api.network.NetworkUtils#getItemStackHashCode(ItemStack)}
-     * @param flags  How we are extracting, see {@link GridExtractFlags}
+     * @param flags  How we are extracting
      * @param player The player that is attempting the extraction
      */
     void onExtract(int hash, int flags, EntityPlayerMP player);

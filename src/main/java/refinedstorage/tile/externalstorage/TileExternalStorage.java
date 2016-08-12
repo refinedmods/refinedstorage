@@ -10,8 +10,8 @@ import net.minecraftforge.items.IItemHandler;
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 import refinedstorage.RefinedStorage;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.api.storage.IStorageProvider;
 import refinedstorage.api.storage.item.IItemStorage;
+import refinedstorage.api.storage.item.IItemStorageProvider;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.tile.IStorageGui;
 import refinedstorage.tile.TileMultipartNode;
@@ -24,7 +24,7 @@ import refinedstorage.tile.data.TileDataParameter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileExternalStorage extends TileMultipartNode implements IStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable {
+public class TileExternalStorage extends TileMultipartNode implements IItemStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable {
     public static final TileDataParameter<Integer> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();

@@ -2,7 +2,6 @@ package refinedstorage.api.storage.item;
 
 import net.minecraft.item.ItemStack;
 import refinedstorage.api.storage.CompareUtils;
-import refinedstorage.api.storage.IStorageProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -10,7 +9,7 @@ import java.util.List;
 
 /**
  * Represents an item storage sink for the storage network.
- * Provide this through an {@link IStorageProvider}.
+ * Provide this through an {@link IItemStorageProvider}.
  */
 public interface IItemStorage {
     /**
@@ -32,8 +31,7 @@ public interface IItemStorage {
     /**
      * Extracts an item from this storage.
      * <p>
-     * If the stack we found in the system is smaller than the requested size, return the stack anyway.
-     * For example: if this method is called for dirt (64x) while there is only dirt (32x), return the dirt (32x) anyway.
+     * If the stack we found in the system is smaller than the requested size, return that stack anyway.
      *
      * @param stack A prototype of the stack to extract, do NOT modify
      * @param size  The amount of that prototype that has to be extracted

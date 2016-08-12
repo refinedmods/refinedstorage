@@ -8,8 +8,8 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.api.storage.IStorageProvider;
 import refinedstorage.api.storage.item.IItemStorage;
+import refinedstorage.api.storage.item.IItemStorageProvider;
 import refinedstorage.apiimpl.storage.item.ItemStorageNBT;
 import refinedstorage.block.BlockStorage;
 import refinedstorage.block.EnumStorageType;
@@ -22,7 +22,7 @@ import refinedstorage.tile.data.TileDataParameter;
 
 import java.util.List;
 
-public class TileStorage extends TileNode implements IStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable {
+public class TileStorage extends TileNode implements IItemStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable {
     public static final TileDataParameter<Integer> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
