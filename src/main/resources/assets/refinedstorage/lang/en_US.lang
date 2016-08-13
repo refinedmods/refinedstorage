@@ -42,6 +42,7 @@ gui.refinedstorage:network_transmitter.missing_upgrade=Insert upgrade
 gui.refinedstorage:fluid_disk_drive=Fluid Disk Drive
 gui.refinedstorage:fluid_constructor=Fluid Constructor
 gui.refinedstorage:fluid_destructor=Fluid Destructor
+gui.refinedstorage:fluid_importer=Fluid Importer
 
 misc.refinedstorage:energy_stored=%d / %d RS
 misc.refinedstorage:energy_usage=Usage: %d RS/t
@@ -132,6 +133,7 @@ block.refinedstorage:network_transmitter.name=Network Transmitter
 block.refinedstorage:fluid_disk_drive.name=Fluid Disk Drive
 block.refinedstorage:fluid_constructor.name=Fluid Constructor
 block.refinedstorage:fluid_destructor.name=Fluid Destructor
+block.refinedstorage:fluid_importer.name=Fluid Importer
 
 item.refinedstorage:storage_disk.0.name=1k Storage Disk
 item.refinedstorage:storage_disk.1.name=4k Storage Disk

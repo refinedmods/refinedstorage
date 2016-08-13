@@ -57,6 +57,8 @@ public class GuiHandler implements IGuiHandler {
                 return new ContainerFluidConstructor((TileFluidConstructor) tile, player);
             case RefinedStorageGui.FLUID_DESTRUCTOR:
                 return new ContainerFluidDestructor((TileFluidDestructor) tile, player);
+            case RefinedStorageGui.FLUID_IMPORTER:
+                return new ContainerFluidImporter((TileFluidImporter) tile, player);
             default:
                 return null;
         }
@@ -134,6 +136,8 @@ public class GuiHandler implements IGuiHandler {
                 return new GuiFluidConstructor((ContainerFluidConstructor) getContainer(ID, player, tile));
             case RefinedStorageGui.FLUID_DESTRUCTOR:
                 return new GuiFluidDestructor((ContainerFluidDestructor) getContainer(ID, player, tile));
+            case RefinedStorageGui.FLUID_IMPORTER:
+                return new GuiFluidImporter((ContainerFluidImporter) getContainer(ID, player, tile));
             default:
                 return null;
         }

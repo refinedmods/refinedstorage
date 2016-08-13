@@ -88,6 +88,7 @@ public class CommonProxy {
         registerTile(TileFluidDiskDrive.class, "fluid_disk_drive");
         registerTile(TileFluidConstructor.class, "fluid_constructor");
         registerTile(TileFluidDestructor.class, "fluid_destructor");
+        registerTile(TileFluidImporter.class, "fluid_importer");
 
         registerBlock(RefinedStorageBlocks.CONTROLLER);
         registerBlock(RefinedStorageBlocks.GRID);
@@ -113,6 +114,7 @@ public class CommonProxy {
         registerBlock(RefinedStorageBlocks.FLUID_DISK_DRIVE);
         registerBlock(RefinedStorageBlocks.FLUID_CONSTRUCTOR);
         registerBlock(RefinedStorageBlocks.FLUID_DESTRUCTOR);
+        registerBlock(RefinedStorageBlocks.FLUID_IMPORTER);
 
         registerItem(RefinedStorageItems.QUARTZ_ENRICHED_IRON);
         registerItem(RefinedStorageItems.STORAGE_DISK);
@@ -329,6 +331,14 @@ public class CommonProxy {
             new ItemStack(RefinedStorageBlocks.CABLE),
             new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
             new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
+        );
+
+        // Fluid Importer
+        GameRegistry.addShapelessRecipe(new ItemStack(RefinedStorageBlocks.FLUID_IMPORTER),
+            new ItemStack(RefinedStorageBlocks.CABLE),
+            new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
+            new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED),
+            new ItemStack(Items.BUCKET)
         );
 
         // Exporter

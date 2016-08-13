@@ -1,18 +1,12 @@
 package refinedstorage.tile;
 
 import mcmultipart.microblock.IMicroblock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockLiquid;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.wrappers.BlockLiquidWrapper;
-import net.minecraftforge.fluids.capability.wrappers.FluidBlockWrapper;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorage;
@@ -23,14 +17,12 @@ import refinedstorage.tile.config.IComparable;
 import refinedstorage.tile.config.IFilterable;
 import refinedstorage.tile.data.TileDataParameter;
 
-public class TileFluidDestructor extends TileMultipartNode implements IComparable, IFilterable {
+public class TileFluidImporter extends TileMultipartNode implements IComparable, IFilterable {
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
 
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
-
-    private static final int BASE_SPEED = 20;
 
     private ItemHandlerFluid filters = new ItemHandlerFluid(9, this);
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED);
@@ -38,7 +30,7 @@ public class TileFluidDestructor extends TileMultipartNode implements IComparabl
     private int compare = 0;
     private int mode = IFilterable.WHITELIST;
 
-    public TileFluidDestructor() {
+    public TileFluidImporter() {
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(MODE);
     }
@@ -50,32 +42,20 @@ public class TileFluidDestructor extends TileMultipartNode implements IComparabl
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.fluidDestructorUsage + upgrades.getEnergyUsage();
+        return RefinedStorage.INSTANCE.fluidImporterUsage + upgrades.getEnergyUsage();
     }
 
     @Override
     public void updateNode() {
-        if (ticks % upgrades.getSpeed(BASE_SPEED, 4) == 0) {
-            BlockPos front = pos.offset(getDirection());
+        IFluidHandler handler = getFluidHandler(getFacingTile(), getDirection().getOpposite());
 
-            Block frontBlock = worldObj.getBlockState(front).getBlock();
+        if (handler != null) {
+            FluidStack stack = handler.drain(Fluid.BUCKET_VOLUME, false);
 
-            IFluidHandler handler = null;
+            if (stack != null && IFilterable.canTakeFluids(filters, mode, compare, stack) && network.insertFluid(stack, stack.amount, true) == null) {
+                FluidStack drain = handler.drain(Fluid.BUCKET_VOLUME, true);
 
-            if (frontBlock instanceof BlockLiquid) {
-                handler = new BlockLiquidWrapper((BlockLiquid) frontBlock, worldObj, front);
-            } else if (frontBlock instanceof IFluidBlock) {
-                handler = new FluidBlockWrapper((IFluidBlock) frontBlock, worldObj, front);
-            }
-
-            if (handler != null) {
-                FluidStack stack = handler.drain(Fluid.BUCKET_VOLUME, false);
-
-                if (stack != null && IFilterable.canTakeFluids(filters, mode, compare, stack) && network.insertFluid(stack, stack.amount, true) == null) {
-                    FluidStack drained = handler.drain(Fluid.BUCKET_VOLUME, true);
-
-                    network.insertFluid(drained, drained.amount, false);
-                }
+                network.insertFluid(drain, drain.amount, false);
             }
         }
     }
@@ -137,7 +117,7 @@ public class TileFluidDestructor extends TileMultipartNode implements IComparabl
         return upgrades;
     }
 
-    public IItemHandler getInventory() {
+    public IItemHandler getFilters() {
         return filters;
     }
 

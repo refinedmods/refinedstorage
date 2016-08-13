@@ -14,6 +14,9 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.wrappers.FluidHandlerWrapper;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
@@ -213,6 +216,22 @@ public abstract class TileBase extends TileEntity implements ITickable {
             } else if (tile instanceof IInventory) {
                 handler = new InvWrapper((IInventory) tile);
             }
+        }
+
+        return handler;
+    }
+
+    protected IFluidHandler getFluidHandler(TileEntity tile, EnumFacing side) {
+        if (tile == null) {
+            return null;
+        }
+
+        IFluidHandler handler = null;
+
+        if (tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)) {
+            handler = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side);
+        } else if (tile instanceof net.minecraftforge.fluids.IFluidHandler) {
+            handler = new FluidHandlerWrapper((net.minecraftforge.fluids.IFluidHandler) tile, side);
         }
 
         return handler;

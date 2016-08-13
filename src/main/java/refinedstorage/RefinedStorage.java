@@ -59,6 +59,7 @@ public final class RefinedStorage {
     public int externalStoragePerStorageUsage;
     public int exporterUsage;
     public int importerUsage;
+    public int fluidImporterUsage;
     public int interfaceUsage;
     public int relayUsage;
     public int soldererUsage;
@@ -108,6 +109,7 @@ public final class RefinedStorage {
         externalStoragePerStorageUsage = config.getInt("externalStoragePerStorage", "energy", 1, 0, Integer.MAX_VALUE, "The additional energy used per connected storage to an External Storage");
         exporterUsage = config.getInt("exporter", "energy", 1, 0, Integer.MAX_VALUE, "The energy used by Exporters");
         importerUsage = config.getInt("importer", "energy", 1, 0, Integer.MAX_VALUE, "The energy used by Importers");
+        fluidImporterUsage = config.getInt("fluidImporter", "energy", 1, 0, Integer.MAX_VALUE, "The energy used by Fluid Importers");
         interfaceUsage = config.getInt("interface", "energy", 3, 0, Integer.MAX_VALUE, "The energy used by Interfaces");
         relayUsage = config.getInt("relay", "energy", 1, 0, Integer.MAX_VALUE, "The energy used by Relays");
         soldererUsage = config.getInt("solderer", "energy", 3, 0, Integer.MAX_VALUE, "The energy used by Solderers");

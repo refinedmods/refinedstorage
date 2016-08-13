@@ -36,8 +36,12 @@ public class BlockImporter extends BlockCable {
     public static final AxisAlignedBB LINE_DOWN_2_AABB = createAABB(5, 2, 5, 11, 4, 11);
     public static final AxisAlignedBB LINE_DOWN_3_AABB = createAABB(3, 0, 3, 13, 2, 13);
 
+    public BlockImporter(String name) {
+        super(name);
+    }
+
     public BlockImporter() {
-        super("importer");
+        this("importer");
     }
 
     @Override

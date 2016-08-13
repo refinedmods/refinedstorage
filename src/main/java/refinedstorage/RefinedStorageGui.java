@@ -23,4 +23,5 @@ public final class RefinedStorageGui {
     public static final int FLUID_DISK_DRIVE = 19;
     public static final int FLUID_CONSTRUCTOR = 20;
     public static final int FLUID_DESTRUCTOR = 21;
+    public static final int FLUID_IMPORTER = 22;
 }
