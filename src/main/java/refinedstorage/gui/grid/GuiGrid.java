@@ -60,7 +60,7 @@ public class GuiGrid extends GuiBase {
     }
 
     public GuiGrid(ContainerGrid container, IGrid grid) {
-        super(container, 227, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 247 : 208);
+        super(container, grid.getType() == EnumGridType.FLUID ? 193 : 227, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 247 : 208);
 
         setScrollbar(new Scrollbar(174, 20, 12, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN || grid.getType() == EnumGridType.FLUID) ? 70 : 88));
 
@@ -241,8 +241,6 @@ public class GuiGrid extends GuiBase {
             bindTexture("gui/crafting_grid.png");
         } else if (grid.getType() == EnumGridType.PATTERN) {
             bindTexture("gui/pattern_grid.png");
-        } else if (grid.getType() == EnumGridType.FLUID) {
-            bindTexture("gui/fluid_grid.png");
         } else {
             bindTexture("gui/grid.png");
         }

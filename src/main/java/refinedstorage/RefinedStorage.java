@@ -44,6 +44,7 @@ public final class RefinedStorage {
     public int controllerBaseUsage;
     public int cableUsage;
     public int constructorUsage;
+    public int fluidConstructorUsage;
     public int crafterUsage;
     public int crafterPerPatternUsage;
     public int craftingMonitorUsage;
@@ -91,6 +92,7 @@ public final class RefinedStorage {
         controllerBaseUsage = config.getInt("controllerBase", "energy", 0, 0, Integer.MAX_VALUE, "The base energy used by the Controller");
         cableUsage = config.getInt("cable", "energy", 0, 0, Integer.MAX_VALUE, "The energy used by Cables");
         constructorUsage = config.getInt("constructor", "energy", 1, 0, Integer.MAX_VALUE, "The energy used by Constructors");
+        fluidConstructorUsage = config.getInt("fluidConstructor", "energy", 1, 0, Integer.MAX_VALUE, "The energy used by Fluid Constructors");
         crafterUsage = config.getInt("crafter", "energy", 2, 0, Integer.MAX_VALUE, "The base energy used by Crafters");
         crafterPerPatternUsage = config.getInt("crafterPerPattern", "energy", 1, 0, Integer.MAX_VALUE, "The additional energy used per Pattern in a Crafter");
         craftingMonitorUsage = config.getInt("craftingMonitor", "energy", 2, 0, Integer.MAX_VALUE, "The energy used by Crafting Monitors");

@@ -4,7 +4,7 @@
     "textures": {
       "all": "refinedstorage:blocks/cable",
       "particle": "refinedstorage:blocks/cable",
-      "front": "refinedstorage:blocks/constructor",
+      "front": "refinedstorage:blocks/fluid_constructor",
       "line": "refinedstorage:blocks/cable_part"
     },
     "model": "refinedstorage:cable_core",

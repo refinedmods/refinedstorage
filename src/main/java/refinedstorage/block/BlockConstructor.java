@@ -31,8 +31,12 @@ public class BlockConstructor extends BlockCable {
     public static final AxisAlignedBB HEAD_DOWN_AABB = createAABB(0, 0, 0, 16, 2, 16);
     public static final AxisAlignedBB HEAD_UP_AABB = createAABB(0, 14, 0, 16, 16, 16);
 
+    public BlockConstructor(String name) {
+        super(name);
+    }
+
     public BlockConstructor() {
-        super("constructor");
+        this("constructor");
     }
 
     @Override

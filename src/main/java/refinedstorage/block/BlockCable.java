@@ -68,6 +68,10 @@ public class BlockCable extends BlockCoverable {
         setCreativeTab(RefinedStorage.INSTANCE.tab);
     }
 
+    public BlockCable() {
+        this("cable");
+    }
+
     @Override
     public String getUnlocalizedName() {
         return "block." + RefinedStorage.ID + ":" + name;
@@ -75,10 +79,6 @@ public class BlockCable extends BlockCoverable {
 
     public String getName() {
         return name;
-    }
-
-    public BlockCable() {
-        this("cable");
     }
 
     @Override

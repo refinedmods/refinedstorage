@@ -23,8 +23,6 @@ public class GuiHandler implements IGuiHandler {
                 return new ContainerGrid((TileGrid) tile, player);
             case RefinedStorageGui.DISK_DRIVE:
                 return new ContainerDiskDrive((TileDiskDrive) tile, player);
-            case RefinedStorageGui.FLUID_DISK_DRIVE:
-                return new ContainerFluidDiskDrive((TileFluidDiskDrive) tile, player);
             case RefinedStorageGui.IMPORTER:
                 return new ContainerImporter((TileImporter) tile, player);
             case RefinedStorageGui.EXPORTER:
@@ -53,6 +51,10 @@ public class GuiHandler implements IGuiHandler {
                 return new ContainerProcessingPatternEncoder((TileProcessingPatternEncoder) tile, player);
             case RefinedStorageGui.NETWORK_TRANSMITTER:
                 return new ContainerNetworkTransmitter((TileNetworkTransmitter) tile, player);
+            case RefinedStorageGui.FLUID_DISK_DRIVE:
+                return new ContainerFluidDiskDrive((TileFluidDiskDrive) tile, player);
+            case RefinedStorageGui.FLUID_CONSTRUCTOR:
+                return new ContainerFluidConstructor((TileFluidConstructor) tile, player);
             default:
                 return null;
         }
@@ -94,8 +96,6 @@ public class GuiHandler implements IGuiHandler {
                 return getWirelessGridGui(player, x);
             case RefinedStorageGui.DISK_DRIVE:
                 return new GuiStorage((ContainerDiskDrive) getContainer(ID, player, tile), (IStorageGui) tile, "gui/disk_drive.png");
-            case RefinedStorageGui.FLUID_DISK_DRIVE:
-                return new GuiStorage((ContainerFluidDiskDrive) getContainer(ID, player, tile), (IStorageGui) tile, "gui/fluid_disk_drive.png");
             case RefinedStorageGui.IMPORTER:
                 return new GuiImporter((ContainerImporter) getContainer(ID, player, tile));
             case RefinedStorageGui.EXPORTER:
@@ -126,6 +126,10 @@ public class GuiHandler implements IGuiHandler {
                 return new GuiGridFilter(getGridFilterContainer(player, x));
             case RefinedStorageGui.NETWORK_TRANSMITTER:
                 return new GuiNetworkTransmitter((ContainerNetworkTransmitter) getContainer(ID, player, tile), (TileNetworkTransmitter) tile);
+            case RefinedStorageGui.FLUID_DISK_DRIVE:
+                return new GuiStorage((ContainerFluidDiskDrive) getContainer(ID, player, tile), (IStorageGui) tile, "gui/disk_drive.png");
+            case RefinedStorageGui.FLUID_CONSTRUCTOR:
+                return new GuiFluidConstructor((ContainerFluidConstructor) getContainer(ID, player, tile));
             default:
                 return null;
         }

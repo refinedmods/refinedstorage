@@ -4,8 +4,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
-import refinedstorage.container.slot.SlotFluid;
 import refinedstorage.container.slot.SlotSpecimen;
+import refinedstorage.container.slot.SlotSpecimenFluid;
 import refinedstorage.inventory.ItemHandlerFluid;
 import refinedstorage.tile.TileBase;
 
@@ -22,7 +22,7 @@ public class ContainerStorage extends ContainerBase {
 
     protected void addFilterAndPlayerInventorySlots(IItemHandler filters) {
         for (int i = 0; i < 9; ++i) {
-            addSlotToContainer(filters instanceof ItemHandlerFluid ? new SlotFluid(!getTile().getWorld().isRemote, filters, i, 8 + (18 * i), 20) : new SlotSpecimen(filters, i, 8 + (18 * i), 20));
+            addSlotToContainer(filters instanceof ItemHandlerFluid ? new SlotSpecimenFluid(!getTile().getWorld().isRemote, filters, i, 8 + (18 * i), 20) : new SlotSpecimen(filters, i, 8 + (18 * i), 20));
         }
 
         addPlayerInventory(8, 129);
