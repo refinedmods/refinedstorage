@@ -14,6 +14,10 @@ public final class NetworkUtils {
         return network.extractItem(stack, size, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
     }
 
+    public static FluidStack extractFluid(INetworkMaster network, FluidStack stack, int size) {
+        return network.extractFluid(stack, size, CompareUtils.COMPARE_NBT);
+    }
+
     public static ICraftingPattern getPattern(INetworkMaster network, ItemStack stack) {
         return network.getPattern(stack, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
     }

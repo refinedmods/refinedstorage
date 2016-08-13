@@ -179,6 +179,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
         super.onConnectionChange(network, state);
 
         network.getItemStorage().rebuild();
+        network.getFluidStorage().rebuild();
     }
 
     @Override

@@ -360,8 +360,8 @@ public class GuiGrid extends GuiBase {
                 RefinedStorage.INSTANCE.network.sendToServer(grid.getType() == EnumGridType.FLUID ? new MessageGridFluidInsertHeld() : new MessageGridItemInsertHeld(clickedButton == 1));
             }
 
-            if (isOverSlotWithItem() && (held == null || (held != null && clickedButton == 2))) {
-                if (grid.getType() != EnumGridType.FLUID) {
+            if (isOverSlotWithItem()) {
+                if (grid.getType() != EnumGridType.FLUID && (held == null || (held != null && clickedButton == 2))) {
                     ClientStackItem stack = (ClientStackItem) STACKS.get(slotNumber);
 
                     if (stack.isCraftable() && (stack.getQuantity() == 0 || (GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown()))) {
@@ -383,7 +383,7 @@ public class GuiGrid extends GuiBase {
 
                         RefinedStorage.INSTANCE.network.sendToServer(new MessageGridItemPull(stack.getHash(), flags));
                     }
-                } else {
+                } else if (grid.getType() == EnumGridType.FLUID && held == null) {
                     RefinedStorage.INSTANCE.network.sendToServer(new MessageGridFluidPull(STACKS.get(slotNumber).getHash(), GuiScreen.isShiftKeyDown()));
                 }
             }

@@ -57,6 +57,14 @@ public interface IGroupedFluidStorage {
     FluidStack get(@Nonnull FluidStack stack, int flags);
 
     /**
+     * Gets a fluid from the network by hash, see {@link refinedstorage.api.network.NetworkUtils#getFluidStackHashCode(FluidStack)}.
+     *
+     * @return Null if no fluid is found matching the hash, or the {@link FluidStack}, do NOT modify
+     */
+    @Nullable
+    FluidStack get(int hash);
+
+    /**
      * @return All fluids in this storage network
      */
     Collection<FluidStack> getStacks();
