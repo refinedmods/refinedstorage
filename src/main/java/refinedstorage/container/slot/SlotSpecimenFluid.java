@@ -1,14 +1,23 @@
 package refinedstorage.container.slot;
 
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.SlotItemHandler;
 
-/**
- * Created by Raoul on 13/08/2016.
- */
-// @TODO: REMOVAL
-public class SlotSpecimenFluid extends SlotItemHandler {
-    public SlotSpecimenFluid(boolean b, IItemHandler filters, int i, int i1, int i2) {
-        super(filters, i, i1, i2);
+public class SlotSpecimenFluid extends SlotSpecimen {
+    private boolean server;
+
+    public SlotSpecimenFluid(boolean server, IItemHandler handler, int id, int x, int y) {
+        super(handler, id, x, y);
+
+        this.server = server;
+    }
+
+    @Override
+    public ItemStack getStack() {
+        return server ? super.getStack() : null;
+    }
+
+    public ItemStack getRealStack() {
+        return super.getStack();
     }
 }

@@ -37,4 +37,8 @@ public class SlotSpecimenType extends SlotSpecimen {
     public ItemStack getStack() {
         return (type.getType() == IType.ITEMS || !((TileEntity) type).getWorld().isRemote) ? super.getStack() : null;
     }
+
+    public ItemStack getRealStack() {
+        return super.getStack();
+    }
 }

@@ -7,9 +7,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.api.storage.CompareUtils;
-import refinedstorage.container.slot.SlotDisabled;
-import refinedstorage.container.slot.SlotSpecimen;
-import refinedstorage.container.slot.SlotSpecimenLegacy;
+import refinedstorage.container.slot.*;
 import refinedstorage.tile.TileBase;
 import refinedstorage.tile.grid.WirelessGrid;
 
@@ -109,21 +107,37 @@ public abstract class ContainerBase extends Container {
 
     protected ItemStack mergeItemStackToSpecimen(ItemStack stack, int begin, int end) {
         for (int i = begin; i < end; ++i) {
-            if (CompareUtils.compareStackNoQuantity(getSlot(i).getStack(), stack)) {
+            if (CompareUtils.compareStackNoQuantity(getStackFromSlot(getSlot(i)), stack)) {
                 return null;
             }
         }
 
         for (int i = begin; i < end; ++i) {
-            if (!getSlot(i).getHasStack() && getSlot(i).isItemValid(stack)) {
-                getSlot(i).putStack(ItemHandlerHelper.copyStackWithSize(stack, 1));
-                getSlot(i).onSlotChanged();
+            Slot slot = getSlot(i);
+
+            if (getStackFromSlot(slot) == null && slot.isItemValid(stack)) {
+                slot.putStack(ItemHandlerHelper.copyStackWithSize(stack, 1));
+                slot.onSlotChanged();
 
                 return null;
             }
         }
 
         return null;
+    }
+
+    private ItemStack getStackFromSlot(Slot slot) {
+        ItemStack stackInSlot = slot.getStack();
+
+        if (stackInSlot == null) {
+            if (slot instanceof SlotSpecimenFluid) {
+                stackInSlot = ((SlotSpecimenFluid) slot).getRealStack();
+            } else if (slot instanceof SlotSpecimenType) {
+                stackInSlot = ((SlotSpecimenType) slot).getRealStack();
+            }
+        }
+
+        return stackInSlot;
     }
 
     @Override
