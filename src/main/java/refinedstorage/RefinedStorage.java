@@ -65,6 +65,7 @@ public final class RefinedStorage {
     public int gridUsage;
     public int craftingGridUsage;
     public int patternGridUsage;
+    public int fluidGridUsage;
     public int networkTransmitterUsage;
     public float networkTransmitterPerBlockUsage;
     public int networkReceiverUsage;
@@ -111,6 +112,7 @@ public final class RefinedStorage {
         gridUsage = config.getInt("grid", "energy", 2, 0, Integer.MAX_VALUE, "The energy used by Grids");
         craftingGridUsage = config.getInt("craftingGrid", "energy", 4, 0, Integer.MAX_VALUE, "The energy used by Crafting Grids");
         patternGridUsage = config.getInt("patternGrid", "energy", 3, 0, Integer.MAX_VALUE, "The energy used by Pattern Grids");
+        fluidGridUsage = config.getInt("fluidGrid", "energy", 2, 0, Integer.MAX_VALUE, "The energy used by Fluid Grids");
         networkTransmitterUsage = config.getInt("networkTransmitter", "energy", 50, 0, Integer.MAX_VALUE, "The base energy used by Network Transmitters");
         networkTransmitterPerBlockUsage = config.getFloat("networkTransmitterPerBlock", "energy", 4, 0, Float.MAX_VALUE, "The additional energy per block that the Network Transmitter uses, gets rounded up");
         networkReceiverUsage = config.getInt("networkReceiver", "energy", 15, 0, Integer.MAX_VALUE, "The energy used by Network Receivers");

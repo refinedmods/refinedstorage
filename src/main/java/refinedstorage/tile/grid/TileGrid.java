@@ -167,6 +167,8 @@ public class TileGrid extends TileNode implements IGrid {
                 return RefinedStorage.INSTANCE.craftingGridUsage;
             case PATTERN:
                 return RefinedStorage.INSTANCE.patternGridUsage;
+            case FLUID:
+                return RefinedStorage.INSTANCE.fluidGridUsage;
             default:
                 return 0;
         }
