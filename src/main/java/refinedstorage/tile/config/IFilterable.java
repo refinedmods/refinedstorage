@@ -3,8 +3,10 @@ package refinedstorage.tile.config;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.inventory.ItemHandlerFluidFilter;
 import refinedstorage.tile.data.ITileDataConsumer;
 import refinedstorage.tile.data.ITileDataProducer;
 import refinedstorage.tile.data.TileDataParameter;
@@ -49,6 +51,38 @@ public interface IFilterable {
         } else if (mode == BLACKLIST) {
             for (int i = 0; i < filters.getSlots(); ++i) {
                 ItemStack slot = filters.getStackInSlot(i);
+
+                if (slot != null && CompareUtils.compareStack(slot, stack, compare)) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    static boolean canTakeFluids(ItemHandlerFluidFilter filters, int mode, int compare, FluidStack stack) {
+        if (mode == WHITELIST) {
+            int slots = 0;
+
+            for (int i = 0; i < filters.getSlots(); ++i) {
+                FluidStack slot = filters.getFilters()[i];
+
+                if (slot != null) {
+                    slots++;
+
+                    if (CompareUtils.compareStack(slot, stack, compare)) {
+                        return true;
+                    }
+                }
+            }
+
+            return slots == 0;
+        } else if (mode == BLACKLIST) {
+            for (int i = 0; i < filters.getSlots(); ++i) {
+                FluidStack slot = filters.getFilters()[i];
 
                 if (slot != null && CompareUtils.compareStack(slot, stack, compare)) {
                     return false;

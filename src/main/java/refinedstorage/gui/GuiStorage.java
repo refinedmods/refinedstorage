@@ -45,8 +45,13 @@ public class GuiStorage extends GuiBase {
         }
 
         if (gui.getCompareParameter() != null) {
-            addSideButton(new SideButtonCompare(gui.getCompareParameter(), CompareUtils.COMPARE_DAMAGE));
-            addSideButton(new SideButtonCompare(gui.getCompareParameter(), CompareUtils.COMPARE_NBT));
+            if (gui.hasComparisonFor(CompareUtils.COMPARE_DAMAGE)) {
+                addSideButton(new SideButtonCompare(gui.getCompareParameter(), CompareUtils.COMPARE_DAMAGE));
+            }
+
+            if (gui.hasComparisonFor(CompareUtils.COMPARE_NBT)) {
+                addSideButton(new SideButtonCompare(gui.getCompareParameter(), CompareUtils.COMPARE_NBT));
+            }
         }
 
         priorityField = new GuiTextField(0, fontRendererObj, x + 98 + 1, y + 54 + 1, 25, fontRendererObj.FONT_HEIGHT);

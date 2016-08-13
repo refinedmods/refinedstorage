@@ -85,6 +85,7 @@ public class CommonProxy {
         registerTile(TileCable.class, "cable");
         registerTile(TileNetworkReceiver.class, "network_receiver");
         registerTile(TileNetworkTransmitter.class, "network_transmitter");
+        registerTile(TileFluidDiskDrive.class, "fluid_disk_drive");
 
         registerBlock(RefinedStorageBlocks.CONTROLLER);
         registerBlock(RefinedStorageBlocks.GRID);
@@ -107,6 +108,7 @@ public class CommonProxy {
         registerBlock(RefinedStorageBlocks.MACHINE_CASING);
         registerBlock(RefinedStorageBlocks.NETWORK_TRANSMITTER);
         registerBlock(RefinedStorageBlocks.NETWORK_RECEIVER);
+        registerBlock(RefinedStorageBlocks.FLUID_DISK_DRIVE);
 
         registerItem(RefinedStorageItems.QUARTZ_ENRICHED_IRON);
         registerItem(RefinedStorageItems.STORAGE_DISK);
@@ -200,6 +202,15 @@ public class CommonProxy {
             new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
             new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
             new ItemStack(Blocks.CHEST)
+        ));
+
+        // Fluid Disk Drive
+        RefinedStorageAPI.SOLDERER_REGISTRY.addRecipe(new SoldererRecipeBasic(
+            new ItemStack(RefinedStorageBlocks.FLUID_DISK_DRIVE),
+            500,
+            new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
+            new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
+            new ItemStack(Items.BUCKET)
         ));
 
         // Cable

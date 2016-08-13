@@ -12,6 +12,10 @@ public interface IStorageGui {
 
     TileDataParameter<Integer> getCompareParameter();
 
+    default boolean hasComparisonFor(int compare) {
+        return true;
+    }
+
     TileDataParameter<Integer> getFilterParameter();
 
     TileDataParameter<Integer> getPriorityParameter();

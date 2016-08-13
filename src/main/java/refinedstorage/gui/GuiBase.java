@@ -1,16 +1,23 @@
 package refinedstorage.gui;
 
+import mezz.jei.gui.ingredients.FluidStackRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
+import net.minecraftforge.items.SlotItemHandler;
 import org.lwjgl.input.Mouse;
 import refinedstorage.RefinedStorage;
 import refinedstorage.gui.sidebutton.SideButton;
+import refinedstorage.inventory.ItemHandlerFluidFilter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,6 +25,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class GuiBase extends GuiContainer {
+    public static final FluidStackRenderer FLUID_RENDERER = new FluidStackRenderer(Fluid.BUCKET_VOLUME, false, 16, 16, null);
+
     protected static final int SIDE_BUTTON_WIDTH = 20;
     protected static final int SIDE_BUTTON_HEIGHT = 20;
 
@@ -115,6 +124,20 @@ public abstract class GuiBase extends GuiContainer {
         }
 
         drawForeground(mouseX, mouseY);
+
+        RenderHelper.enableGUIStandardItemLighting();
+
+        for (int i = 0; i < inventorySlots.inventorySlots.size(); ++i) {
+            Slot slot = inventorySlots.inventorySlots.get(i);
+
+            if (slot instanceof SlotItemHandler && ((SlotItemHandler) slot).getItemHandler() instanceof ItemHandlerFluidFilter) {
+                FluidStack stack = ((ItemHandlerFluidFilter) ((SlotItemHandler) slot).getItemHandler()).getFilters()[slot.getSlotIndex()];
+
+                if (stack != null) {
+                    FLUID_RENDERER.draw(mc, slot.xDisplayPosition, slot.yDisplayPosition, stack);
+                }
+            }
+        }
 
         if (sideButtonTooltip != null) {
             drawTooltip(mouseX, mouseY, sideButtonTooltip);

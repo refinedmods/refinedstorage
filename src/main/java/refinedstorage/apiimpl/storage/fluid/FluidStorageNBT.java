@@ -138,6 +138,7 @@ public abstract class FluidStorageNBT implements IFluidStorage {
     @Override
     public FluidStack extractFluid(FluidStack stack, int size, int flags) {
         for (FluidStack otherStack : stacks) {
+            // @TODO: Use flags everywhere
             if (otherStack.isFluidEqual(stack)) {
                 if (size > otherStack.amount) {
                     size = otherStack.amount;

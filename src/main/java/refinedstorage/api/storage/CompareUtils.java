@@ -1,6 +1,7 @@
 package refinedstorage.api.storage;
 
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -69,6 +70,36 @@ public final class CompareUtils {
 
         if ((flags & COMPARE_QUANTITY) == COMPARE_QUANTITY) {
             if (left.stackSize != right.stackSize) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Compares two stacks by the given flags.
+     *
+     * @param left  The left stack
+     * @param right The right stack
+     * @param flags The flags to compare with
+     * @return Whether the left and right stack are equal
+     */
+    public static boolean compareStack(FluidStack left, FluidStack right, int flags) {
+        if (left == null && right == null) {
+            return true;
+        }
+
+        if ((left == null && right != null) || (left != null && right == null)) {
+            return false;
+        }
+
+        if (left.getFluid() != right.getFluid()) {
+            return false;
+        }
+
+        if ((flags & COMPARE_NBT) == COMPARE_NBT) {
+            if (!left.tag.equals(right)) {
                 return false;
             }
         }

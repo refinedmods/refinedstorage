@@ -4,10 +4,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
-import refinedstorage.tile.TileDiskDrive;
+import refinedstorage.tile.TileFluidDiskDrive;
 
-public class ContainerDiskDrive extends ContainerStorage {
-    public ContainerDiskDrive(TileDiskDrive drive, EntityPlayer player) {
+public class ContainerFluidDiskDrive extends ContainerStorage {
+    public ContainerFluidDiskDrive(TileFluidDiskDrive drive, EntityPlayer player) {
         super(drive, player);
 
         for (int i = 0; i < 4; ++i) {
