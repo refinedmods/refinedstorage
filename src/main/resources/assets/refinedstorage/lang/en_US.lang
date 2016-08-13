@@ -40,9 +40,6 @@ gui.refinedstorage:network_transmitter.dimension=Dimension %d
 gui.refinedstorage:network_transmitter.missing_card=Missing Network Card
 gui.refinedstorage:network_transmitter.missing_upgrade=Insert upgrade
 gui.refinedstorage:fluid_disk_drive=Fluid Disk Drive
-gui.refinedstorage:fluid_constructor=Fluid Constructor
-gui.refinedstorage:fluid_destructor=Fluid Destructor
-gui.refinedstorage:fluid_importer=Fluid Importer
 
 misc.refinedstorage:energy_stored=%d / %d RS
 misc.refinedstorage:energy_usage=Usage: %d RS/t
@@ -96,6 +93,10 @@ sidebutton.refinedstorage:mode=Mode
 sidebutton.refinedstorage:mode.whitelist=Whitelist
 sidebutton.refinedstorage:mode.blacklist=Blacklist
 
+sidebutton.refinedstorage:type=Type
+sidebutton.refinedstorage:type.0=Items
+sidebutton.refinedstorage:type.1=Fluids
+
 sidebutton.refinedstorage:detector.mode=Mode
 sidebutton.refinedstorage:detector.mode.0=Emit signal when under the amount
 sidebutton.refinedstorage:detector.mode.1=Emit signal when on the amount
@@ -131,9 +132,6 @@ block.refinedstorage:processing_pattern_encoder.name=Processing Pattern Encoder
 block.refinedstorage:network_receiver.name=Network Receiver
 block.refinedstorage:network_transmitter.name=Network Transmitter
 block.refinedstorage:fluid_disk_drive.name=Fluid Disk Drive
-block.refinedstorage:fluid_constructor.name=Fluid Constructor
-block.refinedstorage:fluid_destructor.name=Fluid Destructor
-block.refinedstorage:fluid_importer.name=Fluid Importer
 
 item.refinedstorage:storage_disk.0.name=1k Storage Disk
 item.refinedstorage:storage_disk.1.name=4k Storage Disk

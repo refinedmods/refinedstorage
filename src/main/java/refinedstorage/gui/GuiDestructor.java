@@ -5,6 +5,7 @@ import refinedstorage.container.ContainerDestructor;
 import refinedstorage.gui.sidebutton.SideButtonCompare;
 import refinedstorage.gui.sidebutton.SideButtonMode;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
+import refinedstorage.gui.sidebutton.SideButtonType;
 import refinedstorage.tile.TileDestructor;
 
 public class GuiDestructor extends GuiBase {
@@ -15,6 +16,8 @@ public class GuiDestructor extends GuiBase {
     @Override
     public void init(int x, int y) {
         addSideButton(new SideButtonRedstoneMode(TileDestructor.REDSTONE_MODE));
+
+        addSideButton(new SideButtonType(TileDestructor.TYPE));
 
         addSideButton(new SideButtonMode(TileDestructor.MODE));
 

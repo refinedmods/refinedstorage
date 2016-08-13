@@ -44,12 +44,10 @@ public final class RefinedStorage {
     public int controllerBaseUsage;
     public int cableUsage;
     public int constructorUsage;
-    public int fluidConstructorUsage;
     public int crafterUsage;
     public int crafterPerPatternUsage;
     public int craftingMonitorUsage;
     public int destructorUsage;
-    public int fluidDestructorUsage;
     public int detectorUsage;
     public int diskDriveUsage;
     public int diskDrivePerDiskUsage;
@@ -59,7 +57,6 @@ public final class RefinedStorage {
     public int externalStoragePerStorageUsage;
     public int exporterUsage;
     public int importerUsage;
-    public int fluidImporterUsage;
     public int interfaceUsage;
     public int relayUsage;
     public int soldererUsage;
@@ -94,12 +91,10 @@ public final class RefinedStorage {
         controllerBaseUsage = config.getInt("controllerBase", "energy", 0, 0, Integer.MAX_VALUE, "The base energy used by the Controller");
         cableUsage = config.getInt("cable", "energy", 0, 0, Integer.MAX_VALUE, "The energy used by Cables");
         constructorUsage = config.getInt("constructor", "energy", 1, 0, Integer.MAX_VALUE, "The energy used by Constructors");
-        fluidConstructorUsage = config.getInt("fluidConstructor", "energy", 1, 0, Integer.MAX_VALUE, "The energy used by Fluid Constructors");
         crafterUsage = config.getInt("crafter", "energy", 2, 0, Integer.MAX_VALUE, "The base energy used by Crafters");
         crafterPerPatternUsage = config.getInt("crafterPerPattern", "energy", 1, 0, Integer.MAX_VALUE, "The additional energy used per Pattern in a Crafter");
         craftingMonitorUsage = config.getInt("craftingMonitor", "energy", 2, 0, Integer.MAX_VALUE, "The energy used by Crafting Monitors");
         destructorUsage = config.getInt("destructor", "energy", 1, 0, Integer.MAX_VALUE, "The energy used by Destructors");
-        fluidDestructorUsage = config.getInt("fluidDestructor", "energy", 1, 0, Integer.MAX_VALUE, "The energy used by Fluid Destructors");
         detectorUsage = config.getInt("detector", "energy", 2, 0, Integer.MAX_VALUE, "The energy used by Detectors");
         diskDriveUsage = config.getInt("diskDrive", "energy", 0, 0, Integer.MAX_VALUE, "The base energy used by Disk Drives");
         diskDrivePerDiskUsage = config.getInt("diskDrivePerDisk", "energy", 1, 0, Integer.MAX_VALUE, "The additional energy used by Storage Disks in Disk Drives");
@@ -109,7 +104,6 @@ public final class RefinedStorage {
         externalStoragePerStorageUsage = config.getInt("externalStoragePerStorage", "energy", 1, 0, Integer.MAX_VALUE, "The additional energy used per connected storage to an External Storage");
         exporterUsage = config.getInt("exporter", "energy", 1, 0, Integer.MAX_VALUE, "The energy used by Exporters");
         importerUsage = config.getInt("importer", "energy", 1, 0, Integer.MAX_VALUE, "The energy used by Importers");
-        fluidImporterUsage = config.getInt("fluidImporter", "energy", 1, 0, Integer.MAX_VALUE, "The energy used by Fluid Importers");
         interfaceUsage = config.getInt("interface", "energy", 3, 0, Integer.MAX_VALUE, "The energy used by Interfaces");
         relayUsage = config.getInt("relay", "energy", 1, 0, Integer.MAX_VALUE, "The energy used by Relays");
         soldererUsage = config.getInt("solderer", "energy", 3, 0, Integer.MAX_VALUE, "The energy used by Solderers");

@@ -86,9 +86,6 @@ public class CommonProxy {
         registerTile(TileNetworkReceiver.class, "network_receiver");
         registerTile(TileNetworkTransmitter.class, "network_transmitter");
         registerTile(TileFluidDiskDrive.class, "fluid_disk_drive");
-        registerTile(TileFluidConstructor.class, "fluid_constructor");
-        registerTile(TileFluidDestructor.class, "fluid_destructor");
-        registerTile(TileFluidImporter.class, "fluid_importer");
 
         registerBlock(RefinedStorageBlocks.CONTROLLER);
         registerBlock(RefinedStorageBlocks.GRID);
@@ -112,9 +109,6 @@ public class CommonProxy {
         registerBlock(RefinedStorageBlocks.NETWORK_TRANSMITTER);
         registerBlock(RefinedStorageBlocks.NETWORK_RECEIVER);
         registerBlock(RefinedStorageBlocks.FLUID_DISK_DRIVE);
-        registerBlock(RefinedStorageBlocks.FLUID_CONSTRUCTOR);
-        registerBlock(RefinedStorageBlocks.FLUID_DESTRUCTOR);
-        registerBlock(RefinedStorageBlocks.FLUID_IMPORTER);
 
         registerItem(RefinedStorageItems.QUARTZ_ENRICHED_IRON);
         registerItem(RefinedStorageItems.STORAGE_DISK);
@@ -333,14 +327,6 @@ public class CommonProxy {
             new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
         );
 
-        // Fluid Importer
-        GameRegistry.addShapelessRecipe(new ItemStack(RefinedStorageBlocks.FLUID_IMPORTER),
-            new ItemStack(RefinedStorageBlocks.CABLE),
-            new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
-            new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED),
-            new ItemStack(Items.BUCKET)
-        );
-
         // Exporter
         GameRegistry.addShapelessRecipe(new ItemStack(RefinedStorageBlocks.EXPORTER),
             new ItemStack(RefinedStorageBlocks.CABLE),
@@ -360,18 +346,6 @@ public class CommonProxy {
             'I', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
         );
 
-        // Fluid Destructor
-        GameRegistry.addShapedRecipe(new ItemStack(RefinedStorageBlocks.DESTRUCTOR),
-            "EDE",
-            "RMR",
-            "EIE",
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
-            'D', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
-            'R', new ItemStack(Items.BUCKET),
-            'M', new ItemStack(RefinedStorageBlocks.CABLE),
-            'I', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
-        );
-
         // Constructor
         GameRegistry.addShapedRecipe(new ItemStack(RefinedStorageBlocks.CONSTRUCTOR),
             "ECE",
@@ -380,18 +354,6 @@ public class CommonProxy {
             'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
             'C', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
             'R', new ItemStack(Items.REDSTONE),
-            'M', new ItemStack(RefinedStorageBlocks.CABLE),
-            'I', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
-        );
-
-        // Fluid Constructor
-        GameRegistry.addShapedRecipe(new ItemStack(RefinedStorageBlocks.FLUID_CONSTRUCTOR),
-            "ECE",
-            "RMR",
-            "EIE",
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
-            'C', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
-            'R', new ItemStack(Items.BUCKET),
             'M', new ItemStack(RefinedStorageBlocks.CABLE),
             'I', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
         );

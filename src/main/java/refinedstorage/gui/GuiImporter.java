@@ -5,6 +5,7 @@ import refinedstorage.container.ContainerImporter;
 import refinedstorage.gui.sidebutton.SideButtonCompare;
 import refinedstorage.gui.sidebutton.SideButtonMode;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
+import refinedstorage.gui.sidebutton.SideButtonType;
 import refinedstorage.tile.TileImporter;
 
 public class GuiImporter extends GuiBase {
@@ -15,6 +16,8 @@ public class GuiImporter extends GuiBase {
     @Override
     public void init(int x, int y) {
         addSideButton(new SideButtonRedstoneMode(TileImporter.REDSTONE_MODE));
+
+        addSideButton(new SideButtonType(TileImporter.TYPE));
 
         addSideButton(new SideButtonMode(TileImporter.MODE));
 

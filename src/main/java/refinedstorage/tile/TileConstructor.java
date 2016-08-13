@@ -1,6 +1,7 @@
 package refinedstorage.tile;
 
 import mcmultipart.microblock.IMicroblock;
+import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
@@ -9,25 +10,31 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorage;
 import refinedstorage.apiimpl.autocrafting.CraftingTaskScheduler;
 import refinedstorage.container.slot.SlotSpecimen;
 import refinedstorage.inventory.ItemHandlerBasic;
+import refinedstorage.inventory.ItemHandlerFluid;
 import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.IComparable;
+import refinedstorage.tile.config.IType;
 import refinedstorage.tile.data.TileDataParameter;
 
-public class TileConstructor extends TileMultipartNode implements IComparable {
+public class TileConstructor extends TileMultipartNode implements IComparable, IType {
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
+    public static final TileDataParameter<Integer> TYPE = IType.createParameter();
 
     private static final String NBT_COMPARE = "Compare";
+    private static final String NBT_TYPE = "Type";
 
     private static final int BASE_SPEED = 20;
 
-    private ItemHandlerBasic filter = new ItemHandlerBasic(1, this) {
+    private ItemHandlerBasic itemFilters = new ItemHandlerBasic(1, this) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -35,16 +42,20 @@ public class TileConstructor extends TileMultipartNode implements IComparable {
             block = SlotSpecimen.getBlockState(worldObj, pos.offset(getDirection()), getStackInSlot(0));
         }
     };
+    private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(1, this);
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_CRAFTING);
 
     private int compare = 0;
+    private int type = IType.ITEMS;
+
     private IBlockState block;
 
     private CraftingTaskScheduler scheduler = new CraftingTaskScheduler(this);
 
     public TileConstructor() {
         dataManager.addWatchedParameter(COMPARE);
+        dataManager.addWatchedParameter(TYPE);
     }
 
     @Override
@@ -59,23 +70,45 @@ public class TileConstructor extends TileMultipartNode implements IComparable {
 
     @Override
     public void updateNode() {
-        if (block != null && ticks % upgrades.getSpeed(BASE_SPEED, 4) == 0) {
-            BlockPos front = pos.offset(getDirection());
+        if (ticks % upgrades.getSpeed(BASE_SPEED, 4) == 0) {
+            if (type == IType.ITEMS && block != null) {
+                BlockPos front = pos.offset(getDirection());
 
-            if (worldObj.isAirBlock(front) && block.getBlock().canPlaceBlockAt(worldObj, front)) {
-                ItemStack took = network.extractItem(filter.getStackInSlot(0), 1, compare);
+                if (worldObj.isAirBlock(front) && block.getBlock().canPlaceBlockAt(worldObj, front)) {
+                    ItemStack took = network.extractItem(itemFilters.getStackInSlot(0), 1, compare);
 
-                if (took != null) {
-                    scheduler.resetSchedule();
-                    worldObj.setBlockState(front, block.getBlock().getStateFromMeta(took.getMetadata()), 1 | 2);
-                    // From ItemBlock.onItemUse
-                    SoundType blockSound = block.getBlock().getSoundType();
-                    worldObj.playSound(null, front, blockSound.getPlaceSound(), SoundCategory.BLOCKS, (blockSound.getVolume() + 1.0F) / 2.0F, blockSound.getPitch() * 0.8F);
-                } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
-                    ItemStack craft = filter.getStackInSlot(0);
+                    if (took != null) {
+                        scheduler.resetSchedule();
+                        worldObj.setBlockState(front, block.getBlock().getStateFromMeta(took.getMetadata()), 1 | 2);
+                        // From ItemBlock.onItemUse
+                        SoundType blockSound = block.getBlock().getSoundType();
+                        worldObj.playSound(null, front, blockSound.getPlaceSound(), SoundCategory.BLOCKS, (blockSound.getVolume() + 1.0F) / 2.0F, blockSound.getPitch() * 0.8F);
+                    } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
+                        ItemStack craft = itemFilters.getStackInSlot(0);
 
-                    if (scheduler.canSchedule(compare, craft)) {
-                        scheduler.schedule(network, compare, craft);
+                        if (scheduler.canSchedule(compare, craft)) {
+                            scheduler.schedule(network, compare, craft);
+                        }
+                    }
+                }
+            } else if (type == IType.FLUIDS) {
+                FluidStack stack = fluidFilters.getFluids()[0];
+
+                if (stack != null) {
+                    BlockPos front = pos.offset(getDirection());
+
+                    Block block = stack.getFluid().getBlock();
+
+
+                    if (worldObj.isAirBlock(front) && block.canPlaceBlockAt(worldObj, front)) {
+                        FluidStack took = network.extractFluid(stack, Fluid.BUCKET_VOLUME, compare);
+
+                        if (took != null) {
+                            IBlockState state = block.getDefaultState();
+
+                            // @TODO: This doesn't cause the block to flow?
+                            worldObj.setBlockState(front, state, 1 | 2);
+                        }
                     }
                 }
             }
@@ -102,8 +135,13 @@ public class TileConstructor extends TileMultipartNode implements IComparable {
             compare = tag.getInteger(NBT_COMPARE);
         }
 
-        readItems(filter, 0, tag);
+        if (tag.hasKey(NBT_TYPE)) {
+            type = tag.getInteger(NBT_TYPE);
+        }
+
+        readItems(itemFilters, 0, tag);
         readItems(upgrades, 1, tag);
+        readItems(fluidFilters, 2, tag);
 
         scheduler.read(tag);
     }
@@ -113,9 +151,11 @@ public class TileConstructor extends TileMultipartNode implements IComparable {
         super.write(tag);
 
         tag.setInteger(NBT_COMPARE, compare);
+        tag.setInteger(NBT_TYPE, type);
 
-        writeItems(filter, 0, tag);
+        writeItems(itemFilters, 0, tag);
         writeItems(upgrades, 1, tag);
+        writeItems(fluidFilters, 2, tag);
 
         scheduler.writeToNBT(tag);
 
@@ -126,13 +166,26 @@ public class TileConstructor extends TileMultipartNode implements IComparable {
         return upgrades;
     }
 
-    public IItemHandler getFilter() {
-        return filter;
-    }
-
     @Override
     public IItemHandler getDrops() {
         return upgrades;
+    }
+
+    @Override
+    public int getType() {
+        return worldObj.isRemote ? TYPE.getValue() : type;
+    }
+
+    @Override
+    public void setType(int type) {
+        this.type = type;
+
+        markDirty();
+    }
+
+    @Override
+    public IItemHandler getFilterInventory() {
+        return getType() == IType.ITEMS ? itemFilters : fluidFilters;
     }
 
     @Override
