@@ -108,7 +108,7 @@ public class GuiGrid extends GuiBase {
         List<IClientStack> stacks = new ArrayList<>();
 
         if (grid.isConnected()) {
-            stacks.addAll(grid.getType() == EnumGridType.FLUID ? FLUIDS.values() : ITEMS.values());
+            stacks.addAll(grid.getType() == EnumGridType.FLUID ? new ArrayList<>(FLUIDS.values()) : new ArrayList<>(ITEMS.values()));
 
             String query = searchField.getText().trim().toLowerCase();
 
