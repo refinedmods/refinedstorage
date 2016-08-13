@@ -252,6 +252,15 @@ public class CommonProxy {
             new ItemStack(RefinedStorageItems.PATTERN)
         ));
 
+        // Fluid Grid
+        RefinedStorageAPI.SOLDERER_REGISTRY.addRecipe(new SoldererRecipeBasic(
+            new ItemStack(RefinedStorageBlocks.GRID, 1, EnumGridType.FLUID.getId()),
+            500,
+            new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
+            new ItemStack(RefinedStorageBlocks.GRID, 1, EnumGridType.FLUID.getId()),
+            new ItemStack(Items.BUCKET)
+        ));
+
         // Wireless Grid
         GameRegistry.addRecipe(new ItemStack(RefinedStorageItems.WIRELESS_GRID, 1, ItemWirelessGrid.TYPE_NORMAL),
             "EPE",

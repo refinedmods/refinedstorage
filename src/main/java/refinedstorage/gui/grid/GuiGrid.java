@@ -30,7 +30,6 @@ import refinedstorage.integration.jei.IntegrationJEI;
 import refinedstorage.network.*;
 import refinedstorage.tile.grid.IGrid;
 import refinedstorage.tile.grid.TileGrid;
-import refinedstorage.tile.grid.WirelessGrid;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -269,7 +268,7 @@ public class GuiGrid extends GuiBase {
 
     @Override
     public void drawForeground(int mouseX, int mouseY) {
-        drawString(7, 7, t(grid instanceof WirelessGrid ? "gui.refinedstorage:wireless_grid" : "gui.refinedstorage:grid"));
+        drawString(7, 7, t(grid.getGuiTitle()));
         drawString(7, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 153 : 114, t("container.inventory"));
 
         int x = 8;

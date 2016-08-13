@@ -11,10 +11,13 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.api.network.grid.IFluidGridHandler;
+import refinedstorage.api.storage.CompareUtils;
 
 import javax.annotation.Nullable;
 
 public class FluidGridHandler implements IFluidGridHandler {
+    private static final ItemStack EMPTY_BUCKET = new ItemStack(Items.BUCKET);
+
     private INetworkMaster network;
 
     public FluidGridHandler(INetworkMaster network) {
@@ -26,7 +29,21 @@ public class FluidGridHandler implements IFluidGridHandler {
         FluidStack stack = network.getFluidStorage().get(hash);
 
         if (stack != null) {
-            ItemStack bucket = NetworkUtils.extractItem(network, new ItemStack(Items.BUCKET), 1);
+            ItemStack bucket = NetworkUtils.extractItem(network, EMPTY_BUCKET, 1);
+
+            if (bucket == null) {
+                for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
+                    ItemStack slot = player.inventory.getStackInSlot(i);
+
+                    if (CompareUtils.compareStack(EMPTY_BUCKET, slot)) {
+                        bucket = slot;
+
+                        player.inventory.setInventorySlotContents(i, null);
+
+                        break;
+                    }
+                }
+            }
 
             if (bucket != null) {
                 bucket.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).fill(NetworkUtils.extractFluid(network, stack, 1000), true);

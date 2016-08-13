@@ -19,6 +19,8 @@ public interface IGrid {
 
     IFluidGridHandler getFluidHandler();
 
+    String getGuiTitle();
+
     int getViewType();
 
     int getSortingType();

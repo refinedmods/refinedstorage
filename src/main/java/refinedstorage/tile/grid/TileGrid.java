@@ -209,6 +209,11 @@ public class TileGrid extends TileNode implements IGrid {
         return isConnected() ? network.getFluidGridHandler() : null;
     }
 
+    @Override
+    public String getGuiTitle() {
+        return getType() == EnumGridType.FLUID ? "gui.refinedstorage:fluid_grid" : "gui.refinedstorage:grid";
+    }
+
     public InventoryCrafting getMatrix() {
         return matrix;
     }

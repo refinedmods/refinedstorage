@@ -97,6 +97,11 @@ public class WirelessGrid implements IGrid {
     }
 
     @Override
+    public String getGuiTitle() {
+        return "gui.refinedstorage:wireless_grid";
+    }
+
+    @Override
     public int getViewType() {
         return viewType;
     }
