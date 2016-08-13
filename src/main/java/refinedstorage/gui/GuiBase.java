@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class GuiBase extends GuiContainer {
+    // @TODO: Don't depend on JEI
     public static final FluidStackRenderer FLUID_RENDERER = new FluidStackRenderer(Fluid.BUCKET_VOLUME, false, 16, 16, null);
 
     protected static final int SIDE_BUTTON_WIDTH = 20;

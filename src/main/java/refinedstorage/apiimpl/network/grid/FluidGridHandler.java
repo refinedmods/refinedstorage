@@ -35,10 +35,10 @@ public class FluidGridHandler implements IFluidGridHandler {
                 for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
                     ItemStack slot = player.inventory.getStackInSlot(i);
 
-                    if (CompareUtils.compareStack(EMPTY_BUCKET, slot)) {
-                        bucket = slot;
+                    if (CompareUtils.compareStackNoQuantity(EMPTY_BUCKET, slot)) {
+                        bucket = EMPTY_BUCKET.copy();
 
-                        player.inventory.setInventorySlotContents(i, null);
+                        player.inventory.decrStackSize(i, 1);
 
                         break;
                     }

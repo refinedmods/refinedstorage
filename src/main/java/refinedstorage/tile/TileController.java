@@ -130,7 +130,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     private static final String NBT_CRAFTING_TASKS = "CraftingTasks";
 
-    private static final Comparator<IItemStorage> SIZE_COMPARATOR = (left, right) -> {
+    private static final Comparator<IItemStorage> ITEM_SIZE_COMPARATOR = (left, right) -> {
         if (left.getStored() == right.getStored()) {
             return 0;
         }
@@ -138,7 +138,23 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         return (left.getStored() > right.getStored()) ? -1 : 1;
     };
 
-    private static final Comparator<IItemStorage> PRIORITY_COMPARATOR = (left, right) -> {
+    private static final Comparator<IItemStorage> ITEM_PRIORITY_COMPARATOR = (left, right) -> {
+        if (left.getPriority() == right.getPriority()) {
+            return 0;
+        }
+
+        return (left.getPriority() > right.getPriority()) ? -1 : 1;
+    };
+
+    private static final Comparator<IFluidStorage> FLUID_SIZE_COMPARATOR = (left, right) -> {
+        if (left.getStored() == right.getStored()) {
+            return 0;
+        }
+
+        return (left.getStored() > right.getStored()) ? -1 : 1;
+    };
+
+    private static final Comparator<IFluidStorage> FLUID_PRIORITY_COMPARATOR = (left, right) -> {
         if (left.getPriority() == right.getPriority()) {
             return 0;
         }
@@ -220,8 +236,11 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             energyEU.update();
 
             if (canRun()) {
-                Collections.sort(itemStorage.getStorages(), SIZE_COMPARATOR);
-                Collections.sort(itemStorage.getStorages(), PRIORITY_COMPARATOR);
+                Collections.sort(itemStorage.getStorages(), ITEM_SIZE_COMPARATOR);
+                Collections.sort(itemStorage.getStorages(), ITEM_PRIORITY_COMPARATOR);
+
+                Collections.sort(fluidStorage.getStorages(), FLUID_SIZE_COMPARATOR);
+                Collections.sort(fluidStorage.getStorages(), FLUID_PRIORITY_COMPARATOR);
 
                 boolean craftingTasksChanged = !craftingTasksToAdd.isEmpty() || !craftingTasksToAddAsLast.isEmpty() || !craftingTasksToCancel.isEmpty();
 
