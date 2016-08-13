@@ -115,7 +115,7 @@ public abstract class ContainerBase extends Container {
         }
 
         for (int i = begin; i < end; ++i) {
-            if (!getSlot(i).getHasStack()) {
+            if (!getSlot(i).getHasStack() && getSlot(i).isItemValid(stack)) {
                 getSlot(i).putStack(ItemHandlerHelper.copyStackWithSize(stack, 1));
                 getSlot(i).onSlotChanged();
 
