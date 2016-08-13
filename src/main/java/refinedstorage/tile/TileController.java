@@ -14,7 +14,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
@@ -183,9 +182,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         dataManager.addWatchedParameter(ENERGY_STORED);
         dataManager.addParameter(ENERGY_CAPACITY);
         dataManager.addParameter(NODES);
-
-        fluidStorage.add(new FluidStack(FluidRegistry.WATER, 1000 * 32), true);
-        fluidStorage.add(new FluidStack(FluidRegistry.LAVA, 1000 * 64), true);
 
         if (IntegrationIC2.isLoaded()) {
             this.energyEU = new ControllerEnergyIC2(this);

@@ -2,6 +2,10 @@ package refinedstorage.apiimpl.network.grid;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.grid.IFluidGridHandler;
 
@@ -16,18 +20,31 @@ public class FluidGridHandler implements IFluidGridHandler {
 
     @Override
     public void onExtract(int hash, boolean shift, EntityPlayerMP player) {
-        System.out.println("Extract " + hash);
+        System.out.println("Extract " + hash + " (shift = " + shift + ")");
     }
 
     @Nullable
     @Override
     public ItemStack onInsert(ItemStack container) {
-        System.out.println("Insert " + container);
+        if (container.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
+            IFluidHandler handler = container.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+
+            FluidStack drainPre = handler.drain(Fluid.BUCKET_VOLUME, false);
+
+            if (drainPre != null && network.insertFluid(drainPre, drainPre.amount, true) == null) {
+                FluidStack drain = handler.drain(Fluid.BUCKET_VOLUME, true);
+
+                network.insertFluid(drain, drain.amount, false);
+            }
+        }
+
         return container;
     }
 
     @Override
     public void onInsertHeldContainer(EntityPlayerMP player) {
-        System.out.println("Insert held!");
+        onInsert(player.inventory.getItemStack());
+
+        player.updateHeldItem();
     }
 }
