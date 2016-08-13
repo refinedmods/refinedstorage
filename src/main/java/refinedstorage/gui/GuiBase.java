@@ -17,7 +17,7 @@ import net.minecraftforge.items.SlotItemHandler;
 import org.lwjgl.input.Mouse;
 import refinedstorage.RefinedStorage;
 import refinedstorage.gui.sidebutton.SideButton;
-import refinedstorage.inventory.ItemHandlerFluidFilter;
+import refinedstorage.inventory.ItemHandlerFluid;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -131,8 +131,8 @@ public abstract class GuiBase extends GuiContainer {
         for (int i = 0; i < inventorySlots.inventorySlots.size(); ++i) {
             Slot slot = inventorySlots.inventorySlots.get(i);
 
-            if (slot instanceof SlotItemHandler && ((SlotItemHandler) slot).getItemHandler() instanceof ItemHandlerFluidFilter) {
-                FluidStack stack = ((ItemHandlerFluidFilter) ((SlotItemHandler) slot).getItemHandler()).getFilters()[slot.getSlotIndex()];
+            if (slot instanceof SlotItemHandler && ((SlotItemHandler) slot).getItemHandler() instanceof ItemHandlerFluid) {
+                FluidStack stack = ((ItemHandlerFluid) ((SlotItemHandler) slot).getItemHandler()).getFluids()[slot.getSlotIndex()];
 
                 if (stack != null) {
                     FLUID_RENDERER.draw(mc, slot.xDisplayPosition, slot.yDisplayPosition, stack);

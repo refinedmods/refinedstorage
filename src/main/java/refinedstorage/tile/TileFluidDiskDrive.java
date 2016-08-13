@@ -19,7 +19,7 @@ import refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
 import refinedstorage.apiimpl.storage.fluid.FluidUtils;
 import refinedstorage.block.EnumFluidStorageType;
 import refinedstorage.inventory.ItemHandlerBasic;
-import refinedstorage.inventory.ItemHandlerFluidFilter;
+import refinedstorage.inventory.ItemHandlerFluid;
 import refinedstorage.inventory.ItemValidatorBasic;
 import refinedstorage.tile.config.IComparable;
 import refinedstorage.tile.config.IFilterable;
@@ -93,7 +93,7 @@ public class TileFluidDiskDrive extends TileNode implements IFluidStorageProvide
         }
     };
 
-    private ItemHandlerFluidFilter filters = new ItemHandlerFluidFilter(this);
+    private ItemHandlerFluid filters = new ItemHandlerFluid(9, this);
 
     private FluidStorage storages[] = new FluidStorage[8];
 
