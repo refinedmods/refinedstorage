@@ -1,6 +1,7 @@
 package refinedstorage.tile.grid;
 
 import net.minecraft.util.math.BlockPos;
+import refinedstorage.api.network.grid.IFluidGridHandler;
 import refinedstorage.api.network.grid.IItemGridHandler;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.gui.grid.GridFilteredItem;
@@ -14,7 +15,9 @@ public interface IGrid {
 
     BlockPos getNetworkPosition();
 
-    IItemGridHandler getHandler();
+    IItemGridHandler getItemHandler();
+
+    IFluidGridHandler getFluidHandler();
 
     int getViewType();
 

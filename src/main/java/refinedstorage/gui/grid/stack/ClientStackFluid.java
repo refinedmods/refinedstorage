@@ -6,17 +6,21 @@ import net.minecraft.client.Minecraft;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.gui.GuiBase;
 
 import java.util.Locale;
 
 public class ClientStackFluid implements IClientStack {
+    private int hash;
     private FluidStack stack;
     private FluidStackRenderer renderer;
 
     public ClientStackFluid(ByteBuf buf) {
-        stack = new FluidStack(FluidRegistry.getFluid(ByteBufUtils.readUTF8String(buf)), buf.readInt(), ByteBufUtils.readTag(buf));
-        renderer = new FluidStackRenderer(1000, false, 16, 16, null);
+        this.hash = buf.readInt();
+        this.stack = new FluidStack(FluidRegistry.getFluid(ByteBufUtils.readUTF8String(buf)), buf.readInt(), ByteBufUtils.readTag(buf));
+        // @TODO: Switch to own implementation
+        this.renderer = new FluidStackRenderer(1000, false, 16, 16, null);
     }
 
     public FluidStack getStack() {
@@ -24,14 +28,18 @@ public class ClientStackFluid implements IClientStack {
     }
 
     @Override
+    public int getHash() {
+        return hash;
+    }
+
+    @Override
     public String getName() {
         return stack.getFluid().getLocalizedName(stack);
     }
 
-    // @todo: ;-)
     @Override
     public String getModId() {
-        return "minecraft";
+        return stack.getFluid().getStill(stack).getResourceDomain();
     }
 
     @Override
@@ -57,6 +65,7 @@ public class ClientStackFluid implements IClientStack {
     }
 
     public static void write(ByteBuf buf, FluidStack stack) {
+        buf.writeInt(NetworkUtils.getFluidStackHashCode(stack));
         ByteBufUtils.writeUTF8String(buf, FluidRegistry.getFluidName(stack.getFluid()));
         buf.writeInt(stack.amount);
         ByteBufUtils.writeTag(buf, stack.tag);

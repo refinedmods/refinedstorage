@@ -27,10 +27,7 @@ import refinedstorage.gui.grid.stack.ClientStackItem;
 import refinedstorage.gui.grid.stack.IClientStack;
 import refinedstorage.gui.sidebutton.*;
 import refinedstorage.integration.jei.IntegrationJEI;
-import refinedstorage.network.MessageGridCraftingClear;
-import refinedstorage.network.MessageGridInsertHeld;
-import refinedstorage.network.MessageGridPatternCreate;
-import refinedstorage.network.MessageGridPull;
+import refinedstorage.network.*;
 import refinedstorage.tile.grid.IGrid;
 import refinedstorage.tile.grid.TileGrid;
 import refinedstorage.tile.grid.WirelessGrid;
@@ -352,7 +349,7 @@ public class GuiGrid extends GuiBase {
             BlockPos gridPos = ((TileGrid) grid).getPos();
 
             RefinedStorage.INSTANCE.network.sendToServer(new MessageGridPatternCreate(gridPos.getX(), gridPos.getY(), gridPos.getZ()));
-        } else if (grid.isConnected() && grid.getType() != EnumGridType.FLUID) {
+        } else if (grid.isConnected()) {
             if (clickedClear) {
                 RefinedStorage.INSTANCE.network.sendToServer(new MessageGridCraftingClear((TileGrid) grid));
             }
@@ -360,30 +357,34 @@ public class GuiGrid extends GuiBase {
             ItemStack held = container.getPlayer().inventory.getItemStack();
 
             if (isOverSlotArea(mouseX - guiLeft, mouseY - guiTop) && held != null && (clickedButton == 0 || clickedButton == 1)) {
-                RefinedStorage.INSTANCE.network.sendToServer(new MessageGridInsertHeld(clickedButton == 1));
+                RefinedStorage.INSTANCE.network.sendToServer(grid.getType() == EnumGridType.FLUID ? new MessageGridFluidInsertHeld() : new MessageGridItemInsertHeld(clickedButton == 1));
             }
 
             if (isOverSlotWithItem() && (held == null || (held != null && clickedButton == 2))) {
-                ClientStackItem stack = (ClientStackItem) STACKS.get(slotNumber);
+                if (grid.getType() != EnumGridType.FLUID) {
+                    ClientStackItem stack = (ClientStackItem) STACKS.get(slotNumber);
 
-                if (stack.isCraftable() && (stack.getQuantity() == 0 || (GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown()))) {
-                    FMLCommonHandler.instance().showGuiScreen(new GuiCraftingSettings(this, container.getPlayer(), stack));
+                    if (stack.isCraftable() && (stack.getQuantity() == 0 || (GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown()))) {
+                        FMLCommonHandler.instance().showGuiScreen(new GuiCraftingSettings(this, container.getPlayer(), stack));
+                    } else {
+                        int flags = 0;
+
+                        if (clickedButton == 1) {
+                            flags |= IItemGridHandler.EXTRACT_HALF;
+                        }
+
+                        if (GuiScreen.isShiftKeyDown()) {
+                            flags |= IItemGridHandler.EXTRACT_SHIFT;
+                        }
+
+                        if (clickedButton == 2) {
+                            flags |= IItemGridHandler.EXTRACT_SINGLE;
+                        }
+
+                        RefinedStorage.INSTANCE.network.sendToServer(new MessageGridItemPull(stack.getHash(), flags));
+                    }
                 } else {
-                    int flags = 0;
-
-                    if (clickedButton == 1) {
-                        flags |= IItemGridHandler.EXTRACT_HALF;
-                    }
-
-                    if (GuiScreen.isShiftKeyDown()) {
-                        flags |= IItemGridHandler.EXTRACT_SHIFT;
-                    }
-
-                    if (clickedButton == 2) {
-                        flags |= IItemGridHandler.EXTRACT_SINGLE;
-                    }
-
-                    RefinedStorage.INSTANCE.network.sendToServer(new MessageGridPull(stack.getHash(), flags));
+                    RefinedStorage.INSTANCE.network.sendToServer(new MessageGridFluidPull(STACKS.get(slotNumber).getHash(), GuiScreen.isShiftKeyDown()));
                 }
             }
         }

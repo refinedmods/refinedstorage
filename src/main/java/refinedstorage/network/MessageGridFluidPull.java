@@ -4,42 +4,42 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import refinedstorage.api.network.grid.IItemGridHandler;
+import refinedstorage.api.network.grid.IFluidGridHandler;
 import refinedstorage.container.ContainerGrid;
 
-public class MessageGridPull extends MessageHandlerPlayerToServer<MessageGridPull> implements IMessage {
+public class MessageGridFluidPull extends MessageHandlerPlayerToServer<MessageGridFluidPull> implements IMessage {
     private int hash;
-    private int flags;
+    private boolean shift;
 
-    public MessageGridPull() {
+    public MessageGridFluidPull() {
     }
 
-    public MessageGridPull(int hash, int flags) {
+    public MessageGridFluidPull(int hash, boolean shift) {
         this.hash = hash;
-        this.flags = flags;
+        this.shift = shift;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         hash = buf.readInt();
-        flags = buf.readInt();
+        shift = buf.readBoolean();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeInt(hash);
-        buf.writeInt(flags);
+        buf.writeBoolean(shift);
     }
 
     @Override
-    public void handle(MessageGridPull message, EntityPlayerMP player) {
+    public void handle(MessageGridFluidPull message, EntityPlayerMP player) {
         Container container = player.openContainer;
 
         if (container instanceof ContainerGrid) {
-            IItemGridHandler handler = ((ContainerGrid) container).getGrid().getHandler();
+            IFluidGridHandler handler = ((ContainerGrid) container).getGrid().getFluidHandler();
 
             if (handler != null) {
-                handler.onExtract(message.hash, message.flags, player);
+                handler.onExtract(message.hash, message.shift, player);
             }
         }
     }

@@ -7,13 +7,13 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import refinedstorage.api.network.grid.IItemGridHandler;
 import refinedstorage.container.ContainerGrid;
 
-public class MessageGridInsertHeld extends MessageHandlerPlayerToServer<MessageGridInsertHeld> implements IMessage {
+public class MessageGridItemInsertHeld extends MessageHandlerPlayerToServer<MessageGridItemInsertHeld> implements IMessage {
     private boolean single;
 
-    public MessageGridInsertHeld() {
+    public MessageGridItemInsertHeld() {
     }
 
-    public MessageGridInsertHeld(boolean single) {
+    public MessageGridItemInsertHeld(boolean single) {
         this.single = single;
     }
 
@@ -28,11 +28,11 @@ public class MessageGridInsertHeld extends MessageHandlerPlayerToServer<MessageG
     }
 
     @Override
-    public void handle(MessageGridInsertHeld message, EntityPlayerMP player) {
+    public void handle(MessageGridItemInsertHeld message, EntityPlayerMP player) {
         Container container = player.openContainer;
 
         if (container instanceof ContainerGrid) {
-            IItemGridHandler handler = ((ContainerGrid) container).getGrid().getHandler();
+            IItemGridHandler handler = ((ContainerGrid) container).getGrid().getItemHandler();
 
             if (handler != null) {
                 handler.onInsertHeldItem(message.single, player);

@@ -23,6 +23,7 @@ import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.*;
+import refinedstorage.api.network.grid.IFluidGridHandler;
 import refinedstorage.api.network.grid.IItemGridHandler;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.api.storage.fluid.IFluidStorage;
@@ -34,6 +35,7 @@ import refinedstorage.apiimpl.autocrafting.CraftingPattern;
 import refinedstorage.apiimpl.autocrafting.ProcessingCraftingTask;
 import refinedstorage.apiimpl.network.NetworkNodeGraph;
 import refinedstorage.apiimpl.network.WirelessGridHandler;
+import refinedstorage.apiimpl.network.grid.FluidGridHandler;
 import refinedstorage.apiimpl.network.grid.ItemGridHandler;
 import refinedstorage.apiimpl.storage.fluid.FluidUtils;
 import refinedstorage.apiimpl.storage.fluid.GroupedFluidStorage;
@@ -146,6 +148,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     };
 
     private ItemGridHandler itemGridHandler = new ItemGridHandler(this);
+    private FluidGridHandler fluidGridHandler = new FluidGridHandler(this);
+
     private WirelessGridHandler wirelessGridHandler = new WirelessGridHandler(this);
 
     private INetworkNodeGraph nodeGraph = new NetworkNodeGraph(this);
@@ -180,8 +184,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         dataManager.addParameter(ENERGY_CAPACITY);
         dataManager.addParameter(NODES);
 
-        fluidStorage.add(new FluidStack(FluidRegistry.WATER, 1000 * 32), false);
-        fluidStorage.add(new FluidStack(FluidRegistry.LAVA, 1000 * 64), false);
+        fluidStorage.add(new FluidStack(FluidRegistry.WATER, 1000 * 32), true);
+        fluidStorage.add(new FluidStack(FluidRegistry.LAVA, 1000 * 64), true);
 
         if (IntegrationIC2.isLoaded()) {
             this.energyEU = new ControllerEnergyIC2(this);
@@ -323,6 +327,11 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public IItemGridHandler getItemGridHandler() {
         return itemGridHandler;
+    }
+
+    @Override
+    public IFluidGridHandler getFluidGridHandler() {
+        return fluidGridHandler;
     }
 
     @Override

@@ -2,6 +2,7 @@ package refinedstorage.api.network;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidStack;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.storage.CompareUtils;
 
@@ -27,6 +28,10 @@ public final class NetworkUtils {
 
     public static int getItemStackHashCode(ItemStack stack) {
         return stack.getItem().hashCode() * (stack.getItemDamage() + 1) * (stack.hasTagCompound() ? stack.getTagCompound().hashCode() : 1);
+    }
+
+    public static int getFluidStackHashCode(FluidStack stack) {
+        return stack.getFluid().hashCode() * (stack.tag != null ? stack.tag.hashCode() : 1);
     }
 
     public static int getNodeHashCode(World world, INetworkNode node) {

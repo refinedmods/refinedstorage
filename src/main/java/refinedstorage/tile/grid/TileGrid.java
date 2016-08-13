@@ -16,6 +16,7 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.api.network.NetworkUtils;
+import refinedstorage.api.network.grid.IFluidGridHandler;
 import refinedstorage.api.network.grid.IItemGridHandler;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.block.BlockGrid;
@@ -199,8 +200,13 @@ public class TileGrid extends TileNode implements IGrid {
     }
 
     @Override
-    public IItemGridHandler getHandler() {
+    public IItemGridHandler getItemHandler() {
         return isConnected() ? network.getItemGridHandler() : null;
+    }
+
+    @Override
+    public IFluidGridHandler getFluidHandler() {
+        return isConnected() ? network.getFluidGridHandler() : null;
     }
 
     public InventoryCrafting getMatrix() {

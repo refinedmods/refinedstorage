@@ -24,16 +24,17 @@ public class ClientStackItem implements IClientStack {
         craftable = buf.readBoolean();
     }
 
-    public int getHash() {
-        return hash;
-    }
-
     public ItemStack getStack() {
         return stack;
     }
 
     public boolean isCraftable() {
         return craftable;
+    }
+
+    @Override
+    public int getHash() {
+        return hash;
     }
 
     @Override

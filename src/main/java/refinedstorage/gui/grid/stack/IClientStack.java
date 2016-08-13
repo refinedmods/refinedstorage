@@ -3,6 +3,8 @@ package refinedstorage.gui.grid.stack;
 import refinedstorage.gui.GuiBase;
 
 public interface IClientStack {
+    int getHash();
+
     String getName();
 
     String getModId();

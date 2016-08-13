@@ -7,6 +7,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.FluidStack;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingTask;
+import refinedstorage.api.network.grid.IFluidGridHandler;
 import refinedstorage.api.network.grid.IItemGridHandler;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.api.storage.fluid.IGroupedFluidStorage;
@@ -49,6 +50,11 @@ public interface INetworkMaster {
      * @return The {@link IItemGridHandler} for this network
      */
     IItemGridHandler getItemGridHandler();
+
+    /**
+     * @return The {@link IFluidGridHandler} for this network
+     */
+    IFluidGridHandler getFluidGridHandler();
 
     /**
      * @return The {@link IWirelessGridHandler} for this network
