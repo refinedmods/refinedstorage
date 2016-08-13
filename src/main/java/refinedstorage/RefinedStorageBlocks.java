@@ -26,4 +26,5 @@ public final class RefinedStorageBlocks {
     public static final BlockNetworkReceiver NETWORK_RECEIVER = new BlockNetworkReceiver();
     public static final BlockFluidDiskDrive FLUID_DISK_DRIVE = new BlockFluidDiskDrive();
     public static final BlockFluidConstructor FLUID_CONSTRUCTOR = new BlockFluidConstructor();
+    public static final BlockFluidDestructor FLUID_DESTRUCTOR = new BlockFluidDestructor();
 }

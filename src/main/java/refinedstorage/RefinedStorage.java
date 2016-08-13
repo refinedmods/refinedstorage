@@ -49,6 +49,7 @@ public final class RefinedStorage {
     public int crafterPerPatternUsage;
     public int craftingMonitorUsage;
     public int destructorUsage;
+    public int fluidDestructorUsage;
     public int detectorUsage;
     public int diskDriveUsage;
     public int diskDrivePerDiskUsage;
@@ -97,6 +98,7 @@ public final class RefinedStorage {
         crafterPerPatternUsage = config.getInt("crafterPerPattern", "energy", 1, 0, Integer.MAX_VALUE, "The additional energy used per Pattern in a Crafter");
         craftingMonitorUsage = config.getInt("craftingMonitor", "energy", 2, 0, Integer.MAX_VALUE, "The energy used by Crafting Monitors");
         destructorUsage = config.getInt("destructor", "energy", 1, 0, Integer.MAX_VALUE, "The energy used by Destructors");
+        fluidDestructorUsage = config.getInt("fluidDestructor", "energy", 1, 0, Integer.MAX_VALUE, "The energy used by Fluid Destructors");
         detectorUsage = config.getInt("detector", "energy", 2, 0, Integer.MAX_VALUE, "The energy used by Detectors");
         diskDriveUsage = config.getInt("diskDrive", "energy", 0, 0, Integer.MAX_VALUE, "The base energy used by Disk Drives");
         diskDrivePerDiskUsage = config.getInt("diskDrivePerDisk", "energy", 1, 0, Integer.MAX_VALUE, "The additional energy used by Storage Disks in Disk Drives");

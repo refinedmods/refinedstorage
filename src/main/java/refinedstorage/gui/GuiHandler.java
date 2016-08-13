@@ -55,6 +55,8 @@ public class GuiHandler implements IGuiHandler {
                 return new ContainerFluidDiskDrive((TileFluidDiskDrive) tile, player);
             case RefinedStorageGui.FLUID_CONSTRUCTOR:
                 return new ContainerFluidConstructor((TileFluidConstructor) tile, player);
+            case RefinedStorageGui.FLUID_DESTRUCTOR:
+                return new ContainerFluidDestructor((TileFluidDestructor) tile, player);
             default:
                 return null;
         }
@@ -130,6 +132,8 @@ public class GuiHandler implements IGuiHandler {
                 return new GuiStorage((ContainerFluidDiskDrive) getContainer(ID, player, tile), (IStorageGui) tile, "gui/disk_drive.png");
             case RefinedStorageGui.FLUID_CONSTRUCTOR:
                 return new GuiFluidConstructor((ContainerFluidConstructor) getContainer(ID, player, tile));
+            case RefinedStorageGui.FLUID_DESTRUCTOR:
+                return new GuiFluidDestructor((ContainerFluidDestructor) getContainer(ID, player, tile));
             default:
                 return null;
         }
