@@ -16,4 +16,5 @@ public final class RefinedStorageItems {
     public static final ItemGridFilter GRID_FILTER = new ItemGridFilter();
     public static final ItemNetworkCard NETWORK_CARD = new ItemNetworkCard();
     public static final ItemFluidStorageDisk FLUID_STORAGE_DISK = new ItemFluidStorageDisk();
+    public static final ItemFluidStoragePart FLUID_STORAGE_PART = new ItemFluidStoragePart();
 }

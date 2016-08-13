@@ -121,6 +121,7 @@ public class CommonProxy {
         registerItem(RefinedStorageItems.GRID_FILTER);
         registerItem(RefinedStorageItems.NETWORK_CARD);
         registerItem(RefinedStorageItems.FLUID_STORAGE_DISK);
+        registerItem(RefinedStorageItems.FLUID_STORAGE_PART);
 
         OreDictionary.registerOre("itemSilicon", RefinedStorageItems.SILICON);
 
@@ -257,7 +258,7 @@ public class CommonProxy {
             new ItemStack(RefinedStorageBlocks.GRID, 1, EnumGridType.FLUID.getId()),
             500,
             new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
-            new ItemStack(RefinedStorageBlocks.GRID, 1, EnumGridType.FLUID.getId()),
+            new ItemStack(RefinedStorageBlocks.GRID, 1, EnumGridType.NORMAL.getId()),
             new ItemStack(Items.BUCKET)
         ));
 
@@ -399,6 +400,47 @@ public class CommonProxy {
             'S', new ItemStack(RefinedStorageItems.STORAGE_PART, 1, ItemStoragePart.TYPE_16K)
         );
 
+        // Fluid Storage Parts
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, ItemFluidStoragePart.TYPE_64K),
+            "SES",
+            "GRG",
+            "SGS",
+            'R', new ItemStack(Items.BUCKET),
+            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+            'S', "itemSilicon",
+            'G', "blockGlass"
+        ));
+
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, ItemFluidStoragePart.TYPE_128K),
+            "PEP",
+            "SRS",
+            "PSP",
+            'R', new ItemStack(Items.BUCKET),
+            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+            'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
+            'S', new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, ItemFluidStoragePart.TYPE_64K)
+        ));
+
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, ItemFluidStoragePart.TYPE_256K),
+            "PEP",
+            "SRS",
+            "PSP",
+            'R', new ItemStack(Items.BUCKET),
+            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+            'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED),
+            'S', new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, ItemFluidStoragePart.TYPE_128K)
+        ));
+
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, ItemFluidStoragePart.TYPE_512K),
+            "PEP",
+            "SRS",
+            "PSP",
+            'R', new ItemStack(Items.BUCKET),
+            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+            'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
+            'S', new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, ItemFluidStoragePart.TYPE_256K)
+        ));
+
         // Storage Housing
         GameRegistry.addRecipe(new ShapedOreRecipe(ItemStorageNBT.createStackWithNBT(new ItemStack(RefinedStorageItems.STORAGE_HOUSING)),
             "GRG",
@@ -426,6 +468,26 @@ public class CommonProxy {
             GameRegistry.addShapelessRecipe(disk,
                 new ItemStack(RefinedStorageItems.STORAGE_HOUSING),
                 new ItemStack(RefinedStorageItems.STORAGE_PART, 1, type)
+            );
+        }
+
+        // Fluid Storage Parts
+        for (int type = 0; type <= 3; ++type) {
+            ItemStack disk = ItemStorageNBT.createStackWithNBT(new ItemStack(RefinedStorageItems.FLUID_STORAGE_DISK, 1, type));
+
+            GameRegistry.addRecipe(new ShapedOreRecipe(disk,
+                "GRG",
+                "RPR",
+                "EEE",
+                'G', "blockGlass",
+                'R', new ItemStack(Items.REDSTONE),
+                'P', new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, type),
+                'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
+            ));
+
+            GameRegistry.addShapelessRecipe(disk,
+                new ItemStack(RefinedStorageItems.STORAGE_HOUSING),
+                new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, type)
             );
         }
 
