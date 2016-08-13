@@ -4,6 +4,7 @@
 **Bugfixes**
 - Fixed item duplication bug with External Storage
 - Fixed External Storage taking too long to update storage
+- Fixed crash with Grid
 
 ### 0.8.18
 **Bugfixes**

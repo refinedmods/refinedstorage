@@ -100,7 +100,7 @@ public class GuiGrid extends GuiBase {
         List<ClientStack> sortedItems = new ArrayList<>();
 
         if (grid.isConnected()) {
-            sortedItems.addAll(ITEMS.values());
+            sortedItems.addAll(new ArrayList<>(ITEMS.values()));
 
             String query = searchField.getText().trim().toLowerCase();
 
