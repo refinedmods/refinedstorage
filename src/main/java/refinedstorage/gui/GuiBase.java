@@ -4,7 +4,6 @@ import mezz.jei.gui.ingredients.FluidStackRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
@@ -100,6 +99,18 @@ public abstract class GuiBase extends GuiContainer {
 
         drawBackground(guiLeft, guiTop, mouseX, mouseY);
 
+        for (int i = 0; i < inventorySlots.inventorySlots.size(); ++i) {
+            Slot slot = inventorySlots.inventorySlots.get(i);
+
+            if (slot instanceof SlotItemHandler && ((SlotItemHandler) slot).getItemHandler() instanceof ItemHandlerFluid) {
+                FluidStack stack = ((ItemHandlerFluid) ((SlotItemHandler) slot).getItemHandler()).getFluids()[slot.getSlotIndex()];
+
+                if (stack != null) {
+                    FLUID_RENDERER.draw(mc, guiLeft + slot.xDisplayPosition, guiTop + slot.yDisplayPosition, stack);
+                }
+            }
+        }
+
         if (scrollbar != null) {
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -125,20 +136,6 @@ public abstract class GuiBase extends GuiContainer {
         }
 
         drawForeground(mouseX, mouseY);
-
-        RenderHelper.enableGUIStandardItemLighting();
-
-        for (int i = 0; i < inventorySlots.inventorySlots.size(); ++i) {
-            Slot slot = inventorySlots.inventorySlots.get(i);
-
-            if (slot instanceof SlotItemHandler && ((SlotItemHandler) slot).getItemHandler() instanceof ItemHandlerFluid) {
-                FluidStack stack = ((ItemHandlerFluid) ((SlotItemHandler) slot).getItemHandler()).getFluids()[slot.getSlotIndex()];
-
-                if (stack != null) {
-                    FLUID_RENDERER.draw(mc, slot.xDisplayPosition, slot.yDisplayPosition, stack);
-                }
-            }
-        }
 
         if (sideButtonTooltip != null) {
             drawTooltip(mouseX, mouseY, sideButtonTooltip);

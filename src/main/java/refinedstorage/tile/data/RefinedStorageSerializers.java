@@ -4,6 +4,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializer;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import refinedstorage.tile.ClientCraftingTask;
 import refinedstorage.tile.ClientNode;
@@ -84,6 +86,34 @@ public final class RefinedStorageSerializers {
 
         @Override
         public DataParameter<List<ClientCraftingTask>> createKey(int id) {
+            return null;
+        }
+    };
+
+    public static final DataSerializer<FluidStack> FLUID_STACK_SERIALIZER = new DataSerializer<FluidStack>() {
+        @Override
+        public void write(PacketBuffer buf, FluidStack value) {
+            if (value == null) {
+                buf.writeBoolean(false);
+            } else {
+                buf.writeBoolean(true);
+                ByteBufUtils.writeUTF8String(buf, FluidRegistry.getFluidName(value));
+                buf.writeInt(value.amount);
+                buf.writeNBTTagCompoundToBuffer(value.tag);
+            }
+        }
+
+        @Override
+        public FluidStack read(PacketBuffer buf) throws IOException {
+            if (buf.readBoolean()) {
+                return new FluidStack(FluidRegistry.getFluid(ByteBufUtils.readUTF8String(buf)), buf.readInt(), buf.readNBTTagCompoundFromBuffer());
+            }
+
+            return null;
+        }
+
+        @Override
+        public DataParameter<FluidStack> createKey(int id) {
             return null;
         }
     };

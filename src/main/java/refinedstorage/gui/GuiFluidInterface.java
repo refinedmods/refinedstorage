@@ -1,10 +1,15 @@
 package refinedstorage.gui;
 
+import mezz.jei.gui.ingredients.FluidStackRenderer;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.container.ContainerFluidInterface;
+import refinedstorage.gui.sidebutton.SideButtonCompare;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.tile.TileFluidInterface;
 
 public class GuiFluidInterface extends GuiBase {
+    private static final FluidStackRenderer TANK_IN_RENDERER = new FluidStackRenderer(TileFluidInterface.TANK_CAPACITY, true, 12, 47, null);
+
     public GuiFluidInterface(ContainerFluidInterface container) {
         super(container, 211, 204);
     }
@@ -12,6 +17,8 @@ public class GuiFluidInterface extends GuiBase {
     @Override
     public void init(int x, int y) {
         addSideButton(new SideButtonRedstoneMode(TileFluidInterface.REDSTONE_MODE));
+
+        addSideButton(new SideButtonCompare(TileFluidInterface.COMPARE, CompareUtils.COMPARE_NBT));
     }
 
     @Override
@@ -23,6 +30,14 @@ public class GuiFluidInterface extends GuiBase {
         bindTexture("gui/fluid_interface.png");
 
         drawTexture(x, y, 0, 0, width, height);
+
+        if (TileFluidInterface.TANK_IN.getValue() != null) {
+            TANK_IN_RENDERER.draw(mc, x + 46, y + 56, TileFluidInterface.TANK_IN.getValue());
+        }
+
+        if (TileFluidInterface.TANK_OUT.getValue() != null) {
+            TANK_IN_RENDERER.draw(mc, x + 118, y + 56, TileFluidInterface.TANK_OUT.getValue());
+        }
     }
 
     @Override
