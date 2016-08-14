@@ -70,7 +70,7 @@ public class TileFluidInterface extends TileNode implements IComparable {
         }
     };
 
-    private ItemHandlerBasic in = new ItemHandlerBasic(1, this, s -> FluidUtils.getFluidFromStack(s, true) != null);
+    private ItemHandlerBasic in = new ItemHandlerBasic(1, this);
     private ItemHandlerFluid out = new ItemHandlerFluid(1, this);
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED);
