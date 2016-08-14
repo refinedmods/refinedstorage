@@ -40,6 +40,9 @@ gui.refinedstorage:network_transmitter.dimension=Dimension %d
 gui.refinedstorage:network_transmitter.missing_card=Missing Network Card
 gui.refinedstorage:network_transmitter.missing_upgrade=Insert upgrade
 gui.refinedstorage:fluid_disk_drive=Fluid Disk Drive
+gui.refinedstorage:fluid_interface=Fluid Interface
+gui.refinedstorage:fluid_interface.in=In
+gui.refinedstorage:fluid_interface.out=Out
 
 misc.refinedstorage:energy_stored=%d / %d RS
 misc.refinedstorage:energy_usage=Usage: %d RS/t
@@ -132,6 +135,7 @@ block.refinedstorage:processing_pattern_encoder.name=Processing Pattern Encoder
 block.refinedstorage:network_receiver.name=Network Receiver
 block.refinedstorage:network_transmitter.name=Network Transmitter
 block.refinedstorage:fluid_disk_drive.name=Fluid Disk Drive
+block.refinedstorage:fluid_interface.name=Fluid Interface
 
 item.refinedstorage:storage_disk.0.name=1k Storage Disk
 item.refinedstorage:storage_disk.1.name=4k Storage Disk

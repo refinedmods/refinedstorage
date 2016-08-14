@@ -53,6 +53,8 @@ public class GuiHandler implements IGuiHandler {
                 return new ContainerNetworkTransmitter((TileNetworkTransmitter) tile, player);
             case RefinedStorageGui.FLUID_DISK_DRIVE:
                 return new ContainerFluidDiskDrive((TileFluidDiskDrive) tile, player);
+            case RefinedStorageGui.FLUID_INTERFACE:
+                return new ContainerFluidInterface((TileFluidInterface) tile, player);
             default:
                 return null;
         }
@@ -126,6 +128,8 @@ public class GuiHandler implements IGuiHandler {
                 return new GuiNetworkTransmitter((ContainerNetworkTransmitter) getContainer(ID, player, tile), (TileNetworkTransmitter) tile);
             case RefinedStorageGui.FLUID_DISK_DRIVE:
                 return new GuiStorage((ContainerFluidDiskDrive) getContainer(ID, player, tile), (IStorageGui) tile, "gui/disk_drive.png");
+            case RefinedStorageGui.FLUID_INTERFACE:
+                return new GuiFluidInterface((ContainerFluidInterface) getContainer(ID, player, tile));
             default:
                 return null;
         }

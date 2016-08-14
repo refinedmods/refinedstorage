@@ -86,6 +86,7 @@ public class CommonProxy {
         registerTile(TileNetworkReceiver.class, "network_receiver");
         registerTile(TileNetworkTransmitter.class, "network_transmitter");
         registerTile(TileFluidDiskDrive.class, "fluid_disk_drive");
+        registerTile(TileFluidInterface.class, "fluid_interface");
 
         registerBlock(RefinedStorageBlocks.CONTROLLER);
         registerBlock(RefinedStorageBlocks.GRID);
@@ -109,6 +110,7 @@ public class CommonProxy {
         registerBlock(RefinedStorageBlocks.NETWORK_TRANSMITTER);
         registerBlock(RefinedStorageBlocks.NETWORK_RECEIVER);
         registerBlock(RefinedStorageBlocks.FLUID_DISK_DRIVE);
+        registerBlock(RefinedStorageBlocks.FLUID_INTERFACE);
 
         registerItem(RefinedStorageItems.QUARTZ_ENRICHED_IRON);
         registerItem(RefinedStorageItems.STORAGE_DISK);
@@ -559,6 +561,15 @@ public class CommonProxy {
             new ItemStack(RefinedStorageBlocks.IMPORTER),
             new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
             new ItemStack(RefinedStorageBlocks.EXPORTER)
+        ));
+
+        // Fluid Interface
+        RefinedStorageAPI.SOLDERER_REGISTRY.addRecipe(new SoldererRecipeBasic(
+            new ItemStack(RefinedStorageBlocks.FLUID_INTERFACE),
+            200,
+            new ItemStack(Items.BUCKET),
+            new ItemStack(RefinedStorageBlocks.INTERFACE),
+            new ItemStack(Items.BUCKET)
         ));
 
         // Grid Filter
