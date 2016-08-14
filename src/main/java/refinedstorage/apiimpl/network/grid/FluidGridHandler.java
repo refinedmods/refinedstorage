@@ -7,11 +7,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.api.network.grid.IFluidGridHandler;
 import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.apiimpl.storage.fluid.FluidUtils;
 
 import javax.annotation.Nullable;
 
@@ -46,7 +46,7 @@ public class FluidGridHandler implements IFluidGridHandler {
             }
 
             if (bucket != null) {
-                bucket.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).fill(NetworkUtils.extractFluid(network, stack, 1000), true);
+                bucket.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).fill(NetworkUtils.extractFluid(network, stack, Fluid.BUCKET_VOLUME), true);
 
                 if (shift) {
                     if (!player.inventory.addItemStackToInventory(bucket.copy())) {
@@ -63,16 +63,12 @@ public class FluidGridHandler implements IFluidGridHandler {
     @Nullable
     @Override
     public ItemStack onInsert(ItemStack container) {
-        if (container.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
-            IFluidHandler handler = container.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+        FluidStack stack = FluidUtils.getFluidFromStack(container, true);
 
-            FluidStack drainPre = handler.drain(Fluid.BUCKET_VOLUME, false);
+        if (stack != null && network.insertFluid(stack, stack.amount, true) == null) {
+            FluidStack drained = FluidUtils.getFluidFromStack(container, false);
 
-            if (drainPre != null && network.insertFluid(drainPre, drainPre.amount, true) == null) {
-                FluidStack drain = handler.drain(Fluid.BUCKET_VOLUME, true);
-
-                network.insertFluid(drain, drain.amount, false);
-            }
+            network.insertFluid(drained, drained.amount, false);
         }
 
         return container;

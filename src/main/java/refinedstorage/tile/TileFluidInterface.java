@@ -1,5 +1,6 @@
 package refinedstorage.tile;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -8,6 +9,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import refinedstorage.RefinedStorage;
+import refinedstorage.apiimpl.storage.fluid.FluidUtils;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerFluid;
 import refinedstorage.inventory.ItemHandlerUpgrade;
@@ -68,7 +70,7 @@ public class TileFluidInterface extends TileNode implements IComparable {
         }
     };
 
-    private ItemHandlerBasic in = new ItemHandlerBasic(1, this);
+    private ItemHandlerBasic in = new ItemHandlerBasic(1, this, s -> FluidUtils.getFluidFromStack(s, true) != null);
     private ItemHandlerFluid out = new ItemHandlerFluid(1, this);
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED);
@@ -87,7 +89,27 @@ public class TileFluidInterface extends TileNode implements IComparable {
 
     @Override
     public void updateNode() {
+        ItemStack container = in.getStackInSlot(0);
+
+        if (container != null) {
+            FluidStack fluid = FluidUtils.getFluidFromStack(container, true);
+
+            if (fluid != null && tankIn.fillInternal(fluid, false) == fluid.amount) {
+                tankIn.fillInternal(FluidUtils.getFluidFromStack(container, false), true);
+            }
+        }
+
         if (ticks % upgrades.getSpeed() == 0) {
+            FluidStack drained = tankIn.drainInternal(Fluid.BUCKET_VOLUME, true);
+
+            if (drained != null) {
+                FluidStack remainder = network.insertFluid(drained, drained.amount, false);
+
+                if (remainder != null) {
+                    tankIn.fillInternal(remainder, true);
+                }
+            }
+
             FluidStack stack = out.getFluids()[0];
 
             if (tankOut.getFluid() != null && (stack == null || (tankOut.getFluid().getFluid() != stack.getFluid()))) {

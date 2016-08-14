@@ -99,7 +99,6 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
 
                     Block block = stack.getFluid().getBlock();
 
-
                     if (worldObj.isAirBlock(front) && block.canPlaceBlockAt(worldObj, front)) {
                         FluidStack took = network.extractFluid(stack, Fluid.BUCKET_VOLUME, compare);
 
