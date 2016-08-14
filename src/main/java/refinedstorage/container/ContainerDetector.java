@@ -3,14 +3,14 @@ package refinedstorage.container;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import refinedstorage.container.slot.SlotSpecimen;
+import refinedstorage.container.slot.SlotSpecimenType;
 import refinedstorage.tile.TileDetector;
 
 public class ContainerDetector extends ContainerBase {
     public ContainerDetector(TileDetector detector, EntityPlayer player) {
         super(detector, player);
 
-        addSlotToContainer(new SlotSpecimen(detector.getInventory(), 0, 107, 20));
+        addSlotToContainer(new SlotSpecimenType(detector, 0, 107, 20));
 
         addPlayerInventory(8, 55);
     }

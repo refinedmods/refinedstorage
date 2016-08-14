@@ -6,6 +6,7 @@ import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.container.ContainerDetector;
 import refinedstorage.gui.sidebutton.SideButtonCompare;
 import refinedstorage.gui.sidebutton.SideButtonDetectorMode;
+import refinedstorage.gui.sidebutton.SideButtonType;
 import refinedstorage.tile.TileDetector;
 import refinedstorage.tile.data.TileDataManager;
 
@@ -20,10 +21,12 @@ public class GuiDetector extends GuiBase {
 
     @Override
     public void init(int x, int y) {
-        addSideButton(new SideButtonCompare(TileDetector.COMPARE, CompareUtils.COMPARE_DAMAGE));
-        addSideButton(new SideButtonCompare(TileDetector.COMPARE, CompareUtils.COMPARE_NBT));
+        addSideButton(new SideButtonType(TileDetector.TYPE));
 
         addSideButton(new SideButtonDetectorMode());
+
+        addSideButton(new SideButtonCompare(TileDetector.COMPARE, CompareUtils.COMPARE_DAMAGE));
+        addSideButton(new SideButtonCompare(TileDetector.COMPARE, CompareUtils.COMPARE_NBT));
 
         AMOUNT = new GuiTextField(0, fontRendererObj, x + 62 + 1, y + 23 + 1, 25, fontRendererObj.FONT_HEIGHT);
         AMOUNT.setText(String.valueOf(TileDetector.AMOUNT.getValue()));
