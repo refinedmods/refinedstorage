@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
-import refinedstorage.container.slot.SlotSpecimen;
+import refinedstorage.container.slot.SlotSpecimenType;
 import refinedstorage.tile.TileExporter;
 
 public class ContainerExporter extends ContainerBase {
@@ -16,7 +16,7 @@ public class ContainerExporter extends ContainerBase {
         }
 
         for (int i = 0; i < 9; ++i) {
-            addSlotToContainer(new SlotSpecimen(exporter.getFilters(), i, 8 + (18 * i), 20));
+            addSlotToContainer(new SlotSpecimenType(exporter, i, 8 + (18 * i), 20));
         }
 
         addPlayerInventory(8, 55);
