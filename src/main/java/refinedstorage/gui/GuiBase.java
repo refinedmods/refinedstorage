@@ -19,11 +19,11 @@ import refinedstorage.gui.sidebutton.SideButton;
 import refinedstorage.inventory.ItemHandlerFluid;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public abstract class GuiBase extends GuiContainer {
+    private static final Map<String, ResourceLocation> TEXTURE_CACHE = new HashMap<>();
+
     // @TODO: Don't depend on JEI
     public static final FluidStackRenderer FLUID_RENDERER = new FluidStackRenderer(Fluid.BUCKET_VOLUME, false, 16, 16, null);
 
@@ -204,7 +204,13 @@ public abstract class GuiBase extends GuiContainer {
     }
 
     public void bindTexture(String base, String file) {
-        mc.getTextureManager().bindTexture(new ResourceLocation(base, "textures/" + file));
+        String id = base + ":" + file;
+
+        if (!TEXTURE_CACHE.containsKey(id)) {
+            TEXTURE_CACHE.put(id, new ResourceLocation(base, "textures/" + file));
+        }
+
+        mc.getTextureManager().bindTexture(TEXTURE_CACHE.get(id));
     }
 
     public void drawItem(int x, int y, ItemStack stack) {
