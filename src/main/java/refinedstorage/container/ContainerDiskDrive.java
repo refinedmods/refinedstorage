@@ -4,9 +4,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
+import refinedstorage.container.slot.SlotSpecimenType;
 import refinedstorage.tile.TileDiskDrive;
 
-public class ContainerDiskDrive extends ContainerStorage {
+public class ContainerDiskDrive extends ContainerBase {
     public ContainerDiskDrive(TileDiskDrive drive, EntityPlayer player) {
         super(drive, player);
 
@@ -18,7 +19,11 @@ public class ContainerDiskDrive extends ContainerStorage {
             addSlotToContainer(new SlotItemHandler(drive.getDisks(), 4 + i, 98 + (i * 18), 96));
         }
 
-        addFilterAndPlayerInventorySlots(drive.getFilters());
+        for (int i = 0; i < 9; ++i) {
+            addSlotToContainer(new SlotSpecimenType(drive, i, 8 + (18 * i), 20));
+        }
+
+        addPlayerInventory(8, 129);
     }
 
     @Override

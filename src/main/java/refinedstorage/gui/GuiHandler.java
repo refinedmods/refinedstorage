@@ -11,6 +11,7 @@ import refinedstorage.RefinedStorageGui;
 import refinedstorage.container.*;
 import refinedstorage.gui.grid.GuiGrid;
 import refinedstorage.tile.*;
+import refinedstorage.tile.externalstorage.TileExternalStorage;
 import refinedstorage.tile.grid.TileGrid;
 import refinedstorage.tile.grid.WirelessGrid;
 
@@ -36,7 +37,9 @@ public class GuiHandler implements IGuiHandler {
             case RefinedStorageGui.CONSTRUCTOR:
                 return new ContainerConstructor((TileConstructor) tile, player);
             case RefinedStorageGui.STORAGE:
-                return new ContainerStorage((TileBase) tile, player, ((IStorageGui) tile).getFilters());
+                return new ContainerStorage((TileStorage) tile, player);
+            case RefinedStorageGui.EXTERNAL_STORAGE:
+                return new ContainerExternalStorage((TileExternalStorage) tile, player);
             case RefinedStorageGui.RELAY:
                 return new ContainerRelay((TileRelay) tile, player);
             case RefinedStorageGui.INTERFACE:
@@ -51,8 +54,6 @@ public class GuiHandler implements IGuiHandler {
                 return new ContainerProcessingPatternEncoder((TileProcessingPatternEncoder) tile, player);
             case RefinedStorageGui.NETWORK_TRANSMITTER:
                 return new ContainerNetworkTransmitter((TileNetworkTransmitter) tile, player);
-            case RefinedStorageGui.FLUID_DISK_DRIVE:
-                return new ContainerFluidDiskDrive((TileFluidDiskDrive) tile, player);
             case RefinedStorageGui.FLUID_INTERFACE:
                 return new ContainerFluidInterface((TileFluidInterface) tile, player);
             default:
@@ -109,7 +110,9 @@ public class GuiHandler implements IGuiHandler {
             case RefinedStorageGui.CONSTRUCTOR:
                 return new GuiConstructor((ContainerConstructor) getContainer(ID, player, tile));
             case RefinedStorageGui.STORAGE:
-                return new GuiStorage((ContainerStorage) getContainer(ID, player, tile), (IStorageGui) tile);
+                return new GuiStorage((ContainerStorage) getContainer(ID, player, tile), (TileStorage) tile);
+            case RefinedStorageGui.EXTERNAL_STORAGE:
+                return new GuiStorage((ContainerExternalStorage) getContainer(ID, player, tile), (TileExternalStorage) tile);
             case RefinedStorageGui.RELAY:
                 return new GuiRelay((ContainerRelay) getContainer(ID, player, tile));
             case RefinedStorageGui.INTERFACE:
@@ -126,8 +129,6 @@ public class GuiHandler implements IGuiHandler {
                 return new GuiGridFilter(getGridFilterContainer(player, x));
             case RefinedStorageGui.NETWORK_TRANSMITTER:
                 return new GuiNetworkTransmitter((ContainerNetworkTransmitter) getContainer(ID, player, tile), (TileNetworkTransmitter) tile);
-            case RefinedStorageGui.FLUID_DISK_DRIVE:
-                return new GuiStorage((ContainerFluidDiskDrive) getContainer(ID, player, tile), (IStorageGui) tile, "gui/disk_drive.png");
             case RefinedStorageGui.FLUID_INTERFACE:
                 return new GuiFluidInterface((ContainerFluidInterface) getContainer(ID, player, tile));
             default:

@@ -75,7 +75,7 @@ public class BlockExternalStorage extends BlockCable {
         }
 
         if (!world.isRemote) {
-            player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.STORAGE, world, pos.getX(), pos.getY(), pos.getZ());
+            player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.EXTERNAL_STORAGE, world, pos.getX(), pos.getY(), pos.getZ());
         }
 
         return true;

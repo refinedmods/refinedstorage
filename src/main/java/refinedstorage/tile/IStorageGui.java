@@ -8,13 +8,11 @@ public interface IStorageGui {
 
     IItemHandler getFilters();
 
+    TileDataParameter<Integer> getTypeParameter();
+
     TileDataParameter<Integer> getRedstoneModeParameter();
 
     TileDataParameter<Integer> getCompareParameter();
-
-    default boolean hasComparisonFor(int compare) {
-        return true;
-    }
 
     TileDataParameter<Integer> getFilterParameter();
 

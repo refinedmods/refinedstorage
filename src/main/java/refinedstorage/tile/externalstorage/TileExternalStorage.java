@@ -264,4 +264,10 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
     public IItemHandler getFilters() {
         return filters;
     }
+
+    // @TODO: Implement
+    @Override
+    public TileDataParameter<Integer> getTypeParameter() {
+        return null;
+    }
 }

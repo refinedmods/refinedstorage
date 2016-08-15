@@ -3,10 +3,11 @@ package refinedstorage.gui;
 import com.google.common.primitives.Ints;
 import net.minecraft.client.gui.GuiTextField;
 import refinedstorage.api.storage.CompareUtils;
-import refinedstorage.container.ContainerStorage;
+import refinedstorage.container.ContainerBase;
 import refinedstorage.gui.sidebutton.SideButtonCompare;
 import refinedstorage.gui.sidebutton.SideButtonMode;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
+import refinedstorage.gui.sidebutton.SideButtonType;
 import refinedstorage.tile.IStorageGui;
 import refinedstorage.tile.data.TileDataManager;
 
@@ -23,14 +24,14 @@ public class GuiStorage extends GuiBase {
     private int barWidth = 16;
     private int barHeight = 58;
 
-    public GuiStorage(ContainerStorage container, IStorageGui gui, String texture) {
+    public GuiStorage(ContainerBase container, IStorageGui gui, String texture) {
         super(container, 176, 211);
 
         this.gui = gui;
         this.texture = texture;
     }
 
-    public GuiStorage(ContainerStorage container, IStorageGui gui) {
+    public GuiStorage(ContainerBase container, IStorageGui gui) {
         this(container, gui, "gui/storage.png");
     }
 
@@ -40,18 +41,17 @@ public class GuiStorage extends GuiBase {
             addSideButton(new SideButtonRedstoneMode(gui.getRedstoneModeParameter()));
         }
 
+        if (gui.getTypeParameter() != null) {
+            addSideButton(new SideButtonType(gui.getTypeParameter()));
+        }
+
         if (gui.getFilterParameter() != null) {
             addSideButton(new SideButtonMode(gui.getFilterParameter()));
         }
 
         if (gui.getCompareParameter() != null) {
-            if (gui.hasComparisonFor(CompareUtils.COMPARE_DAMAGE)) {
-                addSideButton(new SideButtonCompare(gui.getCompareParameter(), CompareUtils.COMPARE_DAMAGE));
-            }
-
-            if (gui.hasComparisonFor(CompareUtils.COMPARE_NBT)) {
-                addSideButton(new SideButtonCompare(gui.getCompareParameter(), CompareUtils.COMPARE_NBT));
-            }
+            addSideButton(new SideButtonCompare(gui.getCompareParameter(), CompareUtils.COMPARE_DAMAGE));
+            addSideButton(new SideButtonCompare(gui.getCompareParameter(), CompareUtils.COMPARE_NBT));
         }
 
         priorityField = new GuiTextField(0, fontRendererObj, x + 98 + 1, y + 54 + 1, 25, fontRendererObj.FONT_HEIGHT);

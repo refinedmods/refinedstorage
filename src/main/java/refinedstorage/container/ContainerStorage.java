@@ -3,26 +3,15 @@ package refinedstorage.container;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
 import refinedstorage.container.slot.SlotSpecimen;
-import refinedstorage.container.slot.SlotSpecimenFluid;
-import refinedstorage.inventory.ItemHandlerFluid;
-import refinedstorage.tile.TileBase;
+import refinedstorage.tile.TileStorage;
 
 public class ContainerStorage extends ContainerBase {
-    public ContainerStorage(TileBase tile, EntityPlayer player) {
+    public ContainerStorage(TileStorage tile, EntityPlayer player) {
         super(tile, player);
-    }
 
-    public ContainerStorage(TileBase tile, EntityPlayer player, IItemHandler filters) {
-        this(tile, player);
-
-        addFilterAndPlayerInventorySlots(filters);
-    }
-
-    protected void addFilterAndPlayerInventorySlots(IItemHandler filters) {
         for (int i = 0; i < 9; ++i) {
-            addSlotToContainer(filters instanceof ItemHandlerFluid ? new SlotSpecimenFluid(!getTile().getWorld().isRemote, filters, i, 8 + (18 * i), 20) : new SlotSpecimen(filters, i, 8 + (18 * i), 20));
+            addSlotToContainer(new SlotSpecimen(tile.getFilters(), i, 8 + (18 * i), 20));
         }
 
         addPlayerInventory(8, 129);

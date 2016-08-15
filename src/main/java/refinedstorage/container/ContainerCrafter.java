@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
 import refinedstorage.tile.TileCrafter;
 
-public class ContainerCrafter extends ContainerStorage {
+public class ContainerCrafter extends ContainerBase {
     public ContainerCrafter(TileCrafter crafter, EntityPlayer player) {
         super(crafter, player);
 

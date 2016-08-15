@@ -205,6 +205,11 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
     }
 
     @Override
+    public TileDataParameter<Integer> getTypeParameter() {
+        return null;
+    }
+
+    @Override
     public TileDataParameter<Integer> getRedstoneModeParameter() {
         return REDSTONE_MODE;
     }
