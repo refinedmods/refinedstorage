@@ -13,6 +13,10 @@ public final class FluidUtils {
         return copy;
     }
 
+    public static FluidStack copy(FluidStack stack) {
+        return stack == null ? null : stack.copy();
+    }
+
     public static FluidStack getFluidFromStack(ItemStack stack, boolean simulate) {
         if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
             return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).drain(Fluid.BUCKET_VOLUME, !simulate);

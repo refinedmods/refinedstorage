@@ -59,6 +59,7 @@ import refinedstorage.tile.config.RedstoneMode;
 import refinedstorage.tile.data.ITileDataProducer;
 import refinedstorage.tile.data.RefinedStorageSerializers;
 import refinedstorage.tile.data.TileDataParameter;
+import refinedstorage.tile.externalstorage.FluidStorageExternal;
 import refinedstorage.tile.externalstorage.ItemStorageExternal;
 import refinedstorage.tile.grid.IGrid;
 
@@ -624,6 +625,10 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         for (IFluidStorage storage : this.fluidStorage.getStorages()) {
             remainder = storage.insertFluid(remainder, size, simulate);
 
+            if (storage instanceof FluidStorageExternal && !simulate) {
+                ((FluidStorageExternal) storage).updateCacheForcefully();
+            }
+
             if (remainder == null) {
                 break;
             } else {
@@ -652,6 +657,10 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             FluidStack took = storage.extractFluid(stack, requested - received, flags);
 
             if (took != null) {
+                if (storage instanceof FluidStorageExternal) {
+                    ((FluidStorageExternal) storage).updateCacheForcefully();
+                }
+
                 if (newStack == null) {
                     newStack = took;
                 } else {

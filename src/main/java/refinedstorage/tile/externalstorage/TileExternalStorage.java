@@ -6,35 +6,46 @@ import mcmultipart.microblock.IMicroblock;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.IItemHandler;
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 import refinedstorage.RefinedStorage;
 import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.api.storage.fluid.IFluidStorage;
+import refinedstorage.api.storage.fluid.IFluidStorageProvider;
 import refinedstorage.api.storage.item.IItemStorage;
 import refinedstorage.api.storage.item.IItemStorageProvider;
 import refinedstorage.inventory.ItemHandlerBasic;
+import refinedstorage.inventory.ItemHandlerFluid;
 import refinedstorage.tile.IStorageGui;
 import refinedstorage.tile.TileMultipartNode;
 import refinedstorage.tile.config.IComparable;
 import refinedstorage.tile.config.IFilterable;
 import refinedstorage.tile.config.IPrioritizable;
+import refinedstorage.tile.config.IType;
 import refinedstorage.tile.data.ITileDataProducer;
 import refinedstorage.tile.data.TileDataParameter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileExternalStorage extends TileMultipartNode implements IItemStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable {
+public class TileExternalStorage extends TileMultipartNode implements IItemStorageProvider, IFluidStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IType {
     public static final TileDataParameter<Integer> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
+    public static final TileDataParameter<Integer> TYPE = IType.createParameter();
 
     public static final TileDataParameter<Integer> STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileExternalStorage>() {
         @Override
         public Integer getValue(TileExternalStorage tile) {
             int stored = 0;
 
-            for (ItemStorageExternal storage : tile.storages) {
+            for (ItemStorageExternal storage : tile.itemStorages) {
+                stored += storage.getStored();
+            }
+
+            for (FluidStorageExternal storage : tile.fluidStorages) {
                 stored += storage.getStored();
             }
 
@@ -47,7 +58,11 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
         public Integer getValue(TileExternalStorage tile) {
             int capacity = 0;
 
-            for (ItemStorageExternal storage : tile.storages) {
+            for (ItemStorageExternal storage : tile.itemStorages) {
+                capacity += storage.getCapacity();
+            }
+
+            for (FluidStorageExternal storage : tile.fluidStorages) {
                 capacity += storage.getCapacity();
             }
 
@@ -58,14 +73,19 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
     private static final String NBT_PRIORITY = "Priority";
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
+    private static final String NBT_TYPE = "Type";
 
-    private ItemHandlerBasic filters = new ItemHandlerBasic(9, this);
+    private ItemHandlerBasic itemFilters = new ItemHandlerBasic(9, this);
+    private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(9, this);
 
     private int priority = 0;
     private int compare = 0;
     private int mode = IFilterable.WHITELIST;
+    private int type = IType.ITEMS;
 
-    private List<ItemStorageExternal> storages = new ArrayList<>();
+    private List<ItemStorageExternal> itemStorages = new ArrayList<>();
+    private List<FluidStorageExternal> fluidStorages = new ArrayList<>();
+
     private int lastDrawerCount;
 
     public TileExternalStorage() {
@@ -74,6 +94,7 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
         dataManager.addWatchedParameter(MODE);
         dataManager.addWatchedParameter(STORED);
         dataManager.addWatchedParameter(CAPACITY);
+        dataManager.addWatchedParameter(TYPE);
     }
 
     @Override
@@ -83,7 +104,7 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.externalStorageUsage + (storages.size() * RefinedStorage.INSTANCE.externalStoragePerStorageUsage);
+        return RefinedStorage.INSTANCE.externalStorageUsage + ((itemStorages.size() + fluidStorages.size()) * RefinedStorage.INSTANCE.externalStoragePerStorageUsage);
     }
 
     @Override
@@ -97,21 +118,33 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
         updateStorage(network);
 
         network.getItemStorage().rebuild();
+        network.getFluidStorage().rebuild();
     }
 
     @Override
     public void update() {
         if (!worldObj.isRemote && network != null) {
-            boolean changeDetected = false;
+            boolean itemChangeDetected = false, fluidChangeDetected = false;
 
-            for (ItemStorageExternal storage : storages) {
+            for (ItemStorageExternal storage : itemStorages) {
                 if (storage.updateCache()) {
-                    changeDetected = true;
+                    itemChangeDetected = true;
                 }
             }
 
-            if (changeDetected) {
+            for (FluidStorageExternal storage : fluidStorages) {
+                if (storage.updateCache()) {
+                    fluidChangeDetected = true;
+                }
+            }
+
+            if (itemChangeDetected) {
                 network.getItemStorage().rebuild();
+            }
+
+            // @TODO: This is broken?
+            if (fluidChangeDetected) {
+                network.getFluidStorage().rebuild();
             }
 
             if (getFacingTile() instanceof IDrawerGroup && lastDrawerCount != ((IDrawerGroup) getFacingTile()).getDrawerCount()) {
@@ -128,7 +161,8 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        readItems(filters, 0, tag);
+        readItems(itemFilters, 0, tag);
+        readItems(fluidFilters, 1, tag);
 
         if (tag.hasKey(NBT_PRIORITY)) {
             priority = tag.getInteger(NBT_PRIORITY);
@@ -141,17 +175,23 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
         if (tag.hasKey(NBT_MODE)) {
             mode = tag.getInteger(NBT_MODE);
         }
+
+        if (tag.hasKey(NBT_TYPE)) {
+            type = tag.getInteger(NBT_TYPE);
+        }
     }
 
     @Override
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        writeItems(filters, 0, tag);
+        writeItems(itemFilters, 0, tag);
+        writeItems(fluidFilters, 1, tag);
 
         tag.setInteger(NBT_PRIORITY, priority);
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_MODE, mode);
+        tag.setInteger(NBT_TYPE, type);
 
         return tag;
     }
@@ -193,7 +233,8 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
     }
 
     public void updateStorage(INetworkMaster network) {
-        storages.clear();
+        itemStorages.clear();
+        fluidStorages.clear();
 
         TileEntity facing = getFacingTile();
 
@@ -202,27 +243,41 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
 
             for (int i = 0; i < group.getDrawerCount(); ++i) {
                 if (group.isDrawerEnabled(i)) {
-                    storages.add(new ItemStorageDrawer(this, group.getDrawer(i)));
+                    itemStorages.add(new ItemStorageDrawer(this, group.getDrawer(i)));
                 }
             }
         } else if (facing instanceof IDrawer) {
-            storages.add(new ItemStorageDrawer(this, (IDrawer) facing));
+            itemStorages.add(new ItemStorageDrawer(this, (IDrawer) facing));
         } else if (facing instanceof IDeepStorageUnit) {
-            storages.add(new ItemStorageDSU(this, (IDeepStorageUnit) facing));
+            itemStorages.add(new ItemStorageDSU(this, (IDeepStorageUnit) facing));
         } else {
-            IItemHandler handler = getItemHandler(facing, getDirection().getOpposite());
+            IItemHandler itemHandler = getItemHandler(facing, getDirection().getOpposite());
 
-            if (handler != null) {
-                storages.add(new ItemStorageItemHandler(this, handler));
+            if (itemHandler != null) {
+                itemStorages.add(new ItemStorageItemHandler(this, itemHandler));
+            }
+
+            IFluidHandler fluidHandler = getFluidHandler(facing, getDirection().getOpposite());
+
+            if (fluidHandler != null) {
+                for (IFluidTankProperties property : fluidHandler.getTankProperties()) {
+                    fluidStorages.add(new FluidStorageExternal(this, fluidHandler, property));
+                }
             }
         }
 
         network.getItemStorage().rebuild();
+        network.getFluidStorage().rebuild();
     }
 
     @Override
     public void addItemStorages(List<IItemStorage> storages) {
-        storages.addAll(this.storages);
+        storages.addAll(this.itemStorages);
+    }
+
+    @Override
+    public void addFluidStorages(List<IFluidStorage> storages) {
+        storages.addAll(this.fluidStorages);
     }
 
     @Override
@@ -261,13 +316,33 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
     }
 
     @Override
-    public IItemHandler getFilters() {
-        return filters;
+    public TileDataParameter<Integer> getTypeParameter() {
+        return TYPE;
     }
 
-    // @TODO: Implement
+
     @Override
-    public TileDataParameter<Integer> getTypeParameter() {
-        return null;
+    public int getType() {
+        return worldObj.isRemote ? TYPE.getValue() : type;
+    }
+
+    @Override
+    public void setType(int type) {
+        this.type = type;
+
+        markDirty();
+    }
+
+    @Override
+    public IItemHandler getFilterInventory() {
+        return getType() == IType.ITEMS ? itemFilters : fluidFilters;
+    }
+
+    public ItemHandlerBasic getItemFilters() {
+        return itemFilters;
+    }
+
+    public ItemHandlerFluid getFluidFilters() {
+        return fluidFilters;
     }
 }

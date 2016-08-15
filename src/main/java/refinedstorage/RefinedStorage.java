@@ -51,8 +51,6 @@ public final class RefinedStorage {
     public int detectorUsage;
     public int diskDriveUsage;
     public int diskDrivePerDiskUsage;
-    public int fluidDiskDriveUsage;
-    public int fluidDiskDrivePerDiskUsage;
     public int externalStorageUsage;
     public int externalStoragePerStorageUsage;
     public int exporterUsage;
@@ -99,8 +97,6 @@ public final class RefinedStorage {
         detectorUsage = config.getInt("detector", "energy", 2, 0, Integer.MAX_VALUE, "The energy used by Detectors");
         diskDriveUsage = config.getInt("diskDrive", "energy", 0, 0, Integer.MAX_VALUE, "The base energy used by Disk Drives");
         diskDrivePerDiskUsage = config.getInt("diskDrivePerDisk", "energy", 1, 0, Integer.MAX_VALUE, "The additional energy used by Storage Disks in Disk Drives");
-        fluidDiskDriveUsage = config.getInt("fluidDiskDrive", "energy", 0, 0, Integer.MAX_VALUE, "The base energy used by Fluid Disk Drives");
-        fluidDiskDrivePerDiskUsage = config.getInt("fluidDiskDrivePerDisk", "energy", 1, 0, Integer.MAX_VALUE, "The additional energy used by Fluid Storage Disks in Fluid Disk Drives");
         externalStorageUsage = config.getInt("externalStorage", "energy", 0, 0, Integer.MAX_VALUE, "The base energy used by External Storages");
         externalStoragePerStorageUsage = config.getInt("externalStoragePerStorage", "energy", 1, 0, Integer.MAX_VALUE, "The additional energy used per connected storage to an External Storage");
         exporterUsage = config.getInt("exporter", "energy", 1, 0, Integer.MAX_VALUE, "The energy used by Exporters");

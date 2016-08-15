@@ -3,7 +3,7 @@ package refinedstorage.container;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import refinedstorage.container.slot.SlotSpecimen;
+import refinedstorage.container.slot.SlotSpecimenType;
 import refinedstorage.tile.externalstorage.TileExternalStorage;
 
 public class ContainerExternalStorage extends ContainerBase {
@@ -11,7 +11,7 @@ public class ContainerExternalStorage extends ContainerBase {
         super(tile, player);
 
         for (int i = 0; i < 9; ++i) {
-            addSlotToContainer(new SlotSpecimen(tile.getFilters(), i, 8 + (18 * i), 20));
+            addSlotToContainer(new SlotSpecimenType(tile, i, 8 + (18 * i), 20));
         }
 
         addPlayerInventory(8, 129);

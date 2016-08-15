@@ -353,11 +353,6 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     }
 
     @Override
-    public IItemHandler getFilters() {
-        return itemFilters;
-    }
-
-    @Override
     public TileDataParameter<Integer> getTypeParameter() {
         return TYPE;
     }

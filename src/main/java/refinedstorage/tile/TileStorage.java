@@ -3,7 +3,6 @@ package refinedstorage.tile;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataSerializers;
-import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
@@ -200,11 +199,6 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
     }
 
     @Override
-    public IItemHandler getFilters() {
-        return filters;
-    }
-
-    @Override
     public TileDataParameter<Integer> getTypeParameter() {
         return null;
     }
@@ -239,6 +233,10 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
 
     public ItemStorageNBT getStorage() {
         return storage;
+    }
+
+    public ItemHandlerBasic getFilters() {
+        return filters;
     }
 
     @Override
