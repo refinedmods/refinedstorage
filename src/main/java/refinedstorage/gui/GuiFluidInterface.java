@@ -46,5 +46,13 @@ public class GuiFluidInterface extends GuiBase {
         drawString(43 + 4, 20, t("gui.refinedstorage:fluid_interface.in"));
         drawString(115 + 1, 20, t("gui.refinedstorage:fluid_interface.out"));
         drawString(7, 111, t("container.inventory"));
+
+        if (inBounds(46, 56, 12, 47, mouseX, mouseY) && TileFluidInterface.TANK_IN.getValue() != null) {
+            drawTooltip(mouseX, mouseY, TileFluidInterface.TANK_IN.getValue().getLocalizedName() + "\n" + TileFluidInterface.TANK_IN.getValue().amount + " mB");
+        }
+
+        if (inBounds(118, 56, 12, 47, mouseX, mouseY) && TileFluidInterface.TANK_OUT.getValue() != null) {
+            drawTooltip(mouseX, mouseY, TileFluidInterface.TANK_OUT.getValue().getLocalizedName() + "\n" + TileFluidInterface.TANK_OUT.getValue().amount + " mB");
+        }
     }
 }
