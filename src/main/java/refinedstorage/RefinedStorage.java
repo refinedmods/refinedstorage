@@ -60,6 +60,7 @@ public final class RefinedStorage {
     public int relayUsage;
     public int soldererUsage;
     public int storageUsage;
+    public int fluidStorageUsage;
     public int wirelessTransmitterUsage;
     public int gridUsage;
     public int craftingGridUsage;
@@ -106,6 +107,7 @@ public final class RefinedStorage {
         relayUsage = config.getInt("relay", "energy", 1, 0, Integer.MAX_VALUE, "The energy used by Relays");
         soldererUsage = config.getInt("solderer", "energy", 3, 0, Integer.MAX_VALUE, "The energy used by Solderers");
         storageUsage = config.getInt("storage", "energy", 1, 0, Integer.MAX_VALUE, "The energy used by Storage Blocks");
+        fluidStorageUsage = config.getInt("fluidStorage", "energy", 1, 0, Integer.MAX_VALUE, "The energy used by Fluid Storage Blocks");
         wirelessTransmitterUsage = config.getInt("wirelessTransmitter", "energy", 8, 0, Integer.MAX_VALUE, "The energy used by Wireless Transmitters");
         gridUsage = config.getInt("grid", "energy", 2, 0, Integer.MAX_VALUE, "The energy used by Grids");
         craftingGridUsage = config.getInt("craftingGrid", "energy", 4, 0, Integer.MAX_VALUE, "The energy used by Crafting Grids");

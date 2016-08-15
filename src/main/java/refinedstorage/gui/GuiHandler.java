@@ -56,6 +56,8 @@ public class GuiHandler implements IGuiHandler {
                 return new ContainerNetworkTransmitter((TileNetworkTransmitter) tile, player);
             case RefinedStorageGui.FLUID_INTERFACE:
                 return new ContainerFluidInterface((TileFluidInterface) tile, player);
+            case RefinedStorageGui.FLUID_STORAGE:
+                return new ContainerFluidStorage((TileFluidStorage) tile, player);
             default:
                 return null;
         }
@@ -131,6 +133,8 @@ public class GuiHandler implements IGuiHandler {
                 return new GuiNetworkTransmitter((ContainerNetworkTransmitter) getContainer(ID, player, tile), (TileNetworkTransmitter) tile);
             case RefinedStorageGui.FLUID_INTERFACE:
                 return new GuiFluidInterface((ContainerFluidInterface) getContainer(ID, player, tile));
+            case RefinedStorageGui.FLUID_STORAGE:
+                return new GuiStorage((ContainerFluidStorage) getContainer(ID, player, tile), (TileFluidStorage) tile);
             default:
                 return null;
         }

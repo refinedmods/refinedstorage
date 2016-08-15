@@ -86,6 +86,7 @@ public class CommonProxy {
         registerTile(TileNetworkReceiver.class, "network_receiver");
         registerTile(TileNetworkTransmitter.class, "network_transmitter");
         registerTile(TileFluidInterface.class, "fluid_interface");
+        registerTile(TileFluidStorage.class, "fluid_storage");
 
         registerBlock(RefinedStorageBlocks.CONTROLLER);
         registerBlock(RefinedStorageBlocks.GRID);
@@ -109,6 +110,7 @@ public class CommonProxy {
         registerBlock(RefinedStorageBlocks.NETWORK_TRANSMITTER);
         registerBlock(RefinedStorageBlocks.NETWORK_RECEIVER);
         registerBlock(RefinedStorageBlocks.FLUID_INTERFACE);
+        registerBlock(RefinedStorageBlocks.FLUID_STORAGE);
 
         registerItem(RefinedStorageItems.QUARTZ_ENRICHED_IRON);
         registerItem(RefinedStorageItems.STORAGE_DISK);
@@ -531,6 +533,12 @@ public class CommonProxy {
         RefinedStorageAPI.SOLDERER_REGISTRY.addRecipe(new SoldererRecipeStorage(EnumItemStorageType.TYPE_4K, ItemStoragePart.TYPE_4K));
         RefinedStorageAPI.SOLDERER_REGISTRY.addRecipe(new SoldererRecipeStorage(EnumItemStorageType.TYPE_16K, ItemStoragePart.TYPE_16K));
         RefinedStorageAPI.SOLDERER_REGISTRY.addRecipe(new SoldererRecipeStorage(EnumItemStorageType.TYPE_64K, ItemStoragePart.TYPE_64K));
+
+        // Fluid Storage Blocks
+        RefinedStorageAPI.SOLDERER_REGISTRY.addRecipe(new SoldererRecipeFluidStorage(EnumFluidStorageType.TYPE_64K, ItemFluidStoragePart.TYPE_64K));
+        RefinedStorageAPI.SOLDERER_REGISTRY.addRecipe(new SoldererRecipeFluidStorage(EnumFluidStorageType.TYPE_128K, ItemFluidStoragePart.TYPE_128K));
+        RefinedStorageAPI.SOLDERER_REGISTRY.addRecipe(new SoldererRecipeFluidStorage(EnumFluidStorageType.TYPE_256K, ItemFluidStoragePart.TYPE_256K));
+        RefinedStorageAPI.SOLDERER_REGISTRY.addRecipe(new SoldererRecipeFluidStorage(EnumFluidStorageType.TYPE_512K, ItemFluidStoragePart.TYPE_512K));
 
         // Crafting Monitor
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RefinedStorageBlocks.CRAFTING_MONITOR),

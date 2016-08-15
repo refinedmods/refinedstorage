@@ -25,4 +25,5 @@ public final class RefinedStorageBlocks {
     public static final BlockNetworkTransmitter NETWORK_TRANSMITTER = new BlockNetworkTransmitter();
     public static final BlockNetworkReceiver NETWORK_RECEIVER = new BlockNetworkReceiver();
     public static final BlockFluidInterface FLUID_INTERFACE = new BlockFluidInterface();
+    public static final BlockFluidStorage FLUID_STORAGE = new BlockFluidStorage();
 }

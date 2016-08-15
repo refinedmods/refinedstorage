@@ -93,7 +93,7 @@ public class BlockStorage extends BlockNode {
 
         List<ItemStack> drops = new ArrayList<>();
 
-        ItemStack stack = new ItemStack(RefinedStorageBlocks.STORAGE, 1, RefinedStorageBlocks.STORAGE.getMetaFromState(state));
+        ItemStack stack = new ItemStack(RefinedStorageBlocks.STORAGE, 1, getMetaFromState(state));
         stack.setTagCompound(new NBTTagCompound());
         stack.getTagCompound().setTag(TileStorage.NBT_STORAGE, storage.getStorageTag());
 
