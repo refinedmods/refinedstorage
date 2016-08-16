@@ -27,10 +27,7 @@ import org.lwjgl.opengl.GL11;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageItems;
-import refinedstorage.block.BlockCable;
-import refinedstorage.block.EnumControllerType;
-import refinedstorage.block.EnumGridType;
-import refinedstorage.block.EnumItemStorageType;
+import refinedstorage.block.*;
 import refinedstorage.item.*;
 
 import java.util.List;
@@ -160,6 +157,21 @@ public class ClientProxy extends CommonProxy {
             new ResourceLocation("refinedstorage:64k_storage_part")
         );
 
+        ModelBakery.registerItemVariants(RefinedStorageItems.FLUID_STORAGE_DISK,
+            new ResourceLocation("refinedstorage:64k_fluid_storage_disk"),
+            new ResourceLocation("refinedstorage:128k_fluid_storage_disk"),
+            new ResourceLocation("refinedstorage:256k_fluid_storage_disk"),
+            new ResourceLocation("refinedstorage:512k_fluid_storage_disk"),
+            new ResourceLocation("refinedstorage:creative_fluid_storage_disk")
+        );
+
+        ModelBakery.registerItemVariants(RefinedStorageItems.FLUID_STORAGE_PART,
+            new ResourceLocation("refinedstorage:64k_fluid_storage_part"),
+            new ResourceLocation("refinedstorage:128k_fluid_storage_part"),
+            new ResourceLocation("refinedstorage:256k_fluid_storage_part"),
+            new ResourceLocation("refinedstorage:512k_fluid_storage_part")
+        );
+
         ModelBakery.registerItemVariants(RefinedStorageItems.PROCESSOR,
             new ResourceLocation("refinedstorage:basic_printed_processor"),
             new ResourceLocation("refinedstorage:improved_printed_processor"),
@@ -194,6 +206,17 @@ public class ClientProxy extends CommonProxy {
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.STORAGE_PART, ItemStoragePart.TYPE_4K, new ModelResourceLocation("refinedstorage:4k_storage_part", "inventory"));
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.STORAGE_PART, ItemStoragePart.TYPE_16K, new ModelResourceLocation("refinedstorage:16k_storage_part", "inventory"));
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.STORAGE_PART, ItemStoragePart.TYPE_64K, new ModelResourceLocation("refinedstorage:64k_storage_part", "inventory"));
+
+        ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.FLUID_STORAGE_DISK, ItemFluidStorageDisk.TYPE_64K, new ModelResourceLocation("refinedstorage:64k_fluid_storage_disk", "inventory"));
+        ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.FLUID_STORAGE_DISK, ItemFluidStorageDisk.TYPE_128K, new ModelResourceLocation("refinedstorage:128k_fluid_storage_disk", "inventory"));
+        ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.FLUID_STORAGE_DISK, ItemFluidStorageDisk.TYPE_256K, new ModelResourceLocation("refinedstorage:256k_fluid_storage_disk", "inventory"));
+        ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.FLUID_STORAGE_DISK, ItemFluidStorageDisk.TYPE_512K, new ModelResourceLocation("refinedstorage:512k_fluid_storage_disk", "inventory"));
+        ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.FLUID_STORAGE_DISK, ItemFluidStorageDisk.TYPE_CREATIVE, new ModelResourceLocation("refinedstorage:creative_fluid_storage_disk", "inventory"));
+
+        ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.FLUID_STORAGE_PART, ItemFluidStoragePart.TYPE_64K, new ModelResourceLocation("refinedstorage:64k_fluid_storage_part", "inventory"));
+        ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.FLUID_STORAGE_PART, ItemFluidStoragePart.TYPE_128K, new ModelResourceLocation("refinedstorage:128k_fluid_storage_part", "inventory"));
+        ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.FLUID_STORAGE_PART, ItemFluidStoragePart.TYPE_256K, new ModelResourceLocation("refinedstorage:256k_fluid_storage_part", "inventory"));
+        ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.FLUID_STORAGE_PART, ItemFluidStoragePart.TYPE_512K, new ModelResourceLocation("refinedstorage:512k_fluid_storage_part", "inventory"));
 
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.PROCESSOR, ItemProcessor.TYPE_PRINTED_BASIC, new ModelResourceLocation("refinedstorage:basic_printed_processor", "inventory"));
         ModelLoader.setCustomModelResourceLocation(RefinedStorageItems.PROCESSOR, ItemProcessor.TYPE_PRINTED_IMPROVED, new ModelResourceLocation("refinedstorage:improved_printed_processor", "inventory"));
@@ -246,6 +269,7 @@ public class ClientProxy extends CommonProxy {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.DETECTOR), 0, new ModelResourceLocation("refinedstorage:detector", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.RELAY), 0, new ModelResourceLocation("refinedstorage:relay", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.INTERFACE), 0, new ModelResourceLocation("refinedstorage:interface", "inventory"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.FLUID_INTERFACE), 0, new ModelResourceLocation("refinedstorage:fluid_interface", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.WIRELESS_TRANSMITTER), 0, new ModelResourceLocation("refinedstorage:wireless_transmitter", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.CRAFTING_MONITOR), 0, new ModelResourceLocation("refinedstorage:crafting_monitor", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.CRAFTER), 0, new ModelResourceLocation("refinedstorage:crafter", "inventory"));
@@ -257,5 +281,10 @@ public class ClientProxy extends CommonProxy {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.STORAGE), EnumItemStorageType.TYPE_16K.getId(), new ModelResourceLocation("refinedstorage:storage", "type=16k"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.STORAGE), EnumItemStorageType.TYPE_64K.getId(), new ModelResourceLocation("refinedstorage:storage", "type=64k"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.STORAGE), EnumItemStorageType.TYPE_CREATIVE.getId(), new ModelResourceLocation("refinedstorage:storage", "type=creative"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.FLUID_STORAGE), EnumFluidStorageType.TYPE_64K.getId(), new ModelResourceLocation("refinedstorage:fluid_storage", "type=64k"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.FLUID_STORAGE), EnumFluidStorageType.TYPE_128K.getId(), new ModelResourceLocation("refinedstorage:fluid_storage", "type=128k"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.FLUID_STORAGE), EnumFluidStorageType.TYPE_256K.getId(), new ModelResourceLocation("refinedstorage:fluid_storage", "type=256k"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.FLUID_STORAGE), EnumFluidStorageType.TYPE_512K.getId(), new ModelResourceLocation("refinedstorage:fluid_storage", "type=512k"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RefinedStorageBlocks.FLUID_STORAGE), EnumFluidStorageType.TYPE_CREATIVE.getId(), new ModelResourceLocation("refinedstorage:fluid_storage", "type=creative"));
     }
 }
