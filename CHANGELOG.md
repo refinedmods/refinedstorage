@@ -6,7 +6,7 @@
 
 **Features**
 - Added fluid storage
-- Usage of Wireless Grid is now configurable
+- Energy usage of Wireless Grid is now configurable
 
 ### 0.8.19
 **Bugfixes**
