@@ -1,7 +1,8 @@
 package refinedstorage.gui.grid;
 
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.ListMultimap;
+import com.google.common.collect.Multimaps;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -41,8 +42,8 @@ public class GuiGrid extends GuiBase {
     public static final GridSortingQuantity SORTING_QUANTITY = new GridSortingQuantity();
     public static final GridSortingName SORTING_NAME = new GridSortingName();
 
-    public static Multimap<Item, ClientStackItem> ITEMS = ArrayListMultimap.create();
-    public static Multimap<Fluid, ClientStackFluid> FLUIDS = ArrayListMultimap.create();
+    public static final ListMultimap<Item, ClientStackItem> ITEMS = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
+    public static final ListMultimap<Fluid, ClientStackFluid> FLUIDS = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
 
     public static List<IClientStack> STACKS = new ArrayList<>();
 
@@ -108,7 +109,7 @@ public class GuiGrid extends GuiBase {
         List<IClientStack> stacks = new ArrayList<>();
 
         if (grid.isConnected()) {
-            stacks.addAll(grid.getType() == EnumGridType.FLUID ? new ArrayList<>(FLUIDS.values()) : new ArrayList<>(ITEMS.values()));
+            stacks.addAll(grid.getType() == EnumGridType.FLUID ? FLUIDS.values() : ITEMS.values());
 
             String query = searchField.getText().trim().toLowerCase();
 

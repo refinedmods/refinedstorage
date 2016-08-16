@@ -1,6 +1,9 @@
 # Refined Storage Changelog
 
 ### 0.9
+**Bugfixes**
+- Fixed crash with Grid
+
 **Features**
 - Added fluid storage
 - Usage of Wireless Grid is now configurable
