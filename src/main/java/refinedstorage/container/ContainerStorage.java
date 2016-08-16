@@ -6,7 +6,6 @@ import net.minecraft.item.ItemStack;
 import refinedstorage.container.slot.SlotSpecimen;
 import refinedstorage.tile.TileStorage;
 
-//bla
 public class ContainerStorage extends ContainerBase {
     public ContainerStorage(TileStorage tile, EntityPlayer player) {
         super(tile, player);
