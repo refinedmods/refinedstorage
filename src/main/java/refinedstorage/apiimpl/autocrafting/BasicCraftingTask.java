@@ -94,7 +94,7 @@ public class BasicCraftingTask implements ICraftingTask {
         return done;
     }
 
-    // @todo: handle no space
+    // @TODO: Handle no space
     @Override
     public void onDone(INetworkMaster network) {
         for (ItemStack output : pattern.getOutputs()) {
@@ -108,7 +108,7 @@ public class BasicCraftingTask implements ICraftingTask {
         }
     }
 
-    // @todo: handle no space
+    // @TODO: Handle no space
     @Override
     public void onCancelled(INetworkMaster network) {
         for (ItemStack took : itemsTook) {

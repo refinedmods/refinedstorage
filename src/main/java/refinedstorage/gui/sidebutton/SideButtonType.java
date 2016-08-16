@@ -6,6 +6,7 @@ import refinedstorage.tile.config.IType;
 import refinedstorage.tile.data.TileDataManager;
 import refinedstorage.tile.data.TileDataParameter;
 
+// @TODO: Add icons
 public class SideButtonType extends SideButton {
     private TileDataParameter<Integer> type;
 
