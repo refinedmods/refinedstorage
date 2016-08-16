@@ -10,6 +10,7 @@ import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.NetworkUtils;
+import refinedstorage.apiimpl.storage.fluid.FluidUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +69,7 @@ public class BasicCraftingTask implements ICraftingTask {
             if (!satisfied[i]) {
                 done = false;
 
-                ItemStack took = NetworkUtils.extractItem(network, input, 1);
+                ItemStack took = FluidUtils.extractItemOrIfBucketLookInFluids(network, input, 1);
 
                 if (took != null) {
                     itemsTook.add(took);

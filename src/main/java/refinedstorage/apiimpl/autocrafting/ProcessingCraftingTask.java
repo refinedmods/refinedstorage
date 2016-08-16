@@ -10,6 +10,7 @@ import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.apiimpl.storage.fluid.FluidUtils;
 
 public class ProcessingCraftingTask implements ICraftingTask {
     public static final int ID = 1;
@@ -53,7 +54,7 @@ public class ProcessingCraftingTask implements ICraftingTask {
             for (int i = 0; i < inserted.length; ++i) {
                 if (!inserted[i]) {
                     ItemStack input = pattern.getInputs()[i];
-                    ItemStack took = NetworkUtils.extractItem(network, input, 1);
+                    ItemStack took = FluidUtils.extractItemOrIfBucketLookInFluids(network, input, 1);
 
                     if (took != null) {
                         if (ItemHandlerHelper.insertItem(container.getConnectedItems(), took, true) == null) {
