@@ -1,6 +1,5 @@
 package refinedstorage.gui;
 
-import mezz.jei.gui.ingredients.FluidStackRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -15,6 +14,7 @@ import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.items.SlotItemHandler;
 import org.lwjgl.input.Mouse;
 import refinedstorage.RefinedStorage;
+import refinedstorage.apiimpl.storage.fluid.FluidRenderer;
 import refinedstorage.gui.sidebutton.SideButton;
 import refinedstorage.inventory.ItemHandlerFluid;
 
@@ -24,8 +24,7 @@ import java.util.*;
 public abstract class GuiBase extends GuiContainer {
     private static final Map<String, ResourceLocation> TEXTURE_CACHE = new HashMap<>();
 
-    // @TODO: Don't depend on JEI
-    public static final FluidStackRenderer FLUID_RENDERER = new FluidStackRenderer(Fluid.BUCKET_VOLUME, false, 16, 16, null);
+    public static final FluidRenderer FLUID_RENDERER = new FluidRenderer(Fluid.BUCKET_VOLUME, 16, 16);
 
     protected static final int SIDE_BUTTON_WIDTH = 20;
     protected static final int SIDE_BUTTON_HEIGHT = 20;
