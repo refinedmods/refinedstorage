@@ -20,7 +20,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 minecraft {
-    version = "1.10.2-12.18.1.2046"
+    version = "1.10.2-12.18.1.2065"
     runDir = "run"
     useDepAts = true
     mappings = "snapshot_20160518"
@@ -43,9 +43,9 @@ repositories {
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.10.2:3.7.+"
+    deobfCompile "mezz.jei:jei_1.10.2:3.9.+"
     compile "net.darkhax.tesla:Tesla:1.10-1.2.+"
-    compile "net.industrial-craft:industrialcraft-2:2.6.37-ex110:api"
+    compile "net.industrial-craft:industrialcraft-2:2.6.41-ex110:api"
     deobfCompile "MCMultiPart:MCMultiPart:1.2.1+:universal"
 }
 

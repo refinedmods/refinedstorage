@@ -94,7 +94,7 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
             } else if (type == IType.FLUIDS) {
                 FluidStack stack = fluidFilters.getFluids()[0];
 
-                if (stack != null) {
+                if (stack != null && stack.getFluid().canBePlacedInWorld()) {
                     BlockPos front = pos.offset(getDirection());
 
                     Block block = stack.getFluid().getBlock();
@@ -103,10 +103,8 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
                         FluidStack took = network.extractFluid(stack, Fluid.BUCKET_VOLUME, compare);
 
                         if (took != null) {
-                            IBlockState state = block.getDefaultState();
-
-                            // @TODO: This doesn't cause the block to flow?
-                            worldObj.setBlockState(front, state, 1 | 2);
+                            // @TODO: Won't update
+                            worldObj.setBlockState(front, block.getDefaultState(), 11);
                         }
                     }
                 }

@@ -50,7 +50,11 @@ public abstract class FluidStorageNBT implements IFluidStorage {
         NBTTagList list = (NBTTagList) tag.getTag(NBT_FLUIDS);
 
         for (int i = 0; i < list.tagCount(); ++i) {
-            stacks.add(FluidStack.loadFluidStackFromNBT(list.getCompoundTagAt(i)));
+            FluidStack stack = FluidStack.loadFluidStackFromNBT(list.getCompoundTagAt(i));
+
+            if (stack != null) {
+                stacks.add(stack);
+            }
         }
     }
 
