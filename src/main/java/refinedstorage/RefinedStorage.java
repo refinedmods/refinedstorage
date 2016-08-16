@@ -81,6 +81,11 @@ public final class RefinedStorage {
     public int wirelessTransmitterBaseRange;
     public int wirelessTransmitterRangePerUpgrade;
 
+    public boolean wirelessGridUsesEnergy;
+    public int wirelessGridOpenUsage;
+    public int wirelessGridExtractUsage;
+    public int wirelessGridInsertUsage;
+
     public int rangeUpgradeUsage;
     public int speedUpgradeUsage;
     public int craftingUpgradeUsage;
@@ -127,6 +132,11 @@ public final class RefinedStorage {
 
         wirelessTransmitterBaseRange = config.getInt("range", "wirelessTransmitter", 16, 0, Integer.MAX_VALUE, "The base range of the Wireless Transmitter");
         wirelessTransmitterRangePerUpgrade = config.getInt("rangePerUpgrade", "wirelessTransmitter", 8, 0, Integer.MAX_VALUE, "The additional range per Range Upgrade in the Wireless Transmitter");
+
+        wirelessGridUsesEnergy = config.getBoolean("usesEnergy", "wirelessGrid", true, "Whether the Wireless Grid uses energy");
+        wirelessGridOpenUsage = config.getInt("open", "wirelessGrid", 30, 0, Integer.MAX_VALUE, "The energy used by the Wireless Grid to open");
+        wirelessGridInsertUsage = config.getInt("insert", "wirelessGrid", 3, 0, Integer.MAX_VALUE, "The energy used by the Wireless Grid to insert items");
+        wirelessGridExtractUsage = config.getInt("extract", "wirelessGrid", 3, 0, Integer.MAX_VALUE, "The energy used by the Wireless Grid to extract items");
 
         rangeUpgradeUsage = config.getInt("range", "upgrades", 8, 0, Integer.MAX_VALUE, "The additional energy used per Range Upgrade");
         speedUpgradeUsage = config.getInt("speed", "upgrades", 2, 0, Integer.MAX_VALUE, "The additional energy used per Speed Upgrade");

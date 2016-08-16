@@ -1,6 +1,7 @@
 package refinedstorage.container;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
@@ -108,7 +109,7 @@ public class ContainerGrid extends ContainerBase {
                     ((TileGrid) grid).onCraftedShift(this, player);
                 } else if (slot != patternResultSlot && !(slot instanceof SlotSpecimenLegacy)) {
                     if (grid.getType() != EnumGridType.FLUID && grid.getItemHandler() != null) {
-                        slot.putStack(grid.getItemHandler().onInsert(slot.getStack()));
+                        slot.putStack(grid.getItemHandler().onInsert((EntityPlayerMP) player, slot.getStack()));
                     } else if (grid.getType() == EnumGridType.FLUID && grid.getFluidHandler() != null) {
                         slot.putStack(grid.getFluidHandler().onInsert(slot.getStack()));
                     }

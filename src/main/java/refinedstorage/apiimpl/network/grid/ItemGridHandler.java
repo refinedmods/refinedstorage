@@ -3,13 +3,13 @@ package refinedstorage.apiimpl.network.grid;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
+import refinedstorage.RefinedStorage;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.api.network.grid.IItemGridHandler;
 import refinedstorage.api.storage.CompareUtils;
-import refinedstorage.apiimpl.network.WirelessGridHandler;
 
 public class ItemGridHandler implements IItemGridHandler {
     public static final int MAX_CRAFTING_PER_REQUEST = 500;
@@ -75,17 +75,21 @@ public class ItemGridHandler implements IItemGridHandler {
                 player.updateHeldItem();
             }
 
-            network.getWirelessGridHandler().drainEnergy(player, WirelessGridHandler.USAGE_EXTRACT);
+            network.getWirelessGridHandler().drainEnergy(player, RefinedStorage.INSTANCE.wirelessGridExtractUsage);
         }
     }
 
     @Override
-    public ItemStack onInsert(ItemStack stack) {
-        return network.insertItem(stack, stack.stackSize, false);
+    public ItemStack onInsert(EntityPlayerMP player, ItemStack stack) {
+        ItemStack remainder = network.insertItem(stack, stack.stackSize, false);
+
+        network.getWirelessGridHandler().drainEnergy(player, RefinedStorage.INSTANCE.wirelessGridInsertUsage);
+
+        return remainder;
     }
 
     @Override
-    public void onInsertHeldItem(boolean single, EntityPlayerMP player) {
+    public void onInsertHeldItem(EntityPlayerMP player, boolean single) {
         if (player.inventory.getItemStack() == null) {
             return;
         }
@@ -109,7 +113,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
         player.updateHeldItem();
 
-        network.getWirelessGridHandler().drainEnergy(player, WirelessGridHandler.USAGE_INSERT);
+        network.getWirelessGridHandler().drainEnergy(player, RefinedStorage.INSTANCE.wirelessGridInsertUsage);
     }
 
     @Override

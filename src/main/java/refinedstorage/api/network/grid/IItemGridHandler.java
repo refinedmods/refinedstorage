@@ -25,19 +25,20 @@ public interface IItemGridHandler {
     /**
      * Called when a player tries to insert an item to the grid.
      *
-     * @param stack The item we're trying to insert
+     * @param player The player that is attempting the insert
+     * @param stack  The item we're trying to insert
      * @return The remainder, or null if there is no remainder
      */
     @Nullable
-    ItemStack onInsert(ItemStack stack);
+    ItemStack onInsert(EntityPlayerMP player, ItemStack stack);
 
     /**
      * Called when a player is trying to insert an item that it is holding in their hand in the GUI.
      *
-     * @param single If we are only inserting 1 item
      * @param player The player that is attempting the insert
+     * @param single If we are only inserting 1 item
      */
-    void onInsertHeldItem(boolean single, EntityPlayerMP player);
+    void onInsertHeldItem(EntityPlayerMP player, boolean single);
 
     /**
      * Called when a player requested crafting for an item.

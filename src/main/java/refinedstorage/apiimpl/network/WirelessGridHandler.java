@@ -2,6 +2,7 @@ package refinedstorage.apiimpl.network;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
@@ -14,10 +15,6 @@ import java.util.Iterator;
 import java.util.List;
 
 public class WirelessGridHandler implements IWirelessGridHandler {
-    public static final int USAGE_OPEN = 30;
-    public static final int USAGE_EXTRACT = 3;
-    public static final int USAGE_INSERT = 3;
-
     private INetworkMaster network;
 
     private List<IWirelessGridConsumer> consumers = new ArrayList<>();
@@ -55,13 +52,19 @@ public class WirelessGridHandler implements IWirelessGridHandler {
             return false;
         }
 
-        consumers.add(new WirelessGridConsumer(player, player.getHeldItem(hand)));
+        ItemStack stack = player.getHeldItem(hand);
+
+        if (RefinedStorage.INSTANCE.wirelessGridUsesEnergy && stack.getItemDamage() != ItemWirelessGrid.TYPE_CREATIVE && RefinedStorageItems.WIRELESS_GRID.getEnergyStored(stack) <= RefinedStorage.INSTANCE.wirelessGridOpenUsage) {
+            return true;
+        }
+
+        consumers.add(new WirelessGridConsumer(player, stack));
 
         player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.WIRELESS_GRID, player.worldObj, hand.ordinal(), 0, 0);
 
         network.sendItemStorageToClient((EntityPlayerMP) player);
 
-        drainEnergy(player, USAGE_OPEN);
+        drainEnergy(player, RefinedStorage.INSTANCE.wirelessGridOpenUsage);
 
         return true;
     }
@@ -79,7 +82,7 @@ public class WirelessGridHandler implements IWirelessGridHandler {
     public void drainEnergy(EntityPlayer player, int energy) {
         IWirelessGridConsumer consumer = getConsumer(player);
 
-        if (consumer != null) {
+        if (consumer != null && RefinedStorage.INSTANCE.wirelessGridUsesEnergy) {
             ItemWirelessGrid item = RefinedStorageItems.WIRELESS_GRID;
 
             if (consumer.getStack().getItemDamage() != ItemWirelessGrid.TYPE_CREATIVE) {

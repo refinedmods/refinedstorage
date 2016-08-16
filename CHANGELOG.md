@@ -1,5 +1,10 @@
 # Refined Storage Changelog
 
+### 0.9
+**Features**
+- Added fluid storage
+- Usage of Wireless Grid is now configurable
+
 ### 0.8.19
 **Bugfixes**
 - Fixed item duplication bug with External Storage
