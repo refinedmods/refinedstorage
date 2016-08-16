@@ -4,6 +4,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -40,6 +41,10 @@ public final class RefinedStorage {
             return null;
         }
     };
+
+    static {
+        FluidRegistry.enableUniversalBucket();
+    }
 
     public int controllerBaseUsage;
     public int cableUsage;
