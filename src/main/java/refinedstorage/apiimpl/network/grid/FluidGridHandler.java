@@ -4,7 +4,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -18,7 +17,7 @@ import refinedstorage.apiimpl.storage.fluid.FluidUtils;
 import javax.annotation.Nullable;
 
 public class FluidGridHandler implements IFluidGridHandler {
-    private static final ItemStack EMPTY_BUCKET = new ItemStack(FluidRegistry.isUniversalBucketEnabled() ? ForgeModContainer.getInstance().universalBucket : Items.BUCKET);
+    private static final ItemStack EMPTY_BUCKET = new ItemStack(Items.BUCKET);
 
     private INetworkMaster network;
 
