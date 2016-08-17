@@ -54,7 +54,7 @@ public class GuiStorage extends GuiBase {
             addSideButton(new SideButtonCompare(gui.getCompareParameter(), CompareUtils.COMPARE_NBT));
         }
 
-        priorityField = new GuiTextField(0, fontRendererObj, x + 98 + 1, y + 54 + 1, 25, fontRendererObj.FONT_HEIGHT);
+        priorityField = new GuiTextField(0, fontRendererObj, x + 98 + 1, y + 54 + 1, 29, fontRendererObj.FONT_HEIGHT);
         priorityField.setEnableBackgroundDrawing(false);
         priorityField.setVisible(true);
         priorityField.setTextColor(16777215);
