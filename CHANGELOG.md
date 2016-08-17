@@ -3,7 +3,7 @@
 ### 0.9
 **Bugfixes**
 - Fixed crash with Grid
-- Priority field can now display 4 digits at a time
+- Priority field and detector amount field can now display 4 digits at a time
 
 **Features**
 - Added fluid storage
