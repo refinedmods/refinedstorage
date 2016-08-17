@@ -4,6 +4,7 @@ import mcmultipart.microblock.IMicroblock;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -103,8 +104,15 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
                         FluidStack took = network.extractFluid(stack, Fluid.BUCKET_VOLUME, compare);
 
                         if (took != null) {
-                            // @TODO: Won't update
-                            worldObj.setBlockState(front, block.getDefaultState(), 11);
+                            IBlockState state = block.getDefaultState();
+
+                            if (state.getBlock() == Blocks.WATER) {
+                                state = Blocks.FLOWING_WATER.getDefaultState();
+                            } else if (state.getBlock() == Blocks.LAVA) {
+                                state = Blocks.FLOWING_LAVA.getDefaultState();
+                            }
+
+                            worldObj.setBlockState(front, state, 1 | 2);
                         }
                     }
                 }
