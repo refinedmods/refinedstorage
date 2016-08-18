@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 0.8.20
+**Bugfixes**
+- Fixed crash with Grid
+
 ### 0.8.19
 **Bugfixes**
 - Fixed item duplication bug with External Storage

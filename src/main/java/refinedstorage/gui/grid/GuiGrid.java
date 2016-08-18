@@ -1,7 +1,8 @@
 package refinedstorage.gui.grid;
 
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.ListMultimap;
+import com.google.common.collect.Multimaps;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -38,7 +39,7 @@ public class GuiGrid extends GuiBase {
     public static final GridSortingQuantity SORTING_QUANTITY = new GridSortingQuantity();
     public static final GridSortingName SORTING_NAME = new GridSortingName();
 
-    public static Multimap<Item, ClientStack> ITEMS = ArrayListMultimap.create();
+    public static ListMultimap<Item, ClientStack> ITEMS = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
     public static List<ClientStack> SORTED_ITEMS = new ArrayList<>();
 
     private static boolean markedForSorting;
@@ -100,7 +101,7 @@ public class GuiGrid extends GuiBase {
         List<ClientStack> sortedItems = new ArrayList<>();
 
         if (grid.isConnected()) {
-            sortedItems.addAll(new ArrayList<>(ITEMS.values()));
+            sortedItems.addAll(ITEMS.values());
 
             String query = searchField.getText().trim().toLowerCase();
 
