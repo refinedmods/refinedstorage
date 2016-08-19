@@ -2,6 +2,7 @@ package refinedstorage.gui.grid.stack;
 
 import io.netty.buffer.ByteBuf;
 import joptsimple.internal.Strings;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -49,7 +50,7 @@ public class ClientStackItem implements IClientStack {
 
     @Override
     public String getTooltip() {
-        return Strings.join(stack.getTooltip(null, true), "\n");
+        return Strings.join(stack.getTooltip(Minecraft.getMinecraft().thePlayer, true), "\n");
     }
 
     @Override

@@ -92,6 +92,8 @@ public final class RefinedStorage {
     public int stackUpgradeUsage;
     public int interdimensionalUpgradeUsage;
 
+    public boolean translucentCables;
+
     @EventHandler
     public void preInit(FMLPreInitializationEvent e) {
         PROXY.preInit(e);
@@ -143,6 +145,8 @@ public final class RefinedStorage {
         craftingUpgradeUsage = config.getInt("crafting", "upgrades", 5, 0, Integer.MAX_VALUE, "The additional energy used per Crafting Upgrade");
         stackUpgradeUsage = config.getInt("stack", "upgrades", 12, 0, Integer.MAX_VALUE, "The additional energy used per Stack Upgrade");
         interdimensionalUpgradeUsage = config.getInt("interdimensional", "upgrades", 1000, 0, Integer.MAX_VALUE, "The additional energy used by the Interdimensional Upgrade");
+
+        translucentCables = config.getBoolean("translucentCables", "misc", false, "For resource pack makers that want a translucent cable");
 
         config.save();
     }
