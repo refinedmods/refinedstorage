@@ -39,7 +39,7 @@ public class CraftingTaskScheduler {
         tile.markDirty();
     }
 
-    public void writeToNBT(NBTTagCompound tag) {
+    public void write(NBTTagCompound tag) {
         if (scheduledItem != null) {
             tag.setTag(NBT_SCHEDULED, scheduledItem.serializeNBT());
         } else {

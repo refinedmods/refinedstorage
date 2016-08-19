@@ -3,11 +3,16 @@
 ### 0.9
 **Bugfixes**
 - Fixed crash with Grid
+- Fixed Grid Filter only updating the Grid when reopening the GUI
 - Priority field and detector amount field can now display 4 digits at a time
 
 **Features**
 - Added fluid storage
 - Energy usage of Wireless Grid is now configurable
+
+### 0.8.20
+**Bugfixes**
+- Fixed crash with Grid
 
 ### 0.8.19
 **Bugfixes**

@@ -162,7 +162,7 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
         writeItems(upgrades, 1, tag);
         writeItems(fluidFilters, 2, tag);
 
-        scheduler.writeToNBT(tag);
+        scheduler.write(tag);
 
         return tag;
     }

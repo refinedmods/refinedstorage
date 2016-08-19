@@ -1,8 +1,11 @@
 package refinedstorage.inventory;
 
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.gui.grid.GridFilteredItem;
+import refinedstorage.gui.grid.GuiGrid;
 import refinedstorage.item.ItemGridFilter;
 
 import java.util.List;
@@ -36,6 +39,10 @@ public class ItemHandlerGridFilterInGrid extends ItemHandlerBasic {
                     }
                 }
             }
+        }
+
+        if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
+            GuiGrid.markForSorting();
         }
     }
 }

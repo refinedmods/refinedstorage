@@ -148,7 +148,7 @@ public class TileExporter extends TileMultipartNode implements IComparable, ITyp
         writeItems(upgrades, 1, tag);
         writeItems(fluidFilters, 2, tag);
 
-        scheduler.writeToNBT(tag);
+        scheduler.write(tag);
 
         return tag;
     }
