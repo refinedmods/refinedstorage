@@ -1,0 +1,58 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "orientable",
+    "textures": {
+      "side": "refinedstorage:blocks/fluid_grid_side",
+      "top": "refinedstorage:blocks/fluid_grid_side",
+      "front": "refinedstorage:blocks/fluid_grid_disconnected"
+    }
+  },
+  "variants": {
+    "inventory": [
+      {
+        "transform": "forge:default-block",
+        "y": 0
+      }
+    ],
+    "connected": {
+      "true": {
+        "textures": {
+          "front": "refinedstorage:blocks/fluid_grid_connected"
+        }
+      },
+      "false": {
+      }
+    },
+    "type": {
+      "normal": {
+      },
+      "crafting": {
+      },
+      "pattern": {
+      },
+      "fluid": {
+      }
+    },
+    "direction": {
+      "north": {
+        "y": 0
+      },
+      "east": {
+        "y": 90
+      },
+      "south": {
+        "y": 180
+      },
+      "west": {
+        "y": 270
+      },
+      "up": {
+        "x": 270
+      },
+      "down": {
+        "x": 90
+      }
+    }
+  }
+}

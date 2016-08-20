@@ -6,7 +6,6 @@ import refinedstorage.tile.config.IType;
 import refinedstorage.tile.data.TileDataManager;
 import refinedstorage.tile.data.TileDataParameter;
 
-// @TODO: Add icons
 public class SideButtonType extends SideButton {
     private TileDataParameter<Integer> type;
 
@@ -21,6 +20,9 @@ public class SideButtonType extends SideButton {
 
     @Override
     public void draw(GuiBase gui, int x, int y) {
+        gui.bindTexture("icons.png");
+
+        gui.drawTexture(x, y + 1, 16 * type.getValue(), 128, 16, 16);
     }
 
     @Override

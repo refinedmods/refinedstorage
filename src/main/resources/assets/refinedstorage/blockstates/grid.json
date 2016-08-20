@@ -18,10 +18,39 @@
     "connected": {
       "true": {
         "textures": {
-          "front": "refinedstorage:blocks/grid_connected"
+          "front_fluid_grid": "refinedstorage:blocks/fluid_grid_connected",
+          "front_other": "refinedstorage:blocks/grid_connected"
         }
       },
       "false": {
+        "textures": {
+          "front_fluid_grid": "refinedstorage:blocks/fluid_grid_disconnected",
+          "front_other": "refinedstorage:blocks/grid_disconnected"
+        }
+      }
+    },
+    "type": {
+      "normal": {
+        "textures": {
+          "front": "#front_other"
+        }
+      },
+      "crafting": {
+        "textures": {
+          "front": "#front_other"
+        }
+      },
+      "pattern": {
+        "textures": {
+          "front": "#front_other"
+        }
+      },
+      "fluid": {
+        "textures": {
+          "front": "#front_fluid_grid",
+          "side": "refinedstorage:blocks/fluid_grid_side",
+          "top": "refinedstorage:blocks/fluid_grid_side"
+        }
       }
     },
     "direction": {

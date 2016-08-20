@@ -95,6 +95,7 @@ public class CommonProxy {
         registerBlock(RefinedStorageBlocks.PROCESSING_PATTERN_ENCODER);
         registerBlock(RefinedStorageBlocks.DISK_DRIVE);
         registerBlock(RefinedStorageBlocks.STORAGE);
+        registerBlock(RefinedStorageBlocks.FLUID_STORAGE);
         registerBlock(RefinedStorageBlocks.SOLDERER);
         registerBlock(RefinedStorageBlocks.CABLE);
         registerBlock(RefinedStorageBlocks.IMPORTER);
@@ -105,18 +106,19 @@ public class CommonProxy {
         registerBlock(RefinedStorageBlocks.DETECTOR);
         registerBlock(RefinedStorageBlocks.RELAY);
         registerBlock(RefinedStorageBlocks.INTERFACE);
+        registerBlock(RefinedStorageBlocks.FLUID_INTERFACE);
         registerBlock(RefinedStorageBlocks.WIRELESS_TRANSMITTER);
         registerBlock(RefinedStorageBlocks.MACHINE_CASING);
         registerBlock(RefinedStorageBlocks.NETWORK_TRANSMITTER);
         registerBlock(RefinedStorageBlocks.NETWORK_RECEIVER);
-        registerBlock(RefinedStorageBlocks.FLUID_INTERFACE);
-        registerBlock(RefinedStorageBlocks.FLUID_STORAGE);
 
         registerItem(RefinedStorageItems.QUARTZ_ENRICHED_IRON);
         registerItem(RefinedStorageItems.STORAGE_DISK);
+        registerItem(RefinedStorageItems.FLUID_STORAGE_DISK);
         registerItem(RefinedStorageItems.STORAGE_HOUSING);
         registerItem(RefinedStorageItems.PATTERN);
         registerItem(RefinedStorageItems.STORAGE_PART);
+        registerItem(RefinedStorageItems.FLUID_STORAGE_PART);
         registerItem(RefinedStorageItems.WIRELESS_GRID);
         registerItem(RefinedStorageItems.PROCESSOR);
         registerItem(RefinedStorageItems.CORE);
@@ -124,8 +126,6 @@ public class CommonProxy {
         registerItem(RefinedStorageItems.UPGRADE);
         registerItem(RefinedStorageItems.GRID_FILTER);
         registerItem(RefinedStorageItems.NETWORK_CARD);
-        registerItem(RefinedStorageItems.FLUID_STORAGE_DISK);
-        registerItem(RefinedStorageItems.FLUID_STORAGE_PART);
 
         OreDictionary.registerOre("itemSilicon", RefinedStorageItems.SILICON);
 
