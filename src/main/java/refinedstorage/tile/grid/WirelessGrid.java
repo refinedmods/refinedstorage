@@ -2,34 +2,76 @@ package refinedstorage.tile.grid;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageUtils;
-import refinedstorage.api.network.IGridHandler;
+import refinedstorage.api.network.grid.IFluidGridHandler;
+import refinedstorage.api.network.grid.IItemGridHandler;
 import refinedstorage.block.EnumGridType;
+import refinedstorage.gui.grid.GridFilteredItem;
+import refinedstorage.gui.grid.GuiGrid;
+import refinedstorage.inventory.ItemHandlerBasic;
+import refinedstorage.inventory.ItemHandlerGridFilterInGrid;
 import refinedstorage.item.ItemWirelessGrid;
 import refinedstorage.network.MessageWirelessGridSettingsUpdate;
-import refinedstorage.tile.config.IRedstoneModeConfig;
-import refinedstorage.tile.controller.TileController;
+import refinedstorage.tile.TileBase;
+import refinedstorage.tile.TileController;
+import refinedstorage.tile.data.TileDataParameter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class WirelessGrid implements IGrid {
-    private EnumHand hand;
     private World world;
-    private BlockPos controllerPos;
+
+    private ItemStack stack;
+
+    private BlockPos controller;
+
+    private int viewType;
     private int sortingType;
     private int sortingDirection;
     private int searchBoxMode;
 
-    public WirelessGrid(World world, ItemStack stack, EnumHand hand) {
-        this.hand = hand;
+    private List<GridFilteredItem> filteredItems = new ArrayList<>();
+    private ItemHandlerGridFilterInGrid filter = new ItemHandlerGridFilterInGrid(filteredItems) {
+        @Override
+        protected void onContentsChanged(int slot) {
+            super.onContentsChanged(slot);
+
+            if (!world.isRemote) {
+                if (!stack.hasTagCompound()) {
+                    stack.setTagCompound(new NBTTagCompound());
+                }
+
+                TileBase.writeItems(this, slot, stack.getTagCompound());
+            }
+        }
+    };
+
+    public WirelessGrid(World world, ItemStack stack) {
         this.world = world;
-        this.controllerPos = new BlockPos(ItemWirelessGrid.getX(stack), ItemWirelessGrid.getY(stack), ItemWirelessGrid.getZ(stack));
+
+        this.stack = stack;
+
+        this.controller = new BlockPos(ItemWirelessGrid.getX(stack), ItemWirelessGrid.getY(stack), ItemWirelessGrid.getZ(stack));
+
+        this.viewType = ItemWirelessGrid.getViewType(stack);
         this.sortingType = ItemWirelessGrid.getSortingType(stack);
         this.sortingDirection = ItemWirelessGrid.getSortingDirection(stack);
         this.searchBoxMode = ItemWirelessGrid.getSearchBoxMode(stack);
+
+        if (stack.hasTagCompound()) {
+            for (int i = 0; i < 4; ++i) {
+                TileBase.readItems(filter, i, stack.getTagCompound());
+            }
+        }
+    }
+
+    public ItemStack getStack() {
+        return stack;
     }
 
     @Override
@@ -39,28 +81,29 @@ public class WirelessGrid implements IGrid {
 
     @Override
     public BlockPos getNetworkPosition() {
-        return controllerPos;
+        return controller;
     }
 
     @Override
-    public IGridHandler getGridHandler() {
+    public IItemGridHandler getItemHandler() {
         TileController controller = getController();
 
-        return controller != null ? controller.getGridHandler() : null;
+        return controller != null ? controller.getItemGridHandler() : null;
     }
 
-    public void onClose(EntityPlayer player) {
-        TileController controller = getController();
-
-        if (controller != null) {
-            controller.getWirelessGridHandler().onClose(player);
-        }
+    @Override
+    public IFluidGridHandler getFluidHandler() {
+        return null;
     }
 
-    private TileController getController() {
-        TileEntity tile = world.getTileEntity(controllerPos);
+    @Override
+    public String getGuiTitle() {
+        return "gui.refinedstorage:wireless_grid";
+    }
 
-        return tile instanceof TileController ? (TileController) tile : null;
+    @Override
+    public int getViewType() {
+        return viewType;
     }
 
     @Override
@@ -79,33 +122,70 @@ public class WirelessGrid implements IGrid {
     }
 
     @Override
+    public void onViewTypeChanged(int type) {
+        RefinedStorage.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(type, getSortingDirection(), getSortingType(), getSearchBoxMode()));
+
+        this.viewType = type;
+
+        GuiGrid.markForSorting();
+    }
+
+    @Override
     public void onSortingTypeChanged(int type) {
-        RefinedStorage.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(RefinedStorageUtils.getIdFromHand(hand), getSortingDirection(), type, getSearchBoxMode()));
+        RefinedStorage.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(getViewType(), getSortingDirection(), type, getSearchBoxMode()));
 
         this.sortingType = type;
+
+        GuiGrid.markForSorting();
     }
 
     @Override
     public void onSortingDirectionChanged(int direction) {
-        RefinedStorage.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(RefinedStorageUtils.getIdFromHand(hand), direction, getSortingType(), getSearchBoxMode()));
+        RefinedStorage.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(getViewType(), direction, getSortingType(), getSearchBoxMode()));
 
         this.sortingDirection = direction;
+
+        GuiGrid.markForSorting();
     }
 
     @Override
     public void onSearchBoxModeChanged(int searchBoxMode) {
-        RefinedStorage.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(RefinedStorageUtils.getIdFromHand(hand), getSortingDirection(), getSortingType(), searchBoxMode));
+        RefinedStorage.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), searchBoxMode));
 
         this.searchBoxMode = searchBoxMode;
     }
 
     @Override
-    public IRedstoneModeConfig getRedstoneModeConfig() {
+    public List<GridFilteredItem> getFilteredItems() {
+        return filteredItems;
+    }
+
+    @Override
+    public ItemHandlerBasic getFilter() {
+        return filter;
+    }
+
+    @Override
+    public TileDataParameter<Integer> getRedstoneModeConfig() {
         return null;
     }
 
     @Override
     public boolean isConnected() {
         return true;
+    }
+
+    public void onClose(EntityPlayer player) {
+        TileController controller = getController();
+
+        if (controller != null) {
+            controller.getWirelessGridHandler().onClose(player);
+        }
+    }
+
+    private TileController getController() {
+        TileEntity tile = world.getTileEntity(controller);
+
+        return tile instanceof TileController ? (TileController) tile : null;
     }
 }

@@ -9,8 +9,8 @@ import refinedstorage.container.slot.SlotOutput;
 import refinedstorage.tile.TileSolderer;
 
 public class ContainerSolderer extends ContainerBase {
-    public ContainerSolderer(EntityPlayer player, TileSolderer solderer) {
-        super(player);
+    public ContainerSolderer(TileSolderer solderer, EntityPlayer player) {
+        super(solderer, player);
 
         int x = 44;
         int y = 20;

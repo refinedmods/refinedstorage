@@ -4,7 +4,9 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -18,67 +20,73 @@ import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.api.RefinedStorageAPI;
 import refinedstorage.apiimpl.solderer.*;
-import refinedstorage.apiimpl.storage.NBTStorage;
-import refinedstorage.block.BlockBase;
-import refinedstorage.block.EnumControllerType;
-import refinedstorage.block.EnumGridType;
-import refinedstorage.block.EnumStorageType;
+import refinedstorage.apiimpl.storage.item.ItemStorageNBT;
+import refinedstorage.block.*;
 import refinedstorage.gui.GuiHandler;
 import refinedstorage.item.*;
 import refinedstorage.network.*;
 import refinedstorage.tile.*;
-import refinedstorage.tile.controller.TileController;
+import refinedstorage.tile.data.ContainerListener;
+import refinedstorage.tile.data.TileDataManager;
 import refinedstorage.tile.externalstorage.TileExternalStorage;
 import refinedstorage.tile.grid.TileGrid;
 
-import static refinedstorage.RefinedStorage.ID;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CommonProxy {
+    protected List<BlockCable> cables = new ArrayList<>();
+
     public void preInit(FMLPreInitializationEvent e) {
         RefinedStorageAPI.SOLDERER_REGISTRY = new SoldererRegistry();
 
         int id = 0;
 
-        RefinedStorage.INSTANCE.network.registerMessage(MessageTileContainerUpdate.class, MessageTileContainerUpdate.class, id++, Side.CLIENT);
-        RefinedStorage.INSTANCE.network.registerMessage(MessageRedstoneModeUpdate.class, MessageRedstoneModeUpdate.class, id++, Side.SERVER);
-        RefinedStorage.INSTANCE.network.registerMessage(MessageGridInsertHeld.class, MessageGridInsertHeld.class, id++, Side.SERVER);
-        RefinedStorage.INSTANCE.network.registerMessage(MessageGridPull.class, MessageGridPull.class, id++, Side.SERVER);
-        RefinedStorage.INSTANCE.network.registerMessage(MessageCompareUpdate.class, MessageCompareUpdate.class, id++, Side.SERVER);
-        RefinedStorage.INSTANCE.network.registerMessage(MessageModeToggle.class, MessageModeToggle.class, id++, Side.SERVER);
-        RefinedStorage.INSTANCE.network.registerMessage(MessageDetectorModeUpdate.class, MessageDetectorModeUpdate.class, id++, Side.SERVER);
-        RefinedStorage.INSTANCE.network.registerMessage(MessageDetectorAmountUpdate.class, MessageDetectorAmountUpdate.class, id++, Side.SERVER);
+        RefinedStorage.INSTANCE.network.registerMessage(MessageTileDataParameter.class, MessageTileDataParameter.class, id++, Side.CLIENT);
+        RefinedStorage.INSTANCE.network.registerMessage(MessageTileDataParameterUpdate.class, MessageTileDataParameterUpdate.class, id++, Side.SERVER);
+        RefinedStorage.INSTANCE.network.registerMessage(MessageGridItemInsertHeld.class, MessageGridItemInsertHeld.class, id++, Side.SERVER);
+        RefinedStorage.INSTANCE.network.registerMessage(MessageGridItemPull.class, MessageGridItemPull.class, id++, Side.SERVER);
         RefinedStorage.INSTANCE.network.registerMessage(MessageGridCraftingClear.class, MessageGridCraftingClear.class, id++, Side.SERVER);
-        RefinedStorage.INSTANCE.network.registerMessage(MessagePriorityUpdate.class, MessagePriorityUpdate.class, id++, Side.SERVER);
-        RefinedStorage.INSTANCE.network.registerMessage(MessageGridSettingsUpdate.class, MessageGridSettingsUpdate.class, id++, Side.SERVER);
         RefinedStorage.INSTANCE.network.registerMessage(MessageGridCraftingTransfer.class, MessageGridCraftingTransfer.class, id++, Side.SERVER);
         RefinedStorage.INSTANCE.network.registerMessage(MessageWirelessGridSettingsUpdate.class, MessageWirelessGridSettingsUpdate.class, id++, Side.SERVER);
         RefinedStorage.INSTANCE.network.registerMessage(MessageGridCraftingStart.class, MessageGridCraftingStart.class, id++, Side.SERVER);
         RefinedStorage.INSTANCE.network.registerMessage(MessageGridPatternCreate.class, MessageGridPatternCreate.class, id++, Side.SERVER);
         RefinedStorage.INSTANCE.network.registerMessage(MessageCraftingMonitorCancel.class, MessageCraftingMonitorCancel.class, id++, Side.SERVER);
-        RefinedStorage.INSTANCE.network.registerMessage(MessageGridUpdate.class, MessageGridUpdate.class, id++, Side.CLIENT);
-        RefinedStorage.INSTANCE.network.registerMessage(MessageGridDelta.class, MessageGridDelta.class, id++, Side.CLIENT);
+        RefinedStorage.INSTANCE.network.registerMessage(MessageGridItemUpdate.class, MessageGridItemUpdate.class, id++, Side.CLIENT);
+        RefinedStorage.INSTANCE.network.registerMessage(MessageGridItemDelta.class, MessageGridItemDelta.class, id++, Side.CLIENT);
+        RefinedStorage.INSTANCE.network.registerMessage(MessageGridFluidUpdate.class, MessageGridFluidUpdate.class, id++, Side.CLIENT);
+        RefinedStorage.INSTANCE.network.registerMessage(MessageGridFluidDelta.class, MessageGridFluidDelta.class, id++, Side.CLIENT);
+        RefinedStorage.INSTANCE.network.registerMessage(MessageGridFluidPull.class, MessageGridFluidPull.class, id++, Side.SERVER);
+        RefinedStorage.INSTANCE.network.registerMessage(MessageGridFluidInsertHeld.class, MessageGridFluidInsertHeld.class, id++, Side.SERVER);
         RefinedStorage.INSTANCE.network.registerMessage(MessageProcessingPatternEncoderClear.class, MessageProcessingPatternEncoderClear.class, id++, Side.SERVER);
+        RefinedStorage.INSTANCE.network.registerMessage(MessageGridFilterUpdate.class, MessageGridFilterUpdate.class, id++, Side.SERVER);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(RefinedStorage.INSTANCE, new GuiHandler());
 
-        GameRegistry.registerTileEntity(TileController.class, ID + ":controller");
-        GameRegistry.registerTileEntity(TileGrid.class, ID + ":grid");
-        GameRegistry.registerTileEntity(TileDiskDrive.class, ID + ":disk_drive");
-        GameRegistry.registerTileEntity(TileExternalStorage.class, ID + ":external_storage");
-        GameRegistry.registerTileEntity(TileImporter.class, ID + ":importer");
-        GameRegistry.registerTileEntity(TileExporter.class, ID + ":exporter");
-        GameRegistry.registerTileEntity(TileDetector.class, ID + ":detector");
-        GameRegistry.registerTileEntity(TileSolderer.class, ID + ":solderer");
-        GameRegistry.registerTileEntity(TileDestructor.class, ID + ":destructor");
-        GameRegistry.registerTileEntity(TileConstructor.class, ID + ":constructor");
-        GameRegistry.registerTileEntity(TileStorage.class, ID + ":storage");
-        GameRegistry.registerTileEntity(TileRelay.class, ID + ":relay");
-        GameRegistry.registerTileEntity(TileInterface.class, ID + ":interface");
-        GameRegistry.registerTileEntity(TileCraftingMonitor.class, ID + ":crafting_monitor");
-        GameRegistry.registerTileEntity(TileWirelessTransmitter.class, ID + ":wireless_transmitter");
-        GameRegistry.registerTileEntity(TileCrafter.class, ID + ":crafter");
-        GameRegistry.registerTileEntity(TileProcessingPatternEncoder.class, ID + ":processing_pattern_encoder");
-        GameRegistry.registerTileEntity(TileCable.class, ID + ":cable");
+        MinecraftForge.EVENT_BUS.register(new ContainerListener());
+
+        registerTile(TileController.class, "controller");
+        registerTile(TileGrid.class, "grid");
+        registerTile(TileDiskDrive.class, "disk_drive");
+        registerTile(TileExternalStorage.class, "external_storage");
+        registerTile(TileImporter.class, "importer");
+        registerTile(TileExporter.class, "exporter");
+        registerTile(TileDetector.class, "detector");
+        registerTile(TileSolderer.class, "solderer");
+        registerTile(TileDestructor.class, "destructor");
+        registerTile(TileConstructor.class, "constructor");
+        registerTile(TileStorage.class, "storage");
+        registerTile(TileRelay.class, "relay");
+        registerTile(TileInterface.class, "interface");
+        registerTile(TileCraftingMonitor.class, "crafting_monitor");
+        registerTile(TileWirelessTransmitter.class, "wireless_transmitter");
+        registerTile(TileCrafter.class, "crafter");
+        registerTile(TileProcessingPatternEncoder.class, "processing_pattern_encoder");
+        registerTile(TileCable.class, "cable");
+        registerTile(TileNetworkReceiver.class, "network_receiver");
+        registerTile(TileNetworkTransmitter.class, "network_transmitter");
+        registerTile(TileFluidInterface.class, "fluid_interface");
+        registerTile(TileFluidStorage.class, "fluid_storage");
 
         registerBlock(RefinedStorageBlocks.CONTROLLER);
         registerBlock(RefinedStorageBlocks.GRID);
@@ -99,6 +107,10 @@ public class CommonProxy {
         registerBlock(RefinedStorageBlocks.INTERFACE);
         registerBlock(RefinedStorageBlocks.WIRELESS_TRANSMITTER);
         registerBlock(RefinedStorageBlocks.MACHINE_CASING);
+        registerBlock(RefinedStorageBlocks.NETWORK_TRANSMITTER);
+        registerBlock(RefinedStorageBlocks.NETWORK_RECEIVER);
+        registerBlock(RefinedStorageBlocks.FLUID_INTERFACE);
+        registerBlock(RefinedStorageBlocks.FLUID_STORAGE);
 
         registerItem(RefinedStorageItems.QUARTZ_ENRICHED_IRON);
         registerItem(RefinedStorageItems.STORAGE_DISK);
@@ -110,6 +122,10 @@ public class CommonProxy {
         registerItem(RefinedStorageItems.CORE);
         registerItem(RefinedStorageItems.SILICON);
         registerItem(RefinedStorageItems.UPGRADE);
+        registerItem(RefinedStorageItems.GRID_FILTER);
+        registerItem(RefinedStorageItems.NETWORK_CARD);
+        registerItem(RefinedStorageItems.FLUID_STORAGE_DISK);
+        registerItem(RefinedStorageItems.FLUID_STORAGE_PART);
 
         OreDictionary.registerOre("itemSilicon", RefinedStorageItems.SILICON);
 
@@ -156,9 +172,9 @@ public class CommonProxy {
 
         // Relay
         GameRegistry.addShapelessRecipe(new ItemStack(RefinedStorageBlocks.RELAY),
-            new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
             new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
-            new ItemStack(RefinedStorageBlocks.CABLE)
+            new ItemStack(RefinedStorageBlocks.CABLE),
+            new ItemStack(Blocks.REDSTONE_TORCH)
         );
 
         // Controller
@@ -239,6 +255,15 @@ public class CommonProxy {
             new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
             new ItemStack(RefinedStorageBlocks.GRID, 1, EnumGridType.NORMAL.getId()),
             new ItemStack(RefinedStorageItems.PATTERN)
+        ));
+
+        // Fluid Grid
+        RefinedStorageAPI.SOLDERER_REGISTRY.addRecipe(new SoldererRecipeBasic(
+            new ItemStack(RefinedStorageBlocks.GRID, 1, EnumGridType.FLUID.getId()),
+            500,
+            new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
+            new ItemStack(RefinedStorageBlocks.GRID, 1, EnumGridType.NORMAL.getId()),
+            new ItemStack(Items.BUCKET)
         ));
 
         // Wireless Grid
@@ -379,8 +404,49 @@ public class CommonProxy {
             'S', new ItemStack(RefinedStorageItems.STORAGE_PART, 1, ItemStoragePart.TYPE_16K)
         );
 
+        // Fluid Storage Parts
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, ItemFluidStoragePart.TYPE_64K),
+            "SES",
+            "GRG",
+            "SGS",
+            'R', new ItemStack(Items.BUCKET),
+            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+            'S', "itemSilicon",
+            'G', "blockGlass"
+        ));
+
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, ItemFluidStoragePart.TYPE_128K),
+            "PEP",
+            "SRS",
+            "PSP",
+            'R', new ItemStack(Items.BUCKET),
+            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+            'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
+            'S', new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, ItemFluidStoragePart.TYPE_64K)
+        ));
+
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, ItemFluidStoragePart.TYPE_256K),
+            "PEP",
+            "SRS",
+            "PSP",
+            'R', new ItemStack(Items.BUCKET),
+            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+            'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED),
+            'S', new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, ItemFluidStoragePart.TYPE_128K)
+        ));
+
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, ItemFluidStoragePart.TYPE_512K),
+            "PEP",
+            "SRS",
+            "PSP",
+            'R', new ItemStack(Items.BUCKET),
+            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+            'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
+            'S', new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, ItemFluidStoragePart.TYPE_256K)
+        ));
+
         // Storage Housing
-        GameRegistry.addRecipe(new ShapedOreRecipe(NBTStorage.createStackWithNBT(new ItemStack(RefinedStorageItems.STORAGE_HOUSING)),
+        GameRegistry.addRecipe(new ShapedOreRecipe(ItemStorageNBT.createStackWithNBT(new ItemStack(RefinedStorageItems.STORAGE_HOUSING)),
             "GRG",
             "R R",
             "EEE",
@@ -391,7 +457,7 @@ public class CommonProxy {
 
         // Storage Disks
         for (int type = 0; type <= 3; ++type) {
-            ItemStack disk = NBTStorage.createStackWithNBT(new ItemStack(RefinedStorageItems.STORAGE_DISK, 1, type));
+            ItemStack disk = ItemStorageNBT.createStackWithNBT(new ItemStack(RefinedStorageItems.STORAGE_DISK, 1, type));
 
             GameRegistry.addRecipe(new ShapedOreRecipe(disk,
                 "GRG",
@@ -406,6 +472,26 @@ public class CommonProxy {
             GameRegistry.addShapelessRecipe(disk,
                 new ItemStack(RefinedStorageItems.STORAGE_HOUSING),
                 new ItemStack(RefinedStorageItems.STORAGE_PART, 1, type)
+            );
+        }
+
+        // Fluid Storage Parts
+        for (int type = 0; type <= 3; ++type) {
+            ItemStack disk = ItemStorageNBT.createStackWithNBT(new ItemStack(RefinedStorageItems.FLUID_STORAGE_DISK, 1, type));
+
+            GameRegistry.addRecipe(new ShapedOreRecipe(disk,
+                "GRG",
+                "RPR",
+                "EEE",
+                'G', "blockGlass",
+                'R', new ItemStack(Items.REDSTONE),
+                'P', new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, type),
+                'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
+            ));
+
+            GameRegistry.addShapelessRecipe(disk,
+                new ItemStack(RefinedStorageItems.STORAGE_HOUSING),
+                new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, type)
             );
         }
 
@@ -432,6 +518,7 @@ public class CommonProxy {
         RefinedStorageAPI.SOLDERER_REGISTRY.addRecipe(new SoldererRecipeUpgrade(ItemUpgrade.TYPE_RANGE));
         RefinedStorageAPI.SOLDERER_REGISTRY.addRecipe(new SoldererRecipeUpgrade(ItemUpgrade.TYPE_SPEED));
         RefinedStorageAPI.SOLDERER_REGISTRY.addRecipe(new SoldererRecipeUpgrade(ItemUpgrade.TYPE_CRAFTING));
+        RefinedStorageAPI.SOLDERER_REGISTRY.addRecipe(new SoldererRecipeUpgrade(ItemUpgrade.TYPE_INTERDIMENSIONAL));
 
         GameRegistry.addShapedRecipe(new ItemStack(RefinedStorageItems.UPGRADE, 1, ItemUpgrade.TYPE_STACK),
             "USU",
@@ -442,10 +529,16 @@ public class CommonProxy {
         );
 
         // Storage Blocks
-        RefinedStorageAPI.SOLDERER_REGISTRY.addRecipe(new SoldererRecipeStorage(EnumStorageType.TYPE_1K, ItemStoragePart.TYPE_1K));
-        RefinedStorageAPI.SOLDERER_REGISTRY.addRecipe(new SoldererRecipeStorage(EnumStorageType.TYPE_4K, ItemStoragePart.TYPE_4K));
-        RefinedStorageAPI.SOLDERER_REGISTRY.addRecipe(new SoldererRecipeStorage(EnumStorageType.TYPE_16K, ItemStoragePart.TYPE_16K));
-        RefinedStorageAPI.SOLDERER_REGISTRY.addRecipe(new SoldererRecipeStorage(EnumStorageType.TYPE_64K, ItemStoragePart.TYPE_64K));
+        RefinedStorageAPI.SOLDERER_REGISTRY.addRecipe(new SoldererRecipeStorage(EnumItemStorageType.TYPE_1K, ItemStoragePart.TYPE_1K));
+        RefinedStorageAPI.SOLDERER_REGISTRY.addRecipe(new SoldererRecipeStorage(EnumItemStorageType.TYPE_4K, ItemStoragePart.TYPE_4K));
+        RefinedStorageAPI.SOLDERER_REGISTRY.addRecipe(new SoldererRecipeStorage(EnumItemStorageType.TYPE_16K, ItemStoragePart.TYPE_16K));
+        RefinedStorageAPI.SOLDERER_REGISTRY.addRecipe(new SoldererRecipeStorage(EnumItemStorageType.TYPE_64K, ItemStoragePart.TYPE_64K));
+
+        // Fluid Storage Blocks
+        RefinedStorageAPI.SOLDERER_REGISTRY.addRecipe(new SoldererRecipeFluidStorage(EnumFluidStorageType.TYPE_64K, ItemFluidStoragePart.TYPE_64K));
+        RefinedStorageAPI.SOLDERER_REGISTRY.addRecipe(new SoldererRecipeFluidStorage(EnumFluidStorageType.TYPE_128K, ItemFluidStoragePart.TYPE_128K));
+        RefinedStorageAPI.SOLDERER_REGISTRY.addRecipe(new SoldererRecipeFluidStorage(EnumFluidStorageType.TYPE_256K, ItemFluidStoragePart.TYPE_256K));
+        RefinedStorageAPI.SOLDERER_REGISTRY.addRecipe(new SoldererRecipeFluidStorage(EnumFluidStorageType.TYPE_512K, ItemFluidStoragePart.TYPE_512K));
 
         // Crafting Monitor
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RefinedStorageBlocks.CRAFTING_MONITOR),
@@ -466,6 +559,59 @@ public class CommonProxy {
             new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
             new ItemStack(RefinedStorageBlocks.EXPORTER)
         ));
+
+        // Fluid Interface
+        RefinedStorageAPI.SOLDERER_REGISTRY.addRecipe(new SoldererRecipeBasic(
+            new ItemStack(RefinedStorageBlocks.FLUID_INTERFACE),
+            200,
+            new ItemStack(Items.BUCKET),
+            new ItemStack(RefinedStorageBlocks.INTERFACE),
+            new ItemStack(Items.BUCKET)
+        ));
+
+        // Grid Filter
+        GameRegistry.addShapedRecipe(new ItemStack(RefinedStorageItems.GRID_FILTER),
+            "EPE",
+            "PHP",
+            "EPE",
+            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+            'P', new ItemStack(Items.PAPER),
+            'H', new ItemStack(Blocks.HOPPER)
+        );
+
+        // Network Card
+        GameRegistry.addShapedRecipe(new ItemStack(RefinedStorageItems.NETWORK_CARD),
+            "EEE",
+            "PAP",
+            "EEE",
+            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+            'P', new ItemStack(Items.PAPER),
+            'A', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)
+        );
+
+        // Network Transmitter
+        GameRegistry.addShapedRecipe(new ItemStack(RefinedStorageBlocks.NETWORK_TRANSMITTER),
+            "EEE",
+            "CMD",
+            "AAA",
+            'E', new ItemStack(Items.ENDER_PEARL),
+            'C', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
+            'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
+            'D', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
+            'A', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)
+        );
+
+        // Network Receiver
+        GameRegistry.addShapedRecipe(new ItemStack(RefinedStorageBlocks.NETWORK_RECEIVER),
+            "AAA",
+            "CMD",
+            "EEE",
+            'E', new ItemStack(Items.ENDER_PEARL),
+            'C', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
+            'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
+            'D', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
+            'A', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)
+        );
     }
 
     public void init(FMLInitializationEvent e) {
@@ -477,6 +623,25 @@ public class CommonProxy {
     private void registerBlock(BlockBase block) {
         GameRegistry.<Block>register(block);
         GameRegistry.register(block.createItem());
+    }
+
+    private void registerBlock(BlockCable cable) {
+        GameRegistry.<Block>register(cable);
+        GameRegistry.register(new ItemBlock(cable).setRegistryName(cable.getRegistryName()));
+
+        cables.add(cable);
+    }
+
+    private void registerTile(Class<? extends TileBase> tile, String id) {
+        GameRegistry.registerTileEntity(tile, RefinedStorage.ID + ":" + id);
+
+        try {
+            TileBase tileInstance = tile.newInstance();
+
+            tileInstance.getDataManager().getParameters().forEach(TileDataManager::registerParameter);
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     private void registerItem(Item item) {

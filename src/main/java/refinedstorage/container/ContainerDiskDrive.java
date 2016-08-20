@@ -4,11 +4,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
+import refinedstorage.container.slot.SlotSpecimenType;
 import refinedstorage.tile.TileDiskDrive;
 
-public class ContainerDiskDrive extends ContainerStorage {
-    public ContainerDiskDrive(EntityPlayer player, TileDiskDrive drive) {
-        super(player);
+public class ContainerDiskDrive extends ContainerBase {
+    public ContainerDiskDrive(TileDiskDrive drive, EntityPlayer player) {
+        super(drive, player);
 
         for (int i = 0; i < 4; ++i) {
             addSlotToContainer(new SlotItemHandler(drive.getDisks(), i, 98 + (i * 18), 78));
@@ -18,7 +19,11 @@ public class ContainerDiskDrive extends ContainerStorage {
             addSlotToContainer(new SlotItemHandler(drive.getDisks(), 4 + i, 98 + (i * 18), 96));
         }
 
-        addSpecimenAndPlayerInventorySlots(drive.getFilters());
+        for (int i = 0; i < 9; ++i) {
+            addSlotToContainer(new SlotSpecimenType(drive, i, 8 + (18 * i), 20));
+        }
+
+        addPlayerInventory(8, 129);
     }
 
     @Override
@@ -35,7 +40,7 @@ public class ContainerDiskDrive extends ContainerStorage {
                     return null;
                 }
             } else if (!mergeItemStack(stack, 0, 8, false)) {
-                return null;
+                return mergeItemStackToSpecimen(stack, 8, 8 + 9);
             }
 
             if (stack.stackSize == 0) {

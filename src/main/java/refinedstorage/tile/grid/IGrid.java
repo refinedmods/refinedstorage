@@ -1,16 +1,27 @@
 package refinedstorage.tile.grid;
 
 import net.minecraft.util.math.BlockPos;
-import refinedstorage.api.network.IGridHandler;
+import refinedstorage.api.network.grid.IFluidGridHandler;
+import refinedstorage.api.network.grid.IItemGridHandler;
 import refinedstorage.block.EnumGridType;
-import refinedstorage.tile.config.IRedstoneModeConfig;
+import refinedstorage.gui.grid.GridFilteredItem;
+import refinedstorage.inventory.ItemHandlerBasic;
+import refinedstorage.tile.data.TileDataParameter;
+
+import java.util.List;
 
 public interface IGrid {
     EnumGridType getType();
 
     BlockPos getNetworkPosition();
 
-    IGridHandler getGridHandler();
+    IItemGridHandler getItemHandler();
+
+    IFluidGridHandler getFluidHandler();
+
+    String getGuiTitle();
+
+    int getViewType();
 
     int getSortingType();
 
@@ -18,13 +29,19 @@ public interface IGrid {
 
     int getSearchBoxMode();
 
+    void onViewTypeChanged(int type);
+
     void onSortingTypeChanged(int type);
 
     void onSortingDirectionChanged(int direction);
 
     void onSearchBoxModeChanged(int searchBoxMode);
 
-    IRedstoneModeConfig getRedstoneModeConfig();
+    List<GridFilteredItem> getFilteredItems();
+
+    ItemHandlerBasic getFilter();
+
+    TileDataParameter<Integer> getRedstoneModeConfig();
 
     boolean isConnected();
 }

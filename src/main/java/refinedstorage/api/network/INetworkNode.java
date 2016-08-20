@@ -1,6 +1,8 @@
 package refinedstorage.api.network;
 
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 /**
  * Represents a node in the storage network.
@@ -37,7 +39,7 @@ public interface INetworkNode {
 
     /**
      * Called when the connection state of this node changes.
-     * This is also called when redstone mode is updated, as opposed to {@link INetworkNode#onConnected(INetworkMaster)} and {@link INetworkNode#onDisconnected()}.
+     * This is also called when redstone mode is updated, as opposed to {@link INetworkNode#onConnected(INetworkMaster)} and {@link INetworkNode#onDisconnected(INetworkMaster)}.
      *
      * @param network The network
      * @param state   The state
@@ -50,17 +52,23 @@ public interface INetworkNode {
     boolean isConnected();
 
     /**
-     * @return If {@link INetworkNode#canUpdate()} can get called, typically checks for connection status and redstone mode
+     * @return If {@link INetworkNode#updateNode()} can get called, typically checks for connection status and redstone mode
      */
     boolean canUpdate();
 
     /**
+     * @param direction The direction to conduct to
      * @return Whether this node can conduct a network signal
      */
-    boolean canConduct();
+    boolean canConduct(EnumFacing direction);
 
     /**
      * @return The network
      */
     INetworkMaster getNetwork();
+
+    /**
+     * @return The world where this node is in
+     */
+    World getNodeWorld();
 }

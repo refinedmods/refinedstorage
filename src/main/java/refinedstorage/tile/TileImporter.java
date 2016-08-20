@@ -1,75 +1,103 @@
 package refinedstorage.tile;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraft.inventory.Container;
+import mcmultipart.microblock.IMicroblock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageItems;
-import refinedstorage.RefinedStorageUtils;
-import refinedstorage.container.ContainerImporter;
-import refinedstorage.inventory.BasicItemHandler;
-import refinedstorage.inventory.BasicItemValidator;
+import refinedstorage.inventory.ItemHandlerBasic;
+import refinedstorage.inventory.ItemHandlerFluid;
+import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemUpgrade;
-import refinedstorage.tile.config.ICompareConfig;
-import refinedstorage.tile.config.IModeConfig;
-import refinedstorage.tile.config.ModeConstants;
-import refinedstorage.tile.config.ModeFilter;
+import refinedstorage.tile.config.IComparable;
+import refinedstorage.tile.config.IFilterable;
+import refinedstorage.tile.config.IType;
+import refinedstorage.tile.data.TileDataParameter;
 
-public class TileImporter extends TileNode implements ICompareConfig, IModeConfig {
+public class TileImporter extends TileMultipartNode implements IComparable, IFilterable, IType {
+    public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
+    public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
+    public static final TileDataParameter<Integer> TYPE = IType.createParameter();
+
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
+    private static final String NBT_TYPE = "Type";
 
-    private BasicItemHandler filters = new BasicItemHandler(9, this);
-    private BasicItemHandler upgrades = new BasicItemHandler(
-        4,
-        this,
-        new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED),
-        new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_STACK)
-    );
+    private ItemHandlerBasic itemFilters = new ItemHandlerBasic(9, this);
+    private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(9, this);
+
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK);
 
     private int compare = 0;
-    private int mode = ModeConstants.WHITELIST;
+    private int mode = IFilterable.WHITELIST;
+    private int type = IType.ITEMS;
 
     private int currentSlot;
 
+    public TileImporter() {
+        dataManager.addWatchedParameter(COMPARE);
+        dataManager.addWatchedParameter(MODE);
+        dataManager.addWatchedParameter(TYPE);
+    }
+
+    @Override
+    public boolean canAddMicroblock(IMicroblock microblock) {
+        return !isBlockingMicroblock(microblock, getDirection());
+    }
+
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.importerUsage + RefinedStorageUtils.getUpgradeEnergyUsage(upgrades);
+        return RefinedStorage.INSTANCE.importerUsage + upgrades.getEnergyUsage();
     }
 
     @Override
     public void updateNode() {
-        IItemHandler handler = RefinedStorageUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
+        if (type == IType.ITEMS) {
+            IItemHandler handler = getItemHandler(getFacingTile(), getDirection().getOpposite());
 
-        if (getFacingTile() instanceof TileDiskDrive || handler == null) {
-            return;
-        }
+            if (getFacingTile() instanceof TileDiskDrive || handler == null) {
+                return;
+            }
 
-        if (currentSlot >= handler.getSlots()) {
-            currentSlot = 0;
-        }
+            if (currentSlot >= handler.getSlots()) {
+                currentSlot = 0;
+            }
 
-        if (handler.getSlots() > 0) {
-            ItemStack stack = handler.getStackInSlot(currentSlot);
+            if (handler.getSlots() > 0) {
+                ItemStack stack = handler.getStackInSlot(currentSlot);
 
-            if (stack == null || !ModeFilter.respectsMode(filters, this, compare, stack)) {
-                currentSlot++;
-            } else if (ticks % RefinedStorageUtils.getSpeed(upgrades) == 0) {
-                int quantity = RefinedStorageUtils.hasUpgrade(upgrades, ItemUpgrade.TYPE_STACK) ? 64 : 1;
-
-                ItemStack result = handler.extractItem(currentSlot, quantity, true);
-
-                if (result != null && network.insertItem(result, result.stackSize, true) == null) {
-                    network.insertItem(result, result.stackSize, false);
-
-                    handler.extractItem(currentSlot, quantity, false);
-                } else {
+                if (stack == null || !IFilterable.canTake(itemFilters, mode, compare, stack)) {
                     currentSlot++;
+                } else if (ticks % upgrades.getSpeed() == 0) {
+                    int quantity = upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK) ? 64 : 1;
+
+                    ItemStack result = handler.extractItem(currentSlot, quantity, true);
+
+                    if (result != null && network.insertItem(result, result.stackSize, true) == null) {
+                        network.insertItem(result, result.stackSize, false);
+
+                        handler.extractItem(currentSlot, quantity, false);
+                    } else {
+                        currentSlot++;
+                    }
+                }
+            }
+        } else if (type == IType.FLUIDS && ticks % upgrades.getSpeed() == 0) {
+            IFluidHandler handler = getFluidHandler(getFacingTile(), getDirection().getOpposite());
+
+            if (handler != null) {
+                FluidStack stack = handler.drain(Fluid.BUCKET_VOLUME, false);
+
+                if (stack != null && IFilterable.canTakeFluids(fluidFilters, mode, compare, stack) && network.insertFluid(stack, stack.amount, true) == null) {
+                    FluidStack drain = handler.drain(Fluid.BUCKET_VOLUME, true);
+
+                    network.insertFluid(drain, drain.amount, false);
                 }
             }
         }
@@ -100,19 +128,24 @@ public class TileImporter extends TileNode implements ICompareConfig, IModeConfi
     }
 
     @Override
-    public void read(NBTTagCompound nbt) {
-        super.read(nbt);
+    public void read(NBTTagCompound tag) {
+        super.read(tag);
 
-        if (nbt.hasKey(NBT_COMPARE)) {
-            compare = nbt.getInteger(NBT_COMPARE);
+        if (tag.hasKey(NBT_COMPARE)) {
+            compare = tag.getInteger(NBT_COMPARE);
         }
 
-        if (nbt.hasKey(NBT_MODE)) {
-            mode = nbt.getInteger(NBT_MODE);
+        if (tag.hasKey(NBT_MODE)) {
+            mode = tag.getInteger(NBT_MODE);
         }
 
-        RefinedStorageUtils.readItems(filters, 0, nbt);
-        RefinedStorageUtils.readItems(upgrades, 1, nbt);
+        if (tag.hasKey(NBT_TYPE)) {
+            type = tag.getInteger(NBT_TYPE);
+        }
+
+        readItems(itemFilters, 0, tag);
+        readItems(upgrades, 1, tag);
+        readItems(fluidFilters, 2, tag);
     }
 
     @Override
@@ -121,45 +154,39 @@ public class TileImporter extends TileNode implements ICompareConfig, IModeConfi
 
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_MODE, mode);
+        tag.setInteger(NBT_TYPE, type);
 
-        RefinedStorageUtils.writeItems(filters, 0, tag);
-        RefinedStorageUtils.writeItems(upgrades, 1, tag);
+        writeItems(itemFilters, 0, tag);
+        writeItems(upgrades, 1, tag);
+        writeItems(fluidFilters, 2, tag);
 
         return tag;
-    }
-
-    @Override
-    public void readContainerData(ByteBuf buf) {
-        super.readContainerData(buf);
-
-        compare = buf.readInt();
-        mode = buf.readInt();
-    }
-
-    @Override
-    public void writeContainerData(ByteBuf buf) {
-        super.writeContainerData(buf);
-
-        buf.writeInt(compare);
-        buf.writeInt(mode);
-    }
-
-    @Override
-    public Class<? extends Container> getContainer() {
-        return ContainerImporter.class;
     }
 
     public IItemHandler getUpgrades() {
         return upgrades;
     }
 
-    public IItemHandler getFilters() {
-        return filters;
+    @Override
+    public IItemHandler getDrops() {
+        return upgrades;
     }
 
     @Override
-    public IItemHandler getDroppedItems() {
-        return upgrades;
+    public int getType() {
+        return worldObj.isRemote ? TYPE.getValue() : type;
+    }
+
+    @Override
+    public void setType(int type) {
+        this.type = type;
+
+        markDirty();
+    }
+
+    @Override
+    public IItemHandler getFilterInventory() {
+        return getType() == IType.ITEMS ? itemFilters : fluidFilters;
     }
 
     @Override

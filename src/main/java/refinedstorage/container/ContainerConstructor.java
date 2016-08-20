@@ -5,17 +5,18 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
 import refinedstorage.container.slot.SlotSpecimen;
+import refinedstorage.container.slot.SlotSpecimenType;
 import refinedstorage.tile.TileConstructor;
 
 public class ContainerConstructor extends ContainerBase {
-    public ContainerConstructor(EntityPlayer player, TileConstructor constructor) {
-        super(player);
+    public ContainerConstructor(TileConstructor constructor, EntityPlayer player) {
+        super(constructor, player);
 
         for (int i = 0; i < 4; ++i) {
             addSlotToContainer(new SlotItemHandler(constructor.getUpgrades(), i, 187, 6 + (i * 18)));
         }
 
-        addSlotToContainer(new SlotSpecimen(constructor.getFilter(), 0, 80, 20, SlotSpecimen.SPECIMEN_BLOCK));
+        addSlotToContainer(new SlotSpecimenType(constructor, 0, 80, 20, SlotSpecimen.SPECIMEN_BLOCK));
 
         addPlayerInventory(8, 55);
     }
@@ -34,7 +35,7 @@ public class ContainerConstructor extends ContainerBase {
                     return null;
                 }
             } else if (!mergeItemStack(stack, 0, 4, false)) {
-                return null;
+                return mergeItemStackToSpecimen(stack, 4, 4 + 1);
             }
 
             if (stack.stackSize == 0) {

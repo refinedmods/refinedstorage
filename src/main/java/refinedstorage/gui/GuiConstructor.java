@@ -1,26 +1,25 @@
 package refinedstorage.gui;
 
-import refinedstorage.api.storage.CompareFlags;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.container.ContainerConstructor;
 import refinedstorage.gui.sidebutton.SideButtonCompare;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
+import refinedstorage.gui.sidebutton.SideButtonType;
 import refinedstorage.tile.TileConstructor;
 
 public class GuiConstructor extends GuiBase {
-    private TileConstructor constructor;
-
-    public GuiConstructor(ContainerConstructor container, TileConstructor constructor) {
+    public GuiConstructor(ContainerConstructor container) {
         super(container, 211, 137);
-
-        this.constructor = constructor;
     }
 
     @Override
     public void init(int x, int y) {
-        addSideButton(new SideButtonRedstoneMode(constructor));
+        addSideButton(new SideButtonRedstoneMode(TileConstructor.REDSTONE_MODE));
 
-        addSideButton(new SideButtonCompare(constructor, CompareFlags.COMPARE_DAMAGE));
-        addSideButton(new SideButtonCompare(constructor, CompareFlags.COMPARE_NBT));
+        addSideButton(new SideButtonType(TileConstructor.TYPE));
+
+        addSideButton(new SideButtonCompare(TileConstructor.COMPARE, CompareUtils.COMPARE_DAMAGE));
+        addSideButton(new SideButtonCompare(TileConstructor.COMPARE, CompareUtils.COMPARE_NBT));
     }
 
     @Override

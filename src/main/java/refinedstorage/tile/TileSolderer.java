@@ -1,42 +1,59 @@
 package refinedstorage.tile;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageItems;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.RefinedStorageAPI;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.solderer.ISoldererRecipe;
-import refinedstorage.container.ContainerSolderer;
-import refinedstorage.inventory.BasicItemHandler;
-import refinedstorage.inventory.BasicItemValidator;
-import refinedstorage.inventory.SoldererItemHandler;
+import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.inventory.ItemHandlerBasic;
+import refinedstorage.inventory.ItemHandlerSolderer;
+import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemUpgrade;
+import refinedstorage.tile.data.ITileDataProducer;
+import refinedstorage.tile.data.TileDataParameter;
 
 public class TileSolderer extends TileNode {
+    public static final TileDataParameter<Integer> DURATION = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileSolderer>() {
+        @Override
+        public Integer getValue(TileSolderer tile) {
+            return tile.recipe != null ? tile.recipe.getDuration() : 0;
+        }
+    });
+
+    public static final TileDataParameter<Integer> PROGRESS = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileSolderer>() {
+        @Override
+        public Integer getValue(TileSolderer tile) {
+            return tile.progress;
+        }
+    });
+
     private static final String NBT_WORKING = "Working";
     private static final String NBT_PROGRESS = "Progress";
 
-    private BasicItemHandler items = new BasicItemHandler(4, this);
-    private BasicItemHandler upgrades = new BasicItemHandler(4, this, new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED));
-    private SoldererItemHandler[] itemsFacade = new SoldererItemHandler[EnumFacing.values().length];
+    private ItemHandlerBasic items = new ItemHandlerBasic(4, this);
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED);
+    private ItemHandlerSolderer[] itemsFacade = new ItemHandlerSolderer[EnumFacing.values().length];
 
     private ISoldererRecipe recipe;
 
     private boolean working = false;
     private int progress = 0;
-    private int duration;
+
+    public TileSolderer() {
+        dataManager.addWatchedParameter(DURATION);
+        dataManager.addWatchedParameter(PROGRESS);
+    }
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.soldererUsage + RefinedStorageUtils.getUpgradeEnergyUsage(upgrades);
+        return RefinedStorage.INSTANCE.soldererUsage + upgrades.getEnergyUsage();
     }
 
     @Override
@@ -51,7 +68,7 @@ public class TileSolderer extends TileNode {
             if (newRecipe == null) {
                 stop();
             } else if (newRecipe != recipe) {
-                boolean sameItem = items.getStackInSlot(3) != null ? RefinedStorageUtils.compareStackNoQuantity(items.getStackInSlot(3), newRecipe.getResult()) : false;
+                boolean sameItem = items.getStackInSlot(3) != null ? CompareUtils.compareStackNoQuantity(items.getStackInSlot(3), newRecipe.getResult()) : false;
 
                 if (items.getStackInSlot(3) == null || (sameItem && ((items.getStackInSlot(3).stackSize + newRecipe.getResult().stackSize) <= items.getStackInSlot(3).getMaxStackSize()))) {
                     recipe = newRecipe;
@@ -61,7 +78,7 @@ public class TileSolderer extends TileNode {
                     markDirty();
                 }
             } else if (working) {
-                progress += 1 + RefinedStorageUtils.getUpgradeCount(upgrades, ItemUpgrade.TYPE_SPEED);
+                progress += 1 + upgrades.getUpgradeCount(ItemUpgrade.TYPE_SPEED);
 
                 if (progress >= recipe.getDuration()) {
                     if (items.getStackInSlot(3) != null) {
@@ -86,7 +103,7 @@ public class TileSolderer extends TileNode {
         }
 
         if (wasWorking != working) {
-            RefinedStorageUtils.updateBlock(worldObj, pos);
+            updateBlock();
         }
     }
 
@@ -108,20 +125,20 @@ public class TileSolderer extends TileNode {
     }
 
     @Override
-    public void read(NBTTagCompound nbt) {
-        super.read(nbt);
+    public void read(NBTTagCompound tag) {
+        super.read(tag);
 
-        RefinedStorageUtils.readItems(items, 0, nbt);
-        RefinedStorageUtils.readItems(upgrades, 1, nbt);
+        readItems(items, 0, tag);
+        readItems(upgrades, 1, tag);
 
         recipe = RefinedStorageAPI.SOLDERER_REGISTRY.getRecipe(items);
 
-        if (nbt.hasKey(NBT_WORKING)) {
-            working = nbt.getBoolean(NBT_WORKING);
+        if (tag.hasKey(NBT_WORKING)) {
+            working = tag.getBoolean(NBT_WORKING);
         }
 
-        if (nbt.hasKey(NBT_PROGRESS)) {
-            progress = nbt.getInteger(NBT_PROGRESS);
+        if (tag.hasKey(NBT_PROGRESS)) {
+            progress = tag.getInteger(NBT_PROGRESS);
         }
     }
 
@@ -129,8 +146,8 @@ public class TileSolderer extends TileNode {
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        RefinedStorageUtils.writeItems(items, 0, tag);
-        RefinedStorageUtils.writeItems(upgrades, 1, tag);
+        writeItems(items, 0, tag);
+        writeItems(upgrades, 1, tag);
 
         tag.setBoolean(NBT_WORKING, working);
         tag.setInteger(NBT_PROGRESS, progress);
@@ -154,40 +171,11 @@ public class TileSolderer extends TileNode {
         super.readUpdate(tag);
     }
 
-    @Override
-    public void readContainerData(ByteBuf buf) {
-        super.readContainerData(buf);
-
-        progress = buf.readInt();
-        duration = buf.readInt();
-    }
-
-    @Override
-    public void writeContainerData(ByteBuf buf) {
-        super.writeContainerData(buf);
-
-        buf.writeInt(progress);
-        buf.writeInt(recipe != null ? recipe.getDuration() : 0);
-    }
-
-    @Override
-    public Class<? extends Container> getContainer() {
-        return ContainerSolderer.class;
-    }
-
     public boolean isWorking() {
         return working;
     }
 
-    public int getProgressScaled(int i) {
-        if (progress > duration) {
-            return i;
-        }
-
-        return (int) ((float) progress / (float) duration * (float) i);
-    }
-
-    public BasicItemHandler getItems() {
+    public ItemHandlerBasic getItems() {
         return items;
     }
 
@@ -196,7 +184,7 @@ public class TileSolderer extends TileNode {
     }
 
     @Override
-    public IItemHandler getDroppedItems() {
+    public IItemHandler getDrops() {
         return new CombinedInvWrapper(items, upgrades);
     }
 
@@ -210,7 +198,7 @@ public class TileSolderer extends TileNode {
             int i = facing.ordinal();
 
             if (itemsFacade[i] == null) {
-                itemsFacade[i] = new SoldererItemHandler(this, facing);
+                itemsFacade[i] = new ItemHandlerSolderer(this, facing);
             }
 
             return (T) itemsFacade[i];

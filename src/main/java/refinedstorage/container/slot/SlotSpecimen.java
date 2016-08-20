@@ -38,7 +38,7 @@ public class SlotSpecimen extends SlotItemHandler {
 
     @Override
     public boolean isItemValid(ItemStack stack) {
-        return isBlockOnly() ? (stack.getItem() instanceof ItemBlock || stack.getItem() instanceof ItemBlockSpecial || stack.getItem() instanceof IPlantable) : true;
+        return super.isItemValid(stack) && (isBlockOnly() ? (stack.getItem() instanceof ItemBlock || stack.getItem() instanceof ItemBlockSpecial || stack.getItem() instanceof IPlantable) : true);
     }
 
     @Override
@@ -67,9 +67,7 @@ public class SlotSpecimen extends SlotItemHandler {
                     Field f = ((ItemBlockSpecial) item).getClass().getDeclaredField("block");
                     f.setAccessible(true);
                     return ((Block) f.get(item)).getDefaultState();
-                } catch (IllegalAccessException e) {
-                    // NO OP
-                } catch (NoSuchFieldException e) {
+                } catch (IllegalAccessException | NoSuchFieldException e) {
                     // NO OP
                 }
             } else if (item instanceof ItemBlock) {

@@ -17,12 +17,11 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.item.ItemBlockBase;
 import refinedstorage.tile.TileBase;
 
 public abstract class BlockBase extends Block {
-    public static final PropertyDirection DIRECTION = PropertyDirection.create("direction");
+    private static final PropertyDirection DIRECTION = PropertyDirection.create("direction");
 
     private String name;
 
@@ -91,7 +90,7 @@ public abstract class BlockBase extends Block {
 
             tile.setDirection(getPlacementType().getNext(tile.getDirection()));
 
-            RefinedStorageUtils.updateBlock(world, pos);
+            tile.updateBlock();
 
             return true;
         }
@@ -100,11 +99,22 @@ public abstract class BlockBase extends Block {
     }
 
     @Override
+    public IBlockState onBlockPlaced(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase entity) {
+        IBlockState state = super.onBlockPlaced(world, pos, facing, hitX, hitY, hitZ, meta, entity);
+
+        if (getPlacementType() != null) {
+            return state.withProperty(DIRECTION, getPlacementType().getFrom(facing, pos, entity));
+        }
+
+        return state;
+    }
+
+    @Override
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack stack) {
         super.onBlockPlacedBy(world, pos, state, player, stack);
 
         if (getPlacementType() != null) {
-            ((TileBase) world.getTileEntity(pos)).setDirection(getPlacementType().getFrom(pos, player));
+            ((TileBase) world.getTileEntity(pos)).setDirection(state.getValue(DIRECTION));
         }
     }
 
@@ -112,8 +122,8 @@ public abstract class BlockBase extends Block {
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
         TileEntity tile = world.getTileEntity(pos);
 
-        if (tile instanceof TileBase && ((TileBase) tile).getDroppedItems() != null) {
-            IItemHandler handler = ((TileBase) tile).getDroppedItems();
+        if (tile instanceof TileBase && ((TileBase) tile).getDrops() != null) {
+            IItemHandler handler = ((TileBase) tile).getDrops();
 
             for (int i = 0; i < handler.getSlots(); ++i) {
                 if (handler.getStackInSlot(i) != null) {
@@ -137,7 +147,7 @@ public abstract class BlockBase extends Block {
         world.setBlockToAir(pos);
     }
 
-    public EnumPlacementType getPlacementType() {
+    protected EnumPlacementType getPlacementType() {
         return EnumPlacementType.HORIZONTAL;
     }
 }

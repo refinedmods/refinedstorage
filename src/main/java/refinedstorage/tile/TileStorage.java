@@ -1,30 +1,39 @@
 package refinedstorage.tile;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.items.IItemHandler;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.api.storage.IStorage;
-import refinedstorage.api.storage.IStorageProvider;
-import refinedstorage.apiimpl.storage.NBTStorage;
+import refinedstorage.api.storage.item.IItemStorage;
+import refinedstorage.api.storage.item.IItemStorageProvider;
+import refinedstorage.apiimpl.storage.item.ItemStorageNBT;
 import refinedstorage.block.BlockStorage;
-import refinedstorage.block.EnumStorageType;
-import refinedstorage.container.ContainerStorage;
-import refinedstorage.inventory.BasicItemHandler;
-import refinedstorage.network.MessagePriorityUpdate;
-import refinedstorage.tile.config.*;
+import refinedstorage.block.EnumItemStorageType;
+import refinedstorage.inventory.ItemHandlerBasic;
+import refinedstorage.tile.config.IComparable;
+import refinedstorage.tile.config.IFilterable;
+import refinedstorage.tile.config.IPrioritizable;
+import refinedstorage.tile.data.ITileDataProducer;
+import refinedstorage.tile.data.TileDataParameter;
 
 import java.util.List;
 
-public class TileStorage extends TileNode implements IStorageProvider, IStorageGui, ICompareConfig, IModeConfig {
-    class Storage extends NBTStorage {
-        public Storage() {
+public class TileStorage extends TileNode implements IItemStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable {
+    public static final TileDataParameter<Integer> PRIORITY = IPrioritizable.createParameter();
+    public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
+    public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
+    public static final TileDataParameter<Integer> STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileStorage>() {
+        @Override
+        public Integer getValue(TileStorage tile) {
+            return ItemStorageNBT.getStoredFromNBT(tile.storageTag);
+        }
+    });
+
+    class ItemStorage extends ItemStorageNBT {
+        public ItemStorage() {
             super(TileStorage.this.getStorageTag(), TileStorage.this.getCapacity(), TileStorage.this);
         }
 
@@ -35,7 +44,7 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
 
         @Override
         public ItemStack insertItem(ItemStack stack, int size, boolean simulate) {
-            if (!ModeFilter.respectsMode(filters, TileStorage.this, compare, stack)) {
+            if (!IFilterable.canTake(filters, mode, compare, stack)) {
                 return ItemHandlerHelper.copyStackWithSize(stack, size);
             }
 
@@ -49,18 +58,24 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
 
-    private BasicItemHandler filters = new BasicItemHandler(9, this);
+    private ItemHandlerBasic filters = new ItemHandlerBasic(9, this);
 
-    private NBTTagCompound storageTag = NBTStorage.createNBT();
+    private NBTTagCompound storageTag = ItemStorageNBT.createNBT();
 
-    private Storage storage;
+    private ItemStorage storage;
 
-    private EnumStorageType type;
+    private EnumItemStorageType type;
 
     private int priority = 0;
     private int compare = 0;
-    private int mode = ModeConstants.WHITELIST;
-    private int stored;
+    private int mode = IFilterable.WHITELIST;
+
+    public TileStorage() {
+        dataManager.addWatchedParameter(PRIORITY);
+        dataManager.addWatchedParameter(COMPARE);
+        dataManager.addWatchedParameter(MODE);
+        dataManager.addWatchedParameter(STORED);
+    }
 
     @Override
     public int getEnergyUsage() {
@@ -76,10 +91,10 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
         super.update();
 
         if (storage == null && storageTag != null) {
-            storage = new Storage();
+            storage = new ItemStorage();
 
             if (network != null) {
-                network.getStorage().rebuild();
+                network.getItemStorage().rebuild();
             }
         }
     }
@@ -94,36 +109,36 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
     public void onConnectionChange(INetworkMaster network, boolean state) {
         super.onConnectionChange(network, state);
 
-        network.getStorage().rebuild();
+        network.getItemStorage().rebuild();
     }
 
     @Override
-    public void addStorages(List<IStorage> storages) {
+    public void addItemStorages(List<IItemStorage> storages) {
         if (storage != null) {
             storages.add(storage);
         }
     }
 
     @Override
-    public void read(NBTTagCompound nbt) {
-        super.read(nbt);
+    public void read(NBTTagCompound tag) {
+        super.read(tag);
 
-        RefinedStorageUtils.readItems(filters, 0, nbt);
+        readItems(filters, 0, tag);
 
-        if (nbt.hasKey(NBT_PRIORITY)) {
-            priority = nbt.getInteger(NBT_PRIORITY);
+        if (tag.hasKey(NBT_PRIORITY)) {
+            priority = tag.getInteger(NBT_PRIORITY);
         }
 
-        if (nbt.hasKey(NBT_STORAGE)) {
-            storageTag = nbt.getCompoundTag(NBT_STORAGE);
+        if (tag.hasKey(NBT_STORAGE)) {
+            storageTag = tag.getCompoundTag(NBT_STORAGE);
         }
 
-        if (nbt.hasKey(NBT_COMPARE)) {
-            compare = nbt.getInteger(NBT_COMPARE);
+        if (tag.hasKey(NBT_COMPARE)) {
+            compare = tag.getInteger(NBT_COMPARE);
         }
 
-        if (nbt.hasKey(NBT_MODE)) {
-            mode = nbt.getInteger(NBT_MODE);
+        if (tag.hasKey(NBT_MODE)) {
+            mode = tag.getInteger(NBT_MODE);
         }
     }
 
@@ -131,7 +146,7 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        RefinedStorageUtils.writeItems(filters, 0, tag);
+        writeItems(filters, 0, tag);
 
         tag.setInteger(NBT_PRIORITY, priority);
 
@@ -146,37 +161,12 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
         return tag;
     }
 
-    public EnumStorageType getType() {
+    public EnumItemStorageType getType() {
         if (type == null && worldObj.getBlockState(pos).getBlock() == RefinedStorageBlocks.STORAGE) {
-            this.type = ((EnumStorageType) worldObj.getBlockState(pos).getValue(BlockStorage.TYPE));
+            this.type = ((EnumItemStorageType) worldObj.getBlockState(pos).getValue(BlockStorage.TYPE));
         }
 
-        return type == null ? EnumStorageType.TYPE_1K : type;
-    }
-
-    @Override
-    public void writeContainerData(ByteBuf buf) {
-        super.writeContainerData(buf);
-
-        buf.writeInt(NBTStorage.getStoredFromNBT(storageTag));
-        buf.writeInt(priority);
-        buf.writeInt(compare);
-        buf.writeInt(mode);
-    }
-
-    @Override
-    public void readContainerData(ByteBuf buf) {
-        super.readContainerData(buf);
-
-        stored = buf.readInt();
-        priority = buf.readInt();
-        compare = buf.readInt();
-        mode = buf.readInt();
-    }
-
-    @Override
-    public Class<? extends Container> getContainer() {
-        return ContainerStorage.class;
+        return type == null ? EnumItemStorageType.TYPE_1K : type;
     }
 
     @Override
@@ -209,28 +199,28 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
     }
 
     @Override
-    public IItemHandler getFilters() {
-        return filters;
+    public TileDataParameter<Integer> getTypeParameter() {
+        return null;
     }
 
     @Override
-    public IRedstoneModeConfig getRedstoneModeConfig() {
-        return this;
+    public TileDataParameter<Integer> getRedstoneModeParameter() {
+        return REDSTONE_MODE;
     }
 
     @Override
-    public ICompareConfig getCompareConfig() {
-        return this;
+    public TileDataParameter<Integer> getCompareParameter() {
+        return COMPARE;
     }
 
     @Override
-    public IModeConfig getModeConfig() {
-        return this;
+    public TileDataParameter<Integer> getFilterParameter() {
+        return MODE;
     }
 
     @Override
-    public void onPriorityChanged(int priority) {
-        RefinedStorage.INSTANCE.network.sendToServer(new MessagePriorityUpdate(pos, priority));
+    public TileDataParameter<Integer> getPriorityParameter() {
+        return PRIORITY;
     }
 
     public NBTTagCompound getStorageTag() {
@@ -241,8 +231,12 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
         this.storageTag = storageTag;
     }
 
-    public NBTStorage getStorage() {
+    public ItemStorageNBT getStorage() {
         return storage;
+    }
+
+    public ItemHandlerBasic getFilters() {
+        return filters;
     }
 
     @Override
@@ -250,6 +244,7 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
         return priority;
     }
 
+    @Override
     public void setPriority(int priority) {
         this.priority = priority;
 
@@ -258,7 +253,7 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
 
     @Override
     public int getStored() {
-        return stored;
+        return STORED.getValue();
     }
 
     @Override

@@ -4,10 +4,14 @@ import cofh.api.energy.EnergyStorage;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fluids.FluidStack;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingTask;
-import refinedstorage.api.storage.CompareFlags;
-import refinedstorage.api.storage.IGroupedStorage;
+import refinedstorage.api.network.grid.IFluidGridHandler;
+import refinedstorage.api.network.grid.IItemGridHandler;
+import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.api.storage.fluid.IGroupedFluidStorage;
+import refinedstorage.api.storage.item.IGroupedItemStorage;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,14 +42,19 @@ public interface INetworkMaster {
     boolean canRun();
 
     /**
-     * @return A list with all the network nodes
+     * @return A graph of connected nodes to this network
      */
-    List<INetworkNode> getNodes();
+    INetworkNodeGraph getNodeGraph();
 
     /**
-     * @return The {@link IGridHandler} for this network
+     * @return The {@link IItemGridHandler} for this network
      */
-    IGridHandler getGridHandler();
+    IItemGridHandler getItemGridHandler();
+
+    /**
+     * @return The {@link IFluidGridHandler} for this network
+     */
+    IFluidGridHandler getFluidGridHandler();
 
     /**
      * @return The {@link IWirelessGridHandler} for this network
@@ -53,9 +62,14 @@ public interface INetworkMaster {
     IWirelessGridHandler getWirelessGridHandler();
 
     /**
-     * @return The {@link IGroupedStorage} of this network
+     * @return The {@link IGroupedItemStorage} of this network
      */
-    IGroupedStorage getStorage();
+    IGroupedItemStorage getItemStorage();
+
+    /**
+     * @return The {@link IGroupedFluidStorage} of this network
+     */
+    IGroupedFluidStorage getFluidStorage();
 
     /**
      * @return The crafting tasks in this network, do NOT modify this list
@@ -102,22 +116,17 @@ public interface INetworkMaster {
     void rebuildPatterns();
 
     /**
-     * Rebuilds the network node list.
-     */
-    void rebuildNodes();
-
-    /**
      * Returns crafting patterns from an item stack.
      *
      * @param pattern The {@link ItemStack} to get a pattern for
-     * @param flags   The flags to compare on, see {@link CompareFlags}
+     * @param flags   The flags to compare on, see {@link CompareUtils}
      * @return A list of crafting patterns where the given pattern is one of the outputs
      */
     List<ICraftingPattern> getPatterns(ItemStack pattern, int flags);
 
     /**
      * @param pattern The {@link ItemStack} to get a pattern for
-     * @param flags   The flags to compare on, see {@link CompareFlags}
+     * @param flags   The flags to compare on, see {@link CompareUtils}
      * @return The pattern, or null if the pattern is not found
      */
     @Nullable
@@ -126,20 +135,38 @@ public interface INetworkMaster {
     /**
      * Sends a grid packet with all the items to all clients that are watching a grid.
      */
-    void sendStorageToClient();
+    void sendItemStorageToClient();
 
     /**
      * Sends a grid packet with all the items to a specific player.
      */
-    void sendStorageToClient(EntityPlayerMP player);
+    void sendItemStorageToClient(EntityPlayerMP player);
 
     /**
-     * Sends a storage change to all clients that are watching a grid.
+     * Sends a item storage change to all clients that are watching a grid.
      *
      * @param stack The stack
      * @param delta The delta
      */
-    void sendStorageDeltaToClient(ItemStack stack, int delta);
+    void sendItemStorageDeltaToClient(ItemStack stack, int delta);
+
+    /**
+     * Sends a grid packet with all the fluids to all clients that are watching a grid.
+     */
+    void sendFluidStorageToClient();
+
+    /**
+     * Sends a grid packet with all the fluids to a specific player.
+     */
+    void sendFluidStorageToClient(EntityPlayerMP player);
+
+    /**
+     * Sends a fluids storage change to all clients that are watching a grid.
+     *
+     * @param stack The stack
+     * @param delta The delta
+     */
+    void sendFluidStorageDeltaToClient(FluidStack stack, int delta);
 
     /**
      * Inserts an item to this network.
@@ -157,9 +184,31 @@ public interface INetworkMaster {
      *
      * @param stack The prototype of the stack to extract, do NOT modify
      * @param size  The amount of that prototype that has to be extracted
-     * @param flags The flags to compare on, see {@link CompareFlags}
+     * @param flags The flags to compare on, see {@link CompareUtils}
      * @return null if we didn't extract anything, or a {@link ItemStack} with the result
      */
     @Nullable
     ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags);
+
+    /**
+     * Inserts a fluid to this network.
+     *
+     * @param stack    The stack prototype to insert, do NOT modify
+     * @param size     The amount of that prototype that has to be inserted
+     * @param simulate If we are simulating
+     * @return null if the insert was successful, or an {@link FluidStack} with the remainder
+     */
+    @Nullable
+    FluidStack insertFluid(@Nonnull FluidStack stack, int size, boolean simulate);
+
+    /**
+     * Extracts a fluid from this network.
+     *
+     * @param stack The prototype of the stack to extract, do NOT modify
+     * @param size  The amount of that prototype that has to be extracted
+     * @param flags The flags to compare on, see {@link CompareUtils}
+     * @return null if we didn't extract anything, or a {@link FluidStack} with the result
+     */
+    @Nullable
+    FluidStack extractFluid(@Nonnull FluidStack stack, int size, int flags);
 }

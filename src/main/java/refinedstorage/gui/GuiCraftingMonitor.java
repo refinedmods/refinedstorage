@@ -5,14 +5,15 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.text.TextFormatting;
 import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerCraftingMonitor;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.network.MessageCraftingMonitorCancel;
+import refinedstorage.tile.ClientCraftingTask;
 import refinedstorage.tile.TileCraftingMonitor;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 public class GuiCraftingMonitor extends GuiBase {
     private static final int VISIBLE_ROWS = 3;
@@ -41,7 +42,7 @@ public class GuiCraftingMonitor extends GuiBase {
 
     @Override
     public void init(int x, int y) {
-        addSideButton(new SideButtonRedstoneMode(craftingMonitor));
+        addSideButton(new SideButtonRedstoneMode(TileCraftingMonitor.REDSTONE_MODE));
 
         String cancel = t("gui.cancel");
         String cancelAll = t("misc.refinedstorage:cancel_all");
@@ -55,15 +56,15 @@ public class GuiCraftingMonitor extends GuiBase {
 
     @Override
     public void update(int x, int y) {
-        getScrollbar().setCanScroll(getRows() > VISIBLE_ROWS);
-        getScrollbar().setScrollDelta((float) getScrollbar().getScrollbarHeight() / (float) getRows());
+        getScrollbar().setEnabled(getRows() > VISIBLE_ROWS);
+        getScrollbar().setMaxOffset(getRows() - VISIBLE_ROWS);
 
-        if (itemSelected >= craftingMonitor.getTasks().size()) {
+        if (itemSelected >= getTasks().size()) {
             itemSelected = -1;
         }
 
         cancelButton.enabled = itemSelected != -1;
-        cancelAllButton.enabled = craftingMonitor.getTasks().size() > 0;
+        cancelAllButton.enabled = getTasks().size() > 0;
     }
 
     @Override
@@ -85,7 +86,7 @@ public class GuiCraftingMonitor extends GuiBase {
         int x = 8;
         int y = 20;
 
-        int item = getOffset() * 2;
+        int item = getScrollbar().getOffset() * 2;
 
         RenderHelper.enableGUIStandardItemLighting();
 
@@ -94,28 +95,28 @@ public class GuiCraftingMonitor extends GuiBase {
         renderItemSelection = false;
 
         for (int i = 0; i < 6; ++i) {
-            if (item < craftingMonitor.getTasks().size()) {
+            if (item < getTasks().size()) {
                 if (item == itemSelected) {
                     renderItemSelection = true;
                     renderItemSelectionX = x;
                     renderItemSelectionY = y;
                 }
 
-                TileCraftingMonitor.ClientSideCraftingTask task = craftingMonitor.getTasks().get(i);
+                ClientCraftingTask task = getTasks().get(i);
 
-                drawItem(x + 4, y + 11, task.output);
+                drawItem(x + 4, y + 11, task.getOutput());
 
                 float scale = 0.5f;
 
                 GlStateManager.pushMatrix();
                 GlStateManager.scale(scale, scale, 1);
 
-                drawString(RefinedStorageUtils.calculateOffsetOnScale(x + 5, scale), RefinedStorageUtils.calculateOffsetOnScale(y + 4, scale), task.output.getDisplayName());
+                drawString(calculateOffsetOnScale(x + 5, scale), calculateOffsetOnScale(y + 4, scale), task.getOutput().getDisplayName());
 
                 GlStateManager.popMatrix();
 
-                if (inBounds(x + 5, y + 10, 16, 16, mouseX, mouseY) && !task.info.trim().equals("")) {
-                    lines = task.info.split("\n");
+                if (inBounds(x + 5, y + 10, 16, 16, mouseX, mouseY) && !task.getInfo().trim().equals("")) {
+                    lines = task.getInfo().split("\n");
 
                     for (int j = 0; j < lines.length; ++j) {
                         String line = lines[j];
@@ -146,14 +147,8 @@ public class GuiCraftingMonitor extends GuiBase {
         }
     }
 
-    public int getOffset() {
-        return (int) Math.ceil(getScrollbar().getCurrentScroll() / 89f * (float) getRows());
-    }
-
     private int getRows() {
-        int max = (int) Math.ceil((float) craftingMonitor.getTasks().size() / (float) 2);
-
-        return max < 0 ? 0 : max;
+        return Math.max(0, (int) Math.ceil((float) getTasks().size() / (float) 2));
     }
 
     @Override
@@ -161,8 +156,8 @@ public class GuiCraftingMonitor extends GuiBase {
         super.actionPerformed(button);
 
         if (button == cancelButton && itemSelected != -1) {
-            RefinedStorage.INSTANCE.network.sendToServer(new MessageCraftingMonitorCancel(craftingMonitor, craftingMonitor.getTasks().get(itemSelected).id));
-        } else if (button == cancelAllButton && craftingMonitor.getTasks().size() > 0) {
+            RefinedStorage.INSTANCE.network.sendToServer(new MessageCraftingMonitorCancel(craftingMonitor, getTasks().get(itemSelected).getId()));
+        } else if (button == cancelAllButton && getTasks().size() > 0) {
             RefinedStorage.INSTANCE.network.sendToServer(new MessageCraftingMonitorCancel(craftingMonitor, -1));
         }
     }
@@ -174,14 +169,14 @@ public class GuiCraftingMonitor extends GuiBase {
         if (mouseButton == 0 && inBounds(8, 20, 144, 90, mouseX - guiLeft, mouseY - guiTop)) {
             itemSelected = -1;
 
-            int item = getOffset() * 2;
+            int item = getScrollbar().getOffset() * 2;
 
             for (int y = 0; y < 3; ++y) {
                 for (int x = 0; x < 2; ++x) {
                     int ix = 8 + (x * ITEM_WIDTH);
                     int iy = 20 + (y * ITEM_HEIGHT);
 
-                    if (inBounds(ix, iy, ITEM_WIDTH, ITEM_HEIGHT, mouseX - guiLeft, mouseY - guiTop) && item < craftingMonitor.getTasks().size()) {
+                    if (inBounds(ix, iy, ITEM_WIDTH, ITEM_HEIGHT, mouseX - guiLeft, mouseY - guiTop) && item < getTasks().size()) {
                         itemSelected = item;
                     }
 
@@ -189,5 +184,9 @@ public class GuiCraftingMonitor extends GuiBase {
                 }
             }
         }
+    }
+
+    private List<ClientCraftingTask> getTasks() {
+        return TileCraftingMonitor.TASKS.getValue();
     }
 }

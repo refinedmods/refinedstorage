@@ -1,6 +1,8 @@
 package refinedstorage.item;
 
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import refinedstorage.RefinedStorage;
@@ -12,6 +14,7 @@ public class ItemUpgrade extends ItemBase {
     public static final int TYPE_SPEED = 2;
     public static final int TYPE_CRAFTING = 3;
     public static final int TYPE_STACK = 4;
+    public static final int TYPE_INTERDIMENSIONAL = 5;
 
     public ItemUpgrade() {
         super("upgrade");
@@ -22,8 +25,8 @@ public class ItemUpgrade extends ItemBase {
     }
 
     @Override
-    public void getSubItems(Item item, CreativeTabs tab, List list) {
-        for (int i = 0; i <= 4; ++i) {
+    public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
+        for (int i = 0; i <= 5; ++i) {
             list.add(new ItemStack(item, 1, i));
         }
     }
@@ -38,8 +41,25 @@ public class ItemUpgrade extends ItemBase {
                 return RefinedStorage.INSTANCE.craftingUpgradeUsage;
             case TYPE_STACK:
                 return RefinedStorage.INSTANCE.stackUpgradeUsage;
+            case TYPE_INTERDIMENSIONAL:
+                return RefinedStorage.INSTANCE.interdimensionalUpgradeUsage;
             default:
                 return 0;
+        }
+    }
+
+    public static ItemStack getRequirement(int type) {
+        switch (type) {
+            case ItemUpgrade.TYPE_RANGE:
+                return new ItemStack(Items.ENDER_PEARL);
+            case ItemUpgrade.TYPE_SPEED:
+                return new ItemStack(Items.SUGAR);
+            case ItemUpgrade.TYPE_CRAFTING:
+                return new ItemStack(Blocks.CRAFTING_TABLE);
+            case ItemUpgrade.TYPE_INTERDIMENSIONAL:
+                return new ItemStack(Items.NETHER_STAR);
+            default:
+                return null;
         }
     }
 }

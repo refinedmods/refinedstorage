@@ -32,8 +32,8 @@ public class BlockGrid extends BlockNode {
     }
 
     @Override
-    public void getSubBlocks(Item item, CreativeTabs tab, List subItems) {
-        for (int i = 0; i <= 2; i++) {
+    public void getSubBlocks(Item item, CreativeTabs tab, List<ItemStack> subItems) {
+        for (int i = 0; i <= 3; i++) {
             subItems.add(new ItemStack(item, 1, i));
         }
     }
@@ -47,12 +47,12 @@ public class BlockGrid extends BlockNode {
 
     @Override
     public IBlockState getStateFromMeta(int meta) {
-        return getDefaultState().withProperty(TYPE, meta == 0 ? EnumGridType.NORMAL : (meta == 1 ? EnumGridType.CRAFTING : EnumGridType.PATTERN));
+        return getDefaultState().withProperty(TYPE, meta == 0 ? EnumGridType.NORMAL : (meta == 1 ? EnumGridType.CRAFTING : (meta == 2 ? EnumGridType.PATTERN : EnumGridType.FLUID)));
     }
 
     @Override
     public int getMetaFromState(IBlockState state) {
-        return state.getValue(TYPE) == EnumGridType.NORMAL ? 0 : (state.getValue(TYPE) == EnumGridType.CRAFTING ? 1 : 2);
+        return state.getValue(TYPE) == EnumGridType.NORMAL ? 0 : (state.getValue(TYPE) == EnumGridType.CRAFTING ? 1 : (state.getValue(TYPE) == EnumGridType.PATTERN ? 2 : 3));
     }
 
     @Override

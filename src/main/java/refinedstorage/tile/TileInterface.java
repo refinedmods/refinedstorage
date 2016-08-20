@@ -1,7 +1,5 @@
 package refinedstorage.tile;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -10,34 +8,33 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageItems;
-import refinedstorage.RefinedStorageUtils;
-import refinedstorage.container.ContainerInterface;
-import refinedstorage.inventory.BasicItemHandler;
-import refinedstorage.inventory.BasicItemValidator;
+import refinedstorage.inventory.ItemHandlerBasic;
+import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemUpgrade;
-import refinedstorage.tile.config.ICompareConfig;
+import refinedstorage.tile.config.IComparable;
+import refinedstorage.tile.data.TileDataParameter;
 
-public class TileInterface extends TileNode implements ICompareConfig {
+public class TileInterface extends TileNode implements IComparable {
+    public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
+
     private static final String NBT_COMPARE = "Compare";
 
-    private BasicItemHandler importItems = new BasicItemHandler(9, this);
-    private BasicItemHandler exportSpecimenItems = new BasicItemHandler(9, this);
-    private BasicItemHandler exportItems = new BasicItemHandler(9, this);
-    private BasicItemHandler upgrades = new BasicItemHandler(
-        4,
-        this,
-        new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED),
-        new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_STACK)
-    );
+    private ItemHandlerBasic importItems = new ItemHandlerBasic(9, this);
+    private ItemHandlerBasic exportSpecimenItems = new ItemHandlerBasic(9, this);
+    private ItemHandlerBasic exportItems = new ItemHandlerBasic(9, this);
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK);
 
     private int compare = 0;
 
     private int currentSlot = 0;
 
+    public TileInterface() {
+        dataManager.addWatchedParameter(COMPARE);
+    }
+
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.interfaceUsage + RefinedStorageUtils.getUpgradeEnergyUsage(upgrades);
+        return RefinedStorage.INSTANCE.interfaceUsage + upgrades.getEnergyUsage();
     }
 
     @Override
@@ -50,8 +47,8 @@ public class TileInterface extends TileNode implements ICompareConfig {
 
         if (slot == null) {
             currentSlot++;
-        } else if (ticks % RefinedStorageUtils.getSpeed(upgrades) == 0) {
-            int size = Math.min(slot.stackSize, RefinedStorageUtils.hasUpgrade(upgrades, ItemUpgrade.TYPE_STACK) ? 64 : 1);
+        } else if (ticks % upgrades.getSpeed() == 0) {
+            int size = Math.min(slot.stackSize, upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK) ? 64 : 1);
 
             ItemStack remainder = network.insertItem(slot, size, false);
 
@@ -109,16 +106,16 @@ public class TileInterface extends TileNode implements ICompareConfig {
     }
 
     @Override
-    public void read(NBTTagCompound nbt) {
-        super.read(nbt);
+    public void read(NBTTagCompound tag) {
+        super.read(tag);
 
-        RefinedStorageUtils.readItems(importItems, 0, nbt);
-        RefinedStorageUtils.readItems(exportSpecimenItems, 1, nbt);
-        RefinedStorageUtils.readItems(exportItems, 2, nbt);
-        RefinedStorageUtils.readItems(upgrades, 3, nbt);
+        readItems(importItems, 0, tag);
+        readItems(exportSpecimenItems, 1, tag);
+        readItems(exportItems, 2, tag);
+        readItems(upgrades, 3, tag);
 
-        if (nbt.hasKey(NBT_COMPARE)) {
-            compare = nbt.getInteger(NBT_COMPARE);
+        if (tag.hasKey(NBT_COMPARE)) {
+            compare = tag.getInteger(NBT_COMPARE);
         }
     }
 
@@ -126,34 +123,14 @@ public class TileInterface extends TileNode implements ICompareConfig {
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        RefinedStorageUtils.writeItems(importItems, 0, tag);
-        RefinedStorageUtils.writeItems(exportSpecimenItems, 1, tag);
-        RefinedStorageUtils.writeItems(exportItems, 2, tag);
-        RefinedStorageUtils.writeItems(upgrades, 3, tag);
+        writeItems(importItems, 0, tag);
+        writeItems(exportSpecimenItems, 1, tag);
+        writeItems(exportItems, 2, tag);
+        writeItems(upgrades, 3, tag);
 
         tag.setInteger(NBT_COMPARE, compare);
 
         return tag;
-    }
-
-
-    @Override
-    public void readContainerData(ByteBuf buf) {
-        super.readContainerData(buf);
-
-        compare = buf.readInt();
-    }
-
-    @Override
-    public void writeContainerData(ByteBuf buf) {
-        super.writeContainerData(buf);
-
-        buf.writeInt(compare);
-    }
-
-    @Override
-    public Class<? extends Container> getContainer() {
-        return ContainerInterface.class;
     }
 
     public IItemHandler getImportItems() {
@@ -173,7 +150,7 @@ public class TileInterface extends TileNode implements ICompareConfig {
     }
 
     @Override
-    public IItemHandler getDroppedItems() {
+    public IItemHandler getDrops() {
         return new CombinedInvWrapper(importItems, exportItems, upgrades);
     }
 

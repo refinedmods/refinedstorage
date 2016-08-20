@@ -2,12 +2,14 @@ package refinedstorage.gui;
 
 import com.google.common.primitives.Ints;
 import net.minecraft.client.gui.GuiTextField;
-import refinedstorage.api.storage.CompareFlags;
-import refinedstorage.container.ContainerStorage;
+import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.container.ContainerBase;
 import refinedstorage.gui.sidebutton.SideButtonCompare;
 import refinedstorage.gui.sidebutton.SideButtonMode;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
+import refinedstorage.gui.sidebutton.SideButtonType;
 import refinedstorage.tile.IStorageGui;
+import refinedstorage.tile.data.TileDataManager;
 
 import java.io.IOException;
 
@@ -22,39 +24,44 @@ public class GuiStorage extends GuiBase {
     private int barWidth = 16;
     private int barHeight = 58;
 
-    public GuiStorage(ContainerStorage container, IStorageGui gui, String texture) {
+    public GuiStorage(ContainerBase container, IStorageGui gui, String texture) {
         super(container, 176, 211);
 
         this.gui = gui;
         this.texture = texture;
     }
 
-    public GuiStorage(ContainerStorage container, IStorageGui gui) {
+    public GuiStorage(ContainerBase container, IStorageGui gui) {
         this(container, gui, "gui/storage.png");
     }
 
     @Override
     public void init(int x, int y) {
-        if (gui.getRedstoneModeConfig() != null) {
-            addSideButton(new SideButtonRedstoneMode(gui.getRedstoneModeConfig()));
+        if (gui.getRedstoneModeParameter() != null) {
+            addSideButton(new SideButtonRedstoneMode(gui.getRedstoneModeParameter()));
         }
 
-        if (gui.getModeConfig() != null) {
-            addSideButton(new SideButtonMode(gui.getModeConfig()));
+        if (gui.getTypeParameter() != null) {
+            addSideButton(new SideButtonType(gui.getTypeParameter()));
         }
 
-        if (gui.getCompareConfig() != null) {
-            addSideButton(new SideButtonCompare(gui.getCompareConfig(), CompareFlags.COMPARE_DAMAGE));
-            addSideButton(new SideButtonCompare(gui.getCompareConfig(), CompareFlags.COMPARE_NBT));
+        if (gui.getFilterParameter() != null) {
+            addSideButton(new SideButtonMode(gui.getFilterParameter()));
         }
 
-        priorityField = new GuiTextField(0, fontRendererObj, x + 98 + 1, y + 54 + 1, 25, fontRendererObj.FONT_HEIGHT);
-        priorityField.setText(String.valueOf(gui.getPriority()));
+        if (gui.getCompareParameter() != null) {
+            addSideButton(new SideButtonCompare(gui.getCompareParameter(), CompareUtils.COMPARE_DAMAGE));
+            addSideButton(new SideButtonCompare(gui.getCompareParameter(), CompareUtils.COMPARE_NBT));
+        }
+
+        priorityField = new GuiTextField(0, fontRendererObj, x + 98 + 1, y + 54 + 1, 29, fontRendererObj.FONT_HEIGHT);
         priorityField.setEnableBackgroundDrawing(false);
         priorityField.setVisible(true);
         priorityField.setTextColor(16777215);
         priorityField.setCanLoseFocus(true);
         priorityField.setFocused(false);
+
+        updatePriority(gui.getPriorityParameter().getValue());
     }
 
     @Override
@@ -101,14 +108,22 @@ public class GuiStorage extends GuiBase {
 
     @Override
     protected void keyTyped(char character, int keyCode) throws IOException {
-        if (!checkHotbarKeys(keyCode) && priorityField.textboxKeyTyped(character, keyCode)) {
+        if (checkHotbarKeys(keyCode)) {
+            // NO OP
+        } else if (priorityField.textboxKeyTyped(character, keyCode)) {
             Integer result = Ints.tryParse(priorityField.getText());
 
             if (result != null) {
-                gui.onPriorityChanged(result);
+                TileDataManager.setParameter(gui.getPriorityParameter(), result);
             }
         } else {
             super.keyTyped(character, keyCode);
+        }
+    }
+
+    public void updatePriority(int priority) {
+        if (priorityField != null) {
+            priorityField.setText(String.valueOf(priority));
         }
     }
 }

@@ -20,22 +20,24 @@ import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageGui;
+import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.item.ItemBlockController;
-import refinedstorage.tile.controller.TileController;
+import refinedstorage.tile.TileController;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class BlockController extends BlockBase {
     public static final PropertyEnum TYPE = PropertyEnum.create("type", EnumControllerType.class);
-    public static final PropertyInteger ENERGY = PropertyInteger.create("energy", 0, 7);
+
+    private static final PropertyInteger ENERGY = PropertyInteger.create("energy", 0, 7);
 
     public BlockController() {
         super("controller");
     }
 
     @Override
-    public void getSubBlocks(Item item, CreativeTabs tab, List subItems) {
+    public void getSubBlocks(Item item, CreativeTabs tab, List<ItemStack> subItems) {
         for (int i = 0; i <= 1; i++) {
             subItems.add(ItemBlockController.createStackWithNBT(new ItemStack(item, 1, i)));
         }
@@ -104,7 +106,7 @@ public class BlockController extends BlockBase {
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
         if (!world.isRemote) {
-            ((TileController) world.getTileEntity(pos)).disconnectAll();
+            ((TileController) world.getTileEntity(pos)).getNodeGraph().disconnectAll();
         }
 
         super.breakBlock(world, pos, state);
@@ -115,13 +117,13 @@ public class BlockController extends BlockBase {
         super.neighborChanged(state, world, pos, block);
 
         if (!world.isRemote) {
-            ((TileController) world.getTileEntity(pos)).rebuildNodes();
+            NetworkUtils.rebuildGraph((TileController) world.getTileEntity(pos));
         }
     }
 
     @Override
     public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
-        List<ItemStack> drops = new ArrayList<ItemStack>();
+        List<ItemStack> drops = new ArrayList<>();
 
         ItemStack stack = new ItemStack(RefinedStorageBlocks.CONTROLLER, 1, RefinedStorageBlocks.CONTROLLER.getMetaFromState(state));
 

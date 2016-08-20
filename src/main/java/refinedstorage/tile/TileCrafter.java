@@ -1,7 +1,5 @@
 package refinedstorage.tile;
 
-import net.minecraft.inventory.Container;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -10,24 +8,15 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageItems;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
-import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.container.ContainerCrafter;
-import refinedstorage.inventory.BasicItemHandler;
-import refinedstorage.inventory.BasicItemValidator;
-import refinedstorage.inventory.IItemValidator;
+import refinedstorage.inventory.ItemHandlerBasic;
+import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.item.ItemUpgrade;
 
 public class TileCrafter extends TileNode implements ICraftingPatternContainer {
-    private BasicItemHandler patterns = new BasicItemHandler(9, this, new IItemValidator() {
-        @Override
-        public boolean isValid(ItemStack stack) {
-            return stack.getItem() == RefinedStorageItems.PATTERN && ItemPattern.isValid(stack);
-        }
-    }) {
+    private ItemHandlerBasic patterns = new ItemHandlerBasic(9, this, stack -> (stack.getItem() == RefinedStorageItems.PATTERN && ItemPattern.isValid(stack))) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -38,11 +27,11 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
         }
     };
 
-    private BasicItemHandler upgrades = new BasicItemHandler(4, this, new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED));
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED);
 
     @Override
     public int getEnergyUsage() {
-        int usage = RefinedStorage.INSTANCE.crafterUsage + RefinedStorageUtils.getUpgradeEnergyUsage(upgrades);
+        int usage = RefinedStorage.INSTANCE.crafterUsage + upgrades.getEnergyUsage();
 
         for (int i = 0; i < patterns.getSlots(); ++i) {
             if (patterns.getStackInSlot(i) != null) {
@@ -58,49 +47,42 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
     }
 
     @Override
-    public Class<? extends Container> getContainer() {
-        return ContainerCrafter.class;
-    }
-
-    @Override
     public void onConnectionChange(INetworkMaster network, boolean state) {
         if (!state) {
-            for (ICraftingTask task : network.getCraftingTasks()) {
-                if (task.getPattern().getContainerPosition().equals(pos)) {
-                    network.cancelCraftingTask(task);
-                }
-            }
+            network.getCraftingTasks().stream()
+                .filter(task -> task.getPattern().getContainerPosition().equals(pos))
+                .forEach(network::cancelCraftingTask);
         }
 
         network.rebuildPatterns();
     }
 
     @Override
-    public void read(NBTTagCompound nbt) {
-        super.read(nbt);
+    public void read(NBTTagCompound tag) {
+        super.read(tag);
 
-        RefinedStorageUtils.readItems(patterns, 0, nbt);
-        RefinedStorageUtils.readItems(upgrades, 1, nbt);
+        readItems(patterns, 0, tag);
+        readItems(upgrades, 1, tag);
     }
 
     @Override
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        RefinedStorageUtils.writeItems(patterns, 0, tag);
-        RefinedStorageUtils.writeItems(upgrades, 1, tag);
+        writeItems(patterns, 0, tag);
+        writeItems(upgrades, 1, tag);
 
         return tag;
     }
 
     @Override
     public int getSpeed() {
-        return 20 - (RefinedStorageUtils.getUpgradeCount(upgrades, ItemUpgrade.TYPE_SPEED) * 4);
+        return 20 - (upgrades.getUpgradeCount(ItemUpgrade.TYPE_SPEED) * 4);
     }
 
     @Override
     public IItemHandler getConnectedItems() {
-        return RefinedStorageUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
+        return getItemHandler(getFacingTile(), getDirection().getOpposite());
     }
 
     public IItemHandler getPatterns() {
@@ -112,7 +94,7 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
     }
 
     @Override
-    public IItemHandler getDroppedItems() {
+    public IItemHandler getDrops() {
         return new CombinedInvWrapper(patterns, upgrades);
     }
 

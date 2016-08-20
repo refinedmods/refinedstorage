@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BlockStorage extends BlockNode {
-    public static final PropertyEnum TYPE = PropertyEnum.create("type", EnumStorageType.class);
+    public static final PropertyEnum TYPE = PropertyEnum.create("type", EnumItemStorageType.class);
 
     public BlockStorage() {
         super("storage");
@@ -34,7 +34,7 @@ public class BlockStorage extends BlockNode {
     }
 
     @Override
-    public void getSubBlocks(Item item, CreativeTabs tab, List subItems) {
+    public void getSubBlocks(Item item, CreativeTabs tab, List<ItemStack> subItems) {
         for (int i = 0; i <= 4; ++i) {
             subItems.add(ItemBlockStorage.initNBT(new ItemStack(item, 1, i)));
         }
@@ -49,12 +49,12 @@ public class BlockStorage extends BlockNode {
 
     @Override
     public IBlockState getStateFromMeta(int meta) {
-        return getDefaultState().withProperty(TYPE, EnumStorageType.getById(meta));
+        return getDefaultState().withProperty(TYPE, EnumItemStorageType.getById(meta));
     }
 
     @Override
     public int getMetaFromState(IBlockState state) {
-        return ((EnumStorageType) state.getValue(TYPE)).getId();
+        return ((EnumItemStorageType) state.getValue(TYPE)).getId();
     }
 
     @Override
@@ -91,9 +91,9 @@ public class BlockStorage extends BlockNode {
     public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         TileStorage storage = (TileStorage) world.getTileEntity(pos);
 
-        List<ItemStack> drops = new ArrayList<ItemStack>();
+        List<ItemStack> drops = new ArrayList<>();
 
-        ItemStack stack = new ItemStack(RefinedStorageBlocks.STORAGE, 1, RefinedStorageBlocks.STORAGE.getMetaFromState(state));
+        ItemStack stack = new ItemStack(RefinedStorageBlocks.STORAGE, 1, getMetaFromState(state));
         stack.setTagCompound(new NBTTagCompound());
         stack.getTagCompound().setTag(TileStorage.NBT_STORAGE, storage.getStorageTag());
 

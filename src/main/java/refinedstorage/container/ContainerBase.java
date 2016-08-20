@@ -1,19 +1,22 @@
 package refinedstorage.container;
 
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import refinedstorage.container.slot.SlotDisabled;
-import refinedstorage.container.slot.SlotSpecimen;
-import refinedstorage.container.slot.SlotSpecimenLegacy;
+import net.minecraftforge.items.ItemHandlerHelper;
+import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.container.slot.*;
+import refinedstorage.tile.TileBase;
+import refinedstorage.tile.grid.WirelessGrid;
 
 public abstract class ContainerBase extends Container {
+    private TileBase tile;
     private EntityPlayer player;
 
-    public ContainerBase(EntityPlayer player) {
+    public ContainerBase(TileBase tile, EntityPlayer player) {
+        this.tile = tile;
         this.player = player;
     }
 
@@ -21,11 +24,22 @@ public abstract class ContainerBase extends Container {
         return player;
     }
 
+    public TileBase getTile() {
+        return tile;
+    }
+
     protected void addPlayerInventory(int xInventory, int yInventory) {
         int id = 0;
 
         for (int i = 0; i < 9; i++) {
-            addSlotToContainer(new Slot(player.inventory, id, xInventory + i * 18, yInventory + 4 + (3 * 18)));
+            int x = xInventory + i * 18;
+            int y = yInventory + 4 + (3 * 18);
+
+            if (i == player.inventory.currentItem && (ContainerBase.this instanceof ContainerGridFilter || (ContainerBase.this instanceof ContainerGrid && ((ContainerGrid) ContainerBase.this).getGrid() instanceof WirelessGrid))) {
+                addSlotToContainer(new SlotDisabled(player.inventory, id, x, y));
+            } else {
+                addSlotToContainer(new Slot(player.inventory, id, x, y));
+            }
 
             id++;
         }
@@ -46,23 +60,15 @@ public abstract class ContainerBase extends Container {
         if (slot instanceof SlotSpecimen) {
             if (((SlotSpecimen) slot).isWithSize()) {
                 if (slot.getStack() != null) {
-                    if (GuiScreen.isShiftKeyDown()) {
+                    if (clickType == ClickType.QUICK_MOVE) {
                         slot.putStack(null);
                     } else {
                         int amount = slot.getStack().stackSize;
 
                         if (clickedButton == 0) {
-                            amount--;
-
-                            if (amount < 1) {
-                                amount = 1;
-                            }
+                            amount = Math.max(1, amount - 1);
                         } else if (clickedButton == 1) {
-                            amount++;
-
-                            if (amount > 64) {
-                                amount = 64;
-                            }
+                            amount = Math.min(64, amount + 1);
                         }
 
                         slot.getStack().stackSize = amount;
@@ -70,14 +76,7 @@ public abstract class ContainerBase extends Container {
                 } else if (player.inventory.getItemStack() != null) {
                     int amount = player.inventory.getItemStack().stackSize;
 
-                    if (clickedButton == 1) {
-                        amount = 1;
-                    }
-
-                    ItemStack toPut = player.inventory.getItemStack().copy();
-                    toPut.stackSize = amount;
-
-                    slot.putStack(toPut);
+                    slot.putStack(ItemHandlerHelper.copyStackWithSize(player.inventory.getItemStack(), clickedButton == 1 ? 1 : amount));
                 }
             } else if (player.inventory.getItemStack() == null) {
                 slot.putStack(null);
@@ -104,6 +103,41 @@ public abstract class ContainerBase extends Container {
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) {
         return null;
+    }
+
+    protected ItemStack mergeItemStackToSpecimen(ItemStack stack, int begin, int end) {
+        for (int i = begin; i < end; ++i) {
+            if (CompareUtils.compareStackNoQuantity(getStackFromSlot(getSlot(i)), stack)) {
+                return null;
+            }
+        }
+
+        for (int i = begin; i < end; ++i) {
+            Slot slot = getSlot(i);
+
+            if (getStackFromSlot(slot) == null && slot.isItemValid(stack)) {
+                slot.putStack(ItemHandlerHelper.copyStackWithSize(stack, 1));
+                slot.onSlotChanged();
+
+                return null;
+            }
+        }
+
+        return null;
+    }
+
+    private ItemStack getStackFromSlot(Slot slot) {
+        ItemStack stackInSlot = slot.getStack();
+
+        if (stackInSlot == null) {
+            if (slot instanceof SlotSpecimenFluid) {
+                stackInSlot = ((SlotSpecimenFluid) slot).getRealStack();
+            } else if (slot instanceof SlotSpecimenType) {
+                stackInSlot = ((SlotSpecimenType) slot).getRealStack();
+            }
+        }
+
+        return stackInSlot;
     }
 
     @Override

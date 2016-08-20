@@ -1,69 +1,104 @@
 package refinedstorage.tile;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraft.inventory.Container;
+import mcmultipart.microblock.IMicroblock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageItems;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.apiimpl.autocrafting.CraftingTaskScheduler;
-import refinedstorage.container.ContainerExporter;
-import refinedstorage.inventory.BasicItemHandler;
-import refinedstorage.inventory.BasicItemValidator;
+import refinedstorage.inventory.ItemHandlerBasic;
+import refinedstorage.inventory.ItemHandlerFluid;
+import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemUpgrade;
-import refinedstorage.tile.config.ICompareConfig;
+import refinedstorage.tile.config.IComparable;
+import refinedstorage.tile.config.IType;
+import refinedstorage.tile.data.TileDataParameter;
 
-public class TileExporter extends TileNode implements ICompareConfig {
+public class TileExporter extends TileMultipartNode implements IComparable, IType {
+    public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
+    public static final TileDataParameter<Integer> TYPE = IType.createParameter();
+
     private static final String NBT_COMPARE = "Compare";
+    private static final String NBT_TYPE = "Type";
 
-    private BasicItemHandler filters = new BasicItemHandler(9, this);
-    private BasicItemHandler upgrades = new BasicItemHandler(
-        4,
-        this,
-        new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_SPEED),
-        new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_CRAFTING),
-        new BasicItemValidator(RefinedStorageItems.UPGRADE, ItemUpgrade.TYPE_STACK)
-    );
+    private ItemHandlerBasic itemFilters = new ItemHandlerBasic(9, this);
+    private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(9, this);
+
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_CRAFTING, ItemUpgrade.TYPE_STACK);
 
     private int compare = 0;
+    private int type = IType.ITEMS;
 
     private CraftingTaskScheduler scheduler = new CraftingTaskScheduler(this);
 
+    public TileExporter() {
+        dataManager.addWatchedParameter(COMPARE);
+        dataManager.addWatchedParameter(TYPE);
+    }
+
+    @Override
+    public boolean canAddMicroblock(IMicroblock microblock) {
+        return !isBlockingMicroblock(microblock, getDirection());
+    }
+
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.exporterUsage + RefinedStorageUtils.getUpgradeEnergyUsage(upgrades);
+        return RefinedStorage.INSTANCE.exporterUsage + upgrades.getEnergyUsage();
     }
 
     @Override
     public void updateNode() {
-        IItemHandler handler = RefinedStorageUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
+        if (ticks % upgrades.getSpeed() == 0) {
+            if (type == IType.ITEMS) {
+                IItemHandler handler = getItemHandler(getFacingTile(), getDirection().getOpposite());
 
-        int size = RefinedStorageUtils.hasUpgrade(upgrades, ItemUpgrade.TYPE_STACK) ? 64 : 1;
+                int size = upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK) ? 64 : 1;
 
-        if (handler != null && ticks % RefinedStorageUtils.getSpeed(upgrades) == 0) {
-            for (int i = 0; i < filters.getSlots(); ++i) {
-                ItemStack slot = filters.getStackInSlot(i);
+                if (handler != null) {
+                    for (int i = 0; i < itemFilters.getSlots(); ++i) {
+                        ItemStack slot = itemFilters.getStackInSlot(i);
 
-                if (slot != null) {
-                    ItemStack took = network.extractItem(slot, size, compare);
+                        if (slot != null) {
+                            ItemStack took = network.extractItem(slot, size, compare);
 
-                    if (took != null) {
-                        scheduler.resetSchedule();
+                            if (took != null) {
+                                scheduler.resetSchedule();
 
-                        ItemStack remainder = ItemHandlerHelper.insertItem(handler, took, false);
+                                ItemStack remainder = ItemHandlerHelper.insertItem(handler, took, false);
 
-                        if (remainder != null) {
-                            network.insertItem(remainder, remainder.stackSize, false);
+                                if (remainder != null) {
+                                    network.insertItem(remainder, remainder.stackSize, false);
+                                }
+                            } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
+                                if (scheduler.canSchedule(compare, slot)) {
+                                    scheduler.schedule(network, compare, slot);
+                                }
+                            }
                         }
-                    } else if (RefinedStorageUtils.hasUpgrade(upgrades, ItemUpgrade.TYPE_CRAFTING)) {
-                        if (scheduler.canSchedule(compare, slot)) {
-                            scheduler.schedule(network, compare, slot);
+                    }
+                }
+            } else if (type == IType.FLUIDS) {
+                IFluidHandler handler = getFluidHandler(getFacingTile(), getDirection().getOpposite());
+
+                if (handler != null) {
+                    for (FluidStack stack : fluidFilters.getFluids()) {
+                        if (stack != null) {
+                            FluidStack took = network.extractFluid(stack, Fluid.BUCKET_VOLUME, compare);
+
+                            if (took != null) {
+                                int remainder = Fluid.BUCKET_VOLUME - handler.fill(took, true);
+
+                                if (remainder > 0) {
+                                    network.insertFluid(took, remainder, false);
+                                }
+                            }
                         }
                     }
                 }
@@ -84,17 +119,22 @@ public class TileExporter extends TileNode implements ICompareConfig {
     }
 
     @Override
-    public void read(NBTTagCompound nbt) {
-        super.read(nbt);
+    public void read(NBTTagCompound tag) {
+        super.read(tag);
 
-        if (nbt.hasKey(NBT_COMPARE)) {
-            compare = nbt.getInteger(NBT_COMPARE);
+        if (tag.hasKey(NBT_COMPARE)) {
+            compare = tag.getInteger(NBT_COMPARE);
         }
 
-        RefinedStorageUtils.readItems(filters, 0, nbt);
-        RefinedStorageUtils.readItems(upgrades, 1, nbt);
+        if (tag.hasKey(NBT_TYPE)) {
+            type = tag.getInteger(NBT_TYPE);
+        }
 
-        scheduler.read(nbt);
+        readItems(itemFilters, 0, tag);
+        readItems(upgrades, 1, tag);
+        readItems(fluidFilters, 2, tag);
+
+        scheduler.read(tag);
     }
 
     @Override
@@ -102,36 +142,15 @@ public class TileExporter extends TileNode implements ICompareConfig {
         super.write(tag);
 
         tag.setInteger(NBT_COMPARE, compare);
+        tag.setInteger(NBT_TYPE, type);
 
-        RefinedStorageUtils.writeItems(filters, 0, tag);
-        RefinedStorageUtils.writeItems(upgrades, 1, tag);
+        writeItems(itemFilters, 0, tag);
+        writeItems(upgrades, 1, tag);
+        writeItems(fluidFilters, 2, tag);
 
-        scheduler.writeToNBT(tag);
+        scheduler.write(tag);
 
         return tag;
-    }
-
-    @Override
-    public void readContainerData(ByteBuf buf) {
-        super.readContainerData(buf);
-
-        compare = buf.readInt();
-    }
-
-    @Override
-    public void writeContainerData(ByteBuf buf) {
-        super.writeContainerData(buf);
-
-        buf.writeInt(compare);
-    }
-
-    @Override
-    public Class<? extends Container> getContainer() {
-        return ContainerExporter.class;
-    }
-
-    public IItemHandler getFilters() {
-        return filters;
     }
 
     public IItemHandler getUpgrades() {
@@ -139,8 +158,25 @@ public class TileExporter extends TileNode implements ICompareConfig {
     }
 
     @Override
-    public IItemHandler getDroppedItems() {
+    public IItemHandler getDrops() {
         return upgrades;
+    }
+
+    @Override
+    public int getType() {
+        return worldObj.isRemote ? TYPE.getValue() : type;
+    }
+
+    @Override
+    public void setType(int type) {
+        this.type = type;
+
+        markDirty();
+    }
+
+    @Override
+    public IItemHandler getFilterInventory() {
+        return getType() == IType.ITEMS ? itemFilters : fluidFilters;
     }
 
     @Override

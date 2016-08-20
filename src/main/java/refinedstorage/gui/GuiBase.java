@@ -5,22 +5,31 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.client.config.GuiCheckBox;
+import net.minecraftforge.items.SlotItemHandler;
 import org.lwjgl.input.Mouse;
 import refinedstorage.RefinedStorage;
+import refinedstorage.apiimpl.storage.fluid.FluidRenderer;
 import refinedstorage.gui.sidebutton.SideButton;
+import refinedstorage.inventory.ItemHandlerFluid;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public abstract class GuiBase extends GuiContainer {
+    private static final Map<String, ResourceLocation> TEXTURE_CACHE = new HashMap<>();
+
+    public static final FluidRenderer FLUID_RENDERER = new FluidRenderer(Fluid.BUCKET_VOLUME, 16, 16);
+
     protected static final int SIDE_BUTTON_WIDTH = 20;
     protected static final int SIDE_BUTTON_HEIGHT = 20;
 
-    private List<SideButton> sideButtons = new ArrayList<SideButton>();
+    private List<SideButton> sideButtons = new ArrayList<>();
 
     private int lastButtonId = 0;
     private int lastSideButtonY = 6;
@@ -89,6 +98,18 @@ public abstract class GuiBase extends GuiContainer {
 
         drawBackground(guiLeft, guiTop, mouseX, mouseY);
 
+        for (int i = 0; i < inventorySlots.inventorySlots.size(); ++i) {
+            Slot slot = inventorySlots.inventorySlots.get(i);
+
+            if (slot instanceof SlotItemHandler && ((SlotItemHandler) slot).getItemHandler() instanceof ItemHandlerFluid) {
+                FluidStack stack = ((ItemHandlerFluid) ((SlotItemHandler) slot).getItemHandler()).getFluids()[slot.getSlotIndex()];
+
+                if (stack != null) {
+                    FLUID_RENDERER.draw(mc, guiLeft + slot.xDisplayPosition, guiTop + slot.yDisplayPosition, stack);
+                }
+            }
+        }
+
         if (scrollbar != null) {
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -135,11 +156,7 @@ public abstract class GuiBase extends GuiContainer {
     protected void actionPerformed(GuiButton button) throws IOException {
         super.actionPerformed(button);
 
-        for (SideButton sideButton : sideButtons) {
-            if (sideButton.getId() == button.id) {
-                sideButton.actionPerformed();
-            }
-        }
+        sideButtons.stream().filter(b -> b.getId() == button.id).findFirst().ifPresent(SideButton::actionPerformed);
     }
 
     public GuiButton addButton(int x, int y, int w, int h) {
@@ -148,6 +165,14 @@ public abstract class GuiBase extends GuiContainer {
 
     public GuiButton addButton(int x, int y, int w, int h, String text) {
         return addButton(x, y, w, h, text, true);
+    }
+
+    public GuiCheckBox addCheckBox(int x, int y, String text, boolean checked) {
+        GuiCheckBox checkBox = new GuiCheckBox(lastButtonId++, x, y, text, checked);
+
+        buttonList.add(checkBox);
+
+        return checkBox;
     }
 
     public GuiButton addButton(int x, int y, int w, int h, String text, boolean enabled) {
@@ -178,7 +203,13 @@ public abstract class GuiBase extends GuiContainer {
     }
 
     public void bindTexture(String base, String file) {
-        mc.getTextureManager().bindTexture(new ResourceLocation(base, "textures/" + file));
+        String id = base + ":" + file;
+
+        if (!TEXTURE_CACHE.containsKey(id)) {
+            TEXTURE_CACHE.put(id, new ResourceLocation(base, "textures/" + file));
+        }
+
+        mc.getTextureManager().bindTexture(TEXTURE_CACHE.get(id));
     }
 
     public void drawItem(int x, int y, ItemStack stack) {
@@ -207,26 +238,30 @@ public abstract class GuiBase extends GuiContainer {
         itemRender.renderItemOverlayIntoGUI(fontRendererObj, stack, x, y, "");
 
         if (text != null) {
-            GlStateManager.pushMatrix();
-            GlStateManager.translate(x, y, 1);
-            GlStateManager.scale(0.5f, 0.5f, 1);
-
-            GlStateManager.disableLighting();
-            GlStateManager.disableRescaleNormal();
-            GlStateManager.depthMask(false);
-            GlStateManager.enableBlend();
-            GlStateManager.blendFunc(770, 771);
-            GlStateManager.disableDepth();
-
-            fontRendererObj.drawStringWithShadow(text, 30 - fontRendererObj.getStringWidth(text), 22, 16777215);
-
-            GlStateManager.enableDepth();
-            GlStateManager.enableTexture2D();
-            GlStateManager.depthMask(true);
-            GlStateManager.enableLighting();
-            GlStateManager.disableBlend();
-            GlStateManager.popMatrix();
+            drawQuantity(x, y, text);
         }
+    }
+
+    public void drawQuantity(int x, int y, String qty) {
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x, y, 1);
+        GlStateManager.scale(0.5f, 0.5f, 1);
+
+        GlStateManager.disableLighting();
+        GlStateManager.disableRescaleNormal();
+        GlStateManager.depthMask(false);
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(770, 771);
+        GlStateManager.disableDepth();
+
+        fontRendererObj.drawStringWithShadow(qty, 30 - fontRendererObj.getStringWidth(qty), 22, 16777215);
+
+        GlStateManager.enableDepth();
+        GlStateManager.enableTexture2D();
+        GlStateManager.depthMask(true);
+        GlStateManager.enableLighting();
+        GlStateManager.disableBlend();
+        GlStateManager.popMatrix();
     }
 
     public void drawString(int x, int y, String message) {
@@ -277,5 +312,11 @@ public abstract class GuiBase extends GuiContainer {
 
     public int getGuiTop() {
         return guiTop;
+    }
+
+    protected int calculateOffsetOnScale(int pos, float scale) {
+        float multiplier = (pos / scale);
+
+        return (int) multiplier;
     }
 }

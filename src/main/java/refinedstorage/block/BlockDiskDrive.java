@@ -16,7 +16,7 @@ import refinedstorage.RefinedStorageGui;
 import refinedstorage.tile.TileDiskDrive;
 
 public class BlockDiskDrive extends BlockNode {
-    public static final PropertyInteger STORED = PropertyInteger.create("stored", 0, 7);
+    private static final PropertyInteger STORED = PropertyInteger.create("stored", 0, 7);
 
     public BlockDiskDrive() {
         super("disk_drive");
@@ -37,7 +37,7 @@ public class BlockDiskDrive extends BlockNode {
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
         return super.getActualState(state, world, pos)
-            .withProperty(STORED, ((TileDiskDrive) world.getTileEntity(pos)).getStoredForScaledDisplay());
+            .withProperty(STORED, Math.max(0, ((TileDiskDrive) world.getTileEntity(pos)).getStoredForDisplay()));
     }
 
     @Override

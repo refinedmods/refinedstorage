@@ -5,18 +5,19 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
 import refinedstorage.container.slot.SlotSpecimen;
+import refinedstorage.container.slot.SlotSpecimenType;
 import refinedstorage.tile.TileDestructor;
 
 public class ContainerDestructor extends ContainerBase {
-    public ContainerDestructor(EntityPlayer player, TileDestructor destructor) {
-        super(player);
+    public ContainerDestructor(TileDestructor destructor, EntityPlayer player) {
+        super(destructor, player);
 
         for (int i = 0; i < 4; ++i) {
             addSlotToContainer(new SlotItemHandler(destructor.getUpgrades(), i, 187, 6 + (i * 18)));
         }
 
         for (int i = 0; i < 9; ++i) {
-            addSlotToContainer(new SlotSpecimen(destructor.getInventory(), i, 8 + (18 * i), 20, SlotSpecimen.SPECIMEN_BLOCK));
+            addSlotToContainer(new SlotSpecimenType(destructor, i, 8 + (18 * i), 20, SlotSpecimen.SPECIMEN_BLOCK));
         }
 
         addPlayerInventory(8, 55);
@@ -36,7 +37,7 @@ public class ContainerDestructor extends ContainerBase {
                     return null;
                 }
             } else if (!mergeItemStack(stack, 0, 4, false)) {
-                return null;
+                return mergeItemStackToSpecimen(stack, 4, 4 + 9);
             }
 
             if (stack.stackSize == 0) {

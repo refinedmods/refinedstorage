@@ -11,10 +11,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.tile.TileNode;
 
 public abstract class BlockNode extends BlockBase {
-    public static final PropertyBool CONNECTED = PropertyBool.create("connected");
+    private static final PropertyBool CONNECTED = PropertyBool.create("connected");
 
     public BlockNode(String name) {
         super(name);
@@ -63,7 +64,7 @@ public abstract class BlockNode extends BlockBase {
                 TileEntity tile = world.getTileEntity(pos.offset(facing));
 
                 if (tile instanceof TileNode && ((TileNode) tile).isConnected()) {
-                    ((TileNode) tile).getNetwork().rebuildNodes();
+                    NetworkUtils.rebuildGraph(((TileNode) tile).getNetwork());
 
                     break;
                 }
@@ -86,7 +87,7 @@ public abstract class BlockNode extends BlockBase {
         super.breakBlock(world, pos, state);
 
         if (network != null) {
-            network.rebuildNodes();
+            NetworkUtils.rebuildGraph(network);
         }
     }
 }

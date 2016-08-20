@@ -2,11 +2,10 @@ package refinedstorage.gui;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.container.ContainerController;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
-import refinedstorage.tile.controller.ClientNode;
-import refinedstorage.tile.controller.TileController;
+import refinedstorage.tile.ClientNode;
+import refinedstorage.tile.TileController;
 
 import java.util.List;
 
@@ -30,13 +29,13 @@ public class GuiController extends GuiBase {
 
     @Override
     public void init(int x, int y) {
-        addSideButton(new SideButtonRedstoneMode(controller));
+        addSideButton(new SideButtonRedstoneMode(TileController.REDSTONE_MODE));
     }
 
     @Override
     public void update(int x, int y) {
-        getScrollbar().setCanScroll(getRows() > VISIBLE_ROWS);
-        getScrollbar().setScrollDelta((float) getScrollbar().getScrollbarHeight() / (float) getRows());
+        getScrollbar().setEnabled(getRows() > VISIBLE_ROWS);
+        getScrollbar().setMaxOffset(getRows() - VISIBLE_ROWS);
     }
 
     @Override
@@ -45,7 +44,7 @@ public class GuiController extends GuiBase {
 
         drawTexture(x, y, 0, 0, width, height);
 
-        int barHeightNew = controller.getEnergyScaled(barHeight);
+        int barHeightNew = TileController.getEnergyScaled(TileController.ENERGY_STORED.getValue(), TileController.ENERGY_CAPACITY.getValue(), barHeight);
 
         drawTexture(x + barX, y + barY + barHeight - barHeightNew, 178, barHeight - barHeightNew, barWidth, barHeightNew);
     }
@@ -58,11 +57,11 @@ public class GuiController extends GuiBase {
         int x = 33;
         int y = 26;
 
-        int slot = getOffset() * 2;
+        int slot = getScrollbar().getOffset() * 2;
 
         RenderHelper.enableGUIStandardItemLighting();
 
-        List<ClientNode> nodes = controller.getClientNodes();
+        List<ClientNode> nodes = TileController.NODES.getValue();
 
         ClientNode nodeHovering = null;
 
@@ -70,15 +69,15 @@ public class GuiController extends GuiBase {
             if (slot < nodes.size()) {
                 ClientNode node = nodes.get(slot);
 
-                drawItem(x, y + 5, node.stack);
+                drawItem(x, y + 5, node.getStack());
 
                 float scale = 0.5f;
 
                 GlStateManager.pushMatrix();
                 GlStateManager.scale(scale, scale, 1);
 
-                drawString(RefinedStorageUtils.calculateOffsetOnScale(x + 1, scale), RefinedStorageUtils.calculateOffsetOnScale(y - 2, scale), node.stack.getDisplayName());
-                drawString(RefinedStorageUtils.calculateOffsetOnScale(x + 21, scale), RefinedStorageUtils.calculateOffsetOnScale(y + 10, scale), t("gui.refinedstorage:controller.machine_amount", node.amount));
+                drawString(calculateOffsetOnScale(x + 1, scale), calculateOffsetOnScale(y - 2, scale), node.getStack().getDisplayName());
+                drawString(calculateOffsetOnScale(x + 21, scale), calculateOffsetOnScale(y + 10, scale), t("gui.refinedstorage:controller.machine_amount", node.getAmount()));
 
                 GlStateManager.popMatrix();
 
@@ -98,21 +97,15 @@ public class GuiController extends GuiBase {
         }
 
         if (nodeHovering != null) {
-            drawTooltip(mouseX, mouseY, t("misc.refinedstorage:energy_usage_minimal", nodeHovering.energyUsage));
+            drawTooltip(mouseX, mouseY, t("misc.refinedstorage:energy_usage_minimal", nodeHovering.getEnergyUsage()));
         }
 
         if (inBounds(barX, barY, barWidth, barHeight, mouseX, mouseY)) {
-            drawTooltip(mouseX, mouseY, t("misc.refinedstorage:energy_usage", controller.getEnergyUsage()) + "\n" + t("misc.refinedstorage:energy_stored", controller.getEnergy().getEnergyStored(), controller.getEnergy().getMaxEnergyStored()));
+            drawTooltip(mouseX, mouseY, t("misc.refinedstorage:energy_usage", TileController.ENERGY_USAGE.getValue()) + "\n" + t("misc.refinedstorage:energy_stored", TileController.ENERGY_STORED.getValue(), TileController.ENERGY_CAPACITY.getValue()));
         }
     }
 
-    public int getOffset() {
-        return (int) Math.ceil(getScrollbar().getCurrentScroll() / 59f * (float) getRows());
-    }
-
     private int getRows() {
-        int max = (int) Math.ceil((float) controller.getClientNodes().size() / (float) 2);
-
-        return max < 0 ? 0 : max;
+        return Math.max(0, (int) Math.ceil((float) TileController.NODES.getValue().size() / 2F));
     }
 }

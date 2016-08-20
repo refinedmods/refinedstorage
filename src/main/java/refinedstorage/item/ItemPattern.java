@@ -13,9 +13,11 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import refinedstorage.RefinedStorageItems;
-import refinedstorage.RefinedStorageUtils;
+import refinedstorage.api.storage.CompareUtils;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ItemPattern extends ItemBase {
     public static final String NBT_INPUTS = "Inputs";
@@ -28,27 +30,51 @@ public class ItemPattern extends ItemBase {
     }
 
     @Override
-    public void addInformation(ItemStack pattern, EntityPlayer player, List list, boolean b) {
+    public void addInformation(ItemStack pattern, EntityPlayer player, List<String> tooltip, boolean advanced) {
         if (isValid(pattern)) {
             if (GuiScreen.isShiftKeyDown() || isProcessing(pattern)) {
-                list.add(TextFormatting.YELLOW + I18n.format("misc.refinedstorage:pattern.inputs") + TextFormatting.RESET);
+                tooltip.add(TextFormatting.YELLOW + I18n.format("misc.refinedstorage:pattern.inputs") + TextFormatting.RESET);
 
-                RefinedStorageUtils.combineMultipleItemsInTooltip(list, getInputs(pattern));
+                combineItems(tooltip, true, getInputs(pattern));
 
-                list.add(TextFormatting.YELLOW + I18n.format("misc.refinedstorage:pattern.outputs") + TextFormatting.RESET);
+                tooltip.add(TextFormatting.YELLOW + I18n.format("misc.refinedstorage:pattern.outputs") + TextFormatting.RESET);
             }
 
-            RefinedStorageUtils.combineMultipleItemsInTooltip(list, getOutputs(pattern));
+            combineItems(tooltip, true, getOutputs(pattern));
+        }
+    }
+
+    public static void combineItems(List<String> tooltip, boolean displayAmount, ItemStack... stacks) {
+        Set<Integer> combinedIndices = new HashSet<>();
+
+        for (int i = 0; i < stacks.length; ++i) {
+            if (stacks[i] != null && !combinedIndices.contains(i)) {
+                String data = stacks[i].getDisplayName();
+
+                int amount = stacks[i].stackSize;
+
+                for (int j = i + 1; j < stacks.length; ++j) {
+                    if (CompareUtils.compareStack(stacks[i], stacks[j])) {
+                        amount += stacks[j].stackSize;
+
+                        combinedIndices.add(j);
+                    }
+                }
+
+                data = (displayAmount ? (TextFormatting.WHITE + String.valueOf(amount) + " ") : "") + TextFormatting.GRAY + data;
+
+                tooltip.add(data);
+            }
         }
     }
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
         if (!world.isRemote && player.isSneaking()) {
-            return new ActionResult(EnumActionResult.SUCCESS, new ItemStack(RefinedStorageItems.PATTERN));
+            return new ActionResult<>(EnumActionResult.SUCCESS, new ItemStack(RefinedStorageItems.PATTERN));
         }
 
-        return new ActionResult(EnumActionResult.PASS, stack);
+        return new ActionResult<>(EnumActionResult.PASS, stack);
     }
 
     public static void addInput(ItemStack pattern, ItemStack stack) {

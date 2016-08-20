@@ -4,11 +4,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.items.ItemHandlerHelper;
-import refinedstorage.RefinedStorageUtils;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.api.network.NetworkUtils;
+import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.apiimpl.storage.fluid.FluidUtils;
 
 public class ProcessingCraftingTask implements ICraftingTask {
     public static final int ID = 1;
@@ -32,9 +34,9 @@ public class ProcessingCraftingTask implements ICraftingTask {
 
     public ProcessingCraftingTask(NBTTagCompound tag, ICraftingPattern pattern) {
         this.pattern = pattern;
-        this.inserted = RefinedStorageUtils.readBooleanArray(tag, NBT_INSERTED);
-        this.childTasks = RefinedStorageUtils.readBooleanArray(tag, NBT_CHILD_TASKS);
-        this.satisfied = RefinedStorageUtils.readBooleanArray(tag, NBT_SATISFIED);
+        this.inserted = BasicCraftingTask.readBooleanArray(tag, NBT_INSERTED);
+        this.childTasks = BasicCraftingTask.readBooleanArray(tag, NBT_CHILD_TASKS);
+        this.satisfied = BasicCraftingTask.readBooleanArray(tag, NBT_SATISFIED);
     }
 
     @Override
@@ -52,7 +54,7 @@ public class ProcessingCraftingTask implements ICraftingTask {
             for (int i = 0; i < inserted.length; ++i) {
                 if (!inserted[i]) {
                     ItemStack input = pattern.getInputs()[i];
-                    ItemStack took = RefinedStorageUtils.extractItem(network, input, 1);
+                    ItemStack took = FluidUtils.extractItemOrIfBucketLookInFluids(network, input, 1);
 
                     if (took != null) {
                         if (ItemHandlerHelper.insertItem(container.getConnectedItems(), took, true) == null) {
@@ -63,7 +65,7 @@ public class ProcessingCraftingTask implements ICraftingTask {
                             network.insertItem(took, took.stackSize, false);
                         }
                     } else if (!childTasks[i]) {
-                        ICraftingPattern pattern = RefinedStorageUtils.getPattern(network, input);
+                        ICraftingPattern pattern = NetworkUtils.getPattern(network, input);
 
                         if (pattern != null) {
                             childTasks[i] = true;
@@ -92,7 +94,7 @@ public class ProcessingCraftingTask implements ICraftingTask {
 
     public boolean onInserted(ItemStack stack) {
         for (int i = 0; i < pattern.getOutputs().length; ++i) {
-            if (!satisfied[i] && RefinedStorageUtils.compareStackNoQuantity(stack, pattern.getOutputs()[i])) {
+            if (!satisfied[i] && CompareUtils.compareStackNoQuantity(stack, pattern.getOutputs()[i])) {
                 satisfied[i] = true;
 
                 return true;
@@ -118,9 +120,9 @@ public class ProcessingCraftingTask implements ICraftingTask {
         pattern.writeToNBT(patternTag);
         tag.setTag(CraftingPattern.NBT, patternTag);
 
-        RefinedStorageUtils.writeBooleanArray(tag, NBT_INSERTED, inserted);
-        RefinedStorageUtils.writeBooleanArray(tag, NBT_CHILD_TASKS, childTasks);
-        RefinedStorageUtils.writeBooleanArray(tag, NBT_SATISFIED, satisfied);
+        BasicCraftingTask.writeBooleanArray(tag, NBT_INSERTED, inserted);
+        BasicCraftingTask.writeBooleanArray(tag, NBT_CHILD_TASKS, childTasks);
+        BasicCraftingTask.writeBooleanArray(tag, NBT_SATISFIED, satisfied);
 
         tag.setInteger("Type", ID);
     }

@@ -1,25 +1,34 @@
 package refinedstorage.tile;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import refinedstorage.RefinedStorageUtils;
+import net.minecraft.world.World;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.INetworkNode;
+import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.block.BlockNode;
-import refinedstorage.tile.config.IRedstoneModeConfig;
+import refinedstorage.tile.config.IRedstoneConfigurable;
 import refinedstorage.tile.config.RedstoneMode;
+import refinedstorage.tile.data.TileDataParameter;
 
-public abstract class TileNode extends TileBase implements INetworkNode, ISynchronizedContainer, IRedstoneModeConfig {
+public abstract class TileNode extends TileBase implements INetworkNode, IRedstoneConfigurable {
+    public static final TileDataParameter<Integer> REDSTONE_MODE = RedstoneMode.createParameter();
+
     private static final String NBT_CONNECTED = "Connected";
 
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
     private boolean active;
     private boolean update;
 
+    protected boolean rebuildOnUpdateChange;
     protected boolean connected;
     protected INetworkMaster network;
+
+    public TileNode() {
+        dataManager.addWatchedParameter(REDSTONE_MODE);
+    }
 
     @Override
     public boolean canUpdate() {
@@ -43,10 +52,14 @@ public abstract class TileNode extends TileBase implements INetworkNode, ISynchr
                 update = canUpdate();
 
                 onConnectionChange(network, update);
+
+                if (rebuildOnUpdateChange) {
+                    NetworkUtils.rebuildGraph(network);
+                }
             }
 
             if (active != isActive() && canSendConnectivityUpdate()) {
-                RefinedStorageUtils.updateBlock(worldObj, pos);
+                updateBlock();
 
                 active = isActive();
             }
@@ -81,13 +94,18 @@ public abstract class TileNode extends TileBase implements INetworkNode, ISynchr
     }
 
     @Override
-    public boolean canConduct() {
+    public boolean canConduct(EnumFacing direction) {
         return true;
     }
 
     @Override
     public INetworkMaster getNetwork() {
         return network;
+    }
+
+    @Override
+    public World getNodeWorld() {
+        return worldObj;
     }
 
     @Override
@@ -117,21 +135,11 @@ public abstract class TileNode extends TileBase implements INetworkNode, ISynchr
     }
 
     @Override
-    public void readContainerData(ByteBuf buf) {
-        redstoneMode = RedstoneMode.getById(buf.readInt());
-    }
+    public void read(NBTTagCompound tag) {
+        super.read(tag);
 
-    @Override
-    public void writeContainerData(ByteBuf buf) {
-        buf.writeInt(redstoneMode.id);
-    }
-
-    @Override
-    public void read(NBTTagCompound nbt) {
-        super.read(nbt);
-
-        if (nbt.hasKey(RedstoneMode.NBT)) {
-            redstoneMode = RedstoneMode.getById(nbt.getInteger(RedstoneMode.NBT));
+        if (tag.hasKey(RedstoneMode.NBT)) {
+            redstoneMode = RedstoneMode.getById(tag.getInteger(RedstoneMode.NBT));
         }
     }
 
@@ -139,7 +147,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, ISynchr
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        tag.setInteger(RedstoneMode.NBT, redstoneMode.id);
+        tag.setInteger(RedstoneMode.NBT, redstoneMode.ordinal());
 
         return tag;
     }

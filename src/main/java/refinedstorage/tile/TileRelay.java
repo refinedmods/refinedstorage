@@ -1,43 +1,27 @@
 package refinedstorage.tile;
 
-import net.minecraft.inventory.Container;
+import net.minecraft.util.EnumFacing;
 import refinedstorage.RefinedStorage;
-import refinedstorage.container.ContainerRelay;
 import refinedstorage.tile.config.RedstoneMode;
 
 public class TileRelay extends TileNode {
-    private boolean couldUpdate;
-
     public TileRelay() {
         setRedstoneMode(RedstoneMode.LOW);
+
+        rebuildOnUpdateChange = true;
     }
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.relayUsage;
+        return getRedstoneMode() == RedstoneMode.IGNORE ? 0 : RefinedStorage.INSTANCE.relayUsage;
     }
 
     @Override
     public void updateNode() {
     }
 
-    public void update() {
-        super.update();
-
-        if (network != null && couldUpdate != canUpdate()) {
-            couldUpdate = canUpdate();
-
-            network.rebuildNodes();
-        }
-    }
-
     @Override
-    public boolean canConduct() {
+    public boolean canConduct(EnumFacing direction) {
         return canUpdate();
-    }
-
-    @Override
-    public Class<? extends Container> getContainer() {
-        return ContainerRelay.class;
     }
 }

@@ -1,0 +1,25 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "cube_all",
+    "textures": {
+      "all": "refinedstorage:blocks/fluid_interface_disconnected"
+    }
+  },
+  "variants": {
+    "inventory": [
+      {
+        "transform": "forge:default-block"
+      }
+    ],
+    "connected": {
+      "true": {
+        "textures": {
+          "all": "refinedstorage:blocks/fluid_interface_connected"
+        }
+      },
+      "false": {
+      }
+    }
+  }
+}

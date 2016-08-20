@@ -10,3 +10,4 @@
 ## Translations
 - ChaoticTabris (Portuguese (Brazilian) translation)
 - Leventovitch (French translation)
+- ChillUpX (German translation)

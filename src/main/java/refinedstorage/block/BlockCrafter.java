@@ -33,7 +33,7 @@ public class BlockCrafter extends BlockNode {
 
     @Override
     public EnumPlacementType getPlacementType() {
-        return EnumPlacementType.ANY;
+        return EnumPlacementType.ANY_FACE_PLAYER;
     }
 
     public boolean hasConnectivityState() {

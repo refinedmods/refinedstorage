@@ -30,6 +30,14 @@ gui.refinedstorage:crafter=Crafter
 gui.refinedstorage:crafter.processing=Verwerking
 gui.refinedstorage:processing_pattern_encoder=Verwerkingspatroon Codeerder
 gui.refinedstorage:processing_pattern_encoder.pattern_create=Patroon maken
+gui.refinedstorage:grid_filter=Rooster Filter
+gui.refinedstorage:grid_filter.compare_damage=Schade
+gui.refinedstorage:grid_filter.compare_nbt=NBT
+gui.refinedstorage:network_transmitter=Netwerkzender
+gui.refinedstorage:network_transmitter.distance=%d blokken
+gui.refinedstorage:network_transmitter.dimension=Dimensie %d
+gui.refinedstorage:network_transmitter.missing_card=Geen Netwerkkaart
+gui.refinedstorage:network_transmitter.missing_upgrade=Ontbrekende upgrade
 
 misc.refinedstorage:energy_stored=%d / %d RS
 misc.refinedstorage:energy_usage=Vebruik: %d RS/t
@@ -41,11 +49,11 @@ misc.refinedstorage:storage.stored_minimal=%d
 misc.refinedstorage:storage.stored_capacity_minimal=%d / %d
 misc.refinedstorage:storage.full=%d%% vol
 
-misc.refinedstorage:wireless_grid.tooltip.0=X: %d
-misc.refinedstorage:wireless_grid.tooltip.1=Y: %d
-misc.refinedstorage:wireless_grid.tooltip.2=Z: %d
+misc.refinedstorage:wireless_grid.tooltip=Gelinkt aan %d, %d, %d.
 misc.refinedstorage:wireless_grid.out_of_range=Er is geen Draadloze Zender binnen bereik.
 misc.refinedstorage:wireless_grid.not_found=Controller niet gevonden.
+
+misc.refinedstorage:network_card.tooltip=Gelinkt aan %d, %d, %d.
 
 misc.refinedstorage:pattern.inputs=Inputs
 misc.refinedstorage:pattern.outputs=Outputs
@@ -63,6 +71,10 @@ sidebutton.refinedstorage:redstone_mode.0=Redstone negeren
 sidebutton.refinedstorage:redstone_mode.1=Alleen werken met redstone signaal
 sidebutton.refinedstorage:redstone_mode.2=Alleen werken zonder redstone signaal
 
+sidebutton.refinedstorage:grid.view_type=Weergave
+sidebutton.refinedstorage:grid.view_type.0=Normaal
+sidebutton.refinedstorage:grid.view_type.1=Geen craftables
+sidebutton.refinedstorage:grid.view_type.2=Alleen craftables
 sidebutton.refinedstorage:grid.sorting.direction=Sorteer Richting
 sidebutton.refinedstorage:grid.sorting.direction.0=Oplopend
 sidebutton.refinedstorage:grid.sorting.direction.1=Aflopend
@@ -110,6 +122,8 @@ block.refinedstorage:crafting_monitor.name=Crafting Monitor
 block.refinedstorage:wireless_transmitter.name=Draadloze Zender
 block.refinedstorage:crafter.name=Crafter
 block.refinedstorage:processing_pattern_encoder.name=Verwerkingspatroon Codeerder
+block.refinedstorage:network_receiver.name=Netwerkontvanger
+block.refinedstorage:network_transmitter.name=Netwerkzender
 
 item.refinedstorage:storage_disk.0.name=1k Opslagschijf
 item.refinedstorage:storage_disk.1.name=4k Opslagschijf
@@ -140,4 +154,7 @@ item.refinedstorage:upgrade.1.name=Afstand Upgrade
 item.refinedstorage:upgrade.2.name=Snelheid Upgrade
 item.refinedstorage:upgrade.3.name=Crafting Upgrade
 item.refinedstorage:upgrade.4.name=Stack Upgrade
+item.refinedstorage:upgrade.5.name=Interdimensionale Upgrade
 item.refinedstorage:storage_housing.name=Opslagomhulsel
+item.refinedstorage:grid_filter.name=Rooster Filter
+item.refinedstorage:network_card.name=Netwerk Kaart

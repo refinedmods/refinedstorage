@@ -12,12 +12,15 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "0.8.11"
+version = "0.9"
 group = "refinedstorage"
 archivesBaseName = "refinedstorage"
 
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
 minecraft {
-    version = "1.10.2-12.18.1.2014"
+    version = "1.10.2-12.18.1.2065"
     runDir = "run"
     useDepAts = true
     mappings = "snapshot_20160518"
@@ -34,12 +37,16 @@ repositories {
         name = "ic2"
         url = "http://maven.ic2.player.to/"
     }
+    maven {
+        url "http://maven.amadornes.com/"
+    }
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.10.2:3.7.+"
-    compile "net.darkhax.tesla:Tesla:1.10-1.2.0.34"
-    compile "net.industrial-craft:industrialcraft-2:2.6.9-ex110:api"
+    deobfCompile "mezz.jei:jei_1.10.2:3.9.+"
+    compile "net.darkhax.tesla:Tesla:1.10-1.2.+"
+    compile "net.industrial-craft:industrialcraft-2:2.6.41-ex110:api"
+    deobfCompile "MCMultiPart:MCMultiPart:1.2.1+:universal"
 }
 
 processResources {

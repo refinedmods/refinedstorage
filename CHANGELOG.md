@@ -1,13 +1,101 @@
 # Refined Storage Changelog
 
+### 0.9
+**Bugfixes**
+- Fixed crash with Grid
+- Fixed Grid Filter only updating the Grid when reopening the GUI
+- Priority field and detector amount field can now display 4 digits at a time
+
+**Features**
+- Added fluid storage
+- Energy usage of Wireless Grid is now configurable
+
+### 0.8.20
+**Bugfixes**
+- Fixed crash with Grid
+
+### 0.8.19
+**Bugfixes**
+- Fixed item duplication bug with External Storage
+- Fixed External Storage taking too long to update storage
+- Fixed crash with Grid
+- Fixed crash when shift clicking unsupported item in a slot
+
+### 0.8.18
+**Bugfixes**
+- Fixed Detector mode not persisting
+- Fixed bug where scrollbar didn't scroll correctly and thus hiding some items
+- Fixed Network Transmitter not dropping inventory when broken
+
+### 0.8.17
+**Bugfixes**
+- Fixed Grid causing sorting lag on the client
+
+### 0.8.16
+**Bugfixes**
+- Fixed issue with IC2 integration causing console spam
+- Slight performance increase and network efficiency improvement in all GUI's
+- Slight performance increase in Grid GUI
+- Fixed not being able to change some configs in blocks
+- Fixed serverside configs not syncing up with clientside
+- Fixed not being able to move inventory items in Grid GUI's to hotbar via the number keys
+- Fixed Relays when being in "Ignore Redstone" mode using up energy
+- Fixed Crafter facing bottom side on placement
+- Improved collisions of Cable parts
+- You now have to click the actual cable part head in order to get the GUI open
+
+**Features**
+- Added German translation by ChillUpX
+- Grid Filters can now only filter 9 items, but, Grids take 4 filters now instead
+- Grid Filters can now be configured to compare on NBT and/ or damage
+- It is now possible to shift click items to the Storage Device filters
+- Updated to Forge 2046
+- Updated Tesla
+- Java 8 is now a requirement
+- Added MCMultiPart integration for Cable Parts
+
+### 0.8.15
+**Bugfixes**
+- Fixed server startup crash
+
+### 0.8.14
+**Features**
+- Added Interdimensional Upgrade so the Network Transmitter can work over different dimensions
+
+### 0.8.13
+**Bugfixes**
+- Fixed rendering crash with Disk Drive
+- Fixed crash when quickly toggling sorting direction in Grid
+- Fixed not being able to clear exporter row in interface
+
+**Features**
+- Added config option to set the base energy usage of the Controller (default is 0)
+- Added Grid Filter item to filter items in any Grid
+- Added support for processing patterns with big stacksizes
+- Added Network Transmitter, Network Receiver and Network Cards
+- The slot where the Wireless Grid is in in the Wireless Grid GUI is now disabled, so the item can't be thrown out of the inventory by accident
+- Changed Relay recipe to use redstone torch instead of Basic Processor
+- Placed machines now face the block they are placed on, like hoppers
+
+**NOTE:** Config change: the config options for the energy capacity of the Controller and wether the Controller uses energy are now in a different config category called "controller", if you changed these config options, don't forget the change it under the new category.
+
+### 0.8.12
+**Bugfixes**
+- Fixed dupe bug when shift clicking output slot in grid
+
 ### 0.8.11
 **Bugfixes**
 - Fixed minor dupe bug with JEI transferring
 - Fixed exporter crafting upgrades taking priority over other tasks
+- Solderer upgrades go to upgrades slots first now when shift clicking
 - Fixed NPE with incorrectly initialized disks
+- Fixed not being able to take out items of Grid 2K16
+- Fixed not being able to start autocrafting for certain items (most notably IC2 items)
 
 **Features**
 - Added X button to Processing Pattern Encoder to clear configuration of inputs and outputs
+- Added Grid view toggle buttons (regular, craftable items only, no craftable items)
+- Added ability to shift click items into Importer, Exporter, Constructor, Destructor and Detector to set up whitelist / blacklist configurations easier
 - Re-added opposite facing on shift click functionality
 - Updated to Forge 2014
 

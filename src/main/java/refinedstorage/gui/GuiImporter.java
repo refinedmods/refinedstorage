@@ -1,29 +1,28 @@
 package refinedstorage.gui;
 
-import refinedstorage.api.storage.CompareFlags;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.container.ContainerImporter;
 import refinedstorage.gui.sidebutton.SideButtonCompare;
 import refinedstorage.gui.sidebutton.SideButtonMode;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
+import refinedstorage.gui.sidebutton.SideButtonType;
 import refinedstorage.tile.TileImporter;
 
 public class GuiImporter extends GuiBase {
-    private TileImporter importer;
-
-    public GuiImporter(ContainerImporter container, TileImporter importer) {
+    public GuiImporter(ContainerImporter container) {
         super(container, 211, 137);
-
-        this.importer = importer;
     }
 
     @Override
     public void init(int x, int y) {
-        addSideButton(new SideButtonRedstoneMode(importer));
+        addSideButton(new SideButtonRedstoneMode(TileImporter.REDSTONE_MODE));
 
-        addSideButton(new SideButtonMode(importer));
+        addSideButton(new SideButtonType(TileImporter.TYPE));
 
-        addSideButton(new SideButtonCompare(importer, CompareFlags.COMPARE_DAMAGE));
-        addSideButton(new SideButtonCompare(importer, CompareFlags.COMPARE_NBT));
+        addSideButton(new SideButtonMode(TileImporter.MODE));
+
+        addSideButton(new SideButtonCompare(TileImporter.COMPARE, CompareUtils.COMPARE_DAMAGE));
+        addSideButton(new SideButtonCompare(TileImporter.COMPARE, CompareUtils.COMPARE_NBT));
     }
 
     @Override

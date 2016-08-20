@@ -1,24 +1,19 @@
 package refinedstorage.tile;
 
-import net.minecraftforge.items.IItemHandler;
-import refinedstorage.tile.config.ICompareConfig;
-import refinedstorage.tile.config.IModeConfig;
-import refinedstorage.tile.config.IRedstoneModeConfig;
+import refinedstorage.tile.data.TileDataParameter;
 
 public interface IStorageGui {
     String getGuiTitle();
 
-    int getPriority();
+    TileDataParameter<Integer> getTypeParameter();
 
-    void onPriorityChanged(int priority);
+    TileDataParameter<Integer> getRedstoneModeParameter();
 
-    IItemHandler getFilters();
+    TileDataParameter<Integer> getCompareParameter();
 
-    IRedstoneModeConfig getRedstoneModeConfig();
+    TileDataParameter<Integer> getFilterParameter();
 
-    ICompareConfig getCompareConfig();
-
-    IModeConfig getModeConfig();
+    TileDataParameter<Integer> getPriorityParameter();
 
     int getStored();
 

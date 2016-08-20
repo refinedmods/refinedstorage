@@ -1,11 +1,13 @@
 package refinedstorage.container;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.slot.*;
+import refinedstorage.tile.TileBase;
 import refinedstorage.tile.grid.IGrid;
 import refinedstorage.tile.grid.TileGrid;
 import refinedstorage.tile.grid.WirelessGrid;
@@ -16,8 +18,8 @@ public class ContainerGrid extends ContainerBase {
     private SlotGridCraftingResult craftingResultSlot;
     private SlotDisabled patternResultSlot;
 
-    public ContainerGrid(EntityPlayer player, IGrid grid) {
-        super(player);
+    public ContainerGrid(IGrid grid, EntityPlayer player) {
+        super(grid instanceof TileBase ? (TileBase) grid : null, player);
 
         this.grid = grid;
 
@@ -59,6 +61,12 @@ public class ContainerGrid extends ContainerBase {
             addSlotToContainer(new SlotItemHandler(((TileGrid) grid).getPatterns(), 0, 152, 96));
             addSlotToContainer(new SlotOutput(((TileGrid) grid).getPatterns(), 1, 152, 132));
         }
+
+        if (grid.getType() != EnumGridType.FLUID) {
+            for (int i = 0; i < 4; ++i) {
+                addSlotToContainer(new SlotItemHandler(grid.getFilter(), i, 204, 6 + (18 * i)));
+            }
+        }
     }
 
     public IGrid getGrid() {
@@ -96,12 +104,18 @@ public class ContainerGrid extends ContainerBase {
         if (!player.worldObj.isRemote) {
             Slot slot = inventorySlots.get(slotIndex);
 
-            if (slot == craftingResultSlot) {
-                ((TileGrid) grid).onCraftedShift(this, player);
-            } else if (grid.getGridHandler() != null && slot != patternResultSlot && !(slot instanceof SlotSpecimenLegacy) && slot.getHasStack()) {
-                slot.putStack(grid.getGridHandler().onInsert(slot.getStack()));
+            if (slot.getHasStack()) {
+                if (slot == craftingResultSlot) {
+                    ((TileGrid) grid).onCraftedShift(this, player);
+                } else if (slot != patternResultSlot && !(slot instanceof SlotSpecimenLegacy)) {
+                    if (grid.getType() != EnumGridType.FLUID && grid.getItemHandler() != null) {
+                        slot.putStack(grid.getItemHandler().onInsert((EntityPlayerMP) player, slot.getStack()));
+                    } else if (grid.getType() == EnumGridType.FLUID && grid.getFluidHandler() != null) {
+                        slot.putStack(grid.getFluidHandler().onInsert(slot.getStack()));
+                    }
 
-                detectAndSendChanges();
+                    detectAndSendChanges();
+                }
             }
         }
 

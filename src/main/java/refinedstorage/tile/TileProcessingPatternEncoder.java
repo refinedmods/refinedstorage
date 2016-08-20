@@ -6,32 +6,32 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorageItems;
-import refinedstorage.RefinedStorageUtils;
-import refinedstorage.inventory.BasicItemHandler;
-import refinedstorage.inventory.BasicItemValidator;
+import refinedstorage.inventory.ItemHandlerBasic;
+import refinedstorage.inventory.ItemValidatorBasic;
 import refinedstorage.item.ItemPattern;
 
 public class TileProcessingPatternEncoder extends TileBase {
-    private BasicItemHandler patterns = new BasicItemHandler(2, this, new BasicItemValidator(RefinedStorageItems.PATTERN));
-    private BasicItemHandler configuration = new BasicItemHandler(9 * 2, this);
+    private ItemHandlerBasic patterns = new ItemHandlerBasic(2, this, new ItemValidatorBasic(RefinedStorageItems.PATTERN));
+    private ItemHandlerBasic configuration = new ItemHandlerBasic(9 * 2, this);
 
     @Override
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        RefinedStorageUtils.writeItems(patterns, 0, tag);
-        RefinedStorageUtils.writeItems(configuration, 1, tag);
+        writeItems(patterns, 0, tag);
+        writeItems(configuration, 1, tag);
 
         return tag;
     }
 
     @Override
-    public void read(NBTTagCompound nbt) {
-        super.read(nbt);
+    public void read(NBTTagCompound tag) {
+        super.read(tag);
 
-        RefinedStorageUtils.readItems(patterns, 0, nbt);
-        RefinedStorageUtils.readItems(configuration, 1, nbt);
+        readItems(patterns, 0, tag);
+        readItems(configuration, 1, tag);
     }
 
     public void onCreatePattern() {
@@ -42,10 +42,12 @@ public class TileProcessingPatternEncoder extends TileBase {
 
             for (int i = 0; i < 18; ++i) {
                 if (configuration.getStackInSlot(i) != null) {
-                    if (i >= 9) {
-                        ItemPattern.addOutput(pattern, configuration.getStackInSlot(i));
-                    } else {
-                        ItemPattern.addInput(pattern, configuration.getStackInSlot(i));
+                    for (int j = 0; j < configuration.getStackInSlot(i).stackSize; ++j) {
+                        if (i >= 9) {
+                            ItemPattern.addOutput(pattern, ItemHandlerHelper.copyStackWithSize(configuration.getStackInSlot(i), 1));
+                        } else {
+                            ItemPattern.addInput(pattern, ItemHandlerHelper.copyStackWithSize(configuration.getStackInSlot(i), 1));
+                        }
                     }
                 }
             }
@@ -73,16 +75,16 @@ public class TileProcessingPatternEncoder extends TileBase {
         return inputsFilled > 0 && outputsFilled > 0 && patterns.getStackInSlot(0) != null && patterns.getStackInSlot(1) == null;
     }
 
-    public BasicItemHandler getPatterns() {
+    public ItemHandlerBasic getPatterns() {
         return patterns;
     }
 
-    public BasicItemHandler getConfiguration() {
+    public ItemHandlerBasic getConfiguration() {
         return configuration;
     }
 
     @Override
-    public IItemHandler getDroppedItems() {
+    public IItemHandler getDrops() {
         return patterns;
     }
 

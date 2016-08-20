@@ -5,17 +5,13 @@ import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.tile.TileWirelessTransmitter;
 
 public class GuiWirelessTransmitter extends GuiBase {
-    private TileWirelessTransmitter wirelessTransmitter;
-
-    public GuiWirelessTransmitter(ContainerWirelessTransmitter container, TileWirelessTransmitter wirelessTransmitter) {
+    public GuiWirelessTransmitter(ContainerWirelessTransmitter container) {
         super(container, 211, 137);
-
-        this.wirelessTransmitter = wirelessTransmitter;
     }
 
     @Override
     public void init(int x, int y) {
-        addSideButton(new SideButtonRedstoneMode(wirelessTransmitter));
+        addSideButton(new SideButtonRedstoneMode(TileWirelessTransmitter.REDSTONE_MODE));
     }
 
     @Override
@@ -32,7 +28,7 @@ public class GuiWirelessTransmitter extends GuiBase {
     @Override
     public void drawForeground(int mouseX, int mouseY) {
         drawString(7, 7, t("gui.refinedstorage:wireless_transmitter"));
-        drawString(28, 25, t("gui.refinedstorage:wireless_transmitter.distance", wirelessTransmitter.getRange()));
+        drawString(28, 25, t("gui.refinedstorage:wireless_transmitter.distance", TileWirelessTransmitter.RANGE.getValue()));
         drawString(7, 43, t("container.inventory"));
     }
 }

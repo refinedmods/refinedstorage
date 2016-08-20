@@ -10,12 +10,7 @@ public abstract class MessageHandlerPlayerToServer<T extends IMessage> implement
     public IMessage onMessage(final T message, MessageContext context) {
         final EntityPlayerMP player = context.getServerHandler().playerEntity;
 
-        player.getServerWorld().addScheduledTask(new Runnable() {
-            @Override
-            public void run() {
-                handle(message, player);
-            }
-        });
+        player.getServerWorld().addScheduledTask(() -> handle(message, player));
 
         return null;
     }

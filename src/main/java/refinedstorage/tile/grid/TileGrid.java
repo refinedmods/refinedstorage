@@ -1,37 +1,115 @@
 package refinedstorage.tile.grid;
 
-import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageItems;
-import refinedstorage.RefinedStorageUtils;
-import refinedstorage.api.network.IGridHandler;
+import refinedstorage.api.network.NetworkUtils;
+import refinedstorage.api.network.grid.IFluidGridHandler;
+import refinedstorage.api.network.grid.IItemGridHandler;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.block.BlockGrid;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
-import refinedstorage.inventory.BasicItemHandler;
-import refinedstorage.inventory.BasicItemValidator;
+import refinedstorage.gui.grid.GridFilteredItem;
+import refinedstorage.gui.grid.GuiGrid;
+import refinedstorage.inventory.ItemHandlerBasic;
+import refinedstorage.inventory.ItemHandlerGridFilterInGrid;
+import refinedstorage.inventory.ItemValidatorBasic;
 import refinedstorage.item.ItemPattern;
-import refinedstorage.network.MessageGridSettingsUpdate;
 import refinedstorage.tile.TileNode;
-import refinedstorage.tile.config.IRedstoneModeConfig;
+import refinedstorage.tile.data.ITileDataConsumer;
+import refinedstorage.tile.data.ITileDataProducer;
+import refinedstorage.tile.data.TileDataManager;
+import refinedstorage.tile.data.TileDataParameter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TileGrid extends TileNode implements IGrid {
-    private static final String NBT_SORTING_DIRECTION = "SortingDirection";
-    private static final String NBT_SORTING_TYPE = "SortingType";
-    private static final String NBT_SEARCH_BOX_MODE = "SearchBoxMode";
+    public static final TileDataParameter<Integer> VIEW_TYPE = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileGrid>() {
+        @Override
+        public Integer getValue(TileGrid tile) {
+            return tile.viewType;
+        }
+    }, new ITileDataConsumer<Integer, TileGrid>() {
+        @Override
+        public void setValue(TileGrid tile, Integer value) {
+            if (isValidViewType(value)) {
+                tile.viewType = value;
+
+                tile.markDirty();
+            }
+        }
+    }, parameter -> GuiGrid.markForSorting());
+
+    public static final TileDataParameter<Integer> SORTING_DIRECTION = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileGrid>() {
+        @Override
+        public Integer getValue(TileGrid tile) {
+            return tile.sortingDirection;
+        }
+    }, new ITileDataConsumer<Integer, TileGrid>() {
+        @Override
+        public void setValue(TileGrid tile, Integer value) {
+            if (isValidSortingDirection(value)) {
+                tile.sortingDirection = value;
+
+                tile.markDirty();
+            }
+        }
+    }, parameter -> GuiGrid.markForSorting());
+
+    public static final TileDataParameter<Integer> SORTING_TYPE = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileGrid>() {
+        @Override
+        public Integer getValue(TileGrid tile) {
+            return tile.sortingType;
+        }
+    }, new ITileDataConsumer<Integer, TileGrid>() {
+        @Override
+        public void setValue(TileGrid tile, Integer value) {
+            if (isValidSortingType(value)) {
+                tile.sortingType = value;
+
+                tile.markDirty();
+            }
+        }
+    }, parameter -> GuiGrid.markForSorting());
+
+    public static final TileDataParameter<Integer> SEARCH_BOX_MODE = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileGrid>() {
+        @Override
+        public Integer getValue(TileGrid tile) {
+            return tile.searchBoxMode;
+        }
+    }, new ITileDataConsumer<Integer, TileGrid>() {
+        @Override
+        public void setValue(TileGrid tile, Integer value) {
+            if (isValidSearchBoxMode(value)) {
+                tile.searchBoxMode = value;
+
+                tile.markDirty();
+            }
+        }
+    }, parameter -> {
+        if (Minecraft.getMinecraft().currentScreen instanceof GuiGrid) {
+            ((GuiGrid) Minecraft.getMinecraft().currentScreen).updateSearchFieldFocus(parameter.getValue());
+        }
+    });
+
+    public static final String NBT_VIEW_TYPE = "ViewType";
+    public static final String NBT_SORTING_DIRECTION = "SortingDirection";
+    public static final String NBT_SORTING_TYPE = "SortingType";
+    public static final String NBT_SEARCH_BOX_MODE = "SearchBoxMode";
 
     public static final int SORTING_DIRECTION_ASCENDING = 0;
     public static final int SORTING_DIRECTION_DESCENDING = 1;
@@ -43,6 +121,10 @@ public class TileGrid extends TileNode implements IGrid {
     public static final int SEARCH_BOX_MODE_NORMAL_AUTOSELECTED = 1;
     public static final int SEARCH_BOX_MODE_JEI_SYNCHRONIZED = 2;
     public static final int SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED = 3;
+
+    public static final int VIEW_TYPE_NORMAL = 0;
+    public static final int VIEW_TYPE_NON_CRAFTABLES = 1;
+    public static final int VIEW_TYPE_CRAFTABLES = 2;
 
     private Container craftingContainer = new Container() {
         @Override
@@ -58,13 +140,23 @@ public class TileGrid extends TileNode implements IGrid {
     private InventoryCrafting matrix = new InventoryCrafting(craftingContainer, 3, 3);
     private InventoryCraftResult result = new InventoryCraftResult();
 
-    private BasicItemHandler patterns = new BasicItemHandler(2, this, new BasicItemValidator(RefinedStorageItems.PATTERN));
+    private ItemHandlerBasic patterns = new ItemHandlerBasic(2, this, new ItemValidatorBasic(RefinedStorageItems.PATTERN));
+    private List<GridFilteredItem> filteredItems = new ArrayList<>();
+    private ItemHandlerGridFilterInGrid filter = new ItemHandlerGridFilterInGrid(filteredItems);
 
     private EnumGridType type;
 
+    private int viewType = VIEW_TYPE_NORMAL;
     private int sortingDirection = SORTING_DIRECTION_DESCENDING;
     private int sortingType = SORTING_TYPE_NAME;
     private int searchBoxMode = SEARCH_BOX_MODE_NORMAL;
+
+    public TileGrid() {
+        dataManager.addWatchedParameter(VIEW_TYPE);
+        dataManager.addWatchedParameter(SORTING_DIRECTION);
+        dataManager.addWatchedParameter(SORTING_TYPE);
+        dataManager.addWatchedParameter(SEARCH_BOX_MODE);
+    }
 
     @Override
     public int getEnergyUsage() {
@@ -75,6 +167,8 @@ public class TileGrid extends TileNode implements IGrid {
                 return RefinedStorage.INSTANCE.craftingGridUsage;
             case PATTERN:
                 return RefinedStorage.INSTANCE.patternGridUsage;
+            case FLUID:
+                return RefinedStorage.INSTANCE.fluidGridUsage;
             default:
                 return 0;
         }
@@ -99,13 +193,27 @@ public class TileGrid extends TileNode implements IGrid {
 
     public void onGridOpened(EntityPlayer player) {
         if (isConnected()) {
-            network.sendStorageToClient((EntityPlayerMP) player);
+            if (getType() == EnumGridType.FLUID) {
+                network.sendFluidStorageToClient((EntityPlayerMP) player);
+            } else {
+                network.sendItemStorageToClient((EntityPlayerMP) player);
+            }
         }
     }
 
     @Override
-    public IGridHandler getGridHandler() {
-        return isConnected() ? network.getGridHandler() : null;
+    public IItemGridHandler getItemHandler() {
+        return isConnected() ? network.getItemGridHandler() : null;
+    }
+
+    @Override
+    public IFluidGridHandler getFluidHandler() {
+        return isConnected() ? network.getFluidGridHandler() : null;
+    }
+
+    @Override
+    public String getGuiTitle() {
+        return getType() == EnumGridType.FLUID ? "gui.refinedstorage:fluid_grid" : "gui.refinedstorage:grid";
     }
 
     public InventoryCrafting getMatrix() {
@@ -118,6 +226,16 @@ public class TileGrid extends TileNode implements IGrid {
 
     public IItemHandler getPatterns() {
         return patterns;
+    }
+
+    @Override
+    public ItemHandlerBasic getFilter() {
+        return filter;
+    }
+
+    @Override
+    public List<GridFilteredItem> getFilteredItems() {
+        return filteredItems;
     }
 
     public void onCraftingMatrixChanged() {
@@ -145,7 +263,7 @@ public class TileGrid extends TileNode implements IGrid {
             } else {
                 if (slot != null) {
                     if (slot.stackSize == 1 && isConnected()) {
-                        matrix.setInventorySlotContents(i, RefinedStorageUtils.extractItem(network, slot, 1));
+                        matrix.setInventorySlotContents(i, NetworkUtils.extractItem(network, slot, 1));
                     } else {
                         matrix.decrStackSize(i, 1);
                     }
@@ -157,7 +275,7 @@ public class TileGrid extends TileNode implements IGrid {
     }
 
     public void onCraftedShift(ContainerGrid container, EntityPlayer player) {
-        List<ItemStack> craftedItemsList = new ArrayList<ItemStack>();
+        List<ItemStack> craftedItemsList = new ArrayList<>();
         int craftedItems = 0;
         ItemStack crafted = result.getStackInSlot(0);
 
@@ -168,7 +286,7 @@ public class TileGrid extends TileNode implements IGrid {
 
             craftedItems += crafted.stackSize;
 
-            if (!RefinedStorageUtils.compareStack(crafted, result.getStackInSlot(0)) || craftedItems + crafted.stackSize > crafted.getMaxStackSize()) {
+            if (!CompareUtils.compareStack(crafted, result.getStackInSlot(0)) || craftedItems + crafted.stackSize > crafted.getMaxStackSize()) {
                 break;
             }
         }
@@ -239,7 +357,7 @@ public class TileGrid extends TileNode implements IGrid {
 
                     if (getType() == EnumGridType.CRAFTING) {
                         for (ItemStack possibility : possibilities) {
-                            ItemStack took = RefinedStorageUtils.extractItem(network, possibility, 1);
+                            ItemStack took = NetworkUtils.extractItem(network, possibility, 1);
 
                             if (took != null) {
                                 matrix.setInventorySlotContents(i, took);
@@ -255,73 +373,73 @@ public class TileGrid extends TileNode implements IGrid {
         }
     }
 
+    @Override
+    public int getViewType() {
+        return worldObj.isRemote ? VIEW_TYPE.getValue() : viewType;
+    }
+
+    @Override
     public int getSortingDirection() {
-        return sortingDirection;
+        return worldObj.isRemote ? SORTING_DIRECTION.getValue() : sortingDirection;
     }
 
-    public void setSortingDirection(int sortingDirection) {
-        this.sortingDirection = sortingDirection;
-
-        markDirty();
-    }
-
+    @Override
     public int getSortingType() {
-        return sortingType;
+        return worldObj.isRemote ? SORTING_TYPE.getValue() : sortingType;
     }
 
-    public void setSortingType(int sortingType) {
-        this.sortingType = sortingType;
-
-        markDirty();
-    }
-
+    @Override
     public int getSearchBoxMode() {
-        return searchBoxMode;
+        return worldObj.isRemote ? SEARCH_BOX_MODE.getValue() : searchBoxMode;
     }
 
-    public void setSearchBoxMode(int searchBoxMode) {
-        this.searchBoxMode = searchBoxMode;
-
-        markDirty();
+    @Override
+    public void onViewTypeChanged(int type) {
+        TileDataManager.setParameter(VIEW_TYPE, type);
     }
 
     @Override
     public void onSortingTypeChanged(int type) {
-        RefinedStorage.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(this, sortingDirection, type, searchBoxMode));
+        TileDataManager.setParameter(SORTING_TYPE, type);
     }
 
     @Override
     public void onSortingDirectionChanged(int direction) {
-        RefinedStorage.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(this, direction, sortingType, searchBoxMode));
+        TileDataManager.setParameter(SORTING_DIRECTION, direction);
     }
 
     @Override
     public void onSearchBoxModeChanged(int searchBoxMode) {
-        RefinedStorage.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(this, sortingDirection, sortingType, searchBoxMode));
+        TileDataManager.setParameter(SEARCH_BOX_MODE, searchBoxMode);
     }
 
     @Override
-    public IRedstoneModeConfig getRedstoneModeConfig() {
-        return this;
+    public TileDataParameter<Integer> getRedstoneModeConfig() {
+        return REDSTONE_MODE;
     }
 
     @Override
-    public void read(NBTTagCompound nbt) {
-        super.read(nbt);
+    public void read(NBTTagCompound tag) {
+        super.read(tag);
 
-        RefinedStorageUtils.readItemsLegacy(matrix, 0, nbt);
-        RefinedStorageUtils.readItems(patterns, 1, nbt);
+        readItemsLegacy(matrix, 0, tag);
+        readItems(patterns, 1, tag);
+        readItems(filter, 2, tag);
 
-        if (nbt.hasKey(NBT_SORTING_DIRECTION)) {
-            sortingDirection = nbt.getInteger(NBT_SORTING_DIRECTION);
+        if (tag.hasKey(NBT_VIEW_TYPE)) {
+            viewType = tag.getInteger(NBT_VIEW_TYPE);
         }
 
-        if (nbt.hasKey(NBT_SORTING_TYPE)) {
-            sortingType = nbt.getInteger(NBT_SORTING_TYPE);
+        if (tag.hasKey(NBT_SORTING_DIRECTION)) {
+            sortingDirection = tag.getInteger(NBT_SORTING_DIRECTION);
         }
 
-        if (nbt.hasKey(NBT_SEARCH_BOX_MODE)) {
-            searchBoxMode = nbt.getInteger(NBT_SEARCH_BOX_MODE);
+        if (tag.hasKey(NBT_SORTING_TYPE)) {
+            sortingType = tag.getInteger(NBT_SORTING_TYPE);
+        }
+
+        if (tag.hasKey(NBT_SEARCH_BOX_MODE)) {
+            searchBoxMode = tag.getInteger(NBT_SEARCH_BOX_MODE);
         }
     }
 
@@ -329,9 +447,11 @@ public class TileGrid extends TileNode implements IGrid {
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        RefinedStorageUtils.writeItemsLegacy(matrix, 0, tag);
-        RefinedStorageUtils.writeItems(patterns, 1, tag);
+        writeItemsLegacy(matrix, 0, tag);
+        writeItems(patterns, 1, tag);
+        writeItems(filter, 2, tag);
 
+        tag.setInteger(NBT_VIEW_TYPE, viewType);
         tag.setInteger(NBT_SORTING_DIRECTION, sortingDirection);
         tag.setInteger(NBT_SORTING_TYPE, sortingType);
         tag.setInteger(NBT_SEARCH_BOX_MODE, searchBoxMode);
@@ -340,40 +460,21 @@ public class TileGrid extends TileNode implements IGrid {
     }
 
     @Override
-    public void writeContainerData(ByteBuf buf) {
-        super.writeContainerData(buf);
-
-        buf.writeBoolean(isConnected());
-        buf.writeInt(sortingDirection);
-        buf.writeInt(sortingType);
-        buf.writeInt(searchBoxMode);
-    }
-
-    @Override
-    public void readContainerData(ByteBuf buf) {
-        super.readContainerData(buf);
-
-        connected = buf.readBoolean();
-        sortingDirection = buf.readInt();
-        sortingType = buf.readInt();
-        searchBoxMode = buf.readInt();
-    }
-
-    @Override
-    public Class<? extends Container> getContainer() {
-        return ContainerGrid.class;
-    }
-
-    @Override
-    public IItemHandler getDroppedItems() {
+    public IItemHandler getDrops() {
         switch (getType()) {
             case CRAFTING:
-                return new InvWrapper(matrix);
+                return new CombinedInvWrapper(filter, new InvWrapper(matrix));
             case PATTERN:
-                return patterns;
+                return new CombinedInvWrapper(filter, patterns);
             default:
-                return null;
+                return new CombinedInvWrapper(filter);
         }
+    }
+
+    public static boolean isValidViewType(int type) {
+        return type == VIEW_TYPE_NORMAL ||
+            type == VIEW_TYPE_CRAFTABLES ||
+            type == VIEW_TYPE_NON_CRAFTABLES;
     }
 
     public static boolean isValidSearchBoxMode(int mode) {

@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 
 public class ContainerCraftingSettings extends ContainerBase {
     public ContainerCraftingSettings(EntityPlayer player, final ItemStack stack) {
-        super(player);
+        super(null, player);
 
         final ItemStack slot = ItemHandlerHelper.copyStackWithSize(stack, 1);
 

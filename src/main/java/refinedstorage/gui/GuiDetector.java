@@ -2,41 +2,39 @@ package refinedstorage.gui;
 
 import com.google.common.primitives.Ints;
 import net.minecraft.client.gui.GuiTextField;
-import refinedstorage.RefinedStorage;
-import refinedstorage.api.storage.CompareFlags;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.container.ContainerDetector;
 import refinedstorage.gui.sidebutton.SideButtonCompare;
 import refinedstorage.gui.sidebutton.SideButtonDetectorMode;
-import refinedstorage.network.MessageDetectorAmountUpdate;
+import refinedstorage.gui.sidebutton.SideButtonType;
 import refinedstorage.tile.TileDetector;
+import refinedstorage.tile.data.TileDataManager;
 
 import java.io.IOException;
 
 public class GuiDetector extends GuiBase {
-    private TileDetector detector;
+    public static GuiTextField AMOUNT;
 
-    private GuiTextField amountField;
-
-    public GuiDetector(ContainerDetector container, TileDetector detector) {
+    public GuiDetector(ContainerDetector container) {
         super(container, 176, 137);
-
-        this.detector = detector;
     }
 
     @Override
     public void init(int x, int y) {
-        addSideButton(new SideButtonCompare(detector, CompareFlags.COMPARE_DAMAGE));
-        addSideButton(new SideButtonCompare(detector, CompareFlags.COMPARE_NBT));
+        addSideButton(new SideButtonType(TileDetector.TYPE));
 
-        addSideButton(new SideButtonDetectorMode(detector));
+        addSideButton(new SideButtonDetectorMode());
 
-        amountField = new GuiTextField(0, fontRendererObj, x + 62 + 1, y + 23 + 1, 25, fontRendererObj.FONT_HEIGHT);
-        amountField.setText(String.valueOf(detector.getAmount()));
-        amountField.setEnableBackgroundDrawing(false);
-        amountField.setVisible(true);
-        amountField.setTextColor(16777215);
-        amountField.setCanLoseFocus(false);
-        amountField.setFocused(true);
+        addSideButton(new SideButtonCompare(TileDetector.COMPARE, CompareUtils.COMPARE_DAMAGE));
+        addSideButton(new SideButtonCompare(TileDetector.COMPARE, CompareUtils.COMPARE_NBT));
+
+        AMOUNT = new GuiTextField(0, fontRendererObj, x + 62 + 1, y + 23 + 1, 29, fontRendererObj.FONT_HEIGHT);
+        AMOUNT.setText(String.valueOf(TileDetector.AMOUNT.getValue()));
+        AMOUNT.setEnableBackgroundDrawing(false);
+        AMOUNT.setVisible(true);
+        AMOUNT.setTextColor(16777215);
+        AMOUNT.setCanLoseFocus(false);
+        AMOUNT.setFocused(true);
     }
 
     @Override
@@ -49,7 +47,7 @@ public class GuiDetector extends GuiBase {
 
         drawTexture(x, y, 0, 0, width, height);
 
-        amountField.drawTextBox();
+        AMOUNT.drawTextBox();
     }
 
     @Override
@@ -60,11 +58,11 @@ public class GuiDetector extends GuiBase {
 
     @Override
     protected void keyTyped(char character, int keyCode) throws IOException {
-        if (!checkHotbarKeys(keyCode) && amountField.textboxKeyTyped(character, keyCode)) {
-            Integer result = Ints.tryParse(amountField.getText());
+        if (!checkHotbarKeys(keyCode) && AMOUNT.textboxKeyTyped(character, keyCode)) {
+            Integer result = Ints.tryParse(AMOUNT.getText());
 
             if (result != null) {
-                RefinedStorage.INSTANCE.network.sendToServer(new MessageDetectorAmountUpdate(detector, result));
+                TileDataManager.setParameter(TileDetector.AMOUNT, result);
             }
         } else {
             super.keyTyped(character, keyCode);
