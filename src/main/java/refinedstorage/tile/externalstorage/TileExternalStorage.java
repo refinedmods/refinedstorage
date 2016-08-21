@@ -142,7 +142,6 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
                 network.getItemStorage().rebuild();
             }
 
-            // @TODO: This is broken?
             if (fluidChangeDetected) {
                 network.getFluidStorage().rebuild();
             }

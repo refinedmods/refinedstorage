@@ -98,6 +98,12 @@ public final class CompareUtils {
             return false;
         }
 
+        if ((flags & COMPARE_QUANTITY) == COMPARE_QUANTITY) {
+            if (left.amount != right.amount) {
+                return false;
+            }
+        }
+
         if ((flags & COMPARE_NBT) == COMPARE_NBT) {
             if (left.tag != null && !left.tag.equals(right)) {
                 return false;

@@ -18,23 +18,29 @@ public class FluidStorageExternal implements IFluidStorage {
 
     private TileExternalStorage externalStorage;
     private IFluidHandler handler;
-    private IFluidTankProperties properties;
 
     public FluidStorageExternal(TileExternalStorage externalStorage, IFluidHandler handler, IFluidTankProperties properties) {
         this.externalStorage = externalStorage;
         this.handler = handler;
-        this.properties = properties;
+    }
+
+    public IFluidTankProperties getProperties() {
+        return handler.getTankProperties().length != 0 ? handler.getTankProperties()[0] : null;
+    }
+
+    public FluidStack getContents() {
+        return getProperties() == null ? null : getProperties().getContents();
     }
 
     @Override
     public List<FluidStack> getStacks() {
-        return properties.getContents() == null ? Collections.emptyList() : Collections.singletonList(properties.getContents().copy());
+        return getContents() == null ? Collections.emptyList() : Collections.singletonList(getContents().copy());
     }
 
     @Nullable
     @Override
     public FluidStack insertFluid(@Nonnull FluidStack stack, int size, boolean simulate) {
-        if (IFilterable.canTakeFluids(externalStorage.getFluidFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack) && properties.canFillFluidType(stack)) {
+        if (getProperties() != null && IFilterable.canTakeFluids(externalStorage.getFluidFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack) && getProperties().canFillFluidType(stack)) {
             int filled = handler.fill(FluidUtils.copyStackWithSize(stack, size), !simulate);
 
             if (filled == size) {
@@ -52,7 +58,7 @@ public class FluidStorageExternal implements IFluidStorage {
     public FluidStack extractFluid(@Nonnull FluidStack stack, int size, int flags) {
         FluidStack toDrain = FluidUtils.copyStackWithSize(stack, size);
 
-        if (CompareUtils.compareStack(properties.getContents(), toDrain, flags)) {
+        if (CompareUtils.compareStack(getContents(), toDrain, flags)) {
             return handler.drain(toDrain, true);
         }
 
@@ -61,11 +67,11 @@ public class FluidStorageExternal implements IFluidStorage {
 
     @Override
     public int getStored() {
-        return properties.getContents() != null ? properties.getContents().amount : 0;
+        return getContents() != null ? getContents().amount : 0;
     }
 
     public int getCapacity() {
-        return properties.getCapacity();
+        return getProperties() != null ? getProperties().getCapacity() : 0;
     }
 
     @Override
@@ -74,11 +80,11 @@ public class FluidStorageExternal implements IFluidStorage {
     }
 
     public boolean updateCache() {
-        FluidStack stack = properties.getContents();
+        FluidStack stack = getContents();
 
         if (cache == null) {
             cache = FluidUtils.copy(stack);
-        } else if (!CompareUtils.compareStack(stack, cache, CompareUtils.COMPARE_NBT)) {
+        } else if (!CompareUtils.compareStack(stack, cache, CompareUtils.COMPARE_NBT | CompareUtils.COMPARE_QUANTITY)) {
             cache = FluidUtils.copy(stack);
 
             return true;
@@ -88,6 +94,6 @@ public class FluidStorageExternal implements IFluidStorage {
     }
 
     public void updateCacheForcefully() {
-        cache = FluidUtils.copy(properties.getContents());
+        cache = FluidUtils.copy(getContents());
     }
 }
