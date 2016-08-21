@@ -49,6 +49,8 @@ public class GuiGrid extends GuiBase {
 
     private static boolean markedForSorting;
 
+    private boolean wasConnected;
+
     private GuiTextField searchField;
 
     private ContainerGrid container;
@@ -67,6 +69,7 @@ public class GuiGrid extends GuiBase {
 
         this.container = container;
         this.grid = grid;
+        this.wasConnected = grid.isConnected();
     }
 
     @Override
@@ -194,6 +197,12 @@ public class GuiGrid extends GuiBase {
 
     @Override
     public void update(int x, int y) {
+        if (wasConnected != grid.isConnected()) {
+            wasConnected = grid.isConnected();
+
+            markForSorting();
+        }
+
         if (markedForSorting) {
             markedForSorting = false;
 
