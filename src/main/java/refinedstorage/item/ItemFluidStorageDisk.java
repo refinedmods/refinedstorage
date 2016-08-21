@@ -7,10 +7,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
 import refinedstorage.block.EnumFluidStorageType;
@@ -23,6 +27,9 @@ public class ItemFluidStorageDisk extends ItemBase {
     public static final int TYPE_256K = 2;
     public static final int TYPE_512K = 3;
     public static final int TYPE_CREATIVE = 4;
+    public static final int TYPE_DEBUG = 5;
+
+    private NBTTagCompound debugDiskTag;
 
     public ItemFluidStorageDisk() {
         super("fluid_storage_disk");
@@ -39,12 +46,37 @@ public class ItemFluidStorageDisk extends ItemBase {
         }
     }
 
+    private void applyDebugDiskData(ItemStack stack) {
+        if (debugDiskTag == null) {
+            debugDiskTag = FluidStorageNBT.createNBT();
+
+            FluidStorageNBT storage = new FluidStorageNBT(debugDiskTag, -1, null) {
+                @Override
+                public int getPriority() {
+                    return 0;
+                }
+            };
+
+            for (Fluid fluid : FluidRegistry.getRegisteredFluids().values()) {
+                storage.insertFluid(new FluidStack(fluid, 0), Fluid.BUCKET_VOLUME * 1000, false);
+            }
+
+            storage.writeToNBT();
+        }
+
+        stack.setTagCompound(debugDiskTag.copy());
+    }
+
     @Override
     public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         super.onUpdate(stack, world, entity, slot, selected);
 
         if (!stack.hasTagCompound()) {
-            FluidStorageNBT.createStackWithNBT(stack);
+            if (stack.getMetadata() == TYPE_DEBUG) {
+                applyDebugDiskData(stack);
+            } else {
+                FluidStorageNBT.createStackWithNBT(stack);
+            }
         }
     }
 

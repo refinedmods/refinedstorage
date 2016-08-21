@@ -47,6 +47,7 @@ public enum EnumFluidStorageType implements IStringSerializable {
                 return type;
             }
         }
+
         return TYPE_CREATIVE;
     }
 }

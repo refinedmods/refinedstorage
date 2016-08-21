@@ -47,6 +47,7 @@ public enum EnumItemStorageType implements IStringSerializable {
                 return type;
             }
         }
+
         return TYPE_CREATIVE;
     }
 }
