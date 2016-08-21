@@ -17,6 +17,7 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.common.Optional;
@@ -52,7 +53,7 @@ public class ItemWirelessGrid extends ItemEnergyContainer implements ISpecialEle
         setMaxStackSize(1);
         setHasSubtypes(true);
         setCreativeTab(RefinedStorage.INSTANCE.tab);
-        addPropertyOverride(new ResourceLocation("connected"), (stack, world, entity) -> (entity != null && isValid(stack) && getDimensionId(stack) == entity.dimension) ? 1.0f : 0.0f);
+        addPropertyOverride(new ResourceLocation("connected"), (stack, world, entity) -> (entity != null && isValid(stack)) ? 1.0f : 0.0f);
     }
 
     @Override
@@ -137,11 +138,13 @@ public class ItemWirelessGrid extends ItemEnergyContainer implements ISpecialEle
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
-        if (!world.isRemote && isValid(stack) && getDimensionId(stack) == player.dimension) {
-            TileEntity tile = world.getTileEntity(new BlockPos(getX(stack), getY(stack), getZ(stack)));
+        if (!world.isRemote && isValid(stack)) {
+            World controllerWorld = DimensionManager.getWorld(getDimensionId(stack));
 
-            if (tile instanceof TileController) {
-                if (((TileController) tile).getWirelessGridHandler().onOpen(player, hand)) {
+            TileEntity controller;
+
+            if (controllerWorld != null && ((controller = controllerWorld.getTileEntity(new BlockPos(getX(stack), getY(stack), getZ(stack)))) instanceof TileController)) {
+                if (((TileController) controller).getWirelessGridHandler().onOpen(player, hand)) {
                     return new ActionResult<>(EnumActionResult.SUCCESS, stack);
                 } else {
                     player.addChatComponentMessage(new TextComponentTranslation("misc.refinedstorage:wireless_grid.out_of_range"));

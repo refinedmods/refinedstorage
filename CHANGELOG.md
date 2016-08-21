@@ -4,6 +4,7 @@
 **Bugfixes**
 - Fixed crash with Grid
 - Fixed Grid Filter only updating the Grid when reopening the GUI
+- Fixed Wireless Grid not working cross dimensionally
 - Priority field and detector amount field can now display 4 digits at a time
 
 **Features**
