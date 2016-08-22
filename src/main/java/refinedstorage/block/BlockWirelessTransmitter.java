@@ -14,7 +14,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
-import refinedstorage.tile.TileNode;
+import refinedstorage.tile.TileCable;
 import refinedstorage.tile.TileWirelessTransmitter;
 
 public class BlockWirelessTransmitter extends BlockNode {
@@ -65,10 +65,7 @@ public class BlockWirelessTransmitter extends BlockNode {
 
     @Override
     public boolean canPlaceBlockAt(World world, BlockPos pos) {
-        BlockPos downPos = pos.offset(EnumFacing.DOWN);
-        IBlockState down = world.getBlockState(downPos);
-
-        return down.getBlock().canPlaceTorchOnTop(down, world, downPos) || (world.getTileEntity(downPos) instanceof TileNode && !(world.getTileEntity(downPos) instanceof TileWirelessTransmitter));
+        return world.getTileEntity(pos.offset(EnumFacing.DOWN)) instanceof TileCable;
     }
 
     @Override

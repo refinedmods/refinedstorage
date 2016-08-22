@@ -11,6 +11,7 @@
 **Features**
 - Added fluid storage
 - Energy usage of Wireless Grid is now configurable
+- Wireless Transmitter can now only be placed on Cable
 
 ### 0.8.20
 **Bugfixes**
