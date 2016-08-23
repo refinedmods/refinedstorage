@@ -7,6 +7,7 @@
 - Fixed Wireless Grid not working cross dimensionally
 - Fixed Grid not displaying items after changing redstone mode
 - Fixed Wireless Transmitter crashing when it is transmitting to a removed dimension
+- Fixed disassembling stacked Storage Blocks only returns 1 set of items
 - Priority field and detector amount field can now display 4 digits at a time
 
 **Features**

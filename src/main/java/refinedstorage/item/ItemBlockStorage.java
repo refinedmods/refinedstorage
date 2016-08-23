@@ -42,7 +42,7 @@ public class ItemBlockStorage extends ItemBlockBase {
     public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
         EnumItemStorageType type = EnumItemStorageType.getById(stack.getMetadata());
 
-        if (type != null && isValid(stack) && ItemStorageNBT.getStoredFromNBT(stack.getTagCompound().getCompoundTag(TileStorage.NBT_STORAGE)) == 0 && stack.getMetadata() != ItemStorageDisk.TYPE_CREATIVE && !world.isRemote && player.isSneaking()) {
+        if (type != null && stack.stackSize == 1 && isValid(stack) && ItemStorageNBT.getStoredFromNBT(stack.getTagCompound().getCompoundTag(TileStorage.NBT_STORAGE)) == 0 && stack.getMetadata() != ItemStorageDisk.TYPE_CREATIVE && !world.isRemote && player.isSneaking()) {
             ItemStack storagePart = new ItemStack(RefinedStorageItems.STORAGE_PART, 1, stack.getMetadata());
 
             if (!player.inventory.addItemStackToInventory(storagePart.copy())) {

@@ -42,7 +42,7 @@ public class ItemBlockFluidStorage extends ItemBlockBase {
     public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
         EnumFluidStorageType type = EnumFluidStorageType.getById(stack.getMetadata());
 
-        if (type != null && isValid(stack) && FluidStorageNBT.getStoredFromNBT(stack.getTagCompound().getCompoundTag(TileFluidStorage.NBT_STORAGE)) == 0 && stack.getMetadata() != ItemFluidStorageDisk.TYPE_CREATIVE && !world.isRemote && player.isSneaking()) {
+        if (type != null && isValid(stack) && stack.stackSize == 1 && FluidStorageNBT.getStoredFromNBT(stack.getTagCompound().getCompoundTag(TileFluidStorage.NBT_STORAGE)) == 0 && stack.getMetadata() != ItemFluidStorageDisk.TYPE_CREATIVE && !world.isRemote && player.isSneaking()) {
             ItemStack storagePart = new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, stack.getMetadata());
 
             if (!player.inventory.addItemStackToInventory(storagePart.copy())) {
