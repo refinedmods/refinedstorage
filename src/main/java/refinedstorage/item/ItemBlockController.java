@@ -14,7 +14,7 @@ import java.util.List;
 
 public class ItemBlockController extends ItemBlockBase {
     public ItemBlockController() {
-        super(RefinedStorageBlocks.CONTROLLER, true);
+        super(RefinedStorageBlocks.CONTROLLER, RefinedStorageBlocks.CONTROLLER.getPlacementType(), true);
     }
 
     @Override

@@ -233,7 +233,7 @@ public class BlockCable extends BlockCoverable {
         return false;
     }
 
-    protected EnumPlacementType getPlacementType() {
+    public EnumPlacementType getPlacementType() {
         return null;
     }
 

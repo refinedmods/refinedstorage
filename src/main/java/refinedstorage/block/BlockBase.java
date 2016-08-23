@@ -5,7 +5,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
@@ -56,7 +55,7 @@ public abstract class BlockBase extends Block {
     }
 
     public Item createItem() {
-        return new ItemBlockBase(this, false);
+        return new ItemBlockBase(this, getPlacementType(), false);
     }
 
     @Override
@@ -99,26 +98,6 @@ public abstract class BlockBase extends Block {
     }
 
     @Override
-    public IBlockState onBlockPlaced(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase entity) {
-        IBlockState state = super.onBlockPlaced(world, pos, facing, hitX, hitY, hitZ, meta, entity);
-
-        if (getPlacementType() != null) {
-            return state.withProperty(DIRECTION, getPlacementType().getFrom(facing, pos, entity));
-        }
-
-        return state;
-    }
-
-    @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack stack) {
-        super.onBlockPlacedBy(world, pos, state, player, stack);
-
-        if (getPlacementType() != null) {
-            ((TileBase) world.getTileEntity(pos)).setDirection(state.getValue(DIRECTION));
-        }
-    }
-
-    @Override
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
         TileEntity tile = world.getTileEntity(pos);
 
@@ -147,7 +126,7 @@ public abstract class BlockBase extends Block {
         world.setBlockToAir(pos);
     }
 
-    protected EnumPlacementType getPlacementType() {
+    public EnumPlacementType getPlacementType() {
         return EnumPlacementType.HORIZONTAL;
     }
 }

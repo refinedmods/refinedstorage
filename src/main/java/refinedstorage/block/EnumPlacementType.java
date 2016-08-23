@@ -25,7 +25,7 @@ public enum EnumPlacementType {
         this.allowed = allowed;
     }
 
-    EnumFacing getFrom(EnumFacing facing, BlockPos pos, EntityLivingBase entity) {
+    public EnumFacing getFrom(EnumFacing facing, BlockPos pos, EntityLivingBase entity) {
         switch (this) {
             case ANY:
                 return facing.getOpposite();
@@ -38,7 +38,7 @@ public enum EnumPlacementType {
         }
     }
 
-    EnumFacing getNext(EnumFacing previous) {
+    public EnumFacing getNext(EnumFacing previous) {
         switch (this) {
             case ANY:
             case ANY_FACE_PLAYER:

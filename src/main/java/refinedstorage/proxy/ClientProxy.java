@@ -35,7 +35,7 @@ public class ClientProxy extends CommonProxy {
     @SubscribeEvent
     public void onModelBake(ModelBakeEvent e) {
         for (ModelResourceLocation model : e.getModelRegistry().getKeys()) {
-            for (BlockCable cable : cables) {
+            for (BlockCable cable : cableTypes) {
                 if (model.getResourceDomain().equals(RefinedStorage.ID) && model.getResourcePath().equals(cable.getName()) && !model.getVariant().equals("inventory")) {
                     e.getModelRegistry().putObject(model, new ModelMultipartContainer(e.getModelRegistry().getObject(model), input -> cable.canRenderInLayer(input)));
                 }

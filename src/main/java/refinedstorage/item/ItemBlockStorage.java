@@ -20,7 +20,7 @@ import java.util.List;
 
 public class ItemBlockStorage extends ItemBlockBase {
     public ItemBlockStorage() {
-        super(RefinedStorageBlocks.STORAGE, true);
+        super(RefinedStorageBlocks.STORAGE, RefinedStorageBlocks.STORAGE.getPlacementType(), true);
     }
 
     @Override

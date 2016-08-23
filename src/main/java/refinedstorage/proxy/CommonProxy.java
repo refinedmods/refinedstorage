@@ -4,7 +4,6 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -35,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommonProxy {
-    protected List<BlockCable> cables = new ArrayList<>();
+    protected List<BlockCable> cableTypes = new ArrayList<>();
 
     public void preInit(FMLPreInitializationEvent e) {
         RefinedStorageAPI.SOLDERER_REGISTRY = new SoldererRegistry();
@@ -627,9 +626,9 @@ public class CommonProxy {
 
     private void registerBlock(BlockCable cable) {
         GameRegistry.<Block>register(cable);
-        GameRegistry.register(new ItemBlock(cable).setRegistryName(cable.getRegistryName()));
+        GameRegistry.register(new ItemBlockBase(cable, cable.getPlacementType(), false));
 
-        cables.add(cable);
+        cableTypes.add(cable);
     }
 
     private void registerTile(Class<? extends TileBase> tile, String id) {
