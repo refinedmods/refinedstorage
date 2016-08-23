@@ -2,7 +2,6 @@ itemGroup.refinedstorage=Refined Storage
 
 gui.refinedstorage:controller.0=Controlador
 gui.refinedstorage:controller.1=Controlador Criativo
-gui.refinedstorage:controller.machine_amount=%dx
 gui.refinedstorage:grid=Grade
 gui.refinedstorage:grid.craft=Craft
 gui.refinedstorage:grid.pattern_create=Criar Padrão
@@ -13,7 +12,6 @@ gui.refinedstorage:importer=Importador
 gui.refinedstorage:exporter=Exportador
 gui.refinedstorage:detector=Detector
 gui.refinedstorage:solderer=Soldador
-gui.refinedstorage:solderer.progress=%d%%
 gui.refinedstorage:destructor=Destruidor
 gui.refinedstorage:constructor=Construtor
 gui.refinedstorage:relay=Retransmissor

@@ -39,7 +39,7 @@ public class GuiSolderer extends GuiBase {
         drawString(7, 77, t("container.inventory"));
 
         if (inBounds(83, 38, 22, 15, mouseX, mouseY) && solderer.isWorking()) {
-            drawTooltip(mouseX, mouseY, t("gui.refinedstorage:solderer.progress", getProgressScaled(100)));
+            drawTooltip(mouseX, mouseY, getProgressScaled(100) + "%");
         }
     }
 

@@ -2,7 +2,6 @@ itemGroup.refinedstorage=Refined Storage
 
 gui.refinedstorage:controller.0=Контроллер
 gui.refinedstorage:controller.1=Контроллер (Креатив)
-gui.refinedstorage:controller.machine_amount=%dx
 gui.refinedstorage:grid=Терминал
 gui.refinedstorage:grid.craft=Крафт
 gui.refinedstorage:grid.pattern_create=Создать шаблон
@@ -14,7 +13,6 @@ gui.refinedstorage:importer=Импортер
 gui.refinedstorage:exporter=Экспортер
 gui.refinedstorage:detector=Датчик
 gui.refinedstorage:solderer=Паяльник
-gui.refinedstorage:solderer.progress=%d%%
 gui.refinedstorage:destructor=Разрушитель
 gui.refinedstorage:constructor=Строитель
 gui.refinedstorage:relay=Реле
