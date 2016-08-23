@@ -38,10 +38,6 @@ public enum EnumItemStorageType implements IStringSerializable {
     }
 
     public static EnumItemStorageType getById(int id) {
-        if (id == 5) {
-            return TYPE_CREATIVE;
-        }
-
         for (EnumItemStorageType type : EnumItemStorageType.values()) {
             if (type.getId() == id) {
                 return type;

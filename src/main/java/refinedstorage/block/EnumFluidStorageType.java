@@ -38,10 +38,6 @@ public enum EnumFluidStorageType implements IStringSerializable {
     }
 
     public static EnumFluidStorageType getById(int id) {
-        if (id == 5) {
-            return TYPE_CREATIVE;
-        }
-
         for (EnumFluidStorageType type : EnumFluidStorageType.values()) {
             if (type.getId() == id) {
                 return type;

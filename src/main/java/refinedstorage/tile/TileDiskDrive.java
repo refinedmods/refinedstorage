@@ -159,8 +159,8 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     @Override
     public void update() {
         if (!worldObj.isRemote) {
-            if (stored != getStoredForDisplayServer()) {
-                stored = getStoredForDisplayServer();
+            if (stored != getStoredForDisplay()) {
+                stored = getStoredForDisplay();
 
                 updateBlock();
             }
@@ -317,33 +317,33 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
         markDirty();
     }
 
-    public int getStoredForDisplayServer() {
-        float stored = 0;
-        float capacity = 0;
-
-        for (int i = 0; i < disks.getSlots(); ++i) {
-            ItemStack disk = disks.getStackInSlot(i);
-
-            if (disk != null) {
-                int diskCapacity = disk.getItem() == RefinedStorageItems.STORAGE_DISK ? EnumItemStorageType.getById(disk.getItemDamage()).getCapacity() : EnumFluidStorageType.getById(disk.getItemDamage()).getCapacity();
-
-                if (capacity == -1) {
-                    return 0;
-                }
-
-                stored += disk.getItem() == RefinedStorageItems.STORAGE_DISK ? ItemStorageNBT.getStoredFromNBT(disk.getTagCompound()) : FluidStorageNBT.getStoredFromNBT(disk.getTagCompound());
-                capacity += diskCapacity;
-            }
-        }
-
-        if (capacity == 0) {
-            return 0;
-        }
-
-        return (int) Math.floor((stored / capacity) * 7F);
-    }
-
     public int getStoredForDisplay() {
+        if (!worldObj.isRemote) {
+            float stored = 0;
+            float capacity = 0;
+
+            for (int i = 0; i < disks.getSlots(); ++i) {
+                ItemStack disk = disks.getStackInSlot(i);
+
+                if (disk != null) {
+                    int diskCapacity = disk.getItem() == RefinedStorageItems.STORAGE_DISK ? EnumItemStorageType.getById(disk.getItemDamage()).getCapacity() : EnumFluidStorageType.getById(disk.getItemDamage()).getCapacity();
+
+                    if (diskCapacity == -1) {
+                        return 0;
+                    }
+
+                    stored += disk.getItem() == RefinedStorageItems.STORAGE_DISK ? ItemStorageNBT.getStoredFromNBT(disk.getTagCompound()) : FluidStorageNBT.getStoredFromNBT(disk.getTagCompound());
+                    capacity += diskCapacity;
+                }
+            }
+
+            if (capacity == 0) {
+                return 0;
+            }
+
+            return (int) Math.floor((stored / capacity) * 7F);
+        }
+
         return stored;
     }
 
