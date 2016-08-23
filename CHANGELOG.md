@@ -10,6 +10,7 @@
 
 **Features**
 - Added fluid storage
+- Added Russian translation by CorwinTheCat
 - Energy usage of Wireless Grid is now configurable
 - Wireless Transmitter can now only be placed on Cable
 
