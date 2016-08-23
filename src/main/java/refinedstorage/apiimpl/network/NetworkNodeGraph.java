@@ -73,17 +73,21 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
                 if (transmitter.canTransmit()) {
                     if (!transmitter.isSameDimension()) {
-                        NetworkNodeGraph dimensionGraph = new NetworkNodeGraph(controller) {
-                            @Override
-                            public World getWorld() {
-                                return DimensionManager.getWorld(transmitter.getReceiverDimension());
-                            }
-                        };
+                        final World dimensionWorld = DimensionManager.getWorld(transmitter.getReceiverDimension());
 
-                        dimensionGraph.rebuild(transmitter.getReceiver(), false);
+                        if (dimensionWorld != null) {
+                            NetworkNodeGraph dimensionGraph = new NetworkNodeGraph(controller) {
+                                @Override
+                                public World getWorld() {
+                                    return dimensionWorld;
+                                }
+                            };
 
-                        newNodes.addAll(dimensionGraph.all());
-                        newNodeHashes.addAll(dimensionGraph.allHashes());
+                            dimensionGraph.rebuild(transmitter.getReceiver(), false);
+
+                            newNodes.addAll(dimensionGraph.all());
+                            newNodeHashes.addAll(dimensionGraph.allHashes());
+                        }
                     } else {
                         BlockPos receiver = transmitter.getReceiver();
 

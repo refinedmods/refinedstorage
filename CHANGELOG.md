@@ -6,6 +6,7 @@
 - Fixed Grid Filter only updating the Grid when reopening the GUI
 - Fixed Wireless Grid not working cross dimensionally
 - Fixed Grid not displaying items after changing redstone mode
+- Fixed Wireless Transmitter crashing when it is transmitting to a removed dimension
 - Priority field and detector amount field can now display 4 digits at a time
 
 **Features**
