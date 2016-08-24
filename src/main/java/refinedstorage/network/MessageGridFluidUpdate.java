@@ -6,6 +6,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.gui.grid.GuiGrid;
 import refinedstorage.gui.grid.stack.ClientStackFluid;
 
@@ -37,7 +38,7 @@ public class MessageGridFluidUpdate implements IMessage, IMessageHandler<Message
         buf.writeInt(network.getFluidStorage().getStacks().size());
 
         for (FluidStack stack : network.getFluidStorage().getStacks()) {
-            ClientStackFluid.write(buf, stack);
+            NetworkUtils.writeFluidStack(buf, stack);
         }
     }
 

@@ -7,8 +7,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.gui.GuiBase;
 
 import java.util.Locale;
@@ -86,14 +84,5 @@ public class ClientStackItem implements IClientStack {
     @Override
     public boolean equals(Object obj) {
         return obj instanceof IClientStack && ((ClientStackItem) obj).getHash() == hash;
-    }
-
-    public static void write(ByteBuf buf, INetworkMaster network, ItemStack stack) {
-        buf.writeInt(Item.getIdFromItem(stack.getItem()));
-        buf.writeInt(stack.stackSize);
-        buf.writeInt(stack.getItemDamage());
-        ByteBufUtils.writeTag(buf, stack.getTagCompound());
-        buf.writeInt(NetworkUtils.getItemStackHashCode(stack));
-        buf.writeBoolean(NetworkUtils.hasPattern(network, stack));
     }
 }

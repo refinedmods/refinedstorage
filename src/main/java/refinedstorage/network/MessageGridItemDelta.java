@@ -7,6 +7,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.gui.grid.GuiGrid;
 import refinedstorage.gui.grid.stack.ClientStackItem;
 
@@ -34,7 +35,7 @@ public class MessageGridItemDelta implements IMessage, IMessageHandler<MessageGr
 
     @Override
     public void toBytes(ByteBuf buf) {
-        ClientStackItem.write(buf, network, stack);
+        NetworkUtils.writeStack(buf, network, stack);
         buf.writeInt(delta);
     }
 

@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 0.9.1
+**Bugfixes**
+- Fixed server crash with Grid
+
 ### 0.9
 **Bugfixes**
 - Fixed crash with Grid

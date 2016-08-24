@@ -4,7 +4,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.gui.GuiBase;
 
 import java.util.Locale;
@@ -57,12 +56,5 @@ public class ClientStackFluid implements IClientStack {
     @Override
     public boolean equals(Object obj) {
         return obj instanceof ClientStackFluid && ((ClientStackFluid) obj).getStack().isFluidEqual(stack);
-    }
-
-    public static void write(ByteBuf buf, FluidStack stack) {
-        buf.writeInt(NetworkUtils.getFluidStackHashCode(stack));
-        ByteBufUtils.writeUTF8String(buf, FluidRegistry.getFluidName(stack.getFluid()));
-        buf.writeInt(stack.amount);
-        ByteBufUtils.writeTag(buf, stack.tag);
     }
 }

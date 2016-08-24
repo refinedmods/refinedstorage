@@ -1,8 +1,12 @@
 package refinedstorage.api.network;
 
+import io.netty.buffer.ByteBuf;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.storage.CompareUtils;
 
@@ -42,5 +46,21 @@ public final class NetworkUtils {
         int result = node.getPosition().hashCode();
         result = 31 * result + world.provider.getDimension();
         return result;
+    }
+
+    public static void writeStack(ByteBuf buf, INetworkMaster network, ItemStack stack) {
+        buf.writeInt(Item.getIdFromItem(stack.getItem()));
+        buf.writeInt(stack.stackSize);
+        buf.writeInt(stack.getItemDamage());
+        ByteBufUtils.writeTag(buf, stack.getTagCompound());
+        buf.writeInt(getItemStackHashCode(stack));
+        buf.writeBoolean(hasPattern(network, stack));
+    }
+
+    public static void writeFluidStack(ByteBuf buf, FluidStack stack) {
+        buf.writeInt(getFluidStackHashCode(stack));
+        ByteBufUtils.writeUTF8String(buf, FluidRegistry.getFluidName(stack.getFluid()));
+        buf.writeInt(stack.amount);
+        ByteBufUtils.writeTag(buf, stack.tag);
     }
 }
