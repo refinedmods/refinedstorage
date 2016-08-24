@@ -14,7 +14,7 @@
 - Added fluid storage
 - Added Russian translation by CorwinTheCat
 - Energy usage of Wireless Grid is now configurable
-- Wireless Transmitter can now only be placed on Cable
+- Wireless Transmitters can now only be placed on Cable
 
 ### 0.8.20
 **Bugfixes**
