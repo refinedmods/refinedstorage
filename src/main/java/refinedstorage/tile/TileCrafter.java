@@ -99,6 +99,11 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
     }
 
     @Override
+    public boolean hasConnectivityState() {
+        return true;
+    }
+
+    @Override
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing != getDirection()) {
             return (T) patterns;

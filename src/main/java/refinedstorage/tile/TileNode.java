@@ -1,6 +1,5 @@
 package refinedstorage.tile;
 
-import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -8,7 +7,6 @@ import net.minecraft.world.World;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.INetworkNode;
 import refinedstorage.api.network.NetworkUtils;
-import refinedstorage.block.BlockNode;
 import refinedstorage.tile.config.IRedstoneConfigurable;
 import refinedstorage.tile.config.RedstoneMode;
 import refinedstorage.tile.data.TileDataParameter;
@@ -39,12 +37,6 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
         return isConnected() && canUpdate();
     }
 
-    private boolean canSendConnectivityUpdate() {
-        Block block = getBlockType();
-
-        return block instanceof BlockNode ? ((BlockNode) block).hasConnectivityState() : false;
-    }
-
     @Override
     public void update() {
         if (!worldObj.isRemote) {
@@ -58,7 +50,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
                 }
             }
 
-            if (active != isActive() && canSendConnectivityUpdate()) {
+            if (active != isActive() && hasConnectivityState()) {
                 updateBlock();
 
                 active = isActive();
@@ -155,7 +147,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {
         super.writeUpdate(tag);
 
-        if (canSendConnectivityUpdate()) {
+        if (hasConnectivityState()) {
             tag.setBoolean(NBT_CONNECTED, isActive());
         }
 
@@ -163,10 +155,14 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
     }
 
     public void readUpdate(NBTTagCompound tag) {
-        if (canSendConnectivityUpdate()) {
+        if (hasConnectivityState()) {
             connected = tag.getBoolean(NBT_CONNECTED);
         }
 
         super.readUpdate(tag);
+    }
+
+    public boolean hasConnectivityState() {
+        return false;
     }
 }

@@ -138,6 +138,16 @@ public class TileFluidInterface extends TileNode implements IComparable {
     }
 
     @Override
+    public int getCompare() {
+        return compare;
+    }
+
+    @Override
+    public void setCompare(int compare) {
+        this.compare = compare;
+    }
+
+    @Override
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
@@ -187,6 +197,11 @@ public class TileFluidInterface extends TileNode implements IComparable {
     }
 
     @Override
+    public boolean hasConnectivityState() {
+        return true;
+    }
+
+    @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
         return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
     }
@@ -198,15 +213,5 @@ public class TileFluidInterface extends TileNode implements IComparable {
         }
 
         return super.getCapability(capability, facing);
-    }
-
-    @Override
-    public int getCompare() {
-        return compare;
-    }
-
-    @Override
-    public void setCompare(int compare) {
-        this.compare = compare;
     }
 }

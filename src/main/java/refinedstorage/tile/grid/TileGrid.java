@@ -419,6 +419,11 @@ public class TileGrid extends TileNode implements IGrid {
     }
 
     @Override
+    public boolean hasConnectivityState() {
+        return true;
+    }
+
+    @Override
     public void read(NBTTagCompound tag) {
         super.read(tag);
 

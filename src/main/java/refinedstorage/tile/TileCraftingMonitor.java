@@ -39,4 +39,9 @@ public class TileCraftingMonitor extends TileNode {
     @Override
     public void updateNode() {
     }
+
+    @Override
+    public boolean hasConnectivityState() {
+        return true;
+    }
 }

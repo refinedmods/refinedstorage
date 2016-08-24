@@ -26,10 +26,6 @@ public abstract class BlockNode extends BlockBase {
         return true;
     }
 
-    public boolean hasConnectivityState() {
-        return false;
-    }
-
     @Override
     protected BlockStateContainer.Builder createBlockStateBuilder() {
         BlockStateContainer.Builder builder = super.createBlockStateBuilder();
@@ -89,5 +85,9 @@ public abstract class BlockNode extends BlockBase {
         if (network != null) {
             NetworkUtils.rebuildGraph(network);
         }
+    }
+
+    public boolean hasConnectivityState() {
+        return false;
     }
 }

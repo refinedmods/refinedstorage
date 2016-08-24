@@ -148,4 +148,9 @@ public class TileNetworkTransmitter extends TileNode {
     public boolean isDimensionSupported() {
         return isSameDimension() || upgrades.hasUpgrade(ItemUpgrade.TYPE_INTERDIMENSIONAL);
     }
+
+    @Override
+    public boolean hasConnectivityState() {
+        return true;
+    }
 }

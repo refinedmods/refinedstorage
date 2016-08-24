@@ -17,4 +17,9 @@ public class TileNetworkReceiver extends TileNode {
     public void setRedstoneMode(RedstoneMode mode) {
         // NO OP
     }
+
+    @Override
+    public boolean hasConnectivityState() {
+        return true;
+    }
 }
