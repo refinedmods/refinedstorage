@@ -24,7 +24,6 @@ public interface IType {
                 if (value == 0 || value == 1) {
                     ((IType) tile).setType(value);
 
-                    // @TODO: This doesn't work serverside
                     tile.getWorld().playerEntities.stream()
                         .filter(p -> p.openContainer instanceof ContainerBase && ((ContainerBase) p.openContainer).getTile().getPos().equals(tile.getPos()))
                         .forEach(p -> p.openContainer.detectAndSendChanges());
