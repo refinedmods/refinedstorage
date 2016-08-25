@@ -6,6 +6,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 import refinedstorage.RefinedStorage;
 import refinedstorage.api.network.grid.IFluidGridHandler;
 import refinedstorage.api.network.grid.IItemGridHandler;
@@ -24,10 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WirelessGrid implements IGrid {
-    private World world;
-
     private ItemStack stack;
 
+    private int controllerDimension;
     private BlockPos controller;
 
     private int viewType;
@@ -41,7 +43,7 @@ public class WirelessGrid implements IGrid {
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            if (!world.isRemote) {
+            if (FMLCommonHandler.instance().getSide() == Side.SERVER) {
                 if (!stack.hasTagCompound()) {
                     stack.setTagCompound(new NBTTagCompound());
                 }
@@ -51,12 +53,11 @@ public class WirelessGrid implements IGrid {
         }
     };
 
-    public WirelessGrid(World world, ItemStack stack) {
-        this.world = world;
+    public WirelessGrid(int controllerDimension, ItemStack stack) {
+        this.controllerDimension = controllerDimension;
+        this.controller = new BlockPos(ItemWirelessGrid.getX(stack), ItemWirelessGrid.getY(stack), ItemWirelessGrid.getZ(stack));
 
         this.stack = stack;
-
-        this.controller = new BlockPos(ItemWirelessGrid.getX(stack), ItemWirelessGrid.getY(stack), ItemWirelessGrid.getZ(stack));
 
         this.viewType = ItemWirelessGrid.getViewType(stack);
         this.sortingType = ItemWirelessGrid.getSortingType(stack);
@@ -184,8 +185,14 @@ public class WirelessGrid implements IGrid {
     }
 
     private TileController getController() {
-        TileEntity tile = world.getTileEntity(controller);
+        World world = DimensionManager.getWorld(controllerDimension);
 
-        return tile instanceof TileController ? (TileController) tile : null;
+        if (world != null) {
+            TileEntity tile = world.getTileEntity(controller);
+
+            return tile instanceof TileController ? (TileController) tile : null;
+        }
+
+        return null;
     }
 }

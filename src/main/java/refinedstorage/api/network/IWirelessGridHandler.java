@@ -2,6 +2,7 @@ package refinedstorage.api.network;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumHand;
+import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
@@ -18,10 +19,11 @@ public interface IWirelessGridHandler {
      * Called when a player opens a wireless grid.
      *
      * @param player The player that opened the wireless grid
+     * @param world  The world of the controller
      * @param hand   The hand the player opened it with
      * @return If the opening was successful
      */
-    boolean onOpen(EntityPlayer player, EnumHand hand);
+    boolean onOpen(EntityPlayer player, World world, EnumHand hand);
 
     /**
      * Called when the player closes a wireless grid.

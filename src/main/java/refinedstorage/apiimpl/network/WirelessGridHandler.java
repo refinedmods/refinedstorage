@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
+import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.RefinedStorageItems;
@@ -31,7 +32,7 @@ public class WirelessGridHandler implements IWirelessGridHandler {
     }
 
     @Override
-    public boolean onOpen(EntityPlayer player, EnumHand hand) {
+    public boolean onOpen(EntityPlayer player, World controllerWorld, EnumHand hand) {
         boolean inRange = false;
 
         for (INetworkNode node : network.getNodeGraph().all()) {
@@ -60,7 +61,7 @@ public class WirelessGridHandler implements IWirelessGridHandler {
 
         consumers.add(new WirelessGridConsumer(player, stack));
 
-        player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.WIRELESS_GRID, player.worldObj, hand.ordinal(), 0, 0);
+        player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.WIRELESS_GRID, player.worldObj, hand.ordinal(), controllerWorld.provider.getDimension(), 0);
 
         network.sendItemStorageToClient((EntityPlayerMP) player);
 

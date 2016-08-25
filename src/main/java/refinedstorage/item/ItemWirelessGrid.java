@@ -144,7 +144,7 @@ public class ItemWirelessGrid extends ItemEnergyContainer implements ISpecialEle
             TileEntity controller;
 
             if (controllerWorld != null && ((controller = controllerWorld.getTileEntity(new BlockPos(getX(stack), getY(stack), getZ(stack)))) instanceof TileController)) {
-                if (((TileController) controller).getWirelessGridHandler().onOpen(player, hand)) {
+                if (((TileController) controller).getWirelessGridHandler().onOpen(player, controllerWorld, hand)) {
                     return new ActionResult<>(EnumActionResult.SUCCESS, stack);
                 } else {
                     player.addChatComponentMessage(new TextComponentTranslation("misc.refinedstorage:wireless_grid.out_of_range"));

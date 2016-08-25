@@ -63,12 +63,12 @@ public class GuiHandler implements IGuiHandler {
         }
     }
 
-    private WirelessGrid getWirelessGrid(EntityPlayer player, int hand) {
-        return new WirelessGrid(player.worldObj, player.getHeldItem(EnumHand.values()[hand]));
+    private WirelessGrid getWirelessGrid(EntityPlayer player, int hand, int controllerDimension) {
+        return new WirelessGrid(controllerDimension, player.getHeldItem(EnumHand.values()[hand]));
     }
 
-    private ContainerGrid getWirelessGridContainer(EntityPlayer player, int hand) {
-        return new ContainerGrid(getWirelessGrid(player, hand), player);
+    private ContainerGrid getWirelessGridContainer(EntityPlayer player, int hand, int controllerDimension) {
+        return new ContainerGrid(getWirelessGrid(player, hand, controllerDimension), player);
     }
 
     private ContainerGridFilter getGridFilterContainer(EntityPlayer player, int hand) {
@@ -78,7 +78,7 @@ public class GuiHandler implements IGuiHandler {
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         if (ID == RefinedStorageGui.WIRELESS_GRID) {
-            return getWirelessGridContainer(player, x);
+            return getWirelessGridContainer(player, x, y);
         } else if (ID == RefinedStorageGui.GRID_FILTER) {
             return getGridFilterContainer(player, x);
         }
@@ -96,7 +96,7 @@ public class GuiHandler implements IGuiHandler {
             case RefinedStorageGui.GRID:
                 return new GuiGrid((ContainerGrid) getContainer(ID, player, tile), (TileGrid) tile);
             case RefinedStorageGui.WIRELESS_GRID:
-                return getWirelessGridGui(player, x);
+                return getWirelessGridGui(player, x, y);
             case RefinedStorageGui.DISK_DRIVE:
                 return new GuiStorage((ContainerDiskDrive) getContainer(ID, player, tile), (IStorageGui) tile, "gui/disk_drive.png");
             case RefinedStorageGui.IMPORTER:
@@ -140,8 +140,8 @@ public class GuiHandler implements IGuiHandler {
         }
     }
 
-    private GuiGrid getWirelessGridGui(EntityPlayer player, int hand) {
-        WirelessGrid grid = getWirelessGrid(player, hand);
+    private GuiGrid getWirelessGridGui(EntityPlayer player, int hand, int controllerDimension) {
+        WirelessGrid grid = getWirelessGrid(player, hand, controllerDimension);
 
         return new GuiGrid(new ContainerGrid(grid, player), grid);
     }
