@@ -29,7 +29,7 @@ public final class RefinedStorageSerializers {
         }
 
         @Override
-        public List<ClientNode> read(PacketBuffer buf) throws IOException {
+        public List<ClientNode> read(PacketBuffer buf) {
             List<ClientNode> nodes = new ArrayList<>();
 
             int size = buf.readInt();
@@ -64,7 +64,7 @@ public final class RefinedStorageSerializers {
         }
 
         @Override
-        public List<ClientCraftingTask> read(PacketBuffer buf) throws IOException {
+        public List<ClientCraftingTask> read(PacketBuffer buf) {
             int size = buf.readInt();
 
             List<ClientCraftingTask> tasks = new ArrayList<>();
