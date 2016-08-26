@@ -18,7 +18,7 @@ public class IntegrationCraftingTweaks {
 			tagCompound.setString("ContainerCallback", ContainerCallback.class.getName());
 			tagCompound.setInteger("GridSlotNumber", 36);
 			tagCompound.setString("AlignToGrid", "left");
-			FMLInterModComms.sendMessage(MOD_ID, "RegisterProvider", tagCompound);
+			FMLInterModComms.sendMessage(MOD_ID, "RegisterProviderV2", tagCompound);
 		}
 	}
 
