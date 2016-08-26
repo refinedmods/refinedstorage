@@ -16,14 +16,11 @@ public class NetworkRegistry implements INetworkRegistry {
     @Override
     public void addNetwork(@Nonnull INetworkMaster network) {
         networks.put(network.getPosition(), network);
-        System.out.println("Added " + network.getPosition());
     }
 
     @Override
     public void removeNetwork(@Nonnull BlockPos pos) {
         networks.remove(pos);
-
-        System.out.println("Removed " + pos);
     }
 
     @Override
