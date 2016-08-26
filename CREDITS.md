@@ -9,6 +9,7 @@
 - GustoniaEagle
 
 ## Translations
+- raoulvdberge (Dutch translation)
 - ChaoticTabris (Portuguese (Brazilian) translation)
 - Leventovitch (French translation)
 - ChillUpX and 0blu (German translation)
