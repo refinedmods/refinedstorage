@@ -2,6 +2,7 @@
 
 ### 0.9.3
 - Updated German translation for Fluid Storage (0blu)
+- Updated Dutch translation for Fluid Storage (raoulvdberge)
 - Added Chinese translation (TartaricAcid)
 - Added Crafting Tweaks integration (blay09)
 
