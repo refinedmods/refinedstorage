@@ -86,7 +86,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
 
     @Override
     public INetworkMaster getNetwork() {
-        return !worldObj.isRemote ? RefinedStorageAPI.getNetwork(this) : null;
+        return (worldObj != null && !worldObj.isRemote) ? RefinedStorageAPI.getNetwork(this) : null;
     }
 
     @Override
