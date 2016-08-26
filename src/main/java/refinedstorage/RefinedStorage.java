@@ -19,7 +19,7 @@ import refinedstorage.proxy.CommonProxy;
 @Mod(modid = RefinedStorage.ID, version = RefinedStorage.VERSION, dependencies = RefinedStorage.DEPENDENCIES)
 public final class RefinedStorage {
     public static final String ID = "refinedstorage";
-    public static final String VERSION = "0.9.2";
+    public static final String VERSION = "0.9.3";
     public static final String DEPENDENCIES = "required-after:mcmultipart@[1.2.1,);";
 
     @SidedProxy(clientSide = "refinedstorage.proxy.ClientProxy", serverSide = "refinedstorage.proxy.ServerProxy")
