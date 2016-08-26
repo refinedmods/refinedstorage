@@ -3,6 +3,7 @@
 ## Programming
 - raoulvdberge
 - tomevoll (providing small patches)
+- blay09 (Crafting Tweaks) integration
 
 ## Art
 - GustoniaEagle
