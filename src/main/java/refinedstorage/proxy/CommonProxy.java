@@ -20,6 +20,7 @@ import refinedstorage.api.RefinedStorageAPI;
 import refinedstorage.apiimpl.network.registry.NetworkRegistryProvider;
 import refinedstorage.apiimpl.network.registry.NetworkRegistryUnloader;
 import refinedstorage.apiimpl.solderer.*;
+import refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
 import refinedstorage.apiimpl.storage.item.ItemStorageNBT;
 import refinedstorage.block.*;
 import refinedstorage.gui.GuiHandler;
@@ -484,9 +485,9 @@ public class CommonProxy {
             );
         }
 
-        // Fluid Storage Parts
+        // Fluid Storage Disks
         for (int type = 0; type <= 3; ++type) {
-            ItemStack disk = ItemStorageNBT.createStackWithNBT(new ItemStack(RefinedStorageItems.FLUID_STORAGE_DISK, 1, type));
+            ItemStack disk = FluidStorageNBT.createStackWithNBT(new ItemStack(RefinedStorageItems.FLUID_STORAGE_DISK, 1, type));
 
             GameRegistry.addRecipe(new ShapedOreRecipe(disk,
                 "GRG",
