@@ -5,6 +5,8 @@
 - Updated Dutch translation for Fluid Storage (raoulvdberge)
 - Added Chinese translation (TartaricAcid)
 - Added Crafting Tweaks integration (blay09)
+- Reworked storage network code, should fix weird machine disconnection issues (raoulvdberge)
+- Fixed that the Fluid Storage Disk recipe returns an invalid disk (raoulvdberge)
 
 ### 0.9.2
 **Bugfixes**

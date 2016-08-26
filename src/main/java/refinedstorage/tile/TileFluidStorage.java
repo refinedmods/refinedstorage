@@ -93,8 +93,8 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
         if (storage == null && storageTag != null) {
             storage = new FluidStorage();
 
-            if (network != null) {
-                network.getFluidStorage().rebuild();
+            if (getNetwork() != null) {
+                getNetwork().getFluidStorage().rebuild();
             }
         }
     }

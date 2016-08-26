@@ -85,10 +85,10 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
                         for (ItemStack drop : drops) {
                             // We check if the controller isn't null here because when a destructor faces a node and removes it
                             // it will essentially remove this block itself from the network without knowing
-                            if (network == null) {
+                            if (getNetwork() == null) {
                                 InventoryHelper.spawnItemStack(worldObj, front.getX(), front.getY(), front.getZ(), drop);
                             } else {
-                                ItemStack remainder = network.insertItem(drop, drop.stackSize, false);
+                                ItemStack remainder = getNetwork().insertItem(drop, drop.stackSize, false);
 
                                 if (remainder != null) {
                                     InventoryHelper.spawnItemStack(worldObj, front.getX(), front.getY(), front.getZ(), remainder);
@@ -113,10 +113,10 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
                 if (handler != null) {
                     FluidStack stack = handler.drain(Fluid.BUCKET_VOLUME, false);
 
-                    if (stack != null && IFilterable.canTakeFluids(fluidFilters, mode, compare, stack) && network.insertFluid(stack, stack.amount, true) == null) {
+                    if (stack != null && IFilterable.canTakeFluids(fluidFilters, mode, compare, stack) && getNetwork().insertFluid(stack, stack.amount, true) == null) {
                         FluidStack drained = handler.drain(Fluid.BUCKET_VOLUME, true);
 
-                        network.insertFluid(drained, drained.amount, false);
+                        getNetwork().insertFluid(drained, drained.amount, false);
                     }
                 }
             }

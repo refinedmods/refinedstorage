@@ -236,4 +236,16 @@ public abstract class TileBase extends TileEntity implements ITickable {
 
         return handler;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof TileBase && ((TileBase) o).getPos().equals(pos) && ((TileBase) o).getWorld().provider.getDimension() == worldObj.provider.getDimension();
+    }
+
+    @Override
+    public int hashCode() {
+        int result = pos.hashCode();
+        result = 31 * result + worldObj.provider.getDimension();
+        return result;
+    }
 }

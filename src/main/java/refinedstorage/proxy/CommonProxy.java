@@ -9,7 +9,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
@@ -18,6 +17,8 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.api.RefinedStorageAPI;
+import refinedstorage.apiimpl.network.registry.NetworkRegistryProvider;
+import refinedstorage.apiimpl.network.registry.NetworkRegistryUnloader;
 import refinedstorage.apiimpl.solderer.*;
 import refinedstorage.apiimpl.storage.item.ItemStorageNBT;
 import refinedstorage.block.*;
@@ -44,6 +45,10 @@ public class CommonProxy {
 
         RefinedStorageAPI.SOLDERER_REGISTRY = new SoldererRegistry();
 
+        RefinedStorageAPI.NETWORK_REGISTRY_PROVIDER = new NetworkRegistryProvider();
+
+        MinecraftForge.EVENT_BUS.register(new NetworkRegistryUnloader());
+
         int id = 0;
 
         RefinedStorage.INSTANCE.network.registerMessage(MessageTileDataParameter.class, MessageTileDataParameter.class, id++, Side.CLIENT);
@@ -65,7 +70,7 @@ public class CommonProxy {
         RefinedStorage.INSTANCE.network.registerMessage(MessageProcessingPatternEncoderClear.class, MessageProcessingPatternEncoderClear.class, id++, Side.SERVER);
         RefinedStorage.INSTANCE.network.registerMessage(MessageGridFilterUpdate.class, MessageGridFilterUpdate.class, id++, Side.SERVER);
 
-        NetworkRegistry.INSTANCE.registerGuiHandler(RefinedStorage.INSTANCE, new GuiHandler());
+        net.minecraftforge.fml.common.network.NetworkRegistry.INSTANCE.registerGuiHandler(RefinedStorage.INSTANCE, new GuiHandler());
 
         MinecraftForge.EVENT_BUS.register(new ContainerListener());
 

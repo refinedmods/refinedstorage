@@ -70,8 +70,8 @@ public abstract class TileMultipartNode extends TileNode implements IMicroblockC
     public void onMicroblocksChanged() {
         markDirty();
 
-        if (network != null) {
-            NetworkUtils.rebuildGraph(network);
+        if (getNetwork() != null) {
+            NetworkUtils.rebuildGraph(getNetwork());
         } else if (worldObj != null) {
             RefinedStorageBlocks.CABLE.attemptConnect(worldObj, pos);
         }

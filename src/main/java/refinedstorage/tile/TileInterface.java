@@ -50,7 +50,7 @@ public class TileInterface extends TileNode implements IComparable {
         } else if (ticks % upgrades.getSpeed() == 0) {
             int size = Math.min(slot.stackSize, upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK) ? 64 : 1);
 
-            ItemStack remainder = network.insertItem(slot, size, false);
+            ItemStack remainder = getNetwork().insertItem(slot, size, false);
 
             if (remainder == null) {
                 importItems.extractItem(currentSlot, size, false);
@@ -65,13 +65,13 @@ public class TileInterface extends TileNode implements IComparable {
 
             if (wanted == null) {
                 if (got != null) {
-                    exportItems.setStackInSlot(i, network.insertItem(got, got.stackSize, false));
+                    exportItems.setStackInSlot(i, getNetwork().insertItem(got, got.stackSize, false));
                 }
             } else {
                 int delta = got == null ? wanted.stackSize : (wanted.stackSize - got.stackSize);
 
                 if (delta > 0) {
-                    ItemStack result = network.extractItem(wanted, delta, compare);
+                    ItemStack result = getNetwork().extractItem(wanted, delta, compare);
 
                     if (result != null) {
                         if (got == null) {
@@ -81,7 +81,7 @@ public class TileInterface extends TileNode implements IComparable {
                         }
                     }
                 } else if (delta < 0) {
-                    ItemStack remainder = network.insertItem(got, Math.abs(delta), false);
+                    ItemStack remainder = getNetwork().insertItem(got, Math.abs(delta), false);
 
                     if (remainder == null) {
                         exportItems.extractItem(i, Math.abs(delta), false);

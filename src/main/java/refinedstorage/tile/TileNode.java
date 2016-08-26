@@ -4,6 +4,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import refinedstorage.api.RefinedStorageAPI;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.INetworkNode;
 import refinedstorage.api.network.NetworkUtils;
@@ -19,10 +20,9 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
     private boolean active;
     private boolean update;
+    private boolean connected;
 
     protected boolean rebuildOnUpdateChange;
-    protected boolean connected;
-    protected INetworkMaster network;
 
     public TileNode() {
         dataManager.addWatchedParameter(REDSTONE_MODE);
@@ -40,13 +40,13 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
     @Override
     public void update() {
         if (!worldObj.isRemote) {
-            if (update != canUpdate() && network != null) {
+            if (update != canUpdate() && getNetwork() != null) {
                 update = canUpdate();
 
-                onConnectionChange(network, update);
+                onConnectionChange(getNetwork(), update);
 
                 if (rebuildOnUpdateChange) {
-                    NetworkUtils.rebuildGraph(network);
+                    NetworkUtils.rebuildGraph(getNetwork());
                 }
             }
 
@@ -66,18 +66,12 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
 
     @Override
     public void onConnected(INetworkMaster network) {
-        this.connected = true;
-        this.network = network;
-
         onConnectionChange(network, true);
     }
 
     @Override
     public void onDisconnected(INetworkMaster network) {
         onConnectionChange(network, false);
-
-        this.connected = false;
-        this.network = null;
     }
 
     @Override
@@ -92,7 +86,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
 
     @Override
     public INetworkMaster getNetwork() {
-        return network;
+        return !worldObj.isRemote ? RefinedStorageAPI.getNetwork(this) : null;
     }
 
     @Override
@@ -107,11 +101,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
 
     @Override
     public boolean isConnected() {
-        return connected;
-    }
-
-    public void setConnected(boolean connected) {
-        this.connected = connected;
+        return worldObj.isRemote ? connected : (getNetwork() != null);
     }
 
     @Override
@@ -164,17 +154,5 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
 
     public boolean hasConnectivityState() {
         return false;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return o instanceof TileNode && ((TileNode) o).getPosition().equals(pos);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = pos.hashCode();
-        result = 31 * result + worldObj.provider.getDimension();
-        return result;
     }
 }
