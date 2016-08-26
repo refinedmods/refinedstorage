@@ -14,7 +14,6 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import refinedstorage.integration.IntegrationCraftingTweaks;
 import refinedstorage.proxy.CommonProxy;
 
 @Mod(modid = RefinedStorage.ID, version = RefinedStorage.VERSION, dependencies = RefinedStorage.DEPENDENCIES)
@@ -150,8 +149,6 @@ public final class RefinedStorage {
         translucentCables = config.getBoolean("translucentCables", "misc", false, "For resource pack makers that want a translucent cable");
 
         config.save();
-
-        IntegrationCraftingTweaks.register();
     }
 
     @EventHandler

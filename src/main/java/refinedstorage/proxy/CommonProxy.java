@@ -22,6 +22,7 @@ import refinedstorage.apiimpl.solderer.*;
 import refinedstorage.apiimpl.storage.item.ItemStorageNBT;
 import refinedstorage.block.*;
 import refinedstorage.gui.GuiHandler;
+import refinedstorage.integration.craftingtweaks.IntegrationCraftingTweaks;
 import refinedstorage.item.*;
 import refinedstorage.network.*;
 import refinedstorage.tile.*;
@@ -37,6 +38,10 @@ public class CommonProxy {
     protected List<BlockCable> cableTypes = new ArrayList<>();
 
     public void preInit(FMLPreInitializationEvent e) {
+        if (IntegrationCraftingTweaks.isLoaded()) {
+            IntegrationCraftingTweaks.register();
+        }
+
         RefinedStorageAPI.SOLDERER_REGISTRY = new SoldererRegistry();
 
         int id = 0;
