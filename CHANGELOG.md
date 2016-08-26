@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 0.9.3
+- Updated German translation for Fluid Storage (0blu)
+- Added Chinese translation (TartaricAcid)
+
 ### 0.9.2
 **Bugfixes**
 - Fixed not being able to take out items from Wireless Grid cross-dimensionally

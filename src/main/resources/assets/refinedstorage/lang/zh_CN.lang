@@ -2,7 +2,6 @@
 
 gui.refinedstorage:controller.0=控制器
 gui.refinedstorage:controller.1=创造控制器
-gui.refinedstorage:controller.machine_amount=%dx
 gui.refinedstorage:grid=终端
 gui.refinedstorage:grid.craft=合成
 gui.refinedstorage:grid.pattern_create=写入磁盘
@@ -13,7 +12,6 @@ gui.refinedstorage:importer=输入总线
 gui.refinedstorage:exporter=输出总线
 gui.refinedstorage:detector=网络物品检测器
 gui.refinedstorage:solderer=压印器
-gui.refinedstorage:solderer.progress=%d%%
 gui.refinedstorage:destructor=破坏面板
 gui.refinedstorage:constructor=成型面板
 gui.refinedstorage:relay=继电器
