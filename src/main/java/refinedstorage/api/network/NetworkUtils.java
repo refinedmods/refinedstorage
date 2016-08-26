@@ -3,7 +3,6 @@ package refinedstorage.api.network;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -42,13 +41,7 @@ public final class NetworkUtils {
         return stack.getFluid().hashCode() * (stack.tag != null ? stack.tag.hashCode() : 1);
     }
 
-    public static int getNodeHashCode(World world, INetworkNode node) {
-        int result = node.getPosition().hashCode();
-        result = 31 * result + world.provider.getDimension();
-        return result;
-    }
-
-    public static void writeStack(ByteBuf buf, INetworkMaster network, ItemStack stack) {
+    public static void writeItemStack(ByteBuf buf, INetworkMaster network, ItemStack stack) {
         buf.writeInt(Item.getIdFromItem(stack.getItem()));
         buf.writeInt(stack.stackSize);
         buf.writeInt(stack.getItemDamage());

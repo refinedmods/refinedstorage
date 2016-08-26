@@ -165,4 +165,16 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
     public boolean hasConnectivityState() {
         return false;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof TileNode && ((TileNode) o).getPosition().equals(pos);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = pos.hashCode();
+        result = 31 * result + worldObj.provider.getDimension();
+        return result;
+    }
 }

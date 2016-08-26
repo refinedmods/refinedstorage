@@ -7,7 +7,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import refinedstorage.api.network.INetworkNode;
 import refinedstorage.api.network.INetworkNodeGraph;
-import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.tile.TileController;
 import refinedstorage.tile.TileNetworkTransmitter;
 
@@ -17,7 +16,6 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
     private TileController controller;
 
     private List<INetworkNode> nodes = new ArrayList<>();
-    private Set<Integer> nodeHashes = new HashSet<>();
 
     public NetworkNodeGraph(TileController controller) {
         this.controller = controller;
@@ -36,7 +34,6 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
         World world = getWorld();
 
         List<INetworkNode> newNodes = new ArrayList<>();
-        Set<Integer> newNodeHashes = new HashSet<>();
 
         Set<BlockPos> checked = new HashSet<>();
         Queue<BlockPos> toCheck = new ArrayDeque<>();
@@ -66,7 +63,6 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
             INetworkNode node = (INetworkNode) tile;
 
             newNodes.add(node);
-            newNodeHashes.add(NetworkUtils.getNodeHashCode(world, node));
 
             if (tile instanceof TileNetworkTransmitter) {
                 final TileNetworkTransmitter transmitter = (TileNetworkTransmitter) tile;
@@ -86,7 +82,6 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
                             dimensionGraph.rebuild(transmitter.getReceiver(), false);
 
                             newNodes.addAll(dimensionGraph.all());
-                            newNodeHashes.addAll(dimensionGraph.allHashes());
                         }
                     } else {
                         BlockPos receiver = transmitter.getReceiver();
@@ -109,45 +104,36 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
             }
         }
 
-        List<INetworkNode> oldNodes = new ArrayList<>(nodes);
-        Set<Integer> oldNodeHashes = new HashSet<>(nodeHashes);
-
-        this.nodes = newNodes;
-        this.nodeHashes = newNodeHashes;
+        boolean changed = false;
 
         if (notify) {
-            boolean changed = false;
-
-            for (INetworkNode newNode : nodes) {
-                if (!oldNodeHashes.contains(NetworkUtils.getNodeHashCode(newNode.getNodeWorld(), newNode))) {
+            for (INetworkNode newNode : newNodes) {
+                if (!nodes.contains(newNode)) {
                     newNode.onConnected(controller);
 
                     changed = true;
                 }
             }
 
-            for (INetworkNode oldNode : oldNodes) {
-                if (!nodeHashes.contains(NetworkUtils.getNodeHashCode(oldNode.getNodeWorld(), oldNode))) {
+            for (INetworkNode oldNode : nodes) {
+                if (!newNodes.contains(oldNode)) {
                     oldNode.onDisconnected(controller);
 
                     changed = true;
                 }
             }
+        }
 
-            if (changed) {
-                controller.getDataManager().sendParameterToWatchers(TileController.NODES);
-            }
+        this.nodes = newNodes;
+
+        if (changed) {
+            controller.getDataManager().sendParameterToWatchers(TileController.NODES);
         }
     }
 
     @Override
     public List<INetworkNode> all() {
         return nodes;
-    }
-
-    @Override
-    public Set<Integer> allHashes() {
-        return nodeHashes;
     }
 
     @Override
@@ -159,7 +145,6 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
         }
 
         nodes.clear();
-        nodeHashes.clear();
 
         controller.getDataManager().sendParameterToWatchers(TileController.NODES);
     }

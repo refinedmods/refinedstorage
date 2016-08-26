@@ -38,7 +38,7 @@ public class MessageGridItemUpdate implements IMessage, IMessageHandler<MessageG
         buf.writeInt(network.getItemStorage().getStacks().size());
 
         for (ItemStack stack : network.getItemStorage().getStacks()) {
-            NetworkUtils.writeStack(buf, network, stack);
+            NetworkUtils.writeItemStack(buf, network, stack);
         }
     }
 

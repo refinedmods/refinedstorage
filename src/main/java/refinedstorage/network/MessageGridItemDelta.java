@@ -35,7 +35,7 @@ public class MessageGridItemDelta implements IMessage, IMessageHandler<MessageGr
 
     @Override
     public void toBytes(ByteBuf buf) {
-        NetworkUtils.writeStack(buf, network, stack);
+        NetworkUtils.writeItemStack(buf, network, stack);
         buf.writeInt(delta);
     }
 
