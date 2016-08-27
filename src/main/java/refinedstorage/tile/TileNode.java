@@ -19,8 +19,9 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
     private boolean active;
     private boolean update;
-    private boolean connected;
-    private INetworkMaster network;
+
+    protected boolean connected;
+    protected INetworkMaster network;
 
     protected boolean rebuildOnUpdateChange;
 
@@ -40,13 +41,13 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
     @Override
     public void update() {
         if (!worldObj.isRemote) {
-            if (update != canUpdate() && getNetwork() != null) {
+            if (update != canUpdate() && network != null) {
                 update = canUpdate();
 
-                onConnectionChange(getNetwork(), update);
+                onConnectionChange(network, update);
 
                 if (rebuildOnUpdateChange) {
-                    NetworkUtils.rebuildGraph(getNetwork());
+                    NetworkUtils.rebuildGraph(network);
                 }
             }
 

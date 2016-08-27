@@ -3,6 +3,8 @@
 ### 0.9.4
 - Little fixes in German translation (ThexXTURBOXx)
 - Fixed mod not working without JEI (raoulvdberge)
+- Reverted network changes that caused buggy behavior (raoulvdberge)
+- Reduced explosion radius when multiple controllers are connected to the same network (raoulvdberge)
 
 ### 0.9.3
 - Updated German translation for Fluid Storage (0blu)

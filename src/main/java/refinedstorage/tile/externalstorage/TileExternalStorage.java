@@ -123,7 +123,7 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
 
     @Override
     public void update() {
-        if (!worldObj.isRemote && getNetwork() != null) {
+        if (!worldObj.isRemote && network != null) {
             boolean itemChangeDetected = false, fluidChangeDetected = false;
 
             for (ItemStorageExternal storage : itemStorages) {
@@ -139,17 +139,17 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
             }
 
             if (itemChangeDetected) {
-                getNetwork().getItemStorage().rebuild();
+                network.getItemStorage().rebuild();
             }
 
             if (fluidChangeDetected) {
-                getNetwork().getFluidStorage().rebuild();
+                network.getFluidStorage().rebuild();
             }
 
             if (getFacingTile() instanceof IDrawerGroup && lastDrawerCount != ((IDrawerGroup) getFacingTile()).getDrawerCount()) {
                 lastDrawerCount = ((IDrawerGroup) getFacingTile()).getDrawerCount();
 
-                updateStorage(getNetwork());
+                updateStorage(network);
             }
         }
 

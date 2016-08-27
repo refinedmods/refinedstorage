@@ -360,8 +360,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         super.onChunkUnload();
 
         energyEU.onChunkUnload();
-
-        onDestroyed();
     }
 
     public void onDestroyed() {

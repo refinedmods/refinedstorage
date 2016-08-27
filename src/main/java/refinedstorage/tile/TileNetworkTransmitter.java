@@ -44,8 +44,8 @@ public class TileNetworkTransmitter extends TileNode {
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            if (getNetwork() != null) {
-                NetworkUtils.rebuildGraph(getNetwork());
+            if (network != null) {
+                NetworkUtils.rebuildGraph(network);
             }
         }
     };
@@ -64,8 +64,8 @@ public class TileNetworkTransmitter extends TileNode {
                 receiverDimension = ItemNetworkCard.getDimension(card);
             }
 
-            if (getNetwork() != null) {
-                NetworkUtils.rebuildGraph(getNetwork());
+            if (network != null) {
+                NetworkUtils.rebuildGraph(network);
             }
         }
     };

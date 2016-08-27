@@ -76,7 +76,7 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
                 BlockPos front = pos.offset(getDirection());
 
                 if (worldObj.isAirBlock(front) && block.getBlock().canPlaceBlockAt(worldObj, front)) {
-                    ItemStack took = getNetwork().extractItem(itemFilters.getStackInSlot(0), 1, compare);
+                    ItemStack took = network.extractItem(itemFilters.getStackInSlot(0), 1, compare);
 
                     if (took != null) {
                         scheduler.resetSchedule();
@@ -88,7 +88,7 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
                         ItemStack craft = itemFilters.getStackInSlot(0);
 
                         if (scheduler.canSchedule(compare, craft)) {
-                            scheduler.schedule(getNetwork(), compare, craft);
+                            scheduler.schedule(network, compare, craft);
                         }
                     }
                 }
@@ -101,7 +101,7 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
                     Block block = stack.getFluid().getBlock();
 
                     if (worldObj.isAirBlock(front) && block.canPlaceBlockAt(worldObj, front)) {
-                        FluidStack took = getNetwork().extractFluid(stack, Fluid.BUCKET_VOLUME, compare);
+                        FluidStack took = network.extractFluid(stack, Fluid.BUCKET_VOLUME, compare);
 
                         if (took != null) {
                             IBlockState state = block.getDefaultState();

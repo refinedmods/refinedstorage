@@ -66,7 +66,7 @@ public class TileExporter extends TileMultipartNode implements IComparable, ITyp
                         ItemStack slot = itemFilters.getStackInSlot(i);
 
                         if (slot != null) {
-                            ItemStack took = getNetwork().extractItem(slot, size, compare);
+                            ItemStack took = network.extractItem(slot, size, compare);
 
                             if (took != null) {
                                 scheduler.resetSchedule();
@@ -74,11 +74,11 @@ public class TileExporter extends TileMultipartNode implements IComparable, ITyp
                                 ItemStack remainder = ItemHandlerHelper.insertItem(handler, took, false);
 
                                 if (remainder != null) {
-                                    getNetwork().insertItem(remainder, remainder.stackSize, false);
+                                    network.insertItem(remainder, remainder.stackSize, false);
                                 }
                             } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
                                 if (scheduler.canSchedule(compare, slot)) {
-                                    scheduler.schedule(getNetwork(), compare, slot);
+                                    scheduler.schedule(network, compare, slot);
                                 }
                             }
                         }
@@ -90,13 +90,13 @@ public class TileExporter extends TileMultipartNode implements IComparable, ITyp
                 if (handler != null) {
                     for (FluidStack stack : fluidFilters.getFluids()) {
                         if (stack != null) {
-                            FluidStack took = getNetwork().extractFluid(stack, Fluid.BUCKET_VOLUME, compare);
+                            FluidStack took = network.extractFluid(stack, Fluid.BUCKET_VOLUME, compare);
 
                             if (took != null) {
                                 int remainder = Fluid.BUCKET_VOLUME - handler.fill(took, true);
 
                                 if (remainder > 0) {
-                                    getNetwork().insertFluid(took, remainder, false);
+                                    network.insertFluid(took, remainder, false);
                                 }
                             }
                         }

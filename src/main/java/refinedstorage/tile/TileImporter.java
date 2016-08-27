@@ -79,8 +79,8 @@ public class TileImporter extends TileMultipartNode implements IComparable, IFil
 
                     ItemStack result = handler.extractItem(currentSlot, quantity, true);
 
-                    if (result != null && getNetwork().insertItem(result, result.stackSize, true) == null) {
-                        getNetwork().insertItem(result, result.stackSize, false);
+                    if (result != null && network.insertItem(result, result.stackSize, true) == null) {
+                        network.insertItem(result, result.stackSize, false);
 
                         handler.extractItem(currentSlot, quantity, false);
                     } else {
@@ -94,10 +94,10 @@ public class TileImporter extends TileMultipartNode implements IComparable, IFil
             if (handler != null) {
                 FluidStack stack = handler.drain(Fluid.BUCKET_VOLUME, false);
 
-                if (stack != null && IFilterable.canTakeFluids(fluidFilters, mode, compare, stack) && getNetwork().insertFluid(stack, stack.amount, true) == null) {
+                if (stack != null && IFilterable.canTakeFluids(fluidFilters, mode, compare, stack) && network.insertFluid(stack, stack.amount, true) == null) {
                     FluidStack drain = handler.drain(Fluid.BUCKET_VOLUME, true);
 
-                    getNetwork().insertFluid(drain, drain.amount, false);
+                    network.insertFluid(drain, drain.amount, false);
                 }
             }
         }

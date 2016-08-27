@@ -106,7 +106,7 @@ public class TileDetector extends TileNode implements IComparable, IType {
                 ItemStack slot = itemFilters.getStackInSlot(0);
 
                 if (slot != null) {
-                    ItemStack stack = getNetwork().getItemStorage().get(slot, compare);
+                    ItemStack stack = network.getItemStorage().get(slot, compare);
 
                     powered = isPowered(stack == null ? null : stack.stackSize);
                 } else {
@@ -116,7 +116,7 @@ public class TileDetector extends TileNode implements IComparable, IType {
                 FluidStack slot = fluidFilters.getFluids()[0];
 
                 if (slot != null) {
-                    FluidStack stack = getNetwork().getFluidStorage().get(slot, compare);
+                    FluidStack stack = network.getFluidStorage().get(slot, compare);
 
                     powered = isPowered(stack == null ? null : stack.amount);
                 } else {

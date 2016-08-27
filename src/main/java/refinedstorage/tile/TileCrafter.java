@@ -21,8 +21,8 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            if (getNetwork() != null) {
-                getNetwork().rebuildPatterns();
+            if (network != null) {
+                network.rebuildPatterns();
             }
         }
     };

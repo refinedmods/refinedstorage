@@ -188,27 +188,27 @@ public class TileGrid extends TileNode implements IGrid {
 
     @Override
     public BlockPos getNetworkPosition() {
-        return getNetwork() != null ? getNetwork().getPosition() : null;
+        return network != null ? network.getPosition() : null;
     }
 
     public void onGridOpened(EntityPlayer player) {
         if (isConnected()) {
             if (getType() == EnumGridType.FLUID) {
-                getNetwork().sendFluidStorageToClient((EntityPlayerMP) player);
+                network.sendFluidStorageToClient((EntityPlayerMP) player);
             } else {
-                getNetwork().sendItemStorageToClient((EntityPlayerMP) player);
+                network.sendItemStorageToClient((EntityPlayerMP) player);
             }
         }
     }
 
     @Override
     public IItemGridHandler getItemHandler() {
-        return getNetwork() != null ? getNetwork().getItemGridHandler() : null;
+        return network != null ? network.getItemGridHandler() : null;
     }
 
     @Override
     public IFluidGridHandler getFluidHandler() {
-        return getNetwork() != null ? getNetwork().getFluidGridHandler() : null;
+        return network != null ? network.getFluidGridHandler() : null;
     }
 
     @Override
@@ -263,7 +263,7 @@ public class TileGrid extends TileNode implements IGrid {
             } else {
                 if (slot != null) {
                     if (slot.stackSize == 1 && isConnected()) {
-                        matrix.setInventorySlotContents(i, NetworkUtils.extractItem(getNetwork(), slot, 1));
+                        matrix.setInventorySlotContents(i, NetworkUtils.extractItem(network, slot, 1));
                     } else {
                         matrix.decrStackSize(i, 1);
                     }
@@ -340,10 +340,10 @@ public class TileGrid extends TileNode implements IGrid {
 
                 if (slot != null) {
                     if (getType() == EnumGridType.CRAFTING) {
-                        if (getNetwork().insertItem(slot, slot.stackSize, true) != null) {
+                        if (network.insertItem(slot, slot.stackSize, true) != null) {
                             return;
                         } else {
-                            getNetwork().insertItem(slot, slot.stackSize, false);
+                            network.insertItem(slot, slot.stackSize, false);
                         }
                     }
 
@@ -357,7 +357,7 @@ public class TileGrid extends TileNode implements IGrid {
 
                     if (getType() == EnumGridType.CRAFTING) {
                         for (ItemStack possibility : possibilities) {
-                            ItemStack took = NetworkUtils.extractItem(getNetwork(), possibility, 1);
+                            ItemStack took = NetworkUtils.extractItem(network, possibility, 1);
 
                             if (took != null) {
                                 matrix.setInventorySlotContents(i, took);

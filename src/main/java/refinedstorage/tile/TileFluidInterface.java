@@ -103,7 +103,7 @@ public class TileFluidInterface extends TileNode implements IComparable {
             FluidStack drained = tankIn.drainInternal(Fluid.BUCKET_VOLUME, true);
 
             if (drained != null) {
-                FluidStack remainder = getNetwork().insertFluid(drained, drained.amount, false);
+                FluidStack remainder = network.insertFluid(drained, drained.amount, false);
 
                 if (remainder != null) {
                     tankIn.fillInternal(remainder, true);
@@ -116,16 +116,16 @@ public class TileFluidInterface extends TileNode implements IComparable {
                 FluidStack remainder = tankOut.drainInternal(Fluid.BUCKET_VOLUME, true);
 
                 if (remainder != null) {
-                    getNetwork().insertFluid(remainder, remainder.amount, false);
+                    network.insertFluid(remainder, remainder.amount, false);
                 }
             } else if (stack != null) {
-                FluidStack result = getNetwork().extractFluid(stack, Fluid.BUCKET_VOLUME, compare);
+                FluidStack result = network.extractFluid(stack, Fluid.BUCKET_VOLUME, compare);
 
                 if (result != null) {
                     int remainder = Fluid.BUCKET_VOLUME - tankOut.fillInternal(result, true);
 
                     if (remainder > 0) {
-                        getNetwork().insertFluid(stack, remainder, false);
+                        network.insertFluid(stack, remainder, false);
                     }
                 }
             }

@@ -93,8 +93,8 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
         if (storage == null && storageTag != null) {
             storage = new ItemStorage();
 
-            if (getNetwork() != null) {
-                getNetwork().getItemStorage().rebuild();
+            if (network != null) {
+                network.getItemStorage().rebuild();
             }
         }
     }
