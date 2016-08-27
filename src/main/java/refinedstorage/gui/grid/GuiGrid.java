@@ -28,6 +28,7 @@ import refinedstorage.gui.grid.stack.ClientStackItem;
 import refinedstorage.gui.grid.stack.IClientStack;
 import refinedstorage.gui.sidebutton.*;
 import refinedstorage.integration.jei.IntegrationJEI;
+import refinedstorage.integration.jei.RefinedStorageJEIPlugin;
 import refinedstorage.network.*;
 import refinedstorage.tile.grid.IGrid;
 import refinedstorage.tile.grid.TileGrid;
@@ -416,7 +417,7 @@ public class GuiGrid extends GuiBase {
 
     private void updateJEI() {
         if (IntegrationJEI.isLoaded() && (grid.getSearchBoxMode() == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED || grid.getSearchBoxMode() == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED)) {
-            IntegrationJEI.INSTANCE.getRuntime().getItemListOverlay().setFilterText(searchField.getText());
+            RefinedStorageJEIPlugin.INSTANCE.getRuntime().getItemListOverlay().setFilterText(searchField.getText());
         }
     }
 
