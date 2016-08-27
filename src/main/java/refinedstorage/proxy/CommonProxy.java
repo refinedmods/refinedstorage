@@ -17,8 +17,6 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.api.RefinedStorageAPI;
-import refinedstorage.apiimpl.network.registry.NetworkRegistryProvider;
-import refinedstorage.apiimpl.network.registry.NetworkRegistryUnloader;
 import refinedstorage.apiimpl.solderer.*;
 import refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
 import refinedstorage.apiimpl.storage.item.ItemStorageNBT;
@@ -45,10 +43,6 @@ public class CommonProxy {
         }
 
         RefinedStorageAPI.SOLDERER_REGISTRY = new SoldererRegistry();
-
-        RefinedStorageAPI.NETWORK_REGISTRY_PROVIDER = new NetworkRegistryProvider();
-
-        MinecraftForge.EVENT_BUS.register(new NetworkRegistryUnloader());
 
         int id = 0;
 

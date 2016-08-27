@@ -52,8 +52,8 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
         while ((currentPos = toCheck.poll()) != null) {
             TileEntity tile = world.getTileEntity(currentPos);
 
-            if (tile instanceof TileController && !controller.getPos().equals(tile.getPos())) {
-                world.createExplosion(null, tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ(), 4.5f, true);
+            if (tile instanceof TileController && !controller.getPos().equals(currentPos)) {
+                world.createExplosion(null, currentPos.getX(), currentPos.getY(), currentPos.getZ(), 3.5f, true);
             }
 
             if (!(tile instanceof INetworkNode)) {

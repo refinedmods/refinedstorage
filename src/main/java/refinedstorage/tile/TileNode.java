@@ -4,7 +4,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import refinedstorage.api.RefinedStorageAPI;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.INetworkNode;
 import refinedstorage.api.network.NetworkUtils;
@@ -21,6 +20,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
     private boolean active;
     private boolean update;
     private boolean connected;
+    private INetworkMaster network;
 
     protected boolean rebuildOnUpdateChange;
 
@@ -66,12 +66,18 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
 
     @Override
     public void onConnected(INetworkMaster network) {
+        this.connected = true;
+        this.network = network;
+
         onConnectionChange(network, true);
     }
 
     @Override
     public void onDisconnected(INetworkMaster network) {
         onConnectionChange(network, false);
+
+        this.connected = false;
+        this.network = null;
     }
 
     @Override
@@ -86,7 +92,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
 
     @Override
     public INetworkMaster getNetwork() {
-        return (worldObj != null && !worldObj.isRemote) ? RefinedStorageAPI.getNetwork(this) : null;
+        return network;
     }
 
     @Override
@@ -101,7 +107,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
 
     @Override
     public boolean isConnected() {
-        return worldObj.isRemote ? connected : (getNetwork() != null);
+        return connected;
     }
 
     @Override

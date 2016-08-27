@@ -18,14 +18,12 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
-import refinedstorage.api.RefinedStorageAPI;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.autocrafting.ICraftingTask;
 import refinedstorage.api.network.*;
 import refinedstorage.api.network.grid.IFluidGridHandler;
 import refinedstorage.api.network.grid.IItemGridHandler;
-import refinedstorage.api.network.registry.INetworkRegistry;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.api.storage.fluid.IFluidStorage;
 import refinedstorage.api.storage.fluid.IGroupedFluidStorage;
@@ -186,8 +184,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     private IControllerEnergyIC2 energyEU;
     private ControllerEnergyTesla energyTesla;
 
-    private boolean destroyed;
-
     private int lastEnergyDisplay;
     private int lastEnergyComparator;
 
@@ -238,12 +234,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public void update() {
         if (!worldObj.isRemote) {
-            INetworkRegistry registry = RefinedStorageAPI.getNetworkRegistry(worldObj);
-
-            if (!destroyed && registry.getNetwork(pos) == null) {
-                registry.addNetwork(this);
-            }
-
             energyEU.update();
 
             if (canRun()) {
@@ -370,14 +360,12 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         super.onChunkUnload();
 
         energyEU.onChunkUnload();
+
+        onDestroyed();
     }
 
     public void onDestroyed() {
         nodeGraph.disconnectAll();
-
-        destroyed = true;
-
-        RefinedStorageAPI.getNetworkRegistry(worldObj).removeNetwork(pos);
     }
 
     public IGroupedItemStorage getItemStorage() {
