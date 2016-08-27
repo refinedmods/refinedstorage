@@ -203,12 +203,12 @@ public class TileGrid extends TileNode implements IGrid {
 
     @Override
     public IItemGridHandler getItemHandler() {
-        return network != null ? network.getItemGridHandler() : null;
+        return connected ? network.getItemGridHandler() : null;
     }
 
     @Override
     public IFluidGridHandler getFluidHandler() {
-        return network != null ? network.getFluidGridHandler() : null;
+        return connected ? network.getFluidGridHandler() : null;
     }
 
     @Override

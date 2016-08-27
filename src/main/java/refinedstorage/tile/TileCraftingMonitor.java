@@ -14,7 +14,7 @@ public class TileCraftingMonitor extends TileNode {
     public static final TileDataParameter<List<ClientCraftingTask>> TASKS = new TileDataParameter<>(RefinedStorageSerializers.CLIENT_CRAFTING_TASK_SERIALIZER, new ArrayList<>(), new ITileDataProducer<List<ClientCraftingTask>, TileCraftingMonitor>() {
         @Override
         public List<ClientCraftingTask> getValue(TileCraftingMonitor tile) {
-            if (tile.isConnected()) {
+            if (tile.connected) {
                 List<ClientCraftingTask> tasks = tile.network.getCraftingTasks().stream().map(t -> new ClientCraftingTask(
                     t.getInfo(),
                     t.getPattern().getOutputs()
