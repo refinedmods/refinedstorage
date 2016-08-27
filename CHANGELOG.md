@@ -1,6 +1,7 @@
 # Refined Storage Changelog
 
 ### 0.9.4
+- Little fixed in German translation (ThexXTURBOXx)
 - Fixed mod not working without JEI (raoulvdberge)
 
 ### 0.9.3
