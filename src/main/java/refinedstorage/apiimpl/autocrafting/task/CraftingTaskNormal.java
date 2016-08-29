@@ -2,45 +2,27 @@ package refinedstorage.apiimpl.autocrafting.task;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagIntArray;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.NetworkUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class CraftingTaskNormal extends CraftingTask {
-    public static final String NBT_TOOK = "Took";
     public static final String NBT_SATISFIED = "Satisfied";
-    public static final String NBT_CHILDREN = "Children";
     public static final String NBT_CHECKED = "Checked";
 
-    private ICraftingPattern pattern;
-    private List<ItemStack> took = new ArrayList<>();
     private boolean satisfied[];
-    private boolean childrenCreated[];
     private boolean checked[];
 
     public CraftingTaskNormal(ICraftingPattern pattern) {
-        this.pattern = pattern;
-        this.satisfied = new boolean[pattern.getInputs().length];
-        this.childrenCreated = new boolean[pattern.getInputs().length];
-        this.checked = new boolean[pattern.getInputs().length];
-    }
+        super(pattern);
 
-    public void setTook(List<ItemStack> took) {
-        this.took = took;
+        this.satisfied = new boolean[pattern.getInputs().length];
+        this.checked = new boolean[pattern.getInputs().length];
     }
 
     public void setSatisfied(boolean[] satisfied) {
         this.satisfied = satisfied;
-    }
-
-    public void setChildrenCreated(boolean[] childrenCreated) {
-        this.childrenCreated = childrenCreated;
     }
 
     public void setChecked(boolean[] checked) {
@@ -68,16 +50,8 @@ public class CraftingTaskNormal extends CraftingTask {
                     took.add(received);
 
                     network.updateCraftingTasks();
-                } else if (!childrenCreated[i]) {
-                    ICraftingPattern pattern = NetworkUtils.getPattern(network, input);
-
-                    if (pattern != null) {
-                        child = network.createCraftingTask(pattern);
-
-                        childrenCreated[i] = true;
-
-                        network.updateCraftingTasks();
-                    }
+                } else {
+                    tryCreateChild(network, i);
                 }
 
                 break;
@@ -106,30 +80,11 @@ public class CraftingTaskNormal extends CraftingTask {
     }
 
     @Override
-    public void onCancelled(INetworkMaster network) {
-        super.onCancelled(network);
-
-        for (ItemStack stack : took) {
-            // @TODO: Handle remainder
-            network.insertItem(stack, stack.stackSize, false);
-        }
-    }
-
-    @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
 
         writeBooleanArray(tag, NBT_SATISFIED, satisfied);
-        writeBooleanArray(tag, NBT_CHILDREN, childrenCreated);
         writeBooleanArray(tag, NBT_CHECKED, checked);
-
-        NBTTagList took = new NBTTagList();
-
-        for (ItemStack stack : this.took) {
-            took.appendTag(stack.serializeNBT());
-        }
-
-        tag.setTag(NBT_TOOK, took);
 
         return tag;
     }
@@ -171,27 +126,5 @@ public class CraftingTaskNormal extends CraftingTask {
         }
 
         return builder.toString();
-    }
-
-    public static void writeBooleanArray(NBTTagCompound tag, String name, boolean[] array) {
-        int[] intArray = new int[array.length];
-
-        for (int i = 0; i < intArray.length; ++i) {
-            intArray[i] = array[i] ? 1 : 0;
-        }
-
-        tag.setTag(name, new NBTTagIntArray(intArray));
-    }
-
-    public static boolean[] readBooleanArray(NBTTagCompound tag, String name) {
-        int[] intArray = tag.getIntArray(name);
-
-        boolean array[] = new boolean[intArray.length];
-
-        for (int i = 0; i < intArray.length; ++i) {
-            array[i] = intArray[i] == 1 ? true : false;
-        }
-
-        return array;
     }
 }

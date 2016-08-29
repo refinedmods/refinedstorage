@@ -7,6 +7,7 @@ import net.minecraftforge.common.util.Constants;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.registry.ICraftingTaskFactory;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
+import refinedstorage.apiimpl.autocrafting.task.CraftingTask;
 import refinedstorage.apiimpl.autocrafting.task.CraftingTaskNormal;
 
 import javax.annotation.Nonnull;
@@ -23,13 +24,13 @@ public class CraftingTaskFactoryNormal implements ICraftingTaskFactory {
         CraftingTaskNormal task = new CraftingTaskNormal(pattern);
 
         if (tag != null) {
-            task.setChildrenCreated(CraftingTaskNormal.readBooleanArray(tag, CraftingTaskNormal.NBT_CHILDREN));
-            task.setSatisfied(CraftingTaskNormal.readBooleanArray(tag, CraftingTaskNormal.NBT_SATISFIED));
-            task.setChecked(CraftingTaskNormal.readBooleanArray(tag, CraftingTaskNormal.NBT_CHECKED));
+            task.setChildrenCreated(CraftingTask.readBooleanArray(tag, CraftingTask.NBT_CHILDREN_CREATED));
+            task.setSatisfied(CraftingTask.readBooleanArray(tag, CraftingTaskNormal.NBT_SATISFIED));
+            task.setChecked(CraftingTask.readBooleanArray(tag, CraftingTaskNormal.NBT_CHECKED));
 
             List<ItemStack> took = new ArrayList<>();
 
-            NBTTagList tookTag = tag.getTagList(CraftingTaskNormal.NBT_TOOK, Constants.NBT.TAG_COMPOUND);
+            NBTTagList tookTag = tag.getTagList(CraftingTask.NBT_TOOK, Constants.NBT.TAG_COMPOUND);
 
             for (int i = 0; i < tookTag.tagCount(); ++i) {
                 ItemStack stack = ItemStack.loadItemStackFromNBT(tookTag.getCompoundTagAt(i));
