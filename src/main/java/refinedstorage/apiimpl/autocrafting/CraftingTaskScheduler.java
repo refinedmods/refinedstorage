@@ -7,6 +7,9 @@ import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.storage.CompareUtils;
 
+/**
+ * @TODO: Rework this!
+ */
 public class CraftingTaskScheduler {
     private static final String NBT_SCHEDULED = "CraftingTaskScheduled";
 
@@ -27,7 +30,7 @@ public class CraftingTaskScheduler {
         if (pattern != null) {
             scheduledItem = item;
 
-            network.addCraftingTaskAsLast(network.createCraftingTask(pattern));
+            network.addCraftingTask(network.createCraftingTask(pattern));
 
             tile.markDirty();
         }

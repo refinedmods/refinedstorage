@@ -21,11 +21,6 @@ public interface ICraftingPattern {
     BlockPos getContainerPosition();
 
     /**
-     * @return If this pattern is a processing pattern
-     */
-    boolean isProcessing();
-
-    /**
      * @return The inputs
      */
     ItemStack[] getInputs();
@@ -39,6 +34,13 @@ public interface ICraftingPattern {
      * @return The byproducts
      */
     ItemStack[] getByproducts();
+
+    /**
+     * @return The id of the crafting task, as defined in the registry
+     */
+    String getId();
+
+    int getQuantityPerRequest(ItemStack requested);
 
     /**
      * Writes this pattern to NBT.

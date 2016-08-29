@@ -8,6 +8,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.tile.TileCrafter;
 
@@ -47,11 +48,6 @@ public class CraftingPattern implements ICraftingPattern {
     }
 
     @Override
-    public boolean isProcessing() {
-        return processing;
-    }
-
-    @Override
     public ItemStack[] getInputs() {
         return inputs;
     }
@@ -66,26 +62,55 @@ public class CraftingPattern implements ICraftingPattern {
         return byproducts;
     }
 
+    @Override
+    public String getId() {
+        return processing ? "processing" : "normal";
+    }
+
+    @Override
+    public int getQuantityPerRequest(ItemStack requested) {
+        int quantity = 0;
+
+        for (ItemStack output : outputs) {
+            if (CompareUtils.compareStackNoQuantity(requested, output)) {
+                quantity += output.stackSize;
+
+                if (!processing) {
+                    break;
+                }
+            }
+        }
+        
+        return quantity;
+    }
+
+    @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         tag.setBoolean(ItemPattern.NBT_PROCESSING, processing);
 
         NBTTagList inputsTag = new NBTTagList();
+
         for (ItemStack input : inputs) {
             inputsTag.appendTag(input.serializeNBT());
         }
+
         tag.setTag(ItemPattern.NBT_INPUTS, inputsTag);
 
         NBTTagList outputsTag = new NBTTagList();
+
         for (ItemStack output : outputs) {
             outputsTag.appendTag(output.serializeNBT());
         }
+
         tag.setTag(ItemPattern.NBT_OUTPUTS, outputsTag);
 
         if (byproducts != null) {
             NBTTagList byproductsTag = new NBTTagList();
+
             for (ItemStack byproduct : byproducts) {
                 byproductsTag.appendTag(byproduct.serializeNBT());
             }
+
             tag.setTag(ItemPattern.NBT_BYPRODUCTS, byproductsTag);
         }
 

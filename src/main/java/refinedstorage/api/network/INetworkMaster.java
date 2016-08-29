@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.FluidStack;
 import refinedstorage.api.autocrafting.ICraftingPattern;
-import refinedstorage.api.autocrafting.ICraftingTask;
+import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.network.grid.IFluidGridHandler;
 import refinedstorage.api.network.grid.IItemGridHandler;
 import refinedstorage.api.storage.CompareUtils;
@@ -82,13 +82,6 @@ public interface INetworkMaster {
      * @param task The crafting task to add
      */
     void addCraftingTask(@Nonnull ICraftingTask task);
-
-    /**
-     * Adds a crafting task to the bottom of the crafting task stack.
-     *
-     * @param task The crafting task to add as last
-     */
-    void addCraftingTaskAsLast(@Nonnull ICraftingTask task);
 
     /**
      * Creates a crafting task from a {@link ICraftingPattern}.

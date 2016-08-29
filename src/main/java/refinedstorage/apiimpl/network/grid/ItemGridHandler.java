@@ -5,7 +5,7 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import refinedstorage.RefinedStorage;
 import refinedstorage.api.autocrafting.ICraftingPattern;
-import refinedstorage.api.autocrafting.ICraftingTask;
+import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.api.network.grid.IItemGridHandler;
@@ -128,23 +128,13 @@ public class ItemGridHandler implements IItemGridHandler {
             return;
         }
 
-        int quantityPerRequest = 0;
-
         ICraftingPattern pattern = NetworkUtils.getPattern(network, stack);
 
         if (pattern != null) {
-            for (ItemStack output : pattern.getOutputs()) {
-                if (CompareUtils.compareStackNoQuantity(stack, output)) {
-                    quantityPerRequest += output.stackSize;
-
-                    if (!pattern.isProcessing()) {
-                        break;
-                    }
-                }
-            }
+            int quantityPerRequest = pattern.getQuantityPerRequest(stack);
 
             while (quantity > 0) {
-                network.addCraftingTaskAsLast(network.createCraftingTask(pattern));
+                network.addCraftingTask(network.createCraftingTask(pattern));
 
                 quantity -= quantityPerRequest;
             }
