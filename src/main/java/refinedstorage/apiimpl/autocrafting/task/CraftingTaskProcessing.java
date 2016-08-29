@@ -3,18 +3,20 @@ package refinedstorage.apiimpl.autocrafting.task;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.api.autocrafting.ICraftingPattern;
+import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.NetworkUtils;
 
-public class CraftingTaskNormal extends CraftingTask {
+public class CraftingTaskProcessing extends CraftingTask {
     public static final String NBT_SATISFIED = "Satisfied";
     public static final String NBT_CHECKED = "Checked";
 
     private boolean satisfied[];
     private boolean checked[];
 
-    public CraftingTaskNormal(ICraftingPattern pattern) {
+    public CraftingTaskProcessing(ICraftingPattern pattern) {
         super(pattern);
 
         this.satisfied = new boolean[pattern.getInputs().length];
@@ -53,25 +55,23 @@ public class CraftingTaskNormal extends CraftingTask {
             }
         }
 
-        for (boolean item : satisfied) {
-            if (!item) {
-                return false;
+        if (!isReadyToInsert()) {
+            return false;
+        }
+
+        ICraftingPatternContainer container = pattern.getContainer(world);
+
+        if (!took.isEmpty()) {
+            ItemStack toInsert = took.get(0);
+
+            if (ItemHandlerHelper.insertItem(container.getConnectedItems(), toInsert, true) == null) {
+                ItemHandlerHelper.insertItem(container.getConnectedItems(), toInsert, false);
+
+                took.remove(0);
             }
         }
 
-        for (ItemStack output : pattern.getOutputs()) {
-            // @TODO: Handle remainder
-            network.insertItem(output, output.stackSize, false);
-        }
-
-        if (pattern.getByproducts() != null) {
-            for (ItemStack byproduct : pattern.getByproducts()) {
-                // @TODO: Handle remainder
-                network.insertItem(byproduct, byproduct.stackSize, false);
-            }
-        }
-
-        return true;
+        return false;
     }
 
     @Override
@@ -84,6 +84,16 @@ public class CraftingTaskNormal extends CraftingTask {
         return tag;
     }
 
+    private boolean isReadyToInsert() {
+        for (boolean item : satisfied) {
+            if (!item) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     @Override
     public String getStatus() {
         StringBuilder builder = new StringBuilder();
@@ -93,7 +103,7 @@ public class CraftingTaskNormal extends CraftingTask {
         for (int i = 0; i < pattern.getInputs().length; ++i) {
             ItemStack input = pattern.getInputs()[i];
 
-            if (!satisfied[i] && !childrenCreated[i] && checked[i]) {
+            if (!satisfied[i] && !childrenCreated[i]) {
                 if (!missingItems) {
                     builder.append("I=gui.refinedstorage:crafting_monitor.missing_items\n");
 
@@ -109,7 +119,7 @@ public class CraftingTaskNormal extends CraftingTask {
         for (int i = 0; i < pattern.getInputs().length; ++i) {
             ItemStack input = pattern.getInputs()[i];
 
-            if (!satisfied[i] && childrenCreated[i] && checked[i]) {
+            if (!satisfied[i] && childrenCreated[i]) {
                 if (!itemsCrafting) {
                     builder.append("I=gui.refinedstorage:crafting_monitor.items_crafting\n");
 
@@ -117,6 +127,14 @@ public class CraftingTaskNormal extends CraftingTask {
                 }
 
                 builder.append("T=").append(input.getUnlocalizedName()).append(".name\n");
+            }
+        }
+
+        if (isReadyToInsert()) {
+            builder.append("I=gui.refinedstorage:crafting_monitor.items_processing\n");
+
+            for (int i = 0; i < pattern.getInputs().length; ++i) {
+                builder.append("T=").append(pattern.getInputs()[i].getUnlocalizedName()).append(".name\n");
             }
         }
 

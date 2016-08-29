@@ -19,6 +19,7 @@ import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.api.RefinedStorageAPI;
 import refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactoryNormal;
+import refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactoryProcessing;
 import refinedstorage.apiimpl.autocrafting.registry.CraftingTaskRegistry;
 import refinedstorage.apiimpl.solderer.*;
 import refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
@@ -49,6 +50,7 @@ public class CommonProxy {
 
         RefinedStorageAPI.CRAFTING_TASK_REGISTRY = new CraftingTaskRegistry();
         RefinedStorageAPI.CRAFTING_TASK_REGISTRY.addFactory(CraftingTaskFactoryNormal.ID, new CraftingTaskFactoryNormal());
+        RefinedStorageAPI.CRAFTING_TASK_REGISTRY.addFactory(CraftingTaskFactoryProcessing.ID, new CraftingTaskFactoryProcessing());
 
         int id = 0;
 

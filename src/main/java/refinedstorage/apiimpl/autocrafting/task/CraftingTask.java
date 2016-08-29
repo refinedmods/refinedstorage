@@ -30,6 +30,11 @@ public abstract class CraftingTask implements ICraftingTask {
         this.childrenCreated = new boolean[pattern.getInputs().length];
     }
 
+    @Override
+    public ICraftingPattern getPattern() {
+        return pattern;
+    }
+
     public void setTook(List<ItemStack> took) {
         this.took = took;
     }
