@@ -39,6 +39,8 @@ public class CraftingTaskFactoryNormal implements ICraftingTaskFactory {
             }
 
             task.setTook(took);
+
+            task.readChildNBT(tag);
         }
 
         return task;

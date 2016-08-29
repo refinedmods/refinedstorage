@@ -130,7 +130,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     public static final String NBT_ENERGY_CAPACITY = "EnergyCapacity";
 
     private static final String NBT_CRAFTING_TASKS = "CraftingTasks";
-    private static final String NBT_CRAFTING_TASK_TYPE = "Type";
+    public static final String NBT_CRAFTING_TASK_TYPE = "Type";
 
     private static final Comparator<IItemStorage> ITEM_SIZE_COMPARATOR = (left, right) -> {
         if (left.getStored() == right.getStored()) {
@@ -692,23 +692,31 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             NBTTagList taskList = tag.getTagList(NBT_CRAFTING_TASKS, Constants.NBT.TAG_COMPOUND);
 
             for (int i = 0; i < taskList.tagCount(); ++i) {
-                NBTTagCompound taskTag = taskList.getCompoundTagAt(i);
+                ICraftingTask task = readCraftingTask(taskList.getCompoundTagAt(i));
 
-                CraftingPattern pattern = CraftingPattern.readFromNBT(taskTag.getCompoundTag(CraftingPattern.NBT));
-
-                if (pattern != null) {
-                    ICraftingTaskFactory factory = RefinedStorageAPI.CRAFTING_TASK_REGISTRY.getFactory(taskTag.getString(NBT_CRAFTING_TASK_TYPE));
-
-                    if (factory != null) {
-                        ICraftingTask task = factory.create(taskTag, pattern);
-
-                        if (task != null) {
-                            addCraftingTask(task);
-                        }
-                    }
+                if (task != null) {
+                    addCraftingTask(task);
                 }
             }
         }
+    }
+
+    public static ICraftingTask readCraftingTask(NBTTagCompound tag) {
+        CraftingPattern pattern = CraftingPattern.readFromNBT(tag.getCompoundTag(CraftingPattern.NBT));
+
+        if (pattern != null) {
+            ICraftingTaskFactory factory = RefinedStorageAPI.CRAFTING_TASK_REGISTRY.getFactory(tag.getString(NBT_CRAFTING_TASK_TYPE));
+
+            if (factory != null) {
+                ICraftingTask task = factory.create(tag, pattern);
+
+                if (task != null) {
+                    return task;
+                }
+            }
+        }
+
+        return null;
     }
 
     @Override

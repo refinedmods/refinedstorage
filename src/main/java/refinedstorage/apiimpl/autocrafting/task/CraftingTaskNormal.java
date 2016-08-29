@@ -104,6 +104,8 @@ public class CraftingTaskNormal extends CraftingTask {
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+        super.writeToNBT(tag);
+
         writeBooleanArray(tag, NBT_SATISFIED, satisfied);
         writeBooleanArray(tag, NBT_CHILDREN, childrenCreated);
 
