@@ -6,18 +6,18 @@ import refinedstorage.api.autocrafting.task.ICraftingTask;
 public class ClientCraftingTask {
     private ItemStack output;
     private int id;
-    private boolean isChild;
     private String status;
+    private int depth;
 
     // Used server-side while sending
     private ItemStack[] outputs;
     private ClientCraftingTask child;
 
-    public ClientCraftingTask(ItemStack output, int id, String status, boolean isChild) {
+    public ClientCraftingTask(ItemStack output, int id, String status, int depth) {
         this.output = output;
         this.id = id;
         this.status = status;
-        this.isChild = isChild;
+        this.depth = depth;
     }
 
     public ClientCraftingTask(String status, ItemStack[] outputs, ICraftingTask child) {
@@ -46,7 +46,7 @@ public class ClientCraftingTask {
         return child;
     }
 
-    public boolean isChild() {
-        return isChild;
+    public int getDepth() {
+        return depth;
     }
 }

@@ -80,7 +80,7 @@ public final class RefinedStorageSerializers {
             List<ClientCraftingTask> tasks = new ArrayList<>();
 
             for (int i = 0; i < size; ++i) {
-                readTask(buf, i, false, tasks);
+                readTask(buf, i, 0, tasks);
             }
 
             Collections.reverse(tasks);
@@ -88,17 +88,17 @@ public final class RefinedStorageSerializers {
             return tasks;
         }
 
-        private void readTask(PacketBuffer buf, int i, boolean isChild, List<ClientCraftingTask> tasks) {
+        private void readTask(PacketBuffer buf, int i, int depth, List<ClientCraftingTask> tasks) {
             String status = ByteBufUtils.readUTF8String(buf);
 
             int outputs = buf.readInt();
 
             for (int j = 0; j < outputs; ++j) {
-                tasks.add(new ClientCraftingTask(ByteBufUtils.readItemStack(buf), i, status, isChild));
+                tasks.add(new ClientCraftingTask(ByteBufUtils.readItemStack(buf), i, status, depth));
             }
 
             if (buf.readBoolean()) {
-                readTask(buf, i, true, tasks);
+                readTask(buf, i, depth + 1, tasks);
             }
         }
 

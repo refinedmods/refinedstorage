@@ -12,17 +12,17 @@ public class MessageCraftingMonitorCancel extends MessageHandlerPlayerToServer<M
     private int y;
     private int z;
     private int id;
-    private boolean child;
+    private int depth;
 
     public MessageCraftingMonitorCancel() {
     }
 
-    public MessageCraftingMonitorCancel(TileCraftingMonitor craftingMonitor, int id, boolean child) {
+    public MessageCraftingMonitorCancel(TileCraftingMonitor craftingMonitor, int id, int depth) {
         this.x = craftingMonitor.getPos().getX();
         this.y = craftingMonitor.getPos().getY();
         this.z = craftingMonitor.getPos().getZ();
         this.id = id;
-        this.child = child;
+        this.depth = depth;
     }
 
     @Override
@@ -31,7 +31,7 @@ public class MessageCraftingMonitorCancel extends MessageHandlerPlayerToServer<M
         y = buf.readInt();
         z = buf.readInt();
         id = buf.readInt();
-        child = buf.readBoolean();
+        depth = buf.readInt();
     }
 
     @Override
@@ -40,7 +40,7 @@ public class MessageCraftingMonitorCancel extends MessageHandlerPlayerToServer<M
         buf.writeInt(y);
         buf.writeInt(z);
         buf.writeInt(id);
-        buf.writeBoolean(child);
+        buf.writeInt(depth);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class MessageCraftingMonitorCancel extends MessageHandlerPlayerToServer<M
             TileCraftingMonitor monitor = (TileCraftingMonitor) tile;
 
             if (monitor.isConnected()) {
-                monitor.getNetwork().getItemGridHandler().onCraftingCancelRequested(message.id, message.child);
+                monitor.getNetwork().getItemGridHandler().onCraftingCancelRequested(message.id, message.depth);
             }
         }
     }

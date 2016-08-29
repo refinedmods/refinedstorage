@@ -57,6 +57,8 @@ public class CraftingTaskNormal extends CraftingTask {
                     satisfied[i] = true;
 
                     took.add(received);
+
+                    network.updateCraftingTasks();
                 } else if (!childrenCreated[i]) {
                     ICraftingPattern pattern = NetworkUtils.getPattern(network, input);
 
@@ -64,6 +66,8 @@ public class CraftingTaskNormal extends CraftingTask {
                         child = network.createCraftingTask(pattern);
 
                         childrenCreated[i] = true;
+
+                        network.updateCraftingTasks();
 
                         break;
                     }

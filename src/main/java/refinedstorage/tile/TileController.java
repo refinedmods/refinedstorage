@@ -261,17 +261,19 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 Iterator<ICraftingTask> craftingTaskIterator = craftingTasks.iterator();
 
                 while (craftingTaskIterator.hasNext()) {
-                    craftingTasksChanged = true;
-
                     ICraftingTask task = craftingTaskIterator.next();
 
                     if (task.getChild() != null) {
                         if (updateCraftingTask(task.getChild())) {
                             task.setChild(null);
+
+                            craftingTasksChanged = true;
                         }
                     } else {
                         if (updateCraftingTask(task)) {
                             craftingTaskIterator.remove();
+
+                            craftingTasksChanged = true;
                         }
                     }
                 }
@@ -323,7 +325,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         return container != null && ticks % container.getSpeed() == 0 && task.update(worldObj, this);
     }
 
-    private void updateCraftingTasks() {
+    @Override
+    public void updateCraftingTasks() {
         markDirty();
 
         for (INetworkNode node : nodeGraph.all()) {
