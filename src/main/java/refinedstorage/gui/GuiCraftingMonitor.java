@@ -115,8 +115,8 @@ public class GuiCraftingMonitor extends GuiBase {
 
                 GlStateManager.popMatrix();
 
-                if (inBounds(x + 5, y + 10, 16, 16, mouseX, mouseY) && !task.getInfo().trim().equals("")) {
-                    lines = task.getInfo().split("\n");
+                if (inBounds(x + 5, y + 10, 16, 16, mouseX, mouseY) && !task.getStatus().trim().equals("")) {
+                    lines = task.getStatus().split("\n");
 
                     for (int j = 0; j < lines.length; ++j) {
                         String line = lines[j];

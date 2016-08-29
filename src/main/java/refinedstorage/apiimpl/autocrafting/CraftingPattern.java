@@ -9,6 +9,7 @@ import net.minecraftforge.common.util.Constants;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactoryNormal;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.tile.TileCrafter;
 
@@ -64,7 +65,7 @@ public class CraftingPattern implements ICraftingPattern {
 
     @Override
     public String getId() {
-        return processing ? "processing" : "normal";
+        return processing ? "processing" : CraftingTaskFactoryNormal.ID;
     }
 
     @Override
@@ -80,7 +81,7 @@ public class CraftingPattern implements ICraftingPattern {
                 }
             }
         }
-        
+
         return quantity;
     }
 

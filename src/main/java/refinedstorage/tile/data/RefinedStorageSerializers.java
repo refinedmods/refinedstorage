@@ -53,7 +53,7 @@ public final class RefinedStorageSerializers {
             buf.writeInt(tasks.size());
 
             for (ClientCraftingTask task : tasks) {
-                ByteBufUtils.writeUTF8String(buf, task.getInfo());
+                ByteBufUtils.writeUTF8String(buf, task.getStatus());
 
                 buf.writeInt(task.getOutputs().length);
 

@@ -15,27 +15,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CraftingTaskFactoryNormal implements ICraftingTaskFactory {
+    public static final String ID = "normal";
+
     @Override
     @Nonnull
     public ICraftingTask create(@Nullable NBTTagCompound tag, ICraftingPattern pattern) {
         CraftingTaskNormal task = new CraftingTaskNormal(pattern);
 
-        task.setChildrenCreated(CraftingTaskNormal.readBooleanArray(tag, CraftingTaskNormal.NBT_CHILDREN));
-        task.setSatisfied(CraftingTaskNormal.readBooleanArray(tag, CraftingTaskNormal.NBT_SATISFIED));
+        if (tag != null) {
+            task.setChildrenCreated(CraftingTaskNormal.readBooleanArray(tag, CraftingTaskNormal.NBT_CHILDREN));
+            task.setSatisfied(CraftingTaskNormal.readBooleanArray(tag, CraftingTaskNormal.NBT_SATISFIED));
 
-        List<ItemStack> took = new ArrayList<>();
+            List<ItemStack> took = new ArrayList<>();
 
-        NBTTagList tookTag = tag.getTagList(CraftingTaskNormal.NBT_TOOK, Constants.NBT.TAG_COMPOUND);
+            NBTTagList tookTag = tag.getTagList(CraftingTaskNormal.NBT_TOOK, Constants.NBT.TAG_COMPOUND);
 
-        for (int i = 0; i < tookTag.tagCount(); ++i) {
-            ItemStack stack = ItemStack.loadItemStackFromNBT(tookTag.getCompoundTagAt(i));
+            for (int i = 0; i < tookTag.tagCount(); ++i) {
+                ItemStack stack = ItemStack.loadItemStackFromNBT(tookTag.getCompoundTagAt(i));
 
-            if (stack != null) {
-                took.add(stack);
+                if (stack != null) {
+                    took.add(stack);
+                }
             }
-        }
 
-        task.setTook(took);
+            task.setTook(took);
+        }
 
         return task;
     }

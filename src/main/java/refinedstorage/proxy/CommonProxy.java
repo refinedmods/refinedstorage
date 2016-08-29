@@ -48,7 +48,7 @@ public class CommonProxy {
         RefinedStorageAPI.SOLDERER_REGISTRY = new SoldererRegistry();
 
         RefinedStorageAPI.CRAFTING_TASK_REGISTRY = new CraftingTaskRegistry();
-        RefinedStorageAPI.CRAFTING_TASK_REGISTRY.addFactory("normal", new CraftingTaskFactoryNormal());
+        RefinedStorageAPI.CRAFTING_TASK_REGISTRY.addFactory(CraftingTaskFactoryNormal.ID, new CraftingTaskFactoryNormal());
 
         int id = 0;
 
