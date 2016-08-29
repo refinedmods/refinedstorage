@@ -16,6 +16,7 @@ public interface ICraftingTaskRegistry {
     /**
      * Returns the factory of a crafting task type.
      * This is used when reading the storage network from disk to get a factory in order to create a crafting task.
+     * It is also used for creating crafting tasks on demand when the player requests it.
      *
      * @param id The id
      * @return The factory
