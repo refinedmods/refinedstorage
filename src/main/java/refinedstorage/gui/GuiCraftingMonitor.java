@@ -156,9 +156,11 @@ public class GuiCraftingMonitor extends GuiBase {
         super.actionPerformed(button);
 
         if (button == cancelButton && itemSelected != -1) {
-            RefinedStorage.INSTANCE.network.sendToServer(new MessageCraftingMonitorCancel(craftingMonitor, getTasks().get(itemSelected).getId()));
+            ClientCraftingTask task = getTasks().get(itemSelected);
+
+            RefinedStorage.INSTANCE.network.sendToServer(new MessageCraftingMonitorCancel(craftingMonitor, task.getId(), task.isChild()));
         } else if (button == cancelAllButton && getTasks().size() > 0) {
-            RefinedStorage.INSTANCE.network.sendToServer(new MessageCraftingMonitorCancel(craftingMonitor, -1));
+            RefinedStorage.INSTANCE.network.sendToServer(new MessageCraftingMonitorCancel(craftingMonitor, -1, false));
         }
     }
 

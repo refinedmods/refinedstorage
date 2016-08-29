@@ -17,7 +17,8 @@ public class TileCraftingMonitor extends TileNode {
             if (tile.connected) {
                 List<ClientCraftingTask> tasks = tile.network.getCraftingTasks().stream().map(t -> new ClientCraftingTask(
                     t.getStatus(),
-                    t.getPattern().getOutputs()
+                    t.getPattern().getOutputs(),
+                    t.getChild()
                 )).collect(Collectors.toList());
 
                 return tasks;

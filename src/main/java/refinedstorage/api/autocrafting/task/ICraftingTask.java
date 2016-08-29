@@ -5,6 +5,8 @@ import net.minecraft.world.World;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.network.INetworkMaster;
 
+import javax.annotation.Nullable;
+
 /**
  * Represents a crafting task.
  */
@@ -17,12 +19,13 @@ public interface ICraftingTask {
     /**
      * @return The child task
      */
+    @Nullable
     ICraftingTask getChild();
 
     /**
      * @param child The child task
      */
-    void setChild(ICraftingTask child);
+    void setChild(@Nullable ICraftingTask child);
 
     /**
      * @param world   The world

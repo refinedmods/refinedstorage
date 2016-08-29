@@ -142,9 +142,16 @@ public class ItemGridHandler implements IItemGridHandler {
     }
 
     @Override
-    public void onCraftingCancelRequested(int id) {
+    public void onCraftingCancelRequested(int id, boolean child) {
         if (id >= 0 && id < network.getCraftingTasks().size()) {
-            network.cancelCraftingTask(network.getCraftingTasks().get(id));
+            ICraftingTask task = network.getCraftingTasks().get(id);
+
+            if (child) {
+                task.getChild().onCancelled(network);
+                task.setChild(null);
+            } else {
+                network.cancelCraftingTask(task);
+            }
         } else if (id == -1) {
             for (ICraftingTask task : network.getCraftingTasks()) {
                 network.cancelCraftingTask(task);

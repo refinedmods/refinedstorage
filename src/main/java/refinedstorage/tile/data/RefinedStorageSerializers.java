@@ -53,13 +53,23 @@ public final class RefinedStorageSerializers {
             buf.writeInt(tasks.size());
 
             for (ClientCraftingTask task : tasks) {
-                ByteBufUtils.writeUTF8String(buf, task.getStatus());
+                writeTask(buf, task);
+            }
+        }
 
-                buf.writeInt(task.getOutputs().length);
+        private void writeTask(PacketBuffer buf, ClientCraftingTask task) {
+            ByteBufUtils.writeUTF8String(buf, task.getStatus());
 
-                for (ItemStack output : task.getOutputs()) {
-                    ByteBufUtils.writeItemStack(buf, output);
-                }
+            buf.writeInt(task.getOutputs().length);
+
+            for (ItemStack output : task.getOutputs()) {
+                ByteBufUtils.writeItemStack(buf, output);
+            }
+
+            buf.writeBoolean(task.getChild() != null);
+
+            if (task.getChild() != null) {
+                writeTask(buf, task.getChild());
             }
         }
 
@@ -70,18 +80,26 @@ public final class RefinedStorageSerializers {
             List<ClientCraftingTask> tasks = new ArrayList<>();
 
             for (int i = 0; i < size; ++i) {
-                String info = ByteBufUtils.readUTF8String(buf);
-
-                int outputs = buf.readInt();
-
-                for (int j = 0; j < outputs; ++j) {
-                    tasks.add(new ClientCraftingTask(ByteBufUtils.readItemStack(buf), i, info));
-                }
+                readTask(buf, i, false, tasks);
             }
 
             Collections.reverse(tasks);
 
             return tasks;
+        }
+
+        private void readTask(PacketBuffer buf, int i, boolean isChild, List<ClientCraftingTask> tasks) {
+            String status = ByteBufUtils.readUTF8String(buf);
+
+            int outputs = buf.readInt();
+
+            for (int j = 0; j < outputs; ++j) {
+                tasks.add(new ClientCraftingTask(ByteBufUtils.readItemStack(buf), i, status, isChild));
+            }
+
+            if (buf.readBoolean()) {
+                readTask(buf, i, true, tasks);
+            }
         }
 
         @Override
