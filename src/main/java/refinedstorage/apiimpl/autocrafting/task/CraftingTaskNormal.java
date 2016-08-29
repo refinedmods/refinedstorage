@@ -47,8 +47,6 @@ public class CraftingTaskNormal extends CraftingTask {
 
     @Override
     public boolean update(World world, INetworkMaster network) {
-        updateChildren(world, network);
-
         for (int i = 0; i < pattern.getInputs().length; ++i) {
             ItemStack input = pattern.getInputs()[i];
 
@@ -63,9 +61,11 @@ public class CraftingTaskNormal extends CraftingTask {
                     ICraftingPattern pattern = NetworkUtils.getPattern(network, input);
 
                     if (pattern != null) {
-                        children.add(network.createCraftingTask(pattern));
+                        child = network.createCraftingTask(pattern);
 
                         childrenCreated[i] = true;
+
+                        break;
                     }
                 }
             }
@@ -77,21 +77,19 @@ public class CraftingTaskNormal extends CraftingTask {
             }
         }
 
-        if (children.isEmpty()) {
-            for (ItemStack output : pattern.getOutputs()) {
-                // @TODO: Handle remainder
-                network.insertItem(output, output.stackSize, false);
-            }
+        for (ItemStack output : pattern.getOutputs()) {
+            // @TODO: Handle remainder
+            network.insertItem(output, output.stackSize, false);
+        }
 
+        if (pattern.getByproducts() != null) {
             for (ItemStack byproduct : pattern.getByproducts()) {
                 // @TODO: Handle remainder
                 network.insertItem(byproduct, byproduct.stackSize, false);
             }
-
-            return true;
         }
 
-        return false;
+        return true;
     }
 
     @Override

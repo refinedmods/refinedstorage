@@ -5,8 +5,6 @@ import net.minecraft.world.World;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.network.INetworkMaster;
 
-import java.util.List;
-
 /**
  * Represents a crafting task.
  */
@@ -17,9 +15,14 @@ public interface ICraftingTask {
     ICraftingPattern getPattern();
 
     /**
-     * @return The child tasks
+     * @return The child task
      */
-    List<ICraftingTask> getChildren();
+    ICraftingTask getChild();
+
+    /**
+     * @param child The child task
+     */
+    void setChild(ICraftingTask child);
 
     /**
      * @param world   The world

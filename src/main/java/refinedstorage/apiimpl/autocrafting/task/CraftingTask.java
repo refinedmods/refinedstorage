@@ -1,33 +1,24 @@
 package refinedstorage.apiimpl.autocrafting.task;
 
-import net.minecraft.world.World;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.network.INetworkMaster;
 
-import java.util.Iterator;
-import java.util.List;
-
 public abstract class CraftingTask implements ICraftingTask {
-    protected List<ICraftingTask> children;
+    protected ICraftingTask child;
 
     @Override
-    public List<ICraftingTask> getChildren() {
-        return children;
+    public ICraftingTask getChild() {
+        return child;
     }
 
-    public void updateChildren(World world, INetworkMaster network) {
-        Iterator<ICraftingTask> childrenIterator = children.iterator();
-
-        while (childrenIterator.hasNext()) {
-            if (childrenIterator.next().update(world, network)) {
-                childrenIterator.remove();
-            }
-        }
+    @Override
+    public void setChild(ICraftingTask child) {
+        this.child = child;
     }
 
     @Override
     public void onCancelled(INetworkMaster network) {
-        for (ICraftingTask child : children) {
+        if (child != null) {
             child.onCancelled(network);
         }
     }

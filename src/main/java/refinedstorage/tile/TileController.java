@@ -261,16 +261,18 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 Iterator<ICraftingTask> craftingTaskIterator = craftingTasks.iterator();
 
                 while (craftingTaskIterator.hasNext()) {
+                    craftingTasksChanged = true;
+
                     ICraftingTask task = craftingTaskIterator.next();
 
-                    markDirty();
-
-                    ICraftingPatternContainer container = task.getPattern().getContainer(worldObj);
-
-                    if (container != null && ticks % container.getSpeed() == 0 && task.update(worldObj, this)) {
-                        craftingTaskIterator.remove();
-
-                        craftingTasksChanged = true;
+                    if (task.getChild() != null) {
+                        if (updateCraftingTask(task.getChild())) {
+                            task.setChild(null);
+                        }
+                    } else {
+                        if (updateCraftingTask(task)) {
+                            craftingTaskIterator.remove();
+                        }
                     }
                 }
 
@@ -315,7 +317,15 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         super.update();
     }
 
+    private boolean updateCraftingTask(ICraftingTask task) {
+        ICraftingPatternContainer container = task.getPattern().getContainer(worldObj);
+
+        return container != null && ticks % container.getSpeed() == 0 && task.update(worldObj, this);
+    }
+
     private void updateCraftingTasks() {
+        markDirty();
+
         for (INetworkNode node : nodeGraph.all()) {
             if (node instanceof TileCraftingMonitor) {
                 ((TileCraftingMonitor) node).dataManager.sendParameterToWatchers(TileCraftingMonitor.TASKS);
@@ -541,22 +551,22 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             }
         }
 
-        /*
-        @TODO: Processing crafting tasks
+
+        // @TODO: Processing crafting tasks
 
         int inserted = remainder != null ? (orginalSize - remainder.stackSize) : orginalSize;
 
         if (!simulate && inserted > 0) {
-            for (int i = 0; i < inserted; ++i) {
+            /*for (int i = 0; i < inserted; ++i) {
                 if (!craftingTasks.empty() && craftingTasks.peek() instanceof ProcessingCraftingTask) {
                     if (((ProcessingCraftingTask) craftingTasks.peek()).onInserted(stack)) {
                         updateTopCraftingTask(false);
                     }
                 }
-            }
+            }*/
 
             itemStorage.add(ItemHandlerHelper.copyStackWithSize(stack, inserted), false);
-        }*/
+        }
 
         return remainder;
     }
