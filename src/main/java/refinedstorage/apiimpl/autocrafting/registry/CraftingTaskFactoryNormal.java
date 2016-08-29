@@ -25,6 +25,7 @@ public class CraftingTaskFactoryNormal implements ICraftingTaskFactory {
         if (tag != null) {
             task.setChildrenCreated(CraftingTaskNormal.readBooleanArray(tag, CraftingTaskNormal.NBT_CHILDREN));
             task.setSatisfied(CraftingTaskNormal.readBooleanArray(tag, CraftingTaskNormal.NBT_SATISFIED));
+            task.setChecked(CraftingTaskNormal.readBooleanArray(tag, CraftingTaskNormal.NBT_CHECKED));
 
             List<ItemStack> took = new ArrayList<>();
 

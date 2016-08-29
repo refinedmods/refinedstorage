@@ -258,6 +258,10 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
                 craftingTasksToAdd.clear();
 
+                if (!craftingTasks.isEmpty()) {
+                    markDirty();
+                }
+
                 Iterator<ICraftingTask> craftingTaskIterator = craftingTasks.iterator();
 
                 while (craftingTaskIterator.hasNext()) {

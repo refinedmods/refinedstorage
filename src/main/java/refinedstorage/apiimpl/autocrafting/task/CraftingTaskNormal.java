@@ -16,16 +16,19 @@ public class CraftingTaskNormal extends CraftingTask {
     public static final String NBT_TOOK = "Took";
     public static final String NBT_SATISFIED = "Satisfied";
     public static final String NBT_CHILDREN = "Children";
+    public static final String NBT_CHECKED = "Checked";
 
     private ICraftingPattern pattern;
     private List<ItemStack> took = new ArrayList<>();
     private boolean satisfied[];
     private boolean childrenCreated[];
+    private boolean checked[];
 
     public CraftingTaskNormal(ICraftingPattern pattern) {
         this.pattern = pattern;
         this.satisfied = new boolean[pattern.getInputs().length];
         this.childrenCreated = new boolean[pattern.getInputs().length];
+        this.checked = new boolean[pattern.getInputs().length];
     }
 
     public void setTook(List<ItemStack> took) {
@@ -40,6 +43,10 @@ public class CraftingTaskNormal extends CraftingTask {
         this.childrenCreated = childrenCreated;
     }
 
+    public void setChecked(boolean[] checked) {
+        this.checked = checked;
+    }
+
     @Override
     public ICraftingPattern getPattern() {
         return pattern;
@@ -48,6 +55,8 @@ public class CraftingTaskNormal extends CraftingTask {
     @Override
     public boolean update(World world, INetworkMaster network) {
         for (int i = 0; i < pattern.getInputs().length; ++i) {
+            checked[i] = true;
+
             ItemStack input = pattern.getInputs()[i];
 
             if (!satisfied[i]) {
@@ -68,10 +77,10 @@ public class CraftingTaskNormal extends CraftingTask {
                         childrenCreated[i] = true;
 
                         network.updateCraftingTasks();
-
-                        break;
                     }
                 }
+
+                break;
             }
         }
 
@@ -112,6 +121,7 @@ public class CraftingTaskNormal extends CraftingTask {
 
         writeBooleanArray(tag, NBT_SATISFIED, satisfied);
         writeBooleanArray(tag, NBT_CHILDREN, childrenCreated);
+        writeBooleanArray(tag, NBT_CHECKED, checked);
 
         NBTTagList took = new NBTTagList();
 
@@ -133,7 +143,7 @@ public class CraftingTaskNormal extends CraftingTask {
         for (int i = 0; i < pattern.getInputs().length; ++i) {
             ItemStack input = pattern.getInputs()[i];
 
-            if (!satisfied[i] && !childrenCreated[i]) {
+            if (!satisfied[i] && !childrenCreated[i] && checked[i]) {
                 if (!missingItems) {
                     builder.append("I=gui.refinedstorage:crafting_monitor.missing_items\n");
 
@@ -149,7 +159,7 @@ public class CraftingTaskNormal extends CraftingTask {
         for (int i = 0; i < pattern.getInputs().length; ++i) {
             ItemStack input = pattern.getInputs()[i];
 
-            if (!satisfied[i] && childrenCreated[i]) {
+            if (!satisfied[i] && childrenCreated[i] && checked[i]) {
                 if (!itemsCrafting) {
                     builder.append("I=gui.refinedstorage:crafting_monitor.items_crafting\n");
 

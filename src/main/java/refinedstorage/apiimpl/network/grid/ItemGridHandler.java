@@ -149,7 +149,7 @@ public class ItemGridHandler implements IItemGridHandler {
             if (depth == 0) {
                 network.cancelCraftingTask(task);
             } else {
-                for (int i = 0; i < depth; ++i) {
+                for (int i = 0; i < depth - 1; ++i) {
                     if (task == null) {
                         break;
                     }
@@ -158,26 +158,16 @@ public class ItemGridHandler implements IItemGridHandler {
                 }
 
                 if (task != null) {
-                    cancelCraftingTask(task);
-                }
+                    task.getChild().onCancelled(network);
+                    task.setChild(null);
 
-                network.updateCraftingTasks();
+                    network.updateCraftingTasks();
+                }
             }
         } else if (id == -1) {
             for (ICraftingTask task : network.getCraftingTasks()) {
                 network.cancelCraftingTask(task);
             }
-        }
-    }
-
-    // @TODO: Broken!
-    private void cancelCraftingTask(ICraftingTask task) {
-        task.onCancelled(network);
-
-        if (task.getChild() != null) {
-            cancelCraftingTask(task.getChild());
-
-            task.setChild(null);
         }
     }
 }
