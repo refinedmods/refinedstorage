@@ -13,6 +13,9 @@ import refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactoryNormal;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.tile.TileCrafter;
 
+/**
+ * @TODO: Move this to ItemCraftingPattern and change slot checks in TileCrafter
+ */
 public class CraftingPattern implements ICraftingPattern {
     public static final String NBT = "Pattern";
     private static final String NBT_CRAFTER_X = "CrafterX";
