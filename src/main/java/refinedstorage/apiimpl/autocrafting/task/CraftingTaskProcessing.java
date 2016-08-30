@@ -8,23 +8,31 @@ import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.NetworkUtils;
+import refinedstorage.api.storage.CompareUtils;
 
 public class CraftingTaskProcessing extends CraftingTask {
     public static final String NBT_SATISFIED = "Satisfied";
+    public static final String NBT_SATISFIED_INSERTION = "SatisfiedInsertion";
     public static final String NBT_CHECKED = "Checked";
 
     private boolean satisfied[];
+    private boolean satisfiedInsertion[];
     private boolean checked[];
 
     public CraftingTaskProcessing(ICraftingPattern pattern) {
         super(pattern);
 
         this.satisfied = new boolean[pattern.getInputs().length];
+        this.satisfiedInsertion = new boolean[pattern.getInputs().length];
         this.checked = new boolean[pattern.getInputs().length];
     }
 
     public void setSatisfied(boolean[] satisfied) {
         this.satisfied = satisfied;
+    }
+
+    public void setSatisfiedInsertion(boolean[] satisfiedInsertion) {
+        this.satisfiedInsertion = satisfiedInsertion;
     }
 
     public void setChecked(boolean[] checked) {
@@ -59,15 +67,45 @@ public class CraftingTaskProcessing extends CraftingTask {
             return false;
         }
 
-        ICraftingPatternContainer container = pattern.getContainer(world);
-
         if (!took.isEmpty()) {
+            ICraftingPatternContainer container = pattern.getContainer(world);
+
             ItemStack toInsert = took.get(0);
 
             if (ItemHandlerHelper.insertItem(container.getConnectedItems(), toInsert, true) == null) {
                 ItemHandlerHelper.insertItem(container.getConnectedItems(), toInsert, false);
 
                 took.remove(0);
+            }
+        }
+
+        return isDone();
+    }
+
+    private boolean isDone() {
+        for (boolean item : satisfiedInsertion) {
+            if (!item) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public boolean onInserted(ItemStack stack) {
+        if (isDone()) {
+            return false;
+        }
+
+        for (int i = 0; i < pattern.getOutputs().length; ++i) {
+            ItemStack output = pattern.getOutputs()[i];
+
+            if (!satisfiedInsertion[i]) {
+                if (CompareUtils.compareStackNoQuantity(output, stack)) {
+                    satisfiedInsertion[i] = true;
+
+                    return true;
+                }
             }
         }
 
@@ -79,6 +117,7 @@ public class CraftingTaskProcessing extends CraftingTask {
         super.writeToNBT(tag);
 
         writeBooleanArray(tag, NBT_SATISFIED, satisfied);
+        writeBooleanArray(tag, NBT_SATISFIED_INSERTION, satisfiedInsertion);
         writeBooleanArray(tag, NBT_CHECKED, checked);
 
         return tag;

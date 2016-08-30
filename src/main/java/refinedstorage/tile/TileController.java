@@ -32,6 +32,7 @@ import refinedstorage.api.storage.fluid.IGroupedFluidStorage;
 import refinedstorage.api.storage.item.IGroupedItemStorage;
 import refinedstorage.api.storage.item.IItemStorage;
 import refinedstorage.apiimpl.autocrafting.CraftingPattern;
+import refinedstorage.apiimpl.autocrafting.task.CraftingTaskProcessing;
 import refinedstorage.apiimpl.network.NetworkNodeGraph;
 import refinedstorage.apiimpl.network.WirelessGridHandler;
 import refinedstorage.apiimpl.network.grid.FluidGridHandler;
@@ -558,24 +559,31 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             }
         }
 
-
-        // @TODO: Processing crafting tasks
-
         int inserted = remainder != null ? (orginalSize - remainder.stackSize) : orginalSize;
 
         if (!simulate && inserted > 0) {
-            /*for (int i = 0; i < inserted; ++i) {
-                if (!craftingTasks.empty() && craftingTasks.peek() instanceof ProcessingCraftingTask) {
-                    if (((ProcessingCraftingTask) craftingTasks.peek()).onInserted(stack)) {
-                        updateTopCraftingTask(false);
+            itemStorage.add(ItemHandlerHelper.copyStackWithSize(stack, inserted), false);
+
+            for (int i = 0; i < inserted; ++i) {
+                for (ICraftingTask task : craftingTasks) {
+                    if (checkProcessing(stack, task)) {
+                        inserted--;
                     }
                 }
-            }*/
-
-            itemStorage.add(ItemHandlerHelper.copyStackWithSize(stack, inserted), false);
+            }
         }
 
         return remainder;
+    }
+
+    private boolean checkProcessing(ItemStack stack, ICraftingTask task) {
+        if (task.getChild() instanceof CraftingTaskProcessing) {
+            if (checkProcessing(stack, task.getChild())) {
+                return true;
+            }
+        }
+
+        return task instanceof CraftingTaskProcessing && ((CraftingTaskProcessing) task).onInserted(stack);
     }
 
     @Override

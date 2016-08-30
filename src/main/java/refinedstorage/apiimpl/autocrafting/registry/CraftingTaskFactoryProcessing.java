@@ -8,7 +8,6 @@ import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.registry.ICraftingTaskFactory;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.apiimpl.autocrafting.task.CraftingTask;
-import refinedstorage.apiimpl.autocrafting.task.CraftingTaskNormal;
 import refinedstorage.apiimpl.autocrafting.task.CraftingTaskProcessing;
 
 import javax.annotation.Nonnull;
@@ -26,8 +25,9 @@ public class CraftingTaskFactoryProcessing implements ICraftingTaskFactory {
 
         if (tag != null) {
             task.setChildrenCreated(CraftingTask.readBooleanArray(tag, CraftingTask.NBT_CHILDREN_CREATED));
-            task.setSatisfied(CraftingTask.readBooleanArray(tag, CraftingTaskNormal.NBT_SATISFIED));
-            task.setChecked(CraftingTask.readBooleanArray(tag, CraftingTaskNormal.NBT_CHECKED));
+            task.setSatisfied(CraftingTask.readBooleanArray(tag, CraftingTaskProcessing.NBT_SATISFIED));
+            task.setSatisfiedInsertion(CraftingTask.readBooleanArray(tag, CraftingTaskProcessing.NBT_SATISFIED_INSERTION));
+            task.setChecked(CraftingTask.readBooleanArray(tag, CraftingTaskProcessing.NBT_CHECKED));
 
             List<ItemStack> took = new ArrayList<>();
 
