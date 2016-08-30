@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 1.0
+- Implemented multithreaded autocrafting (raoulvdberge)
+- Processing patterns now hold their items back for pushing until all the required items are gathered from the system (raoulvdberge)
+
 ### 0.9.4
 - Little fixes in German translation (ThexXTURBOXx)
 - Fixed mod not working without JEI (raoulvdberge)
