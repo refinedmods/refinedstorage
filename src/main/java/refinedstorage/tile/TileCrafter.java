@@ -50,7 +50,7 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
     public void onConnectionChange(INetworkMaster network, boolean state) {
         if (!state) {
             network.getCraftingTasks().stream()
-                .filter(task -> task.getPattern().getContainerPosition().equals(pos))
+                .filter(task -> task.getPattern().getContainer(worldObj).getPosition().equals(pos))
                 .forEach(network::cancelCraftingTask);
         }
 
@@ -85,6 +85,7 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
         return getItemHandler(getFacingTile(), getDirection().getOpposite());
     }
 
+    @Override
     public IItemHandler getPatterns() {
         return patterns;
     }

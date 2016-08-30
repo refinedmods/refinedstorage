@@ -2,7 +2,6 @@ package refinedstorage.api.autocrafting;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -14,11 +13,6 @@ public interface ICraftingPattern {
      * @return The container where the pattern is in
      */
     ICraftingPatternContainer getContainer(World world);
-
-    /**
-     * @return The position of the container where the pattern is in
-     */
-    BlockPos getContainerPosition();
 
     /**
      * @return The inputs
@@ -40,6 +34,10 @@ public interface ICraftingPattern {
      */
     String getId();
 
+    /**
+     * @param requested The item requested
+     * @return The quantity returned per request
+     */
     int getQuantityPerRequest(ItemStack requested);
 
     /**

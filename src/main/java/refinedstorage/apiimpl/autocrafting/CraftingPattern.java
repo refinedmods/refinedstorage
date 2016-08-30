@@ -10,6 +10,7 @@ import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactoryNormal;
+import refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactoryProcessing;
 import refinedstorage.item.ItemPattern;
 import refinedstorage.tile.TileCrafter;
 
@@ -47,11 +48,6 @@ public class CraftingPattern implements ICraftingPattern {
     }
 
     @Override
-    public BlockPos getContainerPosition() {
-        return crafterPos;
-    }
-
-    @Override
     public ItemStack[] getInputs() {
         return inputs;
     }
@@ -68,7 +64,7 @@ public class CraftingPattern implements ICraftingPattern {
 
     @Override
     public String getId() {
-        return processing ? "processing" : CraftingTaskFactoryNormal.ID;
+        return processing ? CraftingTaskFactoryProcessing.ID : CraftingTaskFactoryNormal.ID;
     }
 
     @Override

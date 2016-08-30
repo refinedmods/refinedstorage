@@ -1,5 +1,6 @@
 package refinedstorage.api.autocrafting;
 
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.IItemHandler;
 
 /**
@@ -17,4 +18,14 @@ public interface ICraftingPatternContainer {
      * @return The {@link IItemHandler} that this container is facing
      */
     IItemHandler getConnectedItems();
+
+    /**
+     * @return The patterns stored in this container
+     */
+    IItemHandler getPatterns();
+
+    /**
+     * @return The position of this container
+     */
+    BlockPos getPosition();
 }
