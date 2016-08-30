@@ -115,7 +115,7 @@ public abstract class ItemStorageNBT implements IItemStorage {
     }
 
     @Override
-    public ItemStack insertItem(ItemStack stack, int size, boolean simulate) {
+    public synchronized ItemStack insertItem(ItemStack stack, int size, boolean simulate) {
         for (ItemStack otherStack : stacks) {
             if (CompareUtils.compareStackNoQuantity(otherStack, stack)) {
                 if (getCapacity() != -1 && getStored() + size > getCapacity()) {
@@ -178,7 +178,7 @@ public abstract class ItemStorageNBT implements IItemStorage {
     }
 
     @Override
-    public ItemStack extractItem(ItemStack stack, int size, int flags) {
+    public synchronized ItemStack extractItem(ItemStack stack, int size, int flags) {
         for (ItemStack otherStack : stacks) {
             if (CompareUtils.compareStack(otherStack, stack, flags)) {
                 if (size > otherStack.stackSize) {

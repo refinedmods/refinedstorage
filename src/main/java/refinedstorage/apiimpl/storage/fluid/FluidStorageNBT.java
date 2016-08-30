@@ -78,7 +78,7 @@ public abstract class FluidStorageNBT implements IFluidStorage {
     }
 
     @Override
-    public FluidStack insertFluid(FluidStack stack, int size, boolean simulate) {
+    public synchronized FluidStack insertFluid(FluidStack stack, int size, boolean simulate) {
         for (FluidStack otherStack : stacks) {
             if (otherStack.isFluidEqual(stack)) {
                 if (getCapacity() != -1 && getStored() + size > getCapacity()) {
@@ -141,7 +141,7 @@ public abstract class FluidStorageNBT implements IFluidStorage {
     }
 
     @Override
-    public FluidStack extractFluid(FluidStack stack, int size, int flags) {
+    public synchronized FluidStack extractFluid(FluidStack stack, int size, int flags) {
         for (FluidStack otherStack : stacks) {
             if (CompareUtils.compareStack(otherStack, stack, flags)) {
                 if (size > otherStack.amount) {
