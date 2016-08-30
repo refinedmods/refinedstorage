@@ -13,13 +13,17 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import refinedstorage.RefinedStorageItems;
+import refinedstorage.api.autocrafting.ICraftingPattern;
+import refinedstorage.api.autocrafting.ICraftingPatternContainer;
+import refinedstorage.api.autocrafting.ICraftingPatternProvider;
 import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.apiimpl.autocrafting.CraftingPattern;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class ItemPattern extends ItemBase {
+public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
     public static final String NBT_INPUTS = "Inputs";
     public static final String NBT_OUTPUTS = "Outputs";
     public static final String NBT_BYPRODUCTS = "Byproducts";
@@ -172,5 +176,16 @@ public class ItemPattern extends ItemBase {
         }
 
         return pattern.getTagCompound().getBoolean(NBT_PROCESSING);
+    }
+
+    @Override
+    public ICraftingPattern create(ItemStack stack, ICraftingPatternContainer container) {
+        return new CraftingPattern(
+            container.getPosition(),
+            isProcessing(stack),
+            getInputs(stack),
+            getOutputs(stack),
+            getByproducts(stack)
+        );
     }
 }

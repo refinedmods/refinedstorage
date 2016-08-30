@@ -7,16 +7,15 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageItems;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
+import refinedstorage.api.autocrafting.ICraftingPatternProvider;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerUpgrade;
-import refinedstorage.item.ItemPattern;
 import refinedstorage.item.ItemUpgrade;
 
 public class TileCrafter extends TileNode implements ICraftingPatternContainer {
-    private ItemHandlerBasic patterns = new ItemHandlerBasic(9, this, stack -> (stack.getItem() == RefinedStorageItems.PATTERN && ItemPattern.isValid(stack))) {
+    private ItemHandlerBasic patterns = new ItemHandlerBasic(9, this, stack -> stack.getItem() instanceof ICraftingPatternProvider) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);

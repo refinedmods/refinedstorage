@@ -21,6 +21,7 @@ import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.api.RefinedStorageAPI;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
+import refinedstorage.api.autocrafting.ICraftingPatternProvider;
 import refinedstorage.api.autocrafting.registry.ICraftingTaskFactory;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.network.*;
@@ -50,7 +51,6 @@ import refinedstorage.integration.ic2.IControllerEnergyIC2;
 import refinedstorage.integration.ic2.IntegrationIC2;
 import refinedstorage.integration.tesla.ControllerEnergyTesla;
 import refinedstorage.integration.tesla.IntegrationTesla;
-import refinedstorage.item.ItemPattern;
 import refinedstorage.network.MessageGridFluidDelta;
 import refinedstorage.network.MessageGridFluidUpdate;
 import refinedstorage.network.MessageGridItemDelta;
@@ -467,16 +467,10 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 ICraftingPatternContainer container = (ICraftingPatternContainer) node;
 
                 for (int i = 0; i < container.getPatterns().getSlots(); ++i) {
-                    ItemStack pattern = container.getPatterns().getStackInSlot(i);
+                    ItemStack stack = container.getPatterns().getStackInSlot(i);
 
-                    if (pattern != null && ItemPattern.isValid(pattern)) {
-                        patterns.add(new CraftingPattern(
-                            container.getPosition(),
-                            ItemPattern.isProcessing(pattern),
-                            ItemPattern.getInputs(pattern),
-                            ItemPattern.getOutputs(pattern),
-                            ItemPattern.getByproducts(pattern)
-                        ));
+                    if (stack != null) {
+                        patterns.add(((ICraftingPatternProvider) stack.getItem()).create(stack, container));
                     }
                 }
             }
