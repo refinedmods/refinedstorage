@@ -4,6 +4,9 @@
 - Implemented multithreaded autocrafting (raoulvdberge)
 - Processing patterns now hold their items back for pushing until all the required items are gathered from the system (raoulvdberge)
 - Fixed item and fluid storage stored count having incorrect values at times (raoulvdberge)
+- Reworked Crafting Monitor GUI (raoulvdberge)
+- Fixed problems relating to Crafting Upgrade (scheduling a task wrongly, blocking other tasks, etc) (raoulvdberge)
+- Interface now supports Crafting Upgrade (raoulvdberge)
 
 ### 0.9.4
 - Little fixes in German translation (ThexXTURBOXx)

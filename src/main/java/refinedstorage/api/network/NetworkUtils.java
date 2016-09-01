@@ -7,6 +7,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import refinedstorage.api.autocrafting.ICraftingPattern;
+import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.storage.CompareUtils;
 
 /**
@@ -39,6 +40,26 @@ public final class NetworkUtils {
 
     public static int getFluidStackHashCode(FluidStack stack) {
         return stack.getFluid().hashCode() * (stack.tag != null ? stack.tag.hashCode() : 1);
+    }
+
+    public static void scheduleCraftingTaskIfUnscheduled(INetworkMaster network, ItemStack stack, int toSchedule, int compare) {
+        int alreadyScheduled = 0;
+
+        for (ICraftingTask task : network.getCraftingTasks()) {
+            for (ItemStack output : task.getPattern().getOutputs()) {
+                if (CompareUtils.compareStack(output, stack, compare)) {
+                    alreadyScheduled++;
+                }
+            }
+        }
+
+        for (int i = 0; i < toSchedule - alreadyScheduled; ++i) {
+            ICraftingPattern pattern = network.getPattern(stack, compare);
+
+            if (pattern != null) {
+                network.addCraftingTask(network.createCraftingTask(pattern));
+            }
+        }
     }
 
     public static void writeItemStack(ByteBuf buf, INetworkMaster network, ItemStack stack) {

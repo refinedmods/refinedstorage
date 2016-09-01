@@ -16,7 +16,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorage;
-import refinedstorage.apiimpl.autocrafting.CraftingTaskScheduler;
+import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.container.slot.SlotSpecimen;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerFluid;
@@ -52,8 +52,6 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
 
     private IBlockState block;
 
-    private CraftingTaskScheduler scheduler = new CraftingTaskScheduler(this);
-
     public TileConstructor() {
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(TYPE);
@@ -79,7 +77,6 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
                     ItemStack took = network.extractItem(itemFilters.getStackInSlot(0), 1, compare);
 
                     if (took != null) {
-                        scheduler.resetSchedule();
                         worldObj.setBlockState(front, block.getBlock().getStateFromMeta(took.getMetadata()), 1 | 2);
                         // From ItemBlock.onItemUse
                         SoundType blockSound = block.getBlock().getSoundType();
@@ -87,9 +84,7 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
                     } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
                         ItemStack craft = itemFilters.getStackInSlot(0);
 
-                        if (scheduler.canSchedule(compare, craft)) {
-                            scheduler.schedule(network, compare, craft);
-                        }
+                        NetworkUtils.scheduleCraftingTaskIfUnscheduled(network, craft, 1, compare);
                     }
                 }
             } else if (type == IType.FLUIDS) {
@@ -147,8 +142,6 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
         readItems(itemFilters, 0, tag);
         readItems(upgrades, 1, tag);
         readItems(fluidFilters, 2, tag);
-
-        scheduler.read(tag);
     }
 
     @Override
@@ -161,8 +154,6 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
         writeItems(itemFilters, 0, tag);
         writeItems(upgrades, 1, tag);
         writeItems(fluidFilters, 2, tag);
-
-        scheduler.write(tag);
 
         return tag;
     }

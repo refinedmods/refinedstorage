@@ -12,7 +12,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
-import refinedstorage.apiimpl.autocrafting.CraftingTaskScheduler;
+import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerFluid;
 import refinedstorage.inventory.ItemHandlerUpgrade;
@@ -35,8 +35,6 @@ public class TileExporter extends TileMultipartNode implements IComparable, ITyp
 
     private int compare = 0;
     private int type = IType.ITEMS;
-
-    private CraftingTaskScheduler scheduler = new CraftingTaskScheduler(this);
 
     public TileExporter() {
         dataManager.addWatchedParameter(COMPARE);
@@ -69,17 +67,13 @@ public class TileExporter extends TileMultipartNode implements IComparable, ITyp
                             ItemStack took = network.extractItem(slot, size, compare);
 
                             if (took != null) {
-                                scheduler.resetSchedule();
-
                                 ItemStack remainder = ItemHandlerHelper.insertItem(handler, took, false);
 
                                 if (remainder != null) {
                                     network.insertItem(remainder, remainder.stackSize, false);
                                 }
                             } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
-                                if (scheduler.canSchedule(compare, slot)) {
-                                    scheduler.schedule(network, compare, slot);
-                                }
+                                NetworkUtils.scheduleCraftingTaskIfUnscheduled(network, slot, 1, compare);
                             }
                         }
                     }
@@ -133,8 +127,6 @@ public class TileExporter extends TileMultipartNode implements IComparable, ITyp
         readItems(itemFilters, 0, tag);
         readItems(upgrades, 1, tag);
         readItems(fluidFilters, 2, tag);
-
-        scheduler.read(tag);
     }
 
     @Override
@@ -147,8 +139,6 @@ public class TileExporter extends TileMultipartNode implements IComparable, ITyp
         writeItems(itemFilters, 0, tag);
         writeItems(upgrades, 1, tag);
         writeItems(fluidFilters, 2, tag);
-
-        scheduler.write(tag);
 
         return tag;
     }
