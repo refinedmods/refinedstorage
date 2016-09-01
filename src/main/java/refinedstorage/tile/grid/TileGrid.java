@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import refinedstorage.RefinedStorage;
@@ -333,7 +334,7 @@ public class TileGrid extends TileNode implements IGrid {
         return result.getStackInSlot(0) != null && patterns.getStackInSlot(1) == null && patterns.getStackInSlot(0) != null;
     }
 
-    public void onRecipeTransfer(ItemStack[][] recipe) {
+    public void onRecipeTransfer(EntityPlayer player, ItemStack[][] recipe) {
         if (isConnected()) {
             for (int i = 0; i < matrix.getSizeInventory(); ++i) {
                 ItemStack slot = matrix.getStackInSlot(i);
@@ -356,13 +357,37 @@ public class TileGrid extends TileNode implements IGrid {
                     ItemStack[] possibilities = recipe[i];
 
                     if (getType() == EnumGridType.CRAFTING) {
+                        boolean found = false;
+
                         for (ItemStack possibility : possibilities) {
                             ItemStack took = NetworkUtils.extractItem(network, possibility, 1);
 
                             if (took != null) {
                                 matrix.setInventorySlotContents(i, took);
 
+                                found = true;
+
                                 break;
+                            }
+                        }
+
+                        if (!found) {
+                            for (ItemStack possibility : possibilities) {
+                                for (int j = 0; j < player.inventory.getSizeInventory(); ++j) {
+                                    if (CompareUtils.compareStackNoQuantity(possibility, player.inventory.getStackInSlot(j))) {
+                                        matrix.setInventorySlotContents(i, ItemHandlerHelper.copyStackWithSize(player.inventory.getStackInSlot(j), 1));
+
+                                        player.inventory.decrStackSize(j, 1);
+
+                                        found = true;
+
+                                        break;
+                                    }
+                                }
+
+                                if (found) {
+                                    break;
+                                }
                             }
                         }
                     } else if (getType() == EnumGridType.PATTERN) {

@@ -53,7 +53,7 @@ public class MessageGridCraftingTransfer extends MessageHandlerPlayerToServer<Me
                     }
                 }
 
-                ((TileGrid) grid).onRecipeTransfer(actualRecipe);
+                ((TileGrid) grid).onRecipeTransfer(player, actualRecipe);
             }
         }
     }
