@@ -49,8 +49,8 @@ public class GuiCraftingMonitor extends GuiBase {
         int cancelButtonWidth = 14 + fontRendererObj.getStringWidth(cancel);
         int cancelAllButtonWidth = 14 + fontRendererObj.getStringWidth(cancelAll);
 
-        cancelButton = addButton(x + 7, y + 113, cancelButtonWidth, 21, cancel, false);
-        cancelAllButton = addButton(x + 7 + cancelButtonWidth + 4, y + 113, cancelAllButtonWidth, 21, cancelAll, false);
+        cancelButton = addButton(x + 7, y + 114, cancelButtonWidth, 20, cancel, false);
+        cancelAllButton = addButton(x + 7 + cancelButtonWidth + 4, y + 114, cancelAllButtonWidth, 20, cancelAll, false);
     }
 
     @Override
@@ -97,9 +97,9 @@ public class GuiCraftingMonitor extends GuiBase {
 
         for (int i = 0; i < VISIBLE_ROWS; ++i) {
             if (item < getTasks().size()) {
-                ClientCraftingTask task = getTasks().get(i);
+                ClientCraftingTask task = getTasks().get(item);
 
-                if (i == itemSelected) {
+                if (item == itemSelected) {
                     itemSelectedX = x;
                     itemSelectedY = y;
                 }
@@ -179,7 +179,7 @@ public class GuiCraftingMonitor extends GuiBase {
                 int ix = 8;
                 int iy = 20 + (i * ITEM_HEIGHT);
 
-                if (inBounds(ix, iy, ITEM_WIDTH, ITEM_HEIGHT, mouseX - guiLeft, mouseY - guiTop) && item < getTasks().size()) {
+                if (inBounds(ix, iy, ITEM_WIDTH, ITEM_HEIGHT, mouseX - guiLeft, mouseY - guiTop) && (item + i) < getTasks().size()) {
                     itemSelected = item + i;
                 }
             }
