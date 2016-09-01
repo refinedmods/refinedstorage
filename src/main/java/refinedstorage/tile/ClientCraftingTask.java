@@ -8,22 +8,25 @@ public class ClientCraftingTask {
     private int id;
     private String status;
     private int depth;
+    private int progress;
 
     // Used server-side while sending
     private ItemStack[] outputs;
     private ClientCraftingTask child;
 
-    public ClientCraftingTask(ItemStack output, int id, String status, int depth) {
+    public ClientCraftingTask(ItemStack output, int id, String status, int depth, int progress) {
         this.output = output;
         this.id = id;
         this.status = status;
         this.depth = depth;
+        this.progress = progress;
     }
 
-    public ClientCraftingTask(String status, ItemStack[] outputs, ICraftingTask child) {
+    public ClientCraftingTask(String status, ItemStack[] outputs, int progress, ICraftingTask child) {
         this.status = status;
         this.outputs = outputs;
-        this.child = child != null ? new ClientCraftingTask(child.getStatus(), child.getPattern().getOutputs(), child.getChild()) : null;
+        this.progress = progress;
+        this.child = child != null ? new ClientCraftingTask(child.getStatus(), child.getPattern().getOutputs(), child.getProgress(), child.getChild()) : null;
     }
 
     public ItemStack getOutput() {
@@ -48,5 +51,9 @@ public class ClientCraftingTask {
 
     public int getDepth() {
         return depth;
+    }
+
+    public int getProgress() {
+        return progress;
     }
 }

@@ -16,10 +16,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public class GuiCraftingMonitor extends GuiBase {
-    private static final int VISIBLE_ROWS = 3;
+    private static final int VISIBLE_ROWS = 5;
 
-    private static final int ITEM_WIDTH = 72;
-    private static final int ITEM_HEIGHT = 30;
+    private static final int ITEM_WIDTH = 143;
+    private static final int ITEM_HEIGHT = 18;
 
     private TileCraftingMonitor craftingMonitor;
 
@@ -28,9 +28,8 @@ public class GuiCraftingMonitor extends GuiBase {
 
     private int itemSelected = -1;
 
-    private boolean renderItemSelection;
-    private int renderItemSelectionX;
-    private int renderItemSelectionY;
+    private int itemSelectedX = -1;
+    private int itemSelectedY = -1;
 
     public GuiCraftingMonitor(ContainerCraftingMonitor container, TileCraftingMonitor craftingMonitor) {
         super(container, 176, 230);
@@ -50,8 +49,8 @@ public class GuiCraftingMonitor extends GuiBase {
         int cancelButtonWidth = 14 + fontRendererObj.getStringWidth(cancel);
         int cancelAllButtonWidth = 14 + fontRendererObj.getStringWidth(cancelAll);
 
-        cancelButton = addButton(x + 7, y + 113, cancelButtonWidth, 20, cancel, false);
-        cancelAllButton = addButton(x + 7 + cancelButtonWidth + 4, y + 113, cancelAllButtonWidth, 20, cancelAll, false);
+        cancelButton = addButton(x + 7, y + 113, cancelButtonWidth, 21, cancel, false);
+        cancelAllButton = addButton(x + 7 + cancelButtonWidth + 4, y + 113, cancelAllButtonWidth, 21, cancelAll, false);
     }
 
     @Override
@@ -73,8 +72,8 @@ public class GuiCraftingMonitor extends GuiBase {
 
         drawTexture(x, y, 0, 0, width, height);
 
-        if (renderItemSelection) {
-            drawTexture(x + renderItemSelectionX, y + renderItemSelectionY, 178, 0, ITEM_WIDTH, ITEM_HEIGHT);
+        if (itemSelectedX != -1 && itemSelectedY != -1) {
+            drawTexture(x + itemSelectedX, y + itemSelectedY, 0, 232, ITEM_WIDTH, ITEM_HEIGHT);
         }
     }
 
@@ -83,39 +82,46 @@ public class GuiCraftingMonitor extends GuiBase {
         drawString(7, 7, t("gui.refinedstorage:crafting_monitor"));
         drawString(7, 137, t("container.inventory"));
 
-        int x = 8;
-        int y = 20;
-
-        int item = getScrollbar().getOffset() * 2;
+        int item = getScrollbar().getOffset();
 
         RenderHelper.enableGUIStandardItemLighting();
 
         String[] lines = null;
 
-        renderItemSelection = false;
+        int ox = 8;
+        int x = ox;
+        int y = 20;
 
-        for (int i = 0; i < 6; ++i) {
+        itemSelectedX = -1;
+        itemSelectedY = -1;
+
+        for (int i = 0; i < VISIBLE_ROWS; ++i) {
             if (item < getTasks().size()) {
-                if (item == itemSelected) {
-                    renderItemSelection = true;
-                    renderItemSelectionX = x;
-                    renderItemSelectionY = y;
-                }
-
                 ClientCraftingTask task = getTasks().get(i);
 
-                drawItem(x + 4, y + 11, task.getOutput());
+                if (i == itemSelected) {
+                    itemSelectedX = x;
+                    itemSelectedY = y;
+                }
+
+                x += task.getDepth() * 16;
+
+                drawItem(x + 2, y + 1, task.getOutput());
 
                 float scale = 0.5f;
 
                 GlStateManager.pushMatrix();
                 GlStateManager.scale(scale, scale, 1);
 
-                drawString(calculateOffsetOnScale(x + 5, scale), calculateOffsetOnScale(y + 4, scale), task.getOutput().getDisplayName());
+                drawString(calculateOffsetOnScale(x + 21, scale), calculateOffsetOnScale(y + 7, scale), task.getOutput().getDisplayName());
+
+                if (task.getProgress() != -1) {
+                    drawString(calculateOffsetOnScale(ox + ITEM_WIDTH - 15, scale), calculateOffsetOnScale(y + 7, scale), task.getProgress() + "%");
+                }
 
                 GlStateManager.popMatrix();
 
-                if (inBounds(x + 5, y + 10, 16, 16, mouseX, mouseY) && !task.getStatus().trim().equals("")) {
+                if (inBounds(x + 4, y + 4, 16, 16, mouseX, mouseY) && !task.getStatus().trim().equals("")) {
                     lines = task.getStatus().split("\n");
 
                     for (int j = 0; j < lines.length; ++j) {
@@ -130,13 +136,9 @@ public class GuiCraftingMonitor extends GuiBase {
                         lines[j] = line;
                     }
                 }
-            }
 
-            if (i == 1 || i == 3) {
-                x = 8;
+                x = ox;
                 y += ITEM_HEIGHT;
-            } else {
-                x += ITEM_WIDTH;
             }
 
             item++;
@@ -148,7 +150,7 @@ public class GuiCraftingMonitor extends GuiBase {
     }
 
     private int getRows() {
-        return Math.max(0, (int) Math.ceil((float) getTasks().size() / (float) 2));
+        return getTasks().size();
     }
 
     @Override
@@ -168,21 +170,17 @@ public class GuiCraftingMonitor extends GuiBase {
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         super.mouseClicked(mouseX, mouseY, mouseButton);
 
+        itemSelected = -1;
+
         if (mouseButton == 0 && inBounds(8, 20, 144, 90, mouseX - guiLeft, mouseY - guiTop)) {
-            itemSelected = -1;
+            int item = getScrollbar().getOffset();
 
-            int item = getScrollbar().getOffset() * 2;
+            for (int i = 0; i < VISIBLE_ROWS; ++i) {
+                int ix = 8;
+                int iy = 20 + (i * ITEM_HEIGHT);
 
-            for (int y = 0; y < 3; ++y) {
-                for (int x = 0; x < 2; ++x) {
-                    int ix = 8 + (x * ITEM_WIDTH);
-                    int iy = 20 + (y * ITEM_HEIGHT);
-
-                    if (inBounds(ix, iy, ITEM_WIDTH, ITEM_HEIGHT, mouseX - guiLeft, mouseY - guiTop) && item < getTasks().size()) {
-                        itemSelected = item;
-                    }
-
-                    item++;
+                if (inBounds(ix, iy, ITEM_WIDTH, ITEM_HEIGHT, mouseX - guiLeft, mouseY - guiTop) && item < getTasks().size()) {
+                    itemSelected = item + i;
                 }
             }
         }

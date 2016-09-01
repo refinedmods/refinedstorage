@@ -12,7 +12,6 @@ import refinedstorage.tile.ClientNode;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public final class RefinedStorageSerializers {
@@ -60,6 +59,8 @@ public final class RefinedStorageSerializers {
         private void writeTask(PacketBuffer buf, ClientCraftingTask task) {
             ByteBufUtils.writeUTF8String(buf, task.getStatus());
 
+            buf.writeInt(task.getProgress());
+
             buf.writeInt(task.getOutputs().length);
 
             for (ItemStack output : task.getOutputs()) {
@@ -83,18 +84,18 @@ public final class RefinedStorageSerializers {
                 readTask(buf, i, 0, tasks);
             }
 
-            Collections.reverse(tasks);
-
             return tasks;
         }
 
         private void readTask(PacketBuffer buf, int i, int depth, List<ClientCraftingTask> tasks) {
             String status = ByteBufUtils.readUTF8String(buf);
 
+            int progress = buf.readInt();
+
             int outputs = buf.readInt();
 
             for (int j = 0; j < outputs; ++j) {
-                tasks.add(new ClientCraftingTask(ByteBufUtils.readItemStack(buf), i, status, depth));
+                tasks.add(new ClientCraftingTask(ByteBufUtils.readItemStack(buf), i, status, depth, progress));
             }
 
             if (buf.readBoolean()) {

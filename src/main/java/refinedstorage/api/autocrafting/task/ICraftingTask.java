@@ -54,4 +54,9 @@ public interface ICraftingTask {
      * @return The status
      */
     String getStatus();
+
+    /**
+     * @return The progress for display in the crafting monitor, -1 for no progress
+     */
+    int getProgress();
 }

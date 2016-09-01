@@ -122,4 +122,17 @@ public class CraftingTaskNormal extends CraftingTask {
 
         return builder.toString();
     }
+
+    @Override
+    public int getProgress() {
+        int satisfiedAmount = 0;
+
+        for (boolean item : satisfied) {
+            if (item) {
+                satisfiedAmount++;
+            }
+        }
+
+        return (int) ((float) satisfiedAmount / (float) satisfied.length * 100F);
+    }
 }
