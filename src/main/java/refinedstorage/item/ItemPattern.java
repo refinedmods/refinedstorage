@@ -9,6 +9,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
@@ -19,6 +20,7 @@ import refinedstorage.api.autocrafting.ICraftingPatternProvider;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.apiimpl.autocrafting.CraftingPattern;
 
+import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -180,12 +182,58 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
 
     @Override
     public ICraftingPattern create(ItemStack stack, ICraftingPatternContainer container) {
-        return new CraftingPattern(
-            container.getPosition(),
-            isProcessing(stack),
-            getInputs(stack),
-            getOutputs(stack),
-            getByproducts(stack)
-        );
+        return new CraftingPattern(stack, container.getPosition(), isProcessing(stack), getInputs(stack), getOutputs(stack), getByproducts(stack));
+    }
+
+    @Override
+    @Nullable
+    public ICraftingPattern create(ItemStack stack) {
+        NBTTagCompound tag = stack.getTagCompound();
+
+        BlockPos crafterPos = new BlockPos(tag.getInteger(CraftingPattern.NBT_CRAFTER_X), tag.getInteger(CraftingPattern.NBT_CRAFTER_Y), tag.getInteger(CraftingPattern.NBT_CRAFTER_Z));
+
+        boolean processing = tag.getBoolean(NBT_PROCESSING);
+
+        NBTTagList inputsTag = tag.getTagList(NBT_INPUTS, Constants.NBT.TAG_COMPOUND);
+
+        ItemStack inputs[] = new ItemStack[inputsTag.tagCount()];
+
+        for (int i = 0; i < inputsTag.tagCount(); ++i) {
+            inputs[i] = ItemStack.loadItemStackFromNBT(inputsTag.getCompoundTagAt(i));
+
+            if (inputs[i] == null) {
+                return null;
+            }
+        }
+
+        NBTTagList outputsTag = tag.getTagList(NBT_OUTPUTS, Constants.NBT.TAG_COMPOUND);
+
+        ItemStack outputs[] = new ItemStack[outputsTag.tagCount()];
+
+        for (int i = 0; i < outputsTag.tagCount(); ++i) {
+            outputs[i] = ItemStack.loadItemStackFromNBT(outputsTag.getCompoundTagAt(i));
+
+            if (outputs[i] == null) {
+                return null;
+            }
+        }
+
+        ItemStack byproducts[] = new ItemStack[0];
+
+        if (tag.hasKey(ItemPattern.NBT_BYPRODUCTS)) {
+            NBTTagList byproductsTag = tag.getTagList(NBT_BYPRODUCTS, Constants.NBT.TAG_COMPOUND);
+
+            byproducts = new ItemStack[byproductsTag.tagCount()];
+
+            for (int i = 0; i < byproductsTag.tagCount(); ++i) {
+                byproducts[i] = ItemStack.loadItemStackFromNBT(byproductsTag.getCompoundTagAt(i));
+
+                if (byproducts[i] == null) {
+                    return null;
+                }
+            }
+        }
+
+        return new CraftingPattern(stack, crafterPos, processing, inputs, outputs, byproducts);
     }
 }

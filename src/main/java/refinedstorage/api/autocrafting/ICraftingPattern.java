@@ -15,6 +15,11 @@ public interface ICraftingPattern {
     ICraftingPatternContainer getContainer(World world);
 
     /**
+     * @return The crafting pattern stack
+     */
+    ItemStack getStack();
+
+    /**
      * @return The inputs
      */
     ItemStack[] getInputs();

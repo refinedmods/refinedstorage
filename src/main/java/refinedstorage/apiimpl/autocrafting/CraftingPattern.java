@@ -5,7 +5,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.storage.CompareUtils;
@@ -14,15 +13,12 @@ import refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactoryProcessin
 import refinedstorage.item.ItemPattern;
 import refinedstorage.tile.TileCrafter;
 
-/**
- * @TODO: Move this to ItemCraftingPattern and change slot checks in TileCrafter
- */
 public class CraftingPattern implements ICraftingPattern {
-    public static final String NBT = "Pattern";
-    private static final String NBT_CRAFTER_X = "CrafterX";
-    private static final String NBT_CRAFTER_Y = "CrafterY";
-    private static final String NBT_CRAFTER_Z = "CrafterZ";
+    public static final String NBT_CRAFTER_X = "CrafterX";
+    public static final String NBT_CRAFTER_Y = "CrafterY";
+    public static final String NBT_CRAFTER_Z = "CrafterZ";
 
+    private ItemStack stack;
     private BlockPos crafterPos;
     private TileCrafter crafter;
     private boolean processing;
@@ -30,7 +26,8 @@ public class CraftingPattern implements ICraftingPattern {
     private ItemStack[] outputs;
     private ItemStack[] byproducts;
 
-    public CraftingPattern(BlockPos crafterPos, boolean processing, ItemStack[] inputs, ItemStack[] outputs, ItemStack[] byproducts) {
+    public CraftingPattern(ItemStack stack, BlockPos crafterPos, boolean processing, ItemStack[] inputs, ItemStack[] outputs, ItemStack[] byproducts) {
+        this.stack = stack;
         this.crafterPos = crafterPos;
         this.processing = processing;
         this.inputs = inputs;
@@ -45,6 +42,11 @@ public class CraftingPattern implements ICraftingPattern {
         }
 
         return crafter;
+    }
+
+    @Override
+    public ItemStack getStack() {
+        return stack;
     }
 
     @Override
@@ -119,50 +121,5 @@ public class CraftingPattern implements ICraftingPattern {
         tag.setInteger(NBT_CRAFTER_Z, crafterPos.getZ());
 
         return tag;
-    }
-
-    public static CraftingPattern readFromNBT(NBTTagCompound tag) {
-        BlockPos crafterPos = new BlockPos(tag.getInteger(NBT_CRAFTER_X), tag.getInteger(NBT_CRAFTER_Y), tag.getInteger(NBT_CRAFTER_Z));
-
-        boolean processing = tag.getBoolean(ItemPattern.NBT_PROCESSING);
-
-        NBTTagList inputsTag = tag.getTagList(ItemPattern.NBT_INPUTS, Constants.NBT.TAG_COMPOUND);
-        ItemStack inputs[] = new ItemStack[inputsTag.tagCount()];
-
-        for (int i = 0; i < inputsTag.tagCount(); ++i) {
-            inputs[i] = ItemStack.loadItemStackFromNBT(inputsTag.getCompoundTagAt(i));
-
-            if (inputs[i] == null) {
-                return null;
-            }
-        }
-
-        NBTTagList outputsTag = tag.getTagList(ItemPattern.NBT_OUTPUTS, Constants.NBT.TAG_COMPOUND);
-        ItemStack outputs[] = new ItemStack[outputsTag.tagCount()];
-
-        for (int i = 0; i < outputsTag.tagCount(); ++i) {
-            outputs[i] = ItemStack.loadItemStackFromNBT(outputsTag.getCompoundTagAt(i));
-
-            if (outputs[i] == null) {
-                return null;
-            }
-        }
-
-        ItemStack byproducts[] = new ItemStack[0];
-
-        if (tag.hasKey(ItemPattern.NBT_BYPRODUCTS)) {
-            NBTTagList byproductsTag = tag.getTagList(ItemPattern.NBT_BYPRODUCTS, Constants.NBT.TAG_COMPOUND);
-            byproducts = new ItemStack[byproductsTag.tagCount()];
-
-            for (int i = 0; i < byproductsTag.tagCount(); ++i) {
-                byproducts[i] = ItemStack.loadItemStackFromNBT(byproductsTag.getCompoundTagAt(i));
-
-                if (byproducts[i] == null) {
-                    return null;
-                }
-            }
-        }
-
-        return new CraftingPattern(crafterPos, processing, inputs, outputs, byproducts);
     }
 }
