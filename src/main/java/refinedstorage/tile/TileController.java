@@ -736,16 +736,10 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             if (container instanceof ICraftingPatternContainer) {
                 ICraftingPattern pattern = ((ICraftingPatternProvider) stack.getItem()).create(world, stack, (ICraftingPatternContainer) container);
 
-                if (pattern != null) {
-                    ICraftingTaskFactory factory = RefinedStorageAPI.CRAFTING_TASK_REGISTRY.getFactory(tag.getString(NBT_CRAFTING_TASK_TYPE));
+                ICraftingTaskFactory factory = RefinedStorageAPI.CRAFTING_TASK_REGISTRY.getFactory(tag.getString(NBT_CRAFTING_TASK_TYPE));
 
-                    if (factory != null) {
-                        ICraftingTask task = factory.create(tag, world, pattern);
-
-                        if (task != null) {
-                            return task;
-                        }
-                    }
+                if (factory != null) {
+                    return factory.create(world, tag, pattern);
                 }
             }
         }

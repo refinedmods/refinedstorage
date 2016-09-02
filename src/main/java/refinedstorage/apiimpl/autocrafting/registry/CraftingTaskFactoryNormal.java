@@ -21,7 +21,7 @@ public class CraftingTaskFactoryNormal implements ICraftingTaskFactory {
 
     @Override
     @Nonnull
-    public ICraftingTask create(@Nullable NBTTagCompound tag, World world, ICraftingPattern pattern) {
+    public ICraftingTask create(World world, @Nullable NBTTagCompound tag, ICraftingPattern pattern) {
         CraftingTaskNormal task = new CraftingTaskNormal(pattern);
 
         if (tag != null) {

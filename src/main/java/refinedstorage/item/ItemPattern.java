@@ -20,6 +20,7 @@ import refinedstorage.api.autocrafting.ICraftingPatternProvider;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.apiimpl.autocrafting.CraftingPattern;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -145,6 +146,7 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
     }
 
     @Override
+    @Nonnull
     public ICraftingPattern create(World world, ItemStack stack, ICraftingPatternContainer container) {
         return new CraftingPattern(world, container, stack);
     }

@@ -15,11 +15,11 @@ public interface ICraftingTaskFactory {
     /**
      * Returns a crafting task for a given NBT tag and pattern.
      *
-     * @param tag     The NBT tag. If this is null it isn't reading from disk but is used for making a task on demand
      * @param world   The world
+     * @param tag     The NBT tag. If this is null it isn't reading from disk but is used for making a task on demand
      * @param pattern The pattern
      * @return The crafting task
      */
     @Nonnull
-    ICraftingTask create(@Nullable NBTTagCompound tag, World world, ICraftingPattern pattern);
+    ICraftingTask create(World world, @Nullable NBTTagCompound tag, ICraftingPattern pattern);
 }
