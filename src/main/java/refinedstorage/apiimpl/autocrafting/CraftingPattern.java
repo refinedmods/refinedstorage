@@ -22,7 +22,6 @@ public class CraftingPattern implements ICraftingPattern {
     private ItemStack stack;
     private List<ItemStack> inputs = new ArrayList<>();
     private List<ItemStack> outputs = new ArrayList<>();
-    private boolean processing = false;
 
     public CraftingPattern(World world, ICraftingPatternContainer container, ItemStack stack) {
         this.container = container;
@@ -47,10 +46,20 @@ public class CraftingPattern implements ICraftingPattern {
             }
         }
 
-        ItemStack output = CraftingManager.getInstance().findMatchingRecipe(dummyInventory, world);
+        if (!ItemPattern.isProcessing(stack)) {
+            ItemStack output = CraftingManager.getInstance().findMatchingRecipe(dummyInventory, world);
 
-        if (output != null) {
-            outputs.add(output);
+            if (output != null) {
+                outputs.add(output.copy());
+            }
+
+            for (ItemStack remaining : CraftingManager.getInstance().getRemainingItems(dummyInventory, world)) {
+                if (remaining != null) {
+                    outputs.add(remaining.copy());
+                }
+            }
+        } else {
+            outputs = ItemPattern.getOutputs(stack);
         }
     }
 
@@ -81,7 +90,7 @@ public class CraftingPattern implements ICraftingPattern {
 
     @Override
     public String getId() {
-        return processing ? CraftingTaskFactoryProcessing.ID : CraftingTaskFactoryNormal.ID;
+        return ItemPattern.isProcessing(stack) ? CraftingTaskFactoryProcessing.ID : CraftingTaskFactoryNormal.ID;
     }
 
     @Override
@@ -92,7 +101,7 @@ public class CraftingPattern implements ICraftingPattern {
             if (CompareUtils.compareStackNoQuantity(requested, output)) {
                 quantity += output.stackSize;
 
-                if (!processing) {
+                if (!ItemPattern.isProcessing(stack)) {
                     break;
                 }
             }

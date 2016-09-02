@@ -6,9 +6,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemValidatorBasic;
+import refinedstorage.item.ItemPattern;
 
 public class TileProcessingPatternEncoder extends TileBase {
     private ItemHandlerBasic patterns = new ItemHandlerBasic(2, this, new ItemValidatorBasic(RefinedStorageItems.PATTERN));
@@ -36,20 +38,17 @@ public class TileProcessingPatternEncoder extends TileBase {
         if (canCreatePattern()) {
             ItemStack pattern = new ItemStack(RefinedStorageItems.PATTERN);
 
-            // @todo
-            /*ItemPattern.setProcessing(pattern, true);
-
             for (int i = 0; i < 18; ++i) {
                 if (configuration.getStackInSlot(i) != null) {
-                    for (int j = 0; j < configuration.getStackInSlot(i).stackSize; ++j) {
-                        if (i >= 9) {
+                    if (i >= 9) {
+                        for (int j = 0; j < configuration.getStackInSlot(i).stackSize; ++j) {
                             ItemPattern.addOutput(pattern, ItemHandlerHelper.copyStackWithSize(configuration.getStackInSlot(i), 1));
-                        } else {
-                            ItemPattern.addInput(pattern, ItemHandlerHelper.copyStackWithSize(configuration.getStackInSlot(i), 1));
                         }
+                    } else {
+                        ItemPattern.setSlot(pattern, i, configuration.getStackInSlot(i));
                     }
                 }
-            }*/
+            }
 
             patterns.extractItem(0, 1, false);
             patterns.setStackInSlot(1, pattern);
