@@ -1,18 +1,17 @@
 package refinedstorage.api.autocrafting;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
+
+import java.util.List;
 
 /**
  * Represents a crafting pattern.
  */
 public interface ICraftingPattern {
     /**
-     * @param world The world
      * @return The container where the pattern is in
      */
-    ICraftingPatternContainer getContainer(World world);
+    ICraftingPatternContainer getContainer();
 
     /**
      * @return The crafting pattern stack
@@ -20,19 +19,19 @@ public interface ICraftingPattern {
     ItemStack getStack();
 
     /**
+     * @return Whether the crafting pattern is valid
+     */
+    boolean isValid();
+
+    /**
      * @return The inputs
      */
-    ItemStack[] getInputs();
+    List<ItemStack> getInputs();
 
     /**
      * @return The outputs
      */
-    ItemStack[] getOutputs();
-
-    /**
-     * @return The byproducts
-     */
-    ItemStack[] getByproducts();
+    List<ItemStack> getOutputs();
 
     /**
      * @return The id of the crafting task, as defined in the registry
@@ -44,12 +43,4 @@ public interface ICraftingPattern {
      * @return The quantity returned per request
      */
     int getQuantityPerRequest(ItemStack requested);
-
-    /**
-     * Writes this pattern to NBT.
-     *
-     * @param tag The NBT tag to write to
-     * @return The written NBT tag
-     */
-    NBTTagCompound writeToNBT(NBTTagCompound tag);
 }

@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+import refinedstorage.api.RefinedStorageAPI;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.storage.CompareUtils;
@@ -24,6 +25,10 @@ public final class NetworkUtils {
 
     public static ICraftingPattern getPattern(INetworkMaster network, ItemStack stack) {
         return network.getPattern(stack, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
+    }
+
+    public static ICraftingTask createCraftingTask(INetworkMaster network, ICraftingPattern pattern) {
+        return RefinedStorageAPI.CRAFTING_TASK_REGISTRY.getFactory(pattern.getId()).create(null, network.getNetworkWorld(), pattern);
     }
 
     public static boolean hasPattern(INetworkMaster network, ItemStack stack) {
@@ -57,7 +62,7 @@ public final class NetworkUtils {
             ICraftingPattern pattern = network.getPattern(stack, compare);
 
             if (pattern != null) {
-                network.addCraftingTask(network.createCraftingTask(pattern));
+                network.addCraftingTask(createCraftingTask(network, pattern));
             }
         }
     }

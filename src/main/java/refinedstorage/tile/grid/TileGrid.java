@@ -308,21 +308,11 @@ public class TileGrid extends TileNode implements IGrid {
 
             ItemStack pattern = new ItemStack(RefinedStorageItems.PATTERN);
 
-            for (ItemStack byproduct : CraftingManager.getInstance().getRemainingItems(matrix, worldObj)) {
-                if (byproduct != null) {
-                    ItemPattern.addByproduct(pattern, byproduct);
-                }
-            }
-
-            ItemPattern.addOutput(pattern, result.getStackInSlot(0));
-
-            ItemPattern.setProcessing(pattern, false);
-
             for (int i = 0; i < 9; ++i) {
                 ItemStack ingredient = matrix.getStackInSlot(i);
 
                 if (ingredient != null) {
-                    ItemPattern.addInput(pattern, ingredient);
+                    ItemPattern.setSlot(pattern, i, ingredient);
                 }
             }
 

@@ -4,6 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.world.World;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.network.INetworkMaster;
@@ -27,7 +28,7 @@ public abstract class CraftingTask implements ICraftingTask {
 
     public CraftingTask(ICraftingPattern pattern) {
         this.pattern = pattern;
-        this.childrenCreated = new boolean[pattern.getInputs().length];
+        this.childrenCreated = new boolean[pattern.getInputs().size()];
     }
 
     @Override
@@ -45,10 +46,10 @@ public abstract class CraftingTask implements ICraftingTask {
 
     protected void tryCreateChild(INetworkMaster network, int i) {
         if (!childrenCreated[i]) {
-            ICraftingPattern pattern = NetworkUtils.getPattern(network, this.pattern.getInputs()[i]);
+            ICraftingPattern pattern = NetworkUtils.getPattern(network, this.pattern.getInputs().get(i));
 
             if (pattern != null) {
-                child = network.createCraftingTask(pattern);
+                child = NetworkUtils.createCraftingTask(network, pattern);
 
                 childrenCreated[i] = true;
 
@@ -99,9 +100,9 @@ public abstract class CraftingTask implements ICraftingTask {
         return tag;
     }
 
-    public void readChildNBT(NBTTagCompound tag) {
+    public void readChildNBT(World world, NBTTagCompound tag) {
         if (tag.hasKey(NBT_CHILD)) {
-            child = TileController.readCraftingTask(tag.getCompoundTag(NBT_CHILD));
+            child = TileController.readCraftingTask(world, tag.getCompoundTag(NBT_CHILD));
         }
     }
 

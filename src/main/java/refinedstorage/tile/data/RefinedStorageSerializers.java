@@ -61,7 +61,7 @@ public final class RefinedStorageSerializers {
 
             buf.writeInt(task.getProgress());
 
-            buf.writeInt(task.getOutputs().length);
+            buf.writeInt(task.getOutputs().size());
 
             for (ItemStack output : task.getOutputs()) {
                 ByteBufUtils.writeItemStack(buf, output);

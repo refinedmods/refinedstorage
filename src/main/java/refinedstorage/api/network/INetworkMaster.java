@@ -4,6 +4,7 @@ import cofh.api.energy.EnergyStorage;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
@@ -82,14 +83,6 @@ public interface INetworkMaster {
      * @param task The crafting task to add
      */
     void addCraftingTask(@Nonnull ICraftingTask task);
-
-    /**
-     * Creates a crafting task from a {@link ICraftingPattern}.
-     *
-     * @param pattern The pattern to create a task for
-     * @return A task
-     */
-    ICraftingTask createCraftingTask(@Nonnull ICraftingPattern pattern);
 
     /**
      * Cancels a crafting task.
@@ -209,4 +202,9 @@ public interface INetworkMaster {
      */
     @Nullable
     FluidStack extractFluid(@Nonnull FluidStack stack, int size, int flags);
+
+    /**
+     * @return The world where this node is in
+     */
+    World getNetworkWorld();
 }

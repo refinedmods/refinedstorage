@@ -17,8 +17,8 @@ public class CraftingTaskNormal extends CraftingTask {
     public CraftingTaskNormal(ICraftingPattern pattern) {
         super(pattern);
 
-        this.satisfied = new boolean[pattern.getInputs().length];
-        this.checked = new boolean[pattern.getInputs().length];
+        this.satisfied = new boolean[pattern.getInputs().size()];
+        this.checked = new boolean[pattern.getInputs().size()];
     }
 
     public void setSatisfied(boolean[] satisfied) {
@@ -31,10 +31,10 @@ public class CraftingTaskNormal extends CraftingTask {
 
     @Override
     public boolean update(World world, INetworkMaster network) {
-        for (int i = 0; i < pattern.getInputs().length; ++i) {
+        for (int i = 0; i < pattern.getInputs().size(); ++i) {
             checked[i] = true;
 
-            ItemStack input = pattern.getInputs()[i];
+            ItemStack input = pattern.getInputs().get(i);
 
             if (!satisfied[i]) {
                 ItemStack received = NetworkUtils.extractItem(network, input, input.stackSize);
@@ -64,13 +64,6 @@ public class CraftingTaskNormal extends CraftingTask {
             network.insertItem(output, output.stackSize, false);
         }
 
-        if (pattern.getByproducts() != null) {
-            for (ItemStack byproduct : pattern.getByproducts()) {
-                // @TODO: Handle remainder
-                network.insertItem(byproduct, byproduct.stackSize, false);
-            }
-        }
-
         return true;
     }
 
@@ -90,8 +83,8 @@ public class CraftingTaskNormal extends CraftingTask {
 
         boolean missingItems = false;
 
-        for (int i = 0; i < pattern.getInputs().length; ++i) {
-            ItemStack input = pattern.getInputs()[i];
+        for (int i = 0; i < pattern.getInputs().size(); ++i) {
+            ItemStack input = pattern.getInputs().get(i);
 
             if (!satisfied[i] && !childrenCreated[i] && checked[i]) {
                 if (!missingItems) {
@@ -106,8 +99,8 @@ public class CraftingTaskNormal extends CraftingTask {
 
         boolean itemsCrafting = false;
 
-        for (int i = 0; i < pattern.getInputs().length; ++i) {
-            ItemStack input = pattern.getInputs()[i];
+        for (int i = 0; i < pattern.getInputs().size(); ++i) {
+            ItemStack input = pattern.getInputs().get(i);
 
             if (!satisfied[i] && childrenCreated[i] && checked[i]) {
                 if (!itemsCrafting) {

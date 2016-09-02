@@ -22,9 +22,9 @@ public class CraftingTaskProcessing extends CraftingTask {
     public CraftingTaskProcessing(ICraftingPattern pattern) {
         super(pattern);
 
-        this.satisfied = new boolean[pattern.getInputs().length];
-        this.satisfiedInsertion = new boolean[pattern.getInputs().length];
-        this.checked = new boolean[pattern.getInputs().length];
+        this.satisfied = new boolean[pattern.getInputs().size()];
+        this.satisfiedInsertion = new boolean[pattern.getInputs().size()];
+        this.checked = new boolean[pattern.getInputs().size()];
     }
 
     public void setSatisfied(boolean[] satisfied) {
@@ -41,10 +41,10 @@ public class CraftingTaskProcessing extends CraftingTask {
 
     @Override
     public boolean update(World world, INetworkMaster network) {
-        for (int i = 0; i < pattern.getInputs().length; ++i) {
+        for (int i = 0; i < pattern.getInputs().size(); ++i) {
             checked[i] = true;
 
-            ItemStack input = pattern.getInputs()[i];
+            ItemStack input = pattern.getInputs().get(i);
 
             if (!satisfied[i]) {
                 ItemStack received = NetworkUtils.extractItem(network, input, input.stackSize);
@@ -68,7 +68,7 @@ public class CraftingTaskProcessing extends CraftingTask {
         }
 
         if (!took.isEmpty()) {
-            ICraftingPatternContainer container = pattern.getContainer(world);
+            ICraftingPatternContainer container = pattern.getContainer();
 
             ItemStack toInsert = took.get(0);
 
@@ -97,8 +97,8 @@ public class CraftingTaskProcessing extends CraftingTask {
             return false;
         }
 
-        for (int i = 0; i < pattern.getOutputs().length; ++i) {
-            ItemStack output = pattern.getOutputs()[i];
+        for (int i = 0; i < pattern.getOutputs().size(); ++i) {
+            ItemStack output = pattern.getOutputs().get(i);
 
             if (!satisfiedInsertion[i]) {
                 if (CompareUtils.compareStackNoQuantity(output, stack)) {
@@ -139,8 +139,8 @@ public class CraftingTaskProcessing extends CraftingTask {
 
         boolean missingItems = false;
 
-        for (int i = 0; i < pattern.getInputs().length; ++i) {
-            ItemStack input = pattern.getInputs()[i];
+        for (int i = 0; i < pattern.getInputs().size(); ++i) {
+            ItemStack input = pattern.getInputs().get(i);
 
             if (!satisfied[i] && !childrenCreated[i]) {
                 if (!missingItems) {
@@ -155,8 +155,8 @@ public class CraftingTaskProcessing extends CraftingTask {
 
         boolean itemsCrafting = false;
 
-        for (int i = 0; i < pattern.getInputs().length; ++i) {
-            ItemStack input = pattern.getInputs()[i];
+        for (int i = 0; i < pattern.getInputs().size(); ++i) {
+            ItemStack input = pattern.getInputs().get(i);
 
             if (!satisfied[i] && childrenCreated[i]) {
                 if (!itemsCrafting) {
@@ -172,8 +172,8 @@ public class CraftingTaskProcessing extends CraftingTask {
         if (isReadyToInsert()) {
             builder.append("I=gui.refinedstorage:crafting_monitor.items_processing\n");
 
-            for (int i = 0; i < pattern.getInputs().length; ++i) {
-                builder.append("T=").append(pattern.getInputs()[i].getUnlocalizedName()).append(".name\n");
+            for (int i = 0; i < pattern.getInputs().size(); ++i) {
+                builder.append("T=").append(pattern.getInputs().get(i).getUnlocalizedName()).append(".name\n");
             }
         }
 

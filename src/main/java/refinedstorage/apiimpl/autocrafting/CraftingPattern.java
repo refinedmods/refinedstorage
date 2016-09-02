@@ -1,47 +1,62 @@
 package refinedstorage.apiimpl.autocrafting;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.world.World;
+import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactoryNormal;
 import refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactoryProcessing;
 import refinedstorage.item.ItemPattern;
-import refinedstorage.tile.TileCrafter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CraftingPattern implements ICraftingPattern {
-    public static final String NBT_CRAFTER_X = "CrafterX";
-    public static final String NBT_CRAFTER_Y = "CrafterY";
-    public static final String NBT_CRAFTER_Z = "CrafterZ";
-
+    private ICraftingPatternContainer container;
     private ItemStack stack;
-    private BlockPos crafterPos;
-    private TileCrafter crafter;
-    private boolean processing;
-    private ItemStack[] inputs;
-    private ItemStack[] outputs;
-    private ItemStack[] byproducts;
+    private List<ItemStack> inputs = new ArrayList<>();
+    private List<ItemStack> outputs = new ArrayList<>();
+    private boolean processing = false;
 
-    public CraftingPattern(ItemStack stack, BlockPos crafterPos, boolean processing, ItemStack[] inputs, ItemStack[] outputs, ItemStack[] byproducts) {
+    public CraftingPattern(World world, ICraftingPatternContainer container, ItemStack stack) {
+        this.container = container;
         this.stack = stack;
-        this.crafterPos = crafterPos;
-        this.processing = processing;
-        this.inputs = inputs;
-        this.outputs = outputs;
-        this.byproducts = byproducts;
+
+        InventoryCrafting dummyInventory = new InventoryCrafting(new Container() {
+            @Override
+            public boolean canInteractWith(EntityPlayer player) {
+                return false;
+            }
+        }, 3, 3);
+
+        for (int i = 0; i < 9; ++i) {
+            ItemStack slot = ItemPattern.getSlot(stack, i);
+
+            if (slot != null) {
+                for (int j = 0; j < slot.stackSize; ++j) {
+                    inputs.add(ItemHandlerHelper.copyStackWithSize(slot, 1));
+                }
+
+                dummyInventory.setInventorySlotContents(i, slot);
+            }
+        }
+
+        ItemStack output = CraftingManager.getInstance().findMatchingRecipe(dummyInventory, world);
+
+        if (output != null) {
+            outputs.add(output);
+        }
     }
 
     @Override
-    public ICraftingPatternContainer getContainer(World world) {
-        if (crafter == null) {
-            crafter = (TileCrafter) world.getTileEntity(crafterPos);
-        }
-
-        return crafter;
+    public ICraftingPatternContainer getContainer() {
+        return container;
     }
 
     @Override
@@ -50,18 +65,18 @@ public class CraftingPattern implements ICraftingPattern {
     }
 
     @Override
-    public ItemStack[] getInputs() {
+    public boolean isValid() {
+        return !inputs.isEmpty() && !outputs.isEmpty();
+    }
+
+    @Override
+    public List<ItemStack> getInputs() {
         return inputs;
     }
 
     @Override
-    public ItemStack[] getOutputs() {
+    public List<ItemStack> getOutputs() {
         return outputs;
-    }
-
-    @Override
-    public ItemStack[] getByproducts() {
-        return byproducts;
     }
 
     @Override
@@ -84,42 +99,5 @@ public class CraftingPattern implements ICraftingPattern {
         }
 
         return quantity;
-    }
-
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound tag) {
-        tag.setBoolean(ItemPattern.NBT_PROCESSING, processing);
-
-        NBTTagList inputsTag = new NBTTagList();
-
-        for (ItemStack input : inputs) {
-            inputsTag.appendTag(input.serializeNBT());
-        }
-
-        tag.setTag(ItemPattern.NBT_INPUTS, inputsTag);
-
-        NBTTagList outputsTag = new NBTTagList();
-
-        for (ItemStack output : outputs) {
-            outputsTag.appendTag(output.serializeNBT());
-        }
-
-        tag.setTag(ItemPattern.NBT_OUTPUTS, outputsTag);
-
-        if (byproducts != null) {
-            NBTTagList byproductsTag = new NBTTagList();
-
-            for (ItemStack byproduct : byproducts) {
-                byproductsTag.appendTag(byproduct.serializeNBT());
-            }
-
-            tag.setTag(ItemPattern.NBT_BYPRODUCTS, byproductsTag);
-        }
-
-        tag.setInteger(NBT_CRAFTER_X, crafterPos.getX());
-        tag.setInteger(NBT_CRAFTER_Y, crafterPos.getY());
-        tag.setInteger(NBT_CRAFTER_Z, crafterPos.getZ());
-
-        return tag;
     }
 }

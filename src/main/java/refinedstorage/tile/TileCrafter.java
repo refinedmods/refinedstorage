@@ -49,7 +49,7 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
     public void onConnectionChange(INetworkMaster network, boolean state) {
         if (!state) {
             network.getCraftingTasks().stream()
-                .filter(task -> task.getPattern().getContainer(worldObj).getPosition().equals(pos))
+                .filter(task -> task.getPattern().getContainer().getPosition().equals(pos))
                 .forEach(network::cancelCraftingTask);
         }
 

@@ -3,6 +3,7 @@ package refinedstorage.apiimpl.autocrafting.registry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.registry.ICraftingTaskFactory;
@@ -20,7 +21,7 @@ public class CraftingTaskFactoryNormal implements ICraftingTaskFactory {
 
     @Override
     @Nonnull
-    public ICraftingTask create(@Nullable NBTTagCompound tag, ICraftingPattern pattern) {
+    public ICraftingTask create(@Nullable NBTTagCompound tag, World world, ICraftingPattern pattern) {
         CraftingTaskNormal task = new CraftingTaskNormal(pattern);
 
         if (tag != null) {
@@ -42,7 +43,7 @@ public class CraftingTaskFactoryNormal implements ICraftingTaskFactory {
 
             task.setTook(took);
 
-            task.readChildNBT(tag);
+            task.readChildNBT(world, tag);
         }
 
         return task;

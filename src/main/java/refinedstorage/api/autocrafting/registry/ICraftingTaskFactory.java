@@ -1,6 +1,7 @@
 package refinedstorage.api.autocrafting.registry;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
 
@@ -15,9 +16,10 @@ public interface ICraftingTaskFactory {
      * Returns a crafting task for a given NBT tag and pattern.
      *
      * @param tag     The NBT tag. If this is null it isn't reading from disk but is used for making a task on demand
+     * @param world   The world
      * @param pattern The pattern
      * @return The crafting task
      */
     @Nonnull
-    ICraftingTask create(@Nullable NBTTagCompound tag, ICraftingPattern pattern);
+    ICraftingTask create(@Nullable NBTTagCompound tag, World world, ICraftingPattern pattern);
 }

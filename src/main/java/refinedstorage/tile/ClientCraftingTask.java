@@ -3,6 +3,8 @@ package refinedstorage.tile;
 import net.minecraft.item.ItemStack;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
 
+import java.util.List;
+
 public class ClientCraftingTask {
     private ItemStack output;
     private int id;
@@ -11,7 +13,7 @@ public class ClientCraftingTask {
     private int progress;
 
     // Used server-side while sending
-    private ItemStack[] outputs;
+    private List<ItemStack> outputs;
     private ClientCraftingTask child;
 
     public ClientCraftingTask(ItemStack output, int id, String status, int depth, int progress) {
@@ -22,7 +24,7 @@ public class ClientCraftingTask {
         this.progress = progress;
     }
 
-    public ClientCraftingTask(String status, ItemStack[] outputs, int progress, ICraftingTask child) {
+    public ClientCraftingTask(String status, List<ItemStack> outputs, int progress, ICraftingTask child) {
         this.status = status;
         this.outputs = outputs;
         this.progress = progress;
@@ -33,7 +35,7 @@ public class ClientCraftingTask {
         return output;
     }
 
-    public ItemStack[] getOutputs() {
+    public List<ItemStack> getOutputs() {
         return outputs;
     }
 

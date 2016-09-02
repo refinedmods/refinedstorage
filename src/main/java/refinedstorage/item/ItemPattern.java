@@ -1,18 +1,13 @@
 package refinedstorage.item;
 
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
@@ -20,16 +15,12 @@ import refinedstorage.api.autocrafting.ICraftingPatternProvider;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.apiimpl.autocrafting.CraftingPattern;
 
-import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
-    public static final String NBT_INPUTS = "Inputs";
-    public static final String NBT_OUTPUTS = "Outputs";
-    public static final String NBT_BYPRODUCTS = "Byproducts";
-    public static final String NBT_PROCESSING = "Processing";
+    private static final String NBT_SLOT = "Slot_%d";
 
     public ItemPattern() {
         super("pattern");
@@ -37,7 +28,7 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
 
     @Override
     public void addInformation(ItemStack pattern, EntityPlayer player, List<String> tooltip, boolean advanced) {
-        if (isValid(pattern)) {
+       /* @todo CraftingPattern
             if (GuiScreen.isShiftKeyDown() || isProcessing(pattern)) {
                 tooltip.add(TextFormatting.YELLOW + I18n.format("misc.refinedstorage:pattern.inputs") + TextFormatting.RESET);
 
@@ -47,7 +38,25 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
             }
 
             combineItems(tooltip, true, getOutputs(pattern));
+        }*/
+    }
+
+    public static void setSlot(ItemStack pattern, int slot, ItemStack stack) {
+        if (!pattern.hasTagCompound()) {
+            pattern.setTagCompound(new NBTTagCompound());
         }
+
+        pattern.getTagCompound().setTag(String.format(NBT_SLOT, slot), stack.serializeNBT());
+    }
+
+    public static ItemStack getSlot(ItemStack pattern, int slot) {
+        String id = String.format(NBT_SLOT, slot);
+
+        if (!pattern.hasTagCompound() || !pattern.getTagCompound().hasKey(id)) {
+            return null;
+        }
+
+        return ItemStack.loadItemStackFromNBT(pattern.getTagCompound().getCompoundTag(id));
     }
 
     public static void combineItems(List<String> tooltip, boolean displayAmount, ItemStack... stacks) {
@@ -83,157 +92,8 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
         return new ActionResult<>(EnumActionResult.PASS, stack);
     }
 
-    public static void addInput(ItemStack pattern, ItemStack stack) {
-        add(pattern, stack, NBT_INPUTS);
-    }
-
-    public static void addOutput(ItemStack pattern, ItemStack stack) {
-        add(pattern, stack, NBT_OUTPUTS);
-    }
-
-    public static void addByproduct(ItemStack pattern, ItemStack stack) {
-        add(pattern, stack, NBT_BYPRODUCTS);
-    }
-
-    private static void add(ItemStack pattern, ItemStack stack, String type) {
-        if (pattern.getTagCompound() == null) {
-            pattern.setTagCompound(new NBTTagCompound());
-        }
-
-        if (!pattern.getTagCompound().hasKey(type)) {
-            pattern.getTagCompound().setTag(type, new NBTTagList());
-        }
-
-        pattern.getTagCompound().getTagList(type, Constants.NBT.TAG_COMPOUND).appendTag(stack.serializeNBT());
-    }
-
-    public static ItemStack[] getInputs(ItemStack pattern) {
-        return get(pattern, NBT_INPUTS);
-    }
-
-    public static ItemStack[] getOutputs(ItemStack pattern) {
-        return get(pattern, NBT_OUTPUTS);
-    }
-
-    public static ItemStack[] getByproducts(ItemStack pattern) {
-        return get(pattern, NBT_BYPRODUCTS);
-    }
-
-    private static ItemStack[] get(ItemStack pattern, String type) {
-        if (!pattern.hasTagCompound() || !pattern.getTagCompound().hasKey(type)) {
-            return null;
-        }
-
-        NBTTagList stacksList = pattern.getTagCompound().getTagList(type, Constants.NBT.TAG_COMPOUND);
-
-        ItemStack[] stacks = new ItemStack[stacksList.tagCount()];
-
-        for (int i = 0; i < stacksList.tagCount(); ++i) {
-            stacks[i] = ItemStack.loadItemStackFromNBT(stacksList.getCompoundTagAt(i));
-        }
-
-        return stacks;
-    }
-
-    public static boolean isValid(ItemStack pattern) {
-        if (pattern.getTagCompound() == null || (!pattern.getTagCompound().hasKey(NBT_INPUTS) || !pattern.getTagCompound().hasKey(NBT_OUTPUTS) || !pattern.getTagCompound().hasKey(NBT_PROCESSING))) {
-            return false;
-        }
-
-        for (ItemStack input : getInputs(pattern)) {
-            if (input == null) {
-                return false;
-            }
-        }
-
-        for (ItemStack output : getOutputs(pattern)) {
-            if (output == null) {
-                return false;
-            }
-        }
-
-        ItemStack[] byproducts = getByproducts(pattern);
-        if (byproducts != null) {
-            for (ItemStack byproduct : byproducts) {
-                if (byproduct == null) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    public static void setProcessing(ItemStack pattern, boolean processing) {
-        if (pattern.getTagCompound() == null) {
-            pattern.setTagCompound(new NBTTagCompound());
-        }
-
-        pattern.getTagCompound().setBoolean(NBT_PROCESSING, processing);
-    }
-
-    public static boolean isProcessing(ItemStack pattern) {
-        if (!pattern.hasTagCompound() || !pattern.getTagCompound().hasKey(NBT_PROCESSING)) {
-            return false;
-        }
-
-        return pattern.getTagCompound().getBoolean(NBT_PROCESSING);
-    }
-
     @Override
-    public ICraftingPattern create(ItemStack stack, ICraftingPatternContainer container) {
-        return new CraftingPattern(stack, container.getPosition(), isProcessing(stack), getInputs(stack), getOutputs(stack), getByproducts(stack));
-    }
-
-    @Override
-    @Nullable
-    public ICraftingPattern create(ItemStack stack) {
-        NBTTagCompound tag = stack.getTagCompound();
-
-        BlockPos crafterPos = new BlockPos(tag.getInteger(CraftingPattern.NBT_CRAFTER_X), tag.getInteger(CraftingPattern.NBT_CRAFTER_Y), tag.getInteger(CraftingPattern.NBT_CRAFTER_Z));
-
-        boolean processing = tag.getBoolean(NBT_PROCESSING);
-
-        NBTTagList inputsTag = tag.getTagList(NBT_INPUTS, Constants.NBT.TAG_COMPOUND);
-
-        ItemStack inputs[] = new ItemStack[inputsTag.tagCount()];
-
-        for (int i = 0; i < inputsTag.tagCount(); ++i) {
-            inputs[i] = ItemStack.loadItemStackFromNBT(inputsTag.getCompoundTagAt(i));
-
-            if (inputs[i] == null) {
-                return null;
-            }
-        }
-
-        NBTTagList outputsTag = tag.getTagList(NBT_OUTPUTS, Constants.NBT.TAG_COMPOUND);
-
-        ItemStack outputs[] = new ItemStack[outputsTag.tagCount()];
-
-        for (int i = 0; i < outputsTag.tagCount(); ++i) {
-            outputs[i] = ItemStack.loadItemStackFromNBT(outputsTag.getCompoundTagAt(i));
-
-            if (outputs[i] == null) {
-                return null;
-            }
-        }
-
-        ItemStack byproducts[] = new ItemStack[0];
-
-        if (tag.hasKey(ItemPattern.NBT_BYPRODUCTS)) {
-            NBTTagList byproductsTag = tag.getTagList(NBT_BYPRODUCTS, Constants.NBT.TAG_COMPOUND);
-
-            byproducts = new ItemStack[byproductsTag.tagCount()];
-
-            for (int i = 0; i < byproductsTag.tagCount(); ++i) {
-                byproducts[i] = ItemStack.loadItemStackFromNBT(byproductsTag.getCompoundTagAt(i));
-
-                if (byproducts[i] == null) {
-                    return null;
-                }
-            }
-        }
-
-        return new CraftingPattern(stack, crafterPos, processing, inputs, outputs, byproducts);
+    public ICraftingPattern create(World world, ItemStack stack, ICraftingPatternContainer container) {
+        return new CraftingPattern(world, container, stack);
     }
 }

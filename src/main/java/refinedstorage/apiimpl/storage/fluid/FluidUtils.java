@@ -53,7 +53,7 @@ public final class FluidUtils {
                     ICraftingPattern pattern = NetworkUtils.getPattern(network, EMPTY_BUCKET);
 
                     if (pattern != null) {
-                        network.addCraftingTask(network.createCraftingTask(pattern));
+                        network.addCraftingTask(NetworkUtils.createCraftingTask(network, pattern));
                     }
                 }
             }
