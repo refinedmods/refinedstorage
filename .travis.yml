@@ -3,15 +3,7 @@ jdk: oraclejdk8
 
 install: "./gradlew setupCIWorkspace"
 script: "./gradlew build"
+after_success: "./gradlew bintrayUpload"
 
 notifications:
   email: false
-
-deploy:
-  provider: bintray
-  file: bintray.json
-  user: raoulvdberge
-  key:
-    secure: jAWqp3mkqCCcxJmN98nJJEwGuZi2z7Z/DxqBZ3DEm8vg4ATppJQDkpW9QQU+UpqyHRTkyVdzoplWHaCzs5X4N9cl3GqW+2yA9Nj4xVgUy++WoQE6dPhGSX3yow67Moc21CrA+9UskL/u9hiUOR3VmEJ/LobMUfh7+1Mq6c4LeHb/zaP3p1aYhznqBEtlFAmei8wWfHlgNxNeJw3B4o2bQsq9FTL/9+pv1hnsBpbCxmFAKHMd3LcGlSAKxNqLchu/QTJgcDm8KDaSXkSm7MTJYfD++1WgbL74b/tS3Nl0hRjFClNN8E51jKnuorJcdypDg3fV6cMUY3uGNvtBNrJd4TKgx9XZy7Qjllcxjay35SDORYUlv8T2gQ/gUI7GHd1Ruryay5oIMspk4Rcr79O+zHlnDwQB9irEFhL++Tc5WxvR9Kh6HEghGK4KwUxeWUvAziscjhZNKdNgJMWk9j6nkYnHDAAW1WpzgEg3O2VEpox/D0xZOHJM4UR+024w1l3xH/XWruiqVLyI9ppXCywAYfuf4rV6Aus3Hk6qv8spGlYxC5AuQ+q8snYDlcdlAHaldk+RJzqNWYqwdqblfWMdHITeWpKq6k8s/IOppcUne5PYGlY8TEXGyFB8hX55k8s0N1d4QXeW1z1s2fUuLCczE0Nsuqvm/lDU9t7nSutIl1g=
-  on:
-    all_branches: true
