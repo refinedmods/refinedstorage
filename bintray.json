@@ -5,7 +5,7 @@
     "subject": "raoulvdberge"
   },
   "version": {
-    "name": "1.0"
+    "name": "${TRAVIS_BUILD_NUMBER}"
   },
   "files": [
     {
