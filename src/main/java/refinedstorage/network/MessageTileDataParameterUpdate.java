@@ -10,8 +10,6 @@ import refinedstorage.tile.data.ITileDataConsumer;
 import refinedstorage.tile.data.TileDataManager;
 import refinedstorage.tile.data.TileDataParameter;
 
-import java.io.IOException;
-
 public class MessageTileDataParameterUpdate extends MessageHandlerPlayerToServer<MessageTileDataParameterUpdate> implements IMessage {
     private TileDataParameter parameter;
     private Object value;
@@ -33,7 +31,8 @@ public class MessageTileDataParameterUpdate extends MessageHandlerPlayerToServer
         if (parameter != null) {
             try {
                 value = parameter.getSerializer().read(new PacketBuffer(buf));
-            } catch (IOException ignored) {
+            } catch (Exception e) {
+                // NO OP
             }
         }
     }
