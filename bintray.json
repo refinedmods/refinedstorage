@@ -1,0 +1,14 @@
+{
+  "package": {
+    "name": "refinedstorage",
+    "repo": "refinedstorage"
+  },
+  "files": [
+    {
+      "includePattern": "build/libs(.*)*/(.*\\.gem)",
+      "excludePattern": ".*/do-not-deploy/.*",
+      "uploadPattern": "gems/$2"
+    }
+  ],
+  "publish": true
+}
