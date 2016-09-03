@@ -28,8 +28,6 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED);
 
-    private boolean didLegacyPatternConversion;
-
     @Override
     public int getEnergyUsage() {
         int usage = RefinedStorage.INSTANCE.crafterUsage + upgrades.getEnergyUsage();
