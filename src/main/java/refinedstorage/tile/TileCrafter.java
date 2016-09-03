@@ -1,6 +1,5 @@
 package refinedstorage.tile;
 
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -42,22 +41,6 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
         }
 
         return usage;
-    }
-
-    public void update() {
-        super.update();
-
-        if (!worldObj.isRemote && !didLegacyPatternConversion) {
-            for (int i = 0; i < patterns.getSlots(); ++i) {
-                ItemStack slot = patterns.getStackInSlot(i);
-
-                if (slot != null && slot.hasTagCompound() && slot.getTagCompound().hasKey("Inputs")) {
-                    // @TODO: Legacy pattern conversion
-                }
-            }
-
-            didLegacyPatternConversion = true;
-        }
     }
 
     @Override
