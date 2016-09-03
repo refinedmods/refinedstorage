@@ -128,7 +128,7 @@ public final class RefinedStorageSerializers {
                 return new FluidStack(FluidRegistry.getFluid(ByteBufUtils.readUTF8String(buf)), buf.readInt(), buf.readNBTTagCompoundFromBuffer());
             }
 
-            return null;
+            throw new IOException("No fluid");
         }
 
         @Override

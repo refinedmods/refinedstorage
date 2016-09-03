@@ -9,8 +9,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import refinedstorage.tile.data.TileDataManager;
 import refinedstorage.tile.data.TileDataParameter;
 
-import java.io.IOException;
-
 public class MessageTileDataParameter implements IMessage, IMessageHandler<MessageTileDataParameter, IMessage> {
     private TileEntity tile;
     private TileDataParameter parameter;
@@ -32,7 +30,8 @@ public class MessageTileDataParameter implements IMessage, IMessageHandler<Messa
         if (parameter != null) {
             try {
                 parameter.setValue(parameter.getSerializer().read(new PacketBuffer(buf)));
-            } catch (IOException ignored) {
+            } catch (Exception e) {
+                // NO OP
             }
         }
     }
