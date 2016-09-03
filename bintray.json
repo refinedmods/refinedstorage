@@ -4,11 +4,13 @@
     "repo": "refinedstorage",
     "subject": "raoulvdberge"
   },
+  "version": {
+    "name": "1.0"
+  },
   "files": [
     {
-      "includePattern": "build/libs(.*)*/(.*\\.gem)",
-      "excludePattern": ".*/do-not-deploy/.*",
-      "uploadPattern": "gems/$2"
+      "includePattern": "build/libs(.*)*/(.*\\.jar)",
+      "uploadPattern": "/$1"
     }
   ],
   "publish": true
