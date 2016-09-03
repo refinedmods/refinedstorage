@@ -1,4 +1,4 @@
-# Refined Storage
+# Refined Storage [![Build Status](https://travis-ci.org/raoulvdberge/refinedstorage.svg?branch=mc1.10)](https://travis-ci.org/raoulvdberge/refinedstorage)
 
 A Minecraft mod all about storage.
 
