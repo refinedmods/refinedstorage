@@ -9,7 +9,7 @@
   },
   "files": [
     {
-      "includePattern": "build/libs(.*)*/(.*\\.jar)",
+      "includePattern": "build/libs/(.*)",
       "uploadPattern": "/$1"
     }
   ],
