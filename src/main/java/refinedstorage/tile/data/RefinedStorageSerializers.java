@@ -123,12 +123,16 @@ public final class RefinedStorageSerializers {
         }
 
         @Override
-        public FluidStack read(PacketBuffer buf) throws IOException {
-            if (buf.readBoolean()) {
-                return new FluidStack(FluidRegistry.getFluid(ByteBufUtils.readUTF8String(buf)), buf.readInt(), buf.readNBTTagCompoundFromBuffer());
+        public FluidStack read(PacketBuffer buf) {
+            try {
+                if (buf.readBoolean()) {
+                    return new FluidStack(FluidRegistry.getFluid(ByteBufUtils.readUTF8String(buf)), buf.readInt(), buf.readNBTTagCompoundFromBuffer());
+                }
+            } catch (IOException e) {
+                // NO OP
             }
 
-            throw new IOException("No fluid");
+            return null;
         }
 
         @Override
