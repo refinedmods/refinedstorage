@@ -49,7 +49,7 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
 
             combineItems(tooltip, true, Iterables.toArray(pattern.getOutputs(), ItemStack.class));
         } else {
-            tooltip.add(TextFormatting.RED + "Invalid pattern, please re-make!");
+            tooltip.add(TextFormatting.RED + I18n.format("misc.refinedstorage:pattern.invalid") + TextFormatting.RESET);
         }
     }
 

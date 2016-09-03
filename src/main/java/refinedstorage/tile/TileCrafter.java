@@ -1,5 +1,6 @@
 package refinedstorage.tile;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -28,6 +29,8 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED);
 
+    private boolean didLegacyPatternConversion;
+
     @Override
     public int getEnergyUsage() {
         int usage = RefinedStorage.INSTANCE.crafterUsage + upgrades.getEnergyUsage();
@@ -39,6 +42,22 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
         }
 
         return usage;
+    }
+
+    public void update() {
+        super.update();
+
+        if (!worldObj.isRemote && !didLegacyPatternConversion) {
+            for (int i = 0; i < patterns.getSlots(); ++i) {
+                ItemStack slot = patterns.getStackInSlot(i);
+
+                if (slot != null && slot.hasTagCompound() && slot.getTagCompound().hasKey("Inputs")) {
+                    // @TODO: Legacy pattern conversion
+                }
+            }
+
+            didLegacyPatternConversion = true;
+        }
     }
 
     @Override

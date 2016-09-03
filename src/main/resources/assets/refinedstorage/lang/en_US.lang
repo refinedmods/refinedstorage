@@ -59,6 +59,7 @@ misc.refinedstorage:network_card.tooltip=Linked to %d, %d, %d.
 
 misc.refinedstorage:pattern.inputs=Inputs
 misc.refinedstorage:pattern.outputs=Outputs
+misc.refinedstorage:pattern.invalid=Invalid pattern
 
 misc.refinedstorage:start=Start
 misc.refinedstorage:clear=Clear

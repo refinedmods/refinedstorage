@@ -51,11 +51,11 @@ public class CraftingPattern implements ICraftingPattern {
 
             if (output != null) {
                 outputs.add(output.copy());
-            }
 
-            for (ItemStack remaining : CraftingManager.getInstance().getRemainingItems(dummyInventory, world)) {
-                if (remaining != null) {
-                    outputs.add(remaining.copy());
+                for (ItemStack remaining : CraftingManager.getInstance().getRemainingItems(dummyInventory, world)) {
+                    if (remaining != null) {
+                        outputs.add(remaining.copy());
+                    }
                 }
             }
         } else {
