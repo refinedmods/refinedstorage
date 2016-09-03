@@ -190,6 +190,12 @@ public class CraftingTaskProcessing extends CraftingTask {
             }
         }
 
-        return (int) ((float) satisfiedAmount / (float) satisfied.length * 100F);
+        for (boolean item : satisfiedInsertion) {
+            if (item) {
+                satisfiedAmount++;
+            }
+        }
+
+        return (int) ((float) satisfiedAmount / (float) (satisfied.length + satisfiedInsertion.length) * 100F);
     }
 }
