@@ -23,7 +23,7 @@ public class CraftingTaskProcessing extends CraftingTask {
         super(pattern);
 
         this.satisfied = new boolean[pattern.getInputs().size()];
-        this.satisfiedInsertion = new boolean[pattern.getInputs().size()];
+        this.satisfiedInsertion = new boolean[pattern.getOutputs().size()];
         this.checked = new boolean[pattern.getInputs().size()];
     }
 
