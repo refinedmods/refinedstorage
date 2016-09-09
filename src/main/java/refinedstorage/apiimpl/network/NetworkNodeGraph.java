@@ -137,6 +137,12 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
     }
 
     @Override
+    public void replace(INetworkNode node) {
+        nodes.remove(node);
+        nodes.add(node);
+    }
+
+    @Override
     public void disconnectAll() {
         for (INetworkNode node : nodes) {
             if (node.isConnected()) {
