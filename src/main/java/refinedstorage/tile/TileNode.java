@@ -81,7 +81,6 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
         this.network = null;
     }
 
-    @Override
     public void onConnectionChange(INetworkMaster network, boolean state) {
         // NO OP
     }
