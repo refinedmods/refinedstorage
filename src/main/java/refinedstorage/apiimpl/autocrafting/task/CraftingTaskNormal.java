@@ -1,32 +1,15 @@
 package refinedstorage.apiimpl.autocrafting.task;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import refinedstorage.api.autocrafting.ICraftingPattern;
+import refinedstorage.api.autocrafting.task.CraftingTask;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.apiimpl.storage.fluid.FluidUtils;
 
 public class CraftingTaskNormal extends CraftingTask {
-    public static final String NBT_SATISFIED = "Satisfied";
-    public static final String NBT_CHECKED = "Checked";
-
-    private boolean satisfied[];
-    private boolean checked[];
-
     public CraftingTaskNormal(ICraftingPattern pattern) {
         super(pattern);
-
-        this.satisfied = new boolean[pattern.getInputs().size()];
-        this.checked = new boolean[pattern.getInputs().size()];
-    }
-
-    public void setSatisfied(boolean[] satisfied) {
-        this.satisfied = satisfied;
-    }
-
-    public void setChecked(boolean[] checked) {
-        this.checked = checked;
     }
 
     @Override
@@ -65,16 +48,6 @@ public class CraftingTaskNormal extends CraftingTask {
         }
 
         return true;
-    }
-
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound tag) {
-        super.writeToNBT(tag);
-
-        writeBooleanArray(tag, NBT_SATISFIED, satisfied);
-        writeBooleanArray(tag, NBT_CHECKED, checked);
-
-        return tag;
     }
 
     @Override

@@ -6,37 +6,24 @@ import net.minecraft.world.World;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
+import refinedstorage.api.autocrafting.task.CraftingTask;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.apiimpl.storage.fluid.FluidUtils;
 
 public class CraftingTaskProcessing extends CraftingTask {
-    public static final String NBT_SATISFIED = "Satisfied";
     public static final String NBT_SATISFIED_INSERTION = "SatisfiedInsertion";
-    public static final String NBT_CHECKED = "Checked";
 
-    private boolean satisfied[];
     private boolean satisfiedInsertion[];
-    private boolean checked[];
 
     public CraftingTaskProcessing(ICraftingPattern pattern) {
         super(pattern);
 
-        this.satisfied = new boolean[pattern.getInputs().size()];
         this.satisfiedInsertion = new boolean[pattern.getOutputs().size()];
-        this.checked = new boolean[pattern.getInputs().size()];
-    }
-
-    public void setSatisfied(boolean[] satisfied) {
-        this.satisfied = satisfied;
     }
 
     public void setSatisfiedInsertion(boolean[] satisfiedInsertion) {
         this.satisfiedInsertion = satisfiedInsertion;
-    }
-
-    public void setChecked(boolean[] checked) {
-        this.checked = checked;
     }
 
     @Override
@@ -79,10 +66,10 @@ public class CraftingTaskProcessing extends CraftingTask {
             }
         }
 
-        return isDone();
+        return isReady();
     }
 
-    private boolean isDone() {
+    private boolean isReady() {
         for (boolean item : satisfiedInsertion) {
             if (!item) {
                 return false;
@@ -92,8 +79,18 @@ public class CraftingTaskProcessing extends CraftingTask {
         return true;
     }
 
+    private boolean isReadyToInsert() {
+        for (boolean item : satisfied) {
+            if (!item) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public boolean onInserted(ItemStack stack) {
-        if (isDone()) {
+        if (isReady()) {
             return false;
         }
 
@@ -116,21 +113,9 @@ public class CraftingTaskProcessing extends CraftingTask {
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
 
-        writeBooleanArray(tag, NBT_SATISFIED, satisfied);
         writeBooleanArray(tag, NBT_SATISFIED_INSERTION, satisfiedInsertion);
-        writeBooleanArray(tag, NBT_CHECKED, checked);
 
         return tag;
-    }
-
-    private boolean isReadyToInsert() {
-        for (boolean item : satisfied) {
-            if (!item) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     @Override

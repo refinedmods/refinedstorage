@@ -1,4 +1,4 @@
-package refinedstorage.apiimpl.autocrafting.task;
+package refinedstorage.api.autocrafting.task;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -6,7 +6,6 @@ import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import refinedstorage.api.autocrafting.ICraftingPattern;
-import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.tile.TileController;
@@ -15,8 +14,13 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A default implementation for crafting tasks.
+ */
 public abstract class CraftingTask implements ICraftingTask {
     public static final String NBT_CHILDREN_CREATED = "ChildrenCreated";
+    public static final String NBT_SATISFIED = "Satisfied";
+    public static final String NBT_CHECKED = "Checked";
     public static final String NBT_TOOK = "Took";
     private static final String NBT_CHILD = "Child";
 
@@ -24,11 +28,16 @@ public abstract class CraftingTask implements ICraftingTask {
     protected ICraftingTask child;
 
     protected List<ItemStack> took = new ArrayList<>();
+
     protected boolean childrenCreated[];
+    protected boolean satisfied[];
+    protected boolean checked[];
 
     public CraftingTask(ICraftingPattern pattern) {
         this.pattern = pattern;
         this.childrenCreated = new boolean[pattern.getInputs().size()];
+        this.satisfied = new boolean[pattern.getInputs().size()];
+        this.checked = new boolean[pattern.getInputs().size()];
     }
 
     @Override
@@ -40,8 +49,32 @@ public abstract class CraftingTask implements ICraftingTask {
         this.took = took;
     }
 
+    public List<ItemStack> getTook() {
+        return took;
+    }
+
+    public boolean[] getChildrenCreated() {
+        return childrenCreated;
+    }
+
     public void setChildrenCreated(boolean[] childrenCreated) {
         this.childrenCreated = childrenCreated;
+    }
+
+    public boolean[] getSatisfied() {
+        return satisfied;
+    }
+
+    public void setSatisfied(boolean[] satisfied) {
+        this.satisfied = satisfied;
+    }
+
+    public boolean[] getChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean[] checked) {
+        this.checked = checked;
     }
 
     protected void tryCreateChild(INetworkMaster network, int i) {
@@ -88,6 +121,8 @@ public abstract class CraftingTask implements ICraftingTask {
         }
 
         writeBooleanArray(tag, NBT_CHILDREN_CREATED, childrenCreated);
+        writeBooleanArray(tag, NBT_SATISFIED, satisfied);
+        writeBooleanArray(tag, NBT_CHECKED, checked);
 
         NBTTagList took = new NBTTagList();
 
