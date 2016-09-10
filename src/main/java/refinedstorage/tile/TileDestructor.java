@@ -73,6 +73,8 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
                 BlockPos front = pos.offset(getDirection());
 
                 IBlockState frontBlockState = worldObj.getBlockState(front);
+                
+                @SuppressWarnings("deprecation")
                 ItemStack frontStack = frontBlockState.getBlock().getItem(worldObj, front, frontBlockState);
 
                 if (frontStack != null) {

@@ -40,6 +40,7 @@ public class BlockWirelessTransmitter extends BlockNode {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
         if (!canPlaceBlockAt(world, pos) && world.getBlockState(pos).getBlock() == this) {
             dropBlockAsItem(world, pos, state, 0);
@@ -49,16 +50,19 @@ public class BlockWirelessTransmitter extends BlockNode {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
         return WIRELESS_TRANSMITTER_AABB;
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean isFullCube(IBlockState state) {
         return false;
     }

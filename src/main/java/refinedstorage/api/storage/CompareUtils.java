@@ -105,7 +105,7 @@ public final class CompareUtils {
         }
 
         if ((flags & COMPARE_NBT) == COMPARE_NBT) {
-            if (left.tag != null && !left.tag.equals(right)) {
+            if (left.tag != null && !left.tag.equals(right.tag)) {
                 return false;
             }
         }

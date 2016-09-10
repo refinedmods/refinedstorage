@@ -221,6 +221,7 @@ public abstract class TileBase extends TileEntity implements ITickable {
         return handler;
     }
 
+    @SuppressWarnings("deprecation")
     protected IFluidHandler getFluidHandler(TileEntity tile, EnumFacing side) {
         if (tile == null) {
             return null;

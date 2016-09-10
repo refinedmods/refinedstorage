@@ -59,6 +59,7 @@ public abstract class BlockBase extends Block {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public IBlockState getStateFromMeta(int meta) {
         return getDefaultState();
     }
@@ -69,6 +70,7 @@ public abstract class BlockBase extends Block {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
         if (getPlacementType() != null) {
             return state.withProperty(DIRECTION, ((TileBase) world.getTileEntity(pos)).getDirection());

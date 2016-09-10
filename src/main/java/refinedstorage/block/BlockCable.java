@@ -117,6 +117,7 @@ public class BlockCable extends BlockCoverable {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
         state = super.getActualState(state, world, pos)
             .withProperty(NORTH, hasConnectionWith(world, pos, EnumFacing.NORTH))

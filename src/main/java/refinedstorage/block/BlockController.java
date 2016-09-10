@@ -113,6 +113,7 @@ public class BlockController extends BlockBase {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
         super.neighborChanged(state, world, pos, block);
 

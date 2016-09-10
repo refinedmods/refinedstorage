@@ -77,9 +77,13 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
                     ItemStack took = network.extractItem(itemFilters.getStackInSlot(0), 1, compare);
 
                     if (took != null) {
-                        worldObj.setBlockState(front, block.getBlock().getStateFromMeta(took.getMetadata()), 1 | 2);
+                        @SuppressWarnings("deprecation")
+                        IBlockState state = block.getBlock().getStateFromMeta(took.getMetadata());
+
+                        worldObj.setBlockState(front, state, 1 | 2);
+
                         // From ItemBlock.onItemUse
-                        SoundType blockSound = block.getBlock().getSoundType();
+                        SoundType blockSound = block.getBlock().getSoundType(state, worldObj, pos, null);
                         worldObj.playSound(null, front, blockSound.getPlaceSound(), SoundCategory.BLOCKS, (blockSound.getVolume() + 1.0F) / 2.0F, blockSound.getPitch() * 0.8F);
                     } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
                         ItemStack craft = itemFilters.getStackInSlot(0);

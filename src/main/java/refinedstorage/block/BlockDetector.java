@@ -40,6 +40,7 @@ public class BlockDetector extends BlockNode {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
         return AABB_DETECTOR;
     }
@@ -50,16 +51,19 @@ public class BlockDetector extends BlockNode {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public int getWeakPower(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
         return ((TileDetector) world.getTileEntity(pos)).isPowered() ? 15 : 0;
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public int getStrongPower(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
         return getWeakPower(state, world, pos, side);
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean canProvidePower(IBlockState state) {
         return true;
     }
@@ -74,11 +78,13 @@ public class BlockDetector extends BlockNode {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean isFullCube(IBlockState state) {
         return false;
     }
