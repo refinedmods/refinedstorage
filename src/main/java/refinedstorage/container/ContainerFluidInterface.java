@@ -16,7 +16,6 @@ public class ContainerFluidInterface extends ContainerBase {
         }
 
         addSlotToContainer(new SlotItemHandler(fluidInterface.getIn(), 0, 44, 32));
-        // @TODO: Fix shift click bug void
         addSlotToContainer(new SlotSpecimenFluid(!fluidInterface.getWorld().isRemote, fluidInterface.getOut(), 0, 116, 32));
 
         addPlayerInventory(8, 122);
@@ -35,8 +34,8 @@ public class ContainerFluidInterface extends ContainerBase {
                 if (!mergeItemStack(stack, 4 + 2, inventorySlots.size(), false)) {
                     return null;
                 }
-            } else if (!mergeItemStack(stack, 0, 4 + 2, false)) {
-                return null;
+            } else if (!mergeItemStack(stack, 0, 4 + 1, false)) {
+                return mergeItemStackToSpecimen(stack, 5, 6);
             }
 
             if (stack.stackSize == 0) {
