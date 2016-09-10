@@ -16,6 +16,7 @@ public class ContainerFluidInterface extends ContainerBase {
         }
 
         addSlotToContainer(new SlotItemHandler(fluidInterface.getIn(), 0, 44, 32));
+        // @TODO: Fix shift click bug void
         addSlotToContainer(new SlotSpecimenFluid(!fluidInterface.getWorld().isRemote, fluidInterface.getOut(), 0, 116, 32));
 
         addPlayerInventory(8, 122);

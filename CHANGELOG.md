@@ -13,6 +13,7 @@
 - Fixed machines breaking on long distances (raoulvdberge)
 - Fixed controller rebuilding network graph on energy change (raoulvdberge)
 - Fixed fluids not caring about NBT tags (raoulvdberge)
+- Fixed fluids that have less than 1 bucket stored render only partly in Fluid Grid (raoulvdberge)
 
 ### 0.9.4
 - Little fixes in German translation (ThexXTURBOXx)

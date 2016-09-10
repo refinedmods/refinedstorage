@@ -8,7 +8,6 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.items.SlotItemHandler;
@@ -24,7 +23,7 @@ import java.util.*;
 public abstract class GuiBase extends GuiContainer {
     private static final Map<String, ResourceLocation> TEXTURE_CACHE = new HashMap<>();
 
-    public static final FluidRenderer FLUID_RENDERER = new FluidRenderer(Fluid.BUCKET_VOLUME, 16, 16);
+    public static final FluidRenderer FLUID_RENDERER = new FluidRenderer(-1, 16, 16);
 
     protected static final int SIDE_BUTTON_WIDTH = 20;
     protected static final int SIDE_BUTTON_HEIGHT = 20;

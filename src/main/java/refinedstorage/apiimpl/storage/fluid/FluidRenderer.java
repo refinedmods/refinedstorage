@@ -31,7 +31,7 @@ public class FluidRenderer {
         this.height = height;
     }
 
-    public void draw(Minecraft minecraft, final int xPosition, final int yPosition, FluidStack fluidStack) {
+    public void draw(Minecraft minecraft, int xPosition, int yPosition, FluidStack fluidStack) {
         GlStateManager.enableBlend();
         GlStateManager.enableAlpha();
 
@@ -43,11 +43,13 @@ public class FluidRenderer {
         GlStateManager.disableBlend();
     }
 
-    private void drawFluid(Minecraft minecraft, final int xPosition, final int yPosition, FluidStack fluidStack) {
+    private void drawFluid(Minecraft minecraft, int xPosition, int yPosition, FluidStack fluidStack) {
         if (fluidStack == null) {
             return;
         }
+
         Fluid fluid = fluidStack.getFluid();
+
         if (fluid == null) {
             return;
         }
@@ -55,32 +57,40 @@ public class FluidRenderer {
         TextureMap textureMapBlocks = minecraft.getTextureMapBlocks();
         ResourceLocation fluidStill = fluid.getStill();
         TextureAtlasSprite fluidStillSprite = null;
+
         if (fluidStill != null) {
             fluidStillSprite = textureMapBlocks.getTextureExtry(fluidStill.toString());
         }
+
         if (fluidStillSprite == null) {
             fluidStillSprite = textureMapBlocks.getMissingSprite();
         }
 
         int fluidColor = fluid.getColor(fluidStack);
 
-        int scaledAmount = (fluidStack.amount * height) / capacityMb;
-        if (fluidStack.amount > 0 && scaledAmount < MIN_FLUID_HEIGHT) {
-            scaledAmount = MIN_FLUID_HEIGHT;
-        }
-        if (scaledAmount > height) {
-            scaledAmount = height;
+        int scaledAmount = height;
+
+        if (capacityMb != -1) {
+            scaledAmount = (fluidStack.amount * height) / capacityMb;
+
+            if (fluidStack.amount > 0 && scaledAmount < MIN_FLUID_HEIGHT) {
+                scaledAmount = MIN_FLUID_HEIGHT;
+            }
+
+            if (scaledAmount > height) {
+                scaledAmount = height;
+            }
         }
 
         minecraft.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
         setGLColorFromInt(fluidColor);
 
-        final int xTileCount = width / TEX_WIDTH;
-        final int xRemainder = width - (xTileCount * TEX_WIDTH);
-        final int yTileCount = scaledAmount / TEX_HEIGHT;
-        final int yRemainder = scaledAmount - (yTileCount * TEX_HEIGHT);
+        int xTileCount = width / TEX_WIDTH;
+        int xRemainder = width - (xTileCount * TEX_WIDTH);
+        int yTileCount = scaledAmount / TEX_HEIGHT;
+        int yRemainder = scaledAmount - (yTileCount * TEX_HEIGHT);
 
-        final int yStart = yPosition + height;
+        int yStart = yPosition + height;
 
         for (int xTile = 0; xTile <= xTileCount; xTile++) {
             for (int yTile = 0; yTile <= yTileCount; yTile++) {
@@ -88,6 +98,7 @@ public class FluidRenderer {
                 int height = (yTile == yTileCount) ? yRemainder : TEX_HEIGHT;
                 int x = xPosition + (xTile * TEX_WIDTH);
                 int y = yStart - ((yTile + 1) * TEX_HEIGHT);
+
                 if (width > 0 && height > 0) {
                     int maskTop = TEX_HEIGHT - height;
                     int maskRight = TEX_WIDTH - width;
@@ -115,6 +126,7 @@ public class FluidRenderer {
         vMax = vMax - (maskTop / 16.0 * (vMax - vMin));
 
         Tessellator tessellator = Tessellator.getInstance();
+
         VertexBuffer vertexBuffer = tessellator.getBuffer();
         vertexBuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
         vertexBuffer.pos(xCoord, yCoord + 16, zLevel).tex(uMin, vMax).endVertex();
