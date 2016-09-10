@@ -5,7 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.api.network.NetworkUtils;
+import refinedstorage.apiimpl.storage.fluid.FluidUtils;
 
 public class CraftingTaskNormal extends CraftingTask {
     public static final String NBT_SATISFIED = "Satisfied";
@@ -37,7 +37,7 @@ public class CraftingTaskNormal extends CraftingTask {
             ItemStack input = pattern.getInputs().get(i);
 
             if (!satisfied[i]) {
-                ItemStack received = NetworkUtils.extractItem(network, input, input.stackSize);
+                ItemStack received = FluidUtils.extractItemOrIfBucketLookInFluids(network, input, input.stackSize);
 
                 if (received != null) {
                     satisfied[i] = true;

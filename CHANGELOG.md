@@ -1,6 +1,8 @@
 # Refined Storage Changelog
 
 ### 1.0
+**NOTE:** Due to the new crafting system, all Crafting Patterns made before 1.x have to be re-made.
+
 - Implemented multithreaded autocrafting (raoulvdberge)
 - Processing patterns now hold their items back for pushing until all the required items are gathered from the system (raoulvdberge)
 - Fixed item and fluid storage stored count having incorrect values at times (raoulvdberge)
@@ -10,6 +12,7 @@
 - When shift clicking a recipe in the Crafting Grid, the player inventory is now leveraged as well (raoulvdberge)
 - Fixed machines breaking on long distances (raoulvdberge)
 - Fixed controller rebuilding network graph on energy change (raoulvdberge)
+- Fixed fluids not caring about NBT tags (raoulvdberge)
 
 ### 0.9.4
 - Little fixes in German translation (ThexXTURBOXx)
