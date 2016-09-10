@@ -107,27 +107,29 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
             }
         }
 
+        List<INetworkNode> oldNodes = new ArrayList<>(nodes);
+
+        this.nodes = newNodes;
+
         boolean changed = false;
 
         if (notify) {
-            for (INetworkNode newNode : newNodes) {
-                if (!nodes.contains(newNode)) {
-                    newNode.onConnected(controller);
+            for (INetworkNode node : nodes) {
+                if (!oldNodes.contains(node)) {
+                    node.onConnected(controller);
 
                     changed = true;
                 }
             }
 
-            for (INetworkNode oldNode : nodes) {
-                if (!newNodes.contains(oldNode)) {
+            for (INetworkNode oldNode : oldNodes) {
+                if (!nodes.contains(oldNode)) {
                     oldNode.onDisconnected(controller);
 
                     changed = true;
                 }
             }
         }
-
-        this.nodes = newNodes;
 
         if (changed) {
             controller.getDataManager().sendParameterToWatchers(TileController.NODES);
