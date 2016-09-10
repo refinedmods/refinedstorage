@@ -15,6 +15,7 @@
 - Fixed fluids not caring about NBT tags (raoulvdberge)
 - Fixed fluids that have less than 1 bucket stored render only partly in Fluid Grid (raoulvdberge)
 - Fixed Fluid Interface voiding bucket when shift clicking to out slot (raoulvdberge)
+- Updated to Forge 2077 (raoulvdberge)
 
 ### 0.9.4
 - Little fixes in German translation (ThexXTURBOXx)

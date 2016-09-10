@@ -7,28 +7,32 @@ import javax.annotation.Nonnull;
 
 public class RecipeHandlerSolderer implements IRecipeHandler<RecipeWrapperSolderer> {
     @Override
+    @Nonnull
     public Class<RecipeWrapperSolderer> getRecipeClass() {
         return RecipeWrapperSolderer.class;
     }
 
     @Override
+    @Nonnull
+    @SuppressWarnings("deprecation")
     public String getRecipeCategoryUid() {
         return RecipeCategorySolderer.ID;
     }
 
-    @Nonnull
     @Override
+    @Nonnull
     public String getRecipeCategoryUid(@Nonnull RecipeWrapperSolderer recipe) {
         return RecipeCategorySolderer.ID;
     }
 
     @Override
-    public IRecipeWrapper getRecipeWrapper(RecipeWrapperSolderer recipe) {
+    @Nonnull
+    public IRecipeWrapper getRecipeWrapper(@Nonnull RecipeWrapperSolderer recipe) {
         return recipe;
     }
 
     @Override
-    public boolean isRecipeValid(RecipeWrapperSolderer recipe) {
+    public boolean isRecipeValid(@Nonnull RecipeWrapperSolderer recipe) {
         return true;
     }
 }
