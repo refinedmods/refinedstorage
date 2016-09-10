@@ -137,16 +137,6 @@ public class BlockController extends BlockBase {
     }
 
     @Override
-    public boolean hasComparatorInputOverride(IBlockState state) {
-        return true;
-    }
-
-    @Override
-    public int getComparatorInputOverride(IBlockState state, World world, BlockPos pos) {
-        return ((TileController) world.getTileEntity(pos)).getEnergyScaledForComparator();
-    }
-
-    @Override
     public Item createItem() {
         return new ItemBlockController();
     }

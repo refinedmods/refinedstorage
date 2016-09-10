@@ -191,7 +191,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     private ControllerEnergyTesla energyTesla;
 
     private int lastEnergyDisplay;
-    private int lastEnergyComparator;
 
     private boolean couldRun;
 
@@ -329,12 +328,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 lastEnergyDisplay = getEnergyScaledForDisplay();
 
                 updateBlock();
-            }
-
-            if (getEnergyScaledForComparator() != lastEnergyComparator) {
-                lastEnergyComparator = getEnergyScaledForComparator();
-
-                worldObj.updateComparatorOutputLevel(pos, RefinedStorageBlocks.CONTROLLER);
             }
         }
 
@@ -808,10 +801,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     public int getEnergyScaledForDisplay() {
         return getEnergyScaled(energy.getEnergyStored(), energy.getMaxEnergyStored(), 7);
-    }
-
-    public int getEnergyScaledForComparator() {
-        return getEnergyScaled(energy.getEnergyStored(), energy.getMaxEnergyStored(), 15);
     }
 
     @Override

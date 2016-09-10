@@ -5,8 +5,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
+import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.network.INetworkNode;
 import refinedstorage.api.network.INetworkNodeGraph;
+import refinedstorage.api.storage.fluid.IFluidStorageProvider;
+import refinedstorage.api.storage.item.IItemStorageProvider;
 import refinedstorage.tile.TileController;
 import refinedstorage.tile.TileNetworkTransmitter;
 
@@ -140,6 +143,20 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
     public void replace(INetworkNode node) {
         nodes.remove(node);
         nodes.add(node);
+
+        if (node instanceof ICraftingPatternContainer) {
+            controller.rebuildPatterns();
+        }
+
+        if (node instanceof IItemStorageProvider) {
+            controller.getItemStorage().rebuild();
+        }
+
+        if (node instanceof IFluidStorageProvider) {
+            controller.getFluidStorage().rebuild();
+        }
+
+        controller.getDataManager().sendParameterToWatchers(TileController.NODES);
     }
 
     @Override

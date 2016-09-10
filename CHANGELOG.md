@@ -9,6 +9,7 @@
 - Interface now supports Crafting Upgrade (raoulvdberge)
 - When shift clicking a recipe in the Crafting Grid, the player inventory is now leveraged as well (raoulvdberge)
 - Fixed machines breaking on long distances (raoulvdberge)
+- Fixed controller rebuilding network graph on energy change (raoulvdberge)
 
 ### 0.9.4
 - Little fixes in German translation (ThexXTURBOXx)
