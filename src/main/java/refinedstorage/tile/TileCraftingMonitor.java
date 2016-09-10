@@ -15,14 +15,12 @@ public class TileCraftingMonitor extends TileNode {
         @Override
         public List<ClientCraftingTask> getValue(TileCraftingMonitor tile) {
             if (tile.connected) {
-                List<ClientCraftingTask> tasks = tile.network.getCraftingTasks().stream().map(t -> new ClientCraftingTask(
+                return tile.network.getCraftingTasks().stream().map(t -> new ClientCraftingTask(
                     t.getStatus(),
                     t.getPattern().getOutputs(),
                     t.getProgress(),
                     t.getChild()
                 )).collect(Collectors.toList());
-
-                return tasks;
             } else {
                 return Collections.emptyList();
             }

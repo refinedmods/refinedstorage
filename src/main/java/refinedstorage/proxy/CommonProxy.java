@@ -623,9 +623,11 @@ public class CommonProxy {
     }
 
     public void init(FMLInitializationEvent e) {
+        // NO OP
     }
 
     public void postInit(FMLPostInitializationEvent e) {
+        // NO OP
     }
 
     private void registerBlock(BlockBase block) {
