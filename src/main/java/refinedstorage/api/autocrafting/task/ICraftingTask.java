@@ -1,11 +1,13 @@
 package refinedstorage.api.autocrafting.task;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.network.INetworkMaster;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * Represents a crafting task.
@@ -59,4 +61,9 @@ public interface ICraftingTask {
      * @return The progress for display in the crafting monitor, -1 for no progress
      */
     int getProgress();
+
+    /**
+     * @return The items that are required for this tasks's crafting pattern, but are not present.
+     */
+    List<ItemStack> getMissingItems();
 }
