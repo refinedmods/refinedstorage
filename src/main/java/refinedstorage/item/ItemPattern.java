@@ -36,6 +36,10 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
 
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
+        if (!stack.hasTagCompound()) {
+            return;
+        }
+
         ICraftingPattern pattern = create(player.worldObj, stack, null);
 
         if (pattern.isValid()) {
