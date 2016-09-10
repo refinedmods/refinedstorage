@@ -63,7 +63,7 @@ public class TileSolderer extends TileNode {
         if (items.getStackInSlot(1) == null && items.getStackInSlot(2) == null && items.getStackInSlot(3) == null) {
             stop();
         } else {
-            ISoldererRecipe newRecipe = RefinedStorageAPI.SOLDERER_REGISTRY.getRecipe(items);
+            ISoldererRecipe newRecipe = RefinedStorageAPI.instance().getSoldererRegistry().getRecipe(items);
 
             if (newRecipe == null) {
                 stop();
@@ -131,7 +131,7 @@ public class TileSolderer extends TileNode {
         readItems(items, 0, tag);
         readItems(upgrades, 1, tag);
 
-        recipe = RefinedStorageAPI.SOLDERER_REGISTRY.getRecipe(items);
+        recipe = RefinedStorageAPI.instance().getSoldererRegistry().getRecipe(items);
 
         if (tag.hasKey(NBT_WORKING)) {
             working = tag.getBoolean(NBT_WORKING);

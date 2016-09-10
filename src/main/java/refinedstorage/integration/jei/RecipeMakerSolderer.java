@@ -11,7 +11,7 @@ public final class RecipeMakerSolderer {
     public static List<RecipeWrapperSolderer> getRecipes() {
         List<RecipeWrapperSolderer> recipes = new ArrayList<>();
 
-        for (ISoldererRecipe recipe : RefinedStorageAPI.SOLDERER_REGISTRY.getRecipes()) {
+        for (ISoldererRecipe recipe : RefinedStorageAPI.instance().getSoldererRegistry().getRecipes()) {
             List<ItemStack> inputs = new ArrayList<>();
 
             inputs.add(recipe.getRow(0));

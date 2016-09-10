@@ -28,7 +28,7 @@ public final class NetworkUtils {
     }
 
     public static ICraftingTask createCraftingTask(INetworkMaster network, ICraftingPattern pattern) {
-        return RefinedStorageAPI.CRAFTING_TASK_REGISTRY.getFactory(pattern.getId()).create(network.getNetworkWorld(), null, pattern);
+        return RefinedStorageAPI.instance().getCraftingTaskRegistry().getFactory(pattern.getId()).create(network.getNetworkWorld(), null, pattern);
     }
 
     public static boolean hasPattern(INetworkMaster network, ItemStack stack) {
