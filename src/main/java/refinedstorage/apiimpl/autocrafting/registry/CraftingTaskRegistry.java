@@ -3,6 +3,7 @@ package refinedstorage.apiimpl.autocrafting.registry;
 import refinedstorage.api.autocrafting.registry.ICraftingTaskFactory;
 import refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +16,7 @@ public class CraftingTaskRegistry implements ICraftingTaskRegistry {
     }
 
     @Override
+    @Nullable
     public ICraftingTaskFactory getFactory(String id) {
         return registry.get(id);
     }

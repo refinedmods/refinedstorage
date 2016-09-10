@@ -10,6 +10,7 @@ import javax.annotation.Nullable;
 
 /**
  * A factory that creates a crafting task from a NBT tag and crafting pattern.
+ * Register this factory to create your own custom crafting tasks.
  */
 public interface ICraftingTaskFactory {
     /**
