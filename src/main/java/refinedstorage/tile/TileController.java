@@ -569,6 +569,10 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
             for (int i = 0; i < inserted; ++i) {
                 for (ICraftingTask task : craftingTasks) {
+                    if (inserted == 0) {
+                        break;
+                    }
+
                     if (checkProcessing(stack, task)) {
                         inserted--;
                     }
