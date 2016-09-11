@@ -15,7 +15,7 @@ public final class RefinedStorageAPI {
 
             API = (IAPI) apiField.get(apiClass);
         } catch (Exception e) {
-            throw new Error("The Refined Storage API implementation is unavailable, make sure Refined Storage is installed");
+            throw new Error("The Refined Storage API implementation is unavailable, make sure Refined Storage is installed", e);
         }
     }
 
