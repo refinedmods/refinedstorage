@@ -5,26 +5,26 @@ import net.minecraft.util.math.BlockPos;
 import java.util.List;
 
 /**
- * A graph of all the nodes connected to a network.
+ * Represents a graph of all the nodes connected to a network.
  */
 public interface INetworkNodeGraph {
     /**
      * Rebuilds the node graph.
      *
-     * @param start  The starting position to start looking for nodes
-     * @param notify Whether to notify nodes of a connection change
+     * @param start  the starting position to start looking for nodes
+     * @param notify true to notify the nodes of a connection change, false to not notify
      */
     void rebuild(BlockPos start, boolean notify);
 
     /**
-     * @return A list of all connected nodes
+     * @return a list of all connected nodes
      */
     List<INetworkNode> all();
 
     /**
-     * Replaces an old network node with a new one.
+     * Replaces an old node with a new one.
      *
-     * @param node The node
+     * @param node the node to replace
      */
     void replace(INetworkNode node);
 

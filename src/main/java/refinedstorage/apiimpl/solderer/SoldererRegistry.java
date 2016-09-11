@@ -19,23 +19,18 @@ public class SoldererRegistry implements ISoldererRegistry {
     }
 
     @Override
-    public List<ISoldererRecipe> getRecipes() {
-        return recipes;
-    }
-
-    @Override
     @Nullable
-    public ISoldererRecipe getRecipe(@Nonnull IItemHandler items) {
+    public ISoldererRecipe getRecipe(@Nonnull IItemHandler row) {
         for (ISoldererRecipe recipe : recipes) {
             boolean found = true;
 
             for (int i = 0; i < 3; ++i) {
-                if (!CompareUtils.compareStackNoQuantity(recipe.getRow(i), items.getStackInSlot(i)) && !CompareUtils.compareStackOreDict(recipe.getRow(i), items.getStackInSlot(i))) {
+                if (!CompareUtils.compareStackNoQuantity(recipe.getRow(i), row.getStackInSlot(i)) && !CompareUtils.compareStackOreDict(recipe.getRow(i), row.getStackInSlot(i))) {
                     found = false;
                 }
 
-                if (items.getStackInSlot(i) != null && recipe.getRow(i) != null) {
-                    if (items.getStackInSlot(i).stackSize < recipe.getRow(i).stackSize) {
+                if (row.getStackInSlot(i) != null && recipe.getRow(i) != null) {
+                    if (row.getStackInSlot(i).stackSize < recipe.getRow(i).stackSize) {
                         found = false;
                     }
                 }
@@ -47,5 +42,10 @@ public class SoldererRegistry implements ISoldererRegistry {
         }
 
         return null;
+    }
+
+    @Override
+    public List<ISoldererRecipe> getRecipes() {
+        return recipes;
     }
 }

@@ -7,12 +7,12 @@ import net.minecraft.util.math.BlockPos;
  */
 public interface IWirelessTransmitter {
     /**
-     * @return The range in blocks of this transmitter, starting from {@link IWirelessTransmitter#getOrigin()}
+     * @return the range in blocks of this transmitter, starting from {@link IWirelessTransmitter#getOrigin()}
      */
     int getRange();
 
     /**
-     * @return The position where the wireless signal starts
+     * @return the position where the wireless signal starts
      */
     BlockPos getOrigin();
 }

@@ -10,13 +10,13 @@ import javax.annotation.Nonnull;
  */
 public interface IAPI {
     /**
-     * @return The solderer registry
+     * @return the solderer registry
      */
     @Nonnull
     ISoldererRegistry getSoldererRegistry();
 
     /**
-     * @return The crafting task registry
+     * @return the crafting task registry
      */
     @Nonnull
     ICraftingTaskRegistry getCraftingTaskRegistry();

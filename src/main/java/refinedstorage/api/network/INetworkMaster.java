@@ -23,81 +23,81 @@ import java.util.List;
  */
 public interface INetworkMaster {
     /**
-     * @return The energy storage of this network
+     * @return the energy storage of this network
      */
     EnergyStorage getEnergy();
 
     /**
-     * @return The energy usage per tick of this network
+     * @return the energy usage per tick of this network
      */
     int getEnergyUsage();
 
     /**
-     * @return The position of this network in the world
+     * @return the position of this network in the world
      */
     BlockPos getPosition();
 
     /**
-     * @return If this network is able to run (usually corresponds to the redstone setting)
+     * @return if this network is able to run (usually corresponds to the redstone configuration)
      */
     boolean canRun();
 
     /**
-     * @return A graph of connected nodes to this network
+     * @return a graph of connected nodes to this network
      */
     INetworkNodeGraph getNodeGraph();
 
     /**
-     * @return The {@link IItemGridHandler} for this network
+     * @return the {@link IItemGridHandler} of this network
      */
     IItemGridHandler getItemGridHandler();
 
     /**
-     * @return The {@link IFluidGridHandler} for this network
+     * @return the {@link IFluidGridHandler} of this network
      */
     IFluidGridHandler getFluidGridHandler();
 
     /**
-     * @return The {@link IWirelessGridHandler} for this network
+     * @return the {@link IWirelessGridHandler} of this network
      */
     IWirelessGridHandler getWirelessGridHandler();
 
     /**
-     * @return The {@link IGroupedItemStorage} of this network
+     * @return the {@link IGroupedItemStorage} of this network
      */
     IGroupedItemStorage getItemStorage();
 
     /**
-     * @return The {@link IGroupedFluidStorage} of this network
+     * @return the {@link IGroupedFluidStorage} of this network
      */
     IGroupedFluidStorage getFluidStorage();
 
     /**
-     * @return The crafting tasks in this network, do NOT modify this list
+     * @return the crafting tasks in this network, do NOT modify this list
      */
     List<ICraftingTask> getCraftingTasks();
 
     /**
-     * Adds a crafting task to the top of the crafting task stack.
+     * Adds a crafting task.
      *
-     * @param task The crafting task to add
+     * @param task the task to add
      */
     void addCraftingTask(@Nonnull ICraftingTask task);
 
     /**
      * Cancels a crafting task.
      *
-     * @param task The task to cancel
+     * @param task the task to cancel
      */
     void cancelCraftingTask(@Nonnull ICraftingTask task);
 
     /**
-     * Sends a sync packet to all crafting monitors with the crafting task status.
+     * Sends a update packet to all crafting monitors with the crafting task status.
      */
     void updateCraftingTasks();
 
     /**
-     * @return A list of crafting patterns in this network, do NOT modify this list
+     * @return a list of crafting patterns in this network, do NOT modify this list
      */
     List<ICraftingPattern> getPatterns();
 
@@ -109,40 +109,45 @@ public interface INetworkMaster {
     /**
      * Returns crafting patterns from an item stack.
      *
-     * @param pattern The {@link ItemStack} to get a pattern for
-     * @param flags   The flags to compare on, see {@link CompareUtils}
-     * @return A list of crafting patterns where the given pattern is one of the outputs
+     * @param pattern the stack to get a pattern for
+     * @param flags   the flags to compare on, see {@link CompareUtils}
+     * @return a list of crafting patterns where the given pattern is one of the outputs
      */
     List<ICraftingPattern> getPatterns(ItemStack pattern, int flags);
 
     /**
-     * @param pattern The {@link ItemStack} to get a pattern for
-     * @param flags   The flags to compare on, see {@link CompareUtils}
-     * @return The pattern, or null if the pattern is not found
+     * Returns a crafting pattern for an item stack.
+     * This returns a single crafting pattern, as opposed to {@link INetworkMaster#getPatterns(ItemStack, int)}.
+     * Internally, this makes a selection out of the available patterns.
+     * It makes this selection based on the item count of the pattern outputs in the system.
+     *
+     * @param pattern the stack to get a pattern for
+     * @param flags   the flags to compare on, see {@link CompareUtils}
+     * @return the pattern, or null if the pattern is not found
      */
     @Nullable
     ICraftingPattern getPattern(ItemStack pattern, int flags);
 
     /**
-     * Sends a grid packet with all the items to all clients that are watching a grid.
+     * Sends a grid update packet with all the items to all clients that are watching a grid connected to this network.
      */
     void sendItemStorageToClient();
 
     /**
-     * Sends a grid packet with all the items to a specific player.
+     * Sends a grid update packet with all the items to a specific player.
      */
     void sendItemStorageToClient(EntityPlayerMP player);
 
     /**
-     * Sends a item storage change to all clients that are watching a grid.
+     * Sends a item storage change to all clients that are watching a grid connected to this network.
      *
-     * @param stack The stack
-     * @param delta The delta
+     * @param stack the stack
+     * @param delta the delta
      */
     void sendItemStorageDeltaToClient(ItemStack stack, int delta);
 
     /**
-     * Sends a grid packet with all the fluids to all clients that are watching a grid.
+     * Sends a grid update packet with all the fluids to all clients that are watching a grid connected to this network.
      */
     void sendFluidStorageToClient();
 
@@ -152,20 +157,20 @@ public interface INetworkMaster {
     void sendFluidStorageToClient(EntityPlayerMP player);
 
     /**
-     * Sends a fluids storage change to all clients that are watching a grid.
+     * Sends a fluids storage change to all clients that are watching a grid connected to this network.
      *
-     * @param stack The stack
-     * @param delta The delta
+     * @param stack the stack
+     * @param delta the delta
      */
     void sendFluidStorageDeltaToClient(FluidStack stack, int delta);
 
     /**
-     * Inserts an item to this network.
+     * Inserts an item in this network.
      *
-     * @param stack    The stack prototype to insert, do NOT modify
-     * @param size     The amount of that prototype that has to be inserted
-     * @param simulate If we are simulating
-     * @return null if the insert was successful, or an {@link ItemStack} with the remainder
+     * @param stack    the stack prototype to insert, do NOT modify
+     * @param size     the amount of that prototype that has to be inserted
+     * @param simulate if we are simulating
+     * @return null if the insert was successful, or a stack with the remainder
      */
     @Nullable
     ItemStack insertItem(@Nonnull ItemStack stack, int size, boolean simulate);
@@ -173,21 +178,21 @@ public interface INetworkMaster {
     /**
      * Extracts an item from this network.
      *
-     * @param stack The prototype of the stack to extract, do NOT modify
-     * @param size  The amount of that prototype that has to be extracted
-     * @param flags The flags to compare on, see {@link CompareUtils}
-     * @return null if we didn't extract anything, or a {@link ItemStack} with the result
+     * @param stack the prototype of the stack to extract, do NOT modify
+     * @param size  the amount of that prototype that has to be extracted
+     * @param flags the flags to compare on, see {@link CompareUtils}
+     * @return null if we didn't extract anything, or a stack with the result
      */
     @Nullable
     ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags);
 
     /**
-     * Inserts a fluid to this network.
+     * Inserts a fluid in this network.
      *
-     * @param stack    The stack prototype to insert, do NOT modify
-     * @param size     The amount of that prototype that has to be inserted
-     * @param simulate If we are simulating
-     * @return null if the insert was successful, or an {@link FluidStack} with the remainder
+     * @param stack    the stack prototype to insert, do NOT modify
+     * @param size     the amount of that prototype that has to be inserted
+     * @param simulate if we are simulating
+     * @return null if the insert was successful, or a stack with the remainder
      */
     @Nullable
     FluidStack insertFluid(@Nonnull FluidStack stack, int size, boolean simulate);
@@ -195,16 +200,16 @@ public interface INetworkMaster {
     /**
      * Extracts a fluid from this network.
      *
-     * @param stack The prototype of the stack to extract, do NOT modify
-     * @param size  The amount of that prototype that has to be extracted
-     * @param flags The flags to compare on, see {@link CompareUtils}
-     * @return null if we didn't extract anything, or a {@link FluidStack} with the result
+     * @param stack the prototype of the stack to extract, do NOT modify
+     * @param size  the amount of that prototype that has to be extracted
+     * @param flags the flags to compare on, see {@link CompareUtils}
+     * @return null if we didn't extract anything, or a stack with the result
      */
     @Nullable
     FluidStack extractFluid(@Nonnull FluidStack stack, int size, int flags);
 
     /**
-     * @return The world where this node is in
+     * @return the world where this network is in
      */
     World getNetworkWorld();
 }

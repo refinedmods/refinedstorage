@@ -3,13 +3,13 @@ package refinedstorage.api.storage.item;
 import java.util.List;
 
 /**
- * Represents a tile that provides item storage to the network. Implement this on a tile that is a {@link refinedstorage.api.network.INetworkNode}.
+ * Represents a node that provides item storage to the network.
  */
 public interface IItemStorageProvider {
     /**
      * Adds the item storages that this storage provider provides.
      *
-     * @param storages The previously added item storages
+     * @param storages the previously added item storages
      */
     void addItemStorages(List<IItemStorage> storages);
 }

@@ -16,18 +16,18 @@ public interface IItemGridHandler {
     /**
      * Called when a player tries to extract an item from the grid.
      *
-     * @param hash   The hash of the item we're trying to extract, see {@link refinedstorage.api.network.NetworkUtils#getItemStackHashCode(ItemStack)}
-     * @param flags  How we are extracting
-     * @param player The player that is attempting the extraction
+     * @param hash   the hash of the item we're trying to extract, see {@link refinedstorage.api.network.NetworkUtils#getItemStackHashCode(ItemStack)}
+     * @param flags  how we are extracting
+     * @param player the player that is attempting the extraction
      */
     void onExtract(int hash, int flags, EntityPlayerMP player);
 
     /**
-     * Called when a player tries to insert an item to the grid.
+     * Called when a player tries to insert an item in the grid.
      *
-     * @param player The player that is attempting the insert
-     * @param stack  The item we're trying to insert
-     * @return The remainder, or null if there is no remainder
+     * @param player the player that is attempting the insert
+     * @param stack  the item we're trying to insert
+     * @return the remainder, or null if there is no remainder
      */
     @Nullable
     ItemStack onInsert(EntityPlayerMP player, ItemStack stack);
@@ -35,24 +35,24 @@ public interface IItemGridHandler {
     /**
      * Called when a player is trying to insert an item that it is holding in their hand in the GUI.
      *
-     * @param player The player that is attempting the insert
-     * @param single If we are only inserting 1 item
+     * @param player the player that is attempting the insert
+     * @param single if we are only inserting a single item
      */
     void onInsertHeldItem(EntityPlayerMP player, boolean single);
 
     /**
      * Called when a player requested crafting for an item.
      *
-     * @param hash     The hash of the item we're requesting crafting for, see {@link refinedstorage.api.network.NetworkUtils#getItemStackHashCode(ItemStack)}
-     * @param quantity The amount of that item that has to be crafted
+     * @param hash     the hash of the item we're requesting crafting for, see {@link refinedstorage.api.network.NetworkUtils#getItemStackHashCode(ItemStack)}
+     * @param quantity the amount of that item that has to be crafted
      */
     void onCraftingRequested(int hash, int quantity);
 
     /**
      * Called when a player wants to cancel a crafting task.
      *
-     * @param id    The task ID, or -1 for all tasks
-     * @param depth The child depth of this task to cancel
+     * @param id    the task id, or -1 to cancel all tasks
+     * @param depth the child depth of this task to cancel
      */
     void onCraftingCancelRequested(int id, int depth);
 }

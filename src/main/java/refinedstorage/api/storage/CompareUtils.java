@@ -16,9 +16,9 @@ public final class CompareUtils {
     /**
      * Compares two stacks by NBT, damage and quantity.
      *
-     * @param left  The left stack
-     * @param right The right stack
-     * @return Whether the left and right stack are equal
+     * @param left  the left stack
+     * @param right the right stack
+     * @return true if the left and right stack are the same, false otherwise
      */
     public static boolean compareStack(ItemStack left, ItemStack right) {
         return compareStack(left, right, COMPARE_NBT | COMPARE_DAMAGE | COMPARE_QUANTITY);
@@ -27,9 +27,9 @@ public final class CompareUtils {
     /**
      * Compares two stacks by NBT and damage.
      *
-     * @param left  The left stack
-     * @param right The right stack
-     * @return Whether the left and right stack are equal
+     * @param left  the left stack
+     * @param right the right stack
+     * @return true if the left and right stack are the same, false otherwise
      */
     public static boolean compareStackNoQuantity(ItemStack left, ItemStack right) {
         return compareStack(left, right, COMPARE_NBT | COMPARE_DAMAGE);
@@ -38,10 +38,10 @@ public final class CompareUtils {
     /**
      * Compares two stacks by the given flags.
      *
-     * @param left  The left stack
-     * @param right The right stack
-     * @param flags The flags to compare with
-     * @return Whether the left and right stack are equal
+     * @param left  the left stack
+     * @param right the right stack
+     * @param flags the flags to compare with
+     * @return true if the left and right stack are the same, false otherwise
      */
     public static boolean compareStack(ItemStack left, ItemStack right, int flags) {
         if (left == null && right == null) {
@@ -80,10 +80,10 @@ public final class CompareUtils {
     /**
      * Compares two stacks by the given flags.
      *
-     * @param left  The left stack
-     * @param right The right stack
-     * @param flags The flags to compare with
-     * @return Whether the left and right stack are equal
+     * @param left  the left stack
+     * @param right the right stack
+     * @param flags the flags to compare with
+     * @return true if the left and right stack are the same, false otherwise
      */
     public static boolean compareStack(FluidStack left, FluidStack right, int flags) {
         if (left == null && right == null) {
@@ -116,9 +116,9 @@ public final class CompareUtils {
     /**
      * Compares the NBT tags of two stacks.
      *
-     * @param left  The left stack
-     * @param right The right stack
-     * @return Whether the NBT tags are equal
+     * @param left  the left stack
+     * @param right the right stack
+     * @return true if the NBT tags of the two stacks are the same, false otherwise
      */
     public static boolean compareNbt(ItemStack left, ItemStack right) {
         if (!ItemStack.areItemStackTagsEqual(left, right)) {
@@ -137,9 +137,9 @@ public final class CompareUtils {
     /**
      * Compares two stacks and checks if they share the same ore dictionary entry.
      *
-     * @param left  The left stack
-     * @param right The right stack
-     * @return Whether the stacks share the same ore dictionary entry
+     * @param left  the left stack
+     * @param right the right stack
+     * @return true if the two stacks share the same ore dictionary entry
      */
     public static boolean compareStackOreDict(ItemStack left, ItemStack right) {
         if (left == null && right == null) {

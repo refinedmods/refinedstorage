@@ -8,12 +8,12 @@ import net.minecraft.item.ItemStack;
  */
 public interface IWirelessGridConsumer {
     /**
-     * @return The player using the wireless grid
+     * @return the player using the wireless grid
      */
     EntityPlayer getPlayer();
 
     /**
-     * @return The wireless grid stack
+     * @return the wireless grid stack
      */
     ItemStack getStack();
 }

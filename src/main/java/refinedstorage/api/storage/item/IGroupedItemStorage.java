@@ -18,7 +18,8 @@ import java.util.List;
  */
 public interface IGroupedItemStorage {
     /**
-     * Rebuilds the global item list. Typically called when a {@link IItemStorageProvider} is added or removed from the network.
+     * Rebuilds the global item list.
+     * Typically called when a {@link IItemStorageProvider} is added or removed from the network.
      */
     void rebuild();
 
@@ -30,8 +31,8 @@ public interface IGroupedItemStorage {
      * <p>
      * Will merge it with another item if it already exists.
      *
-     * @param stack      The stack to add, do NOT modify
-     * @param rebuilding Whether this method is called while the storage is rebuilding
+     * @param stack      the stack to add, do NOT modify
+     * @param rebuilding whether this method is called while the storage is rebuilding
      */
     void add(@Nonnull ItemStack stack, boolean rebuilding);
 
@@ -41,16 +42,16 @@ public interface IGroupedItemStorage {
      * Note that this doesn't modify any of the connected storages, but just modifies the global item list.
      * Use {@link INetworkMaster#extractItem(ItemStack, int, int)} to remove an item from an actual storage.
      *
-     * @param stack The item to remove, do NOT modify
+     * @param stack the item to remove, do NOT modify
      */
     void remove(@Nonnull ItemStack stack);
 
     /**
      * Gets an item from the network.
      *
-     * @param stack The stack to find
-     * @param flags The flags to compare on, see {@link CompareUtils}
-     * @return Null if no item is found, or the {@link ItemStack}, do NOT modify
+     * @param stack the stack to find
+     * @param flags the flags to compare on, see {@link CompareUtils}
+     * @return null if no item is found, or the stack, do NOT modify
      */
     @Nullable
     ItemStack get(@Nonnull ItemStack stack, int flags);
@@ -58,18 +59,18 @@ public interface IGroupedItemStorage {
     /**
      * Gets an item from the network by hash, see {@link refinedstorage.api.network.NetworkUtils#getItemStackHashCode(ItemStack)}.
      *
-     * @return Null if no item is found matching the hash, or the {@link ItemStack}, do NOT modify
+     * @return null if no item is found matching the hash, or the stack, do NOT modify
      */
     @Nullable
     ItemStack get(int hash);
 
     /**
-     * @return All items in this storage network
+     * @return all items in this storage network
      */
     Collection<ItemStack> getStacks();
 
     /**
-     * @return The item storages connected to this network
+     * @return the item storages connected to this network
      */
     List<IItemStorage> getStorages();
 }

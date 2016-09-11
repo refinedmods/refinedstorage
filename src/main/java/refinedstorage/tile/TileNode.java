@@ -42,6 +42,8 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
         return isConnected() && canUpdate();
     }
 
+    public abstract void updateNode();
+
     @Override
     public void update() {
         if (!worldObj.isRemote) {

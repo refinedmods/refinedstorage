@@ -10,20 +10,20 @@ import javax.annotation.Nullable;
  */
 public interface ISoldererRecipe {
     /**
-     * @param row The row in the solderer that we want the {@link ItemStack} for (between 0 - 2)
-     * @return A {@link ItemStack} for the given row
+     * @param row the row in the solderer that we want the stack for (between 0 - 2)
+     * @return a stack for the given row, or null for no stack
      */
     @Nullable
     ItemStack getRow(int row);
 
     /**
-     * @return The {@link ItemStack} that this recipe gives back
+     * @return the stack that this recipe gives back
      */
     @Nonnull
     ItemStack getResult();
 
     /**
-     * @return The duration in ticks that this recipe takes to give the result back from {@link ISoldererRecipe#getResult()}
+     * @return the duration in ticks that this recipe takes to give the result back
      */
     int getDuration();
 }

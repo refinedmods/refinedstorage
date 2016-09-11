@@ -13,19 +13,21 @@ public interface ISoldererRegistry {
     /**
      * Adds a recipe to the registry.
      *
-     * @param recipe The recipe to add
+     * @param recipe the recipe to add
      */
     void addRecipe(@Nonnull ISoldererRecipe recipe);
 
     /**
-     * @return A list with all the solderer recipes, do NOT modify
-     */
-    List<ISoldererRecipe> getRecipes();
-
-    /**
-     * @param items An item handler, where slots 0 - 2 are the rows
-     * @return The {@link ISoldererRecipe}, or null if no recipe was found
+     * Returns a solderer recipe from the rows.
+     *
+     * @param row an item handler, where slots 0 - 2 are the rows
+     * @return the {@link ISoldererRecipe}, or null if no recipe was found
      */
     @Nullable
-    ISoldererRecipe getRecipe(@Nonnull IItemHandler items);
+    ISoldererRecipe getRecipe(@Nonnull IItemHandler row);
+
+    /**
+     * @return a list with all the solderer recipes, do NOT modify
+     */
+    List<ISoldererRecipe> getRecipes();
 }

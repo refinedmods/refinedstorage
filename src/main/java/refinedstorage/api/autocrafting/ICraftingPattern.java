@@ -9,38 +9,40 @@ import java.util.List;
  */
 public interface ICraftingPattern {
     /**
-     * @return The container where the pattern is in
+     * @return the {@link ICraftingPatternContainer} where the pattern is in
      */
     ICraftingPatternContainer getContainer();
 
     /**
-     * @return The crafting pattern stack
+     * @return the crafting pattern stack
      */
     ItemStack getStack();
 
     /**
-     * @return Whether the crafting pattern is valid
+     * @return true if the crafting pattern is valid, false otherwise
      */
     boolean isValid();
 
     /**
-     * @return The inputs
+     * @return the inputs
      */
     List<ItemStack> getInputs();
 
     /**
-     * @return The outputs
+     * @return the outputs
      */
     List<ItemStack> getOutputs();
 
     /**
-     * @return The id of the crafting task, as defined in the registry
+     * @return the id of the factory that creates a crafting task for this pattern, as defined in the registry
      */
     String getId();
 
     /**
-     * @param requested The item requested
-     * @return The quantity returned per request
+     * Returns the quantity of items that this crafting task yields per request.
+     *
+     * @param requested the item requested
+     * @return the quantity
      */
     int getQuantityPerRequest(ItemStack requested);
 }

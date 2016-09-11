@@ -20,7 +20,7 @@ public final class RefinedStorageAPI {
     }
 
     /**
-     * @return The Refined Storage API
+     * @return the Refined Storage API
      */
     public static IAPI instance() {
         return API;

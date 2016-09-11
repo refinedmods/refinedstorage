@@ -12,51 +12,52 @@ import javax.annotation.Nullable;
  */
 public interface ICraftingTask {
     /**
-     * @return The pattern
+     * @return the pattern
      */
     ICraftingPattern getPattern();
 
     /**
-     * @return The child task
+     * @return the child task
      */
     @Nullable
     ICraftingTask getChild();
 
     /**
-     * @param child The child task
+     * @param child the child task
      */
     void setChild(@Nullable ICraftingTask child);
 
     /**
-     * @param world   The world
-     * @param network The network
-     * @return If the crafting task is done
+     * @param world   the world
+     * @param network the network
+     * @return true if the crafting task is done, false otherwise
      */
     boolean update(World world, INetworkMaster network);
 
     /**
-     * Gets called when this crafting task is cancelled.
+     * Gets called when the crafting task is cancelled.
      *
-     * @param network The network
+     * @param network the network
      */
     void onCancelled(INetworkMaster network);
 
     /**
      * Writes this crafting task to NBT.
      *
-     * @param tag The NBT tag to write to
+     * @param tag the NBT tag to write to
+     * @return the written NBT tag
      */
     NBTTagCompound writeToNBT(NBTTagCompound tag);
 
     /**
-     * Returns status info used in the tooltip of the crafting monitor.
+     * Returns the status of this crafting task that is used for the tooltip in the crafting monitor.
      *
-     * @return The status
+     * @return the status
      */
     String getStatus();
 
     /**
-     * @return The progress for display in the crafting monitor, -1 for no progress
+     * @return the progress for display in the crafting monitor, or -1 to not display any progress
      */
     int getProgress();
 }
