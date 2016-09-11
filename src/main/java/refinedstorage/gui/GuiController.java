@@ -22,9 +22,9 @@ public class GuiController extends GuiBase {
     public GuiController(ContainerController container, TileController controller) {
         super(container, 176, 181);
 
-        setScrollbar(new Scrollbar(157, 20, 12, 59));
-
         this.controller = controller;
+
+        this.scrollbar = new Scrollbar(157, 20, 12, 59);
     }
 
     @Override
@@ -34,8 +34,8 @@ public class GuiController extends GuiBase {
 
     @Override
     public void update(int x, int y) {
-        getScrollbar().setEnabled(getRows() > VISIBLE_ROWS);
-        getScrollbar().setMaxOffset(getRows() - VISIBLE_ROWS);
+        scrollbar.setEnabled(getRows() > VISIBLE_ROWS);
+        scrollbar.setMaxOffset(getRows() - VISIBLE_ROWS);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class GuiController extends GuiBase {
         int x = 33;
         int y = 26;
 
-        int slot = getScrollbar().getOffset() * 2;
+        int slot = scrollbar.getOffset() * 2;
 
         RenderHelper.enableGUIStandardItemLighting();
 

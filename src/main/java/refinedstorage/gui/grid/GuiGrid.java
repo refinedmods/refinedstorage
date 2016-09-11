@@ -66,11 +66,11 @@ public class GuiGrid extends GuiBase {
     public GuiGrid(ContainerGrid container, IGrid grid) {
         super(container, grid.getType() == EnumGridType.FLUID ? 193 : 227, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 247 : 208);
 
-        setScrollbar(new Scrollbar(174, 20, 12, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN || grid.getType() == EnumGridType.FLUID) ? 70 : 88));
-
         this.container = container;
         this.grid = grid;
         this.wasConnected = grid.isConnected();
+
+        this.scrollbar = new Scrollbar(174, 20, 12, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN || grid.getType() == EnumGridType.FLUID) ? 70 : 88);
     }
 
     @Override
@@ -192,8 +192,8 @@ public class GuiGrid extends GuiBase {
 
         STACKS = stacks;
 
-        getScrollbar().setEnabled(getRows() > getVisibleRows());
-        getScrollbar().setMaxOffset(getRows() - getVisibleRows());
+        scrollbar.setEnabled(getRows() > getVisibleRows());
+        scrollbar.setMaxOffset(getRows() - getVisibleRows());
     }
 
     @Override
@@ -285,7 +285,7 @@ public class GuiGrid extends GuiBase {
 
         this.slotNumber = -1;
 
-        int slot = getScrollbar().getOffset() * 9;
+        int slot = scrollbar.getOffset() * 9;
 
         RenderHelper.enableGUIStandardItemLighting();
 

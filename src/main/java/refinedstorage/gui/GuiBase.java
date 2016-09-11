@@ -33,10 +33,10 @@ public abstract class GuiBase extends GuiContainer {
     private int lastButtonId = 0;
     private int lastSideButtonY = 6;
 
-    private Scrollbar scrollbar;
-
     protected int width;
     protected int height;
+
+    protected Scrollbar scrollbar;
 
     public GuiBase(Container container, int width, int height) {
         super(container);
@@ -45,14 +45,6 @@ public abstract class GuiBase extends GuiContainer {
         this.height = height;
         this.xSize = width;
         this.ySize = height;
-    }
-
-    public void setScrollbar(Scrollbar scrollbar) {
-        this.scrollbar = scrollbar;
-    }
-
-    public Scrollbar getScrollbar() {
-        return scrollbar;
     }
 
     @Override
