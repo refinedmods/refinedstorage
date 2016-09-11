@@ -168,10 +168,10 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         return (left.getPriority() > right.getPriority()) ? -1 : 1;
     };
 
-    private ItemGridHandler itemGridHandler = new ItemGridHandler(this);
-    private FluidGridHandler fluidGridHandler = new FluidGridHandler(this);
+    private IItemGridHandler itemGridHandler = new ItemGridHandler(this);
+    private IFluidGridHandler fluidGridHandler = new FluidGridHandler(this);
 
-    private WirelessGridHandler wirelessGridHandler = new WirelessGridHandler(this);
+    private IWirelessGridHandler wirelessGridHandler = new WirelessGridHandler(this);
 
     private INetworkNodeGraph nodeGraph = new NetworkNodeGraph(this);
 
@@ -183,7 +183,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     private List<ICraftingTask> craftingTasks = new ArrayList<>();
     private List<ICraftingTask> craftingTasksToAdd = new ArrayList<>();
     private List<ICraftingTask> craftingTasksToCancel = new ArrayList<>();
-
     private List<NBTTagCompound> craftingTasksToRead = new ArrayList<>();
 
     private EnergyStorage energy = new EnergyStorage(RefinedStorage.INSTANCE.controllerCapacity);
@@ -284,18 +283,10 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 while (craftingTaskIterator.hasNext()) {
                     ICraftingTask task = craftingTaskIterator.next();
 
-                    if (task.getChild() != null) {
-                        if (updateCraftingTask(task.getChild())) {
-                            task.setChild(null);
+                    if (updateCraftingTask(task)) {
+                        craftingTaskIterator.remove();
 
-                            craftingTasksChanged = true;
-                        }
-                    } else {
-                        if (updateCraftingTask(task)) {
-                            craftingTaskIterator.remove();
-
-                            craftingTasksChanged = true;
-                        }
+                        craftingTasksChanged = true;
                     }
                 }
 
@@ -335,6 +326,14 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     }
 
     private boolean updateCraftingTask(ICraftingTask task) {
+        if (task.getChild() != null) {
+            if (updateCraftingTask(task.getChild())) {
+                task.setChild(null);
+            }
+
+            return false;
+        }
+
         ICraftingPatternContainer container = task.getPattern().getContainer();
 
         return container != null && ticks % container.getSpeed() == 0 && task.update(worldObj, this);
