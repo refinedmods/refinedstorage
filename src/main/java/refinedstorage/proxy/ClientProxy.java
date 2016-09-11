@@ -37,7 +37,7 @@ public class ClientProxy extends CommonProxy {
         for (ModelResourceLocation model : e.getModelRegistry().getKeys()) {
             for (BlockCable cable : cableTypes) {
                 if (model.getResourceDomain().equals(RefinedStorage.ID) && model.getResourcePath().equals(cable.getName()) && !model.getVariant().equals("inventory")) {
-                    e.getModelRegistry().putObject(model, new ModelMultipartContainer(e.getModelRegistry().getObject(model), input -> cable.canRenderInLayer(input)));
+                    e.getModelRegistry().putObject(model, ModelMultipartContainer.fromBlock(e.getModelRegistry().getObject(model), cable));
                 }
             }
         }
