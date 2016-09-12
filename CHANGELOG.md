@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.0.1
+- Fixed advanced tooltips showing in Grid when not configured to do so (raoulvdberge)
+
 ### 1.0
 **NOTE:** Due to the new crafting system, all Crafting Patterns made before 1.0 have to be re-made.
 

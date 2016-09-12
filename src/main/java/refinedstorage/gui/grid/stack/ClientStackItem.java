@@ -48,7 +48,7 @@ public class ClientStackItem implements IClientStack {
 
     @Override
     public String getTooltip() {
-        return Strings.join(stack.getTooltip(Minecraft.getMinecraft().thePlayer, true), "\n");
+        return Strings.join(stack.getTooltip(Minecraft.getMinecraft().thePlayer, Minecraft.getMinecraft().gameSettings.advancedItemTooltips), "\n");
     }
 
     @Override
