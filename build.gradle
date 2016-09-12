@@ -72,12 +72,6 @@ processResources {
     }
 }
 
-artifacts {
-    archives deobfJar
-    archives sourceJar
-    archives javadocJar
-}
-
 publishing {
     publications {
         MyPublication(MavenPublication) {
