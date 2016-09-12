@@ -27,6 +27,8 @@ public class SideButtonDetectorMode extends SideButton {
         } else if (mode == TileDetector.MODE_ABOVE) {
             mode = TileDetector.MODE_UNDER;
         } else if (mode == TileDetector.MODE_UNDER) {
+            mode = TileDetector.MODE_AUTOCRAFTING;
+        } else if (mode == TileDetector.MODE_AUTOCRAFTING) {
             mode = TileDetector.MODE_EQUAL;
         }
 

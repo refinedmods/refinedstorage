@@ -11,7 +11,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
+import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.gui.GuiDetector;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerFluid;
@@ -34,7 +36,7 @@ public class TileDetector extends TileNode implements IComparable, IType {
     }, new ITileDataConsumer<Integer, TileDetector>() {
         @Override
         public void setValue(TileDetector tile, Integer value) {
-            if (value == MODE_UNDER || value == MODE_EQUAL || value == MODE_ABOVE) {
+            if (value == MODE_UNDER || value == MODE_EQUAL || value == MODE_ABOVE || value == MODE_AUTOCRAFTING) {
                 tile.mode = value;
 
                 tile.markDirty();
@@ -69,6 +71,7 @@ public class TileDetector extends TileNode implements IComparable, IType {
     public static final int MODE_UNDER = 0;
     public static final int MODE_EQUAL = 1;
     public static final int MODE_ABOVE = 2;
+    public static final int MODE_AUTOCRAFTING = 3;
 
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
@@ -106,11 +109,31 @@ public class TileDetector extends TileNode implements IComparable, IType {
                 ItemStack slot = itemFilters.getStackInSlot(0);
 
                 if (slot != null) {
-                    ItemStack stack = network.getItemStorage().get(slot, compare);
+                    if (mode == MODE_AUTOCRAFTING) {
+                        boolean found = false;
 
-                    powered = isPowered(stack == null ? null : stack.stackSize);
+                        for (ICraftingTask task : network.getCraftingTasks()) {
+                            for (ItemStack output : task.getPattern().getOutputs()) {
+                                if (CompareUtils.compareStackNoQuantity(slot, output)) {
+                                    found = true;
+
+                                    break;
+                                }
+                            }
+
+                            if (found) {
+                                break;
+                            }
+                        }
+
+                        powered = found;
+                    } else {
+                        ItemStack stack = network.getItemStorage().get(slot, compare);
+
+                        powered = isPowered(stack == null ? null : stack.stackSize);
+                    }
                 } else {
-                    powered = false;
+                    powered = mode == MODE_AUTOCRAFTING && !network.getCraftingTasks().isEmpty();
                 }
             } else if (type == IType.FLUIDS) {
                 FluidStack slot = fluidFilters.getFluids()[0];
