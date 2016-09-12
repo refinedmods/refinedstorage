@@ -25,6 +25,7 @@ import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.autocrafting.ICraftingPatternProvider;
 import refinedstorage.api.autocrafting.registry.ICraftingTaskFactory;
+import refinedstorage.api.autocrafting.task.CraftingTask;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.network.*;
 import refinedstorage.api.network.grid.IFluidGridHandler;
@@ -132,9 +133,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     public static final String NBT_ENERGY_CAPACITY = "EnergyCapacity";
 
     private static final String NBT_CRAFTING_TASKS = "CraftingTasks";
-    private static final String NBT_CRAFTING_TASK_PATTERN = "Pattern";
-    private static final String NBT_CRAFTING_TASK_TYPE = "Type";
-    private static final String NBT_CRAFTING_TASK_CONTAINER = "Container";
 
     private static final Comparator<IItemStorage> ITEM_SIZE_COMPARATOR = (left, right) -> {
         if (left.getStored() == right.getStored()) {
@@ -724,15 +722,15 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     }
 
     public static ICraftingTask readCraftingTask(World world, NBTTagCompound tag) {
-        ItemStack stack = ItemStack.loadItemStackFromNBT(tag.getCompoundTag(NBT_CRAFTING_TASK_PATTERN));
+        ItemStack stack = ItemStack.loadItemStackFromNBT(tag.getCompoundTag(CraftingTask.NBT_PATTERN_STACK));
 
         if (stack != null && stack.getItem() instanceof ICraftingPatternProvider) {
-            TileEntity container = world.getTileEntity(BlockPos.fromLong(tag.getLong(NBT_CRAFTING_TASK_CONTAINER)));
+            TileEntity container = world.getTileEntity(BlockPos.fromLong(tag.getLong(CraftingTask.NBT_PATTERN_CONTAINER)));
 
             if (container instanceof ICraftingPatternContainer) {
                 ICraftingPattern pattern = ((ICraftingPatternProvider) stack.getItem()).create(world, stack, (ICraftingPatternContainer) container);
 
-                ICraftingTaskFactory factory = RefinedStorageAPI.instance().getCraftingTaskRegistry().getFactory(tag.getString(NBT_CRAFTING_TASK_TYPE));
+                ICraftingTaskFactory factory = RefinedStorageAPI.instance().getCraftingTaskRegistry().getFactory(tag.getString(CraftingTask.NBT_PATTERN_TYPE));
 
                 if (factory != null) {
                     return factory.create(world, tag, pattern);
@@ -754,15 +752,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         NBTTagList list = new NBTTagList();
 
         for (ICraftingTask task : craftingTasks) {
-            NBTTagCompound taskTag = new NBTTagCompound();
-
-            task.writeToNBT(taskTag);
-
-            taskTag.setString(NBT_CRAFTING_TASK_TYPE, task.getPattern().getId());
-            taskTag.setTag(NBT_CRAFTING_TASK_PATTERN, task.getPattern().getStack().serializeNBT());
-            taskTag.setLong(NBT_CRAFTING_TASK_CONTAINER, task.getPattern().getContainer().getPosition().toLong());
-
-            list.appendTag(taskTag);
+            list.appendTag(task.writeToNBT(new NBTTagCompound()));
         }
 
         tag.setTag(NBT_CRAFTING_TASKS, list);

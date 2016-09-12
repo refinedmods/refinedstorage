@@ -22,6 +22,10 @@ public abstract class CraftingTask implements ICraftingTask {
     public static final String NBT_SATISFIED = "Satisfied";
     public static final String NBT_CHECKED = "Checked";
     public static final String NBT_TOOK = "Took";
+    public static final String NBT_PATTERN_STACK = "Pattern";
+    public static final String NBT_PATTERN_TYPE = "Type";
+    public static final String NBT_PATTERN_CONTAINER = "Container";
+
     private static final String NBT_CHILD = "Child";
 
     protected ICraftingPattern pattern;
@@ -119,6 +123,10 @@ public abstract class CraftingTask implements ICraftingTask {
         if (child != null) {
             tag.setTag(NBT_CHILD, child.writeToNBT(new NBTTagCompound()));
         }
+
+        tag.setString(NBT_PATTERN_TYPE, pattern.getId());
+        tag.setTag(NBT_PATTERN_STACK, pattern.getStack().serializeNBT());
+        tag.setLong(NBT_PATTERN_CONTAINER, pattern.getContainer().getPosition().toLong());
 
         writeBooleanArray(tag, NBT_CHILDREN_CREATED, childrenCreated);
         writeBooleanArray(tag, NBT_SATISFIED, satisfied);
