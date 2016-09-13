@@ -72,9 +72,13 @@ processResources {
     }
 }
 
-task obfJar(type: Jar, dependsOn: 'reobfJar') {
+task obfJar(type: Jar) {
     from sourceSets.main.output
     classifier 'obf'
+}
+
+reobf {
+    reobf obfJar
 }
 
 task deobfJar(type: Jar) {
