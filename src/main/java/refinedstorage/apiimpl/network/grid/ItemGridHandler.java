@@ -12,7 +12,7 @@ import refinedstorage.api.network.grid.IItemGridHandler;
 import refinedstorage.api.storage.CompareUtils;
 
 public class ItemGridHandler implements IItemGridHandler {
-    public static final int MAX_CRAFTING_PER_REQUEST = 1000;
+    public static final int MAX_CRAFTING_PER_REQUEST = 500;
 
     private INetworkMaster network;
 

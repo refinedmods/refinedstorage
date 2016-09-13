@@ -4,7 +4,6 @@
 - Fixed advanced tooltips showing in Grid when not configured to do so (raoulvdberge)
 - Added "autocrafting mode" in Detector, to check if an item is being crafted. If no item is specified, it'll emit a signal if anything is crafting (raoulvdberge)
 - Added an option for the Crafter to trigger autocrafting with a redstone signal (raoulvdberge)
-- Increased crafting tasks per request cap to 1000 (raoulvdberge)
 - Optimized crafting pattern loading (raoulvdberge)
 - Updated to Forge 2084 (raoulvdberge)
 
