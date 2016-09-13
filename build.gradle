@@ -72,18 +72,9 @@ processResources {
     }
 }
 
-task obfJar(type: Jar) {
-    from sourceSets.main.output
-    classifier 'obf'
-}
-
-reobf {
-    reobf obfJar
-}
-
 task deobfJar(type: Jar) {
     from sourceSets.main.output
-    classifier 'deobf'
+    classifier = 'deobf'
 }
 
 task apiJar(type: Jar, dependsOn: 'sourceMainJava') {
@@ -94,7 +85,9 @@ task apiJar(type: Jar, dependsOn: 'sourceMainJava') {
 }
 
 artifacts {
-    archives obfJar, deobfJar, apiJar
+    archives deobfJar
+    archives apiJar
+    archives jar
 }
 
 publishing {
@@ -103,7 +96,7 @@ publishing {
             groupId = project.group
             artifactId = project.archivesBaseName
             version = project.version + '-' + System.getenv('TRAVIS_BUILD_NUMBER')
-            artifact obfJar
+            artifact jar
             artifact deobfJar
             artifact apiJar
         }
