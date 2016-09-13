@@ -94,7 +94,7 @@ publishing {
             groupId = project.group
             artifactId = project.archivesBaseName
             version = project.version + '-' + System.getenv('TRAVIS_BUILD_NUMBER')
-            artifact source: jar, classifier: 'obf', extension: 'jar'
+            artifact source: jar, classifier: '', extension: 'jar'
             artifact deobfJar
             artifact apiJar
         }
