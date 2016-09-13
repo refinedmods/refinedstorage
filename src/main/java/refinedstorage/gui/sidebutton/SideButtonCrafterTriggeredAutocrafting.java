@@ -5,10 +5,10 @@ import refinedstorage.gui.GuiBase;
 import refinedstorage.tile.TileCrafter;
 import refinedstorage.tile.data.TileDataManager;
 
-public class SideButtonCrafterAutocraftSignal extends SideButton {
+public class SideButtonCrafterTriggeredAutocrafting extends SideButton {
     @Override
     public String getTooltip(GuiBase gui) {
-        return TextFormatting.GREEN + gui.t("sidebutton.refinedstorage:crafter.autocraft_signal") + TextFormatting.RESET + "\n" + gui.t("gui." + (TileCrafter.AUTOCRAFT_SIGNAL.getValue() ? "yes" : "no"));
+        return TextFormatting.GREEN + gui.t("sidebutton.refinedstorage:crafter.triggered_autocrafting") + TextFormatting.RESET + "\n" + gui.t("gui." + (TileCrafter.TRIGGERED_AUTOCRAFTING.getValue() ? "yes" : "no"));
     }
 
     @Override
@@ -19,6 +19,6 @@ public class SideButtonCrafterAutocraftSignal extends SideButton {
 
     @Override
     public void actionPerformed() {
-        TileDataManager.setParameter(TileCrafter.AUTOCRAFT_SIGNAL, !TileCrafter.AUTOCRAFT_SIGNAL.getValue());
+        TileDataManager.setParameter(TileCrafter.TRIGGERED_AUTOCRAFTING, !TileCrafter.TRIGGERED_AUTOCRAFTING.getValue());
     }
 }

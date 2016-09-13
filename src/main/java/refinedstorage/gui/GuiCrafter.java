@@ -1,7 +1,7 @@
 package refinedstorage.gui;
 
 import refinedstorage.container.ContainerCrafter;
-import refinedstorage.gui.sidebutton.SideButtonCrafterAutocraftSignal;
+import refinedstorage.gui.sidebutton.SideButtonCrafterTriggeredAutocrafting;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.tile.TileCrafter;
 
@@ -13,7 +13,7 @@ public class GuiCrafter extends GuiBase {
     @Override
     public void init(int x, int y) {
         addSideButton(new SideButtonRedstoneMode(TileCrafter.REDSTONE_MODE));
-        addSideButton(new SideButtonCrafterAutocraftSignal());
+        addSideButton(new SideButtonCrafterTriggeredAutocrafting());
     }
 
     @Override

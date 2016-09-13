@@ -26,21 +26,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TileCrafter extends TileNode implements ICraftingPatternContainer {
-    public static final TileDataParameter<Boolean> AUTOCRAFT_SIGNAL = new TileDataParameter<>(DataSerializers.BOOLEAN, false, new ITileDataProducer<Boolean, TileCrafter>() {
+    public static final TileDataParameter<Boolean> TRIGGERED_AUTOCRAFTING = new TileDataParameter<>(DataSerializers.BOOLEAN, false, new ITileDataProducer<Boolean, TileCrafter>() {
         @Override
         public Boolean getValue(TileCrafter tile) {
-            return tile.autocraftSignal;
+            return tile.triggeredAutocrafting;
         }
     }, new ITileDataConsumer<Boolean, TileCrafter>() {
         @Override
         public void setValue(TileCrafter tile, Boolean value) {
-            tile.autocraftSignal = value;
+            tile.triggeredAutocrafting = value;
 
             tile.markDirty();
         }
     });
 
-    private static final String NBT_AUTOCRAFT_SIGNAL = "AutocraftSignal";
+    private static final String NBT_TRIGGERED_AUTOCRAFTING = "TriggeredAutocrafting";
 
     private ItemHandlerBasic patterns = new ItemHandlerBasic(9, this, stack -> stack.getItem() instanceof ICraftingPatternProvider) {
         @Override
@@ -61,10 +61,10 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED);
 
-    private boolean autocraftSignal = false;
+    private boolean triggeredAutocrafting = false;
 
     public TileCrafter() {
-        dataManager.addWatchedParameter(AUTOCRAFT_SIGNAL);
+        dataManager.addWatchedParameter(TRIGGERED_AUTOCRAFTING);
     }
 
     private void rebuildPatterns() {
@@ -107,7 +107,7 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
 
     @Override
     public void updateNode() {
-        if (autocraftSignal && worldObj.isBlockPowered(pos)) {
+        if (triggeredAutocrafting && worldObj.isBlockPowered(pos)) {
             for (ICraftingPattern pattern : actualPatterns) {
                 for (ItemStack output : pattern.getOutputs()) {
                     NetworkUtils.scheduleCraftingTaskIfUnscheduled(network, output, 1, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
@@ -131,8 +131,8 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        if (tag.hasKey(NBT_AUTOCRAFT_SIGNAL)) {
-            autocraftSignal = tag.getBoolean(NBT_AUTOCRAFT_SIGNAL);
+        if (tag.hasKey(NBT_TRIGGERED_AUTOCRAFTING)) {
+            triggeredAutocrafting = tag.getBoolean(NBT_TRIGGERED_AUTOCRAFTING);
         }
 
         readItems(patterns, 0, tag);
@@ -143,7 +143,7 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        tag.setBoolean(NBT_AUTOCRAFT_SIGNAL, autocraftSignal);
+        tag.setBoolean(NBT_TRIGGERED_AUTOCRAFTING, triggeredAutocrafting);
 
         writeItems(patterns, 0, tag);
         writeItems(upgrades, 1, tag);
