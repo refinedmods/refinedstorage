@@ -466,19 +466,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
         for (INetworkNode node : nodeGraph.all()) {
             if (node instanceof ICraftingPatternContainer && node.canUpdate()) {
-                ICraftingPatternContainer container = (ICraftingPatternContainer) node;
-
-                for (int i = 0; i < container.getPatterns().getSlots(); ++i) {
-                    ItemStack stack = container.getPatterns().getStackInSlot(i);
-
-                    if (stack != null) {
-                        ICraftingPattern pattern = ((ICraftingPatternProvider) stack.getItem()).create(worldObj, stack, container);
-
-                        if (pattern.isValid()) {
-                            patterns.add(pattern);
-                        }
-                    }
-                }
+                patterns.addAll(((ICraftingPatternContainer) node).getPatterns());
             }
         }
 

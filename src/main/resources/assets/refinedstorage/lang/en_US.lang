@@ -104,6 +104,8 @@ sidebutton.refinedstorage:detector.mode.1=Emit signal when on the amount
 sidebutton.refinedstorage:detector.mode.2=Emit signal when above the amount
 sidebutton.refinedstorage:detector.mode.3=Emit signal when is autocrafting
 
+sidebutton.refinedstorage:crafter.autocraft_signal=Trigger autocrafting with redstone signal
+
 block.refinedstorage:controller.0.name=Controller
 block.refinedstorage:controller.1.name=Creative Controller
 block.refinedstorage:cable.name=Cable

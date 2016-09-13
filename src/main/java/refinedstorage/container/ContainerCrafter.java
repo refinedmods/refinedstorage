@@ -11,7 +11,7 @@ public class ContainerCrafter extends ContainerBase {
         super(crafter, player);
 
         for (int i = 0; i < 9; ++i) {
-            addSlotToContainer(new SlotItemHandler(crafter.getPatterns(), i, 8 + (18 * i), 20));
+            addSlotToContainer(new SlotItemHandler(crafter.getPatternItems(), i, 8 + (18 * i), 20));
         }
 
         for (int i = 0; i < 4; ++i) {
