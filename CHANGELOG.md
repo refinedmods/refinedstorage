@@ -4,6 +4,8 @@
 - Fixed advanced tooltips showing in Grid when not configured to do so (raoulvdberge)
 - Added "autocrafting mode" in Detector, to check if an item is being crafted. If no item is specified, it'll emit a signal if anything is crafting (raoulvdberge)
 - Added an option for the Crafter to trigger autocrafting with a redstone signal (raoulvdberge)
+- Increased crafting tasks per request cap to 1000 (raoulvdberge)
+- Optimized crafting pattern loading (raoulvdberge)
 
 ### 1.0
 **NOTE:** Due to the new crafting system, all Crafting Patterns made before 1.0 have to be re-made.
