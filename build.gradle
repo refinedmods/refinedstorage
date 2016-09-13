@@ -20,7 +20,7 @@ apply plugin: 'maven'
 apply plugin: 'maven-publish'
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.0.1"
+version = "1.0.2"
 group = "refinedstorage"
 archivesBaseName = "refinedstorage"
 
@@ -72,6 +72,11 @@ processResources {
     }
 }
 
+task obfJar(type: Jar, dependsOn: 'reobfJar') {
+    from sourceSets.main.output
+    classifier 'obf'
+}
+
 task deobfJar(type: Jar) {
     from sourceSets.main.output
     classifier 'deobf'
@@ -85,7 +90,7 @@ task apiJar(type: Jar, dependsOn: 'sourceMainJava') {
 }
 
 artifacts {
-	archives deobfJar, apiJar
+    archives obfJar, deobfJar, apiJar
 }
 
 publishing {
@@ -94,7 +99,7 @@ publishing {
             groupId = project.group
             artifactId = project.archivesBaseName
             version = project.version + '-' + System.getenv('TRAVIS_BUILD_NUMBER')
-            artifact source: jar, classifier: null, extension: 'jar'
+            artifact obfJar
             artifact deobfJar
             artifact apiJar
         }
