@@ -72,6 +72,22 @@ processResources {
     }
 }
 
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier 'deobf'
+}
+
+task apiJar(type: Jar, dependsOn: 'sourceMainJava') {
+    from sourceSets.main.allSource
+	from sourceSets.main.output
+	include 'refinedstorage/api/**/*'
+	classifier = 'api'
+}
+
+artifacts {
+	archives deobfJar, apiJar
+}
+
 publishing {
     publications {
         MyPublication(MavenPublication) {
@@ -79,6 +95,9 @@ publishing {
             groupId = project.group
             artifactId = project.archivesBaseName
             version = project.version + '-' + System.getenv('TRAVIS_BUILD_NUMBER')
+            artifact jar
+            artifact deobfJar
+            artifact apiJar
         }
     }
 }
