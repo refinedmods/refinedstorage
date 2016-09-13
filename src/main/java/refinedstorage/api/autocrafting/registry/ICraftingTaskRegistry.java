@@ -4,7 +4,7 @@ import javax.annotation.Nullable;
 
 /**
  * A registry that stores crafting task factories.
- * Implement this for adding custom crafting tasks.
+ * Implement this to handle the loading of custom crafting tasks.
  */
 public interface ICraftingTaskRegistry {
     /**
