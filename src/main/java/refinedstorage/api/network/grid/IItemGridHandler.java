@@ -36,7 +36,7 @@ public interface IItemGridHandler {
      * Called when a player is trying to insert an item that it is holding in their hand in the GUI.
      *
      * @param player the player that is attempting the insert
-     * @param single if we are only inserting a single item
+     * @param single true if we are only inserting a single item, false otherwise
      */
     void onInsertHeldItem(EntityPlayerMP player, boolean single);
 
@@ -52,7 +52,7 @@ public interface IItemGridHandler {
      * Called when a player wants to cancel a crafting task.
      *
      * @param id    the task id, or -1 to cancel all tasks
-     * @param depth the child depth of this task to cancel
+     * @param depth the depth to cancel. 0 to cancel the entire task, or n to cancel the nth child of the task
      */
     void onCraftingCancelRequested(int id, int depth);
 }

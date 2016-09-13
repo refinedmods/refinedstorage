@@ -21,13 +21,13 @@ public interface ISoldererRegistry {
      * Returns a solderer recipe from the rows.
      *
      * @param rows an item handler, where slots 0 - 2 are the rows
-     * @return the {@link ISoldererRecipe}, or null if no recipe was found
+     * @return the recipe, or null if no recipe was found
      */
     @Nullable
     ISoldererRecipe getRecipe(@Nonnull IItemHandler rows);
 
     /**
-     * @return a list with all the solderer recipes, do NOT modify
+     * @return a list with all the solderer recipes
      */
     List<ISoldererRecipe> getRecipes();
 }

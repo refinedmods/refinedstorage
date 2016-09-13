@@ -169,7 +169,7 @@ public interface INetworkMaster {
      *
      * @param stack    the stack prototype to insert, do NOT modify
      * @param size     the amount of that prototype that has to be inserted
-     * @param simulate if we are simulating
+     * @param simulate true if we are simulating, false otherwise
      * @return null if the insert was successful, or a stack with the remainder
      */
     @Nullable
@@ -191,7 +191,7 @@ public interface INetworkMaster {
      *
      * @param stack    the stack prototype to insert, do NOT modify
      * @param size     the amount of that prototype that has to be inserted
-     * @param simulate if we are simulating
+     * @param simulate true if we are simulating, false otherwise
      * @return null if the insert was successful, or a stack with the remainder
      */
     @Nullable

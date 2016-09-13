@@ -6,7 +6,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.ArrayUtils;
 
 /**
- * Utilities for comparing.
+ * Utilities for comparing item and fluid stacks.
  */
 public final class CompareUtils {
     public static final int COMPARE_DAMAGE = 1;
