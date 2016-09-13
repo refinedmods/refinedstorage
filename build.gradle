@@ -81,7 +81,7 @@ task apiJar(type: Jar, dependsOn: 'sourceMainJava') {
     from sourceSets.main.allSource
 	from sourceSets.main.output
 	include 'refinedstorage/api/**/*'
-	classifier = 'api'
+	classifier 'api'
 }
 
 artifacts {
@@ -95,7 +95,7 @@ publishing {
             groupId = project.group
             artifactId = project.archivesBaseName
             version = project.version + '-' + System.getenv('TRAVIS_BUILD_NUMBER')
-            artifact jar
+            artifact source: jar, classifier: 'obf', extension: 'jar'
             artifact deobfJar
             artifact apiJar
         }
