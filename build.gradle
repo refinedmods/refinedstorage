@@ -91,7 +91,6 @@ artifacts {
 publishing {
     publications {
         MyPublication(MavenPublication) {
-            from components.java
             groupId = project.group
             artifactId = project.archivesBaseName
             version = project.version + '-' + System.getenv('TRAVIS_BUILD_NUMBER')
