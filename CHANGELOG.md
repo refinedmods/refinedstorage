@@ -3,6 +3,7 @@
 ### 1.0.2
 - Fixed processing patterns not handling item insertion sometimes (raoulvdberge)
 - Removed crafting task limit in crafting start GUI (raoulvdberge)
+- +64 in crafting start GUI now gives 64 from the first time instead of 65 (raoulvdberge)
 
 ### 1.0.1
 - Fixed advanced tooltips showing in Grid when not configured to do so (raoulvdberge)

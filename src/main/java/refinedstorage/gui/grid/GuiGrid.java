@@ -373,7 +373,7 @@ public class GuiGrid extends GuiBase {
                     ClientStackItem stack = (ClientStackItem) STACKS.get(slotNumber);
 
                     if (stack.isCraftable() && (stack.getQuantity() == 0 || (GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown()))) {
-                        FMLCommonHandler.instance().showGuiScreen(new GuiCraftingSettings(this, container.getPlayer(), stack));
+                        FMLCommonHandler.instance().showGuiScreen(new GuiCraftingStart(this, container.getPlayer(), stack));
                     } else {
                         int flags = 0;
 
