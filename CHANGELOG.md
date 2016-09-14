@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.0.2
+- Fixed processing patterns not handling item insertion sometimes (raoulvdberge)
+
 ### 1.0.1
 - Fixed advanced tooltips showing in Grid when not configured to do so (raoulvdberge)
 - Added "autocrafting mode" in Detector, to check if an item is being crafted. If no item is specified, it'll emit a signal if anything is crafting (raoulvdberge)

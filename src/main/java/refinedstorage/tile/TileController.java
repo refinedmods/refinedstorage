@@ -569,10 +569,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     }
 
     private boolean checkProcessing(ItemStack stack, ICraftingTask task) {
-        if (task.getChild() instanceof CraftingTaskProcessing) {
-            if (checkProcessing(stack, task.getChild())) {
-                return true;
-            }
+        if (task.getChild() != null) {
+            return checkProcessing(stack, task.getChild());
         }
 
         return task instanceof CraftingTaskProcessing && ((CraftingTaskProcessing) task).onInserted(stack);
