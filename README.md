@@ -1,4 +1,4 @@
-# Refined Storage [![Build Status](https://travis-ci.org/raoulvdberge/refinedstorage.svg?branch=mc1.10)](https://travis-ci.org/raoulvdberge/refinedstorage) [![Download](https://api.bintray.com/packages/raoulvdberge/dev/refinedstorage/images/download.svg)](https://bintray.com/raoulvdberge/dev/refinedstorage/_latestVersion) ![CurseForge](http://cf.way2muchnoise.eu/full_243076_downloads.svg)
+# Refined Storage [![Build Status](https://travis-ci.org/raoulvdberge/refinedstorage.svg?branch=mc1.10)](https://travis-ci.org/raoulvdberge/refinedstorage) [![Download](https://api.bintray.com/packages/raoulvdberge/dev/refinedstorage/images/download.svg)](https://bintray.com/raoulvdberge/dev/refinedstorage/_latestVersion) [![CurseForge](http://cf.way2muchnoise.eu/full_243076_downloads.svg)](http://minecraft.curseforge.com/projects/refined-storage)
 
 A Minecraft mod all about storage.
 
