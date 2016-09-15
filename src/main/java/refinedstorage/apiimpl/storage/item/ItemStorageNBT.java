@@ -74,6 +74,13 @@ public abstract class ItemStorageNBT implements IItemStorage {
         }
     }
 
+    // ItemHandlerHelper#copyStackWithSize is not null-safe!
+    private ItemStack safeCopy(ItemStack stack, int size) {
+        ItemStack newStack = stack.copy();
+        newStack.stackSize = size;
+        return newStack;
+    }
+
     /**
      * Writes the items to the NBT tag.
      */
@@ -158,7 +165,7 @@ public abstract class ItemStorageNBT implements IItemStorage {
             if (!simulate) {
                 tag.setInteger(NBT_STORED, getStored() + remainingSpace);
 
-                stacks.add(ItemHandlerHelper.copyStackWithSize(stack, remainingSpace));
+                stacks.add(safeCopy(stack, remainingSpace));
 
                 onStorageChanged();
             }
@@ -168,7 +175,7 @@ public abstract class ItemStorageNBT implements IItemStorage {
             if (!simulate) {
                 tag.setInteger(NBT_STORED, getStored() + size);
 
-                stacks.add(ItemHandlerHelper.copyStackWithSize(stack, size));
+                stacks.add(safeCopy(stack, size));
 
                 onStorageChanged();
             }

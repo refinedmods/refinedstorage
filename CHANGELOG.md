@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.0.3
+- Fixed item loading issue (raoulvdberge)
+
 ### 1.0.2
 - Fixed processing patterns not handling item insertion sometimes (raoulvdberge)
 - Removed crafting task limit in crafting start GUI (raoulvdberge)
