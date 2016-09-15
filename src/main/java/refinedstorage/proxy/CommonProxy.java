@@ -95,6 +95,7 @@ public class CommonProxy {
         registerTile(TileNetworkTransmitter.class, "network_transmitter");
         registerTile(TileFluidInterface.class, "fluid_interface");
         registerTile(TileFluidStorage.class, "fluid_storage");
+        registerTile(TileDiskManipulator.class, "disk_manipulator");
 
         registerBlock(RefinedStorageBlocks.CONTROLLER);
         registerBlock(RefinedStorageBlocks.GRID);
@@ -119,6 +120,7 @@ public class CommonProxy {
         registerBlock(RefinedStorageBlocks.MACHINE_CASING);
         registerBlock(RefinedStorageBlocks.NETWORK_TRANSMITTER);
         registerBlock(RefinedStorageBlocks.NETWORK_RECEIVER);
+        registerBlock(RefinedStorageBlocks.DISK_MANIPULATOR);
 
         registerItem(RefinedStorageItems.QUARTZ_ENRICHED_IRON);
         registerItem(RefinedStorageItems.STORAGE_DISK);
