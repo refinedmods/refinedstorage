@@ -131,7 +131,6 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
                 fluidStorages[slot].writeToNBT();
             }
 
-
             return super.extractItem(slot, amount, simulate);
         }
     };
