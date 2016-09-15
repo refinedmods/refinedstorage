@@ -114,6 +114,7 @@ block.refinedstorage:grid.1.name=Crafting Grid
 block.refinedstorage:grid.2.name=Pattern Grid
 block.refinedstorage:grid.3.name=Fluid Grid
 block.refinedstorage:disk_drive.name=Disk Drive
+block.refinedstorage:disk_manipulator.name=Disk Manipulator
 block.refinedstorage:external_storage.name=External Storage
 block.refinedstorage:importer.name=Importer
 block.refinedstorage:exporter.name=Exporter
