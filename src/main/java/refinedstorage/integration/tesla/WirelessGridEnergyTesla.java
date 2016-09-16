@@ -3,29 +3,27 @@ package refinedstorage.integration.tesla;
 import net.darkhax.tesla.api.ITeslaConsumer;
 import net.darkhax.tesla.api.ITeslaHolder;
 import net.minecraft.item.ItemStack;
-import refinedstorage.item.ItemWirelessGrid;
+import refinedstorage.RefinedStorageItems;
 
 public class WirelessGridEnergyTesla implements ITeslaHolder, ITeslaConsumer {
-    private ItemWirelessGrid wirelessGrid;
     private ItemStack stack;
 
-    public WirelessGridEnergyTesla(ItemWirelessGrid wirelessGrid, ItemStack stack) {
-        this.wirelessGrid = wirelessGrid;
+    public WirelessGridEnergyTesla(ItemStack stack) {
         this.stack = stack;
     }
 
     @Override
     public long getStoredPower() {
-        return wirelessGrid.getEnergyStored(stack);
+        return RefinedStorageItems.WIRELESS_GRID.getEnergyStored(stack);
     }
 
     @Override
     public long getCapacity() {
-        return wirelessGrid.getMaxEnergyStored(stack);
+        return RefinedStorageItems.WIRELESS_GRID.getMaxEnergyStored(stack);
     }
 
     @Override
     public long givePower(long power, boolean simulated) {
-        return wirelessGrid.receiveEnergy(stack, (int) power, simulated);
+        return RefinedStorageItems.WIRELESS_GRID.receiveEnergy(stack, (int) power, simulated);
     }
 }

@@ -2,8 +2,10 @@
 
 ### 1.0.3
 - Fixed item loading issue (raoulvdberge)
+- Added integration for Forge energy (raoulvdberge)
 - Solderer now accepts items from any side, allowing easier automation (raoulvdberge)
 - Solderer is now intelligent about items in slots, and will only accept an item if it is part of a recipe (raoulvdberge)
+- Updated to Forge 2088 (raoulvdberge)
 
 ### 1.0.2
 - Fixed processing patterns not handling item insertion sometimes (raoulvdberge)

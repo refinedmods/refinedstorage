@@ -16,6 +16,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
@@ -47,6 +48,7 @@ import refinedstorage.block.BlockController;
 import refinedstorage.block.EnumControllerType;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
+import refinedstorage.integration.forgeenergy.ControllerEnergyForge;
 import refinedstorage.integration.ic2.ControllerEnergyIC2;
 import refinedstorage.integration.ic2.ControllerEnergyIC2None;
 import refinedstorage.integration.ic2.IControllerEnergyIC2;
@@ -184,6 +186,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     private List<NBTTagCompound> craftingTasksToRead = new ArrayList<>();
 
     private EnergyStorage energy = new EnergyStorage(RefinedStorage.INSTANCE.controllerCapacity);
+    private ControllerEnergyForge energyForge = new ControllerEnergyForge(this);
     private IControllerEnergyIC2 energyEU;
     private ControllerEnergyTesla energyTesla;
 
@@ -827,6 +830,10 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+        if (capability == CapabilityEnergy.ENERGY) {
+            return (T) energyForge;
+        }
+
         if (energyTesla != null && (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER)) {
             return (T) energyTesla;
         }
@@ -836,6 +843,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-        return (energyTesla != null && (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER)) || super.hasCapability(capability, facing);
+        return capability == CapabilityEnergy.ENERGY
+            || (energyTesla != null && (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER))
+            || super.hasCapability(capability, facing);
     }
 }
