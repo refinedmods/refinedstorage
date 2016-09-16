@@ -15,8 +15,7 @@
   "variants": {
     "inventory": [
       {
-        "transform": "forge:default-block",
-        "y": 0
+        "transform": "forge:default-block"
       }
     ],
     "normal": {

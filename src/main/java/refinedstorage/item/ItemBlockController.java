@@ -20,21 +20,16 @@ public class ItemBlockController extends ItemBlockBase {
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
         if (stack.getMetadata() != EnumControllerType.CREATIVE.getId()) {
-            int energyStored = 0;
-            int energyCapacity = RefinedStorage.INSTANCE.controllerCapacity;
-
-            if (stack.getTagCompound() != null) {
-                if (stack.getTagCompound().hasKey(TileController.NBT_ENERGY)) {
-                    energyStored = stack.getTagCompound().getInteger(TileController.NBT_ENERGY);
-                }
-
-                if (stack.getTagCompound().hasKey(TileController.NBT_ENERGY_CAPACITY)) {
-                    energyCapacity = stack.getTagCompound().getInteger(TileController.NBT_ENERGY_CAPACITY);
-                }
-            }
-
-            tooltip.add(I18n.format("misc.refinedstorage:energy_stored", energyStored, energyCapacity));
+            tooltip.add(I18n.format("misc.refinedstorage:energy_stored", getEnergyStored(stack), getEnergyCapacity(stack)));
         }
+    }
+
+    public static int getEnergyStored(ItemStack stack) {
+        return (stack.hasTagCompound() && stack.getTagCompound().hasKey(TileController.NBT_ENERGY)) ? stack.getTagCompound().getInteger(TileController.NBT_ENERGY) : 0;
+    }
+
+    public static int getEnergyCapacity(ItemStack stack) {
+        return (stack.hasTagCompound() && stack.getTagCompound().hasKey(TileController.NBT_ENERGY_CAPACITY)) ? stack.getTagCompound().getInteger(TileController.NBT_ENERGY_CAPACITY) : RefinedStorage.INSTANCE.controllerCapacity;
     }
 
     @Override

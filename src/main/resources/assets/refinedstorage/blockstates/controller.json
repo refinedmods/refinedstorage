@@ -9,12 +9,6 @@
     }
   },
   "variants": {
-    "inventory": [
-      {
-        "y": 0,
-        "transform": "forge:default-block"
-      }
-    ],
     "energy": {
       "0": {
         "textures": {
@@ -55,12 +49,6 @@
         "textures": {
           "front": "refinedstorage:blocks/controller_7"
         }
-      }
-    },
-    "type": {
-      "normal": {
-      },
-      "creative": {
       }
     },
     "direction": {

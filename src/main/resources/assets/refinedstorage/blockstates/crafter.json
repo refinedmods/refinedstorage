@@ -13,7 +13,6 @@
         "textures": {
           "front": "refinedstorage:blocks/crafter_disconnected"
         },
-        "transform": "forge:default-block",
         "y": 0
       }
     ],
