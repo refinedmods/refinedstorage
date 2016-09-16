@@ -47,7 +47,7 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            if (worldObj != null) {
+            if (worldObj != null && !worldObj.isRemote) {
                 rebuildPatterns();
             }
 
