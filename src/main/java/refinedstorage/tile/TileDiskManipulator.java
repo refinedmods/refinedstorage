@@ -31,7 +31,9 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
     public static final TileDataParameter<Integer> TYPE = IType.createParameter();
-    public static final TileDataParameter<Integer> IOMODE = new TileDataParameter<>(DataSerializers.VARINT, 1, new ITileDataProducer<Integer, TileDiskManipulator>() {
+
+    public static final int INSERT = 0, EXTRACT = 1;
+    public static final TileDataParameter<Integer> IO_MODE = new TileDataParameter<>(DataSerializers.VARINT, INSERT, new ITileDataProducer<Integer, TileDiskManipulator>() {
         @Override
         public Integer getValue(TileDiskManipulator tile) {
             return tile.ioMode;
@@ -40,10 +42,9 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         @Override
         public void setValue(TileDiskManipulator tile, Integer value) {
             tile.ioMode = value;
+            tile.markDirty();
         }
     });
-
-    public static final int INSERT = 0, EXTRACT = 1;
 
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
@@ -61,6 +62,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(MODE);
         dataManager.addWatchedParameter(TYPE);
+        dataManager.addWatchedParameter(IO_MODE);
 
         itemStorages = new ItemStorage[6];
         fluidStorages = new FluidStorage[6];
@@ -212,16 +214,21 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         int ii = 0;
         do {
             ItemStack stack = null;
-            while (storage.getItems().size() > ii && stack == null)
+            while (storage.getItems().size() > ii && stack == null) {
                 stack = storage.getItems().get(ii++);
-            if (stack != null) extracted = storage.extractItem(stack, 1, compare);
+            }
+            if (stack != null) {
+                extracted = storage.extractItem(stack, 1, compare);
+            }
         } while (storage.getItems().size() > ii && extracted == null);
         if (extracted == null) {
             moveDriveToOutput(slot);
             return;
         }
         ItemStack leftOver = network.insertItem(extracted, extracted.stackSize, false);
-        if (leftOver != null) storage.insertItem(leftOver, leftOver.stackSize, false);
+        if (leftOver != null) {
+            storage.insertItem(leftOver, leftOver.stackSize, false);
+        }
     }
 
     private void extractFromNetwork(ItemStorage storage, int slot) {
@@ -237,15 +244,21 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         int ii = 0;
         do {
             FluidStack stack = storage.getStacks().get(ii);
-            while (stack == null && storage.getStacks().size() > ii) ii++;
-            if (stack != null) extracted = storage.extractFluid(stack, 1, compare);
+            while (stack == null && storage.getStacks().size() > ii) {
+                ii++;
+            }
+            if (stack != null) {
+                extracted = storage.extractFluid(stack, 1, compare);
+            }
         } while (extracted == null && storage.getStacks().size() > ii);
         if (extracted == null) {
             moveDriveToOutput(slot);
             return;
         }
         FluidStack leftOver = network.insertFluid(extracted, extracted.amount, false);
-        if (leftOver != null) storage.insertFluid(leftOver, leftOver.amount, false);
+        if (leftOver != null) {
+            storage.insertFluid(leftOver, leftOver.amount, false);
+        }
     }
 
     private void extractFromNetwork(FluidStorage storage, int slot) {
@@ -255,8 +268,12 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         ItemStack disk = disks.getStackInSlot(slot);
         if (disk != null) {
             int i = 6;
-            while (disks.getStackInSlot(i) != null && i < 12) i++;
-            if (i == 12) return;
+            while (disks.getStackInSlot(i) != null && i < 12) {
+                i++;
+            }
+            if (i == 12) {
+                return;
+            }
             if (slot < 6) {
                 if (itemStorages[slot] != null) {
                     itemStorages[slot].writeToNBT();
