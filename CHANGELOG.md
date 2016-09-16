@@ -5,6 +5,7 @@
 - Added integration for Forge energy (raoulvdberge)
 - Solderer now accepts items from any side, allowing easier automation (raoulvdberge)
 - Solderer is now intelligent about items in slots, and will only accept an item if it is part of a recipe (raoulvdberge)
+- Changed recipe for upgrades in the Solderer, they now just take 1 of the unique item instead of 2, using redstone instead (raoulvdberge)
 - Updated to Forge 2088 (raoulvdberge)
 
 ### 1.0.2
