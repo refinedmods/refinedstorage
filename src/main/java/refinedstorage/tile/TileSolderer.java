@@ -47,7 +47,7 @@ public class TileSolderer extends TileNode {
 
             for (ISoldererRecipe recipe : RefinedStorageAPI.instance().getSoldererRegistry().getRecipes()) {
                 for (int i = 0; i < 3; ++i) {
-                    if (CompareUtils.compareStackNoQuantity(recipe.getRow(i), stack)) {
+                    if (CompareUtils.compareStackNoQuantity(recipe.getRow(i), stack) || CompareUtils.compareStackOreDict(recipe.getRow(i), stack)) {
                         possibleSlots.add(i);
                     }
                 }
