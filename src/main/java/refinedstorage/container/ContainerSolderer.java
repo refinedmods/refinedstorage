@@ -21,7 +21,7 @@ public class ContainerSolderer extends ContainerBase {
             y += 18;
         }
 
-        addSlotToContainer(new SlotOutput(solderer.getItems(), 3, 127, 38));
+        addSlotToContainer(new SlotOutput(solderer.getResult(), 0, 127, 38));
 
         for (int i = 0; i < 4; ++i) {
             addSlotToContainer(new SlotItemHandler(solderer.getUpgrades(), i, 187, 6 + (i * 18)));
