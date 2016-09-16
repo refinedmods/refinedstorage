@@ -1,15 +1,14 @@
-package refinedstorage.apiimpl.solderer;
+package refinedstorage.api.solderer;
 
 import net.minecraft.item.ItemStack;
-import refinedstorage.api.solderer.ISoldererRecipe;
 
 import javax.annotation.Nonnull;
 
 /**
- * A solderer recipe with basic behaviour.
- * Implement {@link ISoldererRecipe} for custom behaviour.
+ * A basic solderer recipe.
+ * Implement {@link ISoldererRecipe} for custom behavior.
  */
-public class SoldererRecipeBasic implements ISoldererRecipe {
+public class SoldererRecipe implements ISoldererRecipe {
     private int duration;
     private ItemStack result;
     private ItemStack[] rows;
@@ -19,7 +18,7 @@ public class SoldererRecipeBasic implements ISoldererRecipe {
      * @param duration The duration in ticks
      * @param rows     The rows of this recipe, has to be 3 rows (null for an empty row)
      */
-    public SoldererRecipeBasic(@Nonnull ItemStack result, int duration, ItemStack... rows) {
+    public SoldererRecipe(@Nonnull ItemStack result, int duration, ItemStack... rows) {
         if (rows.length != 3) {
             throw new IllegalArgumentException("Solderer recipe expects 3 rows, got " + rows.length + " rows");
         }

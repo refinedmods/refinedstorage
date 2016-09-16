@@ -18,6 +18,7 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.api.RefinedStorageAPI;
+import refinedstorage.api.solderer.SoldererRecipe;
 import refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactoryNormal;
 import refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactoryProcessing;
 import refinedstorage.apiimpl.solderer.*;
@@ -208,7 +209,7 @@ public class CommonProxy {
         );
 
         // Disk Drive
-        RefinedStorageAPI.instance().getSoldererRegistry().addRecipe(new SoldererRecipeBasic(
+        RefinedStorageAPI.instance().getSoldererRegistry().addRecipe(new SoldererRecipe(
             new ItemStack(RefinedStorageBlocks.DISK_DRIVE),
             500,
             new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
@@ -250,7 +251,7 @@ public class CommonProxy {
         );
 
         // Crafting Grid
-        RefinedStorageAPI.instance().getSoldererRegistry().addRecipe(new SoldererRecipeBasic(
+        RefinedStorageAPI.instance().getSoldererRegistry().addRecipe(new SoldererRecipe(
             new ItemStack(RefinedStorageBlocks.GRID, 1, EnumGridType.CRAFTING.getId()),
             500,
             new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
@@ -259,7 +260,7 @@ public class CommonProxy {
         ));
 
         // Pattern Grid
-        RefinedStorageAPI.instance().getSoldererRegistry().addRecipe(new SoldererRecipeBasic(
+        RefinedStorageAPI.instance().getSoldererRegistry().addRecipe(new SoldererRecipe(
             new ItemStack(RefinedStorageBlocks.GRID, 1, EnumGridType.PATTERN.getId()),
             500,
             new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
@@ -268,7 +269,7 @@ public class CommonProxy {
         ));
 
         // Fluid Grid
-        RefinedStorageAPI.instance().getSoldererRegistry().addRecipe(new SoldererRecipeBasic(
+        RefinedStorageAPI.instance().getSoldererRegistry().addRecipe(new SoldererRecipe(
             new ItemStack(RefinedStorageBlocks.GRID, 1, EnumGridType.FLUID.getId()),
             500,
             new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
@@ -562,7 +563,7 @@ public class CommonProxy {
         ));
 
         // Interface
-        RefinedStorageAPI.instance().getSoldererRegistry().addRecipe(new SoldererRecipeBasic(
+        RefinedStorageAPI.instance().getSoldererRegistry().addRecipe(new SoldererRecipe(
             new ItemStack(RefinedStorageBlocks.INTERFACE),
             200,
             new ItemStack(RefinedStorageBlocks.IMPORTER),
@@ -571,7 +572,7 @@ public class CommonProxy {
         ));
 
         // Fluid Interface
-        RefinedStorageAPI.instance().getSoldererRegistry().addRecipe(new SoldererRecipeBasic(
+        RefinedStorageAPI.instance().getSoldererRegistry().addRecipe(new SoldererRecipe(
             new ItemStack(RefinedStorageBlocks.FLUID_INTERFACE),
             200,
             new ItemStack(Items.BUCKET),
