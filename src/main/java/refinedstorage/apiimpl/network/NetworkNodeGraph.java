@@ -163,13 +163,15 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
     @Override
     public void disconnectAll() {
-        for (INetworkNode node : nodes) {
+        List<INetworkNode> oldNodes = new ArrayList<>(nodes);
+
+        nodes.clear();
+
+        for (INetworkNode node : oldNodes) {
             if (node.isConnected()) {
                 node.onDisconnected(controller);
             }
         }
-
-        nodes.clear();
 
         controller.getDataManager().sendParameterToWatchers(TileController.NODES);
     }
