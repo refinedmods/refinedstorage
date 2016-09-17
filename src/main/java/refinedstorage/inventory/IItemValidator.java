@@ -6,22 +6,22 @@ import refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
 import refinedstorage.apiimpl.storage.item.ItemStorageNBT;
 
 public interface IItemValidator {
-    IItemValidator itemStorageDisk = new ItemValidatorBasic(RefinedStorageItems.STORAGE_DISK) {
+    IItemValidator ITEM_STORAGE_DISK = new ItemValidatorBasic(RefinedStorageItems.STORAGE_DISK) {
         @Override
         public boolean isValid(ItemStack disk) {
             return super.isValid(disk) && ItemStorageNBT.isValid(disk);
         }
     };
-    IItemValidator fluidStorageDisk = new ItemValidatorBasic(RefinedStorageItems.FLUID_STORAGE_DISK) {
+    IItemValidator FLUID_STORAGE_DISK = new ItemValidatorBasic(RefinedStorageItems.FLUID_STORAGE_DISK) {
         @Override
         public boolean isValid(ItemStack disk) {
             return super.isValid(disk) && FluidStorageNBT.isValid(disk);
         }
     };
-    IItemValidator storageDisk = new IItemValidator() {
+    IItemValidator STORAGE_DISK = new IItemValidator() {
         @Override
         public boolean isValid(ItemStack stack) {
-            return itemStorageDisk.isValid(stack) || fluidStorageDisk.isValid(stack);
+            return ITEM_STORAGE_DISK.isValid(stack) || FLUID_STORAGE_DISK.isValid(stack);
         }
     };
 

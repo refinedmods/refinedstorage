@@ -68,7 +68,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         fluidStorages = new FluidStorage[6];
     }
 
-    private ItemHandlerBasic disks = new ItemHandlerBasic(12, this, IItemValidator.storageDisk) {
+    private ItemHandlerBasic disks = new ItemHandlerBasic(12, this, IItemValidator.STORAGE_DISK) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);

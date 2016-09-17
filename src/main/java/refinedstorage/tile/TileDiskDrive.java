@@ -86,7 +86,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     private static final String NBT_STORED = "Stored";
     private static final String NBT_TYPE = "Type";
 
-    private ItemHandlerBasic disks = new ItemHandlerBasic(8, this, IItemValidator.storageDisk) {
+    private ItemHandlerBasic disks = new ItemHandlerBasic(8, this, IItemValidator.STORAGE_DISK) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);

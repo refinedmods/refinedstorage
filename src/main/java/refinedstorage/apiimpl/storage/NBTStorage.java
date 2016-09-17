@@ -7,7 +7,7 @@ import refinedstorage.apiimpl.storage.item.ItemStorageNBT;
 
 import java.util.function.Function;
 
-public class NBTStorage {
+public final class NBTStorage {
     public static void constructFromDrive(ItemStack disk, int slot, ItemStorageNBT[] itemStorages, FluidStorageNBT[] fluidStorages, Function<ItemStack, ItemStorageNBT> itemStorageSupplier, Function<ItemStack, FluidStorageNBT> fluidStorageNBTSupplier) {
         if (disk == null) {
             itemStorages[slot] = null;
