@@ -17,14 +17,15 @@ import refinedstorage.api.storage.fluid.IFluidStorage;
 import refinedstorage.api.storage.fluid.IFluidStorageProvider;
 import refinedstorage.api.storage.item.IItemStorage;
 import refinedstorage.api.storage.item.IItemStorageProvider;
+import refinedstorage.apiimpl.storage.NBTStorage;
 import refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
 import refinedstorage.apiimpl.storage.fluid.FluidUtils;
 import refinedstorage.apiimpl.storage.item.ItemStorageNBT;
 import refinedstorage.block.EnumFluidStorageType;
 import refinedstorage.block.EnumItemStorageType;
+import refinedstorage.inventory.IItemValidator;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerFluid;
-import refinedstorage.inventory.ItemValidatorBasic;
 import refinedstorage.tile.config.IComparable;
 import refinedstorage.tile.config.IFilterable;
 import refinedstorage.tile.config.IPrioritizable;
@@ -85,34 +86,13 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     private static final String NBT_STORED = "Stored";
     private static final String NBT_TYPE = "Type";
 
-    private ItemHandlerBasic disks = new ItemHandlerBasic(8, this, new ItemValidatorBasic(RefinedStorageItems.STORAGE_DISK) {
-        @Override
-        public boolean isValid(ItemStack disk) {
-            return super.isValid(disk) && ItemStorageNBT.isValid(disk);
-        }
-    }, new ItemValidatorBasic(RefinedStorageItems.FLUID_STORAGE_DISK) {
-        @Override
-        public boolean isValid(ItemStack disk) {
-            return super.isValid(disk) && FluidStorageNBT.isValid(disk);
-        }
-    }) {
+    private ItemHandlerBasic disks = new ItemHandlerBasic(8, this, IItemValidator.STORAGE_DISK) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
             if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
-                ItemStack disk = getStackInSlot(slot);
-
-                if (disk == null) {
-                    itemStorages[slot] = null;
-                    fluidStorages[slot] = null;
-                } else {
-                    if (disk.getItem() == RefinedStorageItems.STORAGE_DISK) {
-                        itemStorages[slot] = new ItemStorage(disk);
-                    } else if (disk.getItem() == RefinedStorageItems.FLUID_STORAGE_DISK) {
-                        fluidStorages[slot] = new FluidStorage(disk);
-                    }
-                }
+                NBTStorage.constructFromDrive(getStackInSlot(slot), slot, itemStorages, fluidStorages, s -> new ItemStorage(s), s -> new FluidStorage(s));
 
                 if (network != null) {
                     network.getItemStorage().rebuild();
