@@ -2,10 +2,7 @@ package refinedstorage.gui;
 
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.container.ContainerDiskManipulator;
-import refinedstorage.gui.sidebutton.SideButtonCompare;
-import refinedstorage.gui.sidebutton.SideButtonMode;
-import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
-import refinedstorage.gui.sidebutton.SideButtonType;
+import refinedstorage.gui.sidebutton.*;
 import refinedstorage.tile.TileDiskManipulator;
 
 public class GuiDiskManipulator extends GuiBase {
@@ -16,6 +13,7 @@ public class GuiDiskManipulator extends GuiBase {
     @Override
     public void init(int x, int y) {
         addSideButton(new SideButtonRedstoneMode(TileDiskManipulator.REDSTONE_MODE));
+        addSideButton(new SideButtonIOMode(TileDiskManipulator.IO_MODE));
         addSideButton(new SideButtonType(TileDiskManipulator.TYPE));
         addSideButton(new SideButtonMode(TileDiskManipulator.MODE));
         addSideButton(new SideButtonCompare(TileDiskManipulator.COMPARE, CompareUtils.COMPARE_DAMAGE));
