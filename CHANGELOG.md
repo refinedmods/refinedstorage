@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.0.4
+- Fixed lag caused by Crafter (raoulvdberge)
+
 ### 1.0.3
 - Fixed item loading issue (raoulvdberge)
 - Added integration for Forge energy (raoulvdberge)
