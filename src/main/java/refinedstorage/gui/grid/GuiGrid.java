@@ -100,7 +100,7 @@ public class GuiGrid extends GuiBase {
         }
 
         if (grid.getType() == EnumGridType.PATTERN) {
-            patternOredicted = addCheckBox(x + 64, y + 138, "Use oredict", TileGrid.PATTERN_OREDICTED.getValue()); // @TODO: I18N
+            patternOredicted = addCheckBox(x + 64, y + 138, t("misc.refinedstorage:use_oredict"), TileGrid.PATTERN_OREDICTED.getValue());
         }
 
         if (grid.getType() != EnumGridType.FLUID) {

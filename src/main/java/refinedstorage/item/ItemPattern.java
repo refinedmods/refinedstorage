@@ -55,7 +55,7 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
             combineItems(tooltip, true, Iterables.toArray(pattern.getOutputs(), ItemStack.class));
 
             if (pattern.isOredicted()) {
-                tooltip.add(TextFormatting.BLUE + "Uses ore dictionary"); // @TODO: I18N
+                tooltip.add(TextFormatting.BLUE + I18n.format("misc.refinedstorage:pattern.oredict"));
             }
         } else {
             tooltip.add(TextFormatting.RED + I18n.format("misc.refinedstorage:pattern.invalid") + TextFormatting.RESET);

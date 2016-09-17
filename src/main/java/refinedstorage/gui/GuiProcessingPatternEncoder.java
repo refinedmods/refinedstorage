@@ -26,7 +26,7 @@ public class GuiProcessingPatternEncoder extends GuiBase {
 
     @Override
     public void init(int x, int y) {
-        patternOredicted = addCheckBox(x + 7, y + 76, "Use oredict", TileProcessingPatternEncoder.PATTERN_OREDICTED.getValue()); // @TODO: I18N
+        patternOredicted = addCheckBox(x + 7, y + 76, t("misc.refinedstorage:use_oredict"), TileProcessingPatternEncoder.PATTERN_OREDICTED.getValue());
     }
 
     @Override
