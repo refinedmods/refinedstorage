@@ -1,8 +1,10 @@
 package refinedstorage.apiimpl.network.grid;
 
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
@@ -60,8 +62,10 @@ public class ItemGridHandler implements IItemGridHandler {
 
         if (took != null) {
             if ((flags & EXTRACT_SHIFT) == EXTRACT_SHIFT) {
-                if (!player.inventory.addItemStackToInventory(took.copy())) {
-                    InventoryHelper.spawnItemStack(player.worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), took);
+                ItemStack remainder = ItemHandlerHelper.insertItem(player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP), took, false);
+
+                if (remainder != null) {
+                    network.insertItem(remainder, remainder.stackSize, false);
                 }
             } else {
                 if (single && held != null) {
