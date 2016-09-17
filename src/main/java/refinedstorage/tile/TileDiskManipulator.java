@@ -12,6 +12,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorageItems;
+import refinedstorage.apiimpl.storage.NBTStorage;
 import refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
 import refinedstorage.apiimpl.storage.fluid.FluidUtils;
 import refinedstorage.apiimpl.storage.item.ItemStorageNBT;
@@ -84,18 +85,8 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             super.onContentsChanged(slot);
 
             if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER && slot < 6) {
-                ItemStack disk = getStackInSlot(slot);
-
-                if (disk == null) {
-                    itemStorages[slot] = null;
-                    fluidStorages[slot] = null;
-                } else {
-                    if (disk.getItem() == RefinedStorageItems.STORAGE_DISK) {
-                        itemStorages[slot] = new ItemStorage(disk);
-                    } else if (disk.getItem() == RefinedStorageItems.FLUID_STORAGE_DISK) {
-                        fluidStorages[slot] = new FluidStorage(disk);
-                    }
-                }
+                NBTStorage.constructFromDrive(getStackInSlot(slot), slot, itemStorages, fluidStorages,
+                        s -> new ItemStorage(s), s -> new FluidStorage(s));
             }
         }
 

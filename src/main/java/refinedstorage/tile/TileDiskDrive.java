@@ -17,6 +17,7 @@ import refinedstorage.api.storage.fluid.IFluidStorage;
 import refinedstorage.api.storage.fluid.IFluidStorageProvider;
 import refinedstorage.api.storage.item.IItemStorage;
 import refinedstorage.api.storage.item.IItemStorageProvider;
+import refinedstorage.apiimpl.storage.NBTStorage;
 import refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
 import refinedstorage.apiimpl.storage.fluid.FluidUtils;
 import refinedstorage.apiimpl.storage.item.ItemStorageNBT;
@@ -101,18 +102,8 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
             super.onContentsChanged(slot);
 
             if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
-                ItemStack disk = getStackInSlot(slot);
-
-                if (disk == null) {
-                    itemStorages[slot] = null;
-                    fluidStorages[slot] = null;
-                } else {
-                    if (disk.getItem() == RefinedStorageItems.STORAGE_DISK) {
-                        itemStorages[slot] = new ItemStorage(disk);
-                    } else if (disk.getItem() == RefinedStorageItems.FLUID_STORAGE_DISK) {
-                        fluidStorages[slot] = new FluidStorage(disk);
-                    }
-                }
+                NBTStorage.constructFromDrive(getStackInSlot(slot), slot, itemStorages, fluidStorages,
+                        s -> new ItemStorage(s), s -> new FluidStorage(s));
 
                 if (network != null) {
                     network.getItemStorage().rebuild();
