@@ -39,8 +39,8 @@ public final class FluidUtils {
         return stack.getFluid() == FluidRegistry.WATER || stack.getFluid() == FluidRegistry.LAVA || FluidRegistry.getBucketFluids().contains(stack.getFluid());
     }
 
-    public static ItemStack extractItemOrIfBucketLookInFluids(INetworkMaster network, ItemStack stack, int size) {
-        ItemStack result = NetworkUtils.extractItem(network, stack, size);
+    public static ItemStack extractItemOrIfBucketLookInFluids(INetworkMaster network, ItemStack stack, int size, boolean oredict) {
+        ItemStack result = oredict ? NetworkUtils.extractItemOreDict(network, stack, size) : NetworkUtils.extractItem(network, stack, size);
 
         if (result == null && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
             FluidStack fluidStack = getFluidFromStack(stack, true);

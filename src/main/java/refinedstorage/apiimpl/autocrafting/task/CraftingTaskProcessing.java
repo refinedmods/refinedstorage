@@ -34,7 +34,7 @@ public class CraftingTaskProcessing extends CraftingTask {
             ItemStack input = pattern.getInputs().get(i);
 
             if (!satisfied[i]) {
-                ItemStack received = FluidUtils.extractItemOrIfBucketLookInFluids(network, input, input.stackSize);
+                ItemStack received = FluidUtils.extractItemOrIfBucketLookInFluids(network, input, input.stackSize, pattern.isOredicted());
 
                 if (received != null) {
                     satisfied[i] = true;

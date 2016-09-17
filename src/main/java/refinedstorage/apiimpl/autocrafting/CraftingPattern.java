@@ -84,6 +84,11 @@ public class CraftingPattern implements ICraftingPattern {
     }
 
     @Override
+    public boolean isOredicted() {
+        return true;
+    }
+
+    @Override
     public List<ItemStack> getOutputs() {
         return outputs;
     }

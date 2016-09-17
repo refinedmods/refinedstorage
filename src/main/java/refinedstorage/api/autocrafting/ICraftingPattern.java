@@ -29,6 +29,11 @@ public interface ICraftingPattern {
     List<ItemStack> getInputs();
 
     /**
+     * @return true if this crafting pattern cares about the ore dictionary when extracting items, false otherwise
+     */
+    boolean isOredicted();
+
+    /**
      * @return the outputs
      */
     List<ItemStack> getOutputs();
