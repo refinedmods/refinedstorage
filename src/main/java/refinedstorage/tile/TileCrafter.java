@@ -98,7 +98,7 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
 
     @Override
     public void update() {
-        if (ticks == 0) {
+        if (!worldObj.isRemote && ticks == 0) {
             rebuildPatterns();
         }
 
