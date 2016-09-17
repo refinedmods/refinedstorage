@@ -23,9 +23,9 @@ import refinedstorage.apiimpl.storage.fluid.FluidUtils;
 import refinedstorage.apiimpl.storage.item.ItemStorageNBT;
 import refinedstorage.block.EnumFluidStorageType;
 import refinedstorage.block.EnumItemStorageType;
+import refinedstorage.inventory.IItemValidator;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerFluid;
-import refinedstorage.inventory.ItemValidatorBasic;
 import refinedstorage.tile.config.IComparable;
 import refinedstorage.tile.config.IFilterable;
 import refinedstorage.tile.config.IPrioritizable;
@@ -86,17 +86,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     private static final String NBT_STORED = "Stored";
     private static final String NBT_TYPE = "Type";
 
-    private ItemHandlerBasic disks = new ItemHandlerBasic(8, this, new ItemValidatorBasic(RefinedStorageItems.STORAGE_DISK) {
-        @Override
-        public boolean isValid(ItemStack disk) {
-            return super.isValid(disk) && ItemStorageNBT.isValid(disk);
-        }
-    }, new ItemValidatorBasic(RefinedStorageItems.FLUID_STORAGE_DISK) {
-        @Override
-        public boolean isValid(ItemStack disk) {
-            return super.isValid(disk) && FluidStorageNBT.isValid(disk);
-        }
-    }) {
+    private ItemHandlerBasic disks = new ItemHandlerBasic(8, this, IItemValidator.storageDisk) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
