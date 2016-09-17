@@ -94,6 +94,10 @@ sidebutton.refinedstorage:mode=Mode
 sidebutton.refinedstorage:mode.whitelist=Whitelist
 sidebutton.refinedstorage:mode.blacklist=Blacklist
 
+sidebutton.refinedstorage:iomode=IOMode
+sidebutton.refinedstorage:iomode.insert=Insert into network
+sidebutton.refinedstorage:iomode.extract=Extract from network
+
 sidebutton.refinedstorage:type=Type
 sidebutton.refinedstorage:type.0=Items
 sidebutton.refinedstorage:type.1=Fluids
