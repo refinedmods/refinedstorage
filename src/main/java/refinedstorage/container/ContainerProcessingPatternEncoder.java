@@ -36,7 +36,7 @@ public class ContainerProcessingPatternEncoder extends ContainerBase {
             }
         }
 
-        addPlayerInventory(8, 90);
+        addPlayerInventory(8, 102);
     }
 
     @Override
