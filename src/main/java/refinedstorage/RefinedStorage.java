@@ -20,7 +20,7 @@ import refinedstorage.proxy.CommonProxy;
 public final class RefinedStorage {
     public static final String ID = "refinedstorage";
     public static final String VERSION = "1.0.4";
-    public static final String DEPENDENCIES = "required-after:mcmultipart@[1.2.1,);";
+    public static final String DEPENDENCIES = "required-after:Forge@[12.18.1.2088,);required-after:mcmultipart@[1.2.1,);";
 
     @SidedProxy(clientSide = "refinedstorage.proxy.ClientProxy", serverSide = "refinedstorage.proxy.ServerProxy")
     public static CommonProxy PROXY;
