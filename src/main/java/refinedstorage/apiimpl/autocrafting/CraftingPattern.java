@@ -85,7 +85,7 @@ public class CraftingPattern implements ICraftingPattern {
 
     @Override
     public boolean isOredicted() {
-        return true;
+        return ItemPattern.isOredicted(stack);
     }
 
     @Override
