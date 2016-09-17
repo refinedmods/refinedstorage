@@ -104,7 +104,9 @@ public class GuiCraftingMonitor extends GuiBase {
                     itemSelectedY = y;
                 }
 
-                x += 16F / (float) task.getDepth();
+                if (task.getDepth() > 0) {
+                    x += 16F - ((float) (task.getChildren() - task.getDepth()) / (float) task.getChildren() * 16F);
+                }
 
                 drawItem(x + 2, y + 1, task.getOutput());
 

@@ -10,17 +10,19 @@ public class ClientCraftingTask {
     private int id;
     private String status;
     private int depth;
+    private int children;
     private int progress;
 
     // Used server-side while sending
     private List<ItemStack> outputs;
     private ClientCraftingTask child;
 
-    public ClientCraftingTask(ItemStack output, int id, String status, int depth, int progress) {
+    public ClientCraftingTask(ItemStack output, int id, String status, int depth, int children, int progress) {
         this.output = output;
         this.id = id;
         this.status = status;
         this.depth = depth;
+        this.children = children;
         this.progress = progress;
     }
 
@@ -53,6 +55,10 @@ public class ClientCraftingTask {
 
     public int getDepth() {
         return depth;
+    }
+
+    public int getChildren() {
+        return children;
     }
 
     public int getProgress() {

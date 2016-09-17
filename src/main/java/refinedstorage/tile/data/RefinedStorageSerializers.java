@@ -52,12 +52,24 @@ public final class RefinedStorageSerializers {
             buf.writeInt(tasks.size());
 
             for (ClientCraftingTask task : tasks) {
-                writeTask(buf, task);
+                int children = 0;
+
+                ClientCraftingTask child = task.getChild();
+
+                while (child != null) {
+                    children++;
+
+                    child = child.getChild();
+                }
+
+                writeTask(buf, task, children);
             }
         }
 
-        private void writeTask(PacketBuffer buf, ClientCraftingTask task) {
+        private void writeTask(PacketBuffer buf, ClientCraftingTask task, int children) {
             ByteBufUtils.writeUTF8String(buf, task.getStatus());
+
+            buf.writeInt(children);
 
             buf.writeInt(task.getProgress());
 
@@ -70,7 +82,7 @@ public final class RefinedStorageSerializers {
             buf.writeBoolean(task.getChild() != null);
 
             if (task.getChild() != null) {
-                writeTask(buf, task.getChild());
+                writeTask(buf, task.getChild(), children);
             }
         }
 
@@ -90,12 +102,14 @@ public final class RefinedStorageSerializers {
         private void readTask(PacketBuffer buf, int i, int depth, List<ClientCraftingTask> tasks) {
             String status = ByteBufUtils.readUTF8String(buf);
 
+            int children = buf.readInt();
+
             int progress = buf.readInt();
 
             int outputs = buf.readInt();
 
             for (int j = 0; j < outputs; ++j) {
-                tasks.add(new ClientCraftingTask(ByteBufUtils.readItemStack(buf), i, status, depth, progress));
+                tasks.add(new ClientCraftingTask(ByteBufUtils.readItemStack(buf), i, status, depth, children, progress));
             }
 
             if (buf.readBoolean()) {
