@@ -7,9 +7,9 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.NetworkUtils;
+import refinedstorage.api.storage.CompareUtils;
 
 public final class FluidUtils {
     public static final ItemStack EMPTY_BUCKET = new ItemStack(Items.BUCKET);
@@ -51,11 +51,7 @@ public final class FluidUtils {
                 if (result != null) {
                     result.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).fill(NetworkUtils.extractFluid(network, fluidStack, Fluid.BUCKET_VOLUME), true);
                 } else {
-                    ICraftingPattern pattern = NetworkUtils.getPattern(network, EMPTY_BUCKET);
-
-                    if (pattern != null) {
-                        network.addCraftingTask(NetworkUtils.createCraftingTask(network, pattern));
-                    }
+                    NetworkUtils.scheduleCraftingTaskIfUnscheduled(network, EMPTY_BUCKET, 1, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
                 }
             }
         }
