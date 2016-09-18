@@ -327,14 +327,14 @@ public class CommonProxy {
         // Importer
         GameRegistry.addShapelessRecipe(new ItemStack(RefinedStorageBlocks.IMPORTER),
             new ItemStack(RefinedStorageBlocks.CABLE),
-            new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
+            new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
             new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
         );
 
         // Exporter
         GameRegistry.addShapelessRecipe(new ItemStack(RefinedStorageBlocks.EXPORTER),
             new ItemStack(RefinedStorageBlocks.CABLE),
-            new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
+            new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
             new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
         );
 

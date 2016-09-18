@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class RefinedStorageConfig {
-
     private Configuration config;
 
     //region Energy
@@ -87,7 +86,9 @@ public final class RefinedStorageConfig {
 
     public RefinedStorageConfig(File configFile) {
         config = new Configuration(configFile);
+
         MinecraftForge.EVENT_BUS.register(this);
+
         loadConfig();
     }
 
@@ -169,17 +170,17 @@ public final class RefinedStorageConfig {
         }
     }
 
-
     @SuppressWarnings("unchecked")
-    public List<IConfigElement> getConfigElements()
-    {
+    public List<IConfigElement> getConfigElements() {
         List<IConfigElement> list = new ArrayList<>();
+
         list.addAll(new ConfigElement(config.getCategory(ENERGY)).getChildElements());
         list.addAll(new ConfigElement(config.getCategory(CONTROLLER)).getChildElements());
         list.addAll(new ConfigElement(config.getCategory(UPGRADES)).getChildElements());
         list.addAll(new ConfigElement(config.getCategory(WIRELESS_TRANSMITTER)).getChildElements());
         list.addAll(new ConfigElement(config.getCategory(WIRELESS_GRID)).getChildElements());
         list.addAll(new ConfigElement(config.getCategory(MISC)).getChildElements());
+
         return list;
     }
 }

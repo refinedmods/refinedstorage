@@ -51,6 +51,7 @@ public final class RefinedStorage {
     @EventHandler
     public void preInit(FMLPreInitializationEvent e) {
         config = new RefinedStorageConfig(e.getSuggestedConfigurationFile());
+
         PROXY.preInit(e);
     }
 
