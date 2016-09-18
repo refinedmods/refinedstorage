@@ -20,6 +20,8 @@ import refinedstorage.block.EnumItemStorageType;
 import refinedstorage.inventory.IItemValidator;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerFluid;
+import refinedstorage.inventory.ItemHandlerUpgrade;
+import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.IComparable;
 import refinedstorage.tile.config.IFilterable;
 import refinedstorage.tile.config.IType;
@@ -69,6 +71,8 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         dataManager.addWatchedParameter(TYPE);
         dataManager.addWatchedParameter(IO_MODE);
     }
+
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK);
 
     private ItemHandlerBasic disks = new ItemHandlerBasic(12, this, IItemValidator.STORAGE_DISK) {
         @Override
@@ -163,6 +167,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
 
     @Override
     public void updateNode() {
+        if (ticks % upgrades.getSpeed() != 0) return;
         int slot = 0;
         if (type == IType.ITEMS) {
             while (slot < itemStorages.length && itemStorages[slot] == null) {
@@ -199,6 +204,10 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         }
     }
 
+    private int getInteractStackSize() {
+        return upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK) ? 64 : 1;
+    }
+
     private void insertIntoNetwork(ItemStorage storage, int slot) {
         if (storage.getStored() == 0) {
             moveDriveToOutput(slot);
@@ -216,7 +225,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             }
 
             if (stack != null) {
-                extracted = storage.extractItem(stack, 1, compare);
+                extracted = storage.extractItem(stack, getInteractStackSize(), compare);
             }
         } while (storage.getItems().size() > i && extracted == null);
 
@@ -252,7 +261,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             }
 
             if (toExtract != null) {
-                extracted = network.extractItem(toExtract, 1, compare);
+                extracted = network.extractItem(toExtract, getInteractStackSize(), compare);
             }
         } else {
             while (itemFilters.getSlots() > i && extracted == null) {
@@ -263,7 +272,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
                 }
 
                 if (stack != null) {
-                    extracted = network.extractItem(stack, 1, compare);
+                    extracted = network.extractItem(stack, getInteractStackSize(), compare);
                 }
             }
         }
@@ -297,7 +306,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             }
 
             if (stack != null) {
-                extracted = storage.extractFluid(stack, 1, compare);
+                extracted = storage.extractFluid(stack, getInteractStackSize(), compare);
             }
         } while (extracted == null && storage.getStacks().size() > i);
 
@@ -333,7 +342,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             }
 
             if (toExtract != null) {
-                extracted = network.extractFluid(toExtract, 1, compare);
+                extracted = network.extractFluid(toExtract, getInteractStackSize(), compare);
             }
         } else {
             while (fluidFilters.getSlots() > i && extracted == null) {
@@ -344,7 +353,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
                 }
 
                 if (stack != null) {
-                    extracted = network.extractFluid(stack, 1, compare);
+                    extracted = network.extractFluid(stack, getInteractStackSize(), compare);
                 }
             }
         }
@@ -430,6 +439,10 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         return disks;
     }
 
+    public IItemHandler getUpgrades() {
+        return upgrades;
+    }
+
     @Override
     public void read(NBTTagCompound tag) {
         super.read(tag);
@@ -437,6 +450,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         readItems(disks, 0, tag);
         readItems(itemFilters, 1, tag);
         readItems(fluidFilters, 2, tag);
+        readItems(upgrades, 3, tag);
 
         if (tag.hasKey(NBT_COMPARE)) {
             compare = tag.getInteger(NBT_COMPARE);
@@ -462,6 +476,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         writeItems(disks, 0, tag);
         writeItems(itemFilters, 1, tag);
         writeItems(fluidFilters, 2, tag);
+        writeItems(upgrades, 3, tag);
 
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_MODE, mode);

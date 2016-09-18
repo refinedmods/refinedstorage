@@ -11,6 +11,10 @@ public class ContainerDiskManipulator extends ContainerBase {
     public ContainerDiskManipulator(TileDiskManipulator manipulator, EntityPlayer player) {
         super(manipulator, player);
 
+        for (int i = 0; i < 4; ++i) {
+            addSlotToContainer(new SlotItemHandler(manipulator.getUpgrades(), i, 187, 6 + (i * 18)));
+        }
+
         for (int i = 0; i < 6; ++i) {
             addSlotToContainer(new SlotItemHandler(manipulator.getDisks(), i, 26 + (i % 2 * 18), ((i / 2) * 18) + 57));
         }
@@ -35,12 +39,12 @@ public class ContainerDiskManipulator extends ContainerBase {
         if (slot != null && slot.getHasStack()) {
             stack = slot.getStack();
 
-            if (index < 12) {
-                if (!mergeItemStack(stack, 12 + 9, inventorySlots.size(), false)) {
+            if (index < 4 + 12) {
+                if (!mergeItemStack(stack, 4 + 12 + 9, inventorySlots.size(), false)) {
                     return null;
                 }
-            } else if (!mergeItemStack(stack, 0, 12, false)) {
-                return mergeItemStackToSpecimen(stack, 12, 12 + 9);
+            } else if (!mergeItemStack(stack, 0, 16, false)) {
+                return mergeItemStackToSpecimen(stack, 4 + 12, 4 + 12 + 9);
             }
 
             if (stack.stackSize == 0) {

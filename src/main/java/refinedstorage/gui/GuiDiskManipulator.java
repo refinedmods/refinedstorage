@@ -7,7 +7,7 @@ import refinedstorage.tile.TileDiskManipulator;
 
 public class GuiDiskManipulator extends GuiBase {
     public GuiDiskManipulator(ContainerDiskManipulator container) {
-        super(container, 176, 211);
+        super(container, 211, 211);
     }
 
     @Override
