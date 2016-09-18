@@ -3,6 +3,7 @@
 ### 1.0.5
 - Fixed crafting a complex item causes the process to flow off the Crafting Monitor's GUI (raoulvdberge)
 - Fixed shift clicking from Grid when player inventory is full throwing items in the world (raoulvdberge)
+- Added support for ore dictionary substitutions in Crafting Patterns (raoulvdberge)
 
 ### 1.0.4
 - Fixed lag caused by Crafter (raoulvdberge)

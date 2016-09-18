@@ -24,19 +24,25 @@ public interface ICraftingPattern {
     boolean isValid();
 
     /**
-     * @return the inputs
-     */
-    List<ItemStack> getInputs();
-
-    /**
      * @return true if this crafting pattern cares about the ore dictionary when extracting items, false otherwise
      */
     boolean isOredicted();
 
     /**
+     * @return the inputs
+     */
+    List<ItemStack> getInputs();
+
+    /**
      * @return the outputs
      */
     List<ItemStack> getOutputs();
+
+    /**
+     * @param took the items that it already took
+     * @return the outputs
+     */
+    List<ItemStack> getOutputsBasedOnTook(ItemStack[] took);
 
     /**
      * @return the id of the factory that creates a crafting task for this pattern, as defined in the registry

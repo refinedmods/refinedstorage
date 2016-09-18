@@ -1,5 +1,7 @@
 package refinedstorage.apiimpl.autocrafting;
 
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryCrafting;
@@ -18,16 +20,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CraftingPattern implements ICraftingPattern {
+    private World world;
     private ICraftingPatternContainer container;
     private ItemStack stack;
     private List<ItemStack> inputs = new ArrayList<>();
     private List<ItemStack> outputs = new ArrayList<>();
+    private List<ItemStack> byproducts = new ArrayList<>();
 
     public CraftingPattern(World world, ICraftingPatternContainer container, ItemStack stack) {
+        this.world = world;
         this.container = container;
         this.stack = stack;
 
-        InventoryCrafting dummyInventory = new InventoryCrafting(new Container() {
+        InventoryCrafting inv = new InventoryCrafting(new Container() {
             @Override
             public boolean canInteractWith(EntityPlayer player) {
                 return false;
@@ -42,19 +47,19 @@ public class CraftingPattern implements ICraftingPattern {
                     inputs.add(ItemHandlerHelper.copyStackWithSize(slot, 1));
                 }
 
-                dummyInventory.setInventorySlotContents(i, slot);
+                inv.setInventorySlotContents(i, slot);
             }
         }
 
         if (!ItemPattern.isProcessing(stack)) {
-            ItemStack output = CraftingManager.getInstance().findMatchingRecipe(dummyInventory, world);
+            ItemStack output = CraftingManager.getInstance().findMatchingRecipe(inv, world);
 
             if (output != null) {
                 outputs.add(output.copy());
 
-                for (ItemStack remaining : CraftingManager.getInstance().getRemainingItems(dummyInventory, world)) {
+                for (ItemStack remaining : CraftingManager.getInstance().getRemainingItems(inv, world)) {
                     if (remaining != null) {
-                        outputs.add(remaining.copy());
+                        byproducts.add(remaining.copy());
                     }
                 }
             }
@@ -79,18 +84,55 @@ public class CraftingPattern implements ICraftingPattern {
     }
 
     @Override
-    public List<ItemStack> getInputs() {
-        return inputs;
-    }
-
-    @Override
     public boolean isOredicted() {
         return ItemPattern.isOredicted(stack);
     }
 
     @Override
+    public List<ItemStack> getInputs() {
+        return inputs;
+    }
+
+    @Override
     public List<ItemStack> getOutputs() {
         return outputs;
+    }
+
+    @Override
+    public List<ItemStack> getOutputsBasedOnTook(ItemStack[] took) {
+        if (ItemPattern.isProcessing(stack) || !ItemPattern.isOredicted(stack)) {
+            return Lists.newArrayList(Iterables.concat(outputs, byproducts));
+        }
+
+        List<ItemStack> outputs = new ArrayList<>();
+        List<ItemStack> byproducts = new ArrayList<>();
+
+        InventoryCrafting inv = new InventoryCrafting(new Container() {
+            @Override
+            public boolean canInteractWith(EntityPlayer player) {
+                return false;
+            }
+        }, 3, 3);
+
+        for (int i = 0; i < 9; ++i) {
+            if (took[i] != null) {
+                inv.setInventorySlotContents(i, took[i]);
+            }
+        }
+
+        ItemStack output = CraftingManager.getInstance().findMatchingRecipe(inv, world);
+
+        if (output != null) {
+            outputs.add(output.copy());
+
+            for (ItemStack remaining : CraftingManager.getInstance().getRemainingItems(inv, world)) {
+                if (remaining != null) {
+                    byproducts.add(remaining.copy());
+                }
+            }
+        }
+
+        return Lists.newArrayList(Iterables.concat(outputs, byproducts));
     }
 
     @Override

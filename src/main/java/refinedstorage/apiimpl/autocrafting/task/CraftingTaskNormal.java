@@ -1,6 +1,7 @@
 package refinedstorage.apiimpl.autocrafting.task;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.task.CraftingTask;
@@ -8,8 +9,16 @@ import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.apiimpl.storage.fluid.FluidUtils;
 
 public class CraftingTaskNormal extends CraftingTask {
+    public static final String NBT_TOOK_SLOT = "TookSlot_%d";
+
+    private ItemStack[] tookSlots = new ItemStack[9];
+
     public CraftingTaskNormal(ICraftingPattern pattern) {
         super(pattern);
+    }
+
+    public ItemStack[] getTookSlots() {
+        return tookSlots;
     }
 
     @Override
@@ -26,6 +35,7 @@ public class CraftingTaskNormal extends CraftingTask {
                     satisfied[i] = true;
 
                     took.add(received);
+                    tookSlots[i] = received;
 
                     network.updateCraftingTasks();
                 } else {
@@ -42,7 +52,7 @@ public class CraftingTaskNormal extends CraftingTask {
             }
         }
 
-        for (ItemStack output : pattern.getOutputs()) {
+        for (ItemStack output : pattern.getOutputsBasedOnTook(tookSlots)) {
             // @TODO: Handle remainder
             network.insertItem(output, output.stackSize, false);
         }
@@ -87,6 +97,19 @@ public class CraftingTaskNormal extends CraftingTask {
         }
 
         return builder.toString();
+    }
+
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+        super.writeToNBT(tag);
+
+        for (int i = 0; i < 9; ++i) {
+            if (tookSlots[i] != null) {
+                tag.setTag(String.format(NBT_TOOK_SLOT, i), tookSlots[i].serializeNBT());
+            }
+        }
+
+        return tag;
     }
 
     @Override
