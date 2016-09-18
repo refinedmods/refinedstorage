@@ -27,6 +27,8 @@ import refinedstorage.tile.data.ITileDataConsumer;
 import refinedstorage.tile.data.ITileDataProducer;
 import refinedstorage.tile.data.TileDataParameter;
 
+import java.util.ArrayList;
+
 public class TileDiskManipulator extends TileNode implements IComparable, IFilterable, IType {
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
@@ -49,6 +51,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
     private static final String NBT_TYPE = "Type";
+    private static final String NBT_IO_MOD = "IOMode";
 
     private int compare = 0;
     private int mode = IFilterable.WHITELIST;
@@ -211,7 +214,42 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
     }
 
     private void extractFromNetwork(ItemStorage storage, int slot) {
+        if (storage.getStored() == storage.getCapacity()) {
+            moveDriveToOutput(slot);
+            return;
+        }
+        ItemStack extracted = null;
+        int ii = 0;
+        if (IFilterable.isEmpty(itemFilters)) {
+            ItemStack toExtract = null;
+            ArrayList<ItemStack> networkItems = new ArrayList<>(network.getItemStorage().getStacks());
+            int iii = 0;
+            while ((toExtract == null || toExtract.stackSize == 0) && iii < networkItems.size()) {
+                toExtract = networkItems.get(iii++);
+            }
+            if (toExtract != null) {
+                extracted = network.extractItem(toExtract, 1, compare);
+            }
+        } else {
+            while (itemFilters.getSlots() > ii && extracted == null) {
+                ItemStack stack = null;
+                while (itemFilters.getSlots() > ii && stack == null) {
+                    stack = itemFilters.getStackInSlot(ii++);
+                }
+                if (stack != null) {
+                    extracted = network.extractItem(stack, 1, compare);
+                }
+            }
+        }
 
+        if (extracted == null) {
+            moveDriveToOutput(slot);
+            return;
+        }
+        ItemStack leftOver = storage.insertItem(extracted, extracted.stackSize, false);
+        if (leftOver != null) {
+            network.insertItem(leftOver, leftOver.stackSize, false);
+        }
     }
 
     private void insertIntoNetwork(FluidStorage storage, int slot) {
@@ -241,6 +279,42 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
     }
 
     private void extractFromNetwork(FluidStorage storage, int slot) {
+        if (storage.getStored() == storage.getCapacity()) {
+            moveDriveToOutput(slot);
+            return;
+        }
+        FluidStack extracted = null;
+        int ii = 0;
+        if (IFilterable.isEmpty(itemFilters)) {
+            FluidStack toExtract = null;
+            ArrayList<FluidStack> networkFluids = new ArrayList<>(network.getFluidStorage().getStacks());
+            int iii = 0;
+            while ((toExtract == null || toExtract.amount == 0) && iii < networkFluids.size()) {
+                toExtract = networkFluids.get(iii++);
+            }
+            if (toExtract != null) {
+                extracted = network.extractFluid(toExtract, 1, compare);
+            }
+        } else {
+            while (fluidFilters.getSlots() > ii && extracted == null) {
+                FluidStack stack = null;
+                while (fluidFilters.getSlots() > ii && stack == null) {
+                    stack = fluidFilters.getFluidStackInSlot(ii++);
+                }
+                if (stack != null) {
+                    extracted = network.extractFluid(stack, 1, compare);
+                }
+            }
+        }
+
+        if (extracted == null) {
+            moveDriveToOutput(slot);
+            return;
+        }
+        FluidStack leftOver = storage.insertFluid(extracted, extracted.amount, false);
+        if (leftOver != null) {
+            network.insertFluid(leftOver, leftOver.amount, false);
+        }
     }
 
     private void moveDriveToOutput(int slot) {
@@ -326,6 +400,10 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         if (tag.hasKey(NBT_TYPE)) {
             type = tag.getInteger(NBT_TYPE);
         }
+
+        if (tag.hasKey(NBT_IO_MOD)) {
+            ioMode = tag.getInteger(NBT_IO_MOD);
+        }
     }
 
     @Override
@@ -339,6 +417,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_MODE, mode);
         tag.setInteger(NBT_TYPE, type);
+        tag.setInteger(NBT_IO_MOD, ioMode);
 
         return tag;
     }

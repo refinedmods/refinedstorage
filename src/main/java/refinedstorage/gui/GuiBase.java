@@ -93,7 +93,7 @@ public abstract class GuiBase extends GuiContainer {
             Slot slot = inventorySlots.inventorySlots.get(i);
 
             if (slot instanceof SlotItemHandler && ((SlotItemHandler) slot).getItemHandler() instanceof ItemHandlerFluid) {
-                FluidStack stack = ((ItemHandlerFluid) ((SlotItemHandler) slot).getItemHandler()).getFluids()[slot.getSlotIndex()];
+                FluidStack stack = ((ItemHandlerFluid) ((SlotItemHandler) slot).getItemHandler()).getFluidStackInSlot(slot.getSlotIndex());
 
                 if (stack != null) {
                     FLUID_RENDERER.draw(mc, guiLeft + slot.xDisplayPosition, guiTop + slot.yDisplayPosition, stack);

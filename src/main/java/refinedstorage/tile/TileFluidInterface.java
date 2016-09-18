@@ -110,7 +110,7 @@ public class TileFluidInterface extends TileNode implements IComparable {
                 }
             }
 
-            FluidStack stack = out.getFluids()[0];
+            FluidStack stack = out.getFluidStackInSlot(0);
 
             if (tankOut.getFluid() != null && (stack == null || (tankOut.getFluid().getFluid() != stack.getFluid()))) {
                 FluidStack remainder = tankOut.drainInternal(Fluid.BUCKET_VOLUME, true);

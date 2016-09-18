@@ -39,7 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommonProxy {
-    public static final boolean ENABLE_DISK_MANIPULATOR = false;
+    public static final boolean ENABLE_DISK_MANIPULATOR = true;
 
     protected List<BlockCable> cableTypes = new ArrayList<>();
 

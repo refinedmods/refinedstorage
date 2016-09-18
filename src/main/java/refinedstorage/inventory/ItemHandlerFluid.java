@@ -28,6 +28,10 @@ public class ItemHandlerFluid extends ItemHandlerBasic {
         }
     }
 
+    public FluidStack getFluidStackInSlot(int slot) {
+        return fluids[slot];
+    }
+
     public FluidStack[] getFluids() {
         return fluids;
     }

@@ -36,5 +36,7 @@ public class GuiDiskManipulator extends GuiBase {
     public void drawForeground(int mouseX, int mouseY) {
         drawString(7, 7, t("block.refinedstorage:disk_manipulator.name"));
         drawString(7, 117, t("container.inventory"));
+        drawString(25, 45, t("gui.refinedstorage:fluid_interface.in"));
+        drawString(115, 45, t("gui.refinedstorage:fluid_interface.out"));
     }
 }
