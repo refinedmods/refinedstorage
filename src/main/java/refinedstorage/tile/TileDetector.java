@@ -99,7 +99,7 @@ public class TileDetector extends TileNode implements IComparable, IType {
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.CONFIG.detectorUsage;
+        return RefinedStorage.INSTANCE.config.detectorUsage;
     }
 
     @Override

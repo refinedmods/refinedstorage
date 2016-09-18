@@ -185,7 +185,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     private List<ICraftingTask> craftingTasksToCancel = new ArrayList<>();
     private List<NBTTagCompound> craftingTasksToRead = new ArrayList<>();
 
-    private EnergyStorage energy = new EnergyStorage(RefinedStorage.CONFIG.controllerCapacity);
+    private EnergyStorage energy = new EnergyStorage(RefinedStorage.INSTANCE.config.controllerCapacity);
     private ControllerEnergyForge energyForge = new ControllerEnergyForge(this);
     private IControllerEnergyIC2 energyEU;
     private ControllerEnergyTesla energyTesla;
@@ -299,7 +299,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             wirelessGridHandler.update();
 
             if (getType() == EnumControllerType.NORMAL) {
-                if (!RefinedStorage.CONFIG.controllerUsesEnergy) {
+                if (!RefinedStorage.INSTANCE.config.controllerUsesEnergy) {
                     energy.setEnergyStored(energy.getMaxEnergyStored());
                 } else if (energy.getEnergyStored() - getEnergyUsage() >= 0) {
                     energy.extractEnergy(getEnergyUsage(), false);
@@ -809,7 +809,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public int getEnergyUsage() {
-        int usage = RefinedStorage.CONFIG.controllerBaseUsage;
+        int usage = RefinedStorage.INSTANCE.config.controllerBaseUsage;
 
         for (INetworkNode node : nodeGraph.all()) {
             if (node.canUpdate()) {

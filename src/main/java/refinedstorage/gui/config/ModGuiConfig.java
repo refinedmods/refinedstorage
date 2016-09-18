@@ -8,10 +8,10 @@ public class ModGuiConfig extends GuiConfig {
 
     public ModGuiConfig(GuiScreen guiScreen) {
         super(guiScreen,
-                RefinedStorage.CONFIG.getConfigElements(),
+                RefinedStorage.INSTANCE.config.getConfigElements(),
                 RefinedStorage.ID,
                 false,
                 false,
-                GuiConfig.getAbridgedConfigPath(RefinedStorage.CONFIG.getConfig().toString()));
+                GuiConfig.getAbridgedConfigPath(RefinedStorage.INSTANCE.config.getConfig().toString()));
     }
 }

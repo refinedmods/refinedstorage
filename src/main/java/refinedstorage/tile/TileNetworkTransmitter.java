@@ -109,7 +109,7 @@ public class TileNetworkTransmitter extends TileNode {
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.CONFIG.networkTransmitterUsage + (isSameDimension() ? (int) Math.ceil(RefinedStorage.CONFIG.networkTransmitterPerBlockUsage * getDistance()) : 0) + upgrades.getEnergyUsage();
+        return RefinedStorage.INSTANCE.config.networkTransmitterUsage + (isSameDimension() ? (int) Math.ceil(RefinedStorage.INSTANCE.config.networkTransmitterPerBlockUsage * getDistance()) : 0) + upgrades.getEnergyUsage();
     }
 
     public ItemHandlerBasic getNetworkCard() {

@@ -34,15 +34,15 @@ public class ItemUpgrade extends ItemBase {
     public static int getEnergyUsage(int type) {
         switch (type) {
             case TYPE_RANGE:
-                return RefinedStorage.CONFIG.rangeUpgradeUsage;
+                return RefinedStorage.INSTANCE.config.rangeUpgradeUsage;
             case TYPE_SPEED:
-                return RefinedStorage.CONFIG.speedUpgradeUsage;
+                return RefinedStorage.INSTANCE.config.speedUpgradeUsage;
             case TYPE_CRAFTING:
-                return RefinedStorage.CONFIG.craftingUpgradeUsage;
+                return RefinedStorage.INSTANCE.config.craftingUpgradeUsage;
             case TYPE_STACK:
-                return RefinedStorage.CONFIG.stackUpgradeUsage;
+                return RefinedStorage.INSTANCE.config.stackUpgradeUsage;
             case TYPE_INTERDIMENSIONAL:
-                return RefinedStorage.CONFIG.interdimensionalUpgradeUsage;
+                return RefinedStorage.INSTANCE.config.interdimensionalUpgradeUsage;
             default:
                 return 0;
         }

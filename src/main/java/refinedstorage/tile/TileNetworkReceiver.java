@@ -10,7 +10,7 @@ public class TileNetworkReceiver extends TileNode {
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.CONFIG.networkReceiverUsage;
+        return RefinedStorage.INSTANCE.config.networkReceiverUsage;
     }
 
     @Override

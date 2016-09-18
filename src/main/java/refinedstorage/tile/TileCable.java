@@ -5,7 +5,7 @@ import refinedstorage.RefinedStorage;
 public class TileCable extends TileMultipartNode {
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.CONFIG.cableUsage;
+        return RefinedStorage.INSTANCE.config.cableUsage;
     }
 
     @Override

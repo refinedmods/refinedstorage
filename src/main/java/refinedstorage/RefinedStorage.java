@@ -28,7 +28,7 @@ public final class RefinedStorage {
     @Instance
     public static RefinedStorage INSTANCE;
 
-    public static RefinedStorageConfig CONFIG;
+    public RefinedStorageConfig config;
 
     public final SimpleNetworkWrapper network = NetworkRegistry.INSTANCE.newSimpleChannel(ID);
 
@@ -50,7 +50,7 @@ public final class RefinedStorage {
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent e) {
-        CONFIG = new RefinedStorageConfig(e.getSuggestedConfigurationFile());
+        config = new RefinedStorageConfig(e.getSuggestedConfigurationFile());
         PROXY.preInit(e);
     }
 

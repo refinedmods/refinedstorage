@@ -77,7 +77,7 @@ public class ItemGridHandler implements IItemGridHandler {
                 player.updateHeldItem();
             }
 
-            network.getWirelessGridHandler().drainEnergy(player, RefinedStorage.CONFIG.wirelessGridExtractUsage);
+            network.getWirelessGridHandler().drainEnergy(player, RefinedStorage.INSTANCE.config.wirelessGridExtractUsage);
         }
     }
 
@@ -85,7 +85,7 @@ public class ItemGridHandler implements IItemGridHandler {
     public ItemStack onInsert(EntityPlayerMP player, ItemStack stack) {
         ItemStack remainder = network.insertItem(stack, stack.stackSize, false);
 
-        network.getWirelessGridHandler().drainEnergy(player, RefinedStorage.CONFIG.wirelessGridInsertUsage);
+        network.getWirelessGridHandler().drainEnergy(player, RefinedStorage.INSTANCE.config.wirelessGridInsertUsage);
 
         return remainder;
     }
@@ -115,7 +115,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
         player.updateHeldItem();
 
-        network.getWirelessGridHandler().drainEnergy(player, RefinedStorage.CONFIG.wirelessGridInsertUsage);
+        network.getWirelessGridHandler().drainEnergy(player, RefinedStorage.INSTANCE.config.wirelessGridInsertUsage);
     }
 
     @Override

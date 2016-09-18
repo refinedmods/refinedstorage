@@ -85,11 +85,11 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
 
     @Override
     public int getEnergyUsage() {
-        int usage = RefinedStorage.CONFIG.crafterUsage + upgrades.getEnergyUsage();
+        int usage = RefinedStorage.INSTANCE.config.crafterUsage + upgrades.getEnergyUsage();
 
         for (int i = 0; i < patterns.getSlots(); ++i) {
             if (patterns.getStackInSlot(i) != null) {
-                usage += RefinedStorage.CONFIG.crafterPerPatternUsage;
+                usage += RefinedStorage.INSTANCE.config.crafterPerPatternUsage;
             }
         }
 
