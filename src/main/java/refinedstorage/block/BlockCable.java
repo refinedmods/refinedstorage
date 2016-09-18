@@ -341,6 +341,6 @@ public class BlockCable extends BlockCoverable {
 
     @Override
     public BlockRenderLayer getBlockLayer() {
-        return RefinedStorage.INSTANCE.translucentCables ? BlockRenderLayer.TRANSLUCENT : super.getBlockLayer();
+        return RefinedStorage.INSTANCE.config.translucentCables ? BlockRenderLayer.TRANSLUCENT : super.getBlockLayer();
     }
 }

@@ -184,13 +184,13 @@ public class TileGrid extends TileNode implements IGrid {
     public int getEnergyUsage() {
         switch (getType()) {
             case NORMAL:
-                return RefinedStorage.INSTANCE.gridUsage;
+                return RefinedStorage.INSTANCE.config.gridUsage;
             case CRAFTING:
-                return RefinedStorage.INSTANCE.craftingGridUsage;
+                return RefinedStorage.INSTANCE.config.craftingGridUsage;
             case PATTERN:
-                return RefinedStorage.INSTANCE.patternGridUsage;
+                return RefinedStorage.INSTANCE.config.patternGridUsage;
             case FLUID:
-                return RefinedStorage.INSTANCE.fluidGridUsage;
+                return RefinedStorage.INSTANCE.config.fluidGridUsage;
             default:
                 return 0;
         }

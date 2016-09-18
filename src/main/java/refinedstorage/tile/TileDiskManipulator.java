@@ -163,7 +163,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.diskManipulatorUsage + upgrades.getEnergyUsage();
+        return RefinedStorage.INSTANCE.config.diskManipulatorUsage + upgrades.getEnergyUsage();
     }
 
     @Override
