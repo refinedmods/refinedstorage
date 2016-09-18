@@ -5,6 +5,7 @@
 - Fixed shift clicking from Grid when player inventory is full throwing items in the world (raoulvdberge)
 - Added support for ore dictionary substitutions in Crafting Patterns (raoulvdberge)
 - Added Disk Manipulator (way2muchnoise)
+- Added ingame config (way2muchnoise)
 - Updated Dutch translation (raoulvdberge)
 
 ### 1.0.4
