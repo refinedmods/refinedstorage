@@ -59,11 +59,14 @@ misc.refinedstorage:network_card.tooltip=Gelinkt aan %d, %d, %d.
 
 misc.refinedstorage:pattern.inputs=Inputs
 misc.refinedstorage:pattern.outputs=Outputs
+misc.refinedstorage:pattern.oredict=Gebruikt de ore dictionary
+misc.refinedstorage:pattern.invalid=Ongeldig patroon
 
 misc.refinedstorage:start=Start
 misc.refinedstorage:clear=Legen
 misc.refinedstorage:cancel_all=Annuleer alles
 misc.refinedstorage:priority=Prioriteit
+misc.refinedstorage:use_oredict=Gebruik ore dict
 
 sidebutton.refinedstorage:compare.1=Vergelijken op schade
 sidebutton.refinedstorage:compare.2=Vergelijken op NBT
@@ -93,6 +96,10 @@ sidebutton.refinedstorage:mode=Mode
 sidebutton.refinedstorage:mode.whitelist=Whitelist
 sidebutton.refinedstorage:mode.blacklist=Blacklist
 
+sidebutton.refinedstorage:iomode=IO Mode
+sidebutton.refinedstorage:iomode.insert=In netwerk steken
+sidebutton.refinedstorage:iomode.extract=Uit netwerk halen
+
 sidebutton.refinedstorage:type=Type
 sidebutton.refinedstorage:type.0=Items
 sidebutton.refinedstorage:type.1=Vloeistoffen
@@ -101,6 +108,9 @@ sidebutton.refinedstorage:detector.mode=Mode
 sidebutton.refinedstorage:detector.mode.0=Redstone signaal aan wanneer onder het aantal
 sidebutton.refinedstorage:detector.mode.1=Redstone signaal aan wanneer op het aantal
 sidebutton.refinedstorage:detector.mode.2=Redstone signaal aan wanneer boven het aantal
+sidebutton.refinedstorage:detector.mode.3=Redstone signaal aan wanneer aan het autocraften
+
+sidebutton.refinedstorage:crafter.triggered_autocrafting=Autocrafting triggeren met redstone signaal
 
 block.refinedstorage:controller.0.name=Controller
 block.refinedstorage:controller.1.name=Creative Controller
@@ -110,6 +120,7 @@ block.refinedstorage:grid.1.name=Crafting Rooster
 block.refinedstorage:grid.2.name=Patroon Rooster
 block.refinedstorage:grid.3.name=Vloeistof Rooster
 block.refinedstorage:disk_drive.name=Schijf
+block.refinedstorage:disk_manipulator.name=Schijf Manipulator
 block.refinedstorage:external_storage.name=Externe Opslag
 block.refinedstorage:importer.name=Importeur
 block.refinedstorage:exporter.name=Exporteur
