@@ -11,6 +11,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import refinedstorage.RefinedStorage;
 import refinedstorage.apiimpl.storage.NBTStorage;
 import refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
 import refinedstorage.apiimpl.storage.fluid.FluidUtils;
@@ -162,12 +163,14 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
 
     @Override
     public int getEnergyUsage() {
-        return 0;
+        return RefinedStorage.INSTANCE.diskManipulatorUsage + upgrades.getEnergyUsage();
     }
 
     @Override
     public void updateNode() {
-        if (ticks % upgrades.getSpeed() != 0) return;
+        if (ticks % upgrades.getSpeed() != 0) {
+            return;
+        }
         int slot = 0;
         if (type == IType.ITEMS) {
             while (slot < itemStorages.length && itemStorages[slot] == null) {

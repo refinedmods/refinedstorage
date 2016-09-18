@@ -74,6 +74,7 @@ public final class RefinedStorage {
     public int networkTransmitterUsage;
     public float networkTransmitterPerBlockUsage;
     public int networkReceiverUsage;
+    public int diskManipulatorUsage;
 
     public int controllerCapacity;
     public boolean controllerUsesEnergy;
@@ -128,6 +129,7 @@ public final class RefinedStorage {
         networkTransmitterUsage = config.getInt("networkTransmitter", "energy", 50, 0, Integer.MAX_VALUE, "The base energy used by Network Transmitters");
         networkTransmitterPerBlockUsage = config.getFloat("networkTransmitterPerBlock", "energy", 4, 0, Float.MAX_VALUE, "The additional energy per block that the Network Transmitter uses, gets rounded up");
         networkReceiverUsage = config.getInt("networkReceiver", "energy", 15, 0, Integer.MAX_VALUE, "The energy used by Network Receivers");
+        diskManipulatorUsage = config.getInt("diskManipulator", "energy", 3, 0, Integer.MAX_VALUE, "The energy used by Disk Manipulators");
 
         controllerCapacity = config.getInt("capacity", "controller", 32000, 0, Integer.MAX_VALUE, "The energy capacity of the Controller");
         controllerUsesEnergy = config.getBoolean("usesEnergy", "controller", true, "Whether the Controller uses energy");
