@@ -27,6 +27,8 @@ import refinedstorage.tile.data.ITileDataConsumer;
 import refinedstorage.tile.data.ITileDataProducer;
 import refinedstorage.tile.data.TileDataParameter;
 
+import java.util.ArrayList;
+
 public class TileDiskManipulator extends TileNode implements IComparable, IFilterable, IType {
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
@@ -49,6 +51,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
     private static final String NBT_TYPE = "Type";
+    private static final String NBT_IO_MODE = "IOMode";
 
     private int compare = 0;
     private int mode = IFilterable.WHITELIST;
@@ -190,28 +193,63 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             return;
         }
         ItemStack extracted = null;
-        int ii = 0;
+        int i = 0;
         do {
             ItemStack stack = null;
-            while (storage.getItems().size() > ii && stack == null) {
-                stack = storage.getItems().get(ii++);
+            while (storage.getItems().size() > i && stack == null) {
+                stack = storage.getItems().get(i++);
             }
             if (stack != null) {
                 extracted = storage.extractItem(stack, 1, compare);
             }
-        } while (storage.getItems().size() > ii && extracted == null);
+        } while (storage.getItems().size() > i && extracted == null);
         if (extracted == null) {
             moveDriveToOutput(slot);
             return;
         }
-        ItemStack leftOver = network.insertItem(extracted, extracted.stackSize, false);
-        if (leftOver != null) {
-            storage.insertItem(leftOver, leftOver.stackSize, false);
+        ItemStack remainder = network.insertItem(extracted, extracted.stackSize, false);
+        if (remainder != null) {
+            storage.insertItem(remainder, remainder.stackSize, false);
         }
     }
 
     private void extractFromNetwork(ItemStorage storage, int slot) {
+        if (storage.getStored() == storage.getCapacity()) {
+            moveDriveToOutput(slot);
+            return;
+        }
+        ItemStack extracted = null;
+        int i = 0;
+        if (IFilterable.isEmpty(itemFilters)) {
+            ItemStack toExtract = null;
+            ArrayList<ItemStack> networkItems = new ArrayList<>(network.getItemStorage().getStacks());
+            int iii = 0;
+            while ((toExtract == null || toExtract.stackSize == 0) && iii < networkItems.size()) {
+                toExtract = networkItems.get(iii++);
+            }
+            if (toExtract != null) {
+                extracted = network.extractItem(toExtract, 1, compare);
+            }
+        } else {
+            while (itemFilters.getSlots() > i && extracted == null) {
+                ItemStack stack = null;
+                while (itemFilters.getSlots() > i && stack == null) {
+                    stack = itemFilters.getStackInSlot(i++);
+                }
+                if (stack != null) {
+                    extracted = network.extractItem(stack, 1, compare);
+                }
+            }
+        }
 
+        if (extracted == null) {
+            moveDriveToOutput(slot);
+            return;
+        }
+        ItemStack remainder = storage.insertItem(extracted, extracted.stackSize, false);
+        if (remainder != null) {
+            network.insertItem(remainder, remainder.stackSize, false);
+        }
     }
 
     private void insertIntoNetwork(FluidStorage storage, int slot) {
@@ -220,27 +258,63 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             return;
         }
         FluidStack extracted = null;
-        int ii = 0;
+        int i = 0;
         do {
-            FluidStack stack = storage.getStacks().get(ii);
-            while (stack == null && storage.getStacks().size() > ii) {
-                ii++;
+            FluidStack stack = storage.getStacks().get(i);
+            while (stack == null && storage.getStacks().size() > i) {
+                i++;
             }
             if (stack != null) {
                 extracted = storage.extractFluid(stack, 1, compare);
             }
-        } while (extracted == null && storage.getStacks().size() > ii);
+        } while (extracted == null && storage.getStacks().size() > i);
         if (extracted == null) {
             moveDriveToOutput(slot);
             return;
         }
-        FluidStack leftOver = network.insertFluid(extracted, extracted.amount, false);
-        if (leftOver != null) {
-            storage.insertFluid(leftOver, leftOver.amount, false);
+        FluidStack remainder = network.insertFluid(extracted, extracted.amount, false);
+        if (remainder != null) {
+            storage.insertFluid(remainder, remainder.amount, false);
         }
     }
 
     private void extractFromNetwork(FluidStorage storage, int slot) {
+        if (storage.getStored() == storage.getCapacity()) {
+            moveDriveToOutput(slot);
+            return;
+        }
+        FluidStack extracted = null;
+        int i = 0;
+        if (IFilterable.isEmpty(itemFilters)) {
+            FluidStack toExtract = null;
+            ArrayList<FluidStack> networkFluids = new ArrayList<>(network.getFluidStorage().getStacks());
+            int j = 0;
+            while ((toExtract == null || toExtract.amount == 0) && j < networkFluids.size()) {
+                toExtract = networkFluids.get(j++);
+            }
+            if (toExtract != null) {
+                extracted = network.extractFluid(toExtract, 1, compare);
+            }
+        } else {
+            while (fluidFilters.getSlots() > i && extracted == null) {
+                FluidStack stack = null;
+                while (fluidFilters.getSlots() > i && stack == null) {
+                    stack = fluidFilters.getFluidStackInSlot(i++);
+                }
+                if (stack != null) {
+                    extracted = network.extractFluid(stack, 1, compare);
+                }
+            }
+        }
+
+        if (extracted == null) {
+            moveDriveToOutput(slot);
+            return;
+        }
+        FluidStack remainder = storage.insertFluid(extracted, extracted.amount, false);
+        if (remainder != null) {
+            network.insertFluid(remainder, remainder.amount, false);
+        }
     }
 
     private void moveDriveToOutput(int slot) {
@@ -326,6 +400,10 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         if (tag.hasKey(NBT_TYPE)) {
             type = tag.getInteger(NBT_TYPE);
         }
+
+        if (tag.hasKey(NBT_IO_MODE)) {
+            ioMode = tag.getInteger(NBT_IO_MODE);
+        }
     }
 
     @Override
@@ -339,6 +417,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_MODE, mode);
         tag.setInteger(NBT_TYPE, type);
+        tag.setInteger(NBT_IO_MODE, ioMode);
 
         return tag;
     }

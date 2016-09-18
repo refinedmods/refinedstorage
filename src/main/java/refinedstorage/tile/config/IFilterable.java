@@ -68,7 +68,7 @@ public interface IFilterable {
             int slots = 0;
 
             for (int i = 0; i < filters.getSlots(); ++i) {
-                FluidStack slot = filters.getFluids()[i];
+                FluidStack slot = filters.getFluidStackInSlot(i);
 
                 if (slot != null) {
                     slots++;
@@ -82,7 +82,7 @@ public interface IFilterable {
             return slots == 0;
         } else if (mode == BLACKLIST) {
             for (int i = 0; i < filters.getSlots(); ++i) {
-                FluidStack slot = filters.getFluids()[i];
+                FluidStack slot = filters.getFluidStackInSlot(i);
 
                 if (slot != null && CompareUtils.compareStack(slot, stack, compare)) {
                     return false;
@@ -93,6 +93,15 @@ public interface IFilterable {
         }
 
         return false;
+    }
+
+    static boolean isEmpty(IItemHandler filter) {
+        for (int i = 0; i < filter.getSlots(); i++) {
+            if (filter.getStackInSlot(i) != null) {
+                return false;
+            }
+        }
+        return true;
     }
 
     void setMode(int mode);
