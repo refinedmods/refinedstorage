@@ -48,7 +48,7 @@ public class TileExporter extends TileMultipartNode implements IComparable, ITyp
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.exporterUsage + upgrades.getEnergyUsage();
+        return RefinedStorage.CONFIG.exporterUsage + upgrades.getEnergyUsage();
     }
 
     @Override

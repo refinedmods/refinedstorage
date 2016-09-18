@@ -13,7 +13,7 @@ public class TileRelay extends TileNode {
 
     @Override
     public int getEnergyUsage() {
-        return getRedstoneMode() == RedstoneMode.IGNORE ? 0 : RefinedStorage.INSTANCE.relayUsage;
+        return getRedstoneMode() == RedstoneMode.IGNORE ? 0 : RefinedStorage.CONFIG.relayUsage;
     }
 
     @Override

@@ -79,7 +79,7 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.fluidStorageUsage;
+        return RefinedStorage.CONFIG.fluidStorageUsage;
     }
 
     @Override

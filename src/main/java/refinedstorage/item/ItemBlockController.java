@@ -29,7 +29,7 @@ public class ItemBlockController extends ItemBlockBase {
     }
 
     public static int getEnergyCapacity(ItemStack stack) {
-        return (stack.hasTagCompound() && stack.getTagCompound().hasKey(TileController.NBT_ENERGY_CAPACITY)) ? stack.getTagCompound().getInteger(TileController.NBT_ENERGY_CAPACITY) : RefinedStorage.INSTANCE.controllerCapacity;
+        return (stack.hasTagCompound() && stack.getTagCompound().hasKey(TileController.NBT_ENERGY_CAPACITY)) ? stack.getTagCompound().getInteger(TileController.NBT_ENERGY_CAPACITY) : RefinedStorage.CONFIG.controllerCapacity;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ItemBlockController extends ItemBlockBase {
             tag = new NBTTagCompound();
         }
 
-        tag.setInteger(TileController.NBT_ENERGY, stack.getMetadata() == EnumControllerType.CREATIVE.getId() ? RefinedStorage.INSTANCE.controllerCapacity : 0);
+        tag.setInteger(TileController.NBT_ENERGY, stack.getMetadata() == EnumControllerType.CREATIVE.getId() ? RefinedStorage.CONFIG.controllerCapacity : 0);
 
         return stack;
     }

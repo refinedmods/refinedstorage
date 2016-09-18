@@ -104,7 +104,7 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.externalStorageUsage + ((itemStorages.size() + fluidStorages.size()) * RefinedStorage.INSTANCE.externalStoragePerStorageUsage);
+        return RefinedStorage.CONFIG.externalStorageUsage + ((itemStorages.size() + fluidStorages.size()) * RefinedStorage.CONFIG.externalStoragePerStorageUsage);
     }
 
     @Override

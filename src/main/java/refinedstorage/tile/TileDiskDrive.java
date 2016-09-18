@@ -150,11 +150,11 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
 
     @Override
     public int getEnergyUsage() {
-        int usage = RefinedStorage.INSTANCE.diskDriveUsage;
+        int usage = RefinedStorage.CONFIG.diskDriveUsage;
 
         for (int i = 0; i < disks.getSlots(); ++i) {
             if (disks.getStackInSlot(i) != null) {
-                usage += RefinedStorage.INSTANCE.diskDrivePerDiskUsage;
+                usage += RefinedStorage.CONFIG.diskDrivePerDiskUsage;
             }
         }
 

@@ -76,7 +76,7 @@ public class TileSolderer extends TileNode {
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.soldererUsage + upgrades.getEnergyUsage();
+        return RefinedStorage.CONFIG.soldererUsage + upgrades.getEnergyUsage();
     }
 
     @Override

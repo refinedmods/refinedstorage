@@ -53,7 +53,7 @@ public class TileImporter extends TileMultipartNode implements IComparable, IFil
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.importerUsage + upgrades.getEnergyUsage();
+        return RefinedStorage.CONFIG.importerUsage + upgrades.getEnergyUsage();
     }
 
     @Override

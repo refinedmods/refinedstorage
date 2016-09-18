@@ -134,7 +134,7 @@ public class TileFluidInterface extends TileNode implements IComparable {
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.fluidInterfaceUsage;
+        return RefinedStorage.CONFIG.fluidInterfaceUsage;
     }
 
     @Override

@@ -55,7 +55,7 @@ public class WirelessGridHandler implements IWirelessGridHandler {
 
         ItemStack stack = player.getHeldItem(hand);
 
-        if (RefinedStorage.INSTANCE.wirelessGridUsesEnergy && stack.getItemDamage() != ItemWirelessGrid.TYPE_CREATIVE && RefinedStorageItems.WIRELESS_GRID.getEnergyStored(stack) <= RefinedStorage.INSTANCE.wirelessGridOpenUsage) {
+        if (RefinedStorage.CONFIG.wirelessGridUsesEnergy && stack.getItemDamage() != ItemWirelessGrid.TYPE_CREATIVE && RefinedStorageItems.WIRELESS_GRID.getEnergyStored(stack) <= RefinedStorage.CONFIG.wirelessGridOpenUsage) {
             return true;
         }
 
@@ -65,7 +65,7 @@ public class WirelessGridHandler implements IWirelessGridHandler {
 
         network.sendItemStorageToClient((EntityPlayerMP) player);
 
-        drainEnergy(player, RefinedStorage.INSTANCE.wirelessGridOpenUsage);
+        drainEnergy(player, RefinedStorage.CONFIG.wirelessGridOpenUsage);
 
         return true;
     }
@@ -83,7 +83,7 @@ public class WirelessGridHandler implements IWirelessGridHandler {
     public void drainEnergy(EntityPlayer player, int energy) {
         IWirelessGridConsumer consumer = getConsumer(player);
 
-        if (consumer != null && RefinedStorage.INSTANCE.wirelessGridUsesEnergy) {
+        if (consumer != null && RefinedStorage.CONFIG.wirelessGridUsesEnergy) {
             ItemWirelessGrid item = RefinedStorageItems.WIRELESS_GRID;
 
             if (consumer.getStack().getItemDamage() != ItemWirelessGrid.TYPE_CREATIVE) {

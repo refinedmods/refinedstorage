@@ -31,7 +31,7 @@ public class TileWirelessTransmitter extends TileNode implements IWirelessTransm
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.wirelessTransmitterUsage + upgrades.getEnergyUsage();
+        return RefinedStorage.CONFIG.wirelessTransmitterUsage + upgrades.getEnergyUsage();
     }
 
     @Override
@@ -56,7 +56,7 @@ public class TileWirelessTransmitter extends TileNode implements IWirelessTransm
 
     @Override
     public int getRange() {
-        return RefinedStorage.INSTANCE.wirelessTransmitterBaseRange + (upgrades.getUpgradeCount(ItemUpgrade.TYPE_RANGE) * RefinedStorage.INSTANCE.wirelessTransmitterRangePerUpgrade);
+        return RefinedStorage.CONFIG.wirelessTransmitterBaseRange + (upgrades.getUpgradeCount(ItemUpgrade.TYPE_RANGE) * RefinedStorage.CONFIG.wirelessTransmitterRangePerUpgrade);
     }
 
     @Override

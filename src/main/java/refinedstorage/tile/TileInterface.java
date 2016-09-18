@@ -35,7 +35,7 @@ public class TileInterface extends TileNode implements IComparable {
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.interfaceUsage + upgrades.getEnergyUsage();
+        return RefinedStorage.CONFIG.interfaceUsage + upgrades.getEnergyUsage();
     }
 
     @Override

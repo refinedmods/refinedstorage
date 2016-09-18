@@ -64,7 +64,7 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.constructorUsage + upgrades.getEnergyUsage();
+        return RefinedStorage.CONFIG.constructorUsage + upgrades.getEnergyUsage();
     }
 
     @Override

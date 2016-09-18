@@ -63,7 +63,7 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.destructorUsage + upgrades.getEnergyUsage();
+        return RefinedStorage.CONFIG.destructorUsage + upgrades.getEnergyUsage();
     }
 
     @Override
