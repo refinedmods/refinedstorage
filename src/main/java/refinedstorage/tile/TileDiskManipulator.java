@@ -34,8 +34,10 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
     public static final TileDataParameter<Integer> TYPE = IType.createParameter();
 
-    public static final int INSERT = 0, EXTRACT = 1;
-    public static final TileDataParameter<Integer> IO_MODE = new TileDataParameter<>(DataSerializers.VARINT, INSERT, new ITileDataProducer<Integer, TileDiskManipulator>() {
+    public static final int IO_MODE_INSERT = 0;
+    public static final int IO_MODE_EXTRACT = 1;
+
+    public static final TileDataParameter<Integer> IO_MODE = new TileDataParameter<>(DataSerializers.VARINT, IO_MODE_INSERT, new ITileDataProducer<Integer, TileDiskManipulator>() {
         @Override
         public Integer getValue(TileDiskManipulator tile) {
             return tile.ioMode;
@@ -56,19 +58,16 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
     private int compare = 0;
     private int mode = IFilterable.WHITELIST;
     private int type = IType.ITEMS;
-    private int ioMode = INSERT;
+    private int ioMode = IO_MODE_INSERT;
 
-    private ItemStorage[] itemStorages;
-    private FluidStorage[] fluidStorages;
+    private ItemStorage[] itemStorages = new ItemStorage[6];
+    private FluidStorage[] fluidStorages = new FluidStorage[6];
 
     public TileDiskManipulator() {
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(MODE);
         dataManager.addWatchedParameter(TYPE);
         dataManager.addWatchedParameter(IO_MODE);
-
-        itemStorages = new ItemStorage[6];
-        fluidStorages = new FluidStorage[6];
     }
 
     private ItemHandlerBasic disks = new ItemHandlerBasic(12, this, IItemValidator.STORAGE_DISK) {
@@ -166,22 +165,35 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
     public void updateNode() {
         int slot = 0;
         if (type == IType.ITEMS) {
-            while (slot < itemStorages.length && itemStorages[slot] == null) slot++;
-            if (slot == itemStorages.length) return;
-            ItemStorage storage = itemStorages[slot];
-            if (ioMode == INSERT) {
-                insertIntoNetwork(storage, slot);
-            } else if (ioMode == EXTRACT) {
-                extractFromNetwork(storage, slot);
+            while (slot < itemStorages.length && itemStorages[slot] == null) {
+                slot++;
             }
 
-        } else if (type == IType.FLUIDS) {
-            while (slot < fluidStorages.length && fluidStorages[slot] == null) slot++;
-            if (slot == fluidStorages.length) return;
-            FluidStorage storage = fluidStorages[slot];
-            if (ioMode == INSERT) {
+            if (slot == itemStorages.length) {
+                return;
+            }
+
+            ItemStorage storage = itemStorages[slot];
+
+            if (ioMode == IO_MODE_INSERT) {
                 insertIntoNetwork(storage, slot);
-            } else if (ioMode == EXTRACT) {
+            } else if (ioMode == IO_MODE_EXTRACT) {
+                extractFromNetwork(storage, slot);
+            }
+        } else if (type == IType.FLUIDS) {
+            while (slot < fluidStorages.length && fluidStorages[slot] == null) {
+                slot++;
+            }
+
+            if (slot == fluidStorages.length) {
+                return;
+            }
+
+            FluidStorage storage = fluidStorages[slot];
+
+            if (ioMode == IO_MODE_INSERT) {
+                insertIntoNetwork(storage, slot);
+            } else if (ioMode == IO_MODE_EXTRACT) {
                 extractFromNetwork(storage, slot);
             }
         }
@@ -192,22 +204,29 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             moveDriveToOutput(slot);
             return;
         }
+
         ItemStack extracted = null;
         int i = 0;
+
         do {
             ItemStack stack = null;
+
             while (storage.getItems().size() > i && stack == null) {
                 stack = storage.getItems().get(i++);
             }
+
             if (stack != null) {
                 extracted = storage.extractItem(stack, 1, compare);
             }
         } while (storage.getItems().size() > i && extracted == null);
+
         if (extracted == null) {
             moveDriveToOutput(slot);
             return;
         }
+
         ItemStack remainder = network.insertItem(extracted, extracted.stackSize, false);
+
         if (remainder != null) {
             storage.insertItem(remainder, remainder.stackSize, false);
         }
@@ -218,24 +237,31 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             moveDriveToOutput(slot);
             return;
         }
+
         ItemStack extracted = null;
         int i = 0;
+
         if (IFilterable.isEmpty(itemFilters)) {
             ItemStack toExtract = null;
             ArrayList<ItemStack> networkItems = new ArrayList<>(network.getItemStorage().getStacks());
-            int iii = 0;
-            while ((toExtract == null || toExtract.stackSize == 0) && iii < networkItems.size()) {
-                toExtract = networkItems.get(iii++);
+
+            int j = 0;
+
+            while ((toExtract == null || toExtract.stackSize == 0) && j < networkItems.size()) {
+                toExtract = networkItems.get(j++);
             }
+
             if (toExtract != null) {
                 extracted = network.extractItem(toExtract, 1, compare);
             }
         } else {
             while (itemFilters.getSlots() > i && extracted == null) {
                 ItemStack stack = null;
+
                 while (itemFilters.getSlots() > i && stack == null) {
                     stack = itemFilters.getStackInSlot(i++);
                 }
+
                 if (stack != null) {
                     extracted = network.extractItem(stack, 1, compare);
                 }
@@ -246,7 +272,9 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             moveDriveToOutput(slot);
             return;
         }
+
         ItemStack remainder = storage.insertItem(extracted, extracted.stackSize, false);
+
         if (remainder != null) {
             network.insertItem(remainder, remainder.stackSize, false);
         }
@@ -257,22 +285,29 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             moveDriveToOutput(slot);
             return;
         }
+
         FluidStack extracted = null;
         int i = 0;
+
         do {
             FluidStack stack = storage.getStacks().get(i);
+
             while (stack == null && storage.getStacks().size() > i) {
                 i++;
             }
+
             if (stack != null) {
                 extracted = storage.extractFluid(stack, 1, compare);
             }
         } while (extracted == null && storage.getStacks().size() > i);
+
         if (extracted == null) {
             moveDriveToOutput(slot);
             return;
         }
+
         FluidStack remainder = network.insertFluid(extracted, extracted.amount, false);
+
         if (remainder != null) {
             storage.insertFluid(remainder, remainder.amount, false);
         }
@@ -283,24 +318,31 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             moveDriveToOutput(slot);
             return;
         }
+
         FluidStack extracted = null;
         int i = 0;
+
         if (IFilterable.isEmpty(itemFilters)) {
             FluidStack toExtract = null;
             ArrayList<FluidStack> networkFluids = new ArrayList<>(network.getFluidStorage().getStacks());
+
             int j = 0;
+
             while ((toExtract == null || toExtract.amount == 0) && j < networkFluids.size()) {
                 toExtract = networkFluids.get(j++);
             }
+
             if (toExtract != null) {
                 extracted = network.extractFluid(toExtract, 1, compare);
             }
         } else {
             while (fluidFilters.getSlots() > i && extracted == null) {
                 FluidStack stack = null;
+
                 while (fluidFilters.getSlots() > i && stack == null) {
                     stack = fluidFilters.getFluidStackInSlot(i++);
                 }
+
                 if (stack != null) {
                     extracted = network.extractFluid(stack, 1, compare);
                 }
@@ -311,7 +353,9 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             moveDriveToOutput(slot);
             return;
         }
+
         FluidStack remainder = storage.insertFluid(extracted, extracted.amount, false);
+
         if (remainder != null) {
             network.insertFluid(remainder, remainder.amount, false);
         }
@@ -321,22 +365,27 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         ItemStack disk = disks.getStackInSlot(slot);
         if (disk != null) {
             int i = 6;
+
             while (disks.getStackInSlot(i) != null && i < 12) {
                 i++;
             }
+
             if (i == 12) {
                 return;
             }
+
             if (slot < 6) {
                 if (itemStorages[slot] != null) {
                     itemStorages[slot].writeToNBT();
                     itemStorages[slot] = null;
                 }
+
                 if (fluidStorages[slot] != null) {
                     fluidStorages[slot].writeToNBT();
                     fluidStorages[slot] = null;
                 }
             }
+
             disks.extractItem(slot, 1, false);
             disks.insertItem(i, disk, false);
         }
@@ -442,11 +491,16 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
     }
 
     public void onBreak() {
-        for (ItemStorage storage : itemStorages)
-            if (storage != null)
+        for (ItemStorage storage : itemStorages) {
+            if (storage != null) {
                 storage.writeToNBT();
-        for (FluidStorage storage : fluidStorages)
-            if (storage != null)
+            }
+        }
+
+        for (FluidStorage storage : fluidStorages) {
+            if (storage != null) {
                 storage.writeToNBT();
+            }
+        }
     }
 }

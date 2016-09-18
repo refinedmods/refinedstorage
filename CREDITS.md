@@ -2,6 +2,7 @@
 
 ## Programming
 - raoulvdberge
+- way2muchnoise
 - tomevoll (providing small patches)
 - blay09 (Crafting Tweaks integration)
 

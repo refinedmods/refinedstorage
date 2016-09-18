@@ -39,8 +39,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommonProxy {
-    public static final boolean ENABLE_DISK_MANIPULATOR = true;
-
     protected List<BlockCable> cableTypes = new ArrayList<>();
 
     public void preInit(FMLPreInitializationEvent e) {
@@ -98,9 +96,7 @@ public class CommonProxy {
         registerTile(TileNetworkTransmitter.class, "network_transmitter");
         registerTile(TileFluidInterface.class, "fluid_interface");
         registerTile(TileFluidStorage.class, "fluid_storage");
-        if (ENABLE_DISK_MANIPULATOR) {
-            registerTile(TileDiskManipulator.class, "disk_manipulator");
-        }
+        registerTile(TileDiskManipulator.class, "disk_manipulator");
 
         registerBlock(RefinedStorageBlocks.CONTROLLER);
         registerBlock(RefinedStorageBlocks.GRID);
@@ -125,9 +121,7 @@ public class CommonProxy {
         registerBlock(RefinedStorageBlocks.MACHINE_CASING);
         registerBlock(RefinedStorageBlocks.NETWORK_TRANSMITTER);
         registerBlock(RefinedStorageBlocks.NETWORK_RECEIVER);
-        if (ENABLE_DISK_MANIPULATOR) {
-            registerBlock(RefinedStorageBlocks.DISK_MANIPULATOR);
-        }
+        registerBlock(RefinedStorageBlocks.DISK_MANIPULATOR);
 
         registerItem(RefinedStorageItems.QUARTZ_ENRICHED_IRON);
         registerItem(RefinedStorageItems.STORAGE_DISK);
@@ -628,6 +622,18 @@ public class CommonProxy {
             'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
             'D', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
             'A', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)
+        );
+
+        // Disk Manipulator
+        GameRegistry.addShapedRecipe(new ItemStack(RefinedStorageBlocks.DISK_MANIPULATOR),
+            "ESE",
+            "CMD",
+            "ESE",
+            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+            'S', new ItemStack(RefinedStorageItems.STORAGE_HOUSING),
+            'C', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
+            'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
+            'D', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_DESTRUCTION)
         );
     }
 

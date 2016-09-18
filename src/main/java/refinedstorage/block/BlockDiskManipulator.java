@@ -29,6 +29,7 @@ public class BlockDiskManipulator extends BlockNode {
         if (!world.isRemote) {
             player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.DISK_MANIPULATOR, world, pos.getX(), pos.getY(), pos.getZ());
         }
+
         return true;
     }
 
