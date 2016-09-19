@@ -157,7 +157,7 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
     }
 
     @Override
-    public IItemHandler getConnectedItems() {
+    public IItemHandler getFacingInventory() {
         return getItemHandler(getFacingTile(), getDirection().getOpposite());
     }
 

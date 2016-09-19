@@ -2,19 +2,25 @@ package refinedstorage.apiimpl.autocrafting.task;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.autocrafting.task.CraftingTask;
+import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.apiimpl.storage.fluid.FluidUtils;
 
 public class CraftingTaskProcessing extends CraftingTask {
     public static final String NBT_SATISFIED_INSERTION = "SatisfiedInsertion";
+    public static final String NBT_TILE_IN_USE = "TileInUse";
 
     private boolean satisfiedInsertion[];
+    private BlockPos tileInUse;
+
+    private boolean waitingOnTileInUse;
 
     public CraftingTaskProcessing(ICraftingPattern pattern) {
         super(pattern);
@@ -24,6 +30,10 @@ public class CraftingTaskProcessing extends CraftingTask {
 
     public void setSatisfiedInsertion(boolean[] satisfiedInsertion) {
         this.satisfiedInsertion = satisfiedInsertion;
+    }
+
+    public void setTileInUse(BlockPos tileInUse) {
+        this.tileInUse = tileInUse;
     }
 
     @Override
@@ -54,15 +64,37 @@ public class CraftingTaskProcessing extends CraftingTask {
             return false;
         }
 
-        if (!took.isEmpty()) {
-            ICraftingPatternContainer container = pattern.getContainer();
+        ICraftingPatternContainer container = pattern.getContainer();
 
-            ItemStack toInsert = took.get(0);
+        if (container.getFacingTile() == null) {
+            tileInUse = null;
 
-            if (ItemHandlerHelper.insertItem(container.getConnectedItems(), toInsert, true) == null) {
-                ItemHandlerHelper.insertItem(container.getConnectedItems(), toInsert, false);
+            waitingOnTileInUse = false;
 
-                took.remove(0);
+            network.updateCraftingTasks();
+        }
+
+        if (!took.isEmpty() && container.getFacingTile() != null) {
+            boolean wasWaitingOnTileInUse = waitingOnTileInUse;
+
+            waitingOnTileInUse = isTileInUse(network);
+
+            if (wasWaitingOnTileInUse != waitingOnTileInUse) {
+                network.updateCraftingTasks();
+            }
+
+            if (!waitingOnTileInUse) {
+                tileInUse = pattern.getContainer().getFacingTile().getPos();
+
+                ItemStack toInsert = took.get(0);
+
+                if (ItemHandlerHelper.insertItem(container.getFacingInventory(), toInsert, true) == null) {
+                    ItemHandlerHelper.insertItem(container.getFacingInventory(), toInsert, false);
+
+                    took.remove(0);
+
+                    network.updateCraftingTasks();
+                }
             }
         }
 
@@ -89,6 +121,32 @@ public class CraftingTaskProcessing extends CraftingTask {
         return true;
     }
 
+    private boolean isTileInUse(INetworkMaster network) {
+        for (ICraftingTask task : network.getCraftingTasks()) {
+            if (isTileInUse(task)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean isTileInUse(ICraftingTask task) {
+        if (task != this && task instanceof CraftingTaskProcessing) {
+            if (task.getChild() != null) {
+                return isTileInUse(task.getChild());
+            }
+
+            CraftingTaskProcessing other = (CraftingTaskProcessing) task;
+
+            if (other.tileInUse != null && other.tileInUse.equals(pattern.getContainer().getFacingTile().getPos()) && !other.pattern.equals(pattern)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public boolean onInserted(ItemStack stack) {
         if (isReady()) {
             return false;
@@ -101,6 +159,10 @@ public class CraftingTaskProcessing extends CraftingTask {
                 if (CompareUtils.compareStackNoQuantity(output, stack)) {
                     satisfiedInsertion[i] = true;
 
+                    if (isReady()) {
+                        tileInUse = null;
+                    }
+
                     return true;
                 }
             }
@@ -112,6 +174,10 @@ public class CraftingTaskProcessing extends CraftingTask {
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
+
+        if (tileInUse != null) {
+            tag.setLong(NBT_TILE_IN_USE, tileInUse.toLong());
+        }
 
         writeBooleanArray(tag, NBT_SATISFIED_INSERTION, satisfiedInsertion);
 
@@ -159,6 +225,12 @@ public class CraftingTaskProcessing extends CraftingTask {
 
             for (int i = 0; i < pattern.getInputs().size(); ++i) {
                 builder.append("T=").append(pattern.getInputs().get(i).getUnlocalizedName()).append(".name\n");
+            }
+
+            if (pattern.getContainer().getFacingTile() == null) {
+                builder.append("B=gui.refinedstorage:crafting_monitor.machine_none");
+            } else if (waitingOnTileInUse) {
+                builder.append("B=gui.refinedstorage:crafting_monitor.machine_in_use");
             }
         }
 

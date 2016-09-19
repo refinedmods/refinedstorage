@@ -203,7 +203,7 @@ public abstract class TileBase extends TileEntity implements ITickable {
         }
     }
 
-    protected IItemHandler getItemHandler(TileEntity tile, EnumFacing side) {
+    public static IItemHandler getItemHandler(TileEntity tile, EnumFacing side) {
         if (tile == null) {
             return null;
         }

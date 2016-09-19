@@ -21,7 +21,6 @@ gui.refinedstorage:crafting_monitor=Monitor de Fabricação
 gui.refinedstorage:crafting_monitor.missing_items=Itens faltantes
 gui.refinedstorage:crafting_monitor.items_crafting=Itens em construção
 gui.refinedstorage:crafting_monitor.items_processing=Itens em processamento
-gui.refinedstorage:crafting_monitor.not_started_yet=Não iniciado
 gui.refinedstorage:wireless_transmitter=Transmissor Sem Fio
 gui.refinedstorage:wireless_transmitter.distance=%d blocks
 gui.refinedstorage:crafter=Fabricador

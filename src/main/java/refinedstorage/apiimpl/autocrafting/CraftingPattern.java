@@ -156,4 +156,31 @@ public class CraftingPattern implements ICraftingPattern {
 
         return quantity;
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof CraftingPattern)) {
+            return false;
+        }
+
+        CraftingPattern otherPattern = (CraftingPattern) other;
+
+        if (inputs.size() != otherPattern.inputs.size() || outputs.size() != otherPattern.outputs.size()) {
+            return false;
+        }
+
+        for (int i = 0; i < inputs.size(); ++i) {
+            if (!CompareUtils.compareStack(inputs.get(i), otherPattern.inputs.get(i))) {
+                return false;
+            }
+        }
+
+        for (int i = 0; i < outputs.size(); ++i) {
+            if (!CompareUtils.compareStack(outputs.get(i), otherPattern.outputs.get(i))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

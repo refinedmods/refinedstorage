@@ -7,6 +7,7 @@
 - Added support for ore dictionary substitutions in Crafting Patterns (raoulvdberge)
 - Added Disk Manipulator (way2muchnoise)
 - Added ingame config (way2muchnoise)
+- When a machine is in use by a crafting pattern, inserting of items from other patterns will be avoided (raoulvdberge)
 - Updated Dutch translation (raoulvdberge)
 
 ### 1.0.4

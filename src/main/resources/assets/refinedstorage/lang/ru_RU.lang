@@ -22,7 +22,6 @@ gui.refinedstorage:crafting_monitor=Терминал запросов
 gui.refinedstorage:crafting_monitor.missing_items=Недостающие предметы
 gui.refinedstorage:crafting_monitor.items_crafting=Предметы с возможностью крафта
 gui.refinedstorage:crafting_monitor.items_processing=Предметы с возможностью обработки
-gui.refinedstorage:crafting_monitor.not_started_yet=Еще не началось
 gui.refinedstorage:wireless_transmitter=Передатчик
 gui.refinedstorage:wireless_transmitter.distance=%d блоков
 gui.refinedstorage:crafter=Крафтер

@@ -1,5 +1,6 @@
 package refinedstorage.api.autocrafting;
 
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.IItemHandler;
 
@@ -17,9 +18,14 @@ public interface ICraftingPatternContainer {
     int getSpeed();
 
     /**
-     * @return the {@link IItemHandler} that this container is facing
+     * @return the tile that this container is facing
      */
-    IItemHandler getConnectedItems();
+    TileEntity getFacingTile();
+
+    /**
+     * @return the inventory that this container is facing
+     */
+    IItemHandler getFacingInventory();
 
     /**
      * @return the patterns stored in this container

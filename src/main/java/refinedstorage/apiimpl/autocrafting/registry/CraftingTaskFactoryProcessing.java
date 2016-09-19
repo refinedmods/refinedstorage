@@ -3,6 +3,7 @@ package refinedstorage.apiimpl.autocrafting.registry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import refinedstorage.api.autocrafting.ICraftingPattern;
@@ -29,6 +30,10 @@ public class CraftingTaskFactoryProcessing implements ICraftingTaskFactory {
             task.setSatisfied(CraftingTask.readBooleanArray(tag, CraftingTask.NBT_SATISFIED));
             task.setSatisfiedInsertion(CraftingTask.readBooleanArray(tag, CraftingTaskProcessing.NBT_SATISFIED_INSERTION));
             task.setChecked(CraftingTask.readBooleanArray(tag, CraftingTask.NBT_CHECKED));
+
+            if (tag.hasKey(CraftingTaskProcessing.NBT_TILE_IN_USE)) {
+                task.setTileInUse(BlockPos.fromLong(tag.getLong(CraftingTaskProcessing.NBT_TILE_IN_USE)));
+            }
 
             List<ItemStack> took = new ArrayList<>();
 

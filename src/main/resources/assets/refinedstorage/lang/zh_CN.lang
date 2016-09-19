@@ -21,7 +21,6 @@ gui.refinedstorage:crafting_monitor=合成监控处理器
 gui.refinedstorage:crafting_monitor.missing_items=缺少物品
 gui.refinedstorage:crafting_monitor.items_crafting=正在合成
 gui.refinedstorage:crafting_monitor.items_processing=正在处理
-gui.refinedstorage:crafting_monitor.not_started_yet=等待中
 gui.refinedstorage:wireless_transmitter=无线访问点
 gui.refinedstorage:wireless_transmitter.distance=%d 方块
 gui.refinedstorage:crafter=装配室

@@ -133,6 +133,8 @@ public class GuiCraftingMonitor extends GuiBase {
                             line = t(line.substring(2));
                         } else if (line.startsWith("I=")) {
                             line = TextFormatting.YELLOW + t(line.substring(2));
+                        } else if (line.startsWith("B=")) {
+                            line = TextFormatting.BLUE + t(line.substring(2));
                         }
 
                         lines[j] = line;

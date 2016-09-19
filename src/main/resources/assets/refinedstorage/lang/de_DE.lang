@@ -22,7 +22,6 @@ gui.refinedstorage:crafting_monitor=Craftingprozess Überwachung
 gui.refinedstorage:crafting_monitor.missing_items=Fehlende Items
 gui.refinedstorage:crafting_monitor.items_crafting=Items werden gecraftet
 gui.refinedstorage:crafting_monitor.items_processing=Items werden verarbeitet
-gui.refinedstorage:crafting_monitor.not_started_yet=Noch nicht gestartet
 gui.refinedstorage:wireless_transmitter=Kabelloser Übermittler
 gui.refinedstorage:wireless_transmitter.distance=%d Blöcke
 gui.refinedstorage:crafter=Crafter
