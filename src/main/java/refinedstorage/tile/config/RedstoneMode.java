@@ -22,9 +22,9 @@ public enum RedstoneMode {
                 return world.isBlockPowered(pos);
             case LOW:
                 return !world.isBlockPowered(pos);
+            default:
+                return false;
         }
-
-        return false;
     }
 
     public void write(NBTTagCompound tag) {
