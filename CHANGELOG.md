@@ -7,9 +7,9 @@
 - Added support for ore dictionary substitutions in Crafting Patterns (raoulvdberge)
 - Added Disk Manipulator (way2muchnoise)
 - Added ingame config (way2muchnoise)
-- Added the ability to see the output of a Pattern by shift clicking (raoulvdberge)
+- Added the ability to see the output of a Pattern by holding shift (raoulvdberge)
 - When a machine is in use by a crafting pattern, inserting of items from other patterns will be avoided (raoulvdberge)
-- Exporter in fluid mode no longer duplicates fluids that are less than 1 bucket (raoulvdberge)
+- Exporter in fluid mode and Fluid Interface no longer duplicates fluids that are less than 1 bucket (raoulvdberge)
 - Updated Dutch translation (raoulvdberge)
 
 ### 1.0.4
