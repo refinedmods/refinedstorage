@@ -132,15 +132,17 @@ public class CraftingTaskProcessing extends CraftingTask {
     }
 
     private boolean isTileInUse(ICraftingTask task) {
-        if (task != this && task instanceof CraftingTaskProcessing) {
+        if (task != this) {
             if (task.getChild() != null) {
                 return isTileInUse(task.getChild());
             }
 
-            CraftingTaskProcessing other = (CraftingTaskProcessing) task;
+            if (task instanceof CraftingTaskProcessing) {
+                CraftingTaskProcessing other = (CraftingTaskProcessing) task;
 
-            if (other.tileInUse != null && other.tileInUse.equals(pattern.getContainer().getFacingTile().getPos()) && !other.pattern.equals(pattern)) {
-                return true;
+                if (other.tileInUse != null && other.tileInUse.equals(pattern.getContainer().getFacingTile().getPos()) && !other.pattern.equals(pattern)) {
+                    return true;
+                }
             }
         }
 
