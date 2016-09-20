@@ -60,14 +60,12 @@ misc.refinedstorage:network_card.tooltip=Linked to %d, %d, %d.
 
 misc.refinedstorage:pattern.inputs=Inputs
 misc.refinedstorage:pattern.outputs=Outputs
-misc.refinedstorage:pattern.oredict=Uses ore dictionary
 misc.refinedstorage:pattern.invalid=Invalid pattern
 
 misc.refinedstorage:start=Start
 misc.refinedstorage:clear=Clear
 misc.refinedstorage:cancel_all=Cancel All
 misc.refinedstorage:priority=Priority
-misc.refinedstorage:use_oredict=Use oredict
 
 sidebutton.refinedstorage:compare.1=Compare Damage
 sidebutton.refinedstorage:compare.2=Compare NBT

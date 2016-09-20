@@ -43,14 +43,6 @@ public class CraftingTaskFactoryNormal implements ICraftingTaskFactory {
 
             task.setTook(took);
 
-            for (int i = 0; i < 9; ++i) {
-                String id = String.format(CraftingTaskNormal.NBT_TOOK_SLOT, i);
-
-                if (tag.hasKey(id)) {
-                    task.getTookSlots()[i] = ItemStack.loadItemStackFromNBT(tag.getCompoundTag(id));
-                }
-            }
-
             task.readChildNBT(world, tag);
         }
 

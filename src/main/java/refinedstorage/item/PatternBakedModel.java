@@ -63,9 +63,7 @@ public class PatternBakedModel implements IBakedModel {
                 CraftingPattern pattern = ItemPattern.getPatternFromCache(world, stack);
 
                 if (GuiBase.isShiftKeyDown() && pattern.isValid() && pattern.getOutputs().size() == 1) {
-                    ItemStack output = pattern.getOutputs().get(0);
-
-                    return Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(output, world, entity);
+                    return Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(pattern.getOutputs().get(0), world, entity);
                 }
 
                 return super.handleItemState(originalModel, stack, world, entity);
