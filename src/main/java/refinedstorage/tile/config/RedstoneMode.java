@@ -1,5 +1,6 @@
 package refinedstorage.tile.config;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -11,7 +12,7 @@ import refinedstorage.tile.data.TileDataParameter;
 public enum RedstoneMode {
     IGNORE, HIGH, LOW;
 
-    public static final String NBT = "RedstoneMode";
+    private static final String NBT = "RedstoneMode";
 
     public boolean isEnabled(World world, BlockPos pos) {
         switch (this) {
@@ -24,6 +25,18 @@ public enum RedstoneMode {
         }
 
         return false;
+    }
+
+    public void write(NBTTagCompound tag) {
+        tag.setInteger(NBT, ordinal());
+    }
+
+    public static RedstoneMode read(NBTTagCompound tag) {
+        if (tag.hasKey(RedstoneMode.NBT)) {
+            return getById(tag.getInteger(NBT));
+        }
+
+        return IGNORE;
     }
 
     public static RedstoneMode getById(int id) {

@@ -692,9 +692,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
         energy.readFromNBT(tag);
 
-        if (tag.hasKey(RedstoneMode.NBT)) {
-            redstoneMode = RedstoneMode.getById(tag.getInteger(RedstoneMode.NBT));
-        }
+        redstoneMode = RedstoneMode.read(tag);
 
         if (tag.hasKey(NBT_CRAFTING_TASKS)) {
             NBTTagList taskList = tag.getTagList(NBT_CRAFTING_TASKS, Constants.NBT.TAG_COMPOUND);
@@ -731,7 +729,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
         energy.writeToNBT(tag);
 
-        tag.setInteger(RedstoneMode.NBT, redstoneMode.ordinal());
+        redstoneMode.write(tag);
 
         NBTTagList list = new NBTTagList();
 

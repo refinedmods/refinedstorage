@@ -148,9 +148,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        if (tag.hasKey(RedstoneMode.NBT)) {
-            redstoneMode = RedstoneMode.getById(tag.getInteger(RedstoneMode.NBT));
-        }
+        redstoneMode = RedstoneMode.read(tag);
 
         if (tag.hasKey(NBT_NETWORK)) {
             networkPos = BlockPos.fromLong(tag.getLong(NBT_NETWORK));
@@ -161,7 +159,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        tag.setInteger(RedstoneMode.NBT, redstoneMode.ordinal());
+        redstoneMode.write(tag);
 
         if (network != null) {
             tag.setLong(NBT_NETWORK, network.getPosition().toLong());
