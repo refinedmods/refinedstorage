@@ -6,13 +6,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.oredict.OreDictionary;
 import refinedstorage.api.RefinedStorageAPI;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.storage.CompareUtils;
-
-import java.util.List;
 
 /**
  * Utilities for network manipulation.
@@ -20,29 +17,6 @@ import java.util.List;
 public final class NetworkUtils {
     public static ItemStack extractItem(INetworkMaster network, ItemStack stack, int size) {
         return network.extractItem(stack, size, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
-    }
-
-    public static ItemStack extractItemOreDict(INetworkMaster network, ItemStack stack, int size) {
-        int ids[] = OreDictionary.getOreIDs(stack);
-        String names[] = new String[ids.length];
-
-        for (int i = 0; i < ids.length; ++i) {
-            names[i] = OreDictionary.getOreName(ids[i]);
-        }
-
-        for (String name : names) {
-            List<ItemStack> possibilities = OreDictionary.getOres(name);
-
-            for (ItemStack possibility : possibilities) {
-                ItemStack result = network.extractItem(possibility, size, 0);
-
-                if (result != null) {
-                    return result;
-                }
-            }
-        }
-
-        return null;
     }
 
     public static FluidStack extractFluid(INetworkMaster network, FluidStack stack, int size) {
