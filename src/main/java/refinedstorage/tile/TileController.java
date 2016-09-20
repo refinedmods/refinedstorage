@@ -275,10 +275,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
                 craftingTasksToAdd.clear();
 
-                if (!craftingTasks.isEmpty()) {
-                    markDirty();
-                }
-
                 Iterator<ICraftingTask> craftingTaskIterator = craftingTasks.iterator();
 
                 while (craftingTaskIterator.hasNext()) {
@@ -291,7 +287,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                     }
                 }
 
-                if (craftingTasksChanged) {
+                if (!craftingTasks.isEmpty() || craftingTasksChanged) {
+                    markDirty();
+
                     updateCraftingTasks();
                 }
             }
@@ -340,10 +338,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         return container != null && ticks % container.getSpeed() == 0 && task.update(worldObj, this);
     }
 
-    @Override
     public void updateCraftingTasks() {
-        markDirty();
-
         for (INetworkNode node : nodeGraph.all()) {
             if (node instanceof TileCraftingMonitor) {
                 ((TileCraftingMonitor) node).dataManager.sendParameterToWatchers(TileCraftingMonitor.TASKS);

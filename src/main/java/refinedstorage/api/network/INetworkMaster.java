@@ -92,11 +92,6 @@ public interface INetworkMaster {
     void cancelCraftingTask(@Nonnull ICraftingTask task);
 
     /**
-     * Sends a update packet to all crafting monitors with the crafting task status.
-     */
-    void updateCraftingTasks();
-
-    /**
      * @return a list of crafting patterns in this network, do NOT modify this list
      */
     List<ICraftingPattern> getPatterns();

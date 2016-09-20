@@ -36,8 +36,6 @@ public class CraftingTaskNormal extends CraftingTask {
 
                     took.add(received);
                     tookSlots[i] = received;
-
-                    network.updateCraftingTasks();
                 } else {
                     tryCreateChild(network, i);
                 }

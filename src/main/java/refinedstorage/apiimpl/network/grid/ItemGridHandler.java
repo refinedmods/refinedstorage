@@ -162,8 +162,6 @@ public class ItemGridHandler implements IItemGridHandler {
                 if (task != null) {
                     task.getChild().onCancelled(network);
                     task.setChild(null);
-
-                    network.updateCraftingTasks();
                 }
             }
         } else if (id == -1) {

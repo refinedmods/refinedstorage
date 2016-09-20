@@ -89,8 +89,6 @@ public abstract class CraftingTask implements ICraftingTask {
                 child = NetworkUtils.createCraftingTask(network, pattern);
 
                 childrenCreated[i] = true;
-
-                network.updateCraftingTasks();
             }
         }
     }

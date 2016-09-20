@@ -50,8 +50,6 @@ public class CraftingTaskProcessing extends CraftingTask {
                     satisfied[i] = true;
 
                     took.add(received);
-
-                    network.updateCraftingTasks();
                 } else {
                     tryCreateChild(network, i);
                 }
@@ -70,18 +68,10 @@ public class CraftingTaskProcessing extends CraftingTask {
             tileInUse = null;
 
             waitingOnTileInUse = false;
-
-            network.updateCraftingTasks();
         }
 
         if (!took.isEmpty() && container.getFacingTile() != null) {
-            boolean wasWaitingOnTileInUse = waitingOnTileInUse;
-
             waitingOnTileInUse = isTileInUse(network);
-
-            if (wasWaitingOnTileInUse != waitingOnTileInUse) {
-                network.updateCraftingTasks();
-            }
 
             if (!waitingOnTileInUse) {
                 tileInUse = pattern.getContainer().getFacingTile().getPos();
@@ -92,8 +82,6 @@ public class CraftingTaskProcessing extends CraftingTask {
                     ItemHandlerHelper.insertItem(container.getFacingInventory(), toInsert, false);
 
                     took.remove(0);
-
-                    network.updateCraftingTasks();
                 }
             }
         }
