@@ -4,7 +4,6 @@
 - Fixed crafting a complex item causes the process to flow off the Crafting Monitor's GUI (raoulvdberge)
 - Fixed shift clicking from Grid when player inventory is full throwing items in the world (raoulvdberge)
 - Importer now takes a Destruction Core, and Exporter a Construction Core (raoulvdberge)
-- Added support for ore dictionary substitutions in Crafting Patterns (raoulvdberge)
 - Added Disk Manipulator (way2muchnoise)
 - Added ingame config (way2muchnoise)
 - Added the ability to see the output of a Pattern by holding shift (raoulvdberge)
