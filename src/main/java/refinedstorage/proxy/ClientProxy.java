@@ -42,6 +42,10 @@ public class ClientProxy extends CommonProxy {
                     e.getModelRegistry().putObject(model, ModelMultipartContainer.fromBlock(e.getModelRegistry().getObject(model), cable));
                 }
             }
+
+            if (model.getResourceDomain().equals(RefinedStorage.ID) && model.getResourcePath().equals("pattern")) {
+                e.getModelRegistry().putObject(model, new PatternBakedModel(e.getModelRegistry().getObject(model)));
+            }
         }
     }
 

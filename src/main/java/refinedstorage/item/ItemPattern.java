@@ -21,12 +21,15 @@ import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.apiimpl.autocrafting.CraftingPattern;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
+    /**
+     * A cache that maps a stack to a crafting pattern.
+     * Only used client side for rendering and tooltips, to avoid crafting pattern allocations and crafting pattern output calculation (which is expensive).
+     */
+    private static Map<ItemStack, CraftingPattern> PATTERN_CACHE = new HashMap<>();
+
     private static final String NBT_SLOT = "Slot_%d";
     private static final String NBT_OUTPUTS = "Outputs";
     private static final String NBT_OREDICTED = "Oredicted";
@@ -35,13 +38,21 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
         super("pattern");
     }
 
+    public static CraftingPattern getPatternFromCache(World world, ItemStack stack) {
+        if (!PATTERN_CACHE.containsKey(stack)) {
+            PATTERN_CACHE.put(stack, new CraftingPattern(world, null, stack));
+        }
+
+        return PATTERN_CACHE.get(stack);
+    }
+
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
         if (!stack.hasTagCompound()) {
             return;
         }
 
-        ICraftingPattern pattern = create(player.worldObj, stack, null);
+        ICraftingPattern pattern = getPatternFromCache(player.worldObj, stack);
 
         if (pattern.isValid()) {
             if (GuiScreen.isShiftKeyDown() || isProcessing(stack)) {
