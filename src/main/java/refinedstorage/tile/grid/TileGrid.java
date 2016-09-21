@@ -149,7 +149,7 @@ public class TileGrid extends TileNode implements IGrid {
 
     private int viewType = VIEW_TYPE_NORMAL;
     private int sortingDirection = SORTING_DIRECTION_DESCENDING;
-    private int sortingType = SORTING_TYPE_NAME;
+    private int sortingType = SORTING_TYPE_QUANTITY;
     private int searchBoxMode = SEARCH_BOX_MODE_NORMAL;
 
     public TileGrid() {
