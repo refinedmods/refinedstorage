@@ -1,38 +1,25 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "orientable",
+    "model": "cube",
     "textures": {
-      "side": "refinedstorage:blocks/side",
-      "top": "refinedstorage:blocks/side",
-      "front": "refinedstorage:blocks/disk_manipulator"
+      "particle": "refinedstorage:blocks/disk_manipulator",
+      "down": "refinedstorage:blocks/side",
+      "up": "refinedstorage:blocks/side",
+      "north": "refinedstorage:blocks/disk_manipulator",
+      "east": "refinedstorage:blocks/disk_manipulator",
+      "south": "refinedstorage:blocks/disk_manipulator",
+      "west": "refinedstorage:blocks/disk_manipulator"
     }
   },
   "variants": {
     "inventory": [
       {
-        "y": 0
+        "transform": "forge:default-block"
       }
     ],
-    "direction": {
-      "north": {
-        "y": 0
-      },
-      "east": {
-        "y": 90
-      },
-      "south": {
-        "y": 180
-      },
-      "west": {
-        "y": 270
-      },
-      "up": {
-        "x": 270
-      },
-      "down": {
-        "x": 90
-      }
+    "normal": {
+      "model": "cube"
     }
   }
 }

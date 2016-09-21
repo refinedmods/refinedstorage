@@ -39,4 +39,9 @@ public class BlockDiskManipulator extends BlockNode {
 
         super.breakBlock(world, pos, state);
     }
+
+    @Override
+    public EnumPlacementType getPlacementType() {
+        return null;
+    }
 }
