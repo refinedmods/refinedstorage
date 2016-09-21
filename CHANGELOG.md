@@ -10,6 +10,7 @@
 - When a machine is in use by a crafting pattern, inserting of items from other patterns will be avoided (raoulvdberge)
 - Exporter in fluid mode and Fluid Interface no longer duplicates fluids that are less than 1 bucket (raoulvdberge)
 - Updated Dutch translation (raoulvdberge)
+- Updated Chinese translation (TartaricAcid)
 
 ### 1.0.4
 - Fixed lag caused by Crafter (raoulvdberge)
