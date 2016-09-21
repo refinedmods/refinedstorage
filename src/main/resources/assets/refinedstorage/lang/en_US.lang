@@ -41,6 +41,10 @@ gui.refinedstorage:network_transmitter.missing_upgrade=Insert upgrade
 gui.refinedstorage:fluid_interface=Fluid Interface
 gui.refinedstorage:fluid_interface.in=In
 gui.refinedstorage:fluid_interface.out=Out
+gui.refinedstorage:crafting_preview.title=Crafting Preview
+gui.refinedstorage:crafting_preview.to_craft=To Craft: %d
+gui.refinedstorage:crafting_preview.available=Available: %d
+gui.refinedstorage:crafting_preview.missing=Missing: %d
 
 misc.refinedstorage:energy_stored=%d / %d RS
 misc.refinedstorage:energy_usage=Usage: %d RS/t
