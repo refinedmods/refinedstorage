@@ -2,6 +2,7 @@ package refinedstorage.gui.grid;
 
 import com.google.common.primitives.Ints;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.client.FMLClientHandler;
@@ -10,7 +11,7 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.container.ContainerCraftingSettings;
 import refinedstorage.gui.GuiBase;
 import refinedstorage.gui.grid.stack.ClientStackItem;
-import refinedstorage.network.MessageGridCraftingStart;
+import refinedstorage.network.MessageGridCraftingPreview;
 
 import java.io.IOException;
 
@@ -124,13 +125,15 @@ public class GuiCraftingStart extends GuiBase {
         Integer quantity = Ints.tryParse(amountField.getText());
 
         if (quantity != null && quantity > 0) {
-            RefinedStorage.INSTANCE.network.sendToServer(new MessageGridCraftingStart(stack.getHash(), quantity));
-
-            close();
+            RefinedStorage.INSTANCE.network.sendToServer(new MessageGridCraftingPreview(stack.getHash(), quantity));
         }
     }
 
     private void close() {
         FMLClientHandler.instance().showGuiScreen(gui);
+    }
+
+    public GuiGrid getGui() {
+        return gui;
     }
 }
