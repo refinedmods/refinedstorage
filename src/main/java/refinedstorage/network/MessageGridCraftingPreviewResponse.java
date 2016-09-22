@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import refinedstorage.apiimpl.autocrafting.AutoCraftInfoStack;
+import refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewStack;
 import refinedstorage.gui.GuiCraftingPreview;
 import refinedstorage.gui.grid.GuiCraftingStart;
 
@@ -15,15 +15,14 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 public class MessageGridCraftingPreviewResponse implements IMessage, IMessageHandler<MessageGridCraftingPreviewResponse, IMessage> {
-
-    private Collection<AutoCraftInfoStack> stacks;
-    private int hash, quantity;
+    private Collection<CraftingPreviewStack> stacks;
+    private int hash;
+    private int quantity;
 
     public MessageGridCraftingPreviewResponse() {
-
     }
 
-    public MessageGridCraftingPreviewResponse(Collection<AutoCraftInfoStack> stacks, int hash, int quantity) {
+    public MessageGridCraftingPreviewResponse(Collection<CraftingPreviewStack> stacks, int hash, int quantity) {
         this.stacks = stacks;
         this.hash = hash;
         this.quantity = quantity;
@@ -35,9 +34,11 @@ public class MessageGridCraftingPreviewResponse implements IMessage, IMessageHan
         this.quantity = buf.readInt();
 
         this.stacks = new LinkedList<>();
+
         int size = buf.readInt();
-        for (int i = 0 ; i < size; i++) {
-            this.stacks.add(AutoCraftInfoStack.fromByteBuf(buf));
+
+        for (int i = 0; i < size; i++) {
+            this.stacks.add(CraftingPreviewStack.fromByteBuf(buf));
         }
     }
 
@@ -47,7 +48,8 @@ public class MessageGridCraftingPreviewResponse implements IMessage, IMessageHan
         buf.writeInt(this.quantity);
 
         buf.writeInt(stacks.size());
-        for (AutoCraftInfoStack stack : stacks) {
+
+        for (CraftingPreviewStack stack : stacks) {
             stack.writeToByteBuf(buf);
         }
     }
@@ -55,10 +57,13 @@ public class MessageGridCraftingPreviewResponse implements IMessage, IMessageHan
     @Override
     public IMessage onMessage(MessageGridCraftingPreviewResponse message, MessageContext ctx) {
         GuiScreen screen = Minecraft.getMinecraft().currentScreen;
+
         if (screen instanceof GuiCraftingStart) {
-            screen = ((GuiCraftingStart) screen).getGui();
+            screen = ((GuiCraftingStart) screen).getParent();
         }
+
         FMLCommonHandler.instance().showGuiScreen(new GuiCraftingPreview(screen, message.stacks, message.hash, message.quantity));
+
         return null;
     }
 }

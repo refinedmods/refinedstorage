@@ -3,15 +3,13 @@ package refinedstorage.network;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import refinedstorage.RefinedStorage;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.apiimpl.autocrafting.AutoCraftInfoStack;
-import refinedstorage.apiimpl.autocrafting.CraftingUtils;
+import refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewData;
 import refinedstorage.container.ContainerGrid;
-
-import java.util.Collection;
 
 public class MessageGridCraftingPreview extends MessageHandlerPlayerToServer<MessageGridCraftingPreview> implements IMessage {
     private int hash;
@@ -42,11 +40,20 @@ public class MessageGridCraftingPreview extends MessageHandlerPlayerToServer<Mes
         Container container = player.openContainer;
 
         if (container instanceof ContainerGrid) {
-            TileEntity entity = player.getEntityWorld().getTileEntity(((ContainerGrid) container).getGrid().getNetworkPosition());
-            if (entity != null && entity instanceof INetworkMaster) {
-                INetworkMaster network = (INetworkMaster) entity;
-                Collection<AutoCraftInfoStack> stacks = CraftingUtils.getItems(network, network.getItemStorage().get(message.hash), message.quantity);
-                RefinedStorage.INSTANCE.network.sendTo(new MessageGridCraftingPreviewResponse(stacks, message.hash, message.quantity), player);
+            TileEntity tile = player.getEntityWorld().getTileEntity(((ContainerGrid) container).getGrid().getNetworkPosition());
+
+            if (tile != null && tile instanceof INetworkMaster) {
+                INetworkMaster network = (INetworkMaster) tile;
+
+                ItemStack stack = network.getItemStorage().get(message.hash);
+
+                if (stack != null) {
+                    CraftingPreviewData previewData = new CraftingPreviewData(network);
+
+                    previewData.calculate(stack, message.quantity);
+
+                    RefinedStorage.INSTANCE.network.sendTo(new MessageGridCraftingPreviewResponse(previewData.values(), message.hash, message.quantity), player);
+                }
             }
         }
     }

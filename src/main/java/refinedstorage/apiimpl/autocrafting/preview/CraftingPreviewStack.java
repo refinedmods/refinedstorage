@@ -1,17 +1,17 @@
-package refinedstorage.apiimpl.autocrafting;
+package refinedstorage.apiimpl.autocrafting.preview;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-public class AutoCraftInfoStack {
+public class CraftingPreviewStack {
     private ItemStack stack;
     private int needed;
     private int stock;
     private int extras;
     private boolean cantCraft;
 
-    public AutoCraftInfoStack(ItemStack stack, int needed, int stock) {
+    public CraftingPreviewStack(ItemStack stack, int needed, int stock) {
         this.stack = stack;
         this.needed = needed;
         this.stock = stock;
@@ -28,14 +28,17 @@ public class AutoCraftInfoStack {
         buf.writeBoolean(cantCraft);
     }
 
-    public static AutoCraftInfoStack fromByteBuf(ByteBuf buf) {
+    public static CraftingPreviewStack fromByteBuf(ByteBuf buf) {
         Item item = Item.getItemById(buf.readInt());
         int meta = buf.readInt();
         int toCraft = buf.readInt();
         int available = buf.readInt();
-        AutoCraftInfoStack stack = new AutoCraftInfoStack(new ItemStack(item, 1, meta), toCraft, available);
+
+        CraftingPreviewStack stack = new CraftingPreviewStack(new ItemStack(item, 1, meta), toCraft, available);
+
         stack.extras = buf.readInt();
         stack.cantCraft = buf.readBoolean();
+
         return stack;
     }
 
@@ -78,11 +81,4 @@ public class AutoCraftInfoStack {
     public void setCantCraft(boolean cantCraft) {
         this.cantCraft = cantCraft;
     }
-
-    @Override
-    public String toString() {
-        return stack.toString() + ", needed=" + needed + ", stock=" + stock + ", extras=" + extras + ", canCraft=" + !cantCraft;
-    }
-
-
 }

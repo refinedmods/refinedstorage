@@ -2,7 +2,6 @@ package refinedstorage.gui.grid;
 
 import com.google.common.primitives.Ints;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.client.FMLClientHandler;
@@ -19,16 +18,16 @@ public class GuiCraftingStart extends GuiBase {
     private static final int DEFAULT_AMOUNT = 1;
 
     private GuiTextField amountField;
-    private GuiGrid gui;
+    private GuiGrid parent;
     private ClientStackItem stack;
     private GuiButton startButton;
     private GuiButton cancelButton;
     private GuiButton[] incrementButtons = new GuiButton[6];
 
-    public GuiCraftingStart(GuiGrid gui, EntityPlayer player, ClientStackItem stack) {
+    public GuiCraftingStart(GuiGrid parent, EntityPlayer player, ClientStackItem stack) {
         super(new ContainerCraftingSettings(player, stack.getStack()), 172, 99);
 
-        this.gui = gui;
+        this.parent = parent;
         this.stack = stack;
     }
 
@@ -130,10 +129,10 @@ public class GuiCraftingStart extends GuiBase {
     }
 
     private void close() {
-        FMLClientHandler.instance().showGuiScreen(gui);
+        FMLClientHandler.instance().showGuiScreen(parent);
     }
 
-    public GuiGrid getGui() {
-        return gui;
+    public GuiGrid getParent() {
+        return parent;
     }
 }

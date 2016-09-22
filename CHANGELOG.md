@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.0.6
+- Added crafting preview screen (way2muchnoise)
+
 ### 1.0.5
 - Fixed crafting a complex item causes the process to flow off the Crafting Monitor's GUI (raoulvdberge)
 - Fixed shift clicking from Grid when player inventory is full throwing items in the world (raoulvdberge)
