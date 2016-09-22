@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class GuiCraftingPreview extends GuiBase {
-    private static final int VISIBLE_ROWS = 8;
+    private static final int VISIBLE_ROWS = 4;
 
     private List<CraftingPreviewStack> stacks;
     private GuiScreen parent;
