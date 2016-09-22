@@ -37,7 +37,7 @@ public class GuiCraftingPreview extends GuiBase {
             public boolean canInteractWith(EntityPlayer player) {
                 return false;
             }
-        }, 176, 181);
+        }, 168, 171);
 
         this.stacks = new ArrayList<>(stacks);
         this.parent = parent;
@@ -45,13 +45,13 @@ public class GuiCraftingPreview extends GuiBase {
         this.hash = hash;
         this.quantity = quantity;
 
-        this.scrollbar = new Scrollbar(157, 20, 12, 59);
+        this.scrollbar = new Scrollbar(149, 20, 12, 119);
     }
 
     @Override
     public void init(int x, int y) {
-        startButton = addButton(x + 100, y + 150, 50, 20, t("misc.refinedstorage:start"));
-        cancelButton = addButton(x + 20, y + 150, 50, 20, t("gui.cancel"));
+        cancelButton = addButton(x + 16, y + 144, 50, 20, t("gui.cancel"));
+        startButton = addButton(x + 85, y + 144, 50, 20, t("misc.refinedstorage:start"));
 
         startButton.enabled = stacks.stream().filter(CraftingPreviewStack::cantCraft).count() == 0;
     }
@@ -68,16 +68,17 @@ public class GuiCraftingPreview extends GuiBase {
 
         drawTexture(x, y, 0, 0, width, height);
 
-        x += 15;
+        x += 7;
         y += 20;
 
         int slot = scrollbar.getOffset() * 2;
+
         for (int i = 0; i < 8; ++i) {
             if (slot < stacks.size()) {
                 CraftingPreviewStack stack = stacks.get(slot);
 
                 if (stack.cantCraft()) {
-                    drawTexture(x, y, 0, 185, 67, 29);
+                    drawTexture(x, y, 189, 0, 67, 29);
                 }
             }
 
@@ -96,7 +97,7 @@ public class GuiCraftingPreview extends GuiBase {
     public void drawForeground(int mouseX, int mouseY) {
         drawString(7, 7, t("gui.refinedstorage:crafting_preview"));
 
-        int x = 22;
+        int x = 12;
         int y = 22;
 
         int slot = scrollbar.getOffset() * 2;
@@ -116,13 +117,17 @@ public class GuiCraftingPreview extends GuiBase {
                 GlStateManager.pushMatrix();
                 GlStateManager.scale(scale, scale, 1);
 
+                int yy = y + 8;
+
                 if (stack.needsCrafting()) {
                     String format = stack.cantCraft() ? "gui.refinedstorage:crafting_preview.missing"  : "gui.refinedstorage:crafting_preview.to_craft";
-                    drawString(calculateOffsetOnScale(x + 20, scale), calculateOffsetOnScale(y + 8, scale), t(format, stack.getToCraft()));
+                    drawString(calculateOffsetOnScale(x + 23, scale), calculateOffsetOnScale(yy, scale), t(format, stack.getToCraft()));
+
+                    yy += 15;
                 }
 
                 if (stack.getStock() > 0) {
-                    drawString(calculateOffsetOnScale(x + 20, scale), calculateOffsetOnScale(y + 13, scale), t("gui.refinedstorage:crafting_preview.available", stack.getStock()));
+                    drawString(calculateOffsetOnScale(x + 23, scale), calculateOffsetOnScale(yy, scale), t("gui.refinedstorage:crafting_preview.available", stack.getStock()));
                 }
 
                 GlStateManager.popMatrix();
@@ -132,7 +137,7 @@ public class GuiCraftingPreview extends GuiBase {
                 }
             }
 
-            if (i%2 == 1) {
+            if (i % 2 == 1) {
                 x -= 68;
                 y += 30;
             } else {
