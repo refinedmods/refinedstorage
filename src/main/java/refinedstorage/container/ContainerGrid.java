@@ -2,6 +2,7 @@ package refinedstorage.container;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
@@ -11,12 +12,14 @@ import refinedstorage.tile.TileBase;
 import refinedstorage.tile.grid.IGrid;
 import refinedstorage.tile.grid.TileGrid;
 import refinedstorage.tile.grid.WirelessGrid;
+import refinedstorage.item.ItemPattern;
 
 public class ContainerGrid extends ContainerBase {
     private IGrid grid;
 
     private SlotGridCraftingResult craftingResultSlot;
     private SlotDisabled patternResultSlot;
+    private SlotItemHandler patternItemResultSlot;
 
     public ContainerGrid(IGrid grid, EntityPlayer player) {
         super(grid instanceof TileBase ? (TileBase) grid : null, player);
@@ -59,7 +62,7 @@ public class ContainerGrid extends ContainerBase {
             addSlotToContainer(patternResultSlot = new SlotDisabled(((TileGrid) grid).getResult(), 0, 112 + 4, 110 + 4));
 
             addSlotToContainer(new SlotItemHandler(((TileGrid) grid).getPatterns(), 0, 152, 96));
-            addSlotToContainer(new SlotOutput(((TileGrid) grid).getPatterns(), 1, 152, 132));
+            addSlotToContainer(patternItemResultSlot = new SlotItemHandler(((TileGrid) grid).getPatterns(), 1, 152, 132));
         }
 
         if (grid.getType() != EnumGridType.FLUID) {
@@ -103,7 +106,7 @@ public class ContainerGrid extends ContainerBase {
     public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) {
         if (!player.worldObj.isRemote) {
             Slot slot = inventorySlots.get(slotIndex);
-
+ 
             if (slot.getHasStack()) {
                 if (slot == craftingResultSlot) {
                     ((TileGrid) grid).onCraftedShift(this, player);
@@ -115,10 +118,37 @@ public class ContainerGrid extends ContainerBase {
                     }
 
                     detectAndSendChanges();
-                }
+                } 
             }
         }
 
         return null;
+    }
+    
+    @Override
+    public ItemStack slotClick(int id, int clickedButton, ClickType clickType, EntityPlayer player) {
+    	ItemStack slotItem = super.slotClick(id, clickedButton, clickType, player);
+
+        if(id>=0) {    	
+	    	Slot slot = inventorySlots.get(id);
+	    	
+	    	if (slot.getHasStack()) {
+		    	if (slot == patternItemResultSlot) {
+		        	// fill the crafting grid with slot info
+		        
+		        	ItemStack pattern = slot.getStack();
+		        	if(!ItemPattern.isProcessing(pattern)) {
+			        	for (int i = 0; i < 9; ++i) {
+			        		Slot craftslot = inventorySlots.get(36+i);
+			        		craftslot.putStack( ItemPattern.getSlot(pattern, i) );
+			        	}
+		        	}
+		        	
+		        	detectAndSendChanges();
+				}
+	    	}
+        }
+    	
+    	return slotItem;
     }
 }
