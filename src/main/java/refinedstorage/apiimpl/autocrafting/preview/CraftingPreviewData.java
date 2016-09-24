@@ -18,7 +18,11 @@ public class CraftingPreviewData {
     }
 
     public void calculate(ItemStack stack, int quantity) {
-        quantity = -add(stack, quantity);
+        calculate(stack, quantity, true);
+    }
+
+    private void calculate(ItemStack stack, int quantity, boolean baseStack) {
+        quantity = -add(stack, quantity, baseStack);
         if (quantity > 0) {
             ICraftingPattern pattern = NetworkUtils.getPattern(network, stack);
 
@@ -27,7 +31,7 @@ public class CraftingPreviewData {
 
                 while (quantity > 0) {
                     for (ItemStack ingredient : pattern.getInputs()) {
-                        calculate(ingredient, ingredient.stackSize);
+                        calculate(ingredient, ingredient.stackSize, false);
                     }
 
                     get(stack).addExtras(quantityPerRequest);
@@ -40,24 +44,22 @@ public class CraftingPreviewData {
         }
     }
 
-    public int add(ItemStack stack, int quantity) {
+    public int add(ItemStack stack, int quantity, boolean baseStack) {
         int hash = NetworkUtils.getItemStackHashCode(stack);
 
+        CraftingPreviewStack previewStack;
         if (data.containsKey(hash)) {
-            CraftingPreviewStack previewStack = data.get(hash);
+            previewStack = data.get(hash);
 
             previewStack.addNeeded(quantity);
-
-            return previewStack.getAvailable();
         } else {
             ItemStack networkStack = network.getItemStorage().get(stack, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
 
-            CraftingPreviewStack previewStack = new CraftingPreviewStack(stack, quantity, networkStack == null ? 0 : networkStack.stackSize);
+            previewStack = new CraftingPreviewStack(stack, quantity, networkStack == null || baseStack ? 0 : networkStack.stackSize);
 
             data.put(hash, previewStack);
-
-            return previewStack.getAvailable();
         }
+        return baseStack ? -quantity : previewStack.getAvailable();
     }
 
     public CraftingPreviewStack get(ItemStack stack) {
