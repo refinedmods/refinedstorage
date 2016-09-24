@@ -304,7 +304,9 @@ public class TileGrid extends TileNode implements IGrid {
 
     public void onCreatePattern() {
         if (canCreatePattern()) {
-            patterns.extractItem(0, 1, false);
+        	if(patterns.getStackInSlot(1) == null) {
+        		patterns.extractItem(0, 1, false);
+        	}
 
             ItemStack pattern = new ItemStack(RefinedStorageItems.PATTERN);
 
@@ -321,7 +323,7 @@ public class TileGrid extends TileNode implements IGrid {
     }
 
     public boolean canCreatePattern() {
-        return result.getStackInSlot(0) != null && patterns.getStackInSlot(1) == null && patterns.getStackInSlot(0) != null;
+        return result.getStackInSlot(0) != null && (patterns.getStackInSlot(1) != null || patterns.getStackInSlot(0) != null);
     }
 
     public void onRecipeTransfer(EntityPlayer player, ItemStack[][] recipe) {
