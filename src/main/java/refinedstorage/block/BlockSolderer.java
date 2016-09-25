@@ -3,6 +3,7 @@ package refinedstorage.block;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -10,11 +11,14 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.tile.TileSolderer;
+
+import java.util.List;
 
 public class BlockSolderer extends BlockNode {
     private static final AxisAlignedBB AABB_SOLDERER = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 14D / 16D, 1.0D);
@@ -28,6 +32,17 @@ public class BlockSolderer extends BlockNode {
     @Override
     public TileEntity createTileEntity(World world, IBlockState state) {
         return new TileSolderer();
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
+        super.addInformation(stack, player, tooltip, advanced);
+
+        tooltip.add(I18n.format(
+            "block.refinedstorage:solderer.tooltip",
+            TextFormatting.WHITE + I18n.format("block.refinedstorage:controller.0.name") + TextFormatting.GRAY,
+            TextFormatting.WHITE + I18n.format("block.refinedstorage:cable.name") + TextFormatting.GRAY
+        ));
     }
 
     @Override

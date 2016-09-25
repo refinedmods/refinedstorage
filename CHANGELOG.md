@@ -3,6 +3,7 @@
 ### 1.0.6
 - Added crafting preview screen (way2muchnoise)
 - Added max crafting task depth (raoulvdberge)
+- Added helpful tooltips to Solderer and Processing Pattern Encoder (raoulvdberge)
 
 ### 1.0.5
 - Fixed crafting a complex item causes the process to flow off the Crafting Monitor's GUI (raoulvdberge)
