@@ -15,7 +15,6 @@ import java.util.HashMap;
 public class CraftingPreviewData {
     private HashMap<Integer, CraftingPreviewStack> data = new HashMap<>();
     private INetworkMaster network;
-    private int depth = 0;
     private boolean depthCheck = false;
 
     public CraftingPreviewData(INetworkMaster network) {
@@ -23,34 +22,34 @@ public class CraftingPreviewData {
     }
 
     public void calculate(ItemStack stack, int quantity) {
-        calculate(stack, quantity, true);
+        calculate(stack, quantity, true, 0);
     }
 
-    private void calculate(ItemStack stack, int quantity, boolean baseStack) {
-        quantity = -add(stack, quantity, baseStack);
-        
-        if (quantity > 0 && !get(stack).cantCraft()) {
-            ICraftingPattern pattern = NetworkUtils.getPattern(network, stack);
+    private void calculate(ItemStack stack, int quantity, boolean baseStack, int depth) {
+        if (!this.depthCheck) {
+            quantity = -add(stack, quantity, baseStack);
 
-            if (pattern != null && depth < CraftingTask.MAX_DEPTH) {
-                int quantityPerRequest = pattern.getQuantityPerRequest(stack);
+            if (quantity > 0 && !get(stack).cantCraft()) {
+                ICraftingPattern pattern = NetworkUtils.getPattern(network, stack);
 
-                while (quantity > 0) {
-                    for (ItemStack ingredient : pattern.getInputs()) {
-                        depth++;
-                        calculate(ingredient, ingredient.stackSize, false);
-                        depth--;
+                if (pattern != null && depth < CraftingTask.MAX_DEPTH) {
+                    int quantityPerRequest = pattern.getQuantityPerRequest(stack);
+
+                    while (quantity > 0) {
+                        for (ItemStack ingredient : pattern.getInputs()) {
+                            calculate(ingredient, ingredient.stackSize, false, depth + 1);
+                        }
+
+                        get(stack).addExtras(quantityPerRequest);
+
+                        quantity -= quantityPerRequest;
                     }
-
-                    get(stack).addExtras(quantityPerRequest);
-
-                    quantity -= quantityPerRequest;
+                } else {
+                    if (depth >= CraftingTask.MAX_DEPTH) {
+                        this.depthCheck = true;
+                    }
+                    get(stack).setCantCraft(true);
                 }
-            } else {
-                if (depth >= CraftingTask.MAX_DEPTH) {
-                    this.depthCheck = true;
-                }
-                get(stack).setCantCraft(true);
             }
         }
     }
