@@ -6,6 +6,9 @@ import refinedstorage.RefinedStorageItems;
 import refinedstorage.api.solderer.ISoldererRecipe;
 import refinedstorage.item.ItemProcessor;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public class SoldererRecipePrintedProcessor implements ISoldererRecipe {
     private int type;
     private ItemStack requirement;
@@ -32,6 +35,7 @@ public class SoldererRecipePrintedProcessor implements ISoldererRecipe {
     }
 
     @Override
+    @Nullable
     public ItemStack getRow(int row) {
         if (row == 1) {
             return requirement;
@@ -41,6 +45,7 @@ public class SoldererRecipePrintedProcessor implements ISoldererRecipe {
     }
 
     @Override
+    @Nonnull
     public ItemStack getResult() {
         return result;
     }

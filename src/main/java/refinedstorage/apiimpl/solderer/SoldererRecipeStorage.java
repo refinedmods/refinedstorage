@@ -8,6 +8,9 @@ import refinedstorage.block.EnumItemStorageType;
 import refinedstorage.item.ItemBlockStorage;
 import refinedstorage.item.ItemProcessor;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public class SoldererRecipeStorage implements ISoldererRecipe {
     private EnumItemStorageType type;
     private ItemStack[] rows;
@@ -22,11 +25,13 @@ public class SoldererRecipeStorage implements ISoldererRecipe {
     }
 
     @Override
+    @Nullable
     public ItemStack getRow(int row) {
         return rows[row];
     }
 
     @Override
+    @Nonnull
     public ItemStack getResult() {
         return ItemBlockStorage.initNBT(new ItemStack(RefinedStorageBlocks.STORAGE, 1, type.getId()));
     }

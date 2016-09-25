@@ -8,6 +8,9 @@ import refinedstorage.block.EnumFluidStorageType;
 import refinedstorage.item.ItemBlockFluidStorage;
 import refinedstorage.item.ItemProcessor;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public class SoldererRecipeFluidStorage implements ISoldererRecipe {
     private EnumFluidStorageType type;
     private ItemStack[] rows;
@@ -22,11 +25,13 @@ public class SoldererRecipeFluidStorage implements ISoldererRecipe {
     }
 
     @Override
+    @Nullable
     public ItemStack getRow(int row) {
         return rows[row];
     }
 
     @Override
+    @Nonnull
     public ItemStack getResult() {
         return ItemBlockFluidStorage.initNBT(new ItemStack(RefinedStorageBlocks.FLUID_STORAGE, 1, type.getId()));
     }
