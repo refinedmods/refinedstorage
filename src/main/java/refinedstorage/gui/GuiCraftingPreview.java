@@ -53,7 +53,7 @@ public class GuiCraftingPreview extends GuiBase {
         cancelButton = addButton(x + 16, y + 144, 50, 20, t("gui.cancel"));
         startButton = addButton(x + 85, y + 144, 50, 20, t("misc.refinedstorage:start"));
 
-        startButton.enabled = stacks.stream().filter(CraftingPreviewStack::cantCraft).count() == 0;
+        startButton.enabled = !stacks.isEmpty() && stacks.stream().filter(CraftingPreviewStack::cantCraft).count() == 0;
     }
 
     @Override
@@ -68,28 +68,33 @@ public class GuiCraftingPreview extends GuiBase {
 
         drawTexture(x, y, 0, 0, width, height);
 
-        x += 7;
-        y += 20;
+        if (stacks.isEmpty()) {
+            drawRect(x + 7, y + 20, x + 142, y + 139, 0xFFDBDBDB);
+        }
+        else {
+            x += 7;
+            y += 20;
 
-        int slot = scrollbar.getOffset() * 2;
+            int slot = scrollbar.getOffset() * 2;
 
-        for (int i = 0; i < 8; ++i) {
-            if (slot < stacks.size()) {
-                CraftingPreviewStack stack = stacks.get(slot);
+            for (int i = 0; i < 8; ++i) {
+                if (slot < stacks.size()) {
+                    CraftingPreviewStack stack = stacks.get(slot);
 
-                if (stack.cantCraft()) {
-                    drawTexture(x, y, 189, 0, 67, 29);
+                    if (stack.cantCraft()) {
+                        drawTexture(x, y, 189, 0, 67, 29);
+                    }
                 }
-            }
 
-            if (i % 2 == 1) {
-                x -= 68;
-                y += 30;
-            } else {
-                x += 68;
-            }
+                if (i % 2 == 1) {
+                    x -= 68;
+                    y += 30;
+                } else {
+                    x += 68;
+                }
 
-            slot++;
+                slot++;
+            }
         }
     }
 
@@ -99,56 +104,66 @@ public class GuiCraftingPreview extends GuiBase {
 
         int x = 12;
         int y = 22;
+        float scale = 0.5f;
 
-        int slot = scrollbar.getOffset() * 2;
+        if (stacks.isEmpty()) {
+            GlStateManager.pushMatrix();
+            GlStateManager.scale(scale, scale, 1);
 
-        RenderHelper.enableGUIStandardItemLighting();
+            drawString(calculateOffsetOnScale(x + 34, scale), calculateOffsetOnScale(y + 50, scale), t("gui.refinedstorage:crafting_preview.circular"));
+            drawString(calculateOffsetOnScale(x + 35, scale), calculateOffsetOnScale(y + 57, scale), t("gui.refinedstorage:crafting_preview.loop"));
 
-        ItemStack hoveringStack = null;
+            GlStateManager.popMatrix();
+        } else {
 
-        for (int i = 0; i < 8; ++i) {
-            if (slot < stacks.size()) {
-                CraftingPreviewStack stack = stacks.get(slot);
+            int slot = scrollbar.getOffset() * 2;
 
-                drawItem(x, y + 5, stack.getStack());
+            RenderHelper.enableGUIStandardItemLighting();
 
-                float scale = 0.5f;
+            ItemStack hoveringStack = null;
 
-                GlStateManager.pushMatrix();
-                GlStateManager.scale(scale, scale, 1);
+            for (int i = 0; i < 8; ++i) {
+                if (slot < stacks.size()) {
+                    CraftingPreviewStack stack = stacks.get(slot);
 
-                int yy = y + 8;
+                    drawItem(x, y + 5, stack.getStack());
 
-                if (stack.needsCrafting()) {
-                    String format = stack.cantCraft() ? "gui.refinedstorage:crafting_preview.missing"  : "gui.refinedstorage:crafting_preview.to_craft";
-                    drawString(calculateOffsetOnScale(x + 23, scale), calculateOffsetOnScale(yy, scale), t(format, stack.getToCraft()));
+                    GlStateManager.pushMatrix();
+                    GlStateManager.scale(scale, scale, 1);
 
-                    yy += 7;
+                    int yy = y + 8;
+
+                    if (stack.needsCrafting()) {
+                        String format = stack.cantCraft() ? "gui.refinedstorage:crafting_preview.missing" : "gui.refinedstorage:crafting_preview.to_craft";
+                        drawString(calculateOffsetOnScale(x + 23, scale), calculateOffsetOnScale(yy, scale), t(format, stack.getToCraft()));
+
+                        yy += 7;
+                    }
+
+                    if (stack.getStock() > 0) {
+                        drawString(calculateOffsetOnScale(x + 23, scale), calculateOffsetOnScale(yy, scale), t("gui.refinedstorage:crafting_preview.available", stack.getStock()));
+                    }
+
+                    GlStateManager.popMatrix();
+
+                    if (inBounds(x, y, 16, 16, mouseX, mouseY)) {
+                        hoveringStack = stack.getStack();
+                    }
                 }
 
-                if (stack.getStock() > 0) {
-                    drawString(calculateOffsetOnScale(x + 23, scale), calculateOffsetOnScale(yy, scale), t("gui.refinedstorage:crafting_preview.available", stack.getStock()));
+                if (i % 2 == 1) {
+                    x -= 68;
+                    y += 30;
+                } else {
+                    x += 68;
                 }
 
-                GlStateManager.popMatrix();
-
-                if (inBounds(x, y, 16, 16, mouseX, mouseY)) {
-                    hoveringStack = stack.getStack();
-                }
+                slot++;
             }
 
-            if (i % 2 == 1) {
-                x -= 68;
-                y += 30;
-            } else {
-                x += 68;
+            if (hoveringStack != null) {
+                drawTooltip(mouseX, mouseY, hoveringStack.getTooltip(Minecraft.getMinecraft().thePlayer, false));
             }
-
-            slot++;
-        }
-
-        if (hoveringStack != null) {
-            drawTooltip(mouseX, mouseY, hoveringStack.getTooltip(Minecraft.getMinecraft().thePlayer, false));
         }
     }
 
