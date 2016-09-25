@@ -40,6 +40,11 @@ public class BlockSolderer extends BlockNode {
     }
 
     @Override
+    public boolean hasConnectivityState() {
+        return true;
+    }
+
+    @Override
     @SuppressWarnings("deprecation")
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
         return AABB_SOLDERER;

@@ -75,6 +75,11 @@ public class TileSolderer extends TileNode {
     }
 
     @Override
+    public boolean hasConnectivityState() {
+        return true;
+    }
+
+    @Override
     public int getEnergyUsage() {
         return RefinedStorage.INSTANCE.config.soldererUsage + upgrades.getEnergyUsage();
     }
@@ -136,6 +141,8 @@ public class TileSolderer extends TileNode {
 
         if (!state) {
             stop();
+
+            updateBlock();
         }
     }
 
