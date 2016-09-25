@@ -45,6 +45,8 @@ gui.refinedstorage:crafting_preview=Crafting Preview
 gui.refinedstorage:crafting_preview.to_craft=To craft: %d
 gui.refinedstorage:crafting_preview.available=Available: %d
 gui.refinedstorage:crafting_preview.missing=Missing: %d
+gui.refinedstorage:crafting_preview.circular=Circular dependency!
+gui.refinedstorage:crafting_preview.loop=loop in processing...
 
 misc.refinedstorage:energy_stored=%d / %d RS
 misc.refinedstorage:energy_usage=Usage: %d RS/t
