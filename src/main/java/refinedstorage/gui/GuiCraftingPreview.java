@@ -123,7 +123,7 @@ public class GuiCraftingPreview extends GuiBase {
                     String format = stack.cantCraft() ? "gui.refinedstorage:crafting_preview.missing"  : "gui.refinedstorage:crafting_preview.to_craft";
                     drawString(calculateOffsetOnScale(x + 23, scale), calculateOffsetOnScale(yy, scale), t(format, stack.getToCraft()));
 
-                    yy += 15;
+                    yy += 7;
                 }
 
                 if (stack.getStock() > 0) {

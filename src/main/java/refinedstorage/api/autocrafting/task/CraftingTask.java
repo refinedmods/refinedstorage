@@ -18,6 +18,8 @@ import java.util.List;
  * A default implementation for crafting tasks.
  */
 public abstract class CraftingTask implements ICraftingTask {
+    public static final int MAX_DEPTH = 100;
+
     public static final String NBT_CHILDREN_CREATED = "ChildrenCreated";
     public static final String NBT_SATISFIED = "Satisfied";
     public static final String NBT_CHECKED = "Checked";
@@ -28,6 +30,8 @@ public abstract class CraftingTask implements ICraftingTask {
 
     private static final String NBT_CHILD = "Child";
 
+    protected int depth;
+
     protected ICraftingPattern pattern;
     protected ICraftingTask child;
 
@@ -37,11 +41,12 @@ public abstract class CraftingTask implements ICraftingTask {
     protected boolean satisfied[];
     protected boolean checked[];
 
-    public CraftingTask(ICraftingPattern pattern) {
+    public CraftingTask(ICraftingPattern pattern, int depth) {
         this.pattern = pattern;
         this.childrenCreated = new boolean[pattern.getInputs().size()];
         this.satisfied = new boolean[pattern.getInputs().size()];
         this.checked = new boolean[pattern.getInputs().size()];
+        this.depth = depth;
     }
 
     @Override
@@ -82,11 +87,11 @@ public abstract class CraftingTask implements ICraftingTask {
     }
 
     protected void tryCreateChild(INetworkMaster network, int i) {
-        if (!childrenCreated[i]) {
+        if (!childrenCreated[i] && depth + 1 < MAX_DEPTH) {
             ICraftingPattern pattern = NetworkUtils.getPattern(network, this.pattern.getInputs().get(i));
 
             if (pattern != null) {
-                child = NetworkUtils.createCraftingTask(network, pattern);
+                child = NetworkUtils.createCraftingTask(network, depth + 1, pattern);
 
                 childrenCreated[i] = true;
             }
@@ -143,7 +148,7 @@ public abstract class CraftingTask implements ICraftingTask {
 
     public void readChildNBT(World world, NBTTagCompound tag) {
         if (tag.hasKey(NBT_CHILD)) {
-            child = TileController.readCraftingTask(world, tag.getCompoundTag(NBT_CHILD));
+            child = TileController.readCraftingTask(world, depth + 1, tag.getCompoundTag(NBT_CHILD));
         }
     }
 

@@ -23,6 +23,7 @@ public class CraftingPreviewData {
 
     private void calculate(ItemStack stack, int quantity, boolean baseStack) {
         quantity = -add(stack, quantity, baseStack);
+        
         if (quantity > 0) {
             ICraftingPattern pattern = NetworkUtils.getPattern(network, stack);
 

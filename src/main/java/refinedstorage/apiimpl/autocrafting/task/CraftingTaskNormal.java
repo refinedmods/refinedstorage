@@ -8,8 +8,8 @@ import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.apiimpl.storage.fluid.FluidUtils;
 
 public class CraftingTaskNormal extends CraftingTask {
-    public CraftingTaskNormal(ICraftingPattern pattern) {
-        super(pattern);
+    public CraftingTaskNormal(ICraftingPattern pattern, int depth) {
+        super(pattern, depth);
     }
 
     @Override

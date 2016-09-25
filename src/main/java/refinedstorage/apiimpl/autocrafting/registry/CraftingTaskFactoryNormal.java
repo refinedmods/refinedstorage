@@ -21,8 +21,8 @@ public class CraftingTaskFactoryNormal implements ICraftingTaskFactory {
 
     @Override
     @Nonnull
-    public ICraftingTask create(World world, @Nullable NBTTagCompound tag, ICraftingPattern pattern) {
-        CraftingTaskNormal task = new CraftingTaskNormal(pattern);
+    public ICraftingTask create(World world, int depth, @Nullable NBTTagCompound tag, ICraftingPattern pattern) {
+        CraftingTaskNormal task = new CraftingTaskNormal(pattern, depth);
 
         if (tag != null) {
             task.setChildrenCreated(CraftingTask.readBooleanArray(tag, CraftingTask.NBT_CHILDREN_CREATED));

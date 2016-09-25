@@ -22,8 +22,8 @@ public class CraftingTaskProcessing extends CraftingTask {
 
     private boolean waitingOnTileInUse;
 
-    public CraftingTaskProcessing(ICraftingPattern pattern) {
-        super(pattern);
+    public CraftingTaskProcessing(ICraftingPattern pattern, int depth) {
+        super(pattern, depth);
 
         this.satisfiedInsertion = new boolean[pattern.getOutputs().size()];
     }
