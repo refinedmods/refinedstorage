@@ -86,6 +86,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     private static final String NBT_MODE = "Mode";
     private static final String NBT_STORED = "Stored";
     private static final String NBT_TYPE = "Type";
+    private static final String NBT_FILLED = "Filled_%d";
 
     private ItemHandlerBasic disks = new ItemHandlerBasic(8, this, IItemValidator.STORAGE_DISK) {
         @Override
@@ -98,6 +99,10 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
                 if (network != null) {
                     network.getItemStorage().rebuild();
                     network.getFluidStorage().rebuild();
+                }
+
+                if (worldObj != null) {
+                    updateBlock();
                 }
             }
         }
@@ -128,6 +133,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     private int type = IType.ITEMS;
 
     private int stored = 0;
+    private boolean[] filled = new boolean[8];
 
     public TileDiskDrive() {
         dataManager.addWatchedParameter(PRIORITY);
@@ -263,6 +269,10 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
 
         tag.setInteger(NBT_STORED, stored);
 
+        for (int i = 0; i < 8; ++i) {
+            tag.setBoolean(String.format(NBT_FILLED, i), disks.getStackInSlot(i) != null);
+        }
+
         return tag;
     }
 
@@ -270,7 +280,15 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     public void readUpdate(NBTTagCompound tag) {
         stored = tag.getInteger(NBT_STORED);
 
+        for (int i = 0; i < 8; ++i) {
+            filled[i] = tag.getBoolean(String.format(NBT_FILLED, i));
+        }
+
         super.readUpdate(tag);
+    }
+
+    public boolean[] getFilled() {
+        return filled;
     }
 
     @Override

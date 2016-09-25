@@ -14,6 +14,54 @@
         "y": 0
       }
     ],
+    "filled_0": {
+      "true": {
+      },
+      "false": {
+      }
+    },
+    "filled_1": {
+      "true": {
+      },
+      "false": {
+      }
+    },
+    "filled_2": {
+      "true": {
+      },
+      "false": {
+      }
+    },
+    "filled_3": {
+      "true": {
+      },
+      "false": {
+      }
+    },
+    "filled_4": {
+      "true": {
+      },
+      "false": {
+      }
+    },
+    "filled_5": {
+      "true": {
+      },
+      "false": {
+      }
+    },
+    "filled_6": {
+      "true": {
+      },
+      "false": {
+      }
+    },
+    "filled_7": {
+      "true": {
+      },
+      "false": {
+      }
+    },
     "stored": {
       "0": {
         "textures": {
