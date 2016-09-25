@@ -4,6 +4,7 @@
 - Added crafting preview screen (way2muchnoise)
 - Added max crafting task depth (raoulvdberge)
 - Added helpful tooltips to Solderer and Processing Pattern Encoder (raoulvdberge)
+- Every machine now compares on damage and NBT by default (raoulvdberge)
 - Updated JEI, fixes crashes (way2muchnoise)
 
 ### 1.0.5

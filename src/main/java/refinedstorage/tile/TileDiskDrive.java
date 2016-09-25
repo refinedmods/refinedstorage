@@ -13,6 +13,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.api.storage.fluid.IFluidStorage;
 import refinedstorage.api.storage.fluid.IFluidStorageProvider;
 import refinedstorage.api.storage.item.IItemStorage;
@@ -122,7 +123,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     private FluidStorage fluidStorages[] = new FluidStorage[8];
 
     private int priority = 0;
-    private int compare = 0;
+    private int compare = CompareUtils.COMPARE_NBT | CompareUtils.COMPARE_DAMAGE;
     private int mode = IFilterable.WHITELIST;
     private int type = IType.ITEMS;
 

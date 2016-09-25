@@ -17,6 +17,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorage;
 import refinedstorage.api.network.NetworkUtils;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.container.slot.SlotSpecimen;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerFluid;
@@ -47,7 +48,7 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_CRAFTING);
 
-    private int compare = 0;
+    private int compare = CompareUtils.COMPARE_NBT | CompareUtils.COMPARE_DAMAGE;
     private int type = IType.ITEMS;
 
     private IBlockState block;

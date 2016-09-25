@@ -82,7 +82,7 @@ public class TileDetector extends TileNode implements IComparable, IType {
     private ItemHandlerBasic itemFilters = new ItemHandlerBasic(1, this);
     private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(1, this);
 
-    private int compare = 0;
+    private int compare = CompareUtils.COMPARE_NBT | CompareUtils.COMPARE_DAMAGE;
     private int type = IType.ITEMS;
     private int mode = MODE_EQUAL;
     private int amount = 0;

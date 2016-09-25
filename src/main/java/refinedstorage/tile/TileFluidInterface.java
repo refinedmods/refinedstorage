@@ -9,6 +9,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import refinedstorage.RefinedStorage;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.apiimpl.storage.fluid.FluidUtils;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerFluid;
@@ -42,7 +43,7 @@ public class TileFluidInterface extends TileNode implements IComparable {
     private static final String NBT_TANK_IN = "TankIn";
     private static final String NBT_TANK_OUT = "TankOut";
 
-    private int compare = 0;
+    private int compare = CompareUtils.COMPARE_NBT;
 
     private FluidTank tankIn = new FluidTank(TANK_CAPACITY) {
         @Override

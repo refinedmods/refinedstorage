@@ -6,6 +6,7 @@ import net.minecraftforge.fluids.FluidStack;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.api.storage.fluid.IFluidStorage;
 import refinedstorage.api.storage.fluid.IFluidStorageProvider;
 import refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
@@ -67,7 +68,7 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
     private EnumFluidStorageType type;
 
     private int priority = 0;
-    private int compare = 0;
+    private int compare = CompareUtils.COMPARE_NBT;
     private int mode = IFilterable.WHITELIST;
 
     public TileFluidStorage() {

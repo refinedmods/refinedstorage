@@ -11,6 +11,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RefinedStorage;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerFluid;
 import refinedstorage.inventory.ItemHandlerUpgrade;
@@ -34,7 +35,7 @@ public class TileImporter extends TileMultipartNode implements IComparable, IFil
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK);
 
-    private int compare = 0;
+    private int compare = CompareUtils.COMPARE_NBT | CompareUtils.COMPARE_DAMAGE;
     private int mode = IFilterable.WHITELIST;
     private int type = IType.ITEMS;
 

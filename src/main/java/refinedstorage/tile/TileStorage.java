@@ -7,6 +7,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.api.storage.item.IItemStorage;
 import refinedstorage.api.storage.item.IItemStorageProvider;
 import refinedstorage.apiimpl.storage.item.ItemStorageNBT;
@@ -67,7 +68,7 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
     private EnumItemStorageType type;
 
     private int priority = 0;
-    private int compare = 0;
+    private int compare = CompareUtils.COMPARE_NBT | CompareUtils.COMPARE_DAMAGE;
     private int mode = IFilterable.WHITELIST;
 
     public TileStorage() {

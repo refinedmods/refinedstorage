@@ -12,6 +12,7 @@ import net.minecraftforge.items.IItemHandler;
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 import refinedstorage.RefinedStorage;
 import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.api.storage.fluid.IFluidStorage;
 import refinedstorage.api.storage.fluid.IFluidStorageProvider;
 import refinedstorage.api.storage.item.IItemStorage;
@@ -79,7 +80,7 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
     private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(9, this);
 
     private int priority = 0;
-    private int compare = 0;
+    private int compare = CompareUtils.COMPARE_NBT | CompareUtils.COMPARE_DAMAGE;
     private int mode = IFilterable.WHITELIST;
     private int type = IType.ITEMS;
 

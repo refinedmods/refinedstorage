@@ -9,6 +9,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.api.network.NetworkUtils;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemUpgrade;
@@ -25,7 +26,7 @@ public class TileInterface extends TileNode implements IComparable {
     private ItemHandlerBasic exportItems = new ItemHandlerBasic(9, this);
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK, ItemUpgrade.TYPE_CRAFTING);
 
-    private int compare = 0;
+    private int compare = CompareUtils.COMPARE_NBT | CompareUtils.COMPARE_DAMAGE;
 
     private int currentSlot = 0;
 

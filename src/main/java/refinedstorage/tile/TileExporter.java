@@ -13,6 +13,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.api.network.NetworkUtils;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerFluid;
 import refinedstorage.inventory.ItemHandlerUpgrade;
@@ -33,7 +34,7 @@ public class TileExporter extends TileMultipartNode implements IComparable, ITyp
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_CRAFTING, ItemUpgrade.TYPE_STACK);
 
-    private int compare = 0;
+    private int compare = CompareUtils.COMPARE_NBT | CompareUtils.COMPARE_DAMAGE;
     private int type = IType.ITEMS;
 
     public TileExporter() {
