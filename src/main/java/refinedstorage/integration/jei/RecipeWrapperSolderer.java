@@ -1,18 +1,25 @@
 package refinedstorage.integration.jei;
 
-import mezz.jei.plugins.vanilla.VanillaRecipeWrapper;
+import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.BlankRecipeWrapper;
 import net.minecraft.item.ItemStack;
 
 import java.util.Collections;
 import java.util.List;
 
-public class RecipeWrapperSolderer extends VanillaRecipeWrapper {
+public class RecipeWrapperSolderer extends BlankRecipeWrapper {
     private List<ItemStack> inputs;
     private ItemStack output;
 
     public RecipeWrapperSolderer(List<ItemStack> inputs, ItemStack output) {
         this.inputs = inputs;
         this.output = output;
+    }
+
+    @Override
+    public void getIngredients(IIngredients ingredients) {
+        ingredients.setInputs(ItemStack.class, inputs);
+        ingredients.setOutput(ItemStack.class, output);
     }
 
     @Override

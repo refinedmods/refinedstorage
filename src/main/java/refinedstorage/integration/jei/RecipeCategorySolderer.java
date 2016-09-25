@@ -4,6 +4,7 @@ import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IGuiItemStackGroup;
 import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
@@ -64,6 +65,30 @@ public class RecipeCategorySolderer implements IRecipeCategory {
             }
 
             group.set(3, (ItemStack) recipeWrapper.getOutputs().get(0));
+        }
+    }
+
+    @Override
+    public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper, IIngredients ingredients) {
+        IGuiItemStackGroup group = recipeLayout.getItemStacks();
+
+        int x = 44 - 9;
+        int y = 20 - 6;
+
+        for (int i = 0; i < 3; ++i) {
+            group.init(i, true, x, y);
+
+            y += 18;
+        }
+
+        group.init(3, false, 127 - 9, 38 - 6);
+
+        if (recipeWrapper instanceof RecipeWrapperSolderer) {
+            for (int i = 0; i < 3; ++i) {
+                group.set(i, ingredients.getInputs(ItemStack.class).get(i));
+            }
+
+            group.set(3, ingredients.getOutputs(ItemStack.class).get(0));
         }
     }
 }

@@ -1,14 +1,11 @@
 package refinedstorage.integration.jei;
 
-import mezz.jei.api.IJeiRuntime;
-import mezz.jei.api.IModPlugin;
-import mezz.jei.api.IModRegistry;
-import mezz.jei.api.JEIPlugin;
+import mezz.jei.api.*;
 import net.minecraft.item.ItemStack;
 import refinedstorage.RefinedStorageBlocks;
 
 @JEIPlugin
-public class RefinedStorageJEIPlugin implements IModPlugin {
+public class RefinedStorageJEIPlugin extends BlankModPlugin {
     public static RefinedStorageJEIPlugin INSTANCE;
 
     private IJeiRuntime runtime;
