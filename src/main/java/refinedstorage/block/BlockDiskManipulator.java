@@ -41,7 +41,12 @@ public class BlockDiskManipulator extends BlockNode {
     }
 
     @Override
+    public boolean hasConnectivityState() {
+        return true;
+    }
+
+    @Override
     public EnumPlacementType getPlacementType() {
-        return null;
+        return EnumPlacementType.HORIZONTAL;
     }
 }

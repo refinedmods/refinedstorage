@@ -168,6 +168,11 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
     }
 
     @Override
+    public boolean hasConnectivityState() {
+        return true;
+    }
+
+    @Override
     public void updateNode() {
         if (ticks % upgrades.getSpeed() != 0) {
             return;
