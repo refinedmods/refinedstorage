@@ -127,27 +127,26 @@ public class ContainerGrid extends ContainerBase {
     
     @Override
     public ItemStack slotClick(int id, int clickedButton, ClickType clickType, EntityPlayer player) {
+        if(id<0) return null;
     	ItemStack slotItem = super.slotClick(id, clickedButton, clickType, player);
 
-        if(id>=0) {    	
-	    	Slot slot = inventorySlots.get(id);
-	    	
-	    	if (slot.getHasStack()) {
-		    	if (slot == patternItemResultSlot) {
-		        	// fill the crafting grid with slot info
-		        
-		        	ItemStack pattern = slot.getStack();
-		        	if(!ItemPattern.isProcessing(pattern)) {
-			        	for (int i = 0; i < 9; ++i) {
-			        		Slot craftslot = inventorySlots.get(36+i);
-			        		craftslot.putStack( ItemPattern.getSlot(pattern, i) );
-			        	}
+    	Slot slot = inventorySlots.get(id);
+    	
+    	if (slot.getHasStack()) {
+	    	if (slot == patternItemResultSlot) {
+	        	// fill the crafting grid with slot info
+	        
+	        	ItemStack pattern = slot.getStack();
+	        	if(!ItemPattern.isProcessing(pattern)) {
+		        	for (int i = 0; i < 9; ++i) {
+		        		Slot craftslot = inventorySlots.get(36+i);
+		        		craftslot.putStack( ItemPattern.getSlot(pattern, i) );
 		        	}
-		        	
-		        	detectAndSendChanges();
-				}
-	    	}
-        }
+	        	}
+	        	
+	        	detectAndSendChanges();
+			}
+    	}
     	
     	return slotItem;
     }

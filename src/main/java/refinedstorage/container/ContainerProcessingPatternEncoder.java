@@ -110,43 +110,41 @@ public class ContainerProcessingPatternEncoder extends ContainerBase {
     
     @Override
     public ItemStack slotClick(int id, int clickedButton, ClickType clickType, EntityPlayer player) {
+    	if(id<0) return null;
     	ItemStack slotItem = super.slotClick(id, clickedButton, clickType, player);
 
-        if(id>=0) {    	
-	    	Slot slot = inventorySlots.get(id);
-	    	
-	    	if (slot.getHasStack()) {
-		    	if (slot == patternItemResultSlot) {
-		        	// fill the crafting grid with slot info
-		        
-		        	ItemStack pattern = slot.getStack();
-		        	if(ItemPattern.isProcessing(pattern)) {
-		        	
-			        	for (int i = 0; i < 9; ++i) {
-			        		Slot craftslot = inventorySlots.get(2+i);
-			        		craftslot.putStack( ItemPattern.getSlot(pattern, i) );
-			        	}
-			        	
-			        	for (int i = 0; i < 9; ++i) {
-			        		Slot craftslot = inventorySlots.get(11+i);
-			        		craftslot.putStack( null );
-			        	}
-
-			        	// ToDo : compile the list of output to stack's
-			        	List<ItemStack> outputs = combineItems(ItemPattern.getOutputs(pattern));
-			        	for (int i = 0; i < Math.min(outputs.size(),9); ++i) {
-			        		Slot craftslot = inventorySlots.get(11+i);
-			        		
-			        		craftslot.putStack( outputs.get(i) );
-			        	}
-			        	
-			        	
+    	Slot slot = inventorySlots.get(id);
+    	
+    	if (slot.getHasStack()) {
+	    	if (slot == patternItemResultSlot) {
+	        	// fill the crafting grid with slot info
+	        
+	        	ItemStack pattern = slot.getStack();
+	        	if(ItemPattern.isProcessing(pattern)) {
+	        	
+		        	for (int i = 0; i < 9; ++i) {
+		        		Slot craftslot = inventorySlots.get(2+i);
+		        		craftslot.putStack( ItemPattern.getSlot(pattern, i) );
 		        	}
 		        	
-		        	detectAndSendChanges();
-				}
-	    	}
-        }
+		        	for (int i = 0; i < 9; ++i) {
+		        		Slot craftslot = inventorySlots.get(11+i);
+		        		craftslot.putStack( null );
+		        	}
+
+		        	List<ItemStack> outputs = combineItems(ItemPattern.getOutputs(pattern));
+		        	for (int i = 0; i < Math.min(outputs.size(),9); ++i) {
+		        		Slot craftslot = inventorySlots.get(11+i);
+		        		
+		        		craftslot.putStack( outputs.get(i) );
+		        	}
+		        	
+		        	
+	        	}
+	        	
+	        	detectAndSendChanges();
+			}
+    	}
     	
     	return slotItem;
     }
