@@ -6,6 +6,8 @@
 - Added helpful tooltips to Solderer and Processing Pattern Encoder (raoulvdberge)
 - Every machine now compares on damage and NBT by default (raoulvdberge)
 - Updated JEI, fixes crashes (way2muchnoise)
+- Fixed crash with Disk Manipulator (way2muchnoise)
+- New art by CyanideX (CyanideX)
 
 ### 1.0.5
 - Fixed crafting a complex item causes the process to flow off the Crafting Monitor's GUI (raoulvdberge)
