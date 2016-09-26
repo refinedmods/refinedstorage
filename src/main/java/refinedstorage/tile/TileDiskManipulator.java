@@ -379,7 +379,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         if (disk != null) {
             int i = 6;
 
-            while (disks.getStackInSlot(i) != null && i < 12) {
+            while (i < 12 && disks.getStackInSlot(i) != null) {
                 i++;
             }
 
