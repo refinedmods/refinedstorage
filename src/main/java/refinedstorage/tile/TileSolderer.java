@@ -37,6 +37,13 @@ public class TileSolderer extends TileNode {
         }
     });
 
+    public static final TileDataParameter<Boolean> WORKING = new TileDataParameter<>(DataSerializers.BOOLEAN, false, new ITileDataProducer<Boolean, TileSolderer>() {
+        @Override
+        public Boolean getValue(TileSolderer tile) {
+            return tile.working;
+        }
+    });
+
     private static final String NBT_WORKING = "Working";
     private static final String NBT_PROGRESS = "Progress";
 
@@ -72,11 +79,7 @@ public class TileSolderer extends TileNode {
     public TileSolderer() {
         dataManager.addWatchedParameter(DURATION);
         dataManager.addWatchedParameter(PROGRESS);
-    }
-
-    @Override
-    public boolean hasConnectivityState() {
-        return true;
+        dataManager.addWatchedParameter(WORKING);
     }
 
     @Override
@@ -86,8 +89,6 @@ public class TileSolderer extends TileNode {
 
     @Override
     public void updateNode() {
-        boolean wasWorking = working;
-
         if (items.getStackInSlot(1) == null && items.getStackInSlot(2) == null && result.getStackInSlot(0) == null) {
             stop();
         } else {
@@ -129,10 +130,6 @@ public class TileSolderer extends TileNode {
                 }
             }
         }
-
-        if (wasWorking != working) {
-            updateBlock();
-        }
     }
 
     @Override
@@ -141,8 +138,6 @@ public class TileSolderer extends TileNode {
 
         if (!state) {
             stop();
-
-            updateBlock();
         }
     }
 
@@ -185,26 +180,6 @@ public class TileSolderer extends TileNode {
         tag.setInteger(NBT_PROGRESS, progress);
 
         return tag;
-    }
-
-    @Override
-    public NBTTagCompound writeUpdate(NBTTagCompound tag) {
-        super.writeUpdate(tag);
-
-        tag.setBoolean(NBT_WORKING, working);
-
-        return tag;
-    }
-
-    @Override
-    public void readUpdate(NBTTagCompound tag) {
-        working = tag.getBoolean(NBT_WORKING);
-
-        super.readUpdate(tag);
-    }
-
-    public boolean isWorking() {
-        return working;
     }
 
     public ItemHandlerBasic getItems() {

@@ -1,37 +1,17 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "textures": {
-      "particle": "refinedstorage:blocks/side_borderless",
-      "3": "refinedstorage:blocks/solderer_laser",
-      "4": "refinedstorage:blocks/solderer_laser"
-    },
     "model": "refinedstorage:solderer",
-    "uvlock": true
+    "textures": {
+      "particle": "refinedstorage:blocks/solderer_side"
+    }
   },
   "variants": {
     "inventory": [
       {
-        "model": "refinedstorage:solderer",
         "transform": "forge:default-block"
       }
     ],
-    "working": {
-      "true": {
-        "textures": {
-          "3": "refinedstorage:blocks/solderer_laser_working",
-          "4": "refinedstorage:blocks/solderer_laser_working"
-        }
-      },
-      "false": {
-      }
-    },
-    "connected": {
-      "true": {
-      },
-      "false": {
-      }
-    },
     "direction": {
       "north": {
         "y": 0
