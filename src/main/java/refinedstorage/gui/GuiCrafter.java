@@ -12,8 +12,8 @@ public class GuiCrafter extends GuiBase {
 
     @Override
     public void init(int x, int y) {
-        addSideButton(new SideButtonRedstoneMode(TileCrafter.REDSTONE_MODE));
-        addSideButton(new SideButtonCrafterTriggeredAutocrafting());
+        addSideButton(new SideButtonRedstoneMode(this, TileCrafter.REDSTONE_MODE));
+        addSideButton(new SideButtonCrafterTriggeredAutocrafting(this));
     }
 
     @Override

@@ -29,7 +29,7 @@ public class GuiController extends GuiBase {
 
     @Override
     public void init(int x, int y) {
-        addSideButton(new SideButtonRedstoneMode(TileController.REDSTONE_MODE));
+        addSideButton(new SideButtonRedstoneMode(this, TileController.REDSTONE_MODE));
     }
 
     @Override

@@ -14,12 +14,12 @@ public class GuiConstructor extends GuiBase {
 
     @Override
     public void init(int x, int y) {
-        addSideButton(new SideButtonRedstoneMode(TileConstructor.REDSTONE_MODE));
+        addSideButton(new SideButtonRedstoneMode(this, TileConstructor.REDSTONE_MODE));
 
-        addSideButton(new SideButtonType(TileConstructor.TYPE));
+        addSideButton(new SideButtonType(this, TileConstructor.TYPE));
 
-        addSideButton(new SideButtonCompare(TileConstructor.COMPARE, CompareUtils.COMPARE_DAMAGE));
-        addSideButton(new SideButtonCompare(TileConstructor.COMPARE, CompareUtils.COMPARE_NBT));
+        addSideButton(new SideButtonCompare(this, TileConstructor.COMPARE, CompareUtils.COMPARE_DAMAGE));
+        addSideButton(new SideButtonCompare(this, TileConstructor.COMPARE, CompareUtils.COMPARE_NBT));
     }
 
     @Override

@@ -15,14 +15,14 @@ public class GuiDestructor extends GuiBase {
 
     @Override
     public void init(int x, int y) {
-        addSideButton(new SideButtonRedstoneMode(TileDestructor.REDSTONE_MODE));
+        addSideButton(new SideButtonRedstoneMode(this, TileDestructor.REDSTONE_MODE));
 
-        addSideButton(new SideButtonType(TileDestructor.TYPE));
+        addSideButton(new SideButtonType(this, TileDestructor.TYPE));
 
-        addSideButton(new SideButtonMode(TileDestructor.MODE));
+        addSideButton(new SideButtonMode(this, TileDestructor.MODE));
 
-        addSideButton(new SideButtonCompare(TileDestructor.COMPARE, CompareUtils.COMPARE_DAMAGE));
-        addSideButton(new SideButtonCompare(TileDestructor.COMPARE, CompareUtils.COMPARE_NBT));
+        addSideButton(new SideButtonCompare(this, TileDestructor.COMPARE, CompareUtils.COMPARE_DAMAGE));
+        addSideButton(new SideButtonCompare(this, TileDestructor.COMPARE, CompareUtils.COMPARE_NBT));
     }
 
     @Override

@@ -11,7 +11,7 @@ public class GuiWirelessTransmitter extends GuiBase {
 
     @Override
     public void init(int x, int y) {
-        addSideButton(new SideButtonRedstoneMode(TileWirelessTransmitter.REDSTONE_MODE));
+        addSideButton(new SideButtonRedstoneMode(this, TileWirelessTransmitter.REDSTONE_MODE));
     }
 
     @Override

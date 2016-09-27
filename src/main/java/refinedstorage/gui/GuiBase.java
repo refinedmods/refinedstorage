@@ -18,19 +18,17 @@ import refinedstorage.gui.sidebutton.SideButton;
 import refinedstorage.inventory.ItemHandlerFluid;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public abstract class GuiBase extends GuiContainer {
     private static final Map<String, ResourceLocation> TEXTURE_CACHE = new HashMap<>();
 
     public static final FluidRenderer FLUID_RENDERER = new FluidRenderer(-1, 16, 16);
 
-    protected static final int SIDE_BUTTON_WIDTH = 20;
-    protected static final int SIDE_BUTTON_HEIGHT = 20;
-
-    private List<SideButton> sideButtons = new ArrayList<>();
-
-    private int lastButtonId = 0;
+    private int lastButtonId;
     private int lastSideButtonY = 6;
 
     protected int width;
@@ -47,23 +45,25 @@ public abstract class GuiBase extends GuiContainer {
         this.ySize = height;
     }
 
+    private boolean hasSideButtons() {
+        return buttonList.stream().anyMatch(b -> b instanceof SideButton);
+    }
+
     @Override
     public void initGui() {
-        if (sideButtons.size() > 0) {
-            xSize -= SIDE_BUTTON_WIDTH;
+        if (hasSideButtons()) {
+            xSize -= SideButton.WIDTH;
         }
 
         super.initGui();
-
-        sideButtons.clear();
 
         lastButtonId = 0;
         lastSideButtonY = 6;
 
         init(guiLeft, guiTop);
 
-        if (sideButtons.size() > 0) {
-            xSize += SIDE_BUTTON_WIDTH;
+        if (hasSideButtons()) {
+            xSize += SideButton.WIDTH;
         }
     }
 
@@ -117,11 +117,10 @@ public abstract class GuiBase extends GuiContainer {
 
         String sideButtonTooltip = null;
 
-        for (SideButton sideButton : sideButtons) {
-            sideButton.draw(this, sideButton.getX() + 2, sideButton.getY() + 1);
-
-            if (inBounds(sideButton.getX(), sideButton.getY(), SIDE_BUTTON_WIDTH, SIDE_BUTTON_HEIGHT, mouseX, mouseY)) {
-                sideButtonTooltip = sideButton.getTooltip(this);
+        // @TODO: Can this be moved to SideButton itself?
+        for (GuiButton button : buttonList) {
+            if (button instanceof SideButton && inBounds(button.xPosition, button.yPosition, SideButton.WIDTH, SideButton.HEIGHT, mouseX, mouseY)) {
+                sideButtonTooltip = ((SideButton) button).getTooltip(this);
             }
         }
 
@@ -147,7 +146,9 @@ public abstract class GuiBase extends GuiContainer {
     protected void actionPerformed(GuiButton button) throws IOException {
         super.actionPerformed(button);
 
-        sideButtons.stream().filter(b -> b.getId() == button.id).findFirst().ifPresent(SideButton::actionPerformed);
+        if (button instanceof SideButton) {
+            ((SideButton) button).actionPerformed();
+        }
     }
 
     public GuiButton addButton(int x, int y, int w, int h) {
@@ -175,14 +176,16 @@ public abstract class GuiBase extends GuiContainer {
         return button;
     }
 
-    public void addSideButton(SideButton button) {
-        button.setX(-SIDE_BUTTON_WIDTH + 1);
-        button.setY(lastSideButtonY);
-        button.setId(addButton(guiLeft + button.getX(), guiTop + button.getY(), SIDE_BUTTON_WIDTH, SIDE_BUTTON_HEIGHT).id);
+    public SideButton addSideButton(SideButton button) {
+        button.id = lastButtonId++;
+        button.xPosition = guiLeft + -SideButton.WIDTH + 2;
+        button.yPosition = guiTop + lastSideButtonY;
 
-        lastSideButtonY += SIDE_BUTTON_HEIGHT + 4;
+        lastSideButtonY += SideButton.HEIGHT + 2;
 
-        sideButtons.add(button);
+        buttonList.add(button);
+
+        return button;
     }
 
     public boolean inBounds(int x, int y, int w, int h, int ox, int oy) {

@@ -1,5 +1,6 @@
 package refinedstorage.gui.sidebutton;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.gui.GuiBase;
@@ -10,7 +11,9 @@ public class SideButtonCompare extends SideButton {
     private TileDataParameter<Integer> parameter;
     private int mask;
 
-    public SideButtonCompare(TileDataParameter<Integer> parameter, int mask) {
+    public SideButtonCompare(GuiBase gui, TileDataParameter<Integer> parameter, int mask) {
+        super(gui);
+
         this.parameter = parameter;
         this.mask = mask;
     }
@@ -29,8 +32,8 @@ public class SideButtonCompare extends SideButton {
     }
 
     @Override
-    public void draw(GuiBase gui, int x, int y) {
-        gui.bindTexture("icons.png");
+    public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+        super.drawButton(mc, mouseX, mouseY);
 
         int ty = 0;
 
@@ -42,7 +45,7 @@ public class SideButtonCompare extends SideButton {
 
         int tx = (parameter.getValue() & mask) == mask ? 0 : 16;
 
-        gui.drawTexture(x, y + 1, tx, ty, 16, 16);
+        gui.drawTexture(xPosition, yPosition, tx, ty, 16, 16);
     }
 
     @Override

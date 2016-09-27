@@ -1,5 +1,6 @@
 package refinedstorage.gui.sidebutton;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;
 import refinedstorage.gui.GuiBase;
 import refinedstorage.tile.data.TileDataManager;
@@ -8,7 +9,9 @@ import refinedstorage.tile.data.TileDataParameter;
 public class SideButtonRedstoneMode extends SideButton {
     private TileDataParameter<Integer> parameter;
 
-    public SideButtonRedstoneMode(TileDataParameter<Integer> parameter) {
+    public SideButtonRedstoneMode(GuiBase gui, TileDataParameter<Integer> parameter) {
+        super(gui);
+
         this.parameter = parameter;
     }
 
@@ -18,9 +21,10 @@ public class SideButtonRedstoneMode extends SideButton {
     }
 
     @Override
-    public void draw(GuiBase gui, int x, int y) {
-        gui.bindTexture("icons.png");
-        gui.drawTexture(x, y + 1, parameter.getValue() * 16, 0, 16, 16);
+    public void drawButton(Minecraft mc, int x, int y) {
+        super.drawButton(mc, x, y);
+
+        gui.drawTexture(xPosition, yPosition, parameter.getValue() * 16, 0, 16, 16);
     }
 
     @Override

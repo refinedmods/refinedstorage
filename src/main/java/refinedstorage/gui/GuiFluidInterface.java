@@ -16,9 +16,9 @@ public class GuiFluidInterface extends GuiBase {
 
     @Override
     public void init(int x, int y) {
-        addSideButton(new SideButtonRedstoneMode(TileFluidInterface.REDSTONE_MODE));
+        addSideButton(new SideButtonRedstoneMode(this, TileFluidInterface.REDSTONE_MODE));
 
-        addSideButton(new SideButtonCompare(TileFluidInterface.COMPARE, CompareUtils.COMPARE_NBT));
+        addSideButton(new SideButtonCompare(this, TileFluidInterface.COMPARE, CompareUtils.COMPARE_NBT));
     }
 
     @Override

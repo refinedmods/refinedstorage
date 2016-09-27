@@ -13,10 +13,10 @@ public class GuiInterface extends GuiBase {
 
     @Override
     public void init(int x, int y) {
-        addSideButton(new SideButtonRedstoneMode(TileInterface.REDSTONE_MODE));
+        addSideButton(new SideButtonRedstoneMode(this, TileInterface.REDSTONE_MODE));
 
-        addSideButton(new SideButtonCompare(TileInterface.COMPARE, CompareUtils.COMPARE_DAMAGE));
-        addSideButton(new SideButtonCompare(TileInterface.COMPARE, CompareUtils.COMPARE_NBT));
+        addSideButton(new SideButtonCompare(this, TileInterface.COMPARE, CompareUtils.COMPARE_DAMAGE));
+        addSideButton(new SideButtonCompare(this, TileInterface.COMPARE, CompareUtils.COMPARE_NBT));
     }
 
     @Override

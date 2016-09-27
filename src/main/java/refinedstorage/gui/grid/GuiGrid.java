@@ -76,7 +76,7 @@ public class GuiGrid extends GuiBase {
     @Override
     public void init(int x, int y) {
         if (grid.getRedstoneModeConfig() != null) {
-            addSideButton(new SideButtonRedstoneMode(grid.getRedstoneModeConfig()));
+            addSideButton(new SideButtonRedstoneMode(this, grid.getRedstoneModeConfig()));
         }
 
         int sx = x + 80 + 1;
@@ -95,11 +95,11 @@ public class GuiGrid extends GuiBase {
         }
 
         if (grid.getType() != EnumGridType.FLUID) {
-            addSideButton(new SideButtonGridViewType(grid));
+            addSideButton(new SideButtonGridViewType(this, grid));
         }
 
-        addSideButton(new SideButtonGridSortingDirection(grid));
-        addSideButton(new SideButtonGridSortingType(grid));
+        addSideButton(new SideButtonGridSortingDirection(this, grid));
+        addSideButton(new SideButtonGridSortingType(this, grid));
         addSideButton(new SideButtonGridSearchBoxMode(this));
 
         sortItems();

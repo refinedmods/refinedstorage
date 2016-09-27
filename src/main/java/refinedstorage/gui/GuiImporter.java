@@ -15,14 +15,14 @@ public class GuiImporter extends GuiBase {
 
     @Override
     public void init(int x, int y) {
-        addSideButton(new SideButtonRedstoneMode(TileImporter.REDSTONE_MODE));
+        addSideButton(new SideButtonRedstoneMode(this, TileImporter.REDSTONE_MODE));
 
-        addSideButton(new SideButtonType(TileImporter.TYPE));
+        addSideButton(new SideButtonType(this, TileImporter.TYPE));
 
-        addSideButton(new SideButtonMode(TileImporter.MODE));
+        addSideButton(new SideButtonMode(this, TileImporter.MODE));
 
-        addSideButton(new SideButtonCompare(TileImporter.COMPARE, CompareUtils.COMPARE_DAMAGE));
-        addSideButton(new SideButtonCompare(TileImporter.COMPARE, CompareUtils.COMPARE_NBT));
+        addSideButton(new SideButtonCompare(this, TileImporter.COMPARE, CompareUtils.COMPARE_DAMAGE));
+        addSideButton(new SideButtonCompare(this, TileImporter.COMPARE, CompareUtils.COMPARE_NBT));
     }
 
     @Override

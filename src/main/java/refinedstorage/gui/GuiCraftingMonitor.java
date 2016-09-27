@@ -41,7 +41,7 @@ public class GuiCraftingMonitor extends GuiBase {
 
     @Override
     public void init(int x, int y) {
-        addSideButton(new SideButtonRedstoneMode(TileCraftingMonitor.REDSTONE_MODE));
+        addSideButton(new SideButtonRedstoneMode(this, TileCraftingMonitor.REDSTONE_MODE));
 
         String cancel = t("gui.cancel");
         String cancelAll = t("misc.refinedstorage:cancel_all");

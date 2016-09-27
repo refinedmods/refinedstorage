@@ -11,7 +11,7 @@ public class GuiRelay extends GuiBase {
 
     @Override
     public void init(int x, int y) {
-        addSideButton(new SideButtonRedstoneMode(TileRelay.REDSTONE_MODE));
+        addSideButton(new SideButtonRedstoneMode(this, TileRelay.REDSTONE_MODE));
     }
 
     @Override

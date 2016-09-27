@@ -15,7 +15,7 @@ public class GuiNetworkTransmitter extends GuiBase {
 
     @Override
     public void init(int x, int y) {
-        addSideButton(new SideButtonRedstoneMode(TileNetworkTransmitter.REDSTONE_MODE));
+        addSideButton(new SideButtonRedstoneMode(this, TileNetworkTransmitter.REDSTONE_MODE));
     }
 
     @Override

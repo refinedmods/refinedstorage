@@ -1,5 +1,6 @@
 package refinedstorage.gui.sidebutton;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;
 import refinedstorage.gui.GuiBase;
 import refinedstorage.tile.grid.IGrid;
@@ -8,7 +9,9 @@ import refinedstorage.tile.grid.TileGrid;
 public class SideButtonGridViewType extends SideButton {
     private IGrid grid;
 
-    public SideButtonGridViewType(IGrid grid) {
+    public SideButtonGridViewType(GuiBase gui, IGrid grid) {
+        super(gui);
+
         this.grid = grid;
     }
 
@@ -18,9 +21,10 @@ public class SideButtonGridViewType extends SideButton {
     }
 
     @Override
-    public void draw(GuiBase gui, int x, int y) {
-        gui.bindTexture("icons.png");
-        gui.drawTexture(x, y + 2 - 1, grid.getViewType() * 16, 112, 16, 16);
+    public void drawButton(Minecraft mc, int x, int y) {
+        super.drawButton(mc, x, y);
+
+        gui.drawTexture(xPosition, yPosition, grid.getViewType() * 16, 112, 16, 16);
     }
 
     @Override

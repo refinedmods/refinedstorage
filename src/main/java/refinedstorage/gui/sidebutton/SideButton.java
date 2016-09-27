@@ -1,39 +1,28 @@
 package refinedstorage.gui.sidebutton;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import refinedstorage.gui.GuiBase;
 
-public abstract class SideButton {
-    private int id;
-    private int x;
-    private int y;
+public abstract class SideButton extends GuiButton {
+    public static final int WIDTH = 18;
+    public static final int HEIGHT = 18;
 
-    public int getId() {
-        return id;
+    protected GuiBase gui;
+
+    public SideButton(GuiBase gui) {
+        super(-1, -1, -1, 18, 18, "");
+
+        this.gui = gui;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
+    @Override
+    public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+        gui.bindTexture("icons.png");
+        gui.drawTexture(xPosition, yPosition, 238, 16, 18, 18);
     }
 
     public abstract String getTooltip(GuiBase gui);
-
-    public abstract void draw(GuiBase gui, int x, int y);
 
     public abstract void actionPerformed();
 }

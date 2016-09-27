@@ -1,21 +1,26 @@
 package refinedstorage.gui.sidebutton;
 
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;
 import refinedstorage.gui.GuiBase;
 import refinedstorage.tile.TileDetector;
 import refinedstorage.tile.data.TileDataManager;
 
 public class SideButtonDetectorMode extends SideButton {
+    public SideButtonDetectorMode(GuiBase gui) {
+        super(gui);
+    }
+
     @Override
     public String getTooltip(GuiBase gui) {
         return TextFormatting.GREEN + gui.t("sidebutton.refinedstorage:detector.mode") + TextFormatting.RESET + "\n" + gui.t("sidebutton.refinedstorage:detector.mode." + TileDetector.MODE.getValue());
     }
 
     @Override
-    public void draw(GuiBase gui, int x, int y) {
-        gui.drawItem(x, y, new ItemStack(Items.REDSTONE, 1));
+    public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+        super.drawButton(mc, mouseX, mouseY);
+
+        // @TODO: Detector side icons
     }
 
     @Override
