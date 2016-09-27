@@ -19,7 +19,6 @@ import refinedstorage.tile.grid.TileGrid;
 
 import java.util.List;
 
-// @TODO: Better colors
 public class BlockGrid extends BlockNode {
     public static final PropertyEnum TYPE = PropertyEnum.create("type", EnumGridType.class);
 

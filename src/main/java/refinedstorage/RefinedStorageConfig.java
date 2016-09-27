@@ -71,10 +71,6 @@ public final class RefinedStorageConfig {
     public int interdimensionalUpgradeUsage;
     //endregion
 
-    //region Misc
-    public boolean translucentCables;
-    //endregion
-
     //region Categories
     private static final String ENERGY = "energy";
     private static final String CONTROLLER = "controller";
@@ -159,10 +155,6 @@ public final class RefinedStorageConfig {
         craftingUpgradeUsage = config.getInt("crafting", UPGRADES, 5, 0, Integer.MAX_VALUE, "The additional energy used per Crafting Upgrade");
         stackUpgradeUsage = config.getInt("stack", UPGRADES, 12, 0, Integer.MAX_VALUE, "The additional energy used per Stack Upgrade");
         interdimensionalUpgradeUsage = config.getInt("interdimensional", UPGRADES, 1000, 0, Integer.MAX_VALUE, "The additional energy used by the Interdimensional Upgrade");
-        //endregion
-
-        //region Misc
-        translucentCables = config.getBoolean("translucentCables", MISC, false, "For resource pack makers that want a translucent cable");
         //endregion
 
         if (config.hasChanged()) {

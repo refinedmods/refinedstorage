@@ -356,7 +356,6 @@ public class BlockCable extends BlockCoverable {
 
     @Override
     public BlockRenderLayer getBlockLayer() {
-        // @TODO: Remove config
         return BlockRenderLayer.CUTOUT;
     }
 }

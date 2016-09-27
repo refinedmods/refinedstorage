@@ -16,7 +16,7 @@ import refinedstorage.tile.TileConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-// @TODO: Connectivity
+// @TODO: Constructor connected / disconnected
 public class BlockConstructor extends BlockCable {
     public static final AxisAlignedBB HOLDER_NORTH_AABB = createAABB(7, 7, 2, 9, 9, 6);
     public static final AxisAlignedBB HOLDER_EAST_AABB = createAABB(10, 7, 7, 14, 9, 9);

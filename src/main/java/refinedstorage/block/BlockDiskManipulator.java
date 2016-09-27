@@ -14,7 +14,6 @@ import refinedstorage.tile.TileDiskManipulator;
 
 import javax.annotation.Nullable;
 
-// @TODO: Connectivity
 public class BlockDiskManipulator extends BlockNode {
     public BlockDiskManipulator() {
         super("disk_manipulator");
