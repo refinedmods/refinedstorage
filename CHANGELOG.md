@@ -7,6 +7,7 @@
 - Every machine now compares on damage and NBT by default (raoulvdberge)
 - Updated JEI, fixes crashes (way2muchnoise)
 - Fixed crash with Disk Manipulator (way2muchnoise)
+- Fixed autocrafting not giving back byproducts (raoulvdberge)
 - New art by CyanideX (CyanideX)
 
 ### 1.0.5

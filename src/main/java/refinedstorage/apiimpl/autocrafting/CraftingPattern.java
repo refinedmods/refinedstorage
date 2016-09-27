@@ -92,6 +92,11 @@ public class CraftingPattern implements ICraftingPattern {
     }
 
     @Override
+    public List<ItemStack> getByproducts() {
+        return byproducts;
+    }
+
+    @Override
     public String getId() {
         return ItemPattern.isProcessing(stack) ? CraftingTaskFactoryProcessing.ID : CraftingTaskFactoryNormal.ID;
     }

@@ -34,6 +34,11 @@ public interface ICraftingPattern {
     List<ItemStack> getOutputs();
 
     /**
+     * @return the byproducts
+     */
+    List<ItemStack> getByproducts();
+
+    /**
      * @return the id of the factory that creates a crafting task for this pattern, as defined in the registry
      */
     String getId();

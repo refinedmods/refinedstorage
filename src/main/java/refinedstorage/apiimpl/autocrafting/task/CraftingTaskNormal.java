@@ -45,6 +45,11 @@ public class CraftingTaskNormal extends CraftingTask {
             network.insertItem(output, output.stackSize, false);
         }
 
+        for (ItemStack byproduct : pattern.getByproducts()) {
+            // @TODO: Handle remainder
+            network.insertItem(byproduct, byproduct.stackSize, false);
+        }
+
         return true;
     }
 
