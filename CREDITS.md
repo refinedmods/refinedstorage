@@ -7,7 +7,8 @@
 - blay09 (Crafting Tweaks integration)
 
 ## Art
-- GustoniaEagle
+- CyanideX
+- GustoniaEagle (old textures)
 
 ## Translations
 - raoulvdberge (Dutch translation)
