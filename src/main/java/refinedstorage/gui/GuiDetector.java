@@ -33,8 +33,8 @@ public class GuiDetector extends GuiBase {
         AMOUNT.setEnableBackgroundDrawing(false);
         AMOUNT.setVisible(true);
         AMOUNT.setTextColor(16777215);
-        AMOUNT.setCanLoseFocus(false);
-        AMOUNT.setFocused(true);
+        AMOUNT.setCanLoseFocus(true);
+        AMOUNT.setFocused(false);
     }
 
     @Override

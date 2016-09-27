@@ -2,8 +2,8 @@
   "forge_marker": 1,
   "defaults": {
     "textures": {
-      "particle": "refinedstorage:blocks/side_borderless",
-      "torch": "refinedstorage:blocks/wireless_transmitter_disconnected"
+      "particle": "refinedstorage:blocks/detector_top",
+      "torch": "refinedstorage:blocks/detector_side_off"
     },
     "model": "refinedstorage:detector"
   },
@@ -16,7 +16,7 @@
     "powered": {
       "true": {
         "textures": {
-          "torch": "refinedstorage:blocks/wireless_transmitter_connected"
+          "torch": "refinedstorage:blocks/detector_side_on"
         }
       },
       "false": {
