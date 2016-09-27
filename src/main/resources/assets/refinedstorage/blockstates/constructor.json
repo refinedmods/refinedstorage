@@ -4,8 +4,8 @@
     "textures": {
       "all": "refinedstorage:blocks/cable",
       "particle": "refinedstorage:blocks/cable",
-      "front": "refinedstorage:blocks/constructor",
-      "line": "refinedstorage:blocks/cable_part"
+      "front": "refinedstorage:blocks/constructor_on",
+      "line": "refinedstorage:blocks/importer_exporter_external_storage"
     },
     "model": "refinedstorage:cable_core",
     "uvlock": true
@@ -17,12 +17,6 @@
         "transform": "forge:default-block"
       }
     ],
-    "connected": {
-      "true": {
-      },
-      "false": {
-      }
-    },
     "direction": {
       "north": {
         "submodel": "refinedstorage:constructor_destructor_north"

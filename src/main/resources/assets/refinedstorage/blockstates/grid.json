@@ -1,49 +1,60 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "orientable",
+    "model": "cube",
     "textures": {
-      "side": "refinedstorage:blocks/side",
-      "top": "refinedstorage:blocks/side",
-      "front": "refinedstorage:blocks/grid_disconnected"
+      "particle": "refinedstorage:blocks/side",
+      "north": "refinedstorage:blocks/grid_disconnected",
+      "east": "refinedstorage:blocks/grid_left",
+      "south": "refinedstorage:blocks/grid_back",
+      "west": "refinedstorage:blocks/grid_right",
+      "up": "refinedstorage:blocks/grid_top",
+      "down": "refinedstorage:blocks/bottom"
     }
   },
   "variants": {
     "connected": {
       "true": {
         "textures": {
-          "front_fluid_grid": "refinedstorage:blocks/fluid_grid_connected",
-          "front_other": "refinedstorage:blocks/grid_connected"
+          "north_normal": "refinedstorage:blocks/grid_front_connected",
+          "north_crafting": "refinedstorage:blocks/grid_crafting_front_connected",
+          "north_pattern": "refinedstorage:blocks/grid_pattern_front_connected",
+          "north_fluid": "refinedstorage:blocks/grid_fluid_front_connected"
         }
       },
       "false": {
         "textures": {
-          "front_fluid_grid": "refinedstorage:blocks/fluid_grid_disconnected",
-          "front_other": "refinedstorage:blocks/grid_disconnected"
+          "north_normal": "refinedstorage:blocks/grid_front",
+          "north_crafting": "refinedstorage:blocks/grid_crafting_front",
+          "north_pattern": "refinedstorage:blocks/grid_pattern_front",
+          "north_fluid": "refinedstorage:blocks/grid_fluid_front"
         }
       }
     },
     "type": {
       "normal": {
         "textures": {
-          "front": "#front_other"
+          "north": "#north_normal"
         }
       },
       "crafting": {
         "textures": {
-          "front": "#front_other"
+          "north": "#north_crafting"
         }
       },
       "pattern": {
         "textures": {
-          "front": "#front_other"
+          "north": "#north_pattern"
         }
       },
       "fluid": {
         "textures": {
-          "front": "#front_fluid_grid",
-          "side": "refinedstorage:blocks/fluid_grid_side",
-          "top": "refinedstorage:blocks/fluid_grid_side"
+          "north": "#north_fluid",
+          "east": "refinedstorage:blocks/grid_fluid_left",
+          "south": "refinedstorage:blocks/grid_fluid_back",
+          "west": "refinedstorage:blocks/grid_fluid_right",
+          "up": "refinedstorage:blocks/grid_fluid_top",
+          "down": "refinedstorage:blocks/bottom"
         }
       }
     },

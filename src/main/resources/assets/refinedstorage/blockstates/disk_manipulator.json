@@ -5,7 +5,7 @@
     "textures": {
       "side": "refinedstorage:blocks/side",
       "top": "refinedstorage:blocks/side",
-      "front": "refinedstorage:blocks/disk_manipulator"
+      "front": "refinedstorage:blocks/disk_manipulator_disconnected"
     }
   },
   "variants": {
@@ -16,6 +16,9 @@
     ],
     "connected": {
       "true": {
+        "textures": {
+          "front": "refinedstorage:blocks/disk_manipulator"
+        }
       },
       "false": {
       }

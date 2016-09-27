@@ -1,11 +1,15 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "orientable",
+    "model": "cube",
     "textures": {
-      "side": "refinedstorage:blocks/side",
-      "top": "refinedstorage:blocks/side",
-      "front": "refinedstorage:blocks/disk_drive_0"
+      "particle": "refinedstorage:blocks/disk_drive_0",
+      "down": "refinedstorage:blocks/disk_drive_bottom",
+      "up": "refinedstorage:blocks/disk_drive_top",
+      "north": "refinedstorage:blocks/disk_drive_0",
+      "east": "refinedstorage:blocks/disk_drive_side",
+      "south": "refinedstorage:blocks/disk_drive_side",
+      "west": "refinedstorage:blocks/disk_drive_side"
     }
   },
   "variants": {
@@ -65,42 +69,42 @@
     "stored": {
       "0": {
         "textures": {
-          "front": "refinedstorage:blocks/disk_drive_0"
+          "north": "refinedstorage:blocks/disk_drive_0"
         }
       },
       "1": {
         "textures": {
-          "front": "refinedstorage:blocks/disk_drive_1"
+          "north": "refinedstorage:blocks/disk_drive_0"
         }
       },
       "2": {
         "textures": {
-          "front": "refinedstorage:blocks/disk_drive_2"
+          "north": "refinedstorage:blocks/disk_drive_0"
         }
       },
       "3": {
         "textures": {
-          "front": "refinedstorage:blocks/disk_drive_3"
+          "north": "refinedstorage:blocks/disk_drive_0"
         }
       },
       "4": {
         "textures": {
-          "front": "refinedstorage:blocks/disk_drive_4"
+          "north": "refinedstorage:blocks/disk_drive_0"
         }
       },
       "5": {
         "textures": {
-          "front": "refinedstorage:blocks/disk_drive_5"
+          "north": "refinedstorage:blocks/disk_drive_0"
         }
       },
       "6": {
         "textures": {
-          "front": "refinedstorage:blocks/disk_drive_6"
+          "north": "refinedstorage:blocks/disk_drive_0"
         }
       },
       "7": {
         "textures": {
-          "front": "refinedstorage:blocks/disk_drive_7"
+          "north": "refinedstorage:blocks/disk_drive_0"
         }
       }
     },

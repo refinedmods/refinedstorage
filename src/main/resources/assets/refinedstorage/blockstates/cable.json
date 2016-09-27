@@ -2,8 +2,8 @@
   "forge_marker": 1,
   "defaults": {
     "textures": {
-      "all": "refinedstorage:blocks/cable",
-      "particle": "refinedstorage:blocks/cable"
+      "all": "refinedstorage:blocks/cable_new",
+      "particle": "refinedstorage:blocks/cable_new"
     },
     "model": "refinedstorage:cable_core",
     "uvlock": true

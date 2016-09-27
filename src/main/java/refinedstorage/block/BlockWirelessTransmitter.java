@@ -1,5 +1,6 @@
 package refinedstorage.block;
 
+import mcmultipart.block.BlockCoverable;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,7 +15,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
-import refinedstorage.tile.TileCable;
 import refinedstorage.tile.TileWirelessTransmitter;
 
 public class BlockWirelessTransmitter extends BlockNode {
@@ -69,7 +69,7 @@ public class BlockWirelessTransmitter extends BlockNode {
 
     @Override
     public boolean canPlaceBlockAt(World world, BlockPos pos) {
-        return world.getTileEntity(pos.offset(EnumFacing.DOWN)) instanceof TileCable;
+        return world.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock() instanceof BlockCoverable;
     }
 
     @Override

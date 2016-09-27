@@ -3,8 +3,9 @@
   "defaults": {
     "model": "orientable",
     "textures": {
-      "side": "refinedstorage:blocks/side",
-      "top": "refinedstorage:blocks/side",
+      "particle": "refinedstorage:blocks/controller_0",
+      "side": "refinedstorage:blocks/controller_0",
+      "top": "refinedstorage:blocks/controller_0",
       "front": "refinedstorage:blocks/controller_0"
     }
   },
@@ -17,37 +18,51 @@
       },
       "1": {
         "textures": {
+          "side": "refinedstorage:blocks/controller_1",
+          "top": "refinedstorage:blocks/controller_1",
           "front": "refinedstorage:blocks/controller_1"
         }
       },
       "2": {
         "textures": {
+          "side": "refinedstorage:blocks/controller_2",
+          "top": "refinedstorage:blocks/controller_2",
           "front": "refinedstorage:blocks/controller_2"
         }
       },
       "3": {
         "textures": {
-          "front": "refinedstorage:blocks/controller_3"
+          "side": "refinedstorage:blocks/controller_on",
+          "top": "refinedstorage:blocks/controller_on",
+          "front": "refinedstorage:blocks/controller_on"
         }
       },
       "4": {
         "textures": {
-          "front": "refinedstorage:blocks/controller_4"
+          "side": "refinedstorage:blocks/controller_on",
+          "top": "refinedstorage:blocks/controller_on",
+          "front": "refinedstorage:blocks/controller_on"
         }
       },
       "5": {
         "textures": {
-          "front": "refinedstorage:blocks/controller_5"
+          "side": "refinedstorage:blocks/controller_on",
+          "top": "refinedstorage:blocks/controller_on",
+          "front": "refinedstorage:blocks/controller_on"
         }
       },
       "6": {
         "textures": {
-          "front": "refinedstorage:blocks/controller_6"
+          "side": "refinedstorage:blocks/controller_on",
+          "top": "refinedstorage:blocks/controller_on",
+          "front": "refinedstorage:blocks/controller_on"
         }
       },
       "7": {
         "textures": {
-          "front": "refinedstorage:blocks/controller_7"
+          "side": "refinedstorage:blocks/controller_on",
+          "top": "refinedstorage:blocks/controller_on",
+          "front": "refinedstorage:blocks/controller_on"
         }
       }
     },
