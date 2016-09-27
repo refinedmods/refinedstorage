@@ -1,6 +1,6 @@
 # Refined Storage Changelog
 
-### 1.0.6
+### 1.1
 - New art by CyanideX (CyanideX)
 - Added crafting preview screen (way2muchnoise)
 - Added max crafting task depth (raoulvdberge)
