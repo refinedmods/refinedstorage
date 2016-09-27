@@ -2,9 +2,9 @@
   "forge_marker": 1,
   "defaults": {
     "textures": {
-      "all": "refinedstorage:blocks/cable",
-      "particle": "refinedstorage:blocks/cable",
-      "front": "refinedstorage:blocks/constructor_connected",
+      "all": "refinedstorage:blocks/cable_new",
+      "particle": "refinedstorage:blocks/cable_new",
+      "front": "refinedstorage:blocks/constructor_disconnected",
       "line": "refinedstorage:blocks/importer_exporter_external_storage"
     },
     "model": "refinedstorage:cable_core",
@@ -19,6 +19,9 @@
     ],
     "connected": {
       "true": {
+        "textures": {
+          "front": "refinedstorage:blocks/constructor_connected"
+        }
       },
       "false": {
       }

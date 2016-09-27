@@ -17,7 +17,7 @@ public class SideButtonDetectorMode extends SideButton {
 
     @Override
     protected void drawButtonIcon(int x, int y) {
-        // @TODO: Detector side icons
+        // @TODO: Detector sidebutton icons
     }
 
     @Override

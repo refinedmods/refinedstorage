@@ -17,7 +17,7 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.tile.TileDetector;
 
-// @TODO: Fix detector model connectivity
+// @TODO: Fix detector model connectivity (also HITBOX)
 public class BlockDetector extends BlockNode {
     private static final AxisAlignedBB AABB_DETECTOR = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 4D / 16D, 1.0D);
 

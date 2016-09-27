@@ -16,7 +16,6 @@ import refinedstorage.tile.TileDestructor;
 
 import java.util.List;
 
-// @TODO: Destructor connected / disconnected
 public class BlockDestructor extends BlockCable {
     public BlockDestructor(String name) {
         super(name);
