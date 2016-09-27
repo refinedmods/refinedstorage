@@ -1,6 +1,5 @@
 package refinedstorage.gui.sidebutton;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;
 import refinedstorage.gui.GuiBase;
 import refinedstorage.tile.TileDetector;
@@ -12,14 +11,12 @@ public class SideButtonDetectorMode extends SideButton {
     }
 
     @Override
-    public String getTooltip(GuiBase gui) {
+    public String getTooltip() {
         return TextFormatting.GREEN + gui.t("sidebutton.refinedstorage:detector.mode") + TextFormatting.RESET + "\n" + gui.t("sidebutton.refinedstorage:detector.mode." + TileDetector.MODE.getValue());
     }
 
     @Override
-    public void drawButton(Minecraft mc, int mouseX, int mouseY) {
-        super.drawButton(mc, mouseX, mouseY);
-
+    protected void drawButtonIcon(int x, int y) {
         // @TODO: Detector side icons
     }
 

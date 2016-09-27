@@ -1,6 +1,5 @@
 package refinedstorage.gui.sidebutton;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.gui.GuiBase;
@@ -19,7 +18,7 @@ public class SideButtonCompare extends SideButton {
     }
 
     @Override
-    public String getTooltip(GuiBase gui) {
+    public String getTooltip() {
         String tooltip = TextFormatting.YELLOW + gui.t("sidebutton.refinedstorage:compare." + mask) + TextFormatting.RESET + "\n";
 
         if ((parameter.getValue() & mask) == mask) {
@@ -32,9 +31,7 @@ public class SideButtonCompare extends SideButton {
     }
 
     @Override
-    public void drawButton(Minecraft mc, int mouseX, int mouseY) {
-        super.drawButton(mc, mouseX, mouseY);
-
+    protected void drawButtonIcon(int x, int y) {
         int ty = 0;
 
         if (mask == CompareUtils.COMPARE_DAMAGE) {
@@ -45,7 +42,7 @@ public class SideButtonCompare extends SideButton {
 
         int tx = (parameter.getValue() & mask) == mask ? 0 : 16;
 
-        gui.drawTexture(xPosition, yPosition, tx, ty, 16, 16);
+        gui.drawTexture(x, y, tx, ty, 16, 16);
     }
 
     @Override

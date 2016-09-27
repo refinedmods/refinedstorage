@@ -1,8 +1,6 @@
 package refinedstorage.gui.sidebutton;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;
-import refinedstorage.gui.GuiBase;
 import refinedstorage.gui.grid.GuiGrid;
 import refinedstorage.integration.jei.IntegrationJEI;
 import refinedstorage.tile.grid.TileGrid;
@@ -13,15 +11,13 @@ public class SideButtonGridSearchBoxMode extends SideButton {
     }
 
     @Override
-    public String getTooltip(GuiBase gui) {
+    public String getTooltip() {
         return TextFormatting.YELLOW + gui.t("sidebutton.refinedstorage:grid.search_box_mode") + TextFormatting.RESET + "\n" + gui.t("sidebutton.refinedstorage:grid.search_box_mode." + ((GuiGrid) gui).getGrid().getSearchBoxMode());
     }
 
     @Override
-    public void drawButton(Minecraft mc, int mouseX, int mouseY) {
-        super.drawButton(mc, mouseX, mouseY);
-
-        gui.drawTexture(xPosition, yPosition, 0, 96, 16, 16);
+    protected void drawButtonIcon(int x, int y) {
+        gui.drawTexture(x, y, 0, 96, 16, 16);
     }
 
     @Override

@@ -117,10 +117,9 @@ public abstract class GuiBase extends GuiContainer {
 
         String sideButtonTooltip = null;
 
-        // @TODO: Can this be moved to SideButton itself?
         for (GuiButton button : buttonList) {
-            if (button instanceof SideButton && inBounds(button.xPosition, button.yPosition, SideButton.WIDTH, SideButton.HEIGHT, mouseX, mouseY)) {
-                sideButtonTooltip = ((SideButton) button).getTooltip(this);
+            if (button instanceof SideButton && ((SideButton) button).isHovered()) {
+                sideButtonTooltip = ((SideButton) button).getTooltip();
             }
         }
 
@@ -178,7 +177,7 @@ public abstract class GuiBase extends GuiContainer {
 
     public SideButton addSideButton(SideButton button) {
         button.id = lastButtonId++;
-        button.xPosition = guiLeft + -SideButton.WIDTH + 2;
+        button.xPosition = guiLeft + -SideButton.WIDTH - 2;
         button.yPosition = guiTop + lastSideButtonY;
 
         lastSideButtonY += SideButton.HEIGHT + 2;

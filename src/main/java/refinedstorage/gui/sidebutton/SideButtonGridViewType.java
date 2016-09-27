@@ -1,6 +1,5 @@
 package refinedstorage.gui.sidebutton;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;
 import refinedstorage.gui.GuiBase;
 import refinedstorage.tile.grid.IGrid;
@@ -16,15 +15,13 @@ public class SideButtonGridViewType extends SideButton {
     }
 
     @Override
-    public String getTooltip(GuiBase gui) {
+    public String getTooltip() {
         return TextFormatting.YELLOW + gui.t("sidebutton.refinedstorage:grid.view_type") + TextFormatting.RESET + "\n" + gui.t("sidebutton.refinedstorage:grid.view_type." + grid.getViewType());
     }
 
     @Override
-    public void drawButton(Minecraft mc, int x, int y) {
-        super.drawButton(mc, x, y);
-
-        gui.drawTexture(xPosition, yPosition, grid.getViewType() * 16, 112, 16, 16);
+    protected void drawButtonIcon(int x, int y) {
+        gui.drawTexture(x, y, grid.getViewType() * 16, 112, 16, 16);
     }
 
     @Override

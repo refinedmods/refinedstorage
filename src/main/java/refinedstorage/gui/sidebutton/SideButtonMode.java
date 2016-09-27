@@ -1,6 +1,5 @@
 package refinedstorage.gui.sidebutton;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;
 import refinedstorage.gui.GuiBase;
 import refinedstorage.tile.config.IFilterable;
@@ -17,15 +16,13 @@ public class SideButtonMode extends SideButton {
     }
 
     @Override
-    public String getTooltip(GuiBase gui) {
+    public String getTooltip() {
         return TextFormatting.GREEN + gui.t("sidebutton.refinedstorage:mode") + TextFormatting.RESET + "\n" + gui.t("sidebutton.refinedstorage:mode." + (parameter.getValue() == IFilterable.WHITELIST ? "whitelist" : "blacklist"));
     }
 
     @Override
-    public void drawButton(Minecraft mc, int x, int y) {
-        super.drawButton(mc, x, y);
-
-        gui.drawTexture(xPosition, yPosition, parameter.getValue() == IFilterable.WHITELIST ? 0 : 16, 64, 16, 16);
+    protected void drawButtonIcon(int x, int y) {
+        gui.drawTexture(x, y, parameter.getValue() == IFilterable.WHITELIST ? 0 : 16, 64, 16, 16);
     }
 
     @Override

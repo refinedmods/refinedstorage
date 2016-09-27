@@ -1,6 +1,5 @@
 package refinedstorage.gui.sidebutton;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;
 import refinedstorage.gui.GuiBase;
 import refinedstorage.tile.grid.IGrid;
@@ -16,15 +15,13 @@ public class SideButtonGridSortingDirection extends SideButton {
     }
 
     @Override
-    public String getTooltip(GuiBase gui) {
+    public String getTooltip() {
         return TextFormatting.YELLOW + gui.t("sidebutton.refinedstorage:grid.sorting.direction") + TextFormatting.RESET + "\n" + gui.t("sidebutton.refinedstorage:grid.sorting.direction." + grid.getSortingDirection());
     }
 
     @Override
-    public void drawButton(Minecraft mc, int x, int y) {
-        super.drawButton(mc, x, y);
-
-        gui.drawTexture(xPosition, yPosition, grid.getSortingDirection() * 16, 16, 16, 16);
+    protected void drawButtonIcon(int x, int y) {
+        gui.drawTexture(x, y, grid.getSortingDirection() * 16, 16, 16, 16);
     }
 
     @Override

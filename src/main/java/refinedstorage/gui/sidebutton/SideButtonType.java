@@ -1,6 +1,5 @@
 package refinedstorage.gui.sidebutton;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextFormatting;
 import refinedstorage.gui.GuiBase;
 import refinedstorage.tile.config.IType;
@@ -17,15 +16,13 @@ public class SideButtonType extends SideButton {
     }
 
     @Override
-    public String getTooltip(GuiBase gui) {
+    public String getTooltip() {
         return TextFormatting.GREEN + gui.t("sidebutton.refinedstorage:type") + TextFormatting.RESET + "\n" + gui.t("sidebutton.refinedstorage:type." + type.getValue());
     }
 
     @Override
-    public void drawButton(Minecraft mc, int x, int y) {
-        super.drawButton(mc, x, y);
-
-        gui.drawTexture(xPosition, yPosition, 16 * type.getValue(), 128, 16, 16);
+    protected void drawButtonIcon(int x, int y) {
+        gui.drawTexture(x, y, 16 * type.getValue(), 128, 16, 16);
     }
 
     @Override
