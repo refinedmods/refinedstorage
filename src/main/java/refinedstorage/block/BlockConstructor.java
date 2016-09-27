@@ -92,6 +92,11 @@ public class BlockConstructor extends BlockCable {
     }
 
     @Override
+    public boolean hasConnectivityState() {
+        return true;
+    }
+
+    @Override
     public EnumPlacementType getPlacementType() {
         return EnumPlacementType.ANY;
     }

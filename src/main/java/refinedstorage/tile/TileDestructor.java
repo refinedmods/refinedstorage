@@ -195,6 +195,11 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
     }
 
     @Override
+    public boolean hasConnectivityState() {
+        return true;
+    }
+
+    @Override
     public IItemHandler getDrops() {
         return upgrades;
     }

@@ -56,6 +56,7 @@ public class BlockCable extends BlockCoverable {
     protected static final PropertyBool WEST = PropertyBool.create("west");
     protected static final PropertyBool UP = PropertyBool.create("up");
     protected static final PropertyBool DOWN = PropertyBool.create("down");
+    protected static final PropertyBool CONNECTED = PropertyBool.create("connected");
 
     private String name;
 
@@ -97,6 +98,10 @@ public class BlockCable extends BlockCoverable {
         return new TileCable();
     }
 
+    public boolean hasConnectivityState() {
+        return false;
+    }
+
     @Override
     protected BlockStateContainer createBlockState() {
         BlockStateContainer.Builder builder = new BlockStateContainer.Builder(this);
@@ -113,6 +118,10 @@ public class BlockCable extends BlockCoverable {
             builder.add(DIRECTION);
         }
 
+        if (hasConnectivityState()) {
+            builder.add(CONNECTED);
+        }
+
         return builder.build();
     }
 
@@ -127,8 +136,14 @@ public class BlockCable extends BlockCoverable {
             .withProperty(UP, hasConnectionWith(world, pos, EnumFacing.UP))
             .withProperty(DOWN, hasConnectionWith(world, pos, EnumFacing.DOWN));
 
+        TileNode tile = (TileNode) world.getTileEntity(pos);
+
         if (getPlacementType() != null) {
-            state = state.withProperty(DIRECTION, ((TileNode) world.getTileEntity(pos)).getDirection());
+            state = state.withProperty(DIRECTION, tile.getDirection());
+        }
+
+        if (hasConnectivityState()) {
+            state = state.withProperty(CONNECTED, tile.isConnected());
         }
 
         return state;

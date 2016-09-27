@@ -17,6 +17,12 @@
         "transform": "forge:default-block"
       }
     ],
+    "connected": {
+      "true": {
+      },
+      "false": {
+      }
+    },
     "direction": {
       "north": {
         "submodel": "refinedstorage:constructor_destructor_north"

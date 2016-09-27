@@ -44,6 +44,7 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
             block = SlotSpecimen.getBlockState(worldObj, pos.offset(getDirection()), getStackInSlot(0));
         }
     };
+
     private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(1, this);
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_CRAFTING);
@@ -170,6 +171,11 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
     @Override
     public IItemHandler getDrops() {
         return upgrades;
+    }
+
+    @Override
+    public boolean hasConnectivityState() {
+        return true;
     }
 
     @Override
