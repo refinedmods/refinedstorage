@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.1.2
+- It is now possible to start a crafting task even if the crafting preview says you can't (raoulvdberge)
+
 ### 1.1.1
 - Fixed crash on servers (raoulvdberge)
 
