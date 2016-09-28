@@ -68,4 +68,11 @@ public class GuiDetector extends GuiBase {
             super.keyTyped(character, keyCode);
         }
     }
+
+    @Override
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+        super.mouseClicked(mouseX, mouseY, mouseButton);
+
+        AMOUNT.mouseClicked(mouseX, mouseY, mouseButton);
+    }
 }

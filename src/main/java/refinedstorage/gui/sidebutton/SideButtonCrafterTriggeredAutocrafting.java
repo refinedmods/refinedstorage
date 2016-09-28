@@ -17,7 +17,7 @@ public class SideButtonCrafterTriggeredAutocrafting extends SideButton {
 
     @Override
     protected void drawButtonIcon(int x, int y) {
-        gui.drawTexture(x, y, 0, 144, 16, 16);
+        gui.drawTexture(x, y, TileCrafter.TRIGGERED_AUTOCRAFTING.getValue() ? 0 : 16, 144, 16, 16);
     }
 
     @Override

@@ -17,7 +17,7 @@ public class SideButtonDetectorMode extends SideButton {
 
     @Override
     protected void drawButtonIcon(int x, int y) {
-        // @TODO: Detector sidebutton icons
+        gui.drawTexture(x, y, TileDetector.MODE.getValue() * 16, 176, 16, 16);
     }
 
     @Override

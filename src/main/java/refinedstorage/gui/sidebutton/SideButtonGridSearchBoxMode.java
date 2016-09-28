@@ -17,7 +17,9 @@ public class SideButtonGridSearchBoxMode extends SideButton {
 
     @Override
     protected void drawButtonIcon(int x, int y) {
-        gui.drawTexture(x, y, 0, 96, 16, 16);
+        int mode = ((GuiGrid) gui).getGrid().getSearchBoxMode();
+
+        gui.drawTexture(x, y, mode == TileGrid.SEARCH_BOX_MODE_NORMAL_AUTOSELECTED || mode == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED ? 16 : 0, 96, 16, 16);
     }
 
     @Override
