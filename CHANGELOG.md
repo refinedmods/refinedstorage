@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.1.1
+- Fixed crash on servers (raoulvdberge)
+
 ### 1.1
 - New art by CyanideX (CyanideX)
 - Added crafting preview screen (way2muchnoise)
