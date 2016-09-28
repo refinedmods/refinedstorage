@@ -302,12 +302,14 @@ public class ClientProxy extends CommonProxy {
     }
 
     public static void onReceiveCraftingPreviewResponse(MessageGridCraftingPreviewResponse message) {
-        GuiScreen screen = Minecraft.getMinecraft().currentScreen;
+        Minecraft.getMinecraft().addScheduledTask(() -> {
+            GuiScreen screen = Minecraft.getMinecraft().currentScreen;
 
-        if (screen instanceof GuiCraftingStart) {
-            screen = ((GuiCraftingStart) screen).getParent();
-        }
+            if (screen instanceof GuiCraftingStart) {
+                screen = ((GuiCraftingStart) screen).getParent();
+            }
 
-        FMLCommonHandler.instance().showGuiScreen(new GuiCraftingPreview(screen, message.stacks, message.hash, message.quantity));
+            FMLCommonHandler.instance().showGuiScreen(new GuiCraftingPreview(screen, message.stacks, message.hash, message.quantity));
+        });
     }
 }
