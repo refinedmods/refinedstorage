@@ -4,6 +4,8 @@ import mcmultipart.client.multipart.ModelMultipartContainer;
 import mcmultipart.raytrace.PartMOP;
 import mcmultipart.raytrace.RayTraceUtils;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
@@ -20,6 +22,7 @@ import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -28,7 +31,10 @@ import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.block.*;
+import refinedstorage.gui.GuiCraftingPreview;
+import refinedstorage.gui.grid.GuiCraftingStart;
 import refinedstorage.item.*;
+import refinedstorage.network.MessageGridCraftingPreviewResponse;
 import refinedstorage.tile.TileController;
 
 import java.util.List;
@@ -293,5 +299,15 @@ public class ClientProxy extends CommonProxy {
 
             return new ModelResourceLocation("refinedstorage:controller", "direction=north,energy=" + energy);
         });
+    }
+
+    public static void onReceiveCraftingPreviewResponse(MessageGridCraftingPreviewResponse message) {
+        GuiScreen screen = Minecraft.getMinecraft().currentScreen;
+
+        if (screen instanceof GuiCraftingStart) {
+            screen = ((GuiCraftingStart) screen).getParent();
+        }
+
+        FMLCommonHandler.instance().showGuiScreen(new GuiCraftingPreview(screen, message.stacks, message.hash, message.quantity));
     }
 }

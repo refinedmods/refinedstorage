@@ -1,23 +1,19 @@
 package refinedstorage.network;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewStack;
-import refinedstorage.gui.GuiCraftingPreview;
-import refinedstorage.gui.grid.GuiCraftingStart;
+import refinedstorage.proxy.ClientProxy;
 
 import java.util.Collection;
 import java.util.LinkedList;
 
 public class MessageGridCraftingPreviewResponse implements IMessage, IMessageHandler<MessageGridCraftingPreviewResponse, IMessage> {
-    private Collection<CraftingPreviewStack> stacks;
-    private int hash;
-    private int quantity;
+    public Collection<CraftingPreviewStack> stacks;
+    public int hash;
+    public int quantity;
 
     public MessageGridCraftingPreviewResponse() {
     }
@@ -56,14 +52,8 @@ public class MessageGridCraftingPreviewResponse implements IMessage, IMessageHan
 
     @Override
     public IMessage onMessage(MessageGridCraftingPreviewResponse message, MessageContext ctx) {
-        GuiScreen screen = Minecraft.getMinecraft().currentScreen;
-
-        if (screen instanceof GuiCraftingStart) {
-            screen = ((GuiCraftingStart) screen).getParent();
-        }
-
-        FMLCommonHandler.instance().showGuiScreen(new GuiCraftingPreview(screen, message.stacks, message.hash, message.quantity));
-
+        ClientProxy.onReceiveCraftingPreviewResponse(message);
+        
         return null;
     }
 }
