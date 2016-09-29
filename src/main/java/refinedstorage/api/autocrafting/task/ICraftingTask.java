@@ -52,9 +52,10 @@ public interface ICraftingTask {
     /**
      * Returns the status of this crafting task that is used for the tooltip in the crafting monitor.
      *
+     * @param network the network
      * @return the status
      */
-    String getStatus();
+    String getStatus(INetworkMaster network);
 
     /**
      * @return the progress for display in the crafting monitor, or -1 to not display any progress

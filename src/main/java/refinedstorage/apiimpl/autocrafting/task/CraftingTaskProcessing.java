@@ -20,8 +20,6 @@ public class CraftingTaskProcessing extends CraftingTask {
     private boolean satisfiedInsertion[];
     private BlockPos tileInUse;
 
-    private boolean waitingOnTileInUse;
-
     public CraftingTaskProcessing(ICraftingPattern pattern, int depth) {
         super(pattern, depth);
 
@@ -64,18 +62,10 @@ public class CraftingTaskProcessing extends CraftingTask {
 
         ICraftingPatternContainer container = pattern.getContainer();
 
-        if (container.getFacingTile() == null) {
-            tileInUse = null;
+        if (container.getFacingTile() != null && !isTileInUse(network)) {
+            tileInUse = pattern.getContainer().getFacingTile().getPos();
 
-            waitingOnTileInUse = false;
-        }
-
-        if (!took.isEmpty() && container.getFacingTile() != null) {
-            waitingOnTileInUse = isTileInUse(network);
-
-            if (!waitingOnTileInUse) {
-                tileInUse = pattern.getContainer().getFacingTile().getPos();
-
+            if (!took.isEmpty()) {
                 ItemStack toInsert = took.get(0);
 
                 if (ItemHandlerHelper.insertItem(container.getFacingInventory(), toInsert, true) == null) {
@@ -84,6 +74,8 @@ public class CraftingTaskProcessing extends CraftingTask {
                     took.remove(0);
                 }
             }
+        } else {
+            tileInUse = null;
         }
 
         return isReady();
@@ -110,9 +102,11 @@ public class CraftingTaskProcessing extends CraftingTask {
     }
 
     private boolean isTileInUse(INetworkMaster network) {
-        for (ICraftingTask task : network.getCraftingTasks()) {
-            if (isTileInUse(task)) {
-                return true;
+        if (tileInUse == null) {
+            for (ICraftingTask task : network.getCraftingTasks()) {
+                if (isTileInUse(task)) {
+                    return true;
+                }
             }
         }
 
@@ -120,17 +114,19 @@ public class CraftingTaskProcessing extends CraftingTask {
     }
 
     private boolean isTileInUse(ICraftingTask task) {
-        if (task != this) {
-            if (task.getChild() != null) {
-                return isTileInUse(task.getChild());
-            }
+        if (task == this) {
+            return false;
+        }
 
-            if (task instanceof CraftingTaskProcessing) {
-                CraftingTaskProcessing other = (CraftingTaskProcessing) task;
+        if (task.getChild() != null) {
+            return isTileInUse(task.getChild());
+        }
 
-                if (other.tileInUse != null && other.tileInUse.equals(pattern.getContainer().getFacingTile().getPos()) && !other.pattern.equals(pattern)) {
-                    return true;
-                }
+        if (task instanceof CraftingTaskProcessing) {
+            CraftingTaskProcessing other = (CraftingTaskProcessing) task;
+
+            if (other.tileInUse != null && other.tileInUse.equals(pattern.getContainer().getFacingTile().getPos()) && !other.pattern.equals(pattern)) {
+                return true;
             }
         }
 
@@ -175,7 +171,7 @@ public class CraftingTaskProcessing extends CraftingTask {
     }
 
     @Override
-    public String getStatus() {
+    public String getStatus(INetworkMaster network) {
         StringBuilder builder = new StringBuilder();
 
         boolean missingItems = false;
@@ -219,7 +215,7 @@ public class CraftingTaskProcessing extends CraftingTask {
 
             if (pattern.getContainer().getFacingTile() == null) {
                 builder.append("B=gui.refinedstorage:crafting_monitor.machine_none");
-            } else if (waitingOnTileInUse) {
+            } else if (isTileInUse(network)) {
                 builder.append("B=gui.refinedstorage:crafting_monitor.machine_in_use");
             }
         }

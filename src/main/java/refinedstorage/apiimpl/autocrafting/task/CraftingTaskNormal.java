@@ -54,7 +54,7 @@ public class CraftingTaskNormal extends CraftingTask {
     }
 
     @Override
-    public String getStatus() {
+    public String getStatus(INetworkMaster network) {
         StringBuilder builder = new StringBuilder();
 
         boolean missingItems = false;

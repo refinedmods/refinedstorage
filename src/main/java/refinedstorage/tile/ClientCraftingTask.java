@@ -2,6 +2,7 @@ package refinedstorage.tile;
 
 import net.minecraft.item.ItemStack;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
+import refinedstorage.api.network.INetworkMaster;
 
 import java.util.List;
 
@@ -26,11 +27,11 @@ public class ClientCraftingTask {
         this.progress = progress;
     }
 
-    public ClientCraftingTask(String status, List<ItemStack> outputs, int progress, ICraftingTask child) {
-        this.status = status;
-        this.outputs = outputs;
-        this.progress = progress;
-        this.child = child != null ? new ClientCraftingTask(child.getStatus(), child.getPattern().getOutputs(), child.getProgress(), child.getChild()) : null;
+    public ClientCraftingTask(INetworkMaster network, ICraftingTask task) {
+        this.status = task.getStatus(network);
+        this.outputs = task.getPattern().getOutputs();
+        this.progress = task.getProgress();
+        this.child = task.getChild() != null ? new ClientCraftingTask(network, task.getChild()) : null;
     }
 
     public ItemStack getOutput() {
