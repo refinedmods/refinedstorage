@@ -50,7 +50,10 @@ public class TileProcessingPatternEncoder extends TileBase {
                 }
             }
 
-            patterns.extractItem(0, 1, false);
+            if(patterns.getStackInSlot(1) == null) {
+            	patterns.extractItem(0, 1, false);
+            }
+            
             patterns.setStackInSlot(1, pattern);
         }
     }
@@ -70,7 +73,7 @@ public class TileProcessingPatternEncoder extends TileBase {
             }
         }
 
-        return inputsFilled > 0 && outputsFilled > 0 && patterns.getStackInSlot(0) != null && patterns.getStackInSlot(1) == null;
+        return inputsFilled > 0 && outputsFilled > 0 && (patterns.getStackInSlot(0) != null || patterns.getStackInSlot(1) != null);
     }
 
     public ItemHandlerBasic getPatterns() {

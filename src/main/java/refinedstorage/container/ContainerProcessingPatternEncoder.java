@@ -1,19 +1,31 @@
 package refinedstorage.container;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.SlotItemHandler;
-import refinedstorage.container.slot.SlotOutput;
+import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.container.slot.SlotSpecimen;
+import refinedstorage.item.ItemPattern;
 import refinedstorage.tile.TileProcessingPatternEncoder;
 
 public class ContainerProcessingPatternEncoder extends ContainerBase {
+	private SlotItemHandler patternItemResultSlot;
+	
     public ContainerProcessingPatternEncoder(TileProcessingPatternEncoder processingPatternEncoder, EntityPlayer player) {
         super(processingPatternEncoder, player);
 
         addSlotToContainer(new SlotItemHandler(processingPatternEncoder.getPatterns(), 0, 152, 18));
-        addSlotToContainer(new SlotOutput(processingPatternEncoder.getPatterns(), 1, 152, 58));
+        addSlotToContainer(patternItemResultSlot = new SlotItemHandler(processingPatternEncoder.getPatterns(), 1, 152, 58));
 
         int ox = 8;
         int x = ox;
@@ -64,5 +76,76 @@ public class ContainerProcessingPatternEncoder extends ContainerBase {
         }
 
         return stack;
+    }
+    
+    private List<ItemStack> combineItems(List<ItemStack> stacks) {
+    	List<ItemStack> out = new ArrayList<>(); 
+        Set<Integer> combinedIndices = new HashSet<>();
+
+        for (int i = 0; i < stacks.size(); ++i) {
+            if (stacks.get(i) != null && !combinedIndices.contains(i)) {
+                //String data = stacks[i].getDisplayName();
+
+                int amount = stacks.get(i).stackSize;
+
+                for (int j = i + 1; j < stacks.size(); ++j) {
+                    if (CompareUtils.compareStack(stacks.get(i), stacks.get(j))) {
+                        amount += stacks.get(j).stackSize;
+
+                        combinedIndices.add(j);
+                    }
+                }
+
+                while(amount>0) {
+                    ItemStack tmp = stacks.get(i).copy();
+                	tmp.stackSize = Math.min(amount ,tmp.getMaxStackSize());
+                	amount -= tmp.stackSize;
+                	out.add( tmp );
+                }
+                
+            }
+        }
+        return out;
+    }
+    
+    @Override
+    public ItemStack slotClick(int id, int clickedButton, ClickType clickType, EntityPlayer player) {
+    	if(id<0) return null;
+    	ItemStack slotItem = super.slotClick(id, clickedButton, clickType, player);
+
+    	Slot slot = inventorySlots.get(id);
+    	
+    	if (slot.getHasStack()) {
+	    	if (slot == patternItemResultSlot) {
+	        	// fill the crafting grid with slot info
+	        
+	        	ItemStack pattern = slot.getStack();
+	        	if(ItemPattern.isProcessing(pattern)) {
+	        	
+		        	for (int i = 0; i < 9; ++i) {
+		        		Slot craftslot = inventorySlots.get(2+i);
+		        		craftslot.putStack( ItemPattern.getSlot(pattern, i) );
+		        	}
+		        	
+		        	for (int i = 0; i < 9; ++i) {
+		        		Slot craftslot = inventorySlots.get(11+i);
+		        		craftslot.putStack( null );
+		        	}
+
+		        	List<ItemStack> outputs = combineItems(ItemPattern.getOutputs(pattern));
+		        	for (int i = 0; i < Math.min(outputs.size(),9); ++i) {
+		        		Slot craftslot = inventorySlots.get(11+i);
+		        		
+		        		craftslot.putStack( outputs.get(i) );
+		        	}
+		        	
+		        	
+	        	}
+	        	
+	        	detectAndSendChanges();
+			}
+    	}
+    	
+    	return slotItem;
     }
 }
