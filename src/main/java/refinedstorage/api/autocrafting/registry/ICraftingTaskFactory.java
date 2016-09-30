@@ -19,9 +19,10 @@ public interface ICraftingTaskFactory {
      * @param world   the world
      * @param depth   the depth of the crafting task to create
      * @param tag     the NBT tag, if this is null it isn't reading from disk but is used for making a task on demand
+     * @param parent  the parent task
      * @param pattern the pattern
      * @return the crafting task
      */
     @Nonnull
-    ICraftingTask create(World world, int depth, @Nullable NBTTagCompound tag, ICraftingPattern pattern);
+    ICraftingTask create(World world, int depth, @Nullable NBTTagCompound tag, @Nullable ICraftingTask parent, ICraftingPattern pattern);
 }

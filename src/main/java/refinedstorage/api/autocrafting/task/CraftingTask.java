@@ -33,6 +33,7 @@ public abstract class CraftingTask implements ICraftingTask {
     protected int depth;
 
     protected ICraftingPattern pattern;
+    protected ICraftingTask parent;
     protected ICraftingTask child;
 
     protected List<ItemStack> took = new ArrayList<>();
@@ -41,7 +42,8 @@ public abstract class CraftingTask implements ICraftingTask {
     protected boolean satisfied[];
     protected boolean checked[];
 
-    public CraftingTask(ICraftingPattern pattern, int depth) {
+    public CraftingTask(@Nullable ICraftingTask parent, ICraftingPattern pattern, int depth) {
+        this.parent = parent;
         this.pattern = pattern;
         this.childrenCreated = new boolean[pattern.getInputs().size()];
         this.satisfied = new boolean[pattern.getInputs().size()];
@@ -91,7 +93,7 @@ public abstract class CraftingTask implements ICraftingTask {
             ICraftingPattern pattern = NetworkUtils.getPattern(network, this.pattern.getInputs().get(i));
 
             if (pattern != null) {
-                child = NetworkUtils.createCraftingTask(network, depth + 1, pattern);
+                child = NetworkUtils.createCraftingTask(network, depth + 1, this, pattern);
 
                 childrenCreated[i] = true;
             }
@@ -148,7 +150,7 @@ public abstract class CraftingTask implements ICraftingTask {
 
     public void readChildNBT(World world, NBTTagCompound tag) {
         if (tag.hasKey(NBT_CHILD)) {
-            child = TileController.readCraftingTask(world, depth + 1, tag.getCompoundTag(NBT_CHILD));
+            child = TileController.readCraftingTask(world, this, depth + 1, tag.getCompoundTag(NBT_CHILD));
         }
     }
 
