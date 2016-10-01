@@ -32,7 +32,12 @@ public interface ICraftingTask {
      * @param network the network
      * @return true if the crafting task is done, false otherwise
      */
-    boolean update(World world, INetworkMaster network);
+    void update(World world, INetworkMaster network);
+
+    /**
+     * @return whether this crafting task is finished
+     */
+    boolean isFinished();
 
     /**
      * Gets called when the crafting task is cancelled.

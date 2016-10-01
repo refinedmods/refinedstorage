@@ -35,7 +35,7 @@ public class CraftingTaskProcessing extends CraftingTask {
     }
 
     @Override
-    public boolean update(World world, INetworkMaster network) {
+    public void update(World world, INetworkMaster network) {
         for (int i = 0; i < pattern.getInputs().size(); ++i) {
             checked[i] = true;
 
@@ -56,8 +56,8 @@ public class CraftingTaskProcessing extends CraftingTask {
             }
         }
 
-        if (!hasTakenInputs()) {
-            return false;
+        if (!hasReceivedInputs()) {
+            return;
         }
 
         ICraftingPatternContainer container = pattern.getContainer();
@@ -77,22 +77,15 @@ public class CraftingTaskProcessing extends CraftingTask {
         } else {
             tileInUse = null;
         }
+    }
 
-        return hasReceivedOutputs();
+    @Override
+    public boolean isFinished() {
+        return super.isFinished() && hasReceivedOutputs();
     }
 
     private boolean hasReceivedOutputs() {
         for (boolean item : satisfiedInsertion) {
-            if (!item) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private boolean hasTakenInputs() {
-        for (boolean item : satisfied) {
             if (!item) {
                 return false;
             }
@@ -132,7 +125,7 @@ public class CraftingTaskProcessing extends CraftingTask {
     }
 
     public boolean onInserted(ItemStack stack) {
-        if (!hasReceivedOutputs() && hasTakenInputs()) {
+        if (!hasReceivedOutputs() && hasReceivedInputs()) {
             for (int i = 0; i < pattern.getOutputs().size(); ++i) {
                 ItemStack output = pattern.getOutputs().get(i);
 
@@ -198,7 +191,7 @@ public class CraftingTaskProcessing extends CraftingTask {
             }
         }
 
-        if (hasTakenInputs()) {
+        if (hasReceivedInputs()) {
             builder.append("I=gui.refinedstorage:crafting_monitor.items_processing\n");
 
             for (int i = 0; i < pattern.getInputs().size(); ++i) {

@@ -78,6 +78,16 @@ public abstract class CraftingTask implements ICraftingTask {
         this.satisfied = satisfied;
     }
 
+    protected boolean hasReceivedInputs() {
+        for (boolean item : satisfied) {
+            if (!item) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public boolean[] getChecked() {
         return checked;
     }
@@ -96,6 +106,11 @@ public abstract class CraftingTask implements ICraftingTask {
                 childrenCreated[i] = true;
             }
         }
+    }
+
+    @Override
+    public boolean isFinished() {
+        return hasReceivedInputs();
     }
 
     @Override
