@@ -56,7 +56,7 @@ public class CraftingTaskProcessing extends CraftingTask {
             }
         }
 
-        if (!isReadyToInsert()) {
+        if (!hasTakenInputs()) {
             return false;
         }
 
@@ -78,10 +78,10 @@ public class CraftingTaskProcessing extends CraftingTask {
             tileInUse = null;
         }
 
-        return isReady();
+        return hasReceivedOutputs();
     }
 
-    private boolean isReady() {
+    private boolean hasReceivedOutputs() {
         for (boolean item : satisfiedInsertion) {
             if (!item) {
                 return false;
@@ -91,7 +91,7 @@ public class CraftingTaskProcessing extends CraftingTask {
         return true;
     }
 
-    private boolean isReadyToInsert() {
+    private boolean hasTakenInputs() {
         for (boolean item : satisfied) {
             if (!item) {
                 return false;
@@ -102,11 +102,9 @@ public class CraftingTaskProcessing extends CraftingTask {
     }
 
     private boolean isTileInUse(INetworkMaster network) {
-        if (tileInUse == null) {
-            for (ICraftingTask task : network.getCraftingTasks()) {
-                if (isTileInUse(task)) {
-                    return true;
-                }
+        for (ICraftingTask task : network.getCraftingTasks()) {
+            if (isTileInUse(task)) {
+                return true;
             }
         }
 
@@ -134,22 +132,16 @@ public class CraftingTaskProcessing extends CraftingTask {
     }
 
     public boolean onInserted(ItemStack stack) {
-        if (isReady()) {
-            return false;
-        }
+        if (!hasReceivedOutputs() && hasTakenInputs()) {
+            for (int i = 0; i < pattern.getOutputs().size(); ++i) {
+                ItemStack output = pattern.getOutputs().get(i);
 
-        for (int i = 0; i < pattern.getOutputs().size(); ++i) {
-            ItemStack output = pattern.getOutputs().get(i);
+                if (!satisfiedInsertion[i]) {
+                    if (CompareUtils.compareStackNoQuantity(output, stack)) {
+                        satisfiedInsertion[i] = true;
 
-            if (!satisfiedInsertion[i]) {
-                if (CompareUtils.compareStackNoQuantity(output, stack)) {
-                    satisfiedInsertion[i] = true;
-
-                    if (isReady()) {
-                        tileInUse = null;
+                        return true;
                     }
-
-                    return true;
                 }
             }
         }
@@ -206,7 +198,7 @@ public class CraftingTaskProcessing extends CraftingTask {
             }
         }
 
-        if (isReadyToInsert()) {
+        if (hasTakenInputs()) {
             builder.append("I=gui.refinedstorage:crafting_monitor.items_processing\n");
 
             for (int i = 0; i < pattern.getInputs().size(); ++i) {

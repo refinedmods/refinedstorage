@@ -556,7 +556,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                         break;
                     }
 
-                    if (checkProcessing(stack, task)) {
+                    if (onInserted(stack, task)) {
                         inserted--;
                     }
                 }
@@ -566,9 +566,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         return remainder;
     }
 
-    private boolean checkProcessing(ItemStack stack, ICraftingTask task) {
+    private boolean onInserted(ItemStack stack, ICraftingTask task) {
         if (task.getChild() != null) {
-            return checkProcessing(stack, task.getChild());
+            return onInserted(stack, task.getChild());
         }
 
         return task instanceof CraftingTaskProcessing && ((CraftingTaskProcessing) task).onInserted(stack);
