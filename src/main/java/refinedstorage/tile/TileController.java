@@ -243,7 +243,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
             if (!craftingTasksToRead.isEmpty()) {
                 for (NBTTagCompound tag : craftingTasksToRead) {
-                    ICraftingTask task = readCraftingTask(worldObj, null, 0, tag);
+                    ICraftingTask task = readCraftingTask(worldObj, 0, tag);
 
                     if (task != null) {
                         addCraftingTask(task);
@@ -703,7 +703,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         }
     }
 
-    public static ICraftingTask readCraftingTask(World world, ICraftingTask parent, int depth, NBTTagCompound tag) {
+    public static ICraftingTask readCraftingTask(World world, int depth, NBTTagCompound tag) {
         ItemStack stack = ItemStack.loadItemStackFromNBT(tag.getCompoundTag(CraftingTask.NBT_PATTERN_STACK));
 
         if (stack != null && stack.getItem() instanceof ICraftingPatternProvider) {
@@ -715,7 +715,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 ICraftingTaskFactory factory = RefinedStorageAPI.instance().getCraftingTaskRegistry().getFactory(tag.getString(CraftingTask.NBT_PATTERN_TYPE));
 
                 if (factory != null) {
-                    return factory.create(world, depth, tag, parent, pattern);
+                    return factory.create(world, depth, tag, pattern);
                 }
             }
         }

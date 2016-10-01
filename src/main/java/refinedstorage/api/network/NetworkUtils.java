@@ -11,8 +11,6 @@ import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.storage.CompareUtils;
 
-import javax.annotation.Nullable;
-
 /**
  * Utilities for network manipulation.
  */
@@ -29,8 +27,8 @@ public final class NetworkUtils {
         return network.getPattern(stack, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
     }
 
-    public static ICraftingTask createCraftingTask(INetworkMaster network, int depth, @Nullable ICraftingTask parent, ICraftingPattern pattern) {
-        return RefinedStorageAPI.instance().getCraftingTaskRegistry().getFactory(pattern.getId()).create(network.getNetworkWorld(), depth, null, parent, pattern);
+    public static ICraftingTask createCraftingTask(INetworkMaster network, int depth, ICraftingPattern pattern) {
+        return RefinedStorageAPI.instance().getCraftingTaskRegistry().getFactory(pattern.getId()).create(network.getNetworkWorld(), depth, null, pattern);
     }
 
     public static boolean hasPattern(INetworkMaster network, ItemStack stack) {
@@ -64,7 +62,7 @@ public final class NetworkUtils {
             ICraftingPattern pattern = network.getPattern(stack, compare);
 
             if (pattern != null) {
-                network.addCraftingTask(createCraftingTask(network, 0, null, pattern));
+                network.addCraftingTask(createCraftingTask(network, 0, pattern));
             }
         }
     }

@@ -136,7 +136,7 @@ public class ItemGridHandler implements IItemGridHandler {
             int quantityPerRequest = pattern.getQuantityPerRequest(stack);
 
             while (quantity > 0) {
-                network.addCraftingTask(NetworkUtils.createCraftingTask(network, 0, null, pattern));
+                network.addCraftingTask(NetworkUtils.createCraftingTask(network, 0, pattern));
 
                 quantity -= quantityPerRequest;
             }

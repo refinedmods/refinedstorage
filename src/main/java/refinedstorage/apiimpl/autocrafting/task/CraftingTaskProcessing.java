@@ -13,8 +13,6 @@ import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.apiimpl.storage.fluid.FluidUtils;
 
-import javax.annotation.Nullable;
-
 public class CraftingTaskProcessing extends CraftingTask {
     public static final String NBT_SATISFIED_INSERTION = "SatisfiedInsertion";
     public static final String NBT_TILE_IN_USE = "TileInUse";
@@ -22,8 +20,8 @@ public class CraftingTaskProcessing extends CraftingTask {
     private boolean satisfiedInsertion[];
     private BlockPos tileInUse;
 
-    public CraftingTaskProcessing(@Nullable ICraftingTask parent, ICraftingPattern pattern, int depth) {
-        super(parent, pattern, depth);
+    public CraftingTaskProcessing(ICraftingPattern pattern, int depth) {
+        super(pattern, depth);
 
         this.satisfiedInsertion = new boolean[pattern.getOutputs().size()];
     }
@@ -58,7 +56,7 @@ public class CraftingTaskProcessing extends CraftingTask {
             }
         }
 
-        if (!hasTakenInputs()) {
+        if (!isReadyToInsert()) {
             return false;
         }
 
@@ -80,10 +78,10 @@ public class CraftingTaskProcessing extends CraftingTask {
             tileInUse = null;
         }
 
-        return hasReceivedOutputs();
+        return isReady();
     }
 
-    public boolean hasReceivedOutputs() {
+    private boolean isReady() {
         for (boolean item : satisfiedInsertion) {
             if (!item) {
                 return false;
@@ -93,7 +91,7 @@ public class CraftingTaskProcessing extends CraftingTask {
         return true;
     }
 
-    private boolean hasTakenInputs() {
+    private boolean isReadyToInsert() {
         for (boolean item : satisfied) {
             if (!item) {
                 return false;
@@ -104,9 +102,11 @@ public class CraftingTaskProcessing extends CraftingTask {
     }
 
     private boolean isTileInUse(INetworkMaster network) {
-        for (ICraftingTask task : network.getCraftingTasks()) {
-            if (isTileInUse(task)) {
-                return true;
+        if (tileInUse == null) {
+            for (ICraftingTask task : network.getCraftingTasks()) {
+                if (isTileInUse(task)) {
+                    return true;
+                }
             }
         }
 
@@ -134,20 +134,22 @@ public class CraftingTaskProcessing extends CraftingTask {
     }
 
     public boolean onInserted(ItemStack stack) {
-        if (!hasReceivedOutputs() && hasTakenInputs()) {
-            for (int i = 0; i < pattern.getOutputs().size(); ++i) {
-                ItemStack output = pattern.getOutputs().get(i);
+        if (isReady()) {
+            return false;
+        }
 
-                if (!satisfiedInsertion[i]) {
-                    if (CompareUtils.compareStackNoQuantity(output, stack)) {
-                        satisfiedInsertion[i] = true;
+        for (int i = 0; i < pattern.getOutputs().size(); ++i) {
+            ItemStack output = pattern.getOutputs().get(i);
 
-                        if (hasReceivedOutputs() && parent != null) {
-                            parent.setChild(null);
-                        }
+            if (!satisfiedInsertion[i]) {
+                if (CompareUtils.compareStackNoQuantity(output, stack)) {
+                    satisfiedInsertion[i] = true;
 
-                        return true;
+                    if (isReady()) {
+                        tileInUse = null;
                     }
+
+                    return true;
                 }
             }
         }
@@ -204,7 +206,7 @@ public class CraftingTaskProcessing extends CraftingTask {
             }
         }
 
-        if (hasTakenInputs()) {
+        if (isReadyToInsert()) {
             builder.append("I=gui.refinedstorage:crafting_monitor.items_processing\n");
 
             for (int i = 0; i < pattern.getInputs().size(); ++i) {

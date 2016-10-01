@@ -4,15 +4,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.task.CraftingTask;
-import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.apiimpl.storage.fluid.FluidUtils;
 
-import javax.annotation.Nullable;
-
 public class CraftingTaskNormal extends CraftingTask {
-    public CraftingTaskNormal(@Nullable ICraftingTask parent, ICraftingPattern pattern, int depth) {
-        super(parent, pattern, depth);
+    public CraftingTaskNormal(ICraftingPattern pattern, int depth) {
+        super(pattern, depth);
     }
 
     @Override
