@@ -45,26 +45,14 @@ public abstract class GuiBase extends GuiContainer {
         this.ySize = height;
     }
 
-    private boolean hasSideButtons() {
-        return buttonList.stream().anyMatch(b -> b instanceof SideButton);
-    }
-
     @Override
     public void initGui() {
-        if (hasSideButtons()) {
-            xSize -= SideButton.WIDTH;
-        }
-
         super.initGui();
 
         lastButtonId = 0;
         lastSideButtonY = 6;
 
         init(guiLeft, guiTop);
-
-        if (hasSideButtons()) {
-            xSize += SideButton.WIDTH;
-        }
     }
 
     @Override
