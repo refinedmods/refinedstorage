@@ -106,9 +106,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                     IBlockState state = tile.worldObj.getBlockState(node.getPosition());
 
                     ClientNode clientNode = new ClientNode(
-                            new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state)),
-                            1,
-                            node.getEnergyUsage()
+                        new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state)),
+                        1,
+                        node.getEnergyUsage()
                     );
 
                     if (clientNode.getStack().getItem() != null) {
@@ -275,12 +275,22 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
                 craftingTasksToAdd.clear();
 
-                updateCraftingTasks(CraftingTaskUpdateType.NORMAL);
+                Iterator<ICraftingTask> craftingTaskIterator = craftingTasks.iterator();
+
+                while (craftingTaskIterator.hasNext()) {
+                    ICraftingTask task = craftingTaskIterator.next();
+
+                    if (updateCraftingTask(task)) {
+                        craftingTaskIterator.remove();
+
+                        craftingTasksChanged = true;
+                    }
+                }
 
                 if (!craftingTasks.isEmpty() || craftingTasksChanged) {
                     markDirty();
 
-                    updateCraftingMonitors();
+                    updateCraftingTasks();
                 }
             }
 
@@ -314,26 +324,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         super.update();
     }
 
-    enum CraftingTaskUpdateType {
-        NORMAL,
-        DELETION
-    }
-
-    private void updateCraftingTasks(CraftingTaskUpdateType type) {
-        Iterator<ICraftingTask> craftingTaskIterator = craftingTasks.iterator();
-
-        while (craftingTaskIterator.hasNext()) {
-            ICraftingTask task = craftingTaskIterator.next();
-
-            if (updateCraftingTask(task, type)) {
-                craftingTaskIterator.remove();
-            }
-        }
-    }
-
-    private boolean updateCraftingTask(ICraftingTask task, CraftingTaskUpdateType type) {
+    private boolean updateCraftingTask(ICraftingTask task) {
         if (task.getChild() != null) {
-            if (updateCraftingTask(task.getChild(), type)) {
+            if (updateCraftingTask(task.getChild())) {
                 task.setChild(null);
             }
 
@@ -342,18 +335,10 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
         ICraftingPatternContainer container = task.getPattern().getContainer();
 
-        if (container != null && (ticks % container.getSpeed() == 0 || type == CraftingTaskUpdateType.DELETION)) {
-            if (type == CraftingTaskUpdateType.NORMAL) {
-                task.update(worldObj, this);
-            }
-
-            return task.isFinished();
-        }
-
-        return false;
+        return container != null && ticks % container.getSpeed() == 0 && task.update(worldObj, this);
     }
 
-    private void updateCraftingMonitors() {
+    public void updateCraftingTasks() {
         for (INetworkNode node : nodeGraph.all()) {
             if (node instanceof TileCraftingMonitor) {
                 ((TileCraftingMonitor) node).dataManager.sendParameterToWatchers(TileCraftingMonitor.TASKS);
@@ -489,8 +474,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public void sendItemStorageToClient() {
         worldObj.getMinecraftServer().getPlayerList().getPlayerList().stream()
-                .filter(player -> isWatchingGrid(player, EnumGridType.NORMAL, EnumGridType.CRAFTING, EnumGridType.PATTERN))
-                .forEach(this::sendItemStorageToClient);
+            .filter(player -> isWatchingGrid(player, EnumGridType.NORMAL, EnumGridType.CRAFTING, EnumGridType.PATTERN))
+            .forEach(this::sendItemStorageToClient);
     }
 
     @Override
@@ -501,15 +486,15 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public void sendItemStorageDeltaToClient(ItemStack stack, int delta) {
         worldObj.getMinecraftServer().getPlayerList().getPlayerList().stream()
-                .filter(player -> isWatchingGrid(player, EnumGridType.NORMAL, EnumGridType.CRAFTING, EnumGridType.PATTERN))
-                .forEach(player -> RefinedStorage.INSTANCE.network.sendTo(new MessageGridItemDelta(this, stack, delta), player));
+            .filter(player -> isWatchingGrid(player, EnumGridType.NORMAL, EnumGridType.CRAFTING, EnumGridType.PATTERN))
+            .forEach(player -> RefinedStorage.INSTANCE.network.sendTo(new MessageGridItemDelta(this, stack, delta), player));
     }
 
     @Override
     public void sendFluidStorageToClient() {
         worldObj.getMinecraftServer().getPlayerList().getPlayerList().stream()
-                .filter(player -> isWatchingGrid(player, EnumGridType.FLUID))
-                .forEach(this::sendFluidStorageToClient);
+            .filter(player -> isWatchingGrid(player, EnumGridType.FLUID))
+            .forEach(this::sendFluidStorageToClient);
     }
 
     @Override
@@ -520,8 +505,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public void sendFluidStorageDeltaToClient(FluidStack stack, int delta) {
         worldObj.getMinecraftServer().getPlayerList().getPlayerList().stream()
-                .filter(player -> isWatchingGrid(player, EnumGridType.FLUID))
-                .forEach(player -> RefinedStorage.INSTANCE.network.sendTo(new MessageGridFluidDelta(stack, delta), player));
+            .filter(player -> isWatchingGrid(player, EnumGridType.FLUID))
+            .forEach(player -> RefinedStorage.INSTANCE.network.sendTo(new MessageGridFluidDelta(stack, delta), player));
     }
 
     private boolean isWatchingGrid(EntityPlayer player, EnumGridType... types) {
@@ -566,17 +551,13 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             itemStorage.add(ItemHandlerHelper.copyStackWithSize(stack, inserted), false);
 
             for (int i = 0; i < inserted; ++i) {
-                for (int j = 0; j < craftingTasks.size(); ++j) {
-                    ICraftingTask task = craftingTasks.get(j);
-
+                for (ICraftingTask task : craftingTasks) {
                     if (inserted == 0) {
                         break;
                     }
 
                     if (onInserted(stack, task)) {
                         inserted--;
-
-                        updateCraftingTasks(CraftingTaskUpdateType.DELETION);
                     }
                 }
             }
@@ -856,7 +837,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
         return capability == CapabilityEnergy.ENERGY
-                || (energyTesla != null && (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER))
-                || super.hasCapability(capability, facing);
+            || (energyTesla != null && (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER))
+            || super.hasCapability(capability, facing);
     }
 }

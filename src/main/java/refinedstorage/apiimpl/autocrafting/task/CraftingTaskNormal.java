@@ -13,7 +13,7 @@ public class CraftingTaskNormal extends CraftingTask {
     }
 
     @Override
-    public void update(World world, INetworkMaster network) {
+    public boolean update(World world, INetworkMaster network) {
         for (int i = 0; i < pattern.getInputs().size(); ++i) {
             checked[i] = true;
 
@@ -34,8 +34,10 @@ public class CraftingTaskNormal extends CraftingTask {
             }
         }
 
-        if (!hasReceivedInputs()) {
-            return;
+        for (boolean item : satisfied) {
+            if (!item) {
+                return false;
+            }
         }
 
         for (ItemStack output : pattern.getOutputs()) {
@@ -47,6 +49,8 @@ public class CraftingTaskNormal extends CraftingTask {
             // @TODO: Handle remainder
             network.insertItem(byproduct, byproduct.stackSize, false);
         }
+
+        return true;
     }
 
     @Override
