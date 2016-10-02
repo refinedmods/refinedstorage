@@ -18,7 +18,7 @@ public class RecipeCategorySolderer implements IRecipeCategory {
     private IDrawable background;
 
     public RecipeCategorySolderer(IGuiHelper helper) {
-        background = helper.createDrawable(new ResourceLocation("refinedstorage", "textures/gui/solderer.png"), 8, 5, 162, 83);
+        background = helper.createDrawable(new ResourceLocation("refinedstorage", "textures/gui/solderer.png"), 43, 19, 101, 54);
     }
 
     @Override
@@ -48,8 +48,8 @@ public class RecipeCategorySolderer implements IRecipeCategory {
     public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper) {
         IGuiItemStackGroup group = recipeLayout.getItemStacks();
 
-        int x = 44 - 9;
-        int y = 20 - 6;
+        int x = 0;
+        int y = 0;
 
         for (int i = 0; i < 3; ++i) {
             group.init(i, true, x, y);
@@ -57,7 +57,7 @@ public class RecipeCategorySolderer implements IRecipeCategory {
             y += 18;
         }
 
-        group.init(3, false, 127 - 9, 38 - 6);
+        group.init(3, false, 83, 18);
 
         if (recipeWrapper instanceof RecipeWrapperSolderer) {
             for (int i = 0; i < 3; ++i) {
@@ -72,8 +72,8 @@ public class RecipeCategorySolderer implements IRecipeCategory {
     public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper, IIngredients ingredients) {
         IGuiItemStackGroup group = recipeLayout.getItemStacks();
 
-        int x = 44 - 9;
-        int y = 20 - 6;
+        int x = 0;
+        int y = 0;
 
         for (int i = 0; i < 3; ++i) {
             group.init(i, true, x, y);
@@ -81,7 +81,7 @@ public class RecipeCategorySolderer implements IRecipeCategory {
             y += 18;
         }
 
-        group.init(3, false, 127 - 9, 38 - 6);
+        group.init(3, false, 83, 18);
 
         if (recipeWrapper instanceof RecipeWrapperSolderer) {
             for (int i = 0; i < 3; ++i) {

@@ -3,6 +3,7 @@ package refinedstorage.integration.jei;
 import mezz.jei.api.*;
 import net.minecraft.item.ItemStack;
 import refinedstorage.RefinedStorageBlocks;
+import refinedstorage.container.ContainerSolderer;
 
 @JEIPlugin
 public class RefinedStorageJEIPlugin extends BlankModPlugin {
@@ -15,6 +16,7 @@ public class RefinedStorageJEIPlugin extends BlankModPlugin {
         INSTANCE = this;
 
         registry.getRecipeTransferRegistry().addRecipeTransferHandler(new RecipeTransferHandlerGrid());
+        registry.getRecipeTransferRegistry().addRecipeTransferHandler(ContainerSolderer.class, RecipeCategorySolderer.ID, 0, 3, 8, 36);
 
         registry.addRecipeCategories(new RecipeCategorySolderer(registry.getJeiHelpers().getGuiHelper()));
 
