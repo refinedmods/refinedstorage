@@ -133,6 +133,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     public static final String NBT_ENERGY = "Energy";
     public static final String NBT_ENERGY_CAPACITY = "EnergyCapacity";
+
     private static final String NBT_CRAFTING_TASKS = "CraftingTasks";
 
     private static final Comparator<IItemStorage> ITEM_SIZE_COMPARATOR = (left, right) -> {
@@ -274,9 +275,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
                 craftingTasksToAdd.clear();
 
-                if (updateCraftingTasks(CraftingTaskUpdateType.NORMAL)) {
-                    craftingTasksChanged = true;
-                }
+                updateCraftingTasks(CraftingTaskUpdateType.NORMAL);
 
                 if (!craftingTasks.isEmpty() || craftingTasksChanged) {
                     markDirty();
@@ -315,12 +314,12 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         super.update();
     }
 
-    private enum CraftingTaskUpdateType {
+    enum CraftingTaskUpdateType {
         NORMAL,
         DELETION
     }
 
-    private boolean updateCraftingTasks(CraftingTaskUpdateType type) {
+    private void updateCraftingTasks(CraftingTaskUpdateType type) {
         Iterator<ICraftingTask> craftingTaskIterator = craftingTasks.iterator();
 
         while (craftingTaskIterator.hasNext()) {
@@ -328,12 +327,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
             if (updateCraftingTask(task, type)) {
                 craftingTaskIterator.remove();
-
-                return true;
             }
         }
-
-        return false;
     }
 
     private boolean updateCraftingTask(ICraftingTask task, CraftingTaskUpdateType type) {
@@ -581,9 +576,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                     if (onInserted(stack, task)) {
                         inserted--;
 
-                        if (updateCraftingTasks(CraftingTaskUpdateType.DELETION)) {
-                            updateCraftingMonitors();
-                        }
+                        updateCraftingTasks(CraftingTaskUpdateType.DELETION);
                     }
                 }
             }
