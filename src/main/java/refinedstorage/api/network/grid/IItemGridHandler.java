@@ -41,6 +41,14 @@ public interface IItemGridHandler {
     void onInsertHeldItem(EntityPlayerMP player, boolean single);
 
     /**
+     * Called when a player requests the crafting preview window to be opened.
+     *
+     * @param hash     the hash of the item we want a preview for, see {@link refinedstorage.api.network.NetworkUtils#getItemStackHashCode(ItemStack)}
+     * @param quantity the amount of that item that we need a preview for
+     */
+    void onCraftingPreviewRequested(EntityPlayerMP player, int hash, int quantity);
+
+    /**
      * Called when a player requested crafting for an item.
      *
      * @param hash     the hash of the item we're requesting crafting for, see {@link refinedstorage.api.network.NetworkUtils#getItemStackHashCode(ItemStack)}

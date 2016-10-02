@@ -4,6 +4,7 @@
 - Added recipe transfer handler for Solderer (way2muchnoise)
 - It is now possible to start a crafting task even if the crafting preview says you can't (raoulvdberge)
 - Fixed crash with JEI when changing screens in autocrafting (raoulvdberge)
+- Fixed not being able to start autocrafting in other dimensions with Network Transmitter / Network Receivers (raoulvdberge)
 - Fixed JEI overlay disappearing now and again (raoulvdberge)
 - Fixed Detector hitbox (raoulvdberge)
 

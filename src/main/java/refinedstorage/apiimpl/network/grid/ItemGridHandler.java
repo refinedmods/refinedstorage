@@ -12,6 +12,8 @@ import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.api.network.grid.IItemGridHandler;
 import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewData;
+import refinedstorage.network.MessageGridCraftingPreviewResponse;
 
 public class ItemGridHandler implements IItemGridHandler {
     private INetworkMaster network;
@@ -116,6 +118,19 @@ public class ItemGridHandler implements IItemGridHandler {
         player.updateHeldItem();
 
         network.getWirelessGridHandler().drainEnergy(player, RefinedStorage.INSTANCE.config.wirelessGridInsertUsage);
+    }
+
+    @Override
+    public void onCraftingPreviewRequested(EntityPlayerMP player, int hash, int quantity) {
+        ItemStack stack = network.getItemStorage().get(hash);
+
+        if (stack != null) {
+            CraftingPreviewData previewData = new CraftingPreviewData(network);
+
+            previewData.calculate(stack, quantity);
+
+            RefinedStorage.INSTANCE.network.sendTo(new MessageGridCraftingPreviewResponse(previewData.values(), hash, quantity), player);
+        }
     }
 
     @Override

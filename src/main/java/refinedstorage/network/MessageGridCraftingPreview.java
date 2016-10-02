@@ -3,12 +3,7 @@ package refinedstorage.network;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import refinedstorage.RefinedStorage;
-import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewData;
 import refinedstorage.container.ContainerGrid;
 
 public class MessageGridCraftingPreview extends MessageHandlerPlayerToServer<MessageGridCraftingPreview> implements IMessage {
@@ -40,21 +35,7 @@ public class MessageGridCraftingPreview extends MessageHandlerPlayerToServer<Mes
         Container container = player.openContainer;
 
         if (container instanceof ContainerGrid) {
-            TileEntity tile = player.getEntityWorld().getTileEntity(((ContainerGrid) container).getGrid().getNetworkPosition());
-
-            if (tile != null && tile instanceof INetworkMaster) {
-                INetworkMaster network = (INetworkMaster) tile;
-
-                ItemStack stack = network.getItemStorage().get(message.hash);
-
-                if (stack != null) {
-                    CraftingPreviewData previewData = new CraftingPreviewData(network);
-
-                    previewData.calculate(stack, message.quantity);
-
-                    RefinedStorage.INSTANCE.network.sendTo(new MessageGridCraftingPreviewResponse(previewData.values(), message.hash, message.quantity), player);
-                }
-            }
+            ((ContainerGrid) container).getGrid().getItemHandler().onCraftingPreviewRequested(player, message.hash, message.quantity);
         }
     }
 }
