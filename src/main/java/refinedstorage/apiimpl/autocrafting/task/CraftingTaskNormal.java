@@ -34,10 +34,8 @@ public class CraftingTaskNormal extends CraftingTask {
             }
         }
 
-        for (boolean item : satisfied) {
-            if (!item) {
-                return false;
-            }
+        if (!hasReceivedInputs()) {
+            return false;
         }
 
         for (ItemStack output : pattern.getOutputs()) {

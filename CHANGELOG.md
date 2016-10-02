@@ -1,9 +1,9 @@
 # Refined Storage Changelog
 
 ### 1.1.2
+- Added recipe transfer handler for Solderer (way2muchnoise)
 - It is now possible to start a crafting task even if the crafting preview says you can't (raoulvdberge)
-- Fixed crash when changing screens in autocrafting (raoulvdberge)
-- Fixed autocrafting getting stuck with processing patterns (raoulvdberge)
+- Fixed crash with JEI when changing screens in autocrafting (raoulvdberge)
 - Fixed Detector hitbox (raoulvdberge)
 
 ### 1.1.1

@@ -56,7 +56,7 @@ public class CraftingTaskProcessing extends CraftingTask {
             }
         }
 
-        if (!hasTakenInputs()) {
+        if (!hasReceivedInputs()) {
             return false;
         }
 
@@ -83,16 +83,6 @@ public class CraftingTaskProcessing extends CraftingTask {
 
     private boolean hasReceivedOutputs() {
         for (boolean item : satisfiedInsertion) {
-            if (!item) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private boolean hasTakenInputs() {
-        for (boolean item : satisfied) {
             if (!item) {
                 return false;
             }
@@ -132,7 +122,7 @@ public class CraftingTaskProcessing extends CraftingTask {
     }
 
     public boolean onInserted(ItemStack stack) {
-        if (!hasReceivedOutputs() && hasTakenInputs()) {
+        if (!hasReceivedOutputs() && hasReceivedInputs()) {
             for (int i = 0; i < pattern.getOutputs().size(); ++i) {
                 ItemStack output = pattern.getOutputs().get(i);
 
@@ -198,7 +188,7 @@ public class CraftingTaskProcessing extends CraftingTask {
             }
         }
 
-        if (hasTakenInputs()) {
+        if (hasReceivedInputs()) {
             builder.append("I=gui.refinedstorage:crafting_monitor.items_processing\n");
 
             for (int i = 0; i < pattern.getInputs().size(); ++i) {

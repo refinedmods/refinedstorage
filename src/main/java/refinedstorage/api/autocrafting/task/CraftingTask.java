@@ -74,6 +74,16 @@ public abstract class CraftingTask implements ICraftingTask {
         return satisfied;
     }
 
+    protected boolean hasReceivedInputs() {
+        for (boolean item : satisfied) {
+            if (!item) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public void setSatisfied(boolean[] satisfied) {
         this.satisfied = satisfied;
     }
