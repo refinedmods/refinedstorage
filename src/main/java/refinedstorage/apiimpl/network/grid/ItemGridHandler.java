@@ -12,8 +12,8 @@ import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.api.network.grid.IItemGridHandler;
 import refinedstorage.api.storage.CompareUtils;
-import refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewData;
-import refinedstorage.network.MessageGridCraftingPreviewResponse;
+import refinedstorage.apiimpl.autocrafting.v2.CraftingTask;
+import refinedstorage.tile.TileController;
 
 public class ItemGridHandler implements IItemGridHandler {
     private INetworkMaster network;
@@ -125,11 +125,16 @@ public class ItemGridHandler implements IItemGridHandler {
         ItemStack stack = network.getItemStorage().get(hash);
 
         if (stack != null) {
-            CraftingPreviewData previewData = new CraftingPreviewData(network);
+            CraftingTask t = new CraftingTask(network, NetworkUtils.getPattern(network, stack), quantity);
+            t.calculate();
+            System.out.println(t.toString());
+            ((TileController) network).craftingTasksV2.add(t);
+
+            /*CraftingPreviewData previewData = new CraftingPreviewData(network);
 
             previewData.calculate(stack, quantity);
 
-            RefinedStorage.INSTANCE.network.sendTo(new MessageGridCraftingPreviewResponse(previewData.values(), hash, quantity), player);
+            RefinedStorage.INSTANCE.network.sendTo(new MessageGridCraftingPreviewResponse(previewData.values(), hash, quantity), player);*/
         }
     }
 

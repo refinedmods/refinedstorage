@@ -10,7 +10,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -21,12 +20,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.RefinedStorageBlocks;
-import refinedstorage.api.RefinedStorageAPI;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
-import refinedstorage.api.autocrafting.ICraftingPatternProvider;
-import refinedstorage.api.autocrafting.registry.ICraftingTaskFactory;
-import refinedstorage.api.autocrafting.task.CraftingTask;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.network.*;
 import refinedstorage.api.network.grid.IFluidGridHandler;
@@ -37,6 +32,7 @@ import refinedstorage.api.storage.fluid.IGroupedFluidStorage;
 import refinedstorage.api.storage.item.IGroupedItemStorage;
 import refinedstorage.api.storage.item.IItemStorage;
 import refinedstorage.apiimpl.autocrafting.task.CraftingTaskProcessing;
+import refinedstorage.apiimpl.autocrafting.v2.CraftingTask;
 import refinedstorage.apiimpl.network.NetworkNodeGraph;
 import refinedstorage.apiimpl.network.WirelessGridHandler;
 import refinedstorage.apiimpl.network.grid.FluidGridHandler;
@@ -180,6 +176,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     private List<ICraftingPattern> patterns = new ArrayList<>();
 
+    public List<CraftingTask> craftingTasksV2 = new ArrayList<>();
     private List<ICraftingTask> craftingTasks = new ArrayList<>();
     private List<ICraftingTask> craftingTasksToAdd = new ArrayList<>();
     private List<ICraftingTask> craftingTasksToCancel = new ArrayList<>();
@@ -275,7 +272,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
                 craftingTasksToAdd.clear();
 
-                Iterator<ICraftingTask> craftingTaskIterator = craftingTasks.iterator();
+                /*Iterator<ICraftingTask> craftingTaskIterator = craftingTasks.iterator();
 
                 while (craftingTaskIterator.hasNext()) {
                     ICraftingTask task = craftingTaskIterator.next();
@@ -291,6 +288,16 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                     markDirty();
 
                     updateCraftingTasks();
+                }*/
+
+                Iterator<CraftingTask> craftingTaskIterator = craftingTasksV2.iterator();
+
+                while (craftingTaskIterator.hasNext()) {
+                    CraftingTask task = craftingTaskIterator.next();
+
+                    if (task.update()) {
+                        craftingTaskIterator.remove();
+                    }
                 }
             }
 
@@ -704,7 +711,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     }
 
     public static ICraftingTask readCraftingTask(World world, int depth, NBTTagCompound tag) {
-        ItemStack stack = ItemStack.loadItemStackFromNBT(tag.getCompoundTag(CraftingTask.NBT_PATTERN_STACK));
+       /* ItemStack stack = ItemStack.loadItemStackFromNBT(tag.getCompoundTag(CraftingTask.NBT_PATTERN_STACK));
 
         if (stack != null && stack.getItem() instanceof ICraftingPatternProvider) {
             TileEntity container = world.getTileEntity(BlockPos.fromLong(tag.getLong(CraftingTask.NBT_PATTERN_CONTAINER)));
@@ -718,7 +725,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                     return factory.create(world, depth, tag, pattern);
                 }
             }
-        }
+        }*/
 
         return null;
     }
