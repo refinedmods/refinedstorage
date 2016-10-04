@@ -119,6 +119,19 @@ public class GroupedItemStorage implements IGroupedItemStorage {
     }
 
     @Override
+    public IGroupedItemStorage copy() {
+        GroupedItemStorage copy = new GroupedItemStorage(network);
+
+        copy.storages = storages;
+
+        for (ItemStack stack : stacks.values()) {
+            copy.stacks.put(stack.getItem(), stack.copy());
+        }
+
+        return copy;
+    }
+
+    @Override
     public Collection<ItemStack> getStacks() {
         return stacks.values();
     }

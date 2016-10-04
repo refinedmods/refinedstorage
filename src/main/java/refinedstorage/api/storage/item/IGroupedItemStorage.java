@@ -65,6 +65,13 @@ public interface IGroupedItemStorage {
     ItemStack get(int hash);
 
     /**
+     * Copies a grouped item storage.
+     *
+     * @return the storage
+     */
+    IGroupedItemStorage copy();
+
+    /**
      * @return all items in this storage network
      */
     Collection<ItemStack> getStacks();
