@@ -175,7 +175,7 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
         if (!world.isRemote && player.isSneaking()) {
-            return new ActionResult<>(EnumActionResult.SUCCESS, new ItemStack(RefinedStorageItems.PATTERN));
+            return new ActionResult<>(EnumActionResult.SUCCESS, new ItemStack(RefinedStorageItems.PATTERN, stack.stackSize));
         }
 
         return new ActionResult<>(EnumActionResult.PASS, stack);
