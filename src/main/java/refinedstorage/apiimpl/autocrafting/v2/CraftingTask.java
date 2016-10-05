@@ -113,7 +113,7 @@ public class CraftingTask {
     public boolean update() {
         for (ProcessablePattern processable : toProcess) {
             if (processable.pattern.getContainer().getFacingInventory() != null && !processable.toInsert.isEmpty()) {
-                ItemStack toInsert = processable.toInsert.peek();
+                ItemStack toInsert = NetworkUtils.extractItem(network, processable.toInsert.peek(), 1);
 
                 if (ItemHandlerHelper.insertItem(processable.pattern.getContainer().getFacingInventory(), toInsert, true) == null) {
                     ItemHandlerHelper.insertItem(processable.pattern.getContainer().getFacingInventory(), toInsert, false);
