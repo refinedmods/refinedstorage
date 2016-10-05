@@ -51,8 +51,8 @@ repositories {
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.10.2:3.11.+:api"
-    runtime "mezz.jei:jei_1.10.2:3.11.+"
+    deobfCompile "mezz.jei:jei_1.10.2:3.12.+:api"
+    runtime "mezz.jei:jei_1.10.2:3.12.+"
     compile "net.darkhax.tesla:Tesla:1.10-1.2.+"
     compile "net.industrial-craft:industrialcraft-2:2.6.67-ex110:api"
     deobfCompile "MCMultiPart:MCMultiPart:1.2.1+:universal"

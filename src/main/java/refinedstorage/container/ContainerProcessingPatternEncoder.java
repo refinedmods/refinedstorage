@@ -8,6 +8,8 @@ import refinedstorage.container.slot.SlotOutput;
 import refinedstorage.container.slot.SlotSpecimen;
 import refinedstorage.tile.TileProcessingPatternEncoder;
 
+import java.util.Collection;
+
 public class ContainerProcessingPatternEncoder extends ContainerBase {
     public ContainerProcessingPatternEncoder(TileProcessingPatternEncoder processingPatternEncoder, EntityPlayer player) {
         super(processingPatternEncoder, player);
@@ -64,5 +66,27 @@ public class ContainerProcessingPatternEncoder extends ContainerBase {
         }
 
         return stack;
+    }
+
+    public void setInputs(Collection<ItemStack> stacks) {
+        setSlots(stacks, 2 , 2 + 9);
+    }
+
+    public void setOutputs(Collection<ItemStack> stacks) {
+        setSlots(stacks, 2 + 9, 2 + 9 * 2);
+    }
+
+    private void setSlots(Collection<ItemStack> stacks, int begin, int end) {
+        for (ItemStack stack : stacks) {
+            for (int i = begin; i < end; ++i) {
+                Slot slot = getSlot(i);
+
+                if (!slot.getHasStack() && slot.isItemValid(stack)) {
+                    slot.putStack(stack);
+                    slot.onSlotChanged();
+                    break;
+                }
+            }
+        }
     }
 }
