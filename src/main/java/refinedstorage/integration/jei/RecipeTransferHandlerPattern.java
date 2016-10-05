@@ -35,7 +35,7 @@ public class RecipeTransferHandlerPattern implements IRecipeTransferHandler<Cont
 
             for (IGuiIngredient<ItemStack> guiIngredient : recipeLayout.getItemStacks().getGuiIngredients().values()) {
                 if (guiIngredient != null && guiIngredient.getDisplayedIngredient() != null) {
-                    ItemStack ingredient = guiIngredient.getDisplayedIngredient();
+                    ItemStack ingredient = guiIngredient.getDisplayedIngredient().copy();
 
                     int hash = NetworkUtils.getItemStackHashCode(ingredient);
 
