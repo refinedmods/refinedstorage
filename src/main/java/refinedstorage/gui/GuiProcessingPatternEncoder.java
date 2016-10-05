@@ -11,12 +11,12 @@ import refinedstorage.tile.TileProcessingPatternEncoder;
 import java.io.IOException;
 
 public class GuiProcessingPatternEncoder extends GuiBase {
-    private TileProcessingPatternEncoder processingPatternEncoder;
+    private TileProcessingPatternEncoder encoder;
 
-    public GuiProcessingPatternEncoder(ContainerProcessingPatternEncoder container, TileProcessingPatternEncoder processingPatternEncoder) {
+    public GuiProcessingPatternEncoder(ContainerProcessingPatternEncoder container, TileProcessingPatternEncoder encoder) {
         super(container, 176, 172);
 
-        this.processingPatternEncoder = processingPatternEncoder;
+        this.encoder = encoder;
     }
 
     @Override
@@ -28,7 +28,7 @@ public class GuiProcessingPatternEncoder extends GuiBase {
     }
 
     private boolean isOverCreatePattern(int mouseX, int mouseY) {
-        return inBounds(152, 38, 16, 16, mouseX, mouseY) && processingPatternEncoder.canCreatePattern();
+        return inBounds(152, 38, 16, 16, mouseX, mouseY) && encoder.canCreatePattern();
     }
 
     private boolean isOverClear(int mouseX, int mouseY) {
@@ -47,7 +47,7 @@ public class GuiProcessingPatternEncoder extends GuiBase {
             ty = 1;
         }
 
-        if (!processingPatternEncoder.canCreatePattern()) {
+        if (!encoder.canCreatePattern()) {
             ty = 2;
         }
 
@@ -73,11 +73,11 @@ public class GuiProcessingPatternEncoder extends GuiBase {
         super.mouseClicked(mouseX, mouseY, mouseButton);
 
         if (isOverCreatePattern(mouseX - guiLeft, mouseY - guiTop)) {
-            RefinedStorage.INSTANCE.network.sendToServer(new MessageGridPatternCreate(processingPatternEncoder.getPos().getX(), processingPatternEncoder.getPos().getY(), processingPatternEncoder.getPos().getZ()));
+            RefinedStorage.INSTANCE.network.sendToServer(new MessageGridPatternCreate(encoder.getPos().getX(), encoder.getPos().getY(), encoder.getPos().getZ()));
 
             mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
         } else if (isOverClear(mouseX - guiLeft, mouseY - guiTop)) {
-            RefinedStorage.INSTANCE.network.sendToServer(new MessageProcessingPatternEncoderClear(processingPatternEncoder));
+            RefinedStorage.INSTANCE.network.sendToServer(new MessageProcessingPatternEncoderClear(encoder));
 
             mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
         }

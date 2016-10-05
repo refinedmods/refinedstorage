@@ -32,28 +32,32 @@ public class RecipeTransferHandlerPattern implements IRecipeTransferHandler<Cont
         if (doTransfer) {
             Map<Integer, ItemStack> inputs = new HashMap<>();
             Map<Integer, ItemStack> outputs = new HashMap<>();
-             for (IGuiIngredient<ItemStack> guiIngredient : recipeLayout.getItemStacks().getGuiIngredients().values()) {
-                 if (guiIngredient != null && guiIngredient.getDisplayedIngredient() != null) {
-                     ItemStack ingredient = guiIngredient.getDisplayedIngredient();
-                     int hashCode = NetworkUtils.getItemStackHashCode(ingredient);
-                     if (guiIngredient.isInput()) {
-                         if (inputs.containsKey(hashCode)) {
-                             inputs.get(hashCode).stackSize++;
-                         } else {
-                             inputs.put(hashCode, ingredient);
-                         }
-                     } else {
-                         if (outputs.containsKey(hashCode)) {
-                             outputs.get(hashCode).stackSize++;
-                         } else {
-                             outputs.put(hashCode, ingredient);
-                         }
-                     }
-                 }
-             }
+
+            for (IGuiIngredient<ItemStack> guiIngredient : recipeLayout.getItemStacks().getGuiIngredients().values()) {
+                if (guiIngredient != null && guiIngredient.getDisplayedIngredient() != null) {
+                    ItemStack ingredient = guiIngredient.getDisplayedIngredient();
+
+                    int hash = NetworkUtils.getItemStackHashCode(ingredient);
+
+                    if (guiIngredient.isInput()) {
+                        if (inputs.containsKey(hash)) {
+                            inputs.get(hash).stackSize++;
+                        } else {
+                            inputs.put(hash, ingredient);
+                        }
+                    } else {
+                        if (outputs.containsKey(hash)) {
+                            outputs.get(hash).stackSize++;
+                        } else {
+                            outputs.put(hash, ingredient);
+                        }
+                    }
+                }
+            }
 
             RefinedStorage.INSTANCE.network.sendToServer(new MessageProcessingPatternEncoderTransfer(inputs.values(), outputs.values()));
         }
+
         return null;
     }
 }

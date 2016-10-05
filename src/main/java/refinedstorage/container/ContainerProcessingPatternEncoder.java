@@ -11,18 +11,18 @@ import refinedstorage.tile.TileProcessingPatternEncoder;
 import java.util.Collection;
 
 public class ContainerProcessingPatternEncoder extends ContainerBase {
-    public ContainerProcessingPatternEncoder(TileProcessingPatternEncoder processingPatternEncoder, EntityPlayer player) {
-        super(processingPatternEncoder, player);
+    public ContainerProcessingPatternEncoder(TileProcessingPatternEncoder encoder, EntityPlayer player) {
+        super(encoder, player);
 
-        addSlotToContainer(new SlotItemHandler(processingPatternEncoder.getPatterns(), 0, 152, 18));
-        addSlotToContainer(new SlotOutput(processingPatternEncoder.getPatterns(), 1, 152, 58));
+        addSlotToContainer(new SlotItemHandler(encoder.getPatterns(), 0, 152, 18));
+        addSlotToContainer(new SlotOutput(encoder.getPatterns(), 1, 152, 58));
 
         int ox = 8;
         int x = ox;
         int y = 20;
 
         for (int i = 0; i < 9 * 2; ++i) {
-            addSlotToContainer(new SlotSpecimen(processingPatternEncoder.getConfiguration(), i, x, y, SlotSpecimen.SPECIMEN_SIZE));
+            addSlotToContainer(new SlotSpecimen(encoder.getConfiguration(), i, x, y, SlotSpecimen.SPECIMEN_SIZE));
 
             x += 18;
 
@@ -68,6 +68,13 @@ public class ContainerProcessingPatternEncoder extends ContainerBase {
         return stack;
     }
 
+    public void clearInputsAndOutputs() {
+        for (int i = 2; i < 2 + (9 * 2); ++i) {
+            getSlot(i).putStack(null);
+            getSlot(i).onSlotChanged();
+        }
+    }
+
     public void setInputs(Collection<ItemStack> stacks) {
         setSlots(stacks, 2 , 2 + 9);
     }
@@ -84,6 +91,7 @@ public class ContainerProcessingPatternEncoder extends ContainerBase {
                 if (!slot.getHasStack() && slot.isItemValid(stack)) {
                     slot.putStack(stack);
                     slot.onSlotChanged();
+
                     break;
                 }
             }

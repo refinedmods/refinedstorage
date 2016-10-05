@@ -15,10 +15,10 @@ public class MessageProcessingPatternEncoderClear extends MessageHandlerPlayerTo
     public MessageProcessingPatternEncoderClear() {
     }
 
-    public MessageProcessingPatternEncoderClear(TileProcessingPatternEncoder processingPatternEncoder) {
-        this.x = processingPatternEncoder.getPos().getX();
-        this.y = processingPatternEncoder.getPos().getY();
-        this.z = processingPatternEncoder.getPos().getZ();
+    public MessageProcessingPatternEncoderClear(TileProcessingPatternEncoder encoder) {
+        this.x = encoder.getPos().getX();
+        this.y = encoder.getPos().getY();
+        this.z = encoder.getPos().getZ();
     }
 
     @Override
@@ -40,10 +40,10 @@ public class MessageProcessingPatternEncoderClear extends MessageHandlerPlayerTo
         TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.x, message.y, message.z));
 
         if (tile instanceof TileProcessingPatternEncoder) {
-            TileProcessingPatternEncoder processingPatternEncoder = (TileProcessingPatternEncoder) tile;
+            TileProcessingPatternEncoder encoder = (TileProcessingPatternEncoder) tile;
 
-            for (int i = 0; i < processingPatternEncoder.getConfiguration().getSlots(); ++i) {
-                processingPatternEncoder.getConfiguration().setStackInSlot(i, null);
+            for (int i = 0; i < encoder.getConfiguration().getSlots(); ++i) {
+                encoder.getConfiguration().setStackInSlot(i, null);
             }
         }
     }
