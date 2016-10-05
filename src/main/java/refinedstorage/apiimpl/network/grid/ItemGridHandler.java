@@ -6,14 +6,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
-import refinedstorage.api.autocrafting.ICraftingPattern;
-import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.api.network.grid.IItemGridHandler;
 import refinedstorage.api.storage.CompareUtils;
-import refinedstorage.apiimpl.autocrafting.v2.CraftingTask;
-import refinedstorage.tile.TileController;
+import refinedstorage.apiimpl.autocrafting.task.CraftingTaskNormal;
 
 public class ItemGridHandler implements IItemGridHandler {
     private INetworkMaster network;
@@ -125,10 +122,11 @@ public class ItemGridHandler implements IItemGridHandler {
         ItemStack stack = network.getItemStorage().get(hash);
 
         if (stack != null) {
-            CraftingTask t = new CraftingTask(network, NetworkUtils.getPattern(network, stack), quantity);
-            t.calculate();
-            System.out.println(t.toString());
-            ((TileController) network).craftingTasksV2.add(t);
+            CraftingTaskNormal task = new CraftingTaskNormal(network, NetworkUtils.getPattern(network, stack), quantity);
+
+            task.calculate();
+
+            network.addCraftingTask(task);
 
             /*CraftingPreviewData previewData = new CraftingPreviewData(network);
 
@@ -140,7 +138,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
     @Override
     public void onCraftingRequested(int hash, int quantity) {
-        if (quantity <= 0) {
+        /*if (quantity <= 0) {
             return;
         }
 
@@ -160,12 +158,12 @@ public class ItemGridHandler implements IItemGridHandler {
 
                 quantity -= quantityPerRequest;
             }
-        }
+        }*/
     }
 
     @Override
     public void onCraftingCancelRequested(int id, int depth) {
-        if (id >= 0 && id < network.getCraftingTasks().size()) {
+        /*if (id >= 0 && id < network.getCraftingTasks().size()) {
             ICraftingTask task = network.getCraftingTasks().get(id);
 
             if (depth == 0) {
@@ -188,6 +186,6 @@ public class ItemGridHandler implements IItemGridHandler {
             for (ICraftingTask task : network.getCraftingTasks()) {
                 network.cancelCraftingTask(task);
             }
-        }
+        }*/
     }
 }

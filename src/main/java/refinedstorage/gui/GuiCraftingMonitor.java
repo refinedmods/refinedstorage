@@ -1,18 +1,15 @@
 package refinedstorage.gui;
 
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.util.text.TextFormatting;
 import refinedstorage.RefinedStorage;
 import refinedstorage.container.ContainerCraftingMonitor;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.network.MessageCraftingMonitorCancel;
-import refinedstorage.tile.ClientCraftingTask;
 import refinedstorage.tile.TileCraftingMonitor;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class GuiCraftingMonitor extends GuiBase {
@@ -95,7 +92,7 @@ public class GuiCraftingMonitor extends GuiBase {
         itemSelectedX = -1;
         itemSelectedY = -1;
 
-        for (int i = 0; i < VISIBLE_ROWS; ++i) {
+        /*for (int i = 0; i < VISIBLE_ROWS; ++i) {
             if (item < getTasks().size()) {
                 ClientCraftingTask task = getTasks().get(item);
 
@@ -150,7 +147,7 @@ public class GuiCraftingMonitor extends GuiBase {
 
         if (lines != null) {
             drawTooltip(mouseX, mouseY, Arrays.asList(lines));
-        }
+        }*/
     }
 
     private int getRows() {
@@ -162,9 +159,9 @@ public class GuiCraftingMonitor extends GuiBase {
         super.actionPerformed(button);
 
         if (button == cancelButton && itemSelected != -1) {
-            ClientCraftingTask task = getTasks().get(itemSelected);
+            /*ClientCraftingTask task = getTasks().get(itemSelected);
 
-            RefinedStorage.INSTANCE.network.sendToServer(new MessageCraftingMonitorCancel(craftingMonitor, task.getId(), task.getDepth()));
+            RefinedStorage.INSTANCE.network.sendToServer(new MessageCraftingMonitorCancel(craftingMonitor, task.getId(), task.getDepth()));*/
         } else if (button == cancelAllButton && getTasks().size() > 0) {
             RefinedStorage.INSTANCE.network.sendToServer(new MessageCraftingMonitorCancel(craftingMonitor, -1, 0));
         }
@@ -190,7 +187,7 @@ public class GuiCraftingMonitor extends GuiBase {
         }
     }
 
-    private List<ClientCraftingTask> getTasks() {
-        return TileCraftingMonitor.TASKS.getValue();
+    private List<Integer> getTasks() {
+        return Collections.emptyList();
     }
 }

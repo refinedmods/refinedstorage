@@ -20,7 +20,6 @@ import refinedstorage.RefinedStorageItems;
 import refinedstorage.api.RefinedStorageAPI;
 import refinedstorage.api.solderer.SoldererRecipe;
 import refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactoryNormal;
-import refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactoryProcessing;
 import refinedstorage.apiimpl.solderer.*;
 import refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
 import refinedstorage.apiimpl.storage.item.ItemStorageNBT;
@@ -47,7 +46,6 @@ public class CommonProxy {
         }
 
         RefinedStorageAPI.instance().getCraftingTaskRegistry().addFactory(CraftingTaskFactoryNormal.ID, new CraftingTaskFactoryNormal());
-        RefinedStorageAPI.instance().getCraftingTaskRegistry().addFactory(CraftingTaskFactoryProcessing.ID, new CraftingTaskFactoryProcessing());
 
         int id = 0;
 
@@ -70,7 +68,7 @@ public class CommonProxy {
         RefinedStorage.INSTANCE.network.registerMessage(MessageProcessingPatternEncoderClear.class, MessageProcessingPatternEncoderClear.class, id++, Side.SERVER);
         RefinedStorage.INSTANCE.network.registerMessage(MessageGridFilterUpdate.class, MessageGridFilterUpdate.class, id++, Side.SERVER);
         RefinedStorage.INSTANCE.network.registerMessage(MessageGridCraftingPreview.class, MessageGridCraftingPreview.class, id++, Side.SERVER);
-        RefinedStorage.INSTANCE.network.registerMessage(MessageGridCraftingPreviewResponse.class, MessageGridCraftingPreviewResponse.class, id++, Side.CLIENT);
+        //RefinedStorage.INSTANCE.network.registerMessage(MessageGridCraftingPreviewResponse.class, MessageGridCraftingPreviewResponse.class, id++, Side.CLIENT);
         RefinedStorage.INSTANCE.network.registerMessage(MessageProcessingPatternEncoderTransfer.class, MessageProcessingPatternEncoderTransfer.class, id++, Side.SERVER);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(RefinedStorage.INSTANCE, new GuiHandler());
@@ -158,315 +156,315 @@ public class CommonProxy {
 
         // Quartz Enriched Iron
         GameRegistry.addRecipe(new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON, 4),
-            "II",
-            "IQ",
-            'I', new ItemStack(Items.IRON_INGOT),
-            'Q', new ItemStack(Items.QUARTZ)
+                "II",
+                "IQ",
+                'I', new ItemStack(Items.IRON_INGOT),
+                'Q', new ItemStack(Items.QUARTZ)
         );
 
         // Machine Casing
         GameRegistry.addRecipe(new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
-            "EEE",
-            "E E",
-            "EEE",
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
+                "EEE",
+                "E E",
+                "EEE",
+                'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
         );
 
         // Construction Core
         GameRegistry.addShapelessRecipe(new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
-            new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
-            new ItemStack(Items.GLOWSTONE_DUST)
+                new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
+                new ItemStack(Items.GLOWSTONE_DUST)
         );
 
         // Destruction Core
         GameRegistry.addShapelessRecipe(new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
-            new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
-            new ItemStack(Items.QUARTZ)
+                new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
+                new ItemStack(Items.QUARTZ)
         );
 
         // Relay
         GameRegistry.addShapelessRecipe(new ItemStack(RefinedStorageBlocks.RELAY),
-            new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
-            new ItemStack(RefinedStorageBlocks.CABLE),
-            new ItemStack(Blocks.REDSTONE_TORCH)
+                new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
+                new ItemStack(RefinedStorageBlocks.CABLE),
+                new ItemStack(Blocks.REDSTONE_TORCH)
         );
 
         // Controller
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RefinedStorageBlocks.CONTROLLER, 1, EnumControllerType.NORMAL.getId()),
-            "EDE",
-            "SMS",
-            "ESE",
-            'D', new ItemStack(Items.DIAMOND),
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
-            'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
-            'S', "itemSilicon"
+                "EDE",
+                "SMS",
+                "ESE",
+                'D', new ItemStack(Items.DIAMOND),
+                'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+                'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
+                'S', "itemSilicon"
         ));
 
         // Solderer
         GameRegistry.addRecipe(new ItemStack(RefinedStorageBlocks.SOLDERER),
-            "ESE",
-            "E E",
-            "ESE",
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
-            'S', new ItemStack(Blocks.STICKY_PISTON)
+                "ESE",
+                "E E",
+                "ESE",
+                'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+                'S', new ItemStack(Blocks.STICKY_PISTON)
         );
 
         // Disk Drive
         RefinedStorageAPI.instance().getSoldererRegistry().addRecipe(new SoldererRecipe(
-            new ItemStack(RefinedStorageBlocks.DISK_DRIVE),
-            500,
-            new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
-            new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
-            new ItemStack(Blocks.CHEST)
+                new ItemStack(RefinedStorageBlocks.DISK_DRIVE),
+                500,
+                new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
+                new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
+                new ItemStack(Blocks.CHEST)
         ));
 
         // Cable
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RefinedStorageBlocks.CABLE, 12),
-            "EEE",
-            "GRG",
-            "EEE",
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
-            'G', "blockGlass",
-            'R', new ItemStack(Items.REDSTONE)
+                "EEE",
+                "GRG",
+                "EEE",
+                'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+                'G', "blockGlass",
+                'R', new ItemStack(Items.REDSTONE)
         ));
 
         // Wireless Transmitter
         GameRegistry.addRecipe(new ItemStack(RefinedStorageBlocks.WIRELESS_TRANSMITTER),
-            "EPE",
-            "EME",
-            "EAE",
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
-            'A', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
-            'P', new ItemStack(Items.ENDER_PEARL),
-            'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING)
+                "EPE",
+                "EME",
+                "EAE",
+                'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+                'A', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
+                'P', new ItemStack(Items.ENDER_PEARL),
+                'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING)
         );
 
         // Grid
         GameRegistry.addRecipe(new ItemStack(RefinedStorageBlocks.GRID, 1, EnumGridType.NORMAL.getId()),
-            "ECE",
-            "PMP",
-            "EDE",
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
-            'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED),
-            'C', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
-            'D', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
-            'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING)
+                "ECE",
+                "PMP",
+                "EDE",
+                'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+                'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED),
+                'C', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
+                'D', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
+                'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING)
         );
 
         // Crafting Grid
         RefinedStorageAPI.instance().getSoldererRegistry().addRecipe(new SoldererRecipe(
-            new ItemStack(RefinedStorageBlocks.GRID, 1, EnumGridType.CRAFTING.getId()),
-            500,
-            new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
-            new ItemStack(RefinedStorageBlocks.GRID, 1, EnumGridType.NORMAL.getId()),
-            new ItemStack(Blocks.CRAFTING_TABLE)
+                new ItemStack(RefinedStorageBlocks.GRID, 1, EnumGridType.CRAFTING.getId()),
+                500,
+                new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
+                new ItemStack(RefinedStorageBlocks.GRID, 1, EnumGridType.NORMAL.getId()),
+                new ItemStack(Blocks.CRAFTING_TABLE)
         ));
 
         // Pattern Grid
         RefinedStorageAPI.instance().getSoldererRegistry().addRecipe(new SoldererRecipe(
-            new ItemStack(RefinedStorageBlocks.GRID, 1, EnumGridType.PATTERN.getId()),
-            500,
-            new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
-            new ItemStack(RefinedStorageBlocks.GRID, 1, EnumGridType.NORMAL.getId()),
-            new ItemStack(RefinedStorageItems.PATTERN)
+                new ItemStack(RefinedStorageBlocks.GRID, 1, EnumGridType.PATTERN.getId()),
+                500,
+                new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
+                new ItemStack(RefinedStorageBlocks.GRID, 1, EnumGridType.NORMAL.getId()),
+                new ItemStack(RefinedStorageItems.PATTERN)
         ));
 
         // Fluid Grid
         RefinedStorageAPI.instance().getSoldererRegistry().addRecipe(new SoldererRecipe(
-            new ItemStack(RefinedStorageBlocks.GRID, 1, EnumGridType.FLUID.getId()),
-            500,
-            new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
-            new ItemStack(RefinedStorageBlocks.GRID, 1, EnumGridType.NORMAL.getId()),
-            new ItemStack(Items.BUCKET)
+                new ItemStack(RefinedStorageBlocks.GRID, 1, EnumGridType.FLUID.getId()),
+                500,
+                new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
+                new ItemStack(RefinedStorageBlocks.GRID, 1, EnumGridType.NORMAL.getId()),
+                new ItemStack(Items.BUCKET)
         ));
 
         // Wireless Grid
         GameRegistry.addRecipe(new ItemStack(RefinedStorageItems.WIRELESS_GRID, 1, ItemWirelessGrid.TYPE_NORMAL),
-            "EPE",
-            "EAE",
-            "EEE",
-            'P', new ItemStack(Items.ENDER_PEARL),
-            'A', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
+                "EPE",
+                "EAE",
+                "EEE",
+                'P', new ItemStack(Items.ENDER_PEARL),
+                'A', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
+                'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
         );
 
         // Crafter
         GameRegistry.addRecipe(new ItemStack(RefinedStorageBlocks.CRAFTER),
-            "ECE",
-            "AMA",
-            "EDE",
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
-            'A', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
-            'C', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
-            'D', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
-            'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING)
+                "ECE",
+                "AMA",
+                "EDE",
+                'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+                'A', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
+                'C', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
+                'D', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
+                'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING)
         );
 
         // Processing Pattern Encoder
         GameRegistry.addRecipe(new ItemStack(RefinedStorageBlocks.PROCESSING_PATTERN_ENCODER),
-            "ECE",
-            "PMP",
-            "EFE",
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
-            'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
-            'P', new ItemStack(RefinedStorageItems.PATTERN),
-            'C', new ItemStack(Blocks.CRAFTING_TABLE),
-            'F', new ItemStack(Blocks.FURNACE)
+                "ECE",
+                "PMP",
+                "EFE",
+                'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+                'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
+                'P', new ItemStack(RefinedStorageItems.PATTERN),
+                'C', new ItemStack(Blocks.CRAFTING_TABLE),
+                'F', new ItemStack(Blocks.FURNACE)
         );
 
         // External Storage
         GameRegistry.addRecipe(new ItemStack(RefinedStorageBlocks.EXTERNAL_STORAGE),
-            "CED",
-            "HMH",
-            "EPE",
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
-            'H', new ItemStack(Blocks.CHEST),
-            'C', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
-            'D', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
-            'M', new ItemStack(RefinedStorageBlocks.CABLE),
-            'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
+                "CED",
+                "HMH",
+                "EPE",
+                'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+                'H', new ItemStack(Blocks.CHEST),
+                'C', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
+                'D', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
+                'M', new ItemStack(RefinedStorageBlocks.CABLE),
+                'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
         );
 
         // Importer
         GameRegistry.addShapelessRecipe(new ItemStack(RefinedStorageBlocks.IMPORTER),
-            new ItemStack(RefinedStorageBlocks.CABLE),
-            new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
-            new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
+                new ItemStack(RefinedStorageBlocks.CABLE),
+                new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
+                new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
         );
 
         // Exporter
         GameRegistry.addShapelessRecipe(new ItemStack(RefinedStorageBlocks.EXPORTER),
-            new ItemStack(RefinedStorageBlocks.CABLE),
-            new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
-            new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
+                new ItemStack(RefinedStorageBlocks.CABLE),
+                new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
+                new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
         );
 
         // Destructor
         GameRegistry.addShapedRecipe(new ItemStack(RefinedStorageBlocks.DESTRUCTOR),
-            "EDE",
-            "RMR",
-            "EIE",
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
-            'D', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
-            'R', new ItemStack(Items.REDSTONE),
-            'M', new ItemStack(RefinedStorageBlocks.CABLE),
-            'I', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
+                "EDE",
+                "RMR",
+                "EIE",
+                'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+                'D', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
+                'R', new ItemStack(Items.REDSTONE),
+                'M', new ItemStack(RefinedStorageBlocks.CABLE),
+                'I', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
         );
 
         // Constructor
         GameRegistry.addShapedRecipe(new ItemStack(RefinedStorageBlocks.CONSTRUCTOR),
-            "ECE",
-            "RMR",
-            "EIE",
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
-            'C', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
-            'R', new ItemStack(Items.REDSTONE),
-            'M', new ItemStack(RefinedStorageBlocks.CABLE),
-            'I', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
+                "ECE",
+                "RMR",
+                "EIE",
+                'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+                'C', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
+                'R', new ItemStack(Items.REDSTONE),
+                'M', new ItemStack(RefinedStorageBlocks.CABLE),
+                'I', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
         );
 
         // Detector
         GameRegistry.addRecipe(new ItemStack(RefinedStorageBlocks.DETECTOR),
-            "ECE",
-            "RMR",
-            "EPE",
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
-            'R', new ItemStack(Items.REDSTONE),
-            'C', new ItemStack(Items.COMPARATOR),
-            'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
-            'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
+                "ECE",
+                "RMR",
+                "EPE",
+                'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+                'R', new ItemStack(Items.REDSTONE),
+                'C', new ItemStack(Items.COMPARATOR),
+                'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
+                'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
         );
 
         // Storage Parts
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RefinedStorageItems.STORAGE_PART, 1, ItemStoragePart.TYPE_1K),
-            "SES",
-            "GRG",
-            "SGS",
-            'R', new ItemStack(Items.REDSTONE),
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
-            'S', "itemSilicon",
-            'G', "blockGlass"
+                "SES",
+                "GRG",
+                "SGS",
+                'R', new ItemStack(Items.REDSTONE),
+                'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+                'S', "itemSilicon",
+                'G', "blockGlass"
         ));
 
         GameRegistry.addRecipe(new ItemStack(RefinedStorageItems.STORAGE_PART, 1, ItemStoragePart.TYPE_4K),
-            "PEP",
-            "SRS",
-            "PSP",
-            'R', new ItemStack(Items.REDSTONE),
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
-            'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
-            'S', new ItemStack(RefinedStorageItems.STORAGE_PART, 1, ItemStoragePart.TYPE_1K)
+                "PEP",
+                "SRS",
+                "PSP",
+                'R', new ItemStack(Items.REDSTONE),
+                'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+                'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
+                'S', new ItemStack(RefinedStorageItems.STORAGE_PART, 1, ItemStoragePart.TYPE_1K)
         );
 
         GameRegistry.addRecipe(new ItemStack(RefinedStorageItems.STORAGE_PART, 1, ItemStoragePart.TYPE_16K),
-            "PEP",
-            "SRS",
-            "PSP",
-            'R', new ItemStack(Items.REDSTONE),
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
-            'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED),
-            'S', new ItemStack(RefinedStorageItems.STORAGE_PART, 1, ItemStoragePart.TYPE_4K)
+                "PEP",
+                "SRS",
+                "PSP",
+                'R', new ItemStack(Items.REDSTONE),
+                'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+                'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED),
+                'S', new ItemStack(RefinedStorageItems.STORAGE_PART, 1, ItemStoragePart.TYPE_4K)
         );
 
         GameRegistry.addRecipe(new ItemStack(RefinedStorageItems.STORAGE_PART, 1, ItemStoragePart.TYPE_64K),
-            "PEP",
-            "SRS",
-            "PSP",
-            'R', new ItemStack(Items.REDSTONE),
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
-            'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
-            'S', new ItemStack(RefinedStorageItems.STORAGE_PART, 1, ItemStoragePart.TYPE_16K)
+                "PEP",
+                "SRS",
+                "PSP",
+                'R', new ItemStack(Items.REDSTONE),
+                'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+                'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
+                'S', new ItemStack(RefinedStorageItems.STORAGE_PART, 1, ItemStoragePart.TYPE_16K)
         );
 
         // Fluid Storage Parts
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, ItemFluidStoragePart.TYPE_64K),
-            "SES",
-            "GRG",
-            "SGS",
-            'R', new ItemStack(Items.BUCKET),
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
-            'S', "itemSilicon",
-            'G', "blockGlass"
+                "SES",
+                "GRG",
+                "SGS",
+                'R', new ItemStack(Items.BUCKET),
+                'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+                'S', "itemSilicon",
+                'G', "blockGlass"
         ));
 
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, ItemFluidStoragePart.TYPE_128K),
-            "PEP",
-            "SRS",
-            "PSP",
-            'R', new ItemStack(Items.BUCKET),
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
-            'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
-            'S', new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, ItemFluidStoragePart.TYPE_64K)
+                "PEP",
+                "SRS",
+                "PSP",
+                'R', new ItemStack(Items.BUCKET),
+                'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+                'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
+                'S', new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, ItemFluidStoragePart.TYPE_64K)
         ));
 
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, ItemFluidStoragePart.TYPE_256K),
-            "PEP",
-            "SRS",
-            "PSP",
-            'R', new ItemStack(Items.BUCKET),
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
-            'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED),
-            'S', new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, ItemFluidStoragePart.TYPE_128K)
+                "PEP",
+                "SRS",
+                "PSP",
+                'R', new ItemStack(Items.BUCKET),
+                'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+                'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED),
+                'S', new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, ItemFluidStoragePart.TYPE_128K)
         ));
 
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, ItemFluidStoragePart.TYPE_512K),
-            "PEP",
-            "SRS",
-            "PSP",
-            'R', new ItemStack(Items.BUCKET),
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
-            'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
-            'S', new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, ItemFluidStoragePart.TYPE_256K)
+                "PEP",
+                "SRS",
+                "PSP",
+                'R', new ItemStack(Items.BUCKET),
+                'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+                'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
+                'S', new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, ItemFluidStoragePart.TYPE_256K)
         ));
 
         // Storage Housing
         GameRegistry.addRecipe(new ShapedOreRecipe(ItemStorageNBT.createStackWithNBT(new ItemStack(RefinedStorageItems.STORAGE_HOUSING)),
-            "GRG",
-            "R R",
-            "EEE",
-            'G', "blockGlass",
-            'R', new ItemStack(Items.REDSTONE),
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
+                "GRG",
+                "R R",
+                "EEE",
+                'G', "blockGlass",
+                'R', new ItemStack(Items.REDSTONE),
+                'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
         ));
 
         // Storage Disks
@@ -474,18 +472,18 @@ public class CommonProxy {
             ItemStack disk = ItemStorageNBT.createStackWithNBT(new ItemStack(RefinedStorageItems.STORAGE_DISK, 1, type));
 
             GameRegistry.addRecipe(new ShapedOreRecipe(disk,
-                "GRG",
-                "RPR",
-                "EEE",
-                'G', "blockGlass",
-                'R', new ItemStack(Items.REDSTONE),
-                'P', new ItemStack(RefinedStorageItems.STORAGE_PART, 1, type),
-                'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
+                    "GRG",
+                    "RPR",
+                    "EEE",
+                    'G', "blockGlass",
+                    'R', new ItemStack(Items.REDSTONE),
+                    'P', new ItemStack(RefinedStorageItems.STORAGE_PART, 1, type),
+                    'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
             ));
 
             GameRegistry.addShapelessRecipe(disk,
-                new ItemStack(RefinedStorageItems.STORAGE_HOUSING),
-                new ItemStack(RefinedStorageItems.STORAGE_PART, 1, type)
+                    new ItemStack(RefinedStorageItems.STORAGE_HOUSING),
+                    new ItemStack(RefinedStorageItems.STORAGE_PART, 1, type)
             );
         }
 
@@ -494,39 +492,39 @@ public class CommonProxy {
             ItemStack disk = FluidStorageNBT.createStackWithNBT(new ItemStack(RefinedStorageItems.FLUID_STORAGE_DISK, 1, type));
 
             GameRegistry.addRecipe(new ShapedOreRecipe(disk,
-                "GRG",
-                "RPR",
-                "EEE",
-                'G', "blockGlass",
-                'R', new ItemStack(Items.REDSTONE),
-                'P', new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, type),
-                'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
+                    "GRG",
+                    "RPR",
+                    "EEE",
+                    'G', "blockGlass",
+                    'R', new ItemStack(Items.REDSTONE),
+                    'P', new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, type),
+                    'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
             ));
 
             GameRegistry.addShapelessRecipe(disk,
-                new ItemStack(RefinedStorageItems.STORAGE_HOUSING),
-                new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, type)
+                    new ItemStack(RefinedStorageItems.STORAGE_HOUSING),
+                    new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, type)
             );
         }
 
         // Pattern
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RefinedStorageItems.PATTERN),
-            "GRG",
-            "RGR",
-            "EEE",
-            'G', "blockGlass",
-            'R', new ItemStack(Items.REDSTONE),
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
+                "GRG",
+                "RGR",
+                "EEE",
+                'G', "blockGlass",
+                'R', new ItemStack(Items.REDSTONE),
+                'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
         ));
 
         // Upgrade
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RefinedStorageItems.UPGRADE, 1, 0),
-            "EGE",
-            "EPE",
-            "EGE",
-            'G', "blockGlass",
-            'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED),
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
+                "EGE",
+                "EPE",
+                "EGE",
+                'G', "blockGlass",
+                'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED),
+                'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON)
         ));
 
         RefinedStorageAPI.instance().getSoldererRegistry().addRecipe(new SoldererRecipeUpgrade(ItemUpgrade.TYPE_RANGE));
@@ -535,11 +533,11 @@ public class CommonProxy {
         RefinedStorageAPI.instance().getSoldererRegistry().addRecipe(new SoldererRecipeUpgrade(ItemUpgrade.TYPE_CRAFTING));
 
         GameRegistry.addShapedRecipe(new ItemStack(RefinedStorageItems.UPGRADE, 1, ItemUpgrade.TYPE_STACK),
-            "USU",
-            "SUS",
-            "USU",
-            'U', new ItemStack(Items.SUGAR),
-            'S', new ItemStack(RefinedStorageItems.UPGRADE, 1, ItemUpgrade.TYPE_SPEED)
+                "USU",
+                "SUS",
+                "USU",
+                'U', new ItemStack(Items.SUGAR),
+                'S', new ItemStack(RefinedStorageItems.UPGRADE, 1, ItemUpgrade.TYPE_SPEED)
         );
 
         // Storage Blocks
@@ -556,87 +554,87 @@ public class CommonProxy {
 
         // Crafting Monitor
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RefinedStorageBlocks.CRAFTING_MONITOR),
-            "EGE",
-            "GMG",
-            "EPE",
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
-            'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
-            'G', "blockGlass",
-            'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
+                "EGE",
+                "GMG",
+                "EPE",
+                'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+                'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
+                'G', "blockGlass",
+                'P', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
         ));
 
         // Interface
         RefinedStorageAPI.instance().getSoldererRegistry().addRecipe(new SoldererRecipe(
-            new ItemStack(RefinedStorageBlocks.INTERFACE),
-            200,
-            new ItemStack(RefinedStorageBlocks.IMPORTER),
-            new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
-            new ItemStack(RefinedStorageBlocks.EXPORTER)
+                new ItemStack(RefinedStorageBlocks.INTERFACE),
+                200,
+                new ItemStack(RefinedStorageBlocks.IMPORTER),
+                new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
+                new ItemStack(RefinedStorageBlocks.EXPORTER)
         ));
 
         // Fluid Interface
         RefinedStorageAPI.instance().getSoldererRegistry().addRecipe(new SoldererRecipe(
-            new ItemStack(RefinedStorageBlocks.FLUID_INTERFACE),
-            200,
-            new ItemStack(Items.BUCKET),
-            new ItemStack(RefinedStorageBlocks.INTERFACE),
-            new ItemStack(Items.BUCKET)
+                new ItemStack(RefinedStorageBlocks.FLUID_INTERFACE),
+                200,
+                new ItemStack(Items.BUCKET),
+                new ItemStack(RefinedStorageBlocks.INTERFACE),
+                new ItemStack(Items.BUCKET)
         ));
 
         // Grid Filter
         GameRegistry.addShapedRecipe(new ItemStack(RefinedStorageItems.GRID_FILTER),
-            "EPE",
-            "PHP",
-            "EPE",
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
-            'P', new ItemStack(Items.PAPER),
-            'H', new ItemStack(Blocks.HOPPER)
+                "EPE",
+                "PHP",
+                "EPE",
+                'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+                'P', new ItemStack(Items.PAPER),
+                'H', new ItemStack(Blocks.HOPPER)
         );
 
         // Network Card
         GameRegistry.addShapedRecipe(new ItemStack(RefinedStorageItems.NETWORK_CARD),
-            "EEE",
-            "PAP",
-            "EEE",
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
-            'P', new ItemStack(Items.PAPER),
-            'A', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)
+                "EEE",
+                "PAP",
+                "EEE",
+                'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+                'P', new ItemStack(Items.PAPER),
+                'A', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)
         );
 
         // Network Transmitter
         GameRegistry.addShapedRecipe(new ItemStack(RefinedStorageBlocks.NETWORK_TRANSMITTER),
-            "EEE",
-            "CMD",
-            "AAA",
-            'E', new ItemStack(Items.ENDER_PEARL),
-            'C', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
-            'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
-            'D', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
-            'A', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)
+                "EEE",
+                "CMD",
+                "AAA",
+                'E', new ItemStack(Items.ENDER_PEARL),
+                'C', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
+                'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
+                'D', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
+                'A', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)
         );
 
         // Network Receiver
         GameRegistry.addShapedRecipe(new ItemStack(RefinedStorageBlocks.NETWORK_RECEIVER),
-            "AAA",
-            "CMD",
-            "EEE",
-            'E', new ItemStack(Items.ENDER_PEARL),
-            'C', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
-            'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
-            'D', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
-            'A', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)
+                "AAA",
+                "CMD",
+                "EEE",
+                'E', new ItemStack(Items.ENDER_PEARL),
+                'C', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
+                'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
+                'D', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
+                'A', new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)
         );
 
         // Disk Manipulator
         GameRegistry.addShapedRecipe(new ItemStack(RefinedStorageBlocks.DISK_MANIPULATOR),
-            "ESE",
-            "CMD",
-            "ESE",
-            'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
-            'S', new ItemStack(RefinedStorageItems.STORAGE_HOUSING),
-            'C', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
-            'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
-            'D', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_DESTRUCTION)
+                "ESE",
+                "CMD",
+                "ESE",
+                'E', new ItemStack(RefinedStorageItems.QUARTZ_ENRICHED_IRON),
+                'S', new ItemStack(RefinedStorageItems.STORAGE_HOUSING),
+                'C', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
+                'M', new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
+                'D', new ItemStack(RefinedStorageItems.CORE, 1, ItemCore.TYPE_DESTRUCTION)
         );
     }
 

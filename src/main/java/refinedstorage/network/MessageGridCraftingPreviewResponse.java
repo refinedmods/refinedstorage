@@ -1,5 +1,6 @@
 package refinedstorage.network;
 
+/*
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -57,3 +58,4 @@ public class MessageGridCraftingPreviewResponse implements IMessage, IMessageHan
         return null;
     }
 }
+*/

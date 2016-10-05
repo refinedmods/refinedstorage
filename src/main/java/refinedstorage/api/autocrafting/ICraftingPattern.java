@@ -24,6 +24,11 @@ public interface ICraftingPattern {
     boolean isValid();
 
     /**
+     * @return true if the crafting pattern can be treated as a processing pattern, false otherwise
+     */
+    boolean isProcessing();
+
+    /**
      * @return the inputs
      */
     List<ItemStack> getInputs();

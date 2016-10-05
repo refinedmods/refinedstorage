@@ -3,11 +3,18 @@ package refinedstorage.api.network;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import refinedstorage.api.RefinedStorageAPI;
 import refinedstorage.api.autocrafting.ICraftingPattern;
+import refinedstorage.api.autocrafting.ICraftingPatternContainer;
+import refinedstorage.api.autocrafting.ICraftingPatternProvider;
+import refinedstorage.api.autocrafting.registry.ICraftingTaskFactory;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.storage.CompareUtils;
 
@@ -27,8 +34,8 @@ public final class NetworkUtils {
         return network.getPattern(stack, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
     }
 
-    public static ICraftingTask createCraftingTask(INetworkMaster network, int depth, ICraftingPattern pattern) {
-        return RefinedStorageAPI.instance().getCraftingTaskRegistry().getFactory(pattern.getId()).create(network.getNetworkWorld(), depth, null, pattern);
+    public static ICraftingTask createCraftingTask(INetworkMaster network, ICraftingPattern pattern, int quantity) {
+        return RefinedStorageAPI.instance().getCraftingTaskRegistry().getFactory(pattern.getId()).create(network.getNetworkWorld(), network, pattern, quantity, null);
     }
 
     public static boolean hasPattern(INetworkMaster network, ItemStack stack) {
@@ -62,9 +69,29 @@ public final class NetworkUtils {
             ICraftingPattern pattern = network.getPattern(stack, compare);
 
             if (pattern != null) {
-                network.addCraftingTask(createCraftingTask(network, 0, pattern));
+                network.addCraftingTask(createCraftingTask(network, pattern, 1));
             }
         }
+    }
+
+    public static ICraftingTask readCraftingTask(World world, INetworkMaster network, NBTTagCompound tag) {
+        ItemStack stack = ItemStack.loadItemStackFromNBT(tag.getCompoundTag(ICraftingTask.NBT_PATTERN_STACK));
+
+        if (stack != null && stack.getItem() instanceof ICraftingPatternProvider) {
+            TileEntity container = world.getTileEntity(BlockPos.fromLong(tag.getLong(ICraftingTask.NBT_PATTERN_CONTAINER)));
+
+            if (container instanceof ICraftingPatternContainer) {
+                ICraftingPattern pattern = ((ICraftingPatternProvider) stack.getItem()).create(world, stack, (ICraftingPatternContainer) container);
+
+                ICraftingTaskFactory factory = RefinedStorageAPI.instance().getCraftingTaskRegistry().getFactory(tag.getString(ICraftingTask.NBT_PATTERN_ID));
+
+                if (factory != null) {
+                    return factory.create(world, network, pattern, tag.getInteger(ICraftingTask.NBT_QUANTITY), tag);
+                }
+            }
+        }
+
+        return null;
     }
 
     public static void writeItemStack(ByteBuf buf, INetworkMaster network, ItemStack stack) {

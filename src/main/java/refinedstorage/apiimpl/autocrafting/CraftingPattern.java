@@ -11,7 +11,6 @@ import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactoryNormal;
-import refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactoryProcessing;
 import refinedstorage.item.ItemPattern;
 
 import java.util.ArrayList;
@@ -80,6 +79,11 @@ public class CraftingPattern implements ICraftingPattern {
     }
 
     @Override
+    public boolean isProcessing() {
+        return ItemPattern.isProcessing(stack);
+    }
+
+    @Override
     public List<ItemStack> getInputs() {
         return inputs;
     }
@@ -96,7 +100,7 @@ public class CraftingPattern implements ICraftingPattern {
 
     @Override
     public String getId() {
-        return ItemPattern.isProcessing(stack) ? CraftingTaskFactoryProcessing.ID : CraftingTaskFactoryNormal.ID;
+        return CraftingTaskFactoryNormal.ID;
     }
 
     @Override

@@ -1,28 +1,20 @@
 package refinedstorage.gui;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import org.lwjgl.input.Keyboard;
 import refinedstorage.RefinedStorage;
-import refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewStack;
 import refinedstorage.network.MessageGridCraftingStart;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 public class GuiCraftingPreview extends GuiBase {
     private static final int VISIBLE_ROWS = 4;
 
-    private List<CraftingPreviewStack> stacks;
+    //private List<CraftingPreviewStack> stacks;
     private GuiScreen parent;
 
     private int hash;
@@ -31,7 +23,7 @@ public class GuiCraftingPreview extends GuiBase {
     private GuiButton startButton;
     private GuiButton cancelButton;
 
-    public GuiCraftingPreview(GuiScreen parent, Collection<CraftingPreviewStack> stacks, int hash, int quantity) {
+    public GuiCraftingPreview(GuiScreen parent, /*Collection<CraftingPreviewStack> stacks, */int hash, int quantity) {
         super(new Container() {
             @Override
             public boolean canInteractWith(EntityPlayer player) {
@@ -39,7 +31,7 @@ public class GuiCraftingPreview extends GuiBase {
             }
         }, 168, 171);
 
-        this.stacks = new ArrayList<>(stacks);
+        //this.stacks = new ArrayList<>(stacks);
         this.parent = parent;
 
         this.hash = hash;
@@ -52,7 +44,7 @@ public class GuiCraftingPreview extends GuiBase {
     public void init(int x, int y) {
         cancelButton = addButton(x + 16, y + 144, 50, 20, t("gui.cancel"));
         startButton = addButton(x + 85, y + 144, 50, 20, t("misc.refinedstorage:start"));
-        startButton.enabled = !stacks.isEmpty();
+        //startButton.enabled = !stacks.isEmpty();
     }
 
     @Override
@@ -67,7 +59,7 @@ public class GuiCraftingPreview extends GuiBase {
 
         drawTexture(x, y, 0, 0, width, height);
 
-        if (stacks.isEmpty()) {
+        /*if (stacks.isEmpty()) {
             drawRect(x + 7, y + 20, x + 142, y + 139, 0xFFDBDBDB);
         }
         else {
@@ -94,7 +86,7 @@ public class GuiCraftingPreview extends GuiBase {
 
                 slot++;
             }
-        }
+        }*/
     }
 
     @Override
@@ -105,7 +97,7 @@ public class GuiCraftingPreview extends GuiBase {
         int y = 22;
         float scale = 0.5f;
 
-        if (stacks.isEmpty()) {
+        /*if (stacks.isEmpty()) {
             GlStateManager.pushMatrix();
             GlStateManager.scale(scale, scale, 1);
 
@@ -163,7 +155,7 @@ public class GuiCraftingPreview extends GuiBase {
             if (hoveringStack != null) {
                 drawTooltip(mouseX, mouseY, hoveringStack.getTooltip(Minecraft.getMinecraft().thePlayer, false));
             }
-        }
+        }*/
     }
 
     @Override
@@ -195,7 +187,8 @@ public class GuiCraftingPreview extends GuiBase {
     }
 
     private int getRows() {
-        return Math.max(0, (int) Math.ceil((float) stacks.size() / 2F));
+        /*return Math.max(0, (int) Math.ceil((float) stacks.size() / 2F));*/
+        return 0;
     }
 
     private void close() {

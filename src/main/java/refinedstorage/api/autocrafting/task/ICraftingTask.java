@@ -1,64 +1,37 @@
 package refinedstorage.api.autocrafting.task;
 
+import com.google.common.collect.Multimap;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
 import refinedstorage.api.autocrafting.ICraftingPattern;
-import refinedstorage.api.network.INetworkMaster;
 
-import javax.annotation.Nullable;
+import java.util.Deque;
+import java.util.List;
 
-/**
- * Represents a crafting task.
- */
 public interface ICraftingTask {
-    /**
-     * @return the pattern
-     */
-    ICraftingPattern getPattern();
+    String NBT_QUANTITY = "Quantity";
+    String NBT_PATTERN_ID = "PatternID";
+    String NBT_PATTERN_STACK = "PatternStack";
+    String NBT_PATTERN_CONTAINER = "PatternContainer";
 
-    /**
-     * @return the child task
-     */
-    @Nullable
-    ICraftingTask getChild();
+    void calculate();
 
-    /**
-     * @param child the child task
-     */
-    void setChild(@Nullable ICraftingTask child);
+    void onCancelled();
 
-    /**
-     * @param world   the world
-     * @param network the network
-     * @return true if the crafting task is done, false otherwise
-     */
-    boolean update(World world, INetworkMaster network);
+    boolean update();
 
-    /**
-     * Gets called when the crafting task is cancelled.
-     *
-     * @param network the network
-     */
-    void onCancelled(INetworkMaster network);
+    int getQuantity();
 
-    /**
-     * Writes this crafting task to NBT.
-     *
-     * @param tag the NBT tag to write to
-     * @return the written NBT tag
-     */
     NBTTagCompound writeToNBT(NBTTagCompound tag);
 
-    /**
-     * Returns the status of this crafting task that is used for the tooltip in the crafting monitor.
-     *
-     * @param network the network
-     * @return the status
-     */
-    String getStatus(INetworkMaster network);
+    ICraftingPattern getPattern();
 
-    /**
-     * @return the progress for display in the crafting monitor, or -1 to not display any progress
-     */
-    int getProgress();
+    Deque<ItemStack> getToTake();
+
+    Multimap<Item, ItemStack> getToCraft();
+
+    Multimap<Item, ItemStack> getMissing();
+
+    List<IProcessable> getToProcess();
 }

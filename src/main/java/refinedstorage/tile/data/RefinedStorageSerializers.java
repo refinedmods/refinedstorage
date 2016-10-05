@@ -1,13 +1,11 @@
 package refinedstorage.tile.data;
 
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import refinedstorage.tile.ClientCraftingTask;
 import refinedstorage.tile.ClientNode;
 
 import java.io.IOException;
@@ -42,83 +40,6 @@ public final class RefinedStorageSerializers {
 
         @Override
         public DataParameter<List<ClientNode>> createKey(int id) {
-            return null;
-        }
-    };
-
-    public static final DataSerializer<List<ClientCraftingTask>> CLIENT_CRAFTING_TASK_SERIALIZER = new DataSerializer<List<ClientCraftingTask>>() {
-        @Override
-        public void write(PacketBuffer buf, List<ClientCraftingTask> tasks) {
-            buf.writeInt(tasks.size());
-
-            for (ClientCraftingTask task : tasks) {
-                int children = 0;
-
-                ClientCraftingTask child = task.getChild();
-
-                while (child != null) {
-                    children++;
-
-                    child = child.getChild();
-                }
-
-                writeTask(buf, task, children);
-            }
-        }
-
-        private void writeTask(PacketBuffer buf, ClientCraftingTask task, int children) {
-            ByteBufUtils.writeUTF8String(buf, task.getStatus());
-
-            buf.writeInt(children);
-
-            buf.writeInt(task.getProgress());
-
-            buf.writeInt(task.getOutputs().size());
-
-            for (ItemStack output : task.getOutputs()) {
-                ByteBufUtils.writeItemStack(buf, output);
-            }
-
-            buf.writeBoolean(task.getChild() != null);
-
-            if (task.getChild() != null) {
-                writeTask(buf, task.getChild(), children);
-            }
-        }
-
-        @Override
-        public List<ClientCraftingTask> read(PacketBuffer buf) {
-            int size = buf.readInt();
-
-            List<ClientCraftingTask> tasks = new ArrayList<>();
-
-            for (int i = 0; i < size; ++i) {
-                readTask(buf, i, 0, tasks);
-            }
-
-            return tasks;
-        }
-
-        private void readTask(PacketBuffer buf, int i, int depth, List<ClientCraftingTask> tasks) {
-            String status = ByteBufUtils.readUTF8String(buf);
-
-            int children = buf.readInt();
-
-            int progress = buf.readInt();
-
-            int outputs = buf.readInt();
-
-            for (int j = 0; j < outputs; ++j) {
-                tasks.add(new ClientCraftingTask(ByteBufUtils.readItemStack(buf), i, status, depth, children, progress));
-            }
-
-            if (buf.readBoolean()) {
-                readTask(buf, i, depth + 1, tasks);
-            }
-        }
-
-        @Override
-        public DataParameter<List<ClientCraftingTask>> createKey(int id) {
             return null;
         }
     };

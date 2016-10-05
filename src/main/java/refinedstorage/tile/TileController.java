@@ -31,8 +31,6 @@ import refinedstorage.api.storage.fluid.IFluidStorage;
 import refinedstorage.api.storage.fluid.IGroupedFluidStorage;
 import refinedstorage.api.storage.item.IGroupedItemStorage;
 import refinedstorage.api.storage.item.IItemStorage;
-import refinedstorage.apiimpl.autocrafting.task.CraftingTaskProcessing;
-import refinedstorage.apiimpl.autocrafting.v2.CraftingTask;
 import refinedstorage.apiimpl.network.NetworkNodeGraph;
 import refinedstorage.apiimpl.network.WirelessGridHandler;
 import refinedstorage.apiimpl.network.grid.FluidGridHandler;
@@ -176,7 +174,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     private List<ICraftingPattern> patterns = new ArrayList<>();
 
-    public List<CraftingTask> craftingTasksV2 = new ArrayList<>();
     private List<ICraftingTask> craftingTasks = new ArrayList<>();
     private List<ICraftingTask> craftingTasksToAdd = new ArrayList<>();
     private List<ICraftingTask> craftingTasksToCancel = new ArrayList<>();
@@ -240,7 +237,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
             if (!craftingTasksToRead.isEmpty()) {
                 for (NBTTagCompound tag : craftingTasksToRead) {
-                    ICraftingTask task = readCraftingTask(worldObj, 0, tag);
+                    ICraftingTask task = NetworkUtils.readCraftingTask(worldObj, this, tag);
 
                     if (task != null) {
                         addCraftingTask(task);
@@ -260,7 +257,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 boolean craftingTasksChanged = !craftingTasksToAdd.isEmpty() || !craftingTasksToCancel.isEmpty();
 
                 for (ICraftingTask taskToCancel : craftingTasksToCancel) {
-                    taskToCancel.onCancelled(this);
+                    taskToCancel.onCancelled();
                 }
 
                 craftingTasks.removeAll(craftingTasksToCancel);
@@ -272,12 +269,12 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
                 craftingTasksToAdd.clear();
 
-                /*Iterator<ICraftingTask> craftingTaskIterator = craftingTasks.iterator();
+                Iterator<ICraftingTask> craftingTaskIterator = craftingTasks.iterator();
 
                 while (craftingTaskIterator.hasNext()) {
                     ICraftingTask task = craftingTaskIterator.next();
 
-                    if (updateCraftingTask(task)) {
+                    if (task.update()) {
                         craftingTaskIterator.remove();
 
                         craftingTasksChanged = true;
@@ -287,17 +284,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 if (!craftingTasks.isEmpty() || craftingTasksChanged) {
                     markDirty();
 
-                    updateCraftingTasks();
-                }*/
-
-                Iterator<CraftingTask> craftingTaskIterator = craftingTasksV2.iterator();
-
-                while (craftingTaskIterator.hasNext()) {
-                    CraftingTask task = craftingTaskIterator.next();
-
-                    if (task.update()) {
-                        craftingTaskIterator.remove();
-                    }
+                    updateCraftingMonitors();
                 }
             }
 
@@ -331,24 +318,10 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         super.update();
     }
 
-    private boolean updateCraftingTask(ICraftingTask task) {
-        if (task.getChild() != null) {
-            if (updateCraftingTask(task.getChild())) {
-                task.setChild(null);
-            }
-
-            return false;
-        }
-
-        ICraftingPatternContainer container = task.getPattern().getContainer();
-
-        return container != null && ticks % container.getSpeed() == 0 && task.update(worldObj, this);
-    }
-
-    public void updateCraftingTasks() {
+    public void updateCraftingMonitors() {
         for (INetworkNode node : nodeGraph.all()) {
             if (node instanceof TileCraftingMonitor) {
-                ((TileCraftingMonitor) node).dataManager.sendParameterToWatchers(TileCraftingMonitor.TASKS);
+                //((TileCraftingMonitor) node).dataManager.sendParameterToWatchers(TileCraftingMonitor.TASKS);
             }
         }
     }
@@ -557,7 +530,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         if (!simulate && inserted > 0) {
             itemStorage.add(ItemHandlerHelper.copyStackWithSize(stack, inserted), false);
 
-            for (int i = 0; i < inserted; ++i) {
+            /*for (int i = 0; i < inserted; ++i) {
                 for (ICraftingTask task : craftingTasks) {
                     if (inserted == 0) {
                         break;
@@ -567,18 +540,10 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                         inserted--;
                     }
                 }
-            }
+            }*/
         }
 
         return remainder;
-    }
-
-    private boolean onInserted(ItemStack stack, ICraftingTask task) {
-        if (task.getChild() != null) {
-            return onInserted(stack, task.getChild());
-        }
-
-        return task instanceof CraftingTaskProcessing && ((CraftingTaskProcessing) task).onInserted(stack);
     }
 
     @Override
@@ -708,26 +673,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 craftingTasksToRead.add(taskList.getCompoundTagAt(i));
             }
         }
-    }
-
-    public static ICraftingTask readCraftingTask(World world, int depth, NBTTagCompound tag) {
-       /* ItemStack stack = ItemStack.loadItemStackFromNBT(tag.getCompoundTag(CraftingTask.NBT_PATTERN_STACK));
-
-        if (stack != null && stack.getItem() instanceof ICraftingPatternProvider) {
-            TileEntity container = world.getTileEntity(BlockPos.fromLong(tag.getLong(CraftingTask.NBT_PATTERN_CONTAINER)));
-
-            if (container instanceof ICraftingPatternContainer) {
-                ICraftingPattern pattern = ((ICraftingPatternProvider) stack.getItem()).create(world, stack, (ICraftingPatternContainer) container);
-
-                ICraftingTaskFactory factory = RefinedStorageAPI.instance().getCraftingTaskRegistry().getFactory(tag.getString(CraftingTask.NBT_PATTERN_TYPE));
-
-                if (factory != null) {
-                    return factory.create(world, depth, tag, pattern);
-                }
-            }
-        }*/
-
-        return null;
     }
 
     @Override
