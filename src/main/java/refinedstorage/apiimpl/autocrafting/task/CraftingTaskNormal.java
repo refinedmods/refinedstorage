@@ -41,19 +41,12 @@ public class CraftingTaskNormal implements ICraftingTask {
 
     @Override
     public void onCancelled() {
-
     }
 
     private void calculate(IGroupedItemStorage storage, ICraftingPattern pattern, boolean basePattern) {
         for (int i = 0; i < quantity; ++i) {
             if (pattern.isProcessing()) {
-                IProcessable processable = new Processable(pattern);
-
-                for (int j = pattern.getInputs().size() - 1; j >= 0; --j) {
-                    processable.getToInsert().push(pattern.getInputs().get(j).copy());
-                }
-
-                toProcess.add(processable);
+                toProcess.add(new Processable(pattern));
             }
 
             for (ItemStack input : pattern.getInputs()) {
@@ -102,13 +95,13 @@ public class CraftingTaskNormal implements ICraftingTask {
 
     public boolean update() {
         for (IProcessable processable : toProcess) {
-            if (processable.getPattern().getContainer().getFacingInventory() != null && !processable.getToInsert().isEmpty()) {
-                ItemStack toInsert = NetworkUtils.extractItem(network, processable.getToInsert().peek(), 1);
+            if (processable.getPattern().getContainer().getFacingInventory() != null && processable.getStackToInsert() != null) {
+                ItemStack toInsert = NetworkUtils.extractItem(network, processable.getStackToInsert(), 1);
 
                 if (ItemHandlerHelper.insertItem(processable.getPattern().getContainer().getFacingInventory(), toInsert, true) == null) {
                     ItemHandlerHelper.insertItem(processable.getPattern().getContainer().getFacingInventory(), toInsert, false);
 
-                    processable.getToInsert().pop();
+                    processable.nextStack();
                 }
             }
         }
@@ -121,7 +114,7 @@ public class CraftingTaskNormal implements ICraftingTask {
             }
         }
 
-        if (toTake.isEmpty() && missing.isEmpty()) {
+        if (toTake.isEmpty() && missing.isEmpty() && toProcess.stream().allMatch(IProcessable::hasReceivedOutputs)) {
             for (ItemStack output : pattern.getOutputs()) {
                 // @TODO: Handle remainder
                 network.insertItem(output, output.stackSize, false);

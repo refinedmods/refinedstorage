@@ -23,6 +23,7 @@ import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
+import refinedstorage.api.autocrafting.task.IProcessable;
 import refinedstorage.api.network.*;
 import refinedstorage.api.network.grid.IFluidGridHandler;
 import refinedstorage.api.network.grid.IItemGridHandler;
@@ -530,17 +531,23 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         if (!simulate && inserted > 0) {
             itemStorage.add(ItemHandlerHelper.copyStackWithSize(stack, inserted), false);
 
-            /*for (int i = 0; i < inserted; ++i) {
+            for (int i = 0; i < inserted; ++i) {
                 for (ICraftingTask task : craftingTasks) {
                     if (inserted == 0) {
                         break;
                     }
 
-                    if (onInserted(stack, task)) {
-                        inserted--;
+                    for (IProcessable processable : task.getToProcess()) {
+                        if (inserted == 0) {
+                            break;
+                        }
+
+                        if (processable.onReceiveOutput(stack)) {
+                            inserted--;
+                        }
                     }
                 }
-            }*/
+            }
         }
 
         return remainder;

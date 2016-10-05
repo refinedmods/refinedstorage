@@ -3,16 +3,16 @@ package refinedstorage.apiimpl.autocrafting.task;
 import net.minecraft.item.ItemStack;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.task.IProcessable;
-
-import java.util.ArrayDeque;
-import java.util.Deque;
+import refinedstorage.api.storage.CompareUtils;
 
 public class Processable implements IProcessable {
     private ICraftingPattern pattern;
-    private Deque<ItemStack> toInsert = new ArrayDeque<>();
+    private int pos;
+    private boolean satisfied[];
 
     public Processable(ICraftingPattern pattern) {
         this.pattern = pattern;
+        this.satisfied = new boolean[pattern.getOutputs().size()];
     }
 
     @Override
@@ -21,15 +21,44 @@ public class Processable implements IProcessable {
     }
 
     @Override
-    public Deque<ItemStack> getToInsert() {
-        return toInsert;
+    public void nextStack() {
+        ++pos;
     }
 
     @Override
-    public String toString() {
-        return "ProcessablePattern{" +
-                "pattern=" + pattern +
-                ", toInsert=" + toInsert +
-                '}';
+    public ItemStack getStackToInsert() {
+        if (pos > pattern.getInputs().size() - 1) {
+            return null;
+        }
+
+        return pattern.getInputs().get(pos);
+    }
+
+    @Override
+    public boolean hasReceivedOutputs() {
+        for (boolean item : satisfied) {
+            if (!item) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean onReceiveOutput(ItemStack stack) {
+        for (int i = 0; i < pattern.getOutputs().size(); ++i) {
+            if (!satisfied[i]) {
+                ItemStack item = pattern.getOutputs().get(i);
+
+                if (CompareUtils.compareStackNoQuantity(stack, item)) {
+                    satisfied[i] = true;
+
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
