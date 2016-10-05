@@ -10,15 +10,32 @@ import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.api.storage.item.IGroupedItemStorage;
+import refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactoryProcessing;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
+import java.util.List;
 
 public class CraftingTask {
+    class ProcessablePattern {
+        private ICraftingPattern pattern;
+        private Deque<ItemStack> toInsert = new ArrayDeque<>();
+
+        @Override
+        public String toString() {
+            return "ProcessablePattern{" +
+                    "pattern=" + pattern +
+                    ", toInsert=" + toInsert +
+                    '}';
+        }
+    }
+
     private INetworkMaster network;
     private ICraftingPattern pattern;
     private int quantity;
     private Deque<ItemStack> toTake = new ArrayDeque<>();
+    private List<ProcessablePattern> toProcess = new ArrayList<>();
     private Multimap<Item, ItemStack> toCraft = ArrayListMultimap.create();
     private Multimap<Item, ItemStack> missing = ArrayListMultimap.create();
     private Multimap<Item, ItemStack> extras = ArrayListMultimap.create();
@@ -30,15 +47,27 @@ public class CraftingTask {
     }
 
     public void calculate() {
-        calculate(pattern, true);
+        calculate(network.getItemStorage().copy(), pattern, true);
     }
 
-    private void calculate(ICraftingPattern pattern, boolean basePattern) {
-        IGroupedItemStorage itemStorage = network.getItemStorage().copy();
-
+    private void calculate(IGroupedItemStorage storage, ICraftingPattern pattern, boolean basePattern) {
         for (int i = 0; i < quantity; ++i) {
+            boolean isProcessing = pattern.getId().equals(CraftingTaskFactoryProcessing.ID);
+
+            if (isProcessing) {
+                ProcessablePattern processable = new ProcessablePattern();
+
+                processable.pattern = pattern;
+
+                for (int j = pattern.getInputs().size() - 1; j >= 0; --j) {
+                    processable.toInsert.push(pattern.getInputs().get(j).copy());
+                }
+
+                toProcess.add(processable);
+            }
+
             for (ItemStack input : pattern.getInputs()) {
-                ItemStack inputInNetwork = itemStorage.get(input, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
+                ItemStack inputInNetwork = storage.get(input, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
 
                 if (inputInNetwork == null || inputInNetwork.stackSize == 0) {
                     if (getExtrasFor(input) != null) {
@@ -51,30 +80,49 @@ public class CraftingTask {
                                 addToCraft(output);
                             }
 
-                            calculate(inputPattern, false);
+                            calculate(storage, inputPattern, false);
                         } else {
                             addMissing(input);
                         }
                     }
                 } else {
-                    toTake.push(input);
+                    if (!isProcessing) {
+                        toTake.push(input);
+                    }
 
-                    itemStorage.remove(input);
+                    storage.remove(input);
                 }
             }
 
             if (!basePattern) {
-                pattern.getOutputs().stream().filter(o -> o.stackSize > 1).forEach(o -> addExtras(ItemHandlerHelper.copyStackWithSize(o, o.stackSize - 1)));
+                addExtras(pattern);
             }
         }
     }
 
     @Override
     public String toString() {
-        return "{quantity=" + quantity + ",toTake=" + toTake.toString() + ",toCraft=" + toCraft.toString() + ",missing=" + missing.toString() + "}";
+        return "\nCraftingTask{quantity=" + quantity +
+                "\n, toTake=" + toTake +
+                "\n, toCraft=" + toCraft +
+                "\n, toProcess=" + toProcess +
+                "\n, missing=" + missing +
+                '}';
     }
 
     public boolean update() {
+        for (ProcessablePattern processable : toProcess) {
+            if (processable.pattern.getContainer().getFacingInventory() != null && !processable.toInsert.isEmpty()) {
+                ItemStack toInsert = processable.toInsert.peek();
+
+                if (ItemHandlerHelper.insertItem(processable.pattern.getContainer().getFacingInventory(), toInsert, true) == null) {
+                    ItemHandlerHelper.insertItem(processable.pattern.getContainer().getFacingInventory(), toInsert, false);
+
+                    processable.toInsert.pop();
+                }
+            }
+        }
+
         if (!toTake.isEmpty()) {
             ItemStack took = NetworkUtils.extractItem(network, toTake.peek(), 1);
 
@@ -110,6 +158,10 @@ public class CraftingTask {
         }
 
         missing.put(stack.getItem(), stack.copy());
+    }
+
+    private void addExtras(ICraftingPattern pattern) {
+        pattern.getOutputs().stream().filter(o -> o.stackSize > 1).forEach(o -> addExtras(ItemHandlerHelper.copyStackWithSize(o, o.stackSize - 1)));
     }
 
     private void addExtras(ItemStack stack) {
