@@ -18,6 +18,8 @@ import refinedstorage.api.autocrafting.registry.ICraftingTaskFactory;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.storage.CompareUtils;
 
+import javax.annotation.Nullable;
+
 /**
  * Utilities for network manipulation.
  */
@@ -34,8 +36,8 @@ public final class NetworkUtils {
         return network.getPattern(stack, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
     }
 
-    public static ICraftingTask createCraftingTask(INetworkMaster network, ICraftingPattern pattern, int quantity) {
-        return RefinedStorageAPI.instance().getCraftingTaskRegistry().getFactory(pattern.getId()).create(network.getNetworkWorld(), network, pattern, quantity, null);
+    public static ICraftingTask createCraftingTask(INetworkMaster network, @Nullable ItemStack stack, ICraftingPattern pattern, int quantity) {
+        return RefinedStorageAPI.instance().getCraftingTaskRegistry().getFactory(pattern.getId()).create(network.getNetworkWorld(), network, stack, pattern, quantity, null);
     }
 
     public static boolean hasPattern(INetworkMaster network, ItemStack stack) {
@@ -69,7 +71,7 @@ public final class NetworkUtils {
             ICraftingPattern pattern = network.getPattern(stack, compare);
 
             if (pattern != null) {
-                network.addCraftingTask(createCraftingTask(network, pattern, 1));
+                network.addCraftingTask(createCraftingTask(network, stack, pattern, 1));
             }
         }
     }
@@ -86,7 +88,7 @@ public final class NetworkUtils {
                 ICraftingTaskFactory factory = RefinedStorageAPI.instance().getCraftingTaskRegistry().getFactory(tag.getString(ICraftingTask.NBT_PATTERN_ID));
 
                 if (factory != null) {
-                    return factory.create(world, network, pattern, tag.getInteger(ICraftingTask.NBT_QUANTITY), tag);
+                    return factory.create(world, network, null, pattern, tag.getInteger(ICraftingTask.NBT_QUANTITY), tag);
                 }
             }
         }

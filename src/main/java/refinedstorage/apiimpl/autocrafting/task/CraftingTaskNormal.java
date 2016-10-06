@@ -24,6 +24,7 @@ import java.util.List;
 
 public class CraftingTaskNormal implements ICraftingTask {
     private INetworkMaster network;
+    private ItemStack requested;
     private ICraftingPattern pattern;
     private int quantity;
     private Deque<ItemStack> toTake = new ArrayDeque<>();
@@ -32,58 +33,63 @@ public class CraftingTaskNormal implements ICraftingTask {
     private Multimap<Item, ItemStack> missing = ArrayListMultimap.create();
     private Multimap<Item, ItemStack> extras = ArrayListMultimap.create();
 
-    public CraftingTaskNormal(INetworkMaster network, ICraftingPattern pattern, int quantity) {
+    public CraftingTaskNormal(INetworkMaster network, ItemStack requested, ICraftingPattern pattern, int quantity) {
         this.network = network;
+        this.requested = requested;
         this.pattern = pattern;
         this.quantity = quantity;
     }
 
     public void calculate() {
-        calculate(network.getItemStorage().copy(), pattern, true);
+        int newQuantity = quantity;
+
+        while (newQuantity > 0) {
+            calculate(network.getItemStorage().copy(), pattern, true);
+
+            newQuantity -= requested == null ? newQuantity : pattern.getQuantityPerRequest(requested);
+        }
+    }
+
+    private void calculate(IGroupedItemStorage storage, ICraftingPattern pattern, boolean basePattern) {
+        if (pattern.isProcessing()) {
+            toProcess.add(new Processable(pattern));
+        }
+
+        for (ItemStack input : pattern.getInputs()) {
+            ItemStack inputInNetwork = storage.get(input, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
+
+            if (inputInNetwork == null || inputInNetwork.stackSize == 0) {
+                if (getExtrasFor(input) != null) {
+                    decrOrRemoveExtras(input);
+                } else {
+                    ICraftingPattern inputPattern = NetworkUtils.getPattern(network, input);
+
+                    if (inputPattern != null) {
+                        for (ItemStack output : inputPattern.getOutputs()) {
+                            addToCraft(output);
+                        }
+
+                        calculate(storage, inputPattern, false);
+                    } else {
+                        addMissing(input);
+                    }
+                }
+            } else {
+                if (!pattern.isProcessing()) {
+                    toTake.push(input);
+                }
+
+                storage.remove(input);
+            }
+        }
+
+        if (!basePattern) {
+            addExtras(pattern);
+        }
     }
 
     @Override
     public void onCancelled() {
-    }
-
-    private void calculate(IGroupedItemStorage storage, ICraftingPattern pattern, boolean basePattern) {
-        for (int i = 0; i < quantity; ++i) {
-            if (pattern.isProcessing()) {
-                toProcess.add(new Processable(pattern));
-            }
-
-            for (ItemStack input : pattern.getInputs()) {
-                ItemStack inputInNetwork = storage.get(input, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
-
-                if (inputInNetwork == null || inputInNetwork.stackSize == 0) {
-                    if (getExtrasFor(input) != null) {
-                        decrOrRemoveExtras(input);
-                    } else {
-                        ICraftingPattern inputPattern = NetworkUtils.getPattern(network, input);
-
-                        if (inputPattern != null) {
-                            for (ItemStack output : inputPattern.getOutputs()) {
-                                addToCraft(output);
-                            }
-
-                            calculate(storage, inputPattern, false);
-                        } else {
-                            addMissing(input);
-                        }
-                    }
-                } else {
-                    if (!pattern.isProcessing()) {
-                        toTake.push(input);
-                    }
-
-                    storage.remove(input);
-                }
-            }
-
-            if (!basePattern) {
-                addExtras(pattern);
-            }
-        }
     }
 
     @Override
@@ -173,6 +179,7 @@ public class CraftingTaskNormal implements ICraftingTask {
     public ICraftingPattern getPattern() {
         return pattern;
     }
+
 
     @Override
     public List<IProcessable> getToProcess() {

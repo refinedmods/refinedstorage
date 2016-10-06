@@ -123,7 +123,7 @@ public class ItemGridHandler implements IItemGridHandler {
         ItemStack stack = network.getItemStorage().get(hash);
 
         if (stack != null) {
-            CraftingTaskNormal task = new CraftingTaskNormal(network, NetworkUtils.getPattern(network, stack), quantity);
+            CraftingTaskNormal task = new CraftingTaskNormal(network, stack, NetworkUtils.getPattern(network, stack), quantity);
 
             task.calculate();
 
