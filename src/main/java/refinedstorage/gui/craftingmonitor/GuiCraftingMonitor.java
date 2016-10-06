@@ -1,13 +1,13 @@
-package refinedstorage.gui;
+package refinedstorage.gui.craftingmonitor;
 
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.container.ContainerCraftingMonitor;
+import refinedstorage.gui.GuiBase;
+import refinedstorage.gui.Scrollbar;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.network.MessageCraftingMonitorCancel;
-import refinedstorage.tile.ClientCraftingTask;
 import refinedstorage.tile.TileCraftingMonitor;
 
 import java.io.IOException;
@@ -56,12 +56,12 @@ public class GuiCraftingMonitor extends GuiBase {
         scrollbar.setEnabled(getRows() > VISIBLE_ROWS);
         scrollbar.setMaxOffset(getRows() - VISIBLE_ROWS);
 
-        if (itemSelected >= getTasks().size()) {
+        if (itemSelected >= getElements().size()) {
             itemSelected = -1;
         }
 
         cancelButton.enabled = itemSelected != -1;
-        cancelAllButton.enabled = getTasks().size() > 0;
+        cancelAllButton.enabled = getElements().size() > 0;
     }
 
     @Override
@@ -92,50 +92,15 @@ public class GuiCraftingMonitor extends GuiBase {
         itemSelectedY = -1;
 
         for (int i = 0; i < VISIBLE_ROWS; ++i) {
-            if (item < getTasks().size()) {
-                ClientCraftingTask task = getTasks().get(item);
+            if (item < getElements().size()) {
+                ICraftingMonitorElement element = getElements().get(item);
 
                 if (item == itemSelected) {
                     itemSelectedX = x;
                     itemSelectedY = y;
                 }
 
-                /*if (task.getDepth() > 0) {
-                    x += 16F - ((float) (task.getChildren() - task.getDepth()) / (float) task.getChildren() * 16F);
-                }*/
-
-                drawItem(x + 2, y + 1, task.getOutput());
-
-                float scale = 0.5f;
-
-                GlStateManager.pushMatrix();
-                GlStateManager.scale(scale, scale, 1);
-
-                drawString(calculateOffsetOnScale(x + 21, scale), calculateOffsetOnScale(y + 7, scale), task.getQuantity() + " " + task.getOutput().getDisplayName());
-
-                /*if (task.getProgress() != -1) {
-                    drawString(calculateOffsetOnScale(ox + ITEM_WIDTH - 15, scale), calculateOffsetOnScale(y + 7, scale), task.getProgress() + "%");
-                }*/
-
-                GlStateManager.popMatrix();
-
-                /*if (inBounds(x + 2, y + 1, 16, 16, mouseX, mouseY) && !task.getStatus().trim().equals("")) {
-                    lines = task.getStatus().split("\n");
-
-                    for (int j = 0; j < lines.length; ++j) {
-                        String line = lines[j];
-
-                        if (line.startsWith("T=")) {
-                            line = t(line.substring(2));
-                        } else if (line.startsWith("I=")) {
-                            line = TextFormatting.YELLOW + t(line.substring(2));
-                        } else if (line.startsWith("B=")) {
-                            line = TextFormatting.BLUE + t(line.substring(2));
-                        }
-
-                        lines[j] = line;
-                    }
-                }*/
+                element.draw(this, x, y);
 
                 x = ox;
                 y += ITEM_HEIGHT;
@@ -146,7 +111,7 @@ public class GuiCraftingMonitor extends GuiBase {
     }
 
     private int getRows() {
-        return getTasks().size();
+        return getElements().size();
     }
 
     @Override
@@ -154,8 +119,12 @@ public class GuiCraftingMonitor extends GuiBase {
         super.actionPerformed(button);
 
         if (button == cancelButton && itemSelected != -1) {
-            RefinedStorage.INSTANCE.network.sendToServer(new MessageCraftingMonitorCancel(craftingMonitor, itemSelected));
-        } else if (button == cancelAllButton && getTasks().size() > 0) {
+            ICraftingMonitorElement element = getElements().get(itemSelected);
+
+            if (element.getTaskId() != -1) {
+                RefinedStorage.INSTANCE.network.sendToServer(new MessageCraftingMonitorCancel(craftingMonitor, element.getTaskId()));
+            }
+        } else if (button == cancelAllButton && getElements().size() > 0) {
             RefinedStorage.INSTANCE.network.sendToServer(new MessageCraftingMonitorCancel(craftingMonitor, -1));
         }
     }
@@ -173,14 +142,14 @@ public class GuiCraftingMonitor extends GuiBase {
                 int ix = 8;
                 int iy = 20 + (i * ITEM_HEIGHT);
 
-                if (inBounds(ix, iy, ITEM_WIDTH, ITEM_HEIGHT, mouseX - guiLeft, mouseY - guiTop) && (item + i) < getTasks().size()) {
+                if (inBounds(ix, iy, ITEM_WIDTH, ITEM_HEIGHT, mouseX - guiLeft, mouseY - guiTop) && (item + i) < getElements().size()) {
                     itemSelected = item + i;
                 }
             }
         }
     }
 
-    private List<ClientCraftingTask> getTasks() {
-        return TileCraftingMonitor.TASKS.getValue();
+    private List<ICraftingMonitorElement> getElements() {
+        return TileCraftingMonitor.ELEMENTS.getValue();
     }
 }

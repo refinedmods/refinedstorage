@@ -1,6 +1,8 @@
 package refinedstorage.tile;
 
 import refinedstorage.RefinedStorage;
+import refinedstorage.gui.craftingmonitor.CraftingMonitorElementRoot;
+import refinedstorage.gui.craftingmonitor.ICraftingMonitorElement;
 import refinedstorage.tile.data.ITileDataProducer;
 import refinedstorage.tile.data.RefinedStorageSerializers;
 import refinedstorage.tile.data.TileDataParameter;
@@ -10,11 +12,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class TileCraftingMonitor extends TileNode {
-    public static final TileDataParameter<List<ClientCraftingTask>> TASKS = new TileDataParameter<>(RefinedStorageSerializers.CLIENT_CRAFTING_TASK_SERIALIZER, Collections.emptyList(), new ITileDataProducer<List<ClientCraftingTask>, TileCraftingMonitor>() {
+    public static final TileDataParameter<List<ICraftingMonitorElement>> ELEMENTS = new TileDataParameter<>(RefinedStorageSerializers.CLIENT_CRAFTING_TASK_SERIALIZER, Collections.emptyList(), new ITileDataProducer<List<ICraftingMonitorElement>, TileCraftingMonitor>() {
         @Override
-        public List<ClientCraftingTask> getValue(TileCraftingMonitor tile) {
+        public List<ICraftingMonitorElement> getValue(TileCraftingMonitor tile) {
             if (tile.connected) {
-                List<ClientCraftingTask> tasks = tile.network.getCraftingTasks().stream().map(t -> new ClientCraftingTask(
+                List<ICraftingMonitorElement> tasks = tile.network.getCraftingTasks().stream().map(t -> new CraftingMonitorElementRoot(
+                        tile.network.getCraftingTasks().indexOf(t),
                         t.getPattern().getOutputs().get(0),
                         t.getQuantity()
                 )).collect(Collectors.toList());
@@ -27,7 +30,7 @@ public class TileCraftingMonitor extends TileNode {
     });
 
     public TileCraftingMonitor() {
-        dataManager.addParameter(TASKS);
+        dataManager.addParameter(ELEMENTS);
     }
 
     @Override

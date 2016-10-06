@@ -295,7 +295,7 @@ public abstract class GuiBase extends GuiContainer {
         return guiTop;
     }
 
-    protected int calculateOffsetOnScale(int pos, float scale) {
+    public int calculateOffsetOnScale(int pos, float scale) {
         float multiplier = (pos / scale);
 
         return (int) multiplier;

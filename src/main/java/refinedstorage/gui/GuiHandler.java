@@ -9,6 +9,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import refinedstorage.RefinedStorageGui;
 import refinedstorage.container.*;
+import refinedstorage.gui.craftingmonitor.GuiCraftingMonitor;
 import refinedstorage.gui.grid.GuiGrid;
 import refinedstorage.tile.*;
 import refinedstorage.tile.externalstorage.TileExternalStorage;

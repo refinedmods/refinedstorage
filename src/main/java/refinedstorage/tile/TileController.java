@@ -322,7 +322,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     public void updateCraftingMonitors() {
         for (INetworkNode node : nodeGraph.all()) {
             if (node instanceof TileCraftingMonitor) {
-                ((TileCraftingMonitor) node).dataManager.sendParameterToWatchers(TileCraftingMonitor.TASKS);
+                ((TileCraftingMonitor) node).dataManager.sendParameterToWatchers(TileCraftingMonitor.ELEMENTS);
             }
         }
     }
