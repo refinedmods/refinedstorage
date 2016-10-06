@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import refinedstorage.gui.GuiBase;
 
-public class CraftingMonitorElementRoot implements ICraftingMonitorElement {
+public class CraftingMonitorElementRoot implements ICraftingMonitorElement<GuiBase> {
     public static final String ID = "root";
 
     private int id;

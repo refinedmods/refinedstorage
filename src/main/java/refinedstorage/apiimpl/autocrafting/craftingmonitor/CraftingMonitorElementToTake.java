@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import refinedstorage.gui.GuiBase;
 
-public class CraftingMonitorElementToTake implements ICraftingMonitorElement {
+public class CraftingMonitorElementToTake implements ICraftingMonitorElement<GuiBase> {
     public static final String ID = "to_take";
 
     private ItemStack toTake;
@@ -20,7 +20,7 @@ public class CraftingMonitorElementToTake implements ICraftingMonitorElement {
 
     @Override
     public void draw(GuiBase gui, int x, int y) {
-        x += 3;
+        x += 4;
 
         gui.drawItem(x + 2, y + 1, toTake);
 

@@ -175,21 +175,6 @@ public class CraftingTaskNormal implements ICraftingTask {
     }
 
     @Override
-    public Deque<ItemStack> getToTake() {
-        return toTake;
-    }
-
-    @Override
-    public Multimap<Item, ItemStack> getToCraft() {
-        return toCraft;
-    }
-
-    @Override
-    public Multimap<Item, ItemStack> getMissing() {
-        return missing;
-    }
-
-    @Override
     public List<IProcessable> getToProcess() {
         return toProcess;
     }

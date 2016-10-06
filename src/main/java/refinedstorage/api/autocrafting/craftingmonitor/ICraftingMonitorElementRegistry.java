@@ -5,9 +5,24 @@ import io.netty.buffer.ByteBuf;
 import javax.annotation.Nullable;
 import java.util.function.Function;
 
+/**
+ * This registry holds factories for crafting monitor elements (for deserialization from the network).
+ */
 public interface ICraftingMonitorElementRegistry {
+    /**
+     * Adds a factory to the registry.
+     *
+     * @param id      the id, as specified in {@link ICraftingMonitorElement#getTaskId()}
+     * @param factory the factory
+     */
     void add(String id, Function<ByteBuf, ICraftingMonitorElement> factory);
 
+    /**
+     * Returns a factory from the registry.
+     *
+     * @param id the id, as specified in {@link ICraftingMonitorElement#getTaskId()}
+     * @return the factory, or null if no factory was found
+     */
     @Nullable
     Function<ByteBuf, ICraftingMonitorElement> getFactory(String id);
 }
