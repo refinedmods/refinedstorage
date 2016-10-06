@@ -15,6 +15,7 @@ import refinedstorage.block.BlockStorage;
 import refinedstorage.block.EnumItemStorageType;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.tile.config.IComparable;
+import refinedstorage.tile.config.IExcessVoidable;
 import refinedstorage.tile.config.IFilterable;
 import refinedstorage.tile.config.IPrioritizable;
 import refinedstorage.tile.data.ITileDataProducer;
@@ -22,7 +23,7 @@ import refinedstorage.tile.data.TileDataParameter;
 
 import java.util.List;
 
-public class TileStorage extends TileNode implements IItemStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable {
+public class TileStorage extends TileNode implements IItemStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IExcessVoidable {
     public static final TileDataParameter<Integer> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
@@ -32,6 +33,7 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
             return ItemStorageNBT.getStoredFromNBT(tile.storageTag);
         }
     });
+    public static final TileDataParameter<Boolean> VOID_EXCESS = IExcessVoidable.createParameter();
 
     class ItemStorage extends ItemStorageNBT {
         public ItemStorage() {
@@ -49,7 +51,14 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
                 return ItemHandlerHelper.copyStackWithSize(stack, size);
             }
 
-            return super.insertItem(stack, size, simulate);
+            ItemStack result = super.insertItem(stack, size, simulate);
+
+            if(voidExcess) {
+                //Simulate should not matter as the items are voided anyway
+                return null;
+            }
+
+            return result;
         }
     }
 
@@ -58,6 +67,7 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
     private static final String NBT_PRIORITY = "Priority";
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
+    private static final String NBT_VOID_EXCESS = "VoidExcess";
 
     private ItemHandlerBasic filters = new ItemHandlerBasic(9, this);
 
@@ -70,12 +80,14 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
     private int priority = 0;
     private int compare = CompareUtils.COMPARE_NBT | CompareUtils.COMPARE_DAMAGE;
     private int mode = IFilterable.WHITELIST;
+    private boolean voidExcess = false;
 
     public TileStorage() {
         dataManager.addWatchedParameter(PRIORITY);
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(MODE);
         dataManager.addWatchedParameter(STORED);
+        dataManager.addWatchedParameter(VOID_EXCESS);
     }
 
     @Override
@@ -141,6 +153,10 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
         if (tag.hasKey(NBT_MODE)) {
             mode = tag.getInteger(NBT_MODE);
         }
+
+        if(tag.hasKey(NBT_VOID_EXCESS)) {
+            voidExcess = tag.getBoolean(NBT_VOID_EXCESS);
+        }
     }
 
     @Override
@@ -158,6 +174,7 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
         tag.setTag(NBT_STORAGE, storageTag);
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_MODE, mode);
+        tag.setBoolean(NBT_VOID_EXCESS, voidExcess);
 
         return tag;
     }
@@ -195,6 +212,18 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
     }
 
     @Override
+    public boolean getVoidExcess() {
+        return voidExcess;
+    }
+
+    @Override
+    public void setVoidExcess(boolean voidExcess) {
+        this.voidExcess = voidExcess;
+
+        markDirty();
+    }
+
+    @Override
     public String getGuiTitle() {
         return "block.refinedstorage:storage." + getType().getId() + ".name";
     }
@@ -223,6 +252,9 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
     public TileDataParameter<Integer> getPriorityParameter() {
         return PRIORITY;
     }
+
+    @Override
+    public TileDataParameter<Boolean> getVoidExcessParameter() { return VOID_EXCESS; }
 
     public NBTTagCompound getStorageTag() {
         return storageTag;

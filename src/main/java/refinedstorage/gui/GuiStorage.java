@@ -8,6 +8,7 @@ import refinedstorage.gui.sidebutton.SideButtonCompare;
 import refinedstorage.gui.sidebutton.SideButtonMode;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.gui.sidebutton.SideButtonType;
+import refinedstorage.gui.sidebutton.SideButtonVoidExcess;
 import refinedstorage.tile.IStorageGui;
 import refinedstorage.tile.data.TileDataManager;
 
@@ -52,6 +53,10 @@ public class GuiStorage extends GuiBase {
         if (gui.getCompareParameter() != null) {
             addSideButton(new SideButtonCompare(this, gui.getCompareParameter(), CompareUtils.COMPARE_DAMAGE));
             addSideButton(new SideButtonCompare(this, gui.getCompareParameter(), CompareUtils.COMPARE_NBT));
+        }
+
+        if(gui.getVoidExcessParameter() != null) {
+            addSideButton(new SideButtonVoidExcess(this, gui.getVoidExcessParameter()));
         }
 
         priorityField = new GuiTextField(0, fontRendererObj, x + 98 + 1, y + 54 + 1, 29, fontRendererObj.FONT_HEIGHT);

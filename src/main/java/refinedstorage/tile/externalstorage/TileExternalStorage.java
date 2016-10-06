@@ -306,6 +306,9 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
     }
 
     @Override
+    public TileDataParameter<Boolean> getVoidExcessParameter() { return null; }
+
+    @Override
     public int getStored() {
         return STORED.getValue();
     }
