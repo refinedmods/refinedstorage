@@ -9,6 +9,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -19,6 +20,8 @@ import refinedstorage.RefinedStorageBlocks;
 import refinedstorage.RefinedStorageItems;
 import refinedstorage.api.RefinedStorageAPI;
 import refinedstorage.api.solderer.SoldererRecipe;
+import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementRoot;
+import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementToTake;
 import refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactoryNormal;
 import refinedstorage.apiimpl.solderer.*;
 import refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
@@ -46,6 +49,9 @@ public class CommonProxy {
         }
 
         RefinedStorageAPI.instance().getCraftingTaskRegistry().addFactory(CraftingTaskFactoryNormal.ID, new CraftingTaskFactoryNormal());
+
+        RefinedStorageAPI.instance().getCraftingMonitorElementRegistry().add(CraftingMonitorElementRoot.ID, buf -> new CraftingMonitorElementRoot(buf.readInt(), ByteBufUtils.readItemStack(buf), buf.readInt()));
+        RefinedStorageAPI.instance().getCraftingMonitorElementRegistry().add(CraftingMonitorElementToTake.ID, buf -> new CraftingMonitorElementToTake(ByteBufUtils.readItemStack(buf), buf.readInt()));
 
         int id = 0;
 

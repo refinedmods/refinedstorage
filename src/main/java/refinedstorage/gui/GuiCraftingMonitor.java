@@ -1,11 +1,10 @@
-package refinedstorage.gui.craftingmonitor;
+package refinedstorage.gui;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
 import refinedstorage.RefinedStorage;
+import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import refinedstorage.container.ContainerCraftingMonitor;
-import refinedstorage.gui.GuiBase;
-import refinedstorage.gui.Scrollbar;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.network.MessageCraftingMonitorCancel;
 import refinedstorage.tile.TileCraftingMonitor;

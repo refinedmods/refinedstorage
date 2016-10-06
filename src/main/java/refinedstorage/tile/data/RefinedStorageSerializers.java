@@ -1,17 +1,20 @@
 package refinedstorage.tile.data;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import refinedstorage.gui.craftingmonitor.ICraftingMonitorElement;
+import refinedstorage.api.RefinedStorageAPI;
+import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import refinedstorage.tile.ClientNode;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public final class RefinedStorageSerializers {
     public static final DataSerializer<List<ClientNode>> CLIENT_NODE_SERIALIZER = new DataSerializer<List<ClientNode>>() {
@@ -45,13 +48,13 @@ public final class RefinedStorageSerializers {
         }
     };
 
-    public static final DataSerializer<List<ICraftingMonitorElement>> CLIENT_CRAFTING_TASK_SERIALIZER = new DataSerializer<List<ICraftingMonitorElement>>() {
+    public static final DataSerializer<List<ICraftingMonitorElement>> CRAFTING_MONITOR_ELEMENT_SERIALIZER = new DataSerializer<List<ICraftingMonitorElement>>() {
         @Override
-        public void write(PacketBuffer buf, List<ICraftingMonitorElement> tasks) {
-            buf.writeInt(tasks.size());
+        public void write(PacketBuffer buf, List<ICraftingMonitorElement> elements) {
+            buf.writeInt(elements.size());
 
-            for (ICraftingMonitorElement task : tasks) {
-                buf.writeInt(task.getType());
+            for (ICraftingMonitorElement task : elements) {
+                ByteBufUtils.writeUTF8String(buf, task.getId());
 
                 task.write(buf);
             }
@@ -59,19 +62,19 @@ public final class RefinedStorageSerializers {
 
         @Override
         public List<ICraftingMonitorElement> read(PacketBuffer buf) {
-            List<ICraftingMonitorElement> tasks = new ArrayList<>();
+            List<ICraftingMonitorElement> elements = new ArrayList<>();
 
             int size = buf.readInt();
 
             for (int i = 0; i < size; ++i) {
-                int type = buf.readInt();
+                Function<ByteBuf, ICraftingMonitorElement> factory = RefinedStorageAPI.instance().getCraftingMonitorElementRegistry().getFactory(ByteBufUtils.readUTF8String(buf));
 
-                if (ICraftingMonitorElement.REGISTRY.containsKey(type)) {
-                    tasks.add(ICraftingMonitorElement.REGISTRY.get(type).apply(buf));
+                if (factory != null) {
+                    elements.add(factory.apply(buf));
                 }
             }
 
-            return tasks;
+            return elements;
         }
 
         @Override

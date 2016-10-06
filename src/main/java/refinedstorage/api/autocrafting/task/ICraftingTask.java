@@ -5,6 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import refinedstorage.api.autocrafting.ICraftingPattern;
+import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 
 import java.util.Deque;
 import java.util.List;
@@ -24,6 +25,8 @@ public interface ICraftingTask {
     int getQuantity();
 
     NBTTagCompound writeToNBT(NBTTagCompound tag);
+
+    List<ICraftingMonitorElement> getCraftingMonitorElements();
 
     ICraftingPattern getPattern();
 

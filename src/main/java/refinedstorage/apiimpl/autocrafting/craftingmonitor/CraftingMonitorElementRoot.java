@@ -1,15 +1,14 @@
-package refinedstorage.gui.craftingmonitor;
+package refinedstorage.apiimpl.autocrafting.craftingmonitor;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import refinedstorage.gui.GuiBase;
 
 public class CraftingMonitorElementRoot implements ICraftingMonitorElement {
-    static {
-        REGISTRY.put(0, buf -> new CraftingMonitorElementRoot(buf.readInt(), ByteBufUtils.readItemStack(buf), buf.readInt()));
-    }
+    public static final String ID = "root";
 
     private int id;
     private ItemStack output;
@@ -41,8 +40,8 @@ public class CraftingMonitorElementRoot implements ICraftingMonitorElement {
     }
 
     @Override
-    public int getType() {
-        return 0;
+    public String getId() {
+        return ID;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package refinedstorage.api;
 
+import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementRegistry;
 import refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
 import refinedstorage.api.solderer.ISoldererRegistry;
 
@@ -20,4 +21,10 @@ public interface IAPI {
      */
     @Nonnull
     ICraftingTaskRegistry getCraftingTaskRegistry();
+
+    /**
+     * @return the crafting monitor element registry
+     */
+    @Nonnull
+    ICraftingMonitorElementRegistry getCraftingMonitorElementRegistry();
 }

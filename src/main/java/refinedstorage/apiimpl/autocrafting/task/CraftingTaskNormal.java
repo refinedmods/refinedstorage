@@ -7,12 +7,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.api.autocrafting.ICraftingPattern;
+import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.autocrafting.task.IProcessable;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.api.storage.item.IGroupedItemStorage;
+import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementRoot;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -139,6 +141,19 @@ public class CraftingTaskNormal implements ICraftingTask {
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         return tag;
+    }
+
+    @Override
+    public List<ICraftingMonitorElement> getCraftingMonitorElements() {
+        List<ICraftingMonitorElement> elements = new ArrayList<>();
+
+        elements.add(new CraftingMonitorElementRoot(
+                network.getCraftingTasks().indexOf(this),
+                pattern.getOutputs().get(0),
+                quantity
+        ));
+
+        return elements;
     }
 
     @Override
