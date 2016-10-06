@@ -6,6 +6,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RefinedStorage;
+import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.api.network.grid.IItemGridHandler;
@@ -162,30 +163,13 @@ public class ItemGridHandler implements IItemGridHandler {
     }
 
     @Override
-    public void onCraftingCancelRequested(int id, int depth) {
-        /*if (id >= 0 && id < network.getCraftingTasks().size()) {
-            ICraftingTask task = network.getCraftingTasks().get(id);
-
-            if (depth == 0) {
-                network.cancelCraftingTask(task);
-            } else {
-                for (int i = 0; i < depth - 1; ++i) {
-                    if (task == null) {
-                        break;
-                    }
-
-                    task = task.getChild();
-                }
-
-                if (task != null) {
-                    task.getChild().onCancelled(network);
-                    task.setChild(null);
-                }
-            }
+    public void onCraftingCancelRequested(int id) {
+        if (id >= 0 && id < network.getCraftingTasks().size()) {
+            network.cancelCraftingTask(network.getCraftingTasks().get(id));
         } else if (id == -1) {
             for (ICraftingTask task : network.getCraftingTasks()) {
                 network.cancelCraftingTask(task);
             }
-        }*/
+        }
     }
 }

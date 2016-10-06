@@ -6,6 +6,7 @@ import net.minecraft.network.datasync.DataSerializer;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+import refinedstorage.tile.ClientCraftingTask;
 import refinedstorage.tile.ClientNode;
 
 import java.io.IOException;
@@ -40,6 +41,36 @@ public final class RefinedStorageSerializers {
 
         @Override
         public DataParameter<List<ClientNode>> createKey(int id) {
+            return null;
+        }
+    };
+
+    public static final DataSerializer<List<ClientCraftingTask>> CLIENT_CRAFTING_TASK_SERIALIZER = new DataSerializer<List<ClientCraftingTask>>() {
+        @Override
+        public void write(PacketBuffer buf, List<ClientCraftingTask> tasks) {
+            buf.writeInt(tasks.size());
+
+            for (ClientCraftingTask task : tasks) {
+                ByteBufUtils.writeItemStack(buf, task.getOutput());
+                buf.writeInt(task.getQuantity());
+            }
+        }
+
+        @Override
+        public List<ClientCraftingTask> read(PacketBuffer buf) {
+            List<ClientCraftingTask> tasks = new ArrayList<>();
+
+            int size = buf.readInt();
+
+            for (int i = 0; i < size; ++i) {
+                tasks.add(new ClientCraftingTask(ByteBufUtils.readItemStack(buf), buf.readInt()));
+            }
+
+            return tasks;
+        }
+
+        @Override
+        public DataParameter<List<ClientCraftingTask>> createKey(int id) {
             return null;
         }
     };

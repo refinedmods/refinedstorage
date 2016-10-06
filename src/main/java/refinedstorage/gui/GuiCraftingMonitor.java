@@ -1,15 +1,16 @@
 package refinedstorage.gui;
 
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import refinedstorage.RefinedStorage;
 import refinedstorage.container.ContainerCraftingMonitor;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.network.MessageCraftingMonitorCancel;
+import refinedstorage.tile.ClientCraftingTask;
 import refinedstorage.tile.TileCraftingMonitor;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 public class GuiCraftingMonitor extends GuiBase {
@@ -46,8 +47,8 @@ public class GuiCraftingMonitor extends GuiBase {
         int cancelButtonWidth = 14 + fontRendererObj.getStringWidth(cancel);
         int cancelAllButtonWidth = 14 + fontRendererObj.getStringWidth(cancelAll);
 
-        cancelButton = addButton(x + 7, y + 114, cancelButtonWidth, 20, cancel, false);
-        cancelAllButton = addButton(x + 7 + cancelButtonWidth + 4, y + 114, cancelAllButtonWidth, 20, cancelAll, false);
+        cancelButton = addButton(x + 7, y + 113, cancelButtonWidth, 20, cancel, false);
+        cancelAllButton = addButton(x + 7 + cancelButtonWidth + 4, y + 113, cancelAllButtonWidth, 20, cancelAll, false);
     }
 
     @Override
@@ -83,8 +84,6 @@ public class GuiCraftingMonitor extends GuiBase {
 
         RenderHelper.enableGUIStandardItemLighting();
 
-        String[] lines = null;
-
         int ox = 8;
         int x = ox;
         int y = 20;
@@ -92,7 +91,7 @@ public class GuiCraftingMonitor extends GuiBase {
         itemSelectedX = -1;
         itemSelectedY = -1;
 
-        /*for (int i = 0; i < VISIBLE_ROWS; ++i) {
+        for (int i = 0; i < VISIBLE_ROWS; ++i) {
             if (item < getTasks().size()) {
                 ClientCraftingTask task = getTasks().get(item);
 
@@ -101,9 +100,9 @@ public class GuiCraftingMonitor extends GuiBase {
                     itemSelectedY = y;
                 }
 
-                if (task.getDepth() > 0) {
+                /*if (task.getDepth() > 0) {
                     x += 16F - ((float) (task.getChildren() - task.getDepth()) / (float) task.getChildren() * 16F);
-                }
+                }*/
 
                 drawItem(x + 2, y + 1, task.getOutput());
 
@@ -112,15 +111,15 @@ public class GuiCraftingMonitor extends GuiBase {
                 GlStateManager.pushMatrix();
                 GlStateManager.scale(scale, scale, 1);
 
-                drawString(calculateOffsetOnScale(x + 21, scale), calculateOffsetOnScale(y + 7, scale), task.getOutput().getDisplayName());
+                drawString(calculateOffsetOnScale(x + 21, scale), calculateOffsetOnScale(y + 7, scale), task.getQuantity() + " " + task.getOutput().getDisplayName());
 
-                if (task.getProgress() != -1) {
+                /*if (task.getProgress() != -1) {
                     drawString(calculateOffsetOnScale(ox + ITEM_WIDTH - 15, scale), calculateOffsetOnScale(y + 7, scale), task.getProgress() + "%");
-                }
+                }*/
 
                 GlStateManager.popMatrix();
 
-                if (inBounds(x + 2, y + 1, 16, 16, mouseX, mouseY) && !task.getStatus().trim().equals("")) {
+                /*if (inBounds(x + 2, y + 1, 16, 16, mouseX, mouseY) && !task.getStatus().trim().equals("")) {
                     lines = task.getStatus().split("\n");
 
                     for (int j = 0; j < lines.length; ++j) {
@@ -136,7 +135,7 @@ public class GuiCraftingMonitor extends GuiBase {
 
                         lines[j] = line;
                     }
-                }
+                }*/
 
                 x = ox;
                 y += ITEM_HEIGHT;
@@ -144,10 +143,6 @@ public class GuiCraftingMonitor extends GuiBase {
 
             item++;
         }
-
-        if (lines != null) {
-            drawTooltip(mouseX, mouseY, Arrays.asList(lines));
-        }*/
     }
 
     private int getRows() {
@@ -159,11 +154,9 @@ public class GuiCraftingMonitor extends GuiBase {
         super.actionPerformed(button);
 
         if (button == cancelButton && itemSelected != -1) {
-            /*ClientCraftingTask task = getTasks().get(itemSelected);
-
-            RefinedStorage.INSTANCE.network.sendToServer(new MessageCraftingMonitorCancel(craftingMonitor, task.getId(), task.getDepth()));*/
+            RefinedStorage.INSTANCE.network.sendToServer(new MessageCraftingMonitorCancel(craftingMonitor, itemSelected));
         } else if (button == cancelAllButton && getTasks().size() > 0) {
-            RefinedStorage.INSTANCE.network.sendToServer(new MessageCraftingMonitorCancel(craftingMonitor, -1, 0));
+            RefinedStorage.INSTANCE.network.sendToServer(new MessageCraftingMonitorCancel(craftingMonitor, -1));
         }
     }
 
@@ -187,7 +180,7 @@ public class GuiCraftingMonitor extends GuiBase {
         }
     }
 
-    private List<Integer> getTasks() {
-        return Collections.emptyList();
+    private List<ClientCraftingTask> getTasks() {
+        return TileCraftingMonitor.TASKS.getValue();
     }
 }
