@@ -20,6 +20,8 @@ public class CraftingMonitorElementToTake implements ICraftingMonitorElement {
 
     @Override
     public void draw(GuiBase gui, int x, int y) {
+        x += 3;
+
         gui.drawItem(x + 2, y + 1, toTake);
 
         float scale = 0.5f;

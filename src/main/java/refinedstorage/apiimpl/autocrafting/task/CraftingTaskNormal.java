@@ -15,6 +15,7 @@ import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.api.storage.item.IGroupedItemStorage;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementRoot;
+import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementToTake;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -153,6 +154,18 @@ public class CraftingTaskNormal implements ICraftingTask {
                 quantity
         ));
 
+        if (!toTake.isEmpty()) {
+            Multimap<Item, ItemStack> toTake = ArrayListMultimap.create();
+
+            for (ItemStack stack : new ArrayList<>(this.toTake)) {
+                add(toTake, stack);
+            }
+
+            for (ItemStack stack : toTake.values()) {
+                elements.add(new CraftingMonitorElementToTake(stack, stack.stackSize));
+            }
+        }
+
         return elements;
     }
 
@@ -182,7 +195,15 @@ public class CraftingTaskNormal implements ICraftingTask {
     }
 
     private void addMissing(ItemStack stack) {
-        for (ItemStack m : missing.get(stack.getItem())) {
+        add(missing, stack);
+    }
+
+    private void addToCraft(ItemStack stack) {
+        add(toCraft, stack);
+    }
+
+    private void add(Multimap<Item, ItemStack> map, ItemStack stack) {
+        for (ItemStack m : map.get(stack.getItem())) {
             if (CompareUtils.compareStackNoQuantity(m, stack)) {
                 m.stackSize += stack.stackSize;
 
@@ -190,7 +211,7 @@ public class CraftingTaskNormal implements ICraftingTask {
             }
         }
 
-        missing.put(stack.getItem(), stack.copy());
+        map.put(stack.getItem(), stack.copy());
     }
 
     private void addExtras(ICraftingPattern pattern) {
@@ -225,17 +246,5 @@ public class CraftingTaskNormal implements ICraftingTask {
         if (extras.stackSize == 0) {
             this.extras.remove(extras.getItem(), extras);
         }
-    }
-
-    private void addToCraft(ItemStack stack) {
-        for (ItemStack m : toCraft.get(stack.getItem())) {
-            if (CompareUtils.compareStackNoQuantity(m, stack)) {
-                m.stackSize += stack.stackSize;
-
-                return;
-            }
-        }
-
-        toCraft.put(stack.getItem(), stack.copy());
     }
 }

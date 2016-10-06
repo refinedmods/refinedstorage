@@ -275,7 +275,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 while (craftingTaskIterator.hasNext()) {
                     ICraftingTask task = craftingTaskIterator.next();
 
-                    if (task.update()) {
+                    ICraftingPatternContainer container = task.getPattern().getContainer();
+
+                    if (container != null && ticks % container.getSpeed() == 0 && task.update()) {
                         craftingTaskIterator.remove();
 
                         craftingTasksChanged = true;
