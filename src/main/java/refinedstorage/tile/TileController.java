@@ -528,14 +528,23 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 ((ItemStorageExternal) storage).updateCacheForcefully();
             }
 
-            if (remainder == null) {
+            if (remainder == null || remainder.stackSize < 0) {
                 break;
             } else {
                 size = remainder.stackSize;
             }
         }
 
-        int inserted = remainder != null ? (orginalSize - remainder.stackSize) : orginalSize;
+        //If the stack size of the remainder is negative, it means of the original size abs(remainder.stackSize) items have been voided
+        int inserted;
+        if (remainder == null) {
+            inserted = orginalSize;
+        } else if (remainder.stackSize < 0) {
+            inserted = orginalSize + remainder.stackSize;
+            remainder = null;
+        } else {
+            inserted = orginalSize - remainder.stackSize;
+        }
 
         if (!simulate && inserted > 0) {
             itemStorage.add(ItemHandlerHelper.copyStackWithSize(stack, inserted), false);
