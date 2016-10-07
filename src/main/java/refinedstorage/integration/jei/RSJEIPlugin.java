@@ -9,8 +9,8 @@ import refinedstorage.RSBlocks;
 import refinedstorage.container.ContainerSolderer;
 
 @JEIPlugin
-public class RefinedStorageJEIPlugin extends BlankModPlugin {
-    public static RefinedStorageJEIPlugin INSTANCE;
+public class RSJEIPlugin extends BlankModPlugin {
+    public static RSJEIPlugin INSTANCE;
 
     private IJeiRuntime runtime;
 

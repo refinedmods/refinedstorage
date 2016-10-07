@@ -17,7 +17,7 @@ import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.IComparable;
 import refinedstorage.tile.data.ITileDataProducer;
-import refinedstorage.tile.data.RefinedStorageSerializers;
+import refinedstorage.tile.data.RSSerializers;
 import refinedstorage.tile.data.TileDataParameter;
 
 public class TileFluidInterface extends TileNode implements IComparable {
@@ -25,14 +25,14 @@ public class TileFluidInterface extends TileNode implements IComparable {
 
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
 
-    public static final TileDataParameter<FluidStack> TANK_IN = new TileDataParameter<>(RefinedStorageSerializers.FLUID_STACK_SERIALIZER, null, new ITileDataProducer<FluidStack, TileFluidInterface>() {
+    public static final TileDataParameter<FluidStack> TANK_IN = new TileDataParameter<>(RSSerializers.FLUID_STACK_SERIALIZER, null, new ITileDataProducer<FluidStack, TileFluidInterface>() {
         @Override
         public FluidStack getValue(TileFluidInterface tile) {
             return tile.tankIn.getFluid();
         }
     });
 
-    public static final TileDataParameter<FluidStack> TANK_OUT = new TileDataParameter<>(RefinedStorageSerializers.FLUID_STACK_SERIALIZER, null, new ITileDataProducer<FluidStack, TileFluidInterface>() {
+    public static final TileDataParameter<FluidStack> TANK_OUT = new TileDataParameter<>(RSSerializers.FLUID_STACK_SERIALIZER, null, new ITileDataProducer<FluidStack, TileFluidInterface>() {
         @Override
         public FluidStack getValue(TileFluidInterface tile) {
             return tile.tankOut.getFluid();

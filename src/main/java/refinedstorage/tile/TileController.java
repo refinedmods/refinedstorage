@@ -57,7 +57,7 @@ import refinedstorage.network.MessageGridItemUpdate;
 import refinedstorage.tile.config.IRedstoneConfigurable;
 import refinedstorage.tile.config.RedstoneMode;
 import refinedstorage.tile.data.ITileDataProducer;
-import refinedstorage.tile.data.RefinedStorageSerializers;
+import refinedstorage.tile.data.RSSerializers;
 import refinedstorage.tile.data.TileDataParameter;
 import refinedstorage.tile.externalstorage.FluidStorageExternal;
 import refinedstorage.tile.externalstorage.ItemStorageExternal;
@@ -91,7 +91,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         }
     });
 
-    public static final TileDataParameter<List<ClientNode>> NODES = new TileDataParameter<>(RefinedStorageSerializers.CLIENT_NODE_SERIALIZER, new ArrayList<>(), new ITileDataProducer<List<ClientNode>, TileController>() {
+    public static final TileDataParameter<List<ClientNode>> NODES = new TileDataParameter<>(RSSerializers.CLIENT_NODE_SERIALIZER, new ArrayList<>(), new ITileDataProducer<List<ClientNode>, TileController>() {
         @Override
         public List<ClientNode> getValue(TileController tile) {
             List<ClientNode> nodes = new ArrayList<>();

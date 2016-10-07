@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-public final class RefinedStorageSerializers {
+public final class RSSerializers {
     public static final DataSerializer<List<ClientNode>> CLIENT_NODE_SERIALIZER = new DataSerializer<List<ClientNode>>() {
         @Override
         public void write(PacketBuffer buf, List<ClientNode> nodes) {

@@ -3,7 +3,7 @@ package refinedstorage.tile;
 import refinedstorage.RS;
 import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import refinedstorage.tile.data.ITileDataProducer;
-import refinedstorage.tile.data.RefinedStorageSerializers;
+import refinedstorage.tile.data.RSSerializers;
 import refinedstorage.tile.data.TileDataParameter;
 
 import java.util.Collections;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class TileCraftingMonitor extends TileNode {
-    public static final TileDataParameter<List<ICraftingMonitorElement>> ELEMENTS = new TileDataParameter<>(RefinedStorageSerializers.CRAFTING_MONITOR_ELEMENT_SERIALIZER, Collections.emptyList(), new ITileDataProducer<List<ICraftingMonitorElement>, TileCraftingMonitor>() {
+    public static final TileDataParameter<List<ICraftingMonitorElement>> ELEMENTS = new TileDataParameter<>(RSSerializers.CRAFTING_MONITOR_ELEMENT_SERIALIZER, Collections.emptyList(), new ITileDataProducer<List<ICraftingMonitorElement>, TileCraftingMonitor>() {
         @Override
         public List<ICraftingMonitorElement> getValue(TileCraftingMonitor tile) {
             if (tile.connected) {
