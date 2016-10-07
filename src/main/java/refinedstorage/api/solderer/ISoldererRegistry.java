@@ -1,5 +1,6 @@
 package refinedstorage.api.solderer;
 
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
@@ -30,4 +31,15 @@ public interface ISoldererRegistry {
      * @return a list with all the solderer recipes
      */
     List<ISoldererRecipe> getRecipes();
+
+    /**
+     * Creates a simple solderer recipe.
+     *
+     * @param result   the result
+     * @param duration the duration in ticks
+     * @param rows     the rows of this recipe, has to be 3 rows (null for an empty row)
+     * @return a solderer recipe
+     */
+    @Nonnull
+    ISoldererRecipe createSimpleRecipe(@Nonnull ItemStack result, int duration, ItemStack... rows);
 }

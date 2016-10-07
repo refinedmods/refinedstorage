@@ -10,6 +10,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.util.IComparer;
 
+// @TODO: Move to RSUtils
 public final class FluidUtils {
     public static final ItemStack EMPTY_BUCKET = new ItemStack(Items.BUCKET);
 

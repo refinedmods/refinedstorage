@@ -19,7 +19,6 @@ import refinedstorage.RS;
 import refinedstorage.RSBlocks;
 import refinedstorage.RSItems;
 import refinedstorage.api.RSAPI;
-import refinedstorage.api.solderer.SoldererRecipe;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementRoot;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementToTake;
 import refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactoryNormal;
@@ -216,7 +215,7 @@ public class CommonProxy {
         );
 
         // Disk Drive
-        RSAPI.instance().getSoldererRegistry().addRecipe(new SoldererRecipe(
+        RSAPI.instance().getSoldererRegistry().addRecipe(RSAPI.instance().getSoldererRegistry().createSimpleRecipe(
             new ItemStack(RSBlocks.DISK_DRIVE),
             500,
             new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
@@ -258,7 +257,7 @@ public class CommonProxy {
         );
 
         // Crafting Grid
-        RSAPI.instance().getSoldererRegistry().addRecipe(new SoldererRecipe(
+        RSAPI.instance().getSoldererRegistry().addRecipe(RSAPI.instance().getSoldererRegistry().createSimpleRecipe(
             new ItemStack(RSBlocks.GRID, 1, EnumGridType.CRAFTING.getId()),
             500,
             new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
@@ -267,7 +266,7 @@ public class CommonProxy {
         ));
 
         // Pattern Grid
-        RSAPI.instance().getSoldererRegistry().addRecipe(new SoldererRecipe(
+        RSAPI.instance().getSoldererRegistry().addRecipe(RSAPI.instance().getSoldererRegistry().createSimpleRecipe(
             new ItemStack(RSBlocks.GRID, 1, EnumGridType.PATTERN.getId()),
             500,
             new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
@@ -276,7 +275,7 @@ public class CommonProxy {
         ));
 
         // Fluid Grid
-        RSAPI.instance().getSoldererRegistry().addRecipe(new SoldererRecipe(
+        RSAPI.instance().getSoldererRegistry().addRecipe(RSAPI.instance().getSoldererRegistry().createSimpleRecipe(
             new ItemStack(RSBlocks.GRID, 1, EnumGridType.FLUID.getId()),
             500,
             new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
@@ -570,7 +569,7 @@ public class CommonProxy {
         ));
 
         // Interface
-        RSAPI.instance().getSoldererRegistry().addRecipe(new SoldererRecipe(
+        RSAPI.instance().getSoldererRegistry().addRecipe(RSAPI.instance().getSoldererRegistry().createSimpleRecipe(
             new ItemStack(RSBlocks.INTERFACE),
             200,
             new ItemStack(RSBlocks.IMPORTER),
@@ -579,7 +578,7 @@ public class CommonProxy {
         ));
 
         // Fluid Interface
-        RSAPI.instance().getSoldererRegistry().addRecipe(new SoldererRecipe(
+        RSAPI.instance().getSoldererRegistry().addRecipe(RSAPI.instance().getSoldererRegistry().createSimpleRecipe(
             new ItemStack(RSBlocks.FLUID_INTERFACE),
             200,
             new ItemStack(Items.BUCKET),

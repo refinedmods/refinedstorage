@@ -51,4 +51,31 @@ public class SoldererRegistry implements ISoldererRegistry {
     public List<ISoldererRecipe> getRecipes() {
         return recipes;
     }
+
+    @Nonnull
+    @Override
+    public ISoldererRecipe createSimpleRecipe(@Nonnull ItemStack result, int duration, ItemStack... rows) {
+        if (rows.length != 3) {
+            throw new IllegalArgumentException("Solderer recipe expects 3 rows, got " + rows.length + " rows");
+        }
+
+        return new ISoldererRecipe() {
+            @Nullable
+            @Override
+            public ItemStack getRow(int row) {
+                return rows[row];
+            }
+
+            @Nonnull
+            @Override
+            public ItemStack getResult() {
+                return result;
+            }
+
+            @Override
+            public int getDuration() {
+                return duration;
+            }
+        };
+    }
 }
