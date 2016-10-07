@@ -55,7 +55,7 @@ public class GuiStorage extends GuiBase {
             addSideButton(new SideButtonCompare(this, gui.getCompareParameter(), IComparer.COMPARE_NBT));
         }
 
-        if(gui.getVoidExcessParameter() != null) {
+        if (gui.getVoidExcessParameter() != null) {
             addSideButton(new SideButtonVoidExcess(this, gui.getVoidExcessParameter()));
         }
 

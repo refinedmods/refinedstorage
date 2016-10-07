@@ -16,7 +16,7 @@ public class SideButtonVoidExcess extends SideButton {
 
     @Override
     public String getTooltip() {
-        return TextFormatting.LIGHT_PURPLE + gui.t("sidebutton.refinedstorage:void_excess.mode") + TextFormatting.RESET + "\n" + gui.t("sidebutton.refinedstorage:void_excess.mode." + (parameter.getValue() ? "yes" : "no"));
+        return TextFormatting.LIGHT_PURPLE + gui.t("sidebutton.refinedstorage:void_excess.mode") + TextFormatting.RESET + "\n" + gui.t(parameter.getValue() ? "gui.yes" : "gui.no");
     }
 
     @Override

@@ -537,9 +537,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
         //If the stack size of the remainder is negative, it means of the original size abs(remainder.stackSize) items have been voided
         int inserted;
-        if(remainder == null) {
+        if (remainder == null) {
             inserted = orginalSize;
-        } else if(remainder.stackSize < 0) {
+        } else if (remainder.stackSize < 0) {
             inserted = orginalSize + remainder.stackSize;
             remainder = null;
         } else {
