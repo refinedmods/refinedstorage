@@ -19,6 +19,8 @@ public interface IItemStackList {
 
     void clear();
 
+    boolean isEmpty();
+
     @Nonnull
     Collection<ItemStack> getStacks();
 

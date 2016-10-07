@@ -70,6 +70,11 @@ public class ItemStackList implements IItemStackList {
         stacks.clear();
     }
 
+    @Override
+    public boolean isEmpty() {
+        return stacks.isEmpty();
+    }
+
     @Nonnull
     @Override
     public Collection<ItemStack> getStacks() {

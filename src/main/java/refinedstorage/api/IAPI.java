@@ -30,7 +30,7 @@ public interface IAPI {
     ICraftingMonitorElementRegistry getCraftingMonitorElementRegistry();
 
     /**
-     * @return a empty fast item stack list
+     * @return an empty item stack list
      */
     @Nonnull
     IItemStackList createItemStackList();

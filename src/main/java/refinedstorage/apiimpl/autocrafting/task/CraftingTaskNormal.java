@@ -1,11 +1,9 @@
 package refinedstorage.apiimpl.autocrafting.task;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.items.ItemHandlerHelper;
+import refinedstorage.api.RefinedStorageAPI;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
@@ -29,9 +27,9 @@ public class CraftingTaskNormal implements ICraftingTask {
     private int quantity;
     private Deque<ItemStack> toTake = new ArrayDeque<>();
     private List<IProcessable> toProcess = new ArrayList<>();
-    private Multimap<Item, ItemStack> toCraft = ArrayListMultimap.create();
-    private Multimap<Item, ItemStack> missing = ArrayListMultimap.create();
-    private Multimap<Item, ItemStack> extras = ArrayListMultimap.create();
+    private IItemStackList toCraft = RefinedStorageAPI.instance().createItemStackList();
+    private IItemStackList missing = RefinedStorageAPI.instance().createItemStackList();
+    private IItemStackList extras = RefinedStorageAPI.instance().createItemStackList();
 
     public CraftingTaskNormal(INetworkMaster network, ItemStack requested, ICraftingPattern pattern, int quantity) {
         this.network = network;
@@ -61,19 +59,19 @@ public class CraftingTaskNormal implements ICraftingTask {
             ItemStack inputInNetwork = list.get(input, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
 
             if (inputInNetwork == null || inputInNetwork.stackSize == 0) {
-                if (getExtrasFor(input) != null) {
+                if (extras.get(input, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT) != null) {
                     decrOrRemoveExtras(input);
                 } else {
                     ICraftingPattern inputPattern = NetworkUtils.getPattern(network, input);
 
                     if (inputPattern != null) {
                         for (ItemStack output : inputPattern.getOutputs()) {
-                            addToCraft(output);
+                            toCraft.add(output);
                         }
 
                         calculate(list, inputPattern, false);
                     } else {
-                        addMissing(input);
+                        missing.add(input);
                     }
                 }
             } else {
@@ -163,13 +161,13 @@ public class CraftingTaskNormal implements ICraftingTask {
         ));
 
         if (!toTake.isEmpty()) {
-            Multimap<Item, ItemStack> toTake = ArrayListMultimap.create();
+            IItemStackList toTake = RefinedStorageAPI.instance().createItemStackList();
 
             for (ItemStack stack : new ArrayList<>(this.toTake)) {
-                add(toTake, stack);
+                toTake.add(stack);
             }
 
-            for (ItemStack stack : toTake.values()) {
+            for (ItemStack stack : toTake.getStacks()) {
                 elements.add(new CraftingMonitorElementToTake(stack, stack.stackSize));
             }
         }
@@ -188,57 +186,13 @@ public class CraftingTaskNormal implements ICraftingTask {
         return toProcess;
     }
 
-    private void addMissing(ItemStack stack) {
-        add(missing, stack);
-    }
-
-    private void addToCraft(ItemStack stack) {
-        add(toCraft, stack);
-    }
-
-    private void add(Multimap<Item, ItemStack> map, ItemStack stack) {
-        for (ItemStack m : map.get(stack.getItem())) {
-            if (CompareUtils.compareStackNoQuantity(m, stack)) {
-                m.stackSize += stack.stackSize;
-
-                return;
-            }
-        }
-
-        map.put(stack.getItem(), stack.copy());
-    }
-
     private void addExtras(ICraftingPattern pattern) {
-        pattern.getOutputs().stream().filter(o -> o.stackSize > 1).forEach(o -> addExtras(ItemHandlerHelper.copyStackWithSize(o, o.stackSize - 1)));
-    }
-
-    private void addExtras(ItemStack stack) {
-        ItemStack extras = getExtrasFor(stack);
-
-        if (extras != null) {
-            extras.stackSize += stack.stackSize;
-        } else {
-            this.extras.put(stack.getItem(), stack.copy());
-        }
-    }
-
-    private ItemStack getExtrasFor(ItemStack stack) {
-        for (ItemStack m : extras.get(stack.getItem())) {
-            if (CompareUtils.compareStackNoQuantity(m, stack)) {
-                return m;
-            }
-        }
-
-        return null;
+        pattern.getOutputs().stream()
+                .filter(o -> o.stackSize > 1)
+                .forEach(o -> extras.add(ItemHandlerHelper.copyStackWithSize(o, o.stackSize - 1)));
     }
 
     private void decrOrRemoveExtras(ItemStack stack) {
-        ItemStack extras = getExtrasFor(stack);
-
-        extras.stackSize--;
-
-        if (extras.stackSize == 0) {
-            this.extras.remove(extras.getItem(), extras);
-        }
+        extras.remove(ItemHandlerHelper.copyStackWithSize(stack, 1), true);
     }
 }
