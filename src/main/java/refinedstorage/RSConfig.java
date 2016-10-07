@@ -11,7 +11,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class RefinedStorageConfig {
+public final class RSConfig {
     private Configuration config;
 
     //region Energy
@@ -80,7 +80,7 @@ public final class RefinedStorageConfig {
     private static final String MISC = "misc";
     //endregion
 
-    public RefinedStorageConfig(File configFile) {
+    public RSConfig(File configFile) {
         config = new Configuration(configFile);
 
         MinecraftForge.EVENT_BUS.register(this);
@@ -94,7 +94,7 @@ public final class RefinedStorageConfig {
 
     @SubscribeEvent
     public void onConfigChangedEvent(ConfigChangedEvent.OnConfigChangedEvent event) {
-        if (event.getModID().equalsIgnoreCase(RefinedStorage.ID)) {
+        if (event.getModID().equalsIgnoreCase(RS.ID)) {
             loadConfig();
         }
     }

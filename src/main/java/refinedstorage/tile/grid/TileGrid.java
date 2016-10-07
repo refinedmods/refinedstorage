@@ -13,13 +13,12 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.items.wrapper.InvWrapper;
-import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageBlocks;
-import refinedstorage.RefinedStorageItems;
-import refinedstorage.api.network.NetworkUtils;
+import refinedstorage.RS;
+import refinedstorage.RSBlocks;
+import refinedstorage.RSItems;
+import refinedstorage.api.RSAPI;
 import refinedstorage.api.network.grid.IFluidGridHandler;
 import refinedstorage.api.network.grid.IItemGridHandler;
-import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.block.BlockGrid;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
@@ -141,7 +140,7 @@ public class TileGrid extends TileNode implements IGrid {
     private InventoryCrafting matrix = new InventoryCrafting(craftingContainer, 3, 3);
     private InventoryCraftResult result = new InventoryCraftResult();
 
-    private ItemHandlerBasic patterns = new ItemHandlerBasic(2, this, new ItemValidatorBasic(RefinedStorageItems.PATTERN));
+    private ItemHandlerBasic patterns = new ItemHandlerBasic(2, this, new ItemValidatorBasic(RSItems.PATTERN));
     private List<GridFilteredItem> filteredItems = new ArrayList<>();
     private ItemHandlerGridFilterInGrid filter = new ItemHandlerGridFilterInGrid(filteredItems);
 
@@ -163,13 +162,13 @@ public class TileGrid extends TileNode implements IGrid {
     public int getEnergyUsage() {
         switch (getType()) {
             case NORMAL:
-                return RefinedStorage.INSTANCE.config.gridUsage;
+                return RS.INSTANCE.config.gridUsage;
             case CRAFTING:
-                return RefinedStorage.INSTANCE.config.craftingGridUsage;
+                return RS.INSTANCE.config.craftingGridUsage;
             case PATTERN:
-                return RefinedStorage.INSTANCE.config.patternGridUsage;
+                return RS.INSTANCE.config.patternGridUsage;
             case FLUID:
-                return RefinedStorage.INSTANCE.config.fluidGridUsage;
+                return RS.INSTANCE.config.fluidGridUsage;
             default:
                 return 0;
         }
@@ -180,7 +179,7 @@ public class TileGrid extends TileNode implements IGrid {
     }
 
     public EnumGridType getType() {
-        if (type == null && worldObj.getBlockState(pos).getBlock() == RefinedStorageBlocks.GRID) {
+        if (type == null && worldObj.getBlockState(pos).getBlock() == RSBlocks.GRID) {
             this.type = (EnumGridType) worldObj.getBlockState(pos).getValue(BlockGrid.TYPE);
         }
 
@@ -264,7 +263,7 @@ public class TileGrid extends TileNode implements IGrid {
             } else {
                 if (slot != null) {
                     if (slot.stackSize == 1 && isConnected()) {
-                        matrix.setInventorySlotContents(i, NetworkUtils.extractItem(network, slot, 1));
+                        matrix.setInventorySlotContents(i, network.extractItem(slot, 1));
                     } else {
                         matrix.decrStackSize(i, 1);
                     }
@@ -287,7 +286,7 @@ public class TileGrid extends TileNode implements IGrid {
 
             craftedItems += crafted.stackSize;
 
-            if (!CompareUtils.compareStack(crafted, result.getStackInSlot(0)) || craftedItems + crafted.stackSize > crafted.getMaxStackSize()) {
+            if (!RSAPI.instance().getComparer().isEqual(crafted, result.getStackInSlot(0)) || craftedItems + crafted.stackSize > crafted.getMaxStackSize()) {
                 break;
             }
         }
@@ -306,7 +305,7 @@ public class TileGrid extends TileNode implements IGrid {
         if (canCreatePattern()) {
             patterns.extractItem(0, 1, false);
 
-            ItemStack pattern = new ItemStack(RefinedStorageItems.PATTERN);
+            ItemStack pattern = new ItemStack(RSItems.PATTERN);
 
             for (int i = 0; i < 9; ++i) {
                 ItemStack ingredient = matrix.getStackInSlot(i);
@@ -350,7 +349,7 @@ public class TileGrid extends TileNode implements IGrid {
                         boolean found = false;
 
                         for (ItemStack possibility : possibilities) {
-                            ItemStack took = NetworkUtils.extractItem(network, possibility, 1);
+                            ItemStack took = network.extractItem(possibility, 1);
 
                             if (took != null) {
                                 matrix.setInventorySlotContents(i, took);
@@ -364,7 +363,7 @@ public class TileGrid extends TileNode implements IGrid {
                         if (!found) {
                             for (ItemStack possibility : possibilities) {
                                 for (int j = 0; j < player.inventory.getSizeInventory(); ++j) {
-                                    if (CompareUtils.compareStackNoQuantity(possibility, player.inventory.getStackInSlot(j))) {
+                                    if (RSAPI.instance().getComparer().isEqualNoQuantity(possibility, player.inventory.getStackInSlot(j))) {
                                         matrix.setInventorySlotContents(i, ItemHandlerHelper.copyStackWithSize(player.inventory.getStackInSlot(j), 1));
 
                                         player.inventory.decrStackSize(j, 1);

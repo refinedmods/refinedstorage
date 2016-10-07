@@ -5,8 +5,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageBlocks;
+import refinedstorage.RS;
+import refinedstorage.RSBlocks;
 import refinedstorage.block.EnumControllerType;
 import refinedstorage.tile.TileController;
 
@@ -14,7 +14,7 @@ import java.util.List;
 
 public class ItemBlockController extends ItemBlockBase {
     public ItemBlockController() {
-        super(RefinedStorageBlocks.CONTROLLER, RefinedStorageBlocks.CONTROLLER.getPlacementType(), true);
+        super(RSBlocks.CONTROLLER, RSBlocks.CONTROLLER.getPlacementType(), true);
     }
 
     @Override
@@ -29,7 +29,7 @@ public class ItemBlockController extends ItemBlockBase {
     }
 
     public static int getEnergyCapacity(ItemStack stack) {
-        return (stack.hasTagCompound() && stack.getTagCompound().hasKey(TileController.NBT_ENERGY_CAPACITY)) ? stack.getTagCompound().getInteger(TileController.NBT_ENERGY_CAPACITY) : RefinedStorage.INSTANCE.config.controllerCapacity;
+        return (stack.hasTagCompound() && stack.getTagCompound().hasKey(TileController.NBT_ENERGY_CAPACITY)) ? stack.getTagCompound().getInteger(TileController.NBT_ENERGY_CAPACITY) : RS.INSTANCE.config.controllerCapacity;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ItemBlockController extends ItemBlockBase {
             tag = new NBTTagCompound();
         }
 
-        tag.setInteger(TileController.NBT_ENERGY, stack.getMetadata() == EnumControllerType.CREATIVE.getId() ? RefinedStorage.INSTANCE.config.controllerCapacity : 0);
+        tag.setInteger(TileController.NBT_ENERGY, stack.getMetadata() == EnumControllerType.CREATIVE.getId() ? RS.INSTANCE.config.controllerCapacity : 0);
 
         return stack;
     }

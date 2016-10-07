@@ -6,9 +6,8 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
-import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageItems;
-import refinedstorage.api.network.NetworkUtils;
+import refinedstorage.RS;
+import refinedstorage.RSItems;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.inventory.ItemValidatorBasic;
@@ -45,12 +44,12 @@ public class TileNetworkTransmitter extends TileNode {
             super.onContentsChanged(slot);
 
             if (network != null) {
-                NetworkUtils.rebuildGraph(network);
+                network.getNodeGraph().rebuild();
             }
         }
     };
 
-    private ItemHandlerBasic networkCard = new ItemHandlerBasic(1, this, new ItemValidatorBasic(RefinedStorageItems.NETWORK_CARD)) {
+    private ItemHandlerBasic networkCard = new ItemHandlerBasic(1, this, new ItemValidatorBasic(RSItems.NETWORK_CARD)) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -65,7 +64,7 @@ public class TileNetworkTransmitter extends TileNode {
             }
 
             if (network != null) {
-                NetworkUtils.rebuildGraph(network);
+                network.getNodeGraph().rebuild();
             }
         }
     };
@@ -109,7 +108,7 @@ public class TileNetworkTransmitter extends TileNode {
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.config.networkTransmitterUsage + (isSameDimension() ? (int) Math.ceil(RefinedStorage.INSTANCE.config.networkTransmitterPerBlockUsage * getDistance()) : 0) + upgrades.getEnergyUsage();
+        return RS.INSTANCE.config.networkTransmitterUsage + (isSameDimension() ? (int) Math.ceil(RS.INSTANCE.config.networkTransmitterPerBlockUsage * getDistance()) : 0) + upgrades.getEnergyUsage();
     }
 
     public ItemHandlerBasic getNetworkCard() {

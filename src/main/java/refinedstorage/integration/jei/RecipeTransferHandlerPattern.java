@@ -6,8 +6,8 @@ import mezz.jei.api.recipe.transfer.IRecipeTransferError;
 import mezz.jei.api.recipe.transfer.IRecipeTransferHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import refinedstorage.RefinedStorage;
-import refinedstorage.api.network.NetworkUtils;
+import refinedstorage.RS;
+import refinedstorage.api.RSAPI;
 import refinedstorage.container.ContainerProcessingPatternEncoder;
 import refinedstorage.network.MessageProcessingPatternEncoderTransfer;
 
@@ -37,7 +37,7 @@ public class RecipeTransferHandlerPattern implements IRecipeTransferHandler<Cont
                 if (guiIngredient != null && guiIngredient.getDisplayedIngredient() != null) {
                     ItemStack ingredient = guiIngredient.getDisplayedIngredient().copy();
 
-                    int hash = NetworkUtils.getItemStackHashCode(ingredient);
+                    int hash = RSAPI.instance().getItemStackHashCode(ingredient);
 
                     if (guiIngredient.isInput()) {
                         if (inputs.containsKey(hash)) {
@@ -55,7 +55,7 @@ public class RecipeTransferHandlerPattern implements IRecipeTransferHandler<Cont
                 }
             }
 
-            RefinedStorage.INSTANCE.network.sendToServer(new MessageProcessingPatternEncoderTransfer(inputs.values(), outputs.values()));
+            RS.INSTANCE.network.sendToServer(new MessageProcessingPatternEncoderTransfer(inputs.values(), outputs.values()));
         }
 
         return null;

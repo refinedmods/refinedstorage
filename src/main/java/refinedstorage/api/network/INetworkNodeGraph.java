@@ -2,6 +2,7 @@ package refinedstorage.api.network;
 
 import net.minecraft.util.math.BlockPos;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -11,10 +12,17 @@ public interface INetworkNodeGraph {
     /**
      * Rebuilds the node graph.
      *
-     * @param start  the starting position to start looking for nodes
+     * @param start  the starting position to start looking for nodes, or null to start at network begin position
      * @param notify true to notify the nodes of a connection change, false to not notify
      */
-    void rebuild(BlockPos start, boolean notify);
+    void rebuild(@Nullable BlockPos start, boolean notify);
+
+    /**
+     * Rebuilds the network graph.
+     */
+    default void rebuild() {
+        rebuild(null, true);
+    }
 
     /**
      * @return a list of all connected nodes

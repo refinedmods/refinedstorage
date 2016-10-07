@@ -1,7 +1,6 @@
 package refinedstorage.api.storage.fluid;
 
 import net.minecraftforge.fluids.FluidStack;
-import refinedstorage.api.storage.CompareUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

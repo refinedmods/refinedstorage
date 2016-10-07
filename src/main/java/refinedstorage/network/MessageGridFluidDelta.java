@@ -6,7 +6,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import refinedstorage.api.network.NetworkUtils;
+import refinedstorage.RSUtils;
 import refinedstorage.gui.grid.GuiGrid;
 import refinedstorage.gui.grid.stack.ClientStackFluid;
 
@@ -32,7 +32,7 @@ public class MessageGridFluidDelta implements IMessage, IMessageHandler<MessageG
 
     @Override
     public void toBytes(ByteBuf buf) {
-        NetworkUtils.writeFluidStack(buf, stack);
+        RSUtils.writeFluidStack(buf, stack);
         buf.writeInt(delta);
     }
 

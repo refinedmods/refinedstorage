@@ -22,10 +22,9 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
-import refinedstorage.RefinedStorage;
+import refinedstorage.RS;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.INetworkNode;
-import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.tile.TileBase;
 import refinedstorage.tile.TileCable;
 import refinedstorage.tile.TileMultipartNode;
@@ -66,8 +65,8 @@ public class BlockCable extends BlockCoverable {
         this.name = name;
 
         setHardness(0.6F);
-        setRegistryName(RefinedStorage.ID, name);
-        setCreativeTab(RefinedStorage.INSTANCE.tab);
+        setRegistryName(RS.ID, name);
+        setCreativeTab(RS.INSTANCE.tab);
     }
 
     public BlockCable() {
@@ -76,7 +75,7 @@ public class BlockCable extends BlockCoverable {
 
     @Override
     public String getUnlocalizedName() {
-        return "block." + RefinedStorage.ID + ":" + name;
+        return "block." + RS.ID + ":" + name;
     }
 
     public String getName() {
@@ -281,7 +280,7 @@ public class BlockCable extends BlockCoverable {
                 TileEntity tile = world.getTileEntity(pos.offset(facing));
 
                 if (tile instanceof TileNode && ((TileNode) tile).isConnected()) {
-                    NetworkUtils.rebuildGraph(((TileNode) tile).getNetwork());
+                    ((TileNode) tile).getNetwork().getNodeGraph().rebuild();
 
                     break;
                 }
@@ -314,7 +313,7 @@ public class BlockCable extends BlockCoverable {
         super.breakBlock(world, pos, state);
 
         if (network != null) {
-            NetworkUtils.rebuildGraph(network);
+            network.getNodeGraph().rebuild();
         }
     }
 

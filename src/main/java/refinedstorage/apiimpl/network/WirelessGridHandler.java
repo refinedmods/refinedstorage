@@ -5,9 +5,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
-import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageGui;
-import refinedstorage.RefinedStorageItems;
+import refinedstorage.RS;
+import refinedstorage.RSGui;
+import refinedstorage.RSItems;
 import refinedstorage.api.network.*;
 import refinedstorage.item.ItemWirelessGrid;
 
@@ -55,17 +55,17 @@ public class WirelessGridHandler implements IWirelessGridHandler {
 
         ItemStack stack = player.getHeldItem(hand);
 
-        if (RefinedStorage.INSTANCE.config.wirelessGridUsesEnergy && stack.getItemDamage() != ItemWirelessGrid.TYPE_CREATIVE && RefinedStorageItems.WIRELESS_GRID.getEnergyStored(stack) <= RefinedStorage.INSTANCE.config.wirelessGridOpenUsage) {
+        if (RS.INSTANCE.config.wirelessGridUsesEnergy && stack.getItemDamage() != ItemWirelessGrid.TYPE_CREATIVE && RSItems.WIRELESS_GRID.getEnergyStored(stack) <= RS.INSTANCE.config.wirelessGridOpenUsage) {
             return true;
         }
 
         consumers.add(new WirelessGridConsumer(player, stack));
 
-        player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.WIRELESS_GRID, player.worldObj, hand.ordinal(), controllerWorld.provider.getDimension(), 0);
+        player.openGui(RS.INSTANCE, RSGui.WIRELESS_GRID, player.worldObj, hand.ordinal(), controllerWorld.provider.getDimension(), 0);
 
         network.sendItemStorageToClient((EntityPlayerMP) player);
 
-        drainEnergy(player, RefinedStorage.INSTANCE.config.wirelessGridOpenUsage);
+        drainEnergy(player, RS.INSTANCE.config.wirelessGridOpenUsage);
 
         return true;
     }
@@ -83,8 +83,8 @@ public class WirelessGridHandler implements IWirelessGridHandler {
     public void drainEnergy(EntityPlayer player, int energy) {
         IWirelessGridConsumer consumer = getConsumer(player);
 
-        if (consumer != null && RefinedStorage.INSTANCE.config.wirelessGridUsesEnergy) {
-            ItemWirelessGrid item = RefinedStorageItems.WIRELESS_GRID;
+        if (consumer != null && RS.INSTANCE.config.wirelessGridUsesEnergy) {
+            ItemWirelessGrid item = RSItems.WIRELESS_GRID;
 
             if (consumer.getStack().getItemDamage() != ItemWirelessGrid.TYPE_CREATIVE) {
                 item.extractEnergy(consumer.getStack(), energy, false);

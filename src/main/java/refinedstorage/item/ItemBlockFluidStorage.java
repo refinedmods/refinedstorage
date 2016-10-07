@@ -10,8 +10,8 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
-import refinedstorage.RefinedStorageBlocks;
-import refinedstorage.RefinedStorageItems;
+import refinedstorage.RSBlocks;
+import refinedstorage.RSItems;
 import refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
 import refinedstorage.block.EnumFluidStorageType;
 import refinedstorage.tile.TileFluidStorage;
@@ -20,7 +20,7 @@ import java.util.List;
 
 public class ItemBlockFluidStorage extends ItemBlockBase {
     public ItemBlockFluidStorage() {
-        super(RefinedStorageBlocks.FLUID_STORAGE, RefinedStorageBlocks.FLUID_STORAGE.getPlacementType(), true);
+        super(RSBlocks.FLUID_STORAGE, RSBlocks.FLUID_STORAGE.getPlacementType(), true);
     }
 
     @Override
@@ -43,19 +43,19 @@ public class ItemBlockFluidStorage extends ItemBlockBase {
         EnumFluidStorageType type = EnumFluidStorageType.getById(stack.getMetadata());
 
         if (type != null && stack.stackSize == 1 && isValid(stack) && FluidStorageNBT.getStoredFromNBT(stack.getTagCompound().getCompoundTag(TileFluidStorage.NBT_STORAGE)) == 0 && stack.getMetadata() != ItemFluidStorageDisk.TYPE_CREATIVE && !world.isRemote && player.isSneaking()) {
-            ItemStack storagePart = new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, stack.getMetadata());
+            ItemStack storagePart = new ItemStack(RSItems.FLUID_STORAGE_PART, 1, stack.getMetadata());
 
             if (!player.inventory.addItemStackToInventory(storagePart.copy())) {
                 InventoryHelper.spawnItemStack(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), storagePart);
             }
 
-            ItemStack processor = new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC);
+            ItemStack processor = new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC);
 
             if (!player.inventory.addItemStackToInventory(processor.copy())) {
                 InventoryHelper.spawnItemStack(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), processor);
             }
 
-            return new ActionResult<>(EnumActionResult.SUCCESS, new ItemStack(RefinedStorageBlocks.MACHINE_CASING));
+            return new ActionResult<>(EnumActionResult.SUCCESS, new ItemStack(RSBlocks.MACHINE_CASING));
         }
 
         return new ActionResult<>(EnumActionResult.PASS, stack);

@@ -2,7 +2,7 @@ package refinedstorage.apiimpl.solderer;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import refinedstorage.RefinedStorageItems;
+import refinedstorage.RSItems;
 import refinedstorage.api.solderer.ISoldererRecipe;
 import refinedstorage.item.ItemProcessor;
 
@@ -16,7 +16,7 @@ public class SoldererRecipePrintedProcessor implements ISoldererRecipe {
 
     public SoldererRecipePrintedProcessor(int type) {
         this.type = type;
-        this.result = new ItemStack(RefinedStorageItems.PROCESSOR, 1, type);
+        this.result = new ItemStack(RSItems.PROCESSOR, 1, type);
 
         switch (type) {
             case ItemProcessor.TYPE_PRINTED_BASIC:
@@ -29,7 +29,7 @@ public class SoldererRecipePrintedProcessor implements ISoldererRecipe {
                 this.requirement = new ItemStack(Items.DIAMOND);
                 break;
             case ItemProcessor.TYPE_PRINTED_SILICON:
-                this.requirement = new ItemStack(RefinedStorageItems.SILICON);
+                this.requirement = new ItemStack(RSItems.SILICON);
                 break;
         }
     }

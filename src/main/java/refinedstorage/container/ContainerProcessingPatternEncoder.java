@@ -76,7 +76,7 @@ public class ContainerProcessingPatternEncoder extends ContainerBase {
     }
 
     public void setInputs(Collection<ItemStack> stacks) {
-        setSlots(stacks, 2 , 2 + 9);
+        setSlots(stacks, 2, 2 + 9);
     }
 
     public void setOutputs(Collection<ItemStack> stacks) {

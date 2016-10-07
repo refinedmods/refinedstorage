@@ -7,10 +7,10 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
-import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageGui;
-import refinedstorage.RefinedStorageItems;
-import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.RS;
+import refinedstorage.RSGui;
+import refinedstorage.RSItems;
+import refinedstorage.api.util.IComparer;
 import refinedstorage.inventory.ItemHandlerGridFilter;
 
 import java.util.List;
@@ -28,10 +28,10 @@ public class ItemGridFilter extends ItemBase {
     public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
         if (!world.isRemote) {
             if (player.isSneaking()) {
-                return new ActionResult<>(EnumActionResult.SUCCESS, new ItemStack(RefinedStorageItems.GRID_FILTER));
+                return new ActionResult<>(EnumActionResult.SUCCESS, new ItemStack(RSItems.GRID_FILTER));
             }
 
-            player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.GRID_FILTER, world, hand.ordinal(), 0, 0);
+            player.openGui(RS.INSTANCE, RSGui.GRID_FILTER, world, hand.ordinal(), 0, 0);
 
             return new ActionResult<>(EnumActionResult.SUCCESS, stack);
         }
@@ -49,7 +49,7 @@ public class ItemGridFilter extends ItemBase {
     }
 
     public static int getCompare(ItemStack stack) {
-        return (stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_COMPARE)) ? stack.getTagCompound().getInteger(NBT_COMPARE) : (CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
+        return (stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_COMPARE)) ? stack.getTagCompound().getInteger(NBT_COMPARE) : (IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);
     }
 
     public static void setCompare(ItemStack stack, int compare) {

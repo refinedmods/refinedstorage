@@ -2,7 +2,7 @@ package refinedstorage.apiimpl.solderer;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import refinedstorage.RefinedStorageItems;
+import refinedstorage.RSItems;
 import refinedstorage.api.solderer.ISoldererRecipe;
 import refinedstorage.item.ItemUpgrade;
 
@@ -14,10 +14,10 @@ public class SoldererRecipeUpgrade implements ISoldererRecipe {
     private ItemStack result;
 
     public SoldererRecipeUpgrade(int type) {
-        this.result = new ItemStack(RefinedStorageItems.UPGRADE, 1, type);
+        this.result = new ItemStack(RSItems.UPGRADE, 1, type);
         this.rows = new ItemStack[]{
             ItemUpgrade.getRequirement(type),
-            new ItemStack(RefinedStorageItems.UPGRADE, 1, 0),
+            new ItemStack(RSItems.UPGRADE, 1, 0),
             new ItemStack(Items.REDSTONE)
         };
     }

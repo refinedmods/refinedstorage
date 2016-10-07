@@ -12,7 +12,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
-import refinedstorage.RefinedStorageItems;
+import refinedstorage.RSItems;
 import refinedstorage.apiimpl.storage.item.ItemStorageNBT;
 import refinedstorage.block.EnumItemStorageType;
 
@@ -74,7 +74,7 @@ public class ItemStorageDisk extends ItemBase {
             while (it.hasNext()) {
                 Item item = it.next();
 
-                if (item != RefinedStorageItems.STORAGE_DISK) {
+                if (item != RSItems.STORAGE_DISK) {
                     List<ItemStack> stacks = new ArrayList<>();
 
                     item.getSubItems(item, CreativeTabs.INVENTORY, stacks);
@@ -107,13 +107,13 @@ public class ItemStorageDisk extends ItemBase {
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack disk, World world, EntityPlayer player, EnumHand hand) {
         if (!world.isRemote && player.isSneaking() && ItemStorageNBT.isValid(disk) && ItemStorageNBT.getStoredFromNBT(disk.getTagCompound()) == 0 && disk.getMetadata() != TYPE_CREATIVE) {
-            ItemStack storagePart = new ItemStack(RefinedStorageItems.STORAGE_PART, 1, disk.getMetadata());
+            ItemStack storagePart = new ItemStack(RSItems.STORAGE_PART, 1, disk.getMetadata());
 
             if (!player.inventory.addItemStackToInventory(storagePart.copy())) {
                 InventoryHelper.spawnItemStack(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), storagePart);
             }
 
-            return new ActionResult<>(EnumActionResult.SUCCESS, new ItemStack(RefinedStorageItems.STORAGE_HOUSING));
+            return new ActionResult<>(EnumActionResult.SUCCESS, new ItemStack(RSItems.STORAGE_HOUSING));
         }
 
         return new ActionResult<>(EnumActionResult.PASS, disk);

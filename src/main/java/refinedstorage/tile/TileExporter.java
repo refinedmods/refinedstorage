@@ -11,9 +11,8 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import refinedstorage.RefinedStorage;
-import refinedstorage.api.network.NetworkUtils;
-import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.RS;
+import refinedstorage.api.util.IComparer;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerFluid;
 import refinedstorage.inventory.ItemHandlerUpgrade;
@@ -34,7 +33,7 @@ public class TileExporter extends TileMultipartNode implements IComparable, ITyp
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_CRAFTING, ItemUpgrade.TYPE_STACK);
 
-    private int compare = CompareUtils.COMPARE_NBT | CompareUtils.COMPARE_DAMAGE;
+    private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int type = IType.ITEMS;
 
     public TileExporter() {
@@ -49,7 +48,7 @@ public class TileExporter extends TileMultipartNode implements IComparable, ITyp
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.config.exporterUsage + upgrades.getEnergyUsage();
+        return RS.INSTANCE.config.exporterUsage + upgrades.getEnergyUsage();
     }
 
     @Override
@@ -74,7 +73,7 @@ public class TileExporter extends TileMultipartNode implements IComparable, ITyp
                                     network.insertItem(remainder, remainder.stackSize, false);
                                 }
                             } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
-                                NetworkUtils.scheduleCraftingTaskIfUnscheduled(network, slot, 1, compare);
+                                network.scheduleCraftingTaskIfUnscheduled(slot, 1, compare);
                             }
                         }
                     }

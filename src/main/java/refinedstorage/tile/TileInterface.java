@@ -7,9 +7,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
-import refinedstorage.RefinedStorage;
-import refinedstorage.api.network.NetworkUtils;
-import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.RS;
+import refinedstorage.api.util.IComparer;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemUpgrade;
@@ -26,7 +25,7 @@ public class TileInterface extends TileNode implements IComparable {
     private ItemHandlerBasic exportItems = new ItemHandlerBasic(9, this);
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK, ItemUpgrade.TYPE_CRAFTING);
 
-    private int compare = CompareUtils.COMPARE_NBT | CompareUtils.COMPARE_DAMAGE;
+    private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
 
     private int currentSlot = 0;
 
@@ -36,7 +35,7 @@ public class TileInterface extends TileNode implements IComparable {
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.config.interfaceUsage + upgrades.getEnergyUsage();
+        return RS.INSTANCE.config.interfaceUsage + upgrades.getEnergyUsage();
     }
 
     @Override
@@ -82,7 +81,7 @@ public class TileInterface extends TileNode implements IComparable {
                             exportItems.getStackInSlot(i).stackSize += result.stackSize;
                         }
                     } else {
-                        NetworkUtils.scheduleCraftingTaskIfUnscheduled(network, wanted, delta, compare);
+                        network.scheduleCraftingTaskIfUnscheduled(wanted, delta, compare);
                     }
                 } else if (delta < 0) {
                     ItemStack remainder = network.insertItem(got, Math.abs(delta), false);

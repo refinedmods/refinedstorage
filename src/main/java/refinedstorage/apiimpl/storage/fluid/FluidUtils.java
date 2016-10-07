@@ -8,8 +8,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.api.network.NetworkUtils;
-import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.api.util.IComparer;
 
 public final class FluidUtils {
     public static final ItemStack EMPTY_BUCKET = new ItemStack(Items.BUCKET);
@@ -40,7 +39,7 @@ public final class FluidUtils {
     }
 
     public static ItemStack extractItemOrIfBucketLookInFluids(INetworkMaster network, ItemStack stack, int size) {
-        ItemStack result = NetworkUtils.extractItem(network, stack, size);
+        ItemStack result = network.extractItem(stack, size);
 
         if (result == null && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
             FluidStack fluidStack = getFluidFromStack(stack, true);
@@ -49,9 +48,9 @@ public final class FluidUtils {
                 result = extractBucket(network);
 
                 if (result != null) {
-                    result.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).fill(NetworkUtils.extractFluid(network, fluidStack, Fluid.BUCKET_VOLUME), true);
+                    result.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).fill(network.extractFluid(fluidStack, Fluid.BUCKET_VOLUME), true);
                 } else {
-                    NetworkUtils.scheduleCraftingTaskIfUnscheduled(network, EMPTY_BUCKET, 1, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
+                    network.scheduleCraftingTaskIfUnscheduled(EMPTY_BUCKET, 1, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);
                 }
             }
         }
@@ -60,6 +59,6 @@ public final class FluidUtils {
     }
 
     public static ItemStack extractBucket(INetworkMaster network) {
-        return NetworkUtils.extractItem(network, EMPTY_BUCKET, 1);
+        return network.extractItem(EMPTY_BUCKET, 1);
     }
 }

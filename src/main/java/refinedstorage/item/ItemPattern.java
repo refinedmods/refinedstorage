@@ -13,11 +13,11 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
-import refinedstorage.RefinedStorageItems;
+import refinedstorage.RSItems;
+import refinedstorage.api.RSAPI;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.autocrafting.ICraftingPatternProvider;
-import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.apiimpl.autocrafting.CraftingPattern;
 
 import javax.annotation.Nonnull;
@@ -158,7 +158,7 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
                 int amount = stacks[i].stackSize;
 
                 for (int j = i + 1; j < stacks.length; ++j) {
-                    if (CompareUtils.compareStack(stacks[i], stacks[j])) {
+                    if (RSAPI.instance().getComparer().isEqual(stacks[i], stacks[j])) {
                         amount += stacks[j].stackSize;
 
                         combinedIndices.add(j);
@@ -175,7 +175,7 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
         if (!world.isRemote && player.isSneaking()) {
-            return new ActionResult<>(EnumActionResult.SUCCESS, new ItemStack(RefinedStorageItems.PATTERN, stack.stackSize));
+            return new ActionResult<>(EnumActionResult.SUCCESS, new ItemStack(RSItems.PATTERN, stack.stackSize));
         }
 
         return new ActionResult<>(EnumActionResult.PASS, stack);

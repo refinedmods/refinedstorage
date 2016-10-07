@@ -4,12 +4,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraftforge.items.ItemHandlerHelper;
-import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageBlocks;
+import refinedstorage.RS;
+import refinedstorage.RSBlocks;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.api.storage.item.IItemStorage;
 import refinedstorage.api.storage.item.IItemStorageProvider;
+import refinedstorage.api.util.IComparer;
 import refinedstorage.apiimpl.storage.item.ItemStorageNBT;
 import refinedstorage.block.BlockStorage;
 import refinedstorage.block.EnumItemStorageType;
@@ -78,7 +78,7 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
     private EnumItemStorageType type;
 
     private int priority = 0;
-    private int compare = CompareUtils.COMPARE_NBT | CompareUtils.COMPARE_DAMAGE;
+    private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int mode = IFilterable.WHITELIST;
     private boolean voidExcess = false;
 
@@ -92,7 +92,7 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.config.storageUsage;
+        return RS.INSTANCE.config.storageUsage;
     }
 
     @Override
@@ -180,7 +180,7 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
     }
 
     public EnumItemStorageType getType() {
-        if (type == null && worldObj.getBlockState(pos).getBlock() == RefinedStorageBlocks.STORAGE) {
+        if (type == null && worldObj.getBlockState(pos).getBlock() == RSBlocks.STORAGE) {
             this.type = ((EnumItemStorageType) worldObj.getBlockState(pos).getValue(BlockStorage.TYPE));
         }
 

@@ -14,9 +14,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import refinedstorage.RefinedStorage;
+import refinedstorage.RS;
+import refinedstorage.api.RSAPI;
 import refinedstorage.api.network.grid.IItemGridHandler;
-import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
 import refinedstorage.gui.GuiBase;
@@ -28,7 +28,7 @@ import refinedstorage.gui.grid.stack.ClientStackItem;
 import refinedstorage.gui.grid.stack.IClientStack;
 import refinedstorage.gui.sidebutton.*;
 import refinedstorage.integration.jei.IntegrationJEI;
-import refinedstorage.integration.jei.RefinedStorageJEIPlugin;
+import refinedstorage.integration.jei.RSJEIPlugin;
 import refinedstorage.network.*;
 import refinedstorage.tile.grid.IGrid;
 import refinedstorage.tile.grid.TileGrid;
@@ -128,7 +128,7 @@ public class GuiGrid extends GuiBase {
                     boolean found = filteredItems.isEmpty();
 
                     for (GridFilteredItem filteredItem : filteredItems) {
-                        if (CompareUtils.compareStack(((ClientStackItem) stack).getStack(), filteredItem.getStack(), filteredItem.getCompare())) {
+                        if (RSAPI.instance().getComparer().isEqual(((ClientStackItem) stack).getStack(), filteredItem.getStack(), filteredItem.getCompare())) {
                             found = true;
 
                             break;
@@ -356,16 +356,16 @@ public class GuiGrid extends GuiBase {
         if (clickedCreatePattern) {
             BlockPos gridPos = ((TileGrid) grid).getPos();
 
-            RefinedStorage.INSTANCE.network.sendToServer(new MessageGridPatternCreate(gridPos.getX(), gridPos.getY(), gridPos.getZ()));
+            RS.INSTANCE.network.sendToServer(new MessageGridPatternCreate(gridPos.getX(), gridPos.getY(), gridPos.getZ()));
         } else if (grid.isConnected()) {
             if (clickedClear) {
-                RefinedStorage.INSTANCE.network.sendToServer(new MessageGridCraftingClear((TileGrid) grid));
+                RS.INSTANCE.network.sendToServer(new MessageGridCraftingClear((TileGrid) grid));
             }
 
             ItemStack held = container.getPlayer().inventory.getItemStack();
 
             if (isOverSlotArea(mouseX - guiLeft, mouseY - guiTop) && held != null && (clickedButton == 0 || clickedButton == 1)) {
-                RefinedStorage.INSTANCE.network.sendToServer(grid.getType() == EnumGridType.FLUID ? new MessageGridFluidInsertHeld() : new MessageGridItemInsertHeld(clickedButton == 1));
+                RS.INSTANCE.network.sendToServer(grid.getType() == EnumGridType.FLUID ? new MessageGridFluidInsertHeld() : new MessageGridItemInsertHeld(clickedButton == 1));
             }
 
             if (isOverSlotWithItem()) {
@@ -389,10 +389,10 @@ public class GuiGrid extends GuiBase {
                             flags |= IItemGridHandler.EXTRACT_SINGLE;
                         }
 
-                        RefinedStorage.INSTANCE.network.sendToServer(new MessageGridItemPull(stack.getHash(), flags));
+                        RS.INSTANCE.network.sendToServer(new MessageGridItemPull(stack.getHash(), flags));
                     }
                 } else if (grid.getType() == EnumGridType.FLUID && held == null) {
-                    RefinedStorage.INSTANCE.network.sendToServer(new MessageGridFluidPull(STACKS.get(slotNumber).getHash(), GuiScreen.isShiftKeyDown()));
+                    RS.INSTANCE.network.sendToServer(new MessageGridFluidPull(STACKS.get(slotNumber).getHash(), GuiScreen.isShiftKeyDown()));
                 }
             }
         }
@@ -417,7 +417,7 @@ public class GuiGrid extends GuiBase {
 
     private void updateJEI() {
         if (IntegrationJEI.isLoaded() && (grid.getSearchBoxMode() == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED || grid.getSearchBoxMode() == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED)) {
-            RefinedStorageJEIPlugin.INSTANCE.getRuntime().getItemListOverlay().setFilterText(searchField.getText());
+            RSJEIPlugin.INSTANCE.getRuntime().getItemListOverlay().setFilterText(searchField.getText());
         }
     }
 

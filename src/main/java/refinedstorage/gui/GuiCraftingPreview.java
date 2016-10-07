@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import org.lwjgl.input.Keyboard;
-import refinedstorage.RefinedStorage;
+import refinedstorage.RS;
 import refinedstorage.network.MessageGridCraftingStart;
 
 import java.io.IOException;
@@ -181,7 +181,7 @@ public class GuiCraftingPreview extends GuiBase {
     }
 
     private void startRequest() {
-        RefinedStorage.INSTANCE.network.sendToServer(new MessageGridCraftingStart(hash, quantity));
+        RS.INSTANCE.network.sendToServer(new MessageGridCraftingStart(hash, quantity));
 
         close();
     }

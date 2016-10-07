@@ -15,7 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
-import refinedstorage.RefinedStorage;
+import refinedstorage.RS;
 import refinedstorage.item.ItemBlockBase;
 import refinedstorage.tile.TileBase;
 
@@ -30,13 +30,13 @@ public abstract class BlockBase extends Block {
         this.name = name;
 
         setHardness(1.9F);
-        setRegistryName(RefinedStorage.ID, name);
-        setCreativeTab(RefinedStorage.INSTANCE.tab);
+        setRegistryName(RS.ID, name);
+        setCreativeTab(RS.INSTANCE.tab);
     }
 
     @Override
     public String getUnlocalizedName() {
-        return "block." + RefinedStorage.ID + ":" + name;
+        return "block." + RS.ID + ":" + name;
     }
 
     protected BlockStateContainer.Builder createBlockStateBuilder() {

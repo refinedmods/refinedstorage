@@ -6,10 +6,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import refinedstorage.api.RSAPI;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.api.network.grid.IFluidGridHandler;
-import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.apiimpl.storage.fluid.FluidUtils;
 
 import javax.annotation.Nullable;
@@ -32,7 +31,7 @@ public class FluidGridHandler implements IFluidGridHandler {
                 for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
                     ItemStack slot = player.inventory.getStackInSlot(i);
 
-                    if (CompareUtils.compareStackNoQuantity(FluidUtils.EMPTY_BUCKET, slot)) {
+                    if (RSAPI.instance().getComparer().isEqualNoQuantity(FluidUtils.EMPTY_BUCKET, slot)) {
                         bucket = FluidUtils.EMPTY_BUCKET.copy();
 
                         player.inventory.decrStackSize(i, 1);
@@ -43,7 +42,7 @@ public class FluidGridHandler implements IFluidGridHandler {
             }
 
             if (bucket != null) {
-                bucket.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).fill(NetworkUtils.extractFluid(network, stack, Fluid.BUCKET_VOLUME), true);
+                bucket.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).fill(network.extractFluid(stack, Fluid.BUCKET_VOLUME), true);
 
                 if (shift) {
                     if (!player.inventory.addItemStackToInventory(bucket.copy())) {

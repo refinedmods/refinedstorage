@@ -12,7 +12,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.items.SlotItemHandler;
 import org.lwjgl.input.Mouse;
-import refinedstorage.RefinedStorage;
+import refinedstorage.RS;
 import refinedstorage.apiimpl.storage.fluid.FluidRenderer;
 import refinedstorage.gui.sidebutton.SideButton;
 import refinedstorage.inventory.ItemHandlerFluid;
@@ -180,7 +180,7 @@ public abstract class GuiBase extends GuiContainer {
     }
 
     public void bindTexture(String file) {
-        bindTexture(RefinedStorage.ID, file);
+        bindTexture(RS.ID, file);
     }
 
     public void bindTexture(String base, String file) {

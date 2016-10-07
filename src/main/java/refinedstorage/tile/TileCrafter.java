@@ -8,13 +8,12 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
-import refinedstorage.RefinedStorage;
+import refinedstorage.RS;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.autocrafting.ICraftingPatternProvider;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.api.network.NetworkUtils;
-import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.api.util.IComparer;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemUpgrade;
@@ -85,11 +84,11 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
 
     @Override
     public int getEnergyUsage() {
-        int usage = RefinedStorage.INSTANCE.config.crafterUsage + upgrades.getEnergyUsage();
+        int usage = RS.INSTANCE.config.crafterUsage + upgrades.getEnergyUsage();
 
         for (int i = 0; i < patterns.getSlots(); ++i) {
             if (patterns.getStackInSlot(i) != null) {
-                usage += RefinedStorage.INSTANCE.config.crafterPerPatternUsage;
+                usage += RS.INSTANCE.config.crafterPerPatternUsage;
             }
         }
 
@@ -110,7 +109,7 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
         if (triggeredAutocrafting && worldObj.isBlockPowered(pos)) {
             for (ICraftingPattern pattern : actualPatterns) {
                 for (ItemStack output : pattern.getOutputs()) {
-                    NetworkUtils.scheduleCraftingTaskIfUnscheduled(network, output, 1, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
+                    network.scheduleCraftingTaskIfUnscheduled(output, 1, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);
                 }
             }
         }

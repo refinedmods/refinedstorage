@@ -1,5 +1,6 @@
 package refinedstorage.api.autocrafting.registry;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import refinedstorage.api.autocrafting.ICraftingPattern;
@@ -19,11 +20,12 @@ public interface ICraftingTaskFactory {
      *
      * @param world    the world
      * @param network  the network
+     * @param stack    the stack to create task for
      * @param pattern  the pattern
      * @param quantity the quantity
      * @param tag      the NBT tag, if this is null it isn't reading from disk but is used for making a task on demand
      * @return the crafting task
      */
     @Nonnull
-    ICraftingTask create(World world, INetworkMaster network, ICraftingPattern pattern, int quantity, @Nullable NBTTagCompound tag);
+    ICraftingTask create(World world, INetworkMaster network, @Nullable ItemStack stack, ICraftingPattern pattern, int quantity, @Nullable NBTTagCompound tag);
 }

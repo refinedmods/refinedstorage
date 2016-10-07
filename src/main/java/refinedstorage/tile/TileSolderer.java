@@ -8,11 +8,10 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
-import refinedstorage.RefinedStorage;
-import refinedstorage.api.RefinedStorageAPI;
+import refinedstorage.RS;
+import refinedstorage.api.RSAPI;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.solderer.ISoldererRecipe;
-import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemUpgrade;
@@ -52,9 +51,9 @@ public class TileSolderer extends TileNode {
         public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
             Set<Integer> possibleSlots = new HashSet<>();
 
-            for (ISoldererRecipe recipe : RefinedStorageAPI.instance().getSoldererRegistry().getRecipes()) {
+            for (ISoldererRecipe recipe : RSAPI.instance().getSoldererRegistry().getRecipes()) {
                 for (int i = 0; i < 3; ++i) {
-                    if (CompareUtils.compareStackNoQuantity(recipe.getRow(i), stack) || CompareUtils.compareStackOreDict(recipe.getRow(i), stack)) {
+                    if (RSAPI.instance().getComparer().isEqualNoQuantity(recipe.getRow(i), stack) || RSAPI.instance().getComparer().isEqualOredict(recipe.getRow(i), stack)) {
                         possibleSlots.add(i);
                     }
                 }
@@ -84,7 +83,7 @@ public class TileSolderer extends TileNode {
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.config.soldererUsage + upgrades.getEnergyUsage();
+        return RS.INSTANCE.config.soldererUsage + upgrades.getEnergyUsage();
     }
 
     @Override
@@ -92,12 +91,12 @@ public class TileSolderer extends TileNode {
         if (items.getStackInSlot(1) == null && items.getStackInSlot(2) == null && result.getStackInSlot(0) == null) {
             stop();
         } else {
-            ISoldererRecipe newRecipe = RefinedStorageAPI.instance().getSoldererRegistry().getRecipe(items);
+            ISoldererRecipe newRecipe = RSAPI.instance().getSoldererRegistry().getRecipe(items);
 
             if (newRecipe == null) {
                 stop();
             } else if (newRecipe != recipe) {
-                boolean sameItem = result.getStackInSlot(0) != null ? CompareUtils.compareStackNoQuantity(result.getStackInSlot(0), newRecipe.getResult()) : false;
+                boolean sameItem = result.getStackInSlot(0) != null ? RSAPI.instance().getComparer().isEqualNoQuantity(result.getStackInSlot(0), newRecipe.getResult()) : false;
 
                 if (result.getStackInSlot(0) == null || (sameItem && ((result.getStackInSlot(0).stackSize + newRecipe.getResult().stackSize) <= result.getStackInSlot(0).getMaxStackSize()))) {
                     recipe = newRecipe;
@@ -157,7 +156,7 @@ public class TileSolderer extends TileNode {
         readItems(upgrades, 1, tag);
         readItems(result, 2, tag);
 
-        recipe = RefinedStorageAPI.instance().getSoldererRegistry().getRecipe(items);
+        recipe = RSAPI.instance().getSoldererRegistry().getRecipe(items);
 
         if (tag.hasKey(NBT_WORKING)) {
             working = tag.getBoolean(NBT_WORKING);

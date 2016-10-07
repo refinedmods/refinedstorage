@@ -1,9 +1,9 @@
 package refinedstorage.apiimpl.autocrafting.task;
 
 import net.minecraft.item.ItemStack;
+import refinedstorage.api.RSAPI;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.task.IProcessable;
-import refinedstorage.api.storage.CompareUtils;
 
 public class Processable implements IProcessable {
     private ICraftingPattern pattern;
@@ -51,7 +51,7 @@ public class Processable implements IProcessable {
             if (!satisfied[i]) {
                 ItemStack item = pattern.getOutputs().get(i);
 
-                if (CompareUtils.compareStackNoQuantity(stack, item)) {
+                if (RSAPI.instance().getComparer().isEqualNoQuantity(stack, item)) {
                     satisfied[i] = true;
 
                     return true;

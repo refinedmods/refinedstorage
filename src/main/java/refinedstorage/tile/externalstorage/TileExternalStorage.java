@@ -10,13 +10,13 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.IItemHandler;
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
-import refinedstorage.RefinedStorage;
+import refinedstorage.RS;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.api.storage.fluid.IFluidStorage;
 import refinedstorage.api.storage.fluid.IFluidStorageProvider;
 import refinedstorage.api.storage.item.IItemStorage;
 import refinedstorage.api.storage.item.IItemStorageProvider;
+import refinedstorage.api.util.IComparer;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerFluid;
 import refinedstorage.tile.IStorageGui;
@@ -80,7 +80,7 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
     private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(9, this);
 
     private int priority = 0;
-    private int compare = CompareUtils.COMPARE_NBT | CompareUtils.COMPARE_DAMAGE;
+    private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int mode = IFilterable.WHITELIST;
     private int type = IType.ITEMS;
 
@@ -105,7 +105,7 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.config.externalStorageUsage + ((itemStorages.size() + fluidStorages.size()) * RefinedStorage.INSTANCE.config.externalStoragePerStorageUsage);
+        return RS.INSTANCE.config.externalStorageUsage + ((itemStorages.size() + fluidStorages.size()) * RS.INSTANCE.config.externalStoragePerStorageUsage);
     }
 
     @Override

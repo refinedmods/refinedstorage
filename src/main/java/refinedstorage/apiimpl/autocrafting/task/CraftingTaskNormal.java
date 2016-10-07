@@ -1,19 +1,15 @@
 package refinedstorage.apiimpl.autocrafting.task;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.items.ItemHandlerHelper;
+import refinedstorage.api.RSAPI;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.autocrafting.task.IProcessable;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.api.network.NetworkUtils;
-import refinedstorage.api.storage.CompareUtils;
-import refinedstorage.api.storage.item.IGroupedItemStorage;
+import refinedstorage.api.util.IItemStackList;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementRoot;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementToTake;
 
@@ -24,82 +20,90 @@ import java.util.List;
 
 public class CraftingTaskNormal implements ICraftingTask {
     private INetworkMaster network;
+    private ItemStack requested;
     private ICraftingPattern pattern;
     private int quantity;
     private Deque<ItemStack> toTake = new ArrayDeque<>();
     private List<IProcessable> toProcess = new ArrayList<>();
-    private Multimap<Item, ItemStack> toCraft = ArrayListMultimap.create();
-    private Multimap<Item, ItemStack> missing = ArrayListMultimap.create();
-    private Multimap<Item, ItemStack> extras = ArrayListMultimap.create();
+    private IItemStackList toCraft = RSAPI.instance().createItemStackList();
+    private IItemStackList missing = RSAPI.instance().createItemStackList();
+    private IItemStackList extras = RSAPI.instance().createItemStackList();
 
-    public CraftingTaskNormal(INetworkMaster network, ICraftingPattern pattern, int quantity) {
+    public CraftingTaskNormal(INetworkMaster network, ItemStack requested, ICraftingPattern pattern, int quantity) {
         this.network = network;
+        this.requested = requested;
         this.pattern = pattern;
         this.quantity = quantity;
     }
 
     public void calculate() {
-        calculate(network.getItemStorage().copy(), pattern, true);
+        IItemStackList list = network.getItemStorage().getList().copy();
+
+        int newQuantity = quantity;
+
+        while (newQuantity > 0) {
+            calculate(list, pattern, true);
+
+            newQuantity -= requested == null ? newQuantity : pattern.getQuantityPerRequest(requested);
+        }
+    }
+
+    private void calculate(IItemStackList list, ICraftingPattern pattern, boolean basePattern) {
+        if (pattern.isProcessing()) {
+            toProcess.add(new Processable(pattern));
+        }
+
+        for (ItemStack input : pattern.getInputs()) {
+            ItemStack inputInNetwork = list.get(input);
+
+            if (inputInNetwork == null || inputInNetwork.stackSize == 0) {
+                if (extras.get(input) != null) {
+                    decrOrRemoveExtras(input);
+                } else {
+                    ICraftingPattern inputPattern = network.getPattern(input);
+
+                    if (inputPattern != null) {
+                        for (ItemStack output : inputPattern.getOutputs()) {
+                            toCraft.add(output);
+                        }
+
+                        calculate(list, inputPattern, false);
+                    } else {
+                        missing.add(input);
+                    }
+                }
+            } else {
+                if (!pattern.isProcessing()) {
+                    toTake.push(input);
+                }
+
+                list.remove(input, true);
+            }
+        }
+
+        if (!basePattern) {
+            addExtras(pattern);
+        }
     }
 
     @Override
     public void onCancelled() {
     }
 
-    private void calculate(IGroupedItemStorage storage, ICraftingPattern pattern, boolean basePattern) {
-        for (int i = 0; i < quantity; ++i) {
-            if (pattern.isProcessing()) {
-                toProcess.add(new Processable(pattern));
-            }
-
-            for (ItemStack input : pattern.getInputs()) {
-                ItemStack inputInNetwork = storage.get(input, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
-
-                if (inputInNetwork == null || inputInNetwork.stackSize == 0) {
-                    if (getExtrasFor(input) != null) {
-                        decrOrRemoveExtras(input);
-                    } else {
-                        ICraftingPattern inputPattern = NetworkUtils.getPattern(network, input);
-
-                        if (inputPattern != null) {
-                            for (ItemStack output : inputPattern.getOutputs()) {
-                                addToCraft(output);
-                            }
-
-                            calculate(storage, inputPattern, false);
-                        } else {
-                            addMissing(input);
-                        }
-                    }
-                } else {
-                    if (!pattern.isProcessing()) {
-                        toTake.push(input);
-                    }
-
-                    storage.remove(input);
-                }
-            }
-
-            if (!basePattern) {
-                addExtras(pattern);
-            }
-        }
-    }
-
     @Override
     public String toString() {
         return "\nCraftingTask{quantity=" + quantity +
-                "\n, toTake=" + toTake +
-                "\n, toCraft=" + toCraft +
-                "\n, toProcess=" + toProcess +
-                "\n, missing=" + missing +
-                '}';
+            "\n, toTake=" + toTake +
+            "\n, toCraft=" + toCraft +
+            "\n, toProcess=" + toProcess +
+            "\n, missing=" + missing +
+            '}';
     }
 
     public boolean update() {
         for (IProcessable processable : toProcess) {
             if (processable.getPattern().getContainer().getFacingInventory() != null && processable.getStackToInsert() != null) {
-                ItemStack toInsert = NetworkUtils.extractItem(network, processable.getStackToInsert(), 1);
+                ItemStack toInsert = network.extractItem(processable.getStackToInsert(), 1);
 
                 if (ItemHandlerHelper.insertItem(processable.getPattern().getContainer().getFacingInventory(), toInsert, true) == null) {
                     ItemHandlerHelper.insertItem(processable.getPattern().getContainer().getFacingInventory(), toInsert, false);
@@ -110,7 +114,7 @@ public class CraftingTaskNormal implements ICraftingTask {
         }
 
         if (!toTake.isEmpty()) {
-            ItemStack took = NetworkUtils.extractItem(network, toTake.peek(), 1);
+            ItemStack took = network.extractItem(toTake.peek(), 1);
 
             if (took != null) {
                 toTake.pop();
@@ -149,19 +153,19 @@ public class CraftingTaskNormal implements ICraftingTask {
         List<ICraftingMonitorElement> elements = new ArrayList<>();
 
         elements.add(new CraftingMonitorElementRoot(
-                network.getCraftingTasks().indexOf(this),
-                pattern.getOutputs().get(0),
-                quantity
+            network.getCraftingTasks().indexOf(this),
+            pattern.getOutputs().get(0),
+            quantity
         ));
 
         if (!toTake.isEmpty()) {
-            Multimap<Item, ItemStack> toTake = ArrayListMultimap.create();
+            IItemStackList toTake = RSAPI.instance().createItemStackList();
 
             for (ItemStack stack : new ArrayList<>(this.toTake)) {
-                add(toTake, stack);
+                toTake.add(stack);
             }
 
-            for (ItemStack stack : toTake.values()) {
+            for (ItemStack stack : toTake.getStacks()) {
                 elements.add(new CraftingMonitorElementToTake(stack, stack.stackSize));
             }
         }
@@ -174,62 +178,19 @@ public class CraftingTaskNormal implements ICraftingTask {
         return pattern;
     }
 
+
     @Override
     public List<IProcessable> getToProcess() {
         return toProcess;
     }
 
-    private void addMissing(ItemStack stack) {
-        add(missing, stack);
-    }
-
-    private void addToCraft(ItemStack stack) {
-        add(toCraft, stack);
-    }
-
-    private void add(Multimap<Item, ItemStack> map, ItemStack stack) {
-        for (ItemStack m : map.get(stack.getItem())) {
-            if (CompareUtils.compareStackNoQuantity(m, stack)) {
-                m.stackSize += stack.stackSize;
-
-                return;
-            }
-        }
-
-        map.put(stack.getItem(), stack.copy());
-    }
-
     private void addExtras(ICraftingPattern pattern) {
-        pattern.getOutputs().stream().filter(o -> o.stackSize > 1).forEach(o -> addExtras(ItemHandlerHelper.copyStackWithSize(o, o.stackSize - 1)));
-    }
-
-    private void addExtras(ItemStack stack) {
-        ItemStack extras = getExtrasFor(stack);
-
-        if (extras != null) {
-            extras.stackSize += stack.stackSize;
-        } else {
-            this.extras.put(stack.getItem(), stack.copy());
-        }
-    }
-
-    private ItemStack getExtrasFor(ItemStack stack) {
-        for (ItemStack m : extras.get(stack.getItem())) {
-            if (CompareUtils.compareStackNoQuantity(m, stack)) {
-                return m;
-            }
-        }
-
-        return null;
+        pattern.getOutputs().stream()
+            .filter(o -> o.stackSize > 1)
+            .forEach(o -> extras.add(ItemHandlerHelper.copyStackWithSize(o, o.stackSize - 1)));
     }
 
     private void decrOrRemoveExtras(ItemStack stack) {
-        ItemStack extras = getExtrasFor(stack);
-
-        extras.stackSize--;
-
-        if (extras.stackSize == 0) {
-            this.extras.remove(extras.getItem(), extras);
-        }
+        extras.remove(ItemHandlerHelper.copyStackWithSize(stack, 1), true);
     }
 }

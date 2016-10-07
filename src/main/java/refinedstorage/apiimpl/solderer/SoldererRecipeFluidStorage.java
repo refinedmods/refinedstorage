@@ -1,8 +1,8 @@
 package refinedstorage.apiimpl.solderer;
 
 import net.minecraft.item.ItemStack;
-import refinedstorage.RefinedStorageBlocks;
-import refinedstorage.RefinedStorageItems;
+import refinedstorage.RSBlocks;
+import refinedstorage.RSItems;
 import refinedstorage.api.solderer.ISoldererRecipe;
 import refinedstorage.block.EnumFluidStorageType;
 import refinedstorage.item.ItemBlockFluidStorage;
@@ -18,9 +18,9 @@ public class SoldererRecipeFluidStorage implements ISoldererRecipe {
     public SoldererRecipeFluidStorage(EnumFluidStorageType type, int storagePart) {
         this.type = type;
         this.rows = new ItemStack[]{
-            new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
-            new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
-            new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, storagePart)
+            new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
+            new ItemStack(RSBlocks.MACHINE_CASING),
+            new ItemStack(RSItems.FLUID_STORAGE_PART, 1, storagePart)
         };
     }
 
@@ -33,7 +33,7 @@ public class SoldererRecipeFluidStorage implements ISoldererRecipe {
     @Override
     @Nonnull
     public ItemStack getResult() {
-        return ItemBlockFluidStorage.initNBT(new ItemStack(RefinedStorageBlocks.FLUID_STORAGE, 1, type.getId()));
+        return ItemBlockFluidStorage.initNBT(new ItemStack(RSBlocks.FLUID_STORAGE, 1, type.getId()));
     }
 
     @Override

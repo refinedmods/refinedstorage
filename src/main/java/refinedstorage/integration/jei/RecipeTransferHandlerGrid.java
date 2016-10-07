@@ -11,7 +11,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import refinedstorage.RefinedStorage;
+import refinedstorage.RS;
 import refinedstorage.container.ContainerGrid;
 import refinedstorage.network.MessageGridCraftingTransfer;
 
@@ -63,7 +63,7 @@ public class RecipeTransferHandlerGrid implements IRecipeTransferHandler {
                 }
             }
 
-            RefinedStorage.INSTANCE.network.sendToServer(new MessageGridCraftingTransfer(recipe));
+            RS.INSTANCE.network.sendToServer(new MessageGridCraftingTransfer(recipe));
         }
 
         return null;

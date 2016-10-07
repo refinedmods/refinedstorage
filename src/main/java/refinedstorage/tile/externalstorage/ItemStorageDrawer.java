@@ -4,7 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
-import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.api.RSAPI;
 import refinedstorage.tile.config.IFilterable;
 
 import java.util.Collections;
@@ -88,7 +88,7 @@ public class ItemStorageDrawer extends ItemStorageExternal {
 
     @Override
     public ItemStack extractItem(ItemStack stack, int size, int flags) {
-        if (CompareUtils.compareStack(stack, drawer.getStoredItemPrototype(), flags) && drawer.canItemBeExtracted(stack)) {
+        if (RSAPI.instance().getComparer().isEqual(stack, drawer.getStoredItemPrototype(), flags) && drawer.canItemBeExtracted(stack)) {
             if (size > drawer.getStoredItemCount()) {
                 size = drawer.getStoredItemCount();
             }

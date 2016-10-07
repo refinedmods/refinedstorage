@@ -7,7 +7,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.INetworkNode;
-import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.tile.config.IRedstoneConfigurable;
 import refinedstorage.tile.config.RedstoneMode;
 import refinedstorage.tile.data.TileDataParameter;
@@ -65,7 +64,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
                 onConnectionChange(network, update);
 
                 if (rebuildOnUpdateChange) {
-                    NetworkUtils.rebuildGraph(network);
+                    network.getNodeGraph().rebuild();
                 }
             }
 

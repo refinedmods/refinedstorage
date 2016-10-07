@@ -6,7 +6,7 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import org.lwjgl.input.Keyboard;
-import refinedstorage.RefinedStorage;
+import refinedstorage.RS;
 import refinedstorage.container.ContainerCraftingSettings;
 import refinedstorage.gui.GuiBase;
 import refinedstorage.gui.grid.stack.ClientStackItem;
@@ -124,7 +124,7 @@ public class GuiCraftingStart extends GuiBase {
         Integer quantity = Ints.tryParse(amountField.getText());
 
         if (quantity != null && quantity > 0) {
-            RefinedStorage.INSTANCE.network.sendToServer(new MessageGridCraftingPreview(stack.getHash(), quantity));
+            RS.INSTANCE.network.sendToServer(new MessageGridCraftingPreview(stack.getHash(), quantity));
         }
     }
 

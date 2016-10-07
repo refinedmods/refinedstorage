@@ -1,5 +1,6 @@
 package refinedstorage.apiimpl.autocrafting.registry;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import refinedstorage.api.autocrafting.ICraftingPattern;
@@ -16,7 +17,7 @@ public class CraftingTaskFactoryNormal implements ICraftingTaskFactory {
 
     @Override
     @Nonnull
-    public ICraftingTask create(World world, INetworkMaster network, ICraftingPattern pattern, int quantity, @Nullable NBTTagCompound tag) {
-        return new CraftingTaskNormal(network, pattern, quantity);
+    public ICraftingTask create(World world, INetworkMaster network, @Nullable ItemStack stack, ICraftingPattern pattern, int quantity, @Nullable NBTTagCompound tag) {
+        return new CraftingTaskNormal(network, stack, pattern, quantity);
     }
 }

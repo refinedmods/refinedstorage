@@ -2,8 +2,8 @@ package refinedstorage.gui;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
-import refinedstorage.RefinedStorage;
-import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.RS;
+import refinedstorage.api.util.IComparer;
 import refinedstorage.container.ContainerGridFilter;
 import refinedstorage.item.ItemGridFilter;
 import refinedstorage.network.MessageGridFilterUpdate;
@@ -24,8 +24,8 @@ public class GuiGridFilter extends GuiBase {
 
     @Override
     public void init(int x, int y) {
-        compareDamage = addCheckBox(x + 7, y + 41, t("gui.refinedstorage:grid_filter.compare_damage"), (compare & CompareUtils.COMPARE_DAMAGE) == CompareUtils.COMPARE_DAMAGE);
-        compareNBT = addCheckBox(x + 7 + compareDamage.getButtonWidth() + 4, y + 41, t("gui.refinedstorage:grid_filter.compare_nbt"), (compare & CompareUtils.COMPARE_NBT) == CompareUtils.COMPARE_NBT);
+        compareDamage = addCheckBox(x + 7, y + 41, t("gui.refinedstorage:grid_filter.compare_damage"), (compare & IComparer.COMPARE_DAMAGE) == IComparer.COMPARE_DAMAGE);
+        compareNBT = addCheckBox(x + 7 + compareDamage.getButtonWidth() + 4, y + 41, t("gui.refinedstorage:grid_filter.compare_nbt"), (compare & IComparer.COMPARE_NBT) == IComparer.COMPARE_NBT);
     }
 
     @Override
@@ -50,11 +50,11 @@ public class GuiGridFilter extends GuiBase {
         super.actionPerformed(button);
 
         if (button == compareDamage) {
-            compare ^= CompareUtils.COMPARE_DAMAGE;
+            compare ^= IComparer.COMPARE_DAMAGE;
         } else if (button == compareNBT) {
-            compare ^= CompareUtils.COMPARE_NBT;
+            compare ^= IComparer.COMPARE_NBT;
         }
 
-        RefinedStorage.INSTANCE.network.sendToServer(new MessageGridFilterUpdate(compare));
+        RS.INSTANCE.network.sendToServer(new MessageGridFilterUpdate(compare));
     }
 }

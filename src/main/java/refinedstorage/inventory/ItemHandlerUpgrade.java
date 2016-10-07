@@ -1,7 +1,7 @@
 package refinedstorage.inventory;
 
 import net.minecraft.tileentity.TileEntity;
-import refinedstorage.RefinedStorageItems;
+import refinedstorage.RSItems;
 import refinedstorage.item.ItemUpgrade;
 
 public class ItemHandlerUpgrade extends ItemHandlerBasic {
@@ -9,7 +9,7 @@ public class ItemHandlerUpgrade extends ItemHandlerBasic {
         super(size, tile, new IItemValidator[supportedUpgrades.length]);
 
         for (int i = 0; i < supportedUpgrades.length; ++i) {
-            this.validators[i] = new ItemValidatorBasic(RefinedStorageItems.UPGRADE, supportedUpgrades[i]);
+            this.validators[i] = new ItemValidatorBasic(RSItems.UPGRADE, supportedUpgrades[i]);
         }
     }
 

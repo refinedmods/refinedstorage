@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
-import refinedstorage.RefinedStorage;
+import refinedstorage.RS;
 import refinedstorage.container.ContainerBase;
 import refinedstorage.network.MessageTileDataParameter;
 import refinedstorage.network.MessageTileDataParameterUpdate;
@@ -35,7 +35,7 @@ public class TileDataManager {
     }
 
     public static <T> void setParameter(TileDataParameter<T> parameter, T value) {
-        RefinedStorage.INSTANCE.network.sendToServer(new MessageTileDataParameterUpdate(parameter, value));
+        RS.INSTANCE.network.sendToServer(new MessageTileDataParameterUpdate(parameter, value));
     }
 
     private TileEntity tile;
@@ -81,7 +81,7 @@ public class TileDataManager {
     }
 
     public void sendParameter(EntityPlayerMP player, TileDataParameter<?> parameter) {
-        RefinedStorage.INSTANCE.network.sendTo(new MessageTileDataParameter(tile, parameter), player);
+        RS.INSTANCE.network.sendTo(new MessageTileDataParameter(tile, parameter), player);
     }
 
     public void sendParameterToWatchers(TileDataParameter<?> parameter) {

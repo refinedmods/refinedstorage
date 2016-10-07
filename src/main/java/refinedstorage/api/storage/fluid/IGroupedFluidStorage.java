@@ -2,14 +2,14 @@ package refinedstorage.api.storage.fluid;
 
 import net.minecraftforge.fluids.FluidStack;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.api.storage.CompareUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 
-/**e
+/**
+ * e
  * This holds all fluids from all the connected storages from a {@link INetworkMaster}.
  * <p>
  * Refined Storage uses this class mainly for use in Grids and Detectors to avoid querying

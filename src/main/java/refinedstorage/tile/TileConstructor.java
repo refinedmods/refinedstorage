@@ -15,9 +15,8 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import refinedstorage.RefinedStorage;
-import refinedstorage.api.network.NetworkUtils;
-import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.RS;
+import refinedstorage.api.util.IComparer;
 import refinedstorage.container.slot.SlotSpecimen;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerFluid;
@@ -49,7 +48,7 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_CRAFTING);
 
-    private int compare = CompareUtils.COMPARE_NBT | CompareUtils.COMPARE_DAMAGE;
+    private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int type = IType.ITEMS;
 
     private IBlockState block;
@@ -66,7 +65,7 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.config.constructorUsage + upgrades.getEnergyUsage();
+        return RS.INSTANCE.config.constructorUsage + upgrades.getEnergyUsage();
     }
 
     @Override
@@ -90,7 +89,7 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
                     } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
                         ItemStack craft = itemFilters.getStackInSlot(0);
 
-                        NetworkUtils.scheduleCraftingTaskIfUnscheduled(network, craft, 1, compare);
+                        network.scheduleCraftingTaskIfUnscheduled(craft, 1, compare);
                     }
                 }
             } else if (type == IType.FLUIDS) {

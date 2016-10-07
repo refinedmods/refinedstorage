@@ -1,7 +1,6 @@
 package refinedstorage.api.storage.item;
 
 import net.minecraft.item.ItemStack;
-import refinedstorage.api.storage.CompareUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

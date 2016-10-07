@@ -1,6 +1,6 @@
 package refinedstorage.gui;
 
-import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.api.util.IComparer;
 import refinedstorage.container.ContainerDiskManipulator;
 import refinedstorage.gui.sidebutton.*;
 import refinedstorage.tile.TileDiskManipulator;
@@ -16,8 +16,8 @@ public class GuiDiskManipulator extends GuiBase {
         addSideButton(new SideButtonIOMode(this, TileDiskManipulator.IO_MODE));
         addSideButton(new SideButtonType(this, TileDiskManipulator.TYPE));
         addSideButton(new SideButtonMode(this, TileDiskManipulator.MODE));
-        addSideButton(new SideButtonCompare(this, TileDiskManipulator.COMPARE, CompareUtils.COMPARE_DAMAGE));
-        addSideButton(new SideButtonCompare(this, TileDiskManipulator.COMPARE, CompareUtils.COMPARE_NBT));
+        addSideButton(new SideButtonCompare(this, TileDiskManipulator.COMPARE, IComparer.COMPARE_DAMAGE));
+        addSideButton(new SideButtonCompare(this, TileDiskManipulator.COMPARE, IComparer.COMPARE_NBT));
     }
 
     @Override

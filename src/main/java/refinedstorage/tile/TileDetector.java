@@ -9,11 +9,12 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.items.IItemHandler;
-import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageBlocks;
+import refinedstorage.RS;
+import refinedstorage.RSBlocks;
+import refinedstorage.api.RSAPI;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.api.util.IComparer;
 import refinedstorage.gui.GuiDetector;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerFluid;
@@ -82,7 +83,7 @@ public class TileDetector extends TileNode implements IComparable, IType {
     private ItemHandlerBasic itemFilters = new ItemHandlerBasic(1, this);
     private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(1, this);
 
-    private int compare = CompareUtils.COMPARE_NBT | CompareUtils.COMPARE_DAMAGE;
+    private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int type = IType.ITEMS;
     private int mode = MODE_EQUAL;
     private int amount = 0;
@@ -99,7 +100,7 @@ public class TileDetector extends TileNode implements IComparable, IType {
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.config.detectorUsage;
+        return RS.INSTANCE.config.detectorUsage;
     }
 
     @Override
@@ -114,7 +115,7 @@ public class TileDetector extends TileNode implements IComparable, IType {
 
                         for (ICraftingTask task : network.getCraftingTasks()) {
                             for (ItemStack output : task.getPattern().getOutputs()) {
-                                if (CompareUtils.compareStackNoQuantity(slot, output)) {
+                                if (RSAPI.instance().getComparer().isEqualNoQuantity(slot, output)) {
                                     found = true;
 
                                     break;
@@ -128,7 +129,7 @@ public class TileDetector extends TileNode implements IComparable, IType {
 
                         powered = found;
                     } else {
-                        ItemStack stack = network.getItemStorage().get(slot, compare);
+                        ItemStack stack = network.getItemStorage().getList().get(slot, compare);
 
                         powered = isPowered(stack == null ? null : stack.stackSize);
                     }
@@ -154,7 +155,7 @@ public class TileDetector extends TileNode implements IComparable, IType {
         if (powered != wasPowered) {
             wasPowered = powered;
 
-            worldObj.notifyNeighborsOfStateChange(pos, RefinedStorageBlocks.DETECTOR);
+            worldObj.notifyNeighborsOfStateChange(pos, RSBlocks.DETECTOR);
 
             updateBlock();
         }

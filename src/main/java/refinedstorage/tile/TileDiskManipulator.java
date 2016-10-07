@@ -11,9 +11,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import refinedstorage.RefinedStorage;
-import refinedstorage.api.storage.CompareUtils;
-import refinedstorage.apiimpl.storage.NBTStorage;
+import refinedstorage.RS;
+import refinedstorage.RSUtils;
+import refinedstorage.api.util.IComparer;
 import refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
 import refinedstorage.apiimpl.storage.fluid.FluidUtils;
 import refinedstorage.apiimpl.storage.item.ItemStorageNBT;
@@ -59,7 +59,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
     private static final String NBT_TYPE = "Type";
     private static final String NBT_IO_MODE = "IOMode";
 
-    private int compare = CompareUtils.COMPARE_NBT | CompareUtils.COMPARE_DAMAGE;
+    private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int mode = IFilterable.WHITELIST;
     private int type = IType.ITEMS;
     private int ioMode = IO_MODE_INSERT;
@@ -82,7 +82,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             super.onContentsChanged(slot);
 
             if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER && slot < 6) {
-                NBTStorage.constructFromDrive(getStackInSlot(slot), slot, itemStorages, fluidStorages, s -> new ItemStorage(s), s -> new FluidStorage(s));
+                RSUtils.constructFromDrive(getStackInSlot(slot), slot, itemStorages, fluidStorages, s -> new ItemStorage(s), s -> new FluidStorage(s));
             }
         }
 
@@ -164,7 +164,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.config.diskManipulatorUsage + upgrades.getEnergyUsage();
+        return RS.INSTANCE.config.diskManipulatorUsage + upgrades.getEnergyUsage();
     }
 
     @Override
@@ -261,7 +261,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
 
         if (IFilterable.isEmpty(itemFilters)) {
             ItemStack toExtract = null;
-            ArrayList<ItemStack> networkItems = new ArrayList<>(network.getItemStorage().getStacks());
+            ArrayList<ItemStack> networkItems = new ArrayList<>(network.getItemStorage().getList().getStacks());
 
             int j = 0;
 

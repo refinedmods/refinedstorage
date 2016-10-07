@@ -10,8 +10,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageGui;
+import refinedstorage.RS;
+import refinedstorage.RSGui;
 import refinedstorage.tile.externalstorage.TileExternalStorage;
 
 import java.util.ArrayList;
@@ -75,7 +75,7 @@ public class BlockExternalStorage extends BlockCable {
         }
 
         if (!world.isRemote) {
-            player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.EXTERNAL_STORAGE, world, pos.getX(), pos.getY(), pos.getZ());
+            player.openGui(RS.INSTANCE, RSGui.EXTERNAL_STORAGE, world, pos.getX(), pos.getY(), pos.getZ());
         }
 
         return true;

@@ -15,9 +15,9 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageBlocks;
-import refinedstorage.RefinedStorageGui;
+import refinedstorage.RS;
+import refinedstorage.RSBlocks;
+import refinedstorage.RSGui;
 import refinedstorage.item.ItemBlockFluidStorage;
 import refinedstorage.tile.TileFluidStorage;
 
@@ -65,7 +65,7 @@ public class BlockFluidStorage extends BlockNode {
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
-            player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.FLUID_STORAGE, world, pos.getX(), pos.getY(), pos.getZ());
+            player.openGui(RS.INSTANCE, RSGui.FLUID_STORAGE, world, pos.getX(), pos.getY(), pos.getZ());
         }
 
         return true;
@@ -93,7 +93,7 @@ public class BlockFluidStorage extends BlockNode {
 
         List<ItemStack> drops = new ArrayList<>();
 
-        ItemStack stack = new ItemStack(RefinedStorageBlocks.FLUID_STORAGE, 1, getMetaFromState(state));
+        ItemStack stack = new ItemStack(RSBlocks.FLUID_STORAGE, 1, getMetaFromState(state));
         stack.setTagCompound(new NBTTagCompound());
         stack.getTagCompound().setTag(TileFluidStorage.NBT_STORAGE, storage.getStorageTag());
 

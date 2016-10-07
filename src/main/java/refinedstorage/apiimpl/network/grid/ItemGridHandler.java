@@ -5,12 +5,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import refinedstorage.RefinedStorage;
+import refinedstorage.RS;
+import refinedstorage.api.RSAPI;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.api.network.grid.IItemGridHandler;
-import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.apiimpl.autocrafting.task.CraftingTaskNormal;
 
 public class ItemGridHandler implements IItemGridHandler {
@@ -22,7 +21,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
     @Override
     public void onExtract(int hash, int flags, EntityPlayerMP player) {
-        ItemStack item = network.getItemStorage().get(hash);
+        ItemStack item = network.getItemStorage().getList().get(hash);
 
         if (item == null) {
             return;
@@ -35,7 +34,7 @@ public class ItemGridHandler implements IItemGridHandler {
         ItemStack held = player.inventory.getItemStack();
 
         if (single) {
-            if (held != null && (!CompareUtils.compareStackNoQuantity(item, held) || held.stackSize + 1 > held.getMaxStackSize())) {
+            if (held != null && (!RSAPI.instance().getComparer().isEqualNoQuantity(item, held) || held.stackSize + 1 > held.getMaxStackSize())) {
                 return;
             }
         } else if (player.inventory.getItemStack() != null) {
@@ -58,7 +57,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
         size = Math.min(size, item.getItem().getItemStackLimit(item));
 
-        ItemStack took = NetworkUtils.extractItem(network, item, size);
+        ItemStack took = network.extractItem(item, size);
 
         if (took != null) {
             if ((flags & EXTRACT_SHIFT) == EXTRACT_SHIFT) {
@@ -77,7 +76,7 @@ public class ItemGridHandler implements IItemGridHandler {
                 player.updateHeldItem();
             }
 
-            network.getWirelessGridHandler().drainEnergy(player, RefinedStorage.INSTANCE.config.wirelessGridExtractUsage);
+            network.getWirelessGridHandler().drainEnergy(player, RS.INSTANCE.config.wirelessGridExtractUsage);
         }
     }
 
@@ -85,7 +84,7 @@ public class ItemGridHandler implements IItemGridHandler {
     public ItemStack onInsert(EntityPlayerMP player, ItemStack stack) {
         ItemStack remainder = network.insertItem(stack, stack.stackSize, false);
 
-        network.getWirelessGridHandler().drainEnergy(player, RefinedStorage.INSTANCE.config.wirelessGridInsertUsage);
+        network.getWirelessGridHandler().drainEnergy(player, RS.INSTANCE.config.wirelessGridInsertUsage);
 
         return remainder;
     }
@@ -115,15 +114,15 @@ public class ItemGridHandler implements IItemGridHandler {
 
         player.updateHeldItem();
 
-        network.getWirelessGridHandler().drainEnergy(player, RefinedStorage.INSTANCE.config.wirelessGridInsertUsage);
+        network.getWirelessGridHandler().drainEnergy(player, RS.INSTANCE.config.wirelessGridInsertUsage);
     }
 
     @Override
     public void onCraftingPreviewRequested(EntityPlayerMP player, int hash, int quantity) {
-        ItemStack stack = network.getItemStorage().get(hash);
+        ItemStack stack = network.getItemStorage().getList().get(hash);
 
         if (stack != null) {
-            CraftingTaskNormal task = new CraftingTaskNormal(network, NetworkUtils.getPattern(network, stack), quantity);
+            CraftingTaskNormal task = new CraftingTaskNormal(network, stack, network.getPattern(stack), quantity);
 
             task.calculate();
 

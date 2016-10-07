@@ -8,8 +8,8 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import refinedstorage.RefinedStorage;
-import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.RS;
+import refinedstorage.api.util.IComparer;
 import refinedstorage.apiimpl.storage.fluid.FluidUtils;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerFluid;
@@ -17,7 +17,7 @@ import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.IComparable;
 import refinedstorage.tile.data.ITileDataProducer;
-import refinedstorage.tile.data.RefinedStorageSerializers;
+import refinedstorage.tile.data.RSSerializers;
 import refinedstorage.tile.data.TileDataParameter;
 
 public class TileFluidInterface extends TileNode implements IComparable {
@@ -25,14 +25,14 @@ public class TileFluidInterface extends TileNode implements IComparable {
 
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
 
-    public static final TileDataParameter<FluidStack> TANK_IN = new TileDataParameter<>(RefinedStorageSerializers.FLUID_STACK_SERIALIZER, null, new ITileDataProducer<FluidStack, TileFluidInterface>() {
+    public static final TileDataParameter<FluidStack> TANK_IN = new TileDataParameter<>(RSSerializers.FLUID_STACK_SERIALIZER, null, new ITileDataProducer<FluidStack, TileFluidInterface>() {
         @Override
         public FluidStack getValue(TileFluidInterface tile) {
             return tile.tankIn.getFluid();
         }
     });
 
-    public static final TileDataParameter<FluidStack> TANK_OUT = new TileDataParameter<>(RefinedStorageSerializers.FLUID_STACK_SERIALIZER, null, new ITileDataProducer<FluidStack, TileFluidInterface>() {
+    public static final TileDataParameter<FluidStack> TANK_OUT = new TileDataParameter<>(RSSerializers.FLUID_STACK_SERIALIZER, null, new ITileDataProducer<FluidStack, TileFluidInterface>() {
         @Override
         public FluidStack getValue(TileFluidInterface tile) {
             return tile.tankOut.getFluid();
@@ -43,7 +43,7 @@ public class TileFluidInterface extends TileNode implements IComparable {
     private static final String NBT_TANK_IN = "TankIn";
     private static final String NBT_TANK_OUT = "TankOut";
 
-    private int compare = CompareUtils.COMPARE_NBT;
+    private int compare = IComparer.COMPARE_NBT;
 
     private FluidTank tankIn = new FluidTank(TANK_CAPACITY) {
         @Override
@@ -141,7 +141,7 @@ public class TileFluidInterface extends TileNode implements IComparable {
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.config.fluidInterfaceUsage;
+        return RS.INSTANCE.config.fluidInterfaceUsage;
     }
 
     @Override

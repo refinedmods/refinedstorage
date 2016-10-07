@@ -7,7 +7,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
-import refinedstorage.RefinedStorageGui;
+import refinedstorage.RSGui;
 import refinedstorage.container.*;
 import refinedstorage.gui.grid.GuiGrid;
 import refinedstorage.tile.*;
@@ -18,47 +18,47 @@ import refinedstorage.tile.grid.WirelessGrid;
 public class GuiHandler implements IGuiHandler {
     private Container getContainer(int ID, EntityPlayer player, TileEntity tile) {
         switch (ID) {
-            case RefinedStorageGui.CONTROLLER:
+            case RSGui.CONTROLLER:
                 return new ContainerController((TileController) tile, player);
-            case RefinedStorageGui.GRID:
+            case RSGui.GRID:
                 return new ContainerGrid((TileGrid) tile, player);
-            case RefinedStorageGui.DISK_DRIVE:
+            case RSGui.DISK_DRIVE:
                 return new ContainerDiskDrive((TileDiskDrive) tile, player);
-            case RefinedStorageGui.IMPORTER:
+            case RSGui.IMPORTER:
                 return new ContainerImporter((TileImporter) tile, player);
-            case RefinedStorageGui.EXPORTER:
+            case RSGui.EXPORTER:
                 return new ContainerExporter((TileExporter) tile, player);
-            case RefinedStorageGui.DETECTOR:
+            case RSGui.DETECTOR:
                 return new ContainerDetector((TileDetector) tile, player);
-            case RefinedStorageGui.SOLDERER:
+            case RSGui.SOLDERER:
                 return new ContainerSolderer((TileSolderer) tile, player);
-            case RefinedStorageGui.DESTRUCTOR:
+            case RSGui.DESTRUCTOR:
                 return new ContainerDestructor((TileDestructor) tile, player);
-            case RefinedStorageGui.CONSTRUCTOR:
+            case RSGui.CONSTRUCTOR:
                 return new ContainerConstructor((TileConstructor) tile, player);
-            case RefinedStorageGui.STORAGE:
+            case RSGui.STORAGE:
                 return new ContainerStorage((TileStorage) tile, player);
-            case RefinedStorageGui.EXTERNAL_STORAGE:
+            case RSGui.EXTERNAL_STORAGE:
                 return new ContainerExternalStorage((TileExternalStorage) tile, player);
-            case RefinedStorageGui.RELAY:
+            case RSGui.RELAY:
                 return new ContainerRelay((TileRelay) tile, player);
-            case RefinedStorageGui.INTERFACE:
+            case RSGui.INTERFACE:
                 return new ContainerInterface((TileInterface) tile, player);
-            case RefinedStorageGui.CRAFTING_MONITOR:
+            case RSGui.CRAFTING_MONITOR:
                 return new ContainerCraftingMonitor((TileCraftingMonitor) tile, player);
-            case RefinedStorageGui.WIRELESS_TRANSMITTER:
+            case RSGui.WIRELESS_TRANSMITTER:
                 return new ContainerWirelessTransmitter((TileWirelessTransmitter) tile, player);
-            case RefinedStorageGui.CRAFTER:
+            case RSGui.CRAFTER:
                 return new ContainerCrafter((TileCrafter) tile, player);
-            case RefinedStorageGui.PROCESSING_PATTERN_ENCODER:
+            case RSGui.PROCESSING_PATTERN_ENCODER:
                 return new ContainerProcessingPatternEncoder((TileProcessingPatternEncoder) tile, player);
-            case RefinedStorageGui.NETWORK_TRANSMITTER:
+            case RSGui.NETWORK_TRANSMITTER:
                 return new ContainerNetworkTransmitter((TileNetworkTransmitter) tile, player);
-            case RefinedStorageGui.FLUID_INTERFACE:
+            case RSGui.FLUID_INTERFACE:
                 return new ContainerFluidInterface((TileFluidInterface) tile, player);
-            case RefinedStorageGui.FLUID_STORAGE:
+            case RSGui.FLUID_STORAGE:
                 return new ContainerFluidStorage((TileFluidStorage) tile, player);
-            case RefinedStorageGui.DISK_MANIPULATOR:
+            case RSGui.DISK_MANIPULATOR:
                 return new ContainerDiskManipulator((TileDiskManipulator) tile, player);
             default:
                 return null;
@@ -79,9 +79,9 @@ public class GuiHandler implements IGuiHandler {
 
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        if (ID == RefinedStorageGui.WIRELESS_GRID) {
+        if (ID == RSGui.WIRELESS_GRID) {
             return getWirelessGridContainer(player, x, y);
-        } else if (ID == RefinedStorageGui.GRID_FILTER) {
+        } else if (ID == RSGui.GRID_FILTER) {
             return getGridFilterContainer(player, x);
         }
 
@@ -93,51 +93,51 @@ public class GuiHandler implements IGuiHandler {
         TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
 
         switch (ID) {
-            case RefinedStorageGui.CONTROLLER:
+            case RSGui.CONTROLLER:
                 return new GuiController((ContainerController) getContainer(ID, player, tile), (TileController) tile);
-            case RefinedStorageGui.GRID:
+            case RSGui.GRID:
                 return new GuiGrid((ContainerGrid) getContainer(ID, player, tile), (TileGrid) tile);
-            case RefinedStorageGui.WIRELESS_GRID:
+            case RSGui.WIRELESS_GRID:
                 return getWirelessGridGui(player, x, y);
-            case RefinedStorageGui.DISK_DRIVE:
+            case RSGui.DISK_DRIVE:
                 return new GuiStorage((ContainerDiskDrive) getContainer(ID, player, tile), (IStorageGui) tile, "gui/disk_drive.png");
-            case RefinedStorageGui.IMPORTER:
+            case RSGui.IMPORTER:
                 return new GuiImporter((ContainerImporter) getContainer(ID, player, tile));
-            case RefinedStorageGui.EXPORTER:
+            case RSGui.EXPORTER:
                 return new GuiExporter((ContainerExporter) getContainer(ID, player, tile));
-            case RefinedStorageGui.DETECTOR:
+            case RSGui.DETECTOR:
                 return new GuiDetector((ContainerDetector) getContainer(ID, player, tile));
-            case RefinedStorageGui.SOLDERER:
+            case RSGui.SOLDERER:
                 return new GuiSolderer((ContainerSolderer) getContainer(ID, player, tile), (TileSolderer) tile);
-            case RefinedStorageGui.DESTRUCTOR:
+            case RSGui.DESTRUCTOR:
                 return new GuiDestructor((ContainerDestructor) getContainer(ID, player, tile));
-            case RefinedStorageGui.CONSTRUCTOR:
+            case RSGui.CONSTRUCTOR:
                 return new GuiConstructor((ContainerConstructor) getContainer(ID, player, tile));
-            case RefinedStorageGui.STORAGE:
+            case RSGui.STORAGE:
                 return new GuiStorage((ContainerStorage) getContainer(ID, player, tile), (TileStorage) tile);
-            case RefinedStorageGui.EXTERNAL_STORAGE:
+            case RSGui.EXTERNAL_STORAGE:
                 return new GuiStorage((ContainerExternalStorage) getContainer(ID, player, tile), (TileExternalStorage) tile);
-            case RefinedStorageGui.RELAY:
+            case RSGui.RELAY:
                 return new GuiRelay((ContainerRelay) getContainer(ID, player, tile));
-            case RefinedStorageGui.INTERFACE:
+            case RSGui.INTERFACE:
                 return new GuiInterface((ContainerInterface) getContainer(ID, player, tile));
-            case RefinedStorageGui.CRAFTING_MONITOR:
+            case RSGui.CRAFTING_MONITOR:
                 return new GuiCraftingMonitor((ContainerCraftingMonitor) getContainer(ID, player, tile), (TileCraftingMonitor) tile);
-            case RefinedStorageGui.WIRELESS_TRANSMITTER:
+            case RSGui.WIRELESS_TRANSMITTER:
                 return new GuiWirelessTransmitter((ContainerWirelessTransmitter) getContainer(ID, player, tile));
-            case RefinedStorageGui.CRAFTER:
+            case RSGui.CRAFTER:
                 return new GuiCrafter((ContainerCrafter) getContainer(ID, player, tile));
-            case RefinedStorageGui.PROCESSING_PATTERN_ENCODER:
+            case RSGui.PROCESSING_PATTERN_ENCODER:
                 return new GuiProcessingPatternEncoder((ContainerProcessingPatternEncoder) getContainer(ID, player, tile), (TileProcessingPatternEncoder) tile);
-            case RefinedStorageGui.GRID_FILTER:
+            case RSGui.GRID_FILTER:
                 return new GuiGridFilter(getGridFilterContainer(player, x));
-            case RefinedStorageGui.NETWORK_TRANSMITTER:
+            case RSGui.NETWORK_TRANSMITTER:
                 return new GuiNetworkTransmitter((ContainerNetworkTransmitter) getContainer(ID, player, tile), (TileNetworkTransmitter) tile);
-            case RefinedStorageGui.FLUID_INTERFACE:
+            case RSGui.FLUID_INTERFACE:
                 return new GuiFluidInterface((ContainerFluidInterface) getContainer(ID, player, tile));
-            case RefinedStorageGui.FLUID_STORAGE:
+            case RSGui.FLUID_STORAGE:
                 return new GuiStorage((ContainerFluidStorage) getContainer(ID, player, tile), (TileFluidStorage) tile);
-            case RefinedStorageGui.DISK_MANIPULATOR:
+            case RSGui.DISK_MANIPULATOR:
                 return new GuiDiskManipulator((ContainerDiskManipulator) getContainer(ID, player, tile));
             default:
                 return null;

@@ -1,13 +1,16 @@
 package refinedstorage.integration.jei;
 
-import mezz.jei.api.*;
+import mezz.jei.api.BlankModPlugin;
+import mezz.jei.api.IJeiRuntime;
+import mezz.jei.api.IModRegistry;
+import mezz.jei.api.JEIPlugin;
 import net.minecraft.item.ItemStack;
-import refinedstorage.RefinedStorageBlocks;
+import refinedstorage.RSBlocks;
 import refinedstorage.container.ContainerSolderer;
 
 @JEIPlugin
-public class RefinedStorageJEIPlugin extends BlankModPlugin {
-    public static RefinedStorageJEIPlugin INSTANCE;
+public class RSJEIPlugin extends BlankModPlugin {
+    public static RSJEIPlugin INSTANCE;
 
     private IJeiRuntime runtime;
 
@@ -25,7 +28,7 @@ public class RefinedStorageJEIPlugin extends BlankModPlugin {
 
         registry.addRecipes(RecipeMakerSolderer.getRecipes());
 
-        registry.addRecipeCategoryCraftingItem(new ItemStack(RefinedStorageBlocks.SOLDERER), RecipeCategorySolderer.ID);
+        registry.addRecipeCategoryCraftingItem(new ItemStack(RSBlocks.SOLDERER), RecipeCategorySolderer.ID);
     }
 
     @Override

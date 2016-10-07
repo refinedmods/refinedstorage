@@ -17,10 +17,9 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageBlocks;
-import refinedstorage.RefinedStorageGui;
-import refinedstorage.api.network.NetworkUtils;
+import refinedstorage.RS;
+import refinedstorage.RSBlocks;
+import refinedstorage.RSGui;
 import refinedstorage.item.ItemBlockController;
 import refinedstorage.tile.TileController;
 
@@ -82,7 +81,7 @@ public class BlockController extends BlockBase {
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
-            player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.CONTROLLER, world, pos.getX(), pos.getY(), pos.getZ());
+            player.openGui(RS.INSTANCE, RSGui.CONTROLLER, world, pos.getX(), pos.getY(), pos.getZ());
         }
 
         return true;
@@ -118,7 +117,7 @@ public class BlockController extends BlockBase {
         super.neighborChanged(state, world, pos, block);
 
         if (!world.isRemote) {
-            NetworkUtils.rebuildGraph((TileController) world.getTileEntity(pos));
+            ((TileController) world.getTileEntity(pos)).getNodeGraph().rebuild();
         }
     }
 
@@ -126,7 +125,7 @@ public class BlockController extends BlockBase {
     public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         List<ItemStack> drops = new ArrayList<>();
 
-        ItemStack stack = new ItemStack(RefinedStorageBlocks.CONTROLLER, 1, RefinedStorageBlocks.CONTROLLER.getMetaFromState(state));
+        ItemStack stack = new ItemStack(RSBlocks.CONTROLLER, 1, RSBlocks.CONTROLLER.getMetaFromState(state));
 
         stack.setTagCompound(new NBTTagCompound());
         stack.getTagCompound().setInteger(TileController.NBT_ENERGY, ((TileController) world.getTileEntity(pos)).getEnergy().getEnergyStored());

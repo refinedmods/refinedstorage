@@ -1,7 +1,7 @@
 package refinedstorage.tile;
 
 import net.minecraft.item.ItemStack;
-import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.api.RSAPI;
 
 public class ClientNode {
     private ItemStack stack;
@@ -40,7 +40,7 @@ public class ClientNode {
             return false;
         }
 
-        return energyUsage == ((ClientNode) other).energyUsage && CompareUtils.compareStack(stack, ((ClientNode) other).stack);
+        return energyUsage == ((ClientNode) other).energyUsage && RSAPI.instance().getComparer().isEqual(stack, ((ClientNode) other).stack);
     }
 
     @Override

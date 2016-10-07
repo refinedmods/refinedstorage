@@ -1,7 +1,7 @@
 package refinedstorage.tile;
 
 import net.minecraft.util.EnumFacing;
-import refinedstorage.RefinedStorage;
+import refinedstorage.RS;
 import refinedstorage.tile.config.RedstoneMode;
 
 public class TileRelay extends TileNode {
@@ -13,7 +13,7 @@ public class TileRelay extends TileNode {
 
     @Override
     public int getEnergyUsage() {
-        return getRedstoneMode() == RedstoneMode.IGNORE ? 0 : RefinedStorage.INSTANCE.config.relayUsage;
+        return getRedstoneMode() == RedstoneMode.IGNORE ? 0 : RS.INSTANCE.config.relayUsage;
     }
 
     @Override
