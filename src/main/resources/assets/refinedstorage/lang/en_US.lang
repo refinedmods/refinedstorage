@@ -117,6 +117,8 @@ sidebutton.refinedstorage:detector.mode.3=Emit signal when item is being autocra
 
 sidebutton.refinedstorage:crafter.triggered_autocrafting=Trigger autocrafting with redstone signal
 
+sidebutton.refinedstorage:void_excess.mode=Void excess items
+
 block.refinedstorage:controller.0.name=Controller
 block.refinedstorage:controller.1.name=Creative Controller
 block.refinedstorage:cable.name=Cable

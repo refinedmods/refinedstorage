@@ -224,6 +224,11 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
         return PRIORITY;
     }
 
+    @Override
+    public TileDataParameter<Boolean> getVoidExcessParameter() {
+        return null;
+    }
+
     public NBTTagCompound getStorageTag() {
         return storageTag;
     }
