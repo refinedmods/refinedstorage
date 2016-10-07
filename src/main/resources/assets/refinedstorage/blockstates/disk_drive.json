@@ -3,10 +3,10 @@
   "defaults": {
     "model": "cube",
     "textures": {
-      "particle": "refinedstorage:blocks/disk_drive_0",
+      "particle": "refinedstorage:blocks/disk_drive",
       "down": "refinedstorage:blocks/disk_drive_bottom",
       "up": "refinedstorage:blocks/disk_drive_top",
-      "north": "refinedstorage:blocks/disk_drive_0",
+      "north": "refinedstorage:blocks/disk_drive",
       "east": "refinedstorage:blocks/disk_drive_side",
       "south": "refinedstorage:blocks/disk_drive_side",
       "west": "refinedstorage:blocks/disk_drive_side"
@@ -18,96 +18,6 @@
         "y": 0
       }
     ],
-    "filled_0": {
-      "true": {
-      },
-      "false": {
-      }
-    },
-    "filled_1": {
-      "true": {
-      },
-      "false": {
-      }
-    },
-    "filled_2": {
-      "true": {
-      },
-      "false": {
-      }
-    },
-    "filled_3": {
-      "true": {
-      },
-      "false": {
-      }
-    },
-    "filled_4": {
-      "true": {
-      },
-      "false": {
-      }
-    },
-    "filled_5": {
-      "true": {
-      },
-      "false": {
-      }
-    },
-    "filled_6": {
-      "true": {
-      },
-      "false": {
-      }
-    },
-    "filled_7": {
-      "true": {
-      },
-      "false": {
-      }
-    },
-    "stored": {
-      "0": {
-        "textures": {
-          "north": "refinedstorage:blocks/disk_drive_0"
-        }
-      },
-      "1": {
-        "textures": {
-          "north": "refinedstorage:blocks/disk_drive_0"
-        }
-      },
-      "2": {
-        "textures": {
-          "north": "refinedstorage:blocks/disk_drive_0"
-        }
-      },
-      "3": {
-        "textures": {
-          "north": "refinedstorage:blocks/disk_drive_0"
-        }
-      },
-      "4": {
-        "textures": {
-          "north": "refinedstorage:blocks/disk_drive_0"
-        }
-      },
-      "5": {
-        "textures": {
-          "north": "refinedstorage:blocks/disk_drive_0"
-        }
-      },
-      "6": {
-        "textures": {
-          "north": "refinedstorage:blocks/disk_drive_0"
-        }
-      },
-      "7": {
-        "textures": {
-          "north": "refinedstorage:blocks/disk_drive_0"
-        }
-      }
-    },
     "direction": {
       "north": {
         "y": 0

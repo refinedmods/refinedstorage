@@ -86,7 +86,6 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     private static final String NBT_MODE = "Mode";
     private static final String NBT_STORED = "Stored";
     private static final String NBT_TYPE = "Type";
-    private static final String NBT_FILLED = "Filled_%d";
 
     private ItemHandlerBasic disks = new ItemHandlerBasic(8, this, IItemValidator.STORAGE_DISK) {
         @Override
@@ -132,27 +131,11 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     private int mode = IFilterable.WHITELIST;
     private int type = IType.ITEMS;
 
-    private int stored = 0;
-    private boolean[] filled = new boolean[8];
-
     public TileDiskDrive() {
         dataManager.addWatchedParameter(PRIORITY);
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(MODE);
         dataManager.addWatchedParameter(TYPE);
-    }
-
-    @Override
-    public void update() {
-        if (!worldObj.isRemote) {
-            if (stored != getStoredForDisplay()) {
-                stored = getStoredForDisplay();
-
-                updateBlock();
-            }
-        }
-
-        super.update();
     }
 
     @Override
@@ -264,34 +247,6 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     }
 
     @Override
-    public NBTTagCompound writeUpdate(NBTTagCompound tag) {
-        super.writeUpdate(tag);
-
-        tag.setInteger(NBT_STORED, stored);
-
-        for (int i = 0; i < 8; ++i) {
-            tag.setBoolean(String.format(NBT_FILLED, i), disks.getStackInSlot(i) != null);
-        }
-
-        return tag;
-    }
-
-    @Override
-    public void readUpdate(NBTTagCompound tag) {
-        stored = tag.getInteger(NBT_STORED);
-
-        for (int i = 0; i < 8; ++i) {
-            filled[i] = tag.getBoolean(String.format(NBT_FILLED, i));
-        }
-
-        super.readUpdate(tag);
-    }
-
-    public boolean[] getFilled() {
-        return filled;
-    }
-
-    @Override
     public int getCompare() {
         return compare;
     }
@@ -313,36 +268,6 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
         this.mode = mode;
 
         markDirty();
-    }
-
-    public int getStoredForDisplay() {
-        if (!worldObj.isRemote) {
-            float stored = 0;
-            float capacity = 0;
-
-            for (int i = 0; i < disks.getSlots(); ++i) {
-                ItemStack disk = disks.getStackInSlot(i);
-
-                if (disk != null) {
-                    int diskCapacity = disk.getItem() == RefinedStorageItems.STORAGE_DISK ? EnumItemStorageType.getById(disk.getItemDamage()).getCapacity() : EnumFluidStorageType.getById(disk.getItemDamage()).getCapacity();
-
-                    if (diskCapacity == -1) {
-                        return 0;
-                    }
-
-                    stored += disk.getItem() == RefinedStorageItems.STORAGE_DISK ? ItemStorageNBT.getStoredFromNBT(disk.getTagCompound()) : FluidStorageNBT.getStoredFromNBT(disk.getTagCompound());
-                    capacity += diskCapacity;
-                }
-            }
-
-            if (capacity == 0) {
-                return 0;
-            }
-
-            return (int) Math.floor((stored / capacity) * 7F);
-        }
-
-        return stored;
     }
 
     @Override
