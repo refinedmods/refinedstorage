@@ -1,13 +1,11 @@
 package refinedstorage.apiimpl.autocrafting.craftingmonitor;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import refinedstorage.gui.GuiBase;
 
-public class CraftingMonitorElementToTake implements ICraftingMonitorElement<GuiBase> {
+public class CraftingMonitorElementToTake extends CraftingMonitorElementItemRender {
     public static final String ID = "to_take";
 
     private ItemStack toTake;
@@ -20,18 +18,7 @@ public class CraftingMonitorElementToTake implements ICraftingMonitorElement<Gui
 
     @Override
     public void draw(GuiBase gui, int x, int y) {
-        x += 4;
-
-        gui.drawItem(x + 2, y + 1, toTake);
-
-        float scale = 0.5f;
-
-        GlStateManager.pushMatrix();
-        GlStateManager.scale(scale, scale, 1);
-
-        gui.drawString(gui.calculateOffsetOnScale(x + 21, scale), gui.calculateOffsetOnScale(y + 7, scale), remaining + " " + toTake.getDisplayName());
-
-        GlStateManager.popMatrix();
+        super.draw(gui, x + 32, y);
     }
 
     @Override
@@ -48,5 +35,15 @@ public class CraftingMonitorElementToTake implements ICraftingMonitorElement<Gui
     public void write(ByteBuf buf) {
         ByteBufUtils.writeItemStack(buf, toTake);
         buf.writeInt(remaining);
+    }
+
+    @Override
+    protected ItemStack getItem() {
+        return toTake;
+    }
+
+    @Override
+    protected int getQuantity() {
+        return remaining;
     }
 }

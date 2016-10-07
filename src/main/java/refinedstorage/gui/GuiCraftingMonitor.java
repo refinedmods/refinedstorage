@@ -59,7 +59,7 @@ public class GuiCraftingMonitor extends GuiBase {
             itemSelected = -1;
         }
 
-        cancelButton.enabled = itemSelected != -1;
+        cancelButton.enabled = itemSelected != -1 && getElements().get(itemSelected).getTaskId() != -1;
         cancelAllButton.enabled = getElements().size() > 0;
     }
 

@@ -11,6 +11,7 @@ import refinedstorage.api.autocrafting.task.IProcessable;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.util.IItemStackList;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementRoot;
+import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementText;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementToTake;
 
 import java.util.ArrayList;
@@ -158,6 +159,8 @@ public class CraftingTaskNormal implements ICraftingTask {
             pattern.getOutputs().get(0),
             quantity
         ));
+
+        elements.add(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_taking", 16));
 
         elements.addAll(toTake.getStacks().stream()
             .map(stack -> new CraftingMonitorElementToTake(stack, stack.stackSize))
