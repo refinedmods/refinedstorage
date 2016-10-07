@@ -1,7 +1,6 @@
 package refinedstorage.apiimpl.util;
 
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import refinedstorage.api.RSAPI;
@@ -12,8 +11,9 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 
 public class ItemStackList implements IItemStackList {
-    private Multimap<Item, ItemStack> stacks = ArrayListMultimap.create();
+    private ArrayListMultimap<Item, ItemStack> stacks = ArrayListMultimap.create();
 
+    @Override
     public void add(ItemStack stack) {
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
             if (RSAPI.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
@@ -26,12 +26,13 @@ public class ItemStackList implements IItemStackList {
         stacks.put(stack.getItem(), stack.copy());
     }
 
-    public boolean remove(@Nonnull ItemStack stack, boolean removeIfReachedZero) {
+    @Override
+    public boolean remove(@Nonnull ItemStack stack, int size, boolean removeIfReachedZero) {
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
             if (RSAPI.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
-                otherStack.stackSize -= stack.stackSize;
+                otherStack.stackSize -= size;
 
-                if (otherStack.stackSize == 0 && removeIfReachedZero) {
+                if (otherStack.stackSize <= 0 && removeIfReachedZero) {
                     stacks.remove(otherStack.getItem(), otherStack);
                 }
 
@@ -42,6 +43,7 @@ public class ItemStackList implements IItemStackList {
         return false;
     }
 
+    @Override
     @Nullable
     public ItemStack get(@Nonnull ItemStack stack, int flags) {
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
@@ -53,6 +55,7 @@ public class ItemStackList implements IItemStackList {
         return null;
     }
 
+    @Override
     @Nullable
     public ItemStack get(int hash) {
         for (ItemStack stack : this.stacks.values()) {

@@ -21,10 +21,22 @@ public interface IItemStackList {
      * Decrements the count of that stack in the list.
      *
      * @param stack               the stack
+     * @param size                the size to remove
      * @param removeIfReachedZero true to remove the stack if the count reaches 0, false otherwise
      * @return whether the remove was successful
      */
-    boolean remove(@Nonnull ItemStack stack, boolean removeIfReachedZero);
+    boolean remove(@Nonnull ItemStack stack, int size, boolean removeIfReachedZero);
+
+    /**
+     * Decrements the count of that stack in the list.
+     *
+     * @param stack               the stack
+     * @param removeIfReachedZero true to remove the stack if the count reaches 0, false otherwise
+     * @return whether the remove was successful
+     */
+    default boolean remove(@Nonnull ItemStack stack, boolean removeIfReachedZero) {
+        return remove(stack, stack.stackSize, removeIfReachedZero);
+    }
 
     /**
      * Returns a stack.

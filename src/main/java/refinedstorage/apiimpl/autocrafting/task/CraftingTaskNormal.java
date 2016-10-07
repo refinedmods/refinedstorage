@@ -13,18 +13,17 @@ import refinedstorage.api.util.IItemStackList;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementRoot;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementToTake;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CraftingTaskNormal implements ICraftingTask {
     private INetworkMaster network;
     private ItemStack requested;
     private ICraftingPattern pattern;
     private int quantity;
-    private Deque<ItemStack> toTake = new ArrayDeque<>();
     private List<IProcessable> toProcess = new ArrayList<>();
+    private IItemStackList toTake = RSAPI.instance().createItemStackList();
     private IItemStackList toCraft = RSAPI.instance().createItemStackList();
     private IItemStackList missing = RSAPI.instance().createItemStackList();
     private IItemStackList extras = RSAPI.instance().createItemStackList();
@@ -74,7 +73,7 @@ public class CraftingTaskNormal implements ICraftingTask {
                 }
             } else {
                 if (!pattern.isProcessing()) {
-                    toTake.push(input);
+                    toTake.add(input);
                 }
 
                 list.remove(input, true);
@@ -113,12 +112,14 @@ public class CraftingTaskNormal implements ICraftingTask {
             }
         }
 
-        if (!toTake.isEmpty()) {
-            ItemStack took = network.extractItem(toTake.peek(), 1);
+        for (ItemStack toTakeStack : toTake.getStacks()) {
+            ItemStack took = network.extractItem(toTakeStack, 1);
 
             if (took != null) {
-                toTake.pop();
+                toTake.remove(toTakeStack, 1, true);
             }
+
+            break;
         }
 
         if (toTake.isEmpty() && missing.isEmpty() && toProcess.stream().allMatch(IProcessable::hasReceivedOutputs)) {
@@ -158,17 +159,10 @@ public class CraftingTaskNormal implements ICraftingTask {
             quantity
         ));
 
-        if (!toTake.isEmpty()) {
-            IItemStackList toTake = RSAPI.instance().createItemStackList();
-
-            for (ItemStack stack : new ArrayList<>(this.toTake)) {
-                toTake.add(stack);
-            }
-
-            for (ItemStack stack : toTake.getStacks()) {
-                elements.add(new CraftingMonitorElementToTake(stack, stack.stackSize));
-            }
-        }
+        elements.addAll(toTake.getStacks().stream()
+            .map(stack -> new CraftingMonitorElementToTake(stack, stack.stackSize))
+            .collect(Collectors.toList())
+        );
 
         return elements;
     }
