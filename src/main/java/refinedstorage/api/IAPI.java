@@ -3,6 +3,7 @@ package refinedstorage.api;
 import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementRegistry;
 import refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
 import refinedstorage.api.solderer.ISoldererRegistry;
+import refinedstorage.api.util.IItemStackList;
 
 import javax.annotation.Nonnull;
 
@@ -27,4 +28,10 @@ public interface IAPI {
      */
     @Nonnull
     ICraftingMonitorElementRegistry getCraftingMonitorElementRegistry();
+
+    /**
+     * @return a empty fast item stack list
+     */
+    @Nonnull
+    IItemStackList createItemStackList();
 }

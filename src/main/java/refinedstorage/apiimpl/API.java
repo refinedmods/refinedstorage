@@ -4,9 +4,11 @@ import refinedstorage.api.IAPI;
 import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementRegistry;
 import refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
 import refinedstorage.api.solderer.ISoldererRegistry;
+import refinedstorage.api.util.IItemStackList;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementRegistry;
 import refinedstorage.apiimpl.autocrafting.registry.CraftingTaskRegistry;
 import refinedstorage.apiimpl.solderer.SoldererRegistry;
+import refinedstorage.apiimpl.util.ItemStackList;
 
 import javax.annotation.Nonnull;
 
@@ -33,5 +35,11 @@ public class API implements IAPI {
     @Override
     public ICraftingMonitorElementRegistry getCraftingMonitorElementRegistry() {
         return craftingMonitorElementRegistry;
+    }
+
+    @Nonnull
+    @Override
+    public IItemStackList createItemStackList() {
+        return new ItemStackList();
     }
 }

@@ -128,7 +128,7 @@ public class TileDetector extends TileNode implements IComparable, IType {
 
                         powered = found;
                     } else {
-                        ItemStack stack = network.getItemStorage().get(slot, compare);
+                        ItemStack stack = network.getItemStorage().getList().get(slot, compare);
 
                         powered = isPowered(stack == null ? null : stack.stackSize);
                     }

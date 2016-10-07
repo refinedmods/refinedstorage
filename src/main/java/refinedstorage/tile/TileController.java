@@ -427,7 +427,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             int score = 0;
 
             for (ItemStack input : patterns.get(i).getInputs()) {
-                ItemStack stored = itemStorage.get(input, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
+                ItemStack stored = itemStorage.getList().get(input, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
 
                 score += stored != null ? stored.stackSize : 0;
             }

@@ -13,7 +13,7 @@ import refinedstorage.api.autocrafting.task.IProcessable;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.api.storage.CompareUtils;
-import refinedstorage.api.storage.item.IGroupedItemStorage;
+import refinedstorage.api.util.IItemStackList;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementRoot;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementToTake;
 
@@ -41,22 +41,24 @@ public class CraftingTaskNormal implements ICraftingTask {
     }
 
     public void calculate() {
+        IItemStackList list = network.getItemStorage().getList().copy();
+
         int newQuantity = quantity;
 
         while (newQuantity > 0) {
-            calculate(network.getItemStorage().copy(), pattern, true);
+            calculate(list, pattern, true);
 
             newQuantity -= requested == null ? newQuantity : pattern.getQuantityPerRequest(requested);
         }
     }
 
-    private void calculate(IGroupedItemStorage storage, ICraftingPattern pattern, boolean basePattern) {
+    private void calculate(IItemStackList list, ICraftingPattern pattern, boolean basePattern) {
         if (pattern.isProcessing()) {
             toProcess.add(new Processable(pattern));
         }
 
         for (ItemStack input : pattern.getInputs()) {
-            ItemStack inputInNetwork = storage.get(input, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
+            ItemStack inputInNetwork = list.get(input, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
 
             if (inputInNetwork == null || inputInNetwork.stackSize == 0) {
                 if (getExtrasFor(input) != null) {
@@ -69,7 +71,7 @@ public class CraftingTaskNormal implements ICraftingTask {
                             addToCraft(output);
                         }
 
-                        calculate(storage, inputPattern, false);
+                        calculate(list, inputPattern, false);
                     } else {
                         addMissing(input);
                     }
@@ -79,7 +81,7 @@ public class CraftingTaskNormal implements ICraftingTask {
                     toTake.push(input);
                 }
 
-                storage.remove(input);
+                list.remove(input, true);
             }
         }
 

@@ -35,9 +35,9 @@ public class MessageGridItemUpdate implements IMessage, IMessageHandler<MessageG
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(network.getItemStorage().getStacks().size());
+        buf.writeInt(network.getItemStorage().getList().getStacks().size());
 
-        for (ItemStack stack : network.getItemStorage().getStacks()) {
+        for (ItemStack stack : network.getItemStorage().getList().getStacks()) {
             NetworkUtils.writeItemStack(buf, network, stack);
         }
     }

@@ -2,11 +2,9 @@ package refinedstorage.api.storage.item;
 
 import net.minecraft.item.ItemStack;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.api.util.IItemStackList;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -47,34 +45,9 @@ public interface IGroupedItemStorage {
     void remove(@Nonnull ItemStack stack);
 
     /**
-     * Gets an item from the network.
-     *
-     * @param stack the stack to find
-     * @param flags the flags to compare on, see {@link CompareUtils}
-     * @return null if no item is found, or the stack, do NOT modify
+     * @return the list behind this grouped storage
      */
-    @Nullable
-    ItemStack get(@Nonnull ItemStack stack, int flags);
-
-    /**
-     * Gets an item from the network by hash, see {@link refinedstorage.api.network.NetworkUtils#getItemStackHashCode(ItemStack)}.
-     *
-     * @return null if no item is found matching the hash, or the stack, do NOT modify
-     */
-    @Nullable
-    ItemStack get(int hash);
-
-    /**
-     * Copies a grouped item storage.
-     *
-     * @return the storage
-     */
-    IGroupedItemStorage copy();
-
-    /**
-     * @return all items in this storage network
-     */
-    Collection<ItemStack> getStacks();
+    IItemStackList getList();
 
     /**
      * @return the item storages connected to this network

@@ -22,7 +22,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
     @Override
     public void onExtract(int hash, int flags, EntityPlayerMP player) {
-        ItemStack item = network.getItemStorage().get(hash);
+        ItemStack item = network.getItemStorage().getList().get(hash);
 
         if (item == null) {
             return;
@@ -120,7 +120,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
     @Override
     public void onCraftingPreviewRequested(EntityPlayerMP player, int hash, int quantity) {
-        ItemStack stack = network.getItemStorage().get(hash);
+        ItemStack stack = network.getItemStorage().getList().get(hash);
 
         if (stack != null) {
             CraftingTaskNormal task = new CraftingTaskNormal(network, stack, NetworkUtils.getPattern(network, stack), quantity);
