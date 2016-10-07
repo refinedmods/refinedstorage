@@ -8,7 +8,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import refinedstorage.RS;
-import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.api.util.IComparer;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerUpgrade;
@@ -82,7 +81,7 @@ public class TileInterface extends TileNode implements IComparable {
                             exportItems.getStackInSlot(i).stackSize += result.stackSize;
                         }
                     } else {
-                        NetworkUtils.scheduleCraftingTaskIfUnscheduled(network, wanted, delta, compare);
+                        network.scheduleCraftingTaskIfUnscheduled(wanted, delta, compare);
                     }
                 } else if (delta < 0) {
                     ItemStack remainder = network.insertItem(got, Math.abs(delta), false);

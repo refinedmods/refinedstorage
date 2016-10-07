@@ -16,7 +16,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RS;
-import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.api.util.IComparer;
 import refinedstorage.container.slot.SlotSpecimen;
 import refinedstorage.inventory.ItemHandlerBasic;
@@ -90,7 +89,7 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
                     } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
                         ItemStack craft = itemFilters.getStackInSlot(0);
 
-                        NetworkUtils.scheduleCraftingTaskIfUnscheduled(network, craft, 1, compare);
+                        network.scheduleCraftingTaskIfUnscheduled(craft, 1, compare);
                     }
                 }
             } else if (type == IType.FLUIDS) {

@@ -1,5 +1,7 @@
 package refinedstorage.api;
 
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementRegistry;
 import refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
 import refinedstorage.api.solderer.ISoldererRegistry;
@@ -41,4 +43,16 @@ public interface IAPI {
      */
     @Nonnull
     IItemStackList createItemStackList();
+
+    /**
+     * @param stack the stack
+     * @return a hashcode for the given stack
+     */
+    int getItemStackHashCode(ItemStack stack);
+
+    /**
+     * @param stack the stack
+     * @return a hashcode for the given stack
+     */
+    int getFluidStackHashCode(FluidStack stack);
 }

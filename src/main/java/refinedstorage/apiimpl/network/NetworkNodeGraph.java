@@ -26,6 +26,10 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
     @Override
     public void rebuild(BlockPos start, boolean notify) {
+        if (start == null) {
+            start = controller.getPosition();
+        }
+
         if (!controller.canRun()) {
             if (!nodes.isEmpty()) {
                 disconnectAll();

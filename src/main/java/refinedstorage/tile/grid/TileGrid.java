@@ -17,7 +17,6 @@ import refinedstorage.RS;
 import refinedstorage.RSBlocks;
 import refinedstorage.RSItems;
 import refinedstorage.api.RSAPI;
-import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.api.network.grid.IFluidGridHandler;
 import refinedstorage.api.network.grid.IItemGridHandler;
 import refinedstorage.block.BlockGrid;
@@ -264,7 +263,7 @@ public class TileGrid extends TileNode implements IGrid {
             } else {
                 if (slot != null) {
                     if (slot.stackSize == 1 && isConnected()) {
-                        matrix.setInventorySlotContents(i, NetworkUtils.extractItem(network, slot, 1));
+                        matrix.setInventorySlotContents(i, network.extractItem(slot, 1));
                     } else {
                         matrix.decrStackSize(i, 1);
                     }
@@ -350,7 +349,7 @@ public class TileGrid extends TileNode implements IGrid {
                         boolean found = false;
 
                         for (ItemStack possibility : possibilities) {
-                            ItemStack took = NetworkUtils.extractItem(network, possibility, 1);
+                            ItemStack took = network.extractItem(possibility, 1);
 
                             if (took != null) {
                                 matrix.setInventorySlotContents(i, took);

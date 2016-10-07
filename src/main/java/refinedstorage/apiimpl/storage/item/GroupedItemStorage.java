@@ -4,7 +4,6 @@ import net.minecraft.item.ItemStack;
 import refinedstorage.api.RSAPI;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.api.storage.item.IGroupedItemStorage;
 import refinedstorage.api.storage.item.IItemStorage;
 import refinedstorage.api.storage.item.IItemStorageProvider;
@@ -61,7 +60,7 @@ public class GroupedItemStorage implements IGroupedItemStorage {
 
     @Override
     public void remove(@Nonnull ItemStack stack) {
-        if (list.remove(stack, !NetworkUtils.hasPattern(network, stack))) {
+        if (list.remove(stack, !network.hasPattern(stack))) {
             network.sendItemStorageDeltaToClient(stack, -stack.stackSize);
         }
     }

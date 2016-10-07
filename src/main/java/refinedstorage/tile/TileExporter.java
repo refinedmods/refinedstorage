@@ -12,7 +12,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RS;
-import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.api.util.IComparer;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerFluid;
@@ -74,7 +73,7 @@ public class TileExporter extends TileMultipartNode implements IComparable, ITyp
                                     network.insertItem(remainder, remainder.stackSize, false);
                                 }
                             } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
-                                NetworkUtils.scheduleCraftingTaskIfUnscheduled(network, slot, 1, compare);
+                                network.scheduleCraftingTaskIfUnscheduled(slot, 1, compare);
                             }
                         }
                     }

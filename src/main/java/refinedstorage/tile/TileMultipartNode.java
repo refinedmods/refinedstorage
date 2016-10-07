@@ -17,7 +17,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import refinedstorage.RSBlocks;
-import refinedstorage.api.network.NetworkUtils;
 
 public abstract class TileMultipartNode extends TileNode implements IMicroblockContainerTile, ISlottedCapabilityProvider {
     private MicroblockContainer container;
@@ -71,7 +70,7 @@ public abstract class TileMultipartNode extends TileNode implements IMicroblockC
         markDirty();
 
         if (network != null) {
-            NetworkUtils.rebuildGraph(network);
+            network.getNodeGraph().rebuild();
         } else if (worldObj != null) {
             RSBlocks.CABLE.attemptConnect(worldObj, pos);
         }

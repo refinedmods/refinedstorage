@@ -5,8 +5,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import refinedstorage.RSUtils;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.gui.grid.GuiGrid;
 import refinedstorage.gui.grid.stack.ClientStackItem;
 
@@ -38,7 +38,7 @@ public class MessageGridItemUpdate implements IMessage, IMessageHandler<MessageG
         buf.writeInt(network.getItemStorage().getList().getStacks().size());
 
         for (ItemStack stack : network.getItemStorage().getList().getStacks()) {
-            NetworkUtils.writeItemStack(buf, network, stack);
+            RSUtils.writeItemStack(buf, network, stack);
         }
     }
 

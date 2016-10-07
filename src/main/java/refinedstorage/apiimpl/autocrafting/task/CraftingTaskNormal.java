@@ -9,8 +9,6 @@ import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.autocrafting.task.IProcessable;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.api.network.NetworkUtils;
-import refinedstorage.api.util.IComparer;
 import refinedstorage.api.util.IItemStackList;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementRoot;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementToTake;
@@ -56,13 +54,13 @@ public class CraftingTaskNormal implements ICraftingTask {
         }
 
         for (ItemStack input : pattern.getInputs()) {
-            ItemStack inputInNetwork = list.get(input, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);
+            ItemStack inputInNetwork = list.get(input);
 
             if (inputInNetwork == null || inputInNetwork.stackSize == 0) {
-                if (extras.get(input, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT) != null) {
+                if (extras.get(input) != null) {
                     decrOrRemoveExtras(input);
                 } else {
-                    ICraftingPattern inputPattern = NetworkUtils.getPattern(network, input);
+                    ICraftingPattern inputPattern = network.getPattern(input);
 
                     if (inputPattern != null) {
                         for (ItemStack output : inputPattern.getOutputs()) {
@@ -105,7 +103,7 @@ public class CraftingTaskNormal implements ICraftingTask {
     public boolean update() {
         for (IProcessable processable : toProcess) {
             if (processable.getPattern().getContainer().getFacingInventory() != null && processable.getStackToInsert() != null) {
-                ItemStack toInsert = NetworkUtils.extractItem(network, processable.getStackToInsert(), 1);
+                ItemStack toInsert = network.extractItem(processable.getStackToInsert(), 1);
 
                 if (ItemHandlerHelper.insertItem(processable.getPattern().getContainer().getFacingInventory(), toInsert, true) == null) {
                     ItemHandlerHelper.insertItem(processable.getPattern().getContainer().getFacingInventory(), toInsert, false);
@@ -116,7 +114,7 @@ public class CraftingTaskNormal implements ICraftingTask {
         }
 
         if (!toTake.isEmpty()) {
-            ItemStack took = NetworkUtils.extractItem(network, toTake.peek(), 1);
+            ItemStack took = network.extractItem(toTake.peek(), 1);
 
             if (took != null) {
                 toTake.pop();

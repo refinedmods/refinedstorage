@@ -8,7 +8,6 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import refinedstorage.RS;
 import refinedstorage.RSItems;
-import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.inventory.ItemValidatorBasic;
@@ -45,7 +44,7 @@ public class TileNetworkTransmitter extends TileNode {
             super.onContentsChanged(slot);
 
             if (network != null) {
-                NetworkUtils.rebuildGraph(network);
+                network.getNodeGraph().rebuild();
             }
         }
     };
@@ -65,7 +64,7 @@ public class TileNetworkTransmitter extends TileNode {
             }
 
             if (network != null) {
-                NetworkUtils.rebuildGraph(network);
+                network.getNodeGraph().rebuild();
             }
         }
     };

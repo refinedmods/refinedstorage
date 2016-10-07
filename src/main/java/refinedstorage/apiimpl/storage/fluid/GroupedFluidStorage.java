@@ -6,7 +6,6 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import refinedstorage.api.RSAPI;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.api.storage.fluid.IFluidStorage;
 import refinedstorage.api.storage.fluid.IFluidStorageProvider;
 import refinedstorage.api.storage.fluid.IGroupedFluidStorage;
@@ -99,7 +98,7 @@ public class GroupedFluidStorage implements IGroupedFluidStorage {
     @Nullable
     public FluidStack get(int hash) {
         for (FluidStack stack : this.stacks.values()) {
-            if (NetworkUtils.getFluidStackHashCode(stack) == hash) {
+            if (RSAPI.instance().getFluidStackHashCode(stack) == hash) {
                 return stack;
             }
         }

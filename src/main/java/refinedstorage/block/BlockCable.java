@@ -25,7 +25,6 @@ import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RS;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.INetworkNode;
-import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.tile.TileBase;
 import refinedstorage.tile.TileCable;
 import refinedstorage.tile.TileMultipartNode;
@@ -281,7 +280,7 @@ public class BlockCable extends BlockCoverable {
                 TileEntity tile = world.getTileEntity(pos.offset(facing));
 
                 if (tile instanceof TileNode && ((TileNode) tile).isConnected()) {
-                    NetworkUtils.rebuildGraph(((TileNode) tile).getNetwork());
+                    ((TileNode) tile).getNetwork().getNodeGraph().rebuild();
 
                     break;
                 }
@@ -314,7 +313,7 @@ public class BlockCable extends BlockCoverable {
         super.breakBlock(world, pos, state);
 
         if (network != null) {
-            NetworkUtils.rebuildGraph(network);
+            network.getNodeGraph().rebuild();
         }
     }
 

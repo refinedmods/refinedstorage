@@ -30,6 +30,17 @@ public interface IItemStackList {
      * Returns a stack.
      *
      * @param stack the stack to search for
+     * @return the stack, or null if no stack was found
+     */
+    @Nullable
+    default ItemStack get(@Nonnull ItemStack stack) {
+        return get(stack, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);
+    }
+
+    /**
+     * Returns a stack.
+     *
+     * @param stack the stack to search for
      * @param flags the flags to compare on, see {@link refinedstorage.api.storage.CompareUtils}
      * @return the stack, or null if no stack was found
      */

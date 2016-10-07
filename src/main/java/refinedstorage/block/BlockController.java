@@ -20,7 +20,6 @@ import net.minecraft.world.World;
 import refinedstorage.RS;
 import refinedstorage.RSBlocks;
 import refinedstorage.RSGui;
-import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.item.ItemBlockController;
 import refinedstorage.tile.TileController;
 
@@ -118,7 +117,7 @@ public class BlockController extends BlockBase {
         super.neighborChanged(state, world, pos, block);
 
         if (!world.isRemote) {
-            NetworkUtils.rebuildGraph((TileController) world.getTileEntity(pos));
+            ((TileController) world.getTileEntity(pos)).getNodeGraph().rebuild();
         }
     }
 

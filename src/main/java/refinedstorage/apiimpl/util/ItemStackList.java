@@ -5,7 +5,6 @@ import com.google.common.collect.Multimap;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import refinedstorage.api.RSAPI;
-import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.api.util.IItemStackList;
 
 import javax.annotation.Nonnull;
@@ -57,7 +56,7 @@ public class ItemStackList implements IItemStackList {
     @Nullable
     public ItemStack get(int hash) {
         for (ItemStack stack : this.stacks.values()) {
-            if (NetworkUtils.getItemStackHashCode(stack) == hash) {
+            if (RSAPI.instance().getItemStackHashCode(stack) == hash) {
                 return stack;
             }
         }

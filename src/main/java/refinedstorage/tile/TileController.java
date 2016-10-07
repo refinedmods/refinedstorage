@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -23,9 +24,14 @@ import refinedstorage.RSBlocks;
 import refinedstorage.api.RSAPI;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
+import refinedstorage.api.autocrafting.ICraftingPatternProvider;
+import refinedstorage.api.autocrafting.registry.ICraftingTaskFactory;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.autocrafting.task.IProcessable;
-import refinedstorage.api.network.*;
+import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.api.network.INetworkNode;
+import refinedstorage.api.network.INetworkNodeGraph;
+import refinedstorage.api.network.IWirelessGridHandler;
 import refinedstorage.api.network.grid.IFluidGridHandler;
 import refinedstorage.api.network.grid.IItemGridHandler;
 import refinedstorage.api.storage.fluid.IFluidStorage;
@@ -239,7 +245,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
             if (!craftingTasksToRead.isEmpty()) {
                 for (NBTTagCompound tag : craftingTasksToRead) {
-                    ICraftingTask task = NetworkUtils.readCraftingTask(worldObj, this, tag);
+                    ICraftingTask task = readCraftingTask(worldObj, this, tag);
 
                     if (task != null) {
                         addCraftingTask(task);
@@ -309,7 +315,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             if (couldRun != canRun()) {
                 couldRun = canRun();
 
-                NetworkUtils.rebuildGraph(this);
+                nodeGraph.rebuild();
             }
 
             if (getEnergyScaledForDisplay() != lastEnergyDisplay) {
@@ -666,6 +672,26 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public World getNetworkWorld() {
         return worldObj;
+    }
+
+    public static ICraftingTask readCraftingTask(World world, INetworkMaster network, NBTTagCompound tag) {
+        ItemStack stack = ItemStack.loadItemStackFromNBT(tag.getCompoundTag(ICraftingTask.NBT_PATTERN_STACK));
+
+        if (stack != null && stack.getItem() instanceof ICraftingPatternProvider) {
+            TileEntity container = world.getTileEntity(BlockPos.fromLong(tag.getLong(ICraftingTask.NBT_PATTERN_CONTAINER)));
+
+            if (container instanceof ICraftingPatternContainer) {
+                ICraftingPattern pattern = ((ICraftingPatternProvider) stack.getItem()).create(world, stack, (ICraftingPatternContainer) container);
+
+                ICraftingTaskFactory factory = RSAPI.instance().getCraftingTaskRegistry().getFactory(tag.getString(ICraftingTask.NBT_PATTERN_ID));
+
+                if (factory != null) {
+                    return factory.create(world, network, null, pattern, tag.getInteger(ICraftingTask.NBT_QUANTITY), tag);
+                }
+            }
+        }
+
+        return null;
     }
 
     @Override

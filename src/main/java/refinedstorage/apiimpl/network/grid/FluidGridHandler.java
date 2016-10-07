@@ -8,7 +8,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import refinedstorage.api.RSAPI;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.api.network.grid.IFluidGridHandler;
 import refinedstorage.apiimpl.storage.fluid.FluidUtils;
 
@@ -43,7 +42,7 @@ public class FluidGridHandler implements IFluidGridHandler {
             }
 
             if (bucket != null) {
-                bucket.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).fill(NetworkUtils.extractFluid(network, stack, Fluid.BUCKET_VOLUME), true);
+                bucket.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).fill(network.extractFluid(stack, Fluid.BUCKET_VOLUME), true);
 
                 if (shift) {
                     if (!player.inventory.addItemStackToInventory(bucket.copy())) {

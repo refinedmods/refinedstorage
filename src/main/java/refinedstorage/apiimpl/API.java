@@ -1,5 +1,7 @@
 package refinedstorage.apiimpl;
 
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 import refinedstorage.api.IAPI;
 import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementRegistry;
 import refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
@@ -50,5 +52,15 @@ public class API implements IAPI {
     @Override
     public IItemStackList createItemStackList() {
         return new ItemStackList();
+    }
+
+    @Override
+    public int getItemStackHashCode(ItemStack stack) {
+        return stack.getItem().hashCode() * (stack.getItemDamage() + 1) * (stack.hasTagCompound() ? stack.getTagCompound().hashCode() : 1);
+    }
+
+    @Override
+    public int getFluidStackHashCode(FluidStack stack) {
+        return stack.getFluid().hashCode() * (stack.tag != null ? stack.tag.hashCode() : 1);
     }
 }
