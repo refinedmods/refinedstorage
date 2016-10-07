@@ -2,7 +2,7 @@ package refinedstorage.apiimpl.solderer;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import refinedstorage.RefinedStorageItems;
+import refinedstorage.RSItems;
 import refinedstorage.api.solderer.ISoldererRecipe;
 import refinedstorage.item.ItemProcessor;
 
@@ -21,21 +21,21 @@ public class SoldererRecipeProcessor implements ISoldererRecipe {
 
         switch (type) {
             case ItemProcessor.TYPE_BASIC:
-                printedProcessor = new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_PRINTED_BASIC);
+                printedProcessor = new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_PRINTED_BASIC);
                 break;
             case ItemProcessor.TYPE_IMPROVED:
-                printedProcessor = new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_PRINTED_IMPROVED);
+                printedProcessor = new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_PRINTED_IMPROVED);
                 break;
             case ItemProcessor.TYPE_ADVANCED:
-                printedProcessor = new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_PRINTED_ADVANCED);
+                printedProcessor = new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_PRINTED_ADVANCED);
                 break;
         }
 
-        this.result = new ItemStack(RefinedStorageItems.PROCESSOR, 1, type);
+        this.result = new ItemStack(RSItems.PROCESSOR, 1, type);
         this.rows = new ItemStack[]{
             printedProcessor,
             new ItemStack(Items.REDSTONE),
-            new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_PRINTED_SILICON)
+                new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_PRINTED_SILICON)
         };
     }
 

@@ -22,7 +22,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
-import refinedstorage.RefinedStorage;
+import refinedstorage.RS;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.INetworkNode;
 import refinedstorage.api.network.NetworkUtils;
@@ -66,8 +66,8 @@ public class BlockCable extends BlockCoverable {
         this.name = name;
 
         setHardness(0.6F);
-        setRegistryName(RefinedStorage.ID, name);
-        setCreativeTab(RefinedStorage.INSTANCE.tab);
+        setRegistryName(RS.ID, name);
+        setCreativeTab(RS.INSTANCE.tab);
     }
 
     public BlockCable() {
@@ -76,7 +76,7 @@ public class BlockCable extends BlockCoverable {
 
     @Override
     public String getUnlocalizedName() {
-        return "block." + RefinedStorage.ID + ":" + name;
+        return "block." + RS.ID + ":" + name;
     }
 
     public String getName() {

@@ -9,8 +9,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.items.IItemHandler;
-import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageBlocks;
+import refinedstorage.RS;
+import refinedstorage.RSBlocks;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.storage.CompareUtils;
@@ -99,7 +99,7 @@ public class TileDetector extends TileNode implements IComparable, IType {
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.config.detectorUsage;
+        return RS.INSTANCE.config.detectorUsage;
     }
 
     @Override
@@ -154,7 +154,7 @@ public class TileDetector extends TileNode implements IComparable, IType {
         if (powered != wasPowered) {
             wasPowered = powered;
 
-            worldObj.notifyNeighborsOfStateChange(pos, RefinedStorageBlocks.DETECTOR);
+            worldObj.notifyNeighborsOfStateChange(pos, RSBlocks.DETECTOR);
 
             updateBlock();
         }

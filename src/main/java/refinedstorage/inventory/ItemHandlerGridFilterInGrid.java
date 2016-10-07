@@ -3,7 +3,7 @@ package refinedstorage.inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
-import refinedstorage.RefinedStorageItems;
+import refinedstorage.RSItems;
 import refinedstorage.gui.grid.GridFilteredItem;
 import refinedstorage.gui.grid.GuiGrid;
 import refinedstorage.item.ItemGridFilter;
@@ -14,7 +14,7 @@ public class ItemHandlerGridFilterInGrid extends ItemHandlerBasic {
     private List<GridFilteredItem> filteredItems;
 
     public ItemHandlerGridFilterInGrid(List<GridFilteredItem> filteredItems) {
-        super(4, new ItemValidatorBasic(RefinedStorageItems.GRID_FILTER));
+        super(4, new ItemValidatorBasic(RSItems.GRID_FILTER));
 
         this.filteredItems = filteredItems;
     }

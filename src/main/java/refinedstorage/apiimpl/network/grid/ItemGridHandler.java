@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import refinedstorage.RefinedStorage;
+import refinedstorage.RS;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.NetworkUtils;
@@ -77,7 +77,7 @@ public class ItemGridHandler implements IItemGridHandler {
                 player.updateHeldItem();
             }
 
-            network.getWirelessGridHandler().drainEnergy(player, RefinedStorage.INSTANCE.config.wirelessGridExtractUsage);
+            network.getWirelessGridHandler().drainEnergy(player, RS.INSTANCE.config.wirelessGridExtractUsage);
         }
     }
 
@@ -85,7 +85,7 @@ public class ItemGridHandler implements IItemGridHandler {
     public ItemStack onInsert(EntityPlayerMP player, ItemStack stack) {
         ItemStack remainder = network.insertItem(stack, stack.stackSize, false);
 
-        network.getWirelessGridHandler().drainEnergy(player, RefinedStorage.INSTANCE.config.wirelessGridInsertUsage);
+        network.getWirelessGridHandler().drainEnergy(player, RS.INSTANCE.config.wirelessGridInsertUsage);
 
         return remainder;
     }
@@ -115,7 +115,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
         player.updateHeldItem();
 
-        network.getWirelessGridHandler().drainEnergy(player, RefinedStorage.INSTANCE.config.wirelessGridInsertUsage);
+        network.getWirelessGridHandler().drainEnergy(player, RS.INSTANCE.config.wirelessGridInsertUsage);
     }
 
     @Override

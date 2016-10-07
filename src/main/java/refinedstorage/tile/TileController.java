@@ -18,8 +18,8 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemHandlerHelper;
-import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageBlocks;
+import refinedstorage.RS;
+import refinedstorage.RSBlocks;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
@@ -180,7 +180,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     private List<ICraftingTask> craftingTasksToCancel = new ArrayList<>();
     private List<NBTTagCompound> craftingTasksToRead = new ArrayList<>();
 
-    private EnergyStorage energy = new EnergyStorage(RefinedStorage.INSTANCE.config.controllerCapacity);
+    private EnergyStorage energy = new EnergyStorage(RS.INSTANCE.config.controllerCapacity);
     private ControllerEnergyForge energyForge = new ControllerEnergyForge(this);
     private IControllerEnergyIC2 energyEU;
     private ControllerEnergyTesla energyTesla;
@@ -294,7 +294,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             wirelessGridHandler.update();
 
             if (getType() == EnumControllerType.NORMAL) {
-                if (!RefinedStorage.INSTANCE.config.controllerUsesEnergy) {
+                if (!RS.INSTANCE.config.controllerUsesEnergy) {
                     energy.setEnergyStored(energy.getMaxEnergyStored());
                 } else if (energy.getEnergyStored() - getEnergyUsage() >= 0) {
                     energy.extractEnergy(getEnergyUsage(), false);
@@ -463,14 +463,14 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public void sendItemStorageToClient(EntityPlayerMP player) {
-        RefinedStorage.INSTANCE.network.sendTo(new MessageGridItemUpdate(this), player);
+        RS.INSTANCE.network.sendTo(new MessageGridItemUpdate(this), player);
     }
 
     @Override
     public void sendItemStorageDeltaToClient(ItemStack stack, int delta) {
         worldObj.getMinecraftServer().getPlayerList().getPlayerList().stream()
                 .filter(player -> isWatchingGrid(player, EnumGridType.NORMAL, EnumGridType.CRAFTING, EnumGridType.PATTERN))
-                .forEach(player -> RefinedStorage.INSTANCE.network.sendTo(new MessageGridItemDelta(this, stack, delta), player));
+                .forEach(player -> RS.INSTANCE.network.sendTo(new MessageGridItemDelta(this, stack, delta), player));
     }
 
     @Override
@@ -482,14 +482,14 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public void sendFluidStorageToClient(EntityPlayerMP player) {
-        RefinedStorage.INSTANCE.network.sendTo(new MessageGridFluidUpdate(this), player);
+        RS.INSTANCE.network.sendTo(new MessageGridFluidUpdate(this), player);
     }
 
     @Override
     public void sendFluidStorageDeltaToClient(FluidStack stack, int delta) {
         worldObj.getMinecraftServer().getPlayerList().getPlayerList().stream()
                 .filter(player -> isWatchingGrid(player, EnumGridType.FLUID))
-                .forEach(player -> RefinedStorage.INSTANCE.network.sendTo(new MessageGridFluidDelta(stack, delta), player));
+                .forEach(player -> RS.INSTANCE.network.sendTo(new MessageGridFluidDelta(stack, delta), player));
     }
 
     private boolean isWatchingGrid(EntityPlayer player, EnumGridType... types) {
@@ -763,7 +763,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public int getEnergyUsage() {
-        int usage = RefinedStorage.INSTANCE.config.controllerBaseUsage;
+        int usage = RS.INSTANCE.config.controllerBaseUsage;
 
         for (INetworkNode node : nodeGraph.all()) {
             if (node.canUpdate()) {
@@ -775,7 +775,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     }
 
     public EnumControllerType getType() {
-        if (type == null && worldObj.getBlockState(pos).getBlock() == RefinedStorageBlocks.CONTROLLER) {
+        if (type == null && worldObj.getBlockState(pos).getBlock() == RSBlocks.CONTROLLER) {
             this.type = (EnumControllerType) worldObj.getBlockState(pos).getValue(BlockController.TYPE);
         }
 

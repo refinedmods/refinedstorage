@@ -5,7 +5,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import refinedstorage.RefinedStorage;
+import refinedstorage.RS;
 
 import java.util.List;
 
@@ -34,15 +34,15 @@ public class ItemUpgrade extends ItemBase {
     public static int getEnergyUsage(int type) {
         switch (type) {
             case TYPE_RANGE:
-                return RefinedStorage.INSTANCE.config.rangeUpgradeUsage;
+                return RS.INSTANCE.config.rangeUpgradeUsage;
             case TYPE_SPEED:
-                return RefinedStorage.INSTANCE.config.speedUpgradeUsage;
+                return RS.INSTANCE.config.speedUpgradeUsage;
             case TYPE_CRAFTING:
-                return RefinedStorage.INSTANCE.config.craftingUpgradeUsage;
+                return RS.INSTANCE.config.craftingUpgradeUsage;
             case TYPE_STACK:
-                return RefinedStorage.INSTANCE.config.stackUpgradeUsage;
+                return RS.INSTANCE.config.stackUpgradeUsage;
             case TYPE_INTERDIMENSIONAL:
-                return RefinedStorage.INSTANCE.config.interdimensionalUpgradeUsage;
+                return RS.INSTANCE.config.interdimensionalUpgradeUsage;
             default:
                 return 0;
         }

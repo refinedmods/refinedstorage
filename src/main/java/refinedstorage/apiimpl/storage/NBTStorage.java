@@ -1,7 +1,7 @@
 package refinedstorage.apiimpl.storage;
 
 import net.minecraft.item.ItemStack;
-import refinedstorage.RefinedStorageItems;
+import refinedstorage.RSItems;
 import refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
 import refinedstorage.apiimpl.storage.item.ItemStorageNBT;
 
@@ -13,9 +13,9 @@ public final class NBTStorage {
             itemStorages[slot] = null;
             fluidStorages[slot] = null;
         } else {
-            if (disk.getItem() == RefinedStorageItems.STORAGE_DISK) {
+            if (disk.getItem() == RSItems.STORAGE_DISK) {
                 itemStorages[slot] = itemStorageSupplier.apply(disk);
-            } else if (disk.getItem() == RefinedStorageItems.FLUID_STORAGE_DISK) {
+            } else if (disk.getItem() == RSItems.FLUID_STORAGE_DISK) {
                 fluidStorages[slot] = fluidStorageNBTSupplier.apply(disk);
             }
         }

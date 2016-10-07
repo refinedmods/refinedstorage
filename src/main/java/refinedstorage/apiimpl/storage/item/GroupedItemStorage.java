@@ -1,7 +1,7 @@
 package refinedstorage.apiimpl.storage.item;
 
 import net.minecraft.item.ItemStack;
-import refinedstorage.api.RefinedStorageAPI;
+import refinedstorage.api.RSAPI;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.NetworkUtils;
@@ -17,7 +17,7 @@ import java.util.List;
 public class GroupedItemStorage implements IGroupedItemStorage {
     private INetworkMaster network;
     private List<IItemStorage> storages = new ArrayList<>();
-    private IItemStackList list = RefinedStorageAPI.instance().createItemStackList();
+    private IItemStackList list = RSAPI.instance().createItemStackList();
 
     public GroupedItemStorage(INetworkMaster network) {
         this.network = network;

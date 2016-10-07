@@ -2,7 +2,7 @@ package refinedstorage.gui;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
-import refinedstorage.RefinedStorage;
+import refinedstorage.RS;
 import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import refinedstorage.container.ContainerCraftingMonitor;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
@@ -121,10 +121,10 @@ public class GuiCraftingMonitor extends GuiBase {
             ICraftingMonitorElement element = getElements().get(itemSelected);
 
             if (element.getTaskId() != -1) {
-                RefinedStorage.INSTANCE.network.sendToServer(new MessageCraftingMonitorCancel(craftingMonitor, element.getTaskId()));
+                RS.INSTANCE.network.sendToServer(new MessageCraftingMonitorCancel(craftingMonitor, element.getTaskId()));
             }
         } else if (button == cancelAllButton && getElements().size() > 0) {
-            RefinedStorage.INSTANCE.network.sendToServer(new MessageCraftingMonitorCancel(craftingMonitor, -1));
+            RS.INSTANCE.network.sendToServer(new MessageCraftingMonitorCancel(craftingMonitor, -1));
         }
     }
 

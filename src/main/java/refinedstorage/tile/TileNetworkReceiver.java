@@ -1,6 +1,6 @@
 package refinedstorage.tile;
 
-import refinedstorage.RefinedStorage;
+import refinedstorage.RS;
 import refinedstorage.tile.config.RedstoneMode;
 
 public class TileNetworkReceiver extends TileNode {
@@ -10,7 +10,7 @@ public class TileNetworkReceiver extends TileNode {
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.config.networkReceiverUsage;
+        return RS.INSTANCE.config.networkReceiverUsage;
     }
 
     @Override

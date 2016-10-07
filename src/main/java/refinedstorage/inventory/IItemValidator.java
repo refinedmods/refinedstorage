@@ -1,18 +1,18 @@
 package refinedstorage.inventory;
 
 import net.minecraft.item.ItemStack;
-import refinedstorage.RefinedStorageItems;
+import refinedstorage.RSItems;
 import refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
 import refinedstorage.apiimpl.storage.item.ItemStorageNBT;
 
 public interface IItemValidator {
-    IItemValidator ITEM_STORAGE_DISK = new ItemValidatorBasic(RefinedStorageItems.STORAGE_DISK) {
+    IItemValidator ITEM_STORAGE_DISK = new ItemValidatorBasic(RSItems.STORAGE_DISK) {
         @Override
         public boolean isValid(ItemStack disk) {
             return super.isValid(disk) && ItemStorageNBT.isValid(disk);
         }
     };
-    IItemValidator FLUID_STORAGE_DISK = new ItemValidatorBasic(RefinedStorageItems.FLUID_STORAGE_DISK) {
+    IItemValidator FLUID_STORAGE_DISK = new ItemValidatorBasic(RSItems.FLUID_STORAGE_DISK) {
         @Override
         public boolean isValid(ItemStack disk) {
             return super.isValid(disk) && FluidStorageNBT.isValid(disk);

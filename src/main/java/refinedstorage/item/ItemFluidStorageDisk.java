@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import refinedstorage.RefinedStorageItems;
+import refinedstorage.RSItems;
 import refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
 import refinedstorage.block.EnumFluidStorageType;
 
@@ -83,13 +83,13 @@ public class ItemFluidStorageDisk extends ItemBase {
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack disk, World world, EntityPlayer player, EnumHand hand) {
         if (!world.isRemote && player.isSneaking() && FluidStorageNBT.isValid(disk) && FluidStorageNBT.getStoredFromNBT(disk.getTagCompound()) == 0 && disk.getMetadata() != TYPE_CREATIVE) {
-            ItemStack storagePart = new ItemStack(RefinedStorageItems.FLUID_STORAGE_PART, 1, disk.getMetadata());
+            ItemStack storagePart = new ItemStack(RSItems.FLUID_STORAGE_PART, 1, disk.getMetadata());
 
             if (!player.inventory.addItemStackToInventory(storagePart.copy())) {
                 InventoryHelper.spawnItemStack(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), storagePart);
             }
 
-            return new ActionResult<>(EnumActionResult.SUCCESS, new ItemStack(RefinedStorageItems.STORAGE_HOUSING));
+            return new ActionResult<>(EnumActionResult.SUCCESS, new ItemStack(RSItems.STORAGE_HOUSING));
         }
 
         return new ActionResult<>(EnumActionResult.PASS, disk);

@@ -6,7 +6,7 @@ import mezz.jei.api.recipe.transfer.IRecipeTransferError;
 import mezz.jei.api.recipe.transfer.IRecipeTransferHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import refinedstorage.RefinedStorage;
+import refinedstorage.RS;
 import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.container.ContainerProcessingPatternEncoder;
 import refinedstorage.network.MessageProcessingPatternEncoderTransfer;
@@ -55,7 +55,7 @@ public class RecipeTransferHandlerPattern implements IRecipeTransferHandler<Cont
                 }
             }
 
-            RefinedStorage.INSTANCE.network.sendToServer(new MessageProcessingPatternEncoderTransfer(inputs.values(), outputs.values()));
+            RS.INSTANCE.network.sendToServer(new MessageProcessingPatternEncoderTransfer(inputs.values(), outputs.values()));
         }
 
         return null;

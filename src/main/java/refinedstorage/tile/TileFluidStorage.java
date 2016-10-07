@@ -3,8 +3,8 @@ package refinedstorage.tile;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraftforge.fluids.FluidStack;
-import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageBlocks;
+import refinedstorage.RS;
+import refinedstorage.RSBlocks;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.api.storage.fluid.IFluidStorage;
@@ -80,7 +80,7 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.config.fluidStorageUsage;
+        return RS.INSTANCE.config.fluidStorageUsage;
     }
 
     @Override
@@ -163,7 +163,7 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
     }
 
     public EnumFluidStorageType getType() {
-        if (type == null && worldObj.getBlockState(pos).getBlock() == RefinedStorageBlocks.FLUID_STORAGE) {
+        if (type == null && worldObj.getBlockState(pos).getBlock() == RSBlocks.FLUID_STORAGE) {
             this.type = ((EnumFluidStorageType) worldObj.getBlockState(pos).getValue(BlockFluidStorage.TYPE));
         }
 

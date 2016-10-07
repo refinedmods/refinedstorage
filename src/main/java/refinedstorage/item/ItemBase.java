@@ -2,7 +2,7 @@ package refinedstorage.item;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import refinedstorage.RefinedStorage;
+import refinedstorage.RS;
 
 public abstract class ItemBase extends Item {
     private String name;
@@ -10,13 +10,13 @@ public abstract class ItemBase extends Item {
     public ItemBase(String name) {
         this.name = name;
 
-        setRegistryName(RefinedStorage.ID, name);
-        setCreativeTab(RefinedStorage.INSTANCE.tab);
+        setRegistryName(RS.ID, name);
+        setCreativeTab(RS.INSTANCE.tab);
     }
 
     @Override
     public String getUnlocalizedName() {
-        return "item." + RefinedStorage.ID + ":" + name;
+        return "item." + RS.ID + ":" + name;
     }
 
     @Override

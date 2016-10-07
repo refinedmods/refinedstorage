@@ -7,7 +7,7 @@ import net.minecraft.network.datasync.DataSerializer;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import refinedstorage.api.RefinedStorageAPI;
+import refinedstorage.api.RSAPI;
 import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import refinedstorage.tile.ClientNode;
 
@@ -67,7 +67,7 @@ public final class RefinedStorageSerializers {
             int size = buf.readInt();
 
             for (int i = 0; i < size; ++i) {
-                Function<ByteBuf, ICraftingMonitorElement> factory = RefinedStorageAPI.instance().getCraftingMonitorElementRegistry().getFactory(ByteBufUtils.readUTF8String(buf));
+                Function<ByteBuf, ICraftingMonitorElement> factory = RSAPI.instance().getCraftingMonitorElementRegistry().getFactory(ByteBufUtils.readUTF8String(buf));
 
                 if (factory != null) {
                     elements.add(factory.apply(buf));

@@ -14,7 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import refinedstorage.RefinedStorage;
+import refinedstorage.RS;
 import refinedstorage.api.network.grid.IItemGridHandler;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.block.EnumGridType;
@@ -356,16 +356,16 @@ public class GuiGrid extends GuiBase {
         if (clickedCreatePattern) {
             BlockPos gridPos = ((TileGrid) grid).getPos();
 
-            RefinedStorage.INSTANCE.network.sendToServer(new MessageGridPatternCreate(gridPos.getX(), gridPos.getY(), gridPos.getZ()));
+            RS.INSTANCE.network.sendToServer(new MessageGridPatternCreate(gridPos.getX(), gridPos.getY(), gridPos.getZ()));
         } else if (grid.isConnected()) {
             if (clickedClear) {
-                RefinedStorage.INSTANCE.network.sendToServer(new MessageGridCraftingClear((TileGrid) grid));
+                RS.INSTANCE.network.sendToServer(new MessageGridCraftingClear((TileGrid) grid));
             }
 
             ItemStack held = container.getPlayer().inventory.getItemStack();
 
             if (isOverSlotArea(mouseX - guiLeft, mouseY - guiTop) && held != null && (clickedButton == 0 || clickedButton == 1)) {
-                RefinedStorage.INSTANCE.network.sendToServer(grid.getType() == EnumGridType.FLUID ? new MessageGridFluidInsertHeld() : new MessageGridItemInsertHeld(clickedButton == 1));
+                RS.INSTANCE.network.sendToServer(grid.getType() == EnumGridType.FLUID ? new MessageGridFluidInsertHeld() : new MessageGridItemInsertHeld(clickedButton == 1));
             }
 
             if (isOverSlotWithItem()) {
@@ -389,10 +389,10 @@ public class GuiGrid extends GuiBase {
                             flags |= IItemGridHandler.EXTRACT_SINGLE;
                         }
 
-                        RefinedStorage.INSTANCE.network.sendToServer(new MessageGridItemPull(stack.getHash(), flags));
+                        RS.INSTANCE.network.sendToServer(new MessageGridItemPull(stack.getHash(), flags));
                     }
                 } else if (grid.getType() == EnumGridType.FLUID && held == null) {
-                    RefinedStorage.INSTANCE.network.sendToServer(new MessageGridFluidPull(STACKS.get(slotNumber).getHash(), GuiScreen.isShiftKeyDown()));
+                    RS.INSTANCE.network.sendToServer(new MessageGridFluidPull(STACKS.get(slotNumber).getHash(), GuiScreen.isShiftKeyDown()));
                 }
             }
         }

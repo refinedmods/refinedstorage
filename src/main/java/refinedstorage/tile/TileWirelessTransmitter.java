@@ -7,7 +7,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import refinedstorage.RefinedStorage;
+import refinedstorage.RS;
 import refinedstorage.api.network.IWirelessTransmitter;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerUpgrade;
@@ -31,7 +31,7 @@ public class TileWirelessTransmitter extends TileNode implements IWirelessTransm
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.config.wirelessTransmitterUsage + upgrades.getEnergyUsage();
+        return RS.INSTANCE.config.wirelessTransmitterUsage + upgrades.getEnergyUsage();
     }
 
     @Override
@@ -56,7 +56,7 @@ public class TileWirelessTransmitter extends TileNode implements IWirelessTransm
 
     @Override
     public int getRange() {
-        return RefinedStorage.INSTANCE.config.wirelessTransmitterBaseRange + (upgrades.getUpgradeCount(ItemUpgrade.TYPE_RANGE) * RefinedStorage.INSTANCE.config.wirelessTransmitterRangePerUpgrade);
+        return RS.INSTANCE.config.wirelessTransmitterBaseRange + (upgrades.getUpgradeCount(ItemUpgrade.TYPE_RANGE) * RS.INSTANCE.config.wirelessTransmitterRangePerUpgrade);
     }
 
     @Override

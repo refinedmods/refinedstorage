@@ -11,7 +11,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import refinedstorage.RefinedStorage;
+import refinedstorage.RS;
 import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.inventory.ItemHandlerBasic;
@@ -49,7 +49,7 @@ public class TileExporter extends TileMultipartNode implements IComparable, ITyp
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.config.exporterUsage + upgrades.getEnergyUsage();
+        return RS.INSTANCE.config.exporterUsage + upgrades.getEnergyUsage();
     }
 
     @Override

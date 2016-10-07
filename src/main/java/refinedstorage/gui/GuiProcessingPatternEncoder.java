@@ -2,7 +2,7 @@ package refinedstorage.gui;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.init.SoundEvents;
-import refinedstorage.RefinedStorage;
+import refinedstorage.RS;
 import refinedstorage.container.ContainerProcessingPatternEncoder;
 import refinedstorage.network.MessageGridPatternCreate;
 import refinedstorage.network.MessageProcessingPatternEncoderClear;
@@ -73,11 +73,11 @@ public class GuiProcessingPatternEncoder extends GuiBase {
         super.mouseClicked(mouseX, mouseY, mouseButton);
 
         if (isOverCreatePattern(mouseX - guiLeft, mouseY - guiTop)) {
-            RefinedStorage.INSTANCE.network.sendToServer(new MessageGridPatternCreate(encoder.getPos().getX(), encoder.getPos().getY(), encoder.getPos().getZ()));
+            RS.INSTANCE.network.sendToServer(new MessageGridPatternCreate(encoder.getPos().getX(), encoder.getPos().getY(), encoder.getPos().getZ()));
 
             mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
         } else if (isOverClear(mouseX - guiLeft, mouseY - guiTop)) {
-            RefinedStorage.INSTANCE.network.sendToServer(new MessageProcessingPatternEncoderClear(encoder));
+            RS.INSTANCE.network.sendToServer(new MessageProcessingPatternEncoderClear(encoder));
 
             mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
         }

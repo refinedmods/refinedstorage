@@ -8,7 +8,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
-import refinedstorage.RefinedStorage;
+import refinedstorage.RS;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.autocrafting.ICraftingPatternProvider;
@@ -85,11 +85,11 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
 
     @Override
     public int getEnergyUsage() {
-        int usage = RefinedStorage.INSTANCE.config.crafterUsage + upgrades.getEnergyUsage();
+        int usage = RS.INSTANCE.config.crafterUsage + upgrades.getEnergyUsage();
 
         for (int i = 0; i < patterns.getSlots(); ++i) {
             if (patterns.getStackInSlot(i) != null) {
-                usage += RefinedStorage.INSTANCE.config.crafterPerPatternUsage;
+                usage += RS.INSTANCE.config.crafterPerPatternUsage;
             }
         }
 

@@ -1,6 +1,6 @@
 package refinedstorage.tile;
 
-import refinedstorage.RefinedStorage;
+import refinedstorage.RS;
 import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import refinedstorage.tile.data.ITileDataProducer;
 import refinedstorage.tile.data.RefinedStorageSerializers;
@@ -28,7 +28,7 @@ public class TileCraftingMonitor extends TileNode {
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.config.craftingMonitorUsage;
+        return RS.INSTANCE.config.craftingMonitorUsage;
     }
 
     @Override

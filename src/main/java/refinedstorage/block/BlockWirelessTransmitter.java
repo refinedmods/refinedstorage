@@ -13,8 +13,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageGui;
+import refinedstorage.RS;
+import refinedstorage.RSGui;
 import refinedstorage.tile.TileWirelessTransmitter;
 
 public class BlockWirelessTransmitter extends BlockNode {
@@ -33,7 +33,7 @@ public class BlockWirelessTransmitter extends BlockNode {
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
-            player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.WIRELESS_TRANSMITTER, world, pos.getX(), pos.getY(), pos.getZ());
+            player.openGui(RS.INSTANCE, RSGui.WIRELESS_TRANSMITTER, world, pos.getX(), pos.getY(), pos.getZ());
         }
 
         return true;

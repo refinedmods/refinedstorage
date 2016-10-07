@@ -10,8 +10,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageGui;
+import refinedstorage.RS;
+import refinedstorage.RSGui;
 import refinedstorage.tile.TileProcessingPatternEncoder;
 
 import java.util.List;
@@ -42,7 +42,7 @@ public class BlockProcessingPatternEncoder extends BlockBase {
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
-            player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.PROCESSING_PATTERN_ENCODER, world, pos.getX(), pos.getY(), pos.getZ());
+            player.openGui(RS.INSTANCE, RSGui.PROCESSING_PATTERN_ENCODER, world, pos.getX(), pos.getY(), pos.getZ());
         }
 
         return true;

@@ -3,7 +3,7 @@ package refinedstorage.apiimpl.autocrafting.task;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.items.ItemHandlerHelper;
-import refinedstorage.api.RefinedStorageAPI;
+import refinedstorage.api.RSAPI;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
@@ -27,9 +27,9 @@ public class CraftingTaskNormal implements ICraftingTask {
     private int quantity;
     private Deque<ItemStack> toTake = new ArrayDeque<>();
     private List<IProcessable> toProcess = new ArrayList<>();
-    private IItemStackList toCraft = RefinedStorageAPI.instance().createItemStackList();
-    private IItemStackList missing = RefinedStorageAPI.instance().createItemStackList();
-    private IItemStackList extras = RefinedStorageAPI.instance().createItemStackList();
+    private IItemStackList toCraft = RSAPI.instance().createItemStackList();
+    private IItemStackList missing = RSAPI.instance().createItemStackList();
+    private IItemStackList extras = RSAPI.instance().createItemStackList();
 
     public CraftingTaskNormal(INetworkMaster network, ItemStack requested, ICraftingPattern pattern, int quantity) {
         this.network = network;
@@ -161,7 +161,7 @@ public class CraftingTaskNormal implements ICraftingTask {
         ));
 
         if (!toTake.isEmpty()) {
-            IItemStackList toTake = RefinedStorageAPI.instance().createItemStackList();
+            IItemStackList toTake = RSAPI.instance().createItemStackList();
 
             for (ItemStack stack : new ArrayList<>(this.toTake)) {
                 toTake.add(stack);

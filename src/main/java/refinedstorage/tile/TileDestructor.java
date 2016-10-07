@@ -18,7 +18,7 @@ import net.minecraftforge.fluids.capability.wrappers.BlockLiquidWrapper;
 import net.minecraftforge.fluids.capability.wrappers.FluidBlockWrapper;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import refinedstorage.RefinedStorage;
+import refinedstorage.RS;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerFluid;
@@ -64,7 +64,7 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.config.destructorUsage + upgrades.getEnergyUsage();
+        return RS.INSTANCE.config.destructorUsage + upgrades.getEnergyUsage();
     }
 
     @Override

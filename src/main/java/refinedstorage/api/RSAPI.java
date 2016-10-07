@@ -2,7 +2,7 @@ package refinedstorage.api;
 
 import java.lang.reflect.Field;
 
-public final class RefinedStorageAPI {
+public final class RSAPI {
     private static final String API_IMPL_CLASS = "refinedstorage.apiimpl.API";
     private static final String API_IMPL_FIELD = "INSTANCE";
 

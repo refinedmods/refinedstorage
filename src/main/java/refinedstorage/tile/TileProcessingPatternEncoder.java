@@ -7,13 +7,13 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import refinedstorage.RefinedStorageItems;
+import refinedstorage.RSItems;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemValidatorBasic;
 import refinedstorage.item.ItemPattern;
 
 public class TileProcessingPatternEncoder extends TileBase {
-    private ItemHandlerBasic patterns = new ItemHandlerBasic(2, this, new ItemValidatorBasic(RefinedStorageItems.PATTERN));
+    private ItemHandlerBasic patterns = new ItemHandlerBasic(2, this, new ItemValidatorBasic(RSItems.PATTERN));
     private ItemHandlerBasic configuration = new ItemHandlerBasic(9 * 2, this);
 
     @Override
@@ -36,7 +36,7 @@ public class TileProcessingPatternEncoder extends TileBase {
 
     public void onCreatePattern() {
         if (canCreatePattern()) {
-            ItemStack pattern = new ItemStack(RefinedStorageItems.PATTERN);
+            ItemStack pattern = new ItemStack(RSItems.PATTERN);
 
             for (int i = 0; i < 18; ++i) {
                 if (configuration.getStackInSlot(i) != null) {

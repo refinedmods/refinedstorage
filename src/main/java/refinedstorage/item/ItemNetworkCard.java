@@ -10,7 +10,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import refinedstorage.RefinedStorageBlocks;
+import refinedstorage.RSBlocks;
 
 import java.util.List;
 
@@ -30,7 +30,7 @@ public class ItemNetworkCard extends ItemBase {
     public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         Block block = world.getBlockState(pos).getBlock();
 
-        if (block == RefinedStorageBlocks.NETWORK_RECEIVER) {
+        if (block == RSBlocks.NETWORK_RECEIVER) {
             setReceiver(stack, pos, world.provider.getDimension());
 
             return EnumActionResult.SUCCESS;

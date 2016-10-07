@@ -1,8 +1,8 @@
 package refinedstorage.apiimpl.solderer;
 
 import net.minecraft.item.ItemStack;
-import refinedstorage.RefinedStorageBlocks;
-import refinedstorage.RefinedStorageItems;
+import refinedstorage.RSBlocks;
+import refinedstorage.RSItems;
 import refinedstorage.api.solderer.ISoldererRecipe;
 import refinedstorage.block.EnumItemStorageType;
 import refinedstorage.item.ItemBlockStorage;
@@ -18,9 +18,9 @@ public class SoldererRecipeStorage implements ISoldererRecipe {
     public SoldererRecipeStorage(EnumItemStorageType type, int storagePart) {
         this.type = type;
         this.rows = new ItemStack[]{
-            new ItemStack(RefinedStorageItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
-            new ItemStack(RefinedStorageBlocks.MACHINE_CASING),
-            new ItemStack(RefinedStorageItems.STORAGE_PART, 1, storagePart)
+                new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
+                new ItemStack(RSBlocks.MACHINE_CASING),
+                new ItemStack(RSItems.STORAGE_PART, 1, storagePart)
         };
     }
 
@@ -33,7 +33,7 @@ public class SoldererRecipeStorage implements ISoldererRecipe {
     @Override
     @Nonnull
     public ItemStack getResult() {
-        return ItemBlockStorage.initNBT(new ItemStack(RefinedStorageBlocks.STORAGE, 1, type.getId()));
+        return ItemBlockStorage.initNBT(new ItemStack(RSBlocks.STORAGE, 1, type.getId()));
     }
 
     @Override

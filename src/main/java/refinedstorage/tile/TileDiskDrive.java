@@ -10,8 +10,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageItems;
+import refinedstorage.RS;
+import refinedstorage.RSItems;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.api.storage.fluid.IFluidStorage;
@@ -157,11 +157,11 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
 
     @Override
     public int getEnergyUsage() {
-        int usage = RefinedStorage.INSTANCE.config.diskDriveUsage;
+        int usage = RS.INSTANCE.config.diskDriveUsage;
 
         for (int i = 0; i < disks.getSlots(); ++i) {
             if (disks.getStackInSlot(i) != null) {
-                usage += RefinedStorage.INSTANCE.config.diskDrivePerDiskUsage;
+                usage += RS.INSTANCE.config.diskDrivePerDiskUsage;
             }
         }
 
@@ -324,13 +324,13 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
                 ItemStack disk = disks.getStackInSlot(i);
 
                 if (disk != null) {
-                    int diskCapacity = disk.getItem() == RefinedStorageItems.STORAGE_DISK ? EnumItemStorageType.getById(disk.getItemDamage()).getCapacity() : EnumFluidStorageType.getById(disk.getItemDamage()).getCapacity();
+                    int diskCapacity = disk.getItem() == RSItems.STORAGE_DISK ? EnumItemStorageType.getById(disk.getItemDamage()).getCapacity() : EnumFluidStorageType.getById(disk.getItemDamage()).getCapacity();
 
                     if (diskCapacity == -1) {
                         return 0;
                     }
 
-                    stored += disk.getItem() == RefinedStorageItems.STORAGE_DISK ? ItemStorageNBT.getStoredFromNBT(disk.getTagCompound()) : FluidStorageNBT.getStoredFromNBT(disk.getTagCompound());
+                    stored += disk.getItem() == RSItems.STORAGE_DISK ? ItemStorageNBT.getStoredFromNBT(disk.getTagCompound()) : FluidStorageNBT.getStoredFromNBT(disk.getTagCompound());
                     capacity += diskCapacity;
                 }
             }
@@ -395,7 +395,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
             ItemStack disk = disks.getStackInSlot(i);
 
             if (disk != null) {
-                stored += disk.getItem() == RefinedStorageItems.STORAGE_DISK ? ItemStorageNBT.getStoredFromNBT(disk.getTagCompound()) : FluidStorageNBT.getStoredFromNBT(disk.getTagCompound());
+                stored += disk.getItem() == RSItems.STORAGE_DISK ? ItemStorageNBT.getStoredFromNBT(disk.getTagCompound()) : FluidStorageNBT.getStoredFromNBT(disk.getTagCompound());
             }
         }
 
@@ -410,7 +410,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
             ItemStack disk = disks.getStackInSlot(i);
 
             if (disk != null) {
-                int diskCapacity = disk.getItem() == RefinedStorageItems.STORAGE_DISK ? EnumItemStorageType.getById(disk.getItemDamage()).getCapacity() : EnumFluidStorageType.getById(disk.getItemDamage()).getCapacity();
+                int diskCapacity = disk.getItem() == RSItems.STORAGE_DISK ? EnumItemStorageType.getById(disk.getItemDamage()).getCapacity() : EnumFluidStorageType.getById(disk.getItemDamage()).getCapacity();
 
                 if (diskCapacity == -1) {
                     return -1;

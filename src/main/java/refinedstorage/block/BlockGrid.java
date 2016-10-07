@@ -12,8 +12,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageGui;
+import refinedstorage.RS;
+import refinedstorage.RSGui;
 import refinedstorage.item.ItemBlockBase;
 import refinedstorage.tile.grid.TileGrid;
 
@@ -58,7 +58,7 @@ public class BlockGrid extends BlockNode {
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
-            player.openGui(RefinedStorage.INSTANCE, RefinedStorageGui.GRID, world, pos.getX(), pos.getY(), pos.getZ());
+            player.openGui(RS.INSTANCE, RSGui.GRID, world, pos.getX(), pos.getY(), pos.getZ());
 
             ((TileGrid) world.getTileEntity(pos)).onGridOpened(player);
         }

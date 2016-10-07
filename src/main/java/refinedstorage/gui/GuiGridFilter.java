@@ -2,7 +2,7 @@ package refinedstorage.gui;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
-import refinedstorage.RefinedStorage;
+import refinedstorage.RS;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.container.ContainerGridFilter;
 import refinedstorage.item.ItemGridFilter;
@@ -55,6 +55,6 @@ public class GuiGridFilter extends GuiBase {
             compare ^= CompareUtils.COMPARE_NBT;
         }
 
-        RefinedStorage.INSTANCE.network.sendToServer(new MessageGridFilterUpdate(compare));
+        RS.INSTANCE.network.sendToServer(new MessageGridFilterUpdate(compare));
     }
 }

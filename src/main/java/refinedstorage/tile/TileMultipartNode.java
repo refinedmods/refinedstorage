@@ -16,7 +16,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import refinedstorage.RefinedStorageBlocks;
+import refinedstorage.RSBlocks;
 import refinedstorage.api.network.NetworkUtils;
 
 public abstract class TileMultipartNode extends TileNode implements IMicroblockContainerTile, ISlottedCapabilityProvider {
@@ -73,7 +73,7 @@ public abstract class TileMultipartNode extends TileNode implements IMicroblockC
         if (network != null) {
             NetworkUtils.rebuildGraph(network);
         } else if (worldObj != null) {
-            RefinedStorageBlocks.CABLE.attemptConnect(worldObj, pos);
+            RSBlocks.CABLE.attemptConnect(worldObj, pos);
         }
     }
 

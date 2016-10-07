@@ -15,7 +15,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import refinedstorage.RefinedStorage;
+import refinedstorage.RS;
 import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.container.slot.SlotSpecimen;
@@ -66,7 +66,7 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.config.constructorUsage + upgrades.getEnergyUsage();
+        return RS.INSTANCE.config.constructorUsage + upgrades.getEnergyUsage();
     }
 
     @Override

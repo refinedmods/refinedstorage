@@ -1,11 +1,11 @@
 package refinedstorage.tile;
 
-import refinedstorage.RefinedStorage;
+import refinedstorage.RS;
 
 public class TileCable extends TileMultipartNode {
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.config.cableUsage;
+        return RS.INSTANCE.config.cableUsage;
     }
 
     @Override

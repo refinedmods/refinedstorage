@@ -2,7 +2,7 @@ package refinedstorage.integration.forgeenergy;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.energy.IEnergyStorage;
-import refinedstorage.RefinedStorageItems;
+import refinedstorage.RSItems;
 
 public class WirelessGridEnergyForge implements IEnergyStorage {
     private ItemStack stack;
@@ -13,22 +13,22 @@ public class WirelessGridEnergyForge implements IEnergyStorage {
 
     @Override
     public int receiveEnergy(int maxReceive, boolean simulate) {
-        return RefinedStorageItems.WIRELESS_GRID.receiveEnergy(stack, maxReceive, simulate);
+        return RSItems.WIRELESS_GRID.receiveEnergy(stack, maxReceive, simulate);
     }
 
     @Override
     public int extractEnergy(int maxExtract, boolean simulate) {
-        return RefinedStorageItems.WIRELESS_GRID.extractEnergy(stack, maxExtract, simulate);
+        return RSItems.WIRELESS_GRID.extractEnergy(stack, maxExtract, simulate);
     }
 
     @Override
     public int getEnergyStored() {
-        return RefinedStorageItems.WIRELESS_GRID.getEnergyStored(stack);
+        return RSItems.WIRELESS_GRID.getEnergyStored(stack);
     }
 
     @Override
     public int getMaxEnergyStored() {
-        return RefinedStorageItems.WIRELESS_GRID.getMaxEnergyStored(stack);
+        return RSItems.WIRELESS_GRID.getMaxEnergyStored(stack);
     }
 
     @Override

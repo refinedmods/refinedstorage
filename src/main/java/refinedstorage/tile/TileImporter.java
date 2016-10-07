@@ -10,7 +10,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import refinedstorage.RefinedStorage;
+import refinedstorage.RS;
 import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerFluid;
@@ -54,7 +54,7 @@ public class TileImporter extends TileMultipartNode implements IComparable, IFil
 
     @Override
     public int getEnergyUsage() {
-        return RefinedStorage.INSTANCE.config.importerUsage + upgrades.getEnergyUsage();
+        return RS.INSTANCE.config.importerUsage + upgrades.getEnergyUsage();
     }
 
     @Override

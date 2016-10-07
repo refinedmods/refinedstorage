@@ -22,8 +22,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.common.Optional;
-import refinedstorage.RefinedStorage;
-import refinedstorage.RefinedStorageBlocks;
+import refinedstorage.RS;
+import refinedstorage.RSBlocks;
 import refinedstorage.integration.forgeenergy.WirelessGridEnergyForge;
 import refinedstorage.integration.ic2.IntegrationIC2;
 import refinedstorage.integration.tesla.IntegrationTesla;
@@ -50,11 +50,11 @@ public class ItemWirelessGrid extends ItemEnergyContainer implements ISpecialEle
     public ItemWirelessGrid() {
         super(3200);
 
-        setRegistryName(RefinedStorage.ID, "wireless_grid");
+        setRegistryName(RS.ID, "wireless_grid");
         setMaxDamage(3200);
         setMaxStackSize(1);
         setHasSubtypes(true);
-        setCreativeTab(RefinedStorage.INSTANCE.tab);
+        setCreativeTab(RS.INSTANCE.tab);
         addPropertyOverride(new ResourceLocation("connected"), (stack, world, entity) -> (entity != null && isValid(stack)) ? 1.0f : 0.0f);
     }
 
@@ -116,7 +116,7 @@ public class ItemWirelessGrid extends ItemEnergyContainer implements ISpecialEle
     public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         Block block = world.getBlockState(pos).getBlock();
 
-        if (block == RefinedStorageBlocks.CONTROLLER) {
+        if (block == RSBlocks.CONTROLLER) {
             NBTTagCompound tag = stack.getTagCompound();
 
             if (tag == null) {
@@ -220,7 +220,7 @@ public class ItemWirelessGrid extends ItemEnergyContainer implements ISpecialEle
 
     @Override
     public String getUnlocalizedName() {
-        return "item." + RefinedStorage.ID + ":wireless_grid";
+        return "item." + RS.ID + ":wireless_grid";
     }
 
     @Override
