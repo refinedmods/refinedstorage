@@ -12,7 +12,6 @@ import refinedstorage.RS;
 import refinedstorage.api.RSAPI;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.solderer.ISoldererRecipe;
-import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemUpgrade;
@@ -54,7 +53,7 @@ public class TileSolderer extends TileNode {
 
             for (ISoldererRecipe recipe : RSAPI.instance().getSoldererRegistry().getRecipes()) {
                 for (int i = 0; i < 3; ++i) {
-                    if (CompareUtils.compareStackNoQuantity(recipe.getRow(i), stack) || CompareUtils.compareStackOreDict(recipe.getRow(i), stack)) {
+                    if (RSAPI.instance().getComparer().isEqualNoQuantity(recipe.getRow(i), stack) || RSAPI.instance().getComparer().isEqualOredict(recipe.getRow(i), stack)) {
                         possibleSlots.add(i);
                     }
                 }
@@ -97,7 +96,7 @@ public class TileSolderer extends TileNode {
             if (newRecipe == null) {
                 stop();
             } else if (newRecipe != recipe) {
-                boolean sameItem = result.getStackInSlot(0) != null ? CompareUtils.compareStackNoQuantity(result.getStackInSlot(0), newRecipe.getResult()) : false;
+                boolean sameItem = result.getStackInSlot(0) != null ? RSAPI.instance().getComparer().isEqualNoQuantity(result.getStackInSlot(0), newRecipe.getResult()) : false;
 
                 if (result.getStackInSlot(0) == null || (sameItem && ((result.getStackInSlot(0).stackSize + newRecipe.getResult().stackSize) <= result.getStackInSlot(0).getMaxStackSize()))) {
                     recipe = newRecipe;

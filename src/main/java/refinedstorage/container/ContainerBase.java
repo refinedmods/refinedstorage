@@ -6,7 +6,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
-import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.api.RSAPI;
 import refinedstorage.container.slot.*;
 import refinedstorage.tile.TileBase;
 import refinedstorage.tile.grid.WirelessGrid;
@@ -107,7 +107,7 @@ public abstract class ContainerBase extends Container {
 
     protected ItemStack mergeItemStackToSpecimen(ItemStack stack, int begin, int end) {
         for (int i = begin; i < end; ++i) {
-            if (CompareUtils.compareStackNoQuantity(getStackFromSlot(getSlot(i)), stack)) {
+            if (RSAPI.instance().getComparer().isEqualNoQuantity(getStackFromSlot(getSlot(i)), stack)) {
                 return null;
             }
         }

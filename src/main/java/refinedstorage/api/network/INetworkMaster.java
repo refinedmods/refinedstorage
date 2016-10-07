@@ -10,7 +10,6 @@ import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.network.grid.IFluidGridHandler;
 import refinedstorage.api.network.grid.IItemGridHandler;
-import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.api.storage.fluid.IGroupedFluidStorage;
 import refinedstorage.api.storage.item.IGroupedItemStorage;
 

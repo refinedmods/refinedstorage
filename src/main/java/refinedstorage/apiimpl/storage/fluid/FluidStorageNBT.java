@@ -5,7 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
-import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.api.RSAPI;
 import refinedstorage.api.storage.fluid.IFluidStorage;
 
 import javax.annotation.Nullable;
@@ -143,7 +143,7 @@ public abstract class FluidStorageNBT implements IFluidStorage {
     @Override
     public synchronized FluidStack extractFluid(FluidStack stack, int size, int flags) {
         for (FluidStack otherStack : stacks) {
-            if (CompareUtils.compareStack(otherStack, stack, flags)) {
+            if (RSAPI.instance().getComparer().isEqual(otherStack, stack, flags)) {
                 if (size > otherStack.amount) {
                     size = otherStack.amount;
                 }

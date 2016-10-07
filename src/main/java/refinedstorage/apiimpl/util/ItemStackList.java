@@ -4,8 +4,8 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import refinedstorage.api.RSAPI;
 import refinedstorage.api.network.NetworkUtils;
-import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.api.util.IItemStackList;
 
 import javax.annotation.Nonnull;
@@ -17,7 +17,7 @@ public class ItemStackList implements IItemStackList {
 
     public void add(ItemStack stack) {
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
-            if (CompareUtils.compareStackNoQuantity(otherStack, stack)) {
+            if (RSAPI.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
                 otherStack.stackSize += stack.stackSize;
 
                 return;
@@ -29,7 +29,7 @@ public class ItemStackList implements IItemStackList {
 
     public boolean remove(@Nonnull ItemStack stack, boolean removeIfReachedZero) {
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
-            if (CompareUtils.compareStackNoQuantity(otherStack, stack)) {
+            if (RSAPI.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
                 otherStack.stackSize -= stack.stackSize;
 
                 if (otherStack.stackSize == 0 && removeIfReachedZero) {
@@ -46,7 +46,7 @@ public class ItemStackList implements IItemStackList {
     @Nullable
     public ItemStack get(@Nonnull ItemStack stack, int flags) {
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
-            if (CompareUtils.compareStack(otherStack, stack, flags)) {
+            if (RSAPI.instance().getComparer().isEqual(otherStack, stack, flags)) {
                 return otherStack;
             }
         }

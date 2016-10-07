@@ -10,7 +10,7 @@ import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.autocrafting.task.IProcessable;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.NetworkUtils;
-import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.api.util.IComparer;
 import refinedstorage.api.util.IItemStackList;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementRoot;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementToTake;
@@ -56,10 +56,10 @@ public class CraftingTaskNormal implements ICraftingTask {
         }
 
         for (ItemStack input : pattern.getInputs()) {
-            ItemStack inputInNetwork = list.get(input, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
+            ItemStack inputInNetwork = list.get(input, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);
 
             if (inputInNetwork == null || inputInNetwork.stackSize == 0) {
-                if (extras.get(input, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT) != null) {
+                if (extras.get(input, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT) != null) {
                     decrOrRemoveExtras(input);
                 } else {
                     ICraftingPattern inputPattern = NetworkUtils.getPattern(network, input);
@@ -95,11 +95,11 @@ public class CraftingTaskNormal implements ICraftingTask {
     @Override
     public String toString() {
         return "\nCraftingTask{quantity=" + quantity +
-                "\n, toTake=" + toTake +
-                "\n, toCraft=" + toCraft +
-                "\n, toProcess=" + toProcess +
-                "\n, missing=" + missing +
-                '}';
+            "\n, toTake=" + toTake +
+            "\n, toCraft=" + toCraft +
+            "\n, toProcess=" + toProcess +
+            "\n, missing=" + missing +
+            '}';
     }
 
     public boolean update() {
@@ -155,9 +155,9 @@ public class CraftingTaskNormal implements ICraftingTask {
         List<ICraftingMonitorElement> elements = new ArrayList<>();
 
         elements.add(new CraftingMonitorElementRoot(
-                network.getCraftingTasks().indexOf(this),
-                pattern.getOutputs().get(0),
-                quantity
+            network.getCraftingTasks().indexOf(this),
+            pattern.getOutputs().get(0),
+            quantity
         ));
 
         if (!toTake.isEmpty()) {
@@ -188,8 +188,8 @@ public class CraftingTaskNormal implements ICraftingTask {
 
     private void addExtras(ICraftingPattern pattern) {
         pattern.getOutputs().stream()
-                .filter(o -> o.stackSize > 1)
-                .forEach(o -> extras.add(ItemHandlerHelper.copyStackWithSize(o, o.stackSize - 1)));
+            .filter(o -> o.stackSize > 1)
+            .forEach(o -> extras.add(ItemHandlerHelper.copyStackWithSize(o, o.stackSize - 1)));
     }
 
     private void decrOrRemoveExtras(ItemStack stack) {

@@ -6,11 +6,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RS;
+import refinedstorage.api.RSAPI;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.NetworkUtils;
 import refinedstorage.api.network.grid.IItemGridHandler;
-import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.apiimpl.autocrafting.task.CraftingTaskNormal;
 
 public class ItemGridHandler implements IItemGridHandler {
@@ -35,7 +35,7 @@ public class ItemGridHandler implements IItemGridHandler {
         ItemStack held = player.inventory.getItemStack();
 
         if (single) {
-            if (held != null && (!CompareUtils.compareStackNoQuantity(item, held) || held.stackSize + 1 > held.getMaxStackSize())) {
+            if (held != null && (!RSAPI.instance().getComparer().isEqualNoQuantity(item, held) || held.stackSize + 1 > held.getMaxStackSize())) {
                 return;
             }
         } else if (player.inventory.getItemStack() != null) {

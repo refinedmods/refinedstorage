@@ -1,7 +1,7 @@
 package refinedstorage.gui.sidebutton;
 
 import net.minecraft.util.text.TextFormatting;
-import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.api.util.IComparer;
 import refinedstorage.gui.GuiBase;
 import refinedstorage.tile.data.TileDataManager;
 import refinedstorage.tile.data.TileDataParameter;
@@ -34,9 +34,9 @@ public class SideButtonCompare extends SideButton {
     protected void drawButtonIcon(int x, int y) {
         int ty = 0;
 
-        if (mask == CompareUtils.COMPARE_DAMAGE) {
+        if (mask == IComparer.COMPARE_DAMAGE) {
             ty = 80;
-        } else if (mask == CompareUtils.COMPARE_NBT) {
+        } else if (mask == IComparer.COMPARE_NBT) {
             ty = 48;
         }
 

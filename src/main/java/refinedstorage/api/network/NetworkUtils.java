@@ -16,7 +16,7 @@ import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.autocrafting.ICraftingPatternProvider;
 import refinedstorage.api.autocrafting.registry.ICraftingTaskFactory;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
-import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.api.util.IComparer;
 
 import javax.annotation.Nullable;
 
@@ -25,15 +25,15 @@ import javax.annotation.Nullable;
  */
 public final class NetworkUtils {
     public static ItemStack extractItem(INetworkMaster network, ItemStack stack, int size) {
-        return network.extractItem(stack, size, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
+        return network.extractItem(stack, size, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);
     }
 
     public static FluidStack extractFluid(INetworkMaster network, FluidStack stack, int size) {
-        return network.extractFluid(stack, size, CompareUtils.COMPARE_NBT);
+        return network.extractFluid(stack, size, IComparer.COMPARE_NBT);
     }
 
     public static ICraftingPattern getPattern(INetworkMaster network, ItemStack stack) {
-        return network.getPattern(stack, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
+        return network.getPattern(stack, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);
     }
 
     public static ICraftingTask createCraftingTask(INetworkMaster network, @Nullable ItemStack stack, ICraftingPattern pattern, int quantity) {
@@ -61,7 +61,7 @@ public final class NetworkUtils {
 
         for (ICraftingTask task : network.getCraftingTasks()) {
             for (ItemStack output : task.getPattern().getOutputs()) {
-                if (CompareUtils.compareStack(output, stack, compare)) {
+                if (RSAPI.instance().getComparer().isEqual(output, stack, compare)) {
                     alreadyScheduled++;
                 }
             }

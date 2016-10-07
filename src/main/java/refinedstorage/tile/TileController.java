@@ -20,6 +20,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RS;
 import refinedstorage.RSBlocks;
+import refinedstorage.api.RSAPI;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
@@ -27,11 +28,11 @@ import refinedstorage.api.autocrafting.task.IProcessable;
 import refinedstorage.api.network.*;
 import refinedstorage.api.network.grid.IFluidGridHandler;
 import refinedstorage.api.network.grid.IItemGridHandler;
-import refinedstorage.api.storage.CompareUtils;
 import refinedstorage.api.storage.fluid.IFluidStorage;
 import refinedstorage.api.storage.fluid.IGroupedFluidStorage;
 import refinedstorage.api.storage.item.IGroupedItemStorage;
 import refinedstorage.api.storage.item.IItemStorage;
+import refinedstorage.api.util.IComparer;
 import refinedstorage.apiimpl.network.NetworkNodeGraph;
 import refinedstorage.apiimpl.network.WirelessGridHandler;
 import refinedstorage.apiimpl.network.grid.FluidGridHandler;
@@ -101,9 +102,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                     IBlockState state = tile.worldObj.getBlockState(node.getPosition());
 
                     ClientNode clientNode = new ClientNode(
-                            new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state)),
-                            1,
-                            node.getEnergyUsage()
+                        new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state)),
+                        1,
+                        node.getEnergyUsage()
                     );
 
                     if (clientNode.getStack().getItem() != null) {
@@ -401,7 +402,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
         for (ICraftingPattern craftingPattern : getPatterns()) {
             for (ItemStack output : craftingPattern.getOutputs()) {
-                if (CompareUtils.compareStack(output, pattern, flags)) {
+                if (RSAPI.instance().getComparer().isEqual(output, pattern, flags)) {
                     patterns.add(craftingPattern);
                 }
             }
@@ -427,7 +428,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             int score = 0;
 
             for (ItemStack input : patterns.get(i).getInputs()) {
-                ItemStack stored = itemStorage.getList().get(input, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
+                ItemStack stored = itemStorage.getList().get(input, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);
 
                 score += stored != null ? stored.stackSize : 0;
             }
@@ -457,8 +458,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public void sendItemStorageToClient() {
         worldObj.getMinecraftServer().getPlayerList().getPlayerList().stream()
-                .filter(player -> isWatchingGrid(player, EnumGridType.NORMAL, EnumGridType.CRAFTING, EnumGridType.PATTERN))
-                .forEach(this::sendItemStorageToClient);
+            .filter(player -> isWatchingGrid(player, EnumGridType.NORMAL, EnumGridType.CRAFTING, EnumGridType.PATTERN))
+            .forEach(this::sendItemStorageToClient);
     }
 
     @Override
@@ -469,15 +470,15 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public void sendItemStorageDeltaToClient(ItemStack stack, int delta) {
         worldObj.getMinecraftServer().getPlayerList().getPlayerList().stream()
-                .filter(player -> isWatchingGrid(player, EnumGridType.NORMAL, EnumGridType.CRAFTING, EnumGridType.PATTERN))
-                .forEach(player -> RS.INSTANCE.network.sendTo(new MessageGridItemDelta(this, stack, delta), player));
+            .filter(player -> isWatchingGrid(player, EnumGridType.NORMAL, EnumGridType.CRAFTING, EnumGridType.PATTERN))
+            .forEach(player -> RS.INSTANCE.network.sendTo(new MessageGridItemDelta(this, stack, delta), player));
     }
 
     @Override
     public void sendFluidStorageToClient() {
         worldObj.getMinecraftServer().getPlayerList().getPlayerList().stream()
-                .filter(player -> isWatchingGrid(player, EnumGridType.FLUID))
-                .forEach(this::sendFluidStorageToClient);
+            .filter(player -> isWatchingGrid(player, EnumGridType.FLUID))
+            .forEach(this::sendFluidStorageToClient);
     }
 
     @Override
@@ -488,8 +489,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public void sendFluidStorageDeltaToClient(FluidStack stack, int delta) {
         worldObj.getMinecraftServer().getPlayerList().getPlayerList().stream()
-                .filter(player -> isWatchingGrid(player, EnumGridType.FLUID))
-                .forEach(player -> RS.INSTANCE.network.sendTo(new MessageGridFluidDelta(stack, delta), player));
+            .filter(player -> isWatchingGrid(player, EnumGridType.FLUID))
+            .forEach(player -> RS.INSTANCE.network.sendTo(new MessageGridFluidDelta(stack, delta), player));
     }
 
     private boolean isWatchingGrid(EntityPlayer player, EnumGridType... types) {
@@ -798,7 +799,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
         return capability == CapabilityEnergy.ENERGY
-                || (energyTesla != null && (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER))
-                || super.hasCapability(capability, facing);
+            || (energyTesla != null && (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER))
+            || super.hasCapability(capability, facing);
     }
 }

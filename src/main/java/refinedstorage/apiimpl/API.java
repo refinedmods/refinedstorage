@@ -4,10 +4,12 @@ import refinedstorage.api.IAPI;
 import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementRegistry;
 import refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
 import refinedstorage.api.solderer.ISoldererRegistry;
+import refinedstorage.api.util.IComparer;
 import refinedstorage.api.util.IItemStackList;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementRegistry;
 import refinedstorage.apiimpl.autocrafting.registry.CraftingTaskRegistry;
 import refinedstorage.apiimpl.solderer.SoldererRegistry;
+import refinedstorage.apiimpl.util.Comparer;
 import refinedstorage.apiimpl.util.ItemStackList;
 
 import javax.annotation.Nonnull;
@@ -15,9 +17,16 @@ import javax.annotation.Nonnull;
 public class API implements IAPI {
     public static final IAPI INSTANCE = new API();
 
+    private IComparer comparer = new Comparer();
     private ISoldererRegistry soldererRegistry = new SoldererRegistry();
     private ICraftingTaskRegistry craftingTaskRegistry = new CraftingTaskRegistry();
     private ICraftingMonitorElementRegistry craftingMonitorElementRegistry = new CraftingMonitorElementRegistry();
+
+    @Nonnull
+    @Override
+    public IComparer getComparer() {
+        return comparer;
+    }
 
     @Override
     @Nonnull

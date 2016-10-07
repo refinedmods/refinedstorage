@@ -35,7 +35,7 @@ public class SoldererRecipeProcessor implements ISoldererRecipe {
         this.rows = new ItemStack[]{
             printedProcessor,
             new ItemStack(Items.REDSTONE),
-                new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_PRINTED_SILICON)
+            new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_PRINTED_SILICON)
         };
     }
 

@@ -12,7 +12,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RS;
-import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.api.util.IComparer;
 import refinedstorage.apiimpl.storage.NBTStorage;
 import refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
 import refinedstorage.apiimpl.storage.fluid.FluidUtils;
@@ -59,7 +59,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
     private static final String NBT_TYPE = "Type";
     private static final String NBT_IO_MODE = "IOMode";
 
-    private int compare = CompareUtils.COMPARE_NBT | CompareUtils.COMPARE_DAMAGE;
+    private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int mode = IFilterable.WHITELIST;
     private int type = IType.ITEMS;
     private int ioMode = IO_MODE_INSERT;

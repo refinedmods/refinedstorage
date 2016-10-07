@@ -2,7 +2,7 @@ package refinedstorage.gui;
 
 import com.google.common.primitives.Ints;
 import net.minecraft.client.gui.GuiTextField;
-import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.api.util.IComparer;
 import refinedstorage.container.ContainerBase;
 import refinedstorage.gui.sidebutton.SideButtonCompare;
 import refinedstorage.gui.sidebutton.SideButtonMode;
@@ -50,8 +50,8 @@ public class GuiStorage extends GuiBase {
         }
 
         if (gui.getCompareParameter() != null) {
-            addSideButton(new SideButtonCompare(this, gui.getCompareParameter(), CompareUtils.COMPARE_DAMAGE));
-            addSideButton(new SideButtonCompare(this, gui.getCompareParameter(), CompareUtils.COMPARE_NBT));
+            addSideButton(new SideButtonCompare(this, gui.getCompareParameter(), IComparer.COMPARE_DAMAGE));
+            addSideButton(new SideButtonCompare(this, gui.getCompareParameter(), IComparer.COMPARE_NBT));
         }
 
         priorityField = new GuiTextField(0, fontRendererObj, x + 98 + 1, y + 54 + 1, 29, fontRendererObj.FONT_HEIGHT);

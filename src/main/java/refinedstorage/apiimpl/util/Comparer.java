@@ -1,49 +1,14 @@
-package refinedstorage.api.storage;
+package refinedstorage.apiimpl.util;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.ArrayUtils;
+import refinedstorage.api.util.IComparer;
 
-/**
- * Utilities for comparing item and fluid stacks.
- */
-public final class CompareUtils {
-    public static final int COMPARE_DAMAGE = 1;
-    public static final int COMPARE_NBT = 2;
-    public static final int COMPARE_QUANTITY = 4;
-
-    /**
-     * Compares two stacks by NBT, damage and quantity.
-     *
-     * @param left  the left stack
-     * @param right the right stack
-     * @return true if the left and right stack are the same, false otherwise
-     */
-    public static boolean compareStack(ItemStack left, ItemStack right) {
-        return compareStack(left, right, COMPARE_NBT | COMPARE_DAMAGE | COMPARE_QUANTITY);
-    }
-
-    /**
-     * Compares two stacks by NBT and damage.
-     *
-     * @param left  the left stack
-     * @param right the right stack
-     * @return true if the left and right stack are the same, false otherwise
-     */
-    public static boolean compareStackNoQuantity(ItemStack left, ItemStack right) {
-        return compareStack(left, right, COMPARE_NBT | COMPARE_DAMAGE);
-    }
-
-    /**
-     * Compares two stacks by the given flags.
-     *
-     * @param left  the left stack
-     * @param right the right stack
-     * @param flags the flags to compare with
-     * @return true if the left and right stack are the same, false otherwise
-     */
-    public static boolean compareStack(ItemStack left, ItemStack right, int flags) {
+public class Comparer implements IComparer {
+    @Override
+    public boolean isEqual(ItemStack left, ItemStack right, int flags) {
         if (left == null && right == null) {
             return true;
         }
@@ -63,7 +28,7 @@ public final class CompareUtils {
         }
 
         if ((flags & COMPARE_NBT) == COMPARE_NBT) {
-            if (!compareNbt(left, right)) {
+            if (!isEqualNBT(left, right)) {
                 return false;
             }
         }
@@ -77,15 +42,8 @@ public final class CompareUtils {
         return true;
     }
 
-    /**
-     * Compares two stacks by the given flags.
-     *
-     * @param left  the left stack
-     * @param right the right stack
-     * @param flags the flags to compare with
-     * @return true if the left and right stack are the same, false otherwise
-     */
-    public static boolean compareStack(FluidStack left, FluidStack right, int flags) {
+    @Override
+    public boolean isEqual(FluidStack left, FluidStack right, int flags) {
         if (left == null && right == null) {
             return true;
         }
@@ -113,14 +71,8 @@ public final class CompareUtils {
         return true;
     }
 
-    /**
-     * Compares the NBT tags of two stacks.
-     *
-     * @param left  the left stack
-     * @param right the right stack
-     * @return true if the NBT tags of the two stacks are the same, false otherwise
-     */
-    public static boolean compareNbt(ItemStack left, ItemStack right) {
+    @Override
+    public boolean isEqualNBT(ItemStack left, ItemStack right) {
         if (!ItemStack.areItemStackTagsEqual(left, right)) {
             if (left.hasTagCompound() && !right.hasTagCompound() && left.getTagCompound().hasNoTags()) {
                 return true;
@@ -134,14 +86,8 @@ public final class CompareUtils {
         return true;
     }
 
-    /**
-     * Compares two stacks and checks if they share the same ore dictionary entry.
-     *
-     * @param left  the left stack
-     * @param right the right stack
-     * @return true if the two stacks share the same ore dictionary entry
-     */
-    public static boolean compareStackOreDict(ItemStack left, ItemStack right) {
+    @Override
+    public boolean isEqualOredict(ItemStack left, ItemStack right) {
         if (left == null && right == null) {
             return true;
         }

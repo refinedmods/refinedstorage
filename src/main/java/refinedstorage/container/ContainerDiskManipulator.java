@@ -20,7 +20,7 @@ public class ContainerDiskManipulator extends ContainerBase {
         }
 
         for (int i = 0; i < 6; ++i) {
-            addSlotToContainer(new SlotItemHandler(manipulator.getDisks(), 6 + i, 116 + (i%2 * 18), ((i / 2) * 18) + 57));
+            addSlotToContainer(new SlotItemHandler(manipulator.getDisks(), 6 + i, 116 + (i % 2 * 18), ((i / 2) * 18) + 57));
         }
 
         for (int i = 0; i < 9; ++i) {

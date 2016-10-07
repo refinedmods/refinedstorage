@@ -6,7 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.items.ItemHandlerHelper;
-import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.api.RSAPI;
 import refinedstorage.api.storage.item.IItemStorage;
 
 import javax.annotation.Nullable;
@@ -124,7 +124,7 @@ public abstract class ItemStorageNBT implements IItemStorage {
     @Override
     public synchronized ItemStack insertItem(ItemStack stack, int size, boolean simulate) {
         for (ItemStack otherStack : stacks) {
-            if (CompareUtils.compareStackNoQuantity(otherStack, stack)) {
+            if (RSAPI.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
                 if (getCapacity() != -1 && getStored() + size > getCapacity()) {
                     int remainingSpace = getCapacity() - getStored();
 
@@ -187,7 +187,7 @@ public abstract class ItemStorageNBT implements IItemStorage {
     @Override
     public synchronized ItemStack extractItem(ItemStack stack, int size, int flags) {
         for (ItemStack otherStack : stacks) {
-            if (CompareUtils.compareStack(otherStack, stack, flags)) {
+            if (RSAPI.instance().getComparer().isEqual(otherStack, stack, flags)) {
                 if (size > otherStack.stackSize) {
                     size = otherStack.stackSize;
                 }

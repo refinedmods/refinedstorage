@@ -18,9 +18,9 @@ public class SoldererRecipeStorage implements ISoldererRecipe {
     public SoldererRecipeStorage(EnumItemStorageType type, int storagePart) {
         this.type = type;
         this.rows = new ItemStack[]{
-                new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
-                new ItemStack(RSBlocks.MACHINE_CASING),
-                new ItemStack(RSItems.STORAGE_PART, 1, storagePart)
+            new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
+            new ItemStack(RSBlocks.MACHINE_CASING),
+            new ItemStack(RSItems.STORAGE_PART, 1, storagePart)
         };
     }
 

@@ -1,6 +1,6 @@
 package refinedstorage.gui;
 
-import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.api.util.IComparer;
 import refinedstorage.container.ContainerInterface;
 import refinedstorage.gui.sidebutton.SideButtonCompare;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
@@ -15,8 +15,8 @@ public class GuiInterface extends GuiBase {
     public void init(int x, int y) {
         addSideButton(new SideButtonRedstoneMode(this, TileInterface.REDSTONE_MODE));
 
-        addSideButton(new SideButtonCompare(this, TileInterface.COMPARE, CompareUtils.COMPARE_DAMAGE));
-        addSideButton(new SideButtonCompare(this, TileInterface.COMPARE, CompareUtils.COMPARE_NBT));
+        addSideButton(new SideButtonCompare(this, TileInterface.COMPARE, IComparer.COMPARE_DAMAGE));
+        addSideButton(new SideButtonCompare(this, TileInterface.COMPARE, IComparer.COMPARE_NBT));
     }
 
     @Override

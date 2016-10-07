@@ -3,7 +3,7 @@ package refinedstorage.tile.externalstorage;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
-import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.api.RSAPI;
 import refinedstorage.tile.config.IFilterable;
 
 import javax.annotation.Nonnull;
@@ -37,7 +37,7 @@ public class ItemStorageDSU extends ItemStorageExternal {
     public ItemStack insertItem(@Nonnull ItemStack stack, int size, boolean simulate) {
         if (IFilterable.canTake(externalStorage.getItemFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack)) {
             if (unit.getStoredItemType() != null) {
-                if (CompareUtils.compareStackNoQuantity(unit.getStoredItemType(), stack)) {
+                if (RSAPI.instance().getComparer().isEqualNoQuantity(unit.getStoredItemType(), stack)) {
                     if (getStored() + size > unit.getMaxStoredCount()) {
                         int remainingSpace = getCapacity() - getStored();
 
@@ -86,7 +86,7 @@ public class ItemStorageDSU extends ItemStorageExternal {
 
     @Override
     public ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags) {
-        if (CompareUtils.compareStack(stack, unit.getStoredItemType(), flags)) {
+        if (RSAPI.instance().getComparer().isEqual(stack, unit.getStoredItemType(), flags)) {
             if (size > unit.getStoredItemType().stackSize) {
                 size = unit.getStoredItemType().stackSize;
             }

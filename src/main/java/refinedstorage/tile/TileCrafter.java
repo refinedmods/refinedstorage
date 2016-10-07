@@ -14,7 +14,7 @@ import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.autocrafting.ICraftingPatternProvider;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.NetworkUtils;
-import refinedstorage.api.storage.CompareUtils;
+import refinedstorage.api.util.IComparer;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemUpgrade;
@@ -110,7 +110,7 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
         if (triggeredAutocrafting && worldObj.isBlockPowered(pos)) {
             for (ICraftingPattern pattern : actualPatterns) {
                 for (ItemStack output : pattern.getOutputs()) {
-                    NetworkUtils.scheduleCraftingTaskIfUnscheduled(network, output, 1, CompareUtils.COMPARE_DAMAGE | CompareUtils.COMPARE_NBT);
+                    NetworkUtils.scheduleCraftingTaskIfUnscheduled(network, output, 1, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);
                 }
             }
         }
