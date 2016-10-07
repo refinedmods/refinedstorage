@@ -532,12 +532,10 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         int inserted;
         if(remainder == null) {
             inserted = orginalSize;
-        }
-        else if(remainder.stackSize < 0) {
+        } else if(remainder.stackSize < 0) {
             inserted = orginalSize + remainder.stackSize;
             remainder = null;
-        }
-        else {
+        } else {
             inserted = orginalSize - remainder.stackSize;
         }
 

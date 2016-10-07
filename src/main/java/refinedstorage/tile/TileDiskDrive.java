@@ -376,7 +376,9 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     }
 
     @Override
-    public TileDataParameter<Boolean> getVoidExcessParameter() { return null; }
+    public TileDataParameter<Boolean> getVoidExcessParameter() {
+        return null;
+    }
 
     @Override
     public int getPriority() {

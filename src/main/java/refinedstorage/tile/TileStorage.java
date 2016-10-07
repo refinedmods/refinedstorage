@@ -254,7 +254,9 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
     }
 
     @Override
-    public TileDataParameter<Boolean> getVoidExcessParameter() { return VOID_EXCESS; }
+    public TileDataParameter<Boolean> getVoidExcessParameter() {
+        return VOID_EXCESS;
+    }
 
     public NBTTagCompound getStorageTag() {
         return storageTag;
