@@ -10,9 +10,8 @@ import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.autocrafting.task.IProcessable;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.util.IItemStackList;
-import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementRoot;
+import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementItemRender;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementText;
-import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementToTake;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,7 +122,7 @@ public class CraftingTaskNormal implements ICraftingTask {
             break;
         }
 
-        if (toTake.isEmpty() && missing.isEmpty() && toProcess.stream().allMatch(IProcessable::hasReceivedOutputs)) {
+        if (toTake.isEmpty() && missing.isEmpty() && hasProcessedItems()) {
             for (ItemStack output : pattern.getOutputs()) {
                 // @TODO: Handle remainder
                 network.insertItem(output, output.stackSize, false);
@@ -154,18 +153,43 @@ public class CraftingTaskNormal implements ICraftingTask {
     public List<ICraftingMonitorElement> getCraftingMonitorElements() {
         List<ICraftingMonitorElement> elements = new ArrayList<>();
 
-        elements.add(new CraftingMonitorElementRoot(
+        elements.add(new CraftingMonitorElementItemRender(
             network.getCraftingTasks().indexOf(this),
             pattern.getOutputs().get(0),
-            quantity
+            quantity,
+            0
         ));
 
-        elements.add(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_taking", 16));
+        if (!toTake.isEmpty()) {
+            elements.add(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_taking", 16));
 
-        elements.addAll(toTake.getStacks().stream()
-            .map(stack -> new CraftingMonitorElementToTake(stack, stack.stackSize))
-            .collect(Collectors.toList())
-        );
+            elements.addAll(toTake.getStacks().stream()
+                .map(stack -> new CraftingMonitorElementItemRender(
+                    -1,
+                    stack,
+                    stack.stackSize,
+                    32
+                ))
+                .collect(Collectors.toList())
+            );
+        }
+
+        if (!hasProcessedItems()) {
+            elements.add(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_processing", 16));
+
+            for (IProcessable processable : toProcess) {
+                for (int i = 0; i < processable.getPattern().getOutputs().size(); ++i) {
+                    if (!processable.hasReceivedOutput(i)) {
+                        elements.add(new CraftingMonitorElementItemRender(
+                            -1,
+                            processable.getPattern().getOutputs().get(i),
+                            processable.getPattern().getOutputs().get(i).stackSize,
+                            32
+                        ));
+                    }
+                }
+            }
+        }
 
         return elements;
     }
@@ -175,10 +199,13 @@ public class CraftingTaskNormal implements ICraftingTask {
         return pattern;
     }
 
-
     @Override
     public List<IProcessable> getToProcess() {
         return toProcess;
+    }
+
+    private boolean hasProcessedItems() {
+        return toProcess.stream().allMatch(IProcessable::hasReceivedOutputs);
     }
 
     private void addExtras(ICraftingPattern pattern) {

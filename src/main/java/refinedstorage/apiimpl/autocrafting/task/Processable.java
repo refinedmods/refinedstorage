@@ -46,6 +46,11 @@ public class Processable implements IProcessable {
     }
 
     @Override
+    public boolean hasReceivedOutput(int i) {
+        return satisfied[i];
+    }
+
+    @Override
     public boolean onReceiveOutput(ItemStack stack) {
         for (int i = 0; i < pattern.getOutputs().size(); ++i) {
             if (!satisfied[i]) {

@@ -19,9 +19,8 @@ import refinedstorage.RS;
 import refinedstorage.RSBlocks;
 import refinedstorage.RSItems;
 import refinedstorage.api.RSAPI;
-import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementRoot;
+import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementItemRender;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementText;
-import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementToTake;
 import refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactoryNormal;
 import refinedstorage.apiimpl.solderer.*;
 import refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
@@ -50,8 +49,7 @@ public class CommonProxy {
 
         RSAPI.instance().getCraftingTaskRegistry().addFactory(CraftingTaskFactoryNormal.ID, new CraftingTaskFactoryNormal());
 
-        RSAPI.instance().getCraftingMonitorElementRegistry().add(CraftingMonitorElementRoot.ID, buf -> new CraftingMonitorElementRoot(buf.readInt(), ByteBufUtils.readItemStack(buf), buf.readInt()));
-        RSAPI.instance().getCraftingMonitorElementRegistry().add(CraftingMonitorElementToTake.ID, buf -> new CraftingMonitorElementToTake(ByteBufUtils.readItemStack(buf), buf.readInt()));
+        RSAPI.instance().getCraftingMonitorElementRegistry().add(CraftingMonitorElementItemRender.ID, buf -> new CraftingMonitorElementItemRender(buf.readInt(), ByteBufUtils.readItemStack(buf), buf.readInt(), buf.readInt()));
         RSAPI.instance().getCraftingMonitorElementRegistry().add(CraftingMonitorElementText.ID, buf -> new CraftingMonitorElementText(ByteBufUtils.readUTF8String(buf), buf.readInt()));
 
         int id = 0;

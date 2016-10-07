@@ -27,6 +27,8 @@ public interface IProcessable {
      */
     boolean hasReceivedOutputs();
 
+    boolean hasReceivedOutput(int i);
+
     /**
      * @param stack the stack that was inserted in the storage system
      * @return whether this item belonged to the processable item
