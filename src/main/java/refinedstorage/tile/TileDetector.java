@@ -134,7 +134,7 @@ public class TileDetector extends TileNode implements IComparable, IType {
                         powered = isPowered(stack == null ? null : stack.stackSize);
                     }
                 } else {
-                    powered = mode == MODE_AUTOCRAFTING && !network.getCraftingTasks().isEmpty();
+                    powered = mode == MODE_AUTOCRAFTING ? !network.getCraftingTasks().isEmpty() : isPowered(network.getItemStorage().getList().getStacks().stream().map(s -> s.stackSize).mapToInt(Number::intValue).sum());
                 }
             } else if (type == IType.FLUIDS) {
                 FluidStack slot = fluidFilters.getFluidStackInSlot(0);
@@ -144,7 +144,7 @@ public class TileDetector extends TileNode implements IComparable, IType {
 
                     powered = isPowered(stack == null ? null : stack.amount);
                 } else {
-                    powered = false;
+                    powered = isPowered(network.getFluidStorage().getStacks().stream().map(s -> s.amount).mapToInt(Number::intValue).sum());
                 }
             }
         }
