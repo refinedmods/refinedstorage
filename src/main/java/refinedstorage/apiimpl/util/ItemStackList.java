@@ -3,8 +3,8 @@ package refinedstorage.apiimpl.util;
 import com.google.common.collect.ArrayListMultimap;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import refinedstorage.api.RSAPI;
 import refinedstorage.api.util.IItemStackList;
+import refinedstorage.apiimpl.API;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -16,7 +16,7 @@ public class ItemStackList implements IItemStackList {
     @Override
     public void add(ItemStack stack) {
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
-            if (RSAPI.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
+            if (API.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
                 otherStack.stackSize += stack.stackSize;
 
                 return;
@@ -29,7 +29,7 @@ public class ItemStackList implements IItemStackList {
     @Override
     public boolean remove(@Nonnull ItemStack stack, int size, boolean removeIfReachedZero) {
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
-            if (RSAPI.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
+            if (API.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
                 otherStack.stackSize -= size;
 
                 if (otherStack.stackSize <= 0 && removeIfReachedZero) {
@@ -47,7 +47,7 @@ public class ItemStackList implements IItemStackList {
     @Nullable
     public ItemStack get(@Nonnull ItemStack stack, int flags) {
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
-            if (RSAPI.instance().getComparer().isEqual(otherStack, stack, flags)) {
+            if (API.instance().getComparer().isEqual(otherStack, stack, flags)) {
                 return otherStack;
             }
         }
@@ -59,7 +59,7 @@ public class ItemStackList implements IItemStackList {
     @Nullable
     public ItemStack get(int hash) {
         for (ItemStack stack : this.stacks.values()) {
-            if (RSAPI.instance().getItemStackHashCode(stack) == hash) {
+            if (API.instance().getItemStackHashCode(stack) == hash) {
                 return stack;
             }
         }

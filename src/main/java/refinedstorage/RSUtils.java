@@ -6,8 +6,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import refinedstorage.api.RSAPI;
 import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.apiimpl.API;
 import refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
 import refinedstorage.apiimpl.storage.item.ItemStorageNBT;
 
@@ -19,12 +19,12 @@ public final class RSUtils {
         buf.writeInt(stack.stackSize);
         buf.writeInt(stack.getItemDamage());
         ByteBufUtils.writeTag(buf, stack.getTagCompound());
-        buf.writeInt(RSAPI.instance().getItemStackHashCode(stack));
+        buf.writeInt(API.instance().getItemStackHashCode(stack));
         buf.writeBoolean(network.hasPattern(stack));
     }
 
     public static void writeFluidStack(ByteBuf buf, FluidStack stack) {
-        buf.writeInt(RSAPI.instance().getFluidStackHashCode(stack));
+        buf.writeInt(API.instance().getFluidStackHashCode(stack));
         ByteBufUtils.writeUTF8String(buf, FluidRegistry.getFluidName(stack.getFluid()));
         buf.writeInt(stack.amount);
         ByteBufUtils.writeTag(buf, stack.tag);

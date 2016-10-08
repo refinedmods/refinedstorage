@@ -2,7 +2,9 @@ package refinedstorage.apiimpl;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
-import refinedstorage.api.IAPI;
+import net.minecraftforge.fml.common.discovery.ASMDataTable;
+import refinedstorage.api.IRSAPI;
+import refinedstorage.api.RSAPI;
 import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementRegistry;
 import refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
 import refinedstorage.api.solderer.ISoldererRegistry;
@@ -15,9 +17,11 @@ import refinedstorage.apiimpl.util.Comparer;
 import refinedstorage.apiimpl.util.ItemStackList;
 
 import javax.annotation.Nonnull;
+import java.lang.reflect.Field;
+import java.util.Set;
 
-public class API implements IAPI {
-    public static final IAPI INSTANCE = new API();
+public class API implements IRSAPI {
+    private static final IRSAPI INSTANCE = new API();
 
     private IComparer comparer = new Comparer();
     private ISoldererRegistry soldererRegistry = new SoldererRegistry();
@@ -62,5 +66,24 @@ public class API implements IAPI {
     @Override
     public int getFluidStackHashCode(FluidStack stack) {
         return stack.getFluid().hashCode() * (stack.tag != null ? stack.tag.hashCode() : 1);
+    }
+
+    public static IRSAPI instance() {
+        return INSTANCE;
+    }
+
+    public static void deliver(ASMDataTable asmDataTable) {
+        String annotationClassName = RSAPI.class.getCanonicalName();
+        Set<ASMDataTable.ASMData> asmDataSet = asmDataTable.getAll(annotationClassName);
+        for (ASMDataTable.ASMData asmData : asmDataSet) {
+            try {
+                Class clazz = Class.forName(asmData.getClassName());
+                Field field = clazz.getField(asmData.getObjectName());
+                if (field.getType() == IRSAPI.class)
+                    field.set(null, INSTANCE);
+            } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
+                throw new RuntimeException("Failed to set: {}" + asmData.getClassName() + "." + asmData.getObjectName(), e);
+            }
+        }
     }
 }

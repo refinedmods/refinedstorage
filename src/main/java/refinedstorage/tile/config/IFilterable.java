@@ -5,7 +5,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
-import refinedstorage.api.RSAPI;
+import refinedstorage.apiimpl.API;
 import refinedstorage.inventory.ItemHandlerFluid;
 import refinedstorage.tile.data.ITileDataConsumer;
 import refinedstorage.tile.data.ITileDataProducer;
@@ -41,7 +41,7 @@ public interface IFilterable {
                 if (slot != null) {
                     slots++;
 
-                    if (RSAPI.instance().getComparer().isEqual(slot, stack, compare)) {
+                    if (API.instance().getComparer().isEqual(slot, stack, compare)) {
                         return true;
                     }
                 }
@@ -52,7 +52,7 @@ public interface IFilterable {
             for (int i = 0; i < filters.getSlots(); ++i) {
                 ItemStack slot = filters.getStackInSlot(i);
 
-                if (slot != null && RSAPI.instance().getComparer().isEqual(slot, stack, compare)) {
+                if (slot != null && API.instance().getComparer().isEqual(slot, stack, compare)) {
                     return false;
                 }
             }
@@ -73,7 +73,7 @@ public interface IFilterable {
                 if (slot != null) {
                     slots++;
 
-                    if (RSAPI.instance().getComparer().isEqual(slot, stack, compare)) {
+                    if (API.instance().getComparer().isEqual(slot, stack, compare)) {
                         return true;
                     }
                 }
@@ -84,7 +84,7 @@ public interface IFilterable {
             for (int i = 0; i < filters.getSlots(); ++i) {
                 FluidStack slot = filters.getFluidStackInSlot(i);
 
-                if (slot != null && RSAPI.instance().getComparer().isEqual(slot, stack, compare)) {
+                if (slot != null && API.instance().getComparer().isEqual(slot, stack, compare)) {
                     return false;
                 }
             }

@@ -12,8 +12,9 @@ import javax.annotation.Nonnull;
 
 /**
  * Represents a Refined Storage API implementation.
+ * Delivered by the {@link RSAPI} annotation
  */
-public interface IAPI {
+public interface IRSAPI {
     /**
      * @return the comparer
      */
