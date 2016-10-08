@@ -6,7 +6,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
-import refinedstorage.api.RSAPI;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.network.grid.IFluidGridHandler;
@@ -14,6 +13,7 @@ import refinedstorage.api.network.grid.IItemGridHandler;
 import refinedstorage.api.storage.fluid.IGroupedFluidStorage;
 import refinedstorage.api.storage.item.IGroupedItemStorage;
 import refinedstorage.api.util.IComparer;
+import refinedstorage.apiimpl.API;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -156,7 +156,7 @@ public interface INetworkMaster {
      * @return the crafting task
      */
     default ICraftingTask createCraftingTask(@Nullable ItemStack stack, ICraftingPattern pattern, int quantity) {
-        return RSAPI.instance().getCraftingTaskRegistry().getFactory(pattern.getId()).create(getNetworkWorld(), this, stack, pattern, quantity, null);
+        return API.instance().getCraftingTaskRegistry().getFactory(pattern.getId()).create(getNetworkWorld(), this, stack, pattern, quantity, null);
     }
 
     /**
@@ -171,7 +171,7 @@ public interface INetworkMaster {
 
         for (ICraftingTask task : getCraftingTasks()) {
             for (ItemStack output : task.getPattern().getOutputs()) {
-                if (RSAPI.instance().getComparer().isEqual(output, stack, compare)) {
+                if (API.instance().getComparer().isEqual(output, stack, compare)) {
                     alreadyScheduled++;
                 }
             }

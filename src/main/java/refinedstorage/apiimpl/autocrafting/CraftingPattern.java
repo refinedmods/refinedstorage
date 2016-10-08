@@ -7,9 +7,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.world.World;
 import net.minecraftforge.items.ItemHandlerHelper;
-import refinedstorage.api.RSAPI;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
+import refinedstorage.apiimpl.API;
 import refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactoryNormal;
 import refinedstorage.item.ItemPattern;
 
@@ -108,7 +108,7 @@ public class CraftingPattern implements ICraftingPattern {
         int quantity = 0;
 
         for (ItemStack output : outputs) {
-            if (RSAPI.instance().getComparer().isEqualNoQuantity(requested, output)) {
+            if (API.instance().getComparer().isEqualNoQuantity(requested, output)) {
                 quantity += output.stackSize;
 
                 if (!ItemPattern.isProcessing(stack)) {

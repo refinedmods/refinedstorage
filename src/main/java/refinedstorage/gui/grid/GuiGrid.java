@@ -15,8 +15,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import refinedstorage.RS;
-import refinedstorage.api.RSAPI;
 import refinedstorage.api.network.grid.IItemGridHandler;
+import refinedstorage.apiimpl.API;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
 import refinedstorage.gui.GuiBase;
@@ -128,7 +128,7 @@ public class GuiGrid extends GuiBase {
                     boolean found = filteredItems.isEmpty();
 
                     for (GridFilteredItem filteredItem : filteredItems) {
-                        if (RSAPI.instance().getComparer().isEqual(((ClientStackItem) stack).getStack(), filteredItem.getStack(), filteredItem.getCompare())) {
+                        if (API.instance().getComparer().isEqual(((ClientStackItem) stack).getStack(), filteredItem.getStack(), filteredItem.getCompare())) {
                             found = true;
 
                             break;

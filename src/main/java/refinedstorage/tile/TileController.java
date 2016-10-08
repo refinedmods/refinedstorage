@@ -21,7 +21,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RS;
 import refinedstorage.RSBlocks;
-import refinedstorage.api.RSAPI;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.autocrafting.ICraftingPatternProvider;
@@ -39,6 +38,7 @@ import refinedstorage.api.storage.fluid.IGroupedFluidStorage;
 import refinedstorage.api.storage.item.IGroupedItemStorage;
 import refinedstorage.api.storage.item.IItemStorage;
 import refinedstorage.api.util.IComparer;
+import refinedstorage.apiimpl.API;
 import refinedstorage.apiimpl.network.NetworkNodeGraph;
 import refinedstorage.apiimpl.network.WirelessGridHandler;
 import refinedstorage.apiimpl.network.grid.FluidGridHandler;
@@ -408,7 +408,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
         for (ICraftingPattern craftingPattern : getPatterns()) {
             for (ItemStack output : craftingPattern.getOutputs()) {
-                if (RSAPI.instance().getComparer().isEqual(output, pattern, flags)) {
+                if (API.instance().getComparer().isEqual(output, pattern, flags)) {
                     patterns.add(craftingPattern);
                 }
             }
@@ -692,7 +692,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             if (container instanceof ICraftingPatternContainer) {
                 ICraftingPattern pattern = ((ICraftingPatternProvider) stack.getItem()).create(world, stack, (ICraftingPatternContainer) container);
 
-                ICraftingTaskFactory factory = RSAPI.instance().getCraftingTaskRegistry().getFactory(tag.getString(ICraftingTask.NBT_PATTERN_ID));
+                ICraftingTaskFactory factory = API.instance().getCraftingTaskRegistry().getFactory(tag.getString(ICraftingTask.NBT_PATTERN_ID));
 
                 if (factory != null) {
                     return factory.create(world, network, null, pattern, tag.getInteger(ICraftingTask.NBT_QUANTITY), tag);

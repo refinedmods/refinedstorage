@@ -1,8 +1,8 @@
 package refinedstorage.integration.jei;
 
 import net.minecraft.item.ItemStack;
-import refinedstorage.api.RSAPI;
 import refinedstorage.api.solderer.ISoldererRecipe;
+import refinedstorage.apiimpl.API;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ public final class RecipeMakerSolderer {
     public static List<RecipeWrapperSolderer> getRecipes() {
         List<RecipeWrapperSolderer> recipes = new ArrayList<>();
 
-        for (ISoldererRecipe recipe : RSAPI.instance().getSoldererRegistry().getRecipes()) {
+        for (ISoldererRecipe recipe : API.instance().getSoldererRegistry().getRecipes()) {
             List<ItemStack> inputs = new ArrayList<>();
 
             inputs.add(recipe.getRow(0));

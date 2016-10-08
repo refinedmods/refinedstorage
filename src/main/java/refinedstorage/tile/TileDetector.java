@@ -11,10 +11,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RS;
 import refinedstorage.RSBlocks;
-import refinedstorage.api.RSAPI;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.util.IComparer;
+import refinedstorage.apiimpl.API;
 import refinedstorage.gui.GuiDetector;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerFluid;
@@ -115,7 +115,7 @@ public class TileDetector extends TileNode implements IComparable, IType {
 
                         for (ICraftingTask task : network.getCraftingTasks()) {
                             for (ItemStack output : task.getPattern().getOutputs()) {
-                                if (RSAPI.instance().getComparer().isEqualNoQuantity(slot, output)) {
+                                if (API.instance().getComparer().isEqualNoQuantity(slot, output)) {
                                     found = true;
 
                                     break;

@@ -16,9 +16,9 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 import refinedstorage.RS;
 import refinedstorage.RSBlocks;
 import refinedstorage.RSItems;
-import refinedstorage.api.RSAPI;
 import refinedstorage.api.network.grid.IFluidGridHandler;
 import refinedstorage.api.network.grid.IItemGridHandler;
+import refinedstorage.apiimpl.API;
 import refinedstorage.block.BlockGrid;
 import refinedstorage.block.EnumGridType;
 import refinedstorage.container.ContainerGrid;
@@ -286,7 +286,7 @@ public class TileGrid extends TileNode implements IGrid {
 
             craftedItems += crafted.stackSize;
 
-            if (!RSAPI.instance().getComparer().isEqual(crafted, result.getStackInSlot(0)) || craftedItems + crafted.stackSize > crafted.getMaxStackSize()) {
+            if (!API.instance().getComparer().isEqual(crafted, result.getStackInSlot(0)) || craftedItems + crafted.stackSize > crafted.getMaxStackSize()) {
                 break;
             }
         }
@@ -363,7 +363,7 @@ public class TileGrid extends TileNode implements IGrid {
                         if (!found) {
                             for (ItemStack possibility : possibilities) {
                                 for (int j = 0; j < player.inventory.getSizeInventory(); ++j) {
-                                    if (RSAPI.instance().getComparer().isEqualNoQuantity(possibility, player.inventory.getStackInSlot(j))) {
+                                    if (API.instance().getComparer().isEqualNoQuantity(possibility, player.inventory.getStackInSlot(j))) {
                                         matrix.setInventorySlotContents(i, ItemHandlerHelper.copyStackWithSize(player.inventory.getStackInSlot(j), 1));
 
                                         player.inventory.decrStackSize(j, 1);

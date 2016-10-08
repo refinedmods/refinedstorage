@@ -1,8 +1,8 @@
 package refinedstorage.tile.externalstorage;
 
 import net.minecraft.item.ItemStack;
-import refinedstorage.api.RSAPI;
 import refinedstorage.api.storage.item.IItemStorage;
+import refinedstorage.apiimpl.API;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public abstract class ItemStorageExternal implements IItemStorage {
             return true;
         } else {
             for (int i = 0; i < items.size(); ++i) {
-                if (!RSAPI.instance().getComparer().isEqual(items.get(i), cache.get(i))) {
+                if (!API.instance().getComparer().isEqual(items.get(i), cache.get(i))) {
                     cache = items;
 
                     return true;

@@ -3,13 +3,13 @@ package refinedstorage.apiimpl.autocrafting.task;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.items.ItemHandlerHelper;
-import refinedstorage.api.RSAPI;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.autocrafting.task.IProcessable;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.util.IItemStackList;
+import refinedstorage.apiimpl.API;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementItemRender;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementText;
 
@@ -23,10 +23,10 @@ public class CraftingTaskNormal implements ICraftingTask {
     private ICraftingPattern pattern;
     private int quantity;
     private List<IProcessable> toProcess = new ArrayList<>();
-    private IItemStackList toTake = RSAPI.instance().createItemStackList();
-    private IItemStackList toCraft = RSAPI.instance().createItemStackList();
-    private IItemStackList missing = RSAPI.instance().createItemStackList();
-    private IItemStackList extras = RSAPI.instance().createItemStackList();
+    private IItemStackList toTake = API.instance().createItemStackList();
+    private IItemStackList toCraft = API.instance().createItemStackList();
+    private IItemStackList missing = API.instance().createItemStackList();
+    private IItemStackList extras = API.instance().createItemStackList();
 
     public CraftingTaskNormal(INetworkMaster network, ItemStack requested, ICraftingPattern pattern, int quantity) {
         this.network = network;

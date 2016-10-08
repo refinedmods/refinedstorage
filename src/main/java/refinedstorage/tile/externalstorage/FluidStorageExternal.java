@@ -3,9 +3,9 @@ package refinedstorage.tile.externalstorage;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
-import refinedstorage.api.RSAPI;
 import refinedstorage.api.storage.fluid.IFluidStorage;
 import refinedstorage.api.util.IComparer;
+import refinedstorage.apiimpl.API;
 import refinedstorage.apiimpl.storage.fluid.FluidUtils;
 import refinedstorage.tile.config.IFilterable;
 
@@ -59,7 +59,7 @@ public class FluidStorageExternal implements IFluidStorage {
     public FluidStack extractFluid(@Nonnull FluidStack stack, int size, int flags) {
         FluidStack toDrain = FluidUtils.copyStackWithSize(stack, size);
 
-        if (RSAPI.instance().getComparer().isEqual(getContents(), toDrain, flags)) {
+        if (API.instance().getComparer().isEqual(getContents(), toDrain, flags)) {
             return handler.drain(toDrain, true);
         }
 
@@ -85,7 +85,7 @@ public class FluidStorageExternal implements IFluidStorage {
 
         if (cache == null) {
             cache = FluidUtils.copy(stack);
-        } else if (!RSAPI.instance().getComparer().isEqual(stack, cache, IComparer.COMPARE_NBT | RSAPI.instance().getComparer().COMPARE_QUANTITY)) {
+        } else if (!API.instance().getComparer().isEqual(stack, cache, IComparer.COMPARE_NBT | API.instance().getComparer().COMPARE_QUANTITY)) {
             cache = FluidUtils.copy(stack);
 
             return true;

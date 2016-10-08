@@ -6,9 +6,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import refinedstorage.api.RSAPI;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.grid.IFluidGridHandler;
+import refinedstorage.apiimpl.API;
 import refinedstorage.apiimpl.storage.fluid.FluidUtils;
 
 import javax.annotation.Nullable;
@@ -31,7 +31,7 @@ public class FluidGridHandler implements IFluidGridHandler {
                 for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
                     ItemStack slot = player.inventory.getStackInSlot(i);
 
-                    if (RSAPI.instance().getComparer().isEqualNoQuantity(FluidUtils.EMPTY_BUCKET, slot)) {
+                    if (API.instance().getComparer().isEqualNoQuantity(FluidUtils.EMPTY_BUCKET, slot)) {
                         bucket = FluidUtils.EMPTY_BUCKET.copy();
 
                         player.inventory.decrStackSize(i, 1);
