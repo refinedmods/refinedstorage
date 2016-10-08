@@ -74,7 +74,7 @@ public class TileFluidInterface extends TileNode implements IComparable {
     private ItemHandlerBasic in = new ItemHandlerBasic(1, this);
     private ItemHandlerFluid out = new ItemHandlerFluid(1, this);
 
-    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED);
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK);
 
     public TileFluidInterface() {
         dataManager.addWatchedParameter(COMPARE);
@@ -101,8 +101,11 @@ public class TileFluidInterface extends TileNode implements IComparable {
         }
 
         if (ticks % upgrades.getSpeed() == 0) {
-            FluidStack drained = tankIn.drainInternal(Fluid.BUCKET_VOLUME, true);
+            int size = upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK) ? 64 : 1;
 
+            FluidStack drained = tankIn.drainInternal(Fluid.BUCKET_VOLUME * size, true);
+
+            // Drain in tank
             if (drained != null) {
                 FluidStack remainder = network.insertFluid(drained, drained.amount, false);
 
@@ -113,17 +116,21 @@ public class TileFluidInterface extends TileNode implements IComparable {
 
             FluidStack stack = out.getFluidStackInSlot(0);
 
+            // Fill out tank
+
+            // If our out fluid doesn't match the new fluid, empty it first
             if (tankOut.getFluid() != null && (stack == null || (tankOut.getFluid().getFluid() != stack.getFluid()))) {
-                FluidStack remainder = tankOut.drainInternal(Fluid.BUCKET_VOLUME, true);
+                FluidStack remainder = tankOut.drainInternal(Fluid.BUCKET_VOLUME * size, true);
 
                 if (remainder != null) {
                     network.insertFluid(remainder, remainder.amount, false);
                 }
             } else if (stack != null) {
+                // Fill the out fluid
                 FluidStack stackInStorage = network.getFluidStorage().get(stack, compare);
 
                 if (stackInStorage != null) {
-                    int toExtract = Math.min(Fluid.BUCKET_VOLUME, stackInStorage.amount);
+                    int toExtract = Math.min(Fluid.BUCKET_VOLUME * size, stackInStorage.amount);
 
                     FluidStack took = network.extractFluid(stack, toExtract, compare);
 

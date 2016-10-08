@@ -59,6 +59,8 @@ public class TileImporter extends TileMultipartNode implements IComparable, IFil
 
     @Override
     public void updateNode() {
+        int size = upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK) ? 64 : 1;
+
         if (type == IType.ITEMS) {
             IItemHandler handler = getItemHandler(getFacingTile(), getDirection().getOpposite());
 
@@ -76,14 +78,12 @@ public class TileImporter extends TileMultipartNode implements IComparable, IFil
                 if (stack == null || !IFilterable.canTake(itemFilters, mode, compare, stack)) {
                     currentSlot++;
                 } else if (ticks % upgrades.getSpeed() == 0) {
-                    int quantity = upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK) ? 64 : 1;
-
-                    ItemStack result = handler.extractItem(currentSlot, quantity, true);
+                    ItemStack result = handler.extractItem(currentSlot, size, true);
 
                     if (result != null && network.insertItem(result, result.stackSize, true) == null) {
                         network.insertItem(result, result.stackSize, false);
 
-                        handler.extractItem(currentSlot, quantity, false);
+                        handler.extractItem(currentSlot, size, false);
                     } else {
                         currentSlot++;
                     }
@@ -96,9 +96,11 @@ public class TileImporter extends TileMultipartNode implements IComparable, IFil
                 FluidStack stack = handler.drain(Fluid.BUCKET_VOLUME, false);
 
                 if (stack != null && IFilterable.canTakeFluids(fluidFilters, mode, compare, stack) && network.insertFluid(stack, stack.amount, true) == null) {
-                    FluidStack drain = handler.drain(Fluid.BUCKET_VOLUME, true);
+                    FluidStack drained = handler.drain(Fluid.BUCKET_VOLUME * size, true);
 
-                    network.insertFluid(drain, drain.amount, false);
+                    if (drained != null) {
+                        network.insertFluid(drained, drained.amount, false);
+                    }
                 }
             }
         }

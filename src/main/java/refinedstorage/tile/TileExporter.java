@@ -54,10 +54,10 @@ public class TileExporter extends TileMultipartNode implements IComparable, ITyp
     @Override
     public void updateNode() {
         if (ticks % upgrades.getSpeed() == 0) {
+            int size = upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK) ? 64 : 1;
+
             if (type == IType.ITEMS) {
                 IItemHandler handler = getItemHandler(getFacingTile(), getDirection().getOpposite());
-
-                int size = upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK) ? 64 : 1;
 
                 if (handler != null) {
                     for (int i = 0; i < itemFilters.getSlots(); ++i) {
@@ -87,7 +87,7 @@ public class TileExporter extends TileMultipartNode implements IComparable, ITyp
                             FluidStack stackInStorage = network.getFluidStorage().get(stack, compare);
 
                             if (stackInStorage != null) {
-                                int toExtract = Math.min(Fluid.BUCKET_VOLUME, stackInStorage.amount);
+                                int toExtract = Math.min(Fluid.BUCKET_VOLUME * size, stackInStorage.amount);
 
                                 FluidStack took = network.extractFluid(stack, toExtract, compare);
 
