@@ -57,6 +57,14 @@ public class CraftingTask implements ICraftingTask {
             toProcess.add(new Processable(pattern));
         }
 
+        if (!basePattern) {
+            addExtras(pattern);
+        }
+
+        for (ItemStack byproduct : pattern.getByproducts()) {
+            extras.add(byproduct);
+        }
+
         for (ItemStack input : pattern.getInputs()) {
             ItemStack inputInNetwork = list.get(input);
 
@@ -98,10 +106,6 @@ public class CraftingTask implements ICraftingTask {
 
                 list.remove(input, true);
             }
-        }
-
-        if (!basePattern) {
-            addExtras(pattern);
         }
     }
 
