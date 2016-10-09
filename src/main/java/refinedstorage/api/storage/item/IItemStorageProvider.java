@@ -9,7 +9,7 @@ public interface IItemStorageProvider {
     /**
      * Adds the item storages that this storage provider provides.
      *
-     * @param storages the previously added item storages
+     * @param storages the list to insert new storages to
      */
     void addItemStorages(List<IItemStorage> storages);
 }

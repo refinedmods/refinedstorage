@@ -106,7 +106,7 @@ public interface INetworkMaster {
      * Returns crafting patterns from an item stack.
      *
      * @param pattern the stack to get a pattern for
-     * @param flags   the flags to compare on, see {@link CompareUtils}
+     * @param flags   the flags to compare on, see {@link IComparer}
      * @return a list of crafting patterns where the given pattern is one of the outputs
      */
     List<ICraftingPattern> getPatterns(ItemStack pattern, int flags);
@@ -118,7 +118,7 @@ public interface INetworkMaster {
      * It makes this selection based on the item count of the pattern outputs in the system.
      *
      * @param pattern the stack to get a pattern for
-     * @param flags   the flags to compare on, see {@link CompareUtils}
+     * @param flags   the flags to compare on, see {@link IComparer}
      * @return the pattern, or null if the pattern is not found
      */
     @Nullable
@@ -238,7 +238,7 @@ public interface INetworkMaster {
      *
      * @param stack the prototype of the stack to extract, do NOT modify
      * @param size  the amount of that prototype that has to be extracted
-     * @param flags the flags to compare on, see {@link CompareUtils}
+     * @param flags the flags to compare on, see {@link IComparer}
      * @return null if we didn't extract anything, or a stack with the result
      */
     @Nullable
@@ -271,7 +271,7 @@ public interface INetworkMaster {
      *
      * @param stack the prototype of the stack to extract, do NOT modify
      * @param size  the amount of that prototype that has to be extracted
-     * @param flags the flags to compare on, see {@link CompareUtils}
+     * @param flags the flags to compare on, see {@link IComparer}
      * @return null if we didn't extract anything, or a stack with the result
      */
     @Nullable

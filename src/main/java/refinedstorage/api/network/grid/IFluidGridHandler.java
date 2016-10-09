@@ -2,6 +2,7 @@ package refinedstorage.api.network.grid;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
 
@@ -12,7 +13,7 @@ public interface IFluidGridHandler {
     /**
      * Called when a player tries to extract a fluid from the grid.
      *
-     * @param hash   the hash of the fluid we're trying to extract, see {@link refinedstorage.api.network.NetworkUtils#getFluidStackHashCode(net.minecraftforge.fluids.FluidStack)}
+     * @param hash   the hash of the fluid we're trying to extract, see {@link refinedstorage.api.IRSAPI#getFluidStackHashCode(FluidStack)}
      * @param shift  true if shift click was used, false otherwise
      * @param player the player that is attempting the extraction
      */

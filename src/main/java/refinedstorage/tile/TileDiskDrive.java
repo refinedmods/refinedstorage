@@ -84,7 +84,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
             FluidStack result = super.insertFluid(stack, size, simulate);
 
             if (voidExcess && result != null) {
-                // Simulate should not matter as the items are voided anyway
+                // Simulate should not matter as the fluids are voided anyway
                 result.amount = -result.amount;
             }
 

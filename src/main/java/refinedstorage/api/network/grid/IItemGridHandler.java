@@ -16,7 +16,7 @@ public interface IItemGridHandler {
     /**
      * Called when a player tries to extract an item from the grid.
      *
-     * @param hash   the hash of the item we're trying to extract, see {@link refinedstorage.api.network.NetworkUtils#getItemStackHashCode(ItemStack)}
+     * @param hash   the hash of the item we're trying to extract, see {@link refinedstorage.api.IRSAPI#getItemStackHashCode(ItemStack)}
      * @param flags  how we are extracting
      * @param player the player that is attempting the extraction
      */
@@ -43,7 +43,7 @@ public interface IItemGridHandler {
     /**
      * Called when a player requests the crafting preview window to be opened.
      *
-     * @param hash     the hash of the item we want a preview for, see {@link refinedstorage.api.network.NetworkUtils#getItemStackHashCode(ItemStack)}
+     * @param hash     the hash of the item we want a preview for, see {@link refinedstorage.api.IRSAPI#getItemStackHashCode(ItemStack)}
      * @param quantity the amount of that item that we need a preview for
      */
     void onCraftingPreviewRequested(EntityPlayerMP player, int hash, int quantity);
@@ -51,7 +51,7 @@ public interface IItemGridHandler {
     /**
      * Called when a player requested crafting for an item.
      *
-     * @param hash     the hash of the item we're requesting crafting for, see {@link refinedstorage.api.network.NetworkUtils#getItemStackHashCode(ItemStack)}
+     * @param hash     the hash of the item we're requesting crafting for, see {@link refinedstorage.api.IRSAPI#getItemStackHashCode(ItemStack)}
      * @param quantity the amount of that item that has to be crafted
      */
     void onCraftingRequested(int hash, int quantity);

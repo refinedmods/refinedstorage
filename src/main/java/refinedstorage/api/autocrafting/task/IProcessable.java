@@ -18,20 +18,24 @@ public interface IProcessable {
     ItemStack getStackToInsert();
 
     /**
-     * Goes to the next stack to insert.
+     * Moves to the next stack to insert.
      */
     void nextStack();
 
     /**
-     * @return whether this processable item has received its items
+     * @return true if we received all outputs, false otherwise
      */
     boolean hasReceivedOutputs();
 
+    /**
+     * @param i the output to check
+     * @return true if we received the given output, false otherwise
+     */
     boolean hasReceivedOutput(int i);
 
     /**
      * @param stack the stack that was inserted in the storage system
-     * @return whether this item belonged to the processable item
+     * @return true if this item belonged to the processable item, false otherwise
      */
     boolean onReceiveOutput(ItemStack stack);
 }

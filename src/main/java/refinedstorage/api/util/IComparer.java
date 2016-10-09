@@ -12,6 +12,16 @@ public interface IComparer {
     int COMPARE_QUANTITY = 4;
 
     /**
+     * Compares two stacks by the given flags.
+     *
+     * @param left  the left stack
+     * @param right the right stack
+     * @param flags the flags to compare with
+     * @return true if the left and right stack are the same, false otherwise
+     */
+    boolean isEqual(ItemStack left, ItemStack right, int flags);
+
+    /**
      * Compares two stacks by NBT, damage and quantity.
      *
      * @param left  the left stack
@@ -32,17 +42,7 @@ public interface IComparer {
     default boolean isEqualNoQuantity(ItemStack left, ItemStack right) {
         return isEqual(left, right, COMPARE_NBT | COMPARE_DAMAGE);
     }
-
-    /**
-     * Compares two stacks by the given flags.
-     *
-     * @param left  the left stack
-     * @param right the right stack
-     * @param flags the flags to compare with
-     * @return true if the left and right stack are the same, false otherwise
-     */
-    boolean isEqual(ItemStack left, ItemStack right, int flags);
-
+    
     /**
      * Compares two stacks by the given flags.
      *

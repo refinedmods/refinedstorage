@@ -34,7 +34,7 @@ public interface IFluidStorage {
      *
      * @param stack a prototype of the fluid to extract, do NOT modify
      * @param size  the amount of that fluid that has to be extracted
-     * @param flags the flags to compare on, see {@link CompareUtils}
+     * @param flags the flags to compare on, see {@link refinedstorage.api.util.IComparer}
      * @return null if we didn't extract anything, or a stack with the result
      */
     @Nullable

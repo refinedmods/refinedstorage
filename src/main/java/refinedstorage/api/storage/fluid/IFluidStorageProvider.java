@@ -9,7 +9,7 @@ public interface IFluidStorageProvider {
     /**
      * Adds the fluid storages that this storage provider provides.
      *
-     * @param storages the previously added fluid storages
+     * @param storages the list to insert new storages to
      */
     void addFluidStorages(List<IFluidStorage> storages);
 }

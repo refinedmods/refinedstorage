@@ -1,6 +1,5 @@
 package refinedstorage.api.util;
 
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
@@ -54,7 +53,7 @@ public interface IFluidStackList {
      * Returns a stack.
      *
      * @param stack the stack to search for
-     * @param flags the flags to compare on, see {@link refinedstorage.api.storage.CompareUtils}
+     * @param flags the flags to compare on, see {@link IComparer}
      * @return the stack, or null if no stack was found
      */
     @Nullable
@@ -63,7 +62,7 @@ public interface IFluidStackList {
     /**
      * Returns a stack.
      *
-     * @param hash the hash of the stack to search for, see {@link refinedstorage.api.network.NetworkUtils#getItemStackHashCode(ItemStack)}
+     * @param hash the hash of the stack to search for, see {@link refinedstorage.api.IRSAPI#getFluidStackHashCode(FluidStack)}
      * @return the stack, or null if no stack was found
      */
     @Nullable
