@@ -1,7 +1,6 @@
 package refinedstorage.tile;
 
 import net.minecraft.item.ItemStack;
-import refinedstorage.api.RSAPI;
 import refinedstorage.apiimpl.API;
 
 public class ClientNode {

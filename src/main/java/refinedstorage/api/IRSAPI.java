@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
 
 /**
  * Represents a Refined Storage API implementation.
- * Delivered by the {@link RSAPI} annotation
+ * Delivered by the {@link RSAPIInject} annotation.
  */
 public interface IRSAPI {
     /**

@@ -4,7 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import refinedstorage.api.IRSAPI;
-import refinedstorage.api.RSAPI;
+import refinedstorage.api.RSAPIInject;
 import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementRegistry;
 import refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
 import refinedstorage.api.solderer.ISoldererRegistry;
@@ -73,14 +73,18 @@ public class API implements IRSAPI {
     }
 
     public static void deliver(ASMDataTable asmDataTable) {
-        String annotationClassName = RSAPI.class.getCanonicalName();
+        String annotationClassName = RSAPIInject.class.getCanonicalName();
+
         Set<ASMDataTable.ASMData> asmDataSet = asmDataTable.getAll(annotationClassName);
+
         for (ASMDataTable.ASMData asmData : asmDataSet) {
             try {
                 Class clazz = Class.forName(asmData.getClassName());
                 Field field = clazz.getField(asmData.getObjectName());
-                if (field.getType() == IRSAPI.class)
+
+                if (field.getType() == IRSAPI.class) {
                     field.set(null, INSTANCE);
+                }
             } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
                 throw new RuntimeException("Failed to set: {}" + asmData.getClassName() + "." + asmData.getObjectName(), e);
             }
