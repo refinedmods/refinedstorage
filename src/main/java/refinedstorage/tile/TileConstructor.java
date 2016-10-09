@@ -84,7 +84,7 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
 
                         worldObj.setBlockState(front, state, 1 | 2);
 
-                        // From ItemBlock.onItemUse
+                        // From ItemBlock#onItemUse
                         SoundType blockSound = block.getBlock().getSoundType(state, worldObj, pos, null);
                         worldObj.playSound(null, front, blockSound.getPlaceSound(), SoundCategory.BLOCKS, (blockSound.getVolume() + 1.0F) / 2.0F, blockSound.getPitch() * 0.8F);
                     } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {

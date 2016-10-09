@@ -6,9 +6,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import refinedstorage.gui.GuiBase;
 
+import java.util.List;
 import java.util.Locale;
 
 public class ClientStackItem implements IClientStack {
@@ -48,7 +50,18 @@ public class ClientStackItem implements IClientStack {
 
     @Override
     public String getTooltip() {
-        return Strings.join(stack.getTooltip(Minecraft.getMinecraft().thePlayer, Minecraft.getMinecraft().gameSettings.advancedItemTooltips), "\n");
+        List<String> lines = stack.getTooltip(Minecraft.getMinecraft().thePlayer, Minecraft.getMinecraft().gameSettings.advancedItemTooltips);
+
+        // From GuiScreen#renderToolTip
+        for (int i = 0; i < lines.size(); ++i) {
+            if (i == 0) {
+                lines.set(i, stack.getRarity().rarityColor + lines.get(i));
+            } else {
+                lines.set(i, TextFormatting.GRAY + lines.get(i));
+            }
+        }
+
+        return Strings.join(lines, "\n");
     }
 
     @Override
