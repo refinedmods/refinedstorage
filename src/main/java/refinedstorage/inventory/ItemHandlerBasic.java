@@ -43,4 +43,8 @@ public class ItemHandlerBasic extends ItemStackHandler {
             tile.markDirty();
         }
     }
+
+    public ItemStack extractItemInternal(int slot, int amount, boolean simulate) {
+        return super.extractItem(slot, amount, simulate);
+    }
 }

@@ -20,9 +20,21 @@ public class TileInterface extends TileNode implements IComparable {
 
     private static final String NBT_COMPARE = "Compare";
 
-    private ItemHandlerBasic importItems = new ItemHandlerBasic(9, this);
+    private ItemHandlerBasic importItems = new ItemHandlerBasic(9, this) {
+        @Override
+        public ItemStack extractItem(int slot, int amount, boolean simulate) {
+            return null;
+        }
+    };
+
     private ItemHandlerBasic exportSpecimenItems = new ItemHandlerBasic(9, this);
-    private ItemHandlerBasic exportItems = new ItemHandlerBasic(9, this);
+    private ItemHandlerBasic exportItems = new ItemHandlerBasic(9, this) {
+        @Override
+        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+            return stack;
+        }
+    };
+    
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK, ItemUpgrade.TYPE_CRAFTING);
 
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
@@ -54,9 +66,10 @@ public class TileInterface extends TileNode implements IComparable {
             ItemStack remainder = network.insertItem(slot, size, false);
 
             if (remainder == null) {
-                importItems.extractItem(currentSlot, size, false);
+                importItems.extractItemInternal(currentSlot, size, false);
             } else {
-                importItems.extractItem(currentSlot, size - remainder.stackSize, false);
+                importItems.extractItemInternal(currentSlot, size - remainder.stackSize, false);
+                currentSlot++;
             }
         }
 
@@ -165,11 +178,7 @@ public class TileInterface extends TileNode implements IComparable {
     @Override
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            if (facing == EnumFacing.DOWN) {
-                return (T) exportItems;
-            } else {
-                return (T) importItems;
-            }
+            return facing == EnumFacing.DOWN ? (T) exportItems : (T) importItems;
         }
 
         return super.getCapability(capability, facing);
