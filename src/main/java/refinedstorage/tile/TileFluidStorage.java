@@ -53,7 +53,11 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
             }
 
             FluidStack reminder  = super.insertFluid(stack, size, simulate);
-            return voidExcess ? null : reminder;
+            if(voidExcess && reminder != null) {
+                reminder.amount = -reminder.amount;
+            }
+
+            return reminder;
         }
     }
 
