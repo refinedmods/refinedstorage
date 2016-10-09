@@ -535,8 +535,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             }
         }
 
-        //If the stack size of the remainder is negative, it means of the original size abs(remainder.stackSize) items have been voided
+        // If the stack size of the remainder is negative, it means of the original size abs(remainder.stackSize) items have been voided
         int inserted;
+
         if (remainder == null) {
             inserted = orginalSize;
         } else if (remainder.stackSize < 0) {
@@ -632,7 +633,17 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             }
         }
 
-        int inserted = remainder != null ? (orginalSize - remainder.amount) : orginalSize;
+        // If the stack size of the remainder is negative, it means of the original size abs(remainder.amount) fluids have been voided
+        int inserted;
+
+        if (remainder == null) {
+            inserted = orginalSize;
+        } else if (remainder.amount < 0) {
+            inserted = orginalSize + remainder.amount;
+            remainder = null;
+        } else {
+            inserted = orginalSize - remainder.amount;
+        }
 
         if (!simulate && inserted > 0) {
             fluidStorage.add(FluidUtils.copyStackWithSize(stack, inserted), false);

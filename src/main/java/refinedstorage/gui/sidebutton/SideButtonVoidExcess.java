@@ -7,16 +7,18 @@ import refinedstorage.tile.data.TileDataParameter;
 
 public class SideButtonVoidExcess extends SideButton {
     private TileDataParameter<Boolean> parameter;
+    private String type;
 
-    public SideButtonVoidExcess(GuiBase gui, TileDataParameter<Boolean> parameter) {
+    public SideButtonVoidExcess(GuiBase gui, TileDataParameter<Boolean> parameter, String type) {
         super(gui);
 
         this.parameter = parameter;
+        this.type = type;
     }
 
     @Override
     public String getTooltip() {
-        return TextFormatting.LIGHT_PURPLE + gui.t("sidebutton.refinedstorage:void_excess.mode") + TextFormatting.RESET + "\n" + gui.t(parameter.getValue() ? "gui.yes" : "gui.no");
+        return TextFormatting.LIGHT_PURPLE + gui.t("sidebutton.refinedstorage:void_excess." + type) + TextFormatting.RESET + "\n" + gui.t(parameter.getValue() ? "gui.yes" : "gui.no");
     }
 
     @Override

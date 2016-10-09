@@ -55,7 +55,7 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
             ItemStack result = super.insertItem(stack, size, simulate);
 
             if (voidExcess && result != null) {
-                //Simulate should not matter as the items are voided anyway
+                // Simulate should not matter as the items are voided anyway
                 result.stackSize = -result.stackSize;
             }
 
@@ -257,6 +257,11 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
     @Override
     public TileDataParameter<Boolean> getVoidExcessParameter() {
         return VOID_EXCESS;
+    }
+
+    @Override
+    public String getVoidExcessType() {
+        return "items";
     }
 
     public NBTTagCompound getStorageTag() {

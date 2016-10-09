@@ -27,19 +27,17 @@ import refinedstorage.block.EnumItemStorageType;
 import refinedstorage.inventory.IItemValidator;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerFluid;
-import refinedstorage.tile.config.IComparable;
-import refinedstorage.tile.config.IFilterable;
-import refinedstorage.tile.config.IPrioritizable;
-import refinedstorage.tile.config.IType;
+import refinedstorage.tile.config.*;
 import refinedstorage.tile.data.TileDataParameter;
 
 import java.util.List;
 
-public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFluidStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IType {
+public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFluidStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IType, IExcessVoidable {
     public static final TileDataParameter<Integer> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
     public static final TileDataParameter<Integer> TYPE = IType.createParameter();
+    public static final TileDataParameter<Boolean> VOID_EXCESS = IExcessVoidable.createParameter();
 
     public class ItemStorage extends ItemStorageNBT {
         public ItemStorage(ItemStack disk) {
@@ -57,7 +55,14 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
                 return ItemHandlerHelper.copyStackWithSize(stack, size);
             }
 
-            return super.insertItem(stack, size, simulate);
+            ItemStack result = super.insertItem(stack, size, simulate);
+
+            if (voidExcess && result != null) {
+                // Simulate should not matter as the items are voided anyway
+                result.stackSize = -result.stackSize;
+            }
+
+            return result;
         }
     }
 
@@ -77,7 +82,14 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
                 return FluidUtils.copyStackWithSize(stack, size);
             }
 
-            return super.insertFluid(stack, size, simulate);
+            FluidStack result = super.insertFluid(stack, size, simulate);
+
+            if (voidExcess && result != null) {
+                // Simulate should not matter as the items are voided anyway
+                result.amount = -result.amount;
+            }
+
+            return result;
         }
     }
 
@@ -85,6 +97,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
     private static final String NBT_TYPE = "Type";
+    private static final String NBT_VOID_EXCESS = "VoidExcess";
 
     private ItemHandlerBasic disks = new ItemHandlerBasic(8, this, IItemValidator.STORAGE_DISK) {
         @Override
@@ -129,12 +142,14 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int mode = IFilterable.WHITELIST;
     private int type = IType.ITEMS;
+    private boolean voidExcess = false;
 
     public TileDiskDrive() {
         dataManager.addWatchedParameter(PRIORITY);
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(MODE);
         dataManager.addWatchedParameter(TYPE);
+        dataManager.addWatchedParameter(VOID_EXCESS);
     }
 
     @Override
@@ -217,6 +232,10 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
         if (tag.hasKey(NBT_TYPE)) {
             type = tag.getInteger(NBT_TYPE);
         }
+
+        if (tag.hasKey(NBT_VOID_EXCESS)) {
+            voidExcess = tag.getBoolean(NBT_VOID_EXCESS);
+        }
     }
 
     @Override
@@ -241,6 +260,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_MODE, mode);
         tag.setInteger(NBT_TYPE, type);
+        tag.setBoolean(NBT_VOID_EXCESS, voidExcess);
 
         return tag;
     }
@@ -301,7 +321,12 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
 
     @Override
     public TileDataParameter<Boolean> getVoidExcessParameter() {
-        return null;
+        return VOID_EXCESS;
+    }
+
+    @Override
+    public String getVoidExcessType() {
+        return "items_fluids";
     }
 
     @Override
@@ -354,6 +379,18 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
 
     public IItemHandler getDisks() {
         return disks;
+    }
+
+    @Override
+    public boolean getVoidExcess() {
+        return voidExcess;
+    }
+
+    @Override
+    public void setVoidExcess(boolean voidExcess) {
+        this.voidExcess = voidExcess;
+
+        markDirty();
     }
 
     @Override
