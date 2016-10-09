@@ -20,7 +20,6 @@ import refinedstorage.api.storage.item.IItemStorage;
 import refinedstorage.api.storage.item.IItemStorageProvider;
 import refinedstorage.api.util.IComparer;
 import refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
-import refinedstorage.apiimpl.storage.fluid.FluidUtils;
 import refinedstorage.apiimpl.storage.item.ItemStorageNBT;
 import refinedstorage.block.EnumFluidStorageType;
 import refinedstorage.block.EnumItemStorageType;
@@ -79,7 +78,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
         @Override
         public FluidStack insertFluid(FluidStack stack, int size, boolean simulate) {
             if (!IFilterable.canTakeFluids(fluidFilters, mode, getCompare(), stack)) {
-                return FluidUtils.copyStackWithSize(stack, size);
+                return RSUtils.copyStackWithSize(stack, size);
             }
 
             FluidStack result = super.insertFluid(stack, size, simulate);

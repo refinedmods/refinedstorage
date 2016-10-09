@@ -1,6 +1,7 @@
 package refinedstorage;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
@@ -32,6 +33,8 @@ import java.util.Locale;
 import java.util.function.Function;
 
 public final class RSUtils {
+    public static final ItemStack EMPTY_BUCKET = new ItemStack(Items.BUCKET);
+
     private static final String NBT_INVENTORY = "Inventory_%d";
     private static final String NBT_SLOT = "Slot";
 
@@ -190,5 +193,15 @@ public final class RSUtils {
 
     public static String formatFluidStackQuantity(FluidStack stack) {
         return String.format(Locale.US, "%.1f", (float) stack.amount / 1000).replace(".0", "");
+    }
+
+    public static FluidStack copyStackWithSize(FluidStack stack, int size) {
+        FluidStack copy = stack.copy();
+        copy.amount = size;
+        return copy;
+    }
+
+    public static FluidStack copyStack(FluidStack stack) {
+        return stack == null ? null : stack.copy();
     }
 }

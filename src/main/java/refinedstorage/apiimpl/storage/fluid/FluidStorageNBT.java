@@ -5,6 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
+import refinedstorage.RSUtils;
 import refinedstorage.api.storage.fluid.IFluidStorage;
 import refinedstorage.apiimpl.API;
 
@@ -85,7 +86,7 @@ public abstract class FluidStorageNBT implements IFluidStorage {
                     int remainingSpace = getCapacity() - getStored();
 
                     if (remainingSpace <= 0) {
-                        return FluidUtils.copyStackWithSize(stack, size);
+                        return RSUtils.copyStackWithSize(stack, size);
                     }
 
                     if (!simulate) {
@@ -96,7 +97,7 @@ public abstract class FluidStorageNBT implements IFluidStorage {
                         onStorageChanged();
                     }
 
-                    return FluidUtils.copyStackWithSize(otherStack, size - remainingSpace);
+                    return RSUtils.copyStackWithSize(otherStack, size - remainingSpace);
                 } else {
                     if (!simulate) {
                         tag.setInteger(NBT_STORED, getStored() + size);
@@ -115,23 +116,23 @@ public abstract class FluidStorageNBT implements IFluidStorage {
             int remainingSpace = getCapacity() - getStored();
 
             if (remainingSpace <= 0) {
-                return FluidUtils.copyStackWithSize(stack, size);
+                return RSUtils.copyStackWithSize(stack, size);
             }
 
             if (!simulate) {
                 tag.setInteger(NBT_STORED, getStored() + remainingSpace);
 
-                stacks.add(FluidUtils.copyStackWithSize(stack, remainingSpace));
+                stacks.add(RSUtils.copyStackWithSize(stack, remainingSpace));
 
                 onStorageChanged();
             }
 
-            return FluidUtils.copyStackWithSize(stack, size - remainingSpace);
+            return RSUtils.copyStackWithSize(stack, size - remainingSpace);
         } else {
             if (!simulate) {
                 tag.setInteger(NBT_STORED, getStored() + size);
 
-                stacks.add(FluidUtils.copyStackWithSize(stack, size));
+                stacks.add(RSUtils.copyStackWithSize(stack, size));
 
                 onStorageChanged();
             }
@@ -158,7 +159,7 @@ public abstract class FluidStorageNBT implements IFluidStorage {
 
                 onStorageChanged();
 
-                return FluidUtils.copyStackWithSize(otherStack, size);
+                return RSUtils.copyStackWithSize(otherStack, size);
             }
         }
 

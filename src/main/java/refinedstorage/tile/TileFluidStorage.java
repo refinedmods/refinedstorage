@@ -11,7 +11,6 @@ import refinedstorage.api.storage.fluid.IFluidStorage;
 import refinedstorage.api.storage.fluid.IFluidStorageProvider;
 import refinedstorage.api.util.IComparer;
 import refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
-import refinedstorage.apiimpl.storage.fluid.FluidUtils;
 import refinedstorage.block.BlockFluidStorage;
 import refinedstorage.block.EnumFluidStorageType;
 import refinedstorage.inventory.ItemHandlerFluid;
@@ -47,7 +46,7 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
         @Override
         public FluidStack insertFluid(FluidStack stack, int size, boolean simulate) {
             if (!IFilterable.canTakeFluids(filters, mode, compare, stack)) {
-                return FluidUtils.copyStackWithSize(stack, size);
+                return RSUtils.copyStackWithSize(stack, size);
             }
 
             return super.insertFluid(stack, size, simulate);

@@ -10,7 +10,6 @@ import refinedstorage.RSUtils;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.grid.IFluidGridHandler;
 import refinedstorage.apiimpl.API;
-import refinedstorage.apiimpl.storage.fluid.FluidUtils;
 
 import javax.annotation.Nullable;
 
@@ -26,14 +25,14 @@ public class FluidGridHandler implements IFluidGridHandler {
         FluidStack stack = network.getFluidStorage().getList().get(hash);
 
         if (stack != null && RSUtils.hasFluidBucket(stack)) {
-            ItemStack bucket = FluidUtils.extractBucket(network);
+            ItemStack bucket = network.extractItem(RSUtils.EMPTY_BUCKET, 1);
 
             if (bucket == null) {
                 for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
                     ItemStack slot = player.inventory.getStackInSlot(i);
 
-                    if (API.instance().getComparer().isEqualNoQuantity(FluidUtils.EMPTY_BUCKET, slot)) {
-                        bucket = FluidUtils.EMPTY_BUCKET.copy();
+                    if (API.instance().getComparer().isEqualNoQuantity(RSUtils.EMPTY_BUCKET, slot)) {
+                        bucket = RSUtils.EMPTY_BUCKET.copy();
 
                         player.inventory.decrStackSize(i, 1);
 

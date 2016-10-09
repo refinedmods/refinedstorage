@@ -161,14 +161,6 @@ public class CommonProxy {
         API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeProcessor(ItemProcessor.TYPE_IMPROVED));
         API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeProcessor(ItemProcessor.TYPE_ADVANCED));
 
-        GameRegistry.addRecipe(new ItemStack(Blocks.SPONGE),
-            "WWW",
-            "WBW",
-            "WWW",
-            'W', new ItemStack(Blocks.PLANKS),
-            'B', new ItemStack(Items.WATER_BUCKET)
-        );
-
         // Silicon
         GameRegistry.addSmelting(Items.QUARTZ, new ItemStack(RSItems.SILICON), 0.5f);
 

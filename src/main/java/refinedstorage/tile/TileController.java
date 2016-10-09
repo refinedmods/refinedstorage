@@ -21,6 +21,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RS;
 import refinedstorage.RSBlocks;
+import refinedstorage.RSUtils;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.autocrafting.ICraftingPatternProvider;
@@ -43,7 +44,6 @@ import refinedstorage.apiimpl.network.NetworkNodeGraph;
 import refinedstorage.apiimpl.network.WirelessGridHandler;
 import refinedstorage.apiimpl.network.grid.FluidGridHandler;
 import refinedstorage.apiimpl.network.grid.ItemGridHandler;
-import refinedstorage.apiimpl.storage.fluid.FluidUtils;
 import refinedstorage.apiimpl.storage.fluid.GroupedFluidStorage;
 import refinedstorage.apiimpl.storage.item.GroupedItemStorage;
 import refinedstorage.block.BlockController;
@@ -612,7 +612,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public FluidStack insertFluid(@Nonnull FluidStack stack, int size, boolean simulate) {
         if (stack == null || fluidStorage.getStorages().isEmpty()) {
-            return FluidUtils.copyStackWithSize(stack, size);
+            return RSUtils.copyStackWithSize(stack, size);
         }
 
         int orginalSize = size;
@@ -646,7 +646,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         }
 
         if (!simulate && inserted > 0) {
-            fluidStorage.add(FluidUtils.copyStackWithSize(stack, inserted), false);
+            fluidStorage.add(RSUtils.copyStackWithSize(stack, inserted), false);
         }
 
         return remainder;

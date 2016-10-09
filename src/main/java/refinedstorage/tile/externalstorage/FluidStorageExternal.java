@@ -3,10 +3,10 @@ package refinedstorage.tile.externalstorage;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import refinedstorage.RSUtils;
 import refinedstorage.api.storage.fluid.IFluidStorage;
 import refinedstorage.api.util.IComparer;
 import refinedstorage.apiimpl.API;
-import refinedstorage.apiimpl.storage.fluid.FluidUtils;
 import refinedstorage.tile.config.IFilterable;
 
 import javax.annotation.Nonnull;
@@ -42,22 +42,22 @@ public class FluidStorageExternal implements IFluidStorage {
     @Override
     public FluidStack insertFluid(@Nonnull FluidStack stack, int size, boolean simulate) {
         if (getProperties() != null && IFilterable.canTakeFluids(externalStorage.getFluidFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack) && getProperties().canFillFluidType(stack)) {
-            int filled = handler.fill(FluidUtils.copyStackWithSize(stack, size), !simulate);
+            int filled = handler.fill(RSUtils.copyStackWithSize(stack, size), !simulate);
 
             if (filled == size) {
                 return null;
             }
 
-            return FluidUtils.copyStackWithSize(stack, size - filled);
+            return RSUtils.copyStackWithSize(stack, size - filled);
         }
 
-        return FluidUtils.copyStackWithSize(stack, size);
+        return RSUtils.copyStackWithSize(stack, size);
     }
 
     @Nullable
     @Override
     public FluidStack extractFluid(@Nonnull FluidStack stack, int size, int flags) {
-        FluidStack toDrain = FluidUtils.copyStackWithSize(stack, size);
+        FluidStack toDrain = RSUtils.copyStackWithSize(stack, size);
 
         if (API.instance().getComparer().isEqual(getContents(), toDrain, flags)) {
             return handler.drain(toDrain, true);
@@ -84,9 +84,9 @@ public class FluidStorageExternal implements IFluidStorage {
         FluidStack stack = getContents();
 
         if (cache == null) {
-            cache = FluidUtils.copy(stack);
+            cache = RSUtils.copyStack(stack);
         } else if (!API.instance().getComparer().isEqual(stack, cache, IComparer.COMPARE_NBT | API.instance().getComparer().COMPARE_QUANTITY)) {
-            cache = FluidUtils.copy(stack);
+            cache = RSUtils.copyStack(stack);
 
             return true;
         }
@@ -95,6 +95,6 @@ public class FluidStorageExternal implements IFluidStorage {
     }
 
     public void updateCacheForcefully() {
-        cache = FluidUtils.copy(getContents());
+        cache = RSUtils.copyStack(getContents());
     }
 }

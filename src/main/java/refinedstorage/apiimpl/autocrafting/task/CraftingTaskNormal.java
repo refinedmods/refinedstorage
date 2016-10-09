@@ -1,6 +1,5 @@
 package refinedstorage.apiimpl.autocrafting.task;
 
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
@@ -23,8 +22,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CraftingTaskNormal implements ICraftingTask {
-    private static final ItemStack EMPTY_BUCKET = new ItemStack(Items.BUCKET);
-
     private INetworkMaster network;
     private ItemStack requested;
     private ICraftingPattern pattern;
@@ -83,10 +80,10 @@ public class CraftingTaskNormal implements ICraftingTask {
 
                             if (fluidInStorage == null || fluidInStorage.amount < fluidInItem.amount) {
                                 missing.add(input);
-                            } else if (network.getItemStorage().getList().get(EMPTY_BUCKET) == null) {
-                                missing.add(EMPTY_BUCKET.copy());
+                            } else if (network.getItemStorage().getList().get(RSUtils.EMPTY_BUCKET) == null) {
+                                missing.add(RSUtils.EMPTY_BUCKET.copy());
                             } else {
-                                toTake.add(EMPTY_BUCKET.copy());
+                                toTake.add(RSUtils.EMPTY_BUCKET.copy());
                                 toTakeFluids.add(fluidInItem.copy());
                             }
                         } else {
