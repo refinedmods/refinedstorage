@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import org.lwjgl.input.Keyboard;
 import refinedstorage.RS;
 import refinedstorage.api.network.grid.IItemGridHandler;
 import refinedstorage.apiimpl.API;
@@ -34,10 +35,8 @@ import refinedstorage.tile.grid.IGrid;
 import refinedstorage.tile.grid.TileGrid;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class GuiGrid extends GuiBase {
     public static final GridSortingQuantity SORTING_QUANTITY = new GridSortingQuantity();
@@ -59,6 +58,22 @@ public class GuiGrid extends GuiBase {
 
     private int slotNumber;
 
+    private Deque<Integer> konami = new ArrayDeque<>(Arrays.asList(
+        Keyboard.KEY_UP,
+        Keyboard.KEY_UP,
+        Keyboard.KEY_DOWN,
+        Keyboard.KEY_DOWN,
+        Keyboard.KEY_LEFT,
+        Keyboard.KEY_RIGHT,
+        Keyboard.KEY_LEFT,
+        Keyboard.KEY_RIGHT,
+        Keyboard.KEY_B,
+        Keyboard.KEY_A
+    ));
+
+    private int[] konamiOffsetsX;
+    private int[] konamiOffsetsY;
+
     public static void markForSorting() {
         markedForSorting = true;
     }
@@ -71,6 +86,9 @@ public class GuiGrid extends GuiBase {
         this.wasConnected = grid.isConnected();
 
         this.scrollbar = new Scrollbar(174, 20, 12, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN || grid.getType() == EnumGridType.FLUID) ? 70 : 88);
+
+        this.konamiOffsetsX = new int[9 * getVisibleRows()];
+        this.konamiOffsetsY = new int[9 * getVisibleRows()];
     }
 
     @Override
@@ -198,6 +216,13 @@ public class GuiGrid extends GuiBase {
 
     @Override
     public void update(int x, int y) {
+        if (konami.isEmpty()) {
+            for (int i = 0; i < 9 * getVisibleRows(); ++i) {
+                konamiOffsetsX[i] += (ThreadLocalRandom.current().nextBoolean() ? 1 : -1) * ThreadLocalRandom.current().nextInt(5);
+                konamiOffsetsY[i] += (ThreadLocalRandom.current().nextBoolean() ? 1 : -1) * ThreadLocalRandom.current().nextInt(5);
+            }
+        }
+
         if (wasConnected != grid.isConnected()) {
             wasConnected = grid.isConnected();
 
@@ -290,22 +315,25 @@ public class GuiGrid extends GuiBase {
         RenderHelper.enableGUIStandardItemLighting();
 
         for (int i = 0; i < 9 * getVisibleRows(); ++i) {
-            if (inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isConnected()) {
+            int xx = x + (konami.isEmpty() ? konamiOffsetsX[i] : 0);
+            int yy = y + (konami.isEmpty() ? konamiOffsetsY[i] : 0);
+
+            if (inBounds(xx, yy, 16, 16, mouseX, mouseY) || !grid.isConnected()) {
                 this.slotNumber = slot;
             }
 
             if (slot < STACKS.size()) {
-                STACKS.get(slot).draw(this, x, y, GuiScreen.isShiftKeyDown() && slotNumber == slot);
+                STACKS.get(slot).draw(this, xx, yy, GuiScreen.isShiftKeyDown() && slotNumber == slot);
             }
 
-            if (inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isConnected()) {
+            if (inBounds(xx, yy, 16, 16, mouseX, mouseY) || !grid.isConnected()) {
                 int color = grid.isConnected() ? -2130706433 : 0xFF5B5B5B;
 
                 GlStateManager.disableLighting();
                 GlStateManager.disableDepth();
                 zLevel = 190;
                 GlStateManager.colorMask(true, true, true, false);
-                drawGradientRect(x, y, x + 16, y + 16, color, color);
+                drawGradientRect(xx, yy, xx + 16, yy + 16, color, color);
                 zLevel = 0;
                 GlStateManager.colorMask(true, true, true, true);
                 GlStateManager.enableLighting();
@@ -404,6 +432,10 @@ public class GuiGrid extends GuiBase {
 
     @Override
     protected void keyTyped(char character, int keyCode) throws IOException {
+        if (!konami.isEmpty() && konami.peek() == keyCode) {
+            konami.pop();
+        }
+
         if (checkHotbarKeys(keyCode)) {
             // NO OP
         } else if (searchField.textboxKeyTyped(character, keyCode)) {
