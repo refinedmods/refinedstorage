@@ -260,6 +260,11 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
     }
 
     @Override
+    public  TileDataParameter<Integer> getAccessTypeParameter() {
+        return null;
+    }
+
+    @Override
     public String getVoidExcessType() {
         return "items";
     }

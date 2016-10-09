@@ -246,6 +246,11 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
     }
 
     @Override
+    public  TileDataParameter<Integer> getAccessTypeParameter() {
+        return null;
+    }
+
+    @Override
     public String getVoidExcessType() {
         return "fluids";
     }

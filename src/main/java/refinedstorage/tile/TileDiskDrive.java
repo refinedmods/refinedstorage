@@ -324,6 +324,11 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     }
 
     @Override
+    public  TileDataParameter<Integer> getAccessTypeParameter() {
+        return null;
+    }
+
+    @Override
     public String getVoidExcessType() {
         return "items_fluids";
     }
