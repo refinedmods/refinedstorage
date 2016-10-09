@@ -1,7 +1,20 @@
 # Refined Storage Changelog
 
 ### 1.2
+- Added new autocrafting system (raoulvdberge, way2muchnoise)
+- Added ore dictionary autocrafting (raoulvdberge)
+- Added recipe transfer handler for Processing Pattern Encoder (way2muchnoise)
+- Added void excess items functionality to storage blocks (geldorn, raoulvdberge, InusualZ)
+- Added config option to configure RS to EU conversion rates (raoulvdberge)
+- The Constructor can now drop items in the world (raoulvdberge)
+- Stack upgrade in Importer / Exporter in fluid mode and Fluid Interface now transfers 64 buckets at once (raoulvdberge)
+- Detector without any filter will detect based on total items or fluids stored (raoulvdberge)
 - Fixed resetting a stack of patterns yields 1 blank pattern (raoulvdberge)
+- Fixed being able to pipe items in the export slots of the Interface (InusualZ)
+- Fixed Interface being stuck when item isn't accepted in storage (InusualZ)
+- Fixed items with colored name being uncolored in Grid (raoulvdberge)
+- Fixed fluid rendering bugging out side buttons (raoulvdberge)
+- Fixed item count going negative in some cases (raoulvdberge)
 
 ### 1.1.3
 - Fixed some clients not starting up due to too many Disk Drive model permutations (raoulvdberge)
