@@ -138,10 +138,6 @@ public abstract class GuiBase extends GuiContainer {
         }
     }
 
-    public GuiButton addButton(int x, int y, int w, int h) {
-        return addButton(x, y, w, h, "");
-    }
-
     public GuiButton addButton(int x, int y, int w, int h, String text) {
         return addButton(x, y, w, h, text, true);
     }
@@ -262,12 +258,6 @@ public abstract class GuiBase extends GuiContainer {
     public void drawTooltip(int x, int y, List<String> lines) {
         GlStateManager.disableLighting();
         drawHoveringText(lines, x, y);
-        GlStateManager.enableLighting();
-    }
-
-    public void drawTooltip(int x, int y, ItemStack stack) {
-        GlStateManager.disableLighting();
-        renderToolTip(stack, x, y);
         GlStateManager.enableLighting();
     }
 
