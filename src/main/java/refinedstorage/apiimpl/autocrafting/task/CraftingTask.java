@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CraftingTaskNormal implements ICraftingTask {
+public class CraftingTask implements ICraftingTask {
     private INetworkMaster network;
     private ItemStack requested;
     private ICraftingPattern pattern;
@@ -33,7 +33,7 @@ public class CraftingTaskNormal implements ICraftingTask {
     private IItemStackList missing = API.instance().createItemStackList();
     private IItemStackList extras = API.instance().createItemStackList();
 
-    public CraftingTaskNormal(INetworkMaster network, ItemStack requested, ICraftingPattern pattern, int quantity) {
+    public CraftingTask(INetworkMaster network, ItemStack requested, ICraftingPattern pattern, int quantity) {
         this.network = network;
         this.requested = requested;
         this.pattern = pattern;
@@ -113,6 +113,7 @@ public class CraftingTaskNormal implements ICraftingTask {
     public String toString() {
         return "\nCraftingTask{quantity=" + quantity +
             "\n, toTake=" + toTake +
+            "\n, toTakeFluids=" + toTakeFluids +
             "\n, toCraft=" + toCraft +
             "\n, toProcess=" + toProcess +
             "\n, missing=" + missing +

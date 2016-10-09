@@ -10,7 +10,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.apiimpl.API;
-import refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactoryNormal;
+import refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactory;
 import refinedstorage.item.ItemPattern;
 
 import java.util.ArrayList;
@@ -100,7 +100,7 @@ public class CraftingPattern implements ICraftingPattern {
 
     @Override
     public String getId() {
-        return CraftingTaskFactoryNormal.ID;
+        return CraftingTaskFactory.ID;
     }
 
     @Override

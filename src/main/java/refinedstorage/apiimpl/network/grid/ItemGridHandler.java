@@ -10,7 +10,7 @@ import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.grid.IItemGridHandler;
 import refinedstorage.apiimpl.API;
-import refinedstorage.apiimpl.autocrafting.task.CraftingTaskNormal;
+import refinedstorage.apiimpl.autocrafting.task.CraftingTask;
 
 public class ItemGridHandler implements IItemGridHandler {
     private INetworkMaster network;
@@ -122,9 +122,11 @@ public class ItemGridHandler implements IItemGridHandler {
         ItemStack stack = network.getItemStorage().getList().get(hash);
 
         if (stack != null) {
-            CraftingTaskNormal task = new CraftingTaskNormal(network, stack, network.getPattern(stack), quantity);
+            CraftingTask task = new CraftingTask(network, stack, network.getPattern(stack), quantity);
 
             task.calculate();
+
+            System.out.println(task.toString());
 
             network.addCraftingTask(task);
 
