@@ -94,4 +94,9 @@ public class ItemStackList implements IItemStackList {
 
         return list;
     }
+
+    @Override
+    public String toString() {
+        return stacks.toString();
+    }
 }

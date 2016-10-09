@@ -10,6 +10,7 @@ import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.autocrafting.task.IProcessable;
 import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.api.util.IComparer;
 import refinedstorage.api.util.IFluidStackList;
 import refinedstorage.api.util.IItemStackList;
 import refinedstorage.apiimpl.API;
@@ -17,7 +18,9 @@ import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElemen
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementItemRender;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementText;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,12 +35,18 @@ public class CraftingTask implements ICraftingTask {
     private IItemStackList toCraft = API.instance().createItemStackList();
     private IItemStackList missing = API.instance().createItemStackList();
     private IItemStackList extras = API.instance().createItemStackList();
+    private Deque<ItemStack> toInsert = new ArrayDeque<>();
+    private int compare = IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT;
 
     public CraftingTask(INetworkMaster network, ItemStack requested, ICraftingPattern pattern, int quantity) {
         this.network = network;
         this.requested = requested;
         this.pattern = pattern;
         this.quantity = quantity;
+
+        if (pattern.isOredict()) {
+            this.compare = IComparer.COMPARE_OREDICT;
+        }
     }
 
     public void calculate() {
@@ -48,7 +57,15 @@ public class CraftingTask implements ICraftingTask {
         while (newQuantity > 0) {
             calculate(list, pattern, true);
 
+            for (ItemStack output : pattern.getOutputs()) {
+                toInsert.add(output.copy());
+            }
+
             newQuantity -= requested == null ? newQuantity : pattern.getQuantityPerRequest(requested);
+        }
+
+        for (ItemStack extra : extras.getStacks()) {
+            toInsert.add(extra.copy());
         }
     }
 
@@ -61,18 +78,16 @@ public class CraftingTask implements ICraftingTask {
             addExtras(pattern);
         }
 
-        for (ItemStack byproduct : pattern.getByproducts()) {
-            extras.add(byproduct);
-        }
-
         for (ItemStack input : pattern.getInputs()) {
-            ItemStack inputInNetwork = list.get(input);
+            ItemStack inputInNetwork = list.get(input, compare);
 
             if (inputInNetwork == null || inputInNetwork.stackSize == 0) {
-                if (extras.get(input) != null) {
-                    decrOrRemoveExtras(input);
+                ItemStack extra = extras.get(input, compare);
+
+                if (extra != null) {
+                    decrOrRemoveExtras(extra);
                 } else {
-                    ICraftingPattern inputPattern = network.getPattern(input);
+                    ICraftingPattern inputPattern = network.getPattern(input, compare);
 
                     if (inputPattern != null) {
                         for (ItemStack output : inputPattern.getOutputs()) {
@@ -114,8 +129,12 @@ public class CraftingTask implements ICraftingTask {
                     toTake.add(input);
                 }
 
-                list.remove(input, true);
+                list.remove(inputInNetwork, 1, true);
             }
+        }
+
+        for (ItemStack byproduct : pattern.getByproducts()) {
+            extras.add(byproduct.copy());
         }
     }
 
@@ -137,7 +156,7 @@ public class CraftingTask implements ICraftingTask {
     public boolean update() {
         for (IProcessable processable : toProcess) {
             if (processable.getPattern().getContainer().getFacingInventory() != null && processable.getStackToInsert() != null) {
-                ItemStack toInsert = network.extractItem(processable.getStackToInsert(), 1);
+                ItemStack toInsert = network.extractItem(processable.getStackToInsert(), 1, compare);
 
                 if (ItemHandlerHelper.insertItem(processable.getPattern().getContainer().getFacingInventory(), toInsert, true) == null) {
                     ItemHandlerHelper.insertItem(processable.getPattern().getContainer().getFacingInventory(), toInsert, false);
@@ -148,7 +167,7 @@ public class CraftingTask implements ICraftingTask {
         }
 
         for (ItemStack toTakeStack : toTake.getStacks()) {
-            ItemStack took = network.extractItem(toTakeStack, 1);
+            ItemStack took = network.extractItem(toTakeStack, 1, compare);
 
             if (took != null) {
                 toTake.remove(toTakeStack, 1, true);
@@ -171,17 +190,15 @@ public class CraftingTask implements ICraftingTask {
         }
 
         if (toTake.isEmpty() && toTakeFluids.isEmpty() && missing.isEmpty() && hasProcessedItems()) {
-            for (ItemStack output : pattern.getOutputs()) {
-                // @TODO: Handle remainder
-                network.insertItem(output, output.stackSize, false);
+            ItemStack insert = toInsert.peek();
+
+            if (network.insertItem(insert, insert.stackSize, true) == null) {
+                network.insertItem(insert, insert.stackSize, false);
+
+                toInsert.pop();
             }
 
-            for (ItemStack byproduct : pattern.getByproducts()) {
-                // @TODO: Handle remainder
-                network.insertItem(byproduct, byproduct.stackSize, false);
-            }
-
-            return true;
+            return toInsert.isEmpty();
         }
 
         return false;

@@ -17,6 +17,10 @@ public class Comparer implements IComparer {
             return false;
         }
 
+        if ((flags & COMPARE_OREDICT) == COMPARE_OREDICT) {
+            return isEqualOredict(left, right);
+        }
+
         if (left.getItem() != right.getItem()) {
             return false;
         }

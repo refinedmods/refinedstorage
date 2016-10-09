@@ -10,6 +10,7 @@ public interface IComparer {
     int COMPARE_DAMAGE = 1;
     int COMPARE_NBT = 2;
     int COMPARE_QUANTITY = 4;
+    int COMPARE_OREDICT = 8;
 
     /**
      * Compares two stacks by the given flags.

@@ -29,6 +29,11 @@ public interface ICraftingPattern {
     boolean isProcessing();
 
     /**
+     * @return true if the crafting pattern is oredicted, false otherwise
+     */
+    boolean isOredict();
+
+    /**
      * @return the inputs
      */
     List<ItemStack> getInputs();
