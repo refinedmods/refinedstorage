@@ -88,11 +88,21 @@ public class CraftingTask implements ICraftingTask {
 
                             if (fluidInStorage == null || fluidInStorage.amount < fluidInItem.amount) {
                                 missing.add(input);
-                            } else if (network.getItemStorage().getList().get(RSUtils.EMPTY_BUCKET) == null) {
-                                missing.add(RSUtils.EMPTY_BUCKET.copy());
                             } else {
-                                toTake.add(RSUtils.EMPTY_BUCKET.copy());
-                                toTakeFluids.add(fluidInItem.copy());
+                                boolean hasBucket = network.getItemStorage().getList().get(RSUtils.EMPTY_BUCKET) != null;
+                                ICraftingPattern bucketPattern = network.getPattern(RSUtils.EMPTY_BUCKET);
+
+                                if (!hasBucket) {
+                                    if (bucketPattern == null) {
+                                        missing.add(RSUtils.EMPTY_BUCKET.copy());
+                                    } else {
+                                        calculate(list, bucketPattern, false);
+                                    }
+                                }
+
+                                if (hasBucket || bucketPattern != null) {
+                                    toTakeFluids.add(fluidInItem.copy());
+                                }
                             }
                         } else {
                             missing.add(input);
