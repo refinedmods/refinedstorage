@@ -1,20 +1,17 @@
 package refinedstorage.gui.grid.stack;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
+import org.apache.commons.lang3.tuple.Pair;
+import refinedstorage.RSUtils;
 import refinedstorage.gui.GuiBase;
-
-import java.util.Locale;
 
 public class ClientStackFluid implements IClientStack {
     private int hash;
     private FluidStack stack;
 
-    public ClientStackFluid(ByteBuf buf) {
-        this.hash = buf.readInt();
-        this.stack = new FluidStack(FluidRegistry.getFluid(ByteBufUtils.readUTF8String(buf)), buf.readInt(), ByteBufUtils.readTag(buf));
+    public ClientStackFluid(Pair<Integer, FluidStack> data) {
+        this.hash = data.getLeft();
+        this.stack = data.getRight();
     }
 
     public FluidStack getStack() {
@@ -50,7 +47,7 @@ public class ClientStackFluid implements IClientStack {
     public void draw(GuiBase gui, int x, int y, boolean isOverWithShift) {
         GuiBase.FLUID_RENDERER.draw(gui.mc, x, y, stack);
 
-        gui.drawQuantity(x, y, String.format(Locale.US, "%.1f", (float) stack.amount / 1000).replace(".0", ""));
+        gui.drawQuantity(x, y, RSUtils.formatFluidStackQuantity(stack));
     }
 
     @Override

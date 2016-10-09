@@ -29,15 +29,15 @@ public class MessageGridFluidUpdate implements IMessage, IMessageHandler<Message
         int items = buf.readInt();
 
         for (int i = 0; i < items; ++i) {
-            this.stacks.add(new ClientStackFluid(buf));
+            this.stacks.add(new ClientStackFluid(RSUtils.readFluidStack(buf)));
         }
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(network.getFluidStorage().getStacks().size());
+        buf.writeInt(network.getFluidStorage().getList().getStacks().size());
 
-        for (FluidStack stack : network.getFluidStorage().getStacks()) {
+        for (FluidStack stack : network.getFluidStorage().getList().getStacks()) {
             RSUtils.writeFluidStack(buf, stack);
         }
     }

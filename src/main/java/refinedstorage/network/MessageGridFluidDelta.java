@@ -26,7 +26,7 @@ public class MessageGridFluidDelta implements IMessage, IMessageHandler<MessageG
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        clientStack = new ClientStackFluid(buf);
+        clientStack = new ClientStackFluid(RSUtils.readFluidStack(buf));
         delta = buf.readInt();
     }
 

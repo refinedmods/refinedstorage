@@ -11,7 +11,6 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import refinedstorage.RS;
 import refinedstorage.RSUtils;
 import refinedstorage.api.util.IComparer;
-import refinedstorage.apiimpl.storage.fluid.FluidUtils;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerFluid;
 import refinedstorage.inventory.ItemHandlerUpgrade;
@@ -94,10 +93,10 @@ public class TileFluidInterface extends TileNode implements IComparable {
         ItemStack container = in.getStackInSlot(0);
 
         if (container != null) {
-            FluidStack fluid = FluidUtils.getFluidFromStack(container, true);
+            FluidStack fluid = RSUtils.getFluidFromStack(container, true);
 
             if (fluid != null && tankIn.fillInternal(fluid, false) == fluid.amount) {
-                tankIn.fillInternal(FluidUtils.getFluidFromStack(container, false), true);
+                tankIn.fillInternal(RSUtils.getFluidFromStack(container, false), true);
             }
         }
 
@@ -126,7 +125,7 @@ public class TileFluidInterface extends TileNode implements IComparable {
                 }
             } else if (stack != null) {
                 // Fill the out fluid
-                FluidStack stackInStorage = network.getFluidStorage().get(stack, compare);
+                FluidStack stackInStorage = network.getFluidStorage().getList().get(stack, compare);
 
                 if (stackInStorage != null) {
                     int toExtract = Math.min(Fluid.BUCKET_VOLUME * upgrades.getInteractStackSize(), stackInStorage.amount);

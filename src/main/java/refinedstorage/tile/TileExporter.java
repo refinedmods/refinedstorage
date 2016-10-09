@@ -83,7 +83,7 @@ public class TileExporter extends TileMultipartNode implements IComparable, ITyp
                 if (handler != null) {
                     for (FluidStack stack : fluidFilters.getFluids()) {
                         if (stack != null) {
-                            FluidStack stackInStorage = network.getFluidStorage().get(stack, compare);
+                            FluidStack stackInStorage = network.getFluidStorage().getList().get(stack, compare);
 
                             if (stackInStorage != null) {
                                 int toExtract = Math.min(Fluid.BUCKET_VOLUME * upgrades.getInteractStackSize(), stackInStorage.amount);

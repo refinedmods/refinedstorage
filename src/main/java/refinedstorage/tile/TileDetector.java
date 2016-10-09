@@ -141,11 +141,11 @@ public class TileDetector extends TileNode implements IComparable, IType {
                 FluidStack slot = fluidFilters.getFluidStackInSlot(0);
 
                 if (slot != null) {
-                    FluidStack stack = network.getFluidStorage().get(slot, compare);
+                    FluidStack stack = network.getFluidStorage().getList().get(slot, compare);
 
                     powered = isPowered(stack == null ? null : stack.amount);
                 } else {
-                    powered = isPowered(network.getFluidStorage().getStacks().stream().map(s -> s.amount).mapToInt(Number::intValue).sum());
+                    powered = isPowered(network.getFluidStorage().getList().getStacks().stream().map(s -> s.amount).mapToInt(Number::intValue).sum());
                 }
             }
         }

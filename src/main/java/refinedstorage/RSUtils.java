@@ -10,8 +10,10 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidContainerItem;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.wrappers.FluidHandlerWrapper;
@@ -20,11 +22,13 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
+import org.apache.commons.lang3.tuple.Pair;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.apiimpl.API;
 import refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
 import refinedstorage.apiimpl.storage.item.ItemStorageNBT;
 
+import java.util.Locale;
 import java.util.function.Function;
 
 public final class RSUtils {
@@ -45,6 +49,10 @@ public final class RSUtils {
         ByteBufUtils.writeUTF8String(buf, FluidRegistry.getFluidName(stack.getFluid()));
         buf.writeInt(stack.amount);
         ByteBufUtils.writeTag(buf, stack.tag);
+    }
+
+    public static Pair<Integer, FluidStack> readFluidStack(ByteBuf buf) {
+        return Pair.of(buf.readInt(), new FluidStack(FluidRegistry.getFluid(ByteBufUtils.readUTF8String(buf)), buf.readInt(), ByteBufUtils.readTag(buf)));
     }
 
     public static void constructFromDrive(ItemStack disk, int slot, ItemStorageNBT[] itemStorages, FluidStorageNBT[] fluidStorages, Function<ItemStack, ItemStorageNBT> itemStorageSupplier, Function<ItemStack, FluidStorageNBT> fluidStorageNBTSupplier) {
@@ -148,6 +156,7 @@ public final class RSUtils {
         return handler;
     }
 
+    @SuppressWarnings("deprecation")
     public static IFluidHandler getFluidHandler(TileEntity tile, EnumFacing side) {
         if (tile == null) {
             return null;
@@ -162,5 +171,24 @@ public final class RSUtils {
         }
 
         return handler;
+    }
+
+    @SuppressWarnings("deprecation")
+    public static FluidStack getFluidFromStack(ItemStack stack, boolean simulate) {
+        if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
+            return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).drain(Fluid.BUCKET_VOLUME, !simulate);
+        } else if (stack.getItem() instanceof IFluidContainerItem) {
+            return ((IFluidContainerItem) stack.getItem()).drain(stack, Fluid.BUCKET_VOLUME, !simulate);
+        }
+
+        return null;
+    }
+
+    public static boolean hasFluidBucket(FluidStack stack) {
+        return stack.getFluid() == FluidRegistry.WATER || stack.getFluid() == FluidRegistry.LAVA || FluidRegistry.getBucketFluids().contains(stack.getFluid());
+    }
+
+    public static String formatFluidStackQuantity(FluidStack stack) {
+        return String.format(Locale.US, "%.1f", (float) stack.amount / 1000).replace(".0", "");
     }
 }

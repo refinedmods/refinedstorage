@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import refinedstorage.RSUtils;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.grid.IFluidGridHandler;
 import refinedstorage.apiimpl.API;
@@ -22,9 +23,9 @@ public class FluidGridHandler implements IFluidGridHandler {
 
     @Override
     public void onExtract(int hash, boolean shift, EntityPlayerMP player) {
-        FluidStack stack = network.getFluidStorage().get(hash);
+        FluidStack stack = network.getFluidStorage().getList().get(hash);
 
-        if (stack != null && FluidUtils.hasFluidBucket(stack)) {
+        if (stack != null && RSUtils.hasFluidBucket(stack)) {
             ItemStack bucket = FluidUtils.extractBucket(network);
 
             if (bucket == null) {
@@ -59,10 +60,10 @@ public class FluidGridHandler implements IFluidGridHandler {
     @Nullable
     @Override
     public ItemStack onInsert(ItemStack container) {
-        FluidStack stack = FluidUtils.getFluidFromStack(container, true);
+        FluidStack stack = RSUtils.getFluidFromStack(container, true);
 
         if (stack != null && network.insertFluid(stack, stack.amount, true) == null) {
-            FluidStack drained = FluidUtils.getFluidFromStack(container, false);
+            FluidStack drained = RSUtils.getFluidFromStack(container, false);
 
             network.insertFluid(drained, drained.amount, false);
         }

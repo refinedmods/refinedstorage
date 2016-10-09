@@ -9,11 +9,13 @@ import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementRe
 import refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
 import refinedstorage.api.solderer.ISoldererRegistry;
 import refinedstorage.api.util.IComparer;
+import refinedstorage.api.util.IFluidStackList;
 import refinedstorage.api.util.IItemStackList;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementRegistry;
 import refinedstorage.apiimpl.autocrafting.registry.CraftingTaskRegistry;
 import refinedstorage.apiimpl.solderer.SoldererRegistry;
 import refinedstorage.apiimpl.util.Comparer;
+import refinedstorage.apiimpl.util.FluidStackList;
 import refinedstorage.apiimpl.util.ItemStackList;
 
 import javax.annotation.Nonnull;
@@ -56,6 +58,12 @@ public class API implements IRSAPI {
     @Override
     public IItemStackList createItemStackList() {
         return new ItemStackList();
+    }
+
+    @Nonnull
+    @Override
+    public IFluidStackList createFluidStackList() {
+        return new FluidStackList();
     }
 
     @Override

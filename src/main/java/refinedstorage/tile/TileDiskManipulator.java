@@ -338,7 +338,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
 
         if (IFilterable.isEmpty(itemFilters)) {
             FluidStack toExtract = null;
-            ArrayList<FluidStack> networkFluids = new ArrayList<>(network.getFluidStorage().getStacks());
+            ArrayList<FluidStack> networkFluids = new ArrayList<>(network.getFluidStorage().getList().getStacks());
 
             int j = 0;
 

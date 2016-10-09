@@ -6,6 +6,7 @@ import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementRe
 import refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
 import refinedstorage.api.solderer.ISoldererRegistry;
 import refinedstorage.api.util.IComparer;
+import refinedstorage.api.util.IFluidStackList;
 import refinedstorage.api.util.IItemStackList;
 
 import javax.annotation.Nonnull;
@@ -44,6 +45,12 @@ public interface IRSAPI {
      */
     @Nonnull
     IItemStackList createItemStackList();
+
+    /**
+     * @return an empty fluid stack list
+     */
+    @Nonnull
+    IFluidStackList createFluidStackList();
 
     /**
      * @param stack the stack

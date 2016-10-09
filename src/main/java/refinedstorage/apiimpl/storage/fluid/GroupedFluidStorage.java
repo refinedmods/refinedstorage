@@ -1,25 +1,21 @@
 package refinedstorage.apiimpl.storage.fluid;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.storage.fluid.IFluidStorage;
 import refinedstorage.api.storage.fluid.IFluidStorageProvider;
 import refinedstorage.api.storage.fluid.IGroupedFluidStorage;
+import refinedstorage.api.util.IFluidStackList;
 import refinedstorage.apiimpl.API;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class GroupedFluidStorage implements IGroupedFluidStorage {
     private INetworkMaster network;
     private List<IFluidStorage> storages = new ArrayList<>();
-    private Multimap<Fluid, FluidStack> stacks = ArrayListMultimap.create();
+    private IFluidStackList list = API.instance().createFluidStackList();
 
     public GroupedFluidStorage(INetworkMaster network) {
         this.network = network;
@@ -33,7 +29,7 @@ public class GroupedFluidStorage implements IGroupedFluidStorage {
             .filter(node -> node.canUpdate() && node instanceof IFluidStorageProvider)
             .forEach(node -> ((IFluidStorageProvider) node).addFluidStorages(storages));
 
-        stacks.clear();
+        list.clear();
 
         for (IFluidStorage storage : storages) {
             for (FluidStack stack : storage.getStacks()) {
@@ -46,19 +42,7 @@ public class GroupedFluidStorage implements IGroupedFluidStorage {
 
     @Override
     public void add(@Nonnull FluidStack stack, boolean rebuilding) {
-        for (FluidStack otherStack : stacks.get(stack.getFluid())) {
-            if (otherStack.isFluidEqual(stack)) {
-                otherStack.amount += stack.amount;
-
-                if (!rebuilding) {
-                    network.sendFluidStorageDeltaToClient(stack, stack.amount);
-                }
-
-                return;
-            }
-        }
-
-        stacks.put(stack.getFluid(), stack.copy());
+        list.add(stack);
 
         if (!rebuilding) {
             network.sendFluidStorageDeltaToClient(stack, stack.amount);
@@ -67,48 +51,14 @@ public class GroupedFluidStorage implements IGroupedFluidStorage {
 
     @Override
     public void remove(@Nonnull FluidStack stack) {
-        for (FluidStack otherStack : stacks.get(stack.getFluid())) {
-            if (otherStack.isFluidEqual(stack)) {
-                otherStack.amount -= stack.amount;
-
-                if (otherStack.amount == 0) {
-                    stacks.remove(otherStack.getFluid(), otherStack);
-                }
-
-                network.sendFluidStorageDeltaToClient(stack, -stack.amount);
-
-                return;
-            }
+        if (list.remove(stack, true)) {
+            network.sendFluidStorageDeltaToClient(stack, -stack.amount);
         }
     }
 
     @Override
-    @Nullable
-    public FluidStack get(@Nonnull FluidStack stack, int flags) {
-        for (FluidStack otherStack : stacks.get(stack.getFluid())) {
-            if (API.instance().getComparer().isEqual(otherStack, stack, flags)) {
-                return otherStack;
-            }
-        }
-
-        return null;
-    }
-
-    @Override
-    @Nullable
-    public FluidStack get(int hash) {
-        for (FluidStack stack : this.stacks.values()) {
-            if (API.instance().getFluidStackHashCode(stack) == hash) {
-                return stack;
-            }
-        }
-
-        return null;
-    }
-
-    @Override
-    public Collection<FluidStack> getStacks() {
-        return stacks.values();
+    public IFluidStackList getList() {
+        return list;
     }
 
     @Override

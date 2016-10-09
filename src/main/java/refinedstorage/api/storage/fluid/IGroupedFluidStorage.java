@@ -2,14 +2,12 @@ package refinedstorage.api.storage.fluid;
 
 import net.minecraftforge.fluids.FluidStack;
 import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.api.util.IFluidStackList;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Collection;
 import java.util.List;
 
 /**
- * e
  * This holds all fluids from all the connected storages from a {@link INetworkMaster}.
  * <p>
  * Refined Storage uses this class mainly for use in Grids and Detectors to avoid querying
@@ -47,27 +45,9 @@ public interface IGroupedFluidStorage {
     void remove(@Nonnull FluidStack stack);
 
     /**
-     * Gets a fluid from the network.
-     *
-     * @param stack the stack to find
-     * @param flags the flags to compare on, see {@link CompareUtils}
-     * @return null if no fluid is found, or the stack, do NOT modify
+     * @return the list behind this grouped storage
      */
-    @Nullable
-    FluidStack get(@Nonnull FluidStack stack, int flags);
-
-    /**
-     * Gets a fluid from the network by hash, see {@link refinedstorage.api.network.NetworkUtils#getFluidStackHashCode(FluidStack)}.
-     *
-     * @return null if no fluid is found matching the hash, or the stack, do NOT modify
-     */
-    @Nullable
-    FluidStack get(int hash);
-
-    /**
-     * @return all fluids in this storage network
-     */
-    Collection<FluidStack> getStacks();
+    IFluidStackList getList();
 
     /**
      * @return the fluid storages connected to this network

@@ -18,7 +18,9 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import refinedstorage.RS;
 import refinedstorage.RSBlocks;
 import refinedstorage.RSItems;
+import refinedstorage.RSUtils;
 import refinedstorage.apiimpl.API;
+import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementFluidRender;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementItemRender;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementText;
 import refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactoryNormal;
@@ -52,6 +54,7 @@ public class CommonProxy {
         API.instance().getCraftingTaskRegistry().addFactory(CraftingTaskFactoryNormal.ID, new CraftingTaskFactoryNormal());
 
         API.instance().getCraftingMonitorElementRegistry().add(CraftingMonitorElementItemRender.ID, buf -> new CraftingMonitorElementItemRender(buf.readInt(), ByteBufUtils.readItemStack(buf), buf.readInt(), buf.readInt()));
+        API.instance().getCraftingMonitorElementRegistry().add(CraftingMonitorElementFluidRender.ID, buf -> new CraftingMonitorElementFluidRender(buf.readInt(), RSUtils.readFluidStack(buf).getRight(), buf.readInt()));
         API.instance().getCraftingMonitorElementRegistry().add(CraftingMonitorElementText.ID, buf -> new CraftingMonitorElementText(ByteBufUtils.readUTF8String(buf), buf.readInt()));
 
         int id = 0;
@@ -157,6 +160,14 @@ public class CommonProxy {
         API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeProcessor(ItemProcessor.TYPE_BASIC));
         API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeProcessor(ItemProcessor.TYPE_IMPROVED));
         API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeProcessor(ItemProcessor.TYPE_ADVANCED));
+
+        GameRegistry.addRecipe(new ItemStack(Blocks.SPONGE),
+            "WWW",
+            "WBW",
+            "WWW",
+            'W', new ItemStack(Blocks.PLANKS),
+            'B', new ItemStack(Items.WATER_BUCKET)
+        );
 
         // Silicon
         GameRegistry.addSmelting(Items.QUARTZ, new ItemStack(RSItems.SILICON), 0.5f);

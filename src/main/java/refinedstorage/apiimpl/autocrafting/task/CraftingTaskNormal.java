@@ -1,15 +1,20 @@
 package refinedstorage.apiimpl.autocrafting.task;
 
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemHandlerHelper;
+import refinedstorage.RSUtils;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.autocrafting.task.IProcessable;
 import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.api.util.IFluidStackList;
 import refinedstorage.api.util.IItemStackList;
 import refinedstorage.apiimpl.API;
+import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementFluidRender;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementItemRender;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementText;
 
@@ -18,12 +23,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CraftingTaskNormal implements ICraftingTask {
+    private static final ItemStack EMPTY_BUCKET = new ItemStack(Items.BUCKET);
+
     private INetworkMaster network;
     private ItemStack requested;
     private ICraftingPattern pattern;
     private int quantity;
     private List<IProcessable> toProcess = new ArrayList<>();
     private IItemStackList toTake = API.instance().createItemStackList();
+    private IFluidStackList toTakeFluids = API.instance().createFluidStackList();
     private IItemStackList toCraft = API.instance().createItemStackList();
     private IItemStackList missing = API.instance().createItemStackList();
     private IItemStackList extras = API.instance().createItemStackList();
@@ -68,7 +76,22 @@ public class CraftingTaskNormal implements ICraftingTask {
 
                         calculate(list, inputPattern, false);
                     } else {
-                        missing.add(input);
+                        FluidStack fluidInItem = RSUtils.getFluidFromStack(input, true);
+
+                        if (fluidInItem != null && RSUtils.hasFluidBucket(fluidInItem)) {
+                            FluidStack fluidInStorage = network.getFluidStorage().getList().get(fluidInItem);
+
+                            if (fluidInStorage == null || fluidInStorage.amount < fluidInItem.amount) {
+                                missing.add(input);
+                            } else if (network.getItemStorage().getList().get(EMPTY_BUCKET) == null) {
+                                missing.add(EMPTY_BUCKET.copy());
+                            } else {
+                                toTake.add(EMPTY_BUCKET.copy());
+                                toTakeFluids.add(fluidInItem.copy());
+                            }
+                        } else {
+                            missing.add(input);
+                        }
                     }
                 }
             } else {
@@ -122,7 +145,20 @@ public class CraftingTaskNormal implements ICraftingTask {
             break;
         }
 
-        if (toTake.isEmpty() && missing.isEmpty() && hasProcessedItems()) {
+        // If we took all the items, we can start taking fluids
+        if (toTake.isEmpty()) {
+            for (FluidStack toTakeStack : toTakeFluids.getStacks()) {
+                FluidStack took = network.extractFluid(toTakeStack, toTakeStack.amount);
+
+                if (took != null) {
+                    toTakeFluids.remove(toTakeStack, toTakeStack.amount, true);
+                }
+
+                break;
+            }
+        }
+
+        if (toTake.isEmpty() && toTakeFluids.isEmpty() && missing.isEmpty() && hasProcessedItems()) {
             for (ItemStack output : pattern.getOutputs()) {
                 // @TODO: Handle remainder
                 network.insertItem(output, output.stackSize, false);
@@ -168,6 +204,19 @@ public class CraftingTaskNormal implements ICraftingTask {
                     -1,
                     stack,
                     stack.stackSize,
+                    32
+                ))
+                .collect(Collectors.toList())
+            );
+        }
+
+        if (!toTakeFluids.isEmpty()) {
+            elements.add(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.fluids_taking", 16));
+
+            elements.addAll(toTakeFluids.getStacks().stream()
+                .map(stack -> new CraftingMonitorElementFluidRender(
+                    -1,
+                    stack,
                     32
                 ))
                 .collect(Collectors.toList())
