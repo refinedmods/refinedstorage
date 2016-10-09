@@ -53,7 +53,8 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
             }
 
             FluidStack result  = super.insertFluid(stack, size, simulate);
-            if(voidExcess && result != null) {
+            if (voidExcess && result != null) {
+				// Simulate should not matter as the fluids are voided anyway
                 result.amount = -result.amount;
             }
 
