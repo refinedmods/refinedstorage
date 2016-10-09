@@ -52,12 +52,12 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
                 return FluidUtils.copyStackWithSize(stack, size);
             }
 
-            FluidStack reminder  = super.insertFluid(stack, size, simulate);
-            if(voidExcess && reminder != null) {
-                reminder.amount = -reminder.amount;
+            FluidStack result  = super.insertFluid(stack, size, simulate);
+            if(voidExcess && result != null) {
+                result.amount = -result.amount;
             }
 
-            return reminder;
+            return result;
         }
     }
 
