@@ -3,6 +3,7 @@ package refinedstorage.gui;
 import refinedstorage.api.util.IComparer;
 import refinedstorage.container.ContainerConstructor;
 import refinedstorage.gui.sidebutton.SideButtonCompare;
+import refinedstorage.gui.sidebutton.SideButtonConstuctorDrop;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.gui.sidebutton.SideButtonType;
 import refinedstorage.tile.TileConstructor;
@@ -20,6 +21,7 @@ public class GuiConstructor extends GuiBase {
 
         addSideButton(new SideButtonCompare(this, TileConstructor.COMPARE, IComparer.COMPARE_DAMAGE));
         addSideButton(new SideButtonCompare(this, TileConstructor.COMPARE, IComparer.COMPARE_NBT));
+        addSideButton(new SideButtonConstuctorDrop(this));
     }
 
     @Override

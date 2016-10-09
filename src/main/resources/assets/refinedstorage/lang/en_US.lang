@@ -121,6 +121,8 @@ sidebutton.refinedstorage:void_excess.items=Void excess items
 sidebutton.refinedstorage:void_excess.fluids=Void excess fluids
 sidebutton.refinedstorage:void_excess.items_fluids=Void excess items and fluids
 
+sidebutton.refinedstorage:constructor.drop=Drop blocks as item
+
 block.refinedstorage:controller.0.name=Controller
 block.refinedstorage:controller.1.name=Creative Controller
 block.refinedstorage:cable.name=Cable
