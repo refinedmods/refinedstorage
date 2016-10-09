@@ -16,6 +16,7 @@ import refinedstorage.block.BlockFluidStorage;
 import refinedstorage.block.EnumFluidStorageType;
 import refinedstorage.inventory.ItemHandlerFluid;
 import refinedstorage.tile.config.IComparable;
+import refinedstorage.tile.config.IExcessVoidable;
 import refinedstorage.tile.config.IFilterable;
 import refinedstorage.tile.config.IPrioritizable;
 import refinedstorage.tile.data.ITileDataProducer;
@@ -23,9 +24,10 @@ import refinedstorage.tile.data.TileDataParameter;
 
 import java.util.List;
 
-public class TileFluidStorage extends TileNode implements IFluidStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable {
+public class TileFluidStorage extends TileNode implements IFluidStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IExcessVoidable {
     public static final TileDataParameter<Integer> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
+    public static final TileDataParameter<Boolean> VOID_EXCESS = IExcessVoidable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
     public static final TileDataParameter<Integer> STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileFluidStorage>() {
         @Override
@@ -50,7 +52,8 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
                 return FluidUtils.copyStackWithSize(stack, size);
             }
 
-            return super.insertFluid(stack, size, simulate);
+            FluidStack reminder  = super.insertFluid(stack, size, simulate);
+            return voidExcess ? null : reminder;
         }
     }
 
@@ -59,6 +62,7 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
     private static final String NBT_PRIORITY = "Priority";
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
+    private static final String NBT_VOID_EXCESS = "VoidExcess";
 
     private ItemHandlerFluid filters = new ItemHandlerFluid(9, this);
 
@@ -71,12 +75,14 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
     private int priority = 0;
     private int compare = IComparer.COMPARE_NBT;
     private int mode = IFilterable.WHITELIST;
+    private boolean voidExcess = false;
 
     public TileFluidStorage() {
         dataManager.addWatchedParameter(PRIORITY);
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(MODE);
         dataManager.addWatchedParameter(STORED);
+        dataManager.addWatchedParameter(VOID_EXCESS);
     }
 
     @Override
@@ -142,6 +148,10 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
         if (tag.hasKey(NBT_MODE)) {
             mode = tag.getInteger(NBT_MODE);
         }
+
+        if(tag.hasKey(NBT_VOID_EXCESS)) {
+            voidExcess = tag.getBoolean(NBT_VOID_EXCESS);
+        }
     }
 
     @Override
@@ -159,6 +169,7 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
         tag.setTag(NBT_STORAGE, storageTag);
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_MODE, mode);
+        tag.setBoolean(NBT_VOID_EXCESS, voidExcess);
 
         return tag;
     }
@@ -227,7 +238,7 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
 
     @Override
     public TileDataParameter<Boolean> getVoidExcessParameter() {
-        return null;
+        return VOID_EXCESS;
     }
 
     @Override
@@ -271,6 +282,18 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
     @Override
     public int getCapacity() {
         return getType().getCapacity();
+    }
+
+    @Override
+    public boolean getVoidExcess() {
+        return voidExcess;
+    }
+
+    @Override
+    public void setVoidExcess(boolean value) {
+        this.voidExcess = value;
+
+        markDirty();
     }
 }
 
