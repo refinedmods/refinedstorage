@@ -62,14 +62,12 @@ public class TileInterface extends TileNode implements IComparable {
         if (slot == null) {
             currentSlot++;
         } else if (ticks % upgrades.getSpeed() == 0) {
-            int size = Math.min(slot.stackSize, upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK) ? 64 : 1);
-
-            ItemStack remainder = network.insertItem(slot, size, false);
+            ItemStack remainder = network.insertItem(slot, upgrades.getInteractStackSize(), false);
 
             if (remainder == null) {
-                importItems.extractItemInternal(currentSlot, size, false);
+                importItems.extractItemInternal(currentSlot, upgrades.getInteractStackSize(), false);
             } else {
-                importItems.extractItemInternal(currentSlot, size - remainder.stackSize, false);
+                importItems.extractItemInternal(currentSlot, upgrades.getInteractStackSize() - remainder.stackSize, false);
                 currentSlot++;
             }
         }
