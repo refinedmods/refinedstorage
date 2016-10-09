@@ -23,7 +23,7 @@ public class GroupedItemStorage implements IGroupedItemStorage {
     }
 
     @Override
-    public void rebuild() {
+    public synchronized void rebuild() {
         storages.clear();
 
         network.getNodeGraph().all().stream()
@@ -50,7 +50,7 @@ public class GroupedItemStorage implements IGroupedItemStorage {
     }
 
     @Override
-    public void add(@Nonnull ItemStack stack, boolean rebuilding) {
+    public synchronized void add(@Nonnull ItemStack stack, boolean rebuilding) {
         list.add(stack);
 
         if (!rebuilding) {
@@ -59,7 +59,7 @@ public class GroupedItemStorage implements IGroupedItemStorage {
     }
 
     @Override
-    public void remove(@Nonnull ItemStack stack) {
+    public synchronized void remove(@Nonnull ItemStack stack) {
         if (list.remove(stack, !network.hasPattern(stack))) {
             network.sendItemStorageDeltaToClient(stack, -stack.stackSize);
         }

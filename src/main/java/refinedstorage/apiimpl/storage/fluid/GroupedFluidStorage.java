@@ -22,7 +22,7 @@ public class GroupedFluidStorage implements IGroupedFluidStorage {
     }
 
     @Override
-    public void rebuild() {
+    public synchronized void rebuild() {
         storages.clear();
 
         network.getNodeGraph().all().stream()
@@ -41,7 +41,7 @@ public class GroupedFluidStorage implements IGroupedFluidStorage {
     }
 
     @Override
-    public void add(@Nonnull FluidStack stack, boolean rebuilding) {
+    public synchronized void add(@Nonnull FluidStack stack, boolean rebuilding) {
         list.add(stack);
 
         if (!rebuilding) {
@@ -50,7 +50,7 @@ public class GroupedFluidStorage implements IGroupedFluidStorage {
     }
 
     @Override
-    public void remove(@Nonnull FluidStack stack) {
+    public synchronized void remove(@Nonnull FluidStack stack) {
         if (list.remove(stack, true)) {
             network.sendFluidStorageDeltaToClient(stack, -stack.amount);
         }
