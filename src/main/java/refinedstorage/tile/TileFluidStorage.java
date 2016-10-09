@@ -51,10 +51,10 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
             if (!IFilterable.canTakeFluids(filters, mode, compare, stack)) {
                 return FluidUtils.copyStackWithSize(stack, size);
             }
-
-            FluidStack result  = super.insertFluid(stack, size, simulate);
+			
+            FluidStack result = super.insertFluid(stack, size, simulate);
             if (voidExcess && result != null) {
-				// Simulate should not matter as the fluids are voided anyway
+                // Simulate should not matter as the fluids are voided anyway
                 result.amount = -result.amount;
             }
 
@@ -154,7 +154,7 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
             mode = tag.getInteger(NBT_MODE);
         }
 
-        if(tag.hasKey(NBT_VOID_EXCESS)) {
+        if (tag.hasKey(NBT_VOID_EXCESS)) {
             voidExcess = tag.getBoolean(NBT_VOID_EXCESS);
         }
     }
