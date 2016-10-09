@@ -16,6 +16,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RS;
+import refinedstorage.RSUtils;
 import refinedstorage.api.util.IComparer;
 import refinedstorage.container.slot.SlotSpecimen;
 import refinedstorage.inventory.ItemHandlerBasic;
@@ -144,9 +145,9 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
             type = tag.getInteger(NBT_TYPE);
         }
 
-        readItems(itemFilters, 0, tag);
-        readItems(upgrades, 1, tag);
-        readItems(fluidFilters, 2, tag);
+        RSUtils.readItems(itemFilters, 0, tag);
+        RSUtils.readItems(upgrades, 1, tag);
+        RSUtils.readItems(fluidFilters, 2, tag);
     }
 
     @Override
@@ -156,9 +157,9 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_TYPE, type);
 
-        writeItems(itemFilters, 0, tag);
-        writeItems(upgrades, 1, tag);
-        writeItems(fluidFilters, 2, tag);
+        RSUtils.writeItems(itemFilters, 0, tag);
+        RSUtils.writeItems(upgrades, 1, tag);
+        RSUtils.writeItems(fluidFilters, 2, tag);
 
         return tag;
     }

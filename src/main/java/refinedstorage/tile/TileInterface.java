@@ -8,6 +8,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import refinedstorage.RS;
+import refinedstorage.RSUtils;
 import refinedstorage.api.util.IComparer;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerUpgrade;
@@ -125,10 +126,10 @@ public class TileInterface extends TileNode implements IComparable {
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        readItems(importItems, 0, tag);
-        readItems(exportSpecimenItems, 1, tag);
-        readItems(exportItems, 2, tag);
-        readItems(upgrades, 3, tag);
+        RSUtils.readItems(importItems, 0, tag);
+        RSUtils.readItems(exportSpecimenItems, 1, tag);
+        RSUtils.readItems(exportItems, 2, tag);
+        RSUtils.readItems(upgrades, 3, tag);
 
         if (tag.hasKey(NBT_COMPARE)) {
             compare = tag.getInteger(NBT_COMPARE);
@@ -139,10 +140,10 @@ public class TileInterface extends TileNode implements IComparable {
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        writeItems(importItems, 0, tag);
-        writeItems(exportSpecimenItems, 1, tag);
-        writeItems(exportItems, 2, tag);
-        writeItems(upgrades, 3, tag);
+        RSUtils.writeItems(importItems, 0, tag);
+        RSUtils.writeItems(exportSpecimenItems, 1, tag);
+        RSUtils.writeItems(exportItems, 2, tag);
+        RSUtils.writeItems(upgrades, 3, tag);
 
         tag.setInteger(NBT_COMPARE, compare);
 

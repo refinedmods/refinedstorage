@@ -3,7 +3,7 @@ package refinedstorage.inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.items.ItemStackHandler;
-import refinedstorage.tile.TileBase;
+import refinedstorage.RSUtils;
 
 public class ItemHandlerGridFilter extends ItemStackHandler {
     private ItemStack stack;
@@ -14,7 +14,7 @@ public class ItemHandlerGridFilter extends ItemStackHandler {
         this.stack = stack;
 
         if (stack.hasTagCompound()) {
-            TileBase.readItems(this, 0, stack.getTagCompound());
+            RSUtils.readItems(this, 0, stack.getTagCompound());
         }
     }
 
@@ -26,7 +26,7 @@ public class ItemHandlerGridFilter extends ItemStackHandler {
             stack.setTagCompound(new NBTTagCompound());
         }
 
-        TileBase.writeItems(this, 0, stack.getTagCompound());
+        RSUtils.writeItems(this, 0, stack.getTagCompound());
     }
 
     public ItemStack[] getFilteredItems() {

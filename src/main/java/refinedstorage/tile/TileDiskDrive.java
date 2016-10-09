@@ -216,9 +216,9 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        readItems(disks, 0, tag);
-        readItems(itemFilters, 1, tag);
-        readItems(fluidFilters, 2, tag);
+        RSUtils.readItems(disks, 0, tag);
+        RSUtils.readItems(itemFilters, 1, tag);
+        RSUtils.readItems(fluidFilters, 2, tag);
 
         if (tag.hasKey(NBT_PRIORITY)) {
             priority = tag.getInteger(NBT_PRIORITY);
@@ -251,9 +251,9 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
             }
         }
 
-        writeItems(disks, 0, tag);
-        writeItems(itemFilters, 1, tag);
-        writeItems(fluidFilters, 2, tag);
+        RSUtils.writeItems(disks, 0, tag);
+        RSUtils.writeItems(itemFilters, 1, tag);
+        RSUtils.writeItems(fluidFilters, 2, tag);
 
         tag.setInteger(NBT_PRIORITY, priority);
         tag.setInteger(NBT_COMPARE, compare);

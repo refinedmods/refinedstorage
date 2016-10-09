@@ -6,6 +6,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RS;
 import refinedstorage.RSBlocks;
+import refinedstorage.RSUtils;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.storage.item.IItemStorage;
 import refinedstorage.api.storage.item.IItemStorageProvider;
@@ -136,7 +137,7 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        readItems(filters, 0, tag);
+        RSUtils.readItems(filters, 0, tag);
 
         if (tag.hasKey(NBT_PRIORITY)) {
             priority = tag.getInteger(NBT_PRIORITY);
@@ -163,7 +164,7 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        writeItems(filters, 0, tag);
+        RSUtils.writeItems(filters, 0, tag);
 
         tag.setInteger(NBT_PRIORITY, priority);
 

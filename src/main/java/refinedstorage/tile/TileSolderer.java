@@ -9,6 +9,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import refinedstorage.RS;
+import refinedstorage.RSUtils;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.solderer.ISoldererRecipe;
 import refinedstorage.apiimpl.API;
@@ -152,9 +153,9 @@ public class TileSolderer extends TileNode {
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        readItems(items, 0, tag);
-        readItems(upgrades, 1, tag);
-        readItems(result, 2, tag);
+        RSUtils.readItems(items, 0, tag);
+        RSUtils.readItems(upgrades, 1, tag);
+        RSUtils.readItems(result, 2, tag);
 
         recipe = API.instance().getSoldererRegistry().getRecipe(items);
 
@@ -171,9 +172,9 @@ public class TileSolderer extends TileNode {
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        writeItems(items, 0, tag);
-        writeItems(upgrades, 1, tag);
-        writeItems(result, 2, tag);
+        RSUtils.writeItems(items, 0, tag);
+        RSUtils.writeItems(upgrades, 1, tag);
+        RSUtils.writeItems(result, 2, tag);
 
         tag.setBoolean(NBT_WORKING, working);
         tag.setInteger(NBT_PROGRESS, progress);

@@ -456,10 +456,10 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        readItems(disks, 0, tag);
-        readItems(itemFilters, 1, tag);
-        readItems(fluidFilters, 2, tag);
-        readItems(upgrades, 3, tag);
+        RSUtils.readItems(disks, 0, tag);
+        RSUtils.readItems(itemFilters, 1, tag);
+        RSUtils.readItems(fluidFilters, 2, tag);
+        RSUtils.readItems(upgrades, 3, tag);
 
         if (tag.hasKey(NBT_COMPARE)) {
             compare = tag.getInteger(NBT_COMPARE);
@@ -482,10 +482,10 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        writeItems(disks, 0, tag);
-        writeItems(itemFilters, 1, tag);
-        writeItems(fluidFilters, 2, tag);
-        writeItems(upgrades, 3, tag);
+        RSUtils.writeItems(disks, 0, tag);
+        RSUtils.writeItems(itemFilters, 1, tag);
+        RSUtils.writeItems(fluidFilters, 2, tag);
+        RSUtils.writeItems(upgrades, 3, tag);
 
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_MODE, mode);

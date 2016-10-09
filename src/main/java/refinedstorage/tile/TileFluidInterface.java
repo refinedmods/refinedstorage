@@ -9,6 +9,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import refinedstorage.RS;
+import refinedstorage.RSUtils;
 import refinedstorage.api.util.IComparer;
 import refinedstorage.apiimpl.storage.fluid.FluidUtils;
 import refinedstorage.inventory.ItemHandlerBasic;
@@ -165,9 +166,9 @@ public class TileFluidInterface extends TileNode implements IComparable {
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        writeItems(upgrades, 0, tag);
-        writeItems(in, 1, tag);
-        writeItems(out, 2, tag);
+        RSUtils.writeItems(upgrades, 0, tag);
+        RSUtils.writeItems(in, 1, tag);
+        RSUtils.writeItems(out, 2, tag);
 
         tag.setTag(NBT_TANK_IN, tankIn.writeToNBT(new NBTTagCompound()));
         tag.setTag(NBT_TANK_OUT, tankOut.writeToNBT(new NBTTagCompound()));
@@ -181,9 +182,9 @@ public class TileFluidInterface extends TileNode implements IComparable {
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        readItems(upgrades, 0, tag);
-        readItems(in, 1, tag);
-        readItems(out, 2, tag);
+        RSUtils.readItems(upgrades, 0, tag);
+        RSUtils.readItems(in, 1, tag);
+        RSUtils.readItems(out, 2, tag);
 
         if (tag.hasKey(NBT_TANK_IN)) {
             tankIn.readFromNBT(tag.getCompoundTag(NBT_TANK_IN));

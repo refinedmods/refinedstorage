@@ -10,6 +10,7 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import refinedstorage.RS;
+import refinedstorage.RSUtils;
 import refinedstorage.api.network.grid.IFluidGridHandler;
 import refinedstorage.api.network.grid.IItemGridHandler;
 import refinedstorage.block.EnumGridType;
@@ -19,7 +20,6 @@ import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerGridFilterInGrid;
 import refinedstorage.item.ItemWirelessGrid;
 import refinedstorage.network.MessageWirelessGridSettingsUpdate;
-import refinedstorage.tile.TileBase;
 import refinedstorage.tile.TileController;
 import refinedstorage.tile.data.TileDataParameter;
 
@@ -48,7 +48,7 @@ public class WirelessGrid implements IGrid {
                     stack.setTagCompound(new NBTTagCompound());
                 }
 
-                TileBase.writeItems(this, slot, stack.getTagCompound());
+                RSUtils.writeItems(this, slot, stack.getTagCompound());
             }
         }
     };
@@ -66,7 +66,7 @@ public class WirelessGrid implements IGrid {
 
         if (stack.hasTagCompound()) {
             for (int i = 0; i < 4; ++i) {
-                TileBase.readItems(filter, i, stack.getTagCompound());
+                RSUtils.readItems(filter, i, stack.getTagCompound());
             }
         }
     }

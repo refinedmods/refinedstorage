@@ -11,6 +11,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RS;
 import refinedstorage.RSBlocks;
+import refinedstorage.RSUtils;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.util.IComparer;
@@ -231,8 +232,8 @@ public class TileDetector extends TileNode implements IComparable, IType {
             type = tag.getInteger(NBT_TYPE);
         }
 
-        readItems(itemFilters, 0, tag);
-        readItems(fluidFilters, 1, tag);
+        RSUtils.readItems(itemFilters, 0, tag);
+        RSUtils.readItems(fluidFilters, 1, tag);
     }
 
     @Override
@@ -244,8 +245,8 @@ public class TileDetector extends TileNode implements IComparable, IType {
         tag.setInteger(NBT_AMOUNT, amount);
         tag.setInteger(NBT_TYPE, type);
 
-        writeItems(itemFilters, 0, tag);
-        writeItems(fluidFilters, 1, tag);
+        RSUtils.writeItems(itemFilters, 0, tag);
+        RSUtils.writeItems(fluidFilters, 1, tag);
 
         return tag;
     }

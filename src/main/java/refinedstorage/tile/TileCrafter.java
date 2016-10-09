@@ -9,6 +9,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import refinedstorage.RS;
+import refinedstorage.RSUtils;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import refinedstorage.api.autocrafting.ICraftingPatternProvider;
@@ -134,8 +135,8 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
             triggeredAutocrafting = tag.getBoolean(NBT_TRIGGERED_AUTOCRAFTING);
         }
 
-        readItems(patterns, 0, tag);
-        readItems(upgrades, 1, tag);
+        RSUtils.readItems(patterns, 0, tag);
+        RSUtils.readItems(upgrades, 1, tag);
     }
 
     @Override
@@ -144,8 +145,8 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
 
         tag.setBoolean(NBT_TRIGGERED_AUTOCRAFTING, triggeredAutocrafting);
 
-        writeItems(patterns, 0, tag);
-        writeItems(upgrades, 1, tag);
+        RSUtils.writeItems(patterns, 0, tag);
+        RSUtils.writeItems(upgrades, 1, tag);
 
         return tag;
     }
@@ -157,7 +158,7 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
 
     @Override
     public IItemHandler getFacingInventory() {
-        return getItemHandler(getFacingTile(), getDirection().getOpposite());
+        return RSUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
     }
 
     @Override

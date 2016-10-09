@@ -11,6 +11,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import refinedstorage.RS;
+import refinedstorage.RSUtils;
 import refinedstorage.api.util.IComparer;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerFluid;
@@ -62,7 +63,7 @@ public class TileImporter extends TileMultipartNode implements IComparable, IFil
         int size = upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK) ? 64 : 1;
 
         if (type == IType.ITEMS) {
-            IItemHandler handler = getItemHandler(getFacingTile(), getDirection().getOpposite());
+            IItemHandler handler = RSUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
 
             if (getFacingTile() instanceof TileDiskDrive || handler == null) {
                 return;
@@ -90,7 +91,7 @@ public class TileImporter extends TileMultipartNode implements IComparable, IFil
                 }
             }
         } else if (type == IType.FLUIDS && ticks % upgrades.getSpeed() == 0) {
-            IFluidHandler handler = getFluidHandler(getFacingTile(), getDirection().getOpposite());
+            IFluidHandler handler = RSUtils.getFluidHandler(getFacingTile(), getDirection().getOpposite());
 
             if (handler != null) {
                 FluidStack stack = handler.drain(Fluid.BUCKET_VOLUME, false);
@@ -146,9 +147,9 @@ public class TileImporter extends TileMultipartNode implements IComparable, IFil
             type = tag.getInteger(NBT_TYPE);
         }
 
-        readItems(itemFilters, 0, tag);
-        readItems(upgrades, 1, tag);
-        readItems(fluidFilters, 2, tag);
+        RSUtils.readItems(itemFilters, 0, tag);
+        RSUtils.readItems(upgrades, 1, tag);
+        RSUtils.readItems(fluidFilters, 2, tag);
     }
 
     @Override
@@ -159,9 +160,9 @@ public class TileImporter extends TileMultipartNode implements IComparable, IFil
         tag.setInteger(NBT_MODE, mode);
         tag.setInteger(NBT_TYPE, type);
 
-        writeItems(itemFilters, 0, tag);
-        writeItems(upgrades, 1, tag);
-        writeItems(fluidFilters, 2, tag);
+        RSUtils.writeItems(itemFilters, 0, tag);
+        RSUtils.writeItems(upgrades, 1, tag);
+        RSUtils.writeItems(fluidFilters, 2, tag);
 
         return tag;
     }

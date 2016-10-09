@@ -16,6 +16,7 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 import refinedstorage.RS;
 import refinedstorage.RSBlocks;
 import refinedstorage.RSItems;
+import refinedstorage.RSUtils;
 import refinedstorage.api.network.grid.IFluidGridHandler;
 import refinedstorage.api.network.grid.IItemGridHandler;
 import refinedstorage.apiimpl.API;
@@ -441,9 +442,9 @@ public class TileGrid extends TileNode implements IGrid {
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        readItemsLegacy(matrix, 0, tag);
-        readItems(patterns, 1, tag);
-        readItems(filter, 2, tag);
+        RSUtils.readItemsLegacy(matrix, 0, tag);
+        RSUtils.readItems(patterns, 1, tag);
+        RSUtils.readItems(filter, 2, tag);
 
         if (tag.hasKey(NBT_VIEW_TYPE)) {
             viewType = tag.getInteger(NBT_VIEW_TYPE);
@@ -466,9 +467,9 @@ public class TileGrid extends TileNode implements IGrid {
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        writeItemsLegacy(matrix, 0, tag);
-        writeItems(patterns, 1, tag);
-        writeItems(filter, 2, tag);
+        RSUtils.writeItemsLegacy(matrix, 0, tag);
+        RSUtils.writeItems(patterns, 1, tag);
+        RSUtils.writeItems(filter, 2, tag);
 
         tag.setInteger(NBT_VIEW_TYPE, viewType);
         tag.setInteger(NBT_SORTING_DIRECTION, sortingDirection);

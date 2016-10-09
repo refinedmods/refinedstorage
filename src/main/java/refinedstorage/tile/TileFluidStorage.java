@@ -5,6 +5,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraftforge.fluids.FluidStack;
 import refinedstorage.RS;
 import refinedstorage.RSBlocks;
+import refinedstorage.RSUtils;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.storage.fluid.IFluidStorage;
 import refinedstorage.api.storage.fluid.IFluidStorageProvider;
@@ -124,7 +125,7 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        readItems(filters, 0, tag);
+        RSUtils.readItems(filters, 0, tag);
 
         if (tag.hasKey(NBT_PRIORITY)) {
             priority = tag.getInteger(NBT_PRIORITY);
@@ -147,7 +148,7 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        writeItems(filters, 0, tag);
+        RSUtils.writeItems(filters, 0, tag);
 
         tag.setInteger(NBT_PRIORITY, priority);
 

@@ -8,6 +8,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import refinedstorage.RS;
 import refinedstorage.RSItems;
+import refinedstorage.RSUtils;
 import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.inventory.ItemValidatorBasic;
@@ -92,8 +93,8 @@ public class TileNetworkTransmitter extends TileNode {
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        writeItems(networkCard, 0, tag);
-        writeItems(upgrades, 1, tag);
+        RSUtils.writeItems(networkCard, 0, tag);
+        RSUtils.writeItems(upgrades, 1, tag);
 
         return tag;
     }
@@ -102,8 +103,8 @@ public class TileNetworkTransmitter extends TileNode {
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        readItems(networkCard, 0, tag);
-        readItems(upgrades, 1, tag);
+        RSUtils.readItems(networkCard, 0, tag);
+        RSUtils.readItems(upgrades, 1, tag);
     }
 
     @Override

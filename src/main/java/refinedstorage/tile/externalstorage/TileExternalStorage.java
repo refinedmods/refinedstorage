@@ -11,6 +11,7 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.IItemHandler;
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 import refinedstorage.RS;
+import refinedstorage.RSUtils;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.storage.fluid.IFluidStorage;
 import refinedstorage.api.storage.fluid.IFluidStorageProvider;
@@ -161,8 +162,8 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        readItems(itemFilters, 0, tag);
-        readItems(fluidFilters, 1, tag);
+        RSUtils.readItems(itemFilters, 0, tag);
+        RSUtils.readItems(fluidFilters, 1, tag);
 
         if (tag.hasKey(NBT_PRIORITY)) {
             priority = tag.getInteger(NBT_PRIORITY);
@@ -185,8 +186,8 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        writeItems(itemFilters, 0, tag);
-        writeItems(fluidFilters, 1, tag);
+        RSUtils.writeItems(itemFilters, 0, tag);
+        RSUtils.writeItems(fluidFilters, 1, tag);
 
         tag.setInteger(NBT_PRIORITY, priority);
         tag.setInteger(NBT_COMPARE, compare);
@@ -251,13 +252,13 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
         } else if (facing instanceof IDeepStorageUnit) {
             itemStorages.add(new ItemStorageDSU(this, (IDeepStorageUnit) facing));
         } else {
-            IItemHandler itemHandler = getItemHandler(facing, getDirection().getOpposite());
+            IItemHandler itemHandler = RSUtils.getItemHandler(facing, getDirection().getOpposite());
 
             if (itemHandler != null) {
                 itemStorages.add(new ItemStorageItemHandler(this, itemHandler));
             }
 
-            IFluidHandler fluidHandler = getFluidHandler(facing, getDirection().getOpposite());
+            IFluidHandler fluidHandler = RSUtils.getFluidHandler(facing, getDirection().getOpposite());
 
             if (fluidHandler != null) {
                 for (IFluidTankProperties property : fluidHandler.getTankProperties()) {
