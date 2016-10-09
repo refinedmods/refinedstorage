@@ -61,6 +61,7 @@ import refinedstorage.network.MessageGridFluidDelta;
 import refinedstorage.network.MessageGridFluidUpdate;
 import refinedstorage.network.MessageGridItemDelta;
 import refinedstorage.network.MessageGridItemUpdate;
+import refinedstorage.tile.config.IAccessType;
 import refinedstorage.tile.config.IRedstoneConfigurable;
 import refinedstorage.tile.config.RedstoneMode;
 import refinedstorage.tile.data.ITileDataProducer;
@@ -68,6 +69,7 @@ import refinedstorage.tile.data.RSSerializers;
 import refinedstorage.tile.data.TileDataParameter;
 import refinedstorage.tile.externalstorage.FluidStorageExternal;
 import refinedstorage.tile.externalstorage.ItemStorageExternal;
+import refinedstorage.tile.externalstorage.ItemStorageItemHandler;
 import refinedstorage.tile.grid.IGrid;
 
 import javax.annotation.Nonnull;
@@ -518,11 +520,15 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         }
 
         int orginalSize = size;
-
+        int accessType = IAccessType.READ_WRITE;
         ItemStack remainder = stack;
 
         for (IItemStorage storage : this.itemStorage.getStorages()) {
             remainder = storage.insertItem(remainder, size, simulate);
+
+            if(storage instanceof ItemStorageItemHandler) {
+                accessType = ((ItemStorageItemHandler) storage).getAccessType();
+            }
 
             if (storage instanceof ItemStorageExternal && !simulate) {
                 ((ItemStorageExternal) storage).updateCacheForcefully();
@@ -547,7 +553,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             inserted = orginalSize - remainder.stackSize;
         }
 
-        if (!simulate && inserted > 0) {
+        if (!simulate && inserted > 0 && accessType != IAccessType.WRITE) {
             itemStorage.add(ItemHandlerHelper.copyStackWithSize(stack, inserted), false);
 
             for (int i = 0; i < inserted; ++i) {
@@ -616,14 +622,18 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         }
 
         int orginalSize = size;
-
+        int accessType = IAccessType.READ_WRITE;
         FluidStack remainder = stack;
 
         for (IFluidStorage storage : this.fluidStorage.getStorages()) {
             remainder = storage.insertFluid(remainder, size, simulate);
 
-            if (storage instanceof FluidStorageExternal && !simulate) {
-                ((FluidStorageExternal) storage).updateCacheForcefully();
+            if (storage instanceof FluidStorageExternal) {
+                accessType = ((FluidStorageExternal)storage).getAccessType();
+
+                if(!simulate) {
+                    ((FluidStorageExternal) storage).updateCacheForcefully();
+                }
             }
 
             if (remainder == null) {
@@ -645,7 +655,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             inserted = orginalSize - remainder.amount;
         }
 
-        if (!simulate && inserted > 0) {
+        if (!simulate && inserted > 0 && accessType != IAccessType.WRITE) {
             fluidStorage.add(RSUtils.copyStackWithSize(stack, inserted), false);
         }
 

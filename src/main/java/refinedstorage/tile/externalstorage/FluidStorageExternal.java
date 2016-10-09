@@ -7,6 +7,7 @@ import refinedstorage.RSUtils;
 import refinedstorage.api.storage.fluid.IFluidStorage;
 import refinedstorage.api.util.IComparer;
 import refinedstorage.apiimpl.API;
+import refinedstorage.tile.config.IAccessType;
 import refinedstorage.tile.config.IFilterable;
 
 import javax.annotation.Nonnull;
@@ -35,12 +36,20 @@ public class FluidStorageExternal implements IFluidStorage {
 
     @Override
     public List<FluidStack> getStacks() {
+        if(externalStorage.getAccessType() == IAccessType.WRITE) {
+            return Collections.emptyList();
+        }
+
         return getContents() == null ? Collections.emptyList() : Collections.singletonList(getContents().copy());
     }
 
     @Nullable
     @Override
     public FluidStack insertFluid(@Nonnull FluidStack stack, int size, boolean simulate) {
+        if(externalStorage.getAccessType() == IAccessType.READ) {
+            return stack;
+        }
+
         if (getProperties() != null && IFilterable.canTakeFluids(externalStorage.getFluidFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack) && getProperties().canFillFluidType(stack)) {
             int filled = handler.fill(RSUtils.copyStackWithSize(stack, size), !simulate);
 
@@ -57,6 +66,10 @@ public class FluidStorageExternal implements IFluidStorage {
     @Nullable
     @Override
     public FluidStack extractFluid(@Nonnull FluidStack stack, int size, int flags) {
+        if(externalStorage.getAccessType() == IAccessType.READ) {
+            return null;
+        }
+
         FluidStack toDrain = RSUtils.copyStackWithSize(stack, size);
 
         if (API.instance().getComparer().isEqual(getContents(), toDrain, flags)) {
@@ -78,6 +91,10 @@ public class FluidStorageExternal implements IFluidStorage {
     @Override
     public int getPriority() {
         return externalStorage.getPriority();
+    }
+
+    public int getAccessType() {
+        return externalStorage.getAccessType();
     }
 
     public boolean updateCache() {
