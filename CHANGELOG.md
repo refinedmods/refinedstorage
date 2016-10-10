@@ -15,6 +15,7 @@
 - Fixed items with colored name being uncolored in Grid (raoulvdberge)
 - Fixed fluid rendering bugging out side buttons (raoulvdberge)
 - Fixed item count going negative in some cases (raoulvdberge)
+- Updated Storage Drawers API (raoulvdberge)
 
 ### 1.1.3
 - Fixed some clients not starting up due to too many Disk Drive model permutations (raoulvdberge)

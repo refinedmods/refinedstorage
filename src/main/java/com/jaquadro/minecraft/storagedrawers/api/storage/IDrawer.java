@@ -20,9 +20,20 @@ public interface IDrawer {
      * Sets the type of the stored item and initializes it to the given amount.  Any existing item will be replaced.
      *
      * @param itemPrototype An ItemStack representing the type, metadata, and tags of the item to store.
-     * @param amount        The amount to initialize the stored item count to.
+     * @param amount The amount to initialize the stored item count to.
+     * @deprecated setStoredItem may redirect its set to another IDrawer, so use setStoredItemRedir instead.
      */
+    @Deprecated
     void setStoredItem(ItemStack itemPrototype, int amount);
+
+    /**
+     * Sets the type of the stored item and initializes it to the given amount.  Any existing item will be replaced.
+     *
+     * @param itemPrototype An ItemStack representing the type, metadata, and tags of the item to store.
+     * @param amount The amount to initialize the stored item count to.
+     * @return The IDrawer actually set with the prototype.  Some drawer groups can redirect a set operation to another member.
+     */
+    IDrawer setStoredItemRedir(ItemStack itemPrototype, int amount);
 
     /**
      * Gets the number of items stored in this drawer.
@@ -62,7 +73,7 @@ public interface IDrawer {
 
     /**
      * Gets whether or not an item of the given type and data can be stored in this drawer.
-     * <p>
+     *
      * Stack size and available capacity are not considered.  For drawers that are not empty, this
      * method can allow ore-dictionary compatible items to be accepted into the drawer, as defined by what
      * the drawer considers to be an equivalent item.
@@ -74,7 +85,7 @@ public interface IDrawer {
 
     /**
      * Gets whether or not an item of the given type and data can be extracted from this drawer.
-     * <p>
+     *
      * This is intended to allow outbound ore-dictionary conversions of compatible items, as defined by what
      * the drawer considers to be an equivalent item.
      *
@@ -98,8 +109,7 @@ public interface IDrawer {
 
     /**
      * Stores auxiliary data with this drawer, mainly for use in integration.
-     *
-     * @param key  The key to identify the data with.
+     * @param key The key to identify the data with.
      * @param data The data to store.
      */
     void setExtendedData(String key, Object data);

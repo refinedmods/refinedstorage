@@ -1,4 +1,4 @@
-package com.jaquadro.minecraft.storagedrawers.api.pack;/*package com.jaquadro.minecraft.storagedrawers.api.pack;
+/*package com.jaquadro.minecraft.storagedrawers.api.pack;
 
 import net.minecraft.block.Block;
 

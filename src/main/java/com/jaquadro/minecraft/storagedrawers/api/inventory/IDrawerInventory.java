@@ -15,7 +15,7 @@ public interface IDrawerInventory extends ISidedInventory {
      * Gets an IInventory slot index suitable for operations for the given type.
      *
      * @param drawerSlot The index of the drawer within its group.
-     * @param type       The type of IInventory slot to return an index for.
+     * @param type The type of IInventory slot to return an index for.
      */
     int getInventorySlot(int drawerSlot, SlotType type);
 
