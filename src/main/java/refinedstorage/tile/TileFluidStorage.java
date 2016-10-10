@@ -26,7 +26,7 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Boolean> VOID_EXCESS = IExcessVoidable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
-    public static final TileDataParameter<Integer> ACCESS_TYPE = IAccessType.createParameter();
+    public static final TileDataParameter<AccessType> ACCESS_TYPE = IAccessType.createParameter();
     public static final TileDataParameter<Integer> STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileFluidStorage>() {
         @Override
         public Integer getValue(TileFluidStorage tile) {
@@ -257,7 +257,7 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
     }
 
     @Override
-    public TileDataParameter<Integer> getAccessTypeParameter() {
+    public TileDataParameter<AccessType> getAccessTypeParameter() {
         return ACCESS_TYPE;
     }
 
@@ -291,7 +291,9 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
     public void setAccessType(AccessType value) {
         this.accessType = value;
 
-        network.getFluidStorageCache().invalidate();
+        if (network != null) {
+            network.getFluidStorageCache().invalidate();
+        }
 
         markDirty();
     }

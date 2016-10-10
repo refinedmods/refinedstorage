@@ -1,29 +1,23 @@
 package refinedstorage.tile.config;
 
-
-import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.tileentity.TileEntity;
-import refinedstorage.RSUtils;
 import refinedstorage.api.storage.AccessType;
 import refinedstorage.tile.data.ITileDataConsumer;
 import refinedstorage.tile.data.ITileDataProducer;
+import refinedstorage.tile.data.RSSerializers;
 import refinedstorage.tile.data.TileDataParameter;
 
 public interface IAccessType {
-    int READ = 0;
-    int WRITE = 1;
-    int READ_WRITE = 2;
-
-    static <T extends TileEntity> TileDataParameter<Integer> createParameter() {
-        return new TileDataParameter<>(DataSerializers.VARINT, READ_WRITE, new ITileDataProducer<Integer, T>() {
+    static <T extends TileEntity> TileDataParameter<AccessType> createParameter() {
+        return new TileDataParameter<>(RSSerializers.ACCESS_TYPE_SERIALIZER, AccessType.READ_WRITE, new ITileDataProducer<AccessType, T>() {
             @Override
-            public Integer getValue(T tile) {
-                return ((IAccessType) tile).getAccessType().getId();
+            public AccessType getValue(T tile) {
+                return ((IAccessType) tile).getAccessType();
             }
-        }, new ITileDataConsumer<Integer, T>() {
+        }, new ITileDataConsumer<AccessType, T>() {
             @Override
-            public void setValue(T tile, Integer value) {
-                ((IAccessType) tile).setAccessType(RSUtils.getAccessType(value));
+            public void setValue(T tile, AccessType value) {
+                ((IAccessType) tile).setAccessType(value);
             }
         });
     }

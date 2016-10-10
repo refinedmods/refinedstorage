@@ -7,7 +7,9 @@ import net.minecraft.network.datasync.DataSerializer;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+import refinedstorage.RSUtils;
 import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
+import refinedstorage.api.storage.AccessType;
 import refinedstorage.apiimpl.API;
 import refinedstorage.tile.ClientNode;
 
@@ -111,6 +113,23 @@ public final class RSSerializers {
 
         @Override
         public DataParameter<FluidStack> createKey(int id) {
+            return null;
+        }
+    };
+
+    public static final DataSerializer<AccessType> ACCESS_TYPE_SERIALIZER = new DataSerializer<AccessType>() {
+        @Override
+        public void write(PacketBuffer buf, AccessType value) {
+            buf.writeInt(value.getId());
+        }
+
+        @Override
+        public AccessType read(PacketBuffer buf) throws IOException {
+            return RSUtils.getAccessType(buf.readInt());
+        }
+
+        @Override
+        public DataParameter<AccessType> createKey(int id) {
             return null;
         }
     };

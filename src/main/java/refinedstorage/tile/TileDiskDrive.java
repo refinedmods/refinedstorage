@@ -38,7 +38,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
     public static final TileDataParameter<Integer> TYPE = IType.createParameter();
     public static final TileDataParameter<Boolean> VOID_EXCESS = IExcessVoidable.createParameter();
-    public static final TileDataParameter<Integer> ACCESS_TYPE = IAccessType.createParameter();
+    public static final TileDataParameter<AccessType> ACCESS_TYPE = IAccessType.createParameter();
 
     public class ItemStorage extends ItemStorageNBT {
         public ItemStorage(ItemStack disk) {
@@ -342,7 +342,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     }
 
     @Override
-    public TileDataParameter<Integer> getAccessTypeParameter() {
+    public TileDataParameter<AccessType> getAccessTypeParameter() {
         return ACCESS_TYPE;
     }
 
@@ -360,8 +360,10 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     public void setAccessType(AccessType value) {
         this.accessType = value;
 
-        network.getFluidStorageCache().invalidate();
-        network.getItemStorageCache().invalidate();
+        if (network != null) {
+            network.getFluidStorageCache().invalidate();
+            network.getItemStorageCache().invalidate();
+        }
 
         markDirty();
     }

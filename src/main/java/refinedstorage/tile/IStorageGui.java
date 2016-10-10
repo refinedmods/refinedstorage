@@ -1,5 +1,6 @@
 package refinedstorage.tile;
 
+import refinedstorage.api.storage.AccessType;
 import refinedstorage.tile.data.TileDataParameter;
 
 public interface IStorageGui {
@@ -15,9 +16,9 @@ public interface IStorageGui {
 
     TileDataParameter<Integer> getPriorityParameter();
 
-    TileDataParameter<Boolean> getVoidExcessParameter();
+    TileDataParameter<AccessType> getAccessTypeParameter();
 
-    TileDataParameter<Integer> getAccessTypeParameter();
+    TileDataParameter<Boolean> getVoidExcessParameter();
 
     String getVoidExcessType();
 

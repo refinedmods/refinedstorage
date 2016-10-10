@@ -35,7 +35,7 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
     public static final TileDataParameter<Integer> TYPE = IType.createParameter();
-    public static final TileDataParameter<Integer> ACCESS_TYPE = IAccessType.createParameter();
+    public static final TileDataParameter<AccessType> ACCESS_TYPE = IAccessType.createParameter();
 
     public static final TileDataParameter<Integer> STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileExternalStorage>() {
         @Override
@@ -317,7 +317,7 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
     }
 
     @Override
-    public TileDataParameter<Integer> getAccessTypeParameter() {
+    public TileDataParameter<AccessType> getAccessTypeParameter() {
         return ACCESS_TYPE;
     }
 
@@ -345,8 +345,10 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
     public void setAccessType(AccessType type) {
         this.accessType = type;
 
-        network.getItemStorageCache().invalidate();
-        network.getFluidStorageCache().invalidate();
+        if (network != null) {
+            network.getItemStorageCache().invalidate();
+            network.getFluidStorageCache().invalidate();
+        }
 
         markDirty();
     }

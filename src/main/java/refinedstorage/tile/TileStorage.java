@@ -26,7 +26,7 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
     public static final TileDataParameter<Integer> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
-    public static final TileDataParameter<Integer> ACCESS_TYPE = IAccessType.createParameter();
+    public static final TileDataParameter<AccessType> ACCESS_TYPE = IAccessType.createParameter();
     public static final TileDataParameter<Integer> STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileStorage>() {
         @Override
         public Integer getValue(TileStorage tile) {
@@ -270,7 +270,7 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
     }
 
     @Override
-    public TileDataParameter<Integer> getAccessTypeParameter() {
+    public TileDataParameter<AccessType> getAccessTypeParameter() {
         return ACCESS_TYPE;
     }
 
@@ -304,7 +304,9 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
     public void setAccessType(AccessType value) {
         this.accessType = value;
 
-        network.getItemStorageCache().invalidate();
+        if (network != null) {
+            network.getItemStorageCache().invalidate();
+        }
 
         markDirty();
     }

@@ -123,9 +123,9 @@ sidebutton.refinedstorage:void_excess.items_fluids=Void excess items and fluids
 
 sidebutton.refinedstorage:constructor.drop=Drop blocks instead of placing
 
-sidebutton.refinedstorage:access_type.read=Read
-sidebutton.refinedstorage:access_type.write=Write
-sidebutton.refinedstorage:access_type.read_write=Read and write
+sidebutton.refinedstorage:access_type.0=Read and write
+sidebutton.refinedstorage:access_type.1=Read
+sidebutton.refinedstorage:access_type.2=Write
 
 block.refinedstorage:controller.0.name=Controller
 block.refinedstorage:controller.1.name=Creative Controller
