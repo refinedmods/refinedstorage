@@ -27,10 +27,6 @@ public class ItemStorageDrawer extends ItemStorageExternal {
 
     @Override
     public List<ItemStack> getItems() {
-        if(externalStorage.getAccessType() == IAccessType.READ) {
-            return Collections.emptyList();
-        }
-
         if (!drawer.isEmpty() && drawer.getStoredItemCount() > 0) {
             return Collections.singletonList(drawer.getStoredItemCopy());
         }
@@ -44,10 +40,6 @@ public class ItemStorageDrawer extends ItemStorageExternal {
 
     @Override
     public ItemStack insertItem(ItemStack stack, int size, boolean simulate) {
-        if(externalStorage.getAccessType() == IAccessType.READ) {
-            return stack;
-        }
-
         if (IFilterable.canTake(externalStorage.getItemFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack) && drawer.canItemBeStored(stack)) {
             if (!drawer.isEmpty()) {
                 if (getStored() + size > drawer.getMaxCapacity(stack)) {
@@ -97,10 +89,6 @@ public class ItemStorageDrawer extends ItemStorageExternal {
 
     @Override
     public ItemStack extractItem(ItemStack stack, int size, int flags) {
-        if(externalStorage.getAccessType() == IAccessType.READ) {
-            return null;
-        }
-
         if (API.instance().getComparer().isEqual(stack, drawer.getStoredItemPrototype(), flags) && drawer.canItemBeExtracted(stack)) {
             if (size > drawer.getStoredItemCount()) {
                 size = drawer.getStoredItemCount();

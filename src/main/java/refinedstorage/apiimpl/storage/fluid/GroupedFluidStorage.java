@@ -7,6 +7,8 @@ import refinedstorage.api.storage.fluid.IFluidStorageProvider;
 import refinedstorage.api.storage.fluid.IGroupedFluidStorage;
 import refinedstorage.api.util.IFluidStackList;
 import refinedstorage.apiimpl.API;
+import refinedstorage.tile.config.IAccessType;
+import refinedstorage.tile.externalstorage.FluidStorageExternal;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -32,6 +34,10 @@ public class GroupedFluidStorage implements IGroupedFluidStorage {
         list.clear();
 
         for (IFluidStorage storage : storages) {
+            if (storage instanceof FluidStorageExternal && ((FluidStorageExternal) storage).getAccessType() == IAccessType.WRITE) {
+               continue;
+            }
+
             for (FluidStack stack : storage.getStacks()) {
                 add(stack, true);
             }

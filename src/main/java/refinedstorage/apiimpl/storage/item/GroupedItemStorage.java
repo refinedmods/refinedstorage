@@ -8,6 +8,8 @@ import refinedstorage.api.storage.item.IItemStorage;
 import refinedstorage.api.storage.item.IItemStorageProvider;
 import refinedstorage.api.util.IItemStackList;
 import refinedstorage.apiimpl.API;
+import refinedstorage.tile.config.IAccessType;
+import refinedstorage.tile.externalstorage.ItemStorageItemHandler;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -33,6 +35,10 @@ public class GroupedItemStorage implements IGroupedItemStorage {
         list.clear();
 
         for (IItemStorage storage : storages) {
+            if (storage instanceof ItemStorageItemHandler && ((ItemStorageItemHandler) storage).getAccessType() == IAccessType.WRITE) {
+                continue;
+            }
+
             for (ItemStack stack : storage.getItems()) {
                 add(stack, true);
             }

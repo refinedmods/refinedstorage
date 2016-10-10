@@ -28,10 +28,6 @@ public class ItemStorageDSU extends ItemStorageExternal {
 
     @Override
     public List<ItemStack> getItems() {
-        if(externalStorage.getAccessType() == IAccessType.WRITE) {
-            return Collections.emptyList();
-        }
-
         if (unit.getStoredItemType() != null && unit.getStoredItemType().stackSize > 0) {
             return Collections.singletonList(unit.getStoredItemType().copy());
         }
@@ -41,10 +37,6 @@ public class ItemStorageDSU extends ItemStorageExternal {
 
     @Override
     public ItemStack insertItem(@Nonnull ItemStack stack, int size, boolean simulate) {
-        if(externalStorage.getAccessType() == IAccessType.READ) {
-            return stack;
-        }
-
         if (IFilterable.canTake(externalStorage.getItemFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack)) {
             if (unit.getStoredItemType() != null) {
                 if (API.instance().getComparer().isEqualNoQuantity(unit.getStoredItemType(), stack)) {
@@ -96,10 +88,6 @@ public class ItemStorageDSU extends ItemStorageExternal {
 
     @Override
     public ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags) {
-        if(externalStorage.getAccessType() == IAccessType.READ) {
-            return null;
-        }
-
         if (API.instance().getComparer().isEqual(stack, unit.getStoredItemType(), flags)) {
             if (size > unit.getStoredItemType().stackSize) {
                 size = unit.getStoredItemType().stackSize;

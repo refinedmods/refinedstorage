@@ -346,10 +346,9 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
     public void setAccessType(int type) {
         accessType = type;
 
-        //Update fluid storage cache
-        if(type >= IAccessType.WRITE) {
-            network.getFluidStorage().rebuild();
-        }
+        //Refresh item/fluid cache
+        network.getItemStorage().rebuild();
+        network.getFluidStorage().rebuild();
 
         markDirty();
     }

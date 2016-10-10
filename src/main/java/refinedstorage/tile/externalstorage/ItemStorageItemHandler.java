@@ -27,10 +27,6 @@ public class ItemStorageItemHandler extends ItemStorageExternal {
 
     @Override
     public List<ItemStack> getItems() {
-        if(externalStorage.getAccessType() == IAccessType.WRITE) {
-            return Collections.emptyList();
-        }
-
         List<ItemStack> items = new ArrayList<>();
 
         for (int i = 0; i < handler.getSlots(); ++i) {
@@ -44,10 +40,6 @@ public class ItemStorageItemHandler extends ItemStorageExternal {
 
     @Override
     public ItemStack insertItem(ItemStack stack, int size, boolean simulate) {
-        if(externalStorage.getAccessType() == IAccessType.READ) {
-            return stack;
-        }
-
         if (IFilterable.canTake(externalStorage.getItemFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack)) {
             return ItemHandlerHelper.insertItem(handler, ItemHandlerHelper.copyStackWithSize(stack, size), simulate);
         }
@@ -57,11 +49,6 @@ public class ItemStorageItemHandler extends ItemStorageExternal {
 
     @Override
     public ItemStack extractItem(ItemStack stack, int size, int flags) {
-        if(externalStorage.getAccessType() == IAccessType.READ) {
-            return null;
-        }
-
-
         int remaining = size;
 
         ItemStack received = null;
