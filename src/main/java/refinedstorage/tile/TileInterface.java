@@ -35,7 +35,7 @@ public class TileInterface extends TileNode implements IComparable {
             return stack;
         }
     };
-    
+
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK, ItemUpgrade.TYPE_CRAFTING);
 
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;

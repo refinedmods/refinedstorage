@@ -43,7 +43,7 @@ public interface IComparer {
     default boolean isEqualNoQuantity(ItemStack left, ItemStack right) {
         return isEqual(left, right, COMPARE_NBT | COMPARE_DAMAGE);
     }
-    
+
     /**
      * Compares two stacks by the given flags.
      *

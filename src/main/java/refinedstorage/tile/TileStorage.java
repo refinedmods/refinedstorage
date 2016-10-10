@@ -155,7 +155,7 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
             mode = tag.getInteger(NBT_MODE);
         }
 
-        if(tag.hasKey(NBT_VOID_EXCESS)) {
+        if (tag.hasKey(NBT_VOID_EXCESS)) {
             voidExcess = tag.getBoolean(NBT_VOID_EXCESS);
         }
     }
