@@ -4,11 +4,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 import refinedstorage.apiimpl.API;
-import refinedstorage.tile.config.IAccessType;
 import refinedstorage.tile.config.IFilterable;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 

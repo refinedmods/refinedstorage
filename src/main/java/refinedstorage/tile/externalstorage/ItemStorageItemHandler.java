@@ -4,11 +4,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.apiimpl.API;
-import refinedstorage.tile.config.IAccessType;
 import refinedstorage.tile.config.IFilterable;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class ItemStorageItemHandler extends ItemStorageExternal {

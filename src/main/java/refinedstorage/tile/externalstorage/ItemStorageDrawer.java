@@ -5,7 +5,6 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.apiimpl.API;
-import refinedstorage.tile.config.IAccessType;
 import refinedstorage.tile.config.IFilterable;
 
 import java.util.Collections;

@@ -7,7 +7,6 @@ import refinedstorage.RSUtils;
 import refinedstorage.api.storage.fluid.IFluidStorage;
 import refinedstorage.api.util.IComparer;
 import refinedstorage.apiimpl.API;
-import refinedstorage.tile.config.IAccessType;
 import refinedstorage.tile.config.IFilterable;
 
 import javax.annotation.Nonnull;

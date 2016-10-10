@@ -524,7 +524,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         ItemStack remainder = stack;
 
         for (IItemStorage storage : this.itemStorage.getStorages()) {
-            if(storage instanceof ItemStorageItemHandler) {
+            if (storage instanceof ItemStorageItemHandler) {
                 accessType = ((ItemStorageItemHandler) storage).getAccessType();
                 if(accessType != IAccessType.READ) {
                     remainder = storage.insertItem(remainder, size, simulate);
@@ -593,9 +593,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         for (IItemStorage storage : this.itemStorage.getStorages()) {
             ItemStack took = null;
 
-            if(storage instanceof ItemStorageItemHandler) {
+            if (storage instanceof ItemStorageItemHandler) {
                 accessType = ((ItemStorageItemHandler) storage).getAccessType();
-                if(accessType != IAccessType.READ) {
+                if (accessType != IAccessType.READ) {
                     took = storage.extractItem(stack, requested - received, flags);
                 }
             } else {
@@ -642,7 +642,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         for (IFluidStorage storage : this.fluidStorage.getStorages()) {
             if (storage instanceof FluidStorageExternal) {
                 accessType = ((FluidStorageExternal)storage).getAccessType();
-                if(accessType != IAccessType.READ) {
+                if (accessType != IAccessType.READ) {
                     remainder = storage.insertFluid(remainder, size, simulate);
                 }
             } else {
@@ -692,7 +692,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
             if (storage instanceof FluidStorageExternal) {
                 accessType = ((FluidStorageExternal) storage).getAccessType();
-                if(accessType != IAccessType.READ) {
+                if (accessType != IAccessType.READ) {
                     took = storage.extractFluid(stack, requested - received, flags);
                 }
             } else {
