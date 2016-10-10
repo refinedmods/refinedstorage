@@ -55,6 +55,10 @@ public class GuiStorage extends GuiBase {
             addSideButton(new SideButtonVoidExcess(this, gui.getVoidExcessParameter(), gui.getVoidExcessType()));
         }
 
+        if (gui.getAccessTypeParameter() != null) {
+            addSideButton(new SideButtonAccessType(this, gui.getAccessTypeParameter()));
+        }
+
         priorityField = new GuiTextField(0, fontRendererObj, x + 98 + 1, y + 54 + 1, 29, fontRendererObj.FONT_HEIGHT);
         priorityField.setEnableBackgroundDrawing(false);
         priorityField.setVisible(true);

@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 import refinedstorage.RSItems;
 import refinedstorage.apiimpl.storage.item.ItemStorageNBT;
 import refinedstorage.block.EnumItemStorageType;
+import refinedstorage.tile.config.IAccessType;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -66,6 +67,11 @@ public class ItemStorageDisk extends ItemBase {
                 @Override
                 public int getPriority() {
                     return 0;
+                }
+
+                @Override
+                public int getAccessType() {
+                    return IAccessType.READ_WRITE;
                 }
             };
 

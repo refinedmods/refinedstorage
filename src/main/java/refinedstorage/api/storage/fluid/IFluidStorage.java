@@ -49,4 +49,13 @@ public interface IFluidStorage {
      * @return the priority of this storage
      */
     int getPriority();
+
+    /**
+     * READ(0) : Can see the fluid stored in this storage
+     * WRITE(1) : Can insert and/or extract fluid from this storage
+     * READ_WRITE(2) : Can see, insert and extract fluid from this storage
+     *
+     * @return the access type of this storage
+     */
+    int getAccessType();
 }
