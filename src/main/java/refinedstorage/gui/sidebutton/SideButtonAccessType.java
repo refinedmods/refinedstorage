@@ -31,6 +31,6 @@ public class SideButtonAccessType extends SideButton {
     }
 
     public void actionPerformed() {
-       TileDataManager.setParameter(parameter, ((parameter.getValue() + 1 > IAccessType.READ_WRITE) ? IAccessType.READ : parameter.getValue() + 1));
+        TileDataManager.setParameter(parameter, ((parameter.getValue() + 1 > IAccessType.READ_WRITE) ? IAccessType.READ : parameter.getValue() + 1));
     }
 }

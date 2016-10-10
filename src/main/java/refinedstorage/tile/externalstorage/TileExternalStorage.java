@@ -182,7 +182,7 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
             type = tag.getInteger(NBT_TYPE);
         }
 
-        if (tag.hasKey(NBT_ACCESS_TYPE)){
+        if (tag.hasKey(NBT_ACCESS_TYPE)) {
             accessType = tag.getInteger(NBT_ACCESS_TYPE);
         }
     }

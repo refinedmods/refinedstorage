@@ -20,7 +20,7 @@ import refinedstorage.tile.data.TileDataParameter;
 
 import java.util.List;
 
-public class TileFluidStorage extends TileNode implements IFluidStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IExcessVoidable, IAccessType{
+public class TileFluidStorage extends TileNode implements IFluidStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IExcessVoidable, IAccessType {
     public static final TileDataParameter<Integer> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Boolean> VOID_EXCESS = IExcessVoidable.createParameter();
@@ -257,7 +257,7 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
     }
 
     @Override
-    public  TileDataParameter<Integer> getAccessTypeParameter() {
+    public TileDataParameter<Integer> getAccessTypeParameter() {
         return ACCESS_TYPE;
     }
 

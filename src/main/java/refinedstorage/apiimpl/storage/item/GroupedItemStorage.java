@@ -9,7 +9,6 @@ import refinedstorage.api.storage.item.IItemStorageProvider;
 import refinedstorage.api.util.IItemStackList;
 import refinedstorage.apiimpl.API;
 import refinedstorage.tile.config.IAccessType;
-import refinedstorage.tile.externalstorage.ItemStorageItemHandler;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

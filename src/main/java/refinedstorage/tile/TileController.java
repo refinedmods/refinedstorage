@@ -69,7 +69,6 @@ import refinedstorage.tile.data.RSSerializers;
 import refinedstorage.tile.data.TileDataParameter;
 import refinedstorage.tile.externalstorage.FluidStorageExternal;
 import refinedstorage.tile.externalstorage.ItemStorageExternal;
-import refinedstorage.tile.externalstorage.ItemStorageItemHandler;
 import refinedstorage.tile.grid.IGrid;
 
 import javax.annotation.Nonnull;
