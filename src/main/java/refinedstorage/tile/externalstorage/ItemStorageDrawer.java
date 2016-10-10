@@ -69,13 +69,13 @@ public class ItemStorageDrawer extends ItemStorageExternal {
                     }
 
                     if (!simulate) {
-                        drawer.setStoredItem(stack, remainingSpace);
+                        drawer.setStoredItemRedir(stack, remainingSpace);
                     }
 
                     return isVoidable() ? null : ItemHandlerHelper.copyStackWithSize(stack, size - remainingSpace);
                 } else {
                     if (!simulate) {
-                        drawer.setStoredItem(stack, size);
+                        drawer.setStoredItemRedir(stack, size);
                     }
 
                     return null;

@@ -13,7 +13,7 @@ public interface IAccessType {
     int READ_WRITE = 2;
 
     static <T extends TileEntity> TileDataParameter<Integer> createParameter() {
-        return new TileDataParameter<Integer>(DataSerializers.VARINT, READ_WRITE, new ITileDataProducer<Integer, T>() {
+        return new TileDataParameter<>(DataSerializers.VARINT, READ_WRITE, new ITileDataProducer<Integer, T>() {
             @Override
             public Integer getValue(T tile) {
                 return ((IAccessType) tile).getAccessType();

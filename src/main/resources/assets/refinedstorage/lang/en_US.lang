@@ -125,7 +125,7 @@ sidebutton.refinedstorage:constructor.drop=Drop blocks instead of placing
 
 sidebutton.refinedstorage:access_type.read=Read
 sidebutton.refinedstorage:access_type.write=Write
-sidebutton.refinedstorage:access_type.read_write=Read & Write
+sidebutton.refinedstorage:access_type.read_write=Read and write
 
 block.refinedstorage:controller.0.name=Controller
 block.refinedstorage:controller.1.name=Creative Controller

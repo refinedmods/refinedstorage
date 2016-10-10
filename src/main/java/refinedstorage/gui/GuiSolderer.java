@@ -5,12 +5,8 @@ import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.tile.TileSolderer;
 
 public class GuiSolderer extends GuiBase {
-    private TileSolderer solderer;
-
-    public GuiSolderer(ContainerSolderer container, TileSolderer solderer) {
+    public GuiSolderer(ContainerSolderer container) {
         super(container, 211, 171);
-
-        this.solderer = solderer;
     }
 
     @Override
