@@ -35,17 +35,17 @@ import refinedstorage.api.network.IWirelessGridHandler;
 import refinedstorage.api.network.grid.IFluidGridHandler;
 import refinedstorage.api.network.grid.IItemGridHandler;
 import refinedstorage.api.storage.fluid.IFluidStorage;
-import refinedstorage.api.storage.fluid.IGroupedFluidStorage;
-import refinedstorage.api.storage.item.IGroupedItemStorage;
+import refinedstorage.api.storage.fluid.IFluidStorageCache;
 import refinedstorage.api.storage.item.IItemStorage;
+import refinedstorage.api.storage.item.IItemStorageCache;
 import refinedstorage.api.util.IComparer;
 import refinedstorage.apiimpl.API;
 import refinedstorage.apiimpl.network.NetworkNodeGraph;
 import refinedstorage.apiimpl.network.WirelessGridHandler;
 import refinedstorage.apiimpl.network.grid.FluidGridHandler;
 import refinedstorage.apiimpl.network.grid.ItemGridHandler;
-import refinedstorage.apiimpl.storage.fluid.GroupedFluidStorage;
-import refinedstorage.apiimpl.storage.item.GroupedItemStorage;
+import refinedstorage.apiimpl.storage.fluid.FluidStorageCache;
+import refinedstorage.apiimpl.storage.item.ItemStorageCache;
 import refinedstorage.block.BlockController;
 import refinedstorage.block.EnumControllerType;
 import refinedstorage.block.EnumGridType;
@@ -178,8 +178,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     private INetworkNodeGraph nodeGraph = new NetworkNodeGraph(this);
 
-    private IGroupedItemStorage itemStorage = new GroupedItemStorage(this);
-    private IGroupedFluidStorage fluidStorage = new GroupedFluidStorage(this);
+    private IItemStorageCache itemStorage = new ItemStorageCache(this);
+    private IFluidStorageCache fluidStorage = new FluidStorageCache(this);
 
     private List<ICraftingPattern> patterns = new ArrayList<>();
 
@@ -370,12 +370,12 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         nodeGraph.disconnectAll();
     }
 
-    public IGroupedItemStorage getItemStorage() {
+    public IItemStorageCache getItemStorageCache() {
         return itemStorage;
     }
 
     @Override
-    public IGroupedFluidStorage getFluidStorage() {
+    public IFluidStorageCache getFluidStorageCache() {
         return fluidStorage;
     }
 

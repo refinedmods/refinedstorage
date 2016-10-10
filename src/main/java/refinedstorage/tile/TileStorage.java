@@ -113,7 +113,7 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
             storage = new ItemStorage();
 
             if (network != null) {
-                network.getItemStorage().rebuild();
+                network.getItemStorageCache().rebuild();
             }
         }
     }
@@ -128,7 +128,7 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
     public void onConnectionChange(INetworkMaster network, boolean state) {
         super.onConnectionChange(network, state);
 
-        network.getItemStorage().rebuild();
+        network.getItemStorageCache().rebuild();
     }
 
     @Override
@@ -299,7 +299,7 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
     public void setAccessType(int value) {
         accessType = value;
 
-        network.getItemStorage().rebuild();
+        network.getItemStorageCache().rebuild();
 
         markDirty();
     }

@@ -3,8 +3,8 @@ package refinedstorage.apiimpl.storage.fluid;
 import net.minecraftforge.fluids.FluidStack;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.storage.fluid.IFluidStorage;
+import refinedstorage.api.storage.fluid.IFluidStorageCache;
 import refinedstorage.api.storage.fluid.IFluidStorageProvider;
-import refinedstorage.api.storage.fluid.IGroupedFluidStorage;
 import refinedstorage.api.util.IFluidStackList;
 import refinedstorage.apiimpl.API;
 import refinedstorage.tile.config.IAccessType;
@@ -13,12 +13,12 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GroupedFluidStorage implements IGroupedFluidStorage {
+public class FluidStorageCache implements IFluidStorageCache {
     private INetworkMaster network;
     private List<IFluidStorage> storages = new ArrayList<>();
     private IFluidStackList list = API.instance().createFluidStackList();
 
-    public GroupedFluidStorage(INetworkMaster network) {
+    public FluidStorageCache(INetworkMaster network) {
         this.network = network;
     }
 

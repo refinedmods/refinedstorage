@@ -113,7 +113,7 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
             storage = new FluidStorage();
 
             if (network != null) {
-                network.getFluidStorage().rebuild();
+                network.getFluidStorageCache().rebuild();
             }
         }
     }
@@ -128,7 +128,7 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
     public void onConnectionChange(INetworkMaster network, boolean state) {
         super.onConnectionChange(network, state);
 
-        network.getFluidStorage().rebuild();
+        network.getFluidStorageCache().rebuild();
     }
 
     @Override
@@ -292,7 +292,7 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
     public void setAccessType(int value) {
         accessType = value;
 
-        network.getFluidStorage().rebuild();
+        network.getFluidStorageCache().rebuild();
 
         markDirty();
     }

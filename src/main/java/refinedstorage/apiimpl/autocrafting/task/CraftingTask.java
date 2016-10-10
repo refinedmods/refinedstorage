@@ -50,7 +50,7 @@ public class CraftingTask implements ICraftingTask {
     }
 
     public void calculate() {
-        IItemStackList list = network.getItemStorage().getList().copy();
+        IItemStackList list = network.getItemStorageCache().getList().copy();
 
         int newQuantity = quantity;
 
@@ -99,12 +99,12 @@ public class CraftingTask implements ICraftingTask {
                         FluidStack fluidInItem = RSUtils.getFluidFromStack(input, true);
 
                         if (fluidInItem != null && RSUtils.hasFluidBucket(fluidInItem)) {
-                            FluidStack fluidInStorage = network.getFluidStorage().getList().get(fluidInItem);
+                            FluidStack fluidInStorage = network.getFluidStorageCache().getList().get(fluidInItem);
 
                             if (fluidInStorage == null || fluidInStorage.amount < fluidInItem.amount) {
                                 missing.add(input);
                             } else {
-                                boolean hasBucket = network.getItemStorage().getList().get(RSUtils.EMPTY_BUCKET) != null;
+                                boolean hasBucket = network.getItemStorageCache().getList().get(RSUtils.EMPTY_BUCKET) != null;
                                 ICraftingPattern bucketPattern = network.getPattern(RSUtils.EMPTY_BUCKET);
 
                                 if (!hasBucket) {

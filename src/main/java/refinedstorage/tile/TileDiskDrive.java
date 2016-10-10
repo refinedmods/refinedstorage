@@ -119,8 +119,8 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
                 RSUtils.constructFromDrive(getStackInSlot(slot), slot, itemStorages, fluidStorages, ItemStorage::new, FluidStorage::new);
 
                 if (network != null) {
-                    network.getItemStorage().rebuild();
-                    network.getFluidStorage().rebuild();
+                    network.getItemStorageCache().rebuild();
+                    network.getFluidStorageCache().rebuild();
                 }
 
                 if (worldObj != null) {
@@ -200,8 +200,8 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     public void onConnectionChange(INetworkMaster network, boolean state) {
         super.onConnectionChange(network, state);
 
-        network.getItemStorage().rebuild();
-        network.getFluidStorage().rebuild();
+        network.getItemStorageCache().rebuild();
+        network.getFluidStorageCache().rebuild();
     }
 
     @Override
@@ -361,8 +361,8 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     public void setAccessType(int value) {
         accessType = value;
 
-        network.getFluidStorage().rebuild();
-        network.getItemStorage().rebuild();
+        network.getFluidStorageCache().rebuild();
+        network.getItemStorageCache().rebuild();
 
         markDirty();
     }

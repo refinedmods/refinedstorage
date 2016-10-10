@@ -22,7 +22,7 @@ public class FluidGridHandler implements IFluidGridHandler {
 
     @Override
     public void onExtract(int hash, boolean shift, EntityPlayerMP player) {
-        FluidStack stack = network.getFluidStorage().getList().get(hash);
+        FluidStack stack = network.getFluidStorageCache().getList().get(hash);
 
         if (stack != null && RSUtils.hasFluidBucket(stack)) {
             ItemStack bucket = network.extractItem(RSUtils.EMPTY_BUCKET, 1);

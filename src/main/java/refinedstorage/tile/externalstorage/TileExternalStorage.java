@@ -120,8 +120,8 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
 
         updateStorage(network);
 
-        network.getItemStorage().rebuild();
-        network.getFluidStorage().rebuild();
+        network.getItemStorageCache().rebuild();
+        network.getFluidStorageCache().rebuild();
     }
 
     @Override
@@ -142,11 +142,11 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
             }
 
             if (itemChangeDetected) {
-                network.getItemStorage().rebuild();
+                network.getItemStorageCache().rebuild();
             }
 
             if (fluidChangeDetected) {
-                network.getFluidStorage().rebuild();
+                network.getFluidStorageCache().rebuild();
             }
 
             if (getFacingTile() instanceof IDrawerGroup && lastDrawerCount != ((IDrawerGroup) getFacingTile()).getDrawerCount()) {
@@ -273,8 +273,8 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
             }
         }
 
-        network.getItemStorage().rebuild();
-        network.getFluidStorage().rebuild();
+        network.getItemStorageCache().rebuild();
+        network.getFluidStorageCache().rebuild();
     }
 
     @Override
@@ -347,8 +347,8 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
         accessType = type;
 
         // Refresh item/fluid cache
-        network.getItemStorage().rebuild();
-        network.getFluidStorage().rebuild();
+        network.getItemStorageCache().rebuild();
+        network.getFluidStorageCache().rebuild();
 
         markDirty();
     }

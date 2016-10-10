@@ -10,8 +10,8 @@ import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.network.grid.IFluidGridHandler;
 import refinedstorage.api.network.grid.IItemGridHandler;
-import refinedstorage.api.storage.fluid.IGroupedFluidStorage;
-import refinedstorage.api.storage.item.IGroupedItemStorage;
+import refinedstorage.api.storage.fluid.IFluidStorageCache;
+import refinedstorage.api.storage.item.IItemStorageCache;
 import refinedstorage.api.util.IComparer;
 import refinedstorage.apiimpl.API;
 
@@ -64,14 +64,14 @@ public interface INetworkMaster {
     IWirelessGridHandler getWirelessGridHandler();
 
     /**
-     * @return the {@link IGroupedItemStorage} of this network
+     * @return the {@link IItemStorageCache} of this network
      */
-    IGroupedItemStorage getItemStorage();
+    IItemStorageCache getItemStorageCache();
 
     /**
-     * @return the {@link IGroupedFluidStorage} of this network
+     * @return the {@link IFluidStorageCache} of this network
      */
-    IGroupedFluidStorage getFluidStorage();
+    IFluidStorageCache getFluidStorageCache();
 
     /**
      * @return the crafting tasks in this network, do NOT modify this list

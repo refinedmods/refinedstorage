@@ -14,30 +14,30 @@ import java.util.List;
  * individual {@link IItemStorage} constantly (performance impact) and to send and detect storage changes
  * more efficiently.
  */
-public interface IGroupedItemStorage {
+public interface IItemStorageCache {
     /**
-     * Rebuilds the global item list.
+     * Rebuilds the cache.
      * Typically called when a {@link IItemStorageProvider} is added or removed from the network.
      */
     void rebuild();
 
     /**
-     * Adds an item to the global item list.
+     * Adds an item to the cache.
      * <p>
-     * Note that this doesn't modify any of the connected storages, but just modifies the global item list.
+     * Note that this doesn't modify any of the connected storages, but just modifies the cache.
      * Use {@link INetworkMaster#insertItem(ItemStack, int, boolean)} to add an item to an actual storage.
      * <p>
      * Will merge it with another item if it already exists.
      *
      * @param stack      the stack to add, do NOT modify
-     * @param rebuilding whether this method is called while the storage is rebuilding
+     * @param rebuilding true if this method is called while rebuilding, false otherwise
      */
     void add(@Nonnull ItemStack stack, boolean rebuilding);
 
     /**
-     * Removes a item from global item list.
+     * Removes an item from the cache.
      * <p>
-     * Note that this doesn't modify any of the connected storages, but just modifies the global item list.
+     * Note that this doesn't modify any of the connected storages, but just modifies the cache.
      * Use {@link INetworkMaster#extractItem(ItemStack, int, int)} to remove an item from an actual storage.
      *
      * @param stack the item to remove, do NOT modify
@@ -45,7 +45,7 @@ public interface IGroupedItemStorage {
     void remove(@Nonnull ItemStack stack);
 
     /**
-     * @return the list behind this grouped storage
+     * @return the list behind this cope
      */
     IItemStackList getList();
 

@@ -14,30 +14,30 @@ import java.util.List;
  * individual {@link IFluidStorage} constantly (performance impact) and to send and detect storage changes
  * more efficiently.
  */
-public interface IGroupedFluidStorage {
+public interface IFluidStorageCache {
     /**
-     * Rebuilds the global fluid list.
+     * Rebuilds the cache.
      * Typically called when a {@link IFluidStorageProvider} is added or removed from the network.
      */
     void rebuild();
 
     /**
-     * Adds an item to the global fluid list.
+     * Adds an item to the cache.
      * <p>
-     * Note that this doesn't modify any of the connected storages, but just modifies the global fluid list.
+     * Note that this doesn't modify any of the connected storages, but just modifies the cache.
      * Use {@link INetworkMaster#insertFluid(FluidStack, int, boolean)} to add a fluid to an actual storage.
      * <p>
      * Will merge it with another fluid if it already exists.
      *
      * @param stack      the stack to add, do NOT modify
-     * @param rebuilding whether this method is called while the storage is rebuilding
+     * @param rebuilding true if this method is called while rebuilding, false otherwise
      */
     void add(@Nonnull FluidStack stack, boolean rebuilding);
 
     /**
-     * Removes a fluid from the global fluid list.
+     * Removes a fluid from the cache.
      * <p>
-     * Note that this doesn't modify any of the connected storages, but just modifies the global fluid list.
+     * Note that this doesn't modify any of the connected storages, but just modifies the cache.
      * Use {@link INetworkMaster#extractFluid(FluidStack, int, int)} to remove an fluid from an actual storage.
      *
      * @param stack the fluid to remove, do NOT modify
@@ -45,7 +45,7 @@ public interface IGroupedFluidStorage {
     void remove(@Nonnull FluidStack stack);
 
     /**
-     * @return the list behind this grouped storage
+     * @return the list behind this cache
      */
     IFluidStackList getList();
 

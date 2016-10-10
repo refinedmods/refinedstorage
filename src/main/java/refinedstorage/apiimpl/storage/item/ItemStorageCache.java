@@ -3,8 +3,8 @@ package refinedstorage.apiimpl.storage.item;
 import net.minecraft.item.ItemStack;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.network.INetworkMaster;
-import refinedstorage.api.storage.item.IGroupedItemStorage;
 import refinedstorage.api.storage.item.IItemStorage;
+import refinedstorage.api.storage.item.IItemStorageCache;
 import refinedstorage.api.storage.item.IItemStorageProvider;
 import refinedstorage.api.util.IItemStackList;
 import refinedstorage.apiimpl.API;
@@ -14,12 +14,12 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GroupedItemStorage implements IGroupedItemStorage {
+public class ItemStorageCache implements IItemStorageCache {
     private INetworkMaster network;
     private List<IItemStorage> storages = new ArrayList<>();
     private IItemStackList list = API.instance().createItemStackList();
 
-    public GroupedItemStorage(INetworkMaster network) {
+    public ItemStorageCache(INetworkMaster network) {
         this.network = network;
     }
 

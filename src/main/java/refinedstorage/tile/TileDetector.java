@@ -130,22 +130,22 @@ public class TileDetector extends TileNode implements IComparable, IType {
 
                         powered = found;
                     } else {
-                        ItemStack stack = network.getItemStorage().getList().get(slot, compare);
+                        ItemStack stack = network.getItemStorageCache().getList().get(slot, compare);
 
                         powered = isPowered(stack == null ? null : stack.stackSize);
                     }
                 } else {
-                    powered = mode == MODE_AUTOCRAFTING ? !network.getCraftingTasks().isEmpty() : isPowered(network.getItemStorage().getList().getStacks().stream().map(s -> s.stackSize).mapToInt(Number::intValue).sum());
+                    powered = mode == MODE_AUTOCRAFTING ? !network.getCraftingTasks().isEmpty() : isPowered(network.getItemStorageCache().getList().getStacks().stream().map(s -> s.stackSize).mapToInt(Number::intValue).sum());
                 }
             } else if (type == IType.FLUIDS) {
                 FluidStack slot = fluidFilters.getFluidStackInSlot(0);
 
                 if (slot != null) {
-                    FluidStack stack = network.getFluidStorage().getList().get(slot, compare);
+                    FluidStack stack = network.getFluidStorageCache().getList().get(slot, compare);
 
                     powered = isPowered(stack == null ? null : stack.amount);
                 } else {
-                    powered = isPowered(network.getFluidStorage().getList().getStacks().stream().map(s -> s.amount).mapToInt(Number::intValue).sum());
+                    powered = isPowered(network.getFluidStorageCache().getList().getStacks().stream().map(s -> s.amount).mapToInt(Number::intValue).sum());
                 }
             }
         }

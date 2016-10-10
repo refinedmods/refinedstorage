@@ -125,7 +125,7 @@ public class TileFluidInterface extends TileNode implements IComparable {
                 }
             } else if (stack != null) {
                 // Fill the out fluid
-                FluidStack stackInStorage = network.getFluidStorage().getList().get(stack, compare);
+                FluidStack stackInStorage = network.getFluidStorageCache().getList().get(stack, compare);
 
                 if (stackInStorage != null) {
                     int toExtract = Math.min(Fluid.BUCKET_VOLUME * upgrades.getInteractStackSize(), stackInStorage.amount);
