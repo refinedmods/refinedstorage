@@ -526,7 +526,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         for (IItemStorage storage : this.itemStorage.getStorages()) {
             if (storage instanceof ItemStorageItemHandler) {
                 accessType = ((ItemStorageItemHandler) storage).getAccessType();
-                if(accessType != IAccessType.READ) {
+                if (accessType != IAccessType.READ) {
                     remainder = storage.insertItem(remainder, size, simulate);
                 }
             } else {

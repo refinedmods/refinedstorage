@@ -22,7 +22,7 @@ public interface IAccessType {
         }, new ITileDataConsumer<Integer, T>() {
             @Override
             public void setValue(T tile, Integer value) {
-                if(value == READ || value == WRITE || value == READ_WRITE) {
+                if (value == READ || value == WRITE || value == READ_WRITE) {
                     ((IAccessType) tile).setAccessType(value);
                 }
 
