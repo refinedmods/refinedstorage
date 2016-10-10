@@ -6,6 +6,7 @@
 - Added recipe transfer handler for Processing Pattern Encoder (way2muchnoise)
 - Added void excess items functionality to storage blocks (geldorn, raoulvdberge, InusualZ)
 - Added config option to configure RS to EU conversion rates (InusualZ)
+- Added ability to toggle between read and write, read and write mode in storage blocks (InusualZ, raoulvdberge)
 - The Constructor can now drop items in the world (raoulvdberge)
 - Stack upgrade in Importer / Exporter in fluid mode and Fluid Interface now transfers 64 buckets at once (raoulvdberge)
 - Detector without any filter will detect based on total items or fluids stored (raoulvdberge)
