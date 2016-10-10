@@ -2,12 +2,12 @@ package refinedstorage.apiimpl.storage.fluid;
 
 import net.minecraftforge.fluids.FluidStack;
 import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.api.storage.AccessType;
 import refinedstorage.api.storage.fluid.IFluidStorage;
 import refinedstorage.api.storage.fluid.IFluidStorageCache;
 import refinedstorage.api.storage.fluid.IFluidStorageProvider;
 import refinedstorage.api.util.IFluidStackList;
 import refinedstorage.apiimpl.API;
-import refinedstorage.tile.config.IAccessType;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class FluidStorageCache implements IFluidStorageCache {
     }
 
     @Override
-    public synchronized void rebuild() {
+    public synchronized void invalidate() {
         storages.clear();
 
         network.getNodeGraph().all().stream()
@@ -33,7 +33,7 @@ public class FluidStorageCache implements IFluidStorageCache {
         list.clear();
 
         for (IFluidStorage storage : storages) {
-            if (storage.getAccessType() == IAccessType.WRITE) {
+            if (storage.getAccessType() == AccessType.WRITE) {
                 continue;
             }
 

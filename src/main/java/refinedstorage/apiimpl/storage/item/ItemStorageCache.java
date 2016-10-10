@@ -3,12 +3,12 @@ package refinedstorage.apiimpl.storage.item;
 import net.minecraft.item.ItemStack;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.api.storage.AccessType;
 import refinedstorage.api.storage.item.IItemStorage;
 import refinedstorage.api.storage.item.IItemStorageCache;
 import refinedstorage.api.storage.item.IItemStorageProvider;
 import refinedstorage.api.util.IItemStackList;
 import refinedstorage.apiimpl.API;
-import refinedstorage.tile.config.IAccessType;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public class ItemStorageCache implements IItemStorageCache {
     }
 
     @Override
-    public synchronized void rebuild() {
+    public synchronized void invalidate() {
         storages.clear();
 
         network.getNodeGraph().all().stream()
@@ -34,7 +34,7 @@ public class ItemStorageCache implements IItemStorageCache {
         list.clear();
 
         for (IItemStorage storage : storages) {
-            if (storage.getAccessType() == IAccessType.WRITE) {
+            if (storage.getAccessType() == AccessType.WRITE) {
                 continue;
             }
 

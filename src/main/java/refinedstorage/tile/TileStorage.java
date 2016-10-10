@@ -8,6 +8,7 @@ import refinedstorage.RS;
 import refinedstorage.RSBlocks;
 import refinedstorage.RSUtils;
 import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.api.storage.AccessType;
 import refinedstorage.api.storage.item.IItemStorage;
 import refinedstorage.api.storage.item.IItemStorageProvider;
 import refinedstorage.api.util.IComparer;
@@ -61,7 +62,7 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
         }
 
         @Override
-        public int getAccessType() {
+        public AccessType getAccessType() {
             return accessType;
         }
     }
@@ -81,7 +82,7 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
 
     private EnumItemStorageType type;
 
-    private int accessType = IAccessType.READ_WRITE;
+    private AccessType accessType = AccessType.READ_WRITE;
     private int priority = 0;
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int mode = IFilterable.WHITELIST;
@@ -113,7 +114,7 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
             storage = new ItemStorage();
 
             if (network != null) {
-                network.getItemStorageCache().rebuild();
+                network.getItemStorageCache().invalidate();
             }
         }
     }
@@ -128,7 +129,7 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
     public void onConnectionChange(INetworkMaster network, boolean state) {
         super.onConnectionChange(network, state);
 
-        network.getItemStorageCache().rebuild();
+        network.getItemStorageCache().invalidate();
     }
 
     @Override
@@ -163,6 +164,8 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
         if (tag.hasKey(NBT_VOID_EXCESS)) {
             voidExcess = tag.getBoolean(NBT_VOID_EXCESS);
         }
+
+        RSUtils.writeAccessType(tag, accessType);
     }
 
     @Override
@@ -181,6 +184,8 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_MODE, mode);
         tag.setBoolean(NBT_VOID_EXCESS, voidExcess);
+
+        accessType = RSUtils.readAccessType(tag);
 
         return tag;
     }
@@ -291,15 +296,15 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
     }
 
     @Override
-    public int getAccessType() {
+    public AccessType getAccessType() {
         return accessType;
     }
 
     @Override
-    public void setAccessType(int value) {
-        accessType = value;
+    public void setAccessType(AccessType value) {
+        this.accessType = value;
 
-        network.getItemStorageCache().rebuild();
+        network.getItemStorageCache().invalidate();
 
         markDirty();
     }

@@ -4,6 +4,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import refinedstorage.RSUtils;
+import refinedstorage.api.storage.AccessType;
 import refinedstorage.api.storage.fluid.IFluidStorage;
 import refinedstorage.api.util.IComparer;
 import refinedstorage.apiimpl.API;
@@ -80,7 +81,7 @@ public class FluidStorageExternal implements IFluidStorage {
         return externalStorage.getPriority();
     }
 
-    public int getAccessType() {
+    public AccessType getAccessType() {
         return externalStorage.getAccessType();
     }
 
@@ -89,7 +90,7 @@ public class FluidStorageExternal implements IFluidStorage {
 
         if (cache == null) {
             cache = RSUtils.copyStack(stack);
-        } else if (!API.instance().getComparer().isEqual(stack, cache, IComparer.COMPARE_NBT | API.instance().getComparer().COMPARE_QUANTITY)) {
+        } else if (!API.instance().getComparer().isEqual(stack, cache, IComparer.COMPARE_NBT | IComparer.COMPARE_QUANTITY)) {
             cache = RSUtils.copyStack(stack);
 
             return true;

@@ -23,7 +23,6 @@ import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerFluid;
 import refinedstorage.inventory.ItemHandlerUpgrade;
 import refinedstorage.item.ItemUpgrade;
-import refinedstorage.tile.config.IAccessType;
 import refinedstorage.tile.config.IComparable;
 import refinedstorage.tile.config.IFilterable;
 import refinedstorage.tile.config.IType;
@@ -128,11 +127,6 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
 
             return super.extractItem(stack, size, flags);
         }
-
-        @Override
-        public int getAccessType() {
-            return IAccessType.READ_WRITE;
-        }
     }
 
     public class FluidStorage extends FluidStorageNBT {
@@ -161,11 +155,6 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             }
 
             return super.extractFluid(stack, size, flags);
-        }
-
-        @Override
-        public int getAccessType() {
-            return IAccessType.READ_WRITE;
         }
     }
 

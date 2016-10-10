@@ -7,6 +7,7 @@ import refinedstorage.RS;
 import refinedstorage.RSBlocks;
 import refinedstorage.RSUtils;
 import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.api.storage.AccessType;
 import refinedstorage.api.storage.fluid.IFluidStorage;
 import refinedstorage.api.storage.fluid.IFluidStorageProvider;
 import refinedstorage.api.util.IComparer;
@@ -60,7 +61,7 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
         }
 
         @Override
-        public int getAccessType() {
+        public AccessType getAccessType() {
             return accessType;
         }
     }
@@ -71,7 +72,6 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
     private static final String NBT_VOID_EXCESS = "VoidExcess";
-    private static final String NBT_ACCESS_TYPE = "AccessType";
 
     private ItemHandlerFluid filters = new ItemHandlerFluid(9, this);
 
@@ -81,7 +81,7 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
 
     private EnumFluidStorageType type;
 
-    private int accessType = IAccessType.READ_WRITE;
+    private AccessType accessType = AccessType.READ_WRITE;
     private int priority = 0;
     private int compare = IComparer.COMPARE_NBT;
     private int mode = IFilterable.WHITELIST;
@@ -113,7 +113,7 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
             storage = new FluidStorage();
 
             if (network != null) {
-                network.getFluidStorageCache().rebuild();
+                network.getFluidStorageCache().invalidate();
             }
         }
     }
@@ -128,7 +128,7 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
     public void onConnectionChange(INetworkMaster network, boolean state) {
         super.onConnectionChange(network, state);
 
-        network.getFluidStorageCache().rebuild();
+        network.getFluidStorageCache().invalidate();
     }
 
     @Override
@@ -164,9 +164,7 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
             voidExcess = tag.getBoolean(NBT_VOID_EXCESS);
         }
 
-        if (tag.hasKey(NBT_ACCESS_TYPE)) {
-            accessType = tag.getInteger(NBT_ACCESS_TYPE);
-        }
+        accessType = RSUtils.readAccessType(tag);
     }
 
     @Override
@@ -185,7 +183,8 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_MODE, mode);
         tag.setBoolean(NBT_VOID_EXCESS, voidExcess);
-        tag.setInteger(NBT_ACCESS_TYPE, accessType);
+
+        RSUtils.writeAccessType(tag, accessType);
 
         return tag;
     }
@@ -284,15 +283,15 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
     }
 
     @Override
-    public int getAccessType() {
+    public AccessType getAccessType() {
         return accessType;
     }
 
     @Override
-    public void setAccessType(int value) {
-        accessType = value;
+    public void setAccessType(AccessType value) {
+        this.accessType = value;
 
-        network.getFluidStorageCache().rebuild();
+        network.getFluidStorageCache().invalidate();
 
         markDirty();
     }

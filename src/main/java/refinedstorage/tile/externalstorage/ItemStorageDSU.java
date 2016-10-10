@@ -3,6 +3,7 @@ package refinedstorage.tile.externalstorage;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
+import refinedstorage.api.storage.AccessType;
 import refinedstorage.apiimpl.API;
 import refinedstorage.tile.config.IFilterable;
 
@@ -112,7 +113,7 @@ public class ItemStorageDSU extends ItemStorageExternal {
     }
 
     @Override
-    public int getAccessType() {
+    public AccessType getAccessType() {
         return externalStorage.getAccessType();
     }
 }

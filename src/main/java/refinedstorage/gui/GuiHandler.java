@@ -108,7 +108,7 @@ public class GuiHandler implements IGuiHandler {
             case RSGui.DETECTOR:
                 return new GuiDetector((ContainerDetector) getContainer(ID, player, tile));
             case RSGui.SOLDERER:
-                return new GuiSolderer((ContainerSolderer) getContainer(ID, player, tile), (TileSolderer) tile);
+                return new GuiSolderer((ContainerSolderer) getContainer(ID, player, tile));
             case RSGui.DESTRUCTOR:
                 return new GuiDestructor((ContainerDestructor) getContainer(ID, player, tile));
             case RSGui.CONSTRUCTOR:

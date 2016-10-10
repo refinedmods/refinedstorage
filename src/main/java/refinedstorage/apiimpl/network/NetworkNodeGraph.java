@@ -155,11 +155,11 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
         }
 
         if (node instanceof IItemStorageProvider) {
-            controller.getItemStorageCache().rebuild();
+            controller.getItemStorageCache().invalidate();
         }
 
         if (node instanceof IFluidStorageProvider) {
-            controller.getFluidStorageCache().rebuild();
+            controller.getFluidStorageCache().invalidate();
         }
 
         controller.getDataManager().sendParameterToWatchers(TileController.NODES);

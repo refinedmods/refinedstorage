@@ -13,6 +13,7 @@ import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 import refinedstorage.RS;
 import refinedstorage.RSUtils;
 import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.api.storage.AccessType;
 import refinedstorage.api.storage.fluid.IFluidStorage;
 import refinedstorage.api.storage.fluid.IFluidStorageProvider;
 import refinedstorage.api.storage.item.IItemStorage;
@@ -74,7 +75,6 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
     private static final String NBT_TYPE = "Type";
-    private static final String NBT_ACCESS_TYPE = "AccessType";
 
     private ItemHandlerBasic itemFilters = new ItemHandlerBasic(9, this);
     private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(9, this);
@@ -83,7 +83,7 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int mode = IFilterable.WHITELIST;
     private int type = IType.ITEMS;
-    private int accessType = IAccessType.READ_WRITE;
+    private AccessType accessType = AccessType.READ_WRITE;
 
     private List<ItemStorageExternal> itemStorages = new ArrayList<>();
     private List<FluidStorageExternal> fluidStorages = new ArrayList<>();
@@ -120,8 +120,8 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
 
         updateStorage(network);
 
-        network.getItemStorageCache().rebuild();
-        network.getFluidStorageCache().rebuild();
+        network.getItemStorageCache().invalidate();
+        network.getFluidStorageCache().invalidate();
     }
 
     @Override
@@ -142,11 +142,11 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
             }
 
             if (itemChangeDetected) {
-                network.getItemStorageCache().rebuild();
+                network.getItemStorageCache().invalidate();
             }
 
             if (fluidChangeDetected) {
-                network.getFluidStorageCache().rebuild();
+                network.getFluidStorageCache().invalidate();
             }
 
             if (getFacingTile() instanceof IDrawerGroup && lastDrawerCount != ((IDrawerGroup) getFacingTile()).getDrawerCount()) {
@@ -182,9 +182,7 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
             type = tag.getInteger(NBT_TYPE);
         }
 
-        if (tag.hasKey(NBT_ACCESS_TYPE)) {
-            accessType = tag.getInteger(NBT_ACCESS_TYPE);
-        }
+        accessType = RSUtils.readAccessType(tag);
     }
 
     @Override
@@ -198,7 +196,8 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_MODE, mode);
         tag.setInteger(NBT_TYPE, type);
-        tag.setInteger(NBT_ACCESS_TYPE, accessType);
+
+        RSUtils.writeAccessType(tag, accessType);
 
         return tag;
     }
@@ -273,8 +272,8 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
             }
         }
 
-        network.getItemStorageCache().rebuild();
-        network.getFluidStorageCache().rebuild();
+        network.getItemStorageCache().invalidate();
+        network.getFluidStorageCache().invalidate();
     }
 
     @Override
@@ -338,17 +337,16 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
     }
 
     @Override
-    public int getAccessType() {
+    public AccessType getAccessType() {
         return accessType;
     }
 
     @Override
-    public void setAccessType(int type) {
-        accessType = type;
+    public void setAccessType(AccessType type) {
+        this.accessType = type;
 
-        // Refresh item/fluid cache
-        network.getItemStorageCache().rebuild();
-        network.getFluidStorageCache().rebuild();
+        network.getItemStorageCache().invalidate();
+        network.getFluidStorageCache().invalidate();
 
         markDirty();
     }

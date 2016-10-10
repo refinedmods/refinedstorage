@@ -1,6 +1,7 @@
 package refinedstorage.api.storage.fluid;
 
 import net.minecraftforge.fluids.FluidStack;
+import refinedstorage.api.storage.AccessType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -51,11 +52,9 @@ public interface IFluidStorage {
     int getPriority();
 
     /**
-     * READ(0) : Can see the fluid stored in this storage
-     * WRITE(1) : Can insert and/or extract fluid from this storage
-     * READ_WRITE(2) : Can see, insert and extract fluid from this storage
-     *
      * @return the access type of this storage
      */
-    int getAccessType();
+    default AccessType getAccessType() {
+        return AccessType.READ_WRITE;
+    }
 }

@@ -25,6 +25,7 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import org.apache.commons.lang3.tuple.Pair;
 import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.api.storage.AccessType;
 import refinedstorage.apiimpl.API;
 import refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
 import refinedstorage.apiimpl.storage.item.ItemStorageNBT;
@@ -37,6 +38,7 @@ public final class RSUtils {
 
     private static final String NBT_INVENTORY = "Inventory_%d";
     private static final String NBT_SLOT = "Slot";
+    private static final String NBT_ACCESS_TYPE = "AccessType";
 
     public static void writeItemStack(ByteBuf buf, INetworkMaster network, ItemStack stack) {
         buf.writeInt(Item.getIdFromItem(stack.getItem()));
@@ -139,6 +141,24 @@ public final class RSUtils {
                 inventory.setInventorySlotContents(slot, stack);
             }
         }
+    }
+
+    public static void writeAccessType(NBTTagCompound tag, AccessType type) {
+        tag.setInteger(NBT_ACCESS_TYPE, type.getId());
+    }
+
+    public static AccessType readAccessType(NBTTagCompound tag) {
+        return tag.hasKey(NBT_ACCESS_TYPE) ? getAccessType(tag.getInteger(NBT_ACCESS_TYPE)) : AccessType.READ_WRITE;
+    }
+
+    public static AccessType getAccessType(int id) {
+        for (AccessType type : AccessType.values()) {
+            if (type.getId() == id) {
+                return type;
+            }
+        }
+
+        return AccessType.READ_WRITE;
     }
 
     public static IItemHandler getItemHandler(TileEntity tile, EnumFacing side) {

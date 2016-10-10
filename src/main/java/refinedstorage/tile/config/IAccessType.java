@@ -3,6 +3,8 @@ package refinedstorage.tile.config;
 
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.tileentity.TileEntity;
+import refinedstorage.RSUtils;
+import refinedstorage.api.storage.AccessType;
 import refinedstorage.tile.data.ITileDataConsumer;
 import refinedstorage.tile.data.ITileDataProducer;
 import refinedstorage.tile.data.TileDataParameter;
@@ -16,19 +18,17 @@ public interface IAccessType {
         return new TileDataParameter<>(DataSerializers.VARINT, READ_WRITE, new ITileDataProducer<Integer, T>() {
             @Override
             public Integer getValue(T tile) {
-                return ((IAccessType) tile).getAccessType();
+                return ((IAccessType) tile).getAccessType().getId();
             }
         }, new ITileDataConsumer<Integer, T>() {
             @Override
             public void setValue(T tile, Integer value) {
-                if (value == READ || value == WRITE || value == READ_WRITE) {
-                    ((IAccessType) tile).setAccessType(value);
-                }
+                ((IAccessType) tile).setAccessType(RSUtils.getAccessType(value));
             }
         });
     }
 
-    int getAccessType();
+    AccessType getAccessType();
 
-    void setAccessType(int accessType);
+    void setAccessType(AccessType accessType);
 }

@@ -18,7 +18,6 @@ import net.minecraftforge.fluids.FluidStack;
 import refinedstorage.RSItems;
 import refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
 import refinedstorage.block.EnumFluidStorageType;
-import refinedstorage.tile.config.IAccessType;
 
 import java.util.List;
 
@@ -55,11 +54,6 @@ public class ItemFluidStorageDisk extends ItemBase {
                 @Override
                 public int getPriority() {
                     return 0;
-                }
-
-                @Override
-                public int getAccessType() {
-                    return IAccessType.READ_WRITE;
                 }
             };
 

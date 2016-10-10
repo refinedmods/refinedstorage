@@ -16,10 +16,10 @@ import java.util.List;
  */
 public interface IItemStorageCache {
     /**
-     * Rebuilds the cache.
+     * Invalidates the cache.
      * Typically called when a {@link IItemStorageProvider} is added or removed from the network.
      */
-    void rebuild();
+    void invalidate();
 
     /**
      * Adds an item to the cache.

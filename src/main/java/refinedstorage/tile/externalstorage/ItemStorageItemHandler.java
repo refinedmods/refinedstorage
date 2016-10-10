@@ -3,6 +3,7 @@ package refinedstorage.tile.externalstorage;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import refinedstorage.api.storage.AccessType;
 import refinedstorage.apiimpl.API;
 import refinedstorage.tile.config.IFilterable;
 
@@ -95,7 +96,7 @@ public class ItemStorageItemHandler extends ItemStorageExternal {
     }
 
     @Override
-    public int getAccessType() {
+    public AccessType getAccessType() {
         return externalStorage.getAccessType();
     }
 }

@@ -4,6 +4,7 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
+import refinedstorage.api.storage.AccessType;
 import refinedstorage.apiimpl.API;
 import refinedstorage.tile.config.IFilterable;
 
@@ -114,7 +115,7 @@ public class ItemStorageDrawer extends ItemStorageExternal {
     }
 
     @Override
-    public int getAccessType() {
+    public AccessType getAccessType() {
         return externalStorage.getAccessType();
     }
 }

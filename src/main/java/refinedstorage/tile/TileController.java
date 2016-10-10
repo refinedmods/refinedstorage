@@ -34,6 +34,7 @@ import refinedstorage.api.network.INetworkNodeGraph;
 import refinedstorage.api.network.IWirelessGridHandler;
 import refinedstorage.api.network.grid.IFluidGridHandler;
 import refinedstorage.api.network.grid.IItemGridHandler;
+import refinedstorage.api.storage.AccessType;
 import refinedstorage.api.storage.fluid.IFluidStorage;
 import refinedstorage.api.storage.fluid.IFluidStorageCache;
 import refinedstorage.api.storage.item.IItemStorage;
@@ -61,7 +62,6 @@ import refinedstorage.network.MessageGridFluidDelta;
 import refinedstorage.network.MessageGridFluidUpdate;
 import refinedstorage.network.MessageGridItemDelta;
 import refinedstorage.network.MessageGridItemUpdate;
-import refinedstorage.tile.config.IAccessType;
 import refinedstorage.tile.config.IRedstoneConfigurable;
 import refinedstorage.tile.config.RedstoneMode;
 import refinedstorage.tile.data.ITileDataProducer;
@@ -459,7 +459,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             }
         }
 
-        itemStorage.rebuild();
+        itemStorage.invalidate();
     }
 
     @Override
@@ -519,13 +519,13 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         }
 
         int orginalSize = size;
-        int accessType = IAccessType.READ_WRITE;
+        AccessType accessType = AccessType.READ_WRITE;
         ItemStack remainder = stack;
 
         for (IItemStorage storage : this.itemStorage.getStorages()) {
             accessType = storage.getAccessType();
 
-            if (accessType != IAccessType.READ) {
+            if (accessType != AccessType.READ) {
                 remainder = storage.insertItem(remainder, size, simulate);
             }
 
@@ -553,7 +553,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             inserted = orginalSize - remainder.stackSize;
         }
 
-        if (!simulate && inserted > 0 && accessType != IAccessType.WRITE) {
+        if (!simulate && inserted > 0 && accessType != AccessType.WRITE) {
             itemStorage.add(ItemHandlerHelper.copyStackWithSize(stack, inserted), false);
 
             for (int i = 0; i < inserted; ++i) {
@@ -587,7 +587,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         for (IItemStorage storage : this.itemStorage.getStorages()) {
             ItemStack took = null;
 
-            if (storage.getAccessType() != IAccessType.READ) {
+            if (storage.getAccessType() != AccessType.READ) {
                 took = storage.extractItem(stack, requested - received, flags);
             }
 
@@ -625,13 +625,13 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         }
 
         int orginalSize = size;
-        int accessType = IAccessType.READ_WRITE;
+        AccessType accessType = AccessType.READ_WRITE;
         FluidStack remainder = stack;
 
         for (IFluidStorage storage : this.fluidStorage.getStorages()) {
             accessType = storage.getAccessType();
 
-            if (accessType != IAccessType.READ) {
+            if (accessType != AccessType.READ) {
                 remainder = storage.insertFluid(remainder, size, simulate);
             }
 
@@ -658,7 +658,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             inserted = orginalSize - remainder.amount;
         }
 
-        if (!simulate && inserted > 0 && accessType != IAccessType.WRITE) {
+        if (!simulate && inserted > 0 && accessType != AccessType.WRITE) {
             fluidStorage.add(RSUtils.copyStackWithSize(stack, inserted), false);
         }
 
@@ -674,7 +674,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
         for (IFluidStorage storage : this.fluidStorage.getStorages()) {
             FluidStack took = null;
-            if (storage.getAccessType() != IAccessType.READ) {
+
+            if (storage.getAccessType() != AccessType.READ) {
                 took = storage.extractFluid(stack, requested - received, flags);
             }
 

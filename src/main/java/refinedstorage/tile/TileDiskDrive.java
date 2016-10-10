@@ -14,6 +14,7 @@ import refinedstorage.RS;
 import refinedstorage.RSItems;
 import refinedstorage.RSUtils;
 import refinedstorage.api.network.INetworkMaster;
+import refinedstorage.api.storage.AccessType;
 import refinedstorage.api.storage.fluid.IFluidStorage;
 import refinedstorage.api.storage.fluid.IFluidStorageProvider;
 import refinedstorage.api.storage.item.IItemStorage;
@@ -66,7 +67,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
         }
 
         @Override
-        public int getAccessType() {
+        public AccessType getAccessType() {
             return accessType;
         }
     }
@@ -98,7 +99,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
         }
 
         @Override
-        public int getAccessType() {
+        public AccessType getAccessType() {
             return accessType;
         }
     }
@@ -108,7 +109,6 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     private static final String NBT_MODE = "Mode";
     private static final String NBT_TYPE = "Type";
     private static final String NBT_VOID_EXCESS = "VoidExcess";
-    private static final String NBT_ACCESS_TYPE = "AccessType";
 
     private ItemHandlerBasic disks = new ItemHandlerBasic(8, this, IItemValidator.STORAGE_DISK) {
         @Override
@@ -119,8 +119,8 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
                 RSUtils.constructFromDrive(getStackInSlot(slot), slot, itemStorages, fluidStorages, ItemStorage::new, FluidStorage::new);
 
                 if (network != null) {
-                    network.getItemStorageCache().rebuild();
-                    network.getFluidStorageCache().rebuild();
+                    network.getItemStorageCache().invalidate();
+                    network.getFluidStorageCache().invalidate();
                 }
 
                 if (worldObj != null) {
@@ -149,7 +149,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     private ItemStorage itemStorages[] = new ItemStorage[8];
     private FluidStorage fluidStorages[] = new FluidStorage[8];
 
-    private int accessType = IAccessType.READ_WRITE;
+    private AccessType accessType = AccessType.READ_WRITE;
     private int priority = 0;
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int mode = IFilterable.WHITELIST;
@@ -200,8 +200,8 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     public void onConnectionChange(INetworkMaster network, boolean state) {
         super.onConnectionChange(network, state);
 
-        network.getItemStorageCache().rebuild();
-        network.getFluidStorageCache().rebuild();
+        network.getItemStorageCache().invalidate();
+        network.getFluidStorageCache().invalidate();
     }
 
     @Override
@@ -250,9 +250,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
             voidExcess = tag.getBoolean(NBT_VOID_EXCESS);
         }
 
-        if (tag.hasKey(NBT_ACCESS_TYPE)) {
-            accessType = tag.getInteger(NBT_ACCESS_TYPE);
-        }
+        accessType = RSUtils.readAccessType(tag);
     }
 
     @Override
@@ -278,7 +276,8 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
         tag.setInteger(NBT_MODE, mode);
         tag.setInteger(NBT_TYPE, type);
         tag.setBoolean(NBT_VOID_EXCESS, voidExcess);
-        tag.setInteger(NBT_ACCESS_TYPE, accessType);
+
+        RSUtils.writeAccessType(tag, accessType);
 
         return tag;
     }
@@ -353,16 +352,16 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     }
 
     @Override
-    public int getAccessType() {
+    public AccessType getAccessType() {
         return accessType;
     }
 
     @Override
-    public void setAccessType(int value) {
-        accessType = value;
+    public void setAccessType(AccessType value) {
+        this.accessType = value;
 
-        network.getFluidStorageCache().rebuild();
-        network.getItemStorageCache().rebuild();
+        network.getFluidStorageCache().invalidate();
+        network.getItemStorageCache().invalidate();
 
         markDirty();
     }
