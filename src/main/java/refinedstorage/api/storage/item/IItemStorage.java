@@ -51,10 +51,9 @@ public interface IItemStorage {
     int getPriority();
 
     /**
-     *
-     * READ(1) : Can see the items stored in this storage
-     * WRITE(2) : Can insert and/or extract items from this storage
-     * READ_WRITE(3) : Can see, insert and extract items from this storage
+     * READ(0) : Can see the items stored in this storage
+     * WRITE(1) : Can insert and/or extract items from this storage
+     * READ_WRITE(2) : Can see, insert and extract items from this storage
      *
      * @return the access type of this storage
      */

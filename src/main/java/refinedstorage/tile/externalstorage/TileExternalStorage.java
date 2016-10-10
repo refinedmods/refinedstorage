@@ -318,7 +318,7 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
     }
 
     @Override
-    public  TileDataParameter<Integer> getAccessTypeParameter() {
+    public TileDataParameter<Integer> getAccessTypeParameter() {
         return ACCESS_TYPE;
     }
 
@@ -346,7 +346,7 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
     public void setAccessType(int type) {
         accessType = type;
 
-        //Refresh item/fluid cache
+        // Refresh item/fluid cache
         network.getItemStorage().rebuild();
         network.getFluidStorage().rebuild();
 

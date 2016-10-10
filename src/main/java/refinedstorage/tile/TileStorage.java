@@ -81,7 +81,7 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
 
     private EnumItemStorageType type;
 
-    private int accessType =  IAccessType.READ_WRITE;
+    private int accessType = IAccessType.READ_WRITE;
     private int priority = 0;
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int mode = IFilterable.WHITELIST;
@@ -265,7 +265,7 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
     }
 
     @Override
-    public  TileDataParameter<Integer> getAccessTypeParameter() {
+    public TileDataParameter<Integer> getAccessTypeParameter() {
         return ACCESS_TYPE;
     }
 

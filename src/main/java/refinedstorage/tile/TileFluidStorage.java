@@ -283,7 +283,7 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
     }
 
     @Override
-    public int getAccessType () {
+    public int getAccessType() {
         return accessType;
     }
 

@@ -253,7 +253,6 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
         if (tag.hasKey(NBT_ACCESS_TYPE)) {
             accessType = tag.getInteger(NBT_ACCESS_TYPE);
         }
-
     }
 
     @Override
@@ -344,7 +343,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     }
 
     @Override
-    public  TileDataParameter<Integer> getAccessTypeParameter() {
+    public TileDataParameter<Integer> getAccessTypeParameter() {
         return ACCESS_TYPE;
     }
 

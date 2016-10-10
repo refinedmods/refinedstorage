@@ -11,7 +11,6 @@ import java.util.List;
  * Provide this through an {@link IFluidStorageProvider}.
  */
 public interface IFluidStorage {
-
     /**
      * @return fluids stored in this storage
      */
@@ -52,10 +51,9 @@ public interface IFluidStorage {
     int getPriority();
 
     /**
-     *
-     * READ(1) : Can see the fluid stored in this storage
-     * WRITE(2) : Can insert and/or extract fluid from this storage
-     * READ_WRITE(3) : Can see, insert and extract fluid from this storage
+     * READ(0) : Can see the fluid stored in this storage
+     * WRITE(1) : Can insert and/or extract fluid from this storage
+     * READ_WRITE(2) : Can see, insert and extract fluid from this storage
      *
      * @return the access type of this storage
      */

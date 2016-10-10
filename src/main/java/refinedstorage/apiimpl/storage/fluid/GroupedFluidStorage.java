@@ -35,7 +35,7 @@ public class GroupedFluidStorage implements IGroupedFluidStorage {
 
         for (IFluidStorage storage : storages) {
             if (storage.getAccessType() == IAccessType.WRITE) {
-               continue;
+                continue;
             }
 
             for (FluidStack stack : storage.getStacks()) {

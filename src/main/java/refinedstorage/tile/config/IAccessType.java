@@ -8,10 +8,9 @@ import refinedstorage.tile.data.ITileDataProducer;
 import refinedstorage.tile.data.TileDataParameter;
 
 public interface IAccessType {
-    int READ = 1;
-    int WRITE = 2;
-    int READ_WRITE = 3;
-
+    int READ = 0;
+    int WRITE = 1;
+    int READ_WRITE = 2;
 
     static <T extends TileEntity>TileDataParameter<Integer> createParameter() {
         return new TileDataParameter<Integer>(DataSerializers.VARINT, READ_WRITE, new ITileDataProducer<Integer, T>() {
@@ -25,7 +24,6 @@ public interface IAccessType {
                 if (value == READ || value == WRITE || value == READ_WRITE) {
                     ((IAccessType) tile).setAccessType(value);
                 }
-
             }
         });
     }
