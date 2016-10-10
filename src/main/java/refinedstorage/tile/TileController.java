@@ -524,12 +524,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         ItemStack remainder = stack;
 
         for (IItemStorage storage : this.itemStorage.getStorages()) {
-            if (storage instanceof ItemStorageItemHandler) {
-                accessType = ((ItemStorageItemHandler) storage).getAccessType();
-                if (accessType != IAccessType.READ) {
-                    remainder = storage.insertItem(remainder, size, simulate);
-                }
-            } else {
+            accessType = storage.getAccessType();
+
+            if (accessType != IAccessType.READ) {
                 remainder = storage.insertItem(remainder, size, simulate);
             }
 
@@ -586,20 +583,13 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     public ItemStack extractItem(ItemStack stack, int size, int flags) {
         int requested = size;
         int received = 0;
-
-        int accessType = IAccessType.READ_WRITE;
         ItemStack newStack = null;
 
         for (IItemStorage storage : this.itemStorage.getStorages()) {
             ItemStack took = null;
 
-            if (storage instanceof ItemStorageItemHandler) {
-                accessType = ((ItemStorageItemHandler) storage).getAccessType();
-                if (accessType != IAccessType.READ) {
-                    took = storage.extractItem(stack, requested - received, flags);
-                }
-            } else {
-                 took = storage.extractItem(stack, requested - received, flags);
+            if (storage.getAccessType() != IAccessType.READ) {
+                took = storage.extractItem(stack, requested - received, flags);
             }
 
             if (took != null) {
@@ -640,12 +630,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         FluidStack remainder = stack;
 
         for (IFluidStorage storage : this.fluidStorage.getStorages()) {
-            if (storage instanceof FluidStorageExternal) {
-                accessType = ((FluidStorageExternal)storage).getAccessType();
-                if (accessType != IAccessType.READ) {
-                    remainder = storage.insertFluid(remainder, size, simulate);
-                }
-            } else {
+            accessType = storage.getAccessType();
+
+            if (accessType != IAccessType.READ) {
                 remainder = storage.insertFluid(remainder, size, simulate);
             }
 
@@ -684,18 +671,11 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     public FluidStack extractFluid(@Nonnull FluidStack stack, int size, int flags) {
         int requested = size;
         int received = 0;
-        int accessType = IAccessType.READ_WRITE;
         FluidStack newStack = null;
 
         for (IFluidStorage storage : this.fluidStorage.getStorages()) {
             FluidStack took = null;
-
-            if (storage instanceof FluidStorageExternal) {
-                accessType = ((FluidStorageExternal) storage).getAccessType();
-                if (accessType != IAccessType.READ) {
-                    took = storage.extractFluid(stack, requested - received, flags);
-                }
-            } else {
+            if (storage.getAccessType() != IAccessType.READ) {
                 took = storage.extractFluid(stack, requested - received, flags);
             }
 

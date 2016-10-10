@@ -35,7 +35,7 @@ public class GroupedItemStorage implements IGroupedItemStorage {
         list.clear();
 
         for (IItemStorage storage : storages) {
-            if (storage instanceof ItemStorageItemHandler && ((ItemStorageItemHandler) storage).getAccessType() == IAccessType.WRITE) {
+            if (storage.getAccessType() == IAccessType.WRITE) {
                 continue;
             }
 

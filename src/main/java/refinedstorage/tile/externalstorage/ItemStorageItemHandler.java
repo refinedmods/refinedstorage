@@ -94,6 +94,7 @@ public class ItemStorageItemHandler extends ItemStorageExternal {
         return externalStorage.getPriority();
     }
 
+    @Override
     public int getAccessType() {
         return externalStorage.getAccessType();
     }

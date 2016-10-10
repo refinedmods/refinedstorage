@@ -14,20 +14,18 @@ import refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
 import refinedstorage.block.BlockFluidStorage;
 import refinedstorage.block.EnumFluidStorageType;
 import refinedstorage.inventory.ItemHandlerFluid;
-import refinedstorage.tile.config.IComparable;
-import refinedstorage.tile.config.IExcessVoidable;
-import refinedstorage.tile.config.IFilterable;
-import refinedstorage.tile.config.IPrioritizable;
+import refinedstorage.tile.config.*;
 import refinedstorage.tile.data.ITileDataProducer;
 import refinedstorage.tile.data.TileDataParameter;
 
 import java.util.List;
 
-public class TileFluidStorage extends TileNode implements IFluidStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IExcessVoidable {
+public class TileFluidStorage extends TileNode implements IFluidStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IExcessVoidable, IAccessType{
     public static final TileDataParameter<Integer> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Boolean> VOID_EXCESS = IExcessVoidable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
+    public static final TileDataParameter<Integer> ACCESS_TYPE = IAccessType.createParameter();
     public static final TileDataParameter<Integer> STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileFluidStorage>() {
         @Override
         public Integer getValue(TileFluidStorage tile) {
@@ -59,6 +57,11 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
 
             return result;
         }
+
+        @Override
+        public int getAccessType() {
+            return accessType;
+        }
     }
 
     public static final String NBT_STORAGE = "Storage";
@@ -67,6 +70,7 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
     private static final String NBT_VOID_EXCESS = "VoidExcess";
+    private static final String NBT_ACCESS_TYPE = "AccessType";
 
     private ItemHandlerFluid filters = new ItemHandlerFluid(9, this);
 
@@ -76,6 +80,7 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
 
     private EnumFluidStorageType type;
 
+    private int accessType = IAccessType.READ_WRITE;
     private int priority = 0;
     private int compare = IComparer.COMPARE_NBT;
     private int mode = IFilterable.WHITELIST;
@@ -87,6 +92,7 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
         dataManager.addWatchedParameter(MODE);
         dataManager.addWatchedParameter(STORED);
         dataManager.addWatchedParameter(VOID_EXCESS);
+        dataManager.addWatchedParameter(ACCESS_TYPE);
     }
 
     @Override
@@ -156,6 +162,10 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
         if (tag.hasKey(NBT_VOID_EXCESS)) {
             voidExcess = tag.getBoolean(NBT_VOID_EXCESS);
         }
+
+        if (tag.hasKey(NBT_ACCESS_TYPE)) {
+            accessType = tag.getInteger(NBT_ACCESS_TYPE);
+        }
     }
 
     @Override
@@ -174,6 +184,7 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_MODE, mode);
         tag.setBoolean(NBT_VOID_EXCESS, voidExcess);
+        tag.setInteger(NBT_ACCESS_TYPE, accessType);
 
         return tag;
     }
@@ -247,7 +258,7 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
 
     @Override
     public  TileDataParameter<Integer> getAccessTypeParameter() {
-        return null;
+        return ACCESS_TYPE;
     }
 
     @Override
@@ -269,6 +280,20 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
 
     public ItemHandlerFluid getFilters() {
         return filters;
+    }
+
+    @Override
+    public int getAccessType () {
+        return accessType;
+    }
+
+    @Override
+    public void setAccessType(int value) {
+        accessType = value;
+
+        network.getFluidStorage().rebuild();
+
+        markDirty();
     }
 
     @Override

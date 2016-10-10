@@ -110,4 +110,9 @@ public class ItemStorageDSU extends ItemStorageExternal {
     public int getPriority() {
         return externalStorage.getPriority();
     }
+
+    @Override
+    public int getAccessType() {
+        return externalStorage.getAccessType();
+    }
 }

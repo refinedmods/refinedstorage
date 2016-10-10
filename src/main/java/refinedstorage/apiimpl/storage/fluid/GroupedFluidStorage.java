@@ -34,7 +34,7 @@ public class GroupedFluidStorage implements IGroupedFluidStorage {
         list.clear();
 
         for (IFluidStorage storage : storages) {
-            if (storage instanceof FluidStorageExternal && ((FluidStorageExternal) storage).getAccessType() == IAccessType.WRITE) {
+            if (storage.getAccessType() == IAccessType.WRITE) {
                continue;
             }
 
