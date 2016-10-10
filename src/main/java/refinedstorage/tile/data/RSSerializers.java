@@ -124,7 +124,7 @@ public final class RSSerializers {
         }
 
         @Override
-        public AccessType read(PacketBuffer buf) throws IOException {
+        public AccessType read(PacketBuffer buf) {
             return RSUtils.getAccessType(buf.readInt());
         }
 
