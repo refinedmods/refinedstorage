@@ -17,6 +17,8 @@ public interface IStorageGui {
 
     TileDataParameter<Boolean> getVoidExcessParameter();
 
+    TileDataParameter<Integer> getAccessTypeParameter();
+
     String getVoidExcessType();
 
     int getStored();

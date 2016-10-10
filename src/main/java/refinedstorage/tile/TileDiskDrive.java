@@ -31,12 +31,13 @@ import refinedstorage.tile.data.TileDataParameter;
 
 import java.util.List;
 
-public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFluidStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IType, IExcessVoidable {
+public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFluidStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IType, IExcessVoidable, IAccessType {
     public static final TileDataParameter<Integer> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
     public static final TileDataParameter<Integer> TYPE = IType.createParameter();
     public static final TileDataParameter<Boolean> VOID_EXCESS = IExcessVoidable.createParameter();
+    public static final TileDataParameter<Integer> ACCESS_TYPE = IAccessType.createParameter();
 
     public class ItemStorage extends ItemStorageNBT {
         public ItemStorage(ItemStack disk) {
@@ -62,6 +63,11 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
             }
 
             return result;
+        }
+
+        @Override
+        public int getAccessType() {
+            return accessType;
         }
     }
 
@@ -90,6 +96,11 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
 
             return result;
         }
+
+        @Override
+        public int getAccessType() {
+            return accessType;
+        }
     }
 
     private static final String NBT_PRIORITY = "Priority";
@@ -97,6 +108,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     private static final String NBT_MODE = "Mode";
     private static final String NBT_TYPE = "Type";
     private static final String NBT_VOID_EXCESS = "VoidExcess";
+    private static final String NBT_ACCESS_TYPE = "AccessType";
 
     private ItemHandlerBasic disks = new ItemHandlerBasic(8, this, IItemValidator.STORAGE_DISK) {
         @Override
@@ -137,6 +149,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     private ItemStorage itemStorages[] = new ItemStorage[8];
     private FluidStorage fluidStorages[] = new FluidStorage[8];
 
+    private int accessType = IAccessType.READ_WRITE;
     private int priority = 0;
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int mode = IFilterable.WHITELIST;
@@ -149,6 +162,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
         dataManager.addWatchedParameter(MODE);
         dataManager.addWatchedParameter(TYPE);
         dataManager.addWatchedParameter(VOID_EXCESS);
+        dataManager.addWatchedParameter(ACCESS_TYPE);
     }
 
     @Override
@@ -235,6 +249,10 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
         if (tag.hasKey(NBT_VOID_EXCESS)) {
             voidExcess = tag.getBoolean(NBT_VOID_EXCESS);
         }
+
+        if (tag.hasKey(NBT_ACCESS_TYPE)) {
+            accessType = tag.getInteger(NBT_ACCESS_TYPE);
+        }
     }
 
     @Override
@@ -260,6 +278,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
         tag.setInteger(NBT_MODE, mode);
         tag.setInteger(NBT_TYPE, type);
         tag.setBoolean(NBT_VOID_EXCESS, voidExcess);
+        tag.setInteger(NBT_ACCESS_TYPE, accessType);
 
         return tag;
     }
@@ -324,8 +343,28 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     }
 
     @Override
+    public TileDataParameter<Integer> getAccessTypeParameter() {
+        return ACCESS_TYPE;
+    }
+
+    @Override
     public String getVoidExcessType() {
         return "items_fluids";
+    }
+
+    @Override
+    public int getAccessType() {
+        return accessType;
+    }
+
+    @Override
+    public void setAccessType(int value) {
+        accessType = value;
+
+        network.getFluidStorage().rebuild();
+        network.getItemStorage().rebuild();
+
+        markDirty();
     }
 
     @Override

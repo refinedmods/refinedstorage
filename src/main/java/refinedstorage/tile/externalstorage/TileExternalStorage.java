@@ -22,21 +22,19 @@ import refinedstorage.inventory.ItemHandlerBasic;
 import refinedstorage.inventory.ItemHandlerFluid;
 import refinedstorage.tile.IStorageGui;
 import refinedstorage.tile.TileMultipartNode;
-import refinedstorage.tile.config.IComparable;
-import refinedstorage.tile.config.IFilterable;
-import refinedstorage.tile.config.IPrioritizable;
-import refinedstorage.tile.config.IType;
+import refinedstorage.tile.config.*;
 import refinedstorage.tile.data.ITileDataProducer;
 import refinedstorage.tile.data.TileDataParameter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileExternalStorage extends TileMultipartNode implements IItemStorageProvider, IFluidStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IType {
+public class TileExternalStorage extends TileMultipartNode implements IItemStorageProvider, IFluidStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IType, IAccessType {
     public static final TileDataParameter<Integer> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
     public static final TileDataParameter<Integer> TYPE = IType.createParameter();
+    public static final TileDataParameter<Integer> ACCESS_TYPE = IAccessType.createParameter();
 
     public static final TileDataParameter<Integer> STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileExternalStorage>() {
         @Override
@@ -76,6 +74,7 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
     private static final String NBT_TYPE = "Type";
+    private static final String NBT_ACCESS_TYPE = "AccessType";
 
     private ItemHandlerBasic itemFilters = new ItemHandlerBasic(9, this);
     private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(9, this);
@@ -84,6 +83,7 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int mode = IFilterable.WHITELIST;
     private int type = IType.ITEMS;
+    private int accessType = IAccessType.READ_WRITE;
 
     private List<ItemStorageExternal> itemStorages = new ArrayList<>();
     private List<FluidStorageExternal> fluidStorages = new ArrayList<>();
@@ -97,6 +97,7 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
         dataManager.addWatchedParameter(STORED);
         dataManager.addWatchedParameter(CAPACITY);
         dataManager.addWatchedParameter(TYPE);
+        dataManager.addWatchedParameter(ACCESS_TYPE);
     }
 
     @Override
@@ -180,6 +181,10 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
         if (tag.hasKey(NBT_TYPE)) {
             type = tag.getInteger(NBT_TYPE);
         }
+
+        if (tag.hasKey(NBT_ACCESS_TYPE)){
+            accessType = tag.getInteger(NBT_ACCESS_TYPE);
+        }
     }
 
     @Override
@@ -193,6 +198,7 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_MODE, mode);
         tag.setInteger(NBT_TYPE, type);
+        tag.setInteger(NBT_ACCESS_TYPE, accessType);
 
         return tag;
     }
@@ -312,6 +318,11 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
     }
 
     @Override
+    public TileDataParameter<Integer> getAccessTypeParameter() {
+        return ACCESS_TYPE;
+    }
+
+    @Override
     public String getVoidExcessType() {
         return null;
     }
@@ -324,6 +335,22 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
     @Override
     public int getCapacity() {
         return CAPACITY.getValue();
+    }
+
+    @Override
+    public int getAccessType() {
+        return accessType;
+    }
+
+    @Override
+    public void setAccessType(int type) {
+        accessType = type;
+
+        // Refresh item/fluid cache
+        network.getItemStorage().rebuild();
+        network.getFluidStorage().rebuild();
+
+        markDirty();
     }
 
     @Override
