@@ -49,8 +49,7 @@ public class ItemStorageDrawer extends ItemStorageExternal {
             if (!simulate && remainingSpace > 0) {
                 if (drawer.isEmpty()) {
                     drawer.setStoredItemRedir(stack, inserted);
-                }
-                else {
+                } else {
                     drawer.setStoredItemCount(stored + inserted);
                 }
             }
