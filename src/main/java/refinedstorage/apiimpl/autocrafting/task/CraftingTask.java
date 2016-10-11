@@ -37,6 +37,8 @@ public class CraftingTask implements ICraftingTask {
     private IItemStackList extras = API.instance().createItemStackList();
     private Deque<ItemStack> toInsert = new ArrayDeque<>();
     private int compare = IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT;
+    private List<ItemStack> took = new ArrayList<>();
+    private List<FluidStack> tookFluids = new ArrayList<>();
 
     public CraftingTask(INetworkMaster network, ItemStack requested, ICraftingPattern pattern, int quantity) {
         this.network = network;
@@ -152,6 +154,13 @@ public class CraftingTask implements ICraftingTask {
 
     @Override
     public void onCancelled() {
+        for (ItemStack took : this.took) {
+            network.insertItem(took, took.stackSize, false);
+        }
+
+        for (FluidStack took : this.tookFluids) {
+            network.insertFluid(took, took.amount, false);
+        }
     }
 
     @Override
@@ -185,6 +194,8 @@ public class CraftingTask implements ICraftingTask {
 
             if (took != null) {
                 toTake.remove(toTakeStack, 1, true);
+
+                this.took.add(took);
             }
 
             break;
@@ -197,6 +208,8 @@ public class CraftingTask implements ICraftingTask {
 
                 if (took != null) {
                     toTakeFluids.remove(toTakeStack, toTakeStack.amount, true);
+
+                    this.tookFluids.add(took);
                 }
 
                 break;
