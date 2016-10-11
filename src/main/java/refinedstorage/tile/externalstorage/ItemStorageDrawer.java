@@ -41,47 +41,31 @@ public class ItemStorageDrawer extends ItemStorageExternal {
     @Override
     public ItemStack insertItem(ItemStack stack, int size, boolean simulate) {
         if (IFilterable.canTake(externalStorage.getItemFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack) && drawer.canItemBeStored(stack)) {
-            if (!drawer.isEmpty()) {
-                if (getStored() + size > drawer.getMaxCapacity(stack)) {
-                    int remainingSpace = getCapacity() - getStored();
+            int stored = drawer.getStoredItemCount();
+            int remainingSpace = drawer.getMaxCapacity(stack) - stored;
 
-                    if (remainingSpace <= 0) {
-                        return isVoidable() ? null : ItemHandlerHelper.copyStackWithSize(stack, size);
-                    }
+            int inserted = remainingSpace > size ? size : (remainingSpace <= 0) ? 0 : remainingSpace;
 
-                    if (!simulate) {
-                        drawer.setStoredItemCount(drawer.getStoredItemCount() + remainingSpace);
-                    }
-
-                    return isVoidable() ? null : ItemHandlerHelper.copyStackWithSize(stack, size - remainingSpace);
-                } else {
-                    if (!simulate) {
-                        drawer.setStoredItemCount(drawer.getStoredItemCount() + size);
-                    }
-
-                    return null;
+            if (!simulate && remainingSpace > 0) {
+                if (drawer.isEmpty()) {
+                    drawer.setStoredItemRedir(stack, inserted);
                 }
-            } else {
-                if (getStored() + size > drawer.getMaxCapacity(stack)) {
-                    int remainingSpace = getCapacity() - getStored();
-
-                    if (remainingSpace <= 0) {
-                        return isVoidable() ? null : ItemHandlerHelper.copyStackWithSize(stack, size);
-                    }
-
-                    if (!simulate) {
-                        drawer.setStoredItemRedir(stack, remainingSpace);
-                    }
-
-                    return isVoidable() ? null : ItemHandlerHelper.copyStackWithSize(stack, size - remainingSpace);
-                } else {
-                    if (!simulate) {
-                        drawer.setStoredItemRedir(stack, size);
-                    }
-
-                    return null;
+                else {
+                    drawer.setStoredItemCount(stored + inserted);
                 }
             }
+
+            if (inserted == size) {
+                return null;
+            }
+
+            int returnSize = size - inserted;
+
+            if (isVoidable()) {
+                returnSize = -returnSize;
+            }
+
+            return ItemHandlerHelper.copyStackWithSize(stack, returnSize);
         }
 
         return ItemHandlerHelper.copyStackWithSize(stack, size);
