@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CraftingPattern implements ICraftingPattern {
+    private World world;
     private ICraftingPatternContainer container;
     private ItemStack stack;
     private List<ItemStack> inputs = new ArrayList<>();
@@ -24,6 +25,7 @@ public class CraftingPattern implements ICraftingPattern {
     private List<ItemStack> byproducts = new ArrayList<>();
 
     public CraftingPattern(World world, ICraftingPatternContainer container, ItemStack stack) {
+        this.world = world;
         this.container = container;
         this.stack = stack;
 
@@ -96,6 +98,30 @@ public class CraftingPattern implements ICraftingPattern {
     @Override
     public List<ItemStack> getOutputs() {
         return outputs;
+    }
+
+    @Override
+    public List<ItemStack> getByproducts(ItemStack[] took) {
+        List<ItemStack> byproducts = new ArrayList<>();
+
+        InventoryCrafting inv = new InventoryCrafting(new Container() {
+            @Override
+            public boolean canInteractWith(EntityPlayer player) {
+                return false;
+            }
+        }, 3, 3);
+
+        for (int i = 0; i < 9; ++i) {
+            inv.setInventorySlotContents(i, took[i]);
+        }
+
+        for (ItemStack remaining : CraftingManager.getInstance().getRemainingItems(inv, world)) {
+            if (remaining != null) {
+                byproducts.add(remaining.copy());
+            }
+        }
+
+        return byproducts;
     }
 
     @Override

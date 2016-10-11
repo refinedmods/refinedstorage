@@ -44,6 +44,12 @@ public interface ICraftingPattern {
     List<ItemStack> getOutputs();
 
     /**
+     * @param took the items took
+     * @return the outputs based on the items took
+     */
+    List<ItemStack> getByproducts(ItemStack[] took);
+
+    /**
      * @return the byproducts
      */
     List<ItemStack> getByproducts();

@@ -65,11 +65,13 @@ public class CraftingTask implements ICraftingTask {
         }
 
         for (ItemStack extra : extras.getStacks()) {
-            toInsert.add(extra.copy());
+            toInsert.add(extra);
         }
     }
 
     private void calculate(IItemStackList list, ICraftingPattern pattern, boolean basePattern) {
+        ItemStack[] took = new ItemStack[9];
+
         if (pattern.isProcessing()) {
             toProcess.add(new Processable(pattern));
         }
@@ -78,13 +80,19 @@ public class CraftingTask implements ICraftingTask {
             addExtras(pattern);
         }
 
-        for (ItemStack input : pattern.getInputs()) {
+        for (int i = 0; i < pattern.getInputs().size(); ++i) {
+            ItemStack input = pattern.getInputs().get(i);
+
             ItemStack inputInNetwork = list.get(input, compare);
 
             if (inputInNetwork == null || inputInNetwork.stackSize == 0) {
                 ItemStack extra = extras.get(input, compare);
 
                 if (extra != null) {
+                    if (!pattern.isProcessing()) {
+                        took[i] = ItemHandlerHelper.copyStackWithSize(extra, 1);
+                    }
+
                     decrOrRemoveExtras(extra);
                 } else {
                     ICraftingPattern inputPattern = network.getPattern(input, compare);
@@ -126,14 +134,18 @@ public class CraftingTask implements ICraftingTask {
                 }
             } else {
                 if (!pattern.isProcessing()) {
-                    toTake.add(input);
+                    ItemStack take = ItemHandlerHelper.copyStackWithSize(inputInNetwork, 1);
+
+                    toTake.add(take);
+
+                    took[i] = take;
                 }
 
                 list.remove(inputInNetwork, 1, true);
             }
         }
 
-        for (ItemStack byproduct : pattern.getByproducts()) {
+        for (ItemStack byproduct : (pattern.isOredict() ? pattern.getByproducts(took) : pattern.getByproducts())) {
             extras.add(byproduct.copy());
         }
     }
@@ -149,6 +161,8 @@ public class CraftingTask implements ICraftingTask {
             "\n, toTakeFluids=" + toTakeFluids +
             "\n, toCraft=" + toCraft +
             "\n, toProcess=" + toProcess +
+            "\n, extras=" + extras +
+            "\n, toInsert=" + toInsert +
             "\n, missing=" + missing +
             '}';
     }
