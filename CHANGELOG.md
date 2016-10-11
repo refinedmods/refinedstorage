@@ -16,6 +16,7 @@
 - Fixed items with colored name being uncolored in Grid (raoulvdberge)
 - Fixed fluid rendering bugging out side buttons (raoulvdberge)
 - Fixed item count going negative in some cases (raoulvdberge)
+- Fixed Storage Drawer quantities not updating properly on Void Drawers (geldorn)
 - Updated Storage Drawers API (raoulvdberge)
 
 ### 1.1.3
