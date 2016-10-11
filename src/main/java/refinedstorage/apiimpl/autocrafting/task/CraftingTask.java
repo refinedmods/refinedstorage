@@ -3,6 +3,7 @@ package refinedstorage.apiimpl.autocrafting.task;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RSUtils;
 import refinedstorage.api.autocrafting.ICraftingPattern;
@@ -79,7 +80,9 @@ public class CraftingTask implements ICraftingTask {
         }
 
         if (!basePattern) {
-            addExtras(pattern);
+            pattern.getOutputs().stream()
+                .filter(o -> o.stackSize > 1)
+                .forEach(o -> extras.add(ItemHandlerHelper.copyStackWithSize(o, o.stackSize - 1)));
         }
 
         for (int i = 0; i < pattern.getInputs().size(); ++i) {
@@ -91,11 +94,13 @@ public class CraftingTask implements ICraftingTask {
                 ItemStack extra = extras.get(input, compare);
 
                 if (extra != null) {
+                    ItemStack extraToRemove = ItemHandlerHelper.copyStackWithSize(extra, 1);
+
                     if (!pattern.isProcessing()) {
-                        took[i] = ItemHandlerHelper.copyStackWithSize(extra, 1);
+                        took[i] = extraToRemove;
                     }
 
-                    decrOrRemoveExtras(extra);
+                    extras.remove(extraToRemove, true);
                 } else {
                     ICraftingPattern inputPattern = network.getPattern(input, compare);
 
@@ -154,12 +159,12 @@ public class CraftingTask implements ICraftingTask {
 
     @Override
     public void onCancelled() {
-        for (ItemStack took : this.took) {
-            network.insertItem(took, took.stackSize, false);
+        for (ItemStack stack : took) {
+            network.insertItem(stack, stack.stackSize, false);
         }
 
-        for (FluidStack took : this.tookFluids) {
-            network.insertFluid(took, took.amount, false);
+        for (FluidStack stack : tookFluids) {
+            network.insertFluid(stack, stack.amount, false);
         }
     }
 
@@ -178,24 +183,26 @@ public class CraftingTask implements ICraftingTask {
 
     public boolean update() {
         for (IProcessable processable : toProcess) {
-            if (processable.getPattern().getContainer().getFacingInventory() != null && processable.getStackToInsert() != null) {
+            IItemHandler inventory = processable.getPattern().getContainer().getFacingInventory();
+
+            if (inventory != null && processable.getStackToInsert() != null) {
                 ItemStack toInsert = network.extractItem(processable.getStackToInsert(), 1, compare);
 
-                if (ItemHandlerHelper.insertItem(processable.getPattern().getContainer().getFacingInventory(), toInsert, true) == null) {
-                    ItemHandlerHelper.insertItem(processable.getPattern().getContainer().getFacingInventory(), toInsert, false);
+                if (ItemHandlerHelper.insertItem(inventory, toInsert, true) == null) {
+                    ItemHandlerHelper.insertItem(inventory, toInsert, false);
 
                     processable.nextStack();
                 }
             }
         }
 
-        for (ItemStack toTakeStack : toTake.getStacks()) {
-            ItemStack took = network.extractItem(toTakeStack, 1, compare);
+        for (ItemStack stack : toTake.getStacks()) {
+            ItemStack stackExtracted = network.extractItem(stack, 1, compare);
 
-            if (took != null) {
-                toTake.remove(toTakeStack, 1, true);
+            if (stackExtracted != null) {
+                toTake.remove(stack, 1, true);
 
-                this.took.add(took);
+                took.add(stackExtracted);
             }
 
             break;
@@ -203,20 +210,20 @@ public class CraftingTask implements ICraftingTask {
 
         // If we took all the items, we can start taking fluids
         if (toTake.isEmpty()) {
-            for (FluidStack toTakeStack : toTakeFluids.getStacks()) {
-                FluidStack took = network.extractFluid(toTakeStack, toTakeStack.amount);
+            for (FluidStack stack : toTakeFluids.getStacks()) {
+                FluidStack stackExtracted = network.extractFluid(stack, stack.amount);
 
-                if (took != null) {
-                    toTakeFluids.remove(toTakeStack, toTakeStack.amount, true);
+                if (stackExtracted != null) {
+                    toTakeFluids.remove(stack, stack.amount, true);
 
-                    this.tookFluids.add(took);
+                    tookFluids.add(stackExtracted);
                 }
 
                 break;
             }
         }
 
-        if (toTake.isEmpty() && toTakeFluids.isEmpty() && missing.isEmpty() && hasProcessedItems()) {
+        if (isFinished()) {
             ItemStack insert = toInsert.peek();
 
             if (network.insertItem(insert, insert.stackSize, true) == null) {
@@ -252,10 +259,10 @@ public class CraftingTask implements ICraftingTask {
             0
         ));
 
-        if (!toTake.isEmpty()) {
-            elements.add(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_taking", 16));
+        if (isFinished()) {
+            elements.add(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_inserting", 16));
 
-            elements.addAll(toTake.getStacks().stream()
+            elements.addAll(toInsert.stream()
                 .map(stack -> new CraftingMonitorElementItemRender(
                     -1,
                     stack,
@@ -264,33 +271,47 @@ public class CraftingTask implements ICraftingTask {
                 ))
                 .collect(Collectors.toList())
             );
-        }
+        } else {
+            if (!toTake.isEmpty()) {
+                elements.add(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_taking", 16));
 
-        if (!toTakeFluids.isEmpty()) {
-            elements.add(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.fluids_taking", 16));
+                elements.addAll(toTake.getStacks().stream()
+                    .map(stack -> new CraftingMonitorElementItemRender(
+                        -1,
+                        stack,
+                        stack.stackSize,
+                        32
+                    ))
+                    .collect(Collectors.toList())
+                );
+            }
 
-            elements.addAll(toTakeFluids.getStacks().stream()
-                .map(stack -> new CraftingMonitorElementFluidRender(
-                    -1,
-                    stack,
-                    32
-                ))
-                .collect(Collectors.toList())
-            );
-        }
+            if (!toTakeFluids.isEmpty()) {
+                elements.add(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.fluids_taking", 16));
 
-        if (!hasProcessedItems()) {
-            elements.add(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_processing", 16));
+                elements.addAll(toTakeFluids.getStacks().stream()
+                    .map(stack -> new CraftingMonitorElementFluidRender(
+                        -1,
+                        stack,
+                        32
+                    ))
+                    .collect(Collectors.toList())
+                );
+            }
 
-            for (IProcessable processable : toProcess) {
-                for (int i = 0; i < processable.getPattern().getOutputs().size(); ++i) {
-                    if (!processable.hasReceivedOutput(i)) {
-                        elements.add(new CraftingMonitorElementItemRender(
-                            -1,
-                            processable.getPattern().getOutputs().get(i),
-                            processable.getPattern().getOutputs().get(i).stackSize,
-                            32
-                        ));
+            if (!hasProcessedItems()) {
+                elements.add(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_processing", 16));
+
+                for (IProcessable processable : toProcess) {
+                    for (int i = 0; i < processable.getPattern().getOutputs().size(); ++i) {
+                        if (!processable.hasReceivedOutput(i)) {
+                            elements.add(new CraftingMonitorElementItemRender(
+                                -1,
+                                processable.getPattern().getOutputs().get(i),
+                                processable.getPattern().getOutputs().get(i).stackSize,
+                                32
+                            ));
+                        }
                     }
                 }
             }
@@ -309,17 +330,11 @@ public class CraftingTask implements ICraftingTask {
         return toProcess;
     }
 
+    private boolean isFinished() {
+        return toTake.isEmpty() && toTakeFluids.isEmpty() && missing.isEmpty() && hasProcessedItems();
+    }
+
     private boolean hasProcessedItems() {
         return toProcess.stream().allMatch(IProcessable::hasReceivedOutputs);
-    }
-
-    private void addExtras(ICraftingPattern pattern) {
-        pattern.getOutputs().stream()
-            .filter(o -> o.stackSize > 1)
-            .forEach(o -> extras.add(ItemHandlerHelper.copyStackWithSize(o, o.stackSize - 1)));
-    }
-
-    private void decrOrRemoveExtras(ItemStack stack) {
-        extras.remove(ItemHandlerHelper.copyStackWithSize(stack, 1), true);
     }
 }
