@@ -1,5 +1,6 @@
 package refinedstorage.tile;
 
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataSerializers;
@@ -218,30 +219,28 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             return;
         }
 
-        ItemStack extracted = null;
-        int i = 0;
-
-        do {
-            ItemStack stack = null;
-
-            while (storage.getItems().size() > i && stack == null) {
-                stack = storage.getItems().get(i++);
+        for (int i = 0; i < storage.getItems().size(); i++) {
+            ItemStack stack = storage.getItems().get(i);
+            if (stack == null) {
+                continue;
             }
 
-            if (stack != null) {
-                extracted = storage.extractItem(stack, upgrades.getInteractStackSize(), compare);
+            ItemStack extracted = storage.extractItem(stack, upgrades.getInteractStackSize(), compare);
+            if (extracted == null) {
+                continue;
             }
-        } while (storage.getItems().size() > i && extracted == null);
 
-        if (extracted == null) {
-            moveDriveToOutput(slot);
-            return;
+            ItemStack remainder = network.insertItem(extracted, extracted.stackSize, false);
+            if (remainder == null) {
+                break;
+            }
+
+            // We need to check if the stack was inserted
+            storage.insertItem(((extracted == remainder) ? remainder.copy() : remainder), remainder.stackSize, false);
         }
 
-        ItemStack remainder = network.insertItem(extracted, extracted.stackSize, false);
-
-        if (remainder != null) {
-            storage.insertItem(remainder, remainder.stackSize, false);
+        if (storage.getItems().size() == 0) {
+            moveDriveToOutput(slot);
         }
     }
 
