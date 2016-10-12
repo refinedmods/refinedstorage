@@ -226,16 +226,16 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             }
 
             ItemStack extracted = storage.extractItem(stack, upgrades.getInteractStackSize(), compare);
-            if (extracted == null) { // I think this is not necessary since I already test if stack is null
+            if (extracted == null) {
                 continue;
             }
 
             ItemStack remainder = network.insertItem(extracted, extracted.stackSize, false);
             if (remainder == null) {
-                continue;
+                break;
             }
 
-            //We need to check if the stack was inserted
+            // We need to check if the stack was inserted
             storage.insertItem(((extracted == remainder) ? remainder.copy() : remainder), remainder.stackSize, false);
         }
 
