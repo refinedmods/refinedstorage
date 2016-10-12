@@ -17,6 +17,7 @@
 - Fixed fluid rendering bugging out side buttons (raoulvdberge)
 - Fixed item count going negative in some cases (raoulvdberge)
 - Fixed Storage Drawer quantities not updating properly on Void Drawers (geldorn)
+- Fixed Disk Manipulator blocking items transferring in some cases (InusualZ)
 - Updated Storage Drawers API (raoulvdberge)
 
 ### 1.1.3
