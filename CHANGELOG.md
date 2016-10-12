@@ -18,6 +18,7 @@
 - Fixed item count going negative in some cases (raoulvdberge)
 - Fixed Storage Drawer quantities not updating properly on Void Drawers (geldorn)
 - Fixed Disk Manipulator blocking items transferring in some cases (InusualZ)
+- Fixed External Storage crafting recipe not supporting ore dictionary chests (raoulvdberge)
 - Updated Storage Drawers API (raoulvdberge)
 
 ### 1.1.3

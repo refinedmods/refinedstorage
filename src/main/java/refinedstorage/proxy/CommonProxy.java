@@ -323,17 +323,17 @@ public class CommonProxy {
         );
 
         // External Storage
-        GameRegistry.addRecipe(new ItemStack(RSBlocks.EXTERNAL_STORAGE),
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RSBlocks.EXTERNAL_STORAGE),
             "CED",
             "HMH",
             "EPE",
             'E', new ItemStack(RSItems.QUARTZ_ENRICHED_IRON),
-            'H', new ItemStack(Blocks.CHEST),
+            'H', "chest",
             'C', new ItemStack(RSItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
             'D', new ItemStack(RSItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
             'M', new ItemStack(RSBlocks.CABLE),
             'P', new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED)
-        );
+        ));
 
         // Importer
         GameRegistry.addShapelessRecipe(new ItemStack(RSBlocks.IMPORTER),
