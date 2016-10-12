@@ -3,7 +3,10 @@ package refinedstorage.tile.grid;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.*;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryCraftResult;
+import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
@@ -254,7 +257,7 @@ public class TileGrid extends TileNode implements IGrid {
             if (i < remainder.length && remainder[i] != null) {
                 if (slot != null && slot.stackSize > 1) {
                     if (!player.inventory.addItemStackToInventory(remainder[i].copy())) {
-                        InventoryHelper.spawnItemStack(player.worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), remainder[i].copy());
+                        network.insertItem(remainder[i].copy(), remainder[i].stackSize, false);
                     }
 
                     matrix.decrStackSize(i, 1);
@@ -294,7 +297,7 @@ public class TileGrid extends TileNode implements IGrid {
 
         for (ItemStack craftedItem : craftedItemsList) {
             if (!player.inventory.addItemStackToInventory(craftedItem.copy())) {
-                InventoryHelper.spawnItemStack(player.worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), craftedItem);
+                network.insertItem(craftedItem, craftedItem.stackSize, false);
             }
         }
 
