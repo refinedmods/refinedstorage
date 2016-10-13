@@ -255,7 +255,7 @@ public class TileGrid extends TileNode implements IGrid {
                 if (slot != null && slot.stackSize > 1) {
                     if (!player.inventory.addItemStackToInventory(remainder[i].copy())) {
                         ItemStack remainderStack = network.insertItem(remainder[i].copy(), remainder[i].stackSize, false);
-                        if (remain != null) {
+                        if (remainderStack != null) {
                             InventoryHelper.spawnItemStack(player.worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), remainderStack);
                         }
                     }
