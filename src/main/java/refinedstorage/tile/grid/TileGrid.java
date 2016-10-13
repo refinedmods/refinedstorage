@@ -254,9 +254,9 @@ public class TileGrid extends TileNode implements IGrid {
             if (i < remainder.length && remainder[i] != null) {
                 if (slot != null && slot.stackSize > 1) {
                     if (!player.inventory.addItemStackToInventory(remainder[i].copy())) {
-                        ItemStack remain = network.insertItem(remainder[i].copy(), remainder[i].stackSize, false);
+                        ItemStack remainderStack = network.insertItem(remainder[i].copy(), remainder[i].stackSize, false);
                         if (remain != null) {
-                            InventoryHelper.spawnItemStack(player.worldObj, pos.getX(), pos.getY(), pos.getZ(), remain);
+                            InventoryHelper.spawnItemStack(player.worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), remainderStack);
                         }
                     }
 
@@ -299,7 +299,7 @@ public class TileGrid extends TileNode implements IGrid {
             if (!player.inventory.addItemStackToInventory(craftedItem.copy())) {
                 ItemStack remainder = network.insertItem(craftedItem, craftedItem.stackSize, false);
                 if (remainder != null) {
-                    InventoryHelper.spawnItemStack(player.worldObj, pos.getX(), pos.getY(), pos.getZ(), remainder);
+                    InventoryHelper.spawnItemStack(player.worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), remainder);
                 }
             }
         }
