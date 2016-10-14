@@ -108,7 +108,7 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
                 for (Entity entity : droppedItems) {
                     if (entity instanceof EntityItem) {
                         ItemStack droppedItem = ((EntityItem) entity).getEntityItem();
-                        if (IFilterable.canTake(itemFilters, mode, compare, ((EntityItem) entity).getEntityItem())) {
+                        if (IFilterable.canTake(itemFilters, mode, compare, droppedItem)) {
                             if (network.insertItem(droppedItem, droppedItem.stackSize, true) == null) {
                                 network.insertItem(droppedItem.copy(), droppedItem.stackSize, false);
                                 worldObj.removeEntity(entity);
