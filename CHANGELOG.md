@@ -22,6 +22,7 @@
 - Fixed Disk Manipulator blocking items transferring in some cases (InusualZ)
 - Fixed External Storage crafting recipe not supporting ore dictionary chests (raoulvdberge)
 - Fixed when shift clicking crafting recipe and inventory is full items are dropping on the ground instead of going in the system (raoulvdberge)
+- Fixed glitchy rendering of cable parts in item form (raoulvdberge)
 - Updated Storage Drawers API (raoulvdberge)
 
 ### 1.1.3
