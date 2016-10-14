@@ -3,6 +3,7 @@ package refinedstorage.block;
 import mcmultipart.block.BlockCoverable;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -11,11 +12,14 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import refinedstorage.RS;
 import refinedstorage.RSGui;
 import refinedstorage.tile.TileWirelessTransmitter;
+
+import java.util.List;
 
 public class BlockWirelessTransmitter extends BlockNode {
     // From BlockTorch
@@ -85,5 +89,12 @@ public class BlockWirelessTransmitter extends BlockNode {
     @Override
     public EnumPlacementType getPlacementType() {
         return null;
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
+        super.addInformation(stack, player, tooltip, advanced);
+
+        tooltip.add(I18n.format("block.refinedstorage:wireless_transmitter.tooltip", TextFormatting.WHITE + I18n.format("block.refinedstorage:cable.name") + TextFormatting.GRAY));
     }
 }

@@ -158,6 +158,7 @@ block.refinedstorage:relay.name=Relay
 block.refinedstorage:interface.name=Interface
 block.refinedstorage:crafting_monitor.name=Crafting Monitor
 block.refinedstorage:wireless_transmitter.name=Wireless Transmitter
+block.refinedstorage:wireless_transmitter.tooltip=Needs to be placed on %s.
 block.refinedstorage:crafter.name=Crafter
 block.refinedstorage:processing_pattern_encoder.name=Processing Pattern Encoder
 block.refinedstorage:processing_pattern_encoder.tooltip.0=Only used for creating processing patterns.
