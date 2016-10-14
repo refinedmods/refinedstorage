@@ -1,5 +1,6 @@
 package refinedstorage.gui.sidebutton;
 
+import net.minecraft.util.text.TextFormatting;
 import refinedstorage.RSUtils;
 import refinedstorage.api.storage.AccessType;
 import refinedstorage.gui.GuiBase;
@@ -22,7 +23,7 @@ public class SideButtonAccessType extends SideButton {
 
     @Override
     public String getTooltip() {
-        return gui.t("sidebutton.refinedstorage:access_type." + parameter.getValue().getId());
+        return TextFormatting.RED + gui.t("sidebutton.refinedstorage:access_type") + TextFormatting.RESET + "\n" + gui.t("sidebutton.refinedstorage:access_type." + parameter.getValue().getId());
     }
 
     @Override

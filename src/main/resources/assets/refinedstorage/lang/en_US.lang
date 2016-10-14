@@ -126,6 +126,7 @@ sidebutton.refinedstorage:constructor.drop=Drop blocks instead of placing
 
 sidebutton.refinedstorage:destructor.pickup=Pickup items instead of breaking
 
+sidebutton.refinedstorage:access_type=Access Type
 sidebutton.refinedstorage:access_type.0=Read and write
 sidebutton.refinedstorage:access_type.1=Read
 sidebutton.refinedstorage:access_type.2=Write
