@@ -4,11 +4,17 @@ import mcmultipart.microblock.IMicroblock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -28,18 +34,35 @@ import refinedstorage.item.ItemUpgrade;
 import refinedstorage.tile.config.IComparable;
 import refinedstorage.tile.config.IFilterable;
 import refinedstorage.tile.config.IType;
+import refinedstorage.tile.data.ITileDataConsumer;
+import refinedstorage.tile.data.ITileDataProducer;
 import refinedstorage.tile.data.TileDataParameter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TileDestructor extends TileMultipartNode implements IComparable, IFilterable, IType {
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
     public static final TileDataParameter<Integer> TYPE = IType.createParameter();
+    public static final TileDataParameter<Boolean> PICKUP = new TileDataParameter<Boolean>(DataSerializers.BOOLEAN, false, new ITileDataProducer<Boolean, TileDestructor>() {
+        @Override
+        public Boolean getValue(TileDestructor tile) {
+            return tile.pickupItem;
+        }
+    }, new ITileDataConsumer<Boolean, TileDestructor>() {
+        @Override
+        public void setValue(TileDestructor tile, Boolean value) {
+            tile.pickupItem = value;
+
+            tile.markDirty();
+        }
+    });
 
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
     private static final String NBT_TYPE = "Type";
+    private static final String NBT_PICKUP = "Pickup";
 
     private static final int BASE_SPEED = 20;
 
@@ -51,11 +74,13 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int mode = IFilterable.WHITELIST;
     private int type = IType.ITEMS;
+    private boolean pickupItem = false;
 
     public TileDestructor() {
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(MODE);
         dataManager.addWatchedParameter(TYPE);
+        dataManager.addWatchedParameter(PICKUP);
     }
 
     @Override
@@ -71,9 +96,29 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
     @Override
     public void updateNode() {
         if (ticks % upgrades.getSpeed(BASE_SPEED, 4) == 0) {
-            if (type == IType.ITEMS) {
-                BlockPos front = pos.offset(getDirection());
 
+            BlockPos front = pos.offset(getDirection());
+
+            if (pickupItem && type == IType.ITEMS) {
+                List<Entity> droppedItems = new ArrayList<>();
+
+                Chunk chunk = worldObj.getChunkFromBlockCoords(front);
+                chunk.getEntitiesWithinAABBForEntity(null, new AxisAlignedBB(front), droppedItems, null);
+
+                for (Entity entity : droppedItems) {
+                    if (entity instanceof EntityItem) {
+                        ItemStack droppedItem = ((EntityItem) entity).getEntityItem();
+                        if (IFilterable.canTake(itemFilters, mode, compare, droppedItem)) {
+                            if (network.insertItem(droppedItem, droppedItem.stackSize, true) == null) {
+                                network.insertItem(droppedItem.copy(), droppedItem.stackSize, false);
+                                worldObj.removeEntity(entity);
+                            }
+
+                            break;
+                        }
+                    }
+                }
+            } else if (type == IType.ITEMS) {
                 IBlockState frontBlockState = worldObj.getBlockState(front);
 
                 @SuppressWarnings("deprecation")
@@ -102,8 +147,6 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
                     }
                 }
             } else if (type == IType.FLUIDS) {
-                BlockPos front = pos.offset(getDirection());
-
                 Block frontBlock = worldObj.getBlockState(front).getBlock();
 
                 IFluidHandler handler = null;
@@ -167,6 +210,10 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
             type = tag.getInteger(NBT_TYPE);
         }
 
+        if (tag.hasKey(NBT_PICKUP)) {
+            pickupItem = tag.getBoolean(NBT_PICKUP);
+        }
+
         RSUtils.readItems(itemFilters, 0, tag);
         RSUtils.readItems(upgrades, 1, tag);
         RSUtils.readItems(fluidFilters, 2, tag);
@@ -179,6 +226,7 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_MODE, mode);
         tag.setInteger(NBT_TYPE, type);
+        tag.setBoolean(NBT_PICKUP, pickupItem);
 
         RSUtils.writeItems(itemFilters, 0, tag);
         RSUtils.writeItems(upgrades, 1, tag);

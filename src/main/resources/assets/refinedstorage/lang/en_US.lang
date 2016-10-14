@@ -124,6 +124,8 @@ sidebutton.refinedstorage:void_excess.items_fluids=Void excess items and fluids
 
 sidebutton.refinedstorage:constructor.drop=Drop blocks instead of placing
 
+sidebutton.refinedstorage:destructor.pickup=Pickup items instead of breaking
+
 sidebutton.refinedstorage:access_type.0=Read and write
 sidebutton.refinedstorage:access_type.1=Read
 sidebutton.refinedstorage:access_type.2=Write
