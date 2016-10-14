@@ -4,6 +4,7 @@
 - raoulvdberge
 - way2muchnoise
 - tomevoll (providing small patches)
+- InusualZ (providing small features)
 - blay09 (Crafting Tweaks integration)
 
 ## Art

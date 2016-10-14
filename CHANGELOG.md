@@ -11,6 +11,7 @@
 - The Destructor can now pick up items in the world (InusualZ)
 - Stack upgrade in Importer / Exporter in fluid mode and Fluid Interface now transfers 64 buckets at once (raoulvdberge)
 - Detector without any filter will detect based on total items or fluids stored (raoulvdberge)
+- Storage disks and storage blocks now don't despawn anymore when dropped in the world (raoulvdberge)
 - Fixed resetting a stack of patterns yields 1 blank pattern (raoulvdberge)
 - Fixed being able to pipe items in the export slots of the Interface (InusualZ)
 - Fixed Interface being stuck when item isn't accepted in storage (InusualZ)

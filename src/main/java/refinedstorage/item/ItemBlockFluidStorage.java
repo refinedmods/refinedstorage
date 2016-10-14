@@ -81,6 +81,11 @@ public class ItemBlockFluidStorage extends ItemBlockBase {
         initNBT(stack);
     }
 
+    @Override
+    public int getEntityLifespan(ItemStack stack, World world) {
+        return Integer.MAX_VALUE;
+    }
+
     public static ItemStack initNBT(ItemStack stack) {
         NBTTagCompound tag = new NBTTagCompound();
         tag.setTag(TileFluidStorage.NBT_STORAGE, FluidStorageNBT.createNBT());

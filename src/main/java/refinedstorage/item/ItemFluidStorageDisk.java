@@ -114,4 +114,9 @@ public class ItemFluidStorageDisk extends ItemBase {
 
         FluidStorageNBT.createStackWithNBT(stack);
     }
+
+    @Override
+    public int getEntityLifespan(ItemStack stack, World world) {
+        return Integer.MAX_VALUE;
+    }
 }
