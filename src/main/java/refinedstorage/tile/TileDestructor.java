@@ -7,7 +7,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataSerializers;
@@ -108,11 +107,11 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
                 for (Entity entity : droppedItems) {
                     if (entity instanceof EntityItem) {
                         ItemStack droppedItem = ((EntityItem) entity).getEntityItem();
-                        if (IFilterable.canTake(itemFilters, mode, compare, droppedItem)) {
-                            if (network.insertItem(droppedItem, droppedItem.stackSize, true) == null) {
-                                network.insertItem(droppedItem.copy(), droppedItem.stackSize, false);
-                                worldObj.removeEntity(entity);
-                            }
+
+                        if (IFilterable.canTake(itemFilters, mode, compare, droppedItem) && network.insertItem(droppedItem, droppedItem.stackSize, true) == null) {
+                            network.insertItem(droppedItem.copy(), droppedItem.stackSize, false);
+
+                            worldObj.removeEntity(entity);
 
                             break;
                         }
