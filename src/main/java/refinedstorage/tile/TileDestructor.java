@@ -99,20 +99,24 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
             BlockPos front = pos.offset(getDirection());
 
             if (pickupItem && type == IType.ITEMS) {
-                List<Entity> droppedItem = new ArrayList<>();
+                List<Entity> droppedItems = new ArrayList<>();
 
                 Chunk chunk = worldObj.getChunkFromBlockCoords(front);
-                chunk.getEntitiesWithinAABBForEntity(null, new AxisAlignedBB(front), droppedItem, null);
+                chunk.getEntitiesWithinAABBForEntity(null, new AxisAlignedBB(front), droppedItems, null);
 
-                if (droppedItem.size() > 0) {
-                    for (Entity item : droppedItem) {
-                        if (item instanceof EntityItem) {
-                            ItemStack remainder = network.insertItem(((EntityItem) item).getEntityItem().copy(), ((EntityItem) item).getEntityItem().stackSize, false);
-                            if (remainder != null) {
-                                InventoryHelper.spawnItemStack(worldObj, front.getX(), front.getY(), front.getZ(), remainder);
+                for (Entity item : droppedItems) {
+                    if (item instanceof EntityItem) {
+                        if (IFilterable.canTake(itemFilters, mode, compare, ((EntityItem) item).getEntityItem())) {
+                            int originalSize = ((EntityItem) item).getEntityItem().stackSize;
+                            ItemStack remainder = network.insertItem(((EntityItem) item).getEntityItem().copy(), originalSize, false);
+                            if (remainder != null && originalSize > remainder.stackSize) {
+                                ((EntityItem) item).getEntityItem().stackSize -= remainder.stackSize;
+                            } else if(remainder == null) {
+                                worldObj.removeEntity(item);
+                            } else {
+                                continue;
                             }
 
-                            worldObj.removeEntity(item);
                             break;
                         }
                     }
