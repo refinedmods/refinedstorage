@@ -165,7 +165,7 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
             voidExcess = tag.getBoolean(NBT_VOID_EXCESS);
         }
 
-        RSUtils.writeAccessType(tag, accessType);
+        accessType = RSUtils.readAccessType(tag);
     }
 
     @Override
@@ -185,7 +185,7 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
         tag.setInteger(NBT_MODE, mode);
         tag.setBoolean(NBT_VOID_EXCESS, voidExcess);
 
-        accessType = RSUtils.readAccessType(tag);
+        RSUtils.writeAccessType(tag, accessType);
 
         return tag;
     }
