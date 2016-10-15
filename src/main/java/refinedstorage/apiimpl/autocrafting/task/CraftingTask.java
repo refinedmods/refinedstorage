@@ -18,11 +18,9 @@ import refinedstorage.apiimpl.API;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementFluidRender;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementItemRender;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementText;
+import refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewStack;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class CraftingTask implements ICraftingTask {
@@ -32,10 +30,11 @@ public class CraftingTask implements ICraftingTask {
     private int quantity;
     private List<IProcessable> toProcess = new ArrayList<>();
     private IItemStackList toTake = API.instance().createItemStackList();
-    private IFluidStackList toTakeFluids = API.instance().createFluidStackList();
     private IItemStackList toCraft = API.instance().createItemStackList();
+    private IFluidStackList toTakeFluids = API.instance().createFluidStackList();
     private IItemStackList missing = API.instance().createItemStackList();
-    private IItemStackList extras = API.instance().createItemStackList();
+    private Set<ICraftingPattern> usedPatterns = new HashSet<>();
+    private boolean recurseFound = false;
     private Deque<ItemStack> toInsert = new ArrayDeque<>();
     private int compare = IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT;
     private List<ItemStack> took = new ArrayList<>();
@@ -52,109 +51,133 @@ public class CraftingTask implements ICraftingTask {
         }
     }
 
+    @Override
     public void calculate() {
-        IItemStackList list = network.getItemStorageCache().getList().copy();
+        IItemStackList networkList = network.getItemStorageCache().getList().copy();
+        IItemStackList toInsert = API.instance().createItemStackList();
 
-        int newQuantity = quantity;
-
-        while (newQuantity > 0) {
-            calculate(list, pattern, true);
-
-            for (ItemStack output : pattern.getOutputs()) {
-                toInsert.add(output.copy());
-            }
-
-            newQuantity -= requested == null ? newQuantity : pattern.getQuantityPerRequest(requested);
+        toCraft.add(ItemHandlerHelper.copyStackWithSize(requested, quantity));
+        int quantity = this.quantity;
+        while (quantity > 0 && !recurseFound) {
+            calculate(networkList, pattern, toInsert);
+            quantity -= pattern.getQuantityPerRequest(requested);
         }
 
-        for (ItemStack extra : extras.getStacks()) {
-            toInsert.add(extra);
+        if (!recurseFound) {
+            this.toInsert.addAll(toInsert.getStacks());
         }
+        usedPatterns.clear();
     }
 
-    private void calculate(IItemStackList list, ICraftingPattern pattern, boolean basePattern) {
+    private void calculate(IItemStackList networkList, ICraftingPattern pattern, IItemStackList toInsert) {
+        recurseFound = !usedPatterns.add(pattern);
+        if (recurseFound) return;
+
         ItemStack[] took = new ItemStack[9];
 
         if (pattern.isProcessing()) {
             toProcess.add(new Processable(pattern));
         }
 
-        if (!basePattern) {
-            pattern.getOutputs().stream()
-                .filter(o -> o.stackSize > 1)
-                .forEach(o -> extras.add(ItemHandlerHelper.copyStackWithSize(o, o.stackSize - 1)));
-        }
-
-        for (int i = 0; i < pattern.getInputs().size(); ++i) {
-            ItemStack input = pattern.getInputs().get(i);
-
-            ItemStack inputInNetwork = list.get(input, compare);
-
-            if (inputInNetwork == null || inputInNetwork.stackSize == 0) {
-                ItemStack extra = extras.get(input, compare);
-
-                if (extra != null) {
-                    ItemStack extraToRemove = ItemHandlerHelper.copyStackWithSize(extra, 1);
-
-                    if (!pattern.isProcessing()) {
-                        took[i] = extraToRemove;
-                    }
-
-                    extras.remove(extraToRemove, true);
-                } else {
-                    ICraftingPattern inputPattern = network.getPattern(input, compare);
-
-                    if (inputPattern != null) {
-                        for (ItemStack output : inputPattern.getOutputs()) {
-                            toCraft.add(output);
-                        }
-
-                        calculate(list, inputPattern, false);
-                    } else {
-                        FluidStack fluidInItem = RSUtils.getFluidFromStack(input, true);
-
-                        if (fluidInItem != null && RSUtils.hasFluidBucket(fluidInItem)) {
-                            FluidStack fluidInStorage = network.getFluidStorageCache().getList().get(fluidInItem);
-
-                            if (fluidInStorage == null || fluidInStorage.amount < fluidInItem.amount) {
-                                missing.add(input);
-                            } else {
-                                boolean hasBucket = network.getItemStorageCache().getList().get(RSUtils.EMPTY_BUCKET) != null;
-                                ICraftingPattern bucketPattern = network.getPattern(RSUtils.EMPTY_BUCKET);
-
-                                if (!hasBucket) {
-                                    if (bucketPattern == null) {
-                                        missing.add(RSUtils.EMPTY_BUCKET.copy());
-                                    } else {
-                                        calculate(list, bucketPattern, false);
-                                    }
-                                }
-
-                                if (hasBucket || bucketPattern != null) {
-                                    toTakeFluids.add(fluidInItem.copy());
-                                }
-                            }
-                        } else {
-                            missing.add(input);
-                        }
-                    }
-                }
-            } else {
-                if (!pattern.isProcessing()) {
-                    ItemStack take = ItemHandlerHelper.copyStackWithSize(inputInNetwork, 1);
-
-                    toTake.add(take);
-
-                    took[i] = take;
-                }
-
-                list.remove(inputInNetwork, 1, true);
+        IItemStackList inputs = API.instance().createItemStackList();
+        IItemStackList actualInputs = API.instance().createItemStackList();
+        for (ItemStack input : pattern.getInputs()) {
+            if (input != null) {
+                inputs.add(input.copy());
             }
         }
 
-        for (ItemStack byproduct : (pattern.isOredict() ? pattern.getByproducts(took) : pattern.getByproducts())) {
-            extras.add(byproduct.copy());
+        for (ItemStack input : inputs.getStacks()) {
+            ItemStack extraStack = toInsert.get(input, compare);
+            ItemStack networkStack = networkList.get(input, compare);
+
+            while (input.stackSize > 0) {
+                if (extraStack != null && extraStack.stackSize > 0) {
+                    int takeQuantity = Math.min(extraStack.stackSize, input.stackSize);
+                    ItemStack inputStack = ItemHandlerHelper.copyStackWithSize(extraStack, takeQuantity);
+                    actualInputs.add(inputStack.copy());
+                    input.stackSize -= takeQuantity;
+                    toInsert.remove(inputStack, true);
+                } else if (networkStack != null && networkStack.stackSize > 0) {
+                    int takeQuantity = Math.min(networkStack.stackSize, input.stackSize);
+                    ItemStack inputStack = ItemHandlerHelper.copyStackWithSize(networkStack, takeQuantity);
+                    toTake.add(inputStack.copy());
+                    actualInputs.add(inputStack.copy());
+                    input.stackSize -= takeQuantity;
+                    networkList.remove(inputStack, true);
+                } else {
+                    ICraftingPattern inputPattern = network.getPattern(input, compare);
+                    if (inputPattern != null) {
+                        int craftQuantity = Math.min(inputPattern.getQuantityPerRequest(input), input.stackSize);
+                        ItemStack inputCrafted = ItemHandlerHelper.copyStackWithSize(input, craftQuantity);
+                        toCraft.add(inputCrafted.copy());
+                        actualInputs.add(inputCrafted.copy());
+                        calculate(networkList, inputPattern, toInsert);
+                        input.stackSize -= craftQuantity;
+                        // Calculate added all the crafted outputs toInsert
+                        // So we remove the ones we use from toInsert
+                        toInsert.remove(inputCrafted, true);
+                    } else if (!doFluidCalculation(networkList, input, toInsert)) {
+                        missing.add(input.copy());
+                        input.stackSize = 0;
+                    }
+                }
+            }
         }
+
+        if (missing.isEmpty()) {
+            for (int i = 0; i < pattern.getInputs().size(); i++) {
+                ItemStack input = pattern.getInputs().get(i);
+                if (input != null) {
+                    ItemStack actualInput = actualInputs.get(input, compare);
+                    ItemStack taken = ItemHandlerHelper.copyStackWithSize(actualInput, input.stackSize);
+                    took[i] = taken;
+                    if (taken == null) {
+                        taken = null;
+                    }
+                    actualInputs.remove(taken, true);
+                }
+            }
+
+            for (ItemStack byproduct : (pattern.isOredict() ? pattern.getByproducts(took) : pattern.getByproducts())) {
+                toInsert.add(byproduct.copy());
+            }
+
+            for (ItemStack output : pattern.getOutputs()) {
+                toInsert.add(output.copy());
+            }
+        }
+        usedPatterns.remove(pattern);
+    }
+
+    private boolean doFluidCalculation(IItemStackList networkList, ItemStack input, IItemStackList toInsert) {
+        FluidStack fluidInItem = RSUtils.getFluidFromStack(input, true);
+
+        if (fluidInItem != null && RSUtils.hasFluidBucket(fluidInItem)) {
+            FluidStack fluidInStorage = network.getFluidStorageCache().getList().get(fluidInItem);
+
+            if (fluidInStorage == null || fluidInStorage.amount < fluidInItem.amount) {
+                missing.add(input);
+            } else {
+                boolean hasBucket = networkList.get(RSUtils.EMPTY_BUCKET) != null;
+                ICraftingPattern bucketPattern = network.getPattern(RSUtils.EMPTY_BUCKET);
+
+                if (!hasBucket) {
+                    if (bucketPattern == null) {
+                        missing.add(RSUtils.EMPTY_BUCKET.copy());
+                    } else {
+                        toCraft.add(RSUtils.EMPTY_BUCKET.copy());
+                        calculate(networkList, bucketPattern, toInsert);
+                    }
+                }
+
+                if (hasBucket || bucketPattern != null) {
+                    toTakeFluids.add(fluidInItem.copy());
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -173,14 +196,13 @@ public class CraftingTask implements ICraftingTask {
         return "\nCraftingTask{quantity=" + quantity +
             "\n, toTake=" + toTake +
             "\n, toTakeFluids=" + toTakeFluids +
-            "\n, toCraft=" + toCraft +
             "\n, toProcess=" + toProcess +
-            "\n, extras=" + extras +
+            "\n, toCraft=" + toProcess +
             "\n, toInsert=" + toInsert +
-            "\n, missing=" + missing +
             '}';
     }
 
+    @Override
     public boolean update() {
         for (IProcessable processable : toProcess) {
             IItemHandler inventory = processable.getPattern().getContainer().getFacingInventory();
@@ -226,7 +248,7 @@ public class CraftingTask implements ICraftingTask {
         if (isFinished()) {
             ItemStack insert = toInsert.peek();
 
-            if (network.insertItem(insert, insert.stackSize, true) == null) {
+            if (insert != null && network.insertItem(insert, insert.stackSize, true) == null) {
                 network.insertItem(insert, insert.stackSize, false);
 
                 toInsert.pop();
@@ -328,6 +350,51 @@ public class CraftingTask implements ICraftingTask {
     @Override
     public List<IProcessable> getToProcess() {
         return toProcess;
+    }
+
+    @Override
+    public boolean isValid() {
+        return !recurseFound;
+    }
+
+    @Override
+    public List<CraftingPreviewStack> getPreviewStacks() {
+        if (!isValid()) return new ArrayList<>();
+
+        Map<Integer, CraftingPreviewStack> map = new LinkedHashMap<>();
+
+        for (ItemStack stack : toCraft.getStacks()) {
+            int hash = API.instance().getItemStackHashCode(stack);
+            CraftingPreviewStack previewStack = map.get(hash);
+            if (previewStack == null) {
+                previewStack = new CraftingPreviewStack(stack);
+            }
+            previewStack.addToCraft(stack.stackSize);
+            map.put(hash, previewStack);
+        }
+
+        for (ItemStack stack : toTake.getStacks()) {
+            int hash = API.instance().getItemStackHashCode(stack);
+            CraftingPreviewStack previewStack = map.get(hash);
+            if (previewStack == null) {
+                previewStack = new CraftingPreviewStack(stack);
+            }
+            previewStack.addAvailable(stack.stackSize);
+            map.put(hash, previewStack);
+        }
+
+        for (ItemStack stack : missing.getStacks()) {
+            int hash = API.instance().getItemStackHashCode(stack);
+            CraftingPreviewStack previewStack = map.get(hash);
+            if (previewStack == null) {
+                previewStack = new CraftingPreviewStack(stack);
+            }
+            previewStack.setMissing(true);
+            previewStack.addToCraft(stack.stackSize);
+            map.put(hash, previewStack);
+        }
+
+        return new ArrayList<>(map.values());
     }
 
     private boolean isFinished() {

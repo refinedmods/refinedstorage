@@ -1,8 +1,10 @@
 package refinedstorage.api.autocrafting.task;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
+import refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewStack;
 
 import java.util.List;
 
@@ -27,6 +29,7 @@ public interface ICraftingTask {
 
     /**
      * Updates this task. Gets called every few ticks, depending on the speed of the pattern container.
+     * {@link ICraftingTask#calculate()}  must be run before this
      *
      * @return true if this crafting task is finished and can be deleted from the list, false otherwise
      */
@@ -46,6 +49,8 @@ public interface ICraftingTask {
     NBTTagCompound writeToNBT(NBTTagCompound tag);
 
     /**
+     * {@link ICraftingTask#calculate()} must be run before this
+     *
      * @return the elements of this task for display in the crafting monitor
      */
     List<ICraftingMonitorElement> getCraftingMonitorElements();
@@ -56,7 +61,26 @@ public interface ICraftingTask {
     ICraftingPattern getPattern();
 
     /**
+     * {@link ICraftingTask#calculate()} must be run before this
+     *
      * @return the processable items in this task
      */
     List<IProcessable> getToProcess();
+
+    /**
+     * Used to check if the crafting task has recursive elements
+     * (eg. block needs 9 ingots, ingots are crafted by a block)
+     * {@link ICraftingTask#calculate()} must be run before this
+     *
+     *
+     * @return true if no recursion was found
+     */
+    boolean isValid();
+
+    /**
+     * {@link ICraftingTask#calculate()} must be run before this
+     *
+     * @return get a list of {@link CraftingPreviewStack}s
+     */
+    List<CraftingPreviewStack> getPreviewStacks();
 }

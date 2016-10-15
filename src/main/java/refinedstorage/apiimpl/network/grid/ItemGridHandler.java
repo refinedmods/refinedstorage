@@ -6,11 +6,13 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RS;
+import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.network.grid.IItemGridHandler;
 import refinedstorage.apiimpl.API;
 import refinedstorage.apiimpl.autocrafting.task.CraftingTask;
+import refinedstorage.network.MessageGridCraftingPreviewResponse;
 
 public class ItemGridHandler implements IItemGridHandler {
     private INetworkMaster network;
@@ -122,45 +124,25 @@ public class ItemGridHandler implements IItemGridHandler {
         ItemStack stack = network.getItemStorageCache().getList().get(hash);
 
         if (stack != null) {
-            CraftingTask task = new CraftingTask(network, stack, network.getPattern(stack), quantity);
-
+            ICraftingTask task = new CraftingTask(network, stack, network.getPattern(stack), quantity);
             task.calculate();
-
-            System.out.println(task.toString());
-
-            network.addCraftingTask(task);
-
-            /*CraftingPreviewData previewData = new CraftingPreviewData(network);
-
-            previewData.calculate(stack, quantity);
-
-            RefinedStorage.INSTANCE.network.sendTo(new MessageGridCraftingPreviewResponse(previewData.values(), hash, quantity), player);*/
+            RS.INSTANCE.network.sendTo(new MessageGridCraftingPreviewResponse(task.getPreviewStacks(), hash, quantity), player);
         }
     }
 
     @Override
     public void onCraftingRequested(int hash, int quantity) {
-        /*if (quantity <= 0) {
+        if (quantity <= 0) {
             return;
         }
 
-        ItemStack stack = network.getItemStorage().get(hash);
+        ItemStack stack = network.getItemStorageCache().getList().get(hash);
 
-        if (stack == null) {
-            return;
+        if (stack != null) {
+            ICraftingTask task = new CraftingTask(network, stack, network.getPattern(stack), quantity);
+            task.calculate();
+            network.addCraftingTask(task);
         }
-
-        ICraftingPattern pattern = NetworkUtils.getPattern(network, stack);
-
-        if (pattern != null) {
-            int quantityPerRequest = pattern.getQuantityPerRequest(stack);
-
-            while (quantity > 0) {
-                network.addCraftingTask(NetworkUtils.createCraftingTask(network, 0, pattern));
-
-                quantity -= quantityPerRequest;
-            }
-        }*/
     }
 
     @Override

@@ -34,7 +34,7 @@ public interface ICraftingPattern {
     boolean isOredict();
 
     /**
-     * @return the inputs
+     * @return the inputs, can contain nulls
      */
     List<ItemStack> getInputs();
 

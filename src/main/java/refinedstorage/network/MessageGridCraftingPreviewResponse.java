@@ -1,6 +1,5 @@
 package refinedstorage.network;
 
-/*
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -8,18 +7,18 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewStack;
 import refinedstorage.proxy.ClientProxy;
 
-import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 public class MessageGridCraftingPreviewResponse implements IMessage, IMessageHandler<MessageGridCraftingPreviewResponse, IMessage> {
-    public Collection<CraftingPreviewStack> stacks;
+    public List<CraftingPreviewStack> stacks;
     public int hash;
     public int quantity;
 
     public MessageGridCraftingPreviewResponse() {
     }
 
-    public MessageGridCraftingPreviewResponse(Collection<CraftingPreviewStack> stacks, int hash, int quantity) {
+    public MessageGridCraftingPreviewResponse(List<CraftingPreviewStack> stacks, int hash, int quantity) {
         this.stacks = stacks;
         this.hash = hash;
         this.quantity = quantity;
@@ -58,4 +57,3 @@ public class MessageGridCraftingPreviewResponse implements IMessage, IMessageHan
         return null;
     }
 }
-*/
