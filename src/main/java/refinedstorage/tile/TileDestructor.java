@@ -38,6 +38,7 @@ import refinedstorage.tile.data.ITileDataProducer;
 import refinedstorage.tile.data.TileDataParameter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class TileDestructor extends TileMultipartNode implements IComparable, IFilterable, IType {
@@ -125,17 +126,15 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
 
                 if (frontStack != null) {
                     if (IFilterable.canTake(itemFilters, mode, compare, frontStack)) {
-
                         List<ItemStack> drops;
-                        if(!upgrades.hasUpgrade(ItemUpgrade.TYPE_SILK_TOUCH)) {
+                        if (!upgrades.hasUpgrade(ItemUpgrade.TYPE_SILK_TOUCH)) {
                             drops = frontBlockState.getBlock().getDrops(worldObj, front, frontBlockState, 0);
                         } else {
-                            drops = new ArrayList<>(1);
-                            drops.add(frontStack);
+                            drops = Collections.singletonList(frontStack);
                         }
 
                         for (ItemStack drop : drops) {
-                            if(network.insertItem(drop, drop.stackSize, true) != null) {
+                            if (network.insertItem(drop, drop.stackSize, true) != null) {
                                 return;
                             }
                         }
