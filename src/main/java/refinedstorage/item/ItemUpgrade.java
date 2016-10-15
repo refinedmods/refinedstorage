@@ -17,7 +17,7 @@ public class ItemUpgrade extends ItemBase {
     public static final int TYPE_CRAFTING = 3;
     public static final int TYPE_STACK = 4;
     public static final int TYPE_INTERDIMENSIONAL = 5;
-    public static final int TYPE_SILKTOUCH = 6;
+    public static final int TYPE_SILK_TOUCH = 6;
 
     public ItemUpgrade() {
         super("upgrade");
@@ -46,8 +46,8 @@ public class ItemUpgrade extends ItemBase {
                 return RS.INSTANCE.config.stackUpgradeUsage;
             case TYPE_INTERDIMENSIONAL:
                 return RS.INSTANCE.config.interdimensionalUpgradeUsage;
-            case TYPE_SILKTOUCH:
-                return RS.INSTANCE.config.silktouchUpgradeUsage;
+            case TYPE_SILK_TOUCH:
+                return RS.INSTANCE.config.silkTouchUpgradeUsage;
             default:
                 return 0;
         }
@@ -63,7 +63,7 @@ public class ItemUpgrade extends ItemBase {
                 return new ItemStack(Blocks.CRAFTING_TABLE);
             case ItemUpgrade.TYPE_INTERDIMENSIONAL:
                 return new ItemStack(Items.NETHER_STAR);
-            case ItemUpgrade.TYPE_SILKTOUCH:
+            case ItemUpgrade.TYPE_SILK_TOUCH:
                 return Items.ENCHANTED_BOOK.getEnchantedItemStack(new EnchantmentData(Enchantment.getEnchantmentByID(33), 1));
             default:
                 return null;

@@ -70,7 +70,7 @@ public final class RSConfig {
     public int craftingUpgradeUsage;
     public int stackUpgradeUsage;
     public int interdimensionalUpgradeUsage;
-    public int silktouchUpgradeUsage;
+    public int silkTouchUpgradeUsage;
     //endregion
 
     //region Categories
@@ -158,7 +158,7 @@ public final class RSConfig {
         craftingUpgradeUsage = config.getInt("crafting", UPGRADES, 5, 0, Integer.MAX_VALUE, "The additional energy used per Crafting Upgrade");
         stackUpgradeUsage = config.getInt("stack", UPGRADES, 12, 0, Integer.MAX_VALUE, "The additional energy used per Stack Upgrade");
         interdimensionalUpgradeUsage = config.getInt("interdimensional", UPGRADES, 1000, 0, Integer.MAX_VALUE, "The additional energy used by the Interdimensional Upgrade");
-        silktouchUpgradeUsage = config.getInt("silktouch", UPGRADES, 15, 0, Integer.MAX_VALUE, "The additional energy used by the Silk Touch Upgrade");
+        silkTouchUpgradeUsage = config.getInt("silkTouch", UPGRADES, 15, 0, Integer.MAX_VALUE, "The additional energy used by the Silk Touch Upgrade");
         //endregion
 
         if (config.hasChanged()) {

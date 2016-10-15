@@ -68,7 +68,7 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
     private ItemHandlerBasic itemFilters = new ItemHandlerBasic(9, this);
     private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(9, this);
 
-    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_SILKTOUCH);
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_SILK_TOUCH);
 
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int mode = IFilterable.WHITELIST;
@@ -125,7 +125,7 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
 
                 if (frontStack != null) {
                     if (IFilterable.canTake(itemFilters, mode, compare, frontStack)) {
-                        if(!upgrades.hasUpgrade(ItemUpgrade.TYPE_SILKTOUCH)) {
+                        if(!upgrades.hasUpgrade(ItemUpgrade.TYPE_SILK_TOUCH)) {
                             List<ItemStack> drops = frontBlockState.getBlock().getDrops(worldObj, front, frontBlockState, 0);
 
                             for (ItemStack drop : drops) {
