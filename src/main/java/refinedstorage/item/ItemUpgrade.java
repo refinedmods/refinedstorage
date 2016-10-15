@@ -64,7 +64,7 @@ public class ItemUpgrade extends ItemBase {
             case ItemUpgrade.TYPE_INTERDIMENSIONAL:
                 return new ItemStack(Items.NETHER_STAR);
             case ItemUpgrade.TYPE_SILK_TOUCH:
-                return Items.ENCHANTED_BOOK.getEnchantedItemStack(new EnchantmentData(Enchantment.getEnchantmentByID(33), 1));
+                return Items.ENCHANTED_BOOK.getEnchantedItemStack(new EnchantmentData(Enchantment.getEnchantmentByLocation("silk_touch"), 1));
             default:
                 return null;
         }
