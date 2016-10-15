@@ -15,6 +15,7 @@ import refinedstorage.item.ItemPattern;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class CraftingPattern implements ICraftingPattern {
     private World world;
@@ -38,14 +39,8 @@ public class CraftingPattern implements ICraftingPattern {
 
         for (int i = 0; i < 9; ++i) {
             ItemStack slot = ItemPattern.getSlot(stack, i);
-
-            if (slot != null) {
-                for (int j = 0; j < slot.stackSize; ++j) {
-                    inputs.add(ItemHandlerHelper.copyStackWithSize(slot, 1));
-                }
-
-                inv.setInventorySlotContents(i, slot);
-            }
+            inputs.add(slot);
+            inv.setInventorySlotContents(i, slot);
         }
 
         if (!ItemPattern.isProcessing(stack)) {
@@ -77,7 +72,7 @@ public class CraftingPattern implements ICraftingPattern {
 
     @Override
     public boolean isValid() {
-        return !inputs.isEmpty() && !outputs.isEmpty();
+        return inputs.stream().filter(Objects::nonNull).count() > 0 && !outputs.isEmpty();
     }
 
     @Override

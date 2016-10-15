@@ -273,7 +273,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 craftingTasksToCancel.clear();
 
                 for (ICraftingTask task : craftingTasksToAdd) {
-                    craftingTasks.add(task);
+                    if (task.isValid()) {
+                        craftingTasks.add(task);
+                    }
                 }
 
                 craftingTasksToAdd.clear();
