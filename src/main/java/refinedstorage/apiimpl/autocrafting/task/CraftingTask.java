@@ -135,9 +135,6 @@ public class CraftingTask implements ICraftingTask {
                     ItemStack actualInput = actualInputs.get(input, compare);
                     ItemStack taken = ItemHandlerHelper.copyStackWithSize(actualInput, input.stackSize);
                     took[i] = taken;
-                    if (taken == null) {
-                        taken = null;
-                    }
                     actualInputs.remove(taken, true);
                 }
             }
