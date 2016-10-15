@@ -125,35 +125,35 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
 
                 if (frontStack != null) {
                     if (IFilterable.canTake(itemFilters, mode, compare, frontStack)) {
+
+                        List<ItemStack> drops;
                         if(!upgrades.hasUpgrade(ItemUpgrade.TYPE_SILK_TOUCH)) {
-                            List<ItemStack> drops = frontBlockState.getBlock().getDrops(worldObj, front, frontBlockState, 0);
-
-                            for (ItemStack drop : drops) {
-                                if(network.insertItem(drop, drop.stackSize, true) != null) {
-                                    return;
-                                }
-                            }
-
-                            worldObj.playEvent(null, 2001, front, Block.getStateId(frontBlockState));
-                            worldObj.setBlockToAir(front);
-
-                            for (ItemStack drop : drops) {
-                                // We check if the controller isn't null here because when a destructor faces a node and removes it
-                                // it will essentially remove this block itself from the network without knowing
-                                if (network == null) {
-                                    InventoryHelper.spawnItemStack(worldObj, front.getX(), front.getY(), front.getZ(), drop);
-                                } else {
-                                    ItemStack remainder = network.insertItem(drop, drop.stackSize, false);
-
-                                    if (remainder != null) {
-                                        InventoryHelper.spawnItemStack(worldObj, front.getX(), front.getY(), front.getZ(), remainder);
-                                    }
-                                }
-                            }
+                            drops = frontBlockState.getBlock().getDrops(worldObj, front, frontBlockState, 0);
                         } else {
-                            if(network.insertItem(frontStack.copy(), frontStack.stackSize, false) == null) {
-                                worldObj.playEvent(null, 2001, front, Block.getStateId(frontBlockState));
-                                worldObj.setBlockToAir(front);
+                            drops = new ArrayList<>(1);
+                            drops.add(frontStack);
+                        }
+
+                        for (ItemStack drop : drops) {
+                            if(network.insertItem(drop, drop.stackSize, true) != null) {
+                                return;
+                            }
+                        }
+
+                        worldObj.playEvent(null, 2001, front, Block.getStateId(frontBlockState));
+                        worldObj.setBlockToAir(front);
+
+                        for (ItemStack drop : drops) {
+                            // We check if the controller isn't null here because when a destructor faces a node and removes it
+                            // it will essentially remove this block itself from the network without knowing
+                            if (network == null) {
+                                InventoryHelper.spawnItemStack(worldObj, front.getX(), front.getY(), front.getZ(), drop);
+                            } else {
+                                ItemStack remainder = network.insertItem(drop, drop.stackSize, false);
+
+                                if (remainder != null) {
+                                    InventoryHelper.spawnItemStack(worldObj, front.getX(), front.getY(), front.getZ(), remainder);
+                                }
                             }
                         }
                     }
