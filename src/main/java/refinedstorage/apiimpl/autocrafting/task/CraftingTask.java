@@ -363,7 +363,7 @@ public class CraftingTask implements ICraftingTask {
     @Override
     public List<ICraftingPreviewStack> getPreviewStacks() {
         if (!isValid()) {
-            return new ArrayList<>();
+            return Collections.emptyList();
         }
 
         Map<Integer, CraftingPreviewStack> map = new LinkedHashMap<>();

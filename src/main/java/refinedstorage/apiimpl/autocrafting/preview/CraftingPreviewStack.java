@@ -43,6 +43,7 @@ public class CraftingPreviewStack implements ICraftingPreviewStack {
         return new CraftingPreviewStack(new ItemStack(item, 1, meta), available, missing, toCraft);
     }
 
+    @Override
     public ItemStack getStack() {
         return stack;
     }
@@ -51,6 +52,7 @@ public class CraftingPreviewStack implements ICraftingPreviewStack {
         this.available += amount;
     }
 
+    @Override
     public int getAvailable() {
         return available;
     }
@@ -59,6 +61,7 @@ public class CraftingPreviewStack implements ICraftingPreviewStack {
         this.toCraft += amount;
     }
 
+    @Override
     public int getToCraft() {
         return this.toCraft;
     }
@@ -67,6 +70,7 @@ public class CraftingPreviewStack implements ICraftingPreviewStack {
         this.missing = missing;
     }
 
+    @Override
     public boolean hasMissing() {
         return missing;
     }
