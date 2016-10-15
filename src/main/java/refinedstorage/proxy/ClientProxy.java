@@ -197,7 +197,8 @@ public class ClientProxy extends CommonProxy {
             new ResourceLocation("refinedstorage:range_upgrade"),
             new ResourceLocation("refinedstorage:speed_upgrade"),
             new ResourceLocation("refinedstorage:stack_upgrade"),
-            new ResourceLocation("refinedstorage:interdimensional_upgrade")
+            new ResourceLocation("refinedstorage:interdimensional_upgrade"),
+            new ResourceLocation("refinedstorage:silk_touch_upgrade")
         );
 
         // Items
@@ -249,6 +250,7 @@ public class ClientProxy extends CommonProxy {
         ModelLoader.setCustomModelResourceLocation(RSItems.UPGRADE, ItemUpgrade.TYPE_CRAFTING, new ModelResourceLocation("refinedstorage:crafting_upgrade", "inventory"));
         ModelLoader.setCustomModelResourceLocation(RSItems.UPGRADE, ItemUpgrade.TYPE_STACK, new ModelResourceLocation("refinedstorage:stack_upgrade", "inventory"));
         ModelLoader.setCustomModelResourceLocation(RSItems.UPGRADE, ItemUpgrade.TYPE_INTERDIMENSIONAL, new ModelResourceLocation("refinedstorage:interdimensional_upgrade", "inventory"));
+        ModelLoader.setCustomModelResourceLocation(RSItems.UPGRADE, ItemUpgrade.TYPE_SILK_TOUCH, new ModelResourceLocation("refinedstorage:silk_touch_upgrade", "inventory"));
 
         // Blocks
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.CABLE), 0, new ModelResourceLocation("refinedstorage:cable", "inventory"));

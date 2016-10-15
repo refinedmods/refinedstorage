@@ -38,6 +38,7 @@ import refinedstorage.tile.data.ITileDataProducer;
 import refinedstorage.tile.data.TileDataParameter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class TileDestructor extends TileMultipartNode implements IComparable, IFilterable, IType {
@@ -68,7 +69,7 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
     private ItemHandlerBasic itemFilters = new ItemHandlerBasic(9, this);
     private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(9, this);
 
-    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED);
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_SILK_TOUCH);
 
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int mode = IFilterable.WHITELIST;
@@ -125,7 +126,18 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
 
                 if (frontStack != null) {
                     if (IFilterable.canTake(itemFilters, mode, compare, frontStack)) {
-                        List<ItemStack> drops = frontBlockState.getBlock().getDrops(worldObj, front, frontBlockState, 0);
+                        List<ItemStack> drops;
+                        if (!upgrades.hasUpgrade(ItemUpgrade.TYPE_SILK_TOUCH)) {
+                            drops = frontBlockState.getBlock().getDrops(worldObj, front, frontBlockState, 0);
+                        } else {
+                            drops = Collections.singletonList(frontStack);
+                        }
+
+                        for (ItemStack drop : drops) {
+                            if (network.insertItem(drop, drop.stackSize, true) != null) {
+                                return;
+                            }
+                        }
 
                         worldObj.playEvent(null, 2001, front, Block.getStateId(frontBlockState));
                         worldObj.setBlockToAir(front);
@@ -136,11 +148,7 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
                             if (network == null) {
                                 InventoryHelper.spawnItemStack(worldObj, front.getX(), front.getY(), front.getZ(), drop);
                             } else {
-                                ItemStack remainder = network.insertItem(drop, drop.stackSize, false);
-
-                                if (remainder != null) {
-                                    InventoryHelper.spawnItemStack(worldObj, front.getX(), front.getY(), front.getZ(), remainder);
-                                }
+                                network.insertItem(drop, drop.stackSize, false);
                             }
                         }
                     }

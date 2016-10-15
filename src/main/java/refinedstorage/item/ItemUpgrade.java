@@ -1,6 +1,8 @@
 package refinedstorage.item;
 
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -15,6 +17,7 @@ public class ItemUpgrade extends ItemBase {
     public static final int TYPE_CRAFTING = 3;
     public static final int TYPE_STACK = 4;
     public static final int TYPE_INTERDIMENSIONAL = 5;
+    public static final int TYPE_SILK_TOUCH = 6;
 
     public ItemUpgrade() {
         super("upgrade");
@@ -26,7 +29,7 @@ public class ItemUpgrade extends ItemBase {
 
     @Override
     public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
-        for (int i = 0; i <= 5; ++i) {
+        for (int i = 0; i <= 6; ++i) {
             list.add(new ItemStack(item, 1, i));
         }
     }
@@ -43,6 +46,8 @@ public class ItemUpgrade extends ItemBase {
                 return RS.INSTANCE.config.stackUpgradeUsage;
             case TYPE_INTERDIMENSIONAL:
                 return RS.INSTANCE.config.interdimensionalUpgradeUsage;
+            case TYPE_SILK_TOUCH:
+                return RS.INSTANCE.config.silkTouchUpgradeUsage;
             default:
                 return 0;
         }
@@ -58,6 +63,8 @@ public class ItemUpgrade extends ItemBase {
                 return new ItemStack(Blocks.CRAFTING_TABLE);
             case ItemUpgrade.TYPE_INTERDIMENSIONAL:
                 return new ItemStack(Items.NETHER_STAR);
+            case ItemUpgrade.TYPE_SILK_TOUCH:
+                return Items.ENCHANTED_BOOK.getEnchantedItemStack(new EnchantmentData(Enchantment.getEnchantmentByLocation("silk_touch"), 1));
             default:
                 return null;
         }
