@@ -149,10 +149,6 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
                                 InventoryHelper.spawnItemStack(worldObj, front.getX(), front.getY(), front.getZ(), drop);
                             } else {
                                 ItemStack remainder = network.insertItem(drop, drop.stackSize, false);
-
-                                if (remainder != null) {
-                                    InventoryHelper.spawnItemStack(worldObj, front.getX(), front.getY(), front.getZ(), remainder);
-                                }
                             }
                         }
                     }
