@@ -11,18 +11,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import org.lwjgl.input.Keyboard;
 import refinedstorage.RS;
-import refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewStack;
+import refinedstorage.api.autocrafting.preview.ICraftingPreviewStack;
 import refinedstorage.network.MessageGridCraftingStart;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class GuiCraftingPreview extends GuiBase {
     private static final int VISIBLE_ROWS = 4;
 
-    private List<CraftingPreviewStack> stacks;
+    private List<ICraftingPreviewStack> stacks;
     private GuiScreen parent;
 
     private int hash;
@@ -31,7 +30,7 @@ public class GuiCraftingPreview extends GuiBase {
     private GuiButton startButton;
     private GuiButton cancelButton;
 
-    public GuiCraftingPreview(GuiScreen parent, List<CraftingPreviewStack> stacks, int hash, int quantity) {
+    public GuiCraftingPreview(GuiScreen parent, List<ICraftingPreviewStack> stacks, int hash, int quantity) {
         super(new Container() {
             @Override
             public boolean canInteractWith(EntityPlayer player) {
@@ -78,7 +77,7 @@ public class GuiCraftingPreview extends GuiBase {
 
             for (int i = 0; i < 8; ++i) {
                 if (slot < stacks.size()) {
-                    CraftingPreviewStack stack = stacks.get(slot);
+                    ICraftingPreviewStack stack = stacks.get(slot);
 
                     if (stack.hasMissing()) {
                         drawTexture(x, y, 189, 0, 67, 29);
@@ -123,7 +122,7 @@ public class GuiCraftingPreview extends GuiBase {
 
             for (int i = 0; i < 8; ++i) {
                 if (slot < stacks.size()) {
-                    CraftingPreviewStack stack = stacks.get(slot);
+                    ICraftingPreviewStack stack = stacks.get(slot);
 
                     drawItem(x, y + 5, stack.getStack());
 

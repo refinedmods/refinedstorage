@@ -1,10 +1,9 @@
 package refinedstorage.api.autocrafting.task;
 
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
-import refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewStack;
+import refinedstorage.api.autocrafting.preview.ICraftingPreviewStack;
 
 import java.util.List;
 
@@ -72,7 +71,6 @@ public interface ICraftingTask {
      * (eg. block needs 9 ingots, ingots are crafted by a block)
      * {@link ICraftingTask#calculate()} must be run before this
      *
-     *
      * @return true if no recursion was found
      */
     boolean isValid();
@@ -80,7 +78,7 @@ public interface ICraftingTask {
     /**
      * {@link ICraftingTask#calculate()} must be run before this
      *
-     * @return get a list of {@link CraftingPreviewStack}s
+     * @return get a list of {@link ICraftingPreviewStack}s
      */
-    List<CraftingPreviewStack> getPreviewStacks();
+    List<ICraftingPreviewStack> getPreviewStacks();
 }

@@ -8,6 +8,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RSUtils;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
+import refinedstorage.api.autocrafting.preview.ICraftingPreviewStack;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.autocrafting.task.IProcessable;
 import refinedstorage.api.network.INetworkMaster;
@@ -71,7 +72,9 @@ public class CraftingTask implements ICraftingTask {
 
     private void calculate(IItemStackList networkList, ICraftingPattern pattern, IItemStackList toInsert) {
         recurseFound = !usedPatterns.add(pattern);
-        if (recurseFound) return;
+        if (recurseFound) {
+            return;
+        }
 
         ItemStack[] took = new ItemStack[9];
 
@@ -358,8 +361,10 @@ public class CraftingTask implements ICraftingTask {
     }
 
     @Override
-    public List<CraftingPreviewStack> getPreviewStacks() {
-        if (!isValid()) return new ArrayList<>();
+    public List<ICraftingPreviewStack> getPreviewStacks() {
+        if (!isValid()) {
+            return new ArrayList<>();
+        }
 
         Map<Integer, CraftingPreviewStack> map = new LinkedHashMap<>();
 

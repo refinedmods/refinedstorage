@@ -4,8 +4,9 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
+import refinedstorage.api.autocrafting.preview.ICraftingPreviewStack;
 
-public class CraftingPreviewStack {
+public class CraftingPreviewStack implements ICraftingPreviewStack {
     private ItemStack stack;
     private int available;
     private boolean missing;
@@ -23,6 +24,7 @@ public class CraftingPreviewStack {
         this.toCraft = toCraft;
     }
 
+    @Override
     public void writeToByteBuf(ByteBuf buf) {
         buf.writeInt(Item.getIdFromItem(stack.getItem()));
         buf.writeInt(stack.getMetadata());
