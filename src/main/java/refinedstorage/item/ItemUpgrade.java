@@ -1,5 +1,6 @@
 package refinedstorage.item;
 
+import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentData;
@@ -39,7 +40,7 @@ public class ItemUpgrade extends ItemBase {
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
         if (stack.getItemDamage() == TYPE_FORTUNE) {
-            tooltip.add("Fortune " + ItemUpgrade.getFortuneLevel(stack));
+            tooltip.add(I18n.format("enchantment.lootBonusDigger") + " " + I18n.format("enchantment.level." + ItemUpgrade.getFortuneLevel(stack)));
         }
     }
 
