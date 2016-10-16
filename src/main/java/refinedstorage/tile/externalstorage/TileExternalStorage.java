@@ -358,7 +358,6 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
         return TYPE;
     }
 
-
     @Override
     public int getType() {
         return worldObj.isRemote ? TYPE.getValue() : type;
