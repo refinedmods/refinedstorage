@@ -75,7 +75,6 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
     private static final String NBT_TYPE = "Type";
-    private static final String NBT_LOCKED_ACCESS_TYPE = "LockedAccessType";
 
     private ItemHandlerBasic itemFilters = new ItemHandlerBasic(9, this);
     private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(9, this);
