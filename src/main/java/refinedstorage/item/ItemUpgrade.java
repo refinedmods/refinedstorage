@@ -9,7 +9,10 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import refinedstorage.RS;
+import refinedstorage.RSItems;
 
 import java.util.List;
 
@@ -33,6 +36,7 @@ public class ItemUpgrade extends ItemBase {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
         if (stack.getItemDamage() == TYPE_FORTUNE) {
             tooltip.add("Fortune " + ItemUpgrade.getFortuneLevel(stack));
@@ -46,12 +50,12 @@ public class ItemUpgrade extends ItemBase {
         }
 
         for (int j = 1; j <= 3; ++j) {
-            list.add(initializeForFortune(item, j));
+            list.add(initializeForFortune(j));
         }
     }
 
-    public static ItemStack initializeForFortune(Item item, int level) {
-        ItemStack stack = new ItemStack(item, 1, TYPE_FORTUNE);
+    public static ItemStack initializeForFortune(int level) {
+        ItemStack stack = new ItemStack(RSItems.UPGRADE, 1, TYPE_FORTUNE);
         stack.setTagCompound(new NBTTagCompound());
         stack.getTagCompound().setInteger(NBT_FORTUNE, level);
         return stack;
@@ -89,8 +93,8 @@ public class ItemUpgrade extends ItemBase {
         }
     }
 
-    public static ItemStack getRequirement(int type) {
-        switch (type) {
+    public static ItemStack getRequirement(ItemStack stack) {
+        switch (stack.getItemDamage()) {
             case ItemUpgrade.TYPE_RANGE:
                 return new ItemStack(Items.ENDER_PEARL);
             case ItemUpgrade.TYPE_SPEED:
@@ -101,6 +105,8 @@ public class ItemUpgrade extends ItemBase {
                 return new ItemStack(Items.NETHER_STAR);
             case ItemUpgrade.TYPE_SILK_TOUCH:
                 return Items.ENCHANTED_BOOK.getEnchantedItemStack(new EnchantmentData(Enchantment.getEnchantmentByLocation("silk_touch"), 1));
+            case ItemUpgrade.TYPE_FORTUNE:
+                return Items.ENCHANTED_BOOK.getEnchantedItemStack(new EnchantmentData(Enchantment.getEnchantmentByLocation("fortune"), getFortuneLevel(stack)));
             default:
                 return null;
         }

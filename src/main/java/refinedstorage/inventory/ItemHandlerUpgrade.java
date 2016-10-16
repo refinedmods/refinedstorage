@@ -68,5 +68,4 @@ public class ItemHandlerUpgrade extends ItemHandlerBasic {
     public int getInteractStackSize() {
         return hasUpgrade(ItemUpgrade.TYPE_STACK) ? 64 : 1;
     }
-
 }
