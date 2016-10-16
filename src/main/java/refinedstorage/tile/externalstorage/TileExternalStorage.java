@@ -85,7 +85,6 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
     private int mode = IFilterable.WHITELIST;
     private int type = IType.ITEMS;
     private AccessType accessType = AccessType.READ_WRITE;
-    private boolean lockedAccessType = false;
 
     private List<ItemStorageExternal> itemStorages = new ArrayList<>();
     private List<FluidStorageExternal> fluidStorages = new ArrayList<>();
@@ -184,10 +183,6 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
             type = tag.getInteger(NBT_TYPE);
         }
 
-        if (tag.hasKey(NBT_LOCKED_ACCESS_TYPE)) {
-            lockedAccessType = tag.getBoolean(NBT_LOCKED_ACCESS_TYPE);
-        }
-
         accessType = RSUtils.readAccessType(tag);
     }
 
@@ -202,7 +197,6 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_MODE, mode);
         tag.setInteger(NBT_TYPE, type);
-        tag.setBoolean(NBT_LOCKED_ACCESS_TYPE, lockedAccessType);
 
         RSUtils.writeAccessType(tag, accessType);
 
@@ -264,11 +258,6 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
         } else if (facing instanceof IDeepStorageUnit) {
             itemStorages.add(new ItemStorageDSU(this, (IDeepStorageUnit) facing));
         } else {
-            if (facing.getBlockType().getUnlocalizedName().equals("tile.ExtraUtils2:TrashCan")) {
-                accessType = AccessType.WRITE;
-                lockedAccessType = true;
-            }
-
             IItemHandler itemHandler = RSUtils.getItemHandler(facing, getDirection().getOpposite());
 
             if (itemHandler != null) {
@@ -355,16 +344,14 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
 
     @Override
     public void setAccessType(AccessType type) {
-        if (!lockedAccessType) {
-            this.accessType = type;
+        this.accessType = type;
 
-            if (network != null) {
-                network.getItemStorageCache().invalidate();
-                network.getFluidStorageCache().invalidate();
-            }
-
-            markDirty();
+        if (network != null) {
+            network.getItemStorageCache().invalidate();
+            network.getFluidStorageCache().invalidate();
         }
+
+        markDirty();
     }
 
     @Override

@@ -13,10 +13,15 @@ import java.util.List;
 public class ItemStorageItemHandler extends ItemStorageExternal {
     private TileExternalStorage externalStorage;
     private IItemHandler handler;
+    private AccessType lockedAccessType = AccessType.READ_WRITE;
 
     public ItemStorageItemHandler(TileExternalStorage externalStorage, IItemHandler handler) {
         this.externalStorage = externalStorage;
         this.handler = handler;
+
+        if (externalStorage.getFacingTile().getBlockType().getUnlocalizedName().equals("tile.ExtraUtils2:TrashCan")) {
+            lockedAccessType = AccessType.WRITE;
+        }
     }
 
     @Override
@@ -97,6 +102,6 @@ public class ItemStorageItemHandler extends ItemStorageExternal {
 
     @Override
     public AccessType getAccessType() {
-        return externalStorage.getAccessType();
+        return ((lockedAccessType != AccessType.READ_WRITE) ? lockedAccessType : externalStorage.getAccessType());
     }
 }
