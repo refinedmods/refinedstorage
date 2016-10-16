@@ -13,25 +13,27 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import refinedstorage.proxy.CommonProxy;
+import refinedstorage.proxy.ProxyCommon;
 
 @Mod(modid = RS.ID, version = RS.VERSION, guiFactory = RS.GUI_FACTORY, dependencies = RS.DEPENDENCIES)
 public final class RS {
+    static {
+        FluidRegistry.enableUniversalBucket();
+    }
+
     public static final String ID = "refinedstorage";
     public static final String VERSION = "1.2";
     public static final String DEPENDENCIES = "required-after:Forge@[12.18.1.2088,);required-after:mcmultipart@[1.2.1,);after:JEI@[3.12.0,);";
     public static final String GUI_FACTORY = "refinedstorage.gui.config.ModGuiFactory";
 
-    @SidedProxy(clientSide = "refinedstorage.proxy.ClientProxy", serverSide = "refinedstorage.proxy.ServerProxy")
-    public static CommonProxy PROXY;
+    @SidedProxy(clientSide = "refinedstorage.proxy.ProxyClient", serverSide = "refinedstorage.proxy.ProxyCommon")
+    public static ProxyCommon PROXY;
 
     @Instance
     public static RS INSTANCE;
 
     public RSConfig config;
-
     public final SimpleNetworkWrapper network = NetworkRegistry.INSTANCE.newSimpleChannel(ID);
-
     public final CreativeTabs tab = new CreativeTabs(ID) {
         @Override
         public ItemStack getIconItemStack() {
@@ -43,10 +45,6 @@ public final class RS {
             return null;
         }
     };
-
-    static {
-        FluidRegistry.enableUniversalBucket();
-    }
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent e) {

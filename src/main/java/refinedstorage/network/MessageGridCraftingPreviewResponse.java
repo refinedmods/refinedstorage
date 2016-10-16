@@ -6,7 +6,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import refinedstorage.api.autocrafting.preview.ICraftingPreviewStack;
 import refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewStack;
-import refinedstorage.proxy.ClientProxy;
+import refinedstorage.proxy.ProxyClient;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -53,7 +53,7 @@ public class MessageGridCraftingPreviewResponse implements IMessage, IMessageHan
 
     @Override
     public IMessage onMessage(MessageGridCraftingPreviewResponse message, MessageContext ctx) {
-        ClientProxy.onReceiveCraftingPreviewResponse(message);
+        ProxyClient.onReceiveCraftingPreviewResponse(message);
         
         return null;
     }

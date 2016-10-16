@@ -39,7 +39,7 @@ import refinedstorage.tile.TileController;
 
 import java.util.List;
 
-public class ClientProxy extends CommonProxy {
+public class ProxyClient extends ProxyCommon {
     @SubscribeEvent
     public void onModelBake(ModelBakeEvent e) {
         for (ModelResourceLocation model : e.getModelRegistry().getKeys()) {

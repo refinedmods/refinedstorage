@@ -41,7 +41,7 @@ import refinedstorage.tile.grid.TileGrid;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommonProxy {
+public class ProxyCommon {
     protected List<BlockCable> cableTypes = new ArrayList<>();
 
     public void preInit(FMLPreInitializationEvent e) {
