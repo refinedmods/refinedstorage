@@ -3,6 +3,7 @@ package refinedstorage.api;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementRegistry;
+import refinedstorage.api.autocrafting.preview.ICraftingPreviewElementRegistry;
 import refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
 import refinedstorage.api.solderer.ISoldererRegistry;
 import refinedstorage.api.util.IComparer;
@@ -39,6 +40,12 @@ public interface IRSAPI {
      */
     @Nonnull
     ICraftingMonitorElementRegistry getCraftingMonitorElementRegistry();
+
+    /**
+     * @return the crafting preview element registry
+     */
+    @Nonnull
+    ICraftingPreviewElementRegistry getCraftingPreviewElementRegistry();
 
     /**
      * @return an empty item stack list

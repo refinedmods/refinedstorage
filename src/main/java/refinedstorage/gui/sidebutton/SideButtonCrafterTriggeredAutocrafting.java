@@ -12,7 +12,7 @@ public class SideButtonCrafterTriggeredAutocrafting extends SideButton {
 
     @Override
     public String getTooltip() {
-        return TextFormatting.GREEN + gui.t("sidebutton.refinedstorage:crafter.triggered_autocrafting") + TextFormatting.RESET + "\n" + gui.t("gui." + (TileCrafter.TRIGGERED_AUTOCRAFTING.getValue() ? "yes" : "no"));
+        return TextFormatting.GREEN + GuiBase.t("sidebutton.refinedstorage:crafter.triggered_autocrafting") + TextFormatting.RESET + "\n" + GuiBase.t("gui." + (TileCrafter.TRIGGERED_AUTOCRAFTING.getValue() ? "yes" : "no"));
     }
 
     @Override

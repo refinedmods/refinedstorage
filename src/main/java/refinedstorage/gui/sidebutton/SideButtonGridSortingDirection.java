@@ -16,7 +16,7 @@ public class SideButtonGridSortingDirection extends SideButton {
 
     @Override
     public String getTooltip() {
-        return TextFormatting.YELLOW + gui.t("sidebutton.refinedstorage:grid.sorting.direction") + TextFormatting.RESET + "\n" + gui.t("sidebutton.refinedstorage:grid.sorting.direction." + grid.getSortingDirection());
+        return TextFormatting.YELLOW + GuiBase.t("sidebutton.refinedstorage:grid.sorting.direction") + TextFormatting.RESET + "\n" + GuiBase.t("sidebutton.refinedstorage:grid.sorting.direction." + grid.getSortingDirection());
     }
 
     @Override

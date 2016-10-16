@@ -4,10 +4,13 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
+import refinedstorage.api.render.ElementDrawer;
 import refinedstorage.gui.GuiBase;
 
-public class CraftingMonitorElementText implements ICraftingMonitorElement<GuiBase> {
+public class CraftingMonitorElementText implements ICraftingMonitorElement<String> {
     public static final String ID = "text";
 
     private String text;
@@ -27,13 +30,14 @@ public class CraftingMonitorElementText implements ICraftingMonitorElement<GuiBa
     }
 
     @Override
-    public void draw(GuiBase gui, int x, int y) {
+    @SideOnly(Side.CLIENT)
+    public void draw(int x, int y, ElementDrawer<String> elementDrawer, ElementDrawer<String> stringDrawer) {
         float scale = 0.5f;
 
         GlStateManager.pushMatrix();
         GlStateManager.scale(scale, scale, 1);
 
-        gui.drawString(gui.calculateOffsetOnScale(x + offset, scale), gui.calculateOffsetOnScale(y + 7, scale), I18n.format(text));
+        stringDrawer.draw(GuiBase.calculateOffsetOnScale(x + offset, scale), GuiBase.calculateOffsetOnScale(y + 7, scale), I18n.format(text));
 
         GlStateManager.popMatrix();
     }

@@ -20,6 +20,7 @@ gui.refinedstorage:interface.import=Interface Import
 gui.refinedstorage:interface.export=Interface Export
 gui.refinedstorage:crafting_monitor=Crafting Monitor
 gui.refinedstorage:crafting_monitor.items_taking=Items taking
+gui.refinedstorage:crafting_monitor.items_missing=Items missing
 gui.refinedstorage:crafting_monitor.fluids_taking=Fluids taking
 gui.refinedstorage:crafting_monitor.items_processing=Items processing
 gui.refinedstorage:crafting_monitor.items_inserting=Items inserting

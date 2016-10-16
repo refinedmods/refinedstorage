@@ -3,7 +3,7 @@ package refinedstorage.api.autocrafting.task;
 import net.minecraft.nbt.NBTTagCompound;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
-import refinedstorage.api.autocrafting.preview.ICraftingPreviewStack;
+import refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 
 import java.util.List;
 
@@ -78,7 +78,7 @@ public interface ICraftingTask {
     /**
      * {@link ICraftingTask#calculate()} must be run before this
      *
-     * @return get a list of {@link ICraftingPreviewStack}s
+     * @return get a list of {@link ICraftingPreviewElement}s
      */
-    List<ICraftingPreviewStack> getPreviewStacks();
+    List<ICraftingPreviewElement> getPreviewStacks();
 }
