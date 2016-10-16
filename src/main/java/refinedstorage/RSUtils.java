@@ -26,6 +26,8 @@ import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import org.apache.commons.lang3.tuple.Pair;
 import refinedstorage.api.network.INetworkMaster;
 import refinedstorage.api.storage.AccessType;
+import refinedstorage.api.util.IFluidStackList;
+import refinedstorage.api.util.IItemStackList;
 import refinedstorage.apiimpl.API;
 import refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
 import refinedstorage.apiimpl.storage.item.ItemStorageNBT;
@@ -141,6 +143,54 @@ public final class RSUtils {
                 inventory.setInventorySlotContents(slot, stack);
             }
         }
+    }
+
+    public static NBTTagList serializeItemStackList(IItemStackList list) {
+        NBTTagList tagList = new NBTTagList();
+
+        for (ItemStack stack : list.getStacks()) {
+            tagList.appendTag(stack.writeToNBT(new NBTTagCompound()));
+        }
+
+        return tagList;
+    }
+
+    public static NBTTagList serializeFluidStackList(IFluidStackList list) {
+        NBTTagList tagList = new NBTTagList();
+
+        for (FluidStack stack : list.getStacks()) {
+            tagList.appendTag(stack.writeToNBT(new NBTTagCompound()));
+        }
+
+        return tagList;
+    }
+
+    public static IItemStackList readItemStackList(NBTTagList tagList) {
+        IItemStackList list = API.instance().createItemStackList();
+
+        for (int i = 0; i < tagList.tagCount(); ++i) {
+            ItemStack stack = ItemStack.loadItemStackFromNBT(tagList.getCompoundTagAt(i));
+
+            if (stack != null) {
+                list.add(stack);
+            }
+        }
+
+        return list;
+    }
+
+    public static IFluidStackList readFluidStackList(NBTTagList tagList) {
+        IFluidStackList list = API.instance().createFluidStackList();
+
+        for (int i = 0; i < tagList.tagCount(); ++i) {
+            FluidStack stack = FluidStack.loadFluidStackFromNBT(tagList.getCompoundTagAt(i));
+
+            if (stack != null) {
+                list.add(stack);
+            }
+        }
+
+        return list;
     }
 
     public static void writeAccessType(NBTTagCompound tag, AccessType type) {
