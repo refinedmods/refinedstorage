@@ -16,7 +16,16 @@ public class SoldererRecipeUpgrade implements ISoldererRecipe {
     public SoldererRecipeUpgrade(int type) {
         this.result = new ItemStack(RSItems.UPGRADE, 1, type);
         this.rows = new ItemStack[]{
-            ItemUpgrade.getRequirement(type),
+            ItemUpgrade.getRequirement(result),
+            new ItemStack(RSItems.UPGRADE, 1, 0),
+            new ItemStack(Items.REDSTONE)
+        };
+    }
+
+    public SoldererRecipeUpgrade(ItemStack result) {
+        this.result = result;
+        this.rows = new ItemStack[]{
+            ItemUpgrade.getRequirement(result),
             new ItemStack(RSItems.UPGRADE, 1, 0),
             new ItemStack(Items.REDSTONE)
         };

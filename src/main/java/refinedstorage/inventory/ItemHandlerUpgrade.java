@@ -48,11 +48,21 @@ public class ItemHandlerUpgrade extends ItemHandlerBasic {
 
         for (int i = 0; i < getSlots(); ++i) {
             if (getStackInSlot(i) != null) {
-                usage += ItemUpgrade.getEnergyUsage(getStackInSlot(i).getItemDamage());
+                usage += ItemUpgrade.getEnergyUsage(getStackInSlot(i));
             }
         }
 
         return usage;
+    }
+
+    public int getFortuneLevel() {
+        for (int i = 0; i < getSlots(); ++i) {
+            if (getStackInSlot(i) != null && getStackInSlot(i).getItemDamage() == ItemUpgrade.TYPE_FORTUNE) {
+                return ItemUpgrade.getFortuneLevel(getStackInSlot(i));
+            }
+        }
+
+        return 0;
     }
 
     public int getInteractStackSize() {
