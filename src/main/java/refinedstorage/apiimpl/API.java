@@ -6,12 +6,14 @@ import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import refinedstorage.api.IRSAPI;
 import refinedstorage.api.RSAPIInject;
 import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementRegistry;
+import refinedstorage.api.autocrafting.preview.ICraftingPreviewElementRegistry;
 import refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
 import refinedstorage.api.solderer.ISoldererRegistry;
 import refinedstorage.api.util.IComparer;
 import refinedstorage.api.util.IFluidStackList;
 import refinedstorage.api.util.IItemStackList;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementRegistry;
+import refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementRegistry;
 import refinedstorage.apiimpl.autocrafting.registry.CraftingTaskRegistry;
 import refinedstorage.apiimpl.solderer.SoldererRegistry;
 import refinedstorage.apiimpl.util.Comparer;
@@ -29,6 +31,7 @@ public class API implements IRSAPI {
     private ISoldererRegistry soldererRegistry = new SoldererRegistry();
     private ICraftingTaskRegistry craftingTaskRegistry = new CraftingTaskRegistry();
     private ICraftingMonitorElementRegistry craftingMonitorElementRegistry = new CraftingMonitorElementRegistry();
+    private ICraftingPreviewElementRegistry craftingPreviewElementRegistry = new CraftingPreviewElementRegistry();
 
     @Nonnull
     @Override
@@ -52,6 +55,12 @@ public class API implements IRSAPI {
     @Override
     public ICraftingMonitorElementRegistry getCraftingMonitorElementRegistry() {
         return craftingMonitorElementRegistry;
+    }
+
+    @Nonnull
+    @Override
+    public ICraftingPreviewElementRegistry getCraftingPreviewElementRegistry() {
+        return craftingPreviewElementRegistry;
     }
 
     @Nonnull

@@ -23,6 +23,8 @@ import refinedstorage.apiimpl.API;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementFluidRender;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementItemRender;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementText;
+import refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementFluidStack;
+import refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementItemStack;
 import refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactory;
 import refinedstorage.apiimpl.solderer.*;
 import refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
@@ -56,6 +58,9 @@ public class ProxyCommon {
         API.instance().getCraftingMonitorElementRegistry().add(CraftingMonitorElementItemRender.ID, buf -> new CraftingMonitorElementItemRender(buf.readInt(), ByteBufUtils.readItemStack(buf), buf.readInt(), buf.readInt()));
         API.instance().getCraftingMonitorElementRegistry().add(CraftingMonitorElementFluidRender.ID, buf -> new CraftingMonitorElementFluidRender(buf.readInt(), RSUtils.readFluidStack(buf).getRight(), buf.readInt()));
         API.instance().getCraftingMonitorElementRegistry().add(CraftingMonitorElementText.ID, buf -> new CraftingMonitorElementText(ByteBufUtils.readUTF8String(buf), buf.readInt()));
+
+        API.instance().getCraftingPreviewElementRegistry().add(CraftingPreviewElementItemStack.ID, CraftingPreviewElementItemStack::fromByteBuf);
+        API.instance().getCraftingPreviewElementRegistry().add(CraftingPreviewElementFluidStack.ID, CraftingPreviewElementFluidStack::fromByteBuf);
 
         int id = 0;
 

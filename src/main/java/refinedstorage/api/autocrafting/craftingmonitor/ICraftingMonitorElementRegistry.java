@@ -12,7 +12,7 @@ public interface ICraftingMonitorElementRegistry {
     /**
      * Adds a factory to the registry.
      *
-     * @param id      the id, as specified in {@link ICraftingMonitorElement#getTaskId()}
+     * @param id      the id, as specified in {@link ICraftingMonitorElement#getId()}
      * @param factory the factory
      */
     void add(String id, Function<ByteBuf, ICraftingMonitorElement> factory);

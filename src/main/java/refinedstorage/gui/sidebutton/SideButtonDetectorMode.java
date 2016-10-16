@@ -12,7 +12,7 @@ public class SideButtonDetectorMode extends SideButton {
 
     @Override
     public String getTooltip() {
-        return TextFormatting.GREEN + gui.t("sidebutton.refinedstorage:detector.mode") + TextFormatting.RESET + "\n" + gui.t("sidebutton.refinedstorage:detector.mode." + TileDetector.MODE.getValue());
+        return TextFormatting.GREEN + GuiBase.t("sidebutton.refinedstorage:detector.mode") + TextFormatting.RESET + "\n" + GuiBase.t("sidebutton.refinedstorage:detector.mode." + TileDetector.MODE.getValue());
     }
 
     @Override

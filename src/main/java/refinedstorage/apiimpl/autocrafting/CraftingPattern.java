@@ -91,6 +91,26 @@ public class CraftingPattern implements ICraftingPattern {
     }
 
     @Override
+    public List<ItemStack> getOutputs(ItemStack[] took) {
+        List<ItemStack> outputs = new ArrayList<>();
+
+        InventoryCrafting inv = new InventoryCrafting(new Container() {
+            @Override
+            public boolean canInteractWith(EntityPlayer player) {
+                return false;
+            }
+        }, 3, 3);
+
+        for (int i = 0; i < 9; ++i) {
+            inv.setInventorySlotContents(i, took[i]);
+        }
+
+        outputs.add(CraftingManager.getInstance().findMatchingRecipe(inv, world));
+
+        return outputs;
+    }
+
+    @Override
     public List<ItemStack> getOutputs() {
         return outputs;
     }

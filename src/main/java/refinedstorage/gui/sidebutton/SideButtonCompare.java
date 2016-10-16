@@ -19,12 +19,12 @@ public class SideButtonCompare extends SideButton {
 
     @Override
     public String getTooltip() {
-        String tooltip = TextFormatting.YELLOW + gui.t("sidebutton.refinedstorage:compare." + mask) + TextFormatting.RESET + "\n";
+        String tooltip = TextFormatting.YELLOW + GuiBase.t("sidebutton.refinedstorage:compare." + mask) + TextFormatting.RESET + "\n";
 
         if ((parameter.getValue() & mask) == mask) {
-            tooltip += gui.t("gui.yes");
+            tooltip += GuiBase.t("gui.yes");
         } else {
-            tooltip += gui.t("gui.no");
+            tooltip += GuiBase.t("gui.no");
         }
 
         return tooltip;

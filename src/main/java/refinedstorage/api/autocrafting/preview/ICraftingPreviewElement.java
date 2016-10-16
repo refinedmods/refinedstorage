@@ -1,4 +1,4 @@
-package refinedstorage.api.autocrafting.craftingmonitor;
+package refinedstorage.api.autocrafting.preview;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.ItemStack;
@@ -7,10 +7,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import refinedstorage.api.render.IElementDrawer;
 
-/**
- * Represents a crafting monitor element.
- */
-public interface ICraftingMonitorElement<T> {
+public interface ICraftingPreviewElement<T> {
+    /**
+     * @return the underlying element to display
+     */
+    T getElement();
+
     /**
      * @param x   position on the x axis to render
      * @param y   position on the y axis to render
@@ -22,12 +24,26 @@ public interface ICraftingMonitorElement<T> {
     void draw(int x, int y, IElementDrawer<ItemStack> itemDrawer, IElementDrawer<FluidStack> fluidDrawer, IElementDrawer<String> stringDrawer);
 
     /**
-     * Returns the position where the corresponding task is in the crafting task list.
-     * Used for cancelling tasks.
-     *
-     * @return the id, or -1 if no task is associated with this element
+     * @return available amount of the {@link #getElement()}
      */
-    int getTaskId();
+    int getAvailable();
+
+    /**
+     * @return toCraft or missing (depends on {@link #hasMissing()} amount of the {@link #getElement()}
+     */
+    int getToCraft();
+
+    /**
+     * When this is true {@link #getToCraft()} will be the missing items
+     *
+     * @return true when items are missing
+     */
+    boolean hasMissing();
+
+    /**
+     * @param buf byte buf to write to
+     */
+    void writeToByteBuf(ByteBuf buf);
 
     /**
      * Returns the id of this element, used for serialization and deserialization over the network.
@@ -35,11 +51,4 @@ public interface ICraftingMonitorElement<T> {
      * @return the id
      */
     String getId();
-
-    /**
-     * Writes the data to the network.
-     *
-     * @param buf the buffer
-     */
-    void write(ByteBuf buf);
 }
