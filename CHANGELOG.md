@@ -8,6 +8,7 @@
 - Added config option to configure RS to EU conversion rates (InusualZ)
 - Added ability to toggle between read and write, read and write mode in storage blocks (InusualZ, raoulvdberge)
 - Added Silk Touch Upgrade for Destructor (InusualZ)
+- Added Fortune Upgrade for Destructor (InusualZ)
 - The Constructor can now drop items in the world (raoulvdberge)
 - The Destructor can now pick up items in the world (InusualZ)
 - Stack upgrade in Importer / Exporter in fluid mode and Fluid Interface now transfers 64 buckets at once (raoulvdberge)
