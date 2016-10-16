@@ -3,12 +3,12 @@ package refinedstorage.item;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentData;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagInt;
 import refinedstorage.RS;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public class ItemUpgrade extends ItemBase {
     public static final int TYPE_SILK_TOUCH = 6;
     public static final int TYPE_FORTUNE = 7;
 
-    public static final String NBT_FORTUNE = "Fortune";
+    private static final String NBT_FORTUNE = "Fortune";
 
     public ItemUpgrade() {
         super("upgrade");
@@ -33,12 +33,10 @@ public class ItemUpgrade extends ItemBase {
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack stack) {
+    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
         if (stack.getItemDamage() == TYPE_FORTUNE) {
-            return super.getUnlocalizedName(stack) + ":" + ItemUpgrade.getFortuneLevel(stack);
+            tooltip.add("Fortune " + ItemUpgrade.getFortuneLevel(stack));
         }
-
-        return super.getUnlocalizedName(stack);
     }
 
     @Override
@@ -70,8 +68,8 @@ public class ItemUpgrade extends ItemBase {
         return 0;
     }
 
-    public static int getEnergyUsage(int type) {
-        switch (type) {
+    public static int getEnergyUsage(ItemStack stack) {
+        switch (stack.getItemDamage()) {
             case TYPE_RANGE:
                 return RS.INSTANCE.config.rangeUpgradeUsage;
             case TYPE_SPEED:
@@ -84,6 +82,8 @@ public class ItemUpgrade extends ItemBase {
                 return RS.INSTANCE.config.interdimensionalUpgradeUsage;
             case TYPE_SILK_TOUCH:
                 return RS.INSTANCE.config.silkTouchUpgradeUsage;
+            case TYPE_FORTUNE:
+                return RS.INSTANCE.config.fortuneUpgradeUsagePerFortune * ItemUpgrade.getFortuneLevel(stack);
             default:
                 return 0;
         }

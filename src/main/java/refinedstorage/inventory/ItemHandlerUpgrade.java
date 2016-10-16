@@ -1,7 +1,6 @@
 package refinedstorage.inventory;
 
 import net.minecraft.tileentity.TileEntity;
-import refinedstorage.RS;
 import refinedstorage.RSItems;
 import refinedstorage.item.ItemUpgrade;
 
@@ -49,14 +48,14 @@ public class ItemHandlerUpgrade extends ItemHandlerBasic {
 
         for (int i = 0; i < getSlots(); ++i) {
             if (getStackInSlot(i) != null) {
-                usage += ItemUpgrade.getEnergyUsage(getStackInSlot(i).getItemDamage()) + (RS.INSTANCE.config.fortuneUpgradeUsagePerFortune * ItemUpgrade.getFortuneLevel(getStackInSlot(i)));
+                usage += ItemUpgrade.getEnergyUsage(getStackInSlot(i));
             }
         }
 
         return usage;
     }
 
-    public int getFortuneLevel () {
+    public int getFortuneLevel() {
         for (int i = 0; i < getSlots(); ++i) {
             if (getStackInSlot(i) != null && getStackInSlot(i).getItemDamage() == ItemUpgrade.TYPE_FORTUNE) {
                 return ItemUpgrade.getFortuneLevel(getStackInSlot(i));
