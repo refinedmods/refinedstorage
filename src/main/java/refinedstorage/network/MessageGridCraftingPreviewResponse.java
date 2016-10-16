@@ -1,25 +1,26 @@
 package refinedstorage.network;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import refinedstorage.api.autocrafting.preview.ICraftingPreviewStack;
-import refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewStack;
+import refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
+import refinedstorage.apiimpl.API;
 import refinedstorage.proxy.ProxyClient;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class MessageGridCraftingPreviewResponse implements IMessage, IMessageHandler<MessageGridCraftingPreviewResponse, IMessage> {
-    public List<ICraftingPreviewStack> stacks;
+    public List<ICraftingPreviewElement> stacks;
     public int hash;
     public int quantity;
 
     public MessageGridCraftingPreviewResponse() {
     }
 
-    public MessageGridCraftingPreviewResponse(List<ICraftingPreviewStack> stacks, int hash, int quantity) {
+    public MessageGridCraftingPreviewResponse(List<ICraftingPreviewElement> stacks, int hash, int quantity) {
         this.stacks = stacks;
         this.hash = hash;
         this.quantity = quantity;
@@ -35,7 +36,7 @@ public class MessageGridCraftingPreviewResponse implements IMessage, IMessageHan
         int size = buf.readInt();
 
         for (int i = 0; i < size; i++) {
-            this.stacks.add(CraftingPreviewStack.fromByteBuf(buf));
+            this.stacks.add(API.instance().getCraftingPreviewElementRegistry().getFactory(ByteBufUtils.readUTF8String(buf)).apply(buf));
         }
     }
 
@@ -46,7 +47,8 @@ public class MessageGridCraftingPreviewResponse implements IMessage, IMessageHan
 
         buf.writeInt(stacks.size());
 
-        for (ICraftingPreviewStack stack : stacks) {
+        for (ICraftingPreviewElement stack : stacks) {
+            ByteBufUtils.writeUTF8String(buf, stack.getId());
             stack.writeToByteBuf(buf);
         }
     }

@@ -3,6 +3,8 @@ package refinedstorage.api.autocrafting.task;
 import net.minecraft.item.ItemStack;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 
+import java.util.Deque;
+
 /**
  * Represents a item in a crafting task that can be processed.
  */
@@ -13,14 +15,9 @@ public interface IProcessable {
     ICraftingPattern getPattern();
 
     /**
-     * @return the first stack to attempt inserting
+     * @return the stacks to insert
      */
-    ItemStack getStackToInsert();
-
-    /**
-     * Moves to the next stack to insert.
-     */
-    void nextStack();
+    Deque<ItemStack> getToInsert();
 
     /**
      * @return true if we received all outputs, false otherwise

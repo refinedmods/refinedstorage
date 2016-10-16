@@ -2,8 +2,11 @@ package refinedstorage.gui;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 import refinedstorage.RS;
 import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
+import refinedstorage.api.render.IElementDrawer;
 import refinedstorage.container.ContainerCraftingMonitor;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.network.MessageCraftingMonitorCancel;
@@ -27,6 +30,10 @@ public class GuiCraftingMonitor extends GuiBase {
 
     private int itemSelectedX = -1;
     private int itemSelectedY = -1;
+
+    private IElementDrawer<String> stringDrawer = this::drawString;
+    private IElementDrawer<ItemStack> itemDrawer = this::drawItem;
+    private IElementDrawer<FluidStack> fluidDrawer = (x, y, element) -> FLUID_RENDERER.draw(mc, x, y, element);
 
     public GuiCraftingMonitor(ContainerCraftingMonitor container, TileCraftingMonitor craftingMonitor) {
         super(container, 176, 230);
@@ -99,7 +106,7 @@ public class GuiCraftingMonitor extends GuiBase {
                     itemSelectedY = y;
                 }
 
-                element.draw(this, x, y);
+                element.draw(x, y, itemDrawer, fluidDrawer, stringDrawer);
 
                 x = ox;
                 y += ITEM_HEIGHT;

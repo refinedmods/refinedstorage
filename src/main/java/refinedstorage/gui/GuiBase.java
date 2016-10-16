@@ -265,7 +265,7 @@ public abstract class GuiBase extends GuiContainer {
         drawTexturedModalRect(x, y, textureX, textureY, width, height);
     }
 
-    public String t(String name, Object... format) {
+    public static String t(String name, Object... format) {
         return I18n.format(name, format);
     }
 
@@ -285,7 +285,7 @@ public abstract class GuiBase extends GuiContainer {
         return guiTop;
     }
 
-    public int calculateOffsetOnScale(int pos, float scale) {
+    public static int calculateOffsetOnScale(int pos, float scale) {
         float multiplier = (pos / scale);
 
         return (int) multiplier;

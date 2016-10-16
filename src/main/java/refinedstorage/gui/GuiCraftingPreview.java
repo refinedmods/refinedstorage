@@ -8,10 +8,14 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import org.lwjgl.input.Keyboard;
 import refinedstorage.RS;
-import refinedstorage.api.autocrafting.preview.ICraftingPreviewStack;
+import refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
+import refinedstorage.api.render.IElementDrawer;
+import refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementFluidStack;
+import refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementItemStack;
 import refinedstorage.network.MessageGridCraftingStart;
 
 import java.io.IOException;
@@ -21,7 +25,7 @@ import java.util.List;
 public class GuiCraftingPreview extends GuiBase {
     private static final int VISIBLE_ROWS = 4;
 
-    private List<ICraftingPreviewStack> stacks;
+    private List<ICraftingPreviewElement> stacks;
     private GuiScreen parent;
 
     private int hash;
@@ -30,7 +34,11 @@ public class GuiCraftingPreview extends GuiBase {
     private GuiButton startButton;
     private GuiButton cancelButton;
 
-    public GuiCraftingPreview(GuiScreen parent, List<ICraftingPreviewStack> stacks, int hash, int quantity) {
+    private IElementDrawer<String> stringDrawer = this::drawString;
+    private IElementDrawer<ItemStack> itemDrawer = this::drawItem;
+    private IElementDrawer<FluidStack> fluidDrawer = (x, y, element) -> FLUID_RENDERER.draw(mc, x, y, element);
+
+    public GuiCraftingPreview(GuiScreen parent, List<ICraftingPreviewElement> stacks, int hash, int quantity) {
         super(new Container() {
             @Override
             public boolean canInteractWith(EntityPlayer player) {
@@ -51,7 +59,7 @@ public class GuiCraftingPreview extends GuiBase {
     public void init(int x, int y) {
         cancelButton = addButton(x + 16, y + 144, 50, 20, t("gui.cancel"));
         startButton = addButton(x + 85, y + 144, 50, 20, t("misc.refinedstorage:start"));
-        startButton.enabled = !stacks.isEmpty();
+        startButton.enabled = stacks.stream().filter(ICraftingPreviewElement::hasMissing).count() == 0;
     }
 
     @Override
@@ -77,7 +85,7 @@ public class GuiCraftingPreview extends GuiBase {
 
             for (int i = 0; i < 8; ++i) {
                 if (slot < stacks.size()) {
-                    ICraftingPreviewStack stack = stacks.get(slot);
+                    ICraftingPreviewElement stack = stacks.get(slot);
 
                     if (stack.hasMissing()) {
                         drawTexture(x, y, 189, 0, 67, 29);
@@ -119,33 +127,19 @@ public class GuiCraftingPreview extends GuiBase {
             RenderHelper.enableGUIStandardItemLighting();
 
             ItemStack hoveringStack = null;
+            FluidStack hoveringFluid = null;
 
             for (int i = 0; i < 8; ++i) {
                 if (slot < stacks.size()) {
-                    ICraftingPreviewStack stack = stacks.get(slot);
+                    ICraftingPreviewElement stack = stacks.get(slot);
 
-                    drawItem(x, y + 5, stack.getStack());
-
-                    GlStateManager.pushMatrix();
-                    GlStateManager.scale(scale, scale, 1);
-
-                    int yy = y + 8;
-
-                    if (stack.getToCraft() > 0) {
-                        String format = stack.hasMissing() ? "gui.refinedstorage:crafting_preview.missing" : "gui.refinedstorage:crafting_preview.to_craft";
-                        drawString(calculateOffsetOnScale(x + 23, scale), calculateOffsetOnScale(yy, scale), t(format, stack.getToCraft()));
-
-                        yy += 7;
-                    }
-
-                    if (stack.getAvailable() > 0) {
-                        drawString(calculateOffsetOnScale(x + 23, scale), calculateOffsetOnScale(yy, scale), t("gui.refinedstorage:crafting_preview.available", stack.getAvailable()));
-                    }
-
-                    GlStateManager.popMatrix();
+                    stack.draw(x, y + 5, itemDrawer, fluidDrawer, stringDrawer);
 
                     if (inBounds(x, y, 16, 16, mouseX, mouseY)) {
-                        hoveringStack = stack.getStack();
+                        hoveringStack = stack.getId().equals(CraftingPreviewElementItemStack.ID) ? (ItemStack) stack.getElement() : null;
+                        if (hoveringStack == null) {
+                            hoveringFluid = stack.getId().equals(CraftingPreviewElementFluidStack.ID) ? (FluidStack) stack.getElement() : null;
+                        }
                     }
                 }
 
@@ -161,6 +155,8 @@ public class GuiCraftingPreview extends GuiBase {
 
             if (hoveringStack != null) {
                 drawTooltip(mouseX, mouseY, hoveringStack.getTooltip(Minecraft.getMinecraft().thePlayer, false));
+            } else if (hoveringFluid != null) {
+                drawTooltip(mouseX, mouseY, hoveringFluid.getLocalizedName());
             }
         }
     }

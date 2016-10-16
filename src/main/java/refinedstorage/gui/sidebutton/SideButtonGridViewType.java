@@ -16,7 +16,7 @@ public class SideButtonGridViewType extends SideButton {
 
     @Override
     public String getTooltip() {
-        return TextFormatting.YELLOW + gui.t("sidebutton.refinedstorage:grid.view_type") + TextFormatting.RESET + "\n" + gui.t("sidebutton.refinedstorage:grid.view_type." + grid.getViewType());
+        return TextFormatting.YELLOW + GuiBase.t("sidebutton.refinedstorage:grid.view_type") + TextFormatting.RESET + "\n" + GuiBase.t("sidebutton.refinedstorage:grid.view_type." + grid.getViewType());
     }
 
     @Override

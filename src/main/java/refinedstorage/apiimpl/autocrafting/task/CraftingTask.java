@@ -8,7 +8,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.RSUtils;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
-import refinedstorage.api.autocrafting.preview.ICraftingPreviewStack;
+import refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import refinedstorage.api.autocrafting.task.ICraftingTask;
 import refinedstorage.api.autocrafting.task.IProcessable;
 import refinedstorage.api.network.INetworkMaster;
@@ -19,7 +19,8 @@ import refinedstorage.apiimpl.API;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementFluidRender;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementItemRender;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementText;
-import refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewStack;
+import refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementFluidStack;
+import refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementItemStack;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -48,7 +49,7 @@ public class CraftingTask implements ICraftingTask {
         this.quantity = quantity;
 
         if (pattern.isOredict()) {
-            this.compare = IComparer.COMPARE_OREDICT;
+            this.compare |= IComparer.COMPARE_OREDICT;
         }
     }
 
@@ -67,6 +68,7 @@ public class CraftingTask implements ICraftingTask {
         if (!recurseFound) {
             this.toInsert.addAll(toInsert.getStacks());
         }
+
         usedPatterns.clear();
     }
 
@@ -120,7 +122,10 @@ public class CraftingTask implements ICraftingTask {
                         // Calculate added all the crafted outputs toInsert
                         // So we remove the ones we use from toInsert
                         toInsert.remove(inputCrafted, true);
-                    } else if (!doFluidCalculation(networkList, input, toInsert)) {
+                    } else if (doFluidCalculation(networkList, input, toInsert)) {
+                        actualInputs.add(ItemHandlerHelper.copyStackWithSize(input, 1));
+                        input.stackSize -= 1;
+                    } else {
                         missing.add(input.copy());
                         input.stackSize = 0;
                     }
@@ -138,15 +143,16 @@ public class CraftingTask implements ICraftingTask {
                     actualInputs.remove(taken, true);
                 }
             }
-
-            for (ItemStack byproduct : (pattern.isOredict() ? pattern.getByproducts(took) : pattern.getByproducts())) {
-                toInsert.add(byproduct.copy());
-            }
-
-            for (ItemStack output : pattern.getOutputs()) {
-                toInsert.add(output.copy());
-            }
         }
+
+        for (ItemStack byproduct : (pattern.isOredict() && missing.isEmpty() ? pattern.getByproducts(took) : pattern.getByproducts())) {
+            toInsert.add(byproduct.copy());
+        }
+
+        for (ItemStack output : (pattern.isOredict() && missing.isEmpty() ? pattern.getOutputs(took) : pattern.getOutputs())) {
+            toInsert.add(output.copy());
+        }
+
         usedPatterns.remove(pattern);
     }
 
@@ -207,13 +213,13 @@ public class CraftingTask implements ICraftingTask {
         for (IProcessable processable : toProcess) {
             IItemHandler inventory = processable.getPattern().getContainer().getFacingInventory();
 
-            if (inventory != null && processable.getStackToInsert() != null) {
-                ItemStack toInsert = network.extractItem(processable.getStackToInsert(), 1, compare);
+            if (inventory != null && !processable.getToInsert().isEmpty()) {
+                ItemStack toInsert = network.extractItem(processable.getToInsert().peek(), 1, compare);
 
                 if (ItemHandlerHelper.insertItem(inventory, toInsert, true) == null) {
                     ItemHandlerHelper.insertItem(inventory, toInsert, false);
 
-                    processable.nextStack();
+                    processable.getToInsert().pop();
                 }
             }
         }
@@ -358,45 +364,49 @@ public class CraftingTask implements ICraftingTask {
     }
 
     @Override
-    public List<ICraftingPreviewStack> getPreviewStacks() {
+    public List<ICraftingPreviewElement> getPreviewStacks() {
         if (!isValid()) {
             return Collections.emptyList();
         }
 
-        Map<Integer, CraftingPreviewStack> map = new LinkedHashMap<>();
+        Map<Integer, CraftingPreviewElementItemStack> map = new LinkedHashMap<>();
 
         for (ItemStack stack : toCraft.getStacks()) {
             int hash = API.instance().getItemStackHashCode(stack);
-            CraftingPreviewStack previewStack = map.get(hash);
+            CraftingPreviewElementItemStack previewStack = map.get(hash);
             if (previewStack == null) {
-                previewStack = new CraftingPreviewStack(stack);
+                previewStack = new CraftingPreviewElementItemStack(stack);
             }
             previewStack.addToCraft(stack.stackSize);
             map.put(hash, previewStack);
         }
 
-        for (ItemStack stack : toTake.getStacks()) {
-            int hash = API.instance().getItemStackHashCode(stack);
-            CraftingPreviewStack previewStack = map.get(hash);
-            if (previewStack == null) {
-                previewStack = new CraftingPreviewStack(stack);
-            }
-            previewStack.addAvailable(stack.stackSize);
-            map.put(hash, previewStack);
-        }
-
         for (ItemStack stack : missing.getStacks()) {
             int hash = API.instance().getItemStackHashCode(stack);
-            CraftingPreviewStack previewStack = map.get(hash);
+            CraftingPreviewElementItemStack previewStack = map.get(hash);
             if (previewStack == null) {
-                previewStack = new CraftingPreviewStack(stack);
+                previewStack = new CraftingPreviewElementItemStack(stack);
             }
             previewStack.setMissing(true);
             previewStack.addToCraft(stack.stackSize);
             map.put(hash, previewStack);
         }
 
-        return new ArrayList<>(map.values());
+        for (ItemStack stack : toTake.getStacks()) {
+            int hash = API.instance().getItemStackHashCode(stack);
+            CraftingPreviewElementItemStack previewStack = map.get(hash);
+            if (previewStack == null) {
+                previewStack = new CraftingPreviewElementItemStack(stack);
+            }
+            previewStack.addAvailable(stack.stackSize);
+            map.put(hash, previewStack);
+        }
+
+        List<ICraftingPreviewElement> elements = new ArrayList<>(map.values());
+
+        toTakeFluids.getStacks().stream().map(CraftingPreviewElementFluidStack::new).forEach(elements::add);
+
+        return elements;
     }
 
     private boolean isFinished() {

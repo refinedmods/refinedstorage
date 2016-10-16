@@ -23,7 +23,7 @@ public class SideButtonAccessType extends SideButton {
 
     @Override
     public String getTooltip() {
-        return TextFormatting.RED + gui.t("sidebutton.refinedstorage:access_type") + TextFormatting.RESET + "\n" + gui.t("sidebutton.refinedstorage:access_type." + parameter.getValue().getId());
+        return TextFormatting.RED + GuiBase.t("sidebutton.refinedstorage:access_type") + TextFormatting.RESET + "\n" + GuiBase.t("sidebutton.refinedstorage:access_type." + parameter.getValue().getId());
     }
 
     @Override
