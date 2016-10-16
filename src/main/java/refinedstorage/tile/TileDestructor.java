@@ -131,7 +131,7 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
                         if (upgrades.hasUpgrade(ItemUpgrade.TYPE_SILK_TOUCH) && frontBlock.canSilkHarvest(worldObj, front, frontBlockState, null)) {
                             drops = Collections.singletonList(frontStack);
                         } else {
-                            drops = frontBlock.getDrops(worldObj, front, frontBlockState, upgrades.getForuneLevel());
+                            drops = frontBlock.getDrops(worldObj, front, frontBlockState, upgrades.getFortuneLevel());
                         }
 
                         for (ItemStack drop : drops) {

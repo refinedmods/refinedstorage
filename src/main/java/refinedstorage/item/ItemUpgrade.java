@@ -7,6 +7,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagInt;
 import refinedstorage.RS;
 
@@ -32,20 +33,41 @@ public class ItemUpgrade extends ItemBase {
     }
 
     @Override
+    public String getUnlocalizedName(ItemStack stack) {
+        if (stack.getItemDamage() == TYPE_FORTUNE) {
+            return super.getUnlocalizedName(stack) + ":" + ItemUpgrade.getFortuneLevel(stack);
+        }
+
+        return super.getUnlocalizedName(stack);
+    }
+
+    @Override
     public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
         for (int i = 0; i <= 6; ++i) {
             list.add(new ItemStack(item, 1, i));
         }
 
-        for (int j = 0; j <= 3; j++) {
+        for (int j = 1; j <= 3; ++j) {
             list.add(initializeForFortune(item, j));
         }
     }
 
     public static ItemStack initializeForFortune(Item item, int level) {
         ItemStack stack = new ItemStack(item, 1, TYPE_FORTUNE);
-        stack.setTagInfo(NBT_FORTUNE, new NBTTagInt(level));
+        stack.setTagCompound(new NBTTagCompound());
+        stack.getTagCompound().setInteger(NBT_FORTUNE, level);
         return stack;
+    }
+
+    public static int getFortuneLevel(ItemStack stack) {
+        if (stack != null && stack.getItemDamage() == ItemUpgrade.TYPE_FORTUNE) {
+            NBTTagCompound tag = stack.getTagCompound();
+            if (tag.hasKey(ItemUpgrade.NBT_FORTUNE)) {
+                return tag.getInteger(ItemUpgrade.NBT_FORTUNE);
+            }
+        }
+
+        return 0;
     }
 
     public static int getEnergyUsage(int type) {

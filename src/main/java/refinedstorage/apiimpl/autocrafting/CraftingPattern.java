@@ -82,7 +82,7 @@ public class CraftingPattern implements ICraftingPattern {
 
     @Override
     public boolean isOredict() {
-        return false;
+        return true;
     }
 
     @Override
