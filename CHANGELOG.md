@@ -26,6 +26,7 @@
 - Fixed when shift clicking crafting recipe and inventory is full items are dropping on the ground instead of going in the system (raoulvdberge)
 - Fixed glitchy rendering of cable parts in item form (raoulvdberge)
 - Fixed Destructor being able to break bedrock (InusualZ)
+- Fixed External Storage thinking that items are inserted in Extra Utilities Trash Cans (InusualZ)
 - Updated Storage Drawers API (raoulvdberge)
 
 ### 1.1.3

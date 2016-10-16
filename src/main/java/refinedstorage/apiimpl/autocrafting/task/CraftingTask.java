@@ -213,13 +213,13 @@ public class CraftingTask implements ICraftingTask {
         for (IProcessable processable : toProcess) {
             IItemHandler inventory = processable.getPattern().getContainer().getFacingInventory();
 
-            if (inventory != null && processable.getStackToInsert() != null) {
-                ItemStack toInsert = network.extractItem(processable.getStackToInsert(), 1, compare);
+            if (inventory != null && !processable.getToInsert().isEmpty()) {
+                ItemStack toInsert = network.extractItem(processable.getToInsert().peek(), 1, compare);
 
                 if (ItemHandlerHelper.insertItem(inventory, toInsert, true) == null) {
                     ItemHandlerHelper.insertItem(inventory, toInsert, false);
 
-                    processable.nextStack();
+                    processable.getToInsert().pop();
                 }
             }
         }

@@ -5,14 +5,23 @@ import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.task.IProcessable;
 import refinedstorage.apiimpl.API;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 public class Processable implements IProcessable {
     private ICraftingPattern pattern;
-    private int pos;
+    private Deque<ItemStack> toInsert = new ArrayDeque<>();
     private boolean satisfied[];
 
     public Processable(ICraftingPattern pattern) {
         this.pattern = pattern;
         this.satisfied = new boolean[pattern.getOutputs().size()];
+
+        for (ItemStack input : pattern.getInputs()) {
+            if (input != null) {
+                toInsert.add(input.copy());
+            }
+        }
     }
 
     @Override
@@ -21,17 +30,8 @@ public class Processable implements IProcessable {
     }
 
     @Override
-    public void nextStack() {
-        ++pos;
-    }
-
-    @Override
-    public ItemStack getStackToInsert() {
-        if (pos > pattern.getInputs().size() - 1) {
-            return null;
-        }
-
-        return pattern.getInputs().get(pos);
+    public Deque<ItemStack> getToInsert() {
+        return toInsert;
     }
 
     @Override
