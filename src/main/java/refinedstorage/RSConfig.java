@@ -71,6 +71,7 @@ public final class RSConfig {
     public int stackUpgradeUsage;
     public int interdimensionalUpgradeUsage;
     public int silkTouchUpgradeUsage;
+    public int fortuneUpgradeUsage;
     //endregion
 
     //region Categories
@@ -159,6 +160,7 @@ public final class RSConfig {
         stackUpgradeUsage = config.getInt("stack", UPGRADES, 12, 0, Integer.MAX_VALUE, "The additional energy used per Stack Upgrade");
         interdimensionalUpgradeUsage = config.getInt("interdimensional", UPGRADES, 1000, 0, Integer.MAX_VALUE, "The additional energy used by the Interdimensional Upgrade");
         silkTouchUpgradeUsage = config.getInt("silkTouch", UPGRADES, 15, 0, Integer.MAX_VALUE, "The additional energy used by the Silk Touch Upgrade");
+        fortuneUpgradeUsage = config.getInt("fortune", UPGRADES, 10, 0, Integer.MAX_VALUE, "The additional energy used by the Fortune Upgrade, multiplied by the level of the enchantment");
         //endregion
 
         if (config.hasChanged()) {

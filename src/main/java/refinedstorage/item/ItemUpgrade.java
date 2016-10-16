@@ -7,6 +7,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagInt;
 import refinedstorage.RS;
 
 import java.util.List;
@@ -18,6 +19,9 @@ public class ItemUpgrade extends ItemBase {
     public static final int TYPE_STACK = 4;
     public static final int TYPE_INTERDIMENSIONAL = 5;
     public static final int TYPE_SILK_TOUCH = 6;
+    public static final int TYPE_FORTUNE = 7;
+
+    public static final String NBT_FORTUNE = "Fortune";
 
     public ItemUpgrade() {
         super("upgrade");
@@ -32,6 +36,16 @@ public class ItemUpgrade extends ItemBase {
         for (int i = 0; i <= 6; ++i) {
             list.add(new ItemStack(item, 1, i));
         }
+
+        for (int j = 0; j <= 3; j++) {
+            list.add(initializeForFortune(item, j));
+        }
+    }
+
+    public static ItemStack initializeForFortune(Item item, int level) {
+        ItemStack stack = new ItemStack(item, 1, TYPE_FORTUNE);
+        stack.setTagInfo(NBT_FORTUNE, new NBTTagInt(level));
+        return stack;
     }
 
     public static int getEnergyUsage(int type) {

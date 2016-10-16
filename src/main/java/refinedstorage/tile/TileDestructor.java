@@ -69,7 +69,7 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
     private ItemHandlerBasic itemFilters = new ItemHandlerBasic(9, this);
     private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(9, this);
 
-    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_SILK_TOUCH);
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_SILK_TOUCH, ItemUpgrade.TYPE_FORTUNE);
 
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int mode = IFilterable.WHITELIST;
@@ -120,17 +120,18 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
                 }
             } else if (type == IType.ITEMS) {
                 IBlockState frontBlockState = worldObj.getBlockState(front);
+                Block frontBlock = frontBlockState.getBlock();
 
                 @SuppressWarnings("deprecation")
-                ItemStack frontStack = frontBlockState.getBlock().getItem(worldObj, front, frontBlockState);
+                ItemStack frontStack = frontBlock.getItem(worldObj, front, frontBlockState);
 
                 if (frontStack != null) {
-                    if (IFilterable.canTake(itemFilters, mode, compare, frontStack)) {
+                    if (IFilterable.canTake(itemFilters, mode, compare, frontStack) && frontBlockState.getBlockHardness(worldObj, front) != -1.0) {
                         List<ItemStack> drops;
-                        if (!upgrades.hasUpgrade(ItemUpgrade.TYPE_SILK_TOUCH)) {
-                            drops = frontBlockState.getBlock().getDrops(worldObj, front, frontBlockState, 0);
-                        } else {
+                        if (upgrades.hasUpgrade(ItemUpgrade.TYPE_SILK_TOUCH) && frontBlock.canSilkHarvest(worldObj, front, frontBlockState, null)) {
                             drops = Collections.singletonList(frontStack);
+                        } else {
+                            drops = frontBlock.getDrops(worldObj, front, frontBlockState, upgrades.getForuneLevel());
                         }
 
                         for (ItemStack drop : drops) {

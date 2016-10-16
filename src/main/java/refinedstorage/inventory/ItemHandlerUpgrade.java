@@ -1,5 +1,10 @@
 package refinedstorage.inventory;
 
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import refinedstorage.RSItems;
 import refinedstorage.item.ItemUpgrade;
@@ -57,5 +62,20 @@ public class ItemHandlerUpgrade extends ItemHandlerBasic {
 
     public int getInteractStackSize() {
         return hasUpgrade(ItemUpgrade.TYPE_STACK) ? 64 : 1;
+    }
+
+    public int getForuneLevel() {
+        for (int i = 0; i < getSlots(); ++i) {
+            if (getStackInSlot(i) != null && getStackInSlot(i).getItemDamage() == ItemUpgrade.TYPE_FORTUNE) {
+                NBTTagCompound tag = getStackInSlot(i).getTagCompound();
+                if (tag.hasKey(ItemUpgrade.NBT_FORTUNE)) {
+                    int level = tag.getInteger(ItemUpgrade.NBT_FORTUNE);
+                    System.out.println(level);
+                    return level;
+                }
+            }
+        }
+
+        return 0;
     }
 }
