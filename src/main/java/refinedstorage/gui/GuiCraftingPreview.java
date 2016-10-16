@@ -13,7 +13,7 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 import org.lwjgl.input.Keyboard;
 import refinedstorage.RS;
 import refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
-import refinedstorage.api.render.ElementDrawer;
+import refinedstorage.api.render.IElementDrawer;
 import refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementFluidStack;
 import refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementItemStack;
 import refinedstorage.network.MessageGridCraftingStart;
@@ -34,10 +34,9 @@ public class GuiCraftingPreview extends GuiBase {
     private GuiButton startButton;
     private GuiButton cancelButton;
 
-    private ElementDrawer<String> stringDrawer = this::drawString;
-    private ElementDrawer<ItemStack> itemDrawer = this::drawItem;
-    private ElementDrawer<FluidStack> fluidDrawer = (x, y, element) -> FLUID_RENDERER.draw(mc, x, y, element);
-    private ElementDrawer nullDrawer = (x, y, element) -> {};
+    private IElementDrawer<String> stringDrawer = this::drawString;
+    private IElementDrawer<ItemStack> itemDrawer = this::drawItem;
+    private IElementDrawer<FluidStack> fluidDrawer = (x, y, element) -> FLUID_RENDERER.draw(mc, x, y, element);
 
     public GuiCraftingPreview(GuiScreen parent, List<ICraftingPreviewElement> stacks, int hash, int quantity) {
         super(new Container() {
@@ -133,20 +132,8 @@ public class GuiCraftingPreview extends GuiBase {
             for (int i = 0; i < 8; ++i) {
                 if (slot < stacks.size()) {
                     ICraftingPreviewElement stack = stacks.get(slot);
-                    ElementDrawer elementDrawer;
-                    switch (stack.getId()) {
-                        case CraftingPreviewElementItemStack.ID:
-                            elementDrawer = itemDrawer;
-                            break;
-                        case CraftingPreviewElementFluidStack.ID:
-                            elementDrawer = fluidDrawer;
-                            break;
-                        default:
-                            elementDrawer = nullDrawer;
-                            break;
-                    }
 
-                    stack.draw(x, y + 5, elementDrawer, stringDrawer);
+                    stack.draw(x, y + 5, itemDrawer, fluidDrawer, stringDrawer);
 
                     if (inBounds(x, y, 16, 16, mouseX, mouseY)) {
                         hoveringStack = stack.getId().equals(CraftingPreviewElementItemStack.ID) ? (ItemStack) stack.getElement() : null;

@@ -6,12 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import refinedstorage.RS;
 import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
-import refinedstorage.api.render.ElementDrawer;
-import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementFluidRender;
-import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementItemRender;
-import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementText;
-import refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementFluidStack;
-import refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementItemStack;
+import refinedstorage.api.render.IElementDrawer;
 import refinedstorage.container.ContainerCraftingMonitor;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.network.MessageCraftingMonitorCancel;
@@ -36,10 +31,9 @@ public class GuiCraftingMonitor extends GuiBase {
     private int itemSelectedX = -1;
     private int itemSelectedY = -1;
 
-    private ElementDrawer<String> stringDrawer = this::drawString;
-    private ElementDrawer<ItemStack> itemDrawer = this::drawItem;
-    private ElementDrawer<FluidStack> fluidDrawer = (x, y, element) -> FLUID_RENDERER.draw(mc, x, y, element);
-    private ElementDrawer nullDrawer = (x, y, element) -> {};
+    private IElementDrawer<String> stringDrawer = this::drawString;
+    private IElementDrawer<ItemStack> itemDrawer = this::drawItem;
+    private IElementDrawer<FluidStack> fluidDrawer = (x, y, element) -> FLUID_RENDERER.draw(mc, x, y, element);
 
     public GuiCraftingMonitor(ContainerCraftingMonitor container, TileCraftingMonitor craftingMonitor) {
         super(container, 176, 230);
@@ -112,23 +106,7 @@ public class GuiCraftingMonitor extends GuiBase {
                     itemSelectedY = y;
                 }
 
-                ElementDrawer elementDrawer;
-                switch (element.getId()) {
-                    case CraftingMonitorElementItemRender.ID:
-                        elementDrawer = itemDrawer;
-                        break;
-                    case CraftingMonitorElementFluidRender.ID:
-                        elementDrawer = fluidDrawer;
-                        break;
-                    case CraftingMonitorElementText.ID:
-                        elementDrawer = stringDrawer;
-                        break;
-                    default:
-                        elementDrawer = nullDrawer;
-                        break;
-                }
-
-                element.draw(x, y, elementDrawer, stringDrawer);
+                element.draw(x, y, itemDrawer, fluidDrawer, stringDrawer);
 
                 x = ox;
                 y += ITEM_HEIGHT;

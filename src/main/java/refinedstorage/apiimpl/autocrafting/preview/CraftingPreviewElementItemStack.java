@@ -5,12 +5,13 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
-import refinedstorage.api.render.ElementDrawer;
+import refinedstorage.api.render.IElementDrawer;
 import refinedstorage.gui.GuiBase;
 
 public class CraftingPreviewElementItemStack implements ICraftingPreviewElement<ItemStack> {
@@ -63,8 +64,8 @@ public class CraftingPreviewElementItemStack implements ICraftingPreviewElement<
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void draw(int x, int y, ElementDrawer<ItemStack> elementDrawer, ElementDrawer<String> stringDrawer) {
-        elementDrawer.draw(x, y, getElement());
+    public void draw(int x, int y, IElementDrawer<ItemStack> itemDrawer, IElementDrawer<FluidStack> fluidDrawer, IElementDrawer<String> stringDrawer) {
+        itemDrawer.draw(x, y, getElement());
 
         float scale = 0.5f;
         y += 2;

@@ -3,11 +3,13 @@ package refinedstorage.apiimpl.autocrafting.craftingmonitor;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
-import refinedstorage.api.render.ElementDrawer;
+import refinedstorage.api.render.IElementDrawer;
 import refinedstorage.gui.GuiBase;
 
 public class CraftingMonitorElementText implements ICraftingMonitorElement<String> {
@@ -31,7 +33,7 @@ public class CraftingMonitorElementText implements ICraftingMonitorElement<Strin
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void draw(int x, int y, ElementDrawer<String> elementDrawer, ElementDrawer<String> stringDrawer) {
+    public void draw(int x, int y, IElementDrawer<ItemStack> itemDrawer, IElementDrawer<FluidStack> fluidDrawer, IElementDrawer<String> stringDrawer) {
         float scale = 0.5f;
 
         GlStateManager.pushMatrix();
