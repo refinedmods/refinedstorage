@@ -197,6 +197,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     private boolean couldRun;
 
+    private boolean craftingMonitorUpdateRequested;
+
     private EnumControllerType type;
 
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
@@ -294,10 +296,22 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                     }
                 }
 
-                if (!craftingTasks.isEmpty() || craftingTasksChanged) {
-                    markDirty();
+                if (craftingTasksChanged) {
+                    craftingMonitorUpdateRequested = true;
+                }
 
-                    updateCraftingMonitors();
+                if (!craftingTasks.isEmpty()) {
+                    markDirty();
+                }
+
+                if (craftingMonitorUpdateRequested) {
+                    craftingMonitorUpdateRequested = false;
+
+                    for (INetworkNode node : nodeGraph.all()) {
+                        if (node instanceof TileCraftingMonitor) {
+                            ((TileCraftingMonitor) node).dataManager.sendParameterToWatchers(TileCraftingMonitor.ELEMENTS);
+                        }
+                    }
                 }
             }
 
@@ -331,12 +345,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         super.update();
     }
 
-    public void updateCraftingMonitors() {
-        for (INetworkNode node : nodeGraph.all()) {
-            if (node instanceof TileCraftingMonitor) {
-                ((TileCraftingMonitor) node).dataManager.sendParameterToWatchers(TileCraftingMonitor.ELEMENTS);
-            }
-        }
+    @Override
+    public void sendCraftingMonitorUpdate() {
+        craftingMonitorUpdateRequested = true;
     }
 
     @Override

@@ -223,6 +223,11 @@ public interface INetworkMaster {
     void sendFluidStorageDeltaToClient(FluidStack stack, int delta);
 
     /**
+     * Sends a crafting monitor update to all players that are watching a crafting monitor.
+     */
+    void sendCraftingMonitorUpdate();
+
+    /**
      * Inserts an item in this network.
      *
      * @param stack    the stack prototype to insert, do NOT modify
