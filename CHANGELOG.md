@@ -10,6 +10,7 @@
 - Added Silk Touch Upgrade for Destructor (InusualZ)
 - Added Fortune Upgrade for Destructor (InusualZ)
 - The Constructor can now drop items in the world (raoulvdberge)
+- The Constructor can now place skulls (modmuss50)
 - The Destructor can now pick up items in the world (InusualZ)
 - Stack upgrade in Importer / Exporter in fluid mode and Fluid Interface now transfers 64 buckets at once (raoulvdberge)
 - Detector without any filter will detect based on total items or fluids stored (raoulvdberge)
