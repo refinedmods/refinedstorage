@@ -3,6 +3,7 @@ package refinedstorage.tile;
 import com.mojang.authlib.GameProfile;
 import mcmultipart.microblock.IMicroblock;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockSkull;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
@@ -35,8 +36,6 @@ import refinedstorage.tile.config.IType;
 import refinedstorage.tile.data.ITileDataConsumer;
 import refinedstorage.tile.data.ITileDataProducer;
 import refinedstorage.tile.data.TileDataParameter;
-
-import java.util.UUID;
 
 public class TileConstructor extends TileMultipartNode implements IComparable, IType {
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
@@ -155,30 +154,29 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
                 SoundType blockSound = block.getBlock().getSoundType(state, worldObj, pos, null);
                 worldObj.playSound(null, front, blockSound.getPlaceSound(), SoundCategory.BLOCKS, (blockSound.getVolume() + 1.0F) / 2.0F, blockSound.getPitch() * 0.8F);
 
-	            if(block.getBlock() == Blocks.SKULL){
-		            TileEntity tile = worldObj.getTileEntity(front);
-		            if(tile instanceof TileEntitySkull){
-			            TileEntitySkull skullTile = (TileEntitySkull)tile;
-			            if(item.getItemDamage() == 3){
-				            GameProfile playerInfo = null;
-				            if (item.hasTagCompound()) {
-					            NBTTagCompound tagCompound = item.getTagCompound();
-					            if (tagCompound.hasKey("SkullOwner", 10)) {
-						            playerInfo = NBTUtil.readGameProfileFromNBT(tagCompound.getCompoundTag("SkullOwner"));
-					            }
-					            else if (tagCompound.hasKey("SkullOwner", 8) && !tagCompound.getString("SkullOwner").isEmpty()) {
-						            playerInfo = new GameProfile(null, tagCompound.getString("SkullOwner"));
-					            }
-				            }
-				            skullTile.setPlayerProfile(playerInfo);
-			            } else {
-				            skullTile.setType(item.getMetadata());
-			            }
-			            skullTile.setSkullRotation(0); //TODO make this work
-			            Blocks.SKULL.checkWitherSpawn(worldObj, front, skullTile);
-		            }
+                if (block.getBlock() == Blocks.SKULL) {
+                    worldObj.setBlockState(front, worldObj.getBlockState(front).withProperty(BlockSkull.FACING, getDirection()));
+                    TileEntity tile = worldObj.getTileEntity(front);
+                    if (tile instanceof TileEntitySkull) {
+                        TileEntitySkull skullTile = (TileEntitySkull) tile;
+                        if (item.getItemDamage() == 3) {
+                            GameProfile playerInfo = null;
+                            if (item.hasTagCompound()) {
+                                NBTTagCompound tagCompound = item.getTagCompound();
+                                if (tagCompound.hasKey("SkullOwner", 10)) {
+                                    playerInfo = NBTUtil.readGameProfileFromNBT(tagCompound.getCompoundTag("SkullOwner"));
+                                } else if (tagCompound.hasKey("SkullOwner", 8) && !tagCompound.getString("SkullOwner").isEmpty()) {
+                                    playerInfo = new GameProfile(null, tagCompound.getString("SkullOwner"));
+                                }
+                            }
+                            skullTile.setPlayerProfile(playerInfo);
+                        } else {
+                            skullTile.setType(item.getMetadata());
+                        }
+                        Blocks.SKULL.checkWitherSpawn(worldObj, front, skullTile);
+                    }
 
-	            }
+                }
             } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
                 ItemStack craft = itemFilters.getStackInSlot(0);
 

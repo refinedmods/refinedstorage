@@ -1,7 +1,6 @@
 package refinedstorage.container.slot;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockSkull;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -73,8 +72,8 @@ public class SlotSpecimen extends SlotItemHandler {
                 return (((ItemBlock) item).getBlock()).getDefaultState();
             } else if (item instanceof IPlantable) {
                 return ((IPlantable) item).getPlant(world, pos);
-            }else if (item instanceof ItemSkull) {
-	            return Blocks.SKULL.getDefaultState();
+            } else if (item instanceof ItemSkull) {
+                return Blocks.SKULL.getDefaultState();
             }
         }
 
