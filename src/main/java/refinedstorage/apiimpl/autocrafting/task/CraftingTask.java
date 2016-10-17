@@ -26,7 +26,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class CraftingTask implements ICraftingTask {
-    private static final int defaultCompare = IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT;
+    private static final int DEFAULT_COMPARE = IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT;
 
     private INetworkMaster network;
     private ItemStack requested;
@@ -75,7 +75,7 @@ public class CraftingTask implements ICraftingTask {
             return;
         }
 
-        int compare = defaultCompare | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0);
+        int compare = DEFAULT_COMPARE | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0);
         ItemStack[] took = new ItemStack[9];
 
         if (pattern.isProcessing()) {
@@ -212,7 +212,7 @@ public class CraftingTask implements ICraftingTask {
             IItemHandler inventory = processable.getPattern().getContainer().getFacingInventory();
 
             if (inventory != null && !processable.getToInsert().isEmpty()) {
-                ItemStack toInsert = network.extractItem(processable.getToInsert().peek(), 1, defaultCompare | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0));
+                ItemStack toInsert = network.extractItem(processable.getToInsert().peek(), 1, DEFAULT_COMPARE | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0));
 
                 if (ItemHandlerHelper.insertItem(inventory, toInsert, true) == null) {
                     ItemHandlerHelper.insertItem(inventory, toInsert, false);
