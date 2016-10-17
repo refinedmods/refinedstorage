@@ -26,6 +26,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class CraftingTask implements ICraftingTask {
+    private static final int defaultCompare = IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT;
+
     private INetworkMaster network;
     private ItemStack requested;
     private ICraftingPattern pattern;
@@ -38,7 +40,6 @@ public class CraftingTask implements ICraftingTask {
     private Set<ICraftingPattern> usedPatterns = new HashSet<>();
     private boolean recurseFound = false;
     private Deque<ItemStack> toInsert = new ArrayDeque<>();
-    private int compare = IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT;
     private List<ItemStack> took = new ArrayList<>();
     private List<FluidStack> tookFluids = new ArrayList<>();
 
@@ -47,10 +48,6 @@ public class CraftingTask implements ICraftingTask {
         this.requested = requested;
         this.pattern = pattern;
         this.quantity = quantity;
-
-        if (pattern.isOredict()) {
-            this.compare |= IComparer.COMPARE_OREDICT;
-        }
     }
 
     @Override
@@ -78,6 +75,7 @@ public class CraftingTask implements ICraftingTask {
             return;
         }
 
+        int compare = defaultCompare | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0);
         ItemStack[] took = new ItemStack[9];
 
         if (pattern.isProcessing()) {
@@ -214,7 +212,7 @@ public class CraftingTask implements ICraftingTask {
             IItemHandler inventory = processable.getPattern().getContainer().getFacingInventory();
 
             if (inventory != null && !processable.getToInsert().isEmpty()) {
-                ItemStack toInsert = network.extractItem(processable.getToInsert().peek(), 1, compare);
+                ItemStack toInsert = network.extractItem(processable.getToInsert().peek(), 1, defaultCompare | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0));
 
                 if (ItemHandlerHelper.insertItem(inventory, toInsert, true) == null) {
                     ItemHandlerHelper.insertItem(inventory, toInsert, false);
@@ -225,7 +223,7 @@ public class CraftingTask implements ICraftingTask {
         }
 
         for (ItemStack stack : toTake.getStacks()) {
-            ItemStack stackExtracted = network.extractItem(stack, 1, compare);
+            ItemStack stackExtracted = network.extractItem(stack, 1);
 
             if (stackExtracted != null) {
                 toTake.remove(stack, 1, true);
