@@ -3,10 +3,8 @@ package refinedstorage.container.slot;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemBlockSpecial;
-import net.minecraft.item.ItemStack;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.IPlantable;
@@ -38,7 +36,7 @@ public class SlotSpecimen extends SlotItemHandler {
 
     @Override
     public boolean isItemValid(ItemStack stack) {
-        return super.isItemValid(stack) && (isBlockOnly() ? (stack.getItem() instanceof ItemBlock || stack.getItem() instanceof ItemBlockSpecial || stack.getItem() instanceof IPlantable) : true);
+        return super.isItemValid(stack) && (isBlockOnly() ? (stack.getItem() instanceof ItemBlock || stack.getItem() instanceof ItemBlockSpecial || stack.getItem() instanceof IPlantable || stack.getItem() instanceof ItemSkull) : true);
     }
 
     @Override
@@ -74,6 +72,8 @@ public class SlotSpecimen extends SlotItemHandler {
                 return (((ItemBlock) item).getBlock()).getDefaultState();
             } else if (item instanceof IPlantable) {
                 return ((IPlantable) item).getPlant(world, pos);
+            } else if (item instanceof ItemSkull) {
+                return Blocks.SKULL.getDefaultState();
             }
         }
 
