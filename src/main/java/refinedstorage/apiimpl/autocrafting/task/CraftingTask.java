@@ -239,6 +239,8 @@ public class CraftingTask implements ICraftingTask {
                     ItemHandlerHelper.insertItem(inventory, toInsert, false);
 
                     processable.getToInsert().pop();
+
+                    network.sendCraftingMonitorUpdate();
                 }
             }
         }
@@ -250,6 +252,8 @@ public class CraftingTask implements ICraftingTask {
                 toTake.remove(stack, 1, true);
 
                 took.add(stackExtracted);
+
+                network.sendCraftingMonitorUpdate();
             }
 
             break;
@@ -264,6 +268,8 @@ public class CraftingTask implements ICraftingTask {
                     toTakeFluids.remove(stack, stack.amount, true);
 
                     tookFluids.add(stackExtracted);
+
+                    network.sendCraftingMonitorUpdate();
                 }
 
                 break;
@@ -277,6 +283,8 @@ public class CraftingTask implements ICraftingTask {
                 network.insertItem(insert, insert.stackSize, false);
 
                 toInsert.pop();
+                
+                network.sendCraftingMonitorUpdate();
             }
 
             return toInsert.isEmpty();
