@@ -21,6 +21,7 @@ public class GuiConstructor extends GuiBase {
 
         addSideButton(new SideButtonCompare(this, TileConstructor.COMPARE, IComparer.COMPARE_DAMAGE));
         addSideButton(new SideButtonCompare(this, TileConstructor.COMPARE, IComparer.COMPARE_NBT));
+        addSideButton(new SideButtonCompare(this, TileConstructor.COMPARE, IComparer.COMPARE_OREDICT));
         addSideButton(new SideButtonConstuctorDrop(this));
     }
 

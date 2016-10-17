@@ -27,6 +27,7 @@ public class GuiDetector extends GuiBase {
 
         addSideButton(new SideButtonCompare(this, TileDetector.COMPARE, IComparer.COMPARE_DAMAGE));
         addSideButton(new SideButtonCompare(this, TileDetector.COMPARE, IComparer.COMPARE_NBT));
+        addSideButton(new SideButtonCompare(this, TileDetector.COMPARE, IComparer.COMPARE_OREDICT));
 
         AMOUNT = new GuiTextField(0, fontRendererObj, x + 62 + 1, y + 23 + 1, 29, fontRendererObj.FONT_HEIGHT);
         AMOUNT.setText(String.valueOf(TileDetector.AMOUNT.getValue()));

@@ -20,6 +20,7 @@ public class GuiExporter extends GuiBase {
 
         addSideButton(new SideButtonCompare(this, TileExporter.COMPARE, IComparer.COMPARE_DAMAGE));
         addSideButton(new SideButtonCompare(this, TileExporter.COMPARE, IComparer.COMPARE_NBT));
+        addSideButton(new SideButtonCompare(this, TileExporter.COMPARE, IComparer.COMPARE_OREDICT));
     }
 
     @Override

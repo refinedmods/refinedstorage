@@ -1,6 +1,7 @@
 package refinedstorage.api.autocrafting.task;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 
 import java.util.Deque;
@@ -35,4 +36,12 @@ public interface IProcessable {
      * @return true if this item belonged to the processable item, false otherwise
      */
     boolean onReceiveOutput(ItemStack stack);
+
+    /**
+     * Writes the processable to NBT.
+     *
+     * @param tag the tag
+     * @return the written tag
+     */
+    NBTTagCompound writeToNBT(NBTTagCompound tag);
 }

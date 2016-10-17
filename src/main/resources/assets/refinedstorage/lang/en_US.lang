@@ -74,8 +74,9 @@ misc.refinedstorage:clear=Clear
 misc.refinedstorage:cancel_all=Cancel All
 misc.refinedstorage:priority=Priority
 
-sidebutton.refinedstorage:compare.1=Compare Damage
+sidebutton.refinedstorage:compare.1=Compare damage
 sidebutton.refinedstorage:compare.2=Compare NBT
+sidebutton.refinedstorage:compare.8=Compare ore dictionary
 
 sidebutton.refinedstorage:redstone_mode=Redstone Mode
 sidebutton.refinedstorage:redstone_mode.0=Ignore redstone signal

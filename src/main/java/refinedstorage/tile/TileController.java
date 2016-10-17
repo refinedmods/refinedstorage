@@ -736,7 +736,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 ICraftingTaskFactory factory = API.instance().getCraftingTaskRegistry().getFactory(tag.getString(ICraftingTask.NBT_PATTERN_ID));
 
                 if (factory != null) {
-                    return factory.create(world, network, null, pattern, tag.getInteger(ICraftingTask.NBT_QUANTITY), tag);
+                    return factory.create(world, network, tag.hasKey(ICraftingTask.NBT_REQUESTED) ? ItemStack.loadItemStackFromNBT(tag.getCompoundTag(ICraftingTask.NBT_REQUESTED)) : null, pattern, tag.getInteger(ICraftingTask.NBT_QUANTITY), tag);
                 }
             }
         }
