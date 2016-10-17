@@ -175,7 +175,7 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
 				            skullTile.setType(item.getMetadata());
 			            }
 			            skullTile.setSkullRotation(0); //TODO make this work
-			            Blocks.SKULL.checkWitherSpawn(worldObj, pos, skullTile);
+			            Blocks.SKULL.checkWitherSpawn(worldObj, front, skullTile);
 		            }
 
 	            }
