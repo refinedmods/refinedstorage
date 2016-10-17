@@ -2,6 +2,7 @@ package refinedstorage.apiimpl.autocrafting.task;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -22,13 +23,22 @@ import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElemen
 import refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementFluidStack;
 import refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementItemStack;
 
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class CraftingTask implements ICraftingTask {
     private static final int DEFAULT_COMPARE = IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT;
 
+    public static final String NBT_TO_PROCESS = "ToProcess";
+    public static final String NBT_TO_TAKE = "ToTake";
+    public static final String NBT_TO_TAKE_FLUIDS = "ToTakeFluids";
+    public static final String NBT_TO_INSERT = "ToInsert";
+    public static final String NBT_TOOK = "Took";
+    public static final String NBT_TOOK_FLUIDS = "TookFluids";
+
     private INetworkMaster network;
+    @Nullable
     private ItemStack requested;
     private ICraftingPattern pattern;
     private int quantity;
@@ -43,11 +53,22 @@ public class CraftingTask implements ICraftingTask {
     private List<ItemStack> took = new ArrayList<>();
     private List<FluidStack> tookFluids = new ArrayList<>();
 
-    public CraftingTask(INetworkMaster network, ItemStack requested, ICraftingPattern pattern, int quantity) {
+    public CraftingTask(INetworkMaster network, @Nullable ItemStack requested, ICraftingPattern pattern, int quantity) {
         this.network = network;
         this.requested = requested;
         this.pattern = pattern;
         this.quantity = quantity;
+    }
+
+    public CraftingTask(INetworkMaster network, @Nullable ItemStack requested, ICraftingPattern pattern, int quantity, List<IProcessable> toProcess, IItemStackList toTake, IFluidStackList toTakeFluids, Deque<ItemStack> toInsert, List<ItemStack> took, List<FluidStack> tookFluids) {
+        this(network, requested, pattern, quantity);
+
+        this.toProcess = toProcess;
+        this.toTake = toTake;
+        this.toTakeFluids = toTakeFluids;
+        this.toInsert = toInsert;
+        this.took = took;
+        this.tookFluids = tookFluids;
     }
 
     @Override
@@ -269,8 +290,51 @@ public class CraftingTask implements ICraftingTask {
         return quantity;
     }
 
+    @Nullable
+    @Override
+    public ItemStack getRequested() {
+        return requested;
+    }
+
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+        writeDefaultsToNBT(tag);
+
+        NBTTagList processablesList = new NBTTagList();
+
+        for (IProcessable processable : toProcess) {
+            processablesList.appendTag(processable.writeToNBT(new NBTTagCompound()));
+        }
+
+        tag.setTag(NBT_TO_PROCESS, processablesList);
+
+        tag.setTag(NBT_TO_TAKE, RSUtils.serializeItemStackList(toTake));
+        tag.setTag(NBT_TO_TAKE_FLUIDS, RSUtils.serializeFluidStackList(toTakeFluids));
+
+        NBTTagList toInsertList = new NBTTagList();
+
+        for (ItemStack insert : new ArrayList<>(toInsert)) {
+            toInsertList.appendTag(insert.serializeNBT());
+        }
+
+        tag.setTag(NBT_TO_INSERT, toInsertList);
+
+        NBTTagList tookList = new NBTTagList();
+
+        for (ItemStack took : this.took) {
+            tookList.appendTag(took.serializeNBT());
+        }
+
+        tag.setTag(NBT_TOOK, tookList);
+
+        NBTTagList fluidsTookList = new NBTTagList();
+
+        for (FluidStack took : this.tookFluids) {
+            fluidsTookList.appendTag(took.writeToNBT(new NBTTagCompound()));
+        }
+
+        tag.setTag(NBT_TOOK_FLUIDS, fluidsTookList);
+
         return tag;
     }
 
@@ -280,7 +344,7 @@ public class CraftingTask implements ICraftingTask {
 
         elements.add(new CraftingMonitorElementItemRender(
             network.getCraftingTasks().indexOf(this),
-            pattern.getOutputs().get(0),
+            requested != null ? requested : pattern.getOutputs().get(0),
             quantity,
             0
         ));

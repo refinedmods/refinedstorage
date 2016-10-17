@@ -1,10 +1,12 @@
 package refinedstorage.api.autocrafting.task;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -15,6 +17,7 @@ public interface ICraftingTask {
     String NBT_PATTERN_ID = "PatternID";
     String NBT_PATTERN_STACK = "PatternStack";
     String NBT_PATTERN_CONTAINER = "PatternContainer";
+    String NBT_REQUESTED = "Requested";
 
     /**
      * Calculates what this task will do, but doesn't run the task just yet.
@@ -40,12 +43,37 @@ public interface ICraftingTask {
     int getQuantity();
 
     /**
+     * @return the stack requested
+     */
+    @Nullable
+    ItemStack getRequested();
+
+    /**
      * Writes this task to NBT.
      *
      * @param tag the tag
      * @return the written tag
      */
     NBTTagCompound writeToNBT(NBTTagCompound tag);
+
+    /**
+     * Helper method to write default neccesary elements to NBT.
+     *
+     * @param tag the tag
+     * @return the written tag
+     */
+    default NBTTagCompound writeDefaultsToNBT(NBTTagCompound tag) {
+        tag.setInteger(NBT_QUANTITY, getQuantity());
+        tag.setString(NBT_PATTERN_ID, getPattern().getId());
+        tag.setTag(NBT_PATTERN_STACK, getPattern().getStack().serializeNBT());
+        tag.setLong(NBT_PATTERN_CONTAINER, getPattern().getContainer().getPosition().toLong());
+
+        if (getRequested() != null) {
+            tag.setTag(NBT_REQUESTED, getRequested().serializeNBT());
+        }
+
+        return tag;
+    }
 
     /**
      * {@link ICraftingTask#calculate()} must be run before this
