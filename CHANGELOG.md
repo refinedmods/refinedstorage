@@ -9,6 +9,7 @@
 - Added ability to toggle between read and write, read and write mode in storage blocks (InusualZ, raoulvdberge)
 - Added Silk Touch Upgrade for Destructor (InusualZ)
 - Added Fortune Upgrade for Destructor (InusualZ)
+- Added ore dictionary compare toggle to storage I/O blocks (raoulvdberge)
 - The Constructor can now drop items in the world (raoulvdberge)
 - The Constructor can now place skulls (modmuss50)
 - The Destructor can now pick up items in the world (InusualZ)
