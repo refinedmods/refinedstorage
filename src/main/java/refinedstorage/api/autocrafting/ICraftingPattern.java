@@ -1,6 +1,7 @@
 package refinedstorage.api.autocrafting;
 
 import net.minecraft.item.ItemStack;
+import refinedstorage.api.util.IComparer;
 
 import java.util.List;
 
@@ -71,5 +72,16 @@ public interface ICraftingPattern {
      * @param requested the item requested
      * @return the quantity
      */
-    int getQuantityPerRequest(ItemStack requested);
+    default int getQuantityPerRequest(ItemStack requested) {
+        return getQuantityPerRequest(requested, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);
+    }
+
+    /**
+     * Returns the quantity of items that this crafting task yields per request.
+     *
+     * @param requested the item requested
+     * @param compare the {@link refinedstorage.api.util.IComparer} flags
+     * @return the quantity
+     */
+    int getQuantityPerRequest(ItemStack requested, int compare);
 }
