@@ -164,12 +164,14 @@ public class CraftingTask implements ICraftingTask {
             }
         }
 
-        for (ItemStack byproduct : (pattern.isOredict() && missing.isEmpty() ? pattern.getByproducts(took) : pattern.getByproducts())) {
-            toInsert.add(byproduct.copy());
-        }
+        if (!pattern.isProcessing()) {
+            for (ItemStack byproduct : (pattern.isOredict() && missing.isEmpty() ? pattern.getByproducts(took) : pattern.getByproducts())) {
+                toInsert.add(byproduct.copy());
+            }
 
-        for (ItemStack output : (pattern.isOredict() && missing.isEmpty() ? pattern.getOutputs(took) : pattern.getOutputs())) {
-            toInsert.add(output.copy());
+            for (ItemStack output : (pattern.isOredict() && missing.isEmpty() ? pattern.getOutputs(took) : pattern.getOutputs())) {
+                toInsert.add(output.copy());
+            }
         }
 
         usedPatterns.remove(pattern);
@@ -232,7 +234,7 @@ public class CraftingTask implements ICraftingTask {
         for (IProcessable processable : toProcess) {
             IItemHandler inventory = processable.getPattern().getContainer().getFacingInventory();
 
-            if (inventory != null && !processable.getToInsert().isEmpty()) {
+            if (inventory != null && !processable.getToInsert().isEmpty() && canProcess(processable)) {
                 ItemStack toInsert = network.extractItem(processable.getToInsert().peek(), 1, DEFAULT_COMPARE | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0));
 
                 if (ItemHandlerHelper.insertItem(inventory, toInsert, true) == null) {
@@ -283,7 +285,7 @@ public class CraftingTask implements ICraftingTask {
                 network.insertItem(insert, insert.stackSize, false);
 
                 toInsert.pop();
-                
+
                 network.sendCraftingMonitorUpdate();
             }
 
@@ -291,6 +293,35 @@ public class CraftingTask implements ICraftingTask {
         }
 
         return false;
+    }
+
+    private boolean canProcess(IProcessable processable) {
+        for (ICraftingTask otherTask : network.getCraftingTasks()) {
+            for (IProcessable otherProcessable : otherTask.getToProcess()) {
+                if (otherProcessable != processable) {
+                    if (!isPatternsEqual(processable.getPattern(), otherProcessable.getPattern())) {
+                        if (processable.getPattern().getContainer().getFacingTile().getPos().equals(otherProcessable.getPattern().getContainer().getFacingTile().getPos())) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private boolean isPatternsEqual(ICraftingPattern left, ICraftingPattern right) {
+        for (int i = 0; i < 9; ++i) {
+            ItemStack leftStack = left.getInputs().get(i);
+            ItemStack rightStack = right.getInputs().get(i);
+
+            if (!API.instance().getComparer().isEqual(leftStack, rightStack)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @Override
@@ -410,6 +441,10 @@ public class CraftingTask implements ICraftingTask {
                                 32
                             ));
                         }
+                    }
+
+                    if (!canProcess(processable)) {
+                        elements.add(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.machine_in_use", 32));
                     }
                 }
             }
