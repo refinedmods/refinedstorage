@@ -150,11 +150,11 @@ public class CraftingPattern implements ICraftingPattern {
     }
 
     @Override
-    public int getQuantityPerRequest(ItemStack requested) {
+    public int getQuantityPerRequest(ItemStack requested, int compare) {
         int quantity = 0;
 
         for (ItemStack output : outputs) {
-            if (API.instance().getComparer().isEqualNoQuantity(requested, output)) {
+            if (API.instance().getComparer().isEqual(requested, output, compare)) {
                 quantity += output.stackSize;
 
                 if (!ItemPattern.isProcessing(stack)) {
