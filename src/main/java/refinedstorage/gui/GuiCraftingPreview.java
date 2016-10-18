@@ -125,6 +125,7 @@ public class GuiCraftingPreview extends GuiBase {
             int slot = scrollbar.getOffset() * 2;
 
             RenderHelper.enableGUIStandardItemLighting();
+            GlStateManager.enableDepth();
 
             ItemStack hoveringStack = null;
             FluidStack hoveringFluid = null;

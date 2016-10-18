@@ -132,7 +132,7 @@ public class CraftingTask implements ICraftingTask {
                 } else {
                     ICraftingPattern inputPattern = network.getPattern(input, compare);
                     if (inputPattern != null) {
-                        int craftQuantity = Math.min(inputPattern.getQuantityPerRequest(input), input.stackSize);
+                        int craftQuantity = Math.min(inputPattern.getQuantityPerRequest(input, compare), input.stackSize);
                         ItemStack inputCrafted = ItemHandlerHelper.copyStackWithSize(input, craftQuantity);
                         toCraft.add(inputCrafted.copy());
                         actualInputs.add(inputCrafted.copy());
