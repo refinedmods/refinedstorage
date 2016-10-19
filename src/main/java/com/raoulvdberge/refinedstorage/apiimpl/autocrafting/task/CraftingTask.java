@@ -413,7 +413,7 @@ public class CraftingTask implements ICraftingTask {
             0
         ));
 
-        if (isFinished()) {
+        if (isFinished() && !toInsert.isEmpty()) {
             elements.add(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_inserting", 16));
 
             elements.addAll(toInsert.stream()
@@ -453,7 +453,7 @@ public class CraftingTask implements ICraftingTask {
                 );
             }
 
-            if (toTake.isEmpty() && !hasProcessedItems()) {
+            if (!hasProcessedItems()) {
                 elements.add(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_processing", 16));
 
                 for (IProcessable processable : toProcess) {
