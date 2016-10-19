@@ -19,18 +19,22 @@ import com.raoulvdberge.refinedstorage.gui.sidebutton.*;
 import com.raoulvdberge.refinedstorage.integration.jei.IntegrationJEI;
 import com.raoulvdberge.refinedstorage.integration.jei.RSJEIPlugin;
 import com.raoulvdberge.refinedstorage.network.*;
+import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.lwjgl.input.Keyboard;
 
@@ -52,6 +56,7 @@ public class GuiGrid extends GuiBase {
     private boolean wasConnected;
 
     private GuiTextField searchField;
+    private GuiCheckBox oredictPattern;
 
     private ContainerGrid container;
     private IGrid grid;
@@ -100,6 +105,9 @@ public class GuiGrid extends GuiBase {
         int sx = x + 80 + 1;
         int sy = y + 6 + 1;
 
+        int ox = x + 64;
+        int oy = y + 138;
+
         if (searchField == null) {
             searchField = new GuiTextField(0, fontRendererObj, sx, sy, 88 - 6, fontRendererObj.FONT_HEIGHT);
             searchField.setEnableBackgroundDrawing(false);
@@ -110,6 +118,13 @@ public class GuiGrid extends GuiBase {
         } else {
             searchField.xPosition = sx;
             searchField.yPosition = sy;
+        }
+
+        if (oredictPattern == null) {
+            oredictPattern = addCheckBox(ox, oy, I18n.format("misc.refinedstorage:oredict"), TileGrid.OREDICT_PATTERN.getValue());
+        } else {
+            oredictPattern.xPosition = ox;
+            oredictPattern.yPosition = oy;
         }
 
         if (grid.getType() != EnumGridType.FLUID) {
@@ -364,6 +379,15 @@ public class GuiGrid extends GuiBase {
     }
 
     @Override
+    protected void actionPerformed(GuiButton button) throws IOException {
+        super.actionPerformed(button);
+
+        if (button == oredictPattern) {
+            TileDataManager.setParameter(TileGrid.OREDICT_PATTERN, oredictPattern.isChecked());
+        }
+    }
+
+    @Override
     public void mouseClicked(int mouseX, int mouseY, int clickedButton) throws IOException {
         super.mouseClicked(mouseX, mouseY, clickedButton);
 
@@ -457,6 +481,12 @@ public class GuiGrid extends GuiBase {
         if (searchField != null) {
             searchField.setCanLoseFocus(!TileGrid.isSearchBoxModeWithAutoselection(mode));
             searchField.setFocused(TileGrid.isSearchBoxModeWithAutoselection(mode));
+        }
+    }
+
+    public void updateOredictPattern(boolean checked) {
+        if (oredictPattern != null) {
+            oredictPattern.setIsChecked(checked);
         }
     }
 }

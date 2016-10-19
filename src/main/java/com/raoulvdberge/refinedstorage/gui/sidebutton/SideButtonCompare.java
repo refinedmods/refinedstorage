@@ -38,6 +38,8 @@ public class SideButtonCompare extends SideButton {
             ty = 80;
         } else if (mask == IComparer.COMPARE_NBT) {
             ty = 48;
+        } else if (mask == IComparer.COMPARE_OREDICT) {
+            ty = -100; // Temporary
         }
 
         int tx = (parameter.getValue() & mask) == mask ? 0 : 16;

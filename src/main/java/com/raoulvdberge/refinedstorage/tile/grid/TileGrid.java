@@ -107,10 +107,29 @@ public class TileGrid extends TileNode implements IGrid {
         }
     });
 
+    public static final TileDataParameter<Boolean> OREDICT_PATTERN = new TileDataParameter<>(DataSerializers.BOOLEAN, false, new ITileDataProducer<Boolean, TileGrid>() {
+        @Override
+        public Boolean getValue(TileGrid tile) {
+            return tile.oredictPattern;
+        }
+    }, new ITileDataConsumer<Boolean, TileGrid>() {
+        @Override
+        public void setValue(TileGrid tile, Boolean value) {
+            tile.oredictPattern = value;
+
+            tile.markDirty();
+        }
+    }, parameter -> {
+        if (Minecraft.getMinecraft().currentScreen instanceof GuiGrid) {
+            ((GuiGrid) Minecraft.getMinecraft().currentScreen).updateOredictPattern(parameter.getValue());
+        }
+    });
+
     public static final String NBT_VIEW_TYPE = "ViewType";
     public static final String NBT_SORTING_DIRECTION = "SortingDirection";
     public static final String NBT_SORTING_TYPE = "SortingType";
     public static final String NBT_SEARCH_BOX_MODE = "SearchBoxMode";
+    public static final String NBT_OREDICT_PATTERN = "OredictPattern";
 
     public static final int SORTING_DIRECTION_ASCENDING = 0;
     public static final int SORTING_DIRECTION_DESCENDING = 1;
@@ -152,11 +171,14 @@ public class TileGrid extends TileNode implements IGrid {
     private int sortingType = SORTING_TYPE_QUANTITY;
     private int searchBoxMode = SEARCH_BOX_MODE_NORMAL;
 
+    private boolean oredictPattern = false;
+
     public TileGrid() {
         dataManager.addWatchedParameter(VIEW_TYPE);
         dataManager.addWatchedParameter(SORTING_DIRECTION);
         dataManager.addWatchedParameter(SORTING_TYPE);
         dataManager.addWatchedParameter(SEARCH_BOX_MODE);
+        dataManager.addWatchedParameter(OREDICT_PATTERN);
     }
 
     @Override
@@ -314,6 +336,8 @@ public class TileGrid extends TileNode implements IGrid {
 
             ItemStack pattern = new ItemStack(RSItems.PATTERN);
 
+            ItemPattern.setOredict(pattern, oredictPattern);
+
             for (int i = 0; i < 9; ++i) {
                 ItemStack ingredient = matrix.getStackInSlot(i);
 
@@ -467,6 +491,10 @@ public class TileGrid extends TileNode implements IGrid {
         if (tag.hasKey(NBT_SEARCH_BOX_MODE)) {
             searchBoxMode = tag.getInteger(NBT_SEARCH_BOX_MODE);
         }
+
+        if (tag.hasKey(NBT_OREDICT_PATTERN)) {
+            oredictPattern = tag.getBoolean(NBT_OREDICT_PATTERN);
+        }
     }
 
     @Override
@@ -481,6 +509,8 @@ public class TileGrid extends TileNode implements IGrid {
         tag.setInteger(NBT_SORTING_DIRECTION, sortingDirection);
         tag.setInteger(NBT_SORTING_TYPE, sortingType);
         tag.setInteger(NBT_SEARCH_BOX_MODE, searchBoxMode);
+
+        tag.setBoolean(NBT_OREDICT_PATTERN, oredictPattern);
 
         return tag;
     }
