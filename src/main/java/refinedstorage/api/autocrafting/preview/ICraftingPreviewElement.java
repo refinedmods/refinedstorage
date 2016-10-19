@@ -6,6 +6,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import refinedstorage.api.render.IElementDrawer;
+import refinedstorage.api.render.IElementDrawers;
 
 public interface ICraftingPreviewElement<T> {
     /**
@@ -16,12 +17,10 @@ public interface ICraftingPreviewElement<T> {
     /**
      * @param x   position on the x axis to render
      * @param y   position on the y axis to render
-     * @param itemDrawer a drawer for {@link ItemStack}s
-     * @param fluidDrawer a drawer for {@link FluidStack}s
-     * @param stringDrawer a drawer for {@link String}s
+     * @param drawers the drawers this element can use
      */
     @SideOnly(Side.CLIENT)
-    void draw(int x, int y, IElementDrawer<ItemStack> itemDrawer, IElementDrawer<FluidStack> fluidDrawer, IElementDrawer<String> stringDrawer);
+    void draw(int x, int y, IElementDrawers drawers);
 
     /**
      * @return available amount of the {@link #getElement()}

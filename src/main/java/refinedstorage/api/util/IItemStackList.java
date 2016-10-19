@@ -74,6 +74,11 @@ public interface IItemStackList {
     void clear();
 
     /**
+     *  Removes all stacks with size zero
+     */
+    void clean();
+
+    /**
      * @return true if the list is empty, false otherwise
      */
     boolean isEmpty();

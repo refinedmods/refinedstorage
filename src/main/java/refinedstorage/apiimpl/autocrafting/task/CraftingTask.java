@@ -27,12 +27,14 @@ import refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementItemSta
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class CraftingTask implements ICraftingTask {
     private static final int DEFAULT_COMPARE = IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT;
 
     public static final String NBT_TO_PROCESS = "ToProcess";
     public static final String NBT_TO_TAKE = "ToTake";
+    public static final String NBT_INTERNAL_TO_TAKE = "InternalToTake";
     public static final String NBT_TO_TAKE_FLUIDS = "ToTakeFluids";
     public static final String NBT_TO_INSERT = "ToInsert";
     public static final String NBT_TOOK = "Took";
@@ -45,13 +47,14 @@ public class CraftingTask implements ICraftingTask {
     private int quantity;
     private List<IProcessable> toProcess = new ArrayList<>();
     private IItemStackList toTake = API.instance().createItemStackList();
+    private IItemStackList internalToTake = API.instance().createItemStackList();
     private IItemStackList toCraft = API.instance().createItemStackList();
     private IFluidStackList toTakeFluids = API.instance().createFluidStackList();
     private IItemStackList missing = API.instance().createItemStackList();
     private Set<ICraftingPattern> usedPatterns = new HashSet<>();
     private boolean recurseFound = false;
     private Deque<ItemStack> toInsert = new ArrayDeque<>();
-    private List<ItemStack> took = new ArrayList<>();
+    private IItemStackList took = API.instance().createItemStackList();
     private List<FluidStack> tookFluids = new ArrayList<>();
 
     public CraftingTask(INetworkMaster network, @Nullable ItemStack requested, ICraftingPattern pattern, int quantity) {
@@ -61,11 +64,12 @@ public class CraftingTask implements ICraftingTask {
         this.quantity = quantity;
     }
 
-    public CraftingTask(INetworkMaster network, @Nullable ItemStack requested, ICraftingPattern pattern, int quantity, List<IProcessable> toProcess, IItemStackList toTake, IFluidStackList toTakeFluids, Deque<ItemStack> toInsert, List<ItemStack> took, List<FluidStack> tookFluids) {
+    public CraftingTask(INetworkMaster network, @Nullable ItemStack requested, ICraftingPattern pattern, int quantity, List<IProcessable> toProcess, IItemStackList toTake, IItemStackList internalToTake,  IFluidStackList toTakeFluids, Deque<ItemStack> toInsert, IItemStackList took, List<FluidStack> tookFluids) {
         this(network, requested, pattern, quantity);
 
         this.toProcess = toProcess;
         this.toTake = toTake;
+        this.internalToTake = internalToTake;
         this.toTakeFluids = toTakeFluids;
         this.toInsert = toInsert;
         this.took = took;
@@ -140,6 +144,10 @@ public class CraftingTask implements ICraftingTask {
                         // Calculate added all the crafted outputs toInsert
                         // So we remove the ones we use from toInsert
                         toInsert.remove(inputCrafted, true);
+                        // If the pattern is processing the have to be taken.
+                        if (pattern.isProcessing()) {
+                            internalToTake.add(inputCrafted.copy());
+                        }
                     } else if (doFluidCalculation(networkList, input, toInsert)) {
                         actualInputs.add(ItemHandlerHelper.copyStackWithSize(input, 1));
                         input.stackSize -= 1;
@@ -212,7 +220,7 @@ public class CraftingTask implements ICraftingTask {
 
     @Override
     public void onCancelled() {
-        for (ItemStack stack : took) {
+        for (ItemStack stack : took.getStacks()) {
             network.insertItem(stack, stack.stackSize, false);
         }
 
@@ -225,6 +233,7 @@ public class CraftingTask implements ICraftingTask {
     public String toString() {
         return "\nCraftingTask{quantity=" + quantity +
             "\n, toTake=" + toTake +
+            "\n, internalToTake=" + internalToTake +
             "\n, toTakeFluids=" + toTakeFluids +
             "\n, toProcess=" + toProcess +
             "\n, toCraft=" + toProcess +
@@ -234,24 +243,6 @@ public class CraftingTask implements ICraftingTask {
 
     @Override
     public boolean update() {
-        for (IProcessable processable : toProcess) {
-            IItemHandler inventory = processable.getPattern().getContainer().getFacingInventory();
-
-            if (inventory != null && !processable.hasStartedProcessing() && processable.canStartProcessing(network.getItemStorageCache().getList()) && canProcess(processable)) {
-                processable.setStartedProcessing();
-
-                for (ItemStack insertStack : processable.getToInsert().getStacks()) {
-                    ItemStack toInsert = network.extractItem(insertStack, insertStack.stackSize, DEFAULT_COMPARE | (processable.getPattern().isOredict() ? IComparer.COMPARE_OREDICT : 0));
-
-                    if (ItemHandlerHelper.insertItem(inventory, toInsert, true) == null) {
-                        ItemHandlerHelper.insertItem(inventory, toInsert, false);
-
-                        network.sendCraftingMonitorUpdate();
-                    }
-                }
-            }
-        }
-
         for (ItemStack stack : toTake.getStacks()) {
             ItemStack stackExtracted = network.extractItem(stack, Math.min(stack.stackSize, 64));
 
@@ -263,6 +254,41 @@ public class CraftingTask implements ICraftingTask {
                 network.sendCraftingMonitorUpdate();
 
                 break;
+            }
+        }
+
+        // Fetches results from processing patterns
+        for (ItemStack stack : internalToTake.getStacks()) {
+            ItemStack stackExtracted = network.extractItem(stack, Math.min(stack.stackSize, 64));
+
+            if (stackExtracted != null) {
+                internalToTake.remove(stack, stackExtracted.stackSize, false);
+
+                took.add(stackExtracted);
+
+                network.sendCraftingMonitorUpdate();
+            }
+        }
+        // Clean up zero stacks, cause we can't remove them in the loop (CME ahoy!)
+        internalToTake.clean();
+
+        for (IProcessable processable : toProcess) {
+            IItemHandler inventory = processable.getPattern().getContainer().getFacingInventory();
+
+            if (inventory != null && !processable.hasStartedProcessing() && processable.canStartProcessing(took) && canProcess(processable)) {
+                processable.setStartedProcessing();
+
+                for (ItemStack insertStack : processable.getToInsert().getStacks()) {
+                    ItemStack tookStack = took.get(insertStack, DEFAULT_COMPARE | (processable.getPattern().isOredict() ? IComparer.COMPARE_OREDICT : 0));
+                    ItemStack toInsert = ItemHandlerHelper.copyStackWithSize(tookStack, insertStack.stackSize);
+
+                    if (ItemHandlerHelper.insertItem(inventory, toInsert, true) == null) {
+                        ItemHandlerHelper.insertItem(inventory, toInsert, false);
+                        took.remove(tookStack, toInsert.stackSize, true);
+
+                        network.sendCraftingMonitorUpdate();
+                    }
+                }
             }
         }
 
@@ -353,6 +379,7 @@ public class CraftingTask implements ICraftingTask {
         tag.setTag(NBT_TO_PROCESS, processablesList);
 
         tag.setTag(NBT_TO_TAKE, RSUtils.serializeItemStackList(toTake));
+        tag.setTag(NBT_INTERNAL_TO_TAKE, RSUtils.serializeItemStackList(internalToTake));
         tag.setTag(NBT_TO_TAKE_FLUIDS, RSUtils.serializeFluidStackList(toTakeFluids));
 
         NBTTagList toInsertList = new NBTTagList();
@@ -363,13 +390,7 @@ public class CraftingTask implements ICraftingTask {
 
         tag.setTag(NBT_TO_INSERT, toInsertList);
 
-        NBTTagList tookList = new NBTTagList();
-
-        for (ItemStack took : this.took) {
-            tookList.appendTag(took.serializeNBT());
-        }
-
-        tag.setTag(NBT_TOOK, tookList);
+        tag.setTag(NBT_TOOK, RSUtils.serializeItemStackList(took));
 
         NBTTagList fluidsTookList = new NBTTagList();
 
@@ -524,7 +545,7 @@ public class CraftingTask implements ICraftingTask {
     }
 
     private boolean isFinished() {
-        return toTake.isEmpty() && toTakeFluids.isEmpty() && missing.isEmpty() && hasProcessedItems();
+        return toTake.isEmpty() && internalToTake.isEmpty() && toTakeFluids.isEmpty() && missing.isEmpty() && hasProcessedItems();
     }
 
     private boolean hasProcessedItems() {

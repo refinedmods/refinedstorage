@@ -13,6 +13,8 @@ import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.items.SlotItemHandler;
 import org.lwjgl.input.Mouse;
 import refinedstorage.RS;
+import refinedstorage.api.render.IElementDrawer;
+import refinedstorage.api.render.IElementDrawers;
 import refinedstorage.apiimpl.storage.fluid.FluidRenderer;
 import refinedstorage.gui.sidebutton.SideButton;
 import refinedstorage.inventory.ItemHandlerFluid;
@@ -27,6 +29,25 @@ public abstract class GuiBase extends GuiContainer {
     private static final Map<String, ResourceLocation> TEXTURE_CACHE = new HashMap<>();
 
     public static final FluidRenderer FLUID_RENDERER = new FluidRenderer(-1, 16, 16);
+
+    public class ElementDrawers implements IElementDrawers {
+        private IElementDrawer<FluidStack> fluidDrawer = (x, y, element) -> FLUID_RENDERER.draw(GuiBase.this.mc, x, y, element);
+
+        @Override
+        public IElementDrawer<ItemStack> getItemDrawer() {
+            return GuiBase.this::drawItem;
+        }
+
+        @Override
+        public IElementDrawer<FluidStack> getFluidDrawer() {
+            return fluidDrawer;
+        }
+
+        @Override
+        public IElementDrawer<String> getStringDrawer() {
+            return GuiBase.this::drawString;
+        }
+    }
 
     private int lastButtonId;
     private int lastSideButtonY = 6;

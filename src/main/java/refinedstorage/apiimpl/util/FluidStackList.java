@@ -9,6 +9,7 @@ import refinedstorage.apiimpl.API;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 public class FluidStackList implements IFluidStackList {
     private ArrayListMultimap<Fluid, FluidStack> stacks = ArrayListMultimap.create();

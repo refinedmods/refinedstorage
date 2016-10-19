@@ -4,12 +4,10 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
 import refinedstorage.RS;
 import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
-import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementDrawers;
 import refinedstorage.api.render.IElementDrawer;
+import refinedstorage.api.render.IElementDrawers;
 import refinedstorage.container.ContainerCraftingMonitor;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import refinedstorage.network.MessageCraftingMonitorCancel;
@@ -19,8 +17,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class GuiCraftingMonitor extends GuiBase {
-    public class CraftingMonitorElementDrawers implements ICraftingMonitorElementDrawers {
-        private IElementDrawer<FluidStack> fluidDrawer = (x, y, element) -> FLUID_RENDERER.draw(GuiCraftingMonitor.this.mc, x, y, element);
+    public class CraftingMonitorElementDrawers extends ElementDrawers {
         private IElementDrawer redOverlayDrawer = (x, y, element) -> {
             GlStateManager.color(1, 1, 1);
             bindTexture("gui/crafting_preview.png"); // Don't even care
@@ -29,22 +26,7 @@ public class GuiCraftingMonitor extends GuiBase {
         };
 
         @Override
-        public IElementDrawer<ItemStack> getItemDrawer() {
-            return GuiCraftingMonitor.this::drawItem;
-        }
-
-        @Override
-        public IElementDrawer<FluidStack> getFluidDrawer() {
-            return fluidDrawer;
-        }
-
-        @Override
-        public IElementDrawer<String> getStringDrawer() {
-            return GuiCraftingMonitor.this::drawString;
-        }
-
-        @Override
-        public IElementDrawer<?> getRedOverlayDrawer() {
+        public IElementDrawer getRedOverlayDrawer() {
             return redOverlayDrawer;
         }
     }
@@ -59,7 +41,7 @@ public class GuiCraftingMonitor extends GuiBase {
     private GuiButton cancelButton;
     private GuiButton cancelAllButton;
 
-    private ICraftingMonitorElementDrawers drawers = new CraftingMonitorElementDrawers();
+    private IElementDrawers drawers = new CraftingMonitorElementDrawers();
 
     private int itemSelected = -1;
 

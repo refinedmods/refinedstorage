@@ -12,6 +12,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import refinedstorage.api.render.IElementDrawer;
+import refinedstorage.api.render.IElementDrawers;
 import refinedstorage.gui.GuiBase;
 
 public class CraftingPreviewElementFluidStack implements ICraftingPreviewElement<FluidStack> {
@@ -61,16 +62,21 @@ public class CraftingPreviewElementFluidStack implements ICraftingPreviewElement
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void draw(int x, int y, IElementDrawer<ItemStack> itemDrawer, IElementDrawer<FluidStack> fluidDrawer, IElementDrawer<String> stringDrawer) {
-        fluidDrawer.draw(x, y, getElement());
+    public void draw(int x, int y, IElementDrawers drawers) {
+        if (missing) {
+            drawers.getRedOverlayDrawer().draw(x, y, null);
+        }
+        x += 5;
+        y += 7;
+        drawers.getFluidDrawer().draw(x, y, getElement());
 
         float scale = 0.5f;
 
         GlStateManager.pushMatrix();
         GlStateManager.scale(scale, scale, 1);
 
-        stringDrawer.draw(GuiBase.calculateOffsetOnScale(x + 23, scale), GuiBase.calculateOffsetOnScale(y + 3, scale), GuiBase.t("gui.refinedstorage:crafting_preview.available", ""));
-        stringDrawer.draw(GuiBase.calculateOffsetOnScale(x + 23, scale), GuiBase.calculateOffsetOnScale(y + 9, scale), getAvailable() + " mB");
+        drawers.getStringDrawer().draw(GuiBase.calculateOffsetOnScale(x + 23, scale), GuiBase.calculateOffsetOnScale(y + 3, scale), GuiBase.t("gui.refinedstorage:crafting_preview.available", ""));
+        drawers.getStringDrawer().draw(GuiBase.calculateOffsetOnScale(x + 23, scale), GuiBase.calculateOffsetOnScale(y + 9, scale), getAvailable() + " mB");
 
         GlStateManager.popMatrix();
     }

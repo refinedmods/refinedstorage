@@ -14,6 +14,7 @@ import org.lwjgl.input.Keyboard;
 import refinedstorage.RS;
 import refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import refinedstorage.api.render.IElementDrawer;
+import refinedstorage.api.render.IElementDrawers;
 import refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementFluidStack;
 import refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementItemStack;
 import refinedstorage.network.MessageGridCraftingStart;
@@ -23,6 +24,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GuiCraftingPreview extends GuiBase {
+    public class CraftingPreviewElementDrawers extends ElementDrawers {
+        private IElementDrawer redOverlayDrawer = (x, y, element) -> {
+            GlStateManager.color(1, 1, 1);
+            bindTexture("gui/crafting_preview.png");
+            drawTexture(x, y, 189, 0, 67, 29);
+        };
+
+        @Override
+        public IElementDrawer getRedOverlayDrawer() {
+            return redOverlayDrawer;
+        }
+    }
+
     private static final int VISIBLE_ROWS = 4;
 
     private List<ICraftingPreviewElement> stacks;
@@ -34,9 +48,7 @@ public class GuiCraftingPreview extends GuiBase {
     private GuiButton startButton;
     private GuiButton cancelButton;
 
-    private IElementDrawer<String> stringDrawer = this::drawString;
-    private IElementDrawer<ItemStack> itemDrawer = this::drawItem;
-    private IElementDrawer<FluidStack> fluidDrawer = (x, y, element) -> FLUID_RENDERER.draw(mc, x, y, element);
+    private IElementDrawers drawers = new CraftingPreviewElementDrawers();
 
     public GuiCraftingPreview(GuiScreen parent, List<ICraftingPreviewElement> stacks, int hash, int quantity) {
         super(new Container() {
@@ -77,47 +89,22 @@ public class GuiCraftingPreview extends GuiBase {
         if (stacks.isEmpty()) {
             drawRect(x + 7, y + 20, x + 142, y + 139, 0xFFDBDBDB);
         }
-        else {
-            x += 7;
-            y += 20;
-
-            int slot = scrollbar.getOffset() * 2;
-
-            for (int i = 0; i < 8; ++i) {
-                if (slot < stacks.size()) {
-                    ICraftingPreviewElement stack = stacks.get(slot);
-
-                    if (stack.hasMissing()) {
-                        drawTexture(x, y, 189, 0, 67, 29);
-                    }
-                }
-
-                if (i % 2 == 1) {
-                    x -= 68;
-                    y += 30;
-                } else {
-                    x += 68;
-                }
-
-                slot++;
-            }
-        }
     }
 
     @Override
     public void drawForeground(int mouseX, int mouseY) {
         drawString(7, 7, t("gui.refinedstorage:crafting_preview"));
 
-        int x = 12;
-        int y = 22;
+        int x = 7;
+        int y = 15;
         float scale = 0.5f;
 
         if (stacks.isEmpty()) {
             GlStateManager.pushMatrix();
             GlStateManager.scale(scale, scale, 1);
 
-            drawString(calculateOffsetOnScale(x + 34, scale), calculateOffsetOnScale(y + 50, scale), t("gui.refinedstorage:crafting_preview.circular"));
-            drawString(calculateOffsetOnScale(x + 35, scale), calculateOffsetOnScale(y + 57, scale), t("gui.refinedstorage:crafting_preview.loop"));
+            drawString(calculateOffsetOnScale(x + 39, scale), calculateOffsetOnScale(y + 57, scale), t("gui.refinedstorage:crafting_preview.circular"));
+            drawString(calculateOffsetOnScale(x + 40, scale), calculateOffsetOnScale(y + 64, scale), t("gui.refinedstorage:crafting_preview.loop"));
 
             GlStateManager.popMatrix();
         } else {
@@ -134,7 +121,7 @@ public class GuiCraftingPreview extends GuiBase {
                 if (slot < stacks.size()) {
                     ICraftingPreviewElement stack = stacks.get(slot);
 
-                    stack.draw(x, y + 5, itemDrawer, fluidDrawer, stringDrawer);
+                    stack.draw(x, y + 5, drawers);
 
                     if (inBounds(x, y, 16, 16, mouseX, mouseY)) {
                         hoveringStack = stack.getId().equals(CraftingPreviewElementItemStack.ID) ? (ItemStack) stack.getElement() : null;

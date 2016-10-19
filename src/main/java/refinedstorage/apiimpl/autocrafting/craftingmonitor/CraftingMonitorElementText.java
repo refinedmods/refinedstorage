@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
-import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementDrawers;
+import refinedstorage.api.render.IElementDrawers;
 import refinedstorage.gui.GuiBase;
 
 public class CraftingMonitorElementText implements ICraftingMonitorElement<String> {
@@ -31,7 +31,7 @@ public class CraftingMonitorElementText implements ICraftingMonitorElement<Strin
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void draw(int x, int y, ICraftingMonitorElementDrawers drawers) {
+    public void draw(int x, int y, IElementDrawers drawers) {
         float scale = 0.5f;
 
         GlStateManager.pushMatrix();

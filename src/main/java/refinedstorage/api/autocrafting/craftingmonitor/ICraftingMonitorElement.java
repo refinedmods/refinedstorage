@@ -3,6 +3,7 @@ package refinedstorage.api.autocrafting.craftingmonitor;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import refinedstorage.api.render.IElementDrawers;
 
 /**
  * Represents a crafting monitor element.
@@ -14,7 +15,7 @@ public interface ICraftingMonitorElement<T> {
      * @param drawers the drawers that this element can use
      */
     @SideOnly(Side.CLIENT)
-    void draw(int x, int y, ICraftingMonitorElementDrawers drawers);
+    void draw(int x, int y, IElementDrawers drawers);
 
     /**
      * @return whether the crafting monitor can draw a grey background behind the element when selected

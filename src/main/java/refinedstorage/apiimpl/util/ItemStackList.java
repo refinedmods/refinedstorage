@@ -10,6 +10,8 @@ import refinedstorage.apiimpl.API;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ItemStackList implements IItemStackList {
     private ArrayListMultimap<Item, ItemStack> stacks = ArrayListMultimap.create();
@@ -72,6 +74,14 @@ public class ItemStackList implements IItemStackList {
     @Override
     public void clear() {
         stacks.clear();
+    }
+
+    @Override
+    public void clean() {
+        List<ItemStack> toRemove = stacks.values().stream()
+                .filter(stack -> stack.stackSize <= 0)
+                .collect(Collectors.toList());
+        toRemove.forEach(stack -> stacks.remove(stack.getItem(), stack));
     }
 
     @Override

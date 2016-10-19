@@ -3,7 +3,7 @@ package refinedstorage.apiimpl.autocrafting.craftingmonitor;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
-import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementDrawers;
+import refinedstorage.api.render.IElementDrawers;
 
 public class CraftingMonitorElementError implements ICraftingMonitorElement {
     public static final String ID = "error";
@@ -17,7 +17,7 @@ public class CraftingMonitorElementError implements ICraftingMonitorElement {
     }
 
     @Override
-    public void draw(int x, int y, ICraftingMonitorElementDrawers drawers) {
+    public void draw(int x, int y, IElementDrawers drawers) {
         drawers.getRedOverlayDrawer().draw(x, y, null);
 
         base.draw(x, y, drawers);

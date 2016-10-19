@@ -12,6 +12,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemHandlerHelper;
 import refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import refinedstorage.api.render.IElementDrawer;
+import refinedstorage.api.render.IElementDrawers;
 import refinedstorage.gui.GuiBase;
 
 public class CraftingPreviewElementItemStack implements ICraftingPreviewElement<ItemStack> {
@@ -64,8 +65,13 @@ public class CraftingPreviewElementItemStack implements ICraftingPreviewElement<
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void draw(int x, int y, IElementDrawer<ItemStack> itemDrawer, IElementDrawer<FluidStack> fluidDrawer, IElementDrawer<String> stringDrawer) {
-        itemDrawer.draw(x, y, getElement());
+    public void draw(int x, int y, IElementDrawers drawers) {
+        if (missing) {
+            drawers.getRedOverlayDrawer().draw(x, y, null);
+        }
+        x += 5;
+        y += 7;
+        drawers.getItemDrawer().draw(x, y, getElement());
 
         float scale = 0.5f;
         y += 2;
@@ -75,13 +81,13 @@ public class CraftingPreviewElementItemStack implements ICraftingPreviewElement<
 
         if (getToCraft() > 0) {
             String format = hasMissing() ? "gui.refinedstorage:crafting_preview.missing" : "gui.refinedstorage:crafting_preview.to_craft";
-            stringDrawer.draw(GuiBase.calculateOffsetOnScale(x + 23, scale), GuiBase.calculateOffsetOnScale(y, scale), GuiBase.t(format, getToCraft()));
+            drawers.getStringDrawer().draw(GuiBase.calculateOffsetOnScale(x + 23, scale), GuiBase.calculateOffsetOnScale(y, scale), GuiBase.t(format, getToCraft()));
 
             y += 7;
         }
 
         if (getAvailable() > 0) {
-            stringDrawer.draw(GuiBase.calculateOffsetOnScale(x + 23, scale), GuiBase.calculateOffsetOnScale(y, scale), GuiBase.t("gui.refinedstorage:crafting_preview.available", getAvailable()));
+            drawers.getStringDrawer().draw(GuiBase.calculateOffsetOnScale(x + 23, scale), GuiBase.calculateOffsetOnScale(y, scale), GuiBase.t("gui.refinedstorage:crafting_preview.available", getAvailable()));
         }
 
         GlStateManager.popMatrix();

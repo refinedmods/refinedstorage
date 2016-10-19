@@ -39,11 +39,12 @@ public class CraftingTaskFactory implements ICraftingTaskFactory {
             }
 
             IItemStackList toTake = RSUtils.readItemStackList(tag.getTagList(CraftingTask.NBT_TO_TAKE, Constants.NBT.TAG_COMPOUND));
+            IItemStackList internalToTake = RSUtils.readItemStackList(tag.getTagList(CraftingTask.NBT_INTERNAL_TO_TAKE, Constants.NBT.TAG_COMPOUND));
             IFluidStackList toTakeFluids = RSUtils.readFluidStackList(tag.getTagList(CraftingTask.NBT_TO_TAKE_FLUIDS, Constants.NBT.TAG_COMPOUND));
 
             NBTTagList toInsertList = tag.getTagList(CraftingTask.NBT_TO_INSERT, Constants.NBT.TAG_COMPOUND);
 
-            List<ItemStack> toInsert = new ArrayList<>();
+            ArrayDeque<ItemStack> toInsert = new ArrayDeque<>();
 
             for (int i = 0; i < toInsertList.tagCount(); ++i) {
                 ItemStack insertStack = ItemStack.loadItemStackFromNBT(toInsertList.getCompoundTagAt(i));
@@ -55,15 +56,7 @@ public class CraftingTaskFactory implements ICraftingTaskFactory {
 
             NBTTagList tookList = tag.getTagList(CraftingTask.NBT_TOOK, Constants.NBT.TAG_COMPOUND);
 
-            List<ItemStack> took = new ArrayList<>();
-
-            for (int i = 0; i < tookList.tagCount(); ++i) {
-                ItemStack tookStack = ItemStack.loadItemStackFromNBT(tookList.getCompoundTagAt(i));
-
-                if (tookStack != null) {
-                    took.add(tookStack);
-                }
-            }
+            IItemStackList took = RSUtils.readItemStackList(tookList);
 
             NBTTagList tookFluidsList = tag.getTagList(CraftingTask.NBT_TOOK_FLUIDS, Constants.NBT.TAG_COMPOUND);
 
@@ -77,7 +70,7 @@ public class CraftingTaskFactory implements ICraftingTaskFactory {
                 }
             }
 
-            return new CraftingTask(network, stack, pattern, quantity, toProcess, toTake, toTakeFluids, new ArrayDeque<>(toInsert), took, tookFluids);
+            return new CraftingTask(network, stack, pattern, quantity, toProcess, toTake, internalToTake, toTakeFluids, toInsert, took, tookFluids);
         }
 
         return new CraftingTask(network, stack, pattern, quantity);
