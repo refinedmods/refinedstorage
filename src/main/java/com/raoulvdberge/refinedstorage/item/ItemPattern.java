@@ -32,6 +32,7 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
 
     private static final String NBT_SLOT = "Slot_%d";
     private static final String NBT_OUTPUTS = "Outputs";
+    private static final String NBT_OREDICT = "Oredict";
 
     public ItemPattern() {
         super("pattern");
@@ -63,6 +64,10 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
             }
 
             combineItems(tooltip, true, Iterables.toArray(pattern.getOutputs(), ItemStack.class));
+
+            if (isOredict(stack)) {
+                tooltip.add(TextFormatting.BLUE + I18n.format("misc.refinedstorage:pattern.oredict") + TextFormatting.RESET);
+            }
         } else {
             tooltip.add(TextFormatting.RED + I18n.format("misc.refinedstorage:pattern.invalid") + TextFormatting.RESET);
 
@@ -146,6 +151,18 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
 
     public static boolean isProcessing(ItemStack pattern) {
         return pattern.hasTagCompound() && pattern.getTagCompound().hasKey(NBT_OUTPUTS);
+    }
+
+    public static boolean isOredict(ItemStack pattern) {
+        return pattern.hasTagCompound() && pattern.getTagCompound().hasKey(NBT_OREDICT) && pattern.getTagCompound().getBoolean(NBT_OREDICT);
+    }
+
+    public static void setOredict(ItemStack pattern, boolean oredict) {
+        if (!pattern.hasTagCompound()) {
+            pattern.setTagCompound(new NBTTagCompound());
+        }
+
+        pattern.getTagCompound().setBoolean(NBT_OREDICT, oredict);
     }
 
     public static void combineItems(List<String> tooltip, boolean displayAmount, ItemStack... stacks) {
