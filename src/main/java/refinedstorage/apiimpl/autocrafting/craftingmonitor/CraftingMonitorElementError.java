@@ -1,0 +1,53 @@
+package refinedstorage.apiimpl.autocrafting.craftingmonitor;
+
+import io.netty.buffer.ByteBuf;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
+import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementDrawers;
+
+public class CraftingMonitorElementError implements ICraftingMonitorElement {
+    public static final String ID = "error";
+
+    private ICraftingMonitorElement base;
+    private String tooltip;
+
+    public CraftingMonitorElementError(ICraftingMonitorElement base, String tooltip) {
+        this.base = base;
+        this.tooltip = tooltip;
+    }
+
+    @Override
+    public void draw(int x, int y, ICraftingMonitorElementDrawers drawers) {
+        drawers.getRedOverlayDrawer().draw(x, y, null);
+
+        base.draw(x, y, drawers);
+    }
+
+    @Override
+    public boolean canDrawSelection() {
+        return false;
+    }
+
+    @Override
+    public int getTaskId() {
+        return base.getTaskId();
+    }
+
+    @Override
+    public String getId() {
+        return ID;
+    }
+
+    @Override
+    public String getTooltip() {
+        return tooltip;
+    }
+
+    @Override
+    public void write(ByteBuf buf) {
+        ByteBufUtils.writeUTF8String(buf, base.getId());
+        ByteBufUtils.writeUTF8String(buf, tooltip);
+
+        base.write(buf);
+    }
+}

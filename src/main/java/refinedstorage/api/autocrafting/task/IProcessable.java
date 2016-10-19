@@ -5,8 +5,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.util.IItemStackList;
 
-import java.util.Deque;
-
 /**
  * Represents a item in a crafting task that can be processed.
  */
@@ -31,7 +29,7 @@ public interface IProcessable {
 
     void setStartedProcessing();
 
-    boolean isStartedProcessing();
+    boolean hasStartedProcessing();
 
     /**
      * @return true if we received all outputs, false otherwise

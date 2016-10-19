@@ -1,11 +1,14 @@
 package refinedstorage.gui;
 
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import refinedstorage.RS;
 import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
+import refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementDrawers;
 import refinedstorage.api.render.IElementDrawer;
 import refinedstorage.container.ContainerCraftingMonitor;
 import refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
@@ -16,6 +19,36 @@ import java.io.IOException;
 import java.util.List;
 
 public class GuiCraftingMonitor extends GuiBase {
+    public class CraftingMonitorElementDrawers implements ICraftingMonitorElementDrawers {
+        private IElementDrawer<FluidStack> fluidDrawer = (x, y, element) -> FLUID_RENDERER.draw(GuiCraftingMonitor.this.mc, x, y, element);
+        private IElementDrawer redOverlayDrawer = (x, y, element) -> {
+            GlStateManager.color(1, 1, 1);
+            bindTexture("gui/crafting_preview.png"); // Don't even care
+            drawTexture(x, y, 0, 238, ITEM_WIDTH, ITEM_HEIGHT - 1);
+            bindTexture("gui/crafting_monitor.png");
+        };
+
+        @Override
+        public IElementDrawer<ItemStack> getItemDrawer() {
+            return GuiCraftingMonitor.this::drawItem;
+        }
+
+        @Override
+        public IElementDrawer<FluidStack> getFluidDrawer() {
+            return fluidDrawer;
+        }
+
+        @Override
+        public IElementDrawer<String> getStringDrawer() {
+            return GuiCraftingMonitor.this::drawString;
+        }
+
+        @Override
+        public IElementDrawer<?> getRedOverlayDrawer() {
+            return redOverlayDrawer;
+        }
+    }
+
     private static final int VISIBLE_ROWS = 5;
 
     private static final int ITEM_WIDTH = 143;
@@ -26,14 +59,12 @@ public class GuiCraftingMonitor extends GuiBase {
     private GuiButton cancelButton;
     private GuiButton cancelAllButton;
 
+    private ICraftingMonitorElementDrawers drawers = new CraftingMonitorElementDrawers();
+
     private int itemSelected = -1;
 
     private int itemSelectedX = -1;
     private int itemSelectedY = -1;
-
-    private IElementDrawer<String> stringDrawer = this::drawString;
-    private IElementDrawer<ItemStack> itemDrawer = this::drawItem;
-    private IElementDrawer<FluidStack> fluidDrawer = (x, y, element) -> FLUID_RENDERER.draw(mc, x, y, element);
 
     public GuiCraftingMonitor(ContainerCraftingMonitor container, TileCraftingMonitor craftingMonitor) {
         super(container, 176, 230);
@@ -76,7 +107,7 @@ public class GuiCraftingMonitor extends GuiBase {
 
         drawTexture(x, y, 0, 0, width, height);
 
-        if (itemSelectedX != -1 && itemSelectedY != -1) {
+        if (itemSelectedX != -1 && itemSelectedY != -1 && itemSelected >= 0 && itemSelected < getElements().size() && getElements().get(itemSelected).canDrawSelection()) {
             drawTexture(x + itemSelectedX, y + itemSelectedY, 0, 232, ITEM_WIDTH, ITEM_HEIGHT);
         }
     }
@@ -96,6 +127,7 @@ public class GuiCraftingMonitor extends GuiBase {
 
         itemSelectedX = -1;
         itemSelectedY = -1;
+        String itemSelectedTooltip = null;
 
         for (int i = 0; i < VISIBLE_ROWS; ++i) {
             if (item < getElements().size()) {
@@ -104,15 +136,23 @@ public class GuiCraftingMonitor extends GuiBase {
                 if (item == itemSelected) {
                     itemSelectedX = x;
                     itemSelectedY = y;
+
+                    if (inBounds(itemSelectedX, itemSelectedY, ITEM_WIDTH, ITEM_HEIGHT, mouseX, mouseY)) {
+                        itemSelectedTooltip = element.getTooltip();
+                    }
                 }
 
-                element.draw(x, y, itemDrawer, fluidDrawer, stringDrawer);
+                element.draw(x, y, drawers);
 
                 x = ox;
                 y += ITEM_HEIGHT;
             }
 
             item++;
+        }
+
+        if (itemSelectedTooltip != null) {
+            drawTooltip(mouseX, mouseY, I18n.format(itemSelectedTooltip));
         }
     }
 

@@ -73,7 +73,7 @@ public class Processable implements IProcessable {
     }
 
     @Override
-    public boolean isStartedProcessing() {
+    public boolean hasStartedProcessing() {
         return startedProcessing;
     }
 

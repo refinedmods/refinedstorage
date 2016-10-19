@@ -20,6 +20,7 @@ import refinedstorage.RSBlocks;
 import refinedstorage.RSItems;
 import refinedstorage.RSUtils;
 import refinedstorage.apiimpl.API;
+import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementError;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementFluidRender;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementItemRender;
 import refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementText;
@@ -58,6 +59,12 @@ public class ProxyCommon {
         API.instance().getCraftingMonitorElementRegistry().add(CraftingMonitorElementItemRender.ID, buf -> new CraftingMonitorElementItemRender(buf.readInt(), ByteBufUtils.readItemStack(buf), buf.readInt(), buf.readInt()));
         API.instance().getCraftingMonitorElementRegistry().add(CraftingMonitorElementFluidRender.ID, buf -> new CraftingMonitorElementFluidRender(buf.readInt(), RSUtils.readFluidStack(buf).getRight(), buf.readInt()));
         API.instance().getCraftingMonitorElementRegistry().add(CraftingMonitorElementText.ID, buf -> new CraftingMonitorElementText(ByteBufUtils.readUTF8String(buf), buf.readInt()));
+        API.instance().getCraftingMonitorElementRegistry().add(CraftingMonitorElementError.ID, buf -> {
+            String id = ByteBufUtils.readUTF8String(buf);
+            String tooltip = ByteBufUtils.readUTF8String(buf);
+
+            return new CraftingMonitorElementError(API.instance().getCraftingMonitorElementRegistry().getFactory(id).apply(buf), tooltip);
+        });
 
         API.instance().getCraftingPreviewElementRegistry().add(CraftingPreviewElementItemStack.ID, CraftingPreviewElementItemStack::fromByteBuf);
         API.instance().getCraftingPreviewElementRegistry().add(CraftingPreviewElementFluidStack.ID, CraftingPreviewElementFluidStack::fromByteBuf);

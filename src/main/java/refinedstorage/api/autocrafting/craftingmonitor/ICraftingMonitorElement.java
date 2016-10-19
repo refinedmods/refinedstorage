@@ -1,25 +1,25 @@
 package refinedstorage.api.autocrafting.craftingmonitor;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import refinedstorage.api.render.IElementDrawer;
 
 /**
  * Represents a crafting monitor element.
  */
 public interface ICraftingMonitorElement<T> {
     /**
-     * @param x   position on the x axis to render
-     * @param y   position on the y axis to render
-     * @param itemDrawer a drawer for {@link ItemStack}s
-     * @param fluidDrawer a drawer for {@link FluidStack}s
-     * @param stringDrawer a drawer for {@link String}s
+     * @param x       position on the x axis to render
+     * @param y       position on the y axis to render
+     * @param drawers the drawers that this element can use
      */
     @SideOnly(Side.CLIENT)
-    void draw(int x, int y, IElementDrawer<ItemStack> itemDrawer, IElementDrawer<FluidStack> fluidDrawer, IElementDrawer<String> stringDrawer);
+    void draw(int x, int y, ICraftingMonitorElementDrawers drawers);
+
+    /**
+     * @return whether the crafting monitor can draw a grey background behind the element when selected
+     */
+    boolean canDrawSelection();
 
     /**
      * Returns the position where the corresponding task is in the crafting task list.
@@ -35,6 +35,13 @@ public interface ICraftingMonitorElement<T> {
      * @return the id
      */
     String getId();
+
+    /**
+     * @return the tooltip of this element, or null for no tooltip
+     */
+    default String getTooltip() {
+        return null;
+    }
 
     /**
      * Writes the data to the network.
