@@ -39,7 +39,7 @@ public class SideButtonCompare extends SideButton {
         } else if (mask == IComparer.COMPARE_NBT) {
             ty = 48;
         } else if (mask == IComparer.COMPARE_OREDICT) {
-            ty = -100; // Temporary
+            return;
         }
 
         int tx = (parameter.getValue() & mask) == mask ? 0 : 16;

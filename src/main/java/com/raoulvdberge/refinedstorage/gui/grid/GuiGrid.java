@@ -120,11 +120,13 @@ public class GuiGrid extends GuiBase {
             searchField.yPosition = sy;
         }
 
-        if (oredictPattern == null) {
-            oredictPattern = addCheckBox(ox, oy, I18n.format("misc.refinedstorage:oredict"), TileGrid.OREDICT_PATTERN.getValue());
-        } else {
-            oredictPattern.xPosition = ox;
-            oredictPattern.yPosition = oy;
+        if (grid.getType() == EnumGridType.PATTERN) {
+            if (oredictPattern == null) {
+                oredictPattern = addCheckBox(ox, oy, I18n.format("misc.refinedstorage:oredict"), TileGrid.OREDICT_PATTERN.getValue());
+            } else {
+                oredictPattern.xPosition = ox;
+                oredictPattern.yPosition = oy;
+            }
         }
 
         if (grid.getType() != EnumGridType.FLUID) {

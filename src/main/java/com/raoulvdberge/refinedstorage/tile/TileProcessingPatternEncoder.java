@@ -2,11 +2,17 @@ package com.raoulvdberge.refinedstorage.tile;
 
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.RSUtils;
+import com.raoulvdberge.refinedstorage.gui.GuiProcessingPatternEncoder;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.inventory.ItemValidatorBasic;
 import com.raoulvdberge.refinedstorage.item.ItemPattern;
+import com.raoulvdberge.refinedstorage.tile.data.ITileDataConsumer;
+import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
+import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -14,8 +20,34 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class TileProcessingPatternEncoder extends TileBase {
+    private static final String NBT_OREDICT_PATTERN = "OredictPattern";
+
+    public static final TileDataParameter<Boolean> OREDICT_PATTERN = new TileDataParameter<>(DataSerializers.BOOLEAN, false, new ITileDataProducer<Boolean, TileProcessingPatternEncoder>() {
+        @Override
+        public Boolean getValue(TileProcessingPatternEncoder tile) {
+            return tile.oredictPattern;
+        }
+    }, new ITileDataConsumer<Boolean, TileProcessingPatternEncoder>() {
+        @Override
+        public void setValue(TileProcessingPatternEncoder tile, Boolean value) {
+            tile.oredictPattern = value;
+
+            tile.markDirty();
+        }
+    }, parameter -> {
+        if (Minecraft.getMinecraft().currentScreen instanceof GuiProcessingPatternEncoder) {
+            ((GuiProcessingPatternEncoder) Minecraft.getMinecraft().currentScreen).updateOredictPattern(parameter.getValue());
+        }
+    });
+
     private ItemHandlerBasic patterns = new ItemHandlerBasic(2, this, new ItemValidatorBasic(RSItems.PATTERN));
     private ItemHandlerBasic configuration = new ItemHandlerBasic(9 * 2, this);
+
+    private boolean oredictPattern;
+
+    public TileProcessingPatternEncoder() {
+        dataManager.addWatchedParameter(OREDICT_PATTERN);
+    }
 
     @Override
     public NBTTagCompound write(NBTTagCompound tag) {
@@ -23,6 +55,8 @@ public class TileProcessingPatternEncoder extends TileBase {
 
         RSUtils.writeItems(patterns, 0, tag);
         RSUtils.writeItems(configuration, 1, tag);
+
+        tag.setBoolean(NBT_OREDICT_PATTERN, oredictPattern);
 
         return tag;
     }
@@ -33,11 +67,17 @@ public class TileProcessingPatternEncoder extends TileBase {
 
         RSUtils.readItems(patterns, 0, tag);
         RSUtils.readItems(configuration, 1, tag);
+
+        if (tag.hasKey(NBT_OREDICT_PATTERN)) {
+            oredictPattern = tag.getBoolean(NBT_OREDICT_PATTERN);
+        }
     }
 
     public void onCreatePattern() {
         if (canCreatePattern()) {
             ItemStack pattern = new ItemStack(RSItems.PATTERN);
+
+            ItemPattern.setOredict(pattern, oredictPattern);
 
             for (int i = 0; i < 18; ++i) {
                 if (configuration.getStackInSlot(i) != null) {
