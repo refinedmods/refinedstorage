@@ -77,7 +77,7 @@ public class CraftingTaskFactory implements ICraftingTaskFactory {
                 }
             }
 
-            return new CraftingTask(network, stack, pattern, quantity, toProcess, toTake, toTakeFluids, new ArrayDeque<ItemStack>(toInsert), took, tookFluids);
+            return new CraftingTask(network, stack, pattern, quantity, toProcess, toTake, toTakeFluids, new ArrayDeque<>(toInsert), took, tookFluids);
         }
 
         return new CraftingTask(network, stack, pattern, quantity);

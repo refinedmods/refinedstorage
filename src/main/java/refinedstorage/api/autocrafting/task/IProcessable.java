@@ -20,6 +20,10 @@ public interface IProcessable {
      */
     Deque<ItemStack> getToInsert();
 
+    void setStartedProcessing();
+
+    boolean isStartedProcessing();
+
     /**
      * @return true if we received all outputs, false otherwise
      */

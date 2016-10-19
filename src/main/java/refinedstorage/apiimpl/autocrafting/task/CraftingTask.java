@@ -99,12 +99,9 @@ public class CraftingTask implements ICraftingTask {
         int compare = DEFAULT_COMPARE | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0);
         ItemStack[] took = new ItemStack[9];
 
-        if (pattern.isProcessing()) {
-            toProcess.add(new Processable(pattern));
-        }
-
         IItemStackList inputs = API.instance().createItemStackList();
         IItemStackList actualInputs = API.instance().createItemStackList();
+
         for (ItemStack input : pattern.getInputs()) {
             if (input != null) {
                 inputs.add(input.copy());
@@ -131,6 +128,7 @@ public class CraftingTask implements ICraftingTask {
                     networkList.remove(inputStack, true);
                 } else {
                     ICraftingPattern inputPattern = network.getPattern(input, compare);
+
                     if (inputPattern != null) {
                         int craftQuantity = Math.min(inputPattern.getQuantityPerRequest(input, compare), input.stackSize);
                         ItemStack inputCrafted = ItemHandlerHelper.copyStackWithSize(input, craftQuantity);
@@ -150,6 +148,10 @@ public class CraftingTask implements ICraftingTask {
                     }
                 }
             }
+        }
+
+        if (pattern.isProcessing()) {
+            toProcess.add(new Processable(pattern));
         }
 
         if (missing.isEmpty()) {
@@ -235,6 +237,8 @@ public class CraftingTask implements ICraftingTask {
             IItemHandler inventory = processable.getPattern().getContainer().getFacingInventory();
 
             if (inventory != null && !processable.getToInsert().isEmpty() && canProcess(processable)) {
+                processable.setStartedProcessing();
+
                 ItemStack toInsert = network.extractItem(processable.getToInsert().peek(), 1, DEFAULT_COMPARE | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0));
 
                 if (ItemHandlerHelper.insertItem(inventory, toInsert, true) == null) {
@@ -298,7 +302,7 @@ public class CraftingTask implements ICraftingTask {
     private boolean canProcess(IProcessable processable) {
         for (ICraftingTask otherTask : network.getCraftingTasks()) {
             for (IProcessable otherProcessable : otherTask.getToProcess()) {
-                if (otherProcessable != processable) {
+                if (otherProcessable != processable && !otherProcessable.hasReceivedOutputs() && otherProcessable.isStartedProcessing()) {
                     if (!isPatternsEqual(processable.getPattern(), otherProcessable.getPattern())) {
                         if (processable.getPattern().getContainer().getFacingTile().getPos().equals(otherProcessable.getPattern().getContainer().getFacingTile().getPos())) {
                             return false;
@@ -428,10 +432,14 @@ public class CraftingTask implements ICraftingTask {
                 );
             }
 
-            if (!hasProcessedItems()) {
+            if (toTake.isEmpty() && !hasProcessedItems()) {
                 elements.add(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_processing", 16));
 
                 for (IProcessable processable : toProcess) {
+                    if (processable.hasReceivedOutputs()) {
+                        continue;
+                    }
+
                     for (int i = 0; i < processable.getPattern().getOutputs().size(); ++i) {
                         if (!processable.hasReceivedOutput(i)) {
                             elements.add(new CraftingMonitorElementItemRender(

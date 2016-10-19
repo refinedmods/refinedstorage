@@ -20,6 +20,7 @@ public class Processable implements IProcessable {
     private ICraftingPattern pattern;
     private Deque<ItemStack> toInsert = new ArrayDeque<>();
     private boolean satisfied[];
+    private boolean startedProcessing;
 
     public Processable(ICraftingPattern pattern) {
         this.pattern = pattern;
@@ -67,6 +68,16 @@ public class Processable implements IProcessable {
     @Override
     public Deque<ItemStack> getToInsert() {
         return toInsert;
+    }
+
+    @Override
+    public void setStartedProcessing() {
+        startedProcessing = true;
+    }
+
+    @Override
+    public boolean isStartedProcessing() {
+        return startedProcessing;
     }
 
     @Override
