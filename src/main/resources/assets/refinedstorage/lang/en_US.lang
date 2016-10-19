@@ -23,7 +23,7 @@ gui.refinedstorage:crafting_monitor.items_taking=Items taking
 gui.refinedstorage:crafting_monitor.fluids_taking=Fluids taking
 gui.refinedstorage:crafting_monitor.items_processing=Items processing
 gui.refinedstorage:crafting_monitor.items_inserting=Items inserting
-gui.refinedstorage:crafting_monitor.machine_in_use=Waiting on machine that is in use by another task
+gui.refinedstorage:crafting_monitor.machine_in_use=Machine is in use
 gui.refinedstorage:crafting_monitor.machine_none=No machine found
 gui.refinedstorage:wireless_transmitter=Wireless Transmitter
 gui.refinedstorage:wireless_transmitter.distance=%d blocks
@@ -47,7 +47,7 @@ gui.refinedstorage:crafting_preview.to_craft=To craft: %d
 gui.refinedstorage:crafting_preview.available=Available: %d
 gui.refinedstorage:crafting_preview.missing=Missing: %d
 gui.refinedstorage:crafting_preview.circular=Circular dependency!
-gui.refinedstorage:crafting_preview.loop=loop in processing...
+gui.refinedstorage:crafting_preview.loop=Loop in processing...
 
 misc.refinedstorage:energy_stored=%d / %d RS
 misc.refinedstorage:energy_usage=Usage: %d RS/t
@@ -68,11 +68,13 @@ misc.refinedstorage:network_card.tooltip=Linked to %d, %d, %d.
 misc.refinedstorage:pattern.inputs=Inputs
 misc.refinedstorage:pattern.outputs=Outputs
 misc.refinedstorage:pattern.invalid=Invalid pattern
+misc.refinedstorage:pattern.oredict=Uses ore dictionary
 
 misc.refinedstorage:start=Start
 misc.refinedstorage:clear=Clear
 misc.refinedstorage:cancel_all=Cancel All
 misc.refinedstorage:priority=Priority
+misc.refinedstorage:oredict=Oredict
 
 sidebutton.refinedstorage:compare.1=Compare damage
 sidebutton.refinedstorage:compare.2=Compare NBT
