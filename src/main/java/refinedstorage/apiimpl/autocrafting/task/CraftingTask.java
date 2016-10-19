@@ -236,33 +236,33 @@ public class CraftingTask implements ICraftingTask {
         for (IProcessable processable : toProcess) {
             IItemHandler inventory = processable.getPattern().getContainer().getFacingInventory();
 
-            if (inventory != null && !processable.getToInsert().isEmpty() && canProcess(processable)) {
+            if (!processable.isStartedProcessing() && inventory != null && processable.canStartProcessing(network.getItemStorageCache().getList()) && canProcess(processable)) {
                 processable.setStartedProcessing();
 
-                ItemStack toInsert = network.extractItem(processable.getToInsert().peek(), 1, DEFAULT_COMPARE | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0));
+                for (ItemStack insertStack : processable.getToInsert().getStacks()) {
+                    ItemStack toInsert = network.extractItem(insertStack, insertStack.stackSize, DEFAULT_COMPARE | (processable.getPattern().isOredict() ? IComparer.COMPARE_OREDICT : 0));
 
-                if (ItemHandlerHelper.insertItem(inventory, toInsert, true) == null) {
-                    ItemHandlerHelper.insertItem(inventory, toInsert, false);
+                    if (ItemHandlerHelper.insertItem(inventory, toInsert, true) == null) {
+                        ItemHandlerHelper.insertItem(inventory, toInsert, false);
 
-                    processable.getToInsert().pop();
-
-                    network.sendCraftingMonitorUpdate();
+                        network.sendCraftingMonitorUpdate();
+                    }
                 }
             }
         }
 
         for (ItemStack stack : toTake.getStacks()) {
-            ItemStack stackExtracted = network.extractItem(stack, 1);
+            ItemStack stackExtracted = network.extractItem(stack, Math.min(stack.stackSize, 64));
 
             if (stackExtracted != null) {
-                toTake.remove(stack, 1, true);
+                toTake.remove(stack, stackExtracted.stackSize, true);
 
                 took.add(stackExtracted);
 
                 network.sendCraftingMonitorUpdate();
-            }
 
-            break;
+                break;
+            }
         }
 
         // If we took all the items, we can start taking fluids
@@ -276,9 +276,9 @@ public class CraftingTask implements ICraftingTask {
                     tookFluids.add(stackExtracted);
 
                     network.sendCraftingMonitorUpdate();
-                }
 
-                break;
+                    break;
+                }
             }
         }
 

@@ -2,23 +2,20 @@ package refinedstorage.apiimpl.autocrafting.task;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants;
+import refinedstorage.RSUtils;
 import refinedstorage.api.autocrafting.ICraftingPattern;
 import refinedstorage.api.autocrafting.task.IProcessable;
+import refinedstorage.api.util.IComparer;
+import refinedstorage.api.util.IItemStackList;
 import refinedstorage.apiimpl.API;
-
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
 
 public class Processable implements IProcessable {
     private static final String NBT_SATISFIED = "Satisfied_%d";
     private static final String NBT_TO_INSERT = "ToInsert";
 
     private ICraftingPattern pattern;
-    private Deque<ItemStack> toInsert = new ArrayDeque<>();
+    private IItemStackList toInsert = API.instance().createItemStackList();
     private boolean satisfied[];
     private boolean startedProcessing;
 
@@ -45,19 +42,7 @@ public class Processable implements IProcessable {
             }
         }
 
-        NBTTagList toInsertList = tag.getTagList(NBT_TO_INSERT, Constants.NBT.TAG_COMPOUND);
-
-        List<ItemStack> toInsert = new ArrayList<>();
-
-        for (int i = 0; i < toInsertList.tagCount(); ++i) {
-            ItemStack stack = ItemStack.loadItemStackFromNBT(toInsertList.getCompoundTagAt(i));
-
-            if (stack != null) {
-                toInsert.add(stack);
-            }
-        }
-
-        this.toInsert = new ArrayDeque<>(toInsert);
+        this.toInsert = RSUtils.readItemStackList(tag.getTagList(NBT_TO_INSERT, Constants.NBT.TAG_COMPOUND));
     }
 
     @Override
@@ -66,8 +51,20 @@ public class Processable implements IProcessable {
     }
 
     @Override
-    public Deque<ItemStack> getToInsert() {
+    public IItemStackList getToInsert() {
         return toInsert;
+    }
+
+    @Override
+    public boolean canStartProcessing(IItemStackList list) {
+        list = list.copy(); // So we can edit the list
+        for (ItemStack stack : toInsert.getStacks()) {
+            ItemStack actualStack = list.get(stack, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0));
+            if (actualStack == null || actualStack.stackSize == 0 || !list.remove(actualStack, true)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -119,13 +116,7 @@ public class Processable implements IProcessable {
             tag.setBoolean(String.format(NBT_SATISFIED, i), satisfied[i]);
         }
 
-        NBTTagList toInsertList = new NBTTagList();
-
-        for (ItemStack stack : new ArrayList<>(toInsert)) {
-            toInsertList.appendTag(stack.serializeNBT());
-        }
-
-        tag.setTag(NBT_TO_INSERT, toInsertList);
+        tag.setTag(NBT_TO_INSERT, RSUtils.serializeItemStackList(toInsert));
 
         return tag;
     }

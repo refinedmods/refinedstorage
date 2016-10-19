@@ -3,6 +3,7 @@ package refinedstorage.api.autocrafting.task;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import refinedstorage.api.autocrafting.ICraftingPattern;
+import refinedstorage.api.util.IItemStackList;
 
 import java.util.Deque;
 
@@ -18,7 +19,15 @@ public interface IProcessable {
     /**
      * @return the stacks to insert
      */
-    Deque<ItemStack> getToInsert();
+    IItemStackList getToInsert();
+
+    /**
+     * Check if the processing can start
+     *
+     * @param list a list to compare the need inputs against
+     * @return true if processing can start
+     */
+    boolean canStartProcessing(IItemStackList list);
 
     void setStartedProcessing();
 
