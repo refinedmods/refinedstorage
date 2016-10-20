@@ -105,9 +105,6 @@ public class GuiGrid extends GuiBase {
         int sx = x + 80 + 1;
         int sy = y + 6 + 1;
 
-        int ox = x + 64;
-        int oy = y + 138;
-
         if (searchField == null) {
             searchField = new GuiTextField(0, fontRendererObj, sx, sy, 88 - 6, fontRendererObj.FONT_HEIGHT);
             searchField.setEnableBackgroundDrawing(false);
@@ -121,12 +118,7 @@ public class GuiGrid extends GuiBase {
         }
 
         if (grid.getType() == EnumGridType.PATTERN) {
-            if (oredictPattern == null) {
-                oredictPattern = addCheckBox(ox, oy, I18n.format("misc.refinedstorage:oredict"), TileGrid.OREDICT_PATTERN.getValue());
-            } else {
-                oredictPattern.xPosition = ox;
-                oredictPattern.yPosition = oy;
-            }
+            oredictPattern = addCheckBox(x + 64, y + 138, I18n.format("misc.refinedstorage:oredict"), TileGrid.OREDICT_PATTERN.getValue());
         }
 
         if (grid.getType() != EnumGridType.FLUID) {
