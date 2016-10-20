@@ -118,10 +118,10 @@ public class GuiCraftingMonitor extends GuiBase {
                 if (item == itemSelected) {
                     itemSelectedX = x;
                     itemSelectedY = y;
+                }
 
-                    if (inBounds(itemSelectedX, itemSelectedY, ITEM_WIDTH, ITEM_HEIGHT, mouseX, mouseY)) {
-                        itemSelectedTooltip = element.getTooltip();
-                    }
+                if (inBounds(x, y, ITEM_WIDTH, ITEM_HEIGHT, mouseX, mouseY)) {
+                    itemSelectedTooltip = element.getTooltip();
                 }
 
                 element.draw(x, y, drawers);

@@ -75,6 +75,10 @@ public class CraftingTask implements ICraftingTask {
         this.tookFluids = tookFluids;
     }
 
+    public INetworkMaster getNetwork() {
+        return network;
+    }
+
     @Override
     public void calculate() {
         IItemStackList networkList = network.getItemStorageCache().getList().copy();
@@ -159,7 +163,7 @@ public class CraftingTask implements ICraftingTask {
         }
 
         if (pattern.isProcessing()) {
-            toProcess.add(new Processable(pattern));
+            toProcess.add(new Processable(this));
         }
 
         if (missing.isEmpty()) {
@@ -212,8 +216,10 @@ public class CraftingTask implements ICraftingTask {
                     toTakeFluids.add(fluidInItem.copy());
                 }
             }
+
             return true;
         }
+
         return false;
     }
 
@@ -283,6 +289,7 @@ public class CraftingTask implements ICraftingTask {
 
                     if (ItemHandlerHelper.insertItem(inventory, toInsert, true) == null) {
                         ItemHandlerHelper.insertItem(inventory, toInsert, false);
+
                         took.remove(tookStack, toInsert.stackSize, true);
 
                         network.sendCraftingMonitorUpdate();

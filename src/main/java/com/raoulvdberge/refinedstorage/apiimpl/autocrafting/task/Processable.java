@@ -14,13 +14,15 @@ public class Processable implements IProcessable {
     private static final String NBT_SATISFIED = "Satisfied_%d";
     private static final String NBT_TO_INSERT = "ToInsert";
 
+    private CraftingTask task;
     private ICraftingPattern pattern;
     private IItemStackList toInsert = API.instance().createItemStackList();
     private boolean satisfied[];
     private boolean startedProcessing;
 
-    public Processable(ICraftingPattern pattern) {
-        this.pattern = pattern;
+    public Processable(CraftingTask task) {
+        this.task = task;
+        this.pattern = task.getPattern();
         this.satisfied = new boolean[pattern.getOutputs().size()];
 
         for (ItemStack input : pattern.getInputs()) {
@@ -58,12 +60,15 @@ public class Processable implements IProcessable {
     @Override
     public boolean canStartProcessing(IItemStackList list) {
         list = list.copy(); // So we can edit the list
+
         for (ItemStack stack : toInsert.getStacks()) {
             ItemStack actualStack = list.get(stack, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0));
+
             if (actualStack == null || actualStack.stackSize == 0 || !list.remove(actualStack, true)) {
                 return false;
             }
         }
+
         return true;
     }
 
@@ -101,6 +106,8 @@ public class Processable implements IProcessable {
 
                 if (API.instance().getComparer().isEqualNoQuantity(stack, item)) {
                     satisfied[i] = true;
+
+                    task.getNetwork().sendCraftingMonitorUpdate();
 
                     return true;
                 }
