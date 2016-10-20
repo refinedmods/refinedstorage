@@ -36,7 +36,15 @@ public class SlotSpecimen extends SlotItemHandler {
 
     @Override
     public boolean isItemValid(ItemStack stack) {
-        return super.isItemValid(stack) && (isBlockOnly() ? (stack.getItem() instanceof ItemBlock || stack.getItem() instanceof ItemBlockSpecial || stack.getItem() instanceof IPlantable || stack.getItem() instanceof ItemSkull) : true);
+        if (super.isItemValid(stack)) {
+            if (isBlockOnly()) {
+                return stack.getItem() instanceof ItemBlock || stack.getItem() instanceof ItemBlockSpecial || stack.getItem() instanceof IPlantable || stack.getItem() instanceof ItemSkull;
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     @Override
