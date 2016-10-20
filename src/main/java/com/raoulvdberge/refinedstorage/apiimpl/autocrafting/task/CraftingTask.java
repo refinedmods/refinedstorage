@@ -75,10 +75,6 @@ public class CraftingTask implements ICraftingTask {
         this.tookFluids = tookFluids;
     }
 
-    public INetworkMaster getNetwork() {
-        return network;
-    }
-
     @Override
     public void calculate() {
         IItemStackList networkList = network.getItemStorageCache().getList().copy();
@@ -163,7 +159,7 @@ public class CraftingTask implements ICraftingTask {
         }
 
         if (pattern.isProcessing()) {
-            toProcess.add(new Processable(this));
+            toProcess.add(new Processable(network, pattern));
         }
 
         if (missing.isEmpty()) {
