@@ -114,21 +114,21 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                         node.getEnergyUsage()
                     );
 
-                    if (clientNode.getStack().getItem() != null) {
-                        if (nodes.contains(clientNode)) {
-                            for (ClientNode other : nodes) {
-                                if (other.equals(clientNode)) {
-                                    other.setAmount(other.getAmount() + 1);
+                    if (clientNode.getStack().getItem() == null) {
+                        continue;
+                    }
 
-                                    break;
-                                }
-                            }
-                        } else {
-                            nodes.add(clientNode);
-                        }
+                    if (nodes.contains(clientNode)) {
+                        ClientNode other = nodes.get(nodes.indexOf(clientNode));
+
+                        other.setAmount(other.getAmount() + 1);
+                    } else {
+                        nodes.add(clientNode);
                     }
                 }
             }
+
+            Collections.sort(nodes, CLIENT_NODE_COMPARATOR);
 
             return nodes;
         }
@@ -138,6 +138,14 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     public static final String NBT_ENERGY_CAPACITY = "EnergyCapacity";
 
     private static final String NBT_CRAFTING_TASKS = "CraftingTasks";
+
+    private static final Comparator<ClientNode> CLIENT_NODE_COMPARATOR = (left, right) -> {
+        if (left.getEnergyUsage() == right.getEnergyUsage()) {
+            return 0;
+        }
+
+        return (left.getEnergyUsage() > right.getEnergyUsage()) ? -1 : 1;
+    };
 
     private static final Comparator<IItemStorage> ITEM_SIZE_COMPARATOR = (left, right) -> {
         if (left.getStored() == right.getStored()) {
