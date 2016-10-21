@@ -54,29 +54,27 @@ public abstract class ContainerBase extends Container {
     }
 
     @Override
-    public ItemStack slotClick(int id, int clickedButton, ClickType clickType, EntityPlayer player) {
+    public ItemStack slotClick(int id, int dragType, ClickType clickType, EntityPlayer player) {
         Slot slot = id >= 0 ? getSlot(id) : null;
 
         if (slot instanceof SlotSpecimen) {
             if (((SlotSpecimen) slot).isWithSize()) {
-                if (slot.getStack() != null) {
-                    if (clickType == ClickType.QUICK_MOVE) {
-                        slot.putStack(null);
-                    } else {
-                        int amount = slot.getStack().stackSize;
-
-                        if (clickedButton == 0) {
-                            amount = Math.max(1, amount - 1);
-                        } else if (clickedButton == 1) {
-                            amount = Math.min(64, amount + 1);
-                        }
-
-                        slot.getStack().stackSize = amount;
-                    }
+                if (clickType == ClickType.QUICK_MOVE) {
+                    slot.putStack(null);
                 } else if (player.inventory.getItemStack() != null) {
                     int amount = player.inventory.getItemStack().stackSize;
 
-                    slot.putStack(ItemHandlerHelper.copyStackWithSize(player.inventory.getItemStack(), clickedButton == 1 ? 1 : amount));
+                    slot.putStack(ItemHandlerHelper.copyStackWithSize(player.inventory.getItemStack(), amount));
+                } else if (slot.getHasStack()) {
+                    int amount = slot.getStack().stackSize;
+
+                    if (dragType == 0) {
+                        amount = Math.max(1, amount - 1);
+                    } else if (dragType == 1) {
+                        amount = Math.min(64, amount + 1);
+                    }
+
+                    slot.getStack().stackSize = amount;
                 }
             } else if (player.inventory.getItemStack() == null) {
                 slot.putStack(null);
@@ -97,7 +95,7 @@ public abstract class ContainerBase extends Container {
             return null;
         }
 
-        return super.slotClick(id, clickedButton, clickType, player);
+        return super.slotClick(id, dragType, clickType, player);
     }
 
     @Override

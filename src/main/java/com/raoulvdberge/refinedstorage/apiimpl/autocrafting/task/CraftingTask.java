@@ -159,7 +159,7 @@ public class CraftingTask implements ICraftingTask {
         }
 
         if (pattern.isProcessing()) {
-            toProcess.add(new Processable(pattern));
+            toProcess.add(new Processable(network, pattern));
         }
 
         if (missing.isEmpty()) {
@@ -212,8 +212,10 @@ public class CraftingTask implements ICraftingTask {
                     toTakeFluids.add(fluidInItem.copy());
                 }
             }
+
             return true;
         }
+
         return false;
     }
 
@@ -283,6 +285,7 @@ public class CraftingTask implements ICraftingTask {
 
                     if (ItemHandlerHelper.insertItem(inventory, toInsert, true) == null) {
                         ItemHandlerHelper.insertItem(inventory, toInsert, false);
+
                         took.remove(tookStack, toInsert.stackSize, true);
 
                         network.sendCraftingMonitorUpdate();

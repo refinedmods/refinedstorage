@@ -125,6 +125,8 @@ public class GuiCraftingStart extends GuiBase {
 
         if (quantity != null && quantity > 0) {
             RS.INSTANCE.network.sendToServer(new MessageGridCraftingPreview(stack.getHash(), quantity));
+
+            startButton.enabled = false;
         }
     }
 

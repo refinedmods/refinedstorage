@@ -123,9 +123,15 @@ public class ItemGridHandler implements IItemGridHandler {
         ItemStack stack = network.getItemStorageCache().getList().get(hash);
 
         if (stack != null) {
-            ICraftingTask task = new CraftingTask(network, stack, network.getPattern(stack), quantity);
-            task.calculate();
-            RS.INSTANCE.network.sendTo(new MessageGridCraftingPreviewResponse(task.getPreviewStacks(), hash, quantity), player);
+            Thread calculationThread = new Thread(() -> {
+                ICraftingTask task = new CraftingTask(network, stack, network.getPattern(stack), quantity);
+
+                task.calculate();
+
+                RS.INSTANCE.network.sendTo(new MessageGridCraftingPreviewResponse(task.getPreviewStacks(), hash, quantity), player);
+            }, "RS crafting calculation");
+
+            calculationThread.start();
         }
     }
 

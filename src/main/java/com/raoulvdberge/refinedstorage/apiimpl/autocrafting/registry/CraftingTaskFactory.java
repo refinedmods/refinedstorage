@@ -35,7 +35,11 @@ public class CraftingTaskFactory implements ICraftingTaskFactory {
             List<IProcessable> toProcess = new ArrayList<>();
 
             for (int i = 0; i < toProcessList.tagCount(); ++i) {
-                toProcess.add(new Processable(pattern, toProcessList.getCompoundTagAt(i)));
+                Processable processable = new Processable(network);
+
+                if (processable.readFromNBT(toProcessList.getCompoundTagAt(i))) {
+                    toProcess.add(processable);
+                }
             }
 
             IItemStackList toTake = RSUtils.readItemStackList(tag.getTagList(CraftingTask.NBT_TO_TAKE, Constants.NBT.TAG_COMPOUND));
