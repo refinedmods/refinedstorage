@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 
 public abstract class BlockBase extends Block {
-    private static final PropertyDirection DIRECTION = PropertyDirection.create("direction");
+    public static final PropertyDirection DIRECTION = PropertyDirection.create("direction");
 
     private String name;
 
