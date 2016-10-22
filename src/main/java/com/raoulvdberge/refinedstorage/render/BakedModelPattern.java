@@ -1,7 +1,8 @@
-package com.raoulvdberge.refinedstorage.item;
+package com.raoulvdberge.refinedstorage.render;
 
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPattern;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
+import com.raoulvdberge.refinedstorage.item.ItemPattern;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -17,10 +18,10 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class PatternBakedModel implements IBakedModel {
+public class BakedModelPattern implements IBakedModel {
     private IBakedModel patternModel;
 
-    public PatternBakedModel(IBakedModel patternModel) {
+    public BakedModelPattern(IBakedModel patternModel) {
         this.patternModel = patternModel;
     }
 

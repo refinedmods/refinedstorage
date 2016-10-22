@@ -1,0 +1,50 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "particle": "refinedstorage:blocks/disk_drive",
+    "front": "refinedstorage:blocks/disk_drive",
+    "bottom": "refinedstorage:blocks/disk_drive_bottom",
+    "top": "refinedstorage:blocks/disk_drive_top",
+    "side": "refinedstorage:blocks/disk_drive_side"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "down": {
+          "texture": "#bottom",
+          "cullface": "down"
+        },
+        "up": {
+          "texture": "#top",
+          "cullface": "up"
+        },
+        "north": {
+          "texture": "#front",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#side",
+          "cullface": "south"
+        },
+        "west": {
+          "texture": "#side",
+          "cullface": "west"
+        },
+        "east": {
+          "texture": "#side",
+          "cullface": "east"
+        }
+      }
+    }
+  ]
+}
