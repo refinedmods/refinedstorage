@@ -83,6 +83,7 @@ public abstract class CraftingStep implements ICraftingStep {
     @Override
     public boolean canStartProcessing(IItemStackList items, IFluidStackList fluids) {
         items = items.copy(); // So we can edit the list
+        items.clean();// Clean the list so the zero stacks aren't there
 
         for (ItemStack stack : getToInsert()) {
             ItemStack actualStack = items.get(stack, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0));

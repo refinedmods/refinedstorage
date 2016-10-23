@@ -73,6 +73,7 @@ public class CraftingTask implements ICraftingTask {
     @Override
     public void calculate() {
         IItemStackList networkList = network.getItemStorageCache().getList().copy();
+        networkList.clean(); // Remove the zero stacks
         IItemStackList toInsert = API.instance().createItemStackList();
 
         toCraft.add(ItemHandlerHelper.copyStackWithSize(requested, quantity));
@@ -115,7 +116,9 @@ public class CraftingTask implements ICraftingTask {
                     ItemStack inputStack = ItemHandlerHelper.copyStackWithSize(extraStack, takeQuantity);
                     actualInputs.add(inputStack.copy());
                     input.stackSize -= takeQuantity;
-                    toCraft.add(inputStack);
+                    if (!inputStack.isItemStackDamageable() || !inputStack.isItemDamaged()) {
+                        toCraft.add(inputStack);
+                    }
                     toInsert.remove(inputStack, true);
                 } else if (networkStack != null && networkStack.stackSize > 0) {
                     int takeQuantity = Math.min(networkStack.stackSize, input.stackSize);
@@ -291,9 +294,15 @@ public class CraftingTask implements ICraftingTask {
                 for (ICraftingStep otherProcessable : otherTask.getSteps()) {
                     if (otherProcessable.getPattern().isProcessing()) {
                         if (otherProcessable != processable && !otherProcessable.hasReceivedOutputs() && otherProcessable.hasStartedProcessing() && otherProcessable.getPattern().getContainer().getFacingTile() != null) {
-                            if (!arePatternsEqual(processable.getPattern(), otherProcessable.getPattern())) {
-                                if (processable.getPattern().getContainer().getFacingTile().getPos().equals(otherProcessable.getPattern().getContainer().getFacingTile().getPos())) {
+                            if (processable.getPattern().getContainer().getFacingTile().getPos().equals(otherProcessable.getPattern().getContainer().getFacingTile().getPos())) {
+                                if (!arePatternsEqual(processable.getPattern(), otherProcessable.getPattern())) {
                                     return false;
+                                } else {
+                                    for (ItemStack toInsert : processable.getToInsert()) {
+                                        if (ItemHandlerHelper.insertItem(processable.getPattern().getContainer().getFacingInventory(), toInsert, true) != null) {
+                                            return false;
+                                        }
+                                    }
                                 }
                             }
                         }

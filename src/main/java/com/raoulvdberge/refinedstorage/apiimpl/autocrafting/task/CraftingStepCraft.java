@@ -30,6 +30,9 @@ public class CraftingStepCraft extends CraftingStep {
         // So we can edit the lists
         items = items.copy();
         fluids = fluids.copy();
+        // Clean the lists so the zero stacks aren't there
+        items.clean();
+        fluids.clear();
 
         int compare = IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0);
         for (ItemStack stack : getToInsert()) {
