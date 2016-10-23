@@ -8,7 +8,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * Represents a crafting monitor element.
  */
-public interface ICraftingMonitorElement<T> {
+public interface ICraftingMonitorElement {
     /**
      * @param x       position on the x axis to render
      * @param y       position on the y axis to render
@@ -50,4 +50,18 @@ public interface ICraftingMonitorElement<T> {
      * @param buf the buffer
      */
     void write(ByteBuf buf);
+
+    /**
+     * Merge an element into the current element
+     * Used to in {@link ICraftingMonitorElementList}
+     *
+     * @param element the element to merged with the current one
+     * @return true if merge was successful
+     */
+    boolean merge(ICraftingMonitorElement element);
+
+    /**
+     * @return the hash code for the underlying element
+     */
+    int elementHashCode();
 }

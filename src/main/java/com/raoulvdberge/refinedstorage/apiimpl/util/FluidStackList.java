@@ -3,12 +3,15 @@ package com.raoulvdberge.refinedstorage.apiimpl.util;
 import com.google.common.collect.ArrayListMultimap;
 import com.raoulvdberge.refinedstorage.api.util.IFluidStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class FluidStackList implements IFluidStackList {
     private ArrayListMultimap<Fluid, FluidStack> stacks = ArrayListMultimap.create();
@@ -31,12 +34,13 @@ public class FluidStackList implements IFluidStackList {
         for (FluidStack otherStack : stacks.get(stack.getFluid())) {
             if (stack.isFluidEqual(otherStack)) {
                 otherStack.amount -= size;
+                boolean success = otherStack.amount >= 0;
 
                 if (otherStack.amount <= 0 && removeIfReachedZero) {
                     stacks.remove(otherStack.getFluid(), otherStack);
                 }
 
-                return true;
+                return success;
             }
         }
 
@@ -70,6 +74,14 @@ public class FluidStackList implements IFluidStackList {
     @Override
     public void clear() {
         stacks.clear();
+    }
+
+    @Override
+    public void clean() {
+        List<FluidStack> toRemove = stacks.values().stream()
+                .filter(stack -> stack.amount <= 0)
+                .collect(Collectors.toList());
+        toRemove.forEach(stack -> stacks.remove(stack.getFluid(), stack));
     }
 
     @Override

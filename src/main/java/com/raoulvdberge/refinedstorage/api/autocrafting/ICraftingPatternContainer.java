@@ -11,11 +11,9 @@ import java.util.List;
  */
 public interface ICraftingPatternContainer {
     /**
-     * The speed that crafting tasks that have a pattern in this container can run.
-     *
-     * @return the speed of this container
+     * @return the amount of speed upgrades in the container.
      */
-    int getSpeed();
+    int getSpeedUpdateCount();
 
     /**
      * @return the inventory that this container is facing

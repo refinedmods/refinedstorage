@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.renderer.GlStateManager;
@@ -10,7 +11,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class CraftingMonitorElementFluidRender implements ICraftingMonitorElement<FluidStack> {
+public class CraftingMonitorElementFluidRender implements ICraftingMonitorElement {
     public static final String ID = "fluid_render";
 
     private int taskId;
@@ -58,5 +59,19 @@ public class CraftingMonitorElementFluidRender implements ICraftingMonitorElemen
         buf.writeInt(taskId);
         RSUtils.writeFluidStack(buf, stack);
         buf.writeInt(offset);
+    }
+
+    @Override
+    public boolean merge(ICraftingMonitorElement element) {
+        if (element.getId().equals(getId()) && elementHashCode() == element.elementHashCode()) {
+            this.stack.amount += ((CraftingMonitorElementFluidRender) element).stack.amount;
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public int elementHashCode() {
+        return API.instance().getFluidStackHashCode(stack);
     }
 }

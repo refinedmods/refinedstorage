@@ -152,8 +152,8 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
     }
 
     @Override
-    public int getSpeed() {
-        return 20 - (upgrades.getUpgradeCount(ItemUpgrade.TYPE_SPEED) * 4);
+    public int getSpeedUpdateCount() {
+        return upgrades.getUpgradeCount(ItemUpgrade.TYPE_SPEED);
     }
 
     @Override
