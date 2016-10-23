@@ -123,7 +123,7 @@ public class GuiCraftingPreview extends GuiBase {
 
                     stack.draw(x, y + 5, drawers);
 
-                    if (inBounds(x, y, 16, 16, mouseX, mouseY)) {
+                    if (inBounds(x + 5, y + 7, 16, 16, mouseX, mouseY)) {
                         hoveringStack = stack.getId().equals(CraftingPreviewElementItemStack.ID) ? (ItemStack) stack.getElement() : null;
                         if (hoveringStack == null) {
                             hoveringFluid = stack.getId().equals(CraftingPreviewElementFluidStack.ID) ? (FluidStack) stack.getElement() : null;
