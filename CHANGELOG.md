@@ -10,6 +10,7 @@
 - Added Silk Touch Upgrade for Destructor (InusualZ)
 - Added Fortune Upgrade for Destructor (InusualZ)
 - Added ore dictionary compare toggle to storage I/O blocks (raoulvdberge)
+- Added disk icons to Disk Drive block that shows the disks (raoulvdberge)
 - Controller sorts by energy usage in GUI (raoulvdberge)
 - The Constructor can now drop items in the world (raoulvdberge)
 - The Constructor can now place skulls (modmuss50)
