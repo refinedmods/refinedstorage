@@ -467,7 +467,6 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             }
         }
 
-
         RSUtils.readItems(itemFilters, 1, tag);
         RSUtils.readItems(fluidFilters, 2, tag);
         RSUtils.readItems(upgrades, 3, tag);
