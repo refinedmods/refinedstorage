@@ -29,6 +29,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 import java.util.ArrayList;
 
@@ -75,7 +76,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK);
 
-    private ItemHandlerBasic disks = new ItemHandlerBasic(12, this, IItemValidator.STORAGE_DISK) {
+    private ItemHandlerBasic inputDisks = new ItemHandlerBasic(6, this, IItemValidator.STORAGE_DISK) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -99,6 +100,8 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             return super.extractItem(slot, amount, simulate);
         }
     };
+
+    private ItemHandlerBasic outputDisks = new ItemHandlerBasic(6, this, IItemValidator.STORAGE_DISK);
 
     public class ItemStorage extends ItemStorageNBT {
         public ItemStorage(ItemStack disk) {
@@ -373,15 +376,14 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
     }
 
     private void moveDriveToOutput(int slot) {
-        ItemStack disk = disks.getStackInSlot(slot);
+        ItemStack disk = inputDisks.getStackInSlot(slot);
         if (disk != null) {
-            int i = 6;
-
-            while (i < 12 && disks.getStackInSlot(i) != null) {
+            int i = 0;
+            while (i < 6 && outputDisks.getStackInSlot(i) != null) {
                 i++;
             }
 
-            if (i == 12) {
+            if (i == 6) {
                 return;
             }
 
@@ -396,9 +398,8 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
                     fluidStorages[slot] = null;
                 }
             }
-
-            disks.extractItem(slot, 1, false);
-            disks.insertItem(i, disk, false);
+            inputDisks.extractItem(slot, 1, false);
+            outputDisks.insertItem(i, disk, false);
         }
     }
 
@@ -437,8 +438,12 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         return this.mode;
     }
 
-    public IItemHandler getDisks() {
-        return disks;
+    public IItemHandler getInputDisks() {
+        return inputDisks;
+    }
+
+    public IItemHandler getOutputDisks() {
+        return outputDisks;
     }
 
     public IItemHandler getUpgrades() {
@@ -449,10 +454,11 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        RSUtils.readItems(disks, 0, tag);
-        RSUtils.readItems(itemFilters, 1, tag);
-        RSUtils.readItems(fluidFilters, 2, tag);
-        RSUtils.readItems(upgrades, 3, tag);
+        RSUtils.readItems(inputDisks, 0, tag);
+        RSUtils.readItems(outputDisks, 1, tag);
+        RSUtils.readItems(itemFilters, 2, tag);
+        RSUtils.readItems(fluidFilters, 3, tag);
+        RSUtils.readItems(upgrades, 4, tag);
 
         if (tag.hasKey(NBT_COMPARE)) {
             compare = tag.getInteger(NBT_COMPARE);
@@ -475,10 +481,11 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        RSUtils.writeItems(disks, 0, tag);
-        RSUtils.writeItems(itemFilters, 1, tag);
-        RSUtils.writeItems(fluidFilters, 2, tag);
-        RSUtils.writeItems(upgrades, 3, tag);
+        RSUtils.writeItems(inputDisks, 0, tag);
+        RSUtils.writeItems(outputDisks, 1, tag);
+        RSUtils.writeItems(itemFilters, 2, tag);
+        RSUtils.writeItems(fluidFilters, 3, tag);
+        RSUtils.writeItems(upgrades, 4, tag);
 
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_MODE, mode);
@@ -490,13 +497,13 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
 
     @Override
     public IItemHandler getDrops() {
-        return disks;
+        return new CombinedInvWrapper(inputDisks, outputDisks, upgrades);
     }
 
     @Override
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return (T) disks;
+            return facing == EnumFacing.DOWN ? (T) outputDisks : (T) inputDisks;
         }
 
         return super.getCapability(capability, facing);
