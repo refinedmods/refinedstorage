@@ -3,7 +3,6 @@ package com.raoulvdberge.refinedstorage.apiimpl.util;
 import com.google.common.collect.ArrayListMultimap;
 import com.raoulvdberge.refinedstorage.api.util.IFluidStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -81,6 +80,7 @@ public class FluidStackList implements IFluidStackList {
         List<FluidStack> toRemove = stacks.values().stream()
                 .filter(stack -> stack.amount <= 0)
                 .collect(Collectors.toList());
+
         toRemove.forEach(stack -> stacks.remove(stack.getFluid(), stack));
     }
 

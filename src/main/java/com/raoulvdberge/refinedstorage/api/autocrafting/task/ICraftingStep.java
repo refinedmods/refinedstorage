@@ -25,7 +25,7 @@ public interface ICraftingStep {
     List<ItemStack> getToInsert();
 
     /**
-     * Check if the processing can start
+     * Check if the processing can start.
      *
      * @param items a list to compare the needed {@link ItemStack} inputs against
      * @param fluids a list to compare the needed {@link net.minecraftforge.fluids.FluidStack} inputs against (eg. a bucket, machine insert)
@@ -33,14 +33,19 @@ public interface ICraftingStep {
      */
     boolean canStartProcessing(IItemStackList items, IFluidStackList fluids);
 
+    /**
+     * When called, this step will be marked as started processing.
+     */
     void setStartedProcessing();
 
+    /**
+     * @return whether this step has started processing
+     */
     boolean hasStartedProcessing();
 
     /**
-     * Execute this step
-     * Any items to be added to the network should be inserting into these queues
-     * and they'll be managed by the {@link ICraftingTask}
+     * Execute this step.
+     * Any items to be added to the network should be inserting into these queues and they'll be managed by the {@link ICraftingTask}.
      *
      * @param toInsertItems a queue of items to be inserted into the network
      * @param toInsertFluids a queue of fluids to be inserted into the network

@@ -68,8 +68,10 @@ public class CraftingMonitorElementItemRender implements ICraftingMonitorElement
     public boolean merge(ICraftingMonitorElement element) {
         if (element.getId().equals(getId()) && elementHashCode() == element.elementHashCode()) {
             this.quantity += ((CraftingMonitorElementItemRender) element).quantity;
+
             return true;
         }
+
         return false;
     }
 

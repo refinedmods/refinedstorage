@@ -17,15 +17,19 @@ public class CraftingMonitorElementList implements ICraftingMonitorElementList {
     @Override
     public void add(ICraftingMonitorElement element) {
         Map<Integer, ICraftingMonitorElement> currentElements = currentLists.get(element.getId());
+
         if (currentElements == null) {
             currentElements = new HashMap<>();
         }
+
         ICraftingMonitorElement exitingElement = currentElements.get(element.elementHashCode());
+
         if (exitingElement == null) {
             exitingElement = element;
         } else {
             exitingElement.merge(element);
         }
+
         currentElements.put(exitingElement.elementHashCode(), exitingElement);
         currentLists.put(exitingElement.getId(), currentElements);
     }
@@ -41,6 +45,7 @@ public class CraftingMonitorElementList implements ICraftingMonitorElementList {
         if (!currentLists.isEmpty()) {
             commit();
         }
+        
         return elements;
     }
 }

@@ -6,8 +6,8 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContaine
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementList;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
-import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IFluidStackList;
@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 public class CraftingTask implements ICraftingTask {
     protected static final int DEFAULT_COMPARE = IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT;
 
-    public static final String NBT_TO_PROCESS = "ToProcess";
+    public static final String NBT_STEPS = "Steps";
     public static final String NBT_TO_TAKE_FLUIDS = "ToTakeFluids";
     public static final String NBT_TO_INSERT_ITEMS = "ToInsertItems";
     public static final String NBT_TO_INSERT_FLUIDS = "ToInsertFluids";
@@ -76,7 +76,9 @@ public class CraftingTask implements ICraftingTask {
         IItemStackList toInsert = API.instance().createItemStackList();
 
         toCraft.add(ItemHandlerHelper.copyStackWithSize(requested, quantity));
+
         int quantity = this.quantity;
+
         while (quantity > 0 && !recurseFound) {
             calculate(networkList, pattern, toInsert);
             quantity -= pattern.getQuantityPerRequest(requested);
@@ -147,9 +149,9 @@ public class CraftingTask implements ICraftingTask {
         }
 
         if (pattern.isProcessing()) {
-            steps.add(new ProcessCraftingStep(network, pattern));
+            steps.add(new CraftingStepProcess(network, pattern));
         } else {
-            steps.add(new CraftCraftingStep(network, pattern));
+            steps.add(new CraftingStepCraft(network, pattern));
         }
 
         if (missing.isEmpty()) {
@@ -250,7 +252,11 @@ public class CraftingTask implements ICraftingTask {
         for (ICraftingStep step : steps) {
             ICraftingPatternContainer container = step.getPattern().getContainer();
             Integer timesUsed = usedContainers.get(container);
-            if (timesUsed == null) timesUsed = 0;
+
+            if (timesUsed == null) {
+                timesUsed = 0;
+            }
+
             if (timesUsed++ <= container.getSpeedUpdateCount()) {
                 if (!step.hasStartedProcessing() && step.canStartProcessing(network.getItemStorageCache().getList(), tookFluids) && canProcess(step)) {
                     step.setStartedProcessing();
@@ -261,13 +267,13 @@ public class CraftingTask implements ICraftingTask {
             }
         }
 
-        // We need to copy the size cause we'll readd unadded stacks to the queue
+        // We need to copy the size cause we'll re-add unadded stacks to the queue
         int times = toInsertItems.size();
-        for (int i = 0; i < times; i++)
-        {
+        for (int i = 0; i < times; i++) {
             ItemStack insert = toInsertItems.poll();
             if (insert != null) {
                 ItemStack remainder = network.insertItem(insert, insert.stackSize, false);
+
                 if (remainder != null) {
                     toInsertItems.add(remainder);
                 }
@@ -333,7 +339,7 @@ public class CraftingTask implements ICraftingTask {
             processablesList.appendTag(processable.writeToNBT(new NBTTagCompound()));
         }
 
-        tag.setTag(NBT_TO_PROCESS, processablesList);
+        tag.setTag(NBT_STEPS, processablesList);
 
         NBTTagList toInsertItemsList = new NBTTagList();
 
@@ -373,13 +379,13 @@ public class CraftingTask implements ICraftingTask {
             elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_inserting", 16));
 
             toInsertItems.stream()
-                    .map(stack -> new CraftingMonitorElementItemRender(
-                            -1,
-                            stack,
-                            stack.stackSize,
-                            32
-                    ))
-                    .forEach(elements::add);
+                .map(stack -> new CraftingMonitorElementItemRender(
+                    -1,
+                    stack,
+                    stack.stackSize,
+                    32
+                ))
+                .forEach(elements::add);
 
             elements.commit();
         }
@@ -391,10 +397,10 @@ public class CraftingTask implements ICraftingTask {
                 for (ICraftingStep processable : steps.stream().filter(s -> !s.getPattern().isProcessing()).collect(Collectors.toList())) {
                     for (int i = 0; i < processable.getPattern().getOutputs().size(); ++i) {
                         elements.add(new CraftingMonitorElementItemRender(
-                                -1,
-                                processable.getPattern().getOutputs().get(i),
-                                processable.getPattern().getOutputs().get(i).stackSize,
-                                32
+                            -1,
+                            processable.getPattern().getOutputs().get(i),
+                            processable.getPattern().getOutputs().get(i).stackSize,
+                            32
                         ));
                     }
                 }
@@ -408,10 +414,10 @@ public class CraftingTask implements ICraftingTask {
                 for (ICraftingStep processable : steps.stream().filter(s -> s.getPattern().isProcessing()).collect(Collectors.toList())) {
                     for (int i = 0; i < processable.getPattern().getOutputs().size(); ++i) {
                         ICraftingMonitorElement element = new CraftingMonitorElementItemRender(
-                                -1,
-                                processable.getPattern().getOutputs().get(i),
-                                processable.getPattern().getOutputs().get(i).stackSize,
-                                32
+                            -1,
+                            processable.getPattern().getOutputs().get(i),
+                            processable.getPattern().getOutputs().get(i).stackSize,
+                            32
                         );
 
                         if (processable.getPattern().getContainer().getFacingTile() == null) {

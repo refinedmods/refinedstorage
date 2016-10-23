@@ -14,14 +14,14 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.Deque;
 
-public class CraftCraftingStep extends AbstractCraftingStep {
-    public static final String ID = "CraftCraftingStep";
+public class CraftingStepCraft extends CraftingStep {
+    public static final String ID = "craft";
 
-    public CraftCraftingStep(INetworkMaster network, ICraftingPattern pattern) {
+    public CraftingStepCraft(INetworkMaster network, ICraftingPattern pattern) {
         super(network, pattern);
     }
 
-    public CraftCraftingStep(INetworkMaster network) {
+    public CraftingStepCraft(INetworkMaster network) {
         super(network);
     }
 

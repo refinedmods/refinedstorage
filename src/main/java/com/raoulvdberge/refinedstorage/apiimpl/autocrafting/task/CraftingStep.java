@@ -10,14 +10,19 @@ import com.raoulvdberge.refinedstorage.api.util.IFluidStackList;
 import com.raoulvdberge.refinedstorage.api.util.IItemStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
-public abstract class AbstractCraftingStep implements ICraftingStep {
+;
+
+public abstract class CraftingStep implements ICraftingStep {
     public static final String NBT_CRAFTING_STEP_TYPE = "CraftingStepType";
     private static final String NBT_SATISFIED = "Satisfied_%d";
     private static final String NBT_PATTERN = "Pattern";
@@ -29,13 +34,13 @@ public abstract class AbstractCraftingStep implements ICraftingStep {
     protected Map<Integer, Integer> satisfied;
     protected boolean startedProcessing;
 
-    public AbstractCraftingStep(INetworkMaster network, ICraftingPattern pattern) {
+    public CraftingStep(INetworkMaster network, ICraftingPattern pattern) {
         this.network = network;
         this.pattern = pattern;
         this.satisfied = new HashMap<>(getPattern().getOutputs().size());
     }
 
-    public AbstractCraftingStep(INetworkMaster network) {
+    public CraftingStep(INetworkMaster network) {
         this.network = network;
     }
 

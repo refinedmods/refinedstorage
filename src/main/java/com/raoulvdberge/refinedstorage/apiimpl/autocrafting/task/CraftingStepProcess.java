@@ -11,20 +11,20 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.Deque;
 
-public class ProcessCraftingStep extends AbstractCraftingStep {
-    public static final String ID = "ProcessCraftingStep";
+public class CraftingStepProcess extends CraftingStep {
+    public static final String ID = "process";
 
-    public ProcessCraftingStep(INetworkMaster network, ICraftingPattern pattern) {
+    public CraftingStepProcess(INetworkMaster network, ICraftingPattern pattern) {
         super(network, pattern);
     }
 
-    public ProcessCraftingStep(INetworkMaster network) {
+    public CraftingStepProcess(INetworkMaster network) {
         super(network);
     }
 
     @Override
     public void execute(Deque<ItemStack> toInsertItems, Deque<FluidStack> toInsertFluids) {
-        // TODO fluid handling
+        // @TODO: fluid handling
         IItemHandler inventory = getPattern().getContainer().getFacingInventory();
         for (ItemStack insertStack : getToInsert()) {
             ItemStack tookStack = network.extractItem(insertStack, insertStack.stackSize, CraftingTask.DEFAULT_COMPARE | (getPattern().isOredict() ? IComparer.COMPARE_OREDICT : 0));
@@ -35,6 +35,7 @@ public class ProcessCraftingStep extends AbstractCraftingStep {
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         tag.setString(NBT_CRAFTING_STEP_TYPE, ID);
+
         return super.writeToNBT(tag);
     }
 }

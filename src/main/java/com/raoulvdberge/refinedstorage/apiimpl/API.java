@@ -53,14 +53,14 @@ public class API implements IRSAPI {
         return craftingTaskRegistry;
     }
 
-    @Nonnull
     @Override
+    @Nonnull
     public ICraftingMonitorElementRegistry getCraftingMonitorElementRegistry() {
         return craftingMonitorElementRegistry;
     }
 
-    @Nonnull
     @Override
+    @Nonnull
     public ICraftingPreviewElementRegistry getCraftingPreviewElementRegistry() {
         return craftingPreviewElementRegistry;
     }
@@ -71,14 +71,14 @@ public class API implements IRSAPI {
         return new ItemStackList();
     }
 
-    @Nonnull
     @Override
+    @Nonnull
     public IFluidStackList createFluidStackList() {
         return new FluidStackList();
     }
 
-    @Nonnull
     @Override
+    @Nonnull
     public ICraftingMonitorElementList createCraftingMonitorElementList() {
         return new CraftingMonitorElementList();
     }
