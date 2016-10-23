@@ -22,7 +22,7 @@ public final class RS {
     }
 
     public static final String ID = "refinedstorage";
-    public static final String VERSION = "1.2-beta1";
+    public static final String VERSION = "1.2-beta2";
     public static final String DEPENDENCIES = "required-after:Forge@[12.18.1.2088,);required-after:mcmultipart@[1.2.1,);after:JEI@[3.12.0,);";
     public static final String GUI_FACTORY = "com.raoulvdberge.refinedstorage.gui.config.ModGuiFactory";
 
