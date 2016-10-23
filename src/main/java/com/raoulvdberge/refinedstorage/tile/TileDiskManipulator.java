@@ -454,11 +454,24 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        RSUtils.readItems(inputDisks, 0, tag);
-        RSUtils.readItems(outputDisks, 1, tag);
-        RSUtils.readItems(itemFilters, 2, tag);
-        RSUtils.readItems(fluidFilters, 3, tag);
-        RSUtils.readItems(upgrades, 4, tag);
+        ItemHandlerBasic oldDisks = new ItemHandlerBasic(12, this, IItemValidator.STORAGE_DISK);
+        RSUtils.readItems(oldDisks, 0, tag);
+        for (int i = 0; i < 12; ++i) {
+            ItemStack stack = oldDisks.extractItem(i, 1, false);
+            if (stack != null) {
+                if (i < 6) {
+                    inputDisks.insertItem(i, stack, false);
+                } else {
+                    outputDisks.insertItem(i, stack, false);
+                }
+            }
+        }
+
+
+        RSUtils.readItems(itemFilters, 1, tag);
+        RSUtils.readItems(fluidFilters, 2, tag);
+        RSUtils.readItems(upgrades, 3, tag);
+        RSUtils.readItems(outputDisks, 4, tag);
 
         if (tag.hasKey(NBT_COMPARE)) {
             compare = tag.getInteger(NBT_COMPARE);
@@ -481,11 +494,13 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
+        onBreak();
+
         RSUtils.writeItems(inputDisks, 0, tag);
-        RSUtils.writeItems(outputDisks, 1, tag);
-        RSUtils.writeItems(itemFilters, 2, tag);
-        RSUtils.writeItems(fluidFilters, 3, tag);
-        RSUtils.writeItems(upgrades, 4, tag);
+        RSUtils.writeItems(itemFilters, 1, tag);
+        RSUtils.writeItems(fluidFilters, 2, tag);
+        RSUtils.writeItems(upgrades, 3, tag);
+        RSUtils.writeItems(outputDisks, 4, tag);
 
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_MODE, mode);
