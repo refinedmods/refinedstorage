@@ -52,8 +52,7 @@ public interface ICraftingMonitorElement {
     void write(ByteBuf buf);
 
     /**
-     * Merge an element into the current element
-     * Used to in {@link ICraftingMonitorElementList}
+     * Merge an element into the current element.
      *
      * @param element the element to merged with the current one
      * @return true if merge was successful

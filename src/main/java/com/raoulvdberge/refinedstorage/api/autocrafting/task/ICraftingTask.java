@@ -33,7 +33,7 @@ public interface ICraftingTask {
 
     /**
      * Updates this task. Gets called every few ticks, depending on the speed of the pattern container.
-     * {@link ICraftingTask#calculate()}  must be run before this
+     * {@link ICraftingTask#calculate()} must be run before this!
      *
      * @param usedContainers a map keeping track of used containers and how many times
      * @return true if this crafting task is finished and can be deleted from the list, false otherwise
@@ -60,7 +60,7 @@ public interface ICraftingTask {
     NBTTagCompound writeToNBT(NBTTagCompound tag);
 
     /**
-     * Helper method to write default neccesary elements to NBT.
+     * Helper method to write default necessary elements to NBT.
      *
      * @param tag the tag
      * @return the written tag
@@ -107,7 +107,7 @@ public interface ICraftingTask {
     boolean isValid();
 
     /**
-     * {@link ICraftingTask#calculate()} must be run before this
+     * {@link ICraftingTask#calculate()} must be run before this!
      *
      * @return get a list of {@link ICraftingPreviewElement}s
      */

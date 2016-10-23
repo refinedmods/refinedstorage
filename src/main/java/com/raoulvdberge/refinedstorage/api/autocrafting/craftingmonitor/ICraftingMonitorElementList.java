@@ -5,16 +5,15 @@ import java.util.List;
 
 public interface ICraftingMonitorElementList {
     /**
-     * Directly add to the underlying list without trying to merge
+     * Directly add to the underlying list without trying to merge.
      *
      * @param element the {@link ICraftingMonitorElement}
      */
     void directAdd(ICraftingMonitorElement element);
 
     /**
-     * Add a element to the list
-     * Similar elements will be merged
-     * A {@link #commit()} will stop any following adds to be merged with previous ones
+     * Add a element to the list, similar elements will be merged.
+     * A {@link #commit()} will stop any following adds to be merged with previous ones.
      *
      * @param element the {@link ICraftingMonitorElement}
      */
@@ -28,12 +27,12 @@ public interface ICraftingMonitorElementList {
     }
 
     /**
-     * Finish a current merge operation
+     * Finishes a current merge operation.
      */
     void commit();
 
     /**
-     * This also commits the last changes
+     * This also commits the last changes.
      *
      * @return Get the current list of elements
      */
