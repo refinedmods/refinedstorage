@@ -333,13 +333,13 @@ public class CraftingTask implements ICraftingTask {
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         writeDefaultsToNBT(tag);
 
-        NBTTagList processablesList = new NBTTagList();
+        NBTTagList stepsList = new NBTTagList();
 
-        for (ICraftingStep processable : steps) {
-            processablesList.appendTag(processable.writeToNBT(new NBTTagCompound()));
+        for (ICraftingStep step : steps) {
+            stepsList.appendTag(step.writeToNBT(new NBTTagCompound()));
         }
 
-        tag.setTag(NBT_STEPS, processablesList);
+        tag.setTag(NBT_STEPS, stepsList);
 
         NBTTagList toInsertItemsList = new NBTTagList();
 

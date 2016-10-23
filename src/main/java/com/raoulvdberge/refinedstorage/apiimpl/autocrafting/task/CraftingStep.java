@@ -20,8 +20,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-;
-
 public abstract class CraftingStep implements ICraftingStep {
     public static final String NBT_CRAFTING_STEP_TYPE = "CraftingStepType";
     private static final String NBT_SATISFIED = "Satisfied_%d";
@@ -156,7 +154,7 @@ public abstract class CraftingStep implements ICraftingStep {
         tag.setTag(NBT_PATTERN, pattern.getStack().serializeNBT());
         tag.setLong(NBT_PATTERN_CONTAINER, pattern.getContainer().getPosition().toLong());
         tag.setBoolean(NBT_STARTED_PROCESSING, startedProcessing);
-        
+
         return tag;
     }
 }
