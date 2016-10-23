@@ -3,14 +3,14 @@ package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskFactory;
-import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.util.IFluidStackList;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.CraftCraftingStep;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.CraftingStep;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.CraftingStepCraft;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.CraftingStepProcess;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.CraftingTask;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.AbstractCraftingStep;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.ProcessCraftingStep;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -32,28 +32,26 @@ public class CraftingTaskFactory implements ICraftingTaskFactory {
     @Nonnull
     public ICraftingTask create(World world, INetworkMaster network, @Nullable ItemStack stack, ICraftingPattern pattern, int quantity, @Nullable NBTTagCompound tag) {
         if (tag != null) {
-            NBTTagList toProcessList = tag.getTagList(CraftingTask.NBT_TO_PROCESS, Constants.NBT.TAG_COMPOUND);
+            NBTTagList stepsList = tag.getTagList(CraftingTask.NBT_STEPS, Constants.NBT.TAG_COMPOUND);
 
-            List<ICraftingStep> toProcess = new ArrayList<>();
+            List<ICraftingStep> steps = new ArrayList<>();
 
-            for (int i = 0; i < toProcessList.tagCount(); ++i) {
-                NBTTagCompound compound = toProcessList.getCompoundTagAt(i);
-                AbstractCraftingStep abstractCraftingStep;
-                switch (compound.getString(AbstractCraftingStep.NBT_CRAFTING_STEP_TYPE))
-                {
-                    case CraftCraftingStep.ID:
-                        abstractCraftingStep = new CraftCraftingStep(network);
+            for (int i = 0; i < stepsList.tagCount(); ++i) {
+                NBTTagCompound stepTag = stepsList.getCompoundTagAt(i);
+
+                CraftingStep step = null;
+
+                switch (stepTag.getString(CraftingStep.NBT_CRAFTING_STEP_TYPE)) {
+                    case CraftingStepCraft.ID:
+                        step = new CraftingStepCraft(network);
                         break;
-                    case ProcessCraftingStep.ID:
-                        abstractCraftingStep = new ProcessCraftingStep(network);
-                        break;
-                    default:
-                        abstractCraftingStep = null;
+                    case CraftingStepProcess.ID:
+                        step = new CraftingStepProcess(network);
                         break;
                 }
 
-                if (abstractCraftingStep != null && abstractCraftingStep.readFromNBT(compound)) {
-                    toProcess.add(abstractCraftingStep);
+                if (step != null && step.readFromNBT(stepTag)) {
+                    steps.add(step);
                 }
             }
 
@@ -85,7 +83,7 @@ public class CraftingTaskFactory implements ICraftingTaskFactory {
                 }
             }
 
-            return new CraftingTask(network, stack, pattern, quantity, toProcess, toInsert, toTakeFluids, tookFluids, toInsertFluids);
+            return new CraftingTask(network, stack, pattern, quantity, steps, toInsert, toTakeFluids, tookFluids, toInsertFluids);
         }
 
         return new CraftingTask(network, stack, pattern, quantity);

@@ -65,8 +65,10 @@ public class CraftingMonitorElementFluidRender implements ICraftingMonitorElemen
     public boolean merge(ICraftingMonitorElement element) {
         if (element.getId().equals(getId()) && elementHashCode() == element.elementHashCode()) {
             this.stack.amount += ((CraftingMonitorElementFluidRender) element).stack.amount;
+
             return true;
         }
+
         return false;
     }
 

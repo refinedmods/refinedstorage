@@ -20,6 +20,9 @@ public interface ICraftingPatternContainer {
      */
     IItemHandler getFacingInventory();
 
+    /**
+     * @return the tile that this container is facing
+     */
     TileEntity getFacingTile();
 
     /**

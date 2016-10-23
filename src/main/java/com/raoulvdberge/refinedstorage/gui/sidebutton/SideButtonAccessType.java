@@ -18,7 +18,6 @@ public class SideButtonAccessType extends SideButton {
 
     @Override
     protected void drawButtonIcon(int x, int y) {
-        // @TODO
     }
 
     @Override

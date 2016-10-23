@@ -25,7 +25,7 @@ public class ItemStackList implements IItemStackList {
                 } else {
                     otherStack.stackSize += stack.stackSize;
                 }
-                
+
                 return;
             }
         }
@@ -54,7 +54,7 @@ public class ItemStackList implements IItemStackList {
     @Override
     @Nullable
     public ItemStack get(@Nonnull ItemStack stack, int flags) {
-        // When the oreDict flag is set all stacks need to be checked not just the ones matching the Item
+        // When the oredict flag is set all stacks need to be checked not just the ones matching the item
         for (ItemStack otherStack : (flags & IComparer.COMPARE_OREDICT) == IComparer.COMPARE_OREDICT ? stacks.values() : stacks.get(stack.getItem())) {
             if (API.instance().getComparer().isEqual(otherStack, stack, flags)) {
                 return otherStack;
@@ -86,6 +86,7 @@ public class ItemStackList implements IItemStackList {
         List<ItemStack> toRemove = stacks.values().stream()
             .filter(stack -> stack.stackSize <= 0)
             .collect(Collectors.toList());
+
         toRemove.forEach(stack -> stacks.remove(stack.getItem(), stack));
     }
 
