@@ -101,7 +101,7 @@ public class FluidStackList implements IFluidStackList {
         FluidStackList list = new FluidStackList();
 
         for (FluidStack stack : stacks.values()) {
-            list.add(stack.copy());
+            list.stacks.put(stack.getFluid(), stack.copy());
         }
 
         return list;

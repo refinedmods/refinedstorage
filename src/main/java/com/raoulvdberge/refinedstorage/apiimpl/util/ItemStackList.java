@@ -107,7 +107,7 @@ public class ItemStackList implements IItemStackList {
         ItemStackList list = new ItemStackList();
 
         for (ItemStack stack : stacks.values()) {
-            list.add(stack.copy());
+            list.stacks.put(stack.getItem(), stack.copy());
         }
 
         return list;
