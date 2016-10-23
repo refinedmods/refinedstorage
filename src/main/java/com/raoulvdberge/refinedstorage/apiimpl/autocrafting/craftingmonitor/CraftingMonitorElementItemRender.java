@@ -36,7 +36,7 @@ public class CraftingMonitorElementItemRender implements ICraftingMonitorElement
         GlStateManager.pushMatrix();
         GlStateManager.scale(scale, scale, 1);
 
-        drawers.getStringDrawer().draw(GuiBase.calculateOffsetOnScale(x + 21 + offset, scale), GuiBase.calculateOffsetOnScale(y + 7, scale), quantity + " " + stack.getDisplayName());
+        drawers.getStringDrawer().draw(GuiBase.calculateOffsetOnScale(x + 21 + offset, scale), GuiBase.calculateOffsetOnScale(y + 7, scale), quantity + "x " + stack.getDisplayName());
 
         GlStateManager.popMatrix();
     }
