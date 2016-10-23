@@ -8,6 +8,8 @@ import com.raoulvdberge.refinedstorage.gui.GuiCraftingPreview;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiCraftingStart;
 import com.raoulvdberge.refinedstorage.item.*;
 import com.raoulvdberge.refinedstorage.network.MessageGridCraftingPreviewResponse;
+import com.raoulvdberge.refinedstorage.render.BakedModelPattern;
+import com.raoulvdberge.refinedstorage.render.ModelDiskDrive;
 import com.raoulvdberge.refinedstorage.tile.TileController;
 import mcmultipart.client.multipart.ModelMultipartContainer;
 import mcmultipart.raytrace.PartMOP;
@@ -22,6 +24,7 @@ import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
@@ -29,7 +32,10 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.model.ICustomModelLoader;
+import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -161,10 +167,10 @@ public class ProxyClient extends ProxyCommon {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.GRID), EnumGridType.PATTERN.getId(), new ModelResourceLocation("refinedstorage:grid", "connected=false,direction=north,type=pattern"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.GRID), EnumGridType.FLUID.getId(), new ModelResourceLocation("refinedstorage:grid", "connected=false,direction=north,type=fluid"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.MACHINE_CASING), 0, new ModelResourceLocation("refinedstorage:machine_casing", "inventory"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.DISK_DRIVE), 0, new ModelResourceLocation("refinedstorage:disk_drive", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.EXPORTER), 0, new ModelResourceLocation("refinedstorage:exporter", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.IMPORTER), 0, new ModelResourceLocation("refinedstorage:importer", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.EXTERNAL_STORAGE), 0, new ModelResourceLocation("refinedstorage:external_storage", "inventory"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.DISK_DRIVE), 0, new ModelResourceLocation("refinedstorage:disk_drive", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.CONSTRUCTOR), 0, new ModelResourceLocation("refinedstorage:constructor", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.DESTRUCTOR), 0, new ModelResourceLocation("refinedstorage:destructor", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.SOLDERER), 0, new ModelResourceLocation("refinedstorage:solderer", "inventory"));
@@ -189,6 +195,22 @@ public class ProxyClient extends ProxyCommon {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.FLUID_STORAGE), EnumFluidStorageType.TYPE_512K.getId(), new ModelResourceLocation("refinedstorage:fluid_storage", "type=512k"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.FLUID_STORAGE), EnumFluidStorageType.TYPE_CREATIVE.getId(), new ModelResourceLocation("refinedstorage:fluid_storage", "type=creative"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.DISK_MANIPULATOR), 0, new ModelResourceLocation("refinedstorage:disk_manipulator", "inventory"));
+
+        ModelLoaderRegistry.registerLoader(new ICustomModelLoader() {
+            @Override
+            public boolean accepts(ResourceLocation modelLocation) {
+                return modelLocation.getResourceDomain().equals(RS.ID) && modelLocation.getResourcePath().equals("disk_drive");
+            }
+
+            @Override
+            public IModel loadModel(ResourceLocation modelLocation) throws Exception {
+                return new ModelDiskDrive();
+            }
+
+            @Override
+            public void onResourceManagerReload(IResourceManager resourceManager) {
+            }
+        });
 
         ModelLoader.setCustomStateMapper(RSBlocks.CONTROLLER, new StateMap.Builder().ignore(BlockController.TYPE).build());
 
@@ -221,7 +243,7 @@ public class ProxyClient extends ProxyCommon {
             }
 
             if (model.getResourceDomain().equals(RS.ID) && model.getResourcePath().equals("pattern")) {
-                e.getModelRegistry().putObject(model, new PatternBakedModel(e.getModelRegistry().getObject(model)));
+                e.getModelRegistry().putObject(model, new BakedModelPattern(e.getModelRegistry().getObject(model)));
             }
         }
     }

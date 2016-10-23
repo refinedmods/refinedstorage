@@ -20,8 +20,12 @@ public class ItemStackList implements IItemStackList {
     public void add(ItemStack stack) {
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
             if (API.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
-                otherStack.stackSize += stack.stackSize;
-
+                if ((long) otherStack.stackSize + (long) stack.stackSize > Integer.MAX_VALUE) {
+                    otherStack.stackSize = Integer.MAX_VALUE;
+                } else {
+                    otherStack.stackSize += stack.stackSize;
+                }
+                
                 return;
             }
         }

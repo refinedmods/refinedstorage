@@ -32,6 +32,9 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import java.util.function.Function;
 
@@ -41,6 +44,12 @@ public final class RSUtils {
     private static final String NBT_INVENTORY = "Inventory_%d";
     private static final String NBT_SLOT = "Slot";
     private static final String NBT_ACCESS_TYPE = "AccessType";
+
+    public static final DecimalFormat QUANTITY_FORMATTER = new DecimalFormat("####0.#", DecimalFormatSymbols.getInstance(Locale.US));
+
+    static {
+        QUANTITY_FORMATTER.setRoundingMode(RoundingMode.DOWN);
+    }
 
     public static void writeItemStack(ByteBuf buf, INetworkMaster network, ItemStack stack) {
         buf.writeInt(Item.getIdFromItem(stack.getItem()));
@@ -259,10 +268,6 @@ public final class RSUtils {
 
     public static boolean hasFluidBucket(FluidStack stack) {
         return stack.getFluid() == FluidRegistry.WATER || stack.getFluid() == FluidRegistry.LAVA || FluidRegistry.getBucketFluids().contains(stack.getFluid());
-    }
-
-    public static String formatFluidStackQuantity(FluidStack stack) {
-        return String.format(Locale.US, "%.1f", (float) stack.amount / 1000).replace(".0", "");
     }
 
     public static FluidStack copyStackWithSize(FluidStack stack, int size) {

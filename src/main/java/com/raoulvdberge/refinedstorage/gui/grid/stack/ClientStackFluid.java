@@ -47,7 +47,7 @@ public class ClientStackFluid implements IClientStack {
     public void draw(GuiBase gui, int x, int y, boolean isOverWithShift) {
         GuiBase.FLUID_RENDERER.draw(gui.mc, x, y, stack);
 
-        gui.drawQuantity(x, y, RSUtils.formatFluidStackQuantity(stack));
+        gui.drawQuantity(x, y, RSUtils.QUANTITY_FORMATTER.format((float) stack.amount / 1000F));
     }
 
     @Override

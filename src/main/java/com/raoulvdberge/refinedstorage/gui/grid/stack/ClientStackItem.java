@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.gui.grid.stack;
 
+import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import io.netty.buffer.ByteBuf;
 import joptsimple.internal.Strings;
@@ -11,7 +12,6 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import java.util.List;
-import java.util.Locale;
 
 public class ClientStackItem implements IClientStack {
     private int hash;
@@ -77,9 +77,9 @@ public class ClientStackItem implements IClientStack {
         }
 
         if (qty >= 1000000) {
-            return String.format(Locale.US, "%.1f", (float) qty / 1000000).replace(".0", "") + "M";
+            return RSUtils.QUANTITY_FORMATTER.format((float) qty / 1000000F) + "M";
         } else if (qty >= 1000) {
-            return String.format(Locale.US, "%.1f", (float) qty / 1000).replace(".0", "") + "K";
+            return RSUtils.QUANTITY_FORMATTER.format((float) qty / 1000F) + "K";
         } else if (qty == 1) {
             return null;
         } else if (qty == 0) {
