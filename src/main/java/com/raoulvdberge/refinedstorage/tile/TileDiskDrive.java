@@ -41,8 +41,12 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     public static final TileDataParameter<AccessType> ACCESS_TYPE = IAccessType.createParameter();
 
     public class ItemStorage extends ItemStorageNBT {
+        private boolean wasFull;
+
         public ItemStorage(ItemStack disk) {
             super(disk.getTagCompound(), EnumItemStorageType.getById(disk.getItemDamage()).getCapacity(), TileDiskDrive.this);
+
+            wasFull = isFull();
         }
 
         @Override
@@ -70,11 +74,30 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
         public AccessType getAccessType() {
             return accessType;
         }
+
+        @Override
+        public void onStorageChanged() {
+            super.onStorageChanged();
+
+            if (wasFull != isFull()) {
+                wasFull = isFull();
+
+                updateBlock();
+            }
+        }
+
+        public boolean isFull() {
+            return getStored() == getCapacity();
+        }
     }
 
     public class FluidStorage extends FluidStorageNBT {
+        private boolean wasFull;
+
         public FluidStorage(ItemStack disk) {
             super(disk.getTagCompound(), EnumFluidStorageType.getById(disk.getItemDamage()).getCapacity(), TileDiskDrive.this);
+
+            wasFull = isFull();
         }
 
         @Override
@@ -101,6 +124,21 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
         @Override
         public AccessType getAccessType() {
             return accessType;
+        }
+
+        @Override
+        public void onStorageChanged() {
+            super.onStorageChanged();
+
+            if (wasFull != isFull()) {
+                wasFull = isFull();
+
+                updateBlock();
+            }
+        }
+
+        public boolean isFull() {
+            return getStored() == getCapacity();
         }
     }
 
@@ -305,8 +343,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
                 } else {
                     state = DISK_STATE_NORMAL;
 
-                    if ((itemStorages[i] != null && itemStorages[i].getStored() == itemStorages[i].getCapacity()) ||
-                        (fluidStorages[i] != null && fluidStorages[i].getStored() == fluidStorages[i].getCapacity())) {
+                    if ((itemStorages[i] != null && itemStorages[i].isFull()) || (fluidStorages[i] != null && fluidStorages[i].isFull())) {
                         state = DISK_STATE_FULL;
                     }
                 }
