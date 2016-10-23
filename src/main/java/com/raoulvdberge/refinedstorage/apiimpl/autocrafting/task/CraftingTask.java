@@ -115,7 +115,9 @@ public class CraftingTask implements ICraftingTask {
                     ItemStack inputStack = ItemHandlerHelper.copyStackWithSize(extraStack, takeQuantity);
                     actualInputs.add(inputStack.copy());
                     input.stackSize -= takeQuantity;
-                    toCraft.add(inputStack);
+                    if (!inputStack.isItemStackDamageable() || !inputStack.isItemDamaged()) {
+                        toCraft.add(inputStack);
+                    }
                     toInsert.remove(inputStack, true);
                 } else if (networkStack != null && networkStack.stackSize > 0) {
                     int takeQuantity = Math.min(networkStack.stackSize, input.stackSize);
