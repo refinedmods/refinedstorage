@@ -73,6 +73,7 @@ public class CraftingTask implements ICraftingTask {
     @Override
     public void calculate() {
         IItemStackList networkList = network.getItemStorageCache().getList().copy();
+        networkList.clean(); // Remove the zero stacks
         IItemStackList toInsert = API.instance().createItemStackList();
 
         toCraft.add(ItemHandlerHelper.copyStackWithSize(requested, quantity));
