@@ -1,7 +1,7 @@
 {
   "__comment": "Model made by CyanideX",
   "textures": {
-    "disk": "refinedstorage:blocks/disk_drive_disk"
+    "disk": "refinedstorage:blocks/disk_drive_disk_disconnected"
   },
   "elements": [
     {
