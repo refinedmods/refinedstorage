@@ -25,6 +25,8 @@ public class BakedModelDiskDrive implements IBakedModel {
     private Map<EnumFacing, IBakedModel> models = new HashMap<>();
     private Map<EnumFacing, Map<Integer, List<IBakedModel>>> disks = new HashMap<>();
 
+    private Map<Integer, List<BakedQuad>> cache = new HashMap<>();
+
     public BakedModelDiskDrive(IBakedModel base, IBakedModel disk, IBakedModel diskFull, IBakedModel diskDisconnected) {
         this.base = base;
 
@@ -41,6 +43,15 @@ public class BakedModelDiskDrive implements IBakedModel {
             initDiskModels(diskFull, TileDiskDrive.DISK_STATE_FULL, facing);
             initDiskModels(diskDisconnected, TileDiskDrive.DISK_STATE_DISCONNECTED, facing);
         }
+    }
+
+    private int getCacheKey(EnumFacing direction, EnumFacing side, Integer[] diskState) {
+        int result = direction.hashCode();
+        result = 31 * result + side.hashCode();
+        for (Integer state : diskState) {
+            result = 31 * result + Integer.hashCode(state + 1);
+        }
+        return result;
     }
 
     private void initDiskModels(IBakedModel disk, int type, EnumFacing facing) {
@@ -67,24 +78,38 @@ public class BakedModelDiskDrive implements IBakedModel {
 
     @Override
     public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
-        if (!(state instanceof IExtendedBlockState)) {
+        if (!(state instanceof IExtendedBlockState) || side == null) {
             return base.getQuads(state, side, rand);
         }
 
         EnumFacing facing = state.getValue(BlockBase.DIRECTION);
         Integer[] diskState = ((IExtendedBlockState) state).getValue(BlockDiskDrive.DISK_STATE);
 
-        List<BakedQuad> quads = models.get(facing).getQuads(state, side, rand);
+        if (diskState == null) {
+            return base.getQuads(state, side, rand);
+        }
 
-        if (diskState != null) {
-            for (int i = 0; i < 8; ++i) {
-                if (diskState[i] != null && diskState[i] != TileDiskDrive.DISK_STATE_NONE) {
-                    quads.addAll(disks.get(facing).get(diskState[i]).get(i).getQuads(state, side, rand));
-                }
+        for (Integer individualState : diskState) {
+            if (individualState == null) {
+                return base.getQuads(state, side, rand);
             }
         }
 
-        return quads;
+        int cacheKey = getCacheKey(facing, side, diskState);
+
+        if (!cache.containsKey(cacheKey)) {
+            List<BakedQuad> quads = models.get(facing).getQuads(state, side, rand);
+
+            for (int i = 0; i < 8; ++i) {
+                if (diskState[i] != TileDiskDrive.DISK_STATE_NONE) {
+                    quads.addAll(disks.get(facing).get(diskState[i]).get(i).getQuads(state, side, rand));
+                }
+            }
+
+            cache.put(cacheKey, quads);
+        }
+
+        return cache.get(cacheKey);
     }
 
     @Override
