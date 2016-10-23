@@ -454,6 +454,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
+        // Backwards Compatibility
         ItemHandlerBasic oldDisks = new ItemHandlerBasic(12, this, IItemValidator.STORAGE_DISK);
         RSUtils.readItems(oldDisks, 0, tag);
         for (int i = 0; i < 12; ++i) {
