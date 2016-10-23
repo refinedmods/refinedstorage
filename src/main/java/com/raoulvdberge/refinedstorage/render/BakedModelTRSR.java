@@ -19,6 +19,7 @@ import javax.vecmath.Matrix3f;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,7 +27,7 @@ import java.util.List;
  */
 public class BakedModelTRSR implements IBakedModel {
     protected final IBakedModel original;
-    protected final TRSRTransformation transformation;
+    public TRSRTransformation transformation;
     private final TRSROverride override;
     private final int faceOffset;
 
@@ -71,7 +72,7 @@ public class BakedModelTRSR implements IBakedModel {
     public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
         // transform quads obtained from parent
 
-        ImmutableList.Builder<BakedQuad> builder = ImmutableList.builder();
+        List<BakedQuad> quads = new ArrayList<>();
 
         if (!original.isBuiltInRenderer()) {
             try {
@@ -82,14 +83,14 @@ public class BakedModelTRSR implements IBakedModel {
                 for (BakedQuad quad : original.getQuads(state, side, rand)) {
                     Transformer transformer = new Transformer(transformation, quad.getFormat());
                     quad.pipe(transformer);
-                    builder.add(transformer.build());
+                    quads.add(transformer.build());
                 }
             } catch (Exception e) {
                 // do nothing. Seriously, why are you using immutable lists?!
             }
         }
 
-        return builder.build();
+        return quads;
     }
 
     @Override

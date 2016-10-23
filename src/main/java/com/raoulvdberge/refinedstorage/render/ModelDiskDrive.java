@@ -15,6 +15,7 @@ import java.util.Collections;
 
 public class ModelDiskDrive implements IModel {
     private static final ResourceLocation MODEL_BASE = new ResourceLocation("refinedstorage:block/disk_drive");
+    private static final ResourceLocation MODEL_DISK = new ResourceLocation("refinedstorage:block/disk_drive_disk");
 
     @Override
     public Collection<ResourceLocation> getDependencies() {
@@ -29,14 +30,16 @@ public class ModelDiskDrive implements IModel {
     @Override
     public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
         IModel baseModel;
+        IModel diskModel;
 
         try {
             baseModel = ModelLoaderRegistry.getModel(MODEL_BASE);
+            diskModel = ModelLoaderRegistry.getModel(MODEL_DISK);
         } catch (Exception e) {
-            throw new Error("Unable to load disk drive base model", e);
+            throw new Error("Unable to load disk drive models", e);
         }
 
-        return new BakedModelDiskDrive(baseModel.bake(state, format, bakedTextureGetter));
+        return new BakedModelDiskDrive(baseModel.bake(state, format, bakedTextureGetter), diskModel.bake(state, format, bakedTextureGetter));
     }
 
     @Override
