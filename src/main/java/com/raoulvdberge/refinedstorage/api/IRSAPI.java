@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.api;
 
+import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementList;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementRegistry;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElementRegistry;
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
@@ -58,6 +59,9 @@ public interface IRSAPI {
      */
     @Nonnull
     IFluidStackList createFluidStackList();
+
+    @Nonnull
+    ICraftingMonitorElementList createCraftingMonitorElementList();
 
     /**
      * @param stack the stack

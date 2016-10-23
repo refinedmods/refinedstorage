@@ -38,12 +38,13 @@ public class ItemStackList implements IItemStackList {
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
             if (API.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
                 otherStack.stackSize -= size;
+                boolean success = otherStack.stackSize >= 0;
 
                 if (otherStack.stackSize <= 0 && removeIfReachedZero) {
                     stacks.remove(otherStack.getItem(), otherStack);
                 }
 
-                return true;
+                return success;
             }
         }
 

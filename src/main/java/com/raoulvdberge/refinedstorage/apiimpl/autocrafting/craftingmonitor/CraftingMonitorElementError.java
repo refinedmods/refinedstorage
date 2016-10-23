@@ -50,4 +50,14 @@ public class CraftingMonitorElementError implements ICraftingMonitorElement {
 
         base.write(buf);
     }
+
+    @Override
+    public boolean merge(ICraftingMonitorElement element) {
+        return element.getId().equals(getId()) && elementHashCode() == element.elementHashCode() && base.merge(((CraftingMonitorElementError)element).base);
+    }
+
+    @Override
+    public int elementHashCode() {
+        return base.elementHashCode() ^ tooltip.hashCode();
+    }
 }

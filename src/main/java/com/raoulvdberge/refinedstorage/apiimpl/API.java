@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl;
 
 import com.raoulvdberge.refinedstorage.api.IRSAPI;
 import com.raoulvdberge.refinedstorage.api.RSAPIInject;
+import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementList;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementRegistry;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElementRegistry;
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
@@ -9,6 +10,7 @@ import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRegistry;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IFluidStackList;
 import com.raoulvdberge.refinedstorage.api.util.IItemStackList;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementList;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTaskRegistry;
@@ -73,6 +75,12 @@ public class API implements IRSAPI {
     @Override
     public IFluidStackList createFluidStackList() {
         return new FluidStackList();
+    }
+
+    @Nonnull
+    @Override
+    public ICraftingMonitorElementList createCraftingMonitorElementList() {
+        return new CraftingMonitorElementList();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.api.autocrafting.task;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
+import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import net.minecraft.item.ItemStack;
@@ -8,6 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Represents a crafting task.
@@ -33,9 +35,10 @@ public interface ICraftingTask {
      * Updates this task. Gets called every few ticks, depending on the speed of the pattern container.
      * {@link ICraftingTask#calculate()}  must be run before this
      *
+     * @param usedContainers a map keeping track of used containers and how many times
      * @return true if this crafting task is finished and can be deleted from the list, false otherwise
      */
-    boolean update();
+    boolean update(Map<ICraftingPatternContainer, Integer> usedContainers);
 
     /**
      * @return the amount of items that have to be crafted
@@ -92,7 +95,7 @@ public interface ICraftingTask {
      *
      * @return the processable items in this task
      */
-    List<IProcessable> getToProcess();
+    List<ICraftingStep> getSteps();
 
     /**
      * Used to check if the crafting task has recursive elements

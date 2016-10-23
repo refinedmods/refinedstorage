@@ -24,7 +24,7 @@ public interface IFluidStackList {
      * @param stack               the stack
      * @param size                the size to remove
      * @param removeIfReachedZero true to remove the stack if the count reaches 0, false otherwise
-     * @return whether the remove was successful
+     * @return whether the remove was successful for the full amount
      */
     boolean remove(@Nonnull FluidStack stack, int size, boolean removeIfReachedZero);
 
@@ -33,7 +33,7 @@ public interface IFluidStackList {
      *
      * @param stack               the stack
      * @param removeIfReachedZero true to remove the stack if the count reaches 0, false otherwise
-     * @return whether the remove was successful
+     * @return whether the remove was successful for the full amount
      */
     default boolean remove(@Nonnull FluidStack stack, boolean removeIfReachedZero) {
         return remove(stack, stack.amount, removeIfReachedZero);
@@ -73,6 +73,11 @@ public interface IFluidStackList {
      * Clears the list.
      */
     void clear();
+
+    /**
+     * Removes all stacks with size zero
+     */
+    void clean();
 
     /**
      * @return true if the list is empty, false otherwise

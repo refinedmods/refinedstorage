@@ -2,10 +2,12 @@ package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
+import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
+import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementList;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
-import com.raoulvdberge.refinedstorage.api.autocrafting.task.IProcessable;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IFluidStackList;
@@ -21,7 +23,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
@@ -29,14 +30,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class CraftingTask implements ICraftingTask {
-    private static final int DEFAULT_COMPARE = IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT;
+    protected static final int DEFAULT_COMPARE = IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT;
 
     public static final String NBT_TO_PROCESS = "ToProcess";
-    public static final String NBT_TO_TAKE = "ToTake";
-    public static final String NBT_INTERNAL_TO_TAKE = "InternalToTake";
     public static final String NBT_TO_TAKE_FLUIDS = "ToTakeFluids";
-    public static final String NBT_TO_INSERT = "ToInsert";
-    public static final String NBT_TOOK = "Took";
+    public static final String NBT_TO_INSERT_ITEMS = "ToInsertItems";
+    public static final String NBT_TO_INSERT_FLUIDS = "ToInsertFluids";
     public static final String NBT_TOOK_FLUIDS = "TookFluids";
 
     private INetworkMaster network;
@@ -44,17 +43,16 @@ public class CraftingTask implements ICraftingTask {
     private ItemStack requested;
     private ICraftingPattern pattern;
     private int quantity;
-    private List<IProcessable> toProcess = new ArrayList<>();
+    private List<ICraftingStep> steps = new ArrayList<>();
     private IItemStackList toTake = API.instance().createItemStackList();
-    private IItemStackList internalToTake = API.instance().createItemStackList();
     private IItemStackList toCraft = API.instance().createItemStackList();
-    private IFluidStackList toTakeFluids = API.instance().createFluidStackList();
     private IItemStackList missing = API.instance().createItemStackList();
     private Set<ICraftingPattern> usedPatterns = new HashSet<>();
     private boolean recurseFound = false;
-    private Deque<ItemStack> toInsert = new ArrayDeque<>();
-    private IItemStackList took = API.instance().createItemStackList();
-    private List<FluidStack> tookFluids = new ArrayList<>();
+    private Deque<ItemStack> toInsertItems = new ArrayDeque<>();
+    private Deque<FluidStack> toInsertFluids = new ArrayDeque<>();
+    private IFluidStackList toTakeFluids = API.instance().createFluidStackList();
+    private IFluidStackList tookFluids = API.instance().createFluidStackList();
 
     public CraftingTask(INetworkMaster network, @Nullable ItemStack requested, ICraftingPattern pattern, int quantity) {
         this.network = network;
@@ -63,16 +61,13 @@ public class CraftingTask implements ICraftingTask {
         this.quantity = quantity;
     }
 
-    public CraftingTask(INetworkMaster network, @Nullable ItemStack requested, ICraftingPattern pattern, int quantity, List<IProcessable> toProcess, IItemStackList toTake, IItemStackList internalToTake, IFluidStackList toTakeFluids, Deque<ItemStack> toInsert, IItemStackList took, List<FluidStack> tookFluids) {
+    public CraftingTask(INetworkMaster network, @Nullable ItemStack requested, ICraftingPattern pattern, int quantity, List<ICraftingStep> steps, Deque<ItemStack> toInsertItems, IFluidStackList toTakeFluids, IFluidStackList tookFluids, Deque<FluidStack> toInsertFluids) {
         this(network, requested, pattern, quantity);
-
-        this.toProcess = toProcess;
-        this.toTake = toTake;
-        this.internalToTake = internalToTake;
+        this.steps = steps;
+        this.toInsertItems = toInsertItems;
         this.toTakeFluids = toTakeFluids;
-        this.toInsert = toInsert;
-        this.took = took;
         this.tookFluids = tookFluids;
+        this.toInsertFluids = toInsertFluids;
     }
 
     @Override
@@ -85,10 +80,6 @@ public class CraftingTask implements ICraftingTask {
         while (quantity > 0 && !recurseFound) {
             calculate(networkList, pattern, toInsert);
             quantity -= pattern.getQuantityPerRequest(requested);
-        }
-
-        if (!recurseFound) {
-            this.toInsert.addAll(toInsert.getStacks());
         }
 
         usedPatterns.clear();
@@ -122,6 +113,7 @@ public class CraftingTask implements ICraftingTask {
                     ItemStack inputStack = ItemHandlerHelper.copyStackWithSize(extraStack, takeQuantity);
                     actualInputs.add(inputStack.copy());
                     input.stackSize -= takeQuantity;
+                    toCraft.add(inputStack);
                     toInsert.remove(inputStack, true);
                 } else if (networkStack != null && networkStack.stackSize > 0) {
                     int takeQuantity = Math.min(networkStack.stackSize, input.stackSize);
@@ -140,13 +132,9 @@ public class CraftingTask implements ICraftingTask {
                         actualInputs.add(inputCrafted.copy());
                         calculate(networkList, inputPattern, toInsert);
                         input.stackSize -= craftQuantity;
-                        // Calculate added all the crafted outputs toInsert
-                        // So we remove the ones we use from toInsert
+                        // Calculate added all the crafted outputs toInsertItems
+                        // So we remove the ones we use from toInsertItems
                         toInsert.remove(inputCrafted, true);
-                        // If the pattern is processing the have to be taken.
-                        if (pattern.isProcessing()) {
-                            internalToTake.add(inputCrafted.copy());
-                        }
                     } else if (doFluidCalculation(networkList, input, toInsert)) {
                         actualInputs.add(ItemHandlerHelper.copyStackWithSize(input, 1));
                         input.stackSize -= 1;
@@ -159,7 +147,9 @@ public class CraftingTask implements ICraftingTask {
         }
 
         if (pattern.isProcessing()) {
-            toProcess.add(new Processable(network, pattern));
+            steps.add(new ProcessCraftingStep(network, pattern));
+        } else {
+            steps.add(new CraftCraftingStep(network, pattern));
         }
 
         if (missing.isEmpty()) {
@@ -221,120 +211,85 @@ public class CraftingTask implements ICraftingTask {
 
     @Override
     public void onCancelled() {
-        for (ItemStack stack : took.getStacks()) {
+        for (ItemStack stack : toInsertItems) {
             network.insertItem(stack, stack.stackSize, false);
         }
 
-        for (FluidStack stack : tookFluids) {
+        for (FluidStack stack : tookFluids.getStacks()) {
             network.insertFluid(stack, stack.amount, false);
         }
+
+        network.sendCraftingMonitorUpdate();
     }
 
     @Override
     public String toString() {
         return "\nCraftingTask{quantity=" + quantity +
             "\n, toTake=" + toTake +
-            "\n, internalToTake=" + internalToTake +
             "\n, toTakeFluids=" + toTakeFluids +
-            "\n, toProcess=" + toProcess +
-            "\n, toCraft=" + toProcess +
-            "\n, toInsert=" + toInsert +
+            "\n, toCraft=" + toCraft +
+            "\n, toInsertItems=" + toInsertItems +
+            "\n, toInsertFluids=" + toInsertFluids +
+            "\n, steps=" + steps +
             '}';
     }
 
     @Override
-    public boolean update() {
-        for (ItemStack stack : toTake.getStacks()) {
-            ItemStack stackExtracted = network.extractItem(stack, Math.min(stack.stackSize, 64));
-
+    public boolean update(Map<ICraftingPatternContainer, Integer> usedContainers) {
+        for (FluidStack stack : toTakeFluids.getStacks()) {
+            FluidStack stackExtracted = network.extractFluid(stack, stack.amount);
             if (stackExtracted != null) {
-                toTake.remove(stack, stackExtracted.stackSize, true);
-
-                took.add(stackExtracted);
-
-                network.sendCraftingMonitorUpdate();
-
-                break;
-            }
-        }
-
-        // Fetches results from processing patterns
-        for (ItemStack stack : internalToTake.getStacks()) {
-            ItemStack stackExtracted = network.extractItem(stack, Math.min(stack.stackSize, 64));
-
-            if (stackExtracted != null) {
-                internalToTake.remove(stack, stackExtracted.stackSize, false);
-
-                took.add(stackExtracted);
-
+                toTakeFluids.remove(stack, stack.amount, false);
+                tookFluids.add(stackExtracted);
                 network.sendCraftingMonitorUpdate();
             }
         }
-        // Clean up zero stacks, cause we can't remove them in the loop (CME ahoy!)
-        internalToTake.clean();
 
-        for (IProcessable processable : toProcess) {
-            IItemHandler inventory = processable.getPattern().getContainer().getFacingInventory();
+        toTakeFluids.clean();
 
-            if (inventory != null && !processable.hasStartedProcessing() && processable.canStartProcessing(took) && canProcess(processable)) {
-                processable.setStartedProcessing();
-
-                for (ItemStack insertStack : processable.getToInsert().getStacks()) {
-                    ItemStack tookStack = took.get(insertStack, DEFAULT_COMPARE | (processable.getPattern().isOredict() ? IComparer.COMPARE_OREDICT : 0));
-                    ItemStack toInsert = ItemHandlerHelper.copyStackWithSize(tookStack, insertStack.stackSize);
-
-                    if (ItemHandlerHelper.insertItem(inventory, toInsert, true) == null) {
-                        ItemHandlerHelper.insertItem(inventory, toInsert, false);
-
-                        took.remove(tookStack, toInsert.stackSize, true);
-
-                        network.sendCraftingMonitorUpdate();
-                    }
-                }
-            }
-        }
-
-        // If we took all the items, we can start taking fluids
-        if (toTake.isEmpty()) {
-            for (FluidStack stack : toTakeFluids.getStacks()) {
-                FluidStack stackExtracted = network.extractFluid(stack, stack.amount);
-
-                if (stackExtracted != null) {
-                    toTakeFluids.remove(stack, stack.amount, true);
-
-                    tookFluids.add(stackExtracted);
-
+        for (ICraftingStep step : steps) {
+            ICraftingPatternContainer container = step.getPattern().getContainer();
+            Integer timesUsed = usedContainers.get(container);
+            if (timesUsed == null) timesUsed = 0;
+            if (timesUsed++ <= container.getSpeedUpdateCount()) {
+                if (!step.hasStartedProcessing() && step.canStartProcessing(network.getItemStorageCache().getList(), tookFluids) && canProcess(step)) {
+                    step.setStartedProcessing();
+                    step.execute(toInsertItems, toInsertFluids);
+                    usedContainers.put(container, timesUsed);
                     network.sendCraftingMonitorUpdate();
-
-                    break;
                 }
             }
         }
 
-        if (isFinished()) {
-            ItemStack insert = toInsert.peek();
-
-            if (insert != null && network.insertItem(insert, insert.stackSize, true) == null) {
-                network.insertItem(insert, insert.stackSize, false);
-
-                toInsert.pop();
-
-                network.sendCraftingMonitorUpdate();
+        // We need to copy the size cause we'll readd unadded stacks to the queue
+        int times = toInsertItems.size();
+        for (int i = 0; i < times; i++)
+        {
+            ItemStack insert = toInsertItems.poll();
+            if (insert != null) {
+                ItemStack remainder = network.insertItem(insert, insert.stackSize, false);
+                if (remainder != null) {
+                    toInsertItems.add(remainder);
+                }
             }
-
-            return toInsert.isEmpty();
         }
 
-        return false;
+        steps.removeIf(ICraftingStep::hasReceivedOutputs);
+
+        return isFinished();
     }
 
-    private boolean canProcess(IProcessable processable) {
-        for (ICraftingTask otherTask : network.getCraftingTasks()) {
-            for (IProcessable otherProcessable : otherTask.getToProcess()) {
-                if (otherProcessable != processable && !otherProcessable.hasReceivedOutputs() && otherProcessable.hasStartedProcessing() && otherProcessable.getPattern().getContainer().getFacingTile() != null) {
-                    if (!arePatternsEqual(processable.getPattern(), otherProcessable.getPattern())) {
-                        if (processable.getPattern().getContainer().getFacingTile().getPos().equals(otherProcessable.getPattern().getContainer().getFacingTile().getPos())) {
-                            return false;
+    private boolean canProcess(ICraftingStep processable) {
+        if (processable.getPattern().isProcessing()) {
+            for (ICraftingTask otherTask : network.getCraftingTasks()) {
+                for (ICraftingStep otherProcessable : otherTask.getSteps()) {
+                    if (otherProcessable.getPattern().isProcessing()) {
+                        if (otherProcessable != processable && !otherProcessable.hasReceivedOutputs() && otherProcessable.hasStartedProcessing() && otherProcessable.getPattern().getContainer().getFacingTile() != null) {
+                            if (!arePatternsEqual(processable.getPattern(), otherProcessable.getPattern())) {
+                                if (processable.getPattern().getContainer().getFacingTile().getPos().equals(otherProcessable.getPattern().getContainer().getFacingTile().getPos())) {
+                                    return false;
+                                }
+                            }
                         }
                     }
                 }
@@ -374,115 +329,119 @@ public class CraftingTask implements ICraftingTask {
 
         NBTTagList processablesList = new NBTTagList();
 
-        for (IProcessable processable : toProcess) {
+        for (ICraftingStep processable : steps) {
             processablesList.appendTag(processable.writeToNBT(new NBTTagCompound()));
         }
 
         tag.setTag(NBT_TO_PROCESS, processablesList);
 
-        tag.setTag(NBT_TO_TAKE, RSUtils.serializeItemStackList(toTake));
-        tag.setTag(NBT_INTERNAL_TO_TAKE, RSUtils.serializeItemStackList(internalToTake));
+        NBTTagList toInsertItemsList = new NBTTagList();
+
+        for (ItemStack insert : toInsertItems) {
+            toInsertItemsList.appendTag(insert.serializeNBT());
+        }
+
+        tag.setTag(NBT_TO_INSERT_ITEMS, toInsertItemsList);
+
         tag.setTag(NBT_TO_TAKE_FLUIDS, RSUtils.serializeFluidStackList(toTakeFluids));
 
-        NBTTagList toInsertList = new NBTTagList();
+        NBTTagList toInsertFluidsList = new NBTTagList();
 
-        for (ItemStack insert : new ArrayList<>(toInsert)) {
-            toInsertList.appendTag(insert.serializeNBT());
+        for (FluidStack insert : toInsertFluids) {
+            toInsertFluidsList.appendTag(insert.writeToNBT(new NBTTagCompound()));
         }
 
-        tag.setTag(NBT_TO_INSERT, toInsertList);
+        tag.setTag(NBT_TO_INSERT_FLUIDS, toInsertFluidsList);
 
-        tag.setTag(NBT_TOOK, RSUtils.serializeItemStackList(took));
-
-        NBTTagList fluidsTookList = new NBTTagList();
-
-        for (FluidStack took : this.tookFluids) {
-            fluidsTookList.appendTag(took.writeToNBT(new NBTTagCompound()));
-        }
-
-        tag.setTag(NBT_TOOK_FLUIDS, fluidsTookList);
+        tag.setTag(NBT_TOOK_FLUIDS, RSUtils.serializeFluidStackList(tookFluids));
 
         return tag;
     }
 
     @Override
     public List<ICraftingMonitorElement> getCraftingMonitorElements() {
-        List<ICraftingMonitorElement> elements = new ArrayList<>();
+        ICraftingMonitorElementList elements = API.instance().createCraftingMonitorElementList();
 
-        elements.add(new CraftingMonitorElementItemRender(
+        elements.directAdd(new CraftingMonitorElementItemRender(
             network.getCraftingTasks().indexOf(this),
             requested != null ? requested : pattern.getOutputs().get(0),
             quantity,
             0
         ));
 
-        if (isFinished() && !toInsert.isEmpty()) {
-            elements.add(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_inserting", 16));
+        if (!toInsertItems.isEmpty()) {
+            elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_inserting", 16));
 
-            elements.addAll(toInsert.stream()
-                .map(stack -> new CraftingMonitorElementItemRender(
-                    -1,
-                    stack,
-                    stack.stackSize,
-                    32
-                ))
-                .collect(Collectors.toList())
-            );
-        } else {
-            if (!toTake.isEmpty()) {
-                elements.add(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_taking", 16));
-
-                elements.addAll(toTake.getStacks().stream()
+            toInsertItems.stream()
                     .map(stack -> new CraftingMonitorElementItemRender(
-                        -1,
-                        stack,
-                        stack.stackSize,
-                        32
+                            -1,
+                            stack,
+                            stack.stackSize,
+                            32
                     ))
-                    .collect(Collectors.toList())
-                );
-            }
+                    .forEach(elements::add);
 
-            if (!toTakeFluids.isEmpty()) {
-                elements.add(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.fluids_taking", 16));
+            elements.commit();
+        }
 
-                elements.addAll(toTakeFluids.getStacks().stream()
-                    .map(stack -> new CraftingMonitorElementFluidRender(
-                        -1,
-                        stack,
-                        32
-                    ))
-                    .collect(Collectors.toList())
-                );
-            }
+        if (!isFinished()) {
+            if (steps.stream().filter(s -> !s.getPattern().isProcessing()).count() > 0) {
+                elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_crafting", 16));
 
-            if (!hasProcessedItems()) {
-                elements.add(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_processing", 16));
-
-                for (IProcessable processable : toProcess) {
+                for (ICraftingStep processable : steps.stream().filter(s -> !s.getPattern().isProcessing()).collect(Collectors.toList())) {
                     for (int i = 0; i < processable.getPattern().getOutputs().size(); ++i) {
-                        if (!processable.hasReceivedOutput(i)) {
-                            ICraftingMonitorElement element = new CraftingMonitorElementItemRender(
+                        elements.add(new CraftingMonitorElementItemRender(
                                 -1,
                                 processable.getPattern().getOutputs().get(i),
                                 processable.getPattern().getOutputs().get(i).stackSize,
                                 32
-                            );
-
-                            if (processable.getPattern().getContainer().getFacingTile() == null) {
-                                element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.machine_none");
-                            } else if (!canProcess(processable)) {
-                                element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.machine_in_use");
-                            }
-
-                            elements.add(element);
-                        }
+                        ));
                     }
                 }
+
+                elements.commit();
+            }
+
+            if (steps.stream().filter(s -> s.getPattern().isProcessing()).count() > 0) {
+                elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_processing", 16));
+
+                for (ICraftingStep processable : steps.stream().filter(s -> s.getPattern().isProcessing()).collect(Collectors.toList())) {
+                    for (int i = 0; i < processable.getPattern().getOutputs().size(); ++i) {
+                        ICraftingMonitorElement element = new CraftingMonitorElementItemRender(
+                                -1,
+                                processable.getPattern().getOutputs().get(i),
+                                processable.getPattern().getOutputs().get(i).stackSize,
+                                32
+                        );
+
+                        if (processable.getPattern().getContainer().getFacingTile() == null) {
+                            element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.machine_none");
+                        } else if (!canProcess(processable)) {
+                            element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.machine_in_use");
+                        }
+
+                        elements.add(element);
+                    }
+                }
+
+                elements.commit();
+            }
+
+            if (!toTakeFluids.isEmpty()) {
+                elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.fluids_taking", 16));
+
+                toTakeFluids.getStacks().stream()
+                    .map(stack -> new CraftingMonitorElementFluidRender(
+                        -1,
+                        stack,
+                        32
+                    )).forEach(elements::add);
+
+                elements.commit();
             }
         }
 
-        return elements;
+        return elements.getElements();
     }
 
     @Override
@@ -490,9 +449,8 @@ public class CraftingTask implements ICraftingTask {
         return pattern;
     }
 
-    @Override
-    public List<IProcessable> getToProcess() {
-        return toProcess;
+    public List<ICraftingStep> getSteps() {
+        return steps;
     }
 
     @Override
@@ -547,10 +505,6 @@ public class CraftingTask implements ICraftingTask {
     }
 
     private boolean isFinished() {
-        return toTake.isEmpty() && internalToTake.isEmpty() && toTakeFluids.isEmpty() && missing.isEmpty() && hasProcessedItems();
-    }
-
-    private boolean hasProcessedItems() {
-        return toProcess.stream().allMatch(IProcessable::hasReceivedOutputs);
+        return steps.stream().allMatch(ICraftingStep::hasReceivedOutputs);
     }
 }

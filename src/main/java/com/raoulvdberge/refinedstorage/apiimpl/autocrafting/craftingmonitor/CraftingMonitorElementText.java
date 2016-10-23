@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class CraftingMonitorElementText implements ICraftingMonitorElement<String> {
+public class CraftingMonitorElementText implements ICraftingMonitorElement {
     public static final String ID = "text";
 
     private String text;
@@ -61,5 +61,15 @@ public class CraftingMonitorElementText implements ICraftingMonitorElement<Strin
     public void write(ByteBuf buf) {
         ByteBufUtils.writeUTF8String(buf, text);
         buf.writeInt(offset);
+    }
+
+    @Override
+    public boolean merge(ICraftingMonitorElement element) {
+        return element.getId().equals(getId()) && elementHashCode() == element.elementHashCode();
+    }
+
+    @Override
+    public int elementHashCode() {
+        return text.hashCode();
     }
 }

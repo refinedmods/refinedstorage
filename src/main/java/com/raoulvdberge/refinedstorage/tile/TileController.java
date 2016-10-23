@@ -10,7 +10,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContaine
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider;
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskFactory;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
-import com.raoulvdberge.refinedstorage.api.autocrafting.task.IProcessable;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeGraph;
@@ -290,26 +290,29 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
                 craftingTasksToAdd.clear();
 
-                Iterator<ICraftingTask> craftingTaskIterator = craftingTasks.iterator();
+                // Only run task updates every 5 ticks
+                if (ticks % 5 == 0) {
+                    Iterator<ICraftingTask> craftingTaskIterator = craftingTasks.iterator();
+                    Map<ICraftingPatternContainer, Integer> usedCrafters = new HashMap<>();
 
-                while (craftingTaskIterator.hasNext()) {
-                    ICraftingTask task = craftingTaskIterator.next();
 
-                    ICraftingPatternContainer container = task.getPattern().getContainer();
+                    while (craftingTaskIterator.hasNext()) {
+                        ICraftingTask task = craftingTaskIterator.next();
 
-                    if (container != null && ticks % container.getSpeed() == 0 && task.update()) {
-                        craftingTaskIterator.remove();
+                        if (task.update(usedCrafters)) {
+                            craftingTaskIterator.remove();
 
-                        craftingTasksChanged = true;
+                            craftingTasksChanged = true;
+                        }
                     }
-                }
 
-                if (craftingTasksChanged) {
-                    craftingMonitorUpdateRequested = true;
-                }
+                    if (craftingTasksChanged) {
+                        craftingMonitorUpdateRequested = true;
+                    }
 
-                if (!craftingTasks.isEmpty()) {
-                    markDirty();
+                    if (!craftingTasks.isEmpty()) {
+                        markDirty();
+                    }
                 }
 
                 if (craftingMonitorUpdateRequested) {
@@ -321,6 +324,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                         }
                     }
                 }
+
             }
 
             wirelessGridHandler.update();
@@ -457,7 +461,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
             for (ItemStack input : patterns.get(i).getInputs()) {
                 if (input != null) {
-                    ItemStack stored = itemStorage.getList().get(input, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);
+                    ItemStack stored = itemStorage.getList().get(input, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT | (patterns.get(i).isOredict() ? IComparer.COMPARE_OREDICT : 0));
 
                     score += stored != null ? stored.stackSize : 0;
                 }
@@ -578,20 +582,10 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         if (!simulate && inserted > 0 && accessType != AccessType.WRITE) {
             itemStorage.add(ItemHandlerHelper.copyStackWithSize(stack, inserted), false);
 
-            for (int i = 0; i < inserted; ++i) {
-                for (ICraftingTask task : craftingTasks) {
-                    if (inserted == 0) {
+            for (ICraftingTask task : craftingTasks) {
+                for (ICraftingStep processable : task.getSteps()) {
+                    if (processable.onReceiveOutput(stack)) {
                         break;
-                    }
-
-                    for (IProcessable processable : task.getToProcess()) {
-                        if (inserted == 0) {
-                            break;
-                        }
-
-                        if (processable.onReceiveOutput(stack)) {
-                            inserted--;
-                        }
                     }
                 }
             }

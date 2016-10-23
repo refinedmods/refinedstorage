@@ -1,46 +1,41 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider;
-import com.raoulvdberge.refinedstorage.api.autocrafting.task.IProcessable;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.api.util.IFluidStackList;
 import com.raoulvdberge.refinedstorage.api.util.IItemStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagCompound;;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.util.Constants;
 
-public class Processable implements IProcessable {
+import java.util.*;
+import java.util.stream.Collectors;
+
+public abstract class AbstractCraftingStep implements ICraftingStep {
+    public static final String NBT_CRAFTING_STEP_TYPE = "CraftingStepType";
     private static final String NBT_SATISFIED = "Satisfied_%d";
-    private static final String NBT_TO_INSERT = "ToInsert";
     private static final String NBT_PATTERN = "Pattern";
     private static final String NBT_PATTERN_CONTAINER = "PatternContainer";
     private static final String NBT_STARTED_PROCESSING = "StartedProcessing";
 
-    private INetworkMaster network;
-    private ICraftingPattern pattern;
-    private IItemStackList toInsert = API.instance().createItemStackList();
-    private boolean satisfied[];
-    private boolean startedProcessing;
+    protected INetworkMaster network;
+    protected ICraftingPattern pattern;
+    protected Map<Integer, Integer> satisfied;
+    protected boolean startedProcessing;
 
-    public Processable(INetworkMaster network, ICraftingPattern pattern) {
+    public AbstractCraftingStep(INetworkMaster network, ICraftingPattern pattern) {
         this.network = network;
         this.pattern = pattern;
-        this.satisfied = new boolean[pattern.getOutputs().size()];
-
-        for (ItemStack input : pattern.getInputs()) {
-            if (input != null) {
-                toInsert.add(input.copy());
-            }
-        }
+        this.satisfied = new HashMap<>(getPattern().getOutputs().size());
     }
 
-    public Processable(INetworkMaster network) {
+    public AbstractCraftingStep(INetworkMaster network) {
         this.network = network;
     }
 
@@ -52,17 +47,17 @@ public class Processable implements IProcessable {
 
             if (container instanceof ICraftingPatternContainer) {
                 this.pattern = ((ICraftingPatternProvider) patternStack.getItem()).create(network.getNetworkWorld(), patternStack, (ICraftingPatternContainer) container);
-                this.satisfied = new boolean[pattern.getOutputs().size()];
+                this.satisfied = new HashMap<>(pattern.getOutputs().size());
 
-                for (int i = 0; i < satisfied.length; ++i) {
-                    String id = String.format(NBT_SATISFIED, i);
+                for (ItemStack stack : pattern.getOutputs()) {
+                    int hashcode = API.instance().getItemStackHashCode(stack);
+                    String id = String.format(NBT_SATISFIED, hashcode);
 
                     if (tag.hasKey(id)) {
-                        this.satisfied[i] = tag.getBoolean(id);
+                        this.satisfied.put(hashcode, tag.getInteger(id));
                     }
                 }
 
-                this.toInsert = RSUtils.readItemStackList(tag.getTagList(NBT_TO_INSERT, Constants.NBT.TAG_COMPOUND));
                 this.startedProcessing = tag.getBoolean(NBT_STARTED_PROCESSING);
 
                 return true;
@@ -78,18 +73,18 @@ public class Processable implements IProcessable {
     }
 
     @Override
-    public IItemStackList getToInsert() {
-        return toInsert;
+    public List<ItemStack> getToInsert() {
+        return pattern.getInputs().stream().filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     @Override
-    public boolean canStartProcessing(IItemStackList list) {
-        list = list.copy(); // So we can edit the list
+    public boolean canStartProcessing(IItemStackList items, IFluidStackList fluids) {
+        items = items.copy(); // So we can edit the list
 
-        for (ItemStack stack : toInsert.getStacks()) {
-            ItemStack actualStack = list.get(stack, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0));
+        for (ItemStack stack : getToInsert()) {
+            ItemStack actualStack = items.get(stack, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0));
 
-            if (actualStack == null || actualStack.stackSize == 0 || !list.remove(actualStack, true)) {
+            if (actualStack == null || actualStack.stackSize == 0 || !items.remove(actualStack, stack.stackSize, true)) {
                 return false;
             }
         }
@@ -109,8 +104,9 @@ public class Processable implements IProcessable {
 
     @Override
     public boolean hasReceivedOutputs() {
-        for (boolean item : satisfied) {
-            if (!item) {
+        for (ItemStack stack : pattern.getOutputs()) {
+            Integer received = satisfied.get(API.instance().getItemStackHashCode(stack));
+            if (received == null || stack.stackSize > received) {
                 return false;
             }
         }
@@ -119,18 +115,22 @@ public class Processable implements IProcessable {
     }
 
     @Override
-    public boolean hasReceivedOutput(int i) {
-        return satisfied[i];
+    public boolean hasReceivedOutput(ItemStack stack) {
+        Integer received = satisfied.get(API.instance().getItemStackHashCode(stack));
+        return received != null && received >= stack.stackSize;
     }
 
     @Override
     public boolean onReceiveOutput(ItemStack stack) {
-        for (int i = 0; i < pattern.getOutputs().size(); ++i) {
-            if (!satisfied[i]) {
-                ItemStack item = pattern.getOutputs().get(i);
-
-                if (API.instance().getComparer().isEqualNoQuantity(stack, item)) {
-                    satisfied[i] = true;
+        for (ItemStack output : pattern.getOutputs()) {
+            int hashcode = API.instance().getItemStackHashCode(output);
+            Integer received = satisfied.get(hashcode);
+            if (received == null) {
+                received = 0;
+            }
+            if (API.instance().getComparer().isEqual(stack, output, CraftingTask.DEFAULT_COMPARE | (getPattern().isOredict() ? IComparer.COMPARE_OREDICT : 0))) {
+                if (received < output.stackSize) {
+                    satisfied.put(hashcode, received + stack.stackSize);
 
                     network.sendCraftingMonitorUpdate();
 
@@ -144,11 +144,10 @@ public class Processable implements IProcessable {
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
-        for (int i = 0; i < satisfied.length; ++i) {
-            tag.setBoolean(String.format(NBT_SATISFIED, i), satisfied[i]);
+        for (Map.Entry<Integer, Integer> entry : satisfied.entrySet()) {
+            tag.setInteger(String.format(NBT_SATISFIED, entry.getKey()), entry.getValue());
         }
 
-        tag.setTag(NBT_TO_INSERT, RSUtils.serializeItemStackList(toInsert));
         tag.setTag(NBT_PATTERN, pattern.getStack().serializeNBT());
         tag.setLong(NBT_PATTERN_CONTAINER, pattern.getContainer().getPosition().toLong());
         tag.setBoolean(NBT_STARTED_PROCESSING, startedProcessing);
