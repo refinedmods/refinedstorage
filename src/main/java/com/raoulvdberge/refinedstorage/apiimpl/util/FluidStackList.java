@@ -9,11 +9,13 @@ import net.minecraftforge.fluids.FluidStack;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class FluidStackList implements IFluidStackList {
     private ArrayListMultimap<Fluid, FluidStack> stacks = ArrayListMultimap.create();
+    private List<FluidStack> removeTracker = new LinkedList<>();
 
     @Override
     public void add(FluidStack stack) {
@@ -44,6 +46,32 @@ public class FluidStackList implements IFluidStackList {
         }
 
         return false;
+    }
+
+    @Override
+    public boolean trackedRemove(@Nonnull FluidStack stack, int size, boolean removeIfReachedZero) {
+        for (FluidStack otherStack : stacks.get(stack.getFluid())) {
+            if (otherStack.amount > 0 && stack.isFluidEqual(otherStack)) {
+                FluidStack removed = new FluidStack(otherStack.getFluid(), Math.min(size, otherStack.amount));
+                this.removeTracker.add(removed);
+                otherStack.amount -= size;
+                boolean success = otherStack.amount >= 0;
+
+                if (otherStack.amount <= 0 && removeIfReachedZero) {
+                    stacks.remove(otherStack.getFluid(), otherStack);
+                }
+
+                return success;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public void undo() {
+        removeTracker.forEach(this::add);
+        removeTracker.clear();
     }
 
     @Override

@@ -27,31 +27,26 @@ public class CraftingStepCraft extends CraftingStep {
 
     @Override
     public boolean canStartProcessing(IItemStackList items, IFluidStackList fluids) {
-        // So we can edit the lists
-        items = items.copy();
-        fluids = fluids.copy();
-        // Clean the lists so the zero stacks aren't there
-        items.clean();
-        fluids.clear();
-
         int compare = IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0);
         for (ItemStack stack : getToInsert()) {
             ItemStack actualStack = items.get(stack, compare);
 
-            if (actualStack == null || actualStack.stackSize == 0 || !items.remove(actualStack, stack.stackSize, true)) {
+            if (actualStack == null || actualStack.stackSize == 0 || !items.trackedRemove(actualStack, stack.stackSize, true)) {
                 FluidStack fluidInItem = RSUtils.getFluidFromStack(stack, true);
 
                 if (fluidInItem != null && RSUtils.hasFluidBucket(fluidInItem)) {
                     FluidStack fluidStack = fluids.get(fluidInItem, compare);
-                    if (fluidStack != null && fluids.remove(fluidStack, fluidInItem.amount, true)) {
+                    if (fluidStack != null && fluids.trackedRemove(fluidStack, fluidInItem.amount, true)) {
                         continue;
                     }
                 }
-
+                items.undo();
+                fluids.undo();
                 return false;
             }
         }
-
+        items.undo();
+        fluids.undo();
         return true;
     }
 
