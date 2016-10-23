@@ -133,7 +133,7 @@ public final class RSConfig {
         networkTransmitterPerBlockUsage = config.getFloat("networkTransmitterPerBlock", ENERGY, 4, 0, Float.MAX_VALUE, "The additional energy per block that the Network Transmitter uses, gets rounded up");
         networkReceiverUsage = config.getInt("networkReceiver", ENERGY, 15, 0, Integer.MAX_VALUE, "The energy used by Network Receivers");
         diskManipulatorUsage = config.getInt("diskManipulator", ENERGY, 3, 0, Integer.MAX_VALUE, "The energy used by Disk Manipulators");
-        euConversion = config.getInt("euConversion", ENERGY, 8, 0, Integer.MAX_VALUE, "The amount of RS that equals 1 EU");
+        euConversion = config.getInt("euConversion", ENERGY, 8, 1, Integer.MAX_VALUE, "The amount of RS that equals 1 EU");
         //endregion
 
         //region Controller
