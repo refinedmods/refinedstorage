@@ -18,6 +18,7 @@ import com.raoulvdberge.refinedstorage.api.network.IWirelessGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
+import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.fluid.IFluidStorage;
 import com.raoulvdberge.refinedstorage.api.storage.fluid.IFluidStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.item.IItemStorage;
@@ -147,36 +148,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         return (left.getEnergyUsage() > right.getEnergyUsage()) ? -1 : 1;
     };
 
-    private static final Comparator<IItemStorage> ITEM_SIZE_COMPARATOR = (left, right) -> {
-        if (left.getStored() == right.getStored()) {
-            return 0;
-        }
-
-        return (left.getStored() > right.getStored()) ? -1 : 1;
-    };
-
-    private static final Comparator<IItemStorage> ITEM_PRIORITY_COMPARATOR = (left, right) -> {
-        if (left.getPriority() == right.getPriority()) {
-            return 0;
-        }
-
-        return (left.getPriority() > right.getPriority()) ? -1 : 1;
-    };
-
-    private static final Comparator<IFluidStorage> FLUID_SIZE_COMPARATOR = (left, right) -> {
-        if (left.getStored() == right.getStored()) {
-            return 0;
-        }
-
-        return (left.getStored() > right.getStored()) ? -1 : 1;
-    };
-
-    private static final Comparator<IFluidStorage> FLUID_PRIORITY_COMPARATOR = (left, right) -> {
-        if (left.getPriority() == right.getPriority()) {
-            return 0;
-        }
-
-        return (left.getPriority() > right.getPriority()) ? -1 : 1;
+    private static final Comparator<IStorage> STORAGE_COMPARATOR = (left, right) -> {
+        int compare = Integer.compare(left.getPriority(), right.getPriority());
+        return compare != 0 ? compare : Integer.compare(left.getStored(), right.getStored());
     };
 
     private IItemGridHandler itemGridHandler = new ItemGridHandler(this);
@@ -267,11 +241,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             }
 
             if (canRun()) {
-                Collections.sort(itemStorage.getStorages(), ITEM_SIZE_COMPARATOR);
-                Collections.sort(itemStorage.getStorages(), ITEM_PRIORITY_COMPARATOR);
-
-                Collections.sort(fluidStorage.getStorages(), FLUID_SIZE_COMPARATOR);
-                Collections.sort(fluidStorage.getStorages(), FLUID_PRIORITY_COMPARATOR);
+                Collections.sort(itemStorage.getStorages(), STORAGE_COMPARATOR);
+                Collections.sort(fluidStorage.getStorages(), STORAGE_COMPARATOR);
 
                 boolean craftingTasksChanged = !craftingTasksToAdd.isEmpty() || !craftingTasksToCancel.isEmpty();
 

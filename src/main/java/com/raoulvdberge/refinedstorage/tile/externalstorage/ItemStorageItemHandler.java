@@ -30,7 +30,7 @@ public class ItemStorageItemHandler extends ItemStorageExternal {
     }
 
     @Override
-    public List<ItemStack> getItems() {
+    public List<ItemStack> getStacks() {
         List<ItemStack> items = new ArrayList<>();
 
         for (int i = 0; i < handler.getSlots(); ++i) {

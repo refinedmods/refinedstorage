@@ -26,7 +26,7 @@ public class ItemStorageDSU extends ItemStorageExternal {
     }
 
     @Override
-    public List<ItemStack> getItems() {
+    public List<ItemStack> getStacks() {
         if (unit.getStoredItemType() != null && unit.getStoredItemType().stackSize > 0) {
             return Collections.singletonList(unit.getStoredItemType().copy());
         }

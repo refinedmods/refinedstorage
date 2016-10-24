@@ -26,7 +26,7 @@ public class ItemStorageDrawer extends ItemStorageExternal {
     }
 
     @Override
-    public List<ItemStack> getItems() {
+    public List<ItemStack> getStacks() {
         if (!drawer.isEmpty() && drawer.getStoredItemCount() > 0) {
             return Collections.singletonList(drawer.getStoredItemCopy());
         }

@@ -117,7 +117,7 @@ public abstract class ItemStorageNBT implements IItemStorage {
     }
 
     @Override
-    public List<ItemStack> getItems() {
+    public List<ItemStack> getStacks() {
         return stacks;
     }
 
