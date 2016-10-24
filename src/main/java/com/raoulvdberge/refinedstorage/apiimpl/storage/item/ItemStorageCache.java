@@ -38,7 +38,7 @@ public class ItemStorageCache implements IItemStorageCache {
                 continue;
             }
 
-            for (ItemStack stack : storage.getItems()) {
+            for (ItemStack stack : storage.getStacks()) {
                 add(stack, true);
             }
         }

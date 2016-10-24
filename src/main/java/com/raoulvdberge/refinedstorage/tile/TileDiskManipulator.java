@@ -221,8 +221,8 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             return;
         }
 
-        for (int i = 0; i < storage.getItems().size(); i++) {
-            ItemStack stack = storage.getItems().get(i);
+        for (int i = 0; i < storage.getStacks().size(); i++) {
+            ItemStack stack = storage.getStacks().get(i);
             if (stack == null) {
                 continue;
             }
@@ -241,7 +241,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             storage.insertItem(((extracted == remainder) ? remainder.copy() : remainder), remainder.stackSize, false);
         }
 
-        if (storage.getItems().size() == 0) {
+        if (storage.getStacks().size() == 0) {
             moveDriveToOutput(slot);
         }
     }

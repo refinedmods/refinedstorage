@@ -1,23 +1,17 @@
 package com.raoulvdberge.refinedstorage.api.storage.fluid;
 
-import com.raoulvdberge.refinedstorage.api.storage.AccessType;
+import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 
 /**
  * Represents a fluid storage sink for the storage network.
  * Provide this through an {@link IFluidStorageProvider}.
  */
-public interface IFluidStorage {
-    /**
-     * @return fluids stored in this storage
-     */
-    List<FluidStack> getStacks();
-
+public interface IFluidStorage extends IStorage<FluidStack> {
     /**
      * Inserts a fluid in this storage.
      *
@@ -42,20 +36,5 @@ public interface IFluidStorage {
     @Nullable
     FluidStack extractFluid(@Nonnull FluidStack stack, int size, int flags);
 
-    /**
-     * @return the amount of fluids stored in this storage
-     */
-    int getStored();
 
-    /**
-     * @return the priority of this storage
-     */
-    int getPriority();
-
-    /**
-     * @return the access type of this storage
-     */
-    default AccessType getAccessType() {
-        return AccessType.READ_WRITE;
-    }
 }

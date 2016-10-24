@@ -12,7 +12,7 @@ public abstract class ItemStorageExternal implements IItemStorage {
     public abstract int getCapacity();
 
     public boolean updateCache() {
-        List<ItemStack> items = getItems();
+        List<ItemStack> items = getStacks();
 
         if (cache == null) {
             cache = items;
@@ -34,6 +34,6 @@ public abstract class ItemStorageExternal implements IItemStorage {
     }
 
     public void updateCacheForcefully() {
-        cache = getItems();
+        cache = getStacks();
     }
 }

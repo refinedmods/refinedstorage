@@ -1,23 +1,17 @@
 package com.raoulvdberge.refinedstorage.api.storage.item;
 
-import com.raoulvdberge.refinedstorage.api.storage.AccessType;
+import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 
 /**
  * Represents an item storage sink for the storage network.
  * Provide this through an {@link IItemStorageProvider}.
  */
-public interface IItemStorage {
-    /**
-     * @return items stored in this storage
-     */
-    List<ItemStack> getItems();
-
+public interface IItemStorage extends IStorage<ItemStack> {
     /**
      * Inserts an item to this storage.
      *
@@ -41,21 +35,4 @@ public interface IItemStorage {
      */
     @Nullable
     ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags);
-
-    /**
-     * @return The amount of items stored in this storage
-     */
-    int getStored();
-
-    /**
-     * @return The priority of this storage
-     */
-    int getPriority();
-
-    /**
-     * @return the access type of this storage
-     */
-    default AccessType getAccessType() {
-        return AccessType.READ_WRITE;
-    }
 }
