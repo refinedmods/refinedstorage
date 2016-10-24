@@ -6,15 +6,19 @@ import com.raoulvdberge.refinedstorage.api.util.IItemStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class ItemStackList implements IItemStackList {
     private ArrayListMultimap<Item, ItemStack> stacks = ArrayListMultimap.create();
+    private List<ItemStack> removeTracker = new LinkedList<>();
 
     @Override
     public void add(ItemStack stack) {
@@ -36,7 +40,7 @@ public class ItemStackList implements IItemStackList {
     @Override
     public boolean remove(@Nonnull ItemStack stack, int size, boolean removeIfReachedZero) {
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
-            if (API.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
+            if (otherStack.stackSize > 0 && API.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
                 otherStack.stackSize -= size;
                 boolean success = otherStack.stackSize >= 0;
 
@@ -52,11 +56,37 @@ public class ItemStackList implements IItemStackList {
     }
 
     @Override
+    public boolean trackedRemove(@Nonnull ItemStack stack, int size, boolean removeIfReachedZero) {
+        for (ItemStack otherStack : stacks.get(stack.getItem())) {
+            if (otherStack.stackSize > 0 && API.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
+                ItemStack removed = ItemHandlerHelper.copyStackWithSize(otherStack, Math.min(size, otherStack.stackSize));
+                this.removeTracker.add(removed);
+                otherStack.stackSize -= size;
+                boolean success = otherStack.stackSize >= 0;
+
+                if (otherStack.stackSize <= 0 && removeIfReachedZero) {
+                    stacks.remove(otherStack.getItem(), otherStack);
+                }
+
+                return success;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public void undo() {
+        removeTracker.forEach(this::add);
+        removeTracker.clear();
+    }
+
+    @Override
     @Nullable
     public ItemStack get(@Nonnull ItemStack stack, int flags) {
         // When the oredict flag is set all stacks need to be checked not just the ones matching the item
         for (ItemStack otherStack : (flags & IComparer.COMPARE_OREDICT) == IComparer.COMPARE_OREDICT ? stacks.values() : stacks.get(stack.getItem())) {
-            if (API.instance().getComparer().isEqual(otherStack, stack, flags)) {
+            if (otherStack.stackSize > 0 && API.instance().getComparer().isEqual(otherStack, stack, flags)) {
                 return otherStack;
             }
         }

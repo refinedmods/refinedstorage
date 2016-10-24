@@ -40,6 +40,34 @@ public interface IItemStackList {
     }
 
     /**
+     * Decrements the count of that stack in the list.
+     * Keeps track of remove items and can be undone by calling {@link #undo()}
+     *
+     * @param stack               the stack
+     * @param size                the size to remove
+     * @param removeIfReachedZero true to remove the stack if the count reaches 0, false otherwise
+     * @return whether the remove was successful for the full amount
+     */
+    boolean trackedRemove(@Nonnull ItemStack stack, int size, boolean removeIfReachedZero);
+
+    /**
+     * Decrements the count of that stack in the list.
+     * Keeps track of remove items and can be undone by calling {@link #undo()}
+     *
+     * @param stack               the stack
+     * @param removeIfReachedZero true to remove the stack if the count reaches 0, false otherwise
+     * @return whether the remove was successful for the full amount
+     */
+    default boolean trackedRemove(@Nonnull ItemStack stack, boolean removeIfReachedZero) {
+        return trackedRemove(stack, stack.stackSize, removeIfReachedZero);
+    }
+
+    /**
+     * Restore all tracked removes
+     */
+    void undo();
+
+    /**
      * Returns a stack.
      *
      * @param stack the stack to search for
