@@ -18,21 +18,49 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 
 import javax.annotation.Nullable;
 import javax.vecmath.Vector3f;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class BakedModelDiskDrive implements IBakedModel {
-    class CacheKey {
+    private class CacheKey {
         private IBlockState state;
         private EnumFacing side;
         private Integer[] diskState;
 
-        CacheKey(IBlockState state, EnumFacing side, Integer[] diskState) {
+        CacheKey(IBlockState state, @Nullable EnumFacing side, Integer[] diskState) {
             this.state = state;
             this.side = side;
             this.diskState = diskState;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            CacheKey cacheKey = (CacheKey) o;
+
+            if (!state.equals(cacheKey.state)) {
+                return false;
+            }
+
+            if (side != cacheKey.side) {
+                return false;
+            }
+
+            return Arrays.equals(diskState, cacheKey.diskState);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = state.hashCode();
+            result = 31 * result + (side != null ? side.hashCode() : 0);
+            result = 31 * result + Arrays.hashCode(diskState);
+            return result;
         }
     }
 
@@ -99,7 +127,7 @@ public class BakedModelDiskDrive implements IBakedModel {
 
     @Override
     public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
-        if (!(state instanceof IExtendedBlockState) || side == null) {
+        if (!(state instanceof IExtendedBlockState)) {
             return base.getQuads(state, side, rand);
         }
 
@@ -107,12 +135,6 @@ public class BakedModelDiskDrive implements IBakedModel {
 
         if (diskState == null) {
             return base.getQuads(state, side, rand);
-        }
-
-        for (Integer individualState : diskState) {
-            if (individualState == null) {
-                return base.getQuads(state, side, rand);
-            }
         }
 
         CacheKey key = new CacheKey(((IExtendedBlockState) state).getClean(), side, diskState);

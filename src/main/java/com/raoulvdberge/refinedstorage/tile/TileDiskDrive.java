@@ -209,6 +209,10 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
         dataManager.addWatchedParameter(TYPE);
         dataManager.addWatchedParameter(VOID_EXCESS);
         dataManager.addWatchedParameter(ACCESS_TYPE);
+
+        for (int i = 0; i < 8; ++i) {
+            diskState[i] = DISK_STATE_NONE;
+        }
     }
 
     @Override
