@@ -81,22 +81,21 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER && slot < 6) {
-                RSUtils.constructFromDrive(getStackInSlot(slot), slot, itemStorages, fluidStorages, s -> new ItemStorage(s), s -> new FluidStorage(s));
+            if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
+                RSUtils.constructFromDrive(getStackInSlot(slot), slot, itemStorages, fluidStorages, ItemStorage::new, FluidStorage::new);
             }
         }
 
         @Override
         public ItemStack extractItem(int slot, int amount, boolean simulate) {
-            if (slot < 6) {
-                if (itemStorages[slot] != null) {
-                    itemStorages[slot].writeToNBT();
-                }
-
-                if (fluidStorages[slot] != null) {
-                    fluidStorages[slot].writeToNBT();
-                }
+            if (itemStorages[slot] != null) {
+                itemStorages[slot].writeToNBT();
             }
+
+            if (fluidStorages[slot] != null) {
+                fluidStorages[slot].writeToNBT();
+            }
+
             return super.extractItem(slot, amount, simulate);
         }
     };

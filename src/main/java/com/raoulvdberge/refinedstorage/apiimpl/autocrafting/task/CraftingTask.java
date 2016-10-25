@@ -293,16 +293,14 @@ public class CraftingTask implements ICraftingTask {
         if (processable.getPattern().isProcessing()) {
             for (ICraftingTask otherTask : network.getCraftingTasks()) {
                 for (ICraftingStep otherProcessable : otherTask.getSteps()) {
-                    if (otherProcessable.getPattern().isProcessing()) {
-                        if (otherProcessable != processable && !otherProcessable.hasReceivedOutputs() && otherProcessable.hasStartedProcessing() && otherProcessable.getPattern().getContainer().getFacingTile() != null) {
-                            if (processable.getPattern().getContainer().getFacingTile().getPos().equals(otherProcessable.getPattern().getContainer().getFacingTile().getPos())) {
-                                if (!arePatternsEqual(processable.getPattern(), otherProcessable.getPattern())) {
-                                    return false;
-                                } else {
-                                    for (ItemStack toInsert : processable.getToInsert()) {
-                                        if (ItemHandlerHelper.insertItem(processable.getPattern().getContainer().getFacingInventory(), toInsert, true) != null) {
-                                            return false;
-                                        }
+                    if (otherProcessable.getPattern().isProcessing() && otherProcessable != processable && !otherProcessable.hasReceivedOutputs() && otherProcessable.hasStartedProcessing() && otherProcessable.getPattern().getContainer().getFacingTile() != null) {
+                        if (processable.getPattern().getContainer().getFacingTile().getPos().equals(otherProcessable.getPattern().getContainer().getFacingTile().getPos())) {
+                            if (!arePatternsEqual(processable.getPattern(), otherProcessable.getPattern())) {
+                                return false;
+                            } else {
+                                for (ItemStack toInsert : processable.getToInsert()) {
+                                    if (ItemHandlerHelper.insertItem(processable.getPattern().getContainer().getFacingInventory(), toInsert, true) != null) {
+                                        return false;
                                     }
                                 }
                             }
