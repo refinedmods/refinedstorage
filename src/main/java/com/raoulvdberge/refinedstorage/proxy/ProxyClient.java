@@ -240,7 +240,7 @@ public class ProxyClient extends ProxyCommon {
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent e) {
         if (RS.VERSION.contains("beta")) {
             e.player.addChatComponentMessage(new TextComponentString("" + TextFormatting.RED + TextFormatting.BOLD + "WARNING: You are playing on a beta version of Refined Storage (" + RS.VERSION + ")!" + TextFormatting.RESET));
-            e.player.addChatComponentMessage(new TextComponentString("Remember to take backups as there is no guarantee that beta builds won't break your world."));
+            e.player.addChatComponentMessage(new TextComponentString("Literally anything can happen: world breaking bugs, item duplication bugs, etc. So, make sure you make backups."));
             e.player.addChatComponentMessage(new TextComponentString("If you encounter a bug, please report it on the GitHub issue tracker."));
         }
     }
