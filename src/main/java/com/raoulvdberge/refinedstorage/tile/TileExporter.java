@@ -72,7 +72,7 @@ public class TileExporter extends TileMultipartNode implements IComparable, ITyp
                                     network.insertItem(remainder, remainder.stackSize, false);
                                 }
                             } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
-                                network.scheduleCraftingTaskIfUnscheduled(slot, 1, compare);
+                                network.scheduleCraftingTask(slot, 1, compare);
                             }
                         }
                     }

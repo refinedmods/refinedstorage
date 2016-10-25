@@ -110,7 +110,7 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
         if (triggeredAutocrafting && worldObj.isBlockPowered(pos)) {
             for (ICraftingPattern pattern : actualPatterns) {
                 for (ItemStack output : pattern.getOutputs()) {
-                    network.scheduleCraftingTaskIfUnscheduled(output, 1, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);
+                    network.scheduleCraftingTask(output, 1, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);
                 }
             }
         }

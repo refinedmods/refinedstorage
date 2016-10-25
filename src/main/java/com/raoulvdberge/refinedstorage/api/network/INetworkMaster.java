@@ -166,7 +166,7 @@ public interface INetworkMaster {
      * @param toSchedule the amount of tasks to schedule
      * @param compare    the compare value to find patterns
      */
-    default void scheduleCraftingTaskIfUnscheduled(ItemStack stack, int toSchedule, int compare) {
+    default void scheduleCraftingTask(ItemStack stack, int toSchedule, int compare) {
         int alreadyScheduled = 0;
 
         for (ICraftingTask task : getCraftingTasks()) {
@@ -181,7 +181,12 @@ public interface INetworkMaster {
             ICraftingPattern pattern = getPattern(stack, compare);
 
             if (pattern != null) {
-                addCraftingTask(createCraftingTask(stack, pattern, 1));
+                ICraftingTask task = createCraftingTask(stack, pattern, 1);
+
+                task.calculate();
+
+                // @TODO: Only schedule when there are no items missing?
+                addCraftingTask(task);
             }
         }
     }

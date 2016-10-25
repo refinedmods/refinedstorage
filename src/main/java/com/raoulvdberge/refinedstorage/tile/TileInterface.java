@@ -90,7 +90,7 @@ public class TileInterface extends TileNode implements IComparable {
                             exportItems.getStackInSlot(i).stackSize += result.stackSize;
                         }
                     } else {
-                        network.scheduleCraftingTaskIfUnscheduled(wanted, delta, compare);
+                        network.scheduleCraftingTask(wanted, delta, compare);
                     }
                 } else if (delta < 0) {
                     ItemStack remainder = network.insertItem(got, Math.abs(delta), false);

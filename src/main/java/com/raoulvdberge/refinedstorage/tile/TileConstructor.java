@@ -180,7 +180,7 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
             } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
                 ItemStack craft = itemFilters.getStackInSlot(0);
 
-                network.scheduleCraftingTaskIfUnscheduled(craft, 1, compare);
+                network.scheduleCraftingTask(craft, 1, compare);
             }
         }
     }
