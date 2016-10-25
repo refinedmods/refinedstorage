@@ -79,11 +79,15 @@ public class CraftingStepCraft extends CraftingStep {
         }
 
         for (ItemStack byproduct : (pattern.isOredict()? pattern.getByproducts(took) : pattern.getByproducts())) {
-            toInsertItems.add(byproduct.copy());
+            if(byproduct != null) {
+                toInsertItems.add(byproduct.copy());
+            }
         }
 
         for (ItemStack output : (pattern.isOredict() ? pattern.getOutputs(took) : pattern.getOutputs())) {
-            toInsertItems.add(output.copy());
+            if(output != null) {
+                toInsertItems.add(output.copy());
+            }
         }
     }
 
