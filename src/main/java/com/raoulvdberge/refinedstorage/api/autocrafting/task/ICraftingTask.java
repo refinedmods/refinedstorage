@@ -107,6 +107,11 @@ public interface ICraftingTask {
     boolean isValid();
 
     /**
+     * @return whether this crafting task has missing items
+     */
+    boolean hasMissing();
+
+    /**
      * {@link ICraftingTask#calculate()} must be run before this!
      *
      * @return get a list of {@link ICraftingPreviewElement}s

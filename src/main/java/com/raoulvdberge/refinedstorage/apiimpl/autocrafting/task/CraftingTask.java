@@ -475,6 +475,11 @@ public class CraftingTask implements ICraftingTask {
     }
 
     @Override
+    public boolean hasMissing() {
+        return !missing.isEmpty();
+    }
+
+    @Override
     public List<ICraftingPreviewElement> getPreviewStacks() {
         if (!isValid()) {
             return Collections.emptyList();

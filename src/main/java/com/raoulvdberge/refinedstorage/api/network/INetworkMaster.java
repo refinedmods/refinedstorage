@@ -185,8 +185,9 @@ public interface INetworkMaster {
 
                 task.calculate();
 
-                // @TODO: Only schedule when there are no items missing?
-                addCraftingTask(task);
+                if (!task.hasMissing()) {
+                    addCraftingTask(task);
+                }
             }
         }
     }
