@@ -21,12 +21,7 @@ public class TileInterface extends TileNode implements IComparable {
 
     private static final String NBT_COMPARE = "Compare";
 
-    private ItemHandlerBasic importItems = new ItemHandlerBasic(9, this) {
-        @Override
-        public ItemStack extractItem(int slot, int amount, boolean simulate) {
-            return null;
-        }
-    };
+    private ItemHandlerBasic importItems = new ItemHandlerBasic(9, this);
 
     private ItemHandlerBasic exportSpecimenItems = new ItemHandlerBasic(9, this);
     private ItemHandlerBasic exportItems = new ItemHandlerBasic(9, this) {
@@ -62,12 +57,14 @@ public class TileInterface extends TileNode implements IComparable {
         if (slot == null) {
             currentSlot++;
         } else if (ticks % upgrades.getSpeed() == 0) {
-            ItemStack remainder = network.insertItem(slot, upgrades.getInteractStackSize(), false);
+            int size = Math.min(slot.stackSize, upgrades.getInteractStackSize());
+
+            ItemStack remainder = network.insertItem(slot, size, false);
 
             if (remainder == null) {
-                importItems.extractItemInternal(currentSlot, upgrades.getInteractStackSize(), false);
+                importItems.extractItemInternal(currentSlot, size, false);
             } else {
-                importItems.extractItemInternal(currentSlot, upgrades.getInteractStackSize() - remainder.stackSize, false);
+                importItems.extractItemInternal(currentSlot, size - remainder.stackSize, false);
                 currentSlot++;
             }
         }
