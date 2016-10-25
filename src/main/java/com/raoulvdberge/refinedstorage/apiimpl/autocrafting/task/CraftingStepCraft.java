@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
@@ -36,7 +37,8 @@ public class CraftingStepCraft extends CraftingStep {
 
                 if (fluidInItem != null && RSUtils.hasFluidBucket(fluidInItem)) {
                     FluidStack fluidStack = fluids.get(fluidInItem, compare);
-                    if (fluidStack != null && fluids.trackedRemove(fluidStack, fluidInItem.amount, true)) {
+                    ItemStack bucket = items.get(RSUtils.EMPTY_BUCKET, compare);
+                    if (bucket != null && fluidStack != null && fluids.trackedRemove(fluidStack, fluidInItem.amount, true) && items.remove(bucket, 1, true)) {
                         continue;
                     }
                 }
@@ -58,6 +60,7 @@ public class CraftingStepCraft extends CraftingStep {
             FluidStack fluidInItem = RSUtils.getFluidFromStack(insertStack, true);
             if (fluidInItem != null) {
                 network.extractFluid(fluidInItem, fluidInItem.amount, compare);
+                network.extractItem(RSUtils.EMPTY_BUCKET, 1, compare);
                 actualInputs.add(insertStack.copy());
             } else {
                 actualInputs.add(network.extractItem(insertStack, insertStack.stackSize, compare));
@@ -76,11 +79,15 @@ public class CraftingStepCraft extends CraftingStep {
         }
 
         for (ItemStack byproduct : (pattern.isOredict()? pattern.getByproducts(took) : pattern.getByproducts())) {
-            toInsertItems.add(byproduct.copy());
+            if(byproduct != null) {
+                toInsertItems.add(byproduct.copy());
+            }
         }
 
         for (ItemStack output : (pattern.isOredict() ? pattern.getOutputs(took) : pattern.getOutputs())) {
-            toInsertItems.add(output.copy());
+            if(output != null) {
+                toInsertItems.add(output.copy());
+            }
         }
     }
 
