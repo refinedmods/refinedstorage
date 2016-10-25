@@ -557,7 +557,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             for (ICraftingTask task : craftingTasks) {
                 for (ICraftingStep processable : task.getSteps()) {
                     if (processable.onReceiveOutput(stack)) {
-                        break;
+                        return remainder;  // All done
                     }
                 }
             }
