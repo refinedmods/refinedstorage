@@ -81,20 +81,6 @@ public abstract class CraftingStep implements ICraftingStep {
     }
 
     @Override
-    public boolean canStartProcessing(IItemStackList items, IFluidStackList fluids) {
-        for (ItemStack stack : getToInsert()) {
-            ItemStack actualStack = items.get(stack, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0));
-
-            if (actualStack == null || actualStack.stackSize == 0 || !items.trackedRemove(actualStack, stack.stackSize, true)) {
-                items.undo();
-                return false;
-            }
-        }
-        items.undo();
-        return true;
-    }
-
-    @Override
     public void setStartedProcessing() {
         startedProcessing = true;
     }
