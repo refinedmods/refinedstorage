@@ -9,8 +9,8 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider;
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskFactory;
-import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeGraph;
@@ -149,8 +149,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     };
 
     private static final Comparator<IStorage> STORAGE_COMPARATOR = (left, right) -> {
-        int compare = Integer.compare(left.getPriority(), right.getPriority());
-        return compare != 0 ? compare : Integer.compare(left.getStored(), right.getStored());
+        int compare = Integer.compare(right.getPriority(), left.getPriority());
+
+        return compare != 0 ? compare : Integer.compare(right.getStored(), left.getStored());
     };
 
     private IItemGridHandler itemGridHandler = new ItemGridHandler(this);
