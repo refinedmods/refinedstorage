@@ -50,17 +50,16 @@ public class TileSolderer extends TileNode {
     private ItemHandlerBasic items = new ItemHandlerBasic(3, this) {
         @Override
         public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-            Set<Integer> possibleSlots = new HashSet<>();
 
             for (ISoldererRecipe recipe : API.instance().getSoldererRegistry().getRecipes()) {
                 for (int i = 0; i < 3; ++i) {
                     if (API.instance().getComparer().isEqualNoQuantity(recipe.getRow(i), stack) || API.instance().getComparer().isEqualOredict(recipe.getRow(i), stack)) {
-                        possibleSlots.add(i);
+                        return super.insertItem(slot, stack, simulate);
                     }
                 }
             }
 
-            return possibleSlots.contains(slot) ? super.insertItem(slot, stack, simulate) : stack;
+            return stack;
         }
     };
     private ItemHandlerBasic result = new ItemHandlerBasic(1, this) {
