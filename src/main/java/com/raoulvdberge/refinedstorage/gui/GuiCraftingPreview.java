@@ -25,15 +25,14 @@ import java.util.List;
 
 public class GuiCraftingPreview extends GuiBase {
     public class CraftingPreviewElementDrawers extends ElementDrawers {
-        private IElementDrawer redOverlayDrawer = (x, y, element) -> {
+        private IElementDrawer<Integer> overlayDrawer = (x, y, colour) -> {
             GlStateManager.color(1, 1, 1);
-            bindTexture("gui/crafting_preview.png");
-            drawTexture(x, y, 189, 0, 67, 29);
+            drawRect(x, y, x + 67, y + 29, colour);
         };
 
         @Override
-        public IElementDrawer getRedOverlayDrawer() {
-            return redOverlayDrawer;
+        public IElementDrawer<Integer> getOverlayDrawer() {
+            return overlayDrawer;
         }
     }
 

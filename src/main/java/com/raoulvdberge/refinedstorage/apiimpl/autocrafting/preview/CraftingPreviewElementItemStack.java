@@ -65,7 +65,7 @@ public class CraftingPreviewElementItemStack implements ICraftingPreviewElement<
     @SideOnly(Side.CLIENT)
     public void draw(int x, int y, IElementDrawers drawers) {
         if (missing) {
-            drawers.getRedOverlayDrawer().draw(x, y, null);
+            drawers.getOverlayDrawer().draw(x, y, 0xFFF2DEDE);
         }
         x += 5;
         y += 7;

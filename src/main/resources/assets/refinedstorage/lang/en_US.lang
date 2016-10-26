@@ -25,6 +25,7 @@ gui.refinedstorage:crafting_monitor.items_processing=Items processing
 gui.refinedstorage:crafting_monitor.items_inserting=Items inserting
 gui.refinedstorage:crafting_monitor.machine_in_use=Machine is in use
 gui.refinedstorage:crafting_monitor.machine_none=No machine found
+gui.refinedstorage:crafting_monitor.waiting_for_items=Waiting for items
 gui.refinedstorage:wireless_transmitter=Wireless Transmitter
 gui.refinedstorage:wireless_transmitter.distance=%d blocks
 gui.refinedstorage:crafter=Crafter

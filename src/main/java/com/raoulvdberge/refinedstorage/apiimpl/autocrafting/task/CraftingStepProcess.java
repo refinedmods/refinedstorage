@@ -32,7 +32,7 @@ public class CraftingStepProcess extends CraftingStep {
                 ItemStack actualStack = items.get(stack, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0));
 
                 boolean canInsert = ItemHandlerHelper.insertItem(inventory, ItemHandlerHelper.copyStackWithSize(actualStack, stack.stackSize), true) == null;
-                if (actualStack == null || actualStack.stackSize == 0 || !items.trackedRemove(actualStack, stack.stackSize, true) && canInsert) {
+                if (actualStack == null || actualStack.stackSize == 0 || !items.trackedRemove(actualStack, stack.stackSize, true) || !canInsert) {
                     items.undo();
                     return false;
                 }
@@ -41,6 +41,17 @@ public class CraftingStepProcess extends CraftingStep {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean canStartProcessing() {
+        IItemHandler inventory = getPattern().getContainer().getFacingInventory();
+        for (ItemStack stack : getToInsert()) {
+            if (ItemHandlerHelper.insertItem(inventory, stack, true) != null) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

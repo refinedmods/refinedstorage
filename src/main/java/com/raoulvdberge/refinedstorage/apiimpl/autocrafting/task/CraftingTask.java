@@ -13,10 +13,7 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IFluidStackList;
 import com.raoulvdberge.refinedstorage.api.util.IItemStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementError;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementFluidRender;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementItemRender;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementText;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.*;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementFluidStack;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementItemStack;
 import net.minecraft.item.ItemStack;
@@ -262,7 +259,7 @@ public class CraftingTask implements ICraftingTask {
             }
 
             if (timesUsed++ <= container.getSpeedUpdateCount()) {
-                if (!step.hasStartedProcessing() && step.canStartProcessing(network.getItemStorageCache().getList(), tookFluids) && canProcess(step)) {
+                if (!step.hasStartedProcessing() && step.canStartProcessing(network.getItemStorageCache().getList(), tookFluids)) {
                     step.setStartedProcessing();
                     step.execute(toInsertItems, toInsertFluids);
                     usedContainers.put(container, timesUsed);
@@ -287,43 +284,6 @@ public class CraftingTask implements ICraftingTask {
         steps.removeIf(ICraftingStep::hasReceivedOutputs);
 
         return isFinished();
-    }
-
-    private boolean canProcess(ICraftingStep processable) {
-        if (processable.getPattern().isProcessing()) {
-            for (ICraftingTask otherTask : network.getCraftingTasks()) {
-                for (ICraftingStep otherProcessable : otherTask.getSteps()) {
-                    if (otherProcessable.getPattern().isProcessing() && otherProcessable != processable && !otherProcessable.hasReceivedOutputs() && otherProcessable.hasStartedProcessing() && otherProcessable.getPattern().getContainer().getFacingTile() != null) {
-                        if (processable.getPattern().getContainer().getFacingTile().getPos().equals(otherProcessable.getPattern().getContainer().getFacingTile().getPos())) {
-                            if (!arePatternsEqual(processable.getPattern(), otherProcessable.getPattern())) {
-                                return false;
-                            } else {
-                                for (ItemStack toInsert : processable.getToInsert()) {
-                                    if (ItemHandlerHelper.insertItem(processable.getPattern().getContainer().getFacingInventory(), toInsert, true) != null) {
-                                        return false;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return true;
-    }
-
-    private boolean arePatternsEqual(ICraftingPattern left, ICraftingPattern right) {
-        for (int i = 0; i < 9; ++i) {
-            ItemStack leftStack = left.getInputs().get(i);
-            ItemStack rightStack = right.getInputs().get(i);
-
-            if (!API.instance().getComparer().isEqual(leftStack, rightStack)) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     @Override
@@ -402,14 +362,20 @@ public class CraftingTask implements ICraftingTask {
             if (steps.stream().filter(s -> !s.getPattern().isProcessing()).count() > 0) {
                 elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_crafting", 16));
 
-                for (ICraftingStep processable : steps.stream().filter(s -> !s.getPattern().isProcessing()).collect(Collectors.toList())) {
-                    for (int i = 0; i < processable.getPattern().getOutputs().size(); ++i) {
-                        elements.add(new CraftingMonitorElementItemRender(
+                for (ICraftingStep step : steps.stream().filter(s -> !s.getPattern().isProcessing()).collect(Collectors.toList())) {
+                    for (int i = 0; i < step.getPattern().getOutputs().size(); ++i) {
+                        ICraftingMonitorElement element = new CraftingMonitorElementItemRender(
                             -1,
-                            processable.getPattern().getOutputs().get(i),
-                            processable.getPattern().getOutputs().get(i).stackSize,
+                            step.getPattern().getOutputs().get(i),
+                            step.getPattern().getOutputs().get(i).stackSize,
                             32
-                        ));
+                        );
+
+                        if (!step.hasStartedProcessing() && !step.canStartProcessing(network.getItemStorageCache().getList(), tookFluids)) {
+                            element = new CraftingMonitorElementInfo(element, "gui.refinedstorage:crafting_monitor.waiting_for_items");
+                        }
+
+                        elements.add(element);
                     }
                 }
 
@@ -419,18 +385,18 @@ public class CraftingTask implements ICraftingTask {
             if (steps.stream().filter(s -> s.getPattern().isProcessing()).count() > 0) {
                 elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_processing", 16));
 
-                for (ICraftingStep processable : steps.stream().filter(s -> s.getPattern().isProcessing()).collect(Collectors.toList())) {
-                    for (int i = 0; i < processable.getPattern().getOutputs().size(); ++i) {
+                for (ICraftingStep step : steps.stream().filter(s -> s.getPattern().isProcessing()).collect(Collectors.toList())) {
+                    for (int i = 0; i < step.getPattern().getOutputs().size(); ++i) {
                         ICraftingMonitorElement element = new CraftingMonitorElementItemRender(
                             -1,
-                            processable.getPattern().getOutputs().get(i),
-                            processable.getPattern().getOutputs().get(i).stackSize,
+                            step.getPattern().getOutputs().get(i),
+                            step.getPattern().getOutputs().get(i).stackSize,
                             32
                         );
 
-                        if (processable.getPattern().getContainer().getFacingTile() == null) {
+                        if (step.getPattern().getContainer().getFacingTile() == null) {
                             element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.machine_none");
-                        } else if (!canProcess(processable)) {
+                        } else if (!step.hasStartedProcessing() && !step.canStartProcessing()) {
                             element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.machine_in_use");
                         }
 

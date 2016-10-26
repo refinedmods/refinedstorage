@@ -28,10 +28,18 @@ public interface ICraftingStep {
      * Check if the processing can start.
      *
      * @param items a list to compare the needed {@link ItemStack} inputs against
-     * @param fluids a list to compare the needed {@link net.minecraftforge.fluids.FluidStack} inputs against (eg. a bucket, machine insert)
+     * @param fluids a list to compare the needed {@link FluidStack} inputs against (eg. a bucket, machine insert)
      * @return true if processing can start
      */
     boolean canStartProcessing(IItemStackList items, IFluidStackList fluids);
+
+    /**
+     * Check if the processing can start.
+     * Assuming you have all needed {@link ItemStack}s and {@link FluidStack}s
+     *
+     * @return true if processing can start
+     */
+    boolean canStartProcessing();
 
     /**
      * When called, this step will be marked as started processing.

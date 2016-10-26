@@ -79,6 +79,11 @@ public abstract class CraftingStep implements ICraftingStep {
     public List<ItemStack> getToInsert() {
         return pattern.getInputs().stream().filter(Objects::nonNull).collect(Collectors.toList());
     }
+    @Override
+    public boolean canStartProcessing() {
+        return true;
+    }
+
 
     @Override
     public void setStartedProcessing() {

@@ -5,20 +5,20 @@ import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
-public class CraftingMonitorElementError implements ICraftingMonitorElement {
-    public static final String ID = "error";
+public class CraftingMonitorElementInfo implements ICraftingMonitorElement {
+    public static final String ID = "info";
 
     private ICraftingMonitorElement base;
     private String tooltip;
 
-    public CraftingMonitorElementError(ICraftingMonitorElement base, String tooltip) {
+    public CraftingMonitorElementInfo(ICraftingMonitorElement base, String tooltip) {
         this.base = base;
         this.tooltip = tooltip;
     }
 
     @Override
     public void draw(int x, int y, IElementDrawers drawers) {
-        drawers.getOverlayDrawer().draw(x, y, 0xFFF2DEDE);
+        drawers.getOverlayDrawer().draw(x, y, 0xFFD9EDF7);
 
         base.draw(x, y, drawers);
     }
@@ -53,7 +53,7 @@ public class CraftingMonitorElementError implements ICraftingMonitorElement {
 
     @Override
     public boolean merge(ICraftingMonitorElement element) {
-        return element.getId().equals(getId()) && elementHashCode() == element.elementHashCode() && base.merge(((CraftingMonitorElementError)element).base);
+        return element.getId().equals(getId()) && elementHashCode() == element.elementHashCode() && base.merge(((CraftingMonitorElementInfo)element).base);
     }
 
     @Override

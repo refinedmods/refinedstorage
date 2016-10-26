@@ -29,9 +29,9 @@ public interface IElementDrawers {
     }
 
     /**
-     * @return a red overlay drawer
+     * @return an overlay drawer, colour will be the element
      */
-    default IElementDrawer<?> getRedOverlayDrawer() {
+    default IElementDrawer<Integer> getOverlayDrawer() {
         return getNullDrawer();
     }
 
