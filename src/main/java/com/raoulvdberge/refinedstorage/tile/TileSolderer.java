@@ -52,10 +52,8 @@ public class TileSolderer extends TileNode {
         public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
 
             for (ISoldererRecipe recipe : API.instance().getSoldererRegistry().getRecipes()) {
-                for (int i = 0; i < 3; ++i) {
-                    if (API.instance().getComparer().isEqualNoQuantity(recipe.getRow(i), stack) || API.instance().getComparer().isEqualOredict(recipe.getRow(i), stack)) {
-                        return super.insertItem(slot, stack, simulate);
-                    }
+                if (API.instance().getComparer().isEqualNoQuantity(recipe.getRow(slot), stack) || API.instance().getComparer().isEqualOredict(recipe.getRow(slot), stack)) {
+                    return super.insertItem(slot, stack, simulate);
                 }
             }
 
