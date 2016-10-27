@@ -42,7 +42,7 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
 
     private static final String NBT_TRIGGERED_AUTOCRAFTING = "TriggeredAutocrafting";
 
-    private ItemHandlerBasic patterns = new ItemHandlerBasic(9, this, stack -> stack.getItem() instanceof ICraftingPatternProvider) {
+    private ItemHandlerBasic patterns = new ItemHandlerBasic(9, this, s -> s.getItem() instanceof ICraftingPatternProvider && ((ICraftingPatternProvider) s.getItem()).create(worldObj, s, this).isValid()) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
