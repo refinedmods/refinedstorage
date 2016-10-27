@@ -553,10 +553,11 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
         if (!simulate && inserted > 0 && accessType != AccessType.WRITE) {
             itemStorage.add(ItemHandlerHelper.copyStackWithSize(stack, inserted), false);
+            ItemStack checkSteps = ItemHandlerHelper.copyStackWithSize(stack, inserted);
 
             for (ICraftingTask task : craftingTasks) {
                 for (ICraftingStep processable : task.getSteps()) {
-                    if (processable.onReceiveOutput(stack)) {
+                    if (processable.onReceiveOutput(checkSteps)) {
                         return remainder;  // All done
                     }
                 }

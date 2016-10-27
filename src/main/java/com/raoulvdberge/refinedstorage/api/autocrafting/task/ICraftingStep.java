@@ -72,8 +72,11 @@ public interface ICraftingStep {
     boolean hasReceivedOutput(ItemStack stack);
 
     /**
+     * The {@link ItemStack} given to it will be changed and contain the remainder
+     * The return value will only be true if the stack size is zero
+     *
      * @param stack the stack that was inserted in the storage system
-     * @return true if this item belonged to the processable item, false otherwise
+     * @return true if this item belonged to the processable item and was fully used, false otherwise
      */
     boolean onReceiveOutput(ItemStack stack);
 

@@ -123,11 +123,15 @@ public abstract class CraftingStep implements ICraftingStep {
             }
             if (API.instance().getComparer().isEqual(stack, output, CraftingTask.DEFAULT_COMPARE | (getPattern().isOredict() ? IComparer.COMPARE_OREDICT : 0))) {
                 if (received < output.stackSize) {
-                    satisfied.put(hashcode, received + stack.stackSize);
+                    int toReceive = Math.min(output.stackSize - received, stack.stackSize);
+                    satisfied.put(hashcode, received + toReceive);
+                    stack.stackSize -= toReceive;
 
                     network.sendCraftingMonitorUpdate();
 
-                    return true;
+                    if (stack.stackSize == 0) {
+                        return true;
+                    }
                 }
             }
         }
