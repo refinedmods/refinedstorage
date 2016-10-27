@@ -267,7 +267,7 @@ public final class RSUtils {
     }
 
     public static boolean hasFluidBucket(FluidStack stack) {
-        return stack.getFluid() == FluidRegistry.WATER || stack.getFluid() == FluidRegistry.LAVA || FluidRegistry.getBucketFluids().contains(stack.getFluid());
+        return stack.getFluid() == FluidRegistry.WATER || stack.getFluid() == FluidRegistry.LAVA || stack.getFluid().getName().equals("milk") || FluidRegistry.getBucketFluids().contains(stack.getFluid());
     }
 
     public static FluidStack copyStackWithSize(FluidStack stack, int size) {
