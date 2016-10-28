@@ -84,7 +84,8 @@ public class OreDictedItemStackList implements IItemStackList {
                 }
             }
         }
-        return underlyingList.get(stack, flags);
+        // Check the underlying list but don't do oredict things, as that has been tried before
+        return underlyingList.get(stack, flags & ~IComparer.COMPARE_OREDICT);
     }
 
     @Nullable
