@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * An item stack list.
@@ -67,6 +68,8 @@ public interface IItemStackList {
      */
     void undo();
 
+    List<ItemStack> getRemoveTracker();
+
     /**
      * Returns a stack.
      *
@@ -123,4 +126,10 @@ public interface IItemStackList {
      */
     @Nonnull
     IItemStackList copy();
+
+    /**
+     * @return the list wrapped in an ore dictionary optimized {@link IItemStackList}
+     */
+    @Nonnull
+    IItemStackList prepOreDict();
 }

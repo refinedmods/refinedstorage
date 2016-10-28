@@ -72,6 +72,7 @@ public class CraftingTask implements ICraftingTask {
         // Copy here might be expensive but since it is only executed once it isn't a big impact
         IItemStackList networkList = network.getItemStorageCache().getList().copy();
         networkList.clean(); // Remove the zero stacks
+        networkList = networkList.prepOreDict();
         IItemStackList toInsert = API.instance().createItemStackList();
 
         toCraft.add(ItemHandlerHelper.copyStackWithSize(requested, quantity));
@@ -250,6 +251,8 @@ public class CraftingTask implements ICraftingTask {
 
         toTakeFluids.clean();
 
+        IItemStackList oreDictPrepped = network.getItemStorageCache().getList().prepOreDict();
+
         for (ICraftingStep step : steps) {
             ICraftingPatternContainer container = step.getPattern().getContainer();
             Integer timesUsed = usedContainers.get(container);
@@ -259,9 +262,10 @@ public class CraftingTask implements ICraftingTask {
             }
 
             if (timesUsed++ <= container.getSpeedUpdateCount()) {
-                if (!step.hasStartedProcessing() && step.canStartProcessing(network.getItemStorageCache().getList(), tookFluids)) {
+                if (!step.hasStartedProcessing() && step.canStartProcessing(oreDictPrepped, tookFluids)) {
                     step.setStartedProcessing();
                     step.execute(toInsertItems, toInsertFluids);
+                    oreDictPrepped.clean(); // Might have to clean out some zero stacks
                     usedContainers.put(container, timesUsed);
                     network.sendCraftingMonitorUpdate();
                 }
@@ -362,6 +366,8 @@ public class CraftingTask implements ICraftingTask {
             if (steps.stream().filter(s -> !s.getPattern().isProcessing()).count() > 0) {
                 elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_crafting", 16));
 
+                IItemStackList oreDictPrepped = network.getItemStorageCache().getList().prepOreDict();
+
                 for (ICraftingStep step : steps.stream().filter(s -> !s.getPattern().isProcessing()).collect(Collectors.toList())) {
                     for (int i = 0; i < step.getPattern().getOutputs().size(); ++i) {
                         ICraftingMonitorElement element = new CraftingMonitorElementItemRender(
@@ -371,7 +377,7 @@ public class CraftingTask implements ICraftingTask {
                             32
                         );
 
-                        if (!step.hasStartedProcessing() && !step.canStartProcessing(network.getItemStorageCache().getList(), tookFluids)) {
+                        if (!step.hasStartedProcessing() && !step.canStartProcessing(oreDictPrepped, tookFluids)) {
                             element = new CraftingMonitorElementInfo(element, "gui.refinedstorage:crafting_monitor.waiting_for_items");
                         }
 
