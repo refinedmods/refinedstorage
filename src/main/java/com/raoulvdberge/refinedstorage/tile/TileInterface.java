@@ -84,7 +84,7 @@ public class TileInterface extends TileNode implements IComparable {
                     ItemStack result = network.extractItem(wanted, delta, compare);
 
                     if (result != null) {
-                        if (got == null) {
+                        if (exportItems.getStackInSlot(i) == null) {
                             exportItems.setStackInSlot(i, result);
                         } else {
                             exportItems.getStackInSlot(i).stackSize += result.stackSize;
