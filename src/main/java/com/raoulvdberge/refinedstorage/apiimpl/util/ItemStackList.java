@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 public class ItemStackList implements IItemStackList {
     private ArrayListMultimap<Item, ItemStack> stacks = ArrayListMultimap.create();
-    private List<ItemStack> removeTracker = new LinkedList<>();
+    protected List<ItemStack> removeTracker = new LinkedList<>();
 
     @Override
     public void add(ItemStack stack) {
@@ -73,6 +73,11 @@ public class ItemStackList implements IItemStackList {
         }
 
         return false;
+    }
+
+    @Override
+    public List<ItemStack> getRemoveTracker() {
+        return removeTracker;
     }
 
     @Override
@@ -141,6 +146,12 @@ public class ItemStackList implements IItemStackList {
         }
 
         return list;
+    }
+
+    @Nonnull
+    @Override
+    public IItemStackList prepOreDict() {
+        return new OreDictedItemStackList(this);
     }
 
     @Override
