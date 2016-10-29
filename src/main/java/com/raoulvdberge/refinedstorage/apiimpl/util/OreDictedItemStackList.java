@@ -35,9 +35,10 @@ public class OreDictedItemStackList implements IItemStackList {
     @Override
     public void add(ItemStack stack) {
         underlyingList.add(stack);
-        if (underlyingList.get(stack).stackSize == stack.stackSize) {
-            for (int id : OreDictionary.getOreIDs(stack)) {
-                stacks.put(id, stack);
+        ItemStack internalStack = underlyingList.get(stack);
+        if (internalStack != null && internalStack.stackSize == stack.stackSize) {
+            for (int id : OreDictionary.getOreIDs(internalStack)) {
+                stacks.put(id, internalStack);
             }
         }
     }
@@ -83,7 +84,8 @@ public class OreDictedItemStackList implements IItemStackList {
                 }
             }
         }
-        return underlyingList.get(stack, flags);
+        // Check the underlying list but don't do oredict things, as that has been tried before
+        return underlyingList.get(stack, flags & ~IComparer.COMPARE_OREDICT);
     }
 
     @Nullable

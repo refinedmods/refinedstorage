@@ -8,7 +8,7 @@ public class ControllerEnergyIC2 implements IControllerEnergyIC2 {
     private BasicSink sink;
 
     public ControllerEnergyIC2(final TileController controller) {
-        this.sink = new BasicSink(controller, (int) IntegrationIC2.toEU(controller.getEnergy().getMaxEnergyStored()), Integer.MAX_VALUE) {
+        this.sink = new BasicSink(controller, (int) IntegrationIC2.toEU(controller.getEnergy().getMaxEnergyStored()), 3) {
             @Override
             public double getDemandedEnergy() {
                 return Math.max(0.0D, IntegrationIC2.toEU(controller.getEnergy().getMaxEnergyStored()) - IntegrationIC2.toEU(controller.getEnergy().getEnergyStored()));
