@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 public class ItemStackList implements IItemStackList {
     private ArrayListMultimap<Item, ItemStack> stacks = ArrayListMultimap.create();
-    protected List<ItemStack> removeTracker = new LinkedList<>();
+    private List<ItemStack> removeTracker = new LinkedList<>();
 
     @Override
     public void add(ItemStack stack) {

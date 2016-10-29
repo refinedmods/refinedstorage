@@ -19,7 +19,8 @@ import java.util.List;
 public class GuiCraftingMonitor extends GuiBase {
     public class CraftingMonitorElementDrawers extends ElementDrawers {
         private IElementDrawer<Integer> overlayDrawer = (x, y, colour) -> {
-            GlStateManager.color(1, 1, 1);
+            GlStateManager.color(1, 1, 1, 1);
+            GlStateManager.disableLighting();
             drawRect(x, y, x + ITEM_WIDTH, y + ITEM_HEIGHT - 1, colour);
         };
 

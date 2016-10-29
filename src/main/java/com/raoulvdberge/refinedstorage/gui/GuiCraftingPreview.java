@@ -26,7 +26,8 @@ import java.util.List;
 public class GuiCraftingPreview extends GuiBase {
     public class CraftingPreviewElementDrawers extends ElementDrawers {
         private IElementDrawer<Integer> overlayDrawer = (x, y, colour) -> {
-            GlStateManager.color(1, 1, 1);
+            GlStateManager.color(1, 1, 1, 1);
+            GlStateManager.disableLighting();
             drawRect(x, y, x + 67, y + 29, colour);
         };
 
