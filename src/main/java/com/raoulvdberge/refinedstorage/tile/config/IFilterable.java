@@ -15,17 +15,17 @@ public interface IFilterable {
     int WHITELIST = 0;
     int BLACKLIST = 1;
 
-    static <T extends TileEntity> TileDataParameter<Integer> createParameter() {
+    static <T extends TileEntity & IFilterable> TileDataParameter<Integer> createParameter() {
         return new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, T>() {
             @Override
             public Integer getValue(T tile) {
-                return ((IFilterable) tile).getMode();
+                return tile.getMode();
             }
         }, new ITileDataConsumer<Integer, T>() {
             @Override
             public void setValue(T tile, Integer value) {
                 if (value == WHITELIST || value == BLACKLIST) {
-                    ((IFilterable) tile).setMode(value);
+                    tile.setMode(value);
                 }
             }
         });

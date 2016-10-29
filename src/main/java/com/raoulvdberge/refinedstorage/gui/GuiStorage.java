@@ -5,10 +5,16 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.container.ContainerBase;
 import com.raoulvdberge.refinedstorage.gui.sidebutton.*;
 import com.raoulvdberge.refinedstorage.tile.IStorageGui;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+
+import java.io.IOException;
 
 public class GuiStorage extends GuiBase {
     private IStorageGui gui;
     private String texture;
+
+    private GuiButton priorityButton;
 
     private int barX = 8;
     private int barY = 54;
@@ -56,7 +62,7 @@ public class GuiStorage extends GuiBase {
 
         String txt = "Priority"; // @TODO: I18n
         int bw = 10 + fontRendererObj.getStringWidth(txt);
-        addButton(x + 169 - bw, y + 41, bw, 20, txt);
+        priorityButton = addButton(x + 169 - bw, y + 41, bw, 20, txt);
     }
 
     @Override
@@ -99,7 +105,12 @@ public class GuiStorage extends GuiBase {
         }
     }
 
-    // @TODO: Remove
-    public void updatePriority(int priority) {
+    @Override
+    protected void actionPerformed(GuiButton button) throws IOException {
+        super.actionPerformed(button);
+
+        if (button == priorityButton) {
+            FMLCommonHandler.instance().showGuiScreen(new GuiPriority(this, gui.getPriorityParameter()));
+        }
     }
 }

@@ -7,16 +7,16 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.tileentity.TileEntity;
 
 public interface IExcessVoidable {
-    static <T extends TileEntity> TileDataParameter<Boolean> createParameter() {
+    static <T extends TileEntity & IExcessVoidable> TileDataParameter<Boolean> createParameter() {
         return new TileDataParameter<>(DataSerializers.BOOLEAN, false, new ITileDataProducer<Boolean, T>() {
             @Override
             public Boolean getValue(T tile) {
-                return ((IExcessVoidable) tile).getVoidExcess();
+                return tile.getVoidExcess();
             }
         }, new ITileDataConsumer<Boolean, T>() {
             @Override
             public void setValue(T tile, Boolean value) {
-                ((IExcessVoidable) tile).setVoidExcess(value);
+                tile.setVoidExcess(value);
             }
         });
     }
