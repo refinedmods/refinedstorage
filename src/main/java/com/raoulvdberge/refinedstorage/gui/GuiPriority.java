@@ -29,12 +29,12 @@ public class GuiPriority extends GuiCraftingStart {
 
     @Override
     protected String getStartButtonText() {
-        return "Set";
+        return t("misc.refinedstorage:set");
     }
 
     @Override
     protected String getTitle() {
-        return "Priority";
+        return t("misc.refinedstorage:priority");
     }
 
     @Override

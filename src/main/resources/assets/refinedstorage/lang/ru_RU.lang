@@ -44,10 +44,10 @@ misc.refinedstorage:energy_stored=%d / %d RS
 misc.refinedstorage:energy_usage=Usage: %d RS/t
 misc.refinedstorage:energy_usage_minimal=%d RS/t
 
-misc.refinedstorage:storage.stored=Запасено: %d
-misc.refinedstorage:storage.stored_capacity=Запасено: %d / %d
-misc.refinedstorage:storage.stored_minimal=%d
-misc.refinedstorage:storage.stored_capacity_minimal=%d / %d
+misc.refinedstorage:storage.stored=Запасено: %s
+misc.refinedstorage:storage.stored_capacity=Запасено: %s / %s
+misc.refinedstorage:storage.stored_minimal=%s
+misc.refinedstorage:storage.stored_capacity_minimal=%s / %s
 misc.refinedstorage:storage.full=%d%% полный
 
 misc.refinedstorage:wireless_grid.tooltip=Привязано к %d, %d, %d.

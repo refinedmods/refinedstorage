@@ -8,6 +8,7 @@ gui.refinedstorage:grid.pattern_create=Create Pattern
 gui.refinedstorage:wireless_grid=Wireless Grid
 gui.refinedstorage:fluid_grid=Fluid Grid
 gui.refinedstorage:disk_drive=Drive
+gui.refinedstorage:disk_drive.disks=Disks
 gui.refinedstorage:external_storage=External Storage
 gui.refinedstorage:importer=Importer
 gui.refinedstorage:exporter=Exporter
@@ -73,6 +74,7 @@ misc.refinedstorage:pattern.oredict=Uses ore dictionary
 
 misc.refinedstorage:start=Start
 misc.refinedstorage:clear=Clear
+misc.refinedstorage:set=Set
 misc.refinedstorage:cancel_all=Cancel All
 misc.refinedstorage:priority=Priority
 misc.refinedstorage:oredict=Oredict

@@ -32,10 +32,10 @@ misc.refinedstorage:energy_stored=%d / %d RS
 misc.refinedstorage:energy_usage=Usage: %d RS/t
 misc.refinedstorage:energy_usage_minimal=%d RS/t
 
-misc.refinedstorage:storage.stored=Stored: %d
-misc.refinedstorage:storage.stored_capacity=Stocké: %d / %d
-misc.refinedstorage:storage.stored_minimal=%d
-misc.refinedstorage:storage.stored_capacity_minimal=%d / %d
+misc.refinedstorage:storage.stored=Stored: %s
+misc.refinedstorage:storage.stored_capacity=Stocké: %s / %s
+misc.refinedstorage:storage.stored_minimal=%s
+misc.refinedstorage:storage.stored_capacity_minimal=%s / %s
 misc.refinedstorage:storage.full=%d%% plein
 
 misc.refinedstorage:wireless_grid.out_of_range=Il n'y a pas un Émetteur sans Fil dans la gamme.

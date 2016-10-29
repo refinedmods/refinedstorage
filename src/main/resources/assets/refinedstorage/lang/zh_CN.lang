@@ -46,10 +46,10 @@ misc.refinedstorage:energy_stored=%d / %d RS
 misc.refinedstorage:energy_usage=使用: %d RS/t
 misc.refinedstorage:energy_usage_minimal=%d RS/t
 
-misc.refinedstorage:storage.stored=Stored: %d
-misc.refinedstorage:storage.stored_capacity=已存储: %d / %d
-misc.refinedstorage:storage.stored_minimal=%d
-misc.refinedstorage:storage.stored_capacity_minimal=%d / %d
+misc.refinedstorage:storage.stored=Stored: %s
+misc.refinedstorage:storage.stored_capacity=已存储: %s / %s
+misc.refinedstorage:storage.stored_minimal=%s
+misc.refinedstorage:storage.stored_capacity_minimal=%s / %s
 misc.refinedstorage:storage.full=%d%% 已使用
 
 misc.refinedstorage:wireless_grid.tooltip=连接到 %d, %d, %d.

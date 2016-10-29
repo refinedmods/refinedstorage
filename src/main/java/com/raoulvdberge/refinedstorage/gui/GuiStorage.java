@@ -60,9 +60,9 @@ public class GuiStorage extends GuiBase {
             addSideButton(new SideButtonAccessType(this, gui.getAccessTypeParameter()));
         }
 
-        String txt = "Priority"; // @TODO: I18n
-        int bw = 10 + fontRendererObj.getStringWidth(txt);
-        priorityButton = addButton(x + 169 - bw, y + 41, bw, 20, txt);
+        int buttonWidth = 10 + fontRendererObj.getStringWidth(t("misc.refinedstorage:priority"));
+
+        priorityButton = addButton(x + 169 - buttonWidth, y + 41, buttonWidth, 20, t("misc.refinedstorage:priority"));
     }
 
     @Override
@@ -87,9 +87,8 @@ public class GuiStorage extends GuiBase {
             t("misc.refinedstorage:storage.stored_minimal", RSUtils.formatQuantity(gui.getStored())) :
             t("misc.refinedstorage:storage.stored_capacity_minimal", RSUtils.formatQuantity(gui.getStored()), RSUtils.formatQuantity(gui.getCapacity())));
 
-        // @TODO: I18n
         if (texture.contains("disk_drive")) { // HACK!
-            drawString(70, 42, "Disks");
+            drawString(70, 42, t("gui.refinedstorage:disk_drive.disks"));
         }
 
         drawString(7, 129, t("container.inventory"));
