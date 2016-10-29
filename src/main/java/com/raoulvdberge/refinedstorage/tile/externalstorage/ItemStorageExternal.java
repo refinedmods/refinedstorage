@@ -14,16 +14,16 @@ public abstract class ItemStorageExternal implements IItemStorage {
     public boolean updateCache() {
         List<ItemStack> items = getStacks();
 
-        if (cache == null) {
-            cache = items;
+        if (this.cache == null) {
+            this.cache = items;
         } else if (items.size() != cache.size()) {
-            cache = items;
+            this.cache = items;
 
             return true;
         } else {
             for (int i = 0; i < items.size(); ++i) {
                 if (!API.instance().getComparer().isEqual(items.get(i), cache.get(i))) {
-                    cache = items;
+                    this.cache = items;
 
                     return true;
                 }
@@ -34,6 +34,6 @@ public abstract class ItemStorageExternal implements IItemStorage {
     }
 
     public void updateCacheForcefully() {
-        cache = getStacks();
+        this.cache = getStacks();
     }
 }
