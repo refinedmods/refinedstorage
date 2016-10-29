@@ -12,18 +12,18 @@ public abstract class ItemStorageExternal implements IItemStorage {
     public abstract int getCapacity();
 
     public boolean updateCache() {
-        List<ItemStack> items = getStacks();
+        List<ItemStack> newStacks = getStacks();
 
         if (this.cache == null) {
-            this.cache = items;
-        } else if (items.size() != cache.size()) {
-            this.cache = items;
+            this.cache = newStacks;
+        } else if (newStacks.size() != cache.size()) {
+            this.cache = newStacks;
 
             return true;
         } else {
-            for (int i = 0; i < items.size(); ++i) {
-                if (!API.instance().getComparer().isEqual(items.get(i), cache.get(i))) {
-                    this.cache = items;
+            for (int i = 0; i < newStacks.size(); ++i) {
+                if (!API.instance().getComparer().isEqual(newStacks.get(i), cache.get(i))) {
+                    this.cache = newStacks;
 
                     return true;
                 }
