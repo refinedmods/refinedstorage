@@ -85,7 +85,8 @@ public class GuiStorage extends GuiBase {
         drawString(7, 7, t(gui.getGuiTitle()));
         drawString(7, 42, gui.getCapacity() == -1 ?
             t("misc.refinedstorage:storage.stored_minimal", RSUtils.formatQuantity(gui.getStored())) :
-            t("misc.refinedstorage:storage.stored_capacity_minimal", RSUtils.formatQuantity(gui.getStored()), RSUtils.formatQuantity(gui.getCapacity())));
+            t("misc.refinedstorage:storage.stored_capacity_minimal", RSUtils.formatQuantity(gui.getStored()), RSUtils.formatQuantity(gui.getCapacity()))
+        );
 
         if (texture.contains("disk_drive")) { // HACK!
             drawString(70, 42, t("gui.refinedstorage:disk_drive.disks"));
@@ -100,7 +101,10 @@ public class GuiStorage extends GuiBase {
                 full = (int) ((float) gui.getStored() / (float) gui.getCapacity() * 100f);
             }
 
-            drawTooltip(mouseX, mouseY, t("misc.refinedstorage:storage.full", full));
+            drawTooltip(mouseX, mouseY, (gui.getCapacity() == -1 ?
+                t("misc.refinedstorage:storage.stored_minimal", gui.getStored()) :
+                t("misc.refinedstorage:storage.stored_capacity_minimal", gui.getStored(), gui.getCapacity())
+            ) + "\n" + t("misc.refinedstorage:storage.full", full));
         }
     }
 
