@@ -45,6 +45,7 @@ public class RecipeCategorySolderer implements IRecipeCategory {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper) {
         IGuiItemStackGroup group = recipeLayout.getItemStacks();
 

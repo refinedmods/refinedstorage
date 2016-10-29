@@ -8,7 +8,7 @@ import java.util.Set;
 
 public class ModGuiFactory implements IModGuiFactory {
     @Override
-    public void initialize(Minecraft minecraftInstance) {
+    public void initialize(Minecraft mc) {
 
     }
 
@@ -23,6 +23,7 @@ public class ModGuiFactory implements IModGuiFactory {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public RuntimeOptionGuiHandler getHandlerFor(RuntimeOptionCategoryElement element) {
         return null;
     }

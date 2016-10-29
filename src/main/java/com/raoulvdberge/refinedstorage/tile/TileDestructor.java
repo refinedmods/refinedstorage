@@ -45,7 +45,7 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
     public static final TileDataParameter<Integer> TYPE = IType.createParameter();
-    public static final TileDataParameter<Boolean> PICKUP = new TileDataParameter<Boolean>(DataSerializers.BOOLEAN, false, new ITileDataProducer<Boolean, TileDestructor>() {
+    public static final TileDataParameter<Boolean> PICKUP = new TileDataParameter<>(DataSerializers.BOOLEAN, false, new ITileDataProducer<Boolean, TileDestructor>() {
         @Override
         public Boolean getValue(TileDestructor tile) {
             return tile.pickupItem;

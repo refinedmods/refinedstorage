@@ -64,7 +64,6 @@ public class BakedModelDiskManipulator implements IBakedModel {
         }
     }
 
-    private IBakedModel baseConnected;
     private IBakedModel baseDisconnected;
     private Map<EnumFacing, IBakedModel> modelsConnected = new HashMap<>();
     private Map<EnumFacing, IBakedModel> modelsDisconnected = new HashMap<>();
@@ -88,7 +87,6 @@ public class BakedModelDiskManipulator implements IBakedModel {
     });
 
     public BakedModelDiskManipulator(IBakedModel baseConnected, IBakedModel baseDisconnected, IBakedModel disk, IBakedModel diskFull, IBakedModel diskDisconnected) {
-        this.baseConnected = baseConnected;
         this.baseDisconnected = baseDisconnected;
 
         for (EnumFacing facing : EnumFacing.HORIZONTALS) {
@@ -167,6 +165,7 @@ public class BakedModelDiskManipulator implements IBakedModel {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public ItemCameraTransforms getItemCameraTransforms() {
         return baseDisconnected.getItemCameraTransforms();
     }

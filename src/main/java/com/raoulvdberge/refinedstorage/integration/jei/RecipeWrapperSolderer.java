@@ -23,11 +23,13 @@ public class RecipeWrapperSolderer extends BlankRecipeWrapper {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public List<ItemStack> getInputs() {
         return inputs;
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public List<ItemStack> getOutputs() {
         return Collections.singletonList(output);
     }

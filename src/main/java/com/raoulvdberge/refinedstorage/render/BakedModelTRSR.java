@@ -116,6 +116,7 @@ public class BakedModelTRSR implements IBakedModel {
 
     @Nonnull
     @Override
+    @SuppressWarnings("deprecation")
     public ItemCameraTransforms getItemCameraTransforms() {
         return original.getItemCameraTransforms();
     }

@@ -163,6 +163,7 @@ public class BakedModelDiskDrive implements IBakedModel {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public ItemCameraTransforms getItemCameraTransforms() {
         return base.getItemCameraTransforms();
     }
