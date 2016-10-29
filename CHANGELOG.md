@@ -10,7 +10,9 @@
 - Added Silk Touch Upgrade for Destructor (InusualZ)
 - Added Fortune Upgrade for Destructor (InusualZ)
 - Added ore dictionary compare toggle to storage I/O blocks (raoulvdberge)
-- Added disk icons to Disk Drive block that shows the disks (raoulvdberge)
+- Added disk leds to Disk Drive block that shows the disks (raoulvdberge)
+- Added disk leds to Disk Manipulator block that shows the disks (raoulvdberge)
+- Changed storage GUIs (raoulvdberge)
 - Changed default EU conversion rate to be 1:8 with RS (raoulvdberge)
 - Controller sorts by energy usage in GUI (highest to lowest) (raoulvdberge)
 - The Constructor can now drop items in the world (raoulvdberge)
@@ -22,6 +24,7 @@
 - Grid item and fluid quantity now only rounds to 1 digit after comma (raoulvdberge)
 - Items count can no longer overflow, and will max out at the maximum integer value (raoulvdberge)
 - Limited network transmitter usage to 1000 RS/t (raoulvdberge)
+- Fixed lag issues caused by External Storage (raoulvdberge)
 - Fixed resetting a stack of patterns yields 1 blank pattern (raoulvdberge)
 - Fixed being able to pipe items in the export slots of the Interface (InusualZ)
 - Fixed Interface being stuck when item isn't accepted in storage (InusualZ)
@@ -35,6 +38,7 @@
 - Fixed glitchy rendering of cable parts in item form (raoulvdberge)
 - Fixed Destructor being able to break bedrock (InusualZ)
 - Fixed External Storage thinking that items are inserted in Extra Utilities Trash Cans (InusualZ)
+- Fixed Grid quantities being unreadable when using unicode font (raoulvdberge)
 - Updated Storage Drawers API (raoulvdberge)
 
 ### 1.1.3
