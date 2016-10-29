@@ -1,28 +1,22 @@
 package com.raoulvdberge.refinedstorage.gui;
 
-import com.google.common.primitives.Ints;
+import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.container.ContainerBase;
 import com.raoulvdberge.refinedstorage.gui.sidebutton.*;
 import com.raoulvdberge.refinedstorage.tile.IStorageGui;
-import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
-import net.minecraft.client.gui.GuiTextField;
-
-import java.io.IOException;
 
 public class GuiStorage extends GuiBase {
     private IStorageGui gui;
     private String texture;
 
-    private GuiTextField priorityField;
-
     private int barX = 8;
     private int barY = 54;
     private int barWidth = 16;
-    private int barHeight = 58;
+    private int barHeight = 70;
 
     public GuiStorage(ContainerBase container, IStorageGui gui, String texture) {
-        super(container, 176, 211);
+        super(container, 176, 223);
 
         this.gui = gui;
         this.texture = texture;
@@ -60,14 +54,9 @@ public class GuiStorage extends GuiBase {
             addSideButton(new SideButtonAccessType(this, gui.getAccessTypeParameter()));
         }
 
-        priorityField = new GuiTextField(0, fontRendererObj, x + 98 + 1, y + 54 + 1, 29, fontRendererObj.FONT_HEIGHT);
-        priorityField.setEnableBackgroundDrawing(false);
-        priorityField.setVisible(true);
-        priorityField.setTextColor(16777215);
-        priorityField.setCanLoseFocus(true);
-        priorityField.setFocused(false);
-
-        updatePriority(gui.getPriorityParameter().getValue());
+        String txt = "Priority"; // @TODO: I18n
+        int bw = 10 + fontRendererObj.getStringWidth(txt);
+        addButton(x + 169 - bw, y + 41, bw, 20, txt);
     }
 
     @Override
@@ -83,16 +72,21 @@ public class GuiStorage extends GuiBase {
         int barHeightNew = (int) ((float) gui.getStored() / (float) gui.getCapacity() * (float) barHeight);
 
         drawTexture(x + barX, y + barY + barHeight - barHeightNew, 179, barHeight - barHeightNew, barWidth, barHeightNew);
-
-        priorityField.drawTextBox();
     }
 
     @Override
     public void drawForeground(int mouseX, int mouseY) {
         drawString(7, 7, t(gui.getGuiTitle()));
-        drawString(7, 42, gui.getCapacity() == -1 ? t("misc.refinedstorage:storage.stored_minimal", gui.getStored()) : t("misc.refinedstorage:storage.stored_capacity_minimal", gui.getStored(), gui.getCapacity()));
-        drawString(97, 42, t("misc.refinedstorage:priority"));
-        drawString(7, 117, t("container.inventory"));
+        drawString(7, 42, gui.getCapacity() == -1 ?
+            t("misc.refinedstorage:storage.stored_minimal", RSUtils.formatQuantity(gui.getStored())) :
+            t("misc.refinedstorage:storage.stored_capacity_minimal", RSUtils.formatQuantity(gui.getStored()), RSUtils.formatQuantity(gui.getCapacity())));
+
+        // @TODO: I18n
+        if (texture.contains("disk_drive")) { // HACK!
+            drawString(70, 42, "Disks");
+        }
+
+        drawString(7, 129, t("container.inventory"));
 
         if (inBounds(barX, barY, barWidth, barHeight, mouseX, mouseY)) {
             int full = 0;
@@ -105,31 +99,7 @@ public class GuiStorage extends GuiBase {
         }
     }
 
-    @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-        super.mouseClicked(mouseX, mouseY, mouseButton);
-
-        priorityField.mouseClicked(mouseX, mouseY, mouseButton);
-    }
-
-    @Override
-    protected void keyTyped(char character, int keyCode) throws IOException {
-        if (checkHotbarKeys(keyCode)) {
-            // NO OP
-        } else if (priorityField.textboxKeyTyped(character, keyCode)) {
-            Integer result = Ints.tryParse(priorityField.getText());
-
-            if (result != null) {
-                TileDataManager.setParameter(gui.getPriorityParameter(), result);
-            }
-        } else {
-            super.keyTyped(character, keyCode);
-        }
-    }
-
+    // @TODO: Remove
     public void updatePriority(int priority) {
-        if (priorityField != null) {
-            priorityField.setText(String.valueOf(priority));
-        }
     }
 }

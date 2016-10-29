@@ -74,19 +74,13 @@ public class ClientStackItem implements IClientStack {
 
         if (advanced && qty > 1) {
             return String.valueOf(qty);
-        }
-
-        if (qty >= 1000000) {
-            return RSUtils.QUANTITY_FORMATTER.format((float) qty / 1000000F) + "M";
-        } else if (qty >= 1000) {
-            return RSUtils.QUANTITY_FORMATTER.format((float) qty / 1000F) + "K";
         } else if (qty == 1) {
             return null;
         } else if (qty == 0) {
             return I18n.format("gui.refinedstorage:grid.craft");
         }
 
-        return String.valueOf(qty);
+        return RSUtils.formatQuantity(qty);
     }
 
     @Override

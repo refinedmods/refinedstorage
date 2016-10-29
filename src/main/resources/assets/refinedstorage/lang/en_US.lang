@@ -54,10 +54,10 @@ misc.refinedstorage:energy_stored=%d / %d RS
 misc.refinedstorage:energy_usage=Usage: %d RS/t
 misc.refinedstorage:energy_usage_minimal=%d RS/t
 
-misc.refinedstorage:storage.stored=Stored: %d
-misc.refinedstorage:storage.stored_capacity=Stored: %d / %d
-misc.refinedstorage:storage.stored_minimal=%d
-misc.refinedstorage:storage.stored_capacity_minimal=%d / %d
+misc.refinedstorage:storage.stored=Stored: %s
+misc.refinedstorage:storage.stored_capacity=Stored: %s / %s
+misc.refinedstorage:storage.stored_minimal=%s
+misc.refinedstorage:storage.stored_capacity_minimal=%s / %s
 misc.refinedstorage:storage.full=%d%% full
 
 misc.refinedstorage:wireless_grid.tooltip=Linked to %d, %d, %d.

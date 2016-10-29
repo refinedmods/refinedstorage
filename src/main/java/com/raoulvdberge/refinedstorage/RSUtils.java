@@ -3,7 +3,6 @@ package com.raoulvdberge.refinedstorage;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.util.IFluidStackList;
-import com.raoulvdberge.refinedstorage.api.util.IItemStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.item.ItemStorageNBT;
@@ -41,11 +40,11 @@ import java.util.function.Function;
 public final class RSUtils {
     public static final ItemStack EMPTY_BUCKET = new ItemStack(Items.BUCKET);
 
+    public static final DecimalFormat QUANTITY_FORMATTER = new DecimalFormat("####0.#", DecimalFormatSymbols.getInstance(Locale.US));
+
     private static final String NBT_INVENTORY = "Inventory_%d";
     private static final String NBT_SLOT = "Slot";
     private static final String NBT_ACCESS_TYPE = "AccessType";
-
-    public static final DecimalFormat QUANTITY_FORMATTER = new DecimalFormat("####0.#", DecimalFormatSymbols.getInstance(Locale.US));
 
     static {
         QUANTITY_FORMATTER.setRoundingMode(RoundingMode.DOWN);
@@ -154,16 +153,6 @@ public final class RSUtils {
         }
     }
 
-    public static NBTTagList serializeItemStackList(IItemStackList list) {
-        NBTTagList tagList = new NBTTagList();
-
-        for (ItemStack stack : list.getStacks()) {
-            tagList.appendTag(stack.writeToNBT(new NBTTagCompound()));
-        }
-
-        return tagList;
-    }
-
     public static NBTTagList serializeFluidStackList(IFluidStackList list) {
         NBTTagList tagList = new NBTTagList();
 
@@ -172,20 +161,6 @@ public final class RSUtils {
         }
 
         return tagList;
-    }
-
-    public static IItemStackList readItemStackList(NBTTagList tagList) {
-        IItemStackList list = API.instance().createItemStackList();
-
-        for (int i = 0; i < tagList.tagCount(); ++i) {
-            ItemStack stack = ItemStack.loadItemStackFromNBT(tagList.getCompoundTagAt(i));
-
-            if (stack != null) {
-                list.add(stack);
-            }
-        }
-
-        return list;
     }
 
     public static IFluidStackList readFluidStackList(NBTTagList tagList) {
@@ -278,5 +253,15 @@ public final class RSUtils {
 
     public static FluidStack copyStack(FluidStack stack) {
         return stack == null ? null : stack.copy();
+    }
+
+    public static String formatQuantity(int qty) {
+        if (qty >= 1000000) {
+            return RSUtils.QUANTITY_FORMATTER.format((float) qty / 1000000F) + "M";
+        } else if (qty >= 1000) {
+            return RSUtils.QUANTITY_FORMATTER.format((float) qty / 1000F) + "K";
+        }
+
+        return String.valueOf(qty);
     }
 }

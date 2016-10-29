@@ -11,19 +11,18 @@ public class ContainerDiskDrive extends ContainerBase {
     public ContainerDiskDrive(TileDiskDrive drive, EntityPlayer player) {
         super(drive, player);
 
-        for (int i = 0; i < 4; ++i) {
-            addSlotToContainer(new SlotItemHandler(drive.getDisks(), i, 98 + (i * 18), 78));
-        }
+        int x = 71;
+        int y = 54;
 
-        for (int i = 0; i < 4; ++i) {
-            addSlotToContainer(new SlotItemHandler(drive.getDisks(), 4 + i, 98 + (i * 18), 96));
+        for (int i = 0; i < 8; ++i) {
+            addSlotToContainer(new SlotItemHandler(drive.getDisks(), i, x + ((i % 2) * 18), y + Math.floorDiv(i, 2) * 18));
         }
 
         for (int i = 0; i < 9; ++i) {
             addSlotToContainer(new SlotSpecimenType(drive, i, 8 + (18 * i), 20));
         }
 
-        addPlayerInventory(8, 129);
+        addPlayerInventory(8, 141);
     }
 
     @Override

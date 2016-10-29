@@ -14,7 +14,7 @@ public class ContainerStorage extends ContainerBase {
             addSlotToContainer(new SlotSpecimen(tile.getFilters(), i, 8 + (18 * i), 20));
         }
 
-        addPlayerInventory(8, 129);
+        addPlayerInventory(8, 141);
     }
 
     @Override
