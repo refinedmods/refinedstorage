@@ -36,7 +36,7 @@ public class CraftingStepProcess extends CraftingStep {
             for (ItemStack stack : getToInsert()) {
                 ItemStack actualStack = items.get(stack, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0));
                 ItemStack removeStack = ItemHandlerHelper.copyStackWithSize(actualStack, stack.stackSize);
-                if (actualStack == null || actualStack.stackSize == 0 || !items.trackedRemove(removeStack, true) ) {
+                if (actualStack == null || actualStack.stackSize == 0 || !items.trackedRemove(removeStack, true)) {
                     items.undo();
                     return false;
                 }
@@ -75,14 +75,14 @@ public class CraftingStepProcess extends CraftingStep {
     /**
      * Checks whether all stacks can be inserted or not
      *
-     * @param dest target {@link IItemHandler}
+     * @param dest   target {@link IItemHandler}
      * @param stacks a {@link Deque} of {@link ItemStack}s
      * @return true when all can be inserted, false otherwise
      */
     private static boolean insertSimulation(IItemHandler dest, Deque<ItemStack> stacks) {
         ItemStack current = stacks.poll();
         List<Integer> availableSlots = IntStream.range(0, dest.getSlots()).boxed().collect(Collectors.toList());
-        while (current != null  && !availableSlots.isEmpty()) {
+        while (current != null && !availableSlots.isEmpty()) {
             ItemStack remainder = null;
             for (Integer slot : availableSlots) {
                 remainder = dest.insertItem(slot, current, true);

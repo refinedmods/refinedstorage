@@ -17,7 +17,8 @@ public class OreDictedItemStackList implements IItemStackList {
     private IItemStackList underlyingList;
     private ArrayListMultimap<Integer, ItemStack> stacks = ArrayListMultimap.create();
 
-    private OreDictedItemStackList() {}
+    private OreDictedItemStackList() {
+    }
 
     public OreDictedItemStackList(IItemStackList list) {
         this.underlyingList = list;
@@ -101,8 +102,8 @@ public class OreDictedItemStackList implements IItemStackList {
 
     private void localClean() {
         List<Map.Entry<Integer, ItemStack>> toRemove = stacks.entries().stream()
-                .filter(entry -> entry.getValue().stackSize <= 0)
-                .collect(Collectors.toList());
+            .filter(entry -> entry.getValue().stackSize <= 0)
+            .collect(Collectors.toList());
 
         toRemove.forEach(entry -> stacks.remove(entry.getKey(), entry.getValue()));
     }

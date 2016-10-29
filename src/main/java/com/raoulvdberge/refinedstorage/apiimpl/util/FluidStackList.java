@@ -106,8 +106,8 @@ public class FluidStackList implements IFluidStackList {
     @Override
     public void clean() {
         List<FluidStack> toRemove = stacks.values().stream()
-                .filter(stack -> stack.amount <= 0)
-                .collect(Collectors.toList());
+            .filter(stack -> stack.amount <= 0)
+            .collect(Collectors.toList());
 
         toRemove.forEach(stack -> stacks.remove(stack.getFluid(), stack));
     }

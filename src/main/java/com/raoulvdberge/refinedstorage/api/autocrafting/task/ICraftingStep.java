@@ -27,7 +27,7 @@ public interface ICraftingStep {
     /**
      * Check if the processing can start.
      *
-     * @param items a list to compare the needed {@link ItemStack} inputs against
+     * @param items  a list to compare the needed {@link ItemStack} inputs against
      * @param fluids a list to compare the needed {@link FluidStack} inputs against (eg. a bucket, machine insert)
      * @return true if processing can start
      */
@@ -55,7 +55,7 @@ public interface ICraftingStep {
      * Execute this step.
      * Any items to be added to the network should be inserting into these queues and they'll be managed by the {@link ICraftingTask}.
      *
-     * @param toInsertItems a queue of items to be inserted into the network
+     * @param toInsertItems  a queue of items to be inserted into the network
      * @param toInsertFluids a queue of fluids to be inserted into the network
      */
     void execute(Deque<ItemStack> toInsertItems, Deque<FluidStack> toInsertFluids);

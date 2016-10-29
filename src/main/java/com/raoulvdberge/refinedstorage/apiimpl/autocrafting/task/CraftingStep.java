@@ -6,8 +6,6 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.api.util.IFluidStackList;
-import com.raoulvdberge.refinedstorage.api.util.IItemStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -79,6 +77,7 @@ public abstract class CraftingStep implements ICraftingStep {
     public List<ItemStack> getToInsert() {
         return pattern.getInputs().stream().filter(Objects::nonNull).collect(Collectors.toList());
     }
+
     @Override
     public boolean canStartProcessing() {
         return true;

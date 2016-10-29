@@ -53,7 +53,7 @@ public class CraftingMonitorElementInfo implements ICraftingMonitorElement {
 
     @Override
     public boolean merge(ICraftingMonitorElement element) {
-        return element.getId().equals(getId()) && elementHashCode() == element.elementHashCode() && base.merge(((CraftingMonitorElementInfo)element).base);
+        return element.getId().equals(getId()) && elementHashCode() == element.elementHashCode() && base.merge(((CraftingMonitorElementInfo) element).base);
     }
 
     @Override

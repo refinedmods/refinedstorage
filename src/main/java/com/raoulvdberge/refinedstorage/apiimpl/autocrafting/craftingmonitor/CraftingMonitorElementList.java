@@ -45,7 +45,7 @@ public class CraftingMonitorElementList implements ICraftingMonitorElementList {
         if (!currentLists.isEmpty()) {
             commit();
         }
-        
+
         return elements;
     }
 }
