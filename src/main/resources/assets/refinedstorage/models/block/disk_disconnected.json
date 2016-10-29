@@ -1,24 +1,24 @@
 {
-  "__comment": "Model made by CyanideX",
+  "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
   "textures": {
-    "disk": "refinedstorage:blocks/disk_drive_disk_disconnected"
+    "0": "refinedstorage:blocks/disk_disconnected"
   },
   "elements": [
     {
       "name": "disk",
       "from": [
-        9.0,
-        12.0,
+        11.0,
+        14.0,
         -1.0
       ],
       "to": [
-        14.0,
-        14.0,
+        16.0,
+        16.0,
         0.0
       ],
       "faces": {
         "north": {
-          "texture": "#disk",
+          "texture": "#0",
           "uv": [
             3.0,
             0.0,
@@ -27,7 +27,7 @@
           ]
         },
         "east": {
-          "texture": "#disk",
+          "texture": "#0",
           "uv": [
             2.0,
             0.0,
@@ -36,7 +36,7 @@
           ]
         },
         "south": {
-          "texture": "#disk",
+          "texture": "#0",
           "uv": [
             9.0,
             0.0,
@@ -45,7 +45,7 @@
           ]
         },
         "west": {
-          "texture": "#disk",
+          "texture": "#0",
           "uv": [
             8.0,
             0.0,
@@ -54,7 +54,7 @@
           ]
         },
         "up": {
-          "texture": "#disk",
+          "texture": "#0",
           "uv": [
             3.0,
             2.0,
@@ -63,7 +63,7 @@
           ]
         },
         "down": {
-          "texture": "#disk",
+          "texture": "#0",
           "uv": [
             3.0,
             3.0,
@@ -76,18 +76,18 @@
     {
       "name": "led",
       "from": [
-        10.0,
-        11.95,
+        12.0,
+        13.95,
         -1.05
       ],
       "to": [
-        11.0,
         13.0,
+        15.0,
         -0.10000000000000009
       ],
       "faces": {
         "north": {
-          "texture": "#disk",
+          "texture": "#0",
           "uv": [
             14.0,
             1.0,
@@ -96,7 +96,7 @@
           ]
         },
         "east": {
-          "texture": "#disk",
+          "texture": "#0",
           "uv": [
             14.0,
             1.0,
@@ -105,7 +105,7 @@
           ]
         },
         "south": {
-          "texture": "#disk",
+          "texture": "#0",
           "uv": [
             14.0,
             1.0,
@@ -114,7 +114,7 @@
           ]
         },
         "west": {
-          "texture": "#disk",
+          "texture": "#0",
           "uv": [
             14.0,
             1.0,
@@ -123,7 +123,7 @@
           ]
         },
         "up": {
-          "texture": "#disk",
+          "texture": "#0",
           "uv": [
             14.0,
             1.0,
@@ -132,7 +132,7 @@
           ]
         },
         "down": {
-          "texture": "#disk",
+          "texture": "#0",
           "uv": [
             14.0,
             1.0,

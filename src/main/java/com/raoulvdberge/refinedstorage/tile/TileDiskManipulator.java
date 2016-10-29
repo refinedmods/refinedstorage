@@ -67,22 +67,19 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
     private ItemStorage[] itemStorages = new ItemStorage[6];
     private FluidStorage[] fluidStorages = new FluidStorage[6];
 
-    public TileDiskManipulator() {
-        dataManager.addWatchedParameter(COMPARE);
-        dataManager.addWatchedParameter(MODE);
-        dataManager.addWatchedParameter(TYPE);
-        dataManager.addWatchedParameter(IO_MODE);
-    }
+    private Integer[] diskState = new Integer[6];
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK);
 
-    private ItemHandlerBasic inputDisks = new ItemHandlerBasic(6, this, IItemValidator.STORAGE_DISK) {
+    private ItemHandlerBasic inputDisks = new ItemHandlerBasic(3, this, IItemValidator.STORAGE_DISK) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
             if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
                 RSUtils.constructFromDrive(getStackInSlot(slot), slot, itemStorages, fluidStorages, ItemStorage::new, FluidStorage::new);
+
+                updateBlock();
             }
         }
 
@@ -100,11 +97,26 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         }
     };
 
-    private ItemHandlerBasic outputDisks = new ItemHandlerBasic(6, this, IItemValidator.STORAGE_DISK);
+    private ItemHandlerBasic outputDisks = new ItemHandlerBasic(3, this, IItemValidator.STORAGE_DISK) {
+        @Override
+        protected void onContentsChanged(int slot) {
+            super.onContentsChanged(slot);
+
+            if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
+                RSUtils.constructFromDrive(getStackInSlot(slot), 3 + slot, itemStorages, fluidStorages, ItemStorage::new, FluidStorage::new);
+
+                updateBlock();
+            }
+        }
+    };
 
     public class ItemStorage extends ItemStorageNBT {
+        private boolean wasFull;
+
         public ItemStorage(ItemStack disk) {
             super(disk.getTagCompound(), EnumItemStorageType.getById(disk.getItemDamage()).getCapacity(), TileDiskManipulator.this);
+
+            wasFull = isFull();
         }
 
         @Override
@@ -129,11 +141,26 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
 
             return super.extractItem(stack, size, flags);
         }
+
+        @Override
+        public void onStorageChanged() {
+            super.onStorageChanged();
+
+            if (wasFull != isFull()) {
+                wasFull = isFull();
+
+                updateBlock();
+            }
+        }
     }
 
     public class FluidStorage extends FluidStorageNBT {
+        private boolean wasFull;
+
         public FluidStorage(ItemStack disk) {
             super(disk.getTagCompound(), EnumFluidStorageType.getById(disk.getItemDamage()).getCapacity(), TileDiskManipulator.this);
+
+            wasFull = isFull();
         }
 
         @Override
@@ -158,10 +185,30 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
 
             return super.extractFluid(stack, size, flags);
         }
+
+        @Override
+        public void onStorageChanged() {
+            super.onStorageChanged();
+
+            if (wasFull != isFull()) {
+                wasFull = isFull();
+
+                updateBlock();
+            }
+        }
     }
 
     private ItemHandlerBasic itemFilters = new ItemHandlerBasic(9, this);
     private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(9, this);
+
+    public TileDiskManipulator() {
+        dataManager.addWatchedParameter(COMPARE);
+        dataManager.addWatchedParameter(MODE);
+        dataManager.addWatchedParameter(TYPE);
+        dataManager.addWatchedParameter(IO_MODE);
+
+        TileDiskDrive.initDiskState(diskState);
+    }
 
     @Override
     public int getEnergyUsage() {
@@ -180,11 +227,11 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         }
         int slot = 0;
         if (type == IType.ITEMS) {
-            while (slot < itemStorages.length && itemStorages[slot] == null) {
+            while (slot < 3 && itemStorages[slot] == null) {
                 slot++;
             }
 
-            if (slot == itemStorages.length) {
+            if (slot == 3) {
                 return;
             }
 
@@ -196,11 +243,11 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
                 extractFromNetwork(storage, slot);
             }
         } else if (type == IType.FLUIDS) {
-            while (slot < fluidStorages.length && fluidStorages[slot] == null) {
+            while (slot < 3 && fluidStorages[slot] == null) {
                 slot++;
             }
 
-            if (slot == fluidStorages.length) {
+            if (slot == 3) {
                 return;
             }
 
@@ -378,15 +425,15 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         ItemStack disk = inputDisks.getStackInSlot(slot);
         if (disk != null) {
             int i = 0;
-            while (i < 6 && outputDisks.getStackInSlot(i) != null) {
+            while (i < 3 && outputDisks.getStackInSlot(i) != null) {
                 i++;
             }
 
-            if (i == 6) {
+            if (i == 3) {
                 return;
             }
 
-            if (slot < 6) {
+            if (slot < 3) {
                 if (itemStorages[slot] != null) {
                     itemStorages[slot].writeToNBT();
                     itemStorages[slot] = null;
@@ -453,24 +500,11 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        // Backwards Compatibility
-        ItemHandlerBasic oldDisks = new ItemHandlerBasic(12, this, IItemValidator.STORAGE_DISK);
-        RSUtils.readItems(oldDisks, 0, tag);
-        for (int i = 0; i < 12; ++i) {
-            ItemStack stack = oldDisks.extractItem(i, 1, false);
-            if (stack != null) {
-                if (i < 6) {
-                    inputDisks.insertItem(i, stack, false);
-                } else {
-                    outputDisks.insertItem(i, stack, false);
-                }
-            }
-        }
-
         RSUtils.readItems(itemFilters, 1, tag);
         RSUtils.readItems(fluidFilters, 2, tag);
         RSUtils.readItems(upgrades, 3, tag);
-        RSUtils.readItems(outputDisks, 4, tag);
+        RSUtils.readItems(inputDisks, 4, tag);
+        RSUtils.readItems(outputDisks, 5, tag);
 
         if (tag.hasKey(NBT_COMPARE)) {
             compare = tag.getInteger(NBT_COMPARE);
@@ -495,11 +529,11 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
 
         onBreak();
 
-        RSUtils.writeItems(inputDisks, 0, tag);
         RSUtils.writeItems(itemFilters, 1, tag);
         RSUtils.writeItems(fluidFilters, 2, tag);
         RSUtils.writeItems(upgrades, 3, tag);
-        RSUtils.writeItems(outputDisks, 4, tag);
+        RSUtils.writeItems(inputDisks, 4, tag);
+        RSUtils.writeItems(outputDisks, 5, tag);
 
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_MODE, mode);
@@ -507,6 +541,26 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         tag.setInteger(NBT_IO_MODE, ioMode);
 
         return tag;
+    }
+
+    @Override
+    public NBTTagCompound writeUpdate(NBTTagCompound tag) {
+        super.writeUpdate(tag);
+
+        TileDiskDrive.writeDiskState(tag, 6, connected, itemStorages, fluidStorages);
+
+        return tag;
+    }
+
+    @Override
+    public void readUpdate(NBTTagCompound tag) {
+        super.readUpdate(tag);
+
+        TileDiskDrive.readDiskState(tag, diskState);
+    }
+
+    public Integer[] getDiskState() {
+        return diskState;
     }
 
     @Override

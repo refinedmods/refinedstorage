@@ -14,7 +14,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public abstract class BlockNode extends BlockBase {
-    private static final PropertyBool CONNECTED = PropertyBool.create("connected");
+    public static final PropertyBool CONNECTED = PropertyBool.create("connected");
 
     public BlockNode(String name) {
         super(name);

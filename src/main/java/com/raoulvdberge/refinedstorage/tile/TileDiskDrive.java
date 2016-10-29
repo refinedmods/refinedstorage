@@ -85,10 +85,6 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
                 updateBlock();
             }
         }
-
-        public boolean isFull() {
-            return getStored() == getCapacity();
-        }
     }
 
     public class FluidStorage extends FluidStorageNBT {
@@ -135,10 +131,6 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
 
                 updateBlock();
             }
-        }
-
-        public boolean isFull() {
-            return getStored() == getCapacity();
         }
     }
 
@@ -210,9 +202,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
         dataManager.addWatchedParameter(VOID_EXCESS);
         dataManager.addWatchedParameter(ACCESS_TYPE);
 
-        for (int i = 0; i < 8; ++i) {
-            diskState[i] = DISK_STATE_NONE;
-        }
+        initDiskState(diskState);
     }
 
     @Override
@@ -338,7 +328,24 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {
         super.writeUpdate(tag);
 
-        for (int i = 0; i < 8; ++i) {
+        writeDiskState(tag, 8, connected, itemStorages, fluidStorages);
+
+        return tag;
+    }
+
+    @Override
+    public void readUpdate(NBTTagCompound tag) {
+        super.readUpdate(tag);
+
+        readDiskState(tag, diskState);
+    }
+
+    public Integer[] getDiskState() {
+        return diskState;
+    }
+
+    public static void writeDiskState(NBTTagCompound tag, int disks, boolean connected, ItemStorageNBT[] itemStorages, FluidStorageNBT[] fluidStorages) {
+        for (int i = 0; i < disks; ++i) {
             int state = DISK_STATE_NONE;
 
             if (itemStorages[i] != null || fluidStorages[i] != null) {
@@ -355,21 +362,18 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
 
             tag.setInteger(String.format(NBT_DISK_STATE, i), state);
         }
-
-        return tag;
     }
 
-    @Override
-    public void readUpdate(NBTTagCompound tag) {
-        super.readUpdate(tag);
-
-        for (int i = 0; i < 8; ++i) {
+    public static void readDiskState(NBTTagCompound tag, Integer[] diskState) {
+        for (int i = 0; i < diskState.length; ++i) {
             diskState[i] = tag.getInteger(String.format(NBT_DISK_STATE, i));
         }
     }
 
-    public Integer[] getDiskState() {
-        return diskState;
+    public static void initDiskState(Integer[] diskState) {
+        for (int i = 0; i < diskState.length; ++i) {
+            diskState[i] = DISK_STATE_NONE;
+        }
     }
 
     @Override

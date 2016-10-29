@@ -15,12 +15,12 @@ public class ContainerDiskManipulator extends ContainerBase {
             addSlotToContainer(new SlotItemHandler(manipulator.getUpgrades(), i, 187, 6 + (i * 18)));
         }
 
-        for (int i = 0; i < 6; ++i) {
-            addSlotToContainer(new SlotItemHandler(manipulator.getInputDisks(), i, 26 + (i % 2 * 18), ((i / 2) * 18) + 57));
+        for (int i = 0; i < 3; ++i) {
+            addSlotToContainer(new SlotItemHandler(manipulator.getInputDisks(), i, 44, 57 + (i * 18)));
         }
 
-        for (int i = 0; i < 6; ++i) {
-            addSlotToContainer(new SlotItemHandler(manipulator.getOutputDisks(), i, 116 + (i % 2 * 18), ((i / 2) * 18) + 57));
+        for (int i = 0; i < 3; ++i) {
+            addSlotToContainer(new SlotItemHandler(manipulator.getOutputDisks(), i, 116, 57 + (i * 18)));
         }
 
         for (int i = 0; i < 9; ++i) {
@@ -39,12 +39,12 @@ public class ContainerDiskManipulator extends ContainerBase {
         if (slot != null && slot.getHasStack()) {
             stack = slot.getStack();
 
-            if (index < 4 + 12) {
-                if (!mergeItemStack(stack, 4 + 12 + 9, inventorySlots.size(), false)) {
+            if (index < 4 + 6) {
+                if (!mergeItemStack(stack, 4 + 6 + 9, inventorySlots.size(), false)) {
                     return null;
                 }
             } else if (!mergeItemStack(stack, 0, 16, false)) {
-                return mergeItemStackToSpecimen(stack, 4 + 12, 4 + 12 + 9);
+                return mergeItemStackToSpecimen(stack, 4 + 6, 4 + 6 + 9);
             }
 
             if (stack.stackSize == 0) {

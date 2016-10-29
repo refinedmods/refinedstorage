@@ -10,6 +10,7 @@ import com.raoulvdberge.refinedstorage.item.*;
 import com.raoulvdberge.refinedstorage.network.MessageGridCraftingPreviewResponse;
 import com.raoulvdberge.refinedstorage.render.BakedModelPattern;
 import com.raoulvdberge.refinedstorage.render.ModelDiskDrive;
+import com.raoulvdberge.refinedstorage.render.ModelDiskManipulator;
 import com.raoulvdberge.refinedstorage.tile.TileController;
 import mcmultipart.client.multipart.ModelMultipartContainer;
 import mcmultipart.raytrace.PartMOP;
@@ -208,6 +209,22 @@ public class ProxyClient extends ProxyCommon {
             @Override
             public IModel loadModel(ResourceLocation modelLocation) throws Exception {
                 return new ModelDiskDrive();
+            }
+
+            @Override
+            public void onResourceManagerReload(IResourceManager resourceManager) {
+            }
+        });
+
+        ModelLoaderRegistry.registerLoader(new ICustomModelLoader() {
+            @Override
+            public boolean accepts(ResourceLocation modelLocation) {
+                return modelLocation.getResourceDomain().equals(RS.ID) && modelLocation.getResourcePath().equals("disk_manipulator");
+            }
+
+            @Override
+            public IModel loadModel(ResourceLocation modelLocation) throws Exception {
+                return new ModelDiskManipulator();
             }
 
             @Override

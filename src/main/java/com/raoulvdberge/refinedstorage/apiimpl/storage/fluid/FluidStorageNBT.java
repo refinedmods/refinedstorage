@@ -181,6 +181,10 @@ public abstract class FluidStorageNBT implements IFluidStorage {
         return capacity;
     }
 
+    public boolean isFull() {
+        return getStored() == getCapacity();
+    }
+
     public NBTTagCompound getTag() {
         return tag;
     }
