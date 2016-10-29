@@ -265,7 +265,6 @@ public class CraftingTask implements ICraftingTask {
                 if (!step.hasStartedProcessing() && step.canStartProcessing(oreDictPrepped, tookFluids)) {
                     step.setStartedProcessing();
                     step.execute(toInsertItems, toInsertFluids);
-                    oreDictPrepped.clean(); // Might have to clean out some zero stacks
                     usedContainers.put(container, timesUsed);
                     network.sendCraftingMonitorUpdate();
                 }
