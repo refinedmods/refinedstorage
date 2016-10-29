@@ -103,7 +103,7 @@ public interface IFluidStackList {
     void clear();
 
     /**
-     * Removes all stacks with size zero
+     * Removes all stacks with size zero.
      */
     void clean();
 

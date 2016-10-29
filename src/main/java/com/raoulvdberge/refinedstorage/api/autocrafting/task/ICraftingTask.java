@@ -46,7 +46,7 @@ public interface ICraftingTask {
     int getQuantity();
 
     /**
-     * @return the stack requested
+     * @return the stack requested, or null if no specific stack is associated with this task
      */
     @Nullable
     ItemStack getRequested();
@@ -79,7 +79,7 @@ public interface ICraftingTask {
     }
 
     /**
-     * {@link ICraftingTask#calculate()} must be run before this
+     * {@link ICraftingTask#calculate()} must be run before this!
      *
      * @return the elements of this task for display in the crafting monitor
      */
@@ -91,9 +91,9 @@ public interface ICraftingTask {
     ICraftingPattern getPattern();
 
     /**
-     * {@link ICraftingTask#calculate()} must be run before this
+     * {@link ICraftingTask#calculate()} must be run before this!
      *
-     * @return the processable items in this task
+     * @return the steps for this task
      */
     List<ICraftingStep> getSteps();
 

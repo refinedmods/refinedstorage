@@ -5,6 +5,9 @@ import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * Represents a crafting preview element.
+ */
 public interface ICraftingPreviewElement<T> {
     /**
      * @return the underlying element to display
@@ -30,9 +33,9 @@ public interface ICraftingPreviewElement<T> {
     int getToCraft();
 
     /**
-     * When this is true {@link #getToCraft()} will be the missing items
+     * When this is true {@link #getToCraft()} will be the missing items.
      *
-     * @return true when items are missing
+     * @return true when items are missing, false otherwise
      */
     boolean hasMissing();
 

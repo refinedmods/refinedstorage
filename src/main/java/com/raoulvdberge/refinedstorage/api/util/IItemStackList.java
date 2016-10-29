@@ -64,10 +64,13 @@ public interface IItemStackList {
     }
 
     /**
-     * Restore all tracked removes
+     * Restore all tracked removes.
      */
     void undo();
 
+    /**
+     * @return the remove tracker
+     */
     List<ItemStack> getRemoveTracker();
 
     /**

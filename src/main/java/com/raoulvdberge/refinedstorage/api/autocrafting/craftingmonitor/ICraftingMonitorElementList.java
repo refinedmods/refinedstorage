@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor;
 
-import java.util.Collection;
 import java.util.List;
 
 public interface ICraftingMonitorElementList {
@@ -20,13 +19,6 @@ public interface ICraftingMonitorElementList {
     void add(ICraftingMonitorElement element);
 
     /**
-     * @param elements a {@link Collection} of {@link ICraftingMonitorElement}s to be added
-     */
-    default void addAll(Collection<ICraftingMonitorElement> elements) {
-        elements.forEach(this::add);
-    }
-
-    /**
      * Finishes a current merge operation.
      */
     void commit();
@@ -34,7 +26,7 @@ public interface ICraftingMonitorElementList {
     /**
      * This also commits the last changes.
      *
-     * @return Get the current list of elements
+     * @return the current list of elements
      */
     List<ICraftingMonitorElement> getElements();
 }
