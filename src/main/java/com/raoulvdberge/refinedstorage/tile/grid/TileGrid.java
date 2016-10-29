@@ -274,9 +274,11 @@ public class TileGrid extends TileNode implements IGrid {
             ItemStack slot = matrix.getStackInSlot(i);
 
             if (i < remainder.length && remainder[i] != null) {
+                // If there is no space for the remainder, dump it in the player inventory
                 if (slot != null && slot.stackSize > 1) {
                     if (!player.inventory.addItemStackToInventory(remainder[i].copy())) {
                         ItemStack remainderStack = network.insertItem(remainder[i].copy(), remainder[i].stackSize, false);
+
                         if (remainderStack != null) {
                             InventoryHelper.spawnItemStack(player.worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), remainderStack);
                         }
@@ -286,13 +288,11 @@ public class TileGrid extends TileNode implements IGrid {
                 } else {
                     matrix.setInventorySlotContents(i, remainder[i].copy());
                 }
-            } else {
-                if (slot != null) {
-                    if (slot.stackSize == 1 && isConnected()) {
-                        matrix.setInventorySlotContents(i, network.extractItem(slot, 1));
-                    } else {
-                        matrix.decrStackSize(i, 1);
-                    }
+            } else if (slot != null) {
+                if (slot.stackSize == 1 && isConnected()) {
+                    matrix.setInventorySlotContents(i, network.extractItem(slot, 1));
+                } else {
+                    matrix.decrStackSize(i, 1);
                 }
             }
         }
@@ -355,30 +355,43 @@ public class TileGrid extends TileNode implements IGrid {
     }
 
     public void onRecipeTransfer(EntityPlayer player, ItemStack[][] recipe) {
-        if (isConnected()) {
-            for (int i = 0; i < matrix.getSizeInventory(); ++i) {
-                ItemStack slot = matrix.getStackInSlot(i);
+        // First try to empty the crafting matrix
+        for (int i = 0; i < matrix.getSizeInventory(); ++i) {
+            ItemStack slot = matrix.getStackInSlot(i);
 
-                if (slot != null) {
-                    if (getType() == EnumGridType.CRAFTING) {
+            if (slot != null) {
+                // Only if we are a crafting grid. Pattern grids can just be emptied.
+                if (getType() == EnumGridType.CRAFTING) {
+                    // If we are connected, try to insert into network. If it fails, stop.
+                    if (isConnected()) {
                         if (network.insertItem(slot, slot.stackSize, true) != null) {
                             return;
                         } else {
                             network.insertItem(slot, slot.stackSize, false);
                         }
+                    } else {
+                        // If we aren't connected, try to insert into player inventory. If it fails, stop.
+                        if (!player.inventory.addItemStackToInventory(slot.copy())) {
+                            return;
+                        }
                     }
-
-                    matrix.setInventorySlotContents(i, null);
                 }
+
+                matrix.setInventorySlotContents(i, null);
             }
+        }
 
-            for (int i = 0; i < matrix.getSizeInventory(); ++i) {
-                if (recipe[i] != null) {
-                    ItemStack[] possibilities = recipe[i];
+        // Now let's fill the matrix
+        for (int i = 0; i < matrix.getSizeInventory(); ++i) {
+            if (recipe[i] != null) {
+                ItemStack[] possibilities = recipe[i];
 
-                    if (getType() == EnumGridType.CRAFTING) {
-                        boolean found = false;
+                // If we are a crafting grid
+                if (getType() == EnumGridType.CRAFTING) {
+                    boolean found = false;
 
+                    // If we are connected, first try to get the possibilities from the network
+                    if (isConnected()) {
                         for (ItemStack possibility : possibilities) {
                             ItemStack took = network.extractItem(possibility, 1);
 
@@ -390,29 +403,31 @@ public class TileGrid extends TileNode implements IGrid {
                                 break;
                             }
                         }
+                    }
 
-                        if (!found) {
-                            for (ItemStack possibility : possibilities) {
-                                for (int j = 0; j < player.inventory.getSizeInventory(); ++j) {
-                                    if (API.instance().getComparer().isEqualNoQuantity(possibility, player.inventory.getStackInSlot(j))) {
-                                        matrix.setInventorySlotContents(i, ItemHandlerHelper.copyStackWithSize(player.inventory.getStackInSlot(j), 1));
+                    // If we haven't found anything in the network (or we are disconnected), go look in the player inventory
+                    if (!found) {
+                        for (ItemStack possibility : possibilities) {
+                            for (int j = 0; j < player.inventory.getSizeInventory(); ++j) {
+                                if (API.instance().getComparer().isEqualNoQuantity(possibility, player.inventory.getStackInSlot(j))) {
+                                    matrix.setInventorySlotContents(i, ItemHandlerHelper.copyStackWithSize(player.inventory.getStackInSlot(j), 1));
 
-                                        player.inventory.decrStackSize(j, 1);
+                                    player.inventory.decrStackSize(j, 1);
 
-                                        found = true;
+                                    found = true;
 
-                                        break;
-                                    }
-                                }
-
-                                if (found) {
                                     break;
                                 }
                             }
+
+                            if (found) {
+                                break;
+                            }
                         }
-                    } else if (getType() == EnumGridType.PATTERN) {
-                        matrix.setInventorySlotContents(i, possibilities[0]);
                     }
+                } else if (getType() == EnumGridType.PATTERN) {
+                    // If we are a pattern grid we can just set the slot
+                    matrix.setInventorySlotContents(i, possibilities[0]);
                 }
             }
         }
