@@ -582,7 +582,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         for (IItemStorage storage : this.itemStorage.getStorages()) {
             ItemStack took = null;
 
-            if (storage.getAccessType() != AccessType.WRITE) {
+            if (storage.getAccessType() != AccessType.READ) {
                 took = storage.extractItem(stack, requested - received, flags);
             }
 
@@ -670,7 +670,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         for (IFluidStorage storage : this.fluidStorage.getStorages()) {
             FluidStack took = null;
 
-            if (storage.getAccessType() != AccessType.WRITE) {
+            if (storage.getAccessType() != AccessType.READ) {
                 took = storage.extractFluid(stack, requested - received, flags);
             }
 
