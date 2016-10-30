@@ -6,7 +6,7 @@
 - Added recipe transfer handler for Processing Pattern Encoder (way2muchnoise)
 - Added void excess items functionality to storage blocks (geldorn, raoulvdberge, InusualZ)
 - Added config option to configure RS to EU conversion rates (InusualZ)
-- Added ability to toggle between read and write, read and write mode in storage blocks (InusualZ, raoulvdberge)
+- Added ability to toggle between insert and extract, only insert and only extract mode in storage blocks (InusualZ, raoulvdberge)
 - Added Silk Touch Upgrade for Destructor (InusualZ)
 - Added Fortune Upgrade for Destructor (InusualZ)
 - Added ore dictionary compare toggle to storage I/O blocks (raoulvdberge)
