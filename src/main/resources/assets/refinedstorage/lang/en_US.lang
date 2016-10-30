@@ -136,8 +136,8 @@ sidebutton.refinedstorage:destructor.pickup=Pickup items instead of breaking
 
 sidebutton.refinedstorage:access_type=Access Type
 sidebutton.refinedstorage:access_type.0=Insert and extract
-sidebutton.refinedstorage:access_type.1=Only extract
-sidebutton.refinedstorage:access_type.2=Only insert
+sidebutton.refinedstorage:access_type.1=Only insert
+sidebutton.refinedstorage:access_type.2=Only extract
 
 block.refinedstorage:controller.0.name=Controller
 block.refinedstorage:controller.1.name=Creative Controller

@@ -9,13 +9,13 @@ public enum AccessType {
      */
     INSERT_EXTRACT(0),
     /**
-     * Only extract ability.
-     */
-    EXTRACT(1),
-    /**
      * Only insert ability.
      */
-    INSERT(2);
+    INSERT(1),
+    /**
+     * Only extract ability.
+     */
+    EXTRACT(2);
 
     private int id;
 
