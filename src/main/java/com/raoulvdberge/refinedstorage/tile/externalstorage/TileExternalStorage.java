@@ -83,7 +83,7 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int mode = IFilterable.WHITELIST;
     private int type = IType.ITEMS;
-    private AccessType accessType = AccessType.READ_WRITE;
+    private AccessType accessType = AccessType.EXTRACT_INSERT;
 
     private List<ItemStorageExternal> itemStorages = new ArrayList<>();
     private List<FluidStorageExternal> fluidStorages = new ArrayList<>();

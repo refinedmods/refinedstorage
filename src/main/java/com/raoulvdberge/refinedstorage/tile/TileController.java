@@ -520,13 +520,13 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         }
 
         int orginalSize = size;
-        AccessType accessType = AccessType.READ_WRITE;
+        AccessType accessType = AccessType.EXTRACT_INSERT;
         ItemStack remainder = stack;
 
         for (IItemStorage storage : this.itemStorage.getStorages()) {
             accessType = storage.getAccessType();
 
-            if (accessType != AccessType.READ) {
+            if (accessType != AccessType.EXTRACT) {
                 remainder = storage.insertItem(remainder, size, simulate);
             }
 
@@ -557,7 +557,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             inserted = orginalSize - remainder.stackSize;
         }
 
-        if (!simulate && inserted > 0 && accessType != AccessType.WRITE) {
+        if (!simulate && inserted > 0 && accessType != AccessType.INSERT) {
             itemStorage.add(ItemHandlerHelper.copyStackWithSize(stack, inserted), false);
             ItemStack checkSteps = ItemHandlerHelper.copyStackWithSize(stack, inserted);
 
@@ -582,7 +582,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         for (IItemStorage storage : this.itemStorage.getStorages()) {
             ItemStack took = null;
 
-            if (storage.getAccessType() != AccessType.READ) {
+            if (storage.getAccessType() != AccessType.INSERT) {
                 took = storage.extractItem(stack, requested - received, flags);
             }
 
@@ -620,13 +620,13 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         }
 
         int orginalSize = size;
-        AccessType accessType = AccessType.READ_WRITE;
+        AccessType accessType = AccessType.EXTRACT_INSERT;
         FluidStack remainder = stack;
 
         for (IFluidStorage storage : this.fluidStorage.getStorages()) {
             accessType = storage.getAccessType();
 
-            if (accessType != AccessType.READ) {
+            if (accessType != AccessType.EXTRACT) {
                 remainder = storage.insertFluid(remainder, size, simulate);
             }
 
@@ -653,7 +653,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             inserted = orginalSize - remainder.amount;
         }
 
-        if (!simulate && inserted > 0 && accessType != AccessType.WRITE) {
+        if (!simulate && inserted > 0 && accessType != AccessType.INSERT) {
             fluidStorage.add(RSUtils.copyStackWithSize(stack, inserted), false);
         }
 
@@ -670,7 +670,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         for (IFluidStorage storage : this.fluidStorage.getStorages()) {
             FluidStack took = null;
 
-            if (storage.getAccessType() != AccessType.READ) {
+            if (storage.getAccessType() != AccessType.INSERT) {
                 took = storage.extractFluid(stack, requested - received, flags);
             }
 

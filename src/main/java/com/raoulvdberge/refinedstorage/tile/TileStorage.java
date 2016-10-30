@@ -82,7 +82,7 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
 
     private EnumItemStorageType type;
 
-    private AccessType accessType = AccessType.READ_WRITE;
+    private AccessType accessType = AccessType.EXTRACT_INSERT;
     private int priority = 0;
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int mode = IFilterable.WHITELIST;

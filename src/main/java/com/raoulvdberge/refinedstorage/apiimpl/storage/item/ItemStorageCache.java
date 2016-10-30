@@ -34,7 +34,7 @@ public class ItemStorageCache implements IItemStorageCache {
         list.clear();
 
         for (IItemStorage storage : storages) {
-            if (storage.getAccessType() == AccessType.WRITE) {
+            if (storage.getAccessType() == AccessType.INSERT) {
                 continue;
             }
 

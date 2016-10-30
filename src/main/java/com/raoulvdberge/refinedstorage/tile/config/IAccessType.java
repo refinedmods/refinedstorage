@@ -9,7 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 
 public interface IAccessType {
     static <T extends TileEntity & IAccessType> TileDataParameter<AccessType> createParameter() {
-        return new TileDataParameter<>(RSSerializers.ACCESS_TYPE_SERIALIZER, AccessType.READ_WRITE, new ITileDataProducer<AccessType, T>() {
+        return new TileDataParameter<>(RSSerializers.ACCESS_TYPE_SERIALIZER, AccessType.EXTRACT_INSERT, new ITileDataProducer<AccessType, T>() {
             @Override
             public AccessType getValue(T tile) {
                 return tile.getAccessType();

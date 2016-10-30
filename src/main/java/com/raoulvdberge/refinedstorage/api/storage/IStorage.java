@@ -22,6 +22,6 @@ public interface IStorage<T> {
      * @return the access type of this storage
      */
     default AccessType getAccessType() {
-        return AccessType.READ_WRITE;
+        return AccessType.EXTRACT_INSERT;
     }
 }

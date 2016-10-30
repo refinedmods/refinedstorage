@@ -5,17 +5,17 @@ package com.raoulvdberge.refinedstorage.api.storage;
  */
 public enum AccessType {
     /**
-     * Read and write access.
+     * Extract and insert ability.
      */
-    READ_WRITE(0),
+    EXTRACT_INSERT(0),
     /**
-     * Only read access.
+     * Only extract ability.
      */
-    READ(1),
+    EXTRACT(1),
     /**
-     * Only write access.
+     * Only insert ability.
      */
-    WRITE(2);
+    INSERT(2);
 
     private int id;
 

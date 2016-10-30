@@ -33,7 +33,7 @@ public class FluidStorageCache implements IFluidStorageCache {
         list.clear();
 
         for (IFluidStorage storage : storages) {
-            if (storage.getAccessType() == AccessType.WRITE) {
+            if (storage.getAccessType() == AccessType.INSERT) {
                 continue;
             }
 
