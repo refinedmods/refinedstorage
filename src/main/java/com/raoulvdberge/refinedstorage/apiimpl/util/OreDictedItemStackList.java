@@ -81,7 +81,14 @@ public class OreDictedItemStackList implements IItemStackList {
             for (int id : ids) {
                 List<ItemStack> stacks = this.stacks.get(id);
                 if (stacks != null && !stacks.isEmpty()) {
-                    return stacks.get(0);
+                    int i = 0;
+                    ItemStack returnStack = stacks.get(i++);
+                    while (returnStack.stackSize == 0 && i < stacks.size()) {
+                        returnStack = stacks.get(i++);
+                    }
+                    if (returnStack.stackSize != 0) {
+                        return returnStack;
+                    }
                 }
             }
         }
