@@ -21,11 +21,6 @@ public class ItemStackList implements IItemStackList {
 
     @Override
     public void add(ItemStack stack) {
-        if (stack == null) {
-            // What you doing adding nulls?
-            return;
-        }
-
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
             if (API.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
                 if ((long) otherStack.stackSize + (long) stack.stackSize > Integer.MAX_VALUE) {
