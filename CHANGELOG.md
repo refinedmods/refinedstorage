@@ -39,6 +39,7 @@
 - Fixed Destructor being able to break bedrock (InusualZ)
 - Fixed External Storage thinking that items are inserted in Extra Utilities Trash Cans (InusualZ)
 - Fixed Grid quantities being unreadable when using unicode font (raoulvdberge)
+- Fixed disconnecting when Storage Disk or Storage Block is too big (raoulvdberge)
 - Updated Storage Drawers API (raoulvdberge)
 
 ### 1.1.3

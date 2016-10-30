@@ -130,4 +130,9 @@ public class ItemStorageDisk extends ItemBase {
     public int getEntityLifespan(ItemStack stack, World world) {
         return Integer.MAX_VALUE;
     }
+
+    @Override
+    public NBTTagCompound getNBTShareTag(ItemStack stack) {
+        return ItemStorageNBT.getNBTShareTag(stack.getTagCompound());
+    }
 }

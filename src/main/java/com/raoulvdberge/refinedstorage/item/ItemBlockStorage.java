@@ -86,6 +86,11 @@ public class ItemBlockStorage extends ItemBlockBase {
         return Integer.MAX_VALUE;
     }
 
+    @Override
+    public NBTTagCompound getNBTShareTag(ItemStack stack) {
+        return !isValid(stack) ? super.getNBTShareTag(stack) : ItemStorageNBT.getNBTShareTag(stack.getTagCompound().getCompoundTag(TileStorage.NBT_STORAGE));
+    }
+
     public static ItemStack initNBT(ItemStack stack) {
         NBTTagCompound tag = new NBTTagCompound();
         tag.setTag(TileStorage.NBT_STORAGE, ItemStorageNBT.createNBT());

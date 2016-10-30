@@ -86,6 +86,11 @@ public class ItemBlockFluidStorage extends ItemBlockBase {
         return Integer.MAX_VALUE;
     }
 
+    @Override
+    public NBTTagCompound getNBTShareTag(ItemStack stack) {
+        return !isValid(stack) ? super.getNBTShareTag(stack) : FluidStorageNBT.getNBTShareTag(stack.getTagCompound().getCompoundTag(TileFluidStorage.NBT_STORAGE));
+    }
+
     public static ItemStack initNBT(ItemStack stack) {
         NBTTagCompound tag = new NBTTagCompound();
         tag.setTag(TileFluidStorage.NBT_STORAGE, FluidStorageNBT.createNBT());
