@@ -37,7 +37,7 @@ public class CraftingStepCraft extends CraftingStep {
                 if (fluidInItem != null && RSUtils.hasFluidBucket(fluidInItem)) {
                     FluidStack fluidStack = fluids.get(fluidInItem, compare);
                     ItemStack bucket = items.get(RSUtils.EMPTY_BUCKET, compare);
-                    if (bucket != null && fluidStack != null && fluids.trackedRemove(fluidStack, fluidInItem.amount, true) && items.remove(bucket, 1, true)) {
+                    if (bucket != null && fluidStack != null && fluids.trackedRemove(fluidStack, fluidInItem.amount, true) && items.trackedRemove(bucket, 1, true)) {
                         continue;
                     }
                 }

@@ -73,6 +73,7 @@ public class CraftingTask implements ICraftingTask {
         IItemStackList networkList = network.getItemStorageCache().getList().copy();
         networkList.clean(); // Remove the zero stacks
         networkList = networkList.prepOreDict();
+        IFluidStackList networkFluidList = network.getFluidStorageCache().getList().copy();
         IItemStackList toInsert = API.instance().createItemStackList();
 
         toCraft.add(ItemHandlerHelper.copyStackWithSize(requested, quantity));
@@ -80,14 +81,14 @@ public class CraftingTask implements ICraftingTask {
         int quantity = this.quantity;
 
         while (quantity > 0 && !recurseFound) {
-            calculate(networkList, pattern, toInsert);
+            calculate(networkList, networkFluidList, pattern, toInsert);
             quantity -= pattern.getQuantityPerRequest(requested);
         }
 
         usedPatterns.clear();
     }
 
-    private void calculate(IItemStackList networkList, ICraftingPattern pattern, IItemStackList toInsert) {
+    private void calculate(IItemStackList networkList, IFluidStackList networkFluidList, ICraftingPattern pattern, IItemStackList toInsert) {
         recurseFound = !usedPatterns.add(pattern);
         if (recurseFound) {
             return;
@@ -134,17 +135,24 @@ public class CraftingTask implements ICraftingTask {
                         ItemStack inputCrafted = ItemHandlerHelper.copyStackWithSize(input, craftQuantity);
                         toCraft.add(inputCrafted.copy());
                         actualInputs.add(inputCrafted.copy());
-                        calculate(networkList, inputPattern, toInsert);
+                        calculate(networkList, networkFluidList, inputPattern, toInsert);
                         input.stackSize -= craftQuantity;
                         // Calculate added all the crafted outputs toInsertItems
                         // So we remove the ones we use from toInsertItems
                         toInsert.remove(inputCrafted, true);
-                    } else if (doFluidCalculation(networkList, input, toInsert)) {
-                        actualInputs.add(ItemHandlerHelper.copyStackWithSize(input, 1));
-                        input.stackSize -= 1;
                     } else {
-                        missing.add(input.copy());
-                        input.stackSize = 0;
+                        // Fluid checks are with a stack size of one
+                        ItemStack fluidCheck = ItemHandlerHelper.copyStackWithSize(input, 1);
+                        while (input.stackSize > 0 && doFluidCalculation(networkList, networkFluidList, fluidCheck, toInsert)) {
+                            actualInputs.add(fluidCheck);
+                            input.stackSize -= 1;
+                        }
+
+                        // When it isn't a fluid or just doesn't have the needed fluids
+                        if (input.stackSize > 0) {
+                            missing.add(input.copy());
+                            input.stackSize = 0;
+                        }
                     }
                 }
             }
@@ -181,16 +189,27 @@ public class CraftingTask implements ICraftingTask {
         usedPatterns.remove(pattern);
     }
 
-    private boolean doFluidCalculation(IItemStackList networkList, ItemStack input, IItemStackList toInsert) {
+    private boolean doFluidCalculation(IItemStackList networkList, IFluidStackList networkFluidList, ItemStack input, IItemStackList toInsert) {
         FluidStack fluidInItem = RSUtils.getFluidFromStack(input, true);
 
         if (fluidInItem != null && RSUtils.hasFluidBucket(fluidInItem)) {
-            FluidStack fluidInStorage = network.getFluidStorageCache().getList().get(fluidInItem);
+            FluidStack fluidInStorage = networkFluidList.get(fluidInItem);
 
             if (fluidInStorage == null || fluidInStorage.amount < fluidInItem.amount) {
                 missing.add(input);
             } else {
-                boolean hasBucket = networkList.get(RSUtils.EMPTY_BUCKET) != null;
+                ItemStack bucket = toInsert.get(RSUtils.EMPTY_BUCKET);
+                boolean hasBucket = false;
+                if (bucket != null && bucket.stackSize > 0) {
+                    hasBucket = toInsert.remove(RSUtils.EMPTY_BUCKET, 1, false);
+                }
+                if (!hasBucket) {
+                    bucket = networkList.get(RSUtils.EMPTY_BUCKET);
+                    if (bucket != null && bucket.stackSize > 0) {
+                        hasBucket = networkList.remove(RSUtils.EMPTY_BUCKET, 1, false);
+                    }
+                }
+
                 ICraftingPattern bucketPattern = network.getPattern(RSUtils.EMPTY_BUCKET);
 
                 if (!hasBucket) {
@@ -198,12 +217,14 @@ public class CraftingTask implements ICraftingTask {
                         missing.add(RSUtils.EMPTY_BUCKET.copy());
                     } else {
                         toCraft.add(RSUtils.EMPTY_BUCKET.copy());
-                        calculate(networkList, bucketPattern, toInsert);
+                        calculate(networkList, networkFluidList, bucketPattern, toInsert);
+                        toInsert.remove(RSUtils.EMPTY_BUCKET, 1, false);
                     }
                 }
 
                 if (hasBucket || bucketPattern != null) {
                     toTakeFluids.add(fluidInItem.copy());
+                    networkFluidList.remove(fluidInItem, false);
                 }
             }
 
