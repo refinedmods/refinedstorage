@@ -14,7 +14,7 @@ public class ContainerExternalStorage extends ContainerBase {
             addSlotToContainer(new SlotSpecimenType(tile, i, 8 + (18 * i), 20));
         }
 
-        addPlayerInventory(8, 129);
+        addPlayerInventory(8, 141);
     }
 
     @Override
