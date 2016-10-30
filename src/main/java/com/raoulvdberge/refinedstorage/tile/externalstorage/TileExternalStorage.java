@@ -127,22 +127,16 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
     @Override
     public void update() {
         if (!worldObj.isRemote && network != null) {
-            boolean itemChangeDetected = false, fluidChangeDetected = false;
-
             for (ItemStorageExternal storage : itemStorages) {
-                if (storage.updateCache()) {
-                    itemChangeDetected = true;
-                }
+                storage.detectChanges(network);
             }
+
+            boolean fluidChangeDetected = false;
 
             for (FluidStorageExternal storage : fluidStorages) {
                 if (storage.updateCache()) {
                     fluidChangeDetected = true;
                 }
-            }
-
-            if (itemChangeDetected) {
-                network.getItemStorageCache().invalidate();
             }
 
             if (fluidChangeDetected) {

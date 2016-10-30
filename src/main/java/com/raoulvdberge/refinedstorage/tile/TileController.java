@@ -530,13 +530,13 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
             if (remainder == null || remainder.stackSize < 0) {
                 if (storage instanceof ItemStorageExternal && !simulate) {
-                    ((ItemStorageExternal) storage).updateCacheForcefully();
+                    ((ItemStorageExternal) storage).updateForced();
                 }
 
                 break;
             } else {
                 if (size != remainder.stackSize && storage instanceof ItemStorageExternal && !simulate) {
-                    ((ItemStorageExternal) storage).updateCacheForcefully();
+                    ((ItemStorageExternal) storage).updateForced();
                 }
 
                 size = remainder.stackSize;
@@ -586,7 +586,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
             if (took != null) {
                 if (storage instanceof ItemStorageExternal) {
-                    ((ItemStorageExternal) storage).updateCacheForcefully();
+                    ((ItemStorageExternal) storage).updateForced();
                 }
 
                 if (newStack == null) {
