@@ -113,6 +113,12 @@ public abstract class CraftingStep implements ICraftingStep {
     }
 
     @Override
+    public int getReceivedOutput(ItemStack stack) {
+        Integer received = satisfied.get(API.instance().getItemStackHashCode(stack));
+        return received == null ? 0 : received;
+    }
+
+    @Override
     public boolean onReceiveOutput(ItemStack stack) {
         for (ItemStack output : pattern.getOutputs()) {
             int hashcode = API.instance().getItemStackHashCode(output);

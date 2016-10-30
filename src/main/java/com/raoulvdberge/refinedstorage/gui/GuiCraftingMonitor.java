@@ -132,7 +132,7 @@ public class GuiCraftingMonitor extends GuiBase {
             item++;
         }
 
-        if (itemSelectedTooltip != null) {
+        if (itemSelectedTooltip != null && !itemSelectedTooltip.isEmpty()) {
             drawTooltip(mouseX, mouseY, I18n.format(itemSelectedTooltip));
         }
     }

@@ -41,6 +41,16 @@ public interface ICraftingTask {
     boolean update(Map<ICraftingPatternContainer, Integer> usedContainers);
 
     /**
+     * Reschedule the task. This does a recalculation and restart of the task.
+     */
+    void reschedule();
+
+    /**
+     * Clear out missing items. Tasks will run all possible tasks, before reporting missing items again.
+     */
+    void clearMissing();
+
+    /**
      * @return the amount of items that have to be crafted
      */
     int getQuantity();

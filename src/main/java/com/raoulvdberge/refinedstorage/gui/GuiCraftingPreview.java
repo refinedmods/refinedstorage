@@ -78,6 +78,10 @@ public class GuiCraftingPreview extends GuiBase {
     public void update(int x, int y) {
         scrollbar.setEnabled(getRows() > VISIBLE_ROWS);
         scrollbar.setMaxOffset(getRows() - VISIBLE_ROWS);
+
+        if (!startButton.enabled && isCtrlKeyDown() && isShiftKeyDown()) {
+            startButton.enabled = true;
+        }
     }
 
     @Override
@@ -145,6 +149,10 @@ public class GuiCraftingPreview extends GuiBase {
                 drawTooltip(mouseX, mouseY, hoveringStack.getTooltip(Minecraft.getMinecraft().thePlayer, false));
             } else if (hoveringFluid != null) {
                 drawTooltip(mouseX, mouseY, hoveringFluid.getLocalizedName());
+            }
+
+            if (!startButton.enabled && inBounds(85, 144, 50, 20, mouseX, mouseY)) {
+                drawTooltip(mouseX, mouseY, t("gui.refinedstorage:crafting_preview.force_start"));
             }
         }
     }

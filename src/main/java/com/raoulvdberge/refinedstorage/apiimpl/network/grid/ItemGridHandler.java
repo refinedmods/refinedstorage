@@ -145,12 +145,9 @@ public class ItemGridHandler implements IItemGridHandler {
 
         if (stack != null) {
             ICraftingTask task = new CraftingTask(network, stack, network.getPattern(stack), quantity);
-
             task.calculate();
-
-            if (!task.hasMissing()) {
-                network.addCraftingTask(task);
-            }
+            task.clearMissing();
+            network.addCraftingTask(task);
         }
     }
 

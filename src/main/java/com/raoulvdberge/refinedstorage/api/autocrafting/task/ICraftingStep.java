@@ -66,10 +66,16 @@ public interface ICraftingStep {
     boolean hasReceivedOutputs();
 
     /**
-     * @param stack the output to check,
+     * @param stack the output to check
      * @return true if we received the given output (based upon item and stacksize), false otherwise
      */
     boolean hasReceivedOutput(ItemStack stack);
+
+    /**
+     * @param stack the output to check
+     * @return amount of times this {@link ItemStack} has been received
+     */
+    int getReceivedOutput(ItemStack stack);
 
     /**
      * The {@link ItemStack} given to it will be changed and contain the remainder

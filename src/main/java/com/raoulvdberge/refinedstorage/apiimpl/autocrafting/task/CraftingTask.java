@@ -240,6 +240,21 @@ public class CraftingTask implements ICraftingTask {
 
     @Override
     public boolean update(Map<ICraftingPatternContainer, Integer> usedContainers) {
+        IItemStackList oreDictPrepped = network.getItemStorageCache().getList().prepOreDict();
+
+        if (hasMissing()) {
+            for (ItemStack missing : this.missing.getStacks()) {
+                if (!oreDictPrepped.trackedRemove(missing, true)) {
+                    oreDictPrepped.undo();
+                    return false;
+                }
+            }
+            oreDictPrepped.undo();
+            reschedule();
+            return false;
+        }
+
+
         for (FluidStack stack : toTakeFluids.getStacks()) {
             FluidStack stackExtracted = network.extractFluid(stack, stack.amount);
             if (stackExtracted != null) {
@@ -250,8 +265,6 @@ public class CraftingTask implements ICraftingTask {
         }
 
         toTakeFluids.clean();
-
-        IItemStackList oreDictPrepped = network.getItemStorageCache().getList().prepOreDict();
 
         for (ICraftingStep step : steps) {
             ICraftingPatternContainer container = step.getPattern().getContainer();
@@ -284,9 +297,37 @@ public class CraftingTask implements ICraftingTask {
             }
         }
 
+        if (steps.stream().filter(ICraftingStep::hasStartedProcessing).count() == 0) {
+            // When there is no started processes, restart the task.
+            reschedule();
+        }
+
+        // Remove finished tasks
         steps.removeIf(ICraftingStep::hasReceivedOutputs);
 
         return isFinished();
+    }
+
+    @Override
+    public void reschedule() {
+        List<ICraftingStep> mainSteps = steps.stream().filter(s -> s.getPattern() == pattern).collect(Collectors.toList());
+        missing.clear();
+        steps.clear();
+        // if the list of main steps is empty there is no point in rescheduling
+        if (!mainSteps.isEmpty()) {
+            quantity = 0;
+            int quantityPerRequest = pattern.getQuantityPerRequest(requested);
+            for (ICraftingStep step : mainSteps) {
+                quantity += quantityPerRequest - step.getReceivedOutput(requested);
+            }
+            calculate();
+            network.sendCraftingMonitorUpdate();
+        }
+    }
+
+    @Override
+    public void clearMissing() {
+        missing.clear();
     }
 
     @Override
@@ -345,6 +386,21 @@ public class CraftingTask implements ICraftingTask {
             quantity,
             0
         ));
+
+        if (!missing.isEmpty()) {
+            elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_missing", 16));
+
+            missing.getStacks().stream()
+                .map(stack -> new CraftingMonitorElementError(new CraftingMonitorElementItemRender(
+                    -1,
+                    stack,
+                    stack.stackSize,
+                    32
+                ), ""))
+                .forEach(elements::add);
+
+            elements.commit();
+        }
 
         if (!toInsertItems.isEmpty()) {
             elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_inserting", 16));

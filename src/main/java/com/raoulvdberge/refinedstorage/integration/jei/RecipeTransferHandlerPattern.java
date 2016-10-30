@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class RecipeTransferHandlerPattern implements IRecipeTransferHandler<ContainerProcessingPatternEncoder> {
@@ -30,8 +31,8 @@ public class RecipeTransferHandlerPattern implements IRecipeTransferHandler<Cont
     @Override
     public IRecipeTransferError transferRecipe(ContainerProcessingPatternEncoder container, IRecipeLayout recipeLayout, EntityPlayer player, boolean maxTransfer, boolean doTransfer) {
         if (doTransfer) {
-            Map<Integer, ItemStack> inputs = new HashMap<>();
-            Map<Integer, ItemStack> outputs = new HashMap<>();
+            Map<Integer, ItemStack> inputs = new LinkedHashMap<>();
+            Map<Integer, ItemStack> outputs = new LinkedHashMap<>();
 
             for (IGuiIngredient<ItemStack> guiIngredient : recipeLayout.getItemStacks().getGuiIngredients().values()) {
                 if (guiIngredient != null && guiIngredient.getDisplayedIngredient() != null) {
