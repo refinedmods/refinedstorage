@@ -520,7 +520,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         }
 
         int orginalSize = size;
-        AccessType accessType = AccessType.EXTRACT_INSERT;
+        AccessType accessType = AccessType.INSERT_EXTRACT;
         ItemStack remainder = stack;
 
         for (IItemStorage storage : this.itemStorage.getStorages()) {
@@ -620,7 +620,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         }
 
         int orginalSize = size;
-        AccessType accessType = AccessType.EXTRACT_INSERT;
+        AccessType accessType = AccessType.INSERT_EXTRACT;
         FluidStack remainder = stack;
 
         for (IFluidStorage storage : this.fluidStorage.getStorages()) {

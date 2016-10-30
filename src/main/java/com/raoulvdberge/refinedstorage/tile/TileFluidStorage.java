@@ -81,7 +81,7 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
 
     private EnumFluidStorageType type;
 
-    private AccessType accessType = AccessType.EXTRACT_INSERT;
+    private AccessType accessType = AccessType.INSERT_EXTRACT;
     private int priority = 0;
     private int compare = IComparer.COMPARE_NBT;
     private int mode = IFilterable.WHITELIST;

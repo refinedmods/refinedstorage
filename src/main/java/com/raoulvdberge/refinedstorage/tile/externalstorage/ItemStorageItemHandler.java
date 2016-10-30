@@ -13,7 +13,7 @@ import java.util.List;
 public class ItemStorageItemHandler extends ItemStorageExternal {
     private TileExternalStorage externalStorage;
     private IItemHandler handler;
-    private AccessType lockedAccessType = AccessType.EXTRACT_INSERT;
+    private AccessType lockedAccessType = AccessType.INSERT_EXTRACT;
 
     public ItemStorageItemHandler(TileExternalStorage externalStorage, IItemHandler handler) {
         this.externalStorage = externalStorage;
@@ -100,6 +100,6 @@ public class ItemStorageItemHandler extends ItemStorageExternal {
 
     @Override
     public AccessType getAccessType() {
-        return ((lockedAccessType != AccessType.EXTRACT_INSERT) ? lockedAccessType : externalStorage.getAccessType());
+        return ((lockedAccessType != AccessType.INSERT_EXTRACT) ? lockedAccessType : externalStorage.getAccessType());
     }
 }

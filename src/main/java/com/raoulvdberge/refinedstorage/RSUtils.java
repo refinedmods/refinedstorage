@@ -182,7 +182,7 @@ public final class RSUtils {
     }
 
     public static AccessType readAccessType(NBTTagCompound tag) {
-        return tag.hasKey(NBT_ACCESS_TYPE) ? getAccessType(tag.getInteger(NBT_ACCESS_TYPE)) : AccessType.EXTRACT_INSERT;
+        return tag.hasKey(NBT_ACCESS_TYPE) ? getAccessType(tag.getInteger(NBT_ACCESS_TYPE)) : AccessType.INSERT_EXTRACT;
     }
 
     public static AccessType getAccessType(int id) {
@@ -192,7 +192,7 @@ public final class RSUtils {
             }
         }
 
-        return AccessType.EXTRACT_INSERT;
+        return AccessType.INSERT_EXTRACT;
     }
 
     public static IItemHandler getItemHandler(TileEntity tile, EnumFacing side) {

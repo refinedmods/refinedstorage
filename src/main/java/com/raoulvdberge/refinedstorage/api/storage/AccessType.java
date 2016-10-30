@@ -5,9 +5,9 @@ package com.raoulvdberge.refinedstorage.api.storage;
  */
 public enum AccessType {
     /**
-     * Extract and insert ability.
+     * Insert and extract ability.
      */
-    EXTRACT_INSERT(0),
+    INSERT_EXTRACT(0),
     /**
      * Only extract ability.
      */

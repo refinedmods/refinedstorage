@@ -185,7 +185,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     private ItemStorage itemStorages[] = new ItemStorage[8];
     private FluidStorage fluidStorages[] = new FluidStorage[8];
 
-    private AccessType accessType = AccessType.EXTRACT_INSERT;
+    private AccessType accessType = AccessType.INSERT_EXTRACT;
     private int priority = 0;
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int mode = IFilterable.WHITELIST;
