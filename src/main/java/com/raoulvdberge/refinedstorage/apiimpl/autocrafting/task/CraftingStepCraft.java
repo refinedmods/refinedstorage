@@ -62,7 +62,15 @@ public class CraftingStepCraft extends CraftingStep {
                 network.extractItem(RSUtils.EMPTY_BUCKET, 1, compare);
                 actualInputs.add(insertStack.copy());
             } else {
-                actualInputs.add(network.extractItem(insertStack, insertStack.stackSize, compare));
+                ItemStack input = network.extractItem(insertStack, insertStack.stackSize, compare);
+                if (input != null) {
+                    actualInputs.add(input);
+                } else {
+                    // Abort task re-insert taken stacks and reset state
+                    toInsertItems.addAll(actualInputs.getStacks());
+                    startedProcessing = false;
+                    return;
+                }
             }
         }
 
