@@ -11,7 +11,7 @@ import java.util.List;
  * This holds all fluids from all the connected storages from a {@link INetworkMaster}.
  * <p>
  * Refined Storage uses this class mainly for use in Grids and Detectors to avoid querying
- * individual {@link IFluidStorage} constantly (performance impact) and to send and detect storage changes
+ * individual {@link IFluidStorage}s constantly (performance impact) and to send and detect storage changes
  * more efficiently.
  */
 public interface IFluidStorageCache {

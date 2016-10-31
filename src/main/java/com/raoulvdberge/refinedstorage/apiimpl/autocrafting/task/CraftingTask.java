@@ -263,7 +263,7 @@ public class CraftingTask implements ICraftingTask {
     public boolean update(Map<ICraftingPatternContainer, Integer> usedContainers) {
         IItemStackList oreDictPrepped = network.getItemStorageCache().getList().prepOreDict();
 
-        if (hasMissing()) {
+        if (!missing.isEmpty()) {
             for (ItemStack missing : this.missing.getStacks()) {
                 if (!oreDictPrepped.trackedRemove(missing, true)) {
                     oreDictPrepped.undo();
@@ -344,11 +344,6 @@ public class CraftingTask implements ICraftingTask {
             calculate();
             network.sendCraftingMonitorUpdate();
         }
-    }
-
-    @Override
-    public void clearMissing() {
-        missing.clear();
     }
 
     @Override
@@ -521,8 +516,8 @@ public class CraftingTask implements ICraftingTask {
     }
 
     @Override
-    public boolean hasMissing() {
-        return !missing.isEmpty();
+    public IItemStackList getMissing() {
+        return missing;
     }
 
     @Override

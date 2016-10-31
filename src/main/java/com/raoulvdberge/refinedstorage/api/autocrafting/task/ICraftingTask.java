@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
+import com.raoulvdberge.refinedstorage.api.util.IItemStackList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -44,11 +45,6 @@ public interface ICraftingTask {
      * Reschedule the task. This does a recalculation and restart of the task.
      */
     void reschedule();
-
-    /**
-     * Clear out missing items. Tasks will run all possible tasks, before reporting missing items again.
-     */
-    void clearMissing();
 
     /**
      * @return the amount of items that have to be crafted
@@ -108,18 +104,17 @@ public interface ICraftingTask {
     List<ICraftingStep> getSteps();
 
     /**
-     * Used to check if the crafting task has recursive elements
-     * (eg. block needs 9 ingots, ingots are crafted by a block)
-     * {@link ICraftingTask#calculate()} must be run before this
+     * Used to check if the crafting task has recursive elements (eg. block needs 9 ingots, ingots are crafted by a block)
+     * {@link ICraftingTask#calculate()} must be run before this!
      *
      * @return true if no recursion was found
      */
     boolean isValid();
 
     /**
-     * @return whether this crafting task has missing items
+     * @return the missing items
      */
-    boolean hasMissing();
+    IItemStackList getMissing();
 
     /**
      * {@link ICraftingTask#calculate()} must be run before this!

@@ -11,7 +11,7 @@ import java.util.List;
  * This holds all items from all the connected storages from a {@link INetworkMaster}.
  * <p>
  * Refined Storage uses this class mainly for use in Grids and Detectors to avoid querying
- * individual {@link IItemStorage} constantly (performance impact) and to send and detect storage changes
+ * individual {@link IItemStorage}s constantly (performance impact) and to send and detect storage changes
  * more efficiently.
  */
 public interface IItemStorageCache {
@@ -45,7 +45,7 @@ public interface IItemStorageCache {
     void remove(@Nonnull ItemStack stack);
 
     /**
-     * @return the list behind this cope
+     * @return the list behind this cache
      */
     IItemStackList getList();
 

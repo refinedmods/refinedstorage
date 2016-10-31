@@ -275,8 +275,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                             craftingTaskIterator.remove();
 
                             craftingTasksChanged = true;
-                        } else if(task.hasMissing() && ticks % 100 == 0 && Math.random() > 0.5) {
-                            task.clearMissing();
+                        } else if (!task.getMissing().isEmpty() && ticks % 100 == 0 && Math.random() > 0.5) {
+                            task.getMissing().clear();
                         }
                     }
 

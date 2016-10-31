@@ -184,7 +184,8 @@ public interface INetworkMaster {
                 ICraftingTask task = createCraftingTask(stack, pattern, 1);
 
                 task.calculate();
-                task.clearMissing();
+                task.getMissing().clear();
+
                 addCraftingTask(task);
             }
         }
