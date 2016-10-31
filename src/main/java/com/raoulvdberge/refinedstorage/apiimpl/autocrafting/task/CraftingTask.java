@@ -76,6 +76,7 @@ public class CraftingTask implements ICraftingTask {
         IFluidStackList networkFluidList = network.getFluidStorageCache().getList().copy();
         IItemStackList toInsert = API.instance().createItemStackList();
 
+        ItemStack requested = this.requested != null ? this.requested : pattern.getOutputs().get(0);
         toCraft.add(ItemHandlerHelper.copyStackWithSize(requested, quantity));
 
         int quantity = this.quantity;
