@@ -77,7 +77,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             super.onContentsChanged(slot);
 
             if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
-                RSUtils.constructFromDrive(getStackInSlot(slot), slot, itemStorages, fluidStorages, ItemStorage::new, FluidStorage::new);
+                RSUtils.constructFromDrive(getStackInSlot(slot), slot, itemStorages, fluidStorages, s -> new ItemStorage(s), s -> new FluidStorage(s));
 
                 updateBlock();
             }
@@ -103,7 +103,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             super.onContentsChanged(slot);
 
             if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
-                RSUtils.constructFromDrive(getStackInSlot(slot), 3 + slot, itemStorages, fluidStorages, ItemStorage::new, FluidStorage::new);
+                RSUtils.constructFromDrive(getStackInSlot(slot), 3 + slot, itemStorages, fluidStorages, s -> new ItemStorage(s), s -> new FluidStorage(s));
 
                 updateBlock();
             }
