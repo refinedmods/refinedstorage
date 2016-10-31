@@ -54,7 +54,7 @@ public final class RSUtils {
         buf.writeInt(Item.getIdFromItem(stack.getItem()));
         buf.writeInt(stack.stackSize);
         buf.writeInt(stack.getItemDamage());
-        ByteBufUtils.writeTag(buf, stack.getTagCompound());
+        ByteBufUtils.writeTag(buf, stack.getItem().getNBTShareTag(stack));
         buf.writeInt(API.instance().getItemStackHashCode(stack));
         buf.writeBoolean(network.hasPattern(stack));
     }
