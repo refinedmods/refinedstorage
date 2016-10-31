@@ -149,8 +149,8 @@ public class ItemStackList implements IItemStackList {
 
     @Nonnull
     @Override
-    public IItemStackList prepOreDict() {
-        return new OreDictedItemStackList(this);
+    public IItemStackList getOredicted() {
+        return new ItemStackListOredicted(this);
     }
 
     @Override

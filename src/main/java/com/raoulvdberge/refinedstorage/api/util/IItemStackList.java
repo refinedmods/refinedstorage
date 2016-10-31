@@ -134,5 +134,5 @@ public interface IItemStackList {
      * @return the list wrapped in an ore dictionary optimized {@link IItemStackList}
      */
     @Nonnull
-    IItemStackList prepOreDict();
+    IItemStackList getOredicted();
 }

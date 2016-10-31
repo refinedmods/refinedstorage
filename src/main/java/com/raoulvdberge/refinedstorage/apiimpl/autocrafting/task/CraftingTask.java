@@ -72,7 +72,7 @@ public class CraftingTask implements ICraftingTask {
         // Copy here might be expensive but since it is only executed once it isn't a big impact
         IItemStackList networkList = network.getItemStorageCache().getList().copy();
         networkList.clean(); // Remove the zero stacks
-        networkList = networkList.prepOreDict();
+        networkList = networkList.getOredicted();
         IFluidStackList networkFluidList = network.getFluidStorageCache().getList().copy();
         IItemStackList toInsert = API.instance().createItemStackList();
 
@@ -261,7 +261,7 @@ public class CraftingTask implements ICraftingTask {
 
     @Override
     public boolean update(Map<ICraftingPatternContainer, Integer> usedContainers) {
-        IItemStackList oreDictPrepped = network.getItemStorageCache().getList().prepOreDict();
+        IItemStackList oreDictPrepped = network.getItemStorageCache().getList().getOredicted();
 
         if (!missing.isEmpty()) {
             for (ItemStack missing : this.missing.getStacks()) {
@@ -437,7 +437,7 @@ public class CraftingTask implements ICraftingTask {
             if (steps.stream().filter(s -> !s.getPattern().isProcessing()).count() > 0) {
                 elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_crafting", 16));
 
-                IItemStackList oreDictPrepped = network.getItemStorageCache().getList().prepOreDict();
+                IItemStackList oreDictPrepped = network.getItemStorageCache().getList().getOredicted();
 
                 for (ICraftingStep step : steps.stream().filter(s -> !s.getPattern().isProcessing()).collect(Collectors.toList())) {
                     for (int i = 0; i < step.getPattern().getOutputs().size(); ++i) {

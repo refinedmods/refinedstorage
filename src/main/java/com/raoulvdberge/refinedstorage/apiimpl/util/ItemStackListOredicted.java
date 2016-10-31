@@ -13,14 +13,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class OreDictedItemStackList implements IItemStackList {
+public class ItemStackListOredicted implements IItemStackList {
     private IItemStackList underlyingList;
     private ArrayListMultimap<Integer, ItemStack> stacks = ArrayListMultimap.create();
 
-    private OreDictedItemStackList() {
+    private ItemStackListOredicted() {
     }
 
-    public OreDictedItemStackList(IItemStackList list) {
+    public ItemStackListOredicted(IItemStackList list) {
         this.underlyingList = list;
         initOreDict();
     }
@@ -135,7 +135,7 @@ public class OreDictedItemStackList implements IItemStackList {
     @Nonnull
     @Override
     public IItemStackList copy() {
-        OreDictedItemStackList newList = new OreDictedItemStackList();
+        ItemStackListOredicted newList = new ItemStackListOredicted();
         newList.underlyingList = this.underlyingList.copy();
         for (Map.Entry<Integer, ItemStack> entry : this.stacks.entries()) {
             newList.stacks.put(entry.getKey(), entry.getValue());
@@ -145,7 +145,7 @@ public class OreDictedItemStackList implements IItemStackList {
 
     @Nonnull
     @Override
-    public IItemStackList prepOreDict() {
+    public IItemStackList getOredicted() {
         return this;
     }
 }
