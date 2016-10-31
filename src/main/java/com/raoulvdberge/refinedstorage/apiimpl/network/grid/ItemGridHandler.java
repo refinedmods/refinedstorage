@@ -29,6 +29,7 @@ public class ItemGridHandler implements IItemGridHandler {
         }
 
         int itemSize = item.stackSize;
+        int maxItemSize = item.getItem().getItemStackLimit(item);
 
         boolean single = (flags & EXTRACT_SINGLE) == EXTRACT_SINGLE;
 
@@ -47,8 +48,8 @@ public class ItemGridHandler implements IItemGridHandler {
         if ((flags & EXTRACT_HALF) == EXTRACT_HALF && itemSize > 1) {
             size = itemSize / 2;
 
-            if (size > 32) {
-                size = 32;
+            if (size > maxItemSize / 2) {
+                size = maxItemSize / 2;
             }
         } else if (single) {
             size = 1;
@@ -56,7 +57,7 @@ public class ItemGridHandler implements IItemGridHandler {
             // NO OP, the quantity already set (64) is needed for shift
         }
 
-        size = Math.min(size, item.getItem().getItemStackLimit(item));
+        size = Math.min(size, maxItemSize);
 
         ItemStack took = network.extractItem(item, size);
 
