@@ -669,8 +669,8 @@ public class ProxyCommon {
 
         // Wrench
         GameRegistry.addShapedRecipe(new ItemStack(RSItems.WRENCH),
-            "E E",
-            " P ",
+            "EPE",
+            "EEE",
             " E ",
             'E', new ItemStack(RSItems.QUARTZ_ENRICHED_IRON),
             'P', new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC)
