@@ -408,12 +408,10 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         List<ICraftingPattern> patterns = new ArrayList<>();
 
         for (ICraftingPattern craftingPattern : getPatterns()) {
-            IItemStackList outputs = API.instance().createItemStackList();
-            craftingPattern.getOutputs().stream().filter(Objects::nonNull).forEach(outputs::add);
-            outputs = outputs.getOredicted();
-            ItemStack contains = outputs.get(pattern, flags);
-            if (contains != null && contains.stackSize > 0) {
-                patterns.add(craftingPattern);
+            for (ItemStack output : craftingPattern.getOutputs()) {
+                if (API.instance().getComparer().isEqual(output, pattern, flags)) {
+                    patterns.add(craftingPattern);
+                }
             }
         }
 
@@ -433,12 +431,14 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         int highestScore = 0;
         int highestPattern = 0;
 
+        IItemStackList itemList = itemStorage.getList().getOredicted();
+
         for (int i = 0; i < patterns.size(); ++i) {
             int score = 0;
 
             for (ItemStack input : patterns.get(i).getInputs()) {
                 if (input != null) {
-                    ItemStack stored = itemStorage.getList().get(input, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT | (patterns.get(i).isOredict() ? IComparer.COMPARE_OREDICT : 0));
+                    ItemStack stored = itemList.get(input, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT | (patterns.get(i).isOredict() ? IComparer.COMPARE_OREDICT : 0));
 
                     score += stored != null ? stored.stackSize : 0;
                 }
