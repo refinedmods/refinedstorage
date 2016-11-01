@@ -42,7 +42,15 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
 
     private static final String NBT_TRIGGERED_AUTOCRAFTING = "TriggeredAutocrafting";
 
-    private ItemHandlerBasic patterns = new ItemHandlerBasic(9, this, s -> s.getItem() instanceof ICraftingPatternProvider && ((ICraftingPatternProvider) s.getItem()).create(worldObj, s, this).isValid()) {
+    private ItemHandlerBasic patterns = new ItemHandlerBasic(9, this, s -> {
+        // We can only validate the crafting pattern if the world exists.
+        // If the world doesn't exist, this is probably called while reading and in that case it doesn't matter.
+        if (worldObj != null) {
+            return s.getItem() instanceof ICraftingPatternProvider && ((ICraftingPatternProvider) s.getItem()).create(worldObj, s, this).isValid();
+        }
+
+        return true;
+    }) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
