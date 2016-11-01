@@ -33,7 +33,7 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 import java.util.ArrayList;
 
-public class TileDiskManipulator extends TileNode implements IComparable, IFilterable, IType {
+public class TileDiskManipulator extends TileNode implements IComparable, IFilterable, IType, IWrenchable {
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
     public static final TileDataParameter<Integer> TYPE = IType.createParameter();
@@ -500,11 +500,45 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        RSUtils.readItems(itemFilters, 1, tag);
-        RSUtils.readItems(fluidFilters, 2, tag);
         RSUtils.readItems(upgrades, 3, tag);
         RSUtils.readItems(inputDisks, 4, tag);
         RSUtils.readItems(outputDisks, 5, tag);
+
+        readConfiguration(tag);
+    }
+
+    @Override
+    public NBTTagCompound write(NBTTagCompound tag) {
+        super.write(tag);
+
+        onBreak();
+
+        RSUtils.writeItems(upgrades, 3, tag);
+        RSUtils.writeItems(inputDisks, 4, tag);
+        RSUtils.writeItems(outputDisks, 5, tag);
+
+        writeConfiguration(tag);
+
+        return tag;
+    }
+
+    @Override
+    public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+        RSUtils.writeItems(itemFilters, 1, tag);
+        RSUtils.writeItems(fluidFilters, 2, tag);
+
+        tag.setInteger(NBT_COMPARE, compare);
+        tag.setInteger(NBT_MODE, mode);
+        tag.setInteger(NBT_TYPE, type);
+        tag.setInteger(NBT_IO_MODE, ioMode);
+
+        return tag;
+    }
+
+    @Override
+    public void readConfiguration(NBTTagCompound tag) {
+        RSUtils.readItems(itemFilters, 1, tag);
+        RSUtils.readItems(fluidFilters, 2, tag);
 
         if (tag.hasKey(NBT_COMPARE)) {
             compare = tag.getInteger(NBT_COMPARE);
@@ -521,26 +555,6 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         if (tag.hasKey(NBT_IO_MODE)) {
             ioMode = tag.getInteger(NBT_IO_MODE);
         }
-    }
-
-    @Override
-    public NBTTagCompound write(NBTTagCompound tag) {
-        super.write(tag);
-
-        onBreak();
-
-        RSUtils.writeItems(itemFilters, 1, tag);
-        RSUtils.writeItems(fluidFilters, 2, tag);
-        RSUtils.writeItems(upgrades, 3, tag);
-        RSUtils.writeItems(inputDisks, 4, tag);
-        RSUtils.writeItems(outputDisks, 5, tag);
-
-        tag.setInteger(NBT_COMPARE, compare);
-        tag.setInteger(NBT_MODE, mode);
-        tag.setInteger(NBT_TYPE, type);
-        tag.setInteger(NBT_IO_MODE, ioMode);
-
-        return tag;
     }
 
     @Override

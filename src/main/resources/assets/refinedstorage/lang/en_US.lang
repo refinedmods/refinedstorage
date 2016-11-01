@@ -225,3 +225,7 @@ item.refinedstorage:upgrade.7.name=Fortune Upgrade
 item.refinedstorage:storage_housing.name=Storage Housing
 item.refinedstorage:grid_filter.name=Grid Filter
 item.refinedstorage:network_card.name=Network Card
+item.refinedstorage:wrench.name=Wrench
+item.refinedstorage:wrench.saved=Configuration written.
+item.refinedstorage:wrench.read=Configuration read.
+item.refinedstorage:wrench.cleared=Configuration cleared.

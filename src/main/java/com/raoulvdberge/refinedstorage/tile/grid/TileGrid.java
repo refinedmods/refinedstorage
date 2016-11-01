@@ -16,6 +16,7 @@ import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerGridFilterInGrid;
 import com.raoulvdberge.refinedstorage.inventory.ItemValidatorBasic;
 import com.raoulvdberge.refinedstorage.item.ItemPattern;
+import com.raoulvdberge.refinedstorage.tile.IWrenchable;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataConsumer;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
@@ -38,7 +39,7 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileGrid extends TileNode implements IGrid {
+public class TileGrid extends TileNode implements IGrid, IWrenchable {
     public static final TileDataParameter<Integer> VIEW_TYPE = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileGrid>() {
         @Override
         public Integer getValue(TileGrid tile) {
@@ -491,6 +492,36 @@ public class TileGrid extends TileNode implements IGrid {
         RSUtils.readItems(patterns, 1, tag);
         RSUtils.readItems(filter, 2, tag);
 
+        readConfiguration(tag);
+    }
+
+    @Override
+    public NBTTagCompound write(NBTTagCompound tag) {
+        super.write(tag);
+
+        RSUtils.writeItemsLegacy(matrix, 0, tag);
+        RSUtils.writeItems(patterns, 1, tag);
+        RSUtils.writeItems(filter, 2, tag);
+
+        writeConfiguration(tag);
+
+        return tag;
+    }
+
+    @Override
+    public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+        tag.setInteger(NBT_VIEW_TYPE, viewType);
+        tag.setInteger(NBT_SORTING_DIRECTION, sortingDirection);
+        tag.setInteger(NBT_SORTING_TYPE, sortingType);
+        tag.setInteger(NBT_SEARCH_BOX_MODE, searchBoxMode);
+
+        tag.setBoolean(NBT_OREDICT_PATTERN, oredictPattern);
+
+        return tag;
+    }
+
+    @Override
+    public void readConfiguration(NBTTagCompound tag) {
         if (tag.hasKey(NBT_VIEW_TYPE)) {
             viewType = tag.getInteger(NBT_VIEW_TYPE);
         }
@@ -510,24 +541,6 @@ public class TileGrid extends TileNode implements IGrid {
         if (tag.hasKey(NBT_OREDICT_PATTERN)) {
             oredictPattern = tag.getBoolean(NBT_OREDICT_PATTERN);
         }
-    }
-
-    @Override
-    public NBTTagCompound write(NBTTagCompound tag) {
-        super.write(tag);
-
-        RSUtils.writeItemsLegacy(matrix, 0, tag);
-        RSUtils.writeItems(patterns, 1, tag);
-        RSUtils.writeItems(filter, 2, tag);
-
-        tag.setInteger(NBT_VIEW_TYPE, viewType);
-        tag.setInteger(NBT_SORTING_DIRECTION, sortingDirection);
-        tag.setInteger(NBT_SORTING_TYPE, sortingType);
-        tag.setInteger(NBT_SEARCH_BOX_MODE, searchBoxMode);
-
-        tag.setBoolean(NBT_OREDICT_PATTERN, oredictPattern);
-
-        return tag;
     }
 
     @Override

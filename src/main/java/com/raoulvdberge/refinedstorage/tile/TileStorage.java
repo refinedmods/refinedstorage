@@ -22,7 +22,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.List;
 
-public class TileStorage extends TileNode implements IItemStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IExcessVoidable, IAccessType {
+public class TileStorage extends TileNode implements IItemStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IExcessVoidable, IAccessType, IWrenchable {
     public static final TileDataParameter<Integer> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
@@ -143,14 +143,48 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
+        if (tag.hasKey(NBT_STORAGE)) {
+            storageTag = tag.getCompoundTag(NBT_STORAGE);
+        }
+
+        readConfiguration(tag);
+    }
+
+    @Override
+    public NBTTagCompound write(NBTTagCompound tag) {
+        super.write(tag);
+
+        if (storage != null) {
+            storage.writeToNBT();
+        }
+
+        tag.setTag(NBT_STORAGE, storageTag);
+
+        writeConfiguration(tag);
+
+        return tag;
+    }
+
+    @Override
+    public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+        RSUtils.writeItems(filters, 0, tag);
+
+        tag.setInteger(NBT_PRIORITY, priority);
+        tag.setInteger(NBT_COMPARE, compare);
+        tag.setInteger(NBT_MODE, mode);
+        tag.setBoolean(NBT_VOID_EXCESS, voidExcess);
+
+        RSUtils.writeAccessType(tag, accessType);
+
+        return tag;
+    }
+
+    @Override
+    public void readConfiguration(NBTTagCompound tag) {
         RSUtils.readItems(filters, 0, tag);
 
         if (tag.hasKey(NBT_PRIORITY)) {
             priority = tag.getInteger(NBT_PRIORITY);
-        }
-
-        if (tag.hasKey(NBT_STORAGE)) {
-            storageTag = tag.getCompoundTag(NBT_STORAGE);
         }
 
         if (tag.hasKey(NBT_COMPARE)) {
@@ -166,28 +200,6 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
         }
 
         accessType = RSUtils.readAccessType(tag);
-    }
-
-    @Override
-    public NBTTagCompound write(NBTTagCompound tag) {
-        super.write(tag);
-
-        RSUtils.writeItems(filters, 0, tag);
-
-        tag.setInteger(NBT_PRIORITY, priority);
-
-        if (storage != null) {
-            storage.writeToNBT();
-        }
-
-        tag.setTag(NBT_STORAGE, storageTag);
-        tag.setInteger(NBT_COMPARE, compare);
-        tag.setInteger(NBT_MODE, mode);
-        tag.setBoolean(NBT_VOID_EXCESS, voidExcess);
-
-        RSUtils.writeAccessType(tag, accessType);
-
-        return tag;
     }
 
     public EnumItemStorageType getType() {

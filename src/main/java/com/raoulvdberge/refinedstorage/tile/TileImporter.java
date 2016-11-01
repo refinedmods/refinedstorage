@@ -22,7 +22,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class TileImporter extends TileMultipartNode implements IComparable, IFilterable, IType {
+public class TileImporter extends TileMultipartNode implements IComparable, IFilterable, IType, IWrenchable {
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
     public static final TileDataParameter<Integer> TYPE = IType.createParameter();
@@ -133,6 +133,37 @@ public class TileImporter extends TileMultipartNode implements IComparable, IFil
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
+        RSUtils.readItems(upgrades, 1, tag);
+
+        readConfiguration(tag);
+    }
+
+    @Override
+    public NBTTagCompound write(NBTTagCompound tag) {
+        super.write(tag);
+
+        RSUtils.writeItems(upgrades, 1, tag);
+
+        writeConfiguration(tag);
+
+        return tag;
+    }
+
+
+    @Override
+    public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+        tag.setInteger(NBT_COMPARE, compare);
+        tag.setInteger(NBT_MODE, mode);
+        tag.setInteger(NBT_TYPE, type);
+
+        RSUtils.writeItems(itemFilters, 0, tag);
+        RSUtils.writeItems(fluidFilters, 2, tag);
+
+        return tag;
+    }
+
+    @Override
+    public void readConfiguration(NBTTagCompound tag) {
         if (tag.hasKey(NBT_COMPARE)) {
             compare = tag.getInteger(NBT_COMPARE);
         }
@@ -146,23 +177,7 @@ public class TileImporter extends TileMultipartNode implements IComparable, IFil
         }
 
         RSUtils.readItems(itemFilters, 0, tag);
-        RSUtils.readItems(upgrades, 1, tag);
         RSUtils.readItems(fluidFilters, 2, tag);
-    }
-
-    @Override
-    public NBTTagCompound write(NBTTagCompound tag) {
-        super.write(tag);
-
-        tag.setInteger(NBT_COMPARE, compare);
-        tag.setInteger(NBT_MODE, mode);
-        tag.setInteger(NBT_TYPE, type);
-
-        RSUtils.writeItems(itemFilters, 0, tag);
-        RSUtils.writeItems(upgrades, 1, tag);
-        RSUtils.writeItems(fluidFilters, 2, tag);
-
-        return tag;
     }
 
     public IItemHandler getUpgrades() {

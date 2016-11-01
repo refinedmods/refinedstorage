@@ -32,7 +32,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.List;
 
-public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFluidStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IType, IExcessVoidable, IAccessType {
+public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFluidStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IType, IExcessVoidable, IAccessType, IWrenchable {
     public static final TileDataParameter<Integer> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
@@ -269,6 +269,49 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
         super.read(tag);
 
         RSUtils.readItems(disks, 0, tag);
+
+        readConfiguration(tag);
+    }
+
+    @Override
+    public NBTTagCompound write(NBTTagCompound tag) {
+        super.write(tag);
+
+        for (int i = 0; i < disks.getSlots(); ++i) {
+            if (itemStorages[i] != null) {
+                itemStorages[i].writeToNBT();
+            }
+
+            if (fluidStorages[i] != null) {
+                fluidStorages[i].writeToNBT();
+            }
+        }
+
+        RSUtils.writeItems(disks, 0, tag);
+
+        writeConfiguration(tag);
+
+        return tag;
+    }
+
+    @Override
+    public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+        RSUtils.writeItems(itemFilters, 1, tag);
+        RSUtils.writeItems(fluidFilters, 2, tag);
+
+        tag.setInteger(NBT_PRIORITY, priority);
+        tag.setInteger(NBT_COMPARE, compare);
+        tag.setInteger(NBT_MODE, mode);
+        tag.setInteger(NBT_TYPE, type);
+        tag.setBoolean(NBT_VOID_EXCESS, voidExcess);
+
+        RSUtils.writeAccessType(tag, accessType);
+
+        return tag;
+    }
+
+    @Override
+    public void readConfiguration(NBTTagCompound tag) {
         RSUtils.readItems(itemFilters, 1, tag);
         RSUtils.readItems(fluidFilters, 2, tag);
 
@@ -293,35 +336,6 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
         }
 
         accessType = RSUtils.readAccessType(tag);
-    }
-
-    @Override
-    public NBTTagCompound write(NBTTagCompound tag) {
-        super.write(tag);
-
-        for (int i = 0; i < disks.getSlots(); ++i) {
-            if (itemStorages[i] != null) {
-                itemStorages[i].writeToNBT();
-            }
-
-            if (fluidStorages[i] != null) {
-                fluidStorages[i].writeToNBT();
-            }
-        }
-
-        RSUtils.writeItems(disks, 0, tag);
-        RSUtils.writeItems(itemFilters, 1, tag);
-        RSUtils.writeItems(fluidFilters, 2, tag);
-
-        tag.setInteger(NBT_PRIORITY, priority);
-        tag.setInteger(NBT_COMPARE, compare);
-        tag.setInteger(NBT_MODE, mode);
-        tag.setInteger(NBT_TYPE, type);
-        tag.setBoolean(NBT_VOID_EXCESS, voidExcess);
-
-        RSUtils.writeAccessType(tag, accessType);
-
-        return tag;
     }
 
     @Override

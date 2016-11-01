@@ -14,6 +14,7 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.tile.IStorageGui;
+import com.raoulvdberge.refinedstorage.tile.IWrenchable;
 import com.raoulvdberge.refinedstorage.tile.TileMultipartNode;
 import com.raoulvdberge.refinedstorage.tile.config.*;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
@@ -30,7 +31,7 @@ import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileExternalStorage extends TileMultipartNode implements IItemStorageProvider, IFluidStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IType, IAccessType {
+public class TileExternalStorage extends TileMultipartNode implements IItemStorageProvider, IFluidStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IType, IAccessType, IWrenchable {
     public static final TileDataParameter<Integer> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
@@ -157,6 +158,35 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
+        readConfiguration(tag);
+    }
+
+    @Override
+    public NBTTagCompound write(NBTTagCompound tag) {
+        super.write(tag);
+
+        writeConfiguration(tag);
+
+        return tag;
+    }
+
+    @Override
+    public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+        RSUtils.writeItems(itemFilters, 0, tag);
+        RSUtils.writeItems(fluidFilters, 1, tag);
+
+        tag.setInteger(NBT_PRIORITY, priority);
+        tag.setInteger(NBT_COMPARE, compare);
+        tag.setInteger(NBT_MODE, mode);
+        tag.setInteger(NBT_TYPE, type);
+
+        RSUtils.writeAccessType(tag, accessType);
+
+        return tag;
+    }
+
+    @Override
+    public void readConfiguration(NBTTagCompound tag) {
         RSUtils.readItems(itemFilters, 0, tag);
         RSUtils.readItems(fluidFilters, 1, tag);
 
@@ -177,23 +207,6 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
         }
 
         accessType = RSUtils.readAccessType(tag);
-    }
-
-    @Override
-    public NBTTagCompound write(NBTTagCompound tag) {
-        super.write(tag);
-
-        RSUtils.writeItems(itemFilters, 0, tag);
-        RSUtils.writeItems(fluidFilters, 1, tag);
-
-        tag.setInteger(NBT_PRIORITY, priority);
-        tag.setInteger(NBT_COMPARE, compare);
-        tag.setInteger(NBT_MODE, mode);
-        tag.setInteger(NBT_TYPE, type);
-
-        RSUtils.writeAccessType(tag, accessType);
-
-        return tag;
     }
 
     @Override

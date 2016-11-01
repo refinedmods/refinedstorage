@@ -158,7 +158,7 @@ public class ItemWirelessGrid extends ItemEnergyContainer implements ISpecialEle
             }
         }
 
-        return new ActionResult<>(EnumActionResult.PASS, stack);
+        return super.onItemRightClick(stack, world, player, hand);
     }
 
     public static int getDimensionId(ItemStack stack) {

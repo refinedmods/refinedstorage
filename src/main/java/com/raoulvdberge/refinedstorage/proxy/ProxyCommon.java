@@ -99,6 +99,7 @@ public class ProxyCommon {
         NetworkRegistry.INSTANCE.registerGuiHandler(RS.INSTANCE, new GuiHandler());
 
         MinecraftForge.EVENT_BUS.register(new ContainerListener());
+        MinecraftForge.EVENT_BUS.register(RSItems.WRENCH);
 
         registerTile(TileController.class, "controller");
         registerTile(TileGrid.class, "grid");
@@ -163,6 +164,7 @@ public class ProxyCommon {
         registerItem(RSItems.UPGRADE);
         registerItem(RSItems.GRID_FILTER);
         registerItem(RSItems.NETWORK_CARD);
+        registerItem(RSItems.WRENCH);
 
         OreDictionary.registerOre("itemSilicon", RSItems.SILICON);
 
@@ -664,6 +666,15 @@ public class ProxyCommon {
             'C', new ItemStack(RSItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
             'M', new ItemStack(RSBlocks.MACHINE_CASING),
             'D', new ItemStack(RSItems.CORE, 1, ItemCore.TYPE_DESTRUCTION)
+        );
+
+        // Wrench
+        GameRegistry.addShapedRecipe(new ItemStack(RSItems.WRENCH),
+            "E E",
+            " P ",
+            " E ",
+            'E', new ItemStack(RSItems.QUARTZ_ENRICHED_IRON),
+            'P', new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC)
         );
     }
 
