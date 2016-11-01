@@ -24,6 +24,7 @@ import com.raoulvdberge.refinedstorage.api.storage.fluid.IFluidStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.item.IItemStorage;
 import com.raoulvdberge.refinedstorage.api.storage.item.IItemStorageCache;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.api.util.IItemStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeGraph;
 import com.raoulvdberge.refinedstorage.apiimpl.network.WirelessGridHandler;
@@ -407,10 +408,12 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         List<ICraftingPattern> patterns = new ArrayList<>();
 
         for (ICraftingPattern craftingPattern : getPatterns()) {
-            for (ItemStack output : craftingPattern.getOutputs()) {
-                if (API.instance().getComparer().isEqual(output, pattern, flags)) {
-                    patterns.add(craftingPattern);
-                }
+            IItemStackList outputs = API.instance().createItemStackList();
+            craftingPattern.getOutputs().stream().filter(Objects::nonNull).forEach(outputs::add);
+            outputs = outputs.getOredicted();
+            ItemStack contains = outputs.get(pattern, flags);
+            if (contains != null && contains.stackSize > 0) {
+                patterns.add(craftingPattern);
             }
         }
 
