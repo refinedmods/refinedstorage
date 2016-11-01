@@ -89,7 +89,7 @@ public abstract class BlockBase extends Block {
         if (!world.isRemote && getPlacementType() != null) {
             TileBase tile = (TileBase) world.getTileEntity(pos);
 
-            tile.setDirection(getPlacementType().getNext(tile.getDirection()));
+            tile.setDirection(getPlacementType().cycle(tile.getDirection()));
 
             tile.updateBlock();
 

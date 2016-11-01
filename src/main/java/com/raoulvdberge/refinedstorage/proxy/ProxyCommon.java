@@ -99,7 +99,6 @@ public class ProxyCommon {
         NetworkRegistry.INSTANCE.registerGuiHandler(RS.INSTANCE, new GuiHandler());
 
         MinecraftForge.EVENT_BUS.register(new ContainerListener());
-        MinecraftForge.EVENT_BUS.register(RSItems.WRENCH);
 
         registerTile(TileController.class, "controller");
         registerTile(TileGrid.class, "grid");

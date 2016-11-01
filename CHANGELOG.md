@@ -12,6 +12,7 @@
 - Added ore dictionary compare toggle to storage I/O blocks (raoulvdberge)
 - Added disk leds to Disk Drive block that shows the disks (raoulvdberge)
 - Added disk leds to Disk Manipulator block that shows the disks (raoulvdberge)
+- Added Wrench, has two modes: configuration saving / reading mode, and rotation mode (raoulvdberge)
 - Changed storage GUIs (raoulvdberge)
 - Changed default EU conversion rate to be 1:8 with RS (raoulvdberge)
 - Controller sorts by energy usage in GUI (highest to lowest) (raoulvdberge)

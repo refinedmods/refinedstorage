@@ -154,6 +154,7 @@ public class ProxyClient extends ProxyCommon {
         ModelLoader.setCustomModelResourceLocation(RSItems.STORAGE_HOUSING, 0, new ModelResourceLocation("refinedstorage:storage_housing", "inventory"));
         ModelLoader.setCustomModelResourceLocation(RSItems.GRID_FILTER, 0, new ModelResourceLocation("refinedstorage:grid_filter", "inventory"));
         ModelLoader.setCustomModelResourceLocation(RSItems.NETWORK_CARD, 0, new ModelResourceLocation("refinedstorage:network_card", "inventory"));
+        ModelLoader.setCustomModelResourceLocation(RSItems.WRENCH, 0, new ModelResourceLocation("refinedstorage:wrench", "inventory"));
 
         ModelLoader.setCustomModelResourceLocation(RSItems.UPGRADE, 0, new ModelResourceLocation("refinedstorage:upgrade", "inventory"));
         ModelLoader.setCustomModelResourceLocation(RSItems.UPGRADE, ItemUpgrade.TYPE_RANGE, new ModelResourceLocation("refinedstorage:range_upgrade", "inventory"));

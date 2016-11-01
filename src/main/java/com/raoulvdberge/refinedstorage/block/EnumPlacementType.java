@@ -38,7 +38,7 @@ public enum EnumPlacementType {
         }
     }
 
-    public EnumFacing getNext(EnumFacing previous) {
+    public EnumFacing cycle(EnumFacing previous) {
         switch (this) {
             case ANY:
             case ANY_FACE_PLAYER:

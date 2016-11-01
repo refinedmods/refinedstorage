@@ -228,4 +228,6 @@ item.refinedstorage:network_card.name=Network Card
 item.refinedstorage:wrench.name=Wrench
 item.refinedstorage:wrench.saved=Configuration written.
 item.refinedstorage:wrench.read=Configuration read.
-item.refinedstorage:wrench.cleared=Configuration cleared.
+item.refinedstorage:wrench.mode=Mode: %s
+item.refinedstorage:wrench.mode.0=Rotation
+item.refinedstorage:wrench.mode.1=Configuration
