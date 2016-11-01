@@ -26,7 +26,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.items.IItemHandler;
 
-public class TileDetector extends TileNode implements IComparable, IType, IWrenchable {
+public class TileDetector extends TileNode implements IComparable, IType {
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> TYPE = IType.createParameter();
 
@@ -213,23 +213,9 @@ public class TileDetector extends TileNode implements IComparable, IType, IWrenc
     }
 
     @Override
-    public void read(NBTTagCompound tag) {
-        super.read(tag);
-
-        readConfiguration(tag);
-    }
-
-    @Override
-    public NBTTagCompound write(NBTTagCompound tag) {
-        super.write(tag);
-
-        writeConfiguration(tag);
-
-        return tag;
-    }
-
-    @Override
     public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+        super.writeConfiguration(tag);
+
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_MODE, mode);
         tag.setInteger(NBT_AMOUNT, amount);
@@ -243,6 +229,8 @@ public class TileDetector extends TileNode implements IComparable, IType, IWrenc
 
     @Override
     public void readConfiguration(NBTTagCompound tag) {
+        super.readConfiguration(tag);
+
         if (tag.hasKey(NBT_COMPARE)) {
             compare = tag.getInteger(NBT_COMPARE);
         }

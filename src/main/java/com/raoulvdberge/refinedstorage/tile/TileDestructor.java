@@ -41,7 +41,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class TileDestructor extends TileMultipartNode implements IComparable, IFilterable, IType, IWrenchable {
+public class TileDestructor extends TileMultipartNode implements IComparable, IFilterable, IType {
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
     public static final TileDataParameter<Integer> TYPE = IType.createParameter();
@@ -206,16 +206,12 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        readConfiguration(tag);
-
         RSUtils.readItems(upgrades, 1, tag);
     }
 
     @Override
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
-
-        writeConfiguration(tag);
 
         RSUtils.writeItems(upgrades, 1, tag);
 
@@ -224,6 +220,8 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
 
     @Override
     public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+        super.writeConfiguration(tag);
+
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_MODE, mode);
         tag.setInteger(NBT_TYPE, type);
@@ -237,6 +235,8 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
 
     @Override
     public void readConfiguration(NBTTagCompound tag) {
+        super.readConfiguration(tag);
+
         if (tag.hasKey(NBT_COMPARE)) {
             compare = tag.getInteger(NBT_COMPARE);
         }

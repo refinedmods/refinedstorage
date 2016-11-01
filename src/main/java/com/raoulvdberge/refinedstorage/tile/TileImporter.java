@@ -22,7 +22,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class TileImporter extends TileMultipartNode implements IComparable, IFilterable, IType, IWrenchable {
+public class TileImporter extends TileMultipartNode implements IComparable, IFilterable, IType {
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
     public static final TileDataParameter<Integer> TYPE = IType.createParameter();
@@ -134,8 +134,6 @@ public class TileImporter extends TileMultipartNode implements IComparable, IFil
         super.read(tag);
 
         RSUtils.readItems(upgrades, 1, tag);
-
-        readConfiguration(tag);
     }
 
     @Override
@@ -144,14 +142,14 @@ public class TileImporter extends TileMultipartNode implements IComparable, IFil
 
         RSUtils.writeItems(upgrades, 1, tag);
 
-        writeConfiguration(tag);
-
         return tag;
     }
 
 
     @Override
     public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+        super.writeConfiguration(tag);
+
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_MODE, mode);
         tag.setInteger(NBT_TYPE, type);
@@ -164,6 +162,8 @@ public class TileImporter extends TileMultipartNode implements IComparable, IFil
 
     @Override
     public void readConfiguration(NBTTagCompound tag) {
+        super.readConfiguration(tag);
+
         if (tag.hasKey(NBT_COMPARE)) {
             compare = tag.getInteger(NBT_COMPARE);
         }

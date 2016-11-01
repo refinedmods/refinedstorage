@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.tile;
 
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
+import com.raoulvdberge.refinedstorage.api.util.IWrenchable;
 import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
@@ -11,7 +12,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public abstract class TileNode extends TileBase implements INetworkNode, IRedstoneConfigurable {
+public abstract class TileNode extends TileBase implements INetworkNode, IRedstoneConfigurable, IWrenchable {
     public static final TileDataParameter<Integer> REDSTONE_MODE = RedstoneMode.createParameter();
 
     private static final String NBT_CONNECTED = "Connected";
@@ -147,7 +148,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        redstoneMode = RedstoneMode.read(tag);
+        readConfiguration(tag);
 
         if (tag.hasKey(NBT_NETWORK)) {
             networkPos = BlockPos.fromLong(tag.getLong(NBT_NETWORK));
@@ -158,13 +159,25 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        redstoneMode.write(tag);
+        writeConfiguration(tag);
 
         if (network != null) {
             tag.setLong(NBT_NETWORK, network.getPosition().toLong());
         }
 
         return tag;
+    }
+
+    @Override
+    public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+        redstoneMode.write(tag);
+
+        return tag;
+    }
+
+    @Override
+    public void readConfiguration(NBTTagCompound tag) {
+        redstoneMode = RedstoneMode.read(tag);
     }
 
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {

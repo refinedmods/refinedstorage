@@ -32,7 +32,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.List;
 
-public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFluidStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IType, IExcessVoidable, IAccessType, IWrenchable {
+public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFluidStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IType, IExcessVoidable, IAccessType {
     public static final TileDataParameter<Integer> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
@@ -269,8 +269,6 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
         super.read(tag);
 
         RSUtils.readItems(disks, 0, tag);
-
-        readConfiguration(tag);
     }
 
     @Override
@@ -289,13 +287,13 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
 
         RSUtils.writeItems(disks, 0, tag);
 
-        writeConfiguration(tag);
-
         return tag;
     }
 
     @Override
     public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+        super.writeConfiguration(tag);
+
         RSUtils.writeItems(itemFilters, 1, tag);
         RSUtils.writeItems(fluidFilters, 2, tag);
 
@@ -312,6 +310,8 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
 
     @Override
     public void readConfiguration(NBTTagCompound tag) {
+        super.readConfiguration(tag);
+
         RSUtils.readItems(itemFilters, 1, tag);
         RSUtils.readItems(fluidFilters, 2, tag);
 

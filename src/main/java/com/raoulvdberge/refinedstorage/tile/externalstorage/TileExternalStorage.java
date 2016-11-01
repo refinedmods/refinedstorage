@@ -14,7 +14,6 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.tile.IStorageGui;
-import com.raoulvdberge.refinedstorage.tile.IWrenchable;
 import com.raoulvdberge.refinedstorage.tile.TileMultipartNode;
 import com.raoulvdberge.refinedstorage.tile.config.*;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
@@ -31,7 +30,7 @@ import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileExternalStorage extends TileMultipartNode implements IItemStorageProvider, IFluidStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IType, IAccessType, IWrenchable {
+public class TileExternalStorage extends TileMultipartNode implements IItemStorageProvider, IFluidStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IType, IAccessType {
     public static final TileDataParameter<Integer> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
@@ -155,23 +154,9 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
     }
 
     @Override
-    public void read(NBTTagCompound tag) {
-        super.read(tag);
-
-        readConfiguration(tag);
-    }
-
-    @Override
-    public NBTTagCompound write(NBTTagCompound tag) {
-        super.write(tag);
-
-        writeConfiguration(tag);
-
-        return tag;
-    }
-
-    @Override
     public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+        super.writeConfiguration(tag);
+
         RSUtils.writeItems(itemFilters, 0, tag);
         RSUtils.writeItems(fluidFilters, 1, tag);
 
@@ -187,6 +172,8 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
 
     @Override
     public void readConfiguration(NBTTagCompound tag) {
+        super.readConfiguration(tag);
+
         RSUtils.readItems(itemFilters, 0, tag);
         RSUtils.readItems(fluidFilters, 1, tag);
 

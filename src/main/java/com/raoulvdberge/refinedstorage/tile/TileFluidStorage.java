@@ -21,7 +21,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
 
-public class TileFluidStorage extends TileNode implements IFluidStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IExcessVoidable, IAccessType, IWrenchable {
+public class TileFluidStorage extends TileNode implements IFluidStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IExcessVoidable, IAccessType {
     public static final TileDataParameter<Integer> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Boolean> VOID_EXCESS = IExcessVoidable.createParameter();
@@ -142,8 +142,6 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        readConfiguration(tag);
-
         if (tag.hasKey(NBT_STORAGE)) {
             storageTag = tag.getCompoundTag(NBT_STORAGE);
         }
@@ -159,13 +157,13 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
 
         tag.setTag(NBT_STORAGE, storageTag);
 
-        writeConfiguration(tag);
-
         return tag;
     }
 
     @Override
     public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+        super.writeConfiguration(tag);
+
         RSUtils.writeItems(filters, 0, tag);
 
         tag.setInteger(NBT_PRIORITY, priority);
@@ -180,6 +178,8 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
 
     @Override
     public void readConfiguration(NBTTagCompound tag) {
+        super.readConfiguration(tag);
+
         RSUtils.readItems(filters, 0, tag);
 
         if (tag.hasKey(NBT_PRIORITY)) {

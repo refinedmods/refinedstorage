@@ -20,7 +20,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
-public class TileFluidInterface extends TileNode implements IComparable, IWrenchable {
+public class TileFluidInterface extends TileNode implements IComparable {
     public static final int TANK_CAPACITY = 16000;
 
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
@@ -169,8 +169,6 @@ public class TileFluidInterface extends TileNode implements IComparable, IWrench
         tag.setTag(NBT_TANK_IN, tankIn.writeToNBT(new NBTTagCompound()));
         tag.setTag(NBT_TANK_OUT, tankOut.writeToNBT(new NBTTagCompound()));
 
-        writeConfiguration(tag);
-
         return tag;
     }
 
@@ -188,12 +186,12 @@ public class TileFluidInterface extends TileNode implements IComparable, IWrench
         if (tag.hasKey(NBT_TANK_OUT)) {
             tankOut.readFromNBT(tag.getCompoundTag(NBT_TANK_OUT));
         }
-
-        readConfiguration(tag);
     }
 
     @Override
     public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+        super.writeConfiguration(tag);
+
         RSUtils.writeItems(out, 2, tag);
 
         tag.setInteger(NBT_COMPARE, compare);
@@ -203,6 +201,8 @@ public class TileFluidInterface extends TileNode implements IComparable, IWrench
 
     @Override
     public void readConfiguration(NBTTagCompound tag) {
+        super.readConfiguration(tag);
+
         RSUtils.readItems(out, 2, tag);
 
         if (tag.hasKey(NBT_COMPARE)) {

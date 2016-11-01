@@ -16,7 +16,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
-public class TileInterface extends TileNode implements IComparable, IWrenchable {
+public class TileInterface extends TileNode implements IComparable {
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
 
     private static final String NBT_COMPARE = "Compare";
@@ -124,8 +124,6 @@ public class TileInterface extends TileNode implements IComparable, IWrenchable 
         RSUtils.readItems(importItems, 0, tag);
         RSUtils.readItems(exportItems, 2, tag);
         RSUtils.readItems(upgrades, 3, tag);
-
-        readConfiguration(tag);
     }
 
     @Override
@@ -136,13 +134,13 @@ public class TileInterface extends TileNode implements IComparable, IWrenchable 
         RSUtils.writeItems(exportItems, 2, tag);
         RSUtils.writeItems(upgrades, 3, tag);
 
-        writeConfiguration(tag);
-
         return tag;
     }
 
     @Override
     public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+        super.writeConfiguration(tag);
+
         RSUtils.writeItems(exportSpecimenItems, 1, tag);
 
         tag.setInteger(NBT_COMPARE, compare);
@@ -152,6 +150,8 @@ public class TileInterface extends TileNode implements IComparable, IWrenchable 
 
     @Override
     public void readConfiguration(NBTTagCompound tag) {
+        super.readConfiguration(tag);
+
         RSUtils.readItems(exportSpecimenItems, 1, tag);
 
         if (tag.hasKey(NBT_COMPARE)) {

@@ -16,7 +16,6 @@ import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerGridFilterInGrid;
 import com.raoulvdberge.refinedstorage.inventory.ItemValidatorBasic;
 import com.raoulvdberge.refinedstorage.item.ItemPattern;
-import com.raoulvdberge.refinedstorage.tile.IWrenchable;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataConsumer;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
@@ -39,7 +38,7 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileGrid extends TileNode implements IGrid, IWrenchable {
+public class TileGrid extends TileNode implements IGrid {
     public static final TileDataParameter<Integer> VIEW_TYPE = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileGrid>() {
         @Override
         public Integer getValue(TileGrid tile) {
@@ -491,8 +490,6 @@ public class TileGrid extends TileNode implements IGrid, IWrenchable {
         RSUtils.readItemsLegacy(matrix, 0, tag);
         RSUtils.readItems(patterns, 1, tag);
         RSUtils.readItems(filter, 2, tag);
-
-        readConfiguration(tag);
     }
 
     @Override
@@ -503,13 +500,13 @@ public class TileGrid extends TileNode implements IGrid, IWrenchable {
         RSUtils.writeItems(patterns, 1, tag);
         RSUtils.writeItems(filter, 2, tag);
 
-        writeConfiguration(tag);
-
         return tag;
     }
 
     @Override
     public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+        super.writeConfiguration(tag);
+
         tag.setInteger(NBT_VIEW_TYPE, viewType);
         tag.setInteger(NBT_SORTING_DIRECTION, sortingDirection);
         tag.setInteger(NBT_SORTING_TYPE, sortingType);
@@ -522,6 +519,8 @@ public class TileGrid extends TileNode implements IGrid, IWrenchable {
 
     @Override
     public void readConfiguration(NBTTagCompound tag) {
+        super.readConfiguration(tag);
+
         if (tag.hasKey(NBT_VIEW_TYPE)) {
             viewType = tag.getInteger(NBT_VIEW_TYPE);
         }

@@ -22,7 +22,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.List;
 
-public class TileStorage extends TileNode implements IItemStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IExcessVoidable, IAccessType, IWrenchable {
+public class TileStorage extends TileNode implements IItemStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IExcessVoidable, IAccessType {
     public static final TileDataParameter<Integer> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
@@ -146,8 +146,6 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
         if (tag.hasKey(NBT_STORAGE)) {
             storageTag = tag.getCompoundTag(NBT_STORAGE);
         }
-
-        readConfiguration(tag);
     }
 
     @Override
@@ -160,13 +158,13 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
 
         tag.setTag(NBT_STORAGE, storageTag);
 
-        writeConfiguration(tag);
-
         return tag;
     }
 
     @Override
     public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+        super.writeConfiguration(tag);
+
         RSUtils.writeItems(filters, 0, tag);
 
         tag.setInteger(NBT_PRIORITY, priority);
@@ -181,6 +179,8 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
 
     @Override
     public void readConfiguration(NBTTagCompound tag) {
+        super.readConfiguration(tag);
+
         RSUtils.readItems(filters, 0, tag);
 
         if (tag.hasKey(NBT_PRIORITY)) {

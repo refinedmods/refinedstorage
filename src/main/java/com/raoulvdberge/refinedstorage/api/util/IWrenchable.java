@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.tile;
+package com.raoulvdberge.refinedstorage.api.util;
 
 import net.minecraft.nbt.NBTTagCompound;
 

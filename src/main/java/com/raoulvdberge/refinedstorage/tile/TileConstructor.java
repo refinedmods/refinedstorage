@@ -37,7 +37,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class TileConstructor extends TileMultipartNode implements IComparable, IType, IWrenchable {
+public class TileConstructor extends TileMultipartNode implements IComparable, IType {
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> TYPE = IType.createParameter();
     public static final TileDataParameter<Boolean> DROP = new TileDataParameter<>(DataSerializers.BOOLEAN, false, new ITileDataProducer<Boolean, TileConstructor>() {
@@ -214,16 +214,12 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        readConfiguration(tag);
-
         RSUtils.readItems(upgrades, 1, tag);
     }
 
     @Override
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
-
-        writeConfiguration(tag);
 
         RSUtils.writeItems(upgrades, 1, tag);
 
@@ -232,6 +228,8 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
 
     @Override
     public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+        super.writeConfiguration(tag);
+
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_TYPE, type);
         tag.setBoolean(NBT_DROP, drop);
@@ -244,6 +242,8 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
 
     @Override
     public void readConfiguration(NBTTagCompound tag) {
+        super.readConfiguration(tag);
+
         if (tag.hasKey(NBT_COMPARE)) {
             compare = tag.getInteger(NBT_COMPARE);
         }

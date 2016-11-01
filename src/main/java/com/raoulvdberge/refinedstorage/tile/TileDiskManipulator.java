@@ -33,7 +33,7 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 import java.util.ArrayList;
 
-public class TileDiskManipulator extends TileNode implements IComparable, IFilterable, IType, IWrenchable {
+public class TileDiskManipulator extends TileNode implements IComparable, IFilterable, IType {
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
     public static final TileDataParameter<Integer> TYPE = IType.createParameter();
@@ -503,8 +503,6 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         RSUtils.readItems(upgrades, 3, tag);
         RSUtils.readItems(inputDisks, 4, tag);
         RSUtils.readItems(outputDisks, 5, tag);
-
-        readConfiguration(tag);
     }
 
     @Override
@@ -517,13 +515,13 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         RSUtils.writeItems(inputDisks, 4, tag);
         RSUtils.writeItems(outputDisks, 5, tag);
 
-        writeConfiguration(tag);
-
         return tag;
     }
 
     @Override
     public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+        super.writeConfiguration(tag);
+
         RSUtils.writeItems(itemFilters, 1, tag);
         RSUtils.writeItems(fluidFilters, 2, tag);
 
@@ -537,6 +535,8 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
 
     @Override
     public void readConfiguration(NBTTagCompound tag) {
+        super.readConfiguration(tag);
+
         RSUtils.readItems(itemFilters, 1, tag);
         RSUtils.readItems(fluidFilters, 2, tag);
 

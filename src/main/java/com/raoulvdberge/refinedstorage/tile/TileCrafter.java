@@ -25,7 +25,7 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileCrafter extends TileNode implements ICraftingPatternContainer, IWrenchable {
+public class TileCrafter extends TileNode implements ICraftingPatternContainer {
     public static final TileDataParameter<Boolean> TRIGGERED_AUTOCRAFTING = new TileDataParameter<>(DataSerializers.BOOLEAN, false, new ITileDataProducer<Boolean, TileCrafter>() {
         @Override
         public Boolean getValue(TileCrafter tile) {
@@ -131,8 +131,6 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer, 
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        readConfiguration(tag);
-
         RSUtils.readItems(patterns, 0, tag);
         RSUtils.readItems(upgrades, 1, tag);
     }
@@ -140,8 +138,6 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer, 
     @Override
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
-
-        writeConfiguration(tag);
 
         RSUtils.writeItems(patterns, 0, tag);
         RSUtils.writeItems(upgrades, 1, tag);
@@ -151,6 +147,8 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer, 
 
     @Override
     public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+        super.writeConfiguration(tag);
+
         tag.setBoolean(NBT_TRIGGERED_AUTOCRAFTING, triggeredAutocrafting);
 
         return tag;
@@ -158,6 +156,8 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer, 
 
     @Override
     public void readConfiguration(NBTTagCompound tag) {
+        super.readConfiguration(tag);
+
         if (tag.hasKey(NBT_TRIGGERED_AUTOCRAFTING)) {
             triggeredAutocrafting = tag.getBoolean(NBT_TRIGGERED_AUTOCRAFTING);
         }
