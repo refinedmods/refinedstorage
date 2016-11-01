@@ -24,6 +24,7 @@ import com.raoulvdberge.refinedstorage.api.storage.fluid.IFluidStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.item.IItemStorage;
 import com.raoulvdberge.refinedstorage.api.storage.item.IItemStorageCache;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.api.util.IItemStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeGraph;
 import com.raoulvdberge.refinedstorage.apiimpl.network.WirelessGridHandler;
@@ -430,12 +431,14 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         int highestScore = 0;
         int highestPattern = 0;
 
+        IItemStackList itemList = itemStorage.getList().getOredicted();
+
         for (int i = 0; i < patterns.size(); ++i) {
             int score = 0;
 
             for (ItemStack input : patterns.get(i).getInputs()) {
                 if (input != null) {
-                    ItemStack stored = itemStorage.getList().get(input, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT | (patterns.get(i).isOredict() ? IComparer.COMPARE_OREDICT : 0));
+                    ItemStack stored = itemList.get(input, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT | (patterns.get(i).isOredict() ? IComparer.COMPARE_OREDICT : 0));
 
                     score += stored != null ? stored.stackSize : 0;
                 }
