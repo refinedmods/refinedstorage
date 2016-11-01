@@ -255,19 +255,13 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 craftingTasks.removeAll(craftingTasksToCancel);
                 craftingTasksToCancel.clear();
 
-                for (ICraftingTask task : craftingTasksToAdd) {
-                    if (task.isValid()) {
-                        craftingTasks.add(task);
-                    }
-                }
-
+                craftingTasksToAdd.stream().filter(ICraftingTask::isValid).forEach(craftingTasks::add);
                 craftingTasksToAdd.clear();
 
                 // Only run task updates every 5 ticks
                 if (ticks % 5 == 0) {
                     Iterator<ICraftingTask> craftingTaskIterator = craftingTasks.iterator();
                     Map<ICraftingPatternContainer, Integer> usedCrafters = new HashMap<>();
-
 
                     while (craftingTaskIterator.hasNext()) {
                         ICraftingTask task = craftingTaskIterator.next();
