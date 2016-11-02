@@ -96,7 +96,6 @@ public class CraftingTask implements ICraftingTask {
         }
 
         int compare = DEFAULT_COMPARE | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0);
-        ItemStack[] took = new ItemStack[9];
 
         IItemStackList inputs = API.instance().createItemStackList();
         IItemStackList actualInputs = API.instance().createItemStackList();
@@ -132,15 +131,17 @@ public class CraftingTask implements ICraftingTask {
                     ICraftingPattern inputPattern = network.getPattern(input, compare);
 
                     if (inputPattern != null) {
+                        ItemStack actualCraft = inputPattern.getActualOutput(input, compare);
                         int craftQuantity = Math.min(inputPattern.getQuantityPerRequest(input, compare), input.stackSize);
-                        ItemStack inputCrafted = ItemHandlerHelper.copyStackWithSize(input, craftQuantity);
+                        ItemStack inputCrafted = ItemHandlerHelper.copyStackWithSize(actualCraft, craftQuantity);
                         toCraft.add(inputCrafted.copy());
                         actualInputs.add(inputCrafted.copy());
                         calculate(networkList, networkFluidList, inputPattern, toInsert);
                         input.stackSize -= craftQuantity;
-                        // Calculate added all the crafted outputs toInsertItems
-                        // So we remove the ones we use from toInsertItems
-                        toInsert.remove(inputCrafted, true);
+                        // Calculate added all the crafted outputs toInsert
+                        // So we remove the ones we use from toInsert
+                        ItemStack inserted = toInsert.get(inputCrafted, compare);
+                        toInsert.remove(inserted, craftQuantity, true);
                     } else {
                         // Fluid checks are with a stack size of one
                         ItemStack fluidCheck = ItemHandlerHelper.copyStackWithSize(input, 1);
@@ -166,23 +167,24 @@ public class CraftingTask implements ICraftingTask {
         }
 
         if (missing.isEmpty()) {
-            for (int i = 0; i < pattern.getInputs().size(); i++) {
-                ItemStack input = pattern.getInputs().get(i);
-                if (input != null) {
-                    ItemStack actualInput = actualInputs.get(input, compare);
-                    ItemStack taken = ItemHandlerHelper.copyStackWithSize(actualInput, input.stackSize);
-                    took[i] = taken;
-                    actualInputs.remove(taken, true);
+            ItemStack[] took = new ItemStack[9];
+            if (!pattern.isProcessing()) {
+                for (int i = 0; i < pattern.getInputs().size(); i++) {
+                    ItemStack input = pattern.getInputs().get(i);
+                    if (input != null) {
+                        ItemStack actualInput = actualInputs.get(input, compare);
+                        ItemStack taken = ItemHandlerHelper.copyStackWithSize(actualInput, input.stackSize);
+                        took[i] = taken;
+                        actualInputs.remove(taken, true);
+                    }
                 }
             }
-        }
 
-        if (!pattern.isProcessing()) {
-            for (ItemStack byproduct : (pattern.isOredict() && missing.isEmpty() ? pattern.getByproducts(took) : pattern.getByproducts())) {
+            for (ItemStack byproduct : (!pattern.isProcessing() && pattern.isOredict() && missing.isEmpty() ? pattern.getByproducts(took) : pattern.getByproducts())) {
                 toInsert.add(byproduct.copy());
             }
 
-            for (ItemStack output : (pattern.isOredict() && missing.isEmpty() ? pattern.getOutputs(took) : pattern.getOutputs())) {
+            for (ItemStack output : (!pattern.isProcessing() && pattern.isOredict() && missing.isEmpty() ? pattern.getOutputs(took) : pattern.getOutputs())) {
                 toInsert.add(output.copy());
             }
         }

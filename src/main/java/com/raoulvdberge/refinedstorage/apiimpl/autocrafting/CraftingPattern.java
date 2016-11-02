@@ -10,6 +10,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -163,6 +164,17 @@ public class CraftingPattern implements ICraftingPattern {
         }
 
         return quantity;
+    }
+
+    @Override
+    public ItemStack getActualOutput(ItemStack requested, int compare) {
+        for (ItemStack output : outputs) {
+            if (API.instance().getComparer().isEqual(requested, output, compare)) {
+                return output.copy();
+            }
+        }
+
+        return null;
     }
 
     @Override
