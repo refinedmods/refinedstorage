@@ -84,4 +84,13 @@ public interface ICraftingPattern {
      * @return the quantity
      */
     int getQuantityPerRequest(ItemStack requested, int compare);
+
+    /**
+     * Returns the actual outputted {@link ItemStack}
+     *
+     * @param requested an item requested
+     * @param compare the {@link IComparer} flags
+     * @return the actual {@link ItemStack} with quantity
+     */
+    ItemStack getActualOutput(ItemStack requested, int compare);
 }
