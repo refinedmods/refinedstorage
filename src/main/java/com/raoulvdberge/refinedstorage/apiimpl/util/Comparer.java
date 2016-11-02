@@ -1,10 +1,14 @@
 package com.raoulvdberge.refinedstorage.apiimpl.util;
 
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.ArrayUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Comparer implements IComparer {
     @Override
@@ -92,6 +96,8 @@ public class Comparer implements IComparer {
         return true;
     }
 
+    private Map<Integer, Boolean> oredictCache = new HashMap<>();
+
     @Override
     public boolean isEqualOredict(ItemStack left, ItemStack right) {
         if (left == null && right == null) {
@@ -102,14 +108,25 @@ public class Comparer implements IComparer {
             return false;
         }
 
+        int code = API.instance().getItemStackHashCode(left);
+        code = 31 * code + API.instance().getItemStackHashCode(right);
+
+        if (oredictCache.containsKey(code)) {
+            return oredictCache.get(code);
+        }
+
         int[] leftIds = OreDictionary.getOreIDs(left);
         int[] rightIds = OreDictionary.getOreIDs(right);
 
         for (int i : rightIds) {
             if (ArrayUtils.contains(leftIds, i)) {
+                oredictCache.put(code, true);
+
                 return true;
             }
         }
+
+        oredictCache.put(code, false);
 
         return false;
     }
