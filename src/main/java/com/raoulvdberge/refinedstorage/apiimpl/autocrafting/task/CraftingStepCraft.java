@@ -76,6 +76,13 @@ public class CraftingStepCraft extends CraftingStep {
         IItemStackList actualInputs = API.instance().createItemStackList();
         int compare = CraftingTask.DEFAULT_COMPARE | (getPattern().isOredict() ? IComparer.COMPARE_OREDICT : 0);
         for (ItemStack insertStack : getToInsert()) {
+            // This will be a tool, like a hammer
+            if (insertStack.isItemStackDamageable()) {
+                compare &= ~IComparer.COMPARE_DAMAGE;
+            } else {
+                compare |= IComparer.COMPARE_DAMAGE;
+            }
+
             FluidStack fluidInItem = RSUtils.getFluidFromStack(insertStack, true);
             if (fluidInItem != null) {
                 network.extractFluid(fluidInItem, fluidInItem.amount, compare);

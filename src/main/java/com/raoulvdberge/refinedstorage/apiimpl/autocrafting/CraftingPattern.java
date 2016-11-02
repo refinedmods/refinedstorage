@@ -56,8 +56,7 @@ public class CraftingPattern implements ICraftingPattern {
                         Object[] inputs = new Object[0];
                         if (shapedOre) {
                             inputs = ((ShapedOreRecipe) recipe).getInput();
-                        }
-                        else {
+                        } else {
                             try {
                                 inputs = (Object[]) recipe.getClass().getMethod("getInput").invoke(recipe);
                             } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
@@ -67,8 +66,7 @@ public class CraftingPattern implements ICraftingPattern {
                         for (Object input : inputs) {
                             if (input == null) {
                                 oreInputs.add(Collections.emptyList());
-                            }
-                            if (input instanceof ItemStack) {
+                            } else if (input instanceof ItemStack) {
                                 oreInputs.add(Collections.singletonList((ItemStack) input));
                             } else {
                                 oreInputs.add((List<ItemStack>)input);
