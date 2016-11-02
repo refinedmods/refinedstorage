@@ -12,21 +12,21 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 
 public class CraftingPattern implements ICraftingPattern {
-    private World world;
     private ICraftingPatternContainer container;
     private ItemStack stack;
+    private IRecipe recipe;
     private List<ItemStack> inputs = new ArrayList<>();
+    private List<List<ItemStack>> oreInputs = new ArrayList<>();
     private List<ItemStack> outputs = new ArrayList<>();
     private List<ItemStack> byproducts = new ArrayList<>();
 
     public CraftingPattern(World world, ICraftingPatternContainer container, ItemStack stack) {
-        this.world = world;
         this.container = container;
         this.stack = stack;
 
@@ -44,14 +44,52 @@ public class CraftingPattern implements ICraftingPattern {
         }
 
         if (!ItemPattern.isProcessing(stack)) {
-            ItemStack output = CraftingManager.getInstance().findMatchingRecipe(inv, world);
+            recipe = CraftingManager.getInstance().getRecipeList().stream().filter(r -> r.matches(inv, world)).findFirst().orElse(null);
+            if (recipe != null) {
+                ItemStack output = recipe.getCraftingResult(inv);
+                if (output != null) {
+                    outputs.add(output.copy());
 
-            if (output != null) {
-                outputs.add(output.copy());
+                    boolean shapedOre = recipe instanceof ShapedOreRecipe;
+                    // It is a dirty fix, but hey someone has to do it. ~ way2muchnoise 2016 "bite me"
+                    if (shapedOre || recipe.getClass().getName().equals("mekanism.common.recipe.ShapedMekanismRecipe")) {
+                        Object[] inputs = new Object[0];
+                        if (shapedOre) {
+                            inputs = ((ShapedOreRecipe) recipe).getInput();
+                        }
+                        else {
+                            try {
+                                inputs = (Object[]) recipe.getClass().getMethod("getInput").invoke(recipe);
+                            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        for (Object input : inputs) {
+                            if (input == null) {
+                                oreInputs.add(Collections.emptyList());
+                            }
+                            if (input instanceof ItemStack) {
+                                oreInputs.add(Collections.singletonList((ItemStack) input));
+                            } else {
+                                oreInputs.add((List<ItemStack>)input);
+                            }
+                        }
+                    }
 
-                for (ItemStack remaining : CraftingManager.getInstance().getRemainingItems(inv, world)) {
-                    if (remaining != null) {
-                        byproducts.add(remaining.copy());
+                    if (oreInputs.isEmpty()) {
+                        for (ItemStack input : inputs) {
+                            if (input == null) {
+                                oreInputs.add(Collections.emptyList());
+                            } else {
+                                oreInputs.add(Collections.singletonList(input));
+                            }
+                        }
+                    }
+
+                    for (ItemStack remaining : recipe.getRemainingItems(inv)) {
+                        if (remaining != null) {
+                            byproducts.add(remaining.copy());
+                        }
                     }
                 }
             }
@@ -91,6 +129,11 @@ public class CraftingPattern implements ICraftingPattern {
     }
 
     @Override
+    public List<List<ItemStack>> getOreInputs() {
+        return oreInputs;
+    }
+
+    @Override
     public List<ItemStack> getOutputs(ItemStack[] took) {
         List<ItemStack> outputs = new ArrayList<>();
 
@@ -105,7 +148,7 @@ public class CraftingPattern implements ICraftingPattern {
             inv.setInventorySlotContents(i, took[i]);
         }
 
-        outputs.add(CraftingManager.getInstance().findMatchingRecipe(inv, world));
+        outputs.add(recipe.getCraftingResult(inv));
 
         return outputs;
     }
@@ -130,7 +173,7 @@ public class CraftingPattern implements ICraftingPattern {
             inv.setInventorySlotContents(i, took[i]);
         }
 
-        for (ItemStack remaining : CraftingManager.getInstance().getRemainingItems(inv, world)) {
+        for (ItemStack remaining : recipe.getRemainingItems(inv)) {
             if (remaining != null) {
                 byproducts.add(remaining.copy());
             }

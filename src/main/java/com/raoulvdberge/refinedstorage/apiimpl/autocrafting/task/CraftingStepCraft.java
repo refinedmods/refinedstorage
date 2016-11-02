@@ -9,16 +9,24 @@ import com.raoulvdberge.refinedstorage.api.util.IItemStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-import java.util.Deque;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class CraftingStepCraft extends CraftingStep {
     public static final String ID = "craft";
+    private static final String NBT_TO_INSERT = "ToInsert";
 
-    public CraftingStepCraft(INetworkMaster network, ICraftingPattern pattern) {
+    private List<ItemStack> toInsert;
+
+    public CraftingStepCraft(INetworkMaster network, ICraftingPattern pattern, List<ItemStack> toInsert) {
         super(network, pattern);
+        this.toInsert = new LinkedList<>();
+        toInsert.stream().filter(insert -> insert != null).forEach(stack -> this.toInsert.add(stack.copy()));
     }
 
     public CraftingStepCraft(INetworkMaster network) {
@@ -26,9 +34,21 @@ public class CraftingStepCraft extends CraftingStep {
     }
 
     @Override
+    public List<ItemStack> getToInsert() {
+        return toInsert == null ? super.getToInsert() : toInsert;
+    }
+
+    @Override
     public boolean canStartProcessing(IItemStackList items, IFluidStackList fluids) {
-        int compare = IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0);
+        int compare = CraftingTask.DEFAULT_COMPARE | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0);
         for (ItemStack stack : getToInsert()) {
+            // This will be a tool, like a hammer
+            if (stack.isItemStackDamageable()) {
+                compare &= ~IComparer.COMPARE_DAMAGE;
+            } else {
+                compare |= IComparer.COMPARE_DAMAGE;
+            }
+
             ItemStack actualStack = items.get(stack, compare);
 
             if (actualStack == null || actualStack.stackSize == 0 || !items.trackedRemove(actualStack, stack.stackSize, true)) {
@@ -101,6 +121,36 @@ public class CraftingStepCraft extends CraftingStep {
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         tag.setString(NBT_CRAFTING_STEP_TYPE, ID);
-        return super.writeToNBT(tag);
+        super.writeToNBT(tag);
+
+        NBTTagList toInsertList = new NBTTagList();
+
+        for (ItemStack insert : toInsert) {
+            toInsertList.appendTag(insert.serializeNBT());
+        }
+
+        tag.setTag(NBT_TO_INSERT, toInsertList);
+
+        return tag;
+    }
+
+    @Override
+    public boolean readFromNBT(NBTTagCompound tag) {
+        if (super.readFromNBT(tag)) {
+            if (tag.hasKey(NBT_TO_INSERT)) {
+                NBTTagList toInsertList = tag.getTagList(CraftingTask.NBT_TO_INSERT_ITEMS, Constants.NBT.TAG_COMPOUND);
+                toInsert = new ArrayList<>(toInsertList.tagCount());
+                for (int i = 0; i < toInsertList.tagCount(); ++i) {
+                    ItemStack insertStack = ItemStack.loadItemStackFromNBT(toInsertList.getCompoundTagAt(i));
+                    if (insertStack != null) {
+                        toInsert.add(insertStack);
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        return false;
     }
 }

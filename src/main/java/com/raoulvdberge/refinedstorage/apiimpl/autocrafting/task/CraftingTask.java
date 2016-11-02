@@ -99,14 +99,37 @@ public class CraftingTask implements ICraftingTask {
 
         IItemStackList inputs = API.instance().createItemStackList();
         IItemStackList actualInputs = API.instance().createItemStackList();
+        List<ItemStack> usedStacks = new LinkedList<>();
 
-        for (ItemStack input : pattern.getInputs()) {
-            if (input != null) {
-                inputs.add(input.copy());
+        for (List<ItemStack> oreInputs : pattern.getOreInputs()) {
+            boolean added = false;
+            for (ItemStack input : oreInputs) {
+                int oreCompare = IComparer.COMPARE_NBT | (input.isItemStackDamageable() ? 0 : IComparer.COMPARE_DAMAGE);
+                if (network.getItemStorageCache().getList().get(input, oreCompare) != null) {
+                    usedStacks.add(input.copy());
+                    inputs.add(input.copy());
+                    added = true;
+                    break;
+                }
+            }
+            if (!added) {
+                ItemStack choice = null;
+                if (!oreInputs.isEmpty()) {
+                    choice = oreInputs.get(0);
+                    inputs.add(choice);
+                }
+                usedStacks.add(choice);
             }
         }
 
         for (ItemStack input : inputs.getStacks()) {
+            // This will be a tool, like a hammer
+            if (input.isItemStackDamageable()) {
+                compare &= ~IComparer.COMPARE_DAMAGE;
+            } else {
+                compare |= IComparer.COMPARE_DAMAGE;
+            }
+
             ItemStack extraStack = toInsert.get(input, compare);
             ItemStack networkStack = networkList.get(input, compare);
 
@@ -163,14 +186,14 @@ public class CraftingTask implements ICraftingTask {
         if (pattern.isProcessing()) {
             steps.add(new CraftingStepProcess(network, pattern));
         } else {
-            steps.add(new CraftingStepCraft(network, pattern));
+            steps.add(new CraftingStepCraft(network, pattern, usedStacks));
         }
 
         if (missing.isEmpty()) {
             ItemStack[] took = new ItemStack[9];
             if (!pattern.isProcessing()) {
-                for (int i = 0; i < pattern.getInputs().size(); i++) {
-                    ItemStack input = pattern.getInputs().get(i);
+                for (int i = 0; i < usedStacks.size(); i++) {
+                    ItemStack input = usedStacks.get(i);
                     if (input != null) {
                         ItemStack actualInput = actualInputs.get(input, compare);
                         ItemStack taken = ItemHandlerHelper.copyStackWithSize(actualInput, input.stackSize);

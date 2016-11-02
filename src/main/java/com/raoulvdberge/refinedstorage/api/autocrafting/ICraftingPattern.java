@@ -40,6 +40,11 @@ public interface ICraftingPattern {
     List<ItemStack> getInputs();
 
     /**
+     * @return the possible inputs per slot, empty list means null slot
+     */
+    List<List<ItemStack>> getOreInputs();
+
+    /**
      * @param took the items took
      * @return the outputs based on the items took
      */
