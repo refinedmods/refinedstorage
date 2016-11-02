@@ -76,24 +76,27 @@ public class ItemStackListOredicted implements IItemStackList {
     @Nullable
     @Override
     public ItemStack get(@Nonnull ItemStack stack, int flags) {
-        if ((flags & IComparer.COMPARE_OREDICT) == IComparer.COMPARE_OREDICT) {
-            int[] ids = OreDictionary.getOreIDs(stack);
-            for (int id : ids) {
-                List<ItemStack> stacks = this.stacks.get(id);
-                if (stacks != null && !stacks.isEmpty()) {
-                    int i = 0;
-                    ItemStack returnStack = stacks.get(i++);
-                    while (returnStack.stackSize == 0 && i < stacks.size()) {
-                        returnStack = stacks.get(i++);
-                    }
-                    if (returnStack.stackSize != 0) {
-                        return returnStack;
+        // Check the underlying list but don't do oredict things for exact match
+        ItemStack exact = underlyingList.get(stack, flags & ~IComparer.COMPARE_OREDICT);
+        if (exact == null) {
+            if ((flags & IComparer.COMPARE_OREDICT) == IComparer.COMPARE_OREDICT) {
+                int[] ids = OreDictionary.getOreIDs(stack);
+                for (int id : ids) {
+                    List<ItemStack> stacks = this.stacks.get(id);
+                    if (stacks != null && !stacks.isEmpty()) {
+                        int i = 0;
+                        ItemStack returnStack = stacks.get(i++);
+                        while (returnStack.stackSize == 0 && i < stacks.size()) {
+                            returnStack = stacks.get(i++);
+                        }
+                        if (returnStack.stackSize != 0) {
+                            return returnStack;
+                        }
                     }
                 }
             }
         }
-        // Check the underlying list but don't do oredict things, as that has been tried before
-        return underlyingList.get(stack, flags & ~IComparer.COMPARE_OREDICT);
+        return exact;
     }
 
     @Nullable
