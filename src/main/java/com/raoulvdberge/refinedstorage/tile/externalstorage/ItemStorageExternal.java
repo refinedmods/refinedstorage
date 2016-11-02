@@ -65,10 +65,12 @@ public abstract class ItemStorageExternal implements IItemStorage {
             this.cache = newStacks;
 
             for (ItemStack change : changes) {
-                if (change.stackSize > 0) {
-                    network.getItemStorageCache().add(change, false);
-                } else {
-                    network.getItemStorageCache().remove(change);
+                if (change != null) {
+                    if (change.stackSize > 0) {
+                        network.getItemStorageCache().add(change, false);
+                    } else {
+                        network.getItemStorageCache().remove(change);
+                    }
                 }
             }
         }
