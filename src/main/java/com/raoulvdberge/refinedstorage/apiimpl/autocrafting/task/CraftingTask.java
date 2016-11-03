@@ -189,8 +189,8 @@ public class CraftingTask implements ICraftingTask {
             steps.add(new CraftingStepCraft(network, pattern, usedStacks));
         }
 
+        ItemStack[] took = new ItemStack[9];
         if (missing.isEmpty()) {
-            ItemStack[] took = new ItemStack[9];
             if (!pattern.isProcessing()) {
                 for (int i = 0; i < usedStacks.size(); i++) {
                     ItemStack input = usedStacks.get(i);
@@ -202,14 +202,14 @@ public class CraftingTask implements ICraftingTask {
                     }
                 }
             }
+        }
 
-            for (ItemStack byproduct : (!pattern.isProcessing() && pattern.isOredict() && missing.isEmpty() ? pattern.getByproducts(took) : pattern.getByproducts())) {
-                toInsert.add(byproduct.copy());
-            }
+        for (ItemStack byproduct : (!pattern.isProcessing() && pattern.isOredict() && missing.isEmpty() ? pattern.getByproducts(took) : pattern.getByproducts())) {
+            toInsert.add(byproduct.copy());
+        }
 
-            for (ItemStack output : (!pattern.isProcessing() && pattern.isOredict() && missing.isEmpty() ? pattern.getOutputs(took) : pattern.getOutputs())) {
-                toInsert.add(output.copy());
-            }
+        for (ItemStack output : (!pattern.isProcessing() && pattern.isOredict() && missing.isEmpty() ? pattern.getOutputs(took) : pattern.getOutputs())) {
+            toInsert.add(output.copy());
         }
 
         usedPatterns.remove(pattern);

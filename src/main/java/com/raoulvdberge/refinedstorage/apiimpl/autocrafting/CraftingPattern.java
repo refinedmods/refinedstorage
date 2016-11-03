@@ -80,6 +80,9 @@ public class CraftingPattern implements ICraftingPattern {
                                 if (mekanism && ((ItemStack) input).hasTagCompound()) {
                                     stripped.getTagCompound().removeTag("mekData");
                                 }
+                                if (stripped.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
+                                    stripped.setItemDamage(0);
+                                }
                                 oreInputs.add(Collections.singletonList(stripped));
                             } else {
                                 List<ItemStack> cleaned = new LinkedList<>();
@@ -87,6 +90,9 @@ public class CraftingPattern implements ICraftingPattern {
                                     ItemStack stripped = in.copy();
                                     if (mekanism && stripped.hasTagCompound()){
                                         stripped.getTagCompound().removeTag("mekData");
+                                    }
+                                    if (stripped.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
+                                        stripped.setItemDamage(0);
                                     }
                                     cleaned.add(stripped);
                                 }
