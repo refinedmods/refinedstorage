@@ -58,7 +58,11 @@ public abstract class ItemStorageExternal implements IItemStorage {
             // In that case, we remove the items that have been removed due to the shrinkage
             if (cache.size() > newStacks.size()) {
                 for (int i = newStacks.size(); i < cache.size(); ++i) {
-                    changes.add(ItemHandlerHelper.copyStackWithSize(cache.get(i), -cache.get(i).stackSize));
+                    ItemStack change = ItemHandlerHelper.copyStackWithSize(cache.get(i), -cache.get(i).stackSize);
+
+                    if (change != null) {
+                        changes.add(change);
+                    }
                 }
             }
 
