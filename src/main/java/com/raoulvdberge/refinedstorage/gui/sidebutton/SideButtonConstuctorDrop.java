@@ -12,7 +12,7 @@ public class SideButtonConstuctorDrop extends SideButton {
 
     @Override
     protected void drawButtonIcon(int x, int y) {
-
+        gui.drawTexture(x, y, 80 + (TileConstructor.DROP.getValue() ? 16 : 0), 16, 16, 16);
     }
 
     @Override

@@ -22,7 +22,7 @@ public class GuiDestructor extends GuiBase {
         addSideButton(new SideButtonCompare(this, TileDestructor.COMPARE, IComparer.COMPARE_NBT));
         addSideButton(new SideButtonCompare(this, TileDestructor.COMPARE, IComparer.COMPARE_OREDICT));
 
-        addSideButton(new SideButtonPickup(this));
+        addSideButton(new SideButtonDestructorPickup(this));
     }
 
     @Override

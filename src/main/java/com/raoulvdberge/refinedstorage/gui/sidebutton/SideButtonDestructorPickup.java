@@ -5,14 +5,14 @@ import com.raoulvdberge.refinedstorage.tile.TileDestructor;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import net.minecraft.util.text.TextFormatting;
 
-public class SideButtonPickup extends SideButton {
-    public SideButtonPickup(GuiBase gui) {
+public class SideButtonDestructorPickup extends SideButton {
+    public SideButtonDestructorPickup(GuiBase gui) {
         super(gui);
     }
 
     @Override
     protected void drawButtonIcon(int x, int y) {
-
+        gui.drawTexture(x, y, 80 + (!TileDestructor.PICKUP.getValue() ? 16 : 0), 0, 16, 16);
     }
 
     @Override

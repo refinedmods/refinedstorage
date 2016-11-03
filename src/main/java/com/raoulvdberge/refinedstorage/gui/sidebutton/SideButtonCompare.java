@@ -39,10 +39,15 @@ public class SideButtonCompare extends SideButton {
         } else if (mask == IComparer.COMPARE_NBT) {
             ty = 48;
         } else if (mask == IComparer.COMPARE_OREDICT) {
-            return;
+            ty = 224;
         }
 
         int tx = (parameter.getValue() & mask) == mask ? 0 : 16;
+
+        // This is reversed in icons.png :D
+        if (mask == IComparer.COMPARE_OREDICT) {
+            tx = tx == 16 ? 0 : 16;
+        }
 
         gui.drawTexture(x, y, tx, ty, 16, 16);
     }

@@ -18,6 +18,7 @@ public class SideButtonAccessType extends SideButton {
 
     @Override
     protected void drawButtonIcon(int x, int y) {
+        gui.drawTexture(x, y, 16 * parameter.getValue().getId(), 240, 16, 16);
     }
 
     @Override
