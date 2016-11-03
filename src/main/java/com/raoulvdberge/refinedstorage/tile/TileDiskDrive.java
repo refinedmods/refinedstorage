@@ -41,12 +41,12 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     public static final TileDataParameter<AccessType> ACCESS_TYPE = IAccessType.createParameter();
 
     public class ItemStorage extends ItemStorageNBT {
-        private boolean wasFull;
+        private int lastState;
 
         public ItemStorage(ItemStack disk) {
             super(disk.getTagCompound(), EnumItemStorageType.getById(disk.getItemDamage()).getCapacity(), TileDiskDrive.this);
 
-            wasFull = isFull();
+            lastState = getDiskState(getStored(), getCapacity());
         }
 
         @Override
@@ -79,8 +79,10 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
         public void onStorageChanged() {
             super.onStorageChanged();
 
-            if (wasFull != isFull()) {
-                wasFull = isFull();
+            int currentState = getDiskState(getStored(), getCapacity());
+
+            if (lastState != currentState) {
+                lastState = currentState;
 
                 updateBlock();
             }
@@ -88,12 +90,12 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     }
 
     public class FluidStorage extends FluidStorageNBT {
-        private boolean wasFull;
+        private int lastState;
 
         public FluidStorage(ItemStack disk) {
             super(disk.getTagCompound(), EnumFluidStorageType.getById(disk.getItemDamage()).getCapacity(), TileDiskDrive.this);
 
-            wasFull = isFull();
+            lastState = getDiskState(getStored(), getCapacity());
         }
 
         @Override
@@ -126,8 +128,10 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
         public void onStorageChanged() {
             super.onStorageChanged();
 
-            if (wasFull != isFull()) {
-                wasFull = isFull();
+            int currentState = getDiskState(getStored(), getCapacity());
+
+            if (lastState != currentState) {
+                lastState = currentState;
 
                 updateBlock();
             }
@@ -142,9 +146,10 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     private static final String NBT_DISK_STATE = "DiskState_%d";
 
     public static final int DISK_STATE_NORMAL = 0;
-    public static final int DISK_STATE_FULL = 1;
-    public static final int DISK_STATE_DISCONNECTED = 2;
-    public static final int DISK_STATE_NONE = 3;
+    public static final int DISK_STATE_NEAR_CAPACITY = 1;
+    public static final int DISK_STATE_FULL = 2;
+    public static final int DISK_STATE_DISCONNECTED = 3;
+    public static final int DISK_STATE_NONE = 4;
 
     private ItemHandlerBasic disks = new ItemHandlerBasic(8, this, IItemValidator.STORAGE_DISK) {
         @Override
@@ -366,11 +371,10 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
                 if (!connected) {
                     state = DISK_STATE_DISCONNECTED;
                 } else {
-                    state = DISK_STATE_NORMAL;
-
-                    if ((itemStorages[i] != null && itemStorages[i].isFull()) || (fluidStorages[i] != null && fluidStorages[i].isFull())) {
-                        state = DISK_STATE_FULL;
-                    }
+                    state = getDiskState(
+                        itemStorages[i] != null ? itemStorages[i].getStored() : fluidStorages[i].getStored(),
+                        itemStorages[i] != null ? itemStorages[i].getCapacity() : fluidStorages[i].getCapacity()
+                    );
                 }
             }
 
@@ -387,6 +391,16 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     public static void initDiskState(Integer[] diskState) {
         for (int i = 0; i < diskState.length; ++i) {
             diskState[i] = DISK_STATE_NONE;
+        }
+    }
+
+    public static int getDiskState(int stored, int capacity) {
+        if (stored == capacity) {
+            return DISK_STATE_FULL;
+        } else if ((int) ((float) stored / (float) capacity * 100F) > 85) {
+            return DISK_STATE_NEAR_CAPACITY;
+        } else {
+            return DISK_STATE_NORMAL;
         }
     }
 

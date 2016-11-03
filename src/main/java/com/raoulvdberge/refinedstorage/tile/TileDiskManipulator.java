@@ -111,12 +111,12 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
     };
 
     public class ItemStorage extends ItemStorageNBT {
-        private boolean wasFull;
+        private int lastState;
 
         public ItemStorage(ItemStack disk) {
             super(disk.getTagCompound(), EnumItemStorageType.getById(disk.getItemDamage()).getCapacity(), TileDiskManipulator.this);
 
-            wasFull = isFull();
+            lastState = TileDiskDrive.getDiskState(getStored(), getCapacity());
         }
 
         @Override
@@ -146,8 +146,10 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         public void onStorageChanged() {
             super.onStorageChanged();
 
-            if (wasFull != isFull()) {
-                wasFull = isFull();
+            int currentState = TileDiskDrive.getDiskState(getStored(), getCapacity());
+
+            if (lastState != currentState) {
+                lastState = currentState;
 
                 updateBlock();
             }
@@ -155,12 +157,12 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
     }
 
     public class FluidStorage extends FluidStorageNBT {
-        private boolean wasFull;
+        private int lastState;
 
         public FluidStorage(ItemStack disk) {
             super(disk.getTagCompound(), EnumFluidStorageType.getById(disk.getItemDamage()).getCapacity(), TileDiskManipulator.this);
 
-            wasFull = isFull();
+            lastState = TileDiskDrive.getDiskState(getStored(), getCapacity());
         }
 
         @Override
@@ -190,8 +192,10 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         public void onStorageChanged() {
             super.onStorageChanged();
 
-            if (wasFull != isFull()) {
-                wasFull = isFull();
+            int currentState = TileDiskDrive.getDiskState(getStored(), getCapacity());
+
+            if (lastState != currentState) {
+                lastState = currentState;
 
                 updateBlock();
             }

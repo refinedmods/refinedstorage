@@ -86,7 +86,7 @@ public class BakedModelDiskManipulator implements IBakedModel {
         }
     });
 
-    public BakedModelDiskManipulator(IBakedModel baseConnected, IBakedModel baseDisconnected, IBakedModel disk, IBakedModel diskFull, IBakedModel diskDisconnected) {
+    public BakedModelDiskManipulator(IBakedModel baseConnected, IBakedModel baseDisconnected, IBakedModel disk, IBakedModel diskNearCapacity, IBakedModel diskFull, IBakedModel diskDisconnected) {
         this.baseDisconnected = baseDisconnected;
 
         for (EnumFacing facing : EnumFacing.HORIZONTALS) {
@@ -96,10 +96,12 @@ public class BakedModelDiskManipulator implements IBakedModel {
             disks.put(facing, new HashMap<>());
 
             disks.get(facing).put(TileDiskDrive.DISK_STATE_NORMAL, new ArrayList<>());
+            disks.get(facing).put(TileDiskDrive.DISK_STATE_NEAR_CAPACITY, new ArrayList<>());
             disks.get(facing).put(TileDiskDrive.DISK_STATE_FULL, new ArrayList<>());
             disks.get(facing).put(TileDiskDrive.DISK_STATE_DISCONNECTED, new ArrayList<>());
 
             initDiskModels(disk, TileDiskDrive.DISK_STATE_NORMAL, facing);
+            initDiskModels(diskNearCapacity, TileDiskDrive.DISK_STATE_NEAR_CAPACITY, facing);
             initDiskModels(diskFull, TileDiskDrive.DISK_STATE_FULL, facing);
             initDiskModels(diskDisconnected, TileDiskDrive.DISK_STATE_DISCONNECTED, facing);
         }
@@ -140,7 +142,7 @@ public class BakedModelDiskManipulator implements IBakedModel {
         }
 
         CacheKey key = new CacheKey(((IExtendedBlockState) state).getClean(), side, diskState);
-        cache.refresh(key);
+
         return cache.getUnchecked(key);
     }
 

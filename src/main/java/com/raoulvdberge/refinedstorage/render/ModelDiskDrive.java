@@ -16,6 +16,7 @@ import java.util.Collections;
 public class ModelDiskDrive implements IModel {
     private static final ResourceLocation MODEL_BASE = new ResourceLocation("refinedstorage:block/disk_drive");
     private static final ResourceLocation MODEL_DISK = new ResourceLocation("refinedstorage:block/disk");
+    private static final ResourceLocation MODEL_DISK_NEAR_CAPACITY = new ResourceLocation("refinedstorage:block/disk_near_capacity");
     private static final ResourceLocation MODEL_DISK_FULL = new ResourceLocation("refinedstorage:block/disk_full");
     private static final ResourceLocation MODEL_DISK_DISCONNECTED = new ResourceLocation("refinedstorage:block/disk_disconnected");
 
@@ -33,12 +34,14 @@ public class ModelDiskDrive implements IModel {
     public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
         IModel baseModel;
         IModel diskModel;
+        IModel diskModelNearCapacity;
         IModel diskModelFull;
         IModel diskModelDisconnected;
 
         try {
             baseModel = ModelLoaderRegistry.getModel(MODEL_BASE);
             diskModel = ModelLoaderRegistry.getModel(MODEL_DISK);
+            diskModelNearCapacity = ModelLoaderRegistry.getModel(MODEL_DISK_NEAR_CAPACITY);
             diskModelFull = ModelLoaderRegistry.getModel(MODEL_DISK_FULL);
             diskModelDisconnected = ModelLoaderRegistry.getModel(MODEL_DISK_DISCONNECTED);
         } catch (Exception e) {
@@ -48,6 +51,7 @@ public class ModelDiskDrive implements IModel {
         return new BakedModelDiskDrive(
             baseModel.bake(state, format, bakedTextureGetter),
             diskModel.bake(state, format, bakedTextureGetter),
+            diskModelNearCapacity.bake(state, format, bakedTextureGetter),
             diskModelFull.bake(state, format, bakedTextureGetter),
             diskModelDisconnected.bake(state, format, bakedTextureGetter)
         );

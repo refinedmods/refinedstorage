@@ -85,7 +85,7 @@ public class BakedModelDiskDrive implements IBakedModel {
         }
     });
 
-    public BakedModelDiskDrive(IBakedModel base, IBakedModel disk, IBakedModel diskFull, IBakedModel diskDisconnected) {
+    public BakedModelDiskDrive(IBakedModel base, IBakedModel disk, IBakedModel diskNearCapacity, IBakedModel diskFull, IBakedModel diskDisconnected) {
         this.base = base;
 
         for (EnumFacing facing : EnumFacing.HORIZONTALS) {
@@ -94,10 +94,12 @@ public class BakedModelDiskDrive implements IBakedModel {
             disks.put(facing, new HashMap<>());
 
             disks.get(facing).put(TileDiskDrive.DISK_STATE_NORMAL, new ArrayList<>());
+            disks.get(facing).put(TileDiskDrive.DISK_STATE_NEAR_CAPACITY, new ArrayList<>());
             disks.get(facing).put(TileDiskDrive.DISK_STATE_FULL, new ArrayList<>());
             disks.get(facing).put(TileDiskDrive.DISK_STATE_DISCONNECTED, new ArrayList<>());
 
             initDiskModels(disk, TileDiskDrive.DISK_STATE_NORMAL, facing);
+            initDiskModels(diskNearCapacity, TileDiskDrive.DISK_STATE_NEAR_CAPACITY, facing);
             initDiskModels(diskFull, TileDiskDrive.DISK_STATE_FULL, facing);
             initDiskModels(diskDisconnected, TileDiskDrive.DISK_STATE_DISCONNECTED, facing);
         }
