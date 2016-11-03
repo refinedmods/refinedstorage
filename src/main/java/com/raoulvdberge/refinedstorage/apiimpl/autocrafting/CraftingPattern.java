@@ -124,6 +124,8 @@ public class CraftingPattern implements ICraftingPattern {
                                     .mapToObj(OreDictionary::getOreName)
                                     .map(OreDictionary::getOres)
                                     .flatMap(List::stream)
+                                    .map(ItemStack::copy)
+                                    .map(s -> {s.stackSize = input.stackSize; return s;})
                                     .collect(Collectors.toList()));
                         }
                     }
