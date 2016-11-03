@@ -63,7 +63,6 @@ public class ItemWrench extends ItemBase {
         super("wrench");
 
         setMaxStackSize(1);
-        setMaxDamage(64);
     }
 
     @Override
@@ -111,8 +110,6 @@ public class ItemWrench extends ItemBase {
 
                     player.addChatComponentMessage(new TextComponentTranslation("item.refinedstorage:wrench.saved"));
                 }
-
-                stack.damageItem(1, player);
 
                 return EnumActionResult.SUCCESS;
             }

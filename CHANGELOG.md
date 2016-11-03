@@ -1,8 +1,8 @@
 # Refined Storage Changelog
 
 ### 1.2
-- Added new autocrafting system (way2muchnoise, raoulvdberge)
-- Added ore dictionary autocrafting (way2muchnoise, raoulvdberge)
+- Added new autocrafting system (way2muchnoise)
+- Added ore dictionary autocrafting (way2muchnoise)
 - Added recipe transfer handler for Processing Pattern Encoder (way2muchnoise)
 - Added void excess items functionality to storage blocks (geldorn, raoulvdberge, InusualZ)
 - Added config option to configure RS to EU conversion rates (InusualZ)
