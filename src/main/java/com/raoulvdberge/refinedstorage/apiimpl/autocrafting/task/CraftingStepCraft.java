@@ -102,8 +102,8 @@ public class CraftingStepCraft extends CraftingStep {
         }
 
         ItemStack[] took = new ItemStack[9];
-        for (int i = 0; i < pattern.getInputs().size(); i++) {
-            ItemStack input = pattern.getInputs().get(i);
+        for (int i = 0; i < getToInsert().size(); i++) {
+            ItemStack input = getToInsert().get(i);
             if (input != null) {
                 ItemStack actualInput = actualInputs.get(input, compare);
                 ItemStack taken = ItemHandlerHelper.copyStackWithSize(actualInput, input.stackSize);
