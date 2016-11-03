@@ -93,16 +93,6 @@ public class CraftingPattern implements ICraftingPattern {
                         }
                     }
 
-                    if (oreInputs.isEmpty()) {
-                        for (ItemStack input : inputs) {
-                            if (input == null) {
-                                oreInputs.add(Collections.emptyList());
-                            } else {
-                                oreInputs.add(Collections.singletonList(input));
-                            }
-                        }
-                    }
-
                     for (ItemStack remaining : recipe.getRemainingItems(inv)) {
                         if (remaining != null) {
                             ItemStack cleaned = output.copy();
@@ -116,6 +106,16 @@ public class CraftingPattern implements ICraftingPattern {
             }
         } else {
             outputs = ItemPattern.getOutputs(stack);
+        }
+
+        if (oreInputs.isEmpty()) {
+            for (ItemStack input : inputs) {
+                if (input == null) {
+                    oreInputs.add(Collections.emptyList());
+                } else {
+                    oreInputs.add(Collections.singletonList(input));
+                }
+            }
         }
     }
 
