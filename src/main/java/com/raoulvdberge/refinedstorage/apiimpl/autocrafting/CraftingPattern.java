@@ -12,10 +12,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CraftingPattern implements ICraftingPattern {
     private ICraftingPatternContainer container;
@@ -106,6 +108,27 @@ public class CraftingPattern implements ICraftingPattern {
             }
         } else {
             outputs = ItemPattern.getOutputs(stack);
+
+            if (isOredict()) {
+                for (ItemStack input : inputs) {
+
+                    if (input == null) {
+                        oreInputs.add(Collections.emptyList());
+                    } else {
+                        int[] ids = OreDictionary.getOreIDs(input);
+                        if (ids == null || ids.length == 0) {
+                            oreInputs.add(Collections.singletonList(input));
+                        } else {
+                            oreInputs.add(
+                                Arrays.stream(ids)
+                                    .mapToObj(OreDictionary::getOreName)
+                                    .map(OreDictionary::getOres)
+                                    .flatMap(List::stream)
+                                    .collect(Collectors.toList()));
+                        }
+                    }
+                }
+            }
         }
 
         if (oreInputs.isEmpty()) {
