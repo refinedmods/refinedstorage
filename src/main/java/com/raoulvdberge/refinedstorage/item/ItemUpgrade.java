@@ -37,6 +37,11 @@ public class ItemUpgrade extends ItemBase {
     }
 
     @Override
+    public boolean hasEffect(ItemStack stack) {
+        return stack.getMetadata() == TYPE_SILK_TOUCH || stack.getMetadata() == TYPE_FORTUNE;
+    }
+
+    @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
         if (stack.getItemDamage() == TYPE_FORTUNE) {
