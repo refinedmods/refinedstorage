@@ -367,7 +367,9 @@ public class CraftingTask implements ICraftingTask {
             for (ICraftingStep step : mainSteps) {
                 quantity += quantityPerRequest - step.getReceivedOutput(requested);
             }
-            calculate();
+            if (quantity > 0) {
+                calculate();
+            }
             network.sendCraftingMonitorUpdate();
         }
     }
