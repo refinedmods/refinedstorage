@@ -25,6 +25,7 @@ public class CraftingPattern implements ICraftingPattern {
     private List<List<ItemStack>> oreInputs = new ArrayList<>();
     private List<ItemStack> outputs = new ArrayList<>();
     private List<ItemStack> byproducts = new ArrayList<>();
+    private boolean mekanism = false; // Cause they are special in so many ways ¯\_(ツ)_/¯
 
     public CraftingPattern(World world, ICraftingPatternContainer container, ItemStack stack) {
         this.container = container;
@@ -48,11 +49,17 @@ public class CraftingPattern implements ICraftingPattern {
             if (recipe != null) {
                 ItemStack output = recipe.getCraftingResult(inv);
                 if (output != null) {
-                    outputs.add(output.copy());
-
                     boolean shapedOre = recipe instanceof ShapedOreRecipe;
                     // It is a dirty fix, but hey someone has to do it. ~ way2muchnoise 2016 "bite me"
-                    if (shapedOre || recipe.getClass().getName().equals("mekanism.common.recipe.ShapedMekanismRecipe")) {
+                    mekanism = recipe.getClass().getName().equals("mekanism.common.recipe.ShapedMekanismRecipe");
+
+                    ItemStack out = output.copy();
+                    if (mekanism && out.hasTagCompound()) {
+                        out.getTagCompound().removeTag("mekData");
+                    }
+                    outputs.add(out);
+
+                    if (shapedOre || mekanism) {
                         Object[] inputs = new Object[0];
                         if (shapedOre) {
                             inputs = ((ShapedOreRecipe) recipe).getInput();
@@ -67,9 +74,21 @@ public class CraftingPattern implements ICraftingPattern {
                             if (input == null) {
                                 oreInputs.add(Collections.emptyList());
                             } else if (input instanceof ItemStack) {
-                                oreInputs.add(Collections.singletonList((ItemStack) input));
+                                ItemStack stripped = ((ItemStack) input).copy();
+                                if (mekanism && ((ItemStack) input).hasTagCompound()) {
+                                    stripped.getTagCompound().removeTag("mekData");
+                                }
+                                oreInputs.add(Collections.singletonList(stripped));
                             } else {
-                                oreInputs.add((List<ItemStack>)input);
+                                List<ItemStack> cleaned = new LinkedList<>();
+                                for (ItemStack in : (List<ItemStack>) input) {
+                                    ItemStack stripped = in.copy();
+                                    if (mekanism && stripped.hasTagCompound()){
+                                        stripped.getTagCompound().removeTag("mekData");
+                                    }
+                                    cleaned.add(stripped);
+                                }
+                                oreInputs.add(cleaned);
                             }
                         }
                     }
@@ -86,7 +105,11 @@ public class CraftingPattern implements ICraftingPattern {
 
                     for (ItemStack remaining : recipe.getRemainingItems(inv)) {
                         if (remaining != null) {
-                            byproducts.add(remaining.copy());
+                            ItemStack cleaned = output.copy();
+                            if (mekanism && cleaned.hasTagCompound()) {
+                                cleaned.getTagCompound().removeTag("mekData");
+                            }
+                            byproducts.add(cleaned);
                         }
                     }
                 }
@@ -146,7 +169,11 @@ public class CraftingPattern implements ICraftingPattern {
             inv.setInventorySlotContents(i, took[i]);
         }
 
-        outputs.add(recipe.getCraftingResult(inv));
+        ItemStack cleaned = recipe.getCraftingResult(inv).copy();
+        if (mekanism && cleaned.hasTagCompound()) {
+            cleaned.getTagCompound().removeTag("mekData");
+        }
+        outputs.add(cleaned);
 
         return outputs;
     }
@@ -173,7 +200,11 @@ public class CraftingPattern implements ICraftingPattern {
 
         for (ItemStack remaining : recipe.getRemainingItems(inv)) {
             if (remaining != null) {
-                byproducts.add(remaining.copy());
+                ItemStack cleaned = remaining.copy();
+                if (mekanism && cleaned.hasTagCompound()) {
+                    cleaned.getTagCompound().removeTag("mekData");
+                }
+                byproducts.add(cleaned);
             }
         }
 
