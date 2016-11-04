@@ -9,7 +9,6 @@ import com.raoulvdberge.refinedstorage.integration.ic2.IntegrationIC2;
 import com.raoulvdberge.refinedstorage.integration.tesla.IntegrationTesla;
 import com.raoulvdberge.refinedstorage.integration.tesla.NetworkItemEnergyTesla;
 import com.raoulvdberge.refinedstorage.tile.TileController;
-import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import ic2.api.item.IElectricItemManager;
 import ic2.api.item.ISpecialElectricItem;
 import net.darkhax.tesla.capability.TeslaCapabilities;
@@ -149,10 +148,8 @@ public abstract class ItemNetworkItem extends ItemEnergyContainer implements INe
             tag.setInteger(NBT_CONTROLLER_Y, pos.getY());
             tag.setInteger(NBT_CONTROLLER_Z, pos.getZ());
             tag.setInteger(NBT_DIMENSION_ID, player.dimension);
-            tag.setInteger(TileGrid.NBT_VIEW_TYPE, TileGrid.VIEW_TYPE_NORMAL);
-            tag.setInteger(TileGrid.NBT_SORTING_DIRECTION, TileGrid.SORTING_DIRECTION_DESCENDING);
-            tag.setInteger(TileGrid.NBT_SORTING_TYPE, TileGrid.SORTING_TYPE_NAME);
-            tag.setInteger(TileGrid.NBT_SEARCH_BOX_MODE, TileGrid.SEARCH_BOX_MODE_NORMAL);
+
+            initializeDefaults(tag);
 
             stack.setTagCompound(tag);
 
@@ -160,6 +157,10 @@ public abstract class ItemNetworkItem extends ItemEnergyContainer implements INe
         }
 
         return EnumActionResult.PASS;
+    }
+
+    public void initializeDefaults(NBTTagCompound tag) {
+        // NO OP
     }
 
     public static int getDimensionId(ItemStack stack) {
