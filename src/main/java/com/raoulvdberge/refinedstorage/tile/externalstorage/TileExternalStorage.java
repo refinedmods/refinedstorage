@@ -124,9 +124,17 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
         network.getFluidStorageCache().invalidate();
     }
 
+    private int networkTicks;
+
     @Override
     public void update() {
         if (!worldObj.isRemote && network != null) {
+            if (networkTicks == 0) {
+                updateStorage(network);
+            }
+
+            networkTicks++;
+
             for (ItemStorageExternal storage : itemStorages) {
                 storage.detectChanges(network);
             }
