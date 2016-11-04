@@ -1,12 +1,17 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network;
 
+import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeGraph;
 import com.raoulvdberge.refinedstorage.api.storage.fluid.IFluidStorageProvider;
 import com.raoulvdberge.refinedstorage.api.storage.item.IItemStorageProvider;
+import com.raoulvdberge.refinedstorage.item.ItemBlockController;
 import com.raoulvdberge.refinedstorage.tile.TileController;
 import com.raoulvdberge.refinedstorage.tile.TileNetworkTransmitter;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -60,7 +65,19 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
             TileEntity tile = world.getTileEntity(currentPos);
 
             if (tile instanceof TileController && !controller.getPos().equals(currentPos)) {
-                world.createExplosion(null, currentPos.getX(), currentPos.getY(), currentPos.getZ(), 1.5f, true);
+                world.setBlockToAir(currentPos);
+
+                IBlockState state = world.getBlockState(currentPos);
+
+                InventoryHelper.spawnItemStack(
+                    world,
+                    currentPos.getX(),
+                    currentPos.getY(),
+                    currentPos.getZ(),
+                    ItemBlockController.createStackWithNBT(new ItemStack(RSBlocks.CONTROLLER, 1, state.getBlock().getMetaFromState(state)))
+                );
+
+                continue;
             }
 
             if (!(tile instanceof INetworkNode)) {
