@@ -15,24 +15,24 @@ public class GuiHandlerGrid implements IAdvancedGuiHandler<GuiGrid> {
 
     @Nullable
     @Override
-    public List<Rectangle> getGuiExtraAreas(GuiGrid guiContainer) {
+    public List<Rectangle> getGuiExtraAreas(GuiGrid gui) {
         return null;
     }
 
     @Nullable
     @Override
-    public Object getIngredientUnderMouse(GuiGrid guiContainer, int mouseX, int mouseY) {
-        mouseX -= guiContainer.getGuiLeft();
-        mouseY -= guiContainer.getGuiTop();
+    public Object getIngredientUnderMouse(GuiGrid gui, int mouseX, int mouseY) {
+        mouseX -= gui.getGuiLeft();
+        mouseY -= gui.getGuiTop();
 
-        if (guiContainer.isOverSlotArea(mouseX, mouseY)) {
+        if (!gui.getSearchField().isFocused() && gui.isOverSlotArea(mouseX, mouseY)) {
             mouseX -= 7;
             mouseY -= 19;
 
             int x = mouseX / 18;
             int y = mouseY / 18;
 
-            y += guiContainer.getScrollbar().getOffset();
+            y += gui.getScrollbar().getOffset();
 
             int slot = y * 9 + x;
 

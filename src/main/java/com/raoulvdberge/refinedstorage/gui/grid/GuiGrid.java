@@ -478,6 +478,10 @@ public class GuiGrid extends GuiBase {
         }
     }
 
+    public GuiTextField getSearchField() {
+        return searchField;
+    }
+
     public void updateOredictPattern(boolean checked) {
         if (oredictPattern != null) {
             oredictPattern.setIsChecked(checked);
