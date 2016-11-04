@@ -26,7 +26,7 @@ public class CraftingStepCraft extends CraftingStep {
     public CraftingStepCraft(INetworkMaster network, ICraftingPattern pattern, List<ItemStack> toInsert) {
         super(network, pattern);
         this.toInsert = new LinkedList<>();
-        toInsert.stream().filter(insert -> insert != null).forEach(stack -> this.toInsert.add(stack.copy()));
+        toInsert.forEach(stack -> this.toInsert.add(stack == null ? null : stack.copy()));
     }
 
     public CraftingStepCraft(INetworkMaster network) {
@@ -35,7 +35,7 @@ public class CraftingStepCraft extends CraftingStep {
 
     @Override
     public List<ItemStack> getToInsert() {
-        return toInsert == null ? super.getToInsert() : toInsert;
+        return toInsert == null ? super.getToInsert() : toInsert.stream().filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     @Override
@@ -102,8 +102,8 @@ public class CraftingStepCraft extends CraftingStep {
         }
 
         ItemStack[] took = new ItemStack[9];
-        for (int i = 0; i < getToInsert().size(); i++) {
-            ItemStack input = getToInsert().get(i);
+        for (int i = 0; i < toInsert.size(); i++) {
+            ItemStack input = toInsert.get(i);
             if (input != null) {
                 ItemStack actualInput = actualInputs.get(input, compare);
                 ItemStack taken = ItemHandlerHelper.copyStackWithSize(actualInput, input.stackSize);
@@ -133,7 +133,7 @@ public class CraftingStepCraft extends CraftingStep {
         NBTTagList toInsertList = new NBTTagList();
 
         for (ItemStack insert : toInsert) {
-            toInsertList.appendTag(insert.serializeNBT());
+            toInsertList.appendTag(insert == null ? new NBTTagCompound() : insert.serializeNBT());
         }
 
         tag.setTag(NBT_TO_INSERT, toInsertList);
@@ -145,13 +145,10 @@ public class CraftingStepCraft extends CraftingStep {
     public boolean readFromNBT(NBTTagCompound tag) {
         if (super.readFromNBT(tag)) {
             if (tag.hasKey(NBT_TO_INSERT)) {
-                NBTTagList toInsertList = tag.getTagList(CraftingTask.NBT_TO_INSERT_ITEMS, Constants.NBT.TAG_COMPOUND);
+                NBTTagList toInsertList = tag.getTagList(NBT_TO_INSERT, Constants.NBT.TAG_COMPOUND);
                 toInsert = new ArrayList<>(toInsertList.tagCount());
                 for (int i = 0; i < toInsertList.tagCount(); ++i) {
-                    ItemStack insertStack = ItemStack.loadItemStackFromNBT(toInsertList.getCompoundTagAt(i));
-                    if (insertStack != null) {
-                        toInsert.add(insertStack);
-                    }
+                    toInsert.add(ItemStack.loadItemStackFromNBT(toInsertList.getCompoundTagAt(i)));
                 }
             }
 
