@@ -21,9 +21,9 @@ public class TileCraftingMonitor extends TileNode implements ICraftingMonitor {
     }
 
     @Override
-    public void onCancelled(int id) {
+    public void onCancelled(EntityPlayerMP player, int id) {
         if (isConnected()) {
-            network.getItemGridHandler().onCraftingCancelRequested(id);
+            network.getItemGridHandler().onCraftingCancelRequested(player, id);
         }
     }
 

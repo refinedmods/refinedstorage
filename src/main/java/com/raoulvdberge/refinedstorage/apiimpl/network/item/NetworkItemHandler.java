@@ -60,10 +60,10 @@ public class NetworkItemHandler implements INetworkItemHandler {
         if (item.onOpen(network, player, controllerWorld, hand)) {
             items.add(item);
 
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     @Override

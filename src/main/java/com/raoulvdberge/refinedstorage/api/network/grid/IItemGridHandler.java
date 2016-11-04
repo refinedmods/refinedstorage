@@ -60,7 +60,8 @@ public interface IItemGridHandler {
     /**
      * Called when a player wants to cancel a crafting task.
      *
-     * @param id the task id, or -1 to cancel all tasks
+     * @param player the player that requested the cance
+     * @param id     the task id, or -1 to cancel all tasks
      */
-    void onCraftingCancelRequested(int id);
+    void onCraftingCancelRequested(EntityPlayerMP player, int id);
 }

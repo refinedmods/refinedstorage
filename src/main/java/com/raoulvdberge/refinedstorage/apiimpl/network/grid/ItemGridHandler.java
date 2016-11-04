@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.CraftingTask;
+import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemWirelessCraftingMonitor;
 import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemWirelessGrid;
 import com.raoulvdberge.refinedstorage.network.MessageGridCraftingPreviewResponse;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -169,13 +170,19 @@ public class ItemGridHandler implements IItemGridHandler {
     }
 
     @Override
-    public void onCraftingCancelRequested(int id) {
+    public void onCraftingCancelRequested(EntityPlayerMP player, int id) {
         if (id >= 0 && id < network.getCraftingTasks().size()) {
             network.cancelCraftingTask(network.getCraftingTasks().get(id));
         } else if (id == -1) {
             for (ICraftingTask task : network.getCraftingTasks()) {
                 network.cancelCraftingTask(task);
             }
+        }
+
+        INetworkItem networkItem = network.getNetworkItemHandler().getItem(player);
+
+        if (networkItem != null && networkItem instanceof NetworkItemWirelessCraftingMonitor) {
+            ((NetworkItemWirelessCraftingMonitor) networkItem).drainEnergy(id == -1 ? RS.INSTANCE.config.wirelessCraftingMonitorCancelAllUsage : RS.INSTANCE.config.wirelessCraftingMonitorCancelUsage);
         }
     }
 }

@@ -329,7 +329,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public void sendCraftingMonitorUpdate() {
-        List<ICraftingMonitorElement> elements = craftingTasks.stream().flatMap(t -> t.getCraftingMonitorElements().stream()).collect(Collectors.toList());
+        List<ICraftingMonitorElement> elements = getElements();
 
         worldObj.getMinecraftServer().getPlayerList().getPlayerList().stream()
             .filter(player -> player.openContainer instanceof ContainerCraftingMonitor)
@@ -338,7 +338,11 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public void sendCraftingMonitorUpdate(EntityPlayerMP player) {
-        RS.INSTANCE.network.sendTo(new MessageCraftingMonitorElements(craftingTasks.stream().flatMap(t -> t.getCraftingMonitorElements().stream()).collect(Collectors.toList())), player);
+        RS.INSTANCE.network.sendTo(new MessageCraftingMonitorElements(getElements()), player);
+    }
+
+    private List<ICraftingMonitorElement> getElements() {
+        return craftingTasks.stream().flatMap(t -> t.getCraftingMonitorElements().stream()).collect(Collectors.toList());
     }
 
     @Override

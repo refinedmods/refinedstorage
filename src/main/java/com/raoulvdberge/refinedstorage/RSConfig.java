@@ -64,6 +64,13 @@ public final class RSConfig {
     public int wirelessGridInsertUsage;
     //endregion
 
+    //region Wireless Crafting Monitor
+    public boolean wirelessCraftingMonitorUsesEnergy;
+    public int wirelessCraftingMonitorOpenUsage;
+    public int wirelessCraftingMonitorCancelUsage;
+    public int wirelessCraftingMonitorCancelAllUsage;
+    //endregion
+
     //region Upgrades
     public int rangeUpgradeUsage;
     public int speedUpgradeUsage;
@@ -79,6 +86,7 @@ public final class RSConfig {
     private static final String CONTROLLER = "controller";
     private static final String WIRELESS_TRANSMITTER = "wirelessTransmitter";
     private static final String WIRELESS_GRID = "wirelessGrid";
+    private static final String WIRELESS_CRAFTING_MONITOR = "wirelessCraftingMonitor";
     private static final String UPGRADES = "upgrades";
     private static final String MISC = "misc";
     //endregion
@@ -151,6 +159,13 @@ public final class RSConfig {
         wirelessGridOpenUsage = config.getInt("open", WIRELESS_GRID, 30, 0, Integer.MAX_VALUE, "The energy used by the Wireless Grid to open");
         wirelessGridInsertUsage = config.getInt("insert", WIRELESS_GRID, 3, 0, Integer.MAX_VALUE, "The energy used by the Wireless Grid to insert items");
         wirelessGridExtractUsage = config.getInt("extract", WIRELESS_GRID, 3, 0, Integer.MAX_VALUE, "The energy used by the Wireless Grid to extract items");
+        //endregion
+
+        //region Wireless Grid
+        wirelessCraftingMonitorUsesEnergy = config.getBoolean("usesEnergy", WIRELESS_CRAFTING_MONITOR, true, "Whether the Wireless Crafting Monitor uses energy");
+        wirelessCraftingMonitorOpenUsage = config.getInt("open", WIRELESS_CRAFTING_MONITOR, 35, 0, Integer.MAX_VALUE, "The energy used by the Wireless Crafting Monitor to open");
+        wirelessCraftingMonitorCancelUsage = config.getInt("cancel", WIRELESS_CRAFTING_MONITOR, 4, 0, Integer.MAX_VALUE, "The energy used by the Wireless Crafting Monitor to cancel a task");
+        wirelessCraftingMonitorCancelAllUsage = config.getInt("cancelAll", WIRELESS_CRAFTING_MONITOR, 5, 0, Integer.MAX_VALUE, "The energy used by the Wireless Crafting Monitor to cancel all tasks");
         //endregion
 
         //region Upgrades

@@ -18,4 +18,5 @@ public final class RSItems {
     public static final ItemFluidStorageDisk FLUID_STORAGE_DISK = new ItemFluidStorageDisk();
     public static final ItemFluidStoragePart FLUID_STORAGE_PART = new ItemFluidStoragePart();
     public static final ItemWrench WRENCH = new ItemWrench();
+    public static final ItemWirelessCraftingMonitor WIRELESS_CRAFTING_MONITOR = new ItemWirelessCraftingMonitor();
 }

@@ -28,7 +28,7 @@ public class MessageCraftingMonitorCancel extends MessageHandlerPlayerToServer<M
     @Override
     public void handle(MessageCraftingMonitorCancel message, EntityPlayerMP player) {
         if (player.openContainer instanceof ContainerCraftingMonitor) {
-            ((ContainerCraftingMonitor) player.openContainer).getCraftingMonitor().onCancelled(message.id);
+            ((ContainerCraftingMonitor) player.openContainer).getCraftingMonitor().onCancelled(player, message.id);
         }
     }
 }

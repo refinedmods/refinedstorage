@@ -166,6 +166,7 @@ public class ProxyCommon {
         registerItem(RSItems.GRID_FILTER);
         registerItem(RSItems.NETWORK_CARD);
         registerItem(RSItems.WRENCH);
+        registerItem(RSItems.WIRELESS_CRAFTING_MONITOR);
 
         OreDictionary.registerOre("itemSilicon", RSItems.SILICON);
 
@@ -309,11 +310,23 @@ public class ProxyCommon {
         // Wireless Grid
         GameRegistry.addRecipe(new ItemStack(RSItems.WIRELESS_GRID, 1, ItemWirelessGrid.TYPE_NORMAL),
             "EPE",
+            "EGE",
             "EAE",
-            "EEE",
+            'E', new ItemStack(RSItems.QUARTZ_ENRICHED_IRON),
             'P', new ItemStack(Items.ENDER_PEARL),
-            'A', new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
-            'E', new ItemStack(RSItems.QUARTZ_ENRICHED_IRON)
+            'G', new ItemStack(RSBlocks.GRID, 1, EnumGridType.NORMAL.getId()),
+            'A', new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)
+        );
+
+        // Wireless Crafting Monitor
+        GameRegistry.addRecipe(new ItemStack(RSItems.WIRELESS_CRAFTING_MONITOR, 1, ItemWirelessCraftingMonitor.TYPE_NORMAL),
+            "EPE",
+            "EME",
+            "EAE",
+            'E', new ItemStack(RSItems.QUARTZ_ENRICHED_IRON),
+            'P', new ItemStack(Items.ENDER_PEARL),
+            'M', new ItemStack(RSBlocks.CRAFTING_MONITOR),
+            'A', new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)
         );
 
         // Crafter
