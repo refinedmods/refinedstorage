@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.container.*;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.tile.*;
+import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.externalstorage.TileExternalStorage;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.WirelessGrid;
@@ -63,18 +64,6 @@ public class GuiHandler implements IGuiHandler {
             default:
                 return null;
         }
-    }
-
-    private WirelessGrid getWirelessGrid(EntityPlayer player, int hand, int controllerDimension) {
-        return new WirelessGrid(controllerDimension, player.getHeldItem(EnumHand.values()[hand]));
-    }
-
-    private ContainerGrid getWirelessGridContainer(EntityPlayer player, int hand, int controllerDimension) {
-        return new ContainerGrid(getWirelessGrid(player, hand, controllerDimension), player);
-    }
-
-    private ContainerGridFilter getGridFilterContainer(EntityPlayer player, int hand) {
-        return new ContainerGridFilter(player, player.getHeldItem(EnumHand.values()[hand]));
     }
 
     @Override
@@ -144,9 +133,21 @@ public class GuiHandler implements IGuiHandler {
         }
     }
 
+    private WirelessGrid getWirelessGrid(EntityPlayer player, int hand, int controllerDimension) {
+        return new WirelessGrid(controllerDimension, player.getHeldItem(EnumHand.values()[hand]));
+    }
+
     private GuiGrid getWirelessGridGui(EntityPlayer player, int hand, int controllerDimension) {
         WirelessGrid grid = getWirelessGrid(player, hand, controllerDimension);
 
         return new GuiGrid(new ContainerGrid(grid, player), grid);
+    }
+
+    private ContainerGrid getWirelessGridContainer(EntityPlayer player, int hand, int controllerDimension) {
+        return new ContainerGrid(getWirelessGrid(player, hand, controllerDimension), player);
+    }
+
+    private ContainerGridFilter getGridFilterContainer(EntityPlayer player, int hand) {
+        return new ContainerGridFilter(player, player.getHeldItem(EnumHand.values()[hand]));
     }
 }

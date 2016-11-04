@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.network;
 
-import com.raoulvdberge.refinedstorage.tile.TileCraftingMonitor;
+import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;

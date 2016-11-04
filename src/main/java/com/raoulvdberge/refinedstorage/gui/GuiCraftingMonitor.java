@@ -1,20 +1,18 @@
 package com.raoulvdberge.refinedstorage.gui;
 
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawer;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
 import com.raoulvdberge.refinedstorage.container.ContainerCraftingMonitor;
 import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
-import com.raoulvdberge.refinedstorage.network.MessageCraftingMonitorCancel;
-import com.raoulvdberge.refinedstorage.tile.TileCraftingMonitor;
+import com.raoulvdberge.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
+import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 
 import java.io.IOException;
-import java.util.List;
 
 public class GuiCraftingMonitor extends GuiBase {
     public class CraftingMonitorElementDrawers extends ElementDrawers {
@@ -35,7 +33,7 @@ public class GuiCraftingMonitor extends GuiBase {
     private static final int ITEM_WIDTH = 143;
     private static final int ITEM_HEIGHT = 18;
 
-    private TileCraftingMonitor craftingMonitor;
+    private ICraftingMonitor craftingMonitor;
 
     private GuiButton cancelButton;
     private GuiButton cancelAllButton;
@@ -47,7 +45,7 @@ public class GuiCraftingMonitor extends GuiBase {
     private int itemSelectedX = -1;
     private int itemSelectedY = -1;
 
-    public GuiCraftingMonitor(ContainerCraftingMonitor container, TileCraftingMonitor craftingMonitor) {
+    public GuiCraftingMonitor(ContainerCraftingMonitor container, ICraftingMonitor craftingMonitor) {
         super(container, 176, 230);
 
         this.craftingMonitor = craftingMonitor;
@@ -74,12 +72,12 @@ public class GuiCraftingMonitor extends GuiBase {
         scrollbar.setEnabled(getRows() > VISIBLE_ROWS);
         scrollbar.setMaxOffset(getRows() - VISIBLE_ROWS);
 
-        if (itemSelected >= getElements().size()) {
+        if (itemSelected >= craftingMonitor.getElements().size()) {
             itemSelected = -1;
         }
 
-        cancelButton.enabled = itemSelected != -1 && getElements().get(itemSelected).getTaskId() != -1;
-        cancelAllButton.enabled = getElements().size() > 0;
+        cancelButton.enabled = itemSelected != -1 && craftingMonitor.getElements().get(itemSelected).getTaskId() != -1;
+        cancelAllButton.enabled = craftingMonitor.getElements().size() > 0;
     }
 
     @Override
@@ -88,7 +86,11 @@ public class GuiCraftingMonitor extends GuiBase {
 
         drawTexture(x, y, 0, 0, width, height);
 
-        if (itemSelectedX != -1 && itemSelectedY != -1 && itemSelected >= 0 && itemSelected < getElements().size() && getElements().get(itemSelected).canDrawSelection()) {
+        if (itemSelectedX != -1 &&
+            itemSelectedY != -1 &&
+            itemSelected >= 0 &&
+            itemSelected < craftingMonitor.getElements().size() &&
+            craftingMonitor.getElements().get(itemSelected).canDrawSelection()) {
             drawTexture(x + itemSelectedX, y + itemSelectedY, 0, 232, ITEM_WIDTH, ITEM_HEIGHT);
         }
     }
@@ -111,8 +113,8 @@ public class GuiCraftingMonitor extends GuiBase {
         String itemSelectedTooltip = null;
 
         for (int i = 0; i < VISIBLE_ROWS; ++i) {
-            if (item < getElements().size()) {
-                ICraftingMonitorElement element = getElements().get(item);
+            if (item < craftingMonitor.getElements().size()) {
+                ICraftingMonitorElement element = craftingMonitor.getElements().get(item);
 
                 if (item == itemSelected) {
                     itemSelectedX = x;
@@ -138,7 +140,7 @@ public class GuiCraftingMonitor extends GuiBase {
     }
 
     private int getRows() {
-        return getElements().size();
+        return craftingMonitor.getElements().size();
     }
 
     @Override
@@ -146,13 +148,13 @@ public class GuiCraftingMonitor extends GuiBase {
         super.actionPerformed(button);
 
         if (button == cancelButton && itemSelected != -1) {
-            ICraftingMonitorElement element = getElements().get(itemSelected);
+            ICraftingMonitorElement element = craftingMonitor.getElements().get(itemSelected);
 
             if (element.getTaskId() != -1) {
-                RS.INSTANCE.network.sendToServer(new MessageCraftingMonitorCancel(craftingMonitor, element.getTaskId()));
+                craftingMonitor.onCancelled(element);
             }
-        } else if (button == cancelAllButton && getElements().size() > 0) {
-            RS.INSTANCE.network.sendToServer(new MessageCraftingMonitorCancel(craftingMonitor, -1));
+        } else if (button == cancelAllButton && craftingMonitor.getElements().size() > 0) {
+            craftingMonitor.onCancelledAll();
         }
     }
 
@@ -169,14 +171,10 @@ public class GuiCraftingMonitor extends GuiBase {
                 int ix = 8;
                 int iy = 20 + (i * ITEM_HEIGHT);
 
-                if (inBounds(ix, iy, ITEM_WIDTH, ITEM_HEIGHT, mouseX - guiLeft, mouseY - guiTop) && (item + i) < getElements().size()) {
+                if (inBounds(ix, iy, ITEM_WIDTH, ITEM_HEIGHT, mouseX - guiLeft, mouseY - guiTop) && (item + i) < craftingMonitor.getElements().size()) {
                     itemSelected = item + i;
                 }
             }
         }
-    }
-
-    private List<ICraftingMonitorElement> getElements() {
-        return TileCraftingMonitor.ELEMENTS.getValue();
     }
 }

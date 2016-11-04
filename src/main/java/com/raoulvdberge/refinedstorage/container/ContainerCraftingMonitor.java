@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.container;
 
-import com.raoulvdberge.refinedstorage.tile.TileCraftingMonitor;
+import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class ContainerCraftingMonitor extends ContainerBase {
