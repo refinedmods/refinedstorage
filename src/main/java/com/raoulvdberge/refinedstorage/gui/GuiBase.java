@@ -66,6 +66,10 @@ public abstract class GuiBase extends GuiContainer {
         this.ySize = height;
     }
 
+    public Scrollbar getScrollbar() {
+        return scrollbar;
+    }
+
     @Override
     public void initGui() {
         super.initGui();

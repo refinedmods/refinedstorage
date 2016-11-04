@@ -14,4 +14,6 @@ public interface IClientStack {
     int getQuantity();
 
     void draw(GuiBase gui, int x, int y, boolean isOverWithShift);
+
+    Object getIngredient();
 }

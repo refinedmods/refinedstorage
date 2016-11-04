@@ -257,7 +257,7 @@ public class GuiGrid extends GuiBase {
         return slotNumber >= 0;
     }
 
-    private boolean isOverSlotArea(int mouseX, int mouseY) {
+    public boolean isOverSlotArea(int mouseX, int mouseY) {
         return inBounds(7, 19, 162, 18 * getVisibleRows(), mouseX, mouseY);
     }
 

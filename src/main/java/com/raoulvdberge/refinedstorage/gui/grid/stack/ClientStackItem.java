@@ -89,6 +89,11 @@ public class ClientStackItem implements IClientStack {
     }
 
     @Override
+    public Object getIngredient() {
+        return stack;
+    }
+
+    @Override
     public boolean equals(Object obj) {
         return obj instanceof IClientStack && ((ClientStackItem) obj).getHash() == hash;
     }

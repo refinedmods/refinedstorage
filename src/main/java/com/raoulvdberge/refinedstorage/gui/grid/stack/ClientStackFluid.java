@@ -51,6 +51,11 @@ public class ClientStackFluid implements IClientStack {
     }
 
     @Override
+    public Object getIngredient() {
+        return stack;
+    }
+
+    @Override
     public boolean equals(Object obj) {
         return obj instanceof ClientStackFluid && ((ClientStackFluid) obj).getStack().isFluidEqual(stack);
     }
