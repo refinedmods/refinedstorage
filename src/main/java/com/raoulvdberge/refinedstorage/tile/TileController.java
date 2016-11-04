@@ -8,6 +8,7 @@ import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider;
+import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskFactory;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
@@ -328,16 +329,16 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public void sendCraftingMonitorUpdate() {
+        List<ICraftingMonitorElement> elements = craftingTasks.stream().flatMap(t -> t.getCraftingMonitorElements().stream()).collect(Collectors.toList());
+
         worldObj.getMinecraftServer().getPlayerList().getPlayerList().stream()
             .filter(player -> player.openContainer instanceof ContainerCraftingMonitor)
-            .forEach(this::sendCraftingMonitorUpdate);
+            .forEach(player -> RS.INSTANCE.network.sendTo(new MessageCraftingMonitorElements(elements), player));
     }
 
     @Override
     public void sendCraftingMonitorUpdate(EntityPlayerMP player) {
-        RS.INSTANCE.network.sendTo(new MessageCraftingMonitorElements(
-            craftingTasks.stream().flatMap(t -> t.getCraftingMonitorElements().stream()).collect(Collectors.toList())
-        ), player);
+        RS.INSTANCE.network.sendTo(new MessageCraftingMonitorElements(craftingTasks.stream().flatMap(t -> t.getCraftingMonitorElements().stream()).collect(Collectors.toList())), player);
     }
 
     @Override
