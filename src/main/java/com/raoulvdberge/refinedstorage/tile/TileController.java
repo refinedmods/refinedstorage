@@ -463,35 +463,27 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public void scheduleCraftingTask(ItemStack stack, int toSchedule, int compare) {
-        int alreadyScheduled = 0;
-
         for (ICraftingTask task : getCraftingTasks()) {
             for (ItemStack output : task.getPattern().getOutputs()) {
                 if (API.instance().getComparer().isEqual(output, stack, compare)) {
-                    alreadyScheduled++;
+                    toSchedule -= output.stackSize * task.getQuantity();
                 }
             }
         }
 
-        boolean scheduled = false;
-
-        for (int i = 0; i < toSchedule - alreadyScheduled; ++i) {
+        if (toSchedule > 0) {
             ICraftingPattern pattern = getPattern(stack, compare);
 
             if (pattern != null) {
-                ICraftingTask task = createCraftingTask(stack, pattern, 1);
+                ICraftingTask task = createCraftingTask(stack, pattern, toSchedule);
 
                 task.calculate();
                 task.getMissing().clear();
 
                 addCraftingTask(task);
 
-                scheduled = true;
+                markCraftingMonitorForUpdate();
             }
-        }
-
-        if (scheduled) {
-            markCraftingMonitorForUpdate();
         }
     }
 
