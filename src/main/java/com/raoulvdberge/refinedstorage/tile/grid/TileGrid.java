@@ -214,7 +214,7 @@ public class TileGrid extends TileNode implements IGrid {
         return network != null ? network.getPosition() : null;
     }
 
-    public void onGridOpened(EntityPlayer player) {
+    public void onOpened(EntityPlayer player) {
         if (isConnected()) {
             if (getType() == EnumGridType.FLUID) {
                 network.sendFluidStorageToClient((EntityPlayerMP) player);

@@ -35,6 +35,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.item.ItemStorageCache;
 import com.raoulvdberge.refinedstorage.block.BlockController;
 import com.raoulvdberge.refinedstorage.block.EnumControllerType;
 import com.raoulvdberge.refinedstorage.block.EnumGridType;
+import com.raoulvdberge.refinedstorage.container.ContainerCraftingMonitor;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.integration.forgeenergy.ControllerEnergyForge;
 import com.raoulvdberge.refinedstorage.integration.ic2.ControllerEnergyIC2;
@@ -43,13 +44,9 @@ import com.raoulvdberge.refinedstorage.integration.ic2.IControllerEnergyIC2;
 import com.raoulvdberge.refinedstorage.integration.ic2.IntegrationIC2;
 import com.raoulvdberge.refinedstorage.integration.tesla.ControllerEnergyTesla;
 import com.raoulvdberge.refinedstorage.integration.tesla.IntegrationTesla;
-import com.raoulvdberge.refinedstorage.network.MessageGridFluidDelta;
-import com.raoulvdberge.refinedstorage.network.MessageGridFluidUpdate;
-import com.raoulvdberge.refinedstorage.network.MessageGridItemDelta;
-import com.raoulvdberge.refinedstorage.network.MessageGridItemUpdate;
+import com.raoulvdberge.refinedstorage.network.*;
 import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
-import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.RSSerializers;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
@@ -77,6 +74,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class TileController extends TileBase implements INetworkMaster, IEnergyReceiver, IRedstoneConfigurable {
     public static final TileDataParameter<Integer> REDSTONE_MODE = RedstoneMode.createParameter();
@@ -288,11 +286,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 if (craftingMonitorUpdateRequested) {
                     craftingMonitorUpdateRequested = false;
 
-                    for (INetworkNode node : nodeGraph.all()) {
-                        if (node instanceof TileCraftingMonitor) {
-                            ((TileCraftingMonitor) node).dataManager.sendParameterToWatchers(TileCraftingMonitor.ELEMENTS);
-                        }
-                    }
+                    sendCraftingMonitorUpdate();
                 }
 
             }
@@ -328,8 +322,22 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     }
 
     @Override
-    public void sendCraftingMonitorUpdate() {
+    public void markCraftingMonitorForUpdate() {
         craftingMonitorUpdateRequested = true;
+    }
+
+    @Override
+    public void sendCraftingMonitorUpdate() {
+        worldObj.getMinecraftServer().getPlayerList().getPlayerList().stream()
+            .filter(player -> player.openContainer instanceof ContainerCraftingMonitor)
+            .forEach(this::sendCraftingMonitorUpdate);
+    }
+
+    @Override
+    public void sendCraftingMonitorUpdate(EntityPlayerMP player) {
+        RS.INSTANCE.network.sendTo(new MessageCraftingMonitorElements(
+            craftingTasks.stream().flatMap(t -> t.getCraftingMonitorElements().stream()).collect(Collectors.toList())
+        ), player);
     }
 
     @Override
@@ -446,6 +454,40 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         }
 
         return patterns.get(highestPattern);
+    }
+
+    @Override
+    public void scheduleCraftingTask(ItemStack stack, int toSchedule, int compare) {
+        int alreadyScheduled = 0;
+
+        for (ICraftingTask task : getCraftingTasks()) {
+            for (ItemStack output : task.getPattern().getOutputs()) {
+                if (API.instance().getComparer().isEqual(output, stack, compare)) {
+                    alreadyScheduled++;
+                }
+            }
+        }
+
+        boolean scheduled = false;
+
+        for (int i = 0; i < toSchedule - alreadyScheduled; ++i) {
+            ICraftingPattern pattern = getPattern(stack, compare);
+
+            if (pattern != null) {
+                ICraftingTask task = createCraftingTask(stack, pattern, 1);
+
+                task.calculate();
+                task.getMissing().clear();
+
+                addCraftingTask(task);
+
+                scheduled = true;
+            }
+        }
+
+        if (scheduled) {
+            markCraftingMonitorForUpdate();
+        }
     }
 
     @Override

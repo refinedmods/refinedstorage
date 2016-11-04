@@ -132,7 +132,7 @@ public abstract class CraftingStep implements ICraftingStep {
                     satisfied.put(hashcode, received + toReceive);
                     stack.stackSize -= toReceive;
 
-                    network.sendCraftingMonitorUpdate();
+                    network.markCraftingMonitorForUpdate();
 
                     if (stack.stackSize == 0) {
                         return true;

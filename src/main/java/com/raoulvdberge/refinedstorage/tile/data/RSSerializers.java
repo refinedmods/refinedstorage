@@ -1,11 +1,8 @@
 package com.raoulvdberge.refinedstorage.tile.data;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
-import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
-import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.tile.ClientNode;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializer;
@@ -16,7 +13,6 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 public final class RSSerializers {
     public static final DataSerializer<List<ClientNode>> CLIENT_NODE_SERIALIZER = new DataSerializer<List<ClientNode>>() {
@@ -46,41 +42,6 @@ public final class RSSerializers {
 
         @Override
         public DataParameter<List<ClientNode>> createKey(int id) {
-            return null;
-        }
-    };
-
-    public static final DataSerializer<List<ICraftingMonitorElement>> CRAFTING_MONITOR_ELEMENT_SERIALIZER = new DataSerializer<List<ICraftingMonitorElement>>() {
-        @Override
-        public void write(PacketBuffer buf, List<ICraftingMonitorElement> elements) {
-            buf.writeInt(elements.size());
-
-            for (ICraftingMonitorElement task : elements) {
-                ByteBufUtils.writeUTF8String(buf, task.getId());
-
-                task.write(buf);
-            }
-        }
-
-        @Override
-        public List<ICraftingMonitorElement> read(PacketBuffer buf) {
-            List<ICraftingMonitorElement> elements = new ArrayList<>();
-
-            int size = buf.readInt();
-
-            for (int i = 0; i < size; ++i) {
-                Function<ByteBuf, ICraftingMonitorElement> factory = API.instance().getCraftingMonitorElementRegistry().getFactory(ByteBufUtils.readUTF8String(buf));
-
-                if (factory != null) {
-                    elements.add(factory.apply(buf));
-                }
-            }
-
-            return elements;
-        }
-
-        @Override
-        public DataParameter<List<ICraftingMonitorElement>> createKey(int id) {
             return null;
         }
     };

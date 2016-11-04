@@ -60,7 +60,7 @@ public class BlockGrid extends BlockNode {
         if (!world.isRemote) {
             player.openGui(RS.INSTANCE, RSGui.GRID, world, pos.getX(), pos.getY(), pos.getZ());
 
-            ((TileGrid) world.getTileEntity(pos)).onGridOpened(player);
+            ((TileGrid) world.getTileEntity(pos)).onOpened(player);
         }
 
         return true;

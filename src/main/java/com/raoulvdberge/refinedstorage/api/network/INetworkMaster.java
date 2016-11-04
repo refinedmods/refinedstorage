@@ -167,30 +167,7 @@ public interface INetworkMaster {
      * @param toSchedule the amount of tasks to schedule
      * @param compare    the compare value to find patterns
      */
-    default void scheduleCraftingTask(ItemStack stack, int toSchedule, int compare) {
-        int alreadyScheduled = 0;
-
-        for (ICraftingTask task : getCraftingTasks()) {
-            for (ItemStack output : task.getPattern().getOutputs()) {
-                if (API.instance().getComparer().isEqual(output, stack, compare)) {
-                    alreadyScheduled++;
-                }
-            }
-        }
-
-        for (int i = 0; i < toSchedule - alreadyScheduled; ++i) {
-            ICraftingPattern pattern = getPattern(stack, compare);
-
-            if (pattern != null) {
-                ICraftingTask task = createCraftingTask(stack, pattern, 1);
-
-                task.calculate();
-                task.getMissing().clear();
-
-                addCraftingTask(task);
-            }
-        }
-    }
+    void scheduleCraftingTask(ItemStack stack, int toSchedule, int compare);
 
     /**
      * Sends a grid update packet with all the items to all clients that are watching a grid connected to this network.
@@ -229,9 +206,24 @@ public interface INetworkMaster {
     void sendFluidStorageDeltaToClient(FluidStack stack, int delta);
 
     /**
+     * Makes the network send a crafting monitor update to all players as soon as it can.
+     */
+    void markCraftingMonitorForUpdate();
+
+    /**
      * Sends a crafting monitor update to all players that are watching a crafting monitor.
+     * <p>
+     * WARNING: In most cases, you should just use {@link INetworkMaster#markCraftingMonitorForUpdate()}, if not,
+     * you can get high bandwidth usage.
      */
     void sendCraftingMonitorUpdate();
+
+    /**
+     * Sends a crafting monitor update to a specific player.
+     *
+     * @param player the player
+     */
+    void sendCraftingMonitorUpdate(EntityPlayerMP player);
 
     /**
      * Inserts an item in this network.

@@ -270,7 +270,7 @@ public class CraftingTask implements ICraftingTask {
             network.insertFluid(stack, stack.amount, false);
         }
 
-        network.sendCraftingMonitorUpdate();
+        network.markCraftingMonitorForUpdate();
     }
 
     @Override
@@ -307,7 +307,7 @@ public class CraftingTask implements ICraftingTask {
             if (stackExtracted != null) {
                 toTakeFluids.remove(stack, stack.amount, false);
                 tookFluids.add(stackExtracted);
-                network.sendCraftingMonitorUpdate();
+                network.markCraftingMonitorForUpdate();
             }
         }
 
@@ -326,7 +326,7 @@ public class CraftingTask implements ICraftingTask {
                     step.setStartedProcessing();
                     step.execute(toInsertItems, toInsertFluids);
                     usedContainers.put(container, timesUsed);
-                    network.sendCraftingMonitorUpdate();
+                    network.markCraftingMonitorForUpdate();
                 }
             }
         }
@@ -370,7 +370,7 @@ public class CraftingTask implements ICraftingTask {
             if (quantity > 0) {
                 calculate();
             }
-            network.sendCraftingMonitorUpdate();
+            network.markCraftingMonitorForUpdate();
         }
     }
 

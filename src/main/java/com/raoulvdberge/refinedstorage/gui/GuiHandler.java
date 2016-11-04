@@ -111,7 +111,7 @@ public class GuiHandler implements IGuiHandler {
             case RSGui.INTERFACE:
                 return new GuiInterface((ContainerInterface) getContainer(ID, player, tile));
             case RSGui.CRAFTING_MONITOR:
-                return new GuiCraftingMonitor((ContainerCraftingMonitor) getContainer(ID, player, tile), (TileCraftingMonitor) tile);
+                return new GuiCraftingMonitor((ContainerCraftingMonitor) getContainer(ID, player, tile));
             case RSGui.WIRELESS_TRANSMITTER:
                 return new GuiWirelessTransmitter((ContainerWirelessTransmitter) getContainer(ID, player, tile));
             case RSGui.CRAFTER:
