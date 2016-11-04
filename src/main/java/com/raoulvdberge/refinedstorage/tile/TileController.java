@@ -14,9 +14,9 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeGraph;
-import com.raoulvdberge.refinedstorage.api.network.IWirelessGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
+import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.fluid.IFluidStorage;
@@ -27,9 +27,9 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IItemStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeGraph;
-import com.raoulvdberge.refinedstorage.apiimpl.network.WirelessGridHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.FluidGridHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.ItemGridHandler;
+import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.fluid.FluidStorageCache;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.item.ItemStorageCache;
 import com.raoulvdberge.refinedstorage.block.BlockController;
@@ -158,7 +158,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     private IItemGridHandler itemGridHandler = new ItemGridHandler(this);
     private IFluidGridHandler fluidGridHandler = new FluidGridHandler(this);
 
-    private IWirelessGridHandler wirelessGridHandler = new WirelessGridHandler(this);
+    private INetworkItemHandler networkItemHandler = new NetworkItemHandler(this);
 
     private INetworkNodeGraph nodeGraph = new NetworkNodeGraph(this);
 
@@ -296,7 +296,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
             }
 
-            wirelessGridHandler.update();
+            networkItemHandler.update();
 
             if (getType() == EnumControllerType.NORMAL) {
                 if (!RS.INSTANCE.config.controllerUsesEnergy) {
@@ -349,8 +349,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     }
 
     @Override
-    public IWirelessGridHandler getWirelessGridHandler() {
-        return wirelessGridHandler;
+    public INetworkItemHandler getNetworkItemHandler() {
+        return networkItemHandler;
     }
 
     @Override

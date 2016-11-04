@@ -180,7 +180,7 @@ public class WirelessGrid implements IGrid {
         TileController controller = getController();
 
         if (controller != null) {
-            controller.getWirelessGridHandler().onClose(player);
+            controller.getNetworkItemHandler().onClose(player);
         }
     }
 

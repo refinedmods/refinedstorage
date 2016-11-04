@@ -52,9 +52,9 @@ misc.refinedstorage:storage.stored_minimal=%s
 misc.refinedstorage:storage.stored_capacity_minimal=%s / %s
 misc.refinedstorage:storage.full=%d%% 已使用
 
-misc.refinedstorage:wireless_grid.tooltip=连接到 %d, %d, %d.
-misc.refinedstorage:wireless_grid.out_of_range=在范围内没有可以接入的无线访问点.
-misc.refinedstorage:wireless_grid.not_found=没寻找到控制器.
+misc.refinedstorage:network_item.tooltip=连接到 %d, %d, %d.
+misc.refinedstorage:network_item.out_of_range=在范围内没有可以接入的无线访问点.
+misc.refinedstorage:network_item.not_found=没寻找到控制器.
 
 misc.refinedstorage:network_card.tooltip=连接到 %d, %d, %d.
 

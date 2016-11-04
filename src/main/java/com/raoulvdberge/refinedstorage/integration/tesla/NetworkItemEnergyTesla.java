@@ -5,10 +5,10 @@ import net.darkhax.tesla.api.ITeslaConsumer;
 import net.darkhax.tesla.api.ITeslaHolder;
 import net.minecraft.item.ItemStack;
 
-public class WirelessGridEnergyTesla implements ITeslaHolder, ITeslaConsumer {
+public class NetworkItemEnergyTesla implements ITeslaHolder, ITeslaConsumer {
     private ItemStack stack;
 
-    public WirelessGridEnergyTesla(ItemStack stack) {
+    public NetworkItemEnergyTesla(ItemStack stack) {
         this.stack = stack;
     }
 

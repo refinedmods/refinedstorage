@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
+import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
 import com.raoulvdberge.refinedstorage.api.storage.fluid.IFluidStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.item.IItemStorageCache;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
@@ -59,9 +60,9 @@ public interface INetworkMaster {
     IFluidGridHandler getFluidGridHandler();
 
     /**
-     * @return the {@link IWirelessGridHandler} of this network
+     * @return the {@link INetworkItemHandler} of this network
      */
-    IWirelessGridHandler getWirelessGridHandler();
+    INetworkItemHandler getNetworkItemHandler();
 
     /**
      * @return the {@link IItemStorageCache} of this network

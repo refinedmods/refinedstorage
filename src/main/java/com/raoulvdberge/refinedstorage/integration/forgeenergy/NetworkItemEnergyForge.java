@@ -4,10 +4,10 @@ import com.raoulvdberge.refinedstorage.RSItems;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.energy.IEnergyStorage;
 
-public class WirelessGridEnergyForge implements IEnergyStorage {
+public class NetworkItemEnergyForge implements IEnergyStorage {
     private ItemStack stack;
 
-    public WirelessGridEnergyForge(ItemStack stack) {
+    public NetworkItemEnergyForge(ItemStack stack) {
         this.stack = stack;
     }
 

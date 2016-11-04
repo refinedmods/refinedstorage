@@ -50,9 +50,9 @@ misc.refinedstorage:storage.stored_minimal=%s
 misc.refinedstorage:storage.stored_capacity_minimal=%s / %s
 misc.refinedstorage:storage.full=%d%% voll
 
-misc.refinedstorage:wireless_grid.tooltip=Verbunden mit %d, %d, %d.
-misc.refinedstorage:wireless_grid.out_of_range=Es gibt keine Verbindung zu einem kabellosen Übermittler.
-misc.refinedstorage:wireless_grid.not_found=Controller konnte nicht gefunden werden.
+misc.refinedstorage:network_item.tooltip=Verbunden mit %d, %d, %d.
+misc.refinedstorage:network_item.out_of_range=Es gibt keine Verbindung zu einem kabellosen Übermittler.
+misc.refinedstorage:network_item.not_found=Controller konnte nicht gefunden werden.
 
 misc.refinedstorage:network_card.tooltip=Verbunden mit %d, %d, %d.
 

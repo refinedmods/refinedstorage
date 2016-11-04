@@ -50,9 +50,9 @@ misc.refinedstorage:storage.stored_minimal=%s
 misc.refinedstorage:storage.stored_capacity_minimal=%s / %s
 misc.refinedstorage:storage.full=%d%% полный
 
-misc.refinedstorage:wireless_grid.tooltip=Привязано к %d, %d, %d.
-misc.refinedstorage:wireless_grid.out_of_range=Не найден Передатчик
-misc.refinedstorage:wireless_grid.not_found=Не найден Контроллер
+misc.refinedstorage:network_item.tooltip=Привязано к %d, %d, %d.
+misc.refinedstorage:network_item.out_of_range=Не найден Передатчик
+misc.refinedstorage:network_item.not_found=Не найден Контроллер
 
 misc.refinedstorage:network_card.tooltip=Привязано к %d, %d, %d.
 

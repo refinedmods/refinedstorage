@@ -38,8 +38,8 @@ misc.refinedstorage:storage.stored_minimal=%s
 misc.refinedstorage:storage.stored_capacity_minimal=%s / %s
 misc.refinedstorage:storage.full=%d%% plein
 
-misc.refinedstorage:wireless_grid.out_of_range=Il n'y a pas un Émetteur sans Fil dans la gamme.
-misc.refinedstorage:wireless_grid.not_found=Contrôleur non trouvé.
+misc.refinedstorage:network_item.out_of_range=Il n'y a pas un Émetteur sans Fil dans la gamme.
+misc.refinedstorage:network_item.not_found=Contrôleur non trouvé.
 
 misc.refinedstorage:pattern.inputs=Inputs
 misc.refinedstorage:pattern.outputs=Outputs

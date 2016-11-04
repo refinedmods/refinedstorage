@@ -4,8 +4,10 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
+import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.CraftingTask;
+import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemWirelessGrid;
 import com.raoulvdberge.refinedstorage.network.MessageGridCraftingPreviewResponse;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -78,7 +80,11 @@ public class ItemGridHandler implements IItemGridHandler {
                 player.updateHeldItem();
             }
 
-            network.getWirelessGridHandler().drainEnergy(player, RS.INSTANCE.config.wirelessGridExtractUsage);
+            INetworkItem networkItem = network.getNetworkItemHandler().getItem(player);
+
+            if (networkItem != null && networkItem instanceof NetworkItemWirelessGrid) {
+                ((NetworkItemWirelessGrid) networkItem).drainEnergy(RS.INSTANCE.config.wirelessGridExtractUsage);
+            }
         }
     }
 
@@ -86,7 +92,11 @@ public class ItemGridHandler implements IItemGridHandler {
     public ItemStack onInsert(EntityPlayerMP player, ItemStack stack) {
         ItemStack remainder = network.insertItem(stack, stack.stackSize, false);
 
-        network.getWirelessGridHandler().drainEnergy(player, RS.INSTANCE.config.wirelessGridInsertUsage);
+        INetworkItem networkItem = network.getNetworkItemHandler().getItem(player);
+
+        if (networkItem != null && networkItem instanceof NetworkItemWirelessGrid) {
+            ((NetworkItemWirelessGrid) networkItem).drainEnergy(RS.INSTANCE.config.wirelessGridInsertUsage);
+        }
 
         return remainder;
     }
@@ -116,7 +126,11 @@ public class ItemGridHandler implements IItemGridHandler {
 
         player.updateHeldItem();
 
-        network.getWirelessGridHandler().drainEnergy(player, RS.INSTANCE.config.wirelessGridInsertUsage);
+        INetworkItem networkItem = network.getNetworkItemHandler().getItem(player);
+
+        if (networkItem != null && networkItem instanceof NetworkItemWirelessGrid) {
+            ((NetworkItemWirelessGrid) networkItem).drainEnergy(RS.INSTANCE.config.wirelessGridInsertUsage);
+        }
     }
 
     @Override

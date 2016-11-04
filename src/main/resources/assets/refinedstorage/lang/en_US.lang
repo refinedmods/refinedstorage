@@ -63,9 +63,9 @@ misc.refinedstorage:storage.stored_minimal=%s
 misc.refinedstorage:storage.stored_capacity_minimal=%s / %s
 misc.refinedstorage:storage.full=%d%% full
 
-misc.refinedstorage:wireless_grid.tooltip=Linked to %d, %d, %d.
-misc.refinedstorage:wireless_grid.out_of_range=There is no Wireless Transmitter in range.
-misc.refinedstorage:wireless_grid.not_found=Controller not found.
+misc.refinedstorage:network_item.tooltip=Linked to %d, %d, %d.
+misc.refinedstorage:network_item.out_of_range=There is no Wireless Transmitter in range.
+misc.refinedstorage:network_item.not_found=Controller not found.
 
 misc.refinedstorage:network_card.tooltip=Linked to %d, %d, %d.
 
