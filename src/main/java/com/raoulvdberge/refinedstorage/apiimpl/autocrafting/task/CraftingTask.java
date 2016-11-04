@@ -90,7 +90,7 @@ public class CraftingTask implements ICraftingTask {
     }
 
     private void calculate(IItemStackList networkList, IFluidStackList networkFluidList, ICraftingPattern pattern, IItemStackList toInsert) {
-        recurseFound = !usedPatterns.add(pattern);
+        recurseFound |= !usedPatterns.add(pattern);
         if (recurseFound) {
             return;
         }
@@ -133,6 +133,26 @@ public class CraftingTask implements ICraftingTask {
             ItemStack extraStack = toInsert.get(input, compare);
             ItemStack networkStack = networkList.get(input, compare);
 
+            // This handles recipes that use the output as input for the sub recipe
+            final int lambdaCompare = compare;
+            ICraftingPattern inputPattern = null;
+            int available = (extraStack == null ? 0 : extraStack.stackSize) + (networkStack == null ? 0 : networkStack.stackSize);
+            if (available < input.stackSize) {
+                inputPattern = network.getPattern(input, compare);
+                if (inputPattern != null) {
+                    if (inputPattern.getInputs().stream().anyMatch(s -> API.instance().getComparer().isEqual(s, input, lambdaCompare))) {
+                        int craftQuantity = inputPattern.getQuantityPerRequest(input, compare);
+                        // The needed amount is the actual needed amount of extraStacks + the needed input (twice so you can keep repeating it)
+                        long needed = (networkStack == null ? 0 : -networkStack.stackSize) + input.stackSize + inputPattern.getInputs().stream().filter(s -> API.instance().getComparer().isEqual(s, input, lambdaCompare)).count() * 2;
+                        do {
+                            calculate(networkList, networkFluidList, inputPattern, toInsert);
+                            toCraft.add(ItemHandlerHelper.copyStackWithSize(input, craftQuantity));
+                            extraStack = toInsert.get(input, compare);
+                        } while (extraStack != null && extraStack.stackSize < needed);
+                    }
+                }
+            }
+
             while (input.stackSize > 0) {
                 if (extraStack != null && extraStack.stackSize > 0) {
                     int takeQuantity = Math.min(extraStack.stackSize, input.stackSize);
@@ -151,7 +171,9 @@ public class CraftingTask implements ICraftingTask {
                     input.stackSize -= takeQuantity;
                     networkList.remove(inputStack, true);
                 } else {
-                    ICraftingPattern inputPattern = network.getPattern(input, compare);
+                    if (inputPattern == null) {
+                        inputPattern = network.getPattern(input, compare);
+                    }
 
                     if (inputPattern != null) {
                         ItemStack actualCraft = inputPattern.getActualOutput(input, compare);
@@ -161,10 +183,12 @@ public class CraftingTask implements ICraftingTask {
                         actualInputs.add(inputCrafted.copy());
                         calculate(networkList, networkFluidList, inputPattern, toInsert);
                         input.stackSize -= craftQuantity;
-                        // Calculate added all the crafted outputs toInsert
-                        // So we remove the ones we use from toInsert
-                        ItemStack inserted = toInsert.get(inputCrafted, compare);
-                        toInsert.remove(inserted, craftQuantity, true);
+                        if (!recurseFound) {
+                            // Calculate added all the crafted outputs toInsert
+                            // So we remove the ones we use from toInsert
+                            ItemStack inserted = toInsert.get(inputCrafted, compare);
+                            toInsert.remove(inserted, craftQuantity, true);
+                        }
                     } else {
                         // Fluid checks are with a stack size of one
                         ItemStack fluidCheck = ItemHandlerHelper.copyStackWithSize(input, 1);
