@@ -28,10 +28,10 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 minecraft {
-    version = "1.10.2-12.18.2.2116"
+    version = "1.10.2-12.18.2.2120"
     runDir = "run"
     useDepAts = true
-    mappings = "snapshot_20161030"
+    mappings = "snapshot_20161104"
 }
 
 repositories {
@@ -51,11 +51,11 @@ repositories {
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.10.2:3.13.1.345:api"
-    runtime "mezz.jei:jei_1.10.2:3.13.1.345"
+    deobfCompile "mezz.jei:jei_1.10.2:3.13.2.349:api"
+    runtime "mezz.jei:jei_1.10.2:3.13.2.349"
     compile "net.darkhax.tesla:Tesla:1.10.2-1.2.1.49"
-    compile "net.industrial-craft:industrialcraft-2:2.6.96-ex110:api"
-    deobfCompile "MCMultiPart:MCMultiPart:1.2.1:universal"
+    compile "net.industrial-craft:industrialcraft-2:2.6.98-ex110:api"
+    deobfCompile "MCMultiPart:MCMultiPart:1.3.0:universal"
 }
 
 processResources {
