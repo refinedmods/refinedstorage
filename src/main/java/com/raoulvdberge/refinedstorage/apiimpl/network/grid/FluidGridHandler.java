@@ -25,7 +25,7 @@ public class FluidGridHandler implements IFluidGridHandler {
         FluidStack stack = network.getFluidStorageCache().getList().get(hash);
 
         if (stack != null && RSUtils.hasFluidBucket(stack)) {
-            ItemStack bucket = network.extractItem(RSUtils.EMPTY_BUCKET, 1);
+            ItemStack bucket = network.extractItem(RSUtils.EMPTY_BUCKET, 1, false);
 
             if (bucket == null) {
                 for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
@@ -42,7 +42,7 @@ public class FluidGridHandler implements IFluidGridHandler {
             }
 
             if (bucket != null) {
-                bucket.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).fill(network.extractFluid(stack, Fluid.BUCKET_VOLUME), true);
+                bucket.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).fill(network.extractFluid(stack, Fluid.BUCKET_VOLUME, false), true);
 
                 if (shift) {
                     if (!player.inventory.addItemStackToInventory(bucket.copy())) {

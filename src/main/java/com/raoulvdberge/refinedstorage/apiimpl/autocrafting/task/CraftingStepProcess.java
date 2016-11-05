@@ -60,7 +60,7 @@ public class CraftingStepProcess extends CraftingStep {
         IItemHandler inventory = getPattern().getContainer().getFacingInventory();
         int compare = CraftingTask.DEFAULT_COMPARE | (getPattern().isOredict() ? IComparer.COMPARE_OREDICT : 0);
         for (ItemStack insertStack : getToInsert()) {
-            ItemStack tookStack = network.extractItem(insertStack, insertStack.stackSize, compare);
+            ItemStack tookStack = network.extractItem(insertStack, insertStack.stackSize, compare, false);
             ItemHandlerHelper.insertItem(inventory, tookStack, false);
         }
     }

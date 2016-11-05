@@ -239,23 +239,25 @@ public interface INetworkMaster {
     /**
      * Extracts an item from this network.
      *
-     * @param stack the prototype of the stack to extract, do NOT modify
-     * @param size  the amount of that prototype that has to be extracted
-     * @param flags the flags to compare on, see {@link IComparer}
+     * @param stack    the prototype of the stack to extract, do NOT modify
+     * @param size     the amount of that prototype that has to be extracted
+     * @param flags    the flags to compare on, see {@link IComparer}
+     * @param simulate true if we are simulating, false otherwise
      * @return null if we didn't extract anything, or a stack with the result
      */
     @Nullable
-    ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags);
+    ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, boolean simulate);
 
     /**
      * Extracts an item from this network.
      *
-     * @param stack the prototype of the stack to extract, do NOT modify
-     * @param size  the amount of that prototype that has to be extracted
+     * @param stack    the prototype of the stack to extract, do NOT modify
+     * @param size     the amount of that prototype that has to be extracted
+     * @param simulate true if we are simulating, false otherwise
      * @return null if we didn't extract anything, or a stack with the result
      */
-    default ItemStack extractItem(@Nonnull ItemStack stack, int size) {
-        return extractItem(stack, size, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);
+    default ItemStack extractItem(@Nonnull ItemStack stack, int size, boolean simulate) {
+        return extractItem(stack, size, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT, simulate);
     }
 
     /**
@@ -275,20 +277,22 @@ public interface INetworkMaster {
      * @param stack the prototype of the stack to extract, do NOT modify
      * @param size  the amount of that prototype that has to be extracted
      * @param flags the flags to compare on, see {@link IComparer}
+     * @param simulate true if we are simulating, false otherwise
      * @return null if we didn't extract anything, or a stack with the result
      */
     @Nullable
-    FluidStack extractFluid(@Nonnull FluidStack stack, int size, int flags);
+    FluidStack extractFluid(@Nonnull FluidStack stack, int size, int flags, boolean simulate);
 
     /**
      * Extracts a fluid from this network.
      *
      * @param stack the prototype of the stack to extract, do NOT modify
      * @param size  the amount of that prototype that has to be extracted
+     * @param simulate true if we are simulating, false otherwise
      * @return null if we didn't extract anything, or a stack with the result
      */
-    default FluidStack extractFluid(FluidStack stack, int size) {
-        return extractFluid(stack, size, IComparer.COMPARE_NBT);
+    default FluidStack extractFluid(FluidStack stack, int size, boolean simulate) {
+        return extractFluid(stack, size, IComparer.COMPARE_NBT, simulate);
     }
 
     /**

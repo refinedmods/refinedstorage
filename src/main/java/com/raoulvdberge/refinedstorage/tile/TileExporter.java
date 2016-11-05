@@ -63,14 +63,12 @@ public class TileExporter extends TileMultipartNode implements IComparable, ITyp
                         ItemStack slot = itemFilters.getStackInSlot(i);
 
                         if (slot != null) {
-                            ItemStack took = network.extractItem(slot, upgrades.getInteractStackSize(), compare);
+                            ItemStack took = network.extractItem(slot, upgrades.getInteractStackSize(), compare, true);
 
-                            if (took != null) {
-                                ItemStack remainder = ItemHandlerHelper.insertItem(handler, took, false);
+                            if (ItemHandlerHelper.insertItem(handler, took, true) == null) {
+                                took = network.extractItem(slot, upgrades.getInteractStackSize(), compare, false);
 
-                                if (remainder != null) {
-                                    network.insertItem(remainder, remainder.stackSize, false);
-                                }
+                                ItemHandlerHelper.insertItem(handler, took, false);
                             } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
                                 network.scheduleCraftingTask(slot, 1, compare);
                             }
@@ -88,14 +86,12 @@ public class TileExporter extends TileMultipartNode implements IComparable, ITyp
                             if (stackInStorage != null) {
                                 int toExtract = Math.min(Fluid.BUCKET_VOLUME * upgrades.getInteractStackSize(), stackInStorage.amount);
 
-                                FluidStack took = network.extractFluid(stack, toExtract, compare);
+                                FluidStack took = network.extractFluid(stack, toExtract, compare, true);
 
-                                if (took != null) {
-                                    int remainder = toExtract - handler.fill(took, true);
+                                if (took != null && (toExtract - handler.fill(took, false)) == 0) {
+                                    took = network.extractFluid(stack, toExtract, compare, false);
 
-                                    if (remainder > 0) {
-                                        network.insertFluid(took, remainder, false);
-                                    }
+                                    handler.fill(took, true);
                                 }
                             }
                         }

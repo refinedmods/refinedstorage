@@ -28,11 +28,12 @@ public interface IItemStorage extends IStorage<ItemStack> {
      * <p>
      * If the stack we found in the system is smaller than the requested size, return that stack anyway.
      *
-     * @param stack a prototype of the stack to extract, do NOT modify
-     * @param size  the amount of that prototype that has to be extracted
-     * @param flags the flags to compare on, see {@link IComparer}
+     * @param stack    a prototype of the stack to extract, do NOT modify
+     * @param size     the amount of that prototype that has to be extracted
+     * @param flags    the flags to compare on, see {@link IComparer}
+     * @param simulate true if we are simulating, false otherwise
      * @return null if we didn't extract anything, or a stack with the result
      */
     @Nullable
-    ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags);
+    ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, boolean simulate);
 }

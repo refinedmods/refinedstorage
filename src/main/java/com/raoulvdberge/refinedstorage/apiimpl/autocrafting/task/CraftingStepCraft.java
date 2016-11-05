@@ -85,11 +85,11 @@ public class CraftingStepCraft extends CraftingStep {
 
             FluidStack fluidInItem = RSUtils.getFluidFromStack(insertStack, true);
             if (fluidInItem != null) {
-                network.extractFluid(fluidInItem, fluidInItem.amount, compare);
-                network.extractItem(RSUtils.EMPTY_BUCKET, 1, compare);
+                network.extractFluid(fluidInItem, fluidInItem.amount, compare, false);
+                network.extractItem(RSUtils.EMPTY_BUCKET, 1, compare, false);
                 actualInputs.add(insertStack.copy());
             } else {
-                ItemStack input = network.extractItem(insertStack, insertStack.stackSize, compare);
+                ItemStack input = network.extractItem(insertStack, insertStack.stackSize, compare, false);
                 if (input != null) {
                     actualInputs.add(input);
                 } else {

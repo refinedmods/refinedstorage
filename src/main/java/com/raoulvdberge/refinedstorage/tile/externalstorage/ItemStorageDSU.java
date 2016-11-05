@@ -86,7 +86,7 @@ public class ItemStorageDSU extends ItemStorageExternal {
     }
 
     @Override
-    public ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags) {
+    public ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
         if (API.instance().getComparer().isEqual(stack, unit.getStoredItemType(), flags)) {
             if (size > unit.getStoredItemType().stackSize) {
                 size = unit.getStoredItemType().stackSize;
@@ -94,7 +94,9 @@ public class ItemStorageDSU extends ItemStorageExternal {
 
             ItemStack stored = unit.getStoredItemType();
 
-            unit.setStoredItemCount(stored.stackSize - size);
+            if (!simulate) {
+                unit.setStoredItemCount(stored.stackSize - size);
+            }
 
             return ItemHandlerHelper.copyStackWithSize(stored, size);
         }

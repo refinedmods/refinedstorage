@@ -14,6 +14,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class ItemGridHandler implements IItemGridHandler {
@@ -62,16 +63,20 @@ public class ItemGridHandler implements IItemGridHandler {
 
         size = Math.min(size, maxItemSize);
 
-        ItemStack took = network.extractItem(item, size);
+        ItemStack took = network.extractItem(item, size, true);
 
         if (took != null) {
             if ((flags & EXTRACT_SHIFT) == EXTRACT_SHIFT) {
-                ItemStack remainder = ItemHandlerHelper.insertItem(player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP), took, false);
+                IItemHandler playerInventory = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
 
-                if (remainder != null) {
-                    network.insertItem(remainder, remainder.stackSize, false);
+                if (ItemHandlerHelper.insertItem(playerInventory, took, true) == null) {
+                    took = network.extractItem(item, size, false);
+
+                    ItemHandlerHelper.insertItem(playerInventory, took, false);
                 }
             } else {
+                took = network.extractItem(item, size, false);
+
                 if (single && held != null) {
                     held.stackSize++;
                 } else {

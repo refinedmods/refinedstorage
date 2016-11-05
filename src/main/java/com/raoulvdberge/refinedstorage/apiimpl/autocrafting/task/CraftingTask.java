@@ -327,7 +327,7 @@ public class CraftingTask implements ICraftingTask {
 
 
         for (FluidStack stack : toTakeFluids.getStacks()) {
-            FluidStack stackExtracted = network.extractFluid(stack, stack.amount);
+            FluidStack stackExtracted = network.extractFluid(stack, stack.amount, false);
             if (stackExtracted != null) {
                 toTakeFluids.remove(stack, stack.amount, false);
                 tookFluids.add(stackExtracted);

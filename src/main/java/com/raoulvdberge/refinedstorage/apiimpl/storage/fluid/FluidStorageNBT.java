@@ -142,22 +142,24 @@ public abstract class FluidStorageNBT implements IFluidStorage {
     }
 
     @Override
-    public synchronized FluidStack extractFluid(FluidStack stack, int size, int flags) {
+    public synchronized FluidStack extractFluid(FluidStack stack, int size, int flags, boolean simulate) {
         for (FluidStack otherStack : stacks) {
             if (API.instance().getComparer().isEqual(otherStack, stack, flags)) {
                 if (size > otherStack.amount) {
                     size = otherStack.amount;
                 }
 
-                if (otherStack.amount - size == 0) {
-                    stacks.remove(otherStack);
-                } else {
-                    otherStack.amount -= size;
+                if (!simulate) {
+                    if (otherStack.amount - size == 0) {
+                        stacks.remove(otherStack);
+                    } else {
+                        otherStack.amount -= size;
+                    }
+
+                    tag.setInteger(NBT_STORED, getStored() - size);
+
+                    onStorageChanged();
                 }
-
-                tag.setInteger(NBT_STORED, getStored() - size);
-
-                onStorageChanged();
 
                 return RSUtils.copyStackWithSize(otherStack, size);
             }

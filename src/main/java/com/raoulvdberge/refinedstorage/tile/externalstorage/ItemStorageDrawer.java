@@ -71,7 +71,7 @@ public class ItemStorageDrawer extends ItemStorageExternal {
     }
 
     @Override
-    public ItemStack extractItem(ItemStack stack, int size, int flags) {
+    public ItemStack extractItem(ItemStack stack, int size, int flags, boolean simulate) {
         if (API.instance().getComparer().isEqual(stack, drawer.getStoredItemPrototype(), flags) && drawer.canItemBeExtracted(stack)) {
             if (size > drawer.getStoredItemCount()) {
                 size = drawer.getStoredItemCount();
@@ -79,8 +79,10 @@ public class ItemStorageDrawer extends ItemStorageExternal {
 
             ItemStack stored = drawer.getStoredItemPrototype();
 
-            drawer.setStoredItemCount(drawer.getStoredItemCount() - size);
-
+            if (!simulate) {
+                drawer.setStoredItemCount(drawer.getStoredItemCount() - size);
+            }
+            
             return ItemHandlerHelper.copyStackWithSize(stored, size);
         }
 

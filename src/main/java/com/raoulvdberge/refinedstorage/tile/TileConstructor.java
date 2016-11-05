@@ -119,7 +119,7 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
                     Block block = stack.getFluid().getBlock();
 
                     if (worldObj.isAirBlock(front) && block.canPlaceBlockAt(worldObj, front)) {
-                        FluidStack took = network.extractFluid(stack, Fluid.BUCKET_VOLUME, compare);
+                        FluidStack took = network.extractFluid(stack, Fluid.BUCKET_VOLUME, compare, false);
 
                         if (took != null) {
                             IBlockState state = block.getDefaultState();
@@ -142,7 +142,7 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
         BlockPos front = pos.offset(getDirection());
 
         if (worldObj.isAirBlock(front) && block.getBlock().canPlaceBlockAt(worldObj, front)) {
-            ItemStack took = network.extractItem(itemFilters.getStackInSlot(0), 1, compare);
+            ItemStack took = network.extractItem(itemFilters.getStackInSlot(0), 1, compare, false);
 
             if (took != null) {
                 @SuppressWarnings("deprecation")
@@ -186,7 +186,7 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
     }
 
     private void dropItem() {
-        ItemStack took = network.extractItem(item, 1);
+        ItemStack took = network.extractItem(item, 1, false);
 
         if (took != null) {
             // From BlockDispenser#getDispensePosition

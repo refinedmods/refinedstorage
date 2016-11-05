@@ -134,12 +134,12 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         }
 
         @Override
-        public ItemStack extractItem(ItemStack stack, int size, int flags) {
+        public ItemStack extractItem(ItemStack stack, int size, int flags, boolean simulate) {
             if (!IFilterable.canTake(itemFilters, mode, getCompare(), stack)) {
                 return null;
             }
 
-            return super.extractItem(stack, size, flags);
+            return super.extractItem(stack, size, flags, simulate);
         }
 
         @Override
@@ -180,12 +180,12 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         }
 
         @Override
-        public FluidStack extractFluid(FluidStack stack, int size, int flags) {
+        public FluidStack extractFluid(FluidStack stack, int size, int flags, boolean simulate) {
             if (!IFilterable.canTakeFluids(fluidFilters, mode, getCompare(), stack)) {
                 return null;
             }
 
-            return super.extractFluid(stack, size, flags);
+            return super.extractFluid(stack, size, flags, simulate);
         }
 
         @Override
@@ -277,7 +277,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
                 continue;
             }
 
-            ItemStack extracted = storage.extractItem(stack, upgrades.getInteractStackSize(), compare);
+            ItemStack extracted = storage.extractItem(stack, upgrades.getInteractStackSize(), compare, false);
             if (extracted == null) {
                 continue;
             }
@@ -316,7 +316,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             }
 
             if (toExtract != null) {
-                extracted = network.extractItem(toExtract, upgrades.getInteractStackSize(), compare);
+                extracted = network.extractItem(toExtract, upgrades.getInteractStackSize(), compare, false);
             }
         } else {
             while (itemFilters.getSlots() > i && extracted == null) {
@@ -327,7 +327,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
                 }
 
                 if (stack != null) {
-                    extracted = network.extractItem(stack, upgrades.getInteractStackSize(), compare);
+                    extracted = network.extractItem(stack, upgrades.getInteractStackSize(), compare, false);
                 }
             }
         }
@@ -361,7 +361,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             }
 
             if (stack != null) {
-                extracted = storage.extractFluid(stack, upgrades.getInteractStackSize(), compare);
+                extracted = storage.extractFluid(stack, upgrades.getInteractStackSize(), compare, false);
             }
         } while (extracted == null && storage.getStacks().size() > i);
 
@@ -397,7 +397,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             }
 
             if (toExtract != null) {
-                extracted = network.extractFluid(toExtract, upgrades.getInteractStackSize(), compare);
+                extracted = network.extractFluid(toExtract, upgrades.getInteractStackSize(), compare, false);
             }
         } else {
             while (fluidFilters.getSlots() > i && extracted == null) {
@@ -408,7 +408,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
                 }
 
                 if (stack != null) {
-                    extracted = network.extractFluid(stack, upgrades.getInteractStackSize(), compare);
+                    extracted = network.extractFluid(stack, upgrades.getInteractStackSize(), compare, false);
                 }
             }
         }

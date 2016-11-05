@@ -185,22 +185,24 @@ public abstract class ItemStorageNBT implements IItemStorage {
     }
 
     @Override
-    public synchronized ItemStack extractItem(ItemStack stack, int size, int flags) {
+    public synchronized ItemStack extractItem(ItemStack stack, int size, int flags, boolean simulate) {
         for (ItemStack otherStack : stacks) {
             if (API.instance().getComparer().isEqual(otherStack, stack, flags)) {
                 if (size > otherStack.stackSize) {
                     size = otherStack.stackSize;
                 }
 
-                if (otherStack.stackSize - size == 0) {
-                    stacks.remove(otherStack);
-                } else {
-                    otherStack.stackSize -= size;
+                if (!simulate) {
+                    if (otherStack.stackSize - size == 0) {
+                        stacks.remove(otherStack);
+                    } else {
+                        otherStack.stackSize -= size;
+                    }
+
+                    tag.setInteger(NBT_STORED, getStored() - size);
+
+                    onStorageChanged();
                 }
-
-                tag.setInteger(NBT_STORED, getStored() - size);
-
-                onStorageChanged();
 
                 return ItemHandlerHelper.copyStackWithSize(otherStack, size);
             }

@@ -50,7 +50,7 @@ public class ItemStorageItemHandler extends ItemStorageExternal {
     }
 
     @Override
-    public ItemStack extractItem(ItemStack stack, int size, int flags) {
+    public ItemStack extractItem(ItemStack stack, int size, int flags, boolean simulate) {
         int remaining = size;
 
         ItemStack received = null;
@@ -59,7 +59,7 @@ public class ItemStorageItemHandler extends ItemStorageExternal {
             ItemStack slot = handler.getStackInSlot(i);
 
             if (slot != null && API.instance().getComparer().isEqual(slot, stack, flags)) {
-                ItemStack got = handler.extractItem(i, remaining, false);
+                ItemStack got = handler.extractItem(i, remaining, simulate);
 
                 if (got != null) {
                     if (received == null) {

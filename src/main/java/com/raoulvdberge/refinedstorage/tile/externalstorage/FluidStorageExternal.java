@@ -57,11 +57,11 @@ public class FluidStorageExternal implements IFluidStorage {
 
     @Nullable
     @Override
-    public FluidStack extractFluid(@Nonnull FluidStack stack, int size, int flags) {
+    public FluidStack extractFluid(@Nonnull FluidStack stack, int size, int flags, boolean simulate) {
         FluidStack toDrain = RSUtils.copyStackWithSize(stack, size);
 
         if (API.instance().getComparer().isEqual(getContents(), toDrain, flags)) {
-            return handler.drain(toDrain, true);
+            return handler.drain(toDrain, !simulate);
         }
 
         return null;

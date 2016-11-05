@@ -619,7 +619,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     }
 
     @Override
-    public ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags) {
+    public ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
         int requested = size;
         int received = 0;
         ItemStack newStack = null;
@@ -628,11 +628,11 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             ItemStack took = null;
 
             if (storage.getAccessType() != AccessType.INSERT) {
-                took = storage.extractItem(stack, requested - received, flags);
+                took = storage.extractItem(stack, requested - received, flags, simulate);
             }
 
             if (took != null) {
-                if (storage instanceof ItemStorageExternal) {
+                if (storage instanceof ItemStorageExternal && !simulate) {
                     ((ItemStorageExternal) storage).updateForced();
                 }
 
@@ -650,7 +650,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             }
         }
 
-        if (newStack != null) {
+        if (newStack != null && !simulate) {
             itemStorage.remove(newStack);
         }
 
@@ -707,7 +707,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Nullable
     @Override
-    public FluidStack extractFluid(@Nonnull FluidStack stack, int size, int flags) {
+    public FluidStack extractFluid(@Nonnull FluidStack stack, int size, int flags, boolean simulate) {
         int requested = size;
         int received = 0;
         FluidStack newStack = null;
@@ -716,7 +716,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             FluidStack took = null;
 
             if (storage.getAccessType() != AccessType.INSERT) {
-                took = storage.extractFluid(stack, requested - received, flags);
+                took = storage.extractFluid(stack, requested - received, flags, simulate);
             }
 
             if (took != null) {
