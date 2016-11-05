@@ -103,7 +103,7 @@ public class CraftingPattern implements ICraftingPattern {
 
                     for (ItemStack remaining : recipe.getRemainingItems(inv)) {
                         if (remaining != null) {
-                            ItemStack cleaned = output.copy();
+                            ItemStack cleaned = remaining.copy();
                             if (mekanism && cleaned.hasTagCompound()) {
                                 cleaned.getTagCompound().removeTag("mekData");
                             }
