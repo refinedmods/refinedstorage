@@ -538,11 +538,15 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public void sendCraftingMonitorUpdate() {
-        List<ICraftingMonitorElement> elements = getElements();
-
-        worldObj.getMinecraftServer().getPlayerList().getPlayerList().stream()
+        List<EntityPlayerMP> watchers = worldObj.getMinecraftServer().getPlayerList().getPlayerList().stream()
             .filter(player -> player.openContainer instanceof ContainerCraftingMonitor && pos.equals(((ContainerCraftingMonitor) player.openContainer).getCraftingMonitor().getNetworkPosition()))
-            .forEach(player -> RS.INSTANCE.network.sendTo(new MessageCraftingMonitorElements(elements), player));
+            .collect(Collectors.toList());
+
+        if (!watchers.isEmpty()) {
+            List<ICraftingMonitorElement> elements = getElements();
+
+            watchers.forEach(player -> RS.INSTANCE.network.sendTo(new MessageCraftingMonitorElements(elements), player));
+        }
     }
 
     @Override
