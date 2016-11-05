@@ -126,13 +126,6 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
     }
 
     @Override
-    public void invalidate() {
-        onBreak();
-
-        super.invalidate();
-    }
-
-    @Override
     public void onConnectionChange(INetworkMaster network, boolean state) {
         super.onConnectionChange(network, state);
 

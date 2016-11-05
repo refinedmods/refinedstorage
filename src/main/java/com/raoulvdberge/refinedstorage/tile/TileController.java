@@ -327,10 +327,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         super.invalidate();
 
         energyEU.invalidate();
-
-        if (!worldObj.isRemote) {
-            onBreak();
-        }
     }
 
     @Override
@@ -355,7 +351,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         energyEU.onChunkUnload();
     }
 
-    public void onBreak() {
+    public void onDestroyed() {
         nodeGraph.disconnectAll();
     }
 

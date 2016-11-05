@@ -613,11 +613,4 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             }
         }
     }
-
-    @Override
-    public void invalidate() {
-        onBreak();
-
-        super.invalidate();
-    }
 }

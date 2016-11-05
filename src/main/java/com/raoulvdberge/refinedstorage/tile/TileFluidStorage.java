@@ -125,13 +125,6 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
     }
 
     @Override
-    public void invalidate() {
-        onBreak();
-
-        super.invalidate();
-    }
-
-    @Override
     public void onConnectionChange(INetworkMaster network, boolean state) {
         super.onConnectionChange(network, state);
 

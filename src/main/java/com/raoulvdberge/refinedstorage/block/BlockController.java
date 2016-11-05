@@ -103,6 +103,15 @@ public class BlockController extends BlockBase {
     }
 
     @Override
+    public void breakBlock(World world, BlockPos pos, IBlockState state) {
+        if (!world.isRemote) {
+            ((TileController) world.getTileEntity(pos)).onDestroyed();
+        }
+
+        super.breakBlock(world, pos, state);
+    }
+
+    @Override
     @SuppressWarnings("deprecation")
     public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
         super.neighborChanged(state, world, pos, block);

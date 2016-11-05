@@ -80,7 +80,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
                 continue;
             }
 
-            if (!(tile instanceof INetworkNode) || (tile != null && tile.isInvalid())) {
+            if (!(tile instanceof INetworkNode)) {
                 continue;
             }
 
