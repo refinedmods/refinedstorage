@@ -28,6 +28,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
     protected INetworkMaster network;
 
     protected boolean rebuildOnUpdateChange;
+    private boolean rebuildNearbyGraph;
 
     public TileNode() {
         dataManager.addWatchedParameter(REDSTONE_MODE);
@@ -57,6 +58,10 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
                 }
 
                 networkPos = null;
+            } else if (rebuildNearbyGraph) {
+                rebuildNearbyGraph = false;
+
+                rebuildNearbyGraph();
             }
 
             if (update != canUpdate() && network != null) {
@@ -81,6 +86,18 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
         }
 
         super.update();
+    }
+
+    protected void rebuildNearbyGraph() {
+        for (EnumFacing facing : EnumFacing.VALUES) {
+            TileEntity tile = worldObj.getTileEntity(pos.offset(facing));
+
+            if (tile instanceof TileNode && ((TileNode) tile).isConnected()) {
+                ((TileNode) tile).getNetwork().getNodeGraph().rebuild();
+
+                break;
+            }
+        }
     }
 
     @Override
@@ -200,5 +217,21 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
 
     public boolean hasConnectivityState() {
         return false;
+    }
+
+    @Override
+    public void invalidate() {
+        super.invalidate();
+
+        if (!worldObj.isRemote && network != null) {
+            network.getNodeGraph().rebuild();
+        }
+    }
+
+    @Override
+    public void validate() {
+        super.validate();
+
+        rebuildNearbyGraph = true;
     }
 }

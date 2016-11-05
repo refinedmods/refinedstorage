@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.tile;
 
-import com.raoulvdberge.refinedstorage.RSBlocks;
 import mcmultipart.capabilities.ISlottedCapabilityProvider;
 import mcmultipart.capabilities.MultipartCapabilityHelper;
 import mcmultipart.microblock.IMicroblock;
@@ -72,7 +71,7 @@ public abstract class TileMultipartNode extends TileNode implements IMicroblockC
         if (network != null) {
             network.getNodeGraph().rebuild();
         } else if (worldObj != null) {
-            RSBlocks.CABLE.attemptConnect(worldObj, pos);
+            rebuildNearbyGraph();
         }
     }
 
