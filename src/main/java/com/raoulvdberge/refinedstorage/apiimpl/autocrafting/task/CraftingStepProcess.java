@@ -51,7 +51,7 @@ public class CraftingStepProcess extends CraftingStep {
     @Override
     public boolean canStartProcessing() {
         IItemHandler inventory = getPattern().getContainer().getFacingInventory();
-        return insertSimulation(inventory, new LinkedList<>(getToInsert()));
+        return inventory != null && insertSimulation(inventory, new LinkedList<>(getToInsert()));
     }
 
     @Override
