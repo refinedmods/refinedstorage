@@ -114,7 +114,7 @@ public class GuiHandler implements IGuiHandler {
             case RSGui.INTERFACE:
                 return new GuiInterface((ContainerInterface) getContainer(ID, player, tile));
             case RSGui.CRAFTING_MONITOR:
-                return new GuiCraftingMonitor((ContainerCraftingMonitor) getContainer(ID, player, tile));
+                return new GuiCraftingMonitor((ContainerCraftingMonitor) getContainer(ID, player, tile), (TileCraftingMonitor) tile);
             case RSGui.WIRELESS_TRANSMITTER:
                 return new GuiWirelessTransmitter((ContainerWirelessTransmitter) getContainer(ID, player, tile));
             case RSGui.CRAFTER:
@@ -159,7 +159,7 @@ public class GuiHandler implements IGuiHandler {
     private GuiCraftingMonitor getWirelessCraftingMonitorGui(EntityPlayer player, int hand, int controllerDimension) {
         WirelessCraftingMonitor craftingMonitor = getWirelessCraftingMonitor(player, hand, controllerDimension);
 
-        return new GuiCraftingMonitor(new ContainerCraftingMonitor(craftingMonitor, player));
+        return new GuiCraftingMonitor(new ContainerCraftingMonitor(craftingMonitor, player), craftingMonitor);
     }
 
     private ContainerCraftingMonitor getWirelessCraftingMonitorContainer(EntityPlayer player, int hand, int controllerDimension) {

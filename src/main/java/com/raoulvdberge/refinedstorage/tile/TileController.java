@@ -323,29 +323,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     }
 
     @Override
-    public void markCraftingMonitorForUpdate() {
-        craftingMonitorUpdateRequested = true;
-    }
-
-    @Override
-    public void sendCraftingMonitorUpdate() {
-        List<ICraftingMonitorElement> elements = getElements();
-
-        worldObj.getMinecraftServer().getPlayerList().getPlayerList().stream()
-            .filter(player -> player.openContainer instanceof ContainerCraftingMonitor)
-            .forEach(player -> RS.INSTANCE.network.sendTo(new MessageCraftingMonitorElements(elements), player));
-    }
-
-    @Override
-    public void sendCraftingMonitorUpdate(EntityPlayerMP player) {
-        RS.INSTANCE.network.sendTo(new MessageCraftingMonitorElements(getElements()), player);
-    }
-
-    private List<ICraftingMonitorElement> getElements() {
-        return craftingTasks.stream().flatMap(t -> t.getCraftingMonitorElements().stream()).collect(Collectors.toList());
-    }
-
-    @Override
     public void invalidate() {
         super.invalidate();
 
@@ -551,7 +528,30 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     }
 
     @Override
-    public ItemStack insertItem(ItemStack stack, int size, boolean simulate) {
+    public void markCraftingMonitorForUpdate() {
+        craftingMonitorUpdateRequested = true;
+    }
+
+    @Override
+    public void sendCraftingMonitorUpdate() {
+        List<ICraftingMonitorElement> elements = getElements();
+
+        worldObj.getMinecraftServer().getPlayerList().getPlayerList().stream()
+            .filter(player -> player.openContainer instanceof ContainerCraftingMonitor && pos.equals(((ContainerCraftingMonitor) player.openContainer).getCraftingMonitor().getNetworkPosition()))
+            .forEach(player -> RS.INSTANCE.network.sendTo(new MessageCraftingMonitorElements(elements), player));
+    }
+
+    @Override
+    public void sendCraftingMonitorUpdate(EntityPlayerMP player) {
+        RS.INSTANCE.network.sendTo(new MessageCraftingMonitorElements(getElements()), player);
+    }
+
+    private List<ICraftingMonitorElement> getElements() {
+        return craftingTasks.stream().flatMap(t -> t.getCraftingMonitorElements().stream()).collect(Collectors.toList());
+    }
+
+    @Override
+    public ItemStack insertItem(@Nonnull ItemStack stack, int size, boolean simulate) {
         if (stack == null || stack.getItem() == null || itemStorage.getStorages().isEmpty()) {
             return ItemHandlerHelper.copyStackWithSize(stack, size);
         }
@@ -611,7 +611,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     }
 
     @Override
-    public ItemStack extractItem(ItemStack stack, int size, int flags) {
+    public ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags) {
         int requested = size;
         int received = 0;
         ItemStack newStack = null;

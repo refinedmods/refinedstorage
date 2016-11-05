@@ -27,6 +27,16 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
         }
     }
 
+    @Override
+    public BlockPos getNetworkPosition() {
+        return controller;
+    }
+
+    @Override
+    public boolean isConnected() {
+        return true;
+    }
+
     private TileController getController() {
         World world = DimensionManager.getWorld(controllerDimension);
 

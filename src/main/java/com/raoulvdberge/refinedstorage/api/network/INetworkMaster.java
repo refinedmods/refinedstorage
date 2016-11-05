@@ -254,7 +254,7 @@ public interface INetworkMaster {
      * @param size  the amount of that prototype that has to be extracted
      * @return null if we didn't extract anything, or a stack with the result
      */
-    default ItemStack extractItem(ItemStack stack, int size) {
+    default ItemStack extractItem(@Nonnull ItemStack stack, int size) {
         return extractItem(stack, size, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);
     }
 

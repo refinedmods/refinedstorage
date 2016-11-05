@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.math.BlockPos;
 
 public class TileCraftingMonitor extends TileNode implements ICraftingMonitor {
     @Override
@@ -25,6 +26,11 @@ public class TileCraftingMonitor extends TileNode implements ICraftingMonitor {
         if (isConnected()) {
             network.getItemGridHandler().onCraftingCancelRequested(player, id);
         }
+    }
+
+    @Override
+    public BlockPos getNetworkPosition() {
+        return network != null ? network.getPosition() : null;
     }
 
     public void onOpened(EntityPlayer player) {
