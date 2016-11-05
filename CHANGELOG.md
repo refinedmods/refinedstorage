@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.2.3
+- Fixed fluid cache updating wrongly (raoulvdberge)
+
 ### 1.2.2
 - Various autocrafting fixes (way2muchnoise)
 - Fixed item voiding when exporting to a chest with a storage in Extract Only mode (raoulvdberge)

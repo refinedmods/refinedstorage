@@ -716,7 +716,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             }
 
             if (took != null) {
-                if (storage instanceof FluidStorageExternal) {
+                if (storage instanceof FluidStorageExternal && !simulate) {
                     ((FluidStorageExternal) storage).updateCacheForcefully();
                 }
 
@@ -734,7 +734,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             }
         }
 
-        if (newStack != null) {
+        if (newStack != null && !simulate) {
             fluidStorage.remove(newStack);
         }
 
