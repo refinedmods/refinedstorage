@@ -5,6 +5,7 @@
 - Added support for JEI R and U keys in Grids (raoulvdberge)
 - Fixed crafting upgrade having weird behavior (raoulvdberge)
 - Fixed external storage not updating when loading chunk (raoulvdberge)
+- Fixed external storage crash (raoulvdberge)
 - Fixed weird autocrafting behavior (way2muchnoise)
 - Removed controller explosions when multiple controllers are connected to the same network (raoulvdberge)
 - You can now decompose storage disks if the item count is below zero by any chance (raoulvdberge)
