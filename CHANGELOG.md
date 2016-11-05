@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 1.2.2
+- Various autocrafting fixes (way2muchnoise)
+- Fixed item voiding when exporting to a chest with a storage in Extract Only mode (raoulvdberge)
+
 ### 1.2.1
 - Added Wireless Crafting Monitor (with temporary textures) (raoulvdberge)
 - Added support for JEI R and U keys in Grids (raoulvdberge)
