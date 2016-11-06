@@ -2,7 +2,7 @@
 
 ### 1.2.3
 - Fixed fluid cache updating wrongly (raoulvdberge)
-- Fixed Exporter scheduling too many tasks (raoulvdberge)
+- Fixed Exporter scheduling too many crafting tasks (raoulvdberge)
 
 ### 1.2.2
 - Various autocrafting fixes (way2muchnoise)
