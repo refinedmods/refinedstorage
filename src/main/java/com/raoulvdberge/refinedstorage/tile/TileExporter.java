@@ -65,12 +65,14 @@ public class TileExporter extends TileMultipartNode implements IComparable, ITyp
                         if (slot != null) {
                             ItemStack took = network.extractItem(slot, upgrades.getInteractStackSize(), compare, true);
 
-                            if (ItemHandlerHelper.insertItem(handler, took, true) == null) {
+                            if (took == null) {
+                                if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
+                                    network.scheduleCraftingTask(slot, 1, compare);
+                                }
+                            } else if (ItemHandlerHelper.insertItem(handler, took, true) == null) {
                                 took = network.extractItem(slot, upgrades.getInteractStackSize(), compare, false);
 
                                 ItemHandlerHelper.insertItem(handler, took, false);
-                            } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
-                                network.scheduleCraftingTask(slot, 1, compare);
                             }
                         }
                     }
