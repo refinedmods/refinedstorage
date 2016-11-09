@@ -246,25 +246,27 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
 
         TileEntity facing = getFacingTile();
 
-        if (facing instanceof IDrawerGroup) {
-            IDrawerGroup group = (IDrawerGroup) facing;
+        if (type == IType.ITEMS) {
+            if (facing instanceof IDrawerGroup) {
+                IDrawerGroup group = (IDrawerGroup) facing;
 
-            for (int i = 0; i < group.getDrawerCount(); ++i) {
-                if (group.isDrawerEnabled(i)) {
-                    itemStorages.add(new ItemStorageDrawer(this, group.getDrawer(i)));
+                for (int i = 0; i < group.getDrawerCount(); ++i) {
+                    if (group.isDrawerEnabled(i)) {
+                        itemStorages.add(new ItemStorageDrawer(this, group.getDrawer(i)));
+                    }
+                }
+            } else if (facing instanceof IDrawer) {
+                itemStorages.add(new ItemStorageDrawer(this, (IDrawer) facing));
+            } else if (facing instanceof IDeepStorageUnit) {
+                itemStorages.add(new ItemStorageDSU(this, (IDeepStorageUnit) facing));
+            } else {
+                IItemHandler itemHandler = RSUtils.getItemHandler(facing, getDirection().getOpposite());
+
+                if (itemHandler != null) {
+                    itemStorages.add(new ItemStorageItemHandler(this, itemHandler));
                 }
             }
-        } else if (facing instanceof IDrawer) {
-            itemStorages.add(new ItemStorageDrawer(this, (IDrawer) facing));
-        } else if (facing instanceof IDeepStorageUnit) {
-            itemStorages.add(new ItemStorageDSU(this, (IDeepStorageUnit) facing));
-        } else {
-            IItemHandler itemHandler = RSUtils.getItemHandler(facing, getDirection().getOpposite());
-
-            if (itemHandler != null) {
-                itemStorages.add(new ItemStorageItemHandler(this, itemHandler));
-            }
-
+        } else if (type == IType.FLUIDS) {
             IFluidHandler fluidHandler = RSUtils.getFluidHandler(facing, getDirection().getOpposite());
 
             if (fluidHandler != null) {
@@ -370,6 +372,10 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
         this.type = type;
 
         markDirty();
+
+        if (network != null) {
+            updateStorage(network);
+        }
     }
 
     @Override
