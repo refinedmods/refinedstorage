@@ -32,7 +32,9 @@ public abstract class TileBase extends TileEntity implements ITickable {
     }
 
     public void updateBlock() {
-        worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 1 | 2);
+        if (worldObj != null) {
+            worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 1 | 2);
+        }
     }
 
     public void setDirection(EnumFacing direction) {

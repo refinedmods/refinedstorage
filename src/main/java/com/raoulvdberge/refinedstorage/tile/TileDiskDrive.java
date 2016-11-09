@@ -164,9 +164,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
                     network.getFluidStorageCache().invalidate();
                 }
 
-                if (worldObj != null) {
-                    updateBlock();
-                }
+                updateBlock();
             }
         }
 
