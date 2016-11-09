@@ -26,8 +26,12 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.FakePlayerFactory;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidBlock;
@@ -140,16 +144,20 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
                             }
                         }
 
-                        worldObj.playEvent(null, 2001, front, Block.getStateId(frontBlockState));
-                        worldObj.setBlockToAir(front);
+                        BlockEvent.BreakEvent e = new BlockEvent.BreakEvent(worldObj, front, frontBlockState, FakePlayerFactory.getMinecraft((WorldServer) worldObj));
 
-                        for (ItemStack drop : drops) {
-                            // We check if the controller isn't null here because when a destructor faces a node and removes it
-                            // it will essentially remove this block itself from the network without knowing
-                            if (network == null) {
-                                InventoryHelper.spawnItemStack(worldObj, front.getX(), front.getY(), front.getZ(), drop);
-                            } else {
-                                network.insertItem(drop, drop.stackSize, false);
+                        if (!MinecraftForge.EVENT_BUS.post(e)) {
+                            worldObj.playEvent(null, 2001, front, Block.getStateId(frontBlockState));
+                            worldObj.setBlockToAir(front);
+
+                            for (ItemStack drop : drops) {
+                                // We check if the controller isn't null here because when a destructor faces a node and removes it
+                                // it will essentially remove this block itself from the network without knowing
+                                if (network == null) {
+                                    InventoryHelper.spawnItemStack(worldObj, front.getX(), front.getY(), front.getZ(), drop);
+                                } else {
+                                    network.insertItem(drop, drop.stackSize, false);
+                                }
                             }
                         }
                     }
