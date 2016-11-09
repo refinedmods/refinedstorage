@@ -599,7 +599,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         }
 
         if (!simulate && inserted > 0 && accessType != AccessType.INSERT) {
-            itemStorage.add(ItemHandlerHelper.copyStackWithSize(stack, inserted), false);
+            itemStorage.add(stack, inserted, false);
             ItemStack checkSteps = ItemHandlerHelper.copyStackWithSize(stack, inserted);
 
             for (ICraftingTask task : craftingTasks) {
@@ -647,7 +647,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         }
 
         if (newStack != null && !simulate) {
-            itemStorage.remove(newStack);
+            itemStorage.remove(newStack, newStack.stackSize);
         }
 
         return newStack;

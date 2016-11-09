@@ -40,7 +40,7 @@ public class ItemStorageCache implements IItemStorageCache {
 
             for (ItemStack stack : storage.getStacks()) {
                 if (stack != null) {
-                    add(stack, true);
+                    add(stack, stack.stackSize, true);
                 }
             }
         }
@@ -49,7 +49,7 @@ public class ItemStorageCache implements IItemStorageCache {
             for (ItemStack output : pattern.getOutputs()) {
                 ItemStack patternStack = output.copy();
                 patternStack.stackSize = 0;
-                add(patternStack, true);
+                add(patternStack, patternStack.stackSize, true);
             }
         }
 
@@ -57,18 +57,18 @@ public class ItemStorageCache implements IItemStorageCache {
     }
 
     @Override
-    public synchronized void add(@Nonnull ItemStack stack, boolean rebuilding) {
-        list.add(stack);
+    public synchronized void add(@Nonnull ItemStack stack, int size, boolean rebuilding) {
+        list.add(stack, size);
 
         if (!rebuilding) {
-            network.sendItemStorageDeltaToClient(stack, stack.stackSize);
+            network.sendItemStorageDeltaToClient(stack, size);
         }
     }
 
     @Override
-    public synchronized void remove(@Nonnull ItemStack stack) {
-        if (list.remove(stack, !network.hasPattern(stack))) {
-            network.sendItemStorageDeltaToClient(stack, -stack.stackSize);
+    public synchronized void remove(@Nonnull ItemStack stack, int size) {
+        if (list.remove(stack, size, !network.hasPattern(stack))) {
+            network.sendItemStorageDeltaToClient(stack, -size);
         }
     }
 

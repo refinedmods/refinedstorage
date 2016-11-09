@@ -20,20 +20,20 @@ public class ItemStackList implements IItemStackList {
     private List<ItemStack> removeTracker = new LinkedList<>();
 
     @Override
-    public void add(ItemStack stack) {
+    public void add(@Nonnull ItemStack stack, int size) {
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
             if (API.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
-                if ((long) otherStack.stackSize + (long) stack.stackSize > Integer.MAX_VALUE) {
+                if ((long) otherStack.stackSize + (long) size > Integer.MAX_VALUE) {
                     otherStack.stackSize = Integer.MAX_VALUE;
                 } else {
-                    otherStack.stackSize += stack.stackSize;
+                    otherStack.stackSize += size;
                 }
 
                 return;
             }
         }
 
-        stacks.put(stack.getItem(), stack.copy());
+        stacks.put(stack.getItem(), size == 0 ? stack.copy() : ItemHandlerHelper.copyStackWithSize(stack, size));
     }
 
     @Override

@@ -30,19 +30,21 @@ public interface IItemStorageCache {
      * Will merge it with another item if it already exists.
      *
      * @param stack      the stack to add, do NOT modify
+     * @param size       the size to add
      * @param rebuilding true if this method is called while rebuilding, false otherwise
      */
-    void add(@Nonnull ItemStack stack, boolean rebuilding);
+    void add(@Nonnull ItemStack stack, int size, boolean rebuilding);
 
     /**
      * Removes an item from the cache.
      * <p>
      * Note that this doesn't modify any of the connected storages, but just modifies the cache.
-     * Use {@link INetworkMaster#extractItem(ItemStack, int, int)} to remove an item from an actual storage.
+     * Use {@link INetworkMaster#extractItem(ItemStack, int, int, boolean)} to remove an item from an actual storage.
      *
      * @param stack the item to remove, do NOT modify
+     * @param size  the size to remove
      */
-    void remove(@Nonnull ItemStack stack);
+    void remove(@Nonnull ItemStack stack, int size);
 
     /**
      * @return the list behind this cache

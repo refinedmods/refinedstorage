@@ -16,8 +16,18 @@ public interface IItemStackList {
      * Adds a stack to the list, will merge it with another stack if it already exists in the list.
      *
      * @param stack the stack
+     * @param size  the size to add
      */
-    void add(ItemStack stack);
+    void add(@Nonnull ItemStack stack, int size);
+
+    /**
+     * Adds a stack to the list, will merge it with another stack if it already exists in the list.
+     *
+     * @param stack the stack
+     */
+    default void add(@Nonnull ItemStack stack) {
+        add(stack, stack.stackSize);
+    }
 
     /**
      * Decrements the count of that stack in the list.
