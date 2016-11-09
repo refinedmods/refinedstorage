@@ -6,6 +6,7 @@
 - Fixed bug where Disk Manipulator doesn't save disks (raoulvdberge)
 - Fixed Disk Drive stored quantity GUI text hovering over other text (raoulvdberge)
 - Fixed External Storage being in item and fluid mode at the same time (raoulvdberge)
+- Fixed Wrench working when player is not sneaking (raoulvdberge)
 
 ### 1.2.3
 - Fixed fluid cache updating wrongly (raoulvdberge)
