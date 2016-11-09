@@ -89,7 +89,7 @@ public class GuiStorage extends GuiBase {
         );
 
         if (texture.contains("disk_drive")) { // HACK!
-            drawString(70, 42, t("gui.refinedstorage:disk_drive.disks"));
+            drawString(79, 42, t("gui.refinedstorage:disk_drive.disks"));
         }
 
         drawString(7, 129, t("container.inventory"));

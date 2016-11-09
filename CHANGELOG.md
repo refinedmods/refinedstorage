@@ -4,6 +4,7 @@
 - Added tooltip search with # (raoulvdberge)
 - Mod search can now also take mod name instead of just id (raoulvdberge)
 - Fixed bug where Disk Manipulator doesn't save disks (raoulvdberge)
+- Fixed Disk Drive stored quantity GUI text hovering over other text (raoulvdberge)
 
 ### 1.2.3
 - Fixed fluid cache updating wrongly (raoulvdberge)

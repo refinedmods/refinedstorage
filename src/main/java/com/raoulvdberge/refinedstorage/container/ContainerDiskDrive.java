@@ -11,7 +11,7 @@ public class ContainerDiskDrive extends ContainerBase {
     public ContainerDiskDrive(TileDiskDrive drive, EntityPlayer player) {
         super(drive, player);
 
-        int x = 71;
+        int x = 80;
         int y = 54;
 
         for (int i = 0; i < 8; ++i) {
