@@ -1,5 +1,10 @@
 # Refined Storage Changelog
 
+### 1.2.4
+- Added tooltip search with # (raoulvdberge)
+- Mod search can now also take mod name instead of just id (raoulvdberge)
+- Fixed bug where Disk Manipulator doesn't save disks (raoulvdberge)
+
 ### 1.2.3
 - Fixed fluid cache updating wrongly (raoulvdberge)
 - Fixed Exporter scheduling too many crafting tasks (raoulvdberge)

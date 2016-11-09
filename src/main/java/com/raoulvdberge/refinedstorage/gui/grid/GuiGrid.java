@@ -5,11 +5,13 @@ import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimaps;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
-import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.block.EnumGridType;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.Scrollbar;
+import com.raoulvdberge.refinedstorage.gui.grid.filtering.GridFilterMod;
+import com.raoulvdberge.refinedstorage.gui.grid.filtering.GridFilterParser;
+import com.raoulvdberge.refinedstorage.gui.grid.filtering.IGridFilter;
 import com.raoulvdberge.refinedstorage.gui.grid.sorting.GridSortingName;
 import com.raoulvdberge.refinedstorage.gui.grid.sorting.GridSortingQuantity;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.ClientStackFluid;
@@ -142,67 +144,34 @@ public class GuiGrid extends GuiBase {
         if (grid.isConnected()) {
             stacks.addAll(grid.getType() == EnumGridType.FLUID ? FLUIDS.values() : ITEMS.values());
 
-            String query = searchField.getText().trim().toLowerCase();
+            List<IGridFilter> filters = GridFilterParser.getFilters(grid, searchField.getText());
 
             Iterator<IClientStack> t = stacks.iterator();
 
             while (t.hasNext()) {
                 IClientStack stack = t.next();
 
-                if (grid.getType() != EnumGridType.FLUID) {
-                    List<GridFilteredItem> filteredItems = grid.getFilteredItems();
+                int accepts = 0;
+                IGridFilter previous = null;
 
-                    boolean found = filteredItems.isEmpty();
+                for (IGridFilter filter : filters) {
+                    if (!filter.accepts(stack)) {
+                        if (filter.isStrong() || previous instanceof GridFilterMod) {
+                            // avoid removing twice
+                            accepts = -1;
 
-                    for (GridFilteredItem filteredItem : filteredItems) {
-                        if (API.instance().getComparer().isEqual(((ClientStackItem) stack).getStack(), filteredItem.getStack(), filteredItem.getCompare())) {
-                            found = true;
+                            t.remove();
 
                             break;
                         }
+                    } else {
+                        accepts++;
                     }
 
-                    if (!found) {
-                        t.remove();
-
-                        continue;
-                    }
-
-                    if (grid.getViewType() == TileGrid.VIEW_TYPE_NON_CRAFTABLES && ((ClientStackItem) stack).isCraftable()) {
-                        t.remove();
-
-                        continue;
-                    } else if (grid.getViewType() == TileGrid.VIEW_TYPE_CRAFTABLES && !((ClientStackItem) stack).isCraftable()) {
-                        t.remove();
-
-                        continue;
-                    }
+                    previous = filter;
                 }
 
-                if (query.startsWith("@")) {
-                    String[] parts = query.split(" ");
-
-                    String modId = parts[0].substring(1);
-                    String modIdFromItem = stack.getModId();
-
-                    if (!modIdFromItem.contains(modId)) {
-                        t.remove();
-                    } else if (parts.length >= 2) {
-                        StringBuilder itemFromMod = new StringBuilder();
-
-                        for (int i = 1; i < parts.length; ++i) {
-                            itemFromMod.append(parts[i]);
-
-                            if (i != parts.length - 1) {
-                                itemFromMod.append(" ");
-                            }
-                        }
-
-                        if (!stack.getName().toLowerCase().contains(itemFromMod.toString())) {
-                            t.remove();
-                        }
-                    }
-                } else if (!stack.getName().toLowerCase().contains(query)) {
+                if (accepts == 0) {
                     t.remove();
                 }
             }
