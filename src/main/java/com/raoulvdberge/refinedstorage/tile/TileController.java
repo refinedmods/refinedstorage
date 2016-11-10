@@ -561,15 +561,18 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         }
 
         int orginalSize = size;
-        AccessType accessType = AccessType.INSERT_EXTRACT;
         ItemStack remainder = stack;
         int externalStorageInserted = 0;
+        int insertOnlyInserted = 0;
 
         for (IItemStorage storage : this.itemStorage.getStorages()) {
-            accessType = storage.getAccessType();
-
-            if (accessType != AccessType.EXTRACT) {
+            if (storage.getAccessType() != AccessType.EXTRACT) {
                 remainder = storage.insertItem(remainder, size, simulate);
+
+                // if this storage is in insert-only mode, we can disregard this item from the cache
+                if (storage.getAccessType() == AccessType.INSERT && !simulate) {
+                    insertOnlyInserted += size - (remainder != null ? remainder.stackSize : 0);
+                }
             }
 
             if (remainder == null || remainder.stackSize <= 0) {
@@ -603,13 +606,13 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             inserted = orginalSize - remainder.stackSize;
         }
 
-        if (!simulate && accessType != AccessType.INSERT) {
-            if (inserted - externalStorageInserted > 0) {
-                itemStorage.add(stack, inserted - externalStorageInserted, false);
+        if (!simulate) {
+            if (inserted - externalStorageInserted - insertOnlyInserted > 0) {
+                itemStorage.add(stack, inserted - externalStorageInserted - insertOnlyInserted, false);
             }
 
-            if (inserted > 0) {
-                ItemStack checkSteps = ItemHandlerHelper.copyStackWithSize(stack, inserted);
+            if (inserted - insertOnlyInserted > 0) {
+                ItemStack checkSteps = ItemHandlerHelper.copyStackWithSize(stack, inserted - insertOnlyInserted);
 
                 for (ICraftingTask task : craftingTasks) {
                     for (ICraftingStep processable : task.getSteps()) {
