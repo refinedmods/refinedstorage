@@ -33,7 +33,7 @@ public abstract class ItemStorageExternal implements IItemStorage {
                 ItemStack cached = cache.get(i);
 
                 if (cached != null && actual == null) {
-                    // If the cached is not null but the actual is, we removed this item
+                    // If the cached is not null but the actual is, we remove this item
                     network.getItemStorageCache().remove(cached, cached.stackSize);
                 } else if (cached == null && actual != null) {
                     // If the cached is null and the actual isn't, we added this item
@@ -45,13 +45,12 @@ public abstract class ItemStorageExternal implements IItemStorage {
                     network.getItemStorageCache().remove(cached, cached.stackSize);
                     network.getItemStorageCache().add(actual, actual.stackSize, false);
                 } else if (cached.stackSize != actual.stackSize) {
-                    // If both items mismatch on item count, apply the change
                     int delta = actual.stackSize - cached.stackSize;
 
                     if (delta > 0) {
-                        network.getItemStorageCache().add(cached, delta, false);
+                        network.getItemStorageCache().add(actual, delta, false);
                     } else {
-                        network.getItemStorageCache().remove(cached, delta);
+                        network.getItemStorageCache().remove(actual, Math.abs(delta));
                     }
                 }
             }

@@ -571,7 +571,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 remainder = storage.insertItem(remainder, size, simulate);
             }
 
-            if (remainder == null || remainder.stackSize < 0) {
+            if (remainder == null || remainder.stackSize <= 0) {
                 if (storage instanceof ItemStorageExternal && !simulate) {
                     ((ItemStorageExternal) storage).updateForced();
                 }
@@ -600,6 +600,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
         if (!simulate && inserted > 0 && accessType != AccessType.INSERT) {
             itemStorage.add(stack, inserted, false);
+
             ItemStack checkSteps = ItemHandlerHelper.copyStackWithSize(stack, inserted);
 
             for (ICraftingTask task : craftingTasks) {

@@ -27,6 +27,35 @@ public class ItemStorageDrawer extends ItemStorageExternal {
 
     @Override
     public List<ItemStack> getStacks() {
+        return getStacks(drawer);
+    }
+
+    @Override
+    public ItemStack insertItem(ItemStack stack, int size, boolean simulate) {
+        return insertItem(externalStorage, drawer, stack, size, simulate);
+    }
+
+    @Override
+    public ItemStack extractItem(ItemStack stack, int size, int flags, boolean simulate) {
+        return extractItem(drawer, stack, size, flags, simulate);
+    }
+
+    @Override
+    public int getStored() {
+        return drawer.getStoredItemCount();
+    }
+
+    @Override
+    public int getPriority() {
+        return externalStorage.getPriority();
+    }
+
+    @Override
+    public AccessType getAccessType() {
+        return externalStorage.getAccessType();
+    }
+
+    public static List<ItemStack> getStacks(IDrawer drawer) {
         if (!drawer.isEmpty() && drawer.getStoredItemCount() > 0) {
             return Collections.singletonList(drawer.getStoredItemCopy());
         }
@@ -34,12 +63,11 @@ public class ItemStorageDrawer extends ItemStorageExternal {
         return Collections.emptyList();
     }
 
-    private boolean isVoidable() {
-        return drawer instanceof IVoidable && ((IVoidable) drawer).isVoid();
+    public static boolean isVoidable(IDrawer drawer) {
+        return drawer instanceof IVoidable & ((IVoidable) drawer).isVoid();
     }
 
-    @Override
-    public ItemStack insertItem(ItemStack stack, int size, boolean simulate) {
+    public static ItemStack insertItem(TileExternalStorage externalStorage, IDrawer drawer, ItemStack stack, int size, boolean simulate) {
         if (IFilterable.canTake(externalStorage.getItemFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack) && drawer.canItemBeStored(stack)) {
             int stored = drawer.getStoredItemCount();
             int remainingSpace = drawer.getMaxCapacity(stack) - stored;
@@ -60,7 +88,7 @@ public class ItemStorageDrawer extends ItemStorageExternal {
 
             int returnSize = size - inserted;
 
-            if (isVoidable()) {
+            if (isVoidable(drawer)) {
                 returnSize = -returnSize;
             }
 
@@ -70,8 +98,7 @@ public class ItemStorageDrawer extends ItemStorageExternal {
         return ItemHandlerHelper.copyStackWithSize(stack, size);
     }
 
-    @Override
-    public ItemStack extractItem(ItemStack stack, int size, int flags, boolean simulate) {
+    public static ItemStack extractItem(IDrawer drawer, ItemStack stack, int size, int flags, boolean simulate) {
         if (API.instance().getComparer().isEqual(stack, drawer.getStoredItemPrototype(), flags) && drawer.canItemBeExtracted(stack)) {
             if (size > drawer.getStoredItemCount()) {
                 size = drawer.getStoredItemCount();
@@ -82,25 +109,10 @@ public class ItemStorageDrawer extends ItemStorageExternal {
             if (!simulate) {
                 drawer.setStoredItemCount(drawer.getStoredItemCount() - size);
             }
-            
+
             return ItemHandlerHelper.copyStackWithSize(stored, size);
         }
 
         return null;
-    }
-
-    @Override
-    public int getStored() {
-        return drawer.getStoredItemCount();
-    }
-
-    @Override
-    public int getPriority() {
-        return externalStorage.getPriority();
-    }
-
-    @Override
-    public AccessType getAccessType() {
-        return externalStorage.getAccessType();
     }
 }

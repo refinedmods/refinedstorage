@@ -88,8 +88,6 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
     private List<ItemStorageExternal> itemStorages = new ArrayList<>();
     private List<FluidStorageExternal> fluidStorages = new ArrayList<>();
 
-    private int lastDrawerCount;
-
     public TileExternalStorage() {
         dataManager.addWatchedParameter(PRIORITY);
         dataManager.addWatchedParameter(COMPARE);
@@ -129,11 +127,11 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
     @Override
     public void update() {
         if (!worldObj.isRemote && network != null) {
-            if (networkTicks == 0) {
+            if (networkTicks++ == 0) {
                 updateStorage(network);
-            }
 
-            networkTicks++;
+                return;
+            }
 
             for (ItemStorageExternal storage : itemStorages) {
                 storage.detectChanges(network);
@@ -149,12 +147,6 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
 
             if (fluidChangeDetected) {
                 network.getFluidStorageCache().invalidate();
-            }
-
-            if (getFacingTile() instanceof IDrawerGroup && lastDrawerCount != ((IDrawerGroup) getFacingTile()).getDrawerCount()) {
-                lastDrawerCount = ((IDrawerGroup) getFacingTile()).getDrawerCount();
-
-                updateStorage(network);
             }
         }
 
@@ -248,13 +240,7 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
 
         if (type == IType.ITEMS) {
             if (facing instanceof IDrawerGroup) {
-                IDrawerGroup group = (IDrawerGroup) facing;
-
-                for (int i = 0; i < group.getDrawerCount(); ++i) {
-                    if (group.isDrawerEnabled(i)) {
-                        itemStorages.add(new ItemStorageDrawer(this, group.getDrawer(i)));
-                    }
-                }
+                itemStorages.add(new ItemStorageDrawerGroup(this, (IDrawerGroup) facing));
             } else if (facing instanceof IDrawer) {
                 itemStorages.add(new ItemStorageDrawer(this, (IDrawer) facing));
             } else if (facing instanceof IDeepStorageUnit) {
