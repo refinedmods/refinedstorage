@@ -15,6 +15,7 @@ import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.tile.IStorageGui;
 import com.raoulvdberge.refinedstorage.tile.TileMultipartNode;
+import com.raoulvdberge.refinedstorage.tile.TileNode;
 import com.raoulvdberge.refinedstorage.tile.config.*;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
@@ -245,7 +246,7 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
                 itemStorages.add(new ItemStorageDrawer(this, (IDrawer) facing));
             } else if (facing instanceof IDeepStorageUnit) {
                 itemStorages.add(new ItemStorageDSU(this, (IDeepStorageUnit) facing));
-            } else {
+            } else if (!(facing instanceof TileNode)) {
                 IItemHandler itemHandler = RSUtils.getItemHandler(facing, getDirection().getOpposite());
 
                 if (itemHandler != null) {
