@@ -563,6 +563,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         int orginalSize = size;
         AccessType accessType = AccessType.INSERT_EXTRACT;
         ItemStack remainder = stack;
+        int externalStorageInserted = 0;
 
         for (IItemStorage storage : this.itemStorage.getStorages()) {
             accessType = storage.getAccessType();
@@ -573,13 +574,17 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
             if (remainder == null || remainder.stackSize <= 0) {
                 if (storage instanceof ItemStorageExternal && !simulate) {
-                    ((ItemStorageExternal) storage).updateForced();
+                    ((ItemStorageExternal) storage).detectChanges(this);
+                    // the external storage will send the change, we don't need to anymore
+                    externalStorageInserted += size;
                 }
 
                 break;
             } else {
                 if (size != remainder.stackSize && storage instanceof ItemStorageExternal && !simulate) {
-                    ((ItemStorageExternal) storage).updateForced();
+                    ((ItemStorageExternal) storage).detectChanges(this);
+                    // the external storage will send the change, we don't need to anymore
+                    externalStorageInserted += size - remainder.stackSize;
                 }
 
                 size = remainder.stackSize;
@@ -598,15 +603,19 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             inserted = orginalSize - remainder.stackSize;
         }
 
-        if (!simulate && inserted > 0 && accessType != AccessType.INSERT) {
-            itemStorage.add(stack, inserted, false);
+        if (!simulate && accessType != AccessType.INSERT) {
+            if (inserted - externalStorageInserted > 0) {
+                itemStorage.add(stack, inserted - externalStorageInserted, false);
+            }
 
-            ItemStack checkSteps = ItemHandlerHelper.copyStackWithSize(stack, inserted);
+            if (inserted > 0) {
+                ItemStack checkSteps = ItemHandlerHelper.copyStackWithSize(stack, inserted);
 
-            for (ICraftingTask task : craftingTasks) {
-                for (ICraftingStep processable : task.getSteps()) {
-                    if (processable.onReceiveOutput(checkSteps)) {
-                        return remainder;  // All done
+                for (ICraftingTask task : craftingTasks) {
+                    for (ICraftingStep processable : task.getSteps()) {
+                        if (processable.onReceiveOutput(checkSteps)) {
+                            return remainder; // All done
+                        }
                     }
                 }
             }
@@ -619,6 +628,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     public ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
         int requested = size;
         int received = 0;
+        int externalStorageExtracted = 0;
         ItemStack newStack = null;
 
         for (IItemStorage storage : this.itemStorage.getStorages()) {
@@ -630,7 +640,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
             if (took != null) {
                 if (storage instanceof ItemStorageExternal && !simulate) {
-                    ((ItemStorageExternal) storage).updateForced();
+                    ((ItemStorageExternal) storage).detectChanges(this);
+                    // the external storage will send the change, we don't need to anymore
+                    externalStorageExtracted += took.stackSize;
                 }
 
                 if (newStack == null) {
@@ -647,8 +659,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             }
         }
 
-        if (newStack != null && !simulate) {
-            itemStorage.remove(newStack, newStack.stackSize);
+        if (newStack != null && newStack.stackSize - externalStorageExtracted > 0 && !simulate) {
+            itemStorage.remove(newStack, newStack.stackSize - externalStorageExtracted);
         }
 
         return newStack;

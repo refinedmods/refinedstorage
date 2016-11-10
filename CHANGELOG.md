@@ -7,6 +7,8 @@
 - Fixed Disk Drive stored quantity GUI text hovering over other text (raoulvdberge)
 - Fixed External Storage being in item and fluid mode at the same time (raoulvdberge)
 - Fixed Wrench working when player is not sneaking (raoulvdberge)
+- Fixed External Storage cache counting items up when extracting (raoulvdberge)
+- Fixed External Storage cache not working properly on Compacting Drawers (raoulvdberge)
 
 ### 1.2.3
 - Fixed fluid cache updating wrongly (raoulvdberge)
