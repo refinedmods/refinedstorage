@@ -18,6 +18,7 @@ import com.raoulvdberge.refinedstorage.api.network.INetworkNodeGraph;
 import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
+import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.fluid.IFluidStorage;
@@ -141,6 +142,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     private static final String NBT_CRAFTING_TASKS = "CraftingTasks";
 
+    private static final String NBT_READER_WRITER_CHANNELS = "ReaderWriterChannels";
+    private static final String NBT_READER_WRITER_NAME = "Name";
+
     private static final Comparator<ClientNode> CLIENT_NODE_COMPARATOR = (left, right) -> {
         if (left.getEnergyUsage() == right.getEnergyUsage()) {
             return 0;
@@ -164,6 +168,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     private IItemStorageCache itemStorage = new ItemStorageCache(this);
     private IFluidStorageCache fluidStorage = new FluidStorageCache(this);
+
+    private Map<String, IReaderWriterChannel> readerWriterChannels = new HashMap<>();
 
     private List<ICraftingPattern> patterns = new ArrayList<>();
 
@@ -278,10 +284,10 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                     if (craftingTasksChanged) {
                         craftingMonitorUpdateRequested = true;
                     }
+                }
 
-                    if (!craftingTasks.isEmpty()) {
-                        markDirty();
-                    }
+                if (!craftingTasks.isEmpty() || !readerWriterChannels.isEmpty()) {
+                    markDirty();
                 }
 
                 if (craftingMonitorUpdateRequested) {
@@ -550,6 +556,11 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         RS.INSTANCE.network.sendTo(new MessageCraftingMonitorElements(getElements()), player);
     }
 
+    @Override
+    public Map<String, IReaderWriterChannel> getReaderWriterChannels() {
+        return readerWriterChannels;
+    }
+
     private List<ICraftingMonitorElement> getElements() {
         return craftingTasks.stream().flatMap(t -> t.getCraftingMonitorElements().stream()).collect(Collectors.toList());
     }
@@ -797,6 +808,20 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 craftingTasksToRead.add(taskList.getCompoundTagAt(i));
             }
         }
+
+        if (tag.hasKey(NBT_READER_WRITER_CHANNELS)) {
+            NBTTagList readerWriterChannelsList = tag.getTagList(NBT_READER_WRITER_CHANNELS, Constants.NBT.TAG_COMPOUND);
+
+            for (int i = 0; i < readerWriterChannelsList.tagCount(); ++i) {
+                NBTTagCompound channelTag = readerWriterChannelsList.getCompoundTagAt(i);
+
+                IReaderWriterChannel channel = API.instance().createReaderWriterChannel();
+
+                channel.readFromNBT(channelTag);
+
+                readerWriterChannels.put(channelTag.getString(NBT_READER_WRITER_NAME), channel);
+            }
+        }
     }
 
     @Override
@@ -807,13 +832,25 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
         redstoneMode.write(tag);
 
-        NBTTagList list = new NBTTagList();
+        NBTTagList craftingTaskList = new NBTTagList();
 
         for (ICraftingTask task : craftingTasks) {
-            list.appendTag(task.writeToNBT(new NBTTagCompound()));
+            craftingTaskList.appendTag(task.writeToNBT(new NBTTagCompound()));
         }
 
-        tag.setTag(NBT_CRAFTING_TASKS, list);
+        tag.setTag(NBT_CRAFTING_TASKS, craftingTaskList);
+
+        NBTTagList readerWriterChannelsList = new NBTTagList();
+
+        for (Map.Entry<String, IReaderWriterChannel> entry : readerWriterChannels.entrySet()) {
+            NBTTagCompound channelTag = entry.getValue().writeToNBT(new NBTTagCompound());
+
+            channelTag.setString(NBT_READER_WRITER_NAME, entry.getKey());
+
+            readerWriterChannelsList.appendTag(channelTag);
+        }
+
+        tag.setTag(NBT_READER_WRITER_CHANNELS, readerWriterChannelsList);
 
         return tag;
     }

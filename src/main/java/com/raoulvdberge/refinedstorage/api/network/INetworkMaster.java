@@ -6,6 +6,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
+import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.storage.fluid.IFluidStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.item.IItemStorageCache;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
@@ -19,6 +20,7 @@ import net.minecraftforge.fluids.FluidStack;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Represents a network master, usually is a controller.
@@ -224,6 +226,11 @@ public interface INetworkMaster {
      * @param player the player
      */
     void sendCraftingMonitorUpdate(EntityPlayerMP player);
+
+    /**
+     * @return a map with the reader and writer channels
+     */
+    Map<String, IReaderWriterChannel> getReaderWriterChannels();
 
     /**
      * Inserts an item in this network.

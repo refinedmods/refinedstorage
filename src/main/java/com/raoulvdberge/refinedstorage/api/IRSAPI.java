@@ -4,6 +4,8 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftin
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementRegistry;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElementRegistry;
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
+import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
+import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRegistry;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IFluidStackList;
@@ -47,6 +49,18 @@ public interface IRSAPI {
      */
     @Nonnull
     ICraftingPreviewElementRegistry getCraftingPreviewElementRegistry();
+
+    /**
+     * @return the reader writer handler registry
+     */
+    @Nonnull
+    IReaderWriterHandlerRegistry getReaderWriterHandlerRegistry();
+
+    /**
+     * @return a new reader writer channel
+     */
+    @Nonnull
+    IReaderWriterChannel createReaderWriterChannel();
 
     /**
      * @return an empty item stack list

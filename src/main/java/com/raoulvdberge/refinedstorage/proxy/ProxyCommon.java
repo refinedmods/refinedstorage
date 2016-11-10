@@ -9,6 +9,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.*;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementFluidStack;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementItemStack;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactory;
+import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerItems;
 import com.raoulvdberge.refinedstorage.apiimpl.solderer.*;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.item.ItemStorageNBT;
@@ -72,6 +73,8 @@ public class ProxyCommon {
 
         API.instance().getCraftingPreviewElementRegistry().add(CraftingPreviewElementItemStack.ID, CraftingPreviewElementItemStack::fromByteBuf);
         API.instance().getCraftingPreviewElementRegistry().add(CraftingPreviewElementFluidStack.ID, CraftingPreviewElementFluidStack::fromByteBuf);
+
+        API.instance().getReaderWriterHandlerRegistry().add(ReaderWriterHandlerItems.ID, tag -> new ReaderWriterHandlerItems(tag));
 
         int id = 0;
 
