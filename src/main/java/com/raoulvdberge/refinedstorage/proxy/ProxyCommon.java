@@ -132,6 +132,7 @@ public class ProxyCommon {
         registerTile(TileFluidStorage.class, "fluid_storage");
         registerTile(TileDiskManipulator.class, "disk_manipulator");
         registerTile(TileReader.class, "reader");
+        registerTile(TileWriter.class, "writer");
 
         registerBlock(RSBlocks.CONTROLLER);
         registerBlock(RSBlocks.GRID);
@@ -158,6 +159,7 @@ public class ProxyCommon {
         registerBlock(RSBlocks.NETWORK_RECEIVER);
         registerBlock(RSBlocks.DISK_MANIPULATOR);
         registerBlock(RSBlocks.READER);
+        registerBlock(RSBlocks.WRITER);
 
         registerItem(RSItems.QUARTZ_ENRICHED_IRON);
         registerItem(RSItems.STORAGE_DISK);

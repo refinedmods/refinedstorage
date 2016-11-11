@@ -53,6 +53,7 @@ gui.refinedstorage:crafting_preview.circular=Circular dependency!
 gui.refinedstorage:crafting_preview.loop=Loop in processing...
 gui.refinedstorage:crafting_preview.force_start=Press CTRL + SHIFT to start anyway
 gui.refinedstorage:reader=Reader
+gui.refinedstorage:writer=Writer
 
 misc.refinedstorage:energy_stored=%d / %d RS
 misc.refinedstorage:energy_usage=Usage: %d RS/t
@@ -181,6 +182,7 @@ block.refinedstorage:fluid_storage.2.name=256k Fluid Storage Block
 block.refinedstorage:fluid_storage.3.name=512k Fluid Storage Block
 block.refinedstorage:fluid_storage.4.name=Creative Fluid Storage Block
 block.refinedstorage:reader.name=Reader
+block.refinedstorage:writer.name=Writer
 
 item.refinedstorage:storage_disk.0.name=1k Storage Disk
 item.refinedstorage:storage_disk.1.name=4k Storage Disk

@@ -28,4 +28,5 @@ public final class RSBlocks {
     public static final BlockFluidStorage FLUID_STORAGE = new BlockFluidStorage();
     public static final BlockDiskManipulator DISK_MANIPULATOR = new BlockDiskManipulator();
     public static final BlockReader READER = new BlockReader();
+    public static final BlockWriter WRITER = new BlockWriter();
 }
