@@ -827,7 +827,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             for (int i = 0; i < readerWriterChannelsList.tagCount(); ++i) {
                 NBTTagCompound channelTag = readerWriterChannelsList.getCompoundTagAt(i);
 
-                IReaderWriterChannel channel = API.instance().createReaderWriterChannel();
+                IReaderWriterChannel channel = API.instance().createReaderWriterChannel(this);
 
                 channel.readFromNBT(channelTag);
 

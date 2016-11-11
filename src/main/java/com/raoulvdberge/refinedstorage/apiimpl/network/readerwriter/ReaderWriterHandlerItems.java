@@ -58,6 +58,11 @@ public class ReaderWriterHandlerItems implements IReaderWriterHandler {
     }
 
     @Override
+    public void onConnectionChange(boolean state) {
+        // NO OP
+    }
+
+    @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         RSUtils.writeItems(internalInv, 0, tag);
 

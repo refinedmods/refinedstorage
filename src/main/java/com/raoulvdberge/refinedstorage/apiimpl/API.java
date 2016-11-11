@@ -6,6 +6,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftin
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementRegistry;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElementRegistry;
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
+import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRegistry;
@@ -78,8 +79,8 @@ public class API implements IRSAPI {
 
     @Nonnull
     @Override
-    public IReaderWriterChannel createReaderWriterChannel() {
-        return new ReaderWriterChannel();
+    public IReaderWriterChannel createReaderWriterChannel(INetworkMaster network) {
+        return new ReaderWriterChannel(network);
     }
 
     @Nonnull
