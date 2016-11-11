@@ -571,7 +571,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public void addReaderWriterChannel(String name) {
-        readerWriterChannels.put(name, API.instance().createReaderWriterChannel(this));
+        readerWriterChannels.put(name, API.instance().createReaderWriterChannel(name, this));
     }
 
     @Override
@@ -845,11 +845,13 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             for (int i = 0; i < readerWriterChannelsList.tagCount(); ++i) {
                 NBTTagCompound channelTag = readerWriterChannelsList.getCompoundTagAt(i);
 
-                IReaderWriterChannel channel = API.instance().createReaderWriterChannel(this);
+                String name = channelTag.getString(NBT_READER_WRITER_NAME);
+
+                IReaderWriterChannel channel = API.instance().createReaderWriterChannel(name, this);
 
                 channel.readFromNBT(channelTag);
 
-                readerWriterChannels.put(channelTag.getString(NBT_READER_WRITER_NAME), channel);
+                readerWriterChannels.put(name, channel);
             }
         }
     }

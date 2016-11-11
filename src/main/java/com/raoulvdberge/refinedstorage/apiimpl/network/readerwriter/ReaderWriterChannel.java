@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.*;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.tile.IReaderWriter;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.ArrayList;
@@ -12,11 +13,13 @@ import java.util.stream.Collectors;
 public class ReaderWriterChannel implements IReaderWriterChannel {
     private static final String NBT_HANDLER = "Handler_%s";
 
+    private String name;
     private INetworkMaster network;
 
     private List<IReaderWriterHandler> handlers = new ArrayList<>();
 
-    public ReaderWriterChannel(INetworkMaster network) {
+    public ReaderWriterChannel(String name, INetworkMaster network) {
+        this.name = name;
         this.network = network;
         this.handlers.addAll(API.instance().getReaderWriterHandlerRegistry().getFactories().stream().map(f -> f.create(null)).collect(Collectors.toList()));
     }
@@ -28,12 +31,18 @@ public class ReaderWriterChannel implements IReaderWriterChannel {
 
     @Override
     public List<IReader> getReaders() {
-        return network.getNodeGraph().all().stream().filter(n -> n instanceof IReader).map(n -> (IReader) n).collect(Collectors.toList());
+        return network.getNodeGraph().all().stream()
+            .filter(n -> n instanceof IReader && n instanceof IReaderWriter && name.equals(((IReaderWriter) n).getChannel()))
+            .map(n -> (IReader) n)
+            .collect(Collectors.toList());
     }
 
     @Override
     public List<IWriter> getWriters() {
-        return network.getNodeGraph().all().stream().filter(n -> n instanceof IWriter).map(n -> (IWriter) n).collect(Collectors.toList());
+        return network.getNodeGraph().all().stream()
+            .filter(n -> n instanceof IWriter && n instanceof IReaderWriter && name.equals(((IReaderWriter) n).getChannel()))
+            .map(n -> (IWriter) n)
+            .collect(Collectors.toList());
     }
 
     @Override

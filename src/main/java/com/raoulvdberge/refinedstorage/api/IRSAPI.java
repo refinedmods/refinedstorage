@@ -61,7 +61,7 @@ public interface IRSAPI {
      * @return a new reader writer channel
      */
     @Nonnull
-    IReaderWriterChannel createReaderWriterChannel(INetworkMaster network);
+    IReaderWriterChannel createReaderWriterChannel(String name, INetworkMaster network);
 
     /**
      * @return an empty item stack list

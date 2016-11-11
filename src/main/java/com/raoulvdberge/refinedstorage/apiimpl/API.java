@@ -79,8 +79,8 @@ public class API implements IRSAPI {
 
     @Nonnull
     @Override
-    public IReaderWriterChannel createReaderWriterChannel(INetworkMaster network) {
-        return new ReaderWriterChannel(network);
+    public IReaderWriterChannel createReaderWriterChannel(String name, INetworkMaster network) {
+        return new ReaderWriterChannel(name, network);
     }
 
     @Nonnull

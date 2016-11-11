@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.container.ContainerReaderWriter;
 import com.raoulvdberge.refinedstorage.network.MessageReaderWriterChannelAdd;
 import com.raoulvdberge.refinedstorage.network.MessageReaderWriterChannelRemove;
 import com.raoulvdberge.refinedstorage.tile.IReaderWriter;
+import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
@@ -48,6 +49,8 @@ public class GuiReaderWriter extends GuiBase {
         name.setTextColor(16777215);
         name.setCanLoseFocus(true);
         name.setFocused(false);
+
+        updateSelection(readerWriter.getChannelParameter().getValue());
     }
 
     @Override
@@ -119,6 +122,8 @@ public class GuiReaderWriter extends GuiBase {
 
         name.mouseClicked(mouseX, mouseY, mouseButton);
 
+        int itemSelectedOld = itemSelected;
+
         itemSelected = -1;
 
         if (mouseButton == 0 && inBounds(8, 39, 144, 73, mouseX - guiLeft, mouseY - guiTop)) {
@@ -131,9 +136,13 @@ public class GuiReaderWriter extends GuiBase {
                 if (inBounds(ix, iy, ITEM_WIDTH, ITEM_HEIGHT, mouseX - guiLeft, mouseY - guiTop) && (item + i) < getChannels().size()) {
                     itemSelected = item + i;
 
-                    name.setText(getChannels().get(itemSelected));
+                    TileDataManager.setParameter(readerWriter.getChannelParameter(), getChannels().get(itemSelected));
                 }
             }
+        }
+
+        if (itemSelectedOld != -1 && itemSelected == -1) {
+            TileDataManager.setParameter(readerWriter.getChannelParameter(), "");
         }
     }
 
@@ -160,6 +169,11 @@ public class GuiReaderWriter extends GuiBase {
                 RS.INSTANCE.network.sendToServer(new MessageReaderWriterChannelRemove(name));
             }
         }
+    }
+
+    public void updateSelection(String channel) {
+        this.itemSelected = getChannels().indexOf(channel);
+        this.name.setText(itemSelected != -1 ? getChannels().get(itemSelected) : "");
     }
 
     private List<String> getChannels() {

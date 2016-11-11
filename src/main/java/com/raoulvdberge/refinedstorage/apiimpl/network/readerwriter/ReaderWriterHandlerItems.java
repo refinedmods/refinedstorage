@@ -59,7 +59,7 @@ public class ReaderWriterHandlerItems implements IReaderWriterHandler {
 
     @Override
     public void onConnectionChange(boolean state) {
-        // NO OP
+
     }
 
     @Override
