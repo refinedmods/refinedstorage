@@ -1,8 +1,11 @@
 package com.raoulvdberge.refinedstorage.tile;
 
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReader;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.math.BlockPos;
 
-public class TileReader extends TileNode implements IReader, IReaderWriterGui {
+public class TileReader extends TileNode implements IReader, IReaderWriter {
     @Override
     public int getEnergyUsage() {
         return 0; // @TODO
@@ -24,11 +27,35 @@ public class TileReader extends TileNode implements IReader, IReaderWriterGui {
 
     @Override
     public void onAdd(String name) {
-        // @TODO
+        if (network != null && !name.isEmpty()) {
+            network.addReaderWriterChannel(name);
+
+            network.sendReaderWriterChannelUpdate();
+        }
     }
 
     @Override
     public void onRemove(String name) {
-        // @TODO
+        if (network != null && !name.isEmpty()) {
+            network.removeReaderWriterChannel(name);
+
+            network.sendReaderWriterChannelUpdate();
+        }
+    }
+
+    @Override
+    public BlockPos getNetworkPosition() {
+        return network != null ? network.getPosition() : null;
+    }
+
+    @Override
+    public boolean hasConnectivityState() {
+        return true;
+    }
+
+    public void onOpened(EntityPlayer entity) {
+        if (isConnected()) {
+            network.sendReaderWriterChannelUpdate((EntityPlayerMP) entity);
+        }
     }
 }

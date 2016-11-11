@@ -1,16 +1,21 @@
 package com.raoulvdberge.refinedstorage.gui;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.container.ContainerReaderWriter;
-import com.raoulvdberge.refinedstorage.tile.IReaderWriterGui;
+import com.raoulvdberge.refinedstorage.network.MessageReaderWriterChannelAdd;
+import com.raoulvdberge.refinedstorage.network.MessageReaderWriterChannelRemove;
+import com.raoulvdberge.refinedstorage.tile.IReaderWriter;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class GuiReaderWriter extends GuiBase {
+    public static List<String> CHANNELS = Collections.emptyList();
+
     private static final int VISIBLE_ROWS = 4;
 
     private static final int ITEM_WIDTH = 143;
@@ -19,14 +24,14 @@ public class GuiReaderWriter extends GuiBase {
     private GuiButton add;
     private GuiButton remove;
     private GuiTextField name;
-    private IReaderWriterGui readerWriter;
+    private IReaderWriter readerWriter;
 
     private int itemSelected = -1;
 
     private int itemSelectedX = -1;
     private int itemSelectedY = -1;
 
-    public GuiReaderWriter(ContainerReaderWriter container, IReaderWriterGui readerWriter) {
+    public GuiReaderWriter(ContainerReaderWriter container, IReaderWriter readerWriter) {
         super(container, 176, 209);
 
         this.readerWriter = readerWriter;
@@ -125,6 +130,8 @@ public class GuiReaderWriter extends GuiBase {
 
                 if (inBounds(ix, iy, ITEM_WIDTH, ITEM_HEIGHT, mouseX - guiLeft, mouseY - guiTop) && (item + i) < getChannels().size()) {
                     itemSelected = item + i;
+
+                    name.setText(getChannels().get(itemSelected));
                 }
             }
         }
@@ -144,24 +151,18 @@ public class GuiReaderWriter extends GuiBase {
     protected void actionPerformed(GuiButton button) throws IOException {
         super.actionPerformed(button);
 
-        if (button == add) {
+        String name = this.name.getText().trim();
 
-        } else if (button == remove) {
-
+        if (!name.isEmpty()) {
+            if (button == add) {
+                RS.INSTANCE.network.sendToServer(new MessageReaderWriterChannelAdd(name));
+            } else if (button == remove) {
+                RS.INSTANCE.network.sendToServer(new MessageReaderWriterChannelRemove(name));
+            }
         }
     }
 
-    private List<String> tempChannels;
-
     private List<String> getChannels() {
-        if (tempChannels == null) {
-            tempChannels = new ArrayList<>();
-
-            for (int i = 0; i < 40; ++i) {
-                tempChannels.add("Item " + i);
-            }
-        }
-
-        return tempChannels;
+        return readerWriter.isConnected() ? CHANNELS : Collections.emptyList();
     }
 }

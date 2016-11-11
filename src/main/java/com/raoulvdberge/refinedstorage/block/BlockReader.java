@@ -21,6 +21,8 @@ public class BlockReader extends BlockNode {
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
             player.openGui(RS.INSTANCE, RSGui.READER_WRITER, world, pos.getX(), pos.getY(), pos.getZ());
+
+            ((TileReader) world.getTileEntity(pos)).onOpened(player);
         }
 
         return true;

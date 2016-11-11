@@ -40,6 +40,7 @@ import com.raoulvdberge.refinedstorage.block.EnumControllerType;
 import com.raoulvdberge.refinedstorage.block.EnumGridType;
 import com.raoulvdberge.refinedstorage.container.ContainerCraftingMonitor;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
+import com.raoulvdberge.refinedstorage.container.ContainerReaderWriter;
 import com.raoulvdberge.refinedstorage.integration.forgeenergy.ControllerEnergyForge;
 import com.raoulvdberge.refinedstorage.integration.ic2.ControllerEnergyIC2;
 import com.raoulvdberge.refinedstorage.integration.ic2.ControllerEnergyIC2None;
@@ -580,12 +581,14 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public void sendReaderWriterChannelUpdate() {
-        // @TODO
+        worldObj.getMinecraftServer().getPlayerList().getPlayerList().stream()
+            .filter(player -> player.openContainer instanceof ContainerReaderWriter && pos.equals(((ContainerReaderWriter) player.openContainer).getReaderWriter().getNetworkPosition()))
+            .forEach(this::sendReaderWriterChannelUpdate);
     }
 
     @Override
     public void sendReaderWriterChannelUpdate(EntityPlayerMP player) {
-        // @TODO
+        RS.INSTANCE.network.sendTo(new MessageReaderWriterUpdate(readerWriterChannels.keySet()), player);
     }
 
     private List<ICraftingMonitorElement> getElements() {
