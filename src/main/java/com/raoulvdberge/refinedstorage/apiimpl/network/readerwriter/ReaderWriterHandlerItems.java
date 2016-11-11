@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReader;
+import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
 import net.minecraft.item.ItemStack;
@@ -29,27 +29,29 @@ public class ReaderWriterHandlerItems implements IReaderWriterHandler {
     }
 
     @Override
-    public void update(IReader reader, IWriter writer) {
-        IItemHandler handler = RSUtils.getItemHandler(writer.getNodeWorld().getTileEntity(writer.getPosition().offset(writer.getDirection())), writer.getDirection().getOpposite());
+    public void update(IReaderWriterChannel channel) {
+        for (IWriter writer : channel.getWriters()) {
+            IItemHandler handler = RSUtils.getItemHandler(writer.getNodeWorld().getTileEntity(writer.getPosition().offset(writer.getDirection())), writer.getDirection().getOpposite());
 
-        if (handler != null) {
-            for (int i = 0; i < internalInv.getSlots(); ++i) {
-                ItemStack slot = internalInv.getStackInSlot(i);
+            if (handler != null) {
+                for (int i = 0; i < internalInv.getSlots(); ++i) {
+                    ItemStack slot = internalInv.getStackInSlot(i);
 
-                if (slot != null) {
-                    ItemStack toInsert = ItemHandlerHelper.copyStackWithSize(slot, writer.hasStackUpgrade() ? 64 : 1);
+                    if (slot != null) {
+                        ItemStack toInsert = ItemHandlerHelper.copyStackWithSize(slot, writer.hasStackUpgrade() ? 64 : 1);
 
-                    if (ItemHandlerHelper.insertItem(handler, toInsert, true) == null) {
-                        ItemHandlerHelper.insertItem(handler, toInsert, false);
+                        if (ItemHandlerHelper.insertItem(handler, toInsert, true) == null) {
+                            ItemHandlerHelper.insertItem(handler, toInsert, false);
 
-                        internalInv.getStackInSlot(i).stackSize -= toInsert.stackSize;
+                            internalInv.getStackInSlot(i).stackSize -= toInsert.stackSize;
 
-                        if (internalInv.getStackInSlot(i).stackSize <= 0) {
-                            internalInv.setStackInSlot(i, null);
+                            if (internalInv.getStackInSlot(i).stackSize <= 0) {
+                                internalInv.setStackInSlot(i, null);
+                            }
                         }
-                    }
 
-                    break;
+                        break;
+                    }
                 }
             }
         }

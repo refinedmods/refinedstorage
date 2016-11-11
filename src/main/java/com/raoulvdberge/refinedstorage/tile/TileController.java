@@ -19,6 +19,7 @@ import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
+import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.fluid.IFluidStorage;
@@ -286,6 +287,12 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                     }
                 }
 
+                for (IReaderWriterChannel channel : readerWriterChannels.values()) {
+                    for (IReaderWriterHandler handler : channel.getHandlers()) {
+                        handler.update(channel);
+                    }
+                }
+
                 if (!craftingTasks.isEmpty() || !readerWriterChannels.isEmpty()) {
                     markDirty();
                 }
@@ -295,7 +302,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
                     sendCraftingMonitorUpdate();
                 }
-
             }
 
             networkItemHandler.update();
@@ -314,6 +320,12 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
             if (couldRun != canRun()) {
                 couldRun = canRun();
+
+                for (IReaderWriterChannel channel : readerWriterChannels.values()) {
+                    for (IReaderWriterHandler handler : channel.getHandlers()) {
+                        handler.onConnectionChange(couldRun);
+                    }
+                }
 
                 nodeGraph.rebuild();
             }
