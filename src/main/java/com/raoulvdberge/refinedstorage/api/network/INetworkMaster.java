@@ -6,7 +6,6 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.storage.fluid.IFluidStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.item.IItemStorageCache;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
@@ -20,7 +19,6 @@ import net.minecraftforge.fluids.FluidStack;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Represents a network master, usually is a controller.
@@ -228,9 +226,38 @@ public interface INetworkMaster {
     void sendCraftingMonitorUpdate(EntityPlayerMP player);
 
     /**
-     * @return a map with the reader and writer channels
+     * Adds a new reader writer channel.
+     *
+     * @param name the name of this channel
      */
-    Map<String, IReaderWriterChannel> getReaderWriterChannels();
+    void addReaderWriterChannel(String name);
+
+    /**
+     * Renames a reader writer channel.
+     *
+     * @param oldName the old name
+     * @param newName the new name
+     */
+    void renameReaderWriterChannel(String oldName, String newName);
+
+    /**
+     * Removes a reader writer channel.
+     *
+     * @param name the name of the channel to remove
+     */
+    void removeReaderWriterChannel(String name);
+
+    /**
+     * Sends a reader writer channel update to all players watching a reader or writer.
+     */
+    void sendReaderWriterChannelUpdate();
+
+    /**
+     * Sends a reader writer channel update to a specific player.
+     *
+     * @param player the player to send to
+     */
+    void sendReaderWriterChannelUpdate(EntityPlayerMP player);
 
     /**
      * Inserts an item in this network.

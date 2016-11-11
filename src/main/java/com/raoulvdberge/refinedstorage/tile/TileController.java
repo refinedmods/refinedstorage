@@ -569,8 +569,30 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     }
 
     @Override
-    public Map<String, IReaderWriterChannel> getReaderWriterChannels() {
-        return readerWriterChannels;
+    public void addReaderWriterChannel(String name) {
+        readerWriterChannels.put(name, API.instance().createReaderWriterChannel(this));
+    }
+
+    @Override
+    public void renameReaderWriterChannel(String oldName, String newName) {
+        readerWriterChannels.put(newName, readerWriterChannels.get(oldName));
+
+        removeReaderWriterChannel(oldName);
+    }
+
+    @Override
+    public void removeReaderWriterChannel(String name) {
+        readerWriterChannels.remove(name);
+    }
+
+    @Override
+    public void sendReaderWriterChannelUpdate() {
+        // @TODO
+    }
+
+    @Override
+    public void sendReaderWriterChannelUpdate(EntityPlayerMP player) {
+        // @TODO
     }
 
     private List<ICraftingMonitorElement> getElements() {
