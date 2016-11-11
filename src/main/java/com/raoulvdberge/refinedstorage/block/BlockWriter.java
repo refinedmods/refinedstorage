@@ -10,6 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class BlockWriter extends BlockNode {
@@ -31,6 +32,26 @@ public class BlockWriter extends BlockNode {
     @Override
     public TileEntity createTileEntity(World world, IBlockState state) {
         return new TileWriter();
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public int getWeakPower(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
+        TileWriter writer = (TileWriter) world.getTileEntity(pos);
+
+        return side == writer.getDirection().getOpposite() ? writer.getRedstoneStrength() : 0;
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public int getStrongPower(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
+        return getWeakPower(state, world, pos, side);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public boolean canProvidePower(IBlockState state) {
+        return true;
     }
 
     @Override

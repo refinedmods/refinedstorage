@@ -31,10 +31,10 @@ public class TileWriter extends TileNode implements IWriter, IReaderWriter {
     public void update() {
         super.update();
 
-        if (!worldObj.isRemote && redstoneStrength != lastRedstoneStrength) {
-            lastRedstoneStrength = redstoneStrength;
+        if (!worldObj.isRemote && getRedstoneStrength() != lastRedstoneStrength) {
+            lastRedstoneStrength = getRedstoneStrength();
 
-            worldObj.notifyNeighborsOfStateChange(pos, RSBlocks.WRITER);
+            worldObj.notifyNeighborsOfStateChange(pos, RSBlocks.WRITER); // @TODO: Does this need to happen too on orientation change?
         }
     }
 
