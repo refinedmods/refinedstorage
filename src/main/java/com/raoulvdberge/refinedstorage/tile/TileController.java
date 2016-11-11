@@ -569,6 +569,12 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         RS.INSTANCE.network.sendTo(new MessageCraftingMonitorElements(getElements()), player);
     }
 
+    @Nullable
+    @Override
+    public IReaderWriterChannel getReaderWriterChannel(String name) {
+        return readerWriterChannels.get(name);
+    }
+
     @Override
     public void addReaderWriterChannel(String name) {
         readerWriterChannels.put(name, API.instance().createReaderWriterChannel(name, this));

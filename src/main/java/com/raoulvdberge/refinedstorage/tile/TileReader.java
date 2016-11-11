@@ -1,6 +1,8 @@
 package com.raoulvdberge.refinedstorage.tile;
 
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReader;
+import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
+import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
 import com.raoulvdberge.refinedstorage.gui.GuiReaderWriter;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataConsumer;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
@@ -11,7 +13,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.capabilities.Capability;
 
 public class TileReader extends TileNode implements IReader, IReaderWriter {
     private static final String NBT_CHANNEL = "Channel";
@@ -106,6 +110,57 @@ public class TileReader extends TileNode implements IReader, IReaderWriter {
         return true;
     }
 
+    @Override
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+        if (!super.hasCapability(capability, facing)) {
+            if (network == null) {
+                return false;
+            }
+
+            IReaderWriterChannel foundChannel = network.getReaderWriterChannel(channel);
+
+            if (foundChannel == null) {
+                return false;
+            }
+
+            for (IReaderWriterHandler handler : foundChannel.getHandlers()) {
+                if (handler.hasCapability(capability, facing)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+        T foundCap = super.getCapability(capability, facing);
+
+        if (foundCap == null) {
+            if (network == null) {
+                return null;
+            }
+
+            IReaderWriterChannel foundChannel = network.getReaderWriterChannel(channel);
+
+            if (foundChannel == null) {
+                return null;
+            }
+
+            for (IReaderWriterHandler handler : foundChannel.getHandlers()) {
+                foundCap = handler.getCapability(capability, facing);
+
+                if (foundCap != null) {
+                    return foundCap;
+                }
+            }
+        }
+
+        return foundCap;
+    }
 
     @Override
     public void read(NBTTagCompound tag) {

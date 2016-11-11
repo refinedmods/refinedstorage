@@ -33,24 +33,26 @@ public class ReaderWriterHandlerItems implements IReaderWriterHandler {
         for (IWriter writer : channel.getWriters()) {
             IItemHandler handler = RSUtils.getItemHandler(writer.getNodeWorld().getTileEntity(writer.getPosition().offset(writer.getDirection())), writer.getDirection().getOpposite());
 
-            if (handler != null) {
-                for (int i = 0; i < internalInv.getSlots(); ++i) {
-                    ItemStack slot = internalInv.getStackInSlot(i);
+            if (handler == null) {
+                continue;
+            }
 
-                    if (slot != null) {
-                        ItemStack toInsert = ItemHandlerHelper.copyStackWithSize(slot, writer.hasStackUpgrade() ? 64 : 1);
+            for (int i = 0; i < internalInv.getSlots(); ++i) {
+                ItemStack slot = internalInv.getStackInSlot(i);
 
-                        if (ItemHandlerHelper.insertItem(handler, toInsert, true) == null) {
-                            ItemHandlerHelper.insertItem(handler, toInsert, false);
+                if (slot == null) {
+                    continue;
+                }
 
-                            internalInv.getStackInSlot(i).stackSize -= toInsert.stackSize;
+                ItemStack toInsert = ItemHandlerHelper.copyStackWithSize(slot, writer.hasStackUpgrade() ? 64 : 1);
 
-                            if (internalInv.getStackInSlot(i).stackSize <= 0) {
-                                internalInv.setStackInSlot(i, null);
-                            }
-                        }
+                if (ItemHandlerHelper.insertItem(handler, toInsert, true) == null) {
+                    ItemHandlerHelper.insertItem(handler, toInsert, false);
 
-                        break;
+                    internalInv.getStackInSlot(i).stackSize -= toInsert.stackSize;
+
+                    if (internalInv.getStackInSlot(i).stackSize <= 0) {
+                        internalInv.setStackInSlot(i, null);
                     }
                 }
             }

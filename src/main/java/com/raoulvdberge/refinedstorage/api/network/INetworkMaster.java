@@ -6,6 +6,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
+import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.storage.fluid.IFluidStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.item.IItemStorageCache;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
@@ -226,6 +227,13 @@ public interface INetworkMaster {
     void sendCraftingMonitorUpdate(EntityPlayerMP player);
 
     /**
+     * @param name the name of the reader writer channel
+     * @return the reader writer channel, or null if nothing was found
+     */
+    @Nullable
+    IReaderWriterChannel getReaderWriterChannel(String name);
+
+    /**
      * Adds a new reader writer channel.
      *
      * @param name the name of this channel
@@ -300,9 +308,9 @@ public interface INetworkMaster {
     /**
      * Extracts a fluid from this network.
      *
-     * @param stack the prototype of the stack to extract, do NOT modify
-     * @param size  the amount of that prototype that has to be extracted
-     * @param flags the flags to compare on, see {@link IComparer}
+     * @param stack    the prototype of the stack to extract, do NOT modify
+     * @param size     the amount of that prototype that has to be extracted
+     * @param flags    the flags to compare on, see {@link IComparer}
      * @param simulate true if we are simulating, false otherwise
      * @return null if we didn't extract anything, or a stack with the result
      */
@@ -312,8 +320,8 @@ public interface INetworkMaster {
     /**
      * Extracts a fluid from this network.
      *
-     * @param stack the prototype of the stack to extract, do NOT modify
-     * @param size  the amount of that prototype that has to be extracted
+     * @param stack    the prototype of the stack to extract, do NOT modify
+     * @param size     the amount of that prototype that has to be extracted
      * @param simulate true if we are simulating, false otherwise
      * @return null if we didn't extract anything, or a stack with the result
      */
