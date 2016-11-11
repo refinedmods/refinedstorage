@@ -62,6 +62,8 @@ public class GuiHandler implements IGuiHandler {
                 return new ContainerFluidStorage((TileFluidStorage) tile, player);
             case RSGui.DISK_MANIPULATOR:
                 return new ContainerDiskManipulator((TileDiskManipulator) tile, player);
+            case RSGui.READER_WRITER:
+                return new ContainerReaderWriter((TileBase) tile, player);
             default:
                 return null;
         }
@@ -133,6 +135,8 @@ public class GuiHandler implements IGuiHandler {
                 return new GuiDiskManipulator((ContainerDiskManipulator) getContainer(ID, player, tile));
             case RSGui.WIRELESS_CRAFTING_MONITOR:
                 return getWirelessCraftingMonitorGui(player, x, y);
+            case RSGui.READER_WRITER:
+                return new GuiReaderWriter((ContainerReaderWriter) getContainer(ID, player, tile), (IReaderWriterGui) tile);
             default:
                 return null;
         }

@@ -25,4 +25,5 @@ public final class RSGui {
     public static final int FLUID_STORAGE = 21;
     public static final int DISK_MANIPULATOR = 22;
     public static final int WIRELESS_CRAFTING_MONITOR = 23;
+    public static final int READER_WRITER = 24;
 }

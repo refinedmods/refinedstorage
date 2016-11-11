@@ -116,8 +116,7 @@ public class GuiCraftingMonitor extends GuiBase {
 
         RenderHelper.enableGUIStandardItemLighting();
 
-        int ox = 8;
-        int x = ox;
+        int x = 8;
         int y = 20;
 
         itemSelectedX = -1;
@@ -139,7 +138,6 @@ public class GuiCraftingMonitor extends GuiBase {
 
                 element.draw(x, y, drawers);
 
-                x = ox;
                 y += ITEM_HEIGHT;
             }
 

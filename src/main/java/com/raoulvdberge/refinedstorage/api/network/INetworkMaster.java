@@ -233,14 +233,6 @@ public interface INetworkMaster {
     void addReaderWriterChannel(String name);
 
     /**
-     * Renames a reader writer channel.
-     *
-     * @param oldName the old name
-     * @param newName the new name
-     */
-    void renameReaderWriterChannel(String oldName, String newName);
-
-    /**
      * Removes a reader writer channel.
      *
      * @param name the name of the channel to remove
