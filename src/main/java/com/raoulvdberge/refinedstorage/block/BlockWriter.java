@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.block;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSGui;
+import com.raoulvdberge.refinedstorage.tile.TileReader;
 import com.raoulvdberge.refinedstorage.tile.TileWriter;
 import mcmultipart.microblock.MicroblockContainer;
 import net.minecraft.block.state.IBlockState;
@@ -55,7 +56,17 @@ public class BlockWriter extends BlockCable {
     @Override
     @SuppressWarnings("deprecation")
     public int getStrongPowerDefault(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side, MicroblockContainer partContainer) {
-        return getWeakPower(state, world, pos, side);
+        return getWeakPowerDefault(state, world, pos, side, partContainer);
+    }
+
+    @Override
+    public boolean canProvidePower(IBlockState state) {
+        return true;
+    }
+
+    @Override
+    public boolean canConnectRedstoneDefault(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side, MicroblockContainer partContainer) {
+        return side == ((TileWriter) world.getTileEntity(pos)).getDirection().getOpposite();
     }
 
     @Override
