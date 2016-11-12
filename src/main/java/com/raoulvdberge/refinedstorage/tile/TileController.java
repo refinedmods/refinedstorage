@@ -322,12 +322,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             if (couldRun != canRun()) {
                 couldRun = canRun();
 
-                for (IReaderWriterChannel channel : readerWriterChannels.values()) {
-                    for (IReaderWriterHandler handler : channel.getHandlers()) {
-                        handler.onConnectionChange(couldRun);
-                    }
-                }
-
                 nodeGraph.rebuild();
             }
 
@@ -588,7 +582,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public void sendReaderWriterChannelUpdate() {
         worldObj.getMinecraftServer().getPlayerList().getPlayerList().stream()
-            .filter(player -> player.openContainer instanceof ContainerReaderWriter && pos.equals(((ContainerReaderWriter) player.openContainer).getReaderWriter().getNetworkPosition()))
+            .filter(player -> player.openContainer instanceof ContainerReaderWriter &&
+                ((ContainerReaderWriter) player.openContainer).getReaderWriter().isConnected() &&
+                pos.equals(((ContainerReaderWriter) player.openContainer).getReaderWriter().getNetwork().getPosition()))
             .forEach(this::sendReaderWriterChannelUpdate);
     }
 

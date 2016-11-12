@@ -1,9 +1,10 @@
 package com.raoulvdberge.refinedstorage.tile;
 
+import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-import net.minecraft.util.math.BlockPos;
 
-public interface IReaderWriter {
+public interface IReaderWriter extends INetworkNode {
     String getTitle();
 
     String getChannel();
@@ -12,11 +13,23 @@ public interface IReaderWriter {
 
     TileDataParameter<String> getChannelParameter();
 
-    void onAdd(String name);
+    default void onAdd(String name) {
+        INetworkMaster network = getNetwork();
 
-    void onRemove(String name);
+        if (network != null && !name.isEmpty()) {
+            network.addReaderWriterChannel(name);
 
-    BlockPos getNetworkPosition();
+            network.sendReaderWriterChannelUpdate();
+        }
+    }
 
-    boolean isConnected();
+    default void onRemove(String name) {
+        INetworkMaster network = getNetwork();
+
+        if (network != null && !name.isEmpty()) {
+            network.removeReaderWriterChannel(name);
+
+            network.sendReaderWriterChannelUpdate();
+        }
+    }
 }

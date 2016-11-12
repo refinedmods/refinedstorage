@@ -1,12 +1,12 @@
 package com.raoulvdberge.refinedstorage.api.network.readerwriter;
 
-import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
+import com.raoulvdberge.refinedstorage.tile.IReaderWriter;
 import net.minecraft.util.EnumFacing;
 
 /**
  * Represents a writer block in the world.
  */
-public interface IWriter extends INetworkNode {
+public interface IWriter extends IReaderWriter {
     /**
      * @return the redstone strength this writer block is emitting
      */
@@ -21,9 +21,4 @@ public interface IWriter extends INetworkNode {
      * @return the direction of the writer
      */
     EnumFacing getDirection();
-
-    /**
-     * @return true if this writer has a stack upgrade, false otherwise
-     */
-    boolean hasStackUpgrade();
 }

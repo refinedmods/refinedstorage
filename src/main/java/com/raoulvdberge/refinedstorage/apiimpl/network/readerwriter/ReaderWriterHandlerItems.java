@@ -44,7 +44,7 @@ public class ReaderWriterHandlerItems implements IReaderWriterHandler {
                     continue;
                 }
 
-                ItemStack toInsert = ItemHandlerHelper.copyStackWithSize(slot, writer.hasStackUpgrade() ? 64 : 1);
+                ItemStack toInsert = ItemHandlerHelper.copyStackWithSize(slot, 1);
 
                 if (ItemHandlerHelper.insertItem(handler, toInsert, true) == null) {
                     ItemHandlerHelper.insertItem(handler, toInsert, false);
@@ -60,8 +60,8 @@ public class ReaderWriterHandlerItems implements IReaderWriterHandler {
     }
 
     @Override
-    public void onConnectionChange(boolean state) {
-
+    public void onWriterDisabled(IWriter writer) {
+        // NO OP
     }
 
     @Override

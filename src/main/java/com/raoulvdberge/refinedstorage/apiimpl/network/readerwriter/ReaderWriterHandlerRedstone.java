@@ -27,8 +27,8 @@ public class ReaderWriterHandlerRedstone implements IReaderWriterHandler {
     }
 
     @Override
-    public void onConnectionChange(boolean state) {
-        // @TODO: Destroy redstone strength
+    public void onWriterDisabled(IWriter writer) {
+        writer.setRedstoneStrength(0);
     }
 
     @Override

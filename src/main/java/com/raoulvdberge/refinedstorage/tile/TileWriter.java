@@ -1,14 +1,16 @@
 package com.raoulvdberge.refinedstorage.tile;
 
 import com.raoulvdberge.refinedstorage.RSBlocks;
+import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
+import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.EnumFacing;
 
-public class TileWriter extends TileNode implements IWriter, IReaderWriter {
+public class TileWriter extends TileNode implements IWriter {
     private static final String NBT_CHANNEL = "Channel";
 
     private static final TileDataParameter<String> CHANNEL = TileReader.createChannelParameter();
@@ -34,7 +36,7 @@ public class TileWriter extends TileNode implements IWriter, IReaderWriter {
         if (!worldObj.isRemote && getRedstoneStrength() != lastRedstoneStrength) {
             lastRedstoneStrength = getRedstoneStrength();
 
-            worldObj.notifyNeighborsOfStateChange(pos, RSBlocks.WRITER); // @TODO: Does this need to happen too on orientation change?
+            worldObj.notifyNeighborsOfStateChange(pos, RSBlocks.WRITER);
         }
     }
 
@@ -53,11 +55,6 @@ public class TileWriter extends TileNode implements IWriter, IReaderWriter {
     }
 
     @Override
-    public boolean hasStackUpgrade() {
-        return false; // @TODO
-    }
-
-    @Override
     public String getTitle() {
         return "gui.refinedstorage:writer";
     }
@@ -69,35 +66,22 @@ public class TileWriter extends TileNode implements IWriter, IReaderWriter {
 
     @Override
     public void setChannel(String channel) {
+        if (network != null && channel.equals("")) {
+            IReaderWriterChannel networkChannel = network.getReaderWriterChannel(this.channel);
+
+            if (networkChannel != null) {
+                for (IReaderWriterHandler handler : networkChannel.getHandlers()) {
+                    handler.onWriterDisabled(this);
+                }
+            }
+        }
+
         this.channel = channel;
     }
 
     @Override
     public TileDataParameter<String> getChannelParameter() {
         return CHANNEL;
-    }
-
-    @Override
-    public void onAdd(String name) {
-        if (network != null && !name.isEmpty()) {
-            network.addReaderWriterChannel(name);
-
-            network.sendReaderWriterChannelUpdate();
-        }
-    }
-
-    @Override
-    public void onRemove(String name) {
-        if (network != null && !name.isEmpty()) {
-            network.removeReaderWriterChannel(name);
-
-            network.sendReaderWriterChannelUpdate();
-        }
-    }
-
-    @Override
-    public BlockPos getNetworkPosition() {
-        return network != null ? network.getPosition() : null;
     }
 
     @Override
@@ -121,6 +105,13 @@ public class TileWriter extends TileNode implements IWriter, IReaderWriter {
         tag.setString(NBT_CHANNEL, channel);
 
         return tag;
+    }
+
+    @Override
+    public void setDirection(EnumFacing direction) {
+        super.setDirection(direction);
+
+        worldObj.notifyNeighborsOfStateChange(pos, RSBlocks.WRITER);
     }
 
     public void onOpened(EntityPlayer entity) {

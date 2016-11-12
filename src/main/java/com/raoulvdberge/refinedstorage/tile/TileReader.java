@@ -14,10 +14,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 
-public class TileReader extends TileNode implements IReader, IReaderWriter {
+public class TileReader extends TileNode implements IReader {
     private static final String NBT_CHANNEL = "Channel";
 
     static <T extends TileEntity & IReaderWriter> TileDataParameter<String> createChannelParameter() {
@@ -80,29 +79,6 @@ public class TileReader extends TileNode implements IReader, IReaderWriter {
     @Override
     public TileDataParameter<String> getChannelParameter() {
         return CHANNEL;
-    }
-
-    @Override
-    public void onAdd(String name) {
-        if (network != null && !name.isEmpty()) {
-            network.addReaderWriterChannel(name);
-
-            network.sendReaderWriterChannelUpdate();
-        }
-    }
-
-    @Override
-    public void onRemove(String name) {
-        if (network != null && !name.isEmpty()) {
-            network.removeReaderWriterChannel(name);
-
-            network.sendReaderWriterChannelUpdate();
-        }
-    }
-
-    @Override
-    public BlockPos getNetworkPosition() {
-        return network != null ? network.getPosition() : null;
     }
 
     @Override

@@ -15,11 +15,11 @@ public interface IReaderWriterHandler extends ICapabilityProvider {
     void update(IReaderWriterChannel channel);
 
     /**
-     * Called when the network connection state changes.
+     * Called when this handler is removed from a writer.
      *
-     * @param state the new connection state
+     * @param writer the writer
      */
-    void onConnectionChange(boolean state);
+    void onWriterDisabled(IWriter writer);
 
     /**
      * Writes this reader writer handler to NBT.
