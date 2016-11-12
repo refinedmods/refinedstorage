@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
 
 public class TileWriter extends TileNode implements IWriter {
     private static final String NBT_CHANNEL = "Channel";
@@ -105,6 +106,58 @@ public class TileWriter extends TileNode implements IWriter {
         tag.setString(NBT_CHANNEL, channel);
 
         return tag;
+    }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+        if (super.hasCapability(capability, facing)) {
+            return true;
+        }
+
+        if (facing != getDirection() || network == null) {
+            return false;
+        }
+
+        IReaderWriterChannel channel = network.getReaderWriterChannel(this.channel);
+
+        if (channel == null) {
+            return false;
+        }
+
+        for (IReaderWriterHandler handler : channel.getHandlers()) {
+            if (handler.hasCapability(this, capability)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+        T foundCapability = super.getCapability(capability, facing);
+
+        if (foundCapability == null) {
+            if (facing != getDirection() || network == null) {
+                return null;
+            }
+
+            IReaderWriterChannel channel = network.getReaderWriterChannel(this.channel);
+
+            if (channel == null) {
+                return null;
+            }
+
+            for (IReaderWriterHandler handler : channel.getHandlers()) {
+                foundCapability = handler.getCapability(this, capability);
+
+                if (foundCapability != null) {
+                    return foundCapability;
+                }
+            }
+        }
+
+        return foundCapability;
     }
 
     @Override

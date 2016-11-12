@@ -4,11 +4,9 @@ import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReader;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
+import com.raoulvdberge.refinedstorage.tile.IReaderWriter;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
-
-import javax.annotation.Nullable;
 
 public class ReaderWriterHandlerRedstone implements IReaderWriterHandler {
     public static final String ID = "redstone";
@@ -32,6 +30,16 @@ public class ReaderWriterHandlerRedstone implements IReaderWriterHandler {
     }
 
     @Override
+    public boolean hasCapability(IReaderWriter readerWriter, Capability<?> capability) {
+        return false;
+    }
+
+    @Override
+    public <T> T getCapability(IReaderWriter readerWriter, Capability<T> capability) {
+        return null;
+    }
+
+    @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         return tag;
     }
@@ -39,15 +47,5 @@ public class ReaderWriterHandlerRedstone implements IReaderWriterHandler {
     @Override
     public String getId() {
         return ID;
-    }
-
-    @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-        return false;
-    }
-
-    @Override
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        return null;
     }
 }

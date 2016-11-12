@@ -88,54 +88,54 @@ public class TileReader extends TileNode implements IReader {
 
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-        if (!super.hasCapability(capability, facing)) {
-            if (network == null) {
-                return false;
-            }
+        if (super.hasCapability(capability, facing)) {
+            return true;
+        }
 
-            IReaderWriterChannel foundChannel = network.getReaderWriterChannel(channel);
-
-            if (foundChannel == null) {
-                return false;
-            }
-
-            for (IReaderWriterHandler handler : foundChannel.getHandlers()) {
-                if (handler.hasCapability(capability, facing)) {
-                    return true;
-                }
-            }
-
+        if (facing != getDirection() || network == null) {
             return false;
         }
 
-        return true;
+        IReaderWriterChannel channel = network.getReaderWriterChannel(this.channel);
+
+        if (channel == null) {
+            return false;
+        }
+
+        for (IReaderWriterHandler handler : channel.getHandlers()) {
+            if (handler.hasCapability(this, capability)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-        T foundCap = super.getCapability(capability, facing);
+        T foundCapability = super.getCapability(capability, facing);
 
-        if (foundCap == null) {
-            if (network == null) {
+        if (foundCapability == null) {
+            if (facing != getDirection() || network == null) {
                 return null;
             }
 
-            IReaderWriterChannel foundChannel = network.getReaderWriterChannel(channel);
+            IReaderWriterChannel channel = network.getReaderWriterChannel(this.channel);
 
-            if (foundChannel == null) {
+            if (channel == null) {
                 return null;
             }
 
-            for (IReaderWriterHandler handler : foundChannel.getHandlers()) {
-                foundCap = handler.getCapability(capability, facing);
+            for (IReaderWriterHandler handler : channel.getHandlers()) {
+                foundCapability = handler.getCapability(this, capability);
 
-                if (foundCap != null) {
-                    return foundCap;
+                if (foundCapability != null) {
+                    return foundCapability;
                 }
             }
         }
 
-        return foundCap;
+        return foundCapability;
     }
 
     @Override
