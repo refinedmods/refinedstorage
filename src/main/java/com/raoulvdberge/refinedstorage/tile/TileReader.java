@@ -17,7 +17,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 
-public class TileReader extends TileNode implements IReader {
+public class TileReader extends TileMultipartNode implements IReader {
     private static final String NBT_CHANNEL = "Channel";
 
     static <T extends TileEntity & IReaderWriter> TileDataParameter<String> createChannelParameter() {

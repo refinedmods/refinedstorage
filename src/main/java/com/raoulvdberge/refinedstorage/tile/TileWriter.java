@@ -12,7 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 
-public class TileWriter extends TileNode implements IWriter {
+public class TileWriter extends TileMultipartNode implements IWriter {
     private static final String NBT_CHANNEL = "Channel";
 
     private static final TileDataParameter<String> CHANNEL = TileReader.createChannelParameter();
