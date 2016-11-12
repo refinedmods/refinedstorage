@@ -56,7 +56,6 @@ public class CraftingStepProcess extends CraftingStep {
 
     @Override
     public void execute(Deque<ItemStack> toInsertItems, Deque<FluidStack> toInsertFluids) {
-        // @TODO: fluid handling
         IItemHandler inventory = getPattern().getContainer().getFacingInventory();
         int compare = CraftingTask.DEFAULT_COMPARE | (getPattern().isOredict() ? IComparer.COMPARE_OREDICT : 0);
         for (ItemStack insertStack : getToInsert()) {

@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.tile.craftingmonitor;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
+import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.BlockPos;
@@ -26,6 +27,11 @@ public class TileCraftingMonitor extends TileNode implements ICraftingMonitor {
         if (isConnected()) {
             network.getItemGridHandler().onCraftingCancelRequested(player, id);
         }
+    }
+
+    @Override
+    public TileDataParameter<Integer> getRedstoneModeParameter() {
+        return REDSTONE_MODE;
     }
 
     @Override

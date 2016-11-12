@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.tile.craftingmonitor;
 
 import com.raoulvdberge.refinedstorage.item.ItemWirelessCraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.TileController;
+import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -25,6 +26,11 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
         if (controller != null) {
             controller.getItemGridHandler().onCraftingCancelRequested(player, id);
         }
+    }
+
+    @Override
+    public TileDataParameter<Integer> getRedstoneModeParameter() {
+        return null;
     }
 
     @Override

@@ -8,8 +8,6 @@ import com.raoulvdberge.refinedstorage.container.ContainerCraftingMonitor;
 import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.network.MessageCraftingMonitorCancel;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
-import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
-import com.raoulvdberge.refinedstorage.tile.craftingmonitor.WirelessCraftingMonitor;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -65,8 +63,8 @@ public class GuiCraftingMonitor extends GuiBase {
 
     @Override
     public void init(int x, int y) {
-        if (!(craftingMonitor instanceof WirelessCraftingMonitor)) {
-            addSideButton(new SideButtonRedstoneMode(this, TileCraftingMonitor.REDSTONE_MODE));
+        if (craftingMonitor.getRedstoneModeParameter() != null) {
+            addSideButton(new SideButtonRedstoneMode(this, craftingMonitor.getRedstoneModeParameter()));
         }
 
         String cancel = t("gui.cancel");
