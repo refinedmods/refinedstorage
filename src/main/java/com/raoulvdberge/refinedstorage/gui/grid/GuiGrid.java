@@ -9,7 +9,6 @@ import com.raoulvdberge.refinedstorage.block.EnumGridType;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.Scrollbar;
-import com.raoulvdberge.refinedstorage.gui.grid.filtering.GridFilterMod;
 import com.raoulvdberge.refinedstorage.gui.grid.filtering.GridFilterParser;
 import com.raoulvdberge.refinedstorage.gui.grid.filtering.IGridFilter;
 import com.raoulvdberge.refinedstorage.gui.grid.sorting.GridSortingName;
@@ -30,7 +29,6 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -120,7 +118,7 @@ public class GuiGrid extends GuiBase {
         }
 
         if (grid.getType() == EnumGridType.PATTERN) {
-            oredictPattern = addCheckBox(x + 64, y + 138, I18n.format("misc.refinedstorage:oredict"), TileGrid.OREDICT_PATTERN.getValue());
+            oredictPattern = addCheckBox(x + 64, y + 138, t("misc.refinedstorage:oredict"), TileGrid.OREDICT_PATTERN.getValue());
         }
 
         if (grid.getType() != EnumGridType.FLUID) {
@@ -151,28 +149,12 @@ public class GuiGrid extends GuiBase {
             while (t.hasNext()) {
                 IClientStack stack = t.next();
 
-                int accepts = 0;
-                IGridFilter previous = null;
-
                 for (IGridFilter filter : filters) {
                     if (!filter.accepts(stack)) {
-                        if (filter.isStrong() || previous instanceof GridFilterMod) {
-                            // avoid removing twice
-                            accepts = -1;
+                        t.remove();
 
-                            t.remove();
-
-                            break;
-                        }
-                    } else {
-                        accepts++;
+                        break;
                     }
-
-                    previous = filter;
-                }
-
-                if (accepts == 0) {
-                    t.remove();
                 }
             }
 

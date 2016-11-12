@@ -147,7 +147,6 @@ public class GuiReaderWriter extends GuiBase {
         }
     }
 
-
     @Override
     protected void keyTyped(char character, int keyCode) throws IOException {
         if (keyCode == Keyboard.KEY_DELETE) {
