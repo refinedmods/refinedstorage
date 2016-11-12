@@ -9,6 +9,7 @@ import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -149,7 +150,11 @@ public class GuiReaderWriter extends GuiBase {
 
     @Override
     protected void keyTyped(char character, int keyCode) throws IOException {
-        if (!checkHotbarKeys(keyCode) && name.textboxKeyTyped(character, keyCode)) {
+        if (keyCode == Keyboard.KEY_DELETE) {
+            sendRemove();
+        } else if (name.isFocused() && keyCode == Keyboard.KEY_RETURN) {
+            sendAdd();
+        } else if (!checkHotbarKeys(keyCode) && name.textboxKeyTyped(character, keyCode)) {
             // NO OP
         } else {
             super.keyTyped(character, keyCode);
@@ -160,14 +165,26 @@ public class GuiReaderWriter extends GuiBase {
     protected void actionPerformed(GuiButton button) throws IOException {
         super.actionPerformed(button);
 
+        if (button == add) {
+            sendAdd();
+        } else if (button == remove) {
+            sendRemove();
+        }
+    }
+
+    private void sendAdd() {
         String name = this.name.getText().trim();
 
         if (!name.isEmpty()) {
-            if (button == add) {
-                RS.INSTANCE.network.sendToServer(new MessageReaderWriterChannelAdd(name));
-            } else if (button == remove) {
-                RS.INSTANCE.network.sendToServer(new MessageReaderWriterChannelRemove(name));
-            }
+            RS.INSTANCE.network.sendToServer(new MessageReaderWriterChannelAdd(name));
+        }
+    }
+
+    private void sendRemove() {
+        String name = this.name.getText().trim();
+
+        if (!name.isEmpty()) {
+            RS.INSTANCE.network.sendToServer(new MessageReaderWriterChannelRemove(name));
         }
     }
 
