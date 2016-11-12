@@ -30,6 +30,10 @@ public class BlockReader extends BlockCable {
 
     @Override
     public boolean onBlockActivatedDefault(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+        if (hitCablePart(state, world, pos, hitX, hitY, hitZ)) {
+            return false;
+        }
+
         if (!world.isRemote) {
             player.openGui(RS.INSTANCE, RSGui.READER_WRITER, world, pos.getX(), pos.getY(), pos.getZ());
 

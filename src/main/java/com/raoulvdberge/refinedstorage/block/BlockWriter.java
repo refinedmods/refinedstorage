@@ -3,7 +3,6 @@ package com.raoulvdberge.refinedstorage.block;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSGui;
-import com.raoulvdberge.refinedstorage.tile.TileReader;
 import com.raoulvdberge.refinedstorage.tile.TileWriter;
 import mcmultipart.microblock.MicroblockContainer;
 import net.minecraft.block.state.IBlockState;
@@ -31,6 +30,10 @@ public class BlockWriter extends BlockCable {
 
     @Override
     public boolean onBlockActivatedDefault(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+        if (hitCablePart(state, world, pos, hitX, hitY, hitZ)) {
+            return false;
+        }
+
         if (!world.isRemote) {
             player.openGui(RS.INSTANCE, RSGui.READER_WRITER, world, pos.getX(), pos.getY(), pos.getZ());
 
