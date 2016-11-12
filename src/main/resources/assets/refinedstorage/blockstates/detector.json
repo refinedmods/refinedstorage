@@ -3,7 +3,10 @@
   "defaults": {
     "textures": {
       "particle": "refinedstorage:blocks/detector_top",
-      "torch": "refinedstorage:blocks/detector_side_off"
+      "torch": "refinedstorage:blocks/detector_side_off",
+      "side": "refinedstorage:blocks/detector_side_off",
+      "top": "refinedstorage:blocks/detector_top",
+      "bottom": "refinedstorage:blocks/detector_bottom"
     },
     "model": "refinedstorage:detector"
   },

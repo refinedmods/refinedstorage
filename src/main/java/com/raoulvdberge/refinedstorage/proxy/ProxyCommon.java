@@ -161,6 +161,8 @@ public class ProxyCommon {
         registerBlock(RSBlocks.EXTERNAL_STORAGE);
         registerBlock(RSBlocks.CONSTRUCTOR);
         registerBlock(RSBlocks.DESTRUCTOR);
+        registerBlock(RSBlocks.READER);
+        registerBlock(RSBlocks.WRITER);
         registerBlock(RSBlocks.DETECTOR);
         registerBlock(RSBlocks.RELAY);
         registerBlock(RSBlocks.INTERFACE);
@@ -170,8 +172,6 @@ public class ProxyCommon {
         registerBlock(RSBlocks.NETWORK_TRANSMITTER);
         registerBlock(RSBlocks.NETWORK_RECEIVER);
         registerBlock(RSBlocks.DISK_MANIPULATOR);
-        registerBlock(RSBlocks.READER);
-        registerBlock(RSBlocks.WRITER);
 
         registerItem(RSItems.QUARTZ_ENRICHED_IRON);
         registerItem(RSItems.STORAGE_DISK);

@@ -3,7 +3,13 @@
   "defaults": {
     "model": "refinedstorage:solderer",
     "textures": {
-      "particle": "refinedstorage:blocks/solderer_top"
+      "particle": "refinedstorage:blocks/solderer_top",
+      "side": "refinedstorage:blocks/solderer_side",
+      "top": "refinedstorage:blocks/solderer_top",
+      "bottom": "refinedstorage:blocks/solderer_bottom",
+      "middle": "refinedstorage:blocks/solderer_middle",
+      "roof": "refinedstorage:blocks/solderer_roof",
+      "elements": "refinedstorage:blocks/solderer_elements"
     },
     "uvlock": false
   },

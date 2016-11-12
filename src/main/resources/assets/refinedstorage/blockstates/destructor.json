@@ -2,10 +2,10 @@
   "forge_marker": 1,
   "defaults": {
     "textures": {
-      "all": "refinedstorage:blocks/cable_new",
-      "particle": "refinedstorage:blocks/cable_new",
+      "cable": "refinedstorage:blocks/cable",
+      "particle": "refinedstorage:blocks/cable",
       "front": "refinedstorage:blocks/destructor_disconnected",
-      "line": "refinedstorage:blocks/importer_exporter_external_storage"
+      "line": "refinedstorage:blocks/generic_grey"
     },
     "model": "refinedstorage:cable_core",
     "uvlock": true
@@ -13,7 +13,7 @@
   "variants": {
     "inventory": [
       {
-        "model": "refinedstorage:constructor_destructor",
+        "model": "refinedstorage:constructor_destructor_item",
         "transform": "forge:default-block"
       }
     ],
@@ -28,22 +28,27 @@
     },
     "direction": {
       "north": {
-        "submodel": "refinedstorage:constructor_destructor_north"
+        "submodel": "refinedstorage:constructor_destructor"
       },
       "east": {
-        "submodel": "refinedstorage:constructor_destructor_east"
+        "submodel": "refinedstorage:constructor_destructor",
+        "y": 90
       },
       "south": {
-        "submodel": "refinedstorage:constructor_destructor_south"
+        "submodel": "refinedstorage:constructor_destructor",
+        "x": 180
       },
       "west": {
-        "submodel": "refinedstorage:constructor_destructor_west"
+        "submodel": "refinedstorage:constructor_destructor",
+        "y": 270
       },
       "up": {
-        "submodel": "refinedstorage:constructor_destructor_up"
+        "submodel": "refinedstorage:constructor_destructor",
+        "x": 270
       },
       "down": {
-        "submodel": "refinedstorage:constructor_destructor_down"
+        "submodel": "refinedstorage:constructor_destructor",
+        "x": 90
       }
     },
     "north": {

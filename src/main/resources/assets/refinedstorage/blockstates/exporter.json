@@ -2,9 +2,9 @@
   "forge_marker": 1,
   "defaults": {
     "textures": {
-      "all": "refinedstorage:blocks/cable_new",
-      "particle": "refinedstorage:blocks/cable_new",
-      "line": "refinedstorage:blocks/importer_exporter_external_storage"
+      "cable": "refinedstorage:blocks/cable",
+      "particle": "refinedstorage:blocks/cable",
+      "line": "refinedstorage:blocks/generic_grey"
     },
     "model": "refinedstorage:cable_core",
     "uvlock": true
@@ -12,28 +12,33 @@
   "variants": {
     "inventory": [
       {
-        "model": "refinedstorage:exporter",
+        "model": "refinedstorage:exporter_item",
         "transform": "forge:default-block"
       }
     ],
     "direction": {
       "north": {
-        "submodel": "refinedstorage:exporter_north"
+        "submodel": "refinedstorage:exporter"
       },
       "east": {
-        "submodel": "refinedstorage:exporter_east"
+        "submodel": "refinedstorage:exporter",
+        "y": 90
       },
       "south": {
-        "submodel": "refinedstorage:exporter_south"
+        "submodel": "refinedstorage:exporter",
+        "x": 180
       },
       "west": {
-        "submodel": "refinedstorage:exporter_west"
+        "submodel": "refinedstorage:exporter",
+        "y": 270
       },
       "up": {
-        "submodel": "refinedstorage:exporter_up"
+        "submodel": "refinedstorage:exporter",
+        "x": 270
       },
       "down": {
-        "submodel": "refinedstorage:exporter_down"
+        "submodel": "refinedstorage:exporter",
+        "x": 90
       }
     },
     "north": {

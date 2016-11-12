@@ -1,8 +1,5 @@
 {
   "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
-  "textures": {
-    "0": "refinedstorage:blocks/cable_new"
-  },
   "elements": [
     {
       "name": "West",
@@ -18,7 +15,7 @@
       ],
       "faces": {
         "north": {
-          "texture": "#0",
+          "texture": "#cable",
           "uv": [
             10.0,
             6.0,
@@ -27,7 +24,7 @@
           ]
         },
         "east": {
-          "texture": "#0",
+          "texture": "#cable",
           "uv": [
             6.0,
             6.0,
@@ -36,7 +33,7 @@
           ]
         },
         "south": {
-          "texture": "#0",
+          "texture": "#cable",
           "uv": [
             0.0,
             6.0,
@@ -45,7 +42,7 @@
           ]
         },
         "west": {
-          "texture": "#0",
+          "texture": "#cable",
           "uv": [
             6.0,
             6.0,
@@ -54,7 +51,7 @@
           ]
         },
         "up": {
-          "texture": "#0",
+          "texture": "#cable",
           "uv": [
             10.0,
             6.0,
@@ -64,7 +61,7 @@
           "rotation": 90
         },
         "down": {
-          "texture": "#0",
+          "texture": "#cable",
           "uv": [
             10.0,
             10.0,
