@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.tile;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReader;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
@@ -49,7 +50,7 @@ public class TileReader extends TileNode implements IReader {
 
     @Override
     public int getEnergyUsage() {
-        return 0; // @TODO
+        return RS.INSTANCE.config.readerUsage;
     }
 
     @Override

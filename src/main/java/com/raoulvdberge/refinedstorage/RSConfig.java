@@ -44,6 +44,8 @@ public final class RSConfig {
     public float networkTransmitterPerBlockUsage;
     public int networkReceiverUsage;
     public int diskManipulatorUsage;
+    public int readerUsage;
+    public int writerUsage;
     public int euConversion;
     //endregion
 
@@ -141,6 +143,8 @@ public final class RSConfig {
         networkTransmitterPerBlockUsage = config.getFloat("networkTransmitterPerBlock", ENERGY, 4, 0, Float.MAX_VALUE, "The additional energy per block that the Network Transmitter uses, gets rounded up");
         networkReceiverUsage = config.getInt("networkReceiver", ENERGY, 15, 0, Integer.MAX_VALUE, "The energy used by Network Receivers");
         diskManipulatorUsage = config.getInt("diskManipulator", ENERGY, 3, 0, Integer.MAX_VALUE, "The energy used by Disk Manipulators");
+        readerUsage = config.getInt("reader", ENERGY, 2, 0, Integer.MAX_VALUE, "The energy used by Readers");
+        writerUsage = config.getInt("writer", ENERGY, 2, 0, Integer.MAX_VALUE, "The energy used by Writers");
         euConversion = config.getInt("euConversion", ENERGY, 8, 1, Integer.MAX_VALUE, "The amount of RS that equals 1 EU");
         //endregion
 
