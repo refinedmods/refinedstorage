@@ -572,11 +572,22 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public void addReaderWriterChannel(String name) {
         readerWriterChannels.put(name, API.instance().createReaderWriterChannel(name, this));
+
+        sendReaderWriterChannelUpdate();
     }
 
     @Override
     public void removeReaderWriterChannel(String name) {
-        readerWriterChannels.remove(name);
+        IReaderWriterChannel channel = getReaderWriterChannel(name);
+
+        if (channel != null) {
+            channel.getReaders().forEach(reader -> reader.setChannel(""));
+            channel.getWriters().forEach(writer -> writer.setChannel(""));
+
+            readerWriterChannels.remove(name);
+
+            sendReaderWriterChannelUpdate();
+        }
     }
 
     @Override

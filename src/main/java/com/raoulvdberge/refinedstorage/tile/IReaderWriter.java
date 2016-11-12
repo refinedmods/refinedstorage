@@ -18,8 +18,6 @@ public interface IReaderWriter extends INetworkNode {
 
         if (network != null && !name.isEmpty()) {
             network.addReaderWriterChannel(name);
-
-            network.sendReaderWriterChannelUpdate();
         }
     }
 
@@ -28,8 +26,6 @@ public interface IReaderWriter extends INetworkNode {
 
         if (network != null && !name.isEmpty()) {
             network.removeReaderWriterChannel(name);
-
-            network.sendReaderWriterChannelUpdate();
         }
     }
 }
