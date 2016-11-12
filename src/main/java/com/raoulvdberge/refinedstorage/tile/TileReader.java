@@ -55,6 +55,7 @@ public class TileReader extends TileNode implements IReader {
 
     @Override
     public void updateNode() {
+        // NO OP
     }
 
     @Override

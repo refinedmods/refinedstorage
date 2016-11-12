@@ -18,6 +18,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.item.ItemStorageNBT;
 import com.raoulvdberge.refinedstorage.block.*;
 import com.raoulvdberge.refinedstorage.gui.GuiHandler;
 import com.raoulvdberge.refinedstorage.integration.craftingtweaks.IntegrationCraftingTweaks;
+import com.raoulvdberge.refinedstorage.integration.forgeenergy.ReaderWriterHandlerForgeEnergy;
 import com.raoulvdberge.refinedstorage.item.*;
 import com.raoulvdberge.refinedstorage.network.*;
 import com.raoulvdberge.refinedstorage.tile.*;
@@ -79,6 +80,7 @@ public class ProxyCommon {
         API.instance().getReaderWriterHandlerRegistry().add(ReaderWriterHandlerItems.ID, ReaderWriterHandlerItems::new);
         API.instance().getReaderWriterHandlerRegistry().add(ReaderWriterHandlerFluids.ID, ReaderWriterHandlerFluids::new);
         API.instance().getReaderWriterHandlerRegistry().add(ReaderWriterHandlerRedstone.ID, tag -> new ReaderWriterHandlerRedstone());
+        API.instance().getReaderWriterHandlerRegistry().add(ReaderWriterHandlerForgeEnergy.ID, ReaderWriterHandlerForgeEnergy::new);
 
         int id = 0;
 
