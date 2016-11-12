@@ -1,0 +1,74 @@
+{
+  "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
+  "elements": [
+    {
+      "name": "North",
+      "from": [
+        6.0,
+        6.0,
+        0.0
+      ],
+      "to": [
+        10.0,
+        10.0,
+        6.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cable",
+          "uv": [
+            6.0,
+            6.0,
+            10.0,
+            10.0
+          ]
+        },
+        "east": {
+          "texture": "#cable",
+          "uv": [
+            10.0,
+            6.0,
+            16.0,
+            10.0
+          ]
+        },
+        "south": {
+          "texture": "#cable",
+          "uv": [
+            6.0,
+            6.0,
+            10.0,
+            10.0
+          ]
+        },
+        "west": {
+          "texture": "#cable",
+          "uv": [
+            0.0,
+            6.0,
+            6.0,
+            10.0
+          ]
+        },
+        "up": {
+          "texture": "#cable",
+          "uv": [
+            6.0,
+            0.0,
+            10.0,
+            6.0
+          ]
+        },
+        "down": {
+          "texture": "#cable",
+          "uv": [
+            6.0,
+            10.0,
+            10.0,
+            16.0
+          ]
+        }
+      }
+    }
+  ]
+}

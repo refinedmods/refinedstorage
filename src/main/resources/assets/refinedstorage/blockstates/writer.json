@@ -50,42 +50,47 @@
     },
     "north": {
       "true": {
-        "submodel": "refinedstorage:cable_north"
+        "submodel": "refinedstorage:cable_extension"
       },
       "false": {
       }
     },
     "east": {
       "true": {
-        "submodel": "refinedstorage:cable_east"
+        "submodel": "refinedstorage:cable_extension",
+        "y": 90
       },
       "false": {
       }
     },
     "south": {
       "true": {
-        "submodel": "refinedstorage:cable_south"
+        "submodel": "refinedstorage:cable_extension",
+        "x": 180
       },
       "false": {
       }
     },
     "west": {
       "true": {
-        "submodel": "refinedstorage:cable_west"
+        "submodel": "refinedstorage:cable_extension",
+        "y": 270
       },
       "false": {
       }
     },
     "up": {
       "true": {
-        "submodel": "refinedstorage:cable_up"
+        "submodel": "refinedstorage:cable_extension",
+        "x": 270
       },
       "false": {
       }
     },
     "down": {
       "true": {
-        "submodel": "refinedstorage:cable_down"
+        "submodel": "refinedstorage:cable_extension",
+        "x": 90
       },
       "false": {
       }
