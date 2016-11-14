@@ -219,6 +219,7 @@ public class CraftingTask implements ICraftingTask {
                 for (int i = 0; i < usedStacks.size(); i++) {
                     ItemStack input = usedStacks.get(i);
                     if (input != null) {
+                        // This will be a tool, like a hammer
                         if (input.isItemStackDamageable()) {
                             compare &= ~IComparer.COMPARE_DAMAGE;
                         } else {

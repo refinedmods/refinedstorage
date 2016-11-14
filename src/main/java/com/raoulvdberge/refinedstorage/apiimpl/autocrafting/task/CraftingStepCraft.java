@@ -105,6 +105,12 @@ public class CraftingStepCraft extends CraftingStep {
         for (int i = 0; i < toInsert.size(); i++) {
             ItemStack input = toInsert.get(i);
             if (input != null) {
+                // This will be a tool, like a hammer
+                if (input.isItemStackDamageable()) {
+                    compare &= ~IComparer.COMPARE_DAMAGE;
+                } else {
+                    compare |= IComparer.COMPARE_DAMAGE;
+                }
                 ItemStack actualInput = actualInputs.get(input, compare);
                 ItemStack taken = ItemHandlerHelper.copyStackWithSize(actualInput, input.stackSize);
                 took[i] = taken;
