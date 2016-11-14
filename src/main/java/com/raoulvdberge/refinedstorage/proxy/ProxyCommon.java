@@ -521,7 +521,7 @@ public class ProxyCommon {
         ));
 
         // Storage Housing
-        GameRegistry.addRecipe(new ShapedOreRecipe(ItemStorageNBT.createStackWithNBT(new ItemStack(RSItems.STORAGE_HOUSING)),
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RSItems.STORAGE_HOUSING),
             "GRG",
             "R R",
             "EEE",
