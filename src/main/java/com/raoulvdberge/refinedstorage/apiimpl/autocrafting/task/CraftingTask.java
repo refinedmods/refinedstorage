@@ -219,6 +219,11 @@ public class CraftingTask implements ICraftingTask {
                 for (int i = 0; i < usedStacks.size(); i++) {
                     ItemStack input = usedStacks.get(i);
                     if (input != null) {
+                        if (input.isItemStackDamageable()) {
+                            compare &= ~IComparer.COMPARE_DAMAGE;
+                        } else {
+                            compare |= IComparer.COMPARE_DAMAGE;
+                        }
                         ItemStack actualInput = actualInputs.get(input, compare);
                         ItemStack taken = ItemHandlerHelper.copyStackWithSize(actualInput, input.stackSize);
                         took[i] = taken;
