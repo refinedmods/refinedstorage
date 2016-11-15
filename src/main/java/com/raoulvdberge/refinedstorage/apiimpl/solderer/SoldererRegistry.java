@@ -9,6 +9,8 @@ import net.minecraftforge.items.IItemHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 public class SoldererRegistry implements ISoldererRegistry {
@@ -77,5 +79,33 @@ public class SoldererRegistry implements ISoldererRegistry {
                 return duration;
             }
         };
+    }
+
+    @Override
+    public List<ISoldererRecipe> removeRecipe(@Nonnull ItemStack result, ItemStack... rows) {
+        if (!(rows.length == 0 || rows.length == 3)) {
+            throw new IllegalArgumentException("Removing a recipe requires either no rows or 3 rows, got " + rows.length + " rows");
+        }
+        Iterator<ISoldererRecipe> itr = recipes.iterator();
+        List<ISoldererRecipe> removed = new LinkedList<>();
+        while (itr.hasNext()) {
+            ISoldererRecipe recipe = itr.next();
+            if (API.instance().getComparer().isEqualNoQuantity(result, recipe.getResult())) {
+                if (rows.length == 0 || compareRows(recipe, rows)) {
+                    itr.remove();
+                    removed.add(recipe);
+                }
+            }
+        }
+        return removed;
+    }
+
+    private boolean compareRows(ISoldererRecipe recipe, ItemStack[] rows) {
+        for (int i = 0; i < 3; ++i) {
+            if(!API.instance().getComparer().isEqualNoQuantity(recipe.getRow(i), rows[i])) {
+                return false;
+            }
+        }
+        return true;
     }
 }

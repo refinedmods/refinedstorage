@@ -42,4 +42,13 @@ public interface ISoldererRegistry {
      */
     @Nonnull
     ISoldererRecipe createSimpleRecipe(@Nonnull ItemStack result, int duration, ItemStack... rows);
+
+    /**
+     * Remove existing recipes from the solderer
+     *
+     * @param result the result
+     * @param rows none or the three rows that give the result
+     * @return a list of removed {@link ISoldererRecipe}s
+     */
+    List<ISoldererRecipe> removeRecipe(@Nonnull ItemStack result, ItemStack... rows);
 }
