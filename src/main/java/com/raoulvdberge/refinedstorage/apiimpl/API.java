@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl;
 
+import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.api.IRSAPI;
 import com.raoulvdberge.refinedstorage.api.RSAPIInject;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementList;
@@ -109,6 +110,10 @@ public class API implements IRSAPI {
     @Override
     public int getFluidStackHashCode(FluidStack stack) {
         return stack.getFluid().hashCode() * (stack.tag != null ? stack.tag.hashCode() : 1);
+    }
+
+    public void addConnectables(Class<?> classes) {
+        RSBlocks.CABLE.addConnectables(classes);
     }
 
     public static IRSAPI instance() {

@@ -89,4 +89,9 @@ public interface IRSAPI {
      * @return a hashcode for the given stack
      */
     int getFluidStackHashCode(FluidStack stack);
+
+    /**
+     * @param classes
+     */
+    void addConnectables(Class<?> classes);
 }

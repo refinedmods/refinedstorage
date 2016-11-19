@@ -30,9 +30,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class BlockCable extends BlockCoverable {
     protected static final PropertyDirection DIRECTION = PropertyDirection.create("direction");
@@ -57,6 +55,8 @@ public class BlockCable extends BlockCoverable {
     protected static final PropertyBool DOWN = PropertyBool.create("down");
     protected static final PropertyBool CONNECTED = PropertyBool.create("connected");
 
+    protected static final Set<Class<?>> connectableElements = new HashSet<>();
+
     private String name;
 
     public BlockCable(String name) {
@@ -67,6 +67,7 @@ public class BlockCable extends BlockCoverable {
         setHardness(0.6F);
         setRegistryName(RS.ID, name);
         setCreativeTab(RS.INSTANCE.tab);
+        addConnectables(INetworkMaster.class, INetworkNode.class);
     }
 
     public BlockCable() {
@@ -99,6 +100,10 @@ public class BlockCable extends BlockCoverable {
 
     public boolean hasConnectivityState() {
         return false;
+    }
+
+    public void addConnectables(Class<?>... classes) {
+        Collections.addAll(connectableElements, classes);
     }
 
     @Override
@@ -150,8 +155,8 @@ public class BlockCable extends BlockCoverable {
 
     private boolean hasConnectionWith(IBlockAccess world, BlockPos pos, EnumFacing direction) {
         TileEntity facing = world.getTileEntity(pos.offset(direction));
-
-        if (facing instanceof INetworkMaster || facing instanceof INetworkNode) {
+        boolean isConnectable = connectableElements.stream().anyMatch(clazz -> clazz.isInstance(facing));
+        if (isConnectable) {
             // Do not render a cable extension where our cable "head" is (e.g. importer, exporter, external storage heads).
             if (getPlacementType() != null && ((TileMultipartNode) world.getTileEntity(pos)).getFacingTile() == facing) {
                 return false;
