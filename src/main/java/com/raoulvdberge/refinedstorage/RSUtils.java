@@ -27,6 +27,7 @@ import net.minecraftforge.fluids.capability.wrappers.FluidHandlerWrapper;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import org.apache.commons.lang3.tuple.Pair;
@@ -101,7 +102,7 @@ public final class RSUtils {
         nbt.setTag(String.format(NBT_INVENTORY, id), tagList);
     }
 
-    public static void readItems(IItemHandler handler, int id, NBTTagCompound nbt) {
+    public static void readItems(IItemHandlerModifiable handler, int id, NBTTagCompound nbt) {
         String name = String.format(NBT_INVENTORY, id);
 
         if (nbt.hasKey(name)) {
@@ -113,7 +114,7 @@ public final class RSUtils {
                 ItemStack stack = ItemStack.loadItemStackFromNBT(tagList.getCompoundTagAt(i));
 
                 if (slot >= 0 && slot < handler.getSlots()) {
-                    handler.insertItem(slot, stack, false);
+                    handler.setStackInSlot(slot, stack);
                 }
             }
         }
