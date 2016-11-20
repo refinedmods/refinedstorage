@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.block;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.TileCable;
 import com.raoulvdberge.refinedstorage.tile.TileMultipartNode;
@@ -20,6 +21,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityDropper;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -31,6 +33,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 public class BlockCable extends BlockCoverable {
     protected static final PropertyDirection DIRECTION = PropertyDirection.create("direction");
@@ -55,8 +58,6 @@ public class BlockCable extends BlockCoverable {
     protected static final PropertyBool DOWN = PropertyBool.create("down");
     protected static final PropertyBool CONNECTED = PropertyBool.create("connected");
 
-    protected static final Set<Class<?>> connectableElements = new HashSet<>();
-
     private String name;
 
     public BlockCable(String name) {
@@ -67,7 +68,8 @@ public class BlockCable extends BlockCoverable {
         setHardness(0.6F);
         setRegistryName(RS.ID, name);
         setCreativeTab(RS.INSTANCE.tab);
-        addConnectables(INetworkMaster.class, INetworkNode.class);
+        API.instance().getConnectableConditions()
+                .add(tile -> tile instanceof INetworkMaster || tile instanceof INetworkNode);
     }
 
     public BlockCable() {
@@ -100,10 +102,6 @@ public class BlockCable extends BlockCoverable {
 
     public boolean hasConnectivityState() {
         return false;
-    }
-
-    public void addConnectables(Class<?>... classes) {
-        Collections.addAll(connectableElements, classes);
     }
 
     @Override
@@ -155,7 +153,8 @@ public class BlockCable extends BlockCoverable {
 
     private boolean hasConnectionWith(IBlockAccess world, BlockPos pos, EnumFacing direction) {
         TileEntity facing = world.getTileEntity(pos.offset(direction));
-        boolean isConnectable = connectableElements.stream().anyMatch(clazz -> clazz.isInstance(facing));
+
+        boolean isConnectable = API.instance().getConnectableConditions().stream().anyMatch(p -> p.test(facing));
         if (isConnectable) {
             // Do not render a cable extension where our cable "head" is (e.g. importer, exporter, external storage heads).
             if (getPlacementType() != null && ((TileMultipartNode) world.getTileEntity(pos)).getFacingTile() == facing) {
