@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.integration.jei;
 
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.container.ContainerSolderer;
+import com.raoulvdberge.refinedstorage.gui.GuiSolderer;
 import mezz.jei.api.BlankModPlugin;
 import mezz.jei.api.IJeiRuntime;
 import mezz.jei.api.IModRegistry;
@@ -31,6 +32,8 @@ public class RSJEIPlugin extends BlankModPlugin {
         registry.addRecipeCategoryCraftingItem(new ItemStack(RSBlocks.SOLDERER), RecipeCategorySolderer.ID);
 
         registry.addAdvancedGuiHandlers(new GuiHandlerGrid());
+
+        registry.addRecipeClickArea(GuiSolderer.class, 80, 36, 28, 19, RecipeCategorySolderer.ID);
     }
 
     @Override
