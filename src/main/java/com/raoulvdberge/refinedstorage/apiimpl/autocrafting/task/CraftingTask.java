@@ -163,6 +163,9 @@ public class CraftingTask implements ICraftingTask {
                         toCraft.add(inputStack);
                     }
                     toInsert.remove(inputStack, true);
+                    if (input.stackSize > 0) {
+                        extraStack = toInsert.get(input, compare);
+                    }
                 } else if (networkStack != null && networkStack.stackSize > 0) {
                     int takeQuantity = Math.min(networkStack.stackSize, input.stackSize);
                     ItemStack inputStack = ItemHandlerHelper.copyStackWithSize(networkStack, takeQuantity);
@@ -170,6 +173,9 @@ public class CraftingTask implements ICraftingTask {
                     actualInputs.add(inputStack.copy());
                     input.stackSize -= takeQuantity;
                     networkList.remove(inputStack, true);
+                    if (input.stackSize > 0) {
+                        networkStack = networkList.get(inputStack, compare);
+                    }
                 } else {
                     if (inputPattern == null) {
                         inputPattern = network.getPattern(input, compare);
