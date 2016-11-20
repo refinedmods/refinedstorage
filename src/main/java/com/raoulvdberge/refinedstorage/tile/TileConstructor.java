@@ -113,7 +113,7 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
             } else if (type == IType.FLUIDS) {
                 FluidStack stack = fluidFilters.getFluidStackInSlot(0);
 
-                if (stack != null && stack.getFluid().canBePlacedInWorld()) {
+                if (stack != null && stack.getFluid().canBePlacedInWorld() && stack.amount >= 1000) {
                     BlockPos front = pos.offset(getDirection());
 
                     Block block = stack.getFluid().getBlock();
