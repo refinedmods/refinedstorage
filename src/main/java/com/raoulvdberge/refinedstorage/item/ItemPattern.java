@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider;
+import com.raoulvdberge.refinedstorage.api.util.IItemStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPattern;
 import net.minecraft.client.gui.GuiScreen;
@@ -134,7 +135,7 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
             return null;
         }
 
-        ArrayList<ItemStack> outputs = new ArrayList<>();
+        IItemStackList outputs = API.instance().createItemStackList();
 
         NBTTagList outputsTag = pattern.getTagCompound().getTagList(NBT_OUTPUTS, Constants.NBT.TAG_COMPOUND);
 
@@ -146,7 +147,7 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
             }
         }
 
-        return outputs;
+        return new ArrayList<>(outputs.getStacks());
     }
 
     public static boolean isProcessing(ItemStack pattern) {

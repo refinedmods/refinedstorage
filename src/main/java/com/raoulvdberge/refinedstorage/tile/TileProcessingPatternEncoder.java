@@ -82,9 +82,7 @@ public class TileProcessingPatternEncoder extends TileBase {
             for (int i = 0; i < 18; ++i) {
                 if (configuration.getStackInSlot(i) != null) {
                     if (i >= 9) {
-                        for (int j = 0; j < configuration.getStackInSlot(i).stackSize; ++j) {
-                            ItemPattern.addOutput(pattern, ItemHandlerHelper.copyStackWithSize(configuration.getStackInSlot(i), 1));
-                        }
+                        ItemPattern.addOutput(pattern, configuration.getStackInSlot(i));
                     } else {
                         ItemPattern.setSlot(pattern, i, configuration.getStackInSlot(i));
                     }
