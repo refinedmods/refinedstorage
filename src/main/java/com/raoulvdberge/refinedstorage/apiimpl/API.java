@@ -24,12 +24,15 @@ import com.raoulvdberge.refinedstorage.apiimpl.util.Comparer;
 import com.raoulvdberge.refinedstorage.apiimpl.util.FluidStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.util.ItemStackList;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Predicate;
 
 public class API implements IRSAPI {
     private static final IRSAPI INSTANCE = new API();
@@ -40,6 +43,7 @@ public class API implements IRSAPI {
     private ICraftingMonitorElementRegistry craftingMonitorElementRegistry = new CraftingMonitorElementRegistry();
     private ICraftingPreviewElementRegistry craftingPreviewElementRegistry = new CraftingPreviewElementRegistry();
     private IReaderWriterHandlerRegistry readerWriterHandlerRegistry = new ReaderWriterHandlerRegistry();
+    private Set<Predicate<TileEntity>> connectableConditions = new HashSet<>();
 
     @Nonnull
     @Override
@@ -109,6 +113,11 @@ public class API implements IRSAPI {
     @Override
     public int getFluidStackHashCode(FluidStack stack) {
         return stack.getFluid().hashCode() * (stack.tag != null ? stack.tag.hashCode() : 1);
+    }
+
+    @Override
+    public Set<Predicate<TileEntity>> getConnectableConditions() {
+        return connectableConditions;
     }
 
     public static IRSAPI instance() {

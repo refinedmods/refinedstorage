@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
-import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.TileCable;
 import com.raoulvdberge.refinedstorage.tile.TileMultipartNode;
@@ -30,9 +30,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class BlockCable extends BlockCoverable {
     protected static final PropertyDirection DIRECTION = PropertyDirection.create("direction");
@@ -151,7 +149,8 @@ public class BlockCable extends BlockCoverable {
     private boolean hasConnectionWith(IBlockAccess world, BlockPos pos, EnumFacing direction) {
         TileEntity facing = world.getTileEntity(pos.offset(direction));
 
-        if (facing instanceof INetworkMaster || facing instanceof INetworkNode) {
+        boolean isConnectable = API.instance().getConnectableConditions().stream().anyMatch(p -> p.test(facing));
+        if (isConnectable) {
             // Do not render a cable extension where our cable "head" is (e.g. importer, exporter, external storage heads).
             if (getPlacementType() != null && ((TileMultipartNode) world.getTileEntity(pos)).getFacingTile() == facing) {
                 return false;

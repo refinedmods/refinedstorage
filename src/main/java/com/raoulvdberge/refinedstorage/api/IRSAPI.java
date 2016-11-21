@@ -12,9 +12,12 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IFluidStackList;
 import com.raoulvdberge.refinedstorage.api.util.IItemStackList;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
+import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * Represents a Refined Storage API implementation.
@@ -89,4 +92,9 @@ public interface IRSAPI {
      * @return a hashcode for the given stack
      */
     int getFluidStackHashCode(FluidStack stack);
+
+    /**
+     * @return a set with the predicates to check if a block is connectable
+     */
+    Set<Predicate<TileEntity>> getConnectableConditions();
 }
