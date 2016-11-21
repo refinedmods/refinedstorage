@@ -4,6 +4,8 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.RSUtils;
+import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.*;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementFluidStack;
@@ -83,6 +85,8 @@ public class ProxyCommon {
         API.instance().getReaderWriterHandlerRegistry().add(ReaderWriterHandlerFluids.ID, ReaderWriterHandlerFluids::new);
         API.instance().getReaderWriterHandlerRegistry().add(ReaderWriterHandlerRedstone.ID, tag -> new ReaderWriterHandlerRedstone());
         API.instance().getReaderWriterHandlerRegistry().add(ReaderWriterHandlerForgeEnergy.ID, ReaderWriterHandlerForgeEnergy::new);
+
+        API.instance().getConnectableConditions().add(tile -> tile instanceof INetworkMaster || tile instanceof INetworkNode);
 
         if (IntegrationTesla.isLoaded()) {
             API.instance().getReaderWriterHandlerRegistry().add(ReaderWriterHandlerTesla.ID, ReaderWriterHandlerTesla::new);

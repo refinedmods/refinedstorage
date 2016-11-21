@@ -2,7 +2,6 @@ package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
-import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.TileCable;
@@ -66,8 +65,6 @@ public class BlockCable extends BlockCoverable {
         setHardness(0.6F);
         setRegistryName(RS.ID, name);
         setCreativeTab(RS.INSTANCE.tab);
-        API.instance().getConnectableConditions()
-                .add(tile -> tile instanceof INetworkMaster || tile instanceof INetworkNode);
     }
 
     public BlockCable() {
