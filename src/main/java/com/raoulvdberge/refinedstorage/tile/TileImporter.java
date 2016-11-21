@@ -95,10 +95,14 @@ public class TileImporter extends TileMultipartNode implements IComparable, IFil
                 FluidStack stack = handler.drain(Fluid.BUCKET_VOLUME, false);
 
                 if (stack != null && IFilterable.canTakeFluids(fluidFilters, mode, compare, stack) && network.insertFluid(stack, stack.amount, true) == null) {
-                    FluidStack drained = handler.drain(Fluid.BUCKET_VOLUME * upgrades.getInteractStackSize(), true);
+                    FluidStack toDrain = handler.drain(Fluid.BUCKET_VOLUME * upgrades.getInteractStackSize(), false);
 
-                    if (drained != null) {
-                        network.insertFluid(drained, drained.amount, false);
+                    if (toDrain != null) {
+                        FluidStack remainder = network.insertFluid(toDrain, toDrain.amount, false);
+                        if (remainder != null) {
+                            toDrain.amount -= remainder.amount;
+                        }
+                        handler.drain(toDrain, true);
                     }
                 }
             }

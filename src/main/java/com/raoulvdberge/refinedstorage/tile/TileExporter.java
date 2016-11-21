@@ -90,10 +90,11 @@ public class TileExporter extends TileMultipartNode implements IComparable, ITyp
 
                                 FluidStack took = network.extractFluid(stack, toExtract, compare, true);
 
-                                if (took != null && (toExtract - handler.fill(took, false)) == 0) {
-                                    took = network.extractFluid(stack, toExtract, compare, false);
-
+                                if (took != null) {
+                                    int filled = handler.fill(took, false);
+                                    took = network.extractFluid(stack, filled, compare, false);
                                     handler.fill(took, true);
+                                    break;
                                 }
                             }
                         }
