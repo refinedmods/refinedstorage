@@ -61,7 +61,7 @@ public class CraftingPattern implements ICraftingPattern {
                     }
                     outputs.add(out);
 
-                    if (shapedOre || mekanism) {
+                    if ((isOredict() && shapedOre) || mekanism) {
                         Object[] inputs = new Object[0];
                         if (shapedOre) {
                             inputs = ((ShapedOreRecipe) recipe).getInput();
