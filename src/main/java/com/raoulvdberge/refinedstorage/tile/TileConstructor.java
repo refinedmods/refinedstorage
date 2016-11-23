@@ -33,7 +33,12 @@ import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.BlockSnapshot;
+import net.minecraftforge.common.util.FakePlayerFactory;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -152,11 +157,19 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
         BlockPos front = pos.offset(getDirection());
 
         if (worldObj.isAirBlock(front) && block.getBlock().canPlaceBlockAt(worldObj, front)) {
-            ItemStack took = network.extractItem(itemFilters.getStackInSlot(0), 1, compare, false);
+            ItemStack took = network.extractItem(itemFilters.getStackInSlot(0), 1, compare, true);
 
             if (took != null) {
                 @SuppressWarnings("deprecation")
                 IBlockState state = block.getBlock().getStateFromMeta(took.getMetadata());
+
+                BlockEvent.PlaceEvent e = new BlockEvent.PlaceEvent(new BlockSnapshot(worldObj, front, state), worldObj.getBlockState(pos), FakePlayerFactory.getMinecraft((WorldServer) worldObj), null);
+
+                if (MinecraftForge.EVENT_BUS.post(e)) {
+                    return;
+                }
+
+                network.extractItem(itemFilters.getStackInSlot(0), 1, compare, false);
 
                 worldObj.setBlockState(front, state, 1 | 2);
 
@@ -166,23 +179,30 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
 
                 if (block.getBlock() == Blocks.SKULL) {
                     worldObj.setBlockState(front, worldObj.getBlockState(front).withProperty(BlockSkull.FACING, getDirection()));
+
                     TileEntity tile = worldObj.getTileEntity(front);
+
                     if (tile instanceof TileEntitySkull) {
                         TileEntitySkull skullTile = (TileEntitySkull) tile;
+
                         if (item.getItemDamage() == 3) {
                             GameProfile playerInfo = null;
+
                             if (item.hasTagCompound()) {
-                                NBTTagCompound tagCompound = item.getTagCompound();
-                                if (tagCompound.hasKey("SkullOwner", 10)) {
-                                    playerInfo = NBTUtil.readGameProfileFromNBT(tagCompound.getCompoundTag("SkullOwner"));
-                                } else if (tagCompound.hasKey("SkullOwner", 8) && !tagCompound.getString("SkullOwner").isEmpty()) {
-                                    playerInfo = new GameProfile(null, tagCompound.getString("SkullOwner"));
+                                NBTTagCompound tag = item.getTagCompound();
+
+                                if (tag.hasKey("SkullOwner", 10)) {
+                                    playerInfo = NBTUtil.readGameProfileFromNBT(tag.getCompoundTag("SkullOwner"));
+                                } else if (tag.hasKey("SkullOwner", 8) && !tag.getString("SkullOwner").isEmpty()) {
+                                    playerInfo = new GameProfile(null, tag.getString("SkullOwner"));
                                 }
                             }
+
                             skullTile.setPlayerProfile(playerInfo);
                         } else {
                             skullTile.setType(item.getMetadata());
                         }
+
                         Blocks.SKULL.checkWitherSpawn(worldObj, front, skullTile);
                     }
 

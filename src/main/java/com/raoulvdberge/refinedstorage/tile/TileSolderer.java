@@ -47,7 +47,6 @@ public class TileSolderer extends TileNode {
     private ItemHandlerBasic items = new ItemHandlerBasic(3, this) {
         @Override
         public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-
             for (ISoldererRecipe recipe : API.instance().getSoldererRegistry().getRecipes()) {
                 if (API.instance().getComparer().isEqualNoQuantity(recipe.getRow(slot), stack) || API.instance().getComparer().isEqualOredict(recipe.getRow(slot), stack)) {
                     return super.insertItem(slot, stack, simulate);
