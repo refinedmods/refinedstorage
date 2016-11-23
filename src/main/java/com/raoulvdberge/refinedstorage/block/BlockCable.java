@@ -134,13 +134,14 @@ public class BlockCable extends BlockCoverable {
             .withProperty(DOWN, hasConnectionWith(world, pos, EnumFacing.DOWN));
 
         TileNode tile = (TileNode) world.getTileEntity(pos);
+        if (tile != null) {
+            if (getPlacementType() != null) {
+                state = state.withProperty(DIRECTION, tile.getDirection());
+            }
 
-        if (getPlacementType() != null) {
-            state = state.withProperty(DIRECTION, tile.getDirection());
-        }
-
-        if (hasConnectivityState()) {
-            state = state.withProperty(CONNECTED, tile.isConnected());
+            if (hasConnectivityState()) {
+                state = state.withProperty(CONNECTED, tile.isConnected());
+            }
         }
 
         return state;
@@ -152,7 +153,8 @@ public class BlockCable extends BlockCoverable {
         boolean isConnectable = API.instance().getConnectableConditions().stream().anyMatch(p -> p.test(facing));
         if (isConnectable) {
             // Do not render a cable extension where our cable "head" is (e.g. importer, exporter, external storage heads).
-            if (getPlacementType() != null && ((TileMultipartNode) world.getTileEntity(pos)).getFacingTile() == facing) {
+            TileMultipartNode multipartNode = ((TileMultipartNode) world.getTileEntity(pos));
+            if (getPlacementType() != null && multipartNode != null && multipartNode.getFacingTile() == facing) {
                 return false;
             }
 
