@@ -31,6 +31,7 @@ public class MessageGridItemDelta implements IMessage, IMessageHandler<MessageGr
     public void fromBytes(ByteBuf buf) {
         clientStack = new ClientStackItem(buf);
         delta = buf.readInt();
+        clientStack.getStack().stackSize = delta;
     }
 
     @Override
