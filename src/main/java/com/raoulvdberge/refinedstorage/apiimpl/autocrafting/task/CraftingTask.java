@@ -33,7 +33,6 @@ public class CraftingTask implements ICraftingTask {
     public static final String NBT_TO_TAKE_FLUIDS = "ToTakeFluids";
     public static final String NBT_TO_INSERT_ITEMS = "ToInsertItems";
     public static final String NBT_TO_INSERT_FLUIDS = "ToInsertFluids";
-    public static final String NBT_TOOK_FLUIDS = "TookFluids";
 
     private INetworkMaster network;
     @Nullable
@@ -49,7 +48,6 @@ public class CraftingTask implements ICraftingTask {
     private Deque<ItemStack> toInsertItems = new ArrayDeque<>();
     private Deque<FluidStack> toInsertFluids = new ArrayDeque<>();
     private IFluidStackList toTakeFluids = API.instance().createFluidStackList();
-    private IFluidStackList tookFluids = API.instance().createFluidStackList();
 
     public CraftingTask(INetworkMaster network, @Nullable ItemStack requested, ICraftingPattern pattern, int quantity) {
         this.network = network;
@@ -58,12 +56,11 @@ public class CraftingTask implements ICraftingTask {
         this.quantity = quantity;
     }
 
-    public CraftingTask(INetworkMaster network, @Nullable ItemStack requested, ICraftingPattern pattern, int quantity, List<ICraftingStep> steps, Deque<ItemStack> toInsertItems, IFluidStackList toTakeFluids, IFluidStackList tookFluids, Deque<FluidStack> toInsertFluids) {
+    public CraftingTask(INetworkMaster network, @Nullable ItemStack requested, ICraftingPattern pattern, int quantity, List<ICraftingStep> steps, Deque<ItemStack> toInsertItems, IFluidStackList toTakeFluids, Deque<FluidStack> toInsertFluids) {
         this(network, requested, pattern, quantity);
         this.steps = steps;
         this.toInsertItems = toInsertItems;
         this.toTakeFluids = toTakeFluids;
-        this.tookFluids = tookFluids;
         this.toInsertFluids = toInsertFluids;
     }
 
@@ -302,10 +299,6 @@ public class CraftingTask implements ICraftingTask {
             network.insertItem(stack, stack.stackSize, false);
         }
 
-        for (FluidStack stack : tookFluids.getStacks()) {
-            network.insertFluid(stack, stack.amount, false);
-        }
-
         network.markCraftingMonitorForUpdate();
     }
 
@@ -324,6 +317,7 @@ public class CraftingTask implements ICraftingTask {
     @Override
     public boolean update(Map<ICraftingPatternContainer, Integer> usedContainers) {
         IItemStackList oreDictPrepped = network.getItemStorageCache().getList().getOredicted();
+        IFluidStackList networkFluids = network.getFluidStorageCache().getList();
 
         if (!missing.isEmpty()) {
             for (ItemStack missing : this.missing.getStacks()) {
@@ -337,18 +331,6 @@ public class CraftingTask implements ICraftingTask {
             return false;
         }
 
-
-        for (FluidStack stack : toTakeFluids.getStacks()) {
-            FluidStack stackExtracted = network.extractFluid(stack, stack.amount, false);
-            if (stackExtracted != null) {
-                toTakeFluids.remove(stack, stack.amount, false);
-                tookFluids.add(stackExtracted);
-                network.markCraftingMonitorForUpdate();
-            }
-        }
-
-        toTakeFluids.clean();
-
         for (ICraftingStep step : steps) {
             ICraftingPatternContainer container = step.getPattern().getContainer();
             Integer timesUsed = usedContainers.get(container);
@@ -358,7 +340,7 @@ public class CraftingTask implements ICraftingTask {
             }
 
             if (timesUsed++ <= container.getSpeedUpdateCount()) {
-                if (!step.hasStartedProcessing() && step.canStartProcessing(oreDictPrepped, tookFluids)) {
+                if (!step.hasStartedProcessing() && step.canStartProcessing(oreDictPrepped, networkFluids)) {
                     step.setStartedProcessing();
                     step.execute(toInsertItems, toInsertFluids);
                     usedContainers.put(container, timesUsed);
@@ -451,8 +433,6 @@ public class CraftingTask implements ICraftingTask {
 
         tag.setTag(NBT_TO_INSERT_FLUIDS, toInsertFluidsList);
 
-        tag.setTag(NBT_TOOK_FLUIDS, RSUtils.serializeFluidStackList(tookFluids));
-
         return tag;
     }
 
@@ -502,6 +482,7 @@ public class CraftingTask implements ICraftingTask {
                 elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_crafting", 16));
 
                 IItemStackList oreDictPrepped = network.getItemStorageCache().getList().getOredicted();
+                IFluidStackList networkFluids = network.getFluidStorageCache().getList();
 
                 for (ICraftingStep step : steps.stream().filter(s -> !s.getPattern().isProcessing()).collect(Collectors.toList())) {
                     for (int i = 0; i < step.getPattern().getOutputs().size(); ++i) {
@@ -512,7 +493,7 @@ public class CraftingTask implements ICraftingTask {
                             32
                         );
 
-                        if (!step.hasStartedProcessing() && !step.canStartProcessing(oreDictPrepped, tookFluids)) {
+                        if (!step.hasStartedProcessing() && !step.canStartProcessing(oreDictPrepped, networkFluids)) {
                             element = new CraftingMonitorElementInfo(element, "gui.refinedstorage:crafting_monitor.waiting_for_items");
                         }
 
@@ -544,19 +525,6 @@ public class CraftingTask implements ICraftingTask {
                         elements.add(element);
                     }
                 }
-
-                elements.commit();
-            }
-
-            if (!toTakeFluids.isEmpty()) {
-                elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.fluids_taking", 16));
-
-                toTakeFluids.getStacks().stream()
-                    .map(stack -> new CraftingMonitorElementFluidRender(
-                        -1,
-                        stack,
-                        32
-                    )).forEach(elements::add);
 
                 elements.commit();
             }

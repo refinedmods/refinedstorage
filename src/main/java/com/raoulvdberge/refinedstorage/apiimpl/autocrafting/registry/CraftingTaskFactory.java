@@ -69,7 +69,6 @@ public class CraftingTaskFactory implements ICraftingTaskFactory {
             }
 
             IFluidStackList toTakeFluids = RSUtils.readFluidStackList(tag.getTagList(CraftingTask.NBT_TO_TAKE_FLUIDS, Constants.NBT.TAG_COMPOUND));
-            IFluidStackList tookFluids = RSUtils.readFluidStackList(tag.getTagList(CraftingTask.NBT_TOOK_FLUIDS, Constants.NBT.TAG_COMPOUND));
 
             NBTTagList toInsertFluidsList = tag.getTagList(CraftingTask.NBT_TO_INSERT_FLUIDS, Constants.NBT.TAG_COMPOUND);
 
@@ -83,7 +82,7 @@ public class CraftingTaskFactory implements ICraftingTaskFactory {
                 }
             }
 
-            return new CraftingTask(network, stack, pattern, quantity, steps, toInsert, toTakeFluids, tookFluids, toInsertFluids);
+            return new CraftingTask(network, stack, pattern, quantity, steps, toInsert, toTakeFluids, toInsertFluids);
         }
 
         return new CraftingTask(network, stack, pattern, quantity);
