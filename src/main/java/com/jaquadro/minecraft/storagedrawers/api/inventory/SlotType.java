@@ -9,7 +9,9 @@ public enum SlotType {
      */
     INPUT,
 
-    /** An inventory slot for output-only operations; stack sizes artificially held high. */
+    /**
+     * An inventory slot for output-only operations; stack sizes artificially held high.
+     */
     OUTPUT;
 
     public static final SlotType[] values = values();

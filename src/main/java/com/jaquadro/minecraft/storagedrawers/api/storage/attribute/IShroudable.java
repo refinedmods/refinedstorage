@@ -9,6 +9,7 @@ public interface IShroudable {
 
     /**
      * Sets whether or not the drawer is currently shrouded.
+     *
      * @return false if the operation is not supported, true otherwise.
      */
     boolean setIsShrouded(boolean state);

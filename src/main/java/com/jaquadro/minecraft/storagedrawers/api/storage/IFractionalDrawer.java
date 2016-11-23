@@ -7,7 +7,7 @@ package com.jaquadro.minecraft.storagedrawers.api.storage;
 public interface IFractionalDrawer extends IDrawer {
     /**
      * Gets the storage ratio between the held item and the most compressed item within the drawer group.
-     *
+     * <p>
      * For example, most ingots have a conversion rate of 9 compared to metal blocks, and nuggets a rate of 81.
      * Actual conversion rates are implementation-defined.
      */

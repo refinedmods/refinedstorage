@@ -9,6 +9,7 @@ public interface ISealable {
 
     /**
      * Sets whether or not the drawer is currently sealed.
+     *
      * @return false if the operation is not supported, true otherwise.
      */
     boolean setIsSealed(boolean state);
