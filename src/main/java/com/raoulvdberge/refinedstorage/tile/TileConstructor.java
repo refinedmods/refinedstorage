@@ -21,7 +21,9 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
 import net.minecraft.dispenser.PositionImpl;
+import net.minecraft.entity.item.EntityFireworkRocket;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
@@ -108,7 +110,15 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
                         placeBlock();
                     }
                 } else if (item != null) {
-                    dropItem();
+                    if (item.getItem() == Items.FIREWORKS && !drop) {
+                        ItemStack took = network.extractItem(item, 1, false);
+
+                        if (took != null) {
+                            worldObj.spawnEntityInWorld(new EntityFireworkRocket(worldObj, getDispensePositionX(), getDispensePositionY(), getDispensePositionZ(), took));
+                        }
+                    } else {
+                        dropItem();
+                    }
                 }
             } else if (type == IType.FLUIDS) {
                 FluidStack stack = fluidFilters.getFluidStackInSlot(0);
@@ -189,13 +199,23 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
         ItemStack took = network.extractItem(item, 1, false);
 
         if (took != null) {
-            // From BlockDispenser#getDispensePosition
-            double x = (double) pos.getX() + 0.5D + 0.8D * (double) getDirection().getFrontOffsetX();
-            double y = (double) pos.getY() + (getDirection() == EnumFacing.DOWN ? 0.45D : 0.5D) + 0.8D * (double) getDirection().getFrontOffsetY();
-            double z = (double) pos.getZ() + 0.5D + 0.8D * (double) getDirection().getFrontOffsetZ();
-
-            BehaviorDefaultDispenseItem.doDispense(worldObj, took, 6, getDirection(), new PositionImpl(x, y, z));
+            BehaviorDefaultDispenseItem.doDispense(worldObj, took, 6, getDirection(), new PositionImpl(getDispensePositionX(), getDispensePositionY(), getDispensePositionZ()));
         }
+    }
+
+    // From BlockDispenser#getDispensePosition
+    private double getDispensePositionX() {
+        return (double) pos.getX() + 0.5D + 0.8D * (double) getDirection().getFrontOffsetX();
+    }
+
+    // From BlockDispenser#getDispensePosition
+    private double getDispensePositionY() {
+        return (double) pos.getY() + (getDirection() == EnumFacing.DOWN ? 0.45D : 0.5D) + 0.8D * (double) getDirection().getFrontOffsetY();
+    }
+
+    // From BlockDispenser#getDispensePosition
+    private double getDispensePositionZ() {
+        return (double) pos.getZ() + 0.5D + 0.8D * (double) getDirection().getFrontOffsetZ();
     }
 
     @Override
