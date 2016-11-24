@@ -12,6 +12,7 @@
 - Fixed inserting new stack type with right click in Grid causing a desync (raoulvdberge)
 - Fixed Constructor not calling block place event (raoulvdberge)
 - Fixed shift clicking non disk items in the Disk Manipulator voiding them (way2muchnoise)
+- Updated Forge to 2151 (way2muchnoise)
 
 ### 1.2.4
 - Added tooltip search with # (raoulvdberge)
