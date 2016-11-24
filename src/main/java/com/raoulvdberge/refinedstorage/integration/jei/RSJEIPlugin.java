@@ -33,7 +33,7 @@ public class RSJEIPlugin extends BlankModPlugin {
 
         registry.addAdvancedGuiHandlers(new GuiHandlerGrid());
 
-        registry.addRecipeClickArea(GuiSolderer.class, 80, 36, 28, 19, RecipeCategorySolderer.ID);
+        registry.addRecipeClickArea(GuiSolderer.class, 80, 36, 22, 15, RecipeCategorySolderer.ID);
     }
 
     @Override

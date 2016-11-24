@@ -34,8 +34,8 @@ public class GuiSolderer extends GuiBase {
         drawString(7, 7, t("gui.refinedstorage:solderer"));
         drawString(7, 77, t("container.inventory"));
 
-        if (inBounds(83, 38, 22, 15, mouseX, mouseY) && TileSolderer.WORKING.getValue()) {
-            drawTooltip(mouseX, mouseY, getProgressScaled(100) + "%");
+        if (TileSolderer.WORKING.getValue()) {
+            drawString(86, 59, getProgressScaled(100) + "%");
         }
     }
 
