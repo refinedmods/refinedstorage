@@ -51,6 +51,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProxyCommon {
+    protected static final boolean READER_WRITER_ENABLED = true;
+
     protected List<BlockCable> cableTypes = new ArrayList<>();
 
     public void preInit(FMLPreInitializationEvent e) {
@@ -147,8 +149,11 @@ public class ProxyCommon {
         registerTile(TileFluidInterface.class, "fluid_interface");
         registerTile(TileFluidStorage.class, "fluid_storage");
         registerTile(TileDiskManipulator.class, "disk_manipulator");
-        registerTile(TileReader.class, "reader");
-        registerTile(TileWriter.class, "writer");
+
+        if (READER_WRITER_ENABLED) {
+            registerTile(TileReader.class, "reader");
+            registerTile(TileWriter.class, "writer");
+        }
 
         registerBlock(RSBlocks.CONTROLLER);
         registerBlock(RSBlocks.GRID);
@@ -165,8 +170,12 @@ public class ProxyCommon {
         registerBlock(RSBlocks.EXTERNAL_STORAGE);
         registerBlock(RSBlocks.CONSTRUCTOR);
         registerBlock(RSBlocks.DESTRUCTOR);
-        registerBlock(RSBlocks.READER);
-        registerBlock(RSBlocks.WRITER);
+
+        if (READER_WRITER_ENABLED) {
+            registerBlock(RSBlocks.READER);
+            registerBlock(RSBlocks.WRITER);
+        }
+
         registerBlock(RSBlocks.DETECTOR);
         registerBlock(RSBlocks.RELAY);
         registerBlock(RSBlocks.INTERFACE);
