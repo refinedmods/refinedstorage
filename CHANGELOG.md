@@ -1,5 +1,18 @@
 # Refined Storage Changelog
 
+### 1.2.5
+- The Constructor can now place fireworks (raoulvdberge)
+- Added "View Recipes" JEI toggle in Solderer (way2muchnoise)
+- Fixed a bunch of autocrafting bugs (way2muchnoise)
+- Fixed Grid search not working correctly (raoulvdberge)
+- Fixed items disappearing from Solderer inventory (way2muchnoise)
+- Fixed being able to take fluids that have less than 1000 millibuckets filled in Fluid Grid (way2muchnoise)
+- Fixed Constructor being able to place fluids that have less than 1000 millibuckets (way2muchnoise)
+- Fixed Exporter and Importer not working properly with fluids (way2muchnoise)
+- Fixed inserting new stack type with right click in Grid causing a desync (raoulvdberge)
+- Fixed Constructor not calling block place event (raoulvdberge)
+- Fixed shift clicking non disk items in the Disk Manipulator voiding them (way2muchnoise)
+
 ### 1.2.4
 - Added tooltip search with # (raoulvdberge)
 - Mod search can now also take mod name instead of just id (raoulvdberge)
