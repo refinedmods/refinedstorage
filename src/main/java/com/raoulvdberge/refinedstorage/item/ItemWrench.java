@@ -96,7 +96,7 @@ public class ItemWrench extends ItemBase {
 
                         tile.markDirty();
 
-                        player.addChatComponentMessage(new TextComponentTranslation("item.refinedstorage:wrench.read"));
+                        player.sendMessage(new TextComponentTranslation("item.refinedstorage:wrench.read"));
                     } else {
                         canWrite = true;
                     }
@@ -108,7 +108,7 @@ public class ItemWrench extends ItemBase {
                     stack.getTagCompound().setString(NBT_WRENCHED_TILE, wrenchable.getClass().getName());
                     stack.getTagCompound().setTag(NBT_WRENCHED_DATA, wrenchable.writeConfiguration(new NBTTagCompound()));
 
-                    player.addChatComponentMessage(new TextComponentTranslation("item.refinedstorage:wrench.saved"));
+                    player.sendMessage(new TextComponentTranslation("item.refinedstorage:wrench.saved"));
                 }
 
                 return EnumActionResult.SUCCESS;
@@ -129,7 +129,7 @@ public class ItemWrench extends ItemBase {
 
             next.writeToNBT(stack.getTagCompound());
 
-            player.addChatComponentMessage(new TextComponentTranslation(
+            player.sendMessage(new TextComponentTranslation(
                 "item.refinedstorage:wrench.mode",
                 new TextComponentTranslation("item.refinedstorage:wrench.mode." + next.id).setStyle(new Style().setColor(TextFormatting.YELLOW))
             ));

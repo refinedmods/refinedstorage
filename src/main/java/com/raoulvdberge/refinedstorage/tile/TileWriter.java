@@ -35,10 +35,10 @@ public class TileWriter extends TileMultipartNode implements IWriter {
     public void update() {
         super.update();
 
-        if (!worldObj.isRemote && getRedstoneStrength() != lastRedstoneStrength) {
+        if (!getWorld().isRemote && getRedstoneStrength() != lastRedstoneStrength) {
             lastRedstoneStrength = getRedstoneStrength();
 
-            worldObj.notifyNeighborsOfStateChange(pos, RSBlocks.WRITER);
+            getWorld().notifyNeighborsOfStateChange(pos, RSBlocks.WRITER);
         }
     }
 
@@ -166,7 +166,7 @@ public class TileWriter extends TileMultipartNode implements IWriter {
     public void setDirection(EnumFacing direction) {
         super.setDirection(direction);
 
-        worldObj.notifyNeighborsOfStateChange(pos, RSBlocks.WRITER);
+        getWorld().notifyNeighborsOfStateChange(pos, RSBlocks.WRITER);
     }
 
     public void onOpened(EntityPlayer entity) {

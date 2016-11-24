@@ -35,7 +35,7 @@ public class NetworkItemWirelessGrid implements INetworkItem {
             return false;
         }
 
-        player.openGui(RS.INSTANCE, RSGui.WIRELESS_GRID, player.worldObj, hand.ordinal(), controllerWorld.provider.getDimension(), 0);
+        player.openGui(RS.INSTANCE, RSGui.WIRELESS_GRID, player.getEntityWorld(), hand.ordinal(), controllerWorld.provider.getDimension(), 0);
 
         network.sendItemStorageToClient((EntityPlayerMP) player);
 

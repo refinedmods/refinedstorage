@@ -55,7 +55,7 @@ public final class RSSerializers {
                 buf.writeBoolean(true);
                 ByteBufUtils.writeUTF8String(buf, FluidRegistry.getFluidName(value));
                 buf.writeInt(value.amount);
-                buf.writeNBTTagCompoundToBuffer(value.tag);
+                buf.writeCompoundTag(value.tag);
             }
         }
 
@@ -63,7 +63,7 @@ public final class RSSerializers {
         public FluidStack read(PacketBuffer buf) {
             try {
                 if (buf.readBoolean()) {
-                    return new FluidStack(FluidRegistry.getFluid(ByteBufUtils.readUTF8String(buf)), buf.readInt(), buf.readNBTTagCompoundFromBuffer());
+                    return new FluidStack(FluidRegistry.getFluid(ByteBufUtils.readUTF8String(buf)), buf.readInt(), buf.readCompoundTag());
                 }
             } catch (IOException e) {
                 // NO OP

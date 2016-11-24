@@ -109,7 +109,7 @@ public abstract class GuiBase extends GuiContainer {
                 FluidStack stack = ((ItemHandlerFluid) ((SlotItemHandler) slot).getItemHandler()).getFluidStackInSlot(slot.getSlotIndex());
 
                 if (stack != null) {
-                    FLUID_RENDERER.draw(mc, guiLeft + slot.xDisplayPosition, guiTop + slot.yDisplayPosition, stack);
+                    FLUID_RENDERER.draw(mc, guiLeft + slot.xPos, guiTop + slot.yPos, stack);
                 }
             }
         }

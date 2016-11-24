@@ -156,7 +156,7 @@ public class TileDetector extends TileNode implements IComparable, IType {
         if (powered != wasPowered) {
             wasPowered = powered;
 
-            worldObj.notifyNeighborsOfStateChange(pos, RSBlocks.DETECTOR);
+            getWorld().notifyNeighborsOfStateChange(pos, RSBlocks.DETECTOR);
 
             updateBlock();
         }
@@ -278,7 +278,7 @@ public class TileDetector extends TileNode implements IComparable, IType {
 
     @Override
     public int getType() {
-        return worldObj.isRemote ? TYPE.getValue() : type;
+        return getWorld().isRemote ? TYPE.getValue() : type;
     }
 
     @Override

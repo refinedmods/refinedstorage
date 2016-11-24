@@ -73,7 +73,7 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
             super.onContentsChanged(slot);
 
             item = getStackInSlot(slot) == null ? null : getStackInSlot(slot).copy();
-            block = SlotSpecimen.getBlockState(worldObj, pos.offset(getDirection()), getStackInSlot(slot));
+            block = SlotSpecimen.getBlockState(getWorld(), pos.offset(getDirection()), getStackInSlot(slot));
         }
     };
 
@@ -119,7 +119,7 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
                         ItemStack took = network.extractItem(item, 1, false);
 
                         if (took != null) {
-                            worldObj.spawnEntityInWorld(new EntityFireworkRocket(worldObj, getDispensePositionX(), getDispensePositionY(), getDispensePositionZ(), took));
+                            getWorld().spawnEntity(new EntityFireworkRocket(getWorld(), getDispensePositionX(), getDispensePositionY(), getDispensePositionZ(), took));
                         }
                     } else {
                         dropItem();
@@ -133,7 +133,7 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
 
                     Block block = stack.getFluid().getBlock();
 
-                    if (worldObj.isAirBlock(front) && block.canPlaceBlockAt(worldObj, front)) {
+                    if (getWorld().isAirBlock(front) && block.canPlaceBlockAt(getWorld(), front)) {
                         FluidStack took = network.extractFluid(stack, Fluid.BUCKET_VOLUME, compare, false);
 
                         if (took != null) {
@@ -145,7 +145,7 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
                                 state = Blocks.FLOWING_LAVA.getDefaultState();
                             }
 
-                            worldObj.setBlockState(front, state, 1 | 2);
+                            getWorld().setBlockState(front, state, 1 | 2);
                         }
                     }
                 }
@@ -156,14 +156,14 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
     private void placeBlock() {
         BlockPos front = pos.offset(getDirection());
 
-        if (worldObj.isAirBlock(front) && block.getBlock().canPlaceBlockAt(worldObj, front)) {
+        if (getWorld().isAirBlock(front) && block.getBlock().canPlaceBlockAt(getWorld(), front)) {
             ItemStack took = network.extractItem(itemFilters.getStackInSlot(0), 1, compare, true);
 
             if (took != null) {
                 @SuppressWarnings("deprecation")
                 IBlockState state = block.getBlock().getStateFromMeta(took.getMetadata());
 
-                BlockEvent.PlaceEvent e = new BlockEvent.PlaceEvent(new BlockSnapshot(worldObj, front, state), worldObj.getBlockState(pos), FakePlayerFactory.getMinecraft((WorldServer) worldObj), null);
+                BlockEvent.PlaceEvent e = new BlockEvent.PlaceEvent(new BlockSnapshot(getWorld(), front, state), getWorld().getBlockState(pos), FakePlayerFactory.getMinecraft((WorldServer) getWorld()), null);
 
                 if (MinecraftForge.EVENT_BUS.post(e)) {
                     return;
@@ -171,16 +171,16 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
 
                 network.extractItem(itemFilters.getStackInSlot(0), 1, compare, false);
 
-                worldObj.setBlockState(front, state, 1 | 2);
+                getWorld().setBlockState(front, state, 1 | 2);
 
                 // From ItemBlock#onItemUse
-                SoundType blockSound = block.getBlock().getSoundType(state, worldObj, pos, null);
-                worldObj.playSound(null, front, blockSound.getPlaceSound(), SoundCategory.BLOCKS, (blockSound.getVolume() + 1.0F) / 2.0F, blockSound.getPitch() * 0.8F);
+                SoundType blockSound = block.getBlock().getSoundType(state, getWorld(), pos, null);
+                getWorld().playSound(null, front, blockSound.getPlaceSound(), SoundCategory.BLOCKS, (blockSound.getVolume() + 1.0F) / 2.0F, blockSound.getPitch() * 0.8F);
 
                 if (block.getBlock() == Blocks.SKULL) {
-                    worldObj.setBlockState(front, worldObj.getBlockState(front).withProperty(BlockSkull.FACING, getDirection()));
+                    getWorld().setBlockState(front, getWorld().getBlockState(front).withProperty(BlockSkull.FACING, getDirection()));
 
-                    TileEntity tile = worldObj.getTileEntity(front);
+                    TileEntity tile = getWorld().getTileEntity(front);
 
                     if (tile instanceof TileEntitySkull) {
                         TileEntitySkull skullTile = (TileEntitySkull) tile;
@@ -203,7 +203,7 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
                             skullTile.setType(item.getMetadata());
                         }
 
-                        Blocks.SKULL.checkWitherSpawn(worldObj, front, skullTile);
+                        Blocks.SKULL.checkWitherSpawn(getWorld(), front, skullTile);
                     }
 
                 }
@@ -219,7 +219,7 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
         ItemStack took = network.extractItem(item, 1, false);
 
         if (took != null) {
-            BehaviorDefaultDispenseItem.doDispense(worldObj, took, 6, getDirection(), new PositionImpl(getDispensePositionX(), getDispensePositionY(), getDispensePositionZ()));
+            BehaviorDefaultDispenseItem.doDispense(getWorld(), took, 6, getDirection(), new PositionImpl(getDispensePositionX(), getDispensePositionY(), getDispensePositionZ()));
         }
     }
 
@@ -316,7 +316,7 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
 
     @Override
     public int getType() {
-        return worldObj.isRemote ? TYPE.getValue() : type;
+        return getWorld().isRemote ? TYPE.getValue() : type;
     }
 
     @Override

@@ -202,8 +202,8 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
     }
 
     public EnumFluidStorageType getType() {
-        if (type == null && worldObj.getBlockState(pos).getBlock() == RSBlocks.FLUID_STORAGE) {
-            this.type = ((EnumFluidStorageType) worldObj.getBlockState(pos).getValue(BlockFluidStorage.TYPE));
+        if (type == null && getWorld().getBlockState(pos).getBlock() == RSBlocks.FLUID_STORAGE) {
+            this.type = ((EnumFluidStorageType) getWorld().getBlockState(pos).getValue(BlockFluidStorage.TYPE));
         }
 
         return type == null ? EnumFluidStorageType.TYPE_64K : type;

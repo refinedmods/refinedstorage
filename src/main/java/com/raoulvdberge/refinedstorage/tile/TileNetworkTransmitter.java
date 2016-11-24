@@ -145,7 +145,7 @@ public class TileNetworkTransmitter extends TileNode {
     }
 
     public boolean isSameDimension() {
-        return worldObj.provider.getDimension() == receiverDimension;
+        return getWorld().provider.getDimension() == receiverDimension;
     }
 
     public boolean isDimensionSupported() {

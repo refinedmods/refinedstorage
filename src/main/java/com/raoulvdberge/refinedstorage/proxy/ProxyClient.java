@@ -260,9 +260,9 @@ public class ProxyClient extends ProxyCommon {
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent e) {
         if (RS.VERSION.contains("beta")) {
-            e.player.addChatComponentMessage(new TextComponentString("" + TextFormatting.RED + TextFormatting.BOLD + "WARNING: You are playing on a beta version of Refined Storage (" + RS.VERSION + ")!" + TextFormatting.RESET));
-            e.player.addChatComponentMessage(new TextComponentString("Literally anything can happen: world breaking bugs, item duplication bugs, etc. So, make sure you make backups."));
-            e.player.addChatComponentMessage(new TextComponentString("If you encounter a bug, please report it on the GitHub issue tracker."));
+            e.player.sendMessage(new TextComponentString("" + TextFormatting.RED + TextFormatting.BOLD + "WARNING: You are playing on a beta version of Refined Storage (" + RS.VERSION + ")!" + TextFormatting.RESET));
+            e.player.sendMessage(new TextComponentString("Literally anything can happen: world breaking bugs, item duplication bugs, etc. So, make sure you make backups."));
+            e.player.sendMessage(new TextComponentString("If you encounter a bug, please report it on the GitHub issue tracker."));
         }
     }
 
@@ -291,15 +291,15 @@ public class ProxyClient extends ProxyCommon {
 
         BlockPos pos = e.getTarget().getBlockPos();
 
-        IBlockState state = player.worldObj.getBlockState(pos);
+        IBlockState state = player.getEntityWorld().getBlockState(pos);
 
         if (!(state.getBlock() instanceof BlockCable)) {
             return;
         }
 
-        state = ((BlockCable) state.getBlock()).getActualState(state, player.worldObj, pos);
+        state = ((BlockCable) state.getBlock()).getActualState(state, player.getEntityWorld(), pos);
 
-        if (((BlockCable) state.getBlock()).collisionRayTrace(state, player.worldObj, pos, RayTraceUtils.getStart(player), RayTraceUtils.getEnd(player)) instanceof PartMOP) {
+        if (((BlockCable) state.getBlock()).collisionRayTrace(state, player.getEntityWorld(), pos, RayTraceUtils.getStart(player), RayTraceUtils.getEnd(player)) instanceof PartMOP) {
             return;
         }
 

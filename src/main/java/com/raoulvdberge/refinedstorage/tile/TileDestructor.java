@@ -106,7 +106,7 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
             if (pickupItem && type == IType.ITEMS) {
                 List<Entity> droppedItems = new ArrayList<>();
 
-                Chunk chunk = worldObj.getChunkFromBlockCoords(front);
+                Chunk chunk = getWorld().getChunkFromBlockCoords(front);
                 chunk.getEntitiesWithinAABBForEntity(null, new AxisAlignedBB(front), droppedItems, null);
 
                 for (Entity entity : droppedItems) {
@@ -116,26 +116,26 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
                         if (IFilterable.canTake(itemFilters, mode, compare, droppedItem) && network.insertItem(droppedItem, droppedItem.stackSize, true) == null) {
                             network.insertItem(droppedItem.copy(), droppedItem.stackSize, false);
 
-                            worldObj.removeEntity(entity);
+                            getWorld().removeEntity(entity);
 
                             break;
                         }
                     }
                 }
             } else if (type == IType.ITEMS) {
-                IBlockState frontBlockState = worldObj.getBlockState(front);
+                IBlockState frontBlockState = getWorld().getBlockState(front);
                 Block frontBlock = frontBlockState.getBlock();
 
                 @SuppressWarnings("deprecation")
-                ItemStack frontStack = frontBlock.getItem(worldObj, front, frontBlockState);
+                ItemStack frontStack = frontBlock.getItem(getWorld(), front, frontBlockState);
 
                 if (frontStack != null) {
-                    if (IFilterable.canTake(itemFilters, mode, compare, frontStack) && frontBlockState.getBlockHardness(worldObj, front) != -1.0) {
+                    if (IFilterable.canTake(itemFilters, mode, compare, frontStack) && frontBlockState.getBlockHardness(getWorld(), front) != -1.0) {
                         List<ItemStack> drops;
-                        if (upgrades.hasUpgrade(ItemUpgrade.TYPE_SILK_TOUCH) && frontBlock.canSilkHarvest(worldObj, front, frontBlockState, null)) {
+                        if (upgrades.hasUpgrade(ItemUpgrade.TYPE_SILK_TOUCH) && frontBlock.canSilkHarvest(getWorld(), front, frontBlockState, null)) {
                             drops = Collections.singletonList(frontStack);
                         } else {
-                            drops = frontBlock.getDrops(worldObj, front, frontBlockState, upgrades.getFortuneLevel());
+                            drops = frontBlock.getDrops(getWorld(), front, frontBlockState, upgrades.getFortuneLevel());
                         }
 
                         for (ItemStack drop : drops) {
@@ -144,17 +144,17 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
                             }
                         }
 
-                        BlockEvent.BreakEvent e = new BlockEvent.BreakEvent(worldObj, front, frontBlockState, FakePlayerFactory.getMinecraft((WorldServer) worldObj));
+                        BlockEvent.BreakEvent e = new BlockEvent.BreakEvent(getWorld(), front, frontBlockState, FakePlayerFactory.getMinecraft((WorldServer) getWorld()));
 
                         if (!MinecraftForge.EVENT_BUS.post(e)) {
-                            worldObj.playEvent(null, 2001, front, Block.getStateId(frontBlockState));
-                            worldObj.setBlockToAir(front);
+                            getWorld().playEvent(null, 2001, front, Block.getStateId(frontBlockState));
+                            getWorld().setBlockToAir(front);
 
                             for (ItemStack drop : drops) {
                                 // We check if the controller isn't null here because when a destructor faces a node and removes it
                                 // it will essentially remove this block itself from the network without knowing
                                 if (network == null) {
-                                    InventoryHelper.spawnItemStack(worldObj, front.getX(), front.getY(), front.getZ(), drop);
+                                    InventoryHelper.spawnItemStack(getWorld(), front.getX(), front.getY(), front.getZ(), drop);
                                 } else {
                                     network.insertItem(drop, drop.stackSize, false);
                                 }
@@ -163,14 +163,14 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
                     }
                 }
             } else if (type == IType.FLUIDS) {
-                Block frontBlock = worldObj.getBlockState(front).getBlock();
+                Block frontBlock = getWorld().getBlockState(front).getBlock();
 
                 IFluidHandler handler = null;
 
                 if (frontBlock instanceof BlockLiquid) {
-                    handler = new BlockLiquidWrapper((BlockLiquid) frontBlock, worldObj, front);
+                    handler = new BlockLiquidWrapper((BlockLiquid) frontBlock, getWorld(), front);
                 } else if (frontBlock instanceof IFluidBlock) {
-                    handler = new FluidBlockWrapper((IFluidBlock) frontBlock, worldObj, front);
+                    handler = new FluidBlockWrapper((IFluidBlock) frontBlock, getWorld(), front);
                 }
 
                 if (handler != null) {
@@ -285,7 +285,7 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
 
     @Override
     public int getType() {
-        return worldObj.isRemote ? TYPE.getValue() : type;
+        return getWorld().isRemote ? TYPE.getValue() : type;
     }
 
     @Override

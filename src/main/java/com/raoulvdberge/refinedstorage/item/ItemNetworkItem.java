@@ -69,10 +69,10 @@ public abstract class ItemNetworkItem extends ItemEnergyContainer implements INe
                 if (((TileController) controller).getNetworkItemHandler().onOpen(player, controllerWorld, hand)) {
                     return new ActionResult<>(EnumActionResult.SUCCESS, stack);
                 } else {
-                    player.addChatComponentMessage(new TextComponentTranslation("misc.refinedstorage:network_item.out_of_range"));
+                    player.sendMessage(new TextComponentTranslation("misc.refinedstorage:network_item.out_of_range"));
                 }
             } else {
-                player.addChatComponentMessage(new TextComponentTranslation("misc.refinedstorage:network_item.not_found"));
+                player.sendMessage(new TextComponentTranslation("misc.refinedstorage:network_item.not_found"));
             }
         }
 

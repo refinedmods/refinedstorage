@@ -554,7 +554,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
 
     @Override
     public int getType() {
-        return worldObj.isRemote ? TYPE.getValue() : type;
+        return getWorld().isRemote ? TYPE.getValue() : type;
     }
 
     @Override

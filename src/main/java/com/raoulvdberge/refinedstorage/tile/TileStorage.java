@@ -203,8 +203,8 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
     }
 
     public EnumItemStorageType getType() {
-        if (type == null && worldObj.getBlockState(pos).getBlock() == RSBlocks.STORAGE) {
-            this.type = ((EnumItemStorageType) worldObj.getBlockState(pos).getValue(BlockStorage.TYPE));
+        if (type == null && getWorld().getBlockState(pos).getBlock() == RSBlocks.STORAGE) {
+            this.type = ((EnumItemStorageType) getWorld().getBlockState(pos).getValue(BlockStorage.TYPE));
         }
 
         return type == null ? EnumItemStorageType.TYPE_1K : type;

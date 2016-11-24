@@ -127,7 +127,7 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
 
     @Override
     public void update() {
-        if (!worldObj.isRemote && network != null) {
+        if (!getWorld().isRemote && network != null) {
             if (networkTicks++ == 0) {
                 updateStorage(network);
 
@@ -351,7 +351,7 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
 
     @Override
     public int getType() {
-        return worldObj.isRemote ? TYPE.getValue() : type;
+        return getWorld().isRemote ? TYPE.getValue() : type;
     }
 
     @Override

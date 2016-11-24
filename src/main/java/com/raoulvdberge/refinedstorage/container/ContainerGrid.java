@@ -89,7 +89,7 @@ public class ContainerGrid extends ContainerBase {
     public void onContainerClosed(EntityPlayer player) {
         super.onContainerClosed(player);
 
-        if (!player.worldObj.isRemote && grid instanceof WirelessGrid) {
+        if (!player.getEntityWorld().isRemote && grid instanceof WirelessGrid) {
             ((WirelessGrid) grid).onClose(player);
         }
     }
@@ -101,7 +101,7 @@ public class ContainerGrid extends ContainerBase {
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) {
-        if (!player.worldObj.isRemote) {
+        if (!player.getEntityWorld().isRemote) {
             Slot slot = inventorySlots.get(slotIndex);
 
             if (slot.getHasStack()) {

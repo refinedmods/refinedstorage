@@ -24,7 +24,7 @@ public abstract class TileBase extends TileEntity implements ITickable {
 
     @Override
     public void update() {
-        if (!worldObj.isRemote) {
+        if (!getWorld().isRemote) {
             ticks++;
 
             dataManager.detectAndSendChanges();
@@ -32,8 +32,8 @@ public abstract class TileBase extends TileEntity implements ITickable {
     }
 
     public void updateBlock() {
-        if (worldObj != null) {
-            worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 1 | 2);
+        if (getWorld() != null) {
+            getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 1 | 2);
         }
     }
 
@@ -114,7 +114,7 @@ public abstract class TileBase extends TileEntity implements ITickable {
     }
 
     public TileEntity getFacingTile() {
-        return worldObj.getTileEntity(pos.offset(direction));
+        return getWorld().getTileEntity(pos.offset(direction));
     }
 
     public IItemHandler getDrops() {
@@ -123,13 +123,13 @@ public abstract class TileBase extends TileEntity implements ITickable {
 
     @Override
     public boolean equals(Object o) {
-        return o instanceof TileBase && ((TileBase) o).getPos().equals(pos) && ((TileBase) o).getWorld().provider.getDimension() == worldObj.provider.getDimension();
+        return o instanceof TileBase && ((TileBase) o).getPos().equals(pos) && ((TileBase) o).getWorld().provider.getDimension() == getWorld().provider.getDimension();
     }
 
     @Override
     public int hashCode() {
         int result = pos.hashCode();
-        result = 31 * result + worldObj.provider.getDimension();
+        result = 31 * result + getWorld().provider.getDimension();
         return result;
     }
 }

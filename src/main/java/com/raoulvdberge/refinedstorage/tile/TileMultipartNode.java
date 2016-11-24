@@ -71,8 +71,8 @@ public abstract class TileMultipartNode extends TileNode implements IMicroblockC
 
         if (network != null) {
             network.getNodeGraph().rebuild();
-        } else if (worldObj != null) {
-            RSBlocks.CABLE.attemptConnect(worldObj, pos);
+        } else if (getWorld() != null) {
+            RSBlocks.CABLE.attemptConnect(getWorld(), pos);
         }
     }
 
@@ -102,7 +102,7 @@ public abstract class TileMultipartNode extends TileNode implements IMicroblockC
 
     @Override
     public boolean canConduct(EnumFacing direction) {
-        return !hasBlockingMicroblock(worldObj, pos, direction) && !hasBlockingMicroblock(worldObj, pos.offset(direction), direction.getOpposite());
+        return !hasBlockingMicroblock(getWorld(), pos, direction) && !hasBlockingMicroblock(getWorld(), pos.offset(direction), direction.getOpposite());
     }
 
     @Override

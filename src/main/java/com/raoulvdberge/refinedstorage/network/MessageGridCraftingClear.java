@@ -39,7 +39,7 @@ public class MessageGridCraftingClear extends MessageHandlerPlayerToServer<Messa
 
     @Override
     public void handle(MessageGridCraftingClear message, EntityPlayerMP player) {
-        TileEntity tile = player.worldObj.getTileEntity(new BlockPos(message.x, message.y, message.z));
+        TileEntity tile = player.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
 
         if (tile instanceof TileGrid) {
             TileGrid grid = (TileGrid) tile;

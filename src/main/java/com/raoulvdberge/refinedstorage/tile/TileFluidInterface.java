@@ -50,7 +50,7 @@ public class TileFluidInterface extends TileNode implements IComparable {
         protected void onContentsChanged() {
             super.onContentsChanged();
 
-            if (worldObj != null && !worldObj.isRemote) {
+            if (getWorld() != null && !getWorld().isRemote) {
                 dataManager.sendParameterToWatchers(TANK_IN);
             }
 
@@ -63,7 +63,7 @@ public class TileFluidInterface extends TileNode implements IComparable {
         protected void onContentsChanged() {
             super.onContentsChanged();
 
-            if (worldObj != null && !worldObj.isRemote) {
+            if (getWorld() != null && !getWorld().isRemote) {
                 dataManager.sendParameterToWatchers(TANK_OUT);
             }
 

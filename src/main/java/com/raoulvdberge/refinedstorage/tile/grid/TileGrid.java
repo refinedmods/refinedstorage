@@ -202,8 +202,8 @@ public class TileGrid extends TileNode implements IGrid {
     }
 
     public EnumGridType getType() {
-        if (type == null && worldObj.getBlockState(pos).getBlock() == RSBlocks.GRID) {
-            this.type = (EnumGridType) worldObj.getBlockState(pos).getValue(BlockGrid.TYPE);
+        if (type == null && getWorld().getBlockState(pos).getBlock() == RSBlocks.GRID) {
+            this.type = (EnumGridType) getWorld().getBlockState(pos).getValue(BlockGrid.TYPE);
         }
 
         return type == null ? EnumGridType.NORMAL : type;
@@ -264,11 +264,11 @@ public class TileGrid extends TileNode implements IGrid {
     public void onCraftingMatrixChanged() {
         markDirty();
 
-        result.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(matrix, worldObj));
+        result.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(matrix, getWorld()));
     }
 
     public void onCrafted(EntityPlayer player) {
-        ItemStack[] remainder = CraftingManager.getInstance().getRemainingItems(matrix, worldObj);
+        ItemStack[] remainder = CraftingManager.getInstance().getRemainingItems(matrix, getWorld());
 
         for (int i = 0; i < matrix.getSizeInventory(); ++i) {
             ItemStack slot = matrix.getStackInSlot(i);
@@ -280,7 +280,7 @@ public class TileGrid extends TileNode implements IGrid {
                         ItemStack remainderStack = network.insertItem(remainder[i].copy(), remainder[i].stackSize, false);
 
                         if (remainderStack != null) {
-                            InventoryHelper.spawnItemStack(player.worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), remainderStack);
+                            InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), remainderStack);
                         }
                     }
 
@@ -321,7 +321,7 @@ public class TileGrid extends TileNode implements IGrid {
             if (!player.inventory.addItemStackToInventory(craftedItem.copy())) {
                 ItemStack remainder = network.insertItem(craftedItem, craftedItem.stackSize, false);
                 if (remainder != null) {
-                    InventoryHelper.spawnItemStack(player.worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), remainder);
+                    InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), remainder);
                 }
             }
         }
@@ -435,22 +435,22 @@ public class TileGrid extends TileNode implements IGrid {
 
     @Override
     public int getViewType() {
-        return worldObj.isRemote ? VIEW_TYPE.getValue() : viewType;
+        return getWorld().isRemote ? VIEW_TYPE.getValue() : viewType;
     }
 
     @Override
     public int getSortingDirection() {
-        return worldObj.isRemote ? SORTING_DIRECTION.getValue() : sortingDirection;
+        return getWorld().isRemote ? SORTING_DIRECTION.getValue() : sortingDirection;
     }
 
     @Override
     public int getSortingType() {
-        return worldObj.isRemote ? SORTING_TYPE.getValue() : sortingType;
+        return getWorld().isRemote ? SORTING_TYPE.getValue() : sortingType;
     }
 
     @Override
     public int getSearchBoxMode() {
-        return worldObj.isRemote ? SEARCH_BOX_MODE.getValue() : searchBoxMode;
+        return getWorld().isRemote ? SEARCH_BOX_MODE.getValue() : searchBoxMode;
     }
 
     @Override

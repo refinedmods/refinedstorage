@@ -50,7 +50,7 @@ public class ClientStackItem implements IClientStack {
 
     @Override
     public String getTooltip() {
-        List<String> lines = stack.getTooltip(Minecraft.getMinecraft().thePlayer, Minecraft.getMinecraft().gameSettings.advancedItemTooltips);
+        List<String> lines = stack.getTooltip(Minecraft.getMinecraft().player, Minecraft.getMinecraft().gameSettings.advancedItemTooltips);
 
         // From GuiScreen#renderToolTip
         for (int i = 0; i < lines.size(); ++i) {

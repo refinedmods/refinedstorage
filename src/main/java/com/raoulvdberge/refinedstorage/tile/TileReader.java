@@ -60,7 +60,7 @@ public class TileReader extends TileMultipartNode implements IReader {
 
     @Override
     public int getRedstoneStrength() {
-        return worldObj.getRedstonePower(pos.offset(getDirection()), getDirection());
+        return getWorld().getRedstonePower(pos.offset(getDirection()), getDirection());
     }
 
     @Override

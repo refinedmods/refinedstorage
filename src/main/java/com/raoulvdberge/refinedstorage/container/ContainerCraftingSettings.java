@@ -53,7 +53,7 @@ public class ContainerCraftingSettings extends ContainerBase {
             }
 
             @Override
-            public boolean isUseableByPlayer(EntityPlayer player) {
+            public boolean isUsableByPlayer(EntityPlayer player) {
                 return false;
             }
 

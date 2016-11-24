@@ -35,7 +35,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
 
     @Override
     public boolean canUpdate() {
-        return redstoneMode.isEnabled(worldObj, pos);
+        return redstoneMode.isEnabled(getWorld(), pos);
     }
 
     public boolean isActive() {
@@ -46,9 +46,9 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
 
     @Override
     public void update() {
-        if (!worldObj.isRemote) {
+        if (!getWorld().isRemote) {
             if (networkPos != null) {
-                TileEntity tile = worldObj.getTileEntity(networkPos);
+                TileEntity tile = getWorld().getTileEntity(networkPos);
 
                 if (tile instanceof INetworkMaster) {
                     ((INetworkMaster) tile).getNodeGraph().replace(this);
@@ -119,7 +119,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
 
     @Override
     public World getNodeWorld() {
-        return worldObj;
+        return getWorld();
     }
 
     @Override

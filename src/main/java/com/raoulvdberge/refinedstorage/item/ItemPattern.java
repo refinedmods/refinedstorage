@@ -53,7 +53,7 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
             return;
         }
 
-        ICraftingPattern pattern = getPatternFromCache(player.worldObj, stack);
+        ICraftingPattern pattern = getPatternFromCache(player.getEntityWorld(), stack);
 
         if (pattern.isValid()) {
             if (GuiScreen.isShiftKeyDown() || isProcessing(stack)) {

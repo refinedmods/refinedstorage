@@ -45,8 +45,8 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
     private ItemHandlerBasic patterns = new ItemHandlerBasic(9, this, s -> {
         // We can only validate the crafting pattern if the world exists.
         // If the world doesn't exist, this is probably called while reading and in that case it doesn't matter.
-        if (worldObj != null) {
-            return s.getItem() instanceof ICraftingPatternProvider && ((ICraftingPatternProvider) s.getItem()).create(worldObj, s, this).isValid();
+        if (getWorld() != null) {
+            return s.getItem() instanceof ICraftingPatternProvider && ((ICraftingPatternProvider) s.getItem()).create(getWorld(), s, this).isValid();
         }
 
         return true;
@@ -55,7 +55,7 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            if (worldObj != null && !worldObj.isRemote) {
+            if (getWorld() != null && !getWorld().isRemote) {
                 rebuildPatterns();
             }
 
@@ -82,7 +82,7 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
             ItemStack patternStack = patterns.getStackInSlot(i);
 
             if (patternStack != null) {
-                ICraftingPattern pattern = ((ICraftingPatternProvider) patternStack.getItem()).create(worldObj, patternStack, this);
+                ICraftingPattern pattern = ((ICraftingPatternProvider) patternStack.getItem()).create(getWorld(), patternStack, this);
 
                 if (pattern.isValid()) {
                     actualPatterns.add(pattern);
@@ -106,7 +106,7 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
 
     @Override
     public void update() {
-        if (!worldObj.isRemote && ticks == 0) {
+        if (!getWorld().isRemote && ticks == 0) {
             rebuildPatterns();
         }
 
@@ -115,7 +115,7 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
 
     @Override
     public void updateNode() {
-        if (triggeredAutocrafting && worldObj.isBlockPowered(pos)) {
+        if (triggeredAutocrafting && getWorld().isBlockPowered(pos)) {
             for (ICraftingPattern pattern : actualPatterns) {
                 for (ItemStack output : pattern.getOutputs()) {
                     network.scheduleCraftingTask(output, 1, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);

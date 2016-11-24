@@ -172,7 +172,7 @@ public class TileExporter extends TileMultipartNode implements IComparable, ITyp
 
     @Override
     public int getType() {
-        return worldObj.isRemote ? TYPE.getValue() : type;
+        return getWorld().isRemote ? TYPE.getValue() : type;
     }
 
     @Override
