@@ -43,7 +43,7 @@ public class ContainerDiskManipulator extends ContainerBase {
                 if (!mergeItemStack(stack, 4 + 6 + 9, inventorySlots.size(), false)) {
                     return null;
                 }
-            } else if (!mergeItemStack(stack, 0, 16, false)) {
+            } else if (!mergeItemStack(stack, 0, 4 + 3, false)) {
                 return mergeItemStackToSpecimen(stack, 4 + 6, 4 + 6 + 9);
             }
 
