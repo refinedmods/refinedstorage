@@ -52,7 +52,6 @@ import com.raoulvdberge.refinedstorage.tile.externalstorage.FluidStorageExternal
 import com.raoulvdberge.refinedstorage.tile.externalstorage.ItemStorageExternal;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
 import net.darkhax.tesla.capability.TeslaCapabilities;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -105,17 +104,16 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
 
             for (INetworkNode node : tile.nodeGraph.all()) {
                 if (node.canUpdate()) {
-                    IBlockState state = tile.getWorld().getBlockState(node.getPosition());
-
-                    ClientNode clientNode = new ClientNode(
-                        new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state)),
-                        1,
-                        node.getEnergyUsage()
-                    );
-
-                    if (clientNode.getStack().getItem() == null) {
+                    ItemStack itemStack = node.getItemStack();
+                    if (itemStack == null) {
                         continue;
                     }
+
+                    ClientNode clientNode = new ClientNode(
+                            itemStack,
+                            1,
+                            node.getEnergyUsage()
+                    );
 
                     if (nodes.contains(clientNode)) {
                         ClientNode other = nodes.get(nodes.indexOf(clientNode));

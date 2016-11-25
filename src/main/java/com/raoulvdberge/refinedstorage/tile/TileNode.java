@@ -6,11 +6,16 @@ import com.raoulvdberge.refinedstorage.api.util.IWrenchable;
 import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 public abstract class TileNode extends TileBase implements INetworkNode, IRedstoneConfigurable, IWrenchable {
     public static final TileDataParameter<Integer> REDSTONE_MODE = RedstoneMode.createParameter();
@@ -122,9 +127,12 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
         return getWorld();
     }
 
+    @Nullable
     @Override
-    public BlockPos getPosition() {
-        return pos;
+    public ItemStack getItemStack() {
+        IBlockState state = getWorld().getBlockState(pos);
+        Item item = Item.getItemFromBlock(state.getBlock());
+        return item != null ? new ItemStack(item, 1, state.getBlock().getMetaFromState(state)) : null;
     }
 
     @Override

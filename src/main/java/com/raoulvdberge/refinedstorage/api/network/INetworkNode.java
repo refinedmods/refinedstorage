@@ -1,8 +1,10 @@
 package com.raoulvdberge.refinedstorage.api.network;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 /**
  * Represents a node in the network.
@@ -14,9 +16,10 @@ public interface INetworkNode {
     int getEnergyUsage();
 
     /**
-     * @return the position of this node in the world
+     * @return the item of the node
      */
-    BlockPos getPosition();
+    @Nullable
+    ItemStack getItemStack();
 
     /**
      * Called when this node is connected to a network.
