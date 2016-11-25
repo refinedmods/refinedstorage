@@ -15,4 +15,9 @@ public interface IWirelessTransmitter {
      * @return the position where the wireless signal starts
      */
     BlockPos getOrigin();
+
+    /**
+     * @return the dimension in which the transmitter is
+     */
+    int getDimension();
 }

@@ -2,7 +2,6 @@ package com.raoulvdberge.refinedstorage.api.network;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
@@ -55,9 +54,4 @@ public interface INetworkNode {
      * @return the network
      */
     INetworkMaster getNetwork();
-
-    /**
-     * @return the world where this node is in
-     */
-    World getNodeWorld();
 }

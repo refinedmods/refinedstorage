@@ -122,11 +122,6 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
         return network;
     }
 
-    @Override
-    public World getNodeWorld() {
-        return getWorld();
-    }
-
     @Nullable
     @Override
     public ItemStack getItemStack() {

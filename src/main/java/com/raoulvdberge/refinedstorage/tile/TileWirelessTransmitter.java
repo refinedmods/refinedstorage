@@ -65,6 +65,11 @@ public class TileWirelessTransmitter extends TileNode implements IWirelessTransm
         return pos;
     }
 
+    @Override
+    public int getDimension() {
+        return worldObj.provider.getDimension();
+    }
+
     public ItemHandlerBasic getUpgrades() {
         return upgrades;
     }
