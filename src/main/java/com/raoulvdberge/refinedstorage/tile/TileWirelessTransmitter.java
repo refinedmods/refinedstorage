@@ -16,6 +16,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
+import javax.annotation.Nullable;
+
 public class TileWirelessTransmitter extends TileNode implements IWirelessTransmitter {
     public static final TileDataParameter<Integer> RANGE = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileWirelessTransmitter>() {
         @Override
@@ -80,8 +82,8 @@ public class TileWirelessTransmitter extends TileNode implements IWirelessTransm
     }
 
     @Override
-    public boolean canConduct(EnumFacing direction) {
-        return false;
+    public boolean canConduct(@Nullable EnumFacing direction) {
+        return direction != null && EnumFacing.DOWN.equals(direction);
     }
 
     @Override
