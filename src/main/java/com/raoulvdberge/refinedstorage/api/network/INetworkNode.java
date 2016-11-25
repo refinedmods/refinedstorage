@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.api.network;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
 
 import javax.annotation.Nullable;
 
@@ -43,12 +42,6 @@ public interface INetworkNode {
      * @return true if this node can be treated as active, typically checks the redstone configuration
      */
     boolean canUpdate();
-
-    /**
-     * @param direction the direction to do a conduction check
-     * @return true if this node can conduct a connection to the given direction, false otherwise
-     */
-    boolean canConduct(EnumFacing direction);
 
     /**
      * @return the network

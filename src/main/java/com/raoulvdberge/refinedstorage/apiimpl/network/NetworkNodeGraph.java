@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.api.network.INetworkNodeGraph;
 import com.raoulvdberge.refinedstorage.api.storage.fluid.IFluidStorageProvider;
 import com.raoulvdberge.refinedstorage.api.storage.item.IItemStorageProvider;
 import com.raoulvdberge.refinedstorage.item.ItemBlockController;
+import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.TileController;
 import com.raoulvdberge.refinedstorage.tile.TileNetworkTransmitter;
 import net.minecraft.block.state.IBlockState;
@@ -118,7 +119,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
             }
 
             for (EnumFacing facing : EnumFacing.VALUES) {
-                if (node.canConduct(facing)) {
+                if (tile instanceof TileController || tile.hasCapability(CapabilityNetworkNode.NETWORK_NODE_CAPABILITY, facing)) {
                     BlockPos pos = currentPos.offset(facing);
 
                     if (checked.add(pos)) {

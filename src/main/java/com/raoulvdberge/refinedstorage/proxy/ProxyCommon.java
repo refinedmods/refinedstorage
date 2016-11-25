@@ -60,6 +60,8 @@ public class ProxyCommon {
             IntegrationCraftingTweaks.register();
         }
 
+        CapabilityNetworkNode.register();
+
         API.deliver(e.getAsmData());
 
         API.instance().getCraftingTaskRegistry().addFactory(CraftingTaskFactory.ID, new CraftingTaskFactory());
