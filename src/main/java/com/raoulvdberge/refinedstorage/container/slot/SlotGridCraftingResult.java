@@ -7,6 +7,8 @@ import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
+import javax.annotation.Nonnull;
+
 public class SlotGridCraftingResult extends SlotCrafting {
     private ContainerGrid container;
     private TileGrid grid;
@@ -19,7 +21,8 @@ public class SlotGridCraftingResult extends SlotCrafting {
     }
 
     @Override
-    public ItemStack onTake(EntityPlayer player, ItemStack stack) {
+    @Nonnull
+    public ItemStack onTake(EntityPlayer player, @Nonnull ItemStack stack) {
         FMLCommonHandler.instance().firePlayerCraftingEvent(player, stack, grid.getMatrix());
 
         onCrafting(stack);
@@ -30,6 +33,6 @@ public class SlotGridCraftingResult extends SlotCrafting {
             container.sendCraftingSlots();
         }
 
-        return null;
+        return ItemStack.EMPTY;
     }
 }

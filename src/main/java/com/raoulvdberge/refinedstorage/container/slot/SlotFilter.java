@@ -11,21 +11,22 @@ import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
+import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 
-public class SlotSpecimen extends SlotItemHandler {
+public class SlotFilter extends SlotItemHandler {
     public static final int SPECIMEN_SIZE = 1;
     public static final int SPECIMEN_BLOCK = 2;
 
     private int flags = 0;
 
-    public SlotSpecimen(IItemHandler handler, int id, int x, int y, int flags) {
+    public SlotFilter(IItemHandler handler, int id, int x, int y, int flags) {
         super(handler, id, x, y);
 
         this.flags = flags;
     }
 
-    public SlotSpecimen(IItemHandler handler, int id, int x, int y) {
+    public SlotFilter(IItemHandler handler, int id, int x, int y) {
         this(handler, id, x, y, 0);
     }
 
@@ -35,7 +36,7 @@ public class SlotSpecimen extends SlotItemHandler {
     }
 
     @Override
-    public boolean isItemValid(ItemStack stack) {
+    public boolean isItemValid(@Nonnull ItemStack stack) {
         if (super.isItemValid(stack)) {
             if (isBlockOnly()) {
                 return stack.getItem() instanceof ItemBlock || stack.getItem() instanceof ItemBlockSpecial || stack.getItem() instanceof IPlantable || stack.getItem() instanceof ItemSkull;
@@ -48,8 +49,8 @@ public class SlotSpecimen extends SlotItemHandler {
     }
 
     @Override
-    public void putStack(ItemStack stack) {
-        if (stack != null && !isWithSize()) {
+    public void putStack(@Nonnull ItemStack stack) {
+        if (!stack.isEmpty() && !isWithSize()) {
             stack.setCount(1);
         }
 

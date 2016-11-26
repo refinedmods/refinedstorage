@@ -57,8 +57,8 @@ public abstract class ContainerBase extends Container {
     public ItemStack slotClick(int id, int dragType, ClickType clickType, EntityPlayer player) {
         Slot slot = id >= 0 ? getSlot(id) : null;
 
-        if (slot instanceof SlotSpecimen) {
-            if (((SlotSpecimen) slot).isWithSize()) {
+        if (slot instanceof SlotFilter) {
+            if (((SlotFilter) slot).isWithSize()) {
                 if (clickType == ClickType.QUICK_MOVE) {
                     slot.putStack(ItemStack.EMPTY);
                 } else if (!player.inventory.getItemStack().isEmpty()) {
@@ -83,7 +83,7 @@ public abstract class ContainerBase extends Container {
             }
 
             return player.inventory.getItemStack();
-        } else if (slot instanceof SlotSpecimenLegacy) {
+        } else if (slot instanceof SlotFilterLegacy) {
             if (player.inventory.getItemStack().isEmpty()) {
                 slot.putStack(ItemStack.EMPTY);
             } else if (slot.isItemValid(player.inventory.getItemStack())) {
@@ -92,7 +92,7 @@ public abstract class ContainerBase extends Container {
 
             return player.inventory.getItemStack();
         } else if (slot instanceof SlotDisabled) {
-            return null;
+            return ItemStack.EMPTY;
         }
 
         return super.slotClick(id, dragType, clickType, player);
@@ -117,21 +117,21 @@ public abstract class ContainerBase extends Container {
                 slot.putStack(ItemHandlerHelper.copyStackWithSize(stack, 1));
                 slot.onSlotChanged();
 
-                return null;
+                return ItemStack.EMPTY;
             }
         }
 
-        return null;
+        return ItemStack.EMPTY;
     }
 
     private ItemStack getStackFromSlot(Slot slot) {
         ItemStack stackInSlot = slot.getStack();
 
-        if (stackInSlot == null) {
-            if (slot instanceof SlotSpecimenFluid) {
-                stackInSlot = ((SlotSpecimenFluid) slot).getRealStack();
-            } else if (slot instanceof SlotSpecimenType) {
-                stackInSlot = ((SlotSpecimenType) slot).getRealStack();
+        if (stackInSlot.isEmpty()) {
+            if (slot instanceof SlotFilterFluid) {
+                stackInSlot = ((SlotFilterFluid) slot).getRealStack();
+            } else if (slot instanceof SlotFilterType) {
+                stackInSlot = ((SlotFilterType) slot).getRealStack();
             }
         }
 

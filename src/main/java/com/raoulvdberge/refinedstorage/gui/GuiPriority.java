@@ -14,7 +14,7 @@ public class GuiPriority extends GuiCraftingStart {
     public GuiPriority(GuiBase parent, TileDataParameter<Integer> priority) {
         super(parent, null, new Container() {
             @Override
-            public boolean canInteractWith(EntityPlayer playerIn) {
+            public boolean canInteractWith(EntityPlayer player) {
                 return false;
             }
         }, 164, 92);

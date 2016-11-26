@@ -4,7 +4,7 @@ import com.mojang.authlib.GameProfile;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.container.slot.SlotSpecimen;
+import com.raoulvdberge.refinedstorage.container.slot.SlotFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
@@ -72,7 +72,7 @@ public class TileConstructor extends TileNode implements IComparable, IType {
             super.onContentsChanged(slot);
 
             item = getStackInSlot(slot) == null ? null : getStackInSlot(slot).copy();
-            block = SlotSpecimen.getBlockState(getWorld(), pos.offset(getDirection()), getStackInSlot(slot));
+            block = SlotFilter.getBlockState(getWorld(), pos.offset(getDirection()), getStackInSlot(slot));
         }
     };
 

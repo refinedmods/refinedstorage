@@ -32,31 +32,31 @@ public class ContainerSolderer extends ContainerBase {
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int index) {
-        ItemStack stack = null;
+        ItemStack stack = ItemStack.EMPTY;
 
         Slot slot = getSlot(index);
 
-        if (slot != null && slot.getHasStack()) {
+        if (slot.getHasStack()) {
             stack = slot.getStack();
 
             if (index < 4) {
                 if (!mergeItemStack(stack, 4 + 4, inventorySlots.size(), false)) {
-                    return null;
+                    return ItemStack.EMPTY;
                 }
             } else if (index < 4 + 4) {
                 if (!mergeItemStack(stack, 4 + 4, inventorySlots.size(), false)) {
-                    return null;
+                    return ItemStack.EMPTY;
                 }
             } else {
                 if (stack.getItem() != RSItems.UPGRADE || !mergeItemStack(stack, 4, 4 + 4, false)) {
                     if (!mergeItemStack(stack, 0, 3, false)) { // 0 - 3 because we can't shift click to output slot
-                        return null;
+                        return ItemStack.EMPTY;
                     }
                 }
             }
 
             if (stack.getCount() == 0) {
-                slot.putStack(null);
+                slot.putStack(ItemStack.EMPTY);
             } else {
                 slot.onSlotChanged();
             }

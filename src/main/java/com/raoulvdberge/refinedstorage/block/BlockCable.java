@@ -198,4 +198,8 @@ public class BlockCable extends BlockNode {
     public BlockRenderLayer getBlockLayer() {
         return BlockRenderLayer.CUTOUT;
     }
+
+    public EnumPlacementType getPlacementType() {
+        return null;
+    }
 }

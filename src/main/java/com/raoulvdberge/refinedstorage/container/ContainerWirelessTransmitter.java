@@ -19,7 +19,7 @@ public class ContainerWirelessTransmitter extends ContainerBase {
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int index) {
-        ItemStack stack = null;
+        ItemStack stack = ItemStack.EMPTY;
 
         Slot slot = getSlot(index);
 
@@ -28,14 +28,14 @@ public class ContainerWirelessTransmitter extends ContainerBase {
 
             if (index < 4) {
                 if (!mergeItemStack(stack, 4, inventorySlots.size(), false)) {
-                    return null;
+                    return ItemStack.EMPTY;
                 }
             } else if (!mergeItemStack(stack, 0, 4, false)) {
-                return null;
+                return ItemStack.EMPTY;
             }
 
             if (stack.getCount() == 0) {
-                slot.putStack(null);
+                slot.putStack(ItemStack.EMPTY);
             } else {
                 slot.onSlotChanged();
             }

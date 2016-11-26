@@ -63,10 +63,8 @@ public class BlockController extends BlockBase {
 
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
-        TileController controller = (TileController) world.getTileEntity(pos);
-
         return super.getActualState(state, world, pos)
-            .withProperty(ENERGY, controller.getEnergyScaledForDisplay());
+            .withProperty(ENERGY, ((TileController) world.getTileEntity(pos)).getEnergyScaledForDisplay());
     }
 
     @Override

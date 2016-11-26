@@ -5,16 +5,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.items.IItemHandler;
 
-public class SlotSpecimenType extends SlotSpecimen {
+import javax.annotation.Nonnull;
+
+public class SlotFilterType extends SlotFilter {
     private IType type;
 
-    public SlotSpecimenType(IType type, int id, int x, int y, int flags) {
+    public SlotFilterType(IType type, int id, int x, int y, int flags) {
         super(null, id, x, y, flags);
 
         this.type = type;
     }
 
-    public SlotSpecimenType(IType type, int id, int x, int y) {
+    public SlotFilterType(IType type, int id, int x, int y) {
         this(type, id, x, y, 0);
     }
 
@@ -34,8 +36,9 @@ public class SlotSpecimenType extends SlotSpecimen {
     }
 
     @Override
+    @Nonnull
     public ItemStack getStack() {
-        return (type.getType() == IType.ITEMS || !((TileEntity) type).getWorld().isRemote) ? super.getStack() : null;
+        return (type.getType() == IType.ITEMS || !((TileEntity) type).getWorld().isRemote) ? super.getStack() : ItemStack.EMPTY;
     }
 
     public ItemStack getRealStack() {

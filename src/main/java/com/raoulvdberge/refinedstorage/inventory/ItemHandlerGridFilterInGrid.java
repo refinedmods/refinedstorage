@@ -28,13 +28,13 @@ public class ItemHandlerGridFilterInGrid extends ItemHandlerBasic {
         for (int i = 0; i < getSlots(); ++i) {
             ItemStack filter = getStackInSlot(i);
 
-            if (filter != null) {
+            if (!filter.isEmpty()) {
                 int compare = ItemGridFilter.getCompare(filter);
 
                 ItemHandlerGridFilter items = new ItemHandlerGridFilter(filter);
 
                 for (ItemStack item : items.getFilteredItems()) {
-                    if (item != null) {
+                    if (!item.isEmpty()) {
                         filteredItems.add(new GridFilteredItem(item, compare));
                     }
                 }

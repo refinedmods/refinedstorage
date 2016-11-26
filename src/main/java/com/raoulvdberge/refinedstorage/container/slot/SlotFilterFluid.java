@@ -3,18 +3,21 @@ package com.raoulvdberge.refinedstorage.container.slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
-public class SlotSpecimenFluid extends SlotSpecimen {
+import javax.annotation.Nonnull;
+
+public class SlotFilterFluid extends SlotFilter {
     private boolean server;
 
-    public SlotSpecimenFluid(boolean server, IItemHandler handler, int id, int x, int y) {
+    public SlotFilterFluid(boolean server, IItemHandler handler, int id, int x, int y) {
         super(handler, id, x, y);
 
         this.server = server;
     }
 
     @Override
+    @Nonnull
     public ItemStack getStack() {
-        return server ? super.getStack() : null;
+        return server ? super.getStack() : ItemStack.EMPTY;
     }
 
     public ItemStack getRealStack() {

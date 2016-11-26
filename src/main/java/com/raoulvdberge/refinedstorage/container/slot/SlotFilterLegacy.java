@@ -6,8 +6,10 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class SlotSpecimenLegacy extends Slot {
-    public SlotSpecimenLegacy(IInventory inventory, int id, int x, int y) {
+import javax.annotation.Nonnull;
+
+public class SlotFilterLegacy extends Slot {
+    public SlotFilterLegacy(IInventory inventory, int id, int x, int y) {
         super(inventory, id, x, y);
     }
 
@@ -22,8 +24,8 @@ public class SlotSpecimenLegacy extends Slot {
     }
 
     @Override
-    public void putStack(ItemStack stack) {
-        if (stack != null) {
+    public void putStack(@Nonnull ItemStack stack) {
+        if (!stack.isEmpty()) {
             stack.setCount(1);
         }
 

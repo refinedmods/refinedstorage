@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.container;
 
+import com.raoulvdberge.refinedstorage.container.slot.SlotFilter;
 import com.raoulvdberge.refinedstorage.container.slot.SlotOutput;
-import com.raoulvdberge.refinedstorage.container.slot.SlotSpecimen;
 import com.raoulvdberge.refinedstorage.tile.TileProcessingPatternEncoder;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
@@ -22,7 +22,7 @@ public class ContainerProcessingPatternEncoder extends ContainerBase {
         int y = 20;
 
         for (int i = 0; i < 9 * 2; ++i) {
-            addSlotToContainer(new SlotSpecimen(encoder.getConfiguration(), i, x, y, SlotSpecimen.SPECIMEN_SIZE));
+            addSlotToContainer(new SlotFilter(encoder.getConfiguration(), i, x, y, SlotFilter.SPECIMEN_SIZE));
 
             x += 18;
 
@@ -43,23 +43,23 @@ public class ContainerProcessingPatternEncoder extends ContainerBase {
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int index) {
-        ItemStack stack = null;
+        ItemStack stack = ItemStack.EMPTY;
 
         Slot slot = getSlot(index);
 
-        if (slot != null && !(slot instanceof SlotSpecimen) && slot.getHasStack()) {
+        if (!(slot instanceof SlotFilter) && slot.getHasStack()) {
             stack = slot.getStack();
 
             if (index < 2) {
                 if (!mergeItemStack(stack, 2 + 18, inventorySlots.size(), false)) {
-                    return null;
+                    return ItemStack.EMPTY;
                 }
             } else if (!mergeItemStack(stack, 0, 1, false)) {
-                return null;
+                return ItemStack.EMPTY;
             }
 
             if (stack.getCount() == 0) {
-                slot.putStack(null);
+                slot.putStack(ItemStack.EMPTY);
             } else {
                 slot.onSlotChanged();
             }
@@ -70,7 +70,7 @@ public class ContainerProcessingPatternEncoder extends ContainerBase {
 
     public void clearInputsAndOutputs() {
         for (int i = 2; i < 2 + (9 * 2); ++i) {
-            getSlot(i).putStack(null);
+            getSlot(i).putStack(ItemStack.EMPTY);
             getSlot(i).onSlotChanged();
         }
     }

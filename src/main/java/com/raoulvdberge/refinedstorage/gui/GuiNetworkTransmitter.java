@@ -35,7 +35,7 @@ public class GuiNetworkTransmitter extends GuiBase {
 
         String distance;
 
-        if (networkTransmitter.getNetworkCard().getStackInSlot(0) == null) {
+        if (networkTransmitter.getNetworkCard().getStackInSlot(0).isEmpty()) {
             distance = t("gui.refinedstorage:network_transmitter.missing_card");
         } else if (!TileNetworkTransmitter.RECEIVER_DIMENSION_SUPPORTED.getValue()) {
             distance = t("gui.refinedstorage:network_transmitter.missing_upgrade");

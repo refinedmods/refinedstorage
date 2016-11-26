@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.container;
 
-import com.raoulvdberge.refinedstorage.container.slot.SlotSpecimen;
+import com.raoulvdberge.refinedstorage.container.slot.SlotFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerGridFilter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
@@ -17,7 +17,7 @@ public class ContainerGridFilter extends ContainerBase {
         this.filter = new ItemHandlerGridFilter(stack);
 
         for (int i = 0; i < 9; ++i) {
-            addSlotToContainer(new SlotSpecimen(filter, i, 8 + (i * 18), 20));
+            addSlotToContainer(new SlotFilter(filter, i, 8 + (i * 18), 20));
         }
 
         addPlayerInventory(8, 70);
@@ -29,18 +29,18 @@ public class ContainerGridFilter extends ContainerBase {
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int index) {
-        ItemStack stack = null;
+        ItemStack stack = ItemStack.EMPTY;
 
         Slot slot = getSlot(index);
 
-        if (slot != null && slot.getHasStack()) {
+        if (slot.getHasStack()) {
             stack = slot.getStack();
 
             if (index > 9 - 1) {
                 return mergeItemStackToSpecimen(stack, 0, 9);
             }
 
-            return null;
+            return ItemStack.EMPTY;
         }
 
         return stack;

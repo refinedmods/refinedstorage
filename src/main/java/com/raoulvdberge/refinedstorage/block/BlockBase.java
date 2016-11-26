@@ -107,7 +107,7 @@ public abstract class BlockBase extends Block {
             IItemHandler handler = ((TileBase) tile).getDrops();
 
             for (int i = 0; i < handler.getSlots(); ++i) {
-                if (handler.getStackInSlot(i) != null) {
+                if (!handler.getStackInSlot(i).isEmpty()) {
                     InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), handler.getStackInSlot(i));
                 }
             }

@@ -9,6 +9,7 @@ import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.WirelessGrid;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
@@ -47,7 +48,7 @@ public class ContainerGrid extends ContainerBase {
             int y = 96;
 
             for (int i = 0; i < 9; ++i) {
-                addSlotToContainer(new SlotSpecimenLegacy(((TileGrid) grid).getMatrix(), i, x, y));
+                addSlotToContainer(new SlotFilterLegacy(((TileGrid) grid).getMatrix(), i, x, y));
 
                 x += 18;
 
@@ -79,8 +80,8 @@ public class ContainerGrid extends ContainerBase {
             Slot slot = inventorySlots.get(i);
 
             if (slot instanceof SlotGridCrafting || slot == craftingResultSlot) {
-                for (int j = 0; j < listeners.size(); ++j) {
-                    listeners.get(j).sendSlotContents(this, i, slot.getStack());
+                for (IContainerListener listener : listeners) {
+                    listener.sendSlotContents(this, i, slot.getStack());
                 }
             }
         }
@@ -108,7 +109,7 @@ public class ContainerGrid extends ContainerBase {
             if (slot.getHasStack()) {
                 if (slot == craftingResultSlot) {
                     ((TileGrid) grid).onCraftedShift(this, player);
-                } else if (slot != patternResultSlot && !(slot instanceof SlotSpecimenLegacy)) {
+                } else if (slot != patternResultSlot && !(slot instanceof SlotFilterLegacy)) {
                     if (grid.getType() != EnumGridType.FLUID && grid.getItemHandler() != null) {
                         slot.putStack(RSUtils.getStack(grid.getItemHandler().onInsert((EntityPlayerMP) player, slot.getStack())));
                     } else if (grid.getType() == EnumGridType.FLUID && grid.getFluidHandler() != null) {

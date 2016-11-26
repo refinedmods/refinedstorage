@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.container;
 
-import com.raoulvdberge.refinedstorage.container.slot.SlotSpecimenType;
+import com.raoulvdberge.refinedstorage.container.slot.SlotFilterType;
 import com.raoulvdberge.refinedstorage.tile.TileDetector;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
@@ -10,7 +10,7 @@ public class ContainerDetector extends ContainerBase {
     public ContainerDetector(TileDetector detector, EntityPlayer player) {
         super(detector, player);
 
-        addSlotToContainer(new SlotSpecimenType(detector, 0, 107, 20));
+        addSlotToContainer(new SlotFilterType(detector, 0, 107, 20));
 
         addPlayerInventory(8, 55);
     }
@@ -19,7 +19,7 @@ public class ContainerDetector extends ContainerBase {
     public ItemStack transferStackInSlot(EntityPlayer player, int index) {
         Slot slot = getSlot(index);
 
-        if (slot != null && slot.getHasStack() && index > 0) {
+        if (slot.getHasStack() && index > 0) {
             return mergeItemStackToSpecimen(slot.getStack(), 0, 1);
         }
 

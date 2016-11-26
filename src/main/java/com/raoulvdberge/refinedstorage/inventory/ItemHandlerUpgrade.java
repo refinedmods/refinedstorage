@@ -19,7 +19,7 @@ public class ItemHandlerUpgrade extends ItemHandlerBasic {
 
     public int getSpeed(int speed, int speedIncrease) {
         for (int i = 0; i < getSlots(); ++i) {
-            if (getStackInSlot(i) != null && getStackInSlot(i).getItemDamage() == ItemUpgrade.TYPE_SPEED) {
+            if (!getStackInSlot(i).isEmpty() && getStackInSlot(i).getItemDamage() == ItemUpgrade.TYPE_SPEED) {
                 speed -= speedIncrease;
             }
         }
@@ -35,7 +35,7 @@ public class ItemHandlerUpgrade extends ItemHandlerBasic {
         int upgrades = 0;
 
         for (int i = 0; i < getSlots(); ++i) {
-            if (getStackInSlot(i) != null && getStackInSlot(i).getItemDamage() == type) {
+            if (!getStackInSlot(i).isEmpty() && getStackInSlot(i).getItemDamage() == type) {
                 upgrades++;
             }
         }
@@ -47,7 +47,7 @@ public class ItemHandlerUpgrade extends ItemHandlerBasic {
         int usage = 0;
 
         for (int i = 0; i < getSlots(); ++i) {
-            if (getStackInSlot(i) != null) {
+            if (!getStackInSlot(i).isEmpty()) {
                 usage += ItemUpgrade.getEnergyUsage(getStackInSlot(i));
             }
         }
@@ -57,7 +57,7 @@ public class ItemHandlerUpgrade extends ItemHandlerBasic {
 
     public int getFortuneLevel() {
         for (int i = 0; i < getSlots(); ++i) {
-            if (getStackInSlot(i) != null && getStackInSlot(i).getItemDamage() == ItemUpgrade.TYPE_FORTUNE) {
+            if (!getStackInSlot(i).isEmpty() && getStackInSlot(i).getItemDamage() == ItemUpgrade.TYPE_FORTUNE) {
                 return ItemUpgrade.getFortuneLevel(getStackInSlot(i));
             }
         }

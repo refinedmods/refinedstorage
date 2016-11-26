@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.container;
 
+import com.raoulvdberge.refinedstorage.container.slot.SlotFilter;
 import com.raoulvdberge.refinedstorage.container.slot.SlotOutput;
-import com.raoulvdberge.refinedstorage.container.slot.SlotSpecimen;
 import com.raoulvdberge.refinedstorage.tile.TileInterface;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
@@ -17,7 +17,7 @@ public class ContainerInterface extends ContainerBase {
         }
 
         for (int i = 0; i < 9; ++i) {
-            addSlotToContainer(new SlotSpecimen(tile.getExportSpecimenItems(), i, 8 + (18 * i), 54, SlotSpecimen.SPECIMEN_SIZE));
+            addSlotToContainer(new SlotFilter(tile.getExportSpecimenItems(), i, 8 + (18 * i), 54, SlotFilter.SPECIMEN_SIZE));
         }
 
         for (int i = 0; i < 9; ++i) {
@@ -33,23 +33,23 @@ public class ContainerInterface extends ContainerBase {
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int index) {
-        ItemStack stack = null;
+        ItemStack stack = ItemStack.EMPTY;
 
         Slot slot = getSlot(index);
 
-        if (slot != null && slot.getHasStack()) {
+        if (slot.getHasStack()) {
             stack = slot.getStack();
 
             if (index < 9) {
                 if (!mergeItemStack(stack, 9 + 9 + 9 + 4, inventorySlots.size(), false)) {
-                    return null;
+                    return ItemStack.EMPTY;
                 }
             } else if (!mergeItemStack(stack, 0, 9, false)) {
-                return null;
+                return ItemStack.EMPTY;
             }
 
             if (stack.getCount() == 0) {
-                slot.putStack(null);
+                slot.putStack(ItemStack.EMPTY);
             } else {
                 slot.onSlotChanged();
             }
