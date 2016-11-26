@@ -1,7 +1,9 @@
 # Refined Storage Changelog
 
 ### 1.2.6
-- Fixed crash with exporters in fluid mode (raoulvdberge)
+- Processing patterns can now insert buckets (way2muchnoise)
+- Fixed crash with Exporters in fluid mode (raoulvdberge)
+- Removed Solderer progress percentage text (raoulvdberge)
 
 ### 1.2.5
 - The Constructor can now place fireworks (raoulvdberge)
