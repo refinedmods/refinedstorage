@@ -142,7 +142,7 @@ public class BlockCable extends BlockCoverable {
             }
 
             if (hasConnectivityState()) {
-                state = state.withProperty(CONNECTED, tile.isConnected());
+                state = state.withProperty(CONNECTED, tile.getNetwork() != null);
             }
         }
 
@@ -283,7 +283,7 @@ public class BlockCable extends BlockCoverable {
             for (EnumFacing facing : EnumFacing.VALUES) {
                 TileEntity tile = world.getTileEntity(pos.offset(facing));
 
-                if (tile instanceof TileNode && ((TileNode) tile).isConnected()) {
+                if (tile instanceof TileNode && ((TileNode) tile).getNetwork() != null) {
                     ((TileNode) tile).getNetwork().getNodeGraph().rebuild();
 
                     break;

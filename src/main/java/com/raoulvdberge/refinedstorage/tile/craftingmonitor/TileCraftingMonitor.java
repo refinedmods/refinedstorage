@@ -7,6 +7,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.BlockPos;
 
+import javax.annotation.Nullable;
+
 public class TileCraftingMonitor extends TileNode implements ICraftingMonitor {
     @Override
     public int getEnergyUsage() {
@@ -24,7 +26,7 @@ public class TileCraftingMonitor extends TileNode implements ICraftingMonitor {
 
     @Override
     public void onCancelled(EntityPlayerMP player, int id) {
-        if (isConnected()) {
+        if (hasNetwork()) {
             network.getItemGridHandler().onCraftingCancelRequested(player, id);
         }
     }
@@ -34,13 +36,14 @@ public class TileCraftingMonitor extends TileNode implements ICraftingMonitor {
         return REDSTONE_MODE;
     }
 
+    @Nullable
     @Override
     public BlockPos getNetworkPosition() {
         return network != null ? network.getPosition() : null;
     }
 
     public void onOpened(EntityPlayer player) {
-        if (isConnected()) {
+        if (hasNetwork()) {
             network.sendCraftingMonitorUpdate((EntityPlayerMP) player);
         }
     }

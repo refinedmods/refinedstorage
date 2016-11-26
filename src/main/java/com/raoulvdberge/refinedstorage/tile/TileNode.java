@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
 public abstract class TileNode extends TileBase implements INetworkNode, IRedstoneConfigurable, IWrenchable {
     public static final TileDataParameter<Integer> REDSTONE_MODE = RedstoneMode.createParameter();
 
-    private static final String NBT_CONNECTED = "Connected";
+    private static final String NBT_ACTIVE = "Connected";
     private static final String NBT_NETWORK = "Network";
 
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
@@ -32,7 +32,6 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
 
     private BlockPos networkPos;
 
-    protected boolean connected;
     protected INetworkMaster network;
 
     protected boolean rebuildOnUpdateChange;
@@ -47,7 +46,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
     }
 
     public boolean isActive() {
-        return isConnected() && canUpdate();
+        return active;
     }
 
     public abstract void updateNode();
@@ -77,13 +76,13 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
                 }
             }
 
-            if (active != isActive() && hasConnectivityState()) {
+            boolean wasActive = active;
+            active = hasNetwork() && canUpdate();
+            if (active != wasActive && hasConnectivityState()) {
                 updateBlock();
-
-                active = isActive();
             }
 
-            if (isActive()) {
+            if (active) {
                 updateNode();
             }
         }
@@ -93,7 +92,6 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
 
     @Override
     public void onConnected(INetworkMaster network) {
-        this.connected = true;
         this.network = network;
 
         onConnectionChange(network, true);
@@ -105,7 +103,6 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
     public void onDisconnected(INetworkMaster network) {
         onConnectionChange(network, false);
 
-        this.connected = false;
         this.network = null;
 
         markDirty();
@@ -150,17 +147,16 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
         return getWorld();
     }
 
+    public boolean hasNetwork() {
+        return network != null;
+    }
+
     @Nonnull
     @Override
     public ItemStack getItemStack() {
         IBlockState state = getWorld().getBlockState(pos);
         Item item = Item.getItemFromBlock(state.getBlock());
         return new ItemStack(item, 1, state.getBlock().getMetaFromState(state));
-    }
-
-    @Override
-    public boolean isConnected() {
-        return connected;
     }
 
     @Override
@@ -215,7 +211,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
         super.writeUpdate(tag);
 
         if (hasConnectivityState()) {
-            tag.setBoolean(NBT_CONNECTED, isActive());
+            tag.setBoolean(NBT_ACTIVE, active);
         }
 
         return tag;
@@ -223,7 +219,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
 
     public void readUpdate(NBTTagCompound tag) {
         if (hasConnectivityState()) {
-            connected = tag.getBoolean(NBT_CONNECTED);
+            active = tag.getBoolean(NBT_ACTIVE);
         }
 
         super.readUpdate(tag);

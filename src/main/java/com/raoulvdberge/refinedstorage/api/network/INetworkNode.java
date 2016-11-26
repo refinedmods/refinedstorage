@@ -48,7 +48,9 @@ public interface INetworkNode {
     /**
      * @return true if this is node is connected to a network, or false otherwise
      */
-    boolean isConnected();
+    default boolean isConnected() {
+        return getNetwork() != null;
+    }
 
     /**
      * @return true if this node can be treated as active, typically checks the redstone configuration

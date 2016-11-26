@@ -172,7 +172,7 @@ public class WirelessGrid implements IGrid {
     }
 
     @Override
-    public boolean isConnected() {
+    public boolean isActive() {
         return true;
     }
 

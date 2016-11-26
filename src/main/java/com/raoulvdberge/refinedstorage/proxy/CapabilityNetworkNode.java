@@ -55,11 +55,6 @@ public class CapabilityNetworkNode {
             }
 
             @Override
-            public boolean isConnected() {
-                return false;
-            }
-
-            @Override
             public boolean canUpdate() {
                 return false;
             }

@@ -8,11 +8,13 @@ import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.util.math.BlockPos;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public interface IGrid {
     EnumGridType getType();
 
+    @Nullable
     BlockPos getNetworkPosition();
 
     IItemGridHandler getItemHandler();
@@ -43,5 +45,5 @@ public interface IGrid {
 
     TileDataParameter<Integer> getRedstoneModeConfig();
 
-    boolean isConnected();
+    boolean isActive();
 }
