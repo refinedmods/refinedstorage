@@ -576,7 +576,7 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
 
     @Override
     public ItemStack insertItem(@Nonnull ItemStack stack, int size, boolean simulate) {
-        if (stack == null || (stack != null && stack.isEmpty()) || itemStorage.getStorages().isEmpty()) {
+        if (stack.isEmpty() || itemStorage.getStorages().isEmpty()) {
             return ItemHandlerHelper.copyStackWithSize(stack, size);
         }
 
