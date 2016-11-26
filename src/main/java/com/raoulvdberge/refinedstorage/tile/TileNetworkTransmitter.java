@@ -14,6 +14,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
@@ -155,5 +157,18 @@ public class TileNetworkTransmitter extends TileNode {
     @Override
     public boolean hasConnectivityState() {
         return true;
+    }
+
+    @Override
+    public void walkNeighborhood(Operator operator) {
+        super.walkNeighborhood(operator);
+        if (canTransmit()) {
+            if (!isSameDimension()) {
+                final World dimensionWorld = DimensionManager.getWorld(receiverDimension);
+                operator.apply(dimensionWorld, receiver, null);
+            } else {
+                operator.apply(getWorld(), receiver, null);
+            }
+        }
     }
 }

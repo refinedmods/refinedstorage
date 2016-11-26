@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.tile;
 
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetworkNeighborhoodAware;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.util.IWrenchable;
 import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNode;
@@ -20,7 +21,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class TileNode extends TileBase implements INetworkNode, IRedstoneConfigurable, IWrenchable {
+public abstract class TileNode extends TileBase implements INetworkNode, IRedstoneConfigurable, IWrenchable, INetworkNeighborhoodAware {
     public static final TileDataParameter<Integer> REDSTONE_MODE = RedstoneMode.createParameter();
 
     private static final String NBT_ACTIVE = "Connected";
@@ -227,5 +228,12 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
 
     public boolean hasConnectivityState() {
         return false;
+    }
+
+    @Override
+    public void walkNeighborhood(Operator operator) {
+        for (EnumFacing facing : EnumFacing.VALUES) {
+            operator.apply(getWorld(), pos.offset(facing), facing.getOpposite());
+        }
     }
 }

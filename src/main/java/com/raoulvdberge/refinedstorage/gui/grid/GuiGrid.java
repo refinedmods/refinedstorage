@@ -88,7 +88,7 @@ public class GuiGrid extends GuiBase {
 
         this.container = container;
         this.grid = grid;
-        this.wasConnected = isGridActive();
+        this.wasConnected = this.grid.isActive();
 
         this.scrollbar = new Scrollbar(174, 20, 12, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN || grid.getType() == EnumGridType.FLUID) ? 70 : 88);
 
@@ -139,7 +139,7 @@ public class GuiGrid extends GuiBase {
     private void sortItems() {
         List<IClientStack> stacks = new ArrayList<>();
 
-        if (isGridActive()) {
+        if (grid.isActive()) {
             stacks.addAll(grid.getType() == EnumGridType.FLUID ? FLUIDS.values() : ITEMS.values());
 
             List<IGridFilter> filters = GridFilterParser.getFilters(grid, searchField.getText());
@@ -183,8 +183,8 @@ public class GuiGrid extends GuiBase {
             }
         }
 
-        if (wasConnected != isGridActive()) {
-            wasConnected = isGridActive();
+        if (wasConnected != grid.isActive()) {
+            wasConnected = grid.isActive();
 
             markForSorting();
         }
@@ -201,11 +201,7 @@ public class GuiGrid extends GuiBase {
     }
 
     private boolean isOverSlotWithItem() {
-        return isGridActive() && isOverSlot() && slotNumber < STACKS.size();
-    }
-
-    private boolean isGridActive() {
-        return grid.isActive();
+        return grid.isActive() && isOverSlot() && slotNumber < STACKS.size();
     }
 
     private boolean isOverSlot() {
@@ -282,7 +278,7 @@ public class GuiGrid extends GuiBase {
             int xx = x + (konami.isEmpty() ? konamiOffsetsX[i] : 0);
             int yy = y + (konami.isEmpty() ? konamiOffsetsY[i] : 0);
 
-            if (inBounds(xx, yy, 16, 16, mouseX, mouseY) || !isGridActive()) {
+            if (inBounds(xx, yy, 16, 16, mouseX, mouseY) || !grid.isActive()) {
                 this.slotNumber = slot;
             }
 
@@ -290,8 +286,8 @@ public class GuiGrid extends GuiBase {
                 STACKS.get(slot).draw(this, xx, yy, GuiScreen.isShiftKeyDown() && slotNumber == slot);
             }
 
-            if (inBounds(xx, yy, 16, 16, mouseX, mouseY) || !isGridActive()) {
-                int color = isGridActive() ? -2130706433 : 0xFF5B5B5B;
+            if (inBounds(xx, yy, 16, 16, mouseX, mouseY) || !grid.isActive()) {
+                int color = grid.isActive() ? -2130706433 : 0xFF5B5B5B;
 
                 GlStateManager.disableLighting();
                 GlStateManager.disableDepth();
@@ -358,7 +354,7 @@ public class GuiGrid extends GuiBase {
             BlockPos gridPos = ((TileGrid) grid).getPos();
 
             RS.INSTANCE.network.sendToServer(new MessageGridPatternCreate(gridPos.getX(), gridPos.getY(), gridPos.getZ()));
-        } else if (isGridActive()) {
+        } else if (grid.isActive()) {
             if (clickedClear) {
                 RS.INSTANCE.network.sendToServer(new MessageGridCraftingClear((TileGrid) grid));
             }
