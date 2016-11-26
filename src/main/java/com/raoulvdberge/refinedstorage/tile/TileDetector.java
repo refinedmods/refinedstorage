@@ -110,7 +110,7 @@ public class TileDetector extends TileNode implements IComparable, IType {
             if (type == IType.ITEMS) {
                 ItemStack slot = itemFilters.getStackInSlot(0);
 
-                if (slot != null) {
+                if (!slot.isEmpty()) {
                     if (mode == MODE_AUTOCRAFTING) {
                         boolean found = false;
 

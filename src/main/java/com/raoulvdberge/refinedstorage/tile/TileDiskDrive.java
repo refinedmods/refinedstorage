@@ -213,7 +213,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
         int usage = RS.INSTANCE.config.diskDriveUsage;
 
         for (int i = 0; i < disks.getSlots(); ++i) {
-            if (disks.getStackInSlot(i) != null) {
+            if (!disks.getStackInSlot(i).isEmpty()) {
                 usage += RS.INSTANCE.config.diskDrivePerDiskUsage;
             }
         }
@@ -507,7 +507,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
         for (int i = 0; i < disks.getSlots(); ++i) {
             ItemStack disk = disks.getStackInSlot(i);
 
-            if (disk != null) {
+            if (!disk.isEmpty()) {
                 stored += disk.getItem() == RSItems.STORAGE_DISK ? ItemStorageNBT.getStoredFromNBT(disk.getTagCompound()) : FluidStorageNBT.getStoredFromNBT(disk.getTagCompound());
             }
         }
@@ -522,7 +522,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
         for (int i = 0; i < disks.getSlots(); ++i) {
             ItemStack disk = disks.getStackInSlot(i);
 
-            if (disk != null) {
+            if (!disk.isEmpty()) {
                 int diskCapacity = disk.getItem() == RSItems.STORAGE_DISK ? EnumItemStorageType.getById(disk.getItemDamage()).getCapacity() : EnumFluidStorageType.getById(disk.getItemDamage()).getCapacity();
 
                 if (diskCapacity == -1) {

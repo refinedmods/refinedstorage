@@ -57,7 +57,7 @@ public class TileNetworkTransmitter extends TileNode {
 
             ItemStack card = getStackInSlot(slot);
 
-            if (card == null) {
+            if (card.isEmpty()) {
                 receiver = null;
             } else {
                 receiver = ItemNetworkCard.getReceiver(card);

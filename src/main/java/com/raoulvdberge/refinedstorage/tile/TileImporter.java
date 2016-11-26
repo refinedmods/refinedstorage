@@ -68,12 +68,12 @@ public class TileImporter extends TileNode implements IComparable, IFilterable, 
             if (handler.getSlots() > 0) {
                 ItemStack stack = handler.getStackInSlot(currentSlot);
 
-                if (stack == null || !IFilterable.canTake(itemFilters, mode, compare, stack)) {
+                if (stack.isEmpty() || !IFilterable.canTake(itemFilters, mode, compare, stack)) {
                     currentSlot++;
                 } else if (ticks % upgrades.getSpeed() == 0) {
                     ItemStack result = handler.extractItem(currentSlot, upgrades.getItemInteractCount(), true);
 
-                    if (result != null && network.insertItem(result, result.getCount(), true) == null) {
+                    if (!result.isEmpty() && network.insertItem(result, result.getCount(), true) == null) {
                         network.insertItem(result, result.getCount(), false);
 
                         handler.extractItem(currentSlot, upgrades.getItemInteractCount(), false);

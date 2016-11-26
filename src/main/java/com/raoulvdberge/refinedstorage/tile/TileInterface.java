@@ -16,6 +16,8 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
+import javax.annotation.Nonnull;
+
 public class TileInterface extends TileNode implements IComparable {
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
 
@@ -26,6 +28,7 @@ public class TileInterface extends TileNode implements IComparable {
     private ItemHandlerBasic exportSpecimenItems = new ItemHandlerBasic(9, this);
     private ItemHandlerBasic exportItems = new ItemHandlerBasic(9, this) {
         @Override
+        @Nonnull
         public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
             return stack;
         }
@@ -54,7 +57,7 @@ public class TileInterface extends TileNode implements IComparable {
 
         ItemStack slot = importItems.getStackInSlot(currentSlot);
 
-        if (slot == null) {
+        if (slot.isEmpty()) {
             currentSlot++;
         } else if (ticks % upgrades.getSpeed() == 0) {
             int size = Math.min(slot.getCount(), upgrades.getItemInteractCount());
@@ -65,6 +68,7 @@ public class TileInterface extends TileNode implements IComparable {
                 importItems.extractItemInternal(currentSlot, size, false);
             } else {
                 importItems.extractItemInternal(currentSlot, size - remainder.getCount(), false);
+
                 currentSlot++;
             }
         }
@@ -73,18 +77,18 @@ public class TileInterface extends TileNode implements IComparable {
             ItemStack wanted = exportSpecimenItems.getStackInSlot(i);
             ItemStack got = exportItems.getStackInSlot(i);
 
-            if (wanted == null) {
-                if (got != null) {
-                    exportItems.setStackInSlot(i, network.insertItem(got, got.getCount(), false));
+            if (wanted.isEmpty()) {
+                if (!got.isEmpty()) {
+                    exportItems.setStackInSlot(i, RSUtils.getStack(network.insertItem(got, got.getCount(), false)));
                 }
             } else {
-                int delta = got == null ? wanted.getCount() : (wanted.getCount() - got.getCount());
+                int delta = got.isEmpty() ? wanted.getCount() : (wanted.getCount() - got.getCount());
 
                 if (delta > 0) {
                     ItemStack result = network.extractItem(wanted, delta, compare, false);
 
                     if (result != null) {
-                        if (exportItems.getStackInSlot(i) == null) {
+                        if (exportItems.getStackInSlot(i).isEmpty()) {
                             exportItems.setStackInSlot(i, result);
                         } else {
                             exportItems.getStackInSlot(i).grow(result.getCount());

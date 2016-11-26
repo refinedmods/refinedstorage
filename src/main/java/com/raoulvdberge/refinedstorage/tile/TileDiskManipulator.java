@@ -31,6 +31,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
 public class TileDiskManipulator extends TileNode implements IComparable, IFilterable, IType {
@@ -84,6 +85,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         }
 
         @Override
+        @Nonnull
         public ItemStack extractItem(int slot, int amount, boolean simulate) {
             if (itemStorages[slot] != null) {
                 itemStorages[slot].writeToNBT();
@@ -427,9 +429,9 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
 
     private void moveDriveToOutput(int slot) {
         ItemStack disk = inputDisks.getStackInSlot(slot);
-        if (disk != null) {
+        if (!disk.isEmpty()) {
             int i = 0;
-            while (i < 3 && outputDisks.getStackInSlot(i) != null) {
+            while (i < 3 && !outputDisks.getStackInSlot(i).isEmpty()) {
                 i++;
             }
 

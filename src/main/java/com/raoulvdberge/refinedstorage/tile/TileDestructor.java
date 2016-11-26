@@ -94,7 +94,6 @@ public class TileDestructor extends TileNode implements IComparable, IFilterable
     @Override
     public void updateNode() {
         if (ticks % upgrades.getSpeed(BASE_SPEED, 4) == 0) {
-
             BlockPos front = pos.offset(getDirection());
 
             if (pickupItem && type == IType.ITEMS) {
@@ -123,7 +122,7 @@ public class TileDestructor extends TileNode implements IComparable, IFilterable
                 @SuppressWarnings("deprecation")
                 ItemStack frontStack = frontBlock.getItem(getWorld(), front, frontBlockState);
 
-                if (frontStack != null) {
+                if (!frontStack.isEmpty()) {
                     if (IFilterable.canTake(itemFilters, mode, compare, frontStack) && frontBlockState.getBlockHardness(getWorld(), front) != -1.0) {
                         List<ItemStack> drops;
                         if (upgrades.hasUpgrade(ItemUpgrade.TYPE_SILK_TOUCH) && frontBlock.canSilkHarvest(getWorld(), front, frontBlockState, null)) {

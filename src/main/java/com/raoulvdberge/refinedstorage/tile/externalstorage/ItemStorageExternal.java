@@ -41,14 +41,14 @@ public abstract class ItemStorageExternal implements IItemStorage {
 
             ItemStack cached = cache.get(i);
 
-            if (cached != null && actual == null) {
-                // If the cached is not null but the actual is, we remove this item
+            if (cached != ItemStack.EMPTY && actual == ItemStack.EMPTY) {
+                // If the cached is not empty but the actual is, we remove this item
                 network.getItemStorageCache().remove(cached, cached.getCount());
-            } else if (cached == null && actual != null) {
-                // If the cached is null and the actual isn't, we added this item
+            } else if (cached == ItemStack.EMPTY && actual != ItemStack.EMPTY) {
+                // If the cached is empty and the actual isn't, we added this item
                 network.getItemStorageCache().add(actual, actual.getCount(), false);
-            } else if (cached == null && actual == null) {
-                // If they're both null, nothing happens
+            } else if (cached == ItemStack.EMPTY && actual == ItemStack.EMPTY) {
+                // If they're both empty, nothing happens
             } else if (!API.instance().getComparer().isEqualNoQuantity(cached, actual)) {
                 // If both items mismatch, remove the old and add the new
                 network.getItemStorageCache().remove(cached, cached.getCount());
@@ -68,7 +68,7 @@ public abstract class ItemStorageExternal implements IItemStorage {
         // In that case, we remove the items that have been removed due to the shrinkage
         if (cache.size() > newStacks.size()) {
             for (int i = newStacks.size(); i < cache.size(); ++i) {
-                if (cache.get(i) != null) {
+                if (cache.get(i) != ItemStack.EMPTY) {
                     network.getItemStorageCache().remove(cache.get(i), cache.get(i).getCount());
                 }
             }

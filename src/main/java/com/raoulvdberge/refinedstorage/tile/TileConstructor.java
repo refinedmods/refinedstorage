@@ -71,7 +71,7 @@ public class TileConstructor extends TileNode implements IComparable, IType {
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            item = getStackInSlot(slot) == null ? null : getStackInSlot(slot).copy();
+            item = getStackInSlot(slot).isEmpty() ? null : getStackInSlot(slot).copy();
             block = SlotFilter.getBlockState(getWorld(), pos.offset(getDirection()), getStackInSlot(slot));
         }
     };

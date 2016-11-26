@@ -92,7 +92,7 @@ public class TileFluidInterface extends TileNode implements IComparable {
     public void updateNode() {
         ItemStack container = in.getStackInSlot(0);
 
-        if (container != null) {
+        if (!container.isEmpty()) {
             FluidStack fluid = RSUtils.getFluidFromStack(container, true);
 
             if (fluid != null && tankIn.fillInternal(fluid, false) == fluid.amount) {

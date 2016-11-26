@@ -19,6 +19,8 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
+import javax.annotation.Nonnull;
+
 public class TileSolderer extends TileNode {
     public static final TileDataParameter<Integer> DURATION = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileSolderer>() {
         @Override
@@ -46,6 +48,7 @@ public class TileSolderer extends TileNode {
 
     private ItemHandlerBasic items = new ItemHandlerBasic(3, this) {
         @Override
+        @Nonnull
         public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
             for (ISoldererRecipe recipe : API.instance().getSoldererRegistry().getRecipes()) {
                 if (API.instance().getComparer().isEqualNoQuantity(recipe.getRow(slot), stack) || API.instance().getComparer().isEqualOredict(recipe.getRow(slot), stack)) {
@@ -58,6 +61,7 @@ public class TileSolderer extends TileNode {
     };
     private ItemHandlerBasic result = new ItemHandlerBasic(1, this) {
         @Override
+        @Nonnull
         public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
             return stack;
         }
@@ -82,7 +86,7 @@ public class TileSolderer extends TileNode {
 
     @Override
     public void updateNode() {
-        if (items.getStackInSlot(1) == null && items.getStackInSlot(2) == null && result.getStackInSlot(0) == null) {
+        if (items.getStackInSlot(1).isEmpty() && items.getStackInSlot(2).isEmpty() && result.getStackInSlot(0).isEmpty()) {
             stop();
         } else {
             ISoldererRecipe newRecipe = API.instance().getSoldererRegistry().getRecipe(items);
@@ -90,9 +94,9 @@ public class TileSolderer extends TileNode {
             if (newRecipe == null) {
                 stop();
             } else if (newRecipe != recipe) {
-                boolean sameItem = result.getStackInSlot(0) != null && API.instance().getComparer().isEqualNoQuantity(result.getStackInSlot(0), newRecipe.getResult());
+                boolean sameItem = !result.getStackInSlot(0).isEmpty() && API.instance().getComparer().isEqualNoQuantity(result.getStackInSlot(0), newRecipe.getResult());
 
-                if (result.getStackInSlot(0) == null || (sameItem && ((result.getStackInSlot(0).getCount() + newRecipe.getResult().getCount()) <= result.getStackInSlot(0).getMaxStackSize()))) {
+                if (result.getStackInSlot(0).isEmpty() || (sameItem && ((result.getStackInSlot(0).getCount() + newRecipe.getResult().getCount()) <= result.getStackInSlot(0).getMaxStackSize()))) {
                     recipe = newRecipe;
                     progress = 0;
                     working = true;
@@ -103,7 +107,7 @@ public class TileSolderer extends TileNode {
                 progress += 1 + upgrades.getUpgradeCount(ItemUpgrade.TYPE_SPEED);
 
                 if (progress >= recipe.getDuration()) {
-                    if (result.getStackInSlot(0) != null) {
+                    if (!result.getStackInSlot(0).isEmpty()) {
                         result.getStackInSlot(0).grow(recipe.getResult().getCount());
                     } else {
                         result.setStackInSlot(0, recipe.getResult().copy());

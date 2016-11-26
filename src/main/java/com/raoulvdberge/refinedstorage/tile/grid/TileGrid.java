@@ -276,7 +276,7 @@ public class TileGrid extends TileNode implements IGrid {
 
             if (i < remainder.size() && !remainder.get(i).isEmpty()) {
                 // If there is no space for the remainder, dump it in the player inventory
-                if (slot != null && slot.getCount() > 1) {
+                if (!slot.isEmpty() && slot.getCount() > 1) {
                     if (!player.inventory.addItemStackToInventory(remainder.get(i).copy())) {
                         ItemStack remainderStack = network.insertItem(remainder.get(i).copy(), remainder.get(i).getCount(), false);
 
@@ -289,7 +289,7 @@ public class TileGrid extends TileNode implements IGrid {
                 } else {
                     matrix.setInventorySlotContents(i, remainder.get(i).copy());
                 }
-            } else if (slot != null) {
+            } else if (!slot.isEmpty()) {
                 if (slot.getCount() == 1 && isConnected()) {
                     matrix.setInventorySlotContents(i, network.extractItem(slot, 1, false));
                 } else {
@@ -342,7 +342,7 @@ public class TileGrid extends TileNode implements IGrid {
             for (int i = 0; i < 9; ++i) {
                 ItemStack ingredient = matrix.getStackInSlot(i);
 
-                if (ingredient != null) {
+                if (!ingredient.isEmpty()) {
                     ItemPattern.setSlot(pattern, i, ingredient);
                 }
             }
@@ -352,7 +352,7 @@ public class TileGrid extends TileNode implements IGrid {
     }
 
     public boolean canCreatePattern() {
-        return result.getStackInSlot(0) != null && patterns.getStackInSlot(1) == null && patterns.getStackInSlot(0) != null;
+        return !result.getStackInSlot(0).isEmpty() && patterns.getStackInSlot(1).isEmpty() && patterns.getStackInSlot(0) != null;
     }
 
     public void onRecipeTransfer(EntityPlayer player, ItemStack[][] recipe) {
@@ -360,7 +360,7 @@ public class TileGrid extends TileNode implements IGrid {
         for (int i = 0; i < matrix.getSizeInventory(); ++i) {
             ItemStack slot = matrix.getStackInSlot(i);
 
-            if (slot != null) {
+            if (!slot.isEmpty()) {
                 // Only if we are a crafting grid. Pattern grids can just be emptied.
                 if (getType() == EnumGridType.CRAFTING) {
                     // If we are connected, try to insert into network. If it fails, stop.
@@ -378,7 +378,7 @@ public class TileGrid extends TileNode implements IGrid {
                     }
                 }
 
-                matrix.setInventorySlotContents(i, null);
+                matrix.setInventorySlotContents(i, ItemStack.EMPTY);
             }
         }
 
@@ -397,7 +397,7 @@ public class TileGrid extends TileNode implements IGrid {
                             ItemStack took = network.extractItem(possibility, 1, false);
 
                             if (took != null) {
-                                matrix.setInventorySlotContents(i, took);
+                                matrix.setInventorySlotContents(i, RSUtils.getStack(took));
 
                                 found = true;
 

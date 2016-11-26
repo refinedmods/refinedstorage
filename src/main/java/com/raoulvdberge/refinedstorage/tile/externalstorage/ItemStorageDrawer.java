@@ -63,10 +63,6 @@ public class ItemStorageDrawer extends ItemStorageExternal {
         return Collections.emptyList();
     }
 
-    public static boolean isVoidable(IDrawer drawer) {
-        return drawer instanceof IVoidable & ((IVoidable) drawer).isVoid();
-    }
-
     public static ItemStack insertItem(TileExternalStorage externalStorage, IDrawer drawer, ItemStack stack, int size, boolean simulate) {
         if (IFilterable.canTake(externalStorage.getItemFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack) && drawer.canItemBeStored(stack)) {
             int stored = drawer.getStoredItemCount();
@@ -88,7 +84,7 @@ public class ItemStorageDrawer extends ItemStorageExternal {
 
             int returnSize = size - inserted;
 
-            if (isVoidable(drawer)) {
+            if (drawer instanceof IVoidable && ((IVoidable) drawer).isVoid()) {
                 returnSize = -returnSize;
             }
 

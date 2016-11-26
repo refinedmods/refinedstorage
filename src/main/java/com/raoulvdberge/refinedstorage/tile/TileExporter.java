@@ -56,14 +56,14 @@ public class TileExporter extends TileNode implements IComparable, IType {
                     for (int i = 0; i < itemFilters.getSlots(); ++i) {
                         ItemStack slot = itemFilters.getStackInSlot(i);
 
-                        if (slot != null) {
+                        if (!slot.isEmpty()) {
                             ItemStack took = network.extractItem(slot, upgrades.getItemInteractCount(), compare, true);
 
                             if (took == null) {
                                 if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
                                     network.scheduleCraftingTask(slot, 1, compare);
                                 }
-                            } else if (ItemHandlerHelper.insertItem(handler, took, true) == null) {
+                            } else if (ItemHandlerHelper.insertItem(handler, took, true).isEmpty()) {
                                 took = network.extractItem(slot, upgrades.getItemInteractCount(), compare, false);
 
                                 ItemHandlerHelper.insertItem(handler, took, false);

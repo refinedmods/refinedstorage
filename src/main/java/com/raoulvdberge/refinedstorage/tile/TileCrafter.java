@@ -81,7 +81,7 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
         for (int i = 0; i < patterns.getSlots(); ++i) {
             ItemStack patternStack = patterns.getStackInSlot(i);
 
-            if (patternStack != null) {
+            if (!patternStack.isEmpty()) {
                 ICraftingPattern pattern = ((ICraftingPatternProvider) patternStack.getItem()).create(getWorld(), patternStack, this);
 
                 if (pattern.isValid()) {
@@ -96,7 +96,7 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
         int usage = RS.INSTANCE.config.crafterUsage + upgrades.getEnergyUsage();
 
         for (int i = 0; i < patterns.getSlots(); ++i) {
-            if (patterns.getStackInSlot(i) != null) {
+            if (!patterns.getStackInSlot(i).isEmpty()) {
                 usage += RS.INSTANCE.config.crafterPerPatternUsage;
             }
         }

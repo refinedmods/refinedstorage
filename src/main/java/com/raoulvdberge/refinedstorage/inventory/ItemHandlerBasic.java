@@ -4,6 +4,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.items.ItemStackHandler;
 
+import javax.annotation.Nonnull;
+
 public class ItemHandlerBasic extends ItemStackHandler {
     private TileEntity tile;
 
@@ -21,6 +23,7 @@ public class ItemHandlerBasic extends ItemStackHandler {
     }
 
     @Override
+    @Nonnull
     public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
         if (validators.length > 0) {
             for (IItemValidator validator : validators) {
@@ -44,6 +47,7 @@ public class ItemHandlerBasic extends ItemStackHandler {
         }
     }
 
+    @Nonnull
     public ItemStack extractItemInternal(int slot, int amount, boolean simulate) {
         return super.extractItem(slot, amount, simulate);
     }

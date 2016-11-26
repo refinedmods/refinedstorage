@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,14 +35,14 @@ public class ItemStorageItemHandler extends ItemStorageExternal {
         List<ItemStack> items = new ArrayList<>();
 
         for (int i = 0; i < handler.getSlots(); ++i) {
-            items.add(handler.getStackInSlot(i) != null ? handler.getStackInSlot(i).copy() : null);
+            items.add(!handler.getStackInSlot(i).isEmpty() ? handler.getStackInSlot(i).copy() : null);
         }
 
         return items;
     }
 
     @Override
-    public ItemStack insertItem(ItemStack stack, int size, boolean simulate) {
+    public ItemStack insertItem(@Nonnull ItemStack stack, int size, boolean simulate) {
         if (IFilterable.canTake(externalStorage.getItemFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack)) {
             return ItemHandlerHelper.insertItem(handler, ItemHandlerHelper.copyStackWithSize(stack, size), simulate);
         }
@@ -50,7 +51,7 @@ public class ItemStorageItemHandler extends ItemStorageExternal {
     }
 
     @Override
-    public ItemStack extractItem(ItemStack stack, int size, int flags, boolean simulate) {
+    public ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
         int remaining = size;
 
         ItemStack received = null;
@@ -58,10 +59,10 @@ public class ItemStorageItemHandler extends ItemStorageExternal {
         for (int i = 0; i < handler.getSlots(); ++i) {
             ItemStack slot = handler.getStackInSlot(i);
 
-            if (slot != null && API.instance().getComparer().isEqual(slot, stack, flags)) {
+            if (!slot.isEmpty() && API.instance().getComparer().isEqual(slot, stack, flags)) {
                 ItemStack got = handler.extractItem(i, remaining, simulate);
 
-                if (got != null) {
+                if (!got.isEmpty()) {
                     if (received == null) {
                         received = got;
                     } else {
@@ -85,7 +86,7 @@ public class ItemStorageItemHandler extends ItemStorageExternal {
         int size = 0;
 
         for (int i = 0; i < handler.getSlots(); ++i) {
-            if (handler.getStackInSlot(i) != null) {
+            if (!handler.getStackInSlot(i).isEmpty()) {
                 size += handler.getStackInSlot(i).getCount();
             }
         }

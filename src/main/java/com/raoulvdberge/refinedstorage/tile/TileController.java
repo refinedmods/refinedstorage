@@ -353,14 +353,14 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     }
 
     @Override
-    public void addCraftingTask(ICraftingTask task) {
+    public void addCraftingTask(@Nonnull ICraftingTask task) {
         craftingTasksToAdd.add(task);
 
         markDirty();
     }
 
     @Override
-    public void cancelCraftingTask(ICraftingTask task) {
+    public void cancelCraftingTask(@Nonnull ICraftingTask task) {
         craftingTasksToCancel.add(task);
 
         markDirty();
@@ -580,7 +580,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public ItemStack insertItem(@Nonnull ItemStack stack, int size, boolean simulate) {
-        if (stack == null || stack.getItem() == null || itemStorage.getStorages().isEmpty()) {
+        if (stack == null || (stack != null && stack.isEmpty()) || itemStorage.getStorages().isEmpty()) {
             return ItemHandlerHelper.copyStackWithSize(stack, size);
         }
 

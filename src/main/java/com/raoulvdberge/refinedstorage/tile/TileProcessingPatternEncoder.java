@@ -79,7 +79,7 @@ public class TileProcessingPatternEncoder extends TileBase {
             ItemPattern.setOredict(pattern, oredictPattern);
 
             for (int i = 0; i < 18; ++i) {
-                if (configuration.getStackInSlot(i) != null) {
+                if (!configuration.getStackInSlot(i).isEmpty()) {
                     if (i >= 9) {
                         ItemPattern.addOutput(pattern, configuration.getStackInSlot(i));
                     } else {
@@ -97,18 +97,18 @@ public class TileProcessingPatternEncoder extends TileBase {
         int inputsFilled = 0, outputsFilled = 0;
 
         for (int i = 0; i < 9; ++i) {
-            if (configuration.getStackInSlot(i) != null) {
+            if (!configuration.getStackInSlot(i).isEmpty()) {
                 inputsFilled++;
             }
         }
 
         for (int i = 9; i < 18; ++i) {
-            if (configuration.getStackInSlot(i) != null) {
+            if (!configuration.getStackInSlot(i).isEmpty()) {
                 outputsFilled++;
             }
         }
 
-        return inputsFilled > 0 && outputsFilled > 0 && patterns.getStackInSlot(0) != null && patterns.getStackInSlot(1) == null;
+        return inputsFilled > 0 && outputsFilled > 0 && !patterns.getStackInSlot(0).isEmpty() && patterns.getStackInSlot(1).isEmpty();
     }
 
     public ItemHandlerBasic getPatterns() {
