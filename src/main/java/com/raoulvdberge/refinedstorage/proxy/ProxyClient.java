@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.proxy;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSItems;
+import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.block.*;
 import com.raoulvdberge.refinedstorage.gui.GuiCraftingPreview;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiCraftingStart;
@@ -15,6 +16,7 @@ import com.raoulvdberge.refinedstorage.tile.TileController;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.ModelBakery;
@@ -41,6 +43,8 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+
+import java.util.List;
 
 public class ProxyClient extends ProxyCommon {
     @Override
@@ -290,13 +294,11 @@ public class ProxyClient extends ProxyCommon {
 
         state = ((BlockCable) state.getBlock()).getActualState(state, player.getEntityWorld(), pos);
 
-        // @TODO
-        /*if (((BlockCable) state.getBlock()).collisionRayTrace(state, player.getEntityWorld(), pos, RayTraceUtils.getStart(player), RayTraceUtils.getEnd(player)) instanceof PartMOP) {
+        if (((BlockCable) state.getBlock()).collisionRayTrace(state, player.getEntityWorld(), pos, RSUtils.getStart(player), RSUtils.getEnd(player)) == null) {
             return;
-        }*/
-        return;
+        }
 
-        /*List<AxisAlignedBB> unionized = ((BlockCable) state.getBlock()).getUnionizedCollisionBoxes(state);
+        List<AxisAlignedBB> unionized = ((BlockCable) state.getBlock()).getUnionizedCollisionBoxes(state);
         List<AxisAlignedBB> nonUnionized = ((BlockCable) state.getBlock()).getNonUnionizedCollisionBoxes(state);
 
         e.setCanceled(true);
@@ -304,7 +306,7 @@ public class ProxyClient extends ProxyCommon {
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
         GlStateManager.color(0.0F, 0.0F, 0.0F, 0.4F);
-        GL11.glLineWidth(2.0F);
+        GlStateManager.glLineWidth(2.0F);
         GlStateManager.disableTexture2D();
         GlStateManager.depthMask(false);
 
@@ -326,7 +328,7 @@ public class ProxyClient extends ProxyCommon {
 
         GlStateManager.depthMask(true);
         GlStateManager.enableTexture2D();
-        GlStateManager.disableBlend();*/
+        GlStateManager.disableBlend();
     }
 
     private void drawSelectionBoundingBox(AxisAlignedBB aabb) {
