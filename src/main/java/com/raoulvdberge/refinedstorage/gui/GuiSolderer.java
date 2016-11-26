@@ -35,7 +35,9 @@ public class GuiSolderer extends GuiBase {
         drawString(7, 77, t("container.inventory"));
 
         if (TileSolderer.WORKING.getValue()) {
-            drawString(86, 59, getProgressScaled(100) + "%");
+            String t = getProgressScaled(100) + "%";
+
+            drawString(83 + (22 - fontRendererObj.getStringWidth(t)) / 2, 59, t);
         }
     }
 
