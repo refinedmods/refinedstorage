@@ -177,7 +177,7 @@ public class TileDetector extends TileNode implements IComparable, IType {
         return powered;
     }
 
-    public boolean isPowered(Integer size) {
+    private boolean isPowered(Integer size) {
         if (size != null) {
             switch (mode) {
                 case MODE_UNDER:

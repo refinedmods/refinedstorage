@@ -43,8 +43,8 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class GuiGrid extends GuiBase {
-    public static final GridSortingQuantity SORTING_QUANTITY = new GridSortingQuantity();
-    public static final GridSortingName SORTING_NAME = new GridSortingName();
+    private static final GridSortingQuantity SORTING_QUANTITY = new GridSortingQuantity();
+    private static final GridSortingName SORTING_NAME = new GridSortingName();
 
     public static final ListMultimap<Item, ClientStackItem> ITEMS = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
     public static final ListMultimap<Fluid, ClientStackFluid> FLUIDS = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());

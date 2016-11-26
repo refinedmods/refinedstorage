@@ -256,10 +256,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
                 boolean craftingTasksChanged = !craftingTasksToAdd.isEmpty() || !craftingTasksToCancel.isEmpty();
 
-                for (ICraftingTask taskToCancel : craftingTasksToCancel) {
-                    taskToCancel.onCancelled();
-                }
-
+                craftingTasksToCancel.forEach(ICraftingTask::onCancelled);
                 craftingTasks.removeAll(craftingTasksToCancel);
                 craftingTasksToCancel.clear();
 
@@ -816,7 +813,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         return getWorld();
     }
 
-    public static ICraftingTask readCraftingTask(World world, INetworkMaster network, NBTTagCompound tag) {
+    private static ICraftingTask readCraftingTask(World world, INetworkMaster network, NBTTagCompound tag) {
         ItemStack stack = ItemStack.loadItemStackFromNBT(tag.getCompoundTag(ICraftingTask.NBT_PATTERN_STACK));
 
         if (stack != null && stack.getItem() instanceof ICraftingPatternProvider) {

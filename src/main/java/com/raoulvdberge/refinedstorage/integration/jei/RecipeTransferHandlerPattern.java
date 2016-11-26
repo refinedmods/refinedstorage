@@ -12,7 +12,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

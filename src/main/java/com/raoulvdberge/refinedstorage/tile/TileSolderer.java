@@ -90,7 +90,7 @@ public class TileSolderer extends TileNode {
             if (newRecipe == null) {
                 stop();
             } else if (newRecipe != recipe) {
-                boolean sameItem = result.getStackInSlot(0) != null ? API.instance().getComparer().isEqualNoQuantity(result.getStackInSlot(0), newRecipe.getResult()) : false;
+                boolean sameItem = result.getStackInSlot(0) != null && API.instance().getComparer().isEqualNoQuantity(result.getStackInSlot(0), newRecipe.getResult());
 
                 if (result.getStackInSlot(0) == null || (sameItem && ((result.getStackInSlot(0).stackSize + newRecipe.getResult().stackSize) <= result.getStackInSlot(0).getMaxStackSize()))) {
                     recipe = newRecipe;
@@ -134,7 +134,7 @@ public class TileSolderer extends TileNode {
         }
     }
 
-    public void stop() {
+    private void stop() {
         progress = 0;
         working = false;
         recipe = null;

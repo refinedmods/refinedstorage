@@ -13,7 +13,7 @@ public class GuiDiskManipulator extends GuiBase {
     @Override
     public void init(int x, int y) {
         addSideButton(new SideButtonRedstoneMode(this, TileDiskManipulator.REDSTONE_MODE));
-        addSideButton(new SideButtonIOMode(this, TileDiskManipulator.IO_MODE));
+        addSideButton(new SideButtonIOMode(this));
         addSideButton(new SideButtonType(this, TileDiskManipulator.TYPE));
         addSideButton(new SideButtonMode(this, TileDiskManipulator.MODE));
         addSideButton(new SideButtonCompare(this, TileDiskManipulator.COMPARE, IComparer.COMPARE_DAMAGE));

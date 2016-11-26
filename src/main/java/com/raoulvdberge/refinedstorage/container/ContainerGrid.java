@@ -46,7 +46,7 @@ public class ContainerGrid extends ContainerBase {
             int y = 96;
 
             for (int i = 0; i < 9; ++i) {
-                addSlotToContainer(new SlotSpecimenLegacy(((TileGrid) grid).getMatrix(), i, x, y, false));
+                addSlotToContainer(new SlotSpecimenLegacy(((TileGrid) grid).getMatrix(), i, x, y));
 
                 x += 18;
 

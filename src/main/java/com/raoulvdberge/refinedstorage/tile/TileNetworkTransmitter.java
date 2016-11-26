@@ -136,7 +136,7 @@ public class TileNetworkTransmitter extends TileNode {
         return receiverDimension;
     }
 
-    public int getDistance() {
+    private int getDistance() {
         if (receiver == null) {
             return 0;
         }
@@ -148,7 +148,7 @@ public class TileNetworkTransmitter extends TileNode {
         return getWorld().provider.getDimension() == receiverDimension;
     }
 
-    public boolean isDimensionSupported() {
+    private boolean isDimensionSupported() {
         return isSameDimension() || upgrades.hasUpgrade(ItemUpgrade.TYPE_INTERDIMENSIONAL);
     }
 

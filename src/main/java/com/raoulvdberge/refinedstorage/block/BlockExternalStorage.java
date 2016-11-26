@@ -18,12 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BlockExternalStorage extends BlockCable {
-    public static final AxisAlignedBB HEAD_NORTH_AABB = createAABB(3, 3, 0, 13, 13, 2);
-    public static final AxisAlignedBB HEAD_EAST_AABB = createAABB(14, 3, 3, 16, 13, 13);
-    public static final AxisAlignedBB HEAD_SOUTH_AABB = createAABB(3, 3, 14, 13, 13, 16);
-    public static final AxisAlignedBB HEAD_WEST_AABB = createAABB(0, 3, 3, 2, 13, 13);
-    public static final AxisAlignedBB HEAD_UP_AABB = createAABB(3, 14, 3, 13, 16, 13);
-    public static final AxisAlignedBB HEAD_DOWN_AABB = createAABB(3, 0, 3, 13, 2, 13);
+    private static final AxisAlignedBB HEAD_NORTH_AABB = createAABB(3, 3, 0, 13, 13, 2);
+    private static final AxisAlignedBB HEAD_EAST_AABB = createAABB(14, 3, 3, 16, 13, 13);
+    private static final AxisAlignedBB HEAD_SOUTH_AABB = createAABB(3, 3, 14, 13, 13, 16);
+    private static final AxisAlignedBB HEAD_WEST_AABB = createAABB(0, 3, 3, 2, 13, 13);
+    private static final AxisAlignedBB HEAD_UP_AABB = createAABB(3, 14, 3, 13, 16, 13);
+    private static final AxisAlignedBB HEAD_DOWN_AABB = createAABB(3, 0, 3, 13, 2, 13);
 
     public BlockExternalStorage() {
         super("external_storage");

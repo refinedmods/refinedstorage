@@ -17,12 +17,8 @@ import net.minecraft.world.World;
 import java.util.List;
 
 public class BlockDestructor extends BlockCable {
-    public BlockDestructor(String name) {
-        super(name);
-    }
-
     public BlockDestructor() {
-        this("destructor");
+        super("destructor");
     }
 
     @Override

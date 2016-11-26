@@ -15,5 +15,5 @@ public abstract class MessageHandlerPlayerToServer<T extends IMessage> implement
         return null;
     }
 
-    public abstract void handle(T message, EntityPlayerMP player);
+    protected abstract void handle(T message, EntityPlayerMP player);
 }

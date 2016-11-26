@@ -7,7 +7,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 public class SlotSpecimenLegacy extends Slot {
-    public SlotSpecimenLegacy(IInventory inventory, int id, int x, int y, boolean allowSize) {
+    public SlotSpecimenLegacy(IInventory inventory, int id, int x, int y) {
         super(inventory, id, x, y);
     }
 

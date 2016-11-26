@@ -197,7 +197,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
         controller.getDataManager().sendParameterToWatchers(TileController.NODES);
     }
 
-    public World getWorld() {
+    protected World getWorld() {
         return controller.getWorld();
     }
 }

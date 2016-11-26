@@ -38,7 +38,7 @@ public interface IFluidStorageCache {
      * Removes a fluid from the cache.
      * <p>
      * Note that this doesn't modify any of the connected storages, but just modifies the cache.
-     * Use {@link INetworkMaster#extractFluid(FluidStack, int, int)} to remove an fluid from an actual storage.
+     * Use {@link INetworkMaster#extractFluid(FluidStack, int, int, boolean)} to remove an fluid from an actual storage.
      *
      * @param stack the fluid to remove, do NOT modify
      */

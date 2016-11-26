@@ -47,7 +47,7 @@ public abstract class FluidStorageNBT implements IFluidStorage {
         readFromNBT();
     }
 
-    public void readFromNBT() {
+    private void readFromNBT() {
         NBTTagList list = (NBTTagList) tag.getTag(NBT_FLUIDS);
 
         for (int i = 0; i < list.tagCount(); ++i) {

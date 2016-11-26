@@ -21,12 +21,7 @@ public class PropertyObject<T> implements IUnlistedProperty<T> {
     }
 
     public PropertyObject(String name, Class<T> clazz) {
-        this(name, clazz, Predicates.<T>alwaysTrue(), new Function<T, String>() {
-            @Override
-            public String apply(T input) {
-                return Objects.toString(input);
-            }
-        });
+        this(name, clazz, Predicates.alwaysTrue(), input -> Objects.toString(input));
     }
 
     @Override

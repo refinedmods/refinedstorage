@@ -30,7 +30,9 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class BlockCable extends BlockCoverable {
     protected static final PropertyDirection DIRECTION = PropertyDirection.create("direction");
@@ -254,6 +256,7 @@ public class BlockCable extends BlockCoverable {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase entity) {
         IBlockState state = super.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, entity);
 

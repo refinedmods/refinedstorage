@@ -9,7 +9,7 @@ import java.util.Set;
 public class ModGuiFactory implements IModGuiFactory {
     @Override
     public void initialize(Minecraft mc) {
-
+        // NO OP
     }
 
     @Override

@@ -17,7 +17,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 public class TileProcessingPatternEncoder extends TileBase {
     private static final String NBT_OREDICT_PATTERN = "OredictPattern";

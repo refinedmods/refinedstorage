@@ -2,7 +2,10 @@ package com.raoulvdberge.refinedstorage.render;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.*;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
@@ -131,7 +134,7 @@ public class BakedModelTRSR implements IBakedModel {
         private final BakedModelTRSR model;
 
         public TRSROverride(BakedModelTRSR model) {
-            super(ImmutableList.<ItemOverride>of());
+            super(ImmutableList.of());
 
             this.model = model;
         }

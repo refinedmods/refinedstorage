@@ -6,8 +6,8 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftin
 import java.util.*;
 
 public class CraftingMonitorElementList implements ICraftingMonitorElementList {
-    public List<ICraftingMonitorElement> elements = new LinkedList<>();
-    public Map<String, Map<Integer, ICraftingMonitorElement>> currentLists = new LinkedHashMap<>();
+    private List<ICraftingMonitorElement> elements = new LinkedList<>();
+    private Map<String, Map<Integer, ICraftingMonitorElement>> currentLists = new LinkedHashMap<>();
 
     @Override
     public void directAdd(ICraftingMonitorElement element) {

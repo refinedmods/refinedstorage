@@ -53,7 +53,7 @@ public abstract class ItemStorageNBT implements IItemStorage {
         readFromNBT();
     }
 
-    public void readFromNBT() {
+    private void readFromNBT() {
         NBTTagList list = (NBTTagList) tag.getTag(NBT_ITEMS);
 
         for (int i = 0; i < list.tagCount(); ++i) {

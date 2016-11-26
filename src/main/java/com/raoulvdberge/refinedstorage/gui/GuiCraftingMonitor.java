@@ -57,7 +57,7 @@ public class GuiCraftingMonitor extends GuiBase {
         this.scrollbar = new Scrollbar(157, 20, 12, 89);
     }
 
-    public List<ICraftingMonitorElement> getElements() {
+    private List<ICraftingMonitorElement> getElements() {
         return craftingMonitor.isConnected() ? ELEMENTS : Collections.emptyList();
     }
 
