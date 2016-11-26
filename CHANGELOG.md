@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.2.6
+- Fixed crash with exporters in fluid mode (raoulvdberge)
+
 ### 1.2.5
 - The Constructor can now place fireworks (raoulvdberge)
 - Added "View Recipes" JEI toggle in Solderer (way2muchnoise)
