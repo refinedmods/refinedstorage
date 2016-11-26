@@ -51,13 +51,13 @@ public class ItemUpgrade extends ItemBase {
     }
 
     @Override
-    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
+    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
         for (int i = 0; i <= 6; ++i) {
-            list.add(new ItemStack(item, 1, i));
+            subItems.add(new ItemStack(item, 1, i));
         }
 
         for (int j = 1; j <= 3; ++j) {
-            list.add(initializeForFortune(j));
+            subItems.add(initializeForFortune(j));
         }
     }
 
@@ -71,6 +71,7 @@ public class ItemUpgrade extends ItemBase {
     public static int getFortuneLevel(ItemStack stack) {
         if (stack != null && stack.getItemDamage() == ItemUpgrade.TYPE_FORTUNE) {
             NBTTagCompound tag = stack.getTagCompound();
+
             if (tag.hasKey(ItemUpgrade.NBT_FORTUNE)) {
                 return tag.getInteger(ItemUpgrade.NBT_FORTUNE);
             }

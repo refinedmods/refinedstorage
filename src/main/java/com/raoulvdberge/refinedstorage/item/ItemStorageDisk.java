@@ -39,9 +39,9 @@ public class ItemStorageDisk extends ItemBase {
     }
 
     @Override
-    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
+    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
         for (int i = 0; i < 5; ++i) {
-            list.add(ItemStorageNBT.createStackWithNBT(new ItemStack(item, 1, i)));
+            subItems.add(ItemStorageNBT.createStackWithNBT(new ItemStack(item, 1, i)));
         }
     }
 

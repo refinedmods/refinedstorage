@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.network;
 
+import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.block.EnumGridType;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import io.netty.buffer.ByteBuf;
@@ -49,13 +50,13 @@ public class MessageGridCraftingClear extends MessageHandlerPlayerToServer<Messa
                     for (int i = 0; i < grid.getMatrix().getSizeInventory(); ++i) {
                         ItemStack slot = grid.getMatrix().getStackInSlot(i);
 
-                        if (slot != null) {
-                            grid.getMatrix().setInventorySlotContents(i, grid.getNetwork().insertItem(slot, slot.getCount(), false));
+                        if (!slot.isEmpty()) {
+                            grid.getMatrix().setInventorySlotContents(i, RSUtils.getStack(grid.getNetwork().insertItem(slot, slot.getCount(), false)));
                         }
                     }
                 } else if (grid.getType() == EnumGridType.PATTERN) {
                     for (int i = 0; i < grid.getMatrix().getSizeInventory(); ++i) {
-                        grid.getMatrix().setInventorySlotContents(i, null);
+                        grid.getMatrix().setInventorySlotContents(i, ItemStack.EMPTY);
                     }
                 }
             }

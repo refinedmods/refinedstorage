@@ -31,7 +31,14 @@ public class ItemNetworkCard extends ItemBase {
         Block block = world.getBlockState(pos).getBlock();
 
         if (block == RSBlocks.NETWORK_RECEIVER) {
-            setReceiver(player.getHeldItem(hand), pos, world.provider.getDimension());
+            NBTTagCompound tag = new NBTTagCompound();
+
+            tag.setInteger(NBT_RECEIVER_X, pos.getX());
+            tag.setInteger(NBT_RECEIVER_Y, pos.getY());
+            tag.setInteger(NBT_RECEIVER_Z, pos.getZ());
+            tag.setInteger(NBT_DIMENSION, world.provider.getDimension());
+
+            player.getHeldItem(hand).setTagCompound(tag);
 
             return EnumActionResult.SUCCESS;
         }
@@ -60,16 +67,5 @@ public class ItemNetworkCard extends ItemBase {
 
     public static int getDimension(ItemStack stack) {
         return (stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_DIMENSION)) ? stack.getTagCompound().getInteger(NBT_DIMENSION) : 0;
-    }
-
-    public static void setReceiver(ItemStack stack, BlockPos pos, int dimension) {
-        NBTTagCompound tag = new NBTTagCompound();
-
-        tag.setInteger(NBT_RECEIVER_X, pos.getX());
-        tag.setInteger(NBT_RECEIVER_Y, pos.getY());
-        tag.setInteger(NBT_RECEIVER_Z, pos.getZ());
-        tag.setInteger(NBT_DIMENSION, dimension);
-
-        stack.setTagCompound(tag);
     }
 }

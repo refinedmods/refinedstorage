@@ -143,7 +143,7 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
         for (int i = 0; i < outputsTag.tagCount(); ++i) {
             ItemStack stack = new ItemStack(outputsTag.getCompoundTagAt(i));
 
-            if (stack != null) {
+            if (!stack.isEmpty()) {
                 outputs.add(stack);
             }
         }

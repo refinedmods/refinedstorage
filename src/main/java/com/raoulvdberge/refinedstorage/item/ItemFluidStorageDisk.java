@@ -41,9 +41,9 @@ public class ItemFluidStorageDisk extends ItemBase {
     }
 
     @Override
-    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
+    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
         for (int i = 0; i < 5; ++i) {
-            list.add(FluidStorageNBT.createStackWithNBT(new ItemStack(item, 1, i)));
+            subItems.add(FluidStorageNBT.createStackWithNBT(new ItemStack(item, 1, i)));
         }
     }
 

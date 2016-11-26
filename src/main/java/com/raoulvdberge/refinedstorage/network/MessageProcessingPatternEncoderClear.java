@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.network;
 import com.raoulvdberge.refinedstorage.tile.TileProcessingPatternEncoder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -43,7 +44,7 @@ public class MessageProcessingPatternEncoderClear extends MessageHandlerPlayerTo
             TileProcessingPatternEncoder encoder = (TileProcessingPatternEncoder) tile;
 
             for (int i = 0; i < encoder.getConfiguration().getSlots(); ++i) {
-                encoder.getConfiguration().setStackInSlot(i, null);
+                encoder.getConfiguration().setStackInSlot(i, ItemStack.EMPTY);
             }
         }
     }

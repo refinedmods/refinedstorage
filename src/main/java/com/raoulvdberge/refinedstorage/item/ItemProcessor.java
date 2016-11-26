@@ -22,9 +22,9 @@ public class ItemProcessor extends ItemBase {
     }
 
     @Override
-    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
+    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
         for (int i = 0; i <= 6; ++i) {
-            list.add(new ItemStack(item, 1, i));
+            subItems.add(new ItemStack(item, 1, i));
         }
     }
 }
