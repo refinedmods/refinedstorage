@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import net.minecraft.block.BlockPistonBase;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -30,7 +29,7 @@ public enum EnumPlacementType {
             case ANY:
                 return facing.getOpposite();
             case ANY_FACE_PLAYER:
-                return BlockPistonBase.getFacingFromEntity(pos, entity);
+                return EnumFacing.getDirectionFromEntityLiving(pos, entity);
             case HORIZONTAL:
                 return entity.getHorizontalFacing().getOpposite();
             default:

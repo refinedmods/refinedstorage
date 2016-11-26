@@ -277,18 +277,18 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
                 continue;
             }
 
-            ItemStack extracted = storage.extractItem(stack, upgrades.getInteractStackSize(), compare, false);
+            ItemStack extracted = storage.extractItem(stack, upgrades.getItemInteractCount(), compare, false);
             if (extracted == null) {
                 continue;
             }
 
-            ItemStack remainder = network.insertItem(extracted, extracted.stackSize, false);
+            ItemStack remainder = network.insertItem(extracted, extracted.getCount(), false);
             if (remainder == null) {
                 break;
             }
 
             // We need to check if the stack was inserted
-            storage.insertItem(((extracted == remainder) ? remainder.copy() : remainder), remainder.stackSize, false);
+            storage.insertItem(((extracted == remainder) ? remainder.copy() : remainder), remainder.getCount(), false);
         }
 
         if (storage.getStacks().size() == 0) {
@@ -311,12 +311,12 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
 
             int j = 0;
 
-            while ((toExtract == null || toExtract.stackSize == 0) && j < networkItems.size()) {
+            while ((toExtract == null || toExtract.getCount() == 0) && j < networkItems.size()) {
                 toExtract = networkItems.get(j++);
             }
 
             if (toExtract != null) {
-                extracted = network.extractItem(toExtract, upgrades.getInteractStackSize(), compare, false);
+                extracted = network.extractItem(toExtract, upgrades.getItemInteractCount(), compare, false);
             }
         } else {
             while (itemFilters.getSlots() > i && extracted == null) {
@@ -327,7 +327,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
                 }
 
                 if (stack != null) {
-                    extracted = network.extractItem(stack, upgrades.getInteractStackSize(), compare, false);
+                    extracted = network.extractItem(stack, upgrades.getItemInteractCount(), compare, false);
                 }
             }
         }
@@ -337,10 +337,10 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             return;
         }
 
-        ItemStack remainder = storage.insertItem(extracted, extracted.stackSize, false);
+        ItemStack remainder = storage.insertItem(extracted, extracted.getCount(), false);
 
         if (remainder != null) {
-            network.insertItem(remainder, remainder.stackSize, false);
+            network.insertItem(remainder, remainder.getCount(), false);
         }
     }
 
@@ -361,7 +361,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             }
 
             if (stack != null) {
-                extracted = storage.extractFluid(stack, upgrades.getInteractStackSize(), compare, false);
+                extracted = storage.extractFluid(stack, upgrades.getItemInteractCount(), compare, false);
             }
         } while (extracted == null && storage.getStacks().size() > i);
 
@@ -397,7 +397,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             }
 
             if (toExtract != null) {
-                extracted = network.extractFluid(toExtract, upgrades.getInteractStackSize(), compare, false);
+                extracted = network.extractFluid(toExtract, upgrades.getItemInteractCount(), compare, false);
             }
         } else {
             while (fluidFilters.getSlots() > i && extracted == null) {
@@ -408,7 +408,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
                 }
 
                 if (stack != null) {
-                    extracted = network.extractFluid(stack, upgrades.getInteractStackSize(), compare, false);
+                    extracted = network.extractFluid(stack, upgrades.getItemInteractCount(), compare, false);
                 }
             }
         }

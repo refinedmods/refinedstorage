@@ -57,14 +57,14 @@ public class TileInterface extends TileNode implements IComparable {
         if (slot == null) {
             currentSlot++;
         } else if (ticks % upgrades.getSpeed() == 0) {
-            int size = Math.min(slot.stackSize, upgrades.getInteractStackSize());
+            int size = Math.min(slot.getCount(), upgrades.getItemInteractCount());
 
             ItemStack remainder = network.insertItem(slot, size, false);
 
             if (remainder == null) {
                 importItems.extractItemInternal(currentSlot, size, false);
             } else {
-                importItems.extractItemInternal(currentSlot, size - remainder.stackSize, false);
+                importItems.extractItemInternal(currentSlot, size - remainder.getCount(), false);
                 currentSlot++;
             }
         }
@@ -75,10 +75,10 @@ public class TileInterface extends TileNode implements IComparable {
 
             if (wanted == null) {
                 if (got != null) {
-                    exportItems.setStackInSlot(i, network.insertItem(got, got.stackSize, false));
+                    exportItems.setStackInSlot(i, network.insertItem(got, got.getCount(), false));
                 }
             } else {
-                int delta = got == null ? wanted.stackSize : (wanted.stackSize - got.stackSize);
+                int delta = got == null ? wanted.getCount() : (wanted.getCount() - got.getCount());
 
                 if (delta > 0) {
                     ItemStack result = network.extractItem(wanted, delta, compare, false);
@@ -87,7 +87,7 @@ public class TileInterface extends TileNode implements IComparable {
                         if (exportItems.getStackInSlot(i) == null) {
                             exportItems.setStackInSlot(i, result);
                         } else {
-                            exportItems.getStackInSlot(i).stackSize += result.stackSize;
+                            exportItems.getStackInSlot(i).grow(result.getCount());
                         }
                     } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
                         network.scheduleCraftingTask(wanted, delta, compare);
@@ -98,7 +98,7 @@ public class TileInterface extends TileNode implements IComparable {
                     if (remainder == null) {
                         exportItems.extractItem(i, Math.abs(delta), false);
                     } else {
-                        exportItems.extractItem(i, Math.abs(delta) - remainder.stackSize, false);
+                        exportItems.extractItem(i, Math.abs(delta) - remainder.getCount(), false);
                     }
                 }
             }

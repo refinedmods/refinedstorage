@@ -32,7 +32,7 @@ public class ItemGridHandler implements IItemGridHandler {
             return;
         }
 
-        int itemSize = item.stackSize;
+        int itemSize = item.getCount();
         int maxItemSize = item.getItem().getItemStackLimit(item);
 
         boolean single = (flags & EXTRACT_SINGLE) == EXTRACT_SINGLE;
@@ -40,7 +40,7 @@ public class ItemGridHandler implements IItemGridHandler {
         ItemStack held = player.inventory.getItemStack();
 
         if (single) {
-            if (held != null && (!API.instance().getComparer().isEqualNoQuantity(item, held) || held.stackSize + 1 > held.getMaxStackSize())) {
+            if (held != null && (!API.instance().getComparer().isEqualNoQuantity(item, held) || held.getCount() + 1 > held.getMaxStackSize())) {
                 return;
             }
         } else if (player.inventory.getItemStack() != null) {
@@ -78,7 +78,7 @@ public class ItemGridHandler implements IItemGridHandler {
                 took = network.extractItem(item, size, false);
 
                 if (single && held != null) {
-                    held.stackSize++;
+                    held.grow(1);
                 } else {
                     player.inventory.setItemStack(took);
                 }
@@ -96,7 +96,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
     @Override
     public ItemStack onInsert(EntityPlayerMP player, ItemStack stack) {
-        ItemStack remainder = network.insertItem(stack, stack.stackSize, false);
+        ItemStack remainder = network.insertItem(stack, stack.getCount(), false);
 
         INetworkItem networkItem = network.getNetworkItemHandler().getItem(player);
 
@@ -114,15 +114,15 @@ public class ItemGridHandler implements IItemGridHandler {
         }
 
         ItemStack stack = player.inventory.getItemStack();
-        int size = single ? 1 : stack.stackSize;
+        int size = single ? 1 : stack.getCount();
 
         if (single) {
             if (network.insertItem(stack, size, true) == null) {
                 network.insertItem(stack, size, false);
 
-                stack.stackSize -= size;
+                stack.shrink(size);
 
-                if (stack.stackSize == 0) {
+                if (stack.getCount() == 0) {
                     player.inventory.setItemStack(null);
                 }
             }

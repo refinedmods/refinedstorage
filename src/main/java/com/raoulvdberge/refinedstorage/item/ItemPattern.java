@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.item;
 
-import com.google.common.collect.Iterables;
 import com.raoulvdberge.refinedstorage.RSItems;
+import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider;
@@ -17,6 +17,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
@@ -59,12 +60,12 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
             if (GuiScreen.isShiftKeyDown() || isProcessing(stack)) {
                 tooltip.add(TextFormatting.YELLOW + I18n.format("misc.refinedstorage:pattern.inputs") + TextFormatting.RESET);
 
-                combineItems(tooltip, true, Iterables.toArray(pattern.getInputs(), ItemStack.class));
+                combineItems(tooltip, true, RSUtils.toNonNullList(pattern.getInputs()));
 
                 tooltip.add(TextFormatting.YELLOW + I18n.format("misc.refinedstorage:pattern.outputs") + TextFormatting.RESET);
             }
 
-            combineItems(tooltip, true, Iterables.toArray(pattern.getOutputs(), ItemStack.class));
+            combineItems(tooltip, true, RSUtils.toNonNullList(pattern.getOutputs()));
 
             if (isOredict(stack)) {
                 tooltip.add(TextFormatting.BLUE + I18n.format("misc.refinedstorage:pattern.oredict") + TextFormatting.RESET);
@@ -80,10 +81,10 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
 
                 NBTTagList outputsTag = stack.getTagCompound().getTagList("Outputs", Constants.NBT.TAG_COMPOUND);
 
-                ItemStack[] outputs = new ItemStack[outputsTag.tagCount()];
+                NonNullList<ItemStack> outputs = NonNullList.create();
 
                 for (int i = 0; i < outputsTag.tagCount(); ++i) {
-                    outputs[i] = ItemStack.loadItemStackFromNBT(outputsTag.getCompoundTagAt(i));
+                    outputs.add(new ItemStack(outputsTag.getCompoundTagAt(i)));
                 }
 
                 combineItems(tooltip, true, outputs);
@@ -110,7 +111,7 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
             return null;
         }
 
-        return ItemStack.loadItemStackFromNBT(pattern.getTagCompound().getCompoundTag(id));
+        return new ItemStack(pattern.getTagCompound().getCompoundTag(id));
     }
 
     public static void addOutput(ItemStack pattern, ItemStack output) {
@@ -140,7 +141,7 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
         NBTTagList outputsTag = pattern.getTagCompound().getTagList(NBT_OUTPUTS, Constants.NBT.TAG_COMPOUND);
 
         for (int i = 0; i < outputsTag.tagCount(); ++i) {
-            ItemStack stack = ItemStack.loadItemStackFromNBT(outputsTag.getCompoundTagAt(i));
+            ItemStack stack = new ItemStack(outputsTag.getCompoundTagAt(i));
 
             if (stack != null) {
                 outputs.add(stack);
@@ -166,18 +167,20 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
         pattern.getTagCompound().setBoolean(NBT_OREDICT, oredict);
     }
 
-    public static void combineItems(List<String> tooltip, boolean displayAmount, ItemStack... stacks) {
+    public static void combineItems(List<String> tooltip, boolean displayAmount, NonNullList<ItemStack> stacks) {
         Set<Integer> combinedIndices = new HashSet<>();
 
-        for (int i = 0; i < stacks.length; ++i) {
-            if (stacks[i] != null && !combinedIndices.contains(i)) {
-                String data = stacks[i].getDisplayName();
+        for (int i = 0; i < stacks.size(); ++i) {
+            if (!stacks.get(i).isEmpty() && !combinedIndices.contains(i)) {
+                ItemStack stack = stacks.get(i);
 
-                int amount = stacks[i].stackSize;
+                String data = stack.getDisplayName();
 
-                for (int j = i + 1; j < stacks.length; ++j) {
-                    if (API.instance().getComparer().isEqual(stacks[i], stacks[j])) {
-                        amount += stacks[j].stackSize;
+                int amount = stack.getCount();
+
+                for (int j = i + 1; j < stacks.size(); ++j) {
+                    if (API.instance().getComparer().isEqual(stack, stacks.get(j))) {
+                        amount += stacks.get(j).getCount();
 
                         combinedIndices.add(j);
                     }
@@ -191,12 +194,12 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
         if (!world.isRemote && player.isSneaking()) {
-            return new ActionResult<>(EnumActionResult.SUCCESS, new ItemStack(RSItems.PATTERN, stack.stackSize));
+            return new ActionResult<>(EnumActionResult.SUCCESS, new ItemStack(RSItems.PATTERN, player.getHeldItem(hand).getCount()));
         }
 
-        return new ActionResult<>(EnumActionResult.PASS, stack);
+        return new ActionResult<>(EnumActionResult.PASS, player.getHeldItem(hand));
     }
 
     @Override

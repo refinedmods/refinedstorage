@@ -131,7 +131,10 @@ public class CraftingPattern implements ICraftingPattern {
                                     .map(OreDictionary::getOres)
                                     .flatMap(List::stream)
                                     .map(ItemStack::copy)
-                                    .map(s -> {s.stackSize = input.stackSize; return s;})
+                                    .map(s -> {
+                                        s.setCount(input.getCount());
+                                        return s;
+                                    })
                                     .collect(Collectors.toList()));
                         }
                     }
@@ -258,7 +261,7 @@ public class CraftingPattern implements ICraftingPattern {
 
         for (ItemStack output : outputs) {
             if (API.instance().getComparer().isEqual(requested, output, compare)) {
-                quantity += output.stackSize;
+                quantity += output.getCount();
 
                 if (!ItemPattern.isProcessing(stack)) {
                     break;

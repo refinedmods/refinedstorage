@@ -42,9 +42,9 @@ public abstract class CraftingStep implements ICraftingStep {
     }
 
     public boolean readFromNBT(NBTTagCompound tag) {
-        ItemStack patternStack = ItemStack.loadItemStackFromNBT(tag.getCompoundTag(NBT_PATTERN));
+        ItemStack patternStack = new ItemStack(tag.getCompoundTag(NBT_PATTERN));
 
-        if (patternStack != null) {
+        if (!patternStack.isEmpty()) {
             TileEntity container = network.getNetworkWorld().getTileEntity(BlockPos.fromLong(tag.getLong(NBT_PATTERN_CONTAINER)));
 
             if (container instanceof ICraftingPatternContainer) {
@@ -99,7 +99,7 @@ public abstract class CraftingStep implements ICraftingStep {
     public boolean hasReceivedOutputs() {
         for (ItemStack stack : pattern.getOutputs()) {
             Integer received = satisfied.get(API.instance().getItemStackHashCode(stack));
-            if (received == null || stack.stackSize > received) {
+            if (received == null || stack.getCount() > received) {
                 return false;
             }
         }
@@ -110,7 +110,7 @@ public abstract class CraftingStep implements ICraftingStep {
     @Override
     public boolean hasReceivedOutput(ItemStack stack) {
         Integer received = satisfied.get(API.instance().getItemStackHashCode(stack));
-        return received != null && received >= stack.stackSize;
+        return received != null && received >= stack.getCount();
     }
 
     @Override
@@ -128,14 +128,14 @@ public abstract class CraftingStep implements ICraftingStep {
                 received = 0;
             }
             if (API.instance().getComparer().isEqual(stack, output, CraftingTask.DEFAULT_COMPARE | (getPattern().isOredict() ? IComparer.COMPARE_OREDICT : 0))) {
-                if (received < output.stackSize) {
-                    int toReceive = Math.min(output.stackSize - received, stack.stackSize);
+                if (received < output.getCount()) {
+                    int toReceive = Math.min(output.getCount() - received, stack.getCount());
                     satisfied.put(hashcode, received + toReceive);
-                    stack.stackSize -= toReceive;
+                    stack.shrink(toReceive);
 
                     network.markCraftingMonitorForUpdate();
 
-                    if (stack.stackSize == 0) {
+                    if (stack.getCount() == 0) {
                         return true;
                     }
                 }
@@ -163,7 +163,7 @@ public abstract class CraftingStep implements ICraftingStep {
     }
 
     protected AvailableType isItemAvailable(IItemStackList items, IFluidStackList fluids, ItemStack stack, ItemStack actualStack, int compare) {
-        if (actualStack == null || actualStack.stackSize == 0 || !items.trackedRemove(actualStack, stack.stackSize, true)) {
+        if (actualStack == null || actualStack.getCount() == 0 || !items.trackedRemove(actualStack, stack.getCount(), true)) {
             FluidStack fluidInItem = RSUtils.getFluidFromStack(stack, true);
 
             if (fluidInItem != null && RSUtils.hasFluidBucket(fluidInItem)) {
@@ -187,7 +187,7 @@ public abstract class CraftingStep implements ICraftingStep {
                 compare |= IComparer.COMPARE_DAMAGE;
             }
 
-            ItemStack input = network.extractItem(insertStack, insertStack.stackSize, compare, false);
+            ItemStack input = network.extractItem(insertStack, insertStack.getCount(), compare, false);
             if (input != null) {
                 actualInputs.add(input);
             } else {

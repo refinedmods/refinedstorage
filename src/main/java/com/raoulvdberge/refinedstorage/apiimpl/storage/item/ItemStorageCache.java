@@ -40,7 +40,7 @@ public class ItemStorageCache implements IItemStorageCache {
 
             for (ItemStack stack : storage.getStacks()) {
                 if (stack != null) {
-                    add(stack, stack.stackSize, true);
+                    add(stack, stack.getCount(), true);
                 }
             }
         }
@@ -48,8 +48,8 @@ public class ItemStorageCache implements IItemStorageCache {
         for (ICraftingPattern pattern : network.getPatterns()) {
             for (ItemStack output : pattern.getOutputs()) {
                 ItemStack patternStack = output.copy();
-                patternStack.stackSize = 0;
-                add(patternStack, patternStack.stackSize, true);
+                patternStack.setCount(0);
+                add(patternStack, patternStack.getCount(), true);
             }
         }
 

@@ -13,7 +13,6 @@ import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataConsumer;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-import mcmultipart.microblock.IMicroblock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
@@ -45,7 +44,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class TileDestructor extends TileMultipartNode implements IComparable, IFilterable, IType {
+public class TileDestructor extends TileNode implements IComparable, IFilterable, IType {
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
     public static final TileDataParameter<Integer> TYPE = IType.createParameter();
@@ -88,11 +87,6 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
     }
 
     @Override
-    public boolean canAddMicroblock(IMicroblock microblock) {
-        return !isBlockingMicroblock(microblock, getDirection());
-    }
-
-    @Override
     public int getEnergyUsage() {
         return RS.INSTANCE.config.destructorUsage + upgrades.getEnergyUsage();
     }
@@ -113,8 +107,8 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
                     if (entity instanceof EntityItem) {
                         ItemStack droppedItem = ((EntityItem) entity).getEntityItem();
 
-                        if (IFilterable.canTake(itemFilters, mode, compare, droppedItem) && network.insertItem(droppedItem, droppedItem.stackSize, true) == null) {
-                            network.insertItem(droppedItem.copy(), droppedItem.stackSize, false);
+                        if (IFilterable.canTake(itemFilters, mode, compare, droppedItem) && network.insertItem(droppedItem, droppedItem.getCount(), true) == null) {
+                            network.insertItem(droppedItem.copy(), droppedItem.getCount(), false);
 
                             getWorld().removeEntity(entity);
 
@@ -139,7 +133,7 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
                         }
 
                         for (ItemStack drop : drops) {
-                            if (network.insertItem(drop, drop.stackSize, true) != null) {
+                            if (network.insertItem(drop, drop.getCount(), true) != null) {
                                 return;
                             }
                         }
@@ -156,7 +150,7 @@ public class TileDestructor extends TileMultipartNode implements IComparable, IF
                                 if (network == null) {
                                     InventoryHelper.spawnItemStack(getWorld(), front.getX(), front.getY(), front.getZ(), drop);
                                 } else {
-                                    network.insertItem(drop, drop.stackSize, false);
+                                    network.insertItem(drop, drop.getCount(), false);
                                 }
                             }
                         }

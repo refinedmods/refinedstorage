@@ -37,29 +37,6 @@ public class RecipeCategorySolderer extends BlankRecipeCategory<RecipeWrapperSol
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public void setRecipe(@Nonnull IRecipeLayout recipeLayout, @Nonnull RecipeWrapperSolderer recipeWrapper) {
-        IGuiItemStackGroup group = recipeLayout.getItemStacks();
-
-        int x = 0;
-        int y = 0;
-
-        for (int i = 0; i < 3; ++i) {
-            group.init(i, true, x, y);
-
-            y += 18;
-        }
-
-        group.init(3, false, 83, 18);
-
-        for (int i = 0; i < 3; ++i) {
-            group.set(i, recipeWrapper.getInputs().get(i));
-        }
-
-        group.set(3, recipeWrapper.getOutputs().get(0));
-    }
-
-    @Override
     public void setRecipe(@Nonnull IRecipeLayout recipeLayout, @Nonnull RecipeWrapperSolderer recipeWrapper, @Nonnull IIngredients ingredients) {
         IGuiItemStackGroup group = recipeLayout.getItemStacks();
 

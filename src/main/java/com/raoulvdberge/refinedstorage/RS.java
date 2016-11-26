@@ -2,7 +2,6 @@ package com.raoulvdberge.refinedstorage;
 
 import com.raoulvdberge.refinedstorage.proxy.ProxyCommon;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -36,13 +35,8 @@ public final class RS {
     public final SimpleNetworkWrapper network = NetworkRegistry.INSTANCE.newSimpleChannel(ID);
     public final CreativeTabs tab = new CreativeTabs(ID) {
         @Override
-        public ItemStack getIconItemStack() {
-            return new ItemStack(RSItems.STORAGE_HOUSING);
-        }
-
-        @Override
-        public Item getTabIconItem() {
-            return null;
+        public ItemStack getTabIconItem() {
+            return getIconItemStack();
         }
     };
 

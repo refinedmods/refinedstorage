@@ -21,11 +21,6 @@ public class RecipeTransferHandlerPattern implements IRecipeTransferHandler<Cont
         return ContainerProcessingPatternEncoder.class;
     }
 
-    @Override
-    public String getRecipeCategoryUid() {
-        return "patternEncoding";
-    }
-
     @Nullable
     @Override
     public IRecipeTransferError transferRecipe(ContainerProcessingPatternEncoder container, IRecipeLayout recipeLayout, EntityPlayer player, boolean maxTransfer, boolean doTransfer) {
@@ -41,13 +36,13 @@ public class RecipeTransferHandlerPattern implements IRecipeTransferHandler<Cont
 
                     if (guiIngredient.isInput()) {
                         if (inputs.containsKey(hash)) {
-                            inputs.get(hash).stackSize++;
+                            inputs.get(hash).grow(1);
                         } else {
                             inputs.put(hash, ingredient);
                         }
                     } else {
                         if (outputs.containsKey(hash)) {
-                            outputs.get(hash).stackSize++;
+                            outputs.get(hash).grow(1);
                         } else {
                             outputs.put(hash, ingredient);
                         }

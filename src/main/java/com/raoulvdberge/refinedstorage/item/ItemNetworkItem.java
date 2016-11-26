@@ -5,17 +5,13 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemProvider;
 import com.raoulvdberge.refinedstorage.integration.forgeenergy.NetworkItemEnergyForge;
-import com.raoulvdberge.refinedstorage.integration.ic2.IntegrationIC2;
 import com.raoulvdberge.refinedstorage.integration.tesla.IntegrationTesla;
 import com.raoulvdberge.refinedstorage.integration.tesla.NetworkItemEnergyTesla;
 import com.raoulvdberge.refinedstorage.tile.TileController;
-import ic2.api.item.IElectricItemManager;
-import ic2.api.item.ISpecialElectricItem;
 import net.darkhax.tesla.capability.TeslaCapabilities;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -29,16 +25,11 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.fml.common.Optional;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-@Optional.InterfaceList({
-    @Optional.Interface(iface = "ic2.api.item.ISpecialElectricItem", modid = "IC2"),
-    @Optional.Interface(iface = "ic2.api.item.IElectricItemManager", modid = "IC2")
-})
-public abstract class ItemNetworkItem extends ItemEnergyContainer implements INetworkItemProvider, ISpecialElectricItem, IElectricItemManager {
+public abstract class ItemNetworkItem extends ItemEnergyContainer implements INetworkItemProvider {
     public static final int TYPE_NORMAL = 0;
     public static final int TYPE_CREATIVE = 1;
 
@@ -59,7 +50,9 @@ public abstract class ItemNetworkItem extends ItemEnergyContainer implements INe
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+        ItemStack stack = player.getHeldItem(hand);
+
         if (!world.isRemote && isValid(stack)) {
             World controllerWorld = DimensionManager.getWorld(getDimensionId(stack));
 
@@ -76,7 +69,7 @@ public abstract class ItemNetworkItem extends ItemEnergyContainer implements INe
             }
         }
 
-        return super.onItemRightClick(stack, world, player, hand);
+        return super.onItemRightClick(world, player, hand);
     }
 
     @Override
@@ -110,7 +103,7 @@ public abstract class ItemNetworkItem extends ItemEnergyContainer implements INe
     }
 
     @Override
-    public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
+    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
         list.add(new ItemStack(item, 1, TYPE_NORMAL));
 
         ItemStack fullyCharged = new ItemStack(item, 1, TYPE_NORMAL);
@@ -134,7 +127,9 @@ public abstract class ItemNetworkItem extends ItemEnergyContainer implements INe
     }
 
     @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        ItemStack stack = player.getHeldItem(hand);
+
         Block block = world.getBlockState(pos).getBlock();
 
         if (block == RSBlocks.CONTROLLER) {
@@ -200,66 +195,6 @@ public abstract class ItemNetworkItem extends ItemEnergyContainer implements INe
     @Override
     public String getUnlocalizedName(ItemStack stack) {
         return getUnlocalizedName() + "." + stack.getItemDamage();
-    }
-
-    @Optional.Method(modid = "IC2")
-    @Override
-    public IElectricItemManager getManager(ItemStack stack) {
-        return this;
-    }
-
-    @Optional.Method(modid = "IC2")
-    @Override
-    public double charge(ItemStack stack, double amount, int tier, boolean ignoreTransferLimit, boolean simulate) {
-        return IntegrationIC2.toEU(receiveEnergy(stack, IntegrationIC2.toRS(amount), simulate));
-    }
-
-    @Optional.Method(modid = "IC2")
-    @Override
-    public double discharge(ItemStack stack, double amount, int tier, boolean ignoreTransferLimit, boolean externally, boolean simulate) {
-        return IntegrationIC2.toEU(extractEnergy(stack, IntegrationIC2.toRS(amount), simulate));
-    }
-
-    @Optional.Method(modid = "IC2")
-    @Override
-    public double getCharge(ItemStack stack) {
-        return IntegrationIC2.toEU(getEnergyStored(stack));
-    }
-
-    @Optional.Method(modid = "IC2")
-    @Override
-    public double getMaxCharge(ItemStack stack) {
-        return IntegrationIC2.toEU(getMaxEnergyStored(stack));
-    }
-
-    @Optional.Method(modid = "IC2")
-    @Override
-    public boolean canUse(ItemStack stack, double amount) {
-        return true;
-    }
-
-    @Optional.Method(modid = "IC2")
-    @Override
-    public boolean use(ItemStack stack, double amount, EntityLivingBase entity) {
-        return true;
-    }
-
-    @Optional.Method(modid = "IC2")
-    @Override
-    public void chargeFromArmor(ItemStack stack, EntityLivingBase entity) {
-        // NO OP
-    }
-
-    @Optional.Method(modid = "IC2")
-    @Override
-    public String getToolTip(ItemStack stack) {
-        return null;
-    }
-
-    @Optional.Method(modid = "IC2")
-    @Override
-    public int getTier(ItemStack stack) {
-        return Integer.MAX_VALUE;
     }
 
     public boolean isValid(ItemStack stack) {

@@ -77,7 +77,7 @@ public abstract class ItemStorageNBT implements IItemStorage {
     // ItemHandlerHelper#copyStackWithSize is not null-safe!
     private ItemStack safeCopy(ItemStack stack, int size) {
         ItemStack newStack = stack.copy();
-        newStack.stackSize = size;
+        newStack.setCount(size);
         return newStack;
     }
 
@@ -94,7 +94,7 @@ public abstract class ItemStorageNBT implements IItemStorage {
             NBTTagCompound itemTag = new NBTTagCompound();
 
             itemTag.setInteger(NBT_ITEM_TYPE, Item.getIdFromItem(stack.getItem()));
-            itemTag.setInteger(NBT_ITEM_QUANTITY, stack.stackSize);
+            itemTag.setInteger(NBT_ITEM_QUANTITY, stack.getCount());
             itemTag.setInteger(NBT_ITEM_DAMAGE, stack.getItemDamage());
 
             if (stack.hasTagCompound()) {
@@ -135,7 +135,7 @@ public abstract class ItemStorageNBT implements IItemStorage {
                     if (!simulate) {
                         tag.setInteger(NBT_STORED, getStored() + remainingSpace);
 
-                        otherStack.stackSize += remainingSpace;
+                        otherStack.grow(remainingSpace);
 
                         onStorageChanged();
                     }
@@ -145,7 +145,7 @@ public abstract class ItemStorageNBT implements IItemStorage {
                     if (!simulate) {
                         tag.setInteger(NBT_STORED, getStored() + size);
 
-                        otherStack.stackSize += size;
+                        otherStack.grow(size);
 
                         onStorageChanged();
                     }
@@ -188,15 +188,15 @@ public abstract class ItemStorageNBT implements IItemStorage {
     public synchronized ItemStack extractItem(ItemStack stack, int size, int flags, boolean simulate) {
         for (ItemStack otherStack : stacks) {
             if (API.instance().getComparer().isEqual(otherStack, stack, flags)) {
-                if (size > otherStack.stackSize) {
-                    size = otherStack.stackSize;
+                if (size > otherStack.getCount()) {
+                    size = otherStack.getCount();
                 }
 
                 if (!simulate) {
-                    if (otherStack.stackSize - size == 0) {
+                    if (otherStack.getCount() - size == 0) {
                         stacks.remove(otherStack);
                     } else {
-                        otherStack.stackSize -= size;
+                        otherStack.grow(size);
                     }
 
                     tag.setInteger(NBT_STORED, getStored() - size);

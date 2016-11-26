@@ -4,7 +4,6 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.BlankRecipeWrapper;
 import net.minecraft.item.ItemStack;
 
-import java.util.Collections;
 import java.util.List;
 
 public class RecipeWrapperSolderer extends BlankRecipeWrapper {
@@ -20,18 +19,6 @@ public class RecipeWrapperSolderer extends BlankRecipeWrapper {
     public void getIngredients(IIngredients ingredients) {
         ingredients.setInputs(ItemStack.class, inputs);
         ingredients.setOutput(ItemStack.class, output);
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public List<ItemStack> getInputs() {
-        return inputs;
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public List<ItemStack> getOutputs() {
-        return Collections.singletonList(output);
     }
 
     @Override

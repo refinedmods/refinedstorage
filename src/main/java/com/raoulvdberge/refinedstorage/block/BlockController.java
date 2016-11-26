@@ -19,6 +19,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -36,7 +37,7 @@ public class BlockController extends BlockBase {
     }
 
     @Override
-    public void getSubBlocks(Item item, CreativeTabs tab, List<ItemStack> subItems) {
+    public void getSubBlocks(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
         for (int i = 0; i <= 1; i++) {
             subItems.add(ItemBlockController.createStackWithNBT(new ItemStack(item, 1, i)));
         }
@@ -79,7 +80,7 @@ public class BlockController extends BlockBase {
     }
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
             player.openGui(RS.INSTANCE, RSGui.CONTROLLER, world, pos.getX(), pos.getY(), pos.getZ());
         }
@@ -113,8 +114,8 @@ public class BlockController extends BlockBase {
 
     @Override
     @SuppressWarnings("deprecation")
-    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
-        super.neighborChanged(state, world, pos, block);
+    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos fromPos) {
+        super.neighborChanged(state, world, pos, block, fromPos);
 
         if (!world.isRemote) {
             ((TileController) world.getTileEntity(pos)).getNodeGraph().rebuild();

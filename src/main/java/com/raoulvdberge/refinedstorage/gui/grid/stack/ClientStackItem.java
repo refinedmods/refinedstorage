@@ -66,11 +66,11 @@ public class ClientStackItem implements IClientStack {
 
     @Override
     public int getQuantity() {
-        return stack.stackSize;
+        return stack.getCount();
     }
 
     private String getQuantityForDisplay(boolean advanced) {
-        int qty = stack.stackSize;
+        int qty = stack.getCount();
 
         if (advanced && qty > 1) {
             return String.valueOf(qty);

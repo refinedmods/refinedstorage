@@ -37,7 +37,7 @@ public class ItemStackListOredicted implements IItemStackList {
     public void add(@Nonnull ItemStack stack, int size) {
         underlyingList.add(stack, size);
         ItemStack internalStack = underlyingList.get(stack);
-        if (internalStack != null && internalStack.stackSize == stack.stackSize) {
+        if (internalStack != null && internalStack.getCount() == stack.getCount()) {
             for (int id : OreDictionary.getOreIDs(internalStack)) {
                 stacks.put(id, internalStack);
             }
@@ -86,10 +86,10 @@ public class ItemStackListOredicted implements IItemStackList {
                     if (stacks != null && !stacks.isEmpty()) {
                         int i = 0;
                         ItemStack returnStack = stacks.get(i++);
-                        while (returnStack.stackSize == 0 && i < stacks.size()) {
+                        while (returnStack.getCount() == 0 && i < stacks.size()) {
                             returnStack = stacks.get(i++);
                         }
-                        if (returnStack.stackSize != 0) {
+                        if (returnStack.getCount() != 0) {
                             return returnStack;
                         }
                     }
@@ -112,7 +112,7 @@ public class ItemStackListOredicted implements IItemStackList {
 
     private void localClean() {
         List<Map.Entry<Integer, ItemStack>> toRemove = stacks.entries().stream()
-            .filter(entry -> entry.getValue().stackSize <= 0)
+            .filter(entry -> entry.getValue().getCount() <= 0)
             .collect(Collectors.toList());
 
         toRemove.forEach(entry -> stacks.remove(entry.getKey(), entry.getValue()));

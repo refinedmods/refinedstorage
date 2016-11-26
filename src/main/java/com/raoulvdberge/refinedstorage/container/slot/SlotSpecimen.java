@@ -50,7 +50,7 @@ public class SlotSpecimen extends SlotItemHandler {
     @Override
     public void putStack(ItemStack stack) {
         if (stack != null && !isWithSize()) {
-            stack.stackSize = 1;
+            stack.setCount(1);
         }
 
         super.putStack(stack);

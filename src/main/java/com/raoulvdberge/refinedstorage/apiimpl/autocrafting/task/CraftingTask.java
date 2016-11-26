@@ -13,7 +13,10 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IFluidStackList;
 import com.raoulvdberge.refinedstorage.api.util.IItemStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.*;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementError;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementInfo;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementItemRender;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementText;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementFluidStack;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementItemStack;
 import com.raoulvdberge.refinedstorage.apiimpl.util.ItemStackList;
@@ -134,44 +137,44 @@ public class CraftingTask implements ICraftingTask {
             // This handles recipes that use the output as input for the sub recipe
             final int lambdaCompare = compare;
             ICraftingPattern inputPattern = null;
-            int available = (extraStack == null ? 0 : extraStack.stackSize) + (networkStack == null ? 0 : networkStack.stackSize);
-            if (available < input.stackSize) {
+            int available = (extraStack == null ? 0 : extraStack.getCount()) + (networkStack == null ? 0 : networkStack.getCount());
+            if (available < input.getCount()) {
                 inputPattern = network.getPattern(input, compare);
                 if (inputPattern != null) {
                     if (inputPattern.getInputs().stream().anyMatch(s -> API.instance().getComparer().isEqual(s, input, lambdaCompare))) {
                         int craftQuantity = inputPattern.getQuantityPerRequest(input, compare);
                         // The needed amount is the actual needed amount of extraStacks + the needed input (twice so you can keep repeating it)
-                        long needed = (networkStack == null ? 0 : -networkStack.stackSize) + input.stackSize + inputPattern.getInputs().stream().filter(s -> API.instance().getComparer().isEqual(s, input, lambdaCompare)).count() * 2;
+                        long needed = (networkStack == null ? 0 : -networkStack.getCount()) + input.getCount() + inputPattern.getInputs().stream().filter(s -> API.instance().getComparer().isEqual(s, input, lambdaCompare)).count() * 2;
                         do {
                             calculate(networkList, networkFluidList, inputPattern, toInsert);
                             toCraft.add(ItemHandlerHelper.copyStackWithSize(input, craftQuantity));
                             extraStack = toInsert.get(input, compare);
-                        } while (extraStack != null && extraStack.stackSize < needed);
+                        } while (extraStack != null && extraStack.getCount() < needed);
                     }
                 }
             }
 
-            while (input.stackSize > 0) {
-                if (extraStack != null && extraStack.stackSize > 0) {
-                    int takeQuantity = Math.min(extraStack.stackSize, input.stackSize);
+            while (input.getCount() > 0) {
+                if (extraStack != null && extraStack.getCount() > 0) {
+                    int takeQuantity = Math.min(extraStack.getCount(), input.getCount());
                     ItemStack inputStack = ItemHandlerHelper.copyStackWithSize(extraStack, takeQuantity);
                     actualInputs.add(inputStack.copy());
-                    input.stackSize -= takeQuantity;
+                    input.shrink(takeQuantity);
                     if (!inputStack.isItemStackDamageable() || !inputStack.isItemDamaged()) {
                         toCraft.add(inputStack);
                     }
                     toInsert.remove(inputStack, true);
-                    if (input.stackSize > 0) {
+                    if (input.getCount() > 0) {
                         extraStack = toInsert.get(input, compare);
                     }
-                } else if (networkStack != null && networkStack.stackSize > 0) {
-                    int takeQuantity = Math.min(networkStack.stackSize, input.stackSize);
+                } else if (networkStack != null && networkStack.getCount() > 0) {
+                    int takeQuantity = Math.min(networkStack.getCount(), input.getCount());
                     ItemStack inputStack = ItemHandlerHelper.copyStackWithSize(networkStack, takeQuantity);
                     toTake.add(inputStack.copy());
                     actualInputs.add(inputStack.copy());
-                    input.stackSize -= takeQuantity;
+                    input.shrink(takeQuantity);
                     networkList.remove(inputStack, true);
-                    if (input.stackSize > 0) {
+                    if (input.getCount() > 0) {
                         networkStack = networkList.get(inputStack, compare);
                     }
                 } else {
@@ -181,12 +184,12 @@ public class CraftingTask implements ICraftingTask {
 
                     if (inputPattern != null) {
                         ItemStack actualCraft = inputPattern.getActualOutput(input, compare);
-                        int craftQuantity = Math.min(inputPattern.getQuantityPerRequest(input, compare), input.stackSize);
+                        int craftQuantity = Math.min(inputPattern.getQuantityPerRequest(input, compare), input.getCount());
                         ItemStack inputCrafted = ItemHandlerHelper.copyStackWithSize(actualCraft, craftQuantity);
                         toCraft.add(inputCrafted.copy());
                         actualInputs.add(inputCrafted.copy());
                         calculate(networkList, networkFluidList, inputPattern, toInsert);
-                        input.stackSize -= craftQuantity;
+                        input.shrink(craftQuantity);
                         if (!recurseFound) {
                             // Calculate added all the crafted outputs toInsert
                             // So we remove the ones we use from toInsert
@@ -196,15 +199,15 @@ public class CraftingTask implements ICraftingTask {
                     } else {
                         // Fluid checks are with a stack size of one
                         ItemStack fluidCheck = ItemHandlerHelper.copyStackWithSize(input, 1);
-                        while (input.stackSize > 0 && doFluidCalculation(networkList, networkFluidList, fluidCheck, toInsert)) {
+                        while (input.getCount() > 0 && doFluidCalculation(networkList, networkFluidList, fluidCheck, toInsert)) {
                             actualInputs.add(fluidCheck);
-                            input.stackSize -= 1;
+                            input.shrink(1);
                         }
 
                         // When it isn't a fluid or just doesn't have the needed fluids
-                        if (input.stackSize > 0) {
+                        if (input.getCount() > 0) {
                             missing.add(input.copy());
-                            input.stackSize = 0;
+                            input.setCount(0);
                         }
                     }
                 }
@@ -246,12 +249,12 @@ public class CraftingTask implements ICraftingTask {
             } else {
                 ItemStack bucket = toInsert.get(RSUtils.EMPTY_BUCKET);
                 boolean hasBucket = false;
-                if (bucket != null && bucket.stackSize > 0) {
+                if (bucket != null && bucket.getCount() > 0) {
                     hasBucket = toInsert.remove(RSUtils.EMPTY_BUCKET, 1, false);
                 }
                 if (!hasBucket) {
                     bucket = networkList.get(RSUtils.EMPTY_BUCKET);
-                    if (bucket != null && bucket.stackSize > 0) {
+                    if (bucket != null && bucket.getCount() > 0) {
                         hasBucket = networkList.remove(RSUtils.EMPTY_BUCKET, 1, false);
                     }
                 }
@@ -283,7 +286,7 @@ public class CraftingTask implements ICraftingTask {
     @Override
     public void onCancelled() {
         for (ItemStack stack : toInsertItems) {
-            network.insertItem(stack, stack.stackSize, false);
+            network.insertItem(stack, stack.getCount(), false);
         }
 
         network.markCraftingMonitorForUpdate();
@@ -341,7 +344,7 @@ public class CraftingTask implements ICraftingTask {
         for (int i = 0; i < times; i++) {
             ItemStack insert = toInsertItems.poll();
             if (insert != null) {
-                ItemStack remainder = network.insertItem(insert, insert.stackSize, false);
+                ItemStack remainder = network.insertItem(insert, insert.getCount(), false);
 
                 if (remainder != null) {
                     toInsertItems.add(remainder);
@@ -441,7 +444,7 @@ public class CraftingTask implements ICraftingTask {
                 .map(stack -> new CraftingMonitorElementError(new CraftingMonitorElementItemRender(
                     -1,
                     stack,
-                    stack.stackSize,
+                    stack.getCount(),
                     32
                 ), ""))
                 .forEach(elements::add);
@@ -456,7 +459,7 @@ public class CraftingTask implements ICraftingTask {
                 .map(stack -> new CraftingMonitorElementItemRender(
                     -1,
                     stack,
-                    stack.stackSize,
+                    stack.getCount(),
                     32
                 ))
                 .forEach(elements::add);
@@ -476,7 +479,7 @@ public class CraftingTask implements ICraftingTask {
                         ICraftingMonitorElement element = new CraftingMonitorElementItemRender(
                             -1,
                             step.getPattern().getOutputs().get(i),
-                            step.getPattern().getOutputs().get(i).stackSize,
+                            step.getPattern().getOutputs().get(i).getCount(),
                             32
                         );
 
@@ -499,7 +502,7 @@ public class CraftingTask implements ICraftingTask {
                         ICraftingMonitorElement element = new CraftingMonitorElementItemRender(
                             -1,
                             step.getPattern().getOutputs().get(i),
-                            step.getPattern().getOutputs().get(i).stackSize,
+                            step.getPattern().getOutputs().get(i).getCount(),
                             32
                         );
 
@@ -553,7 +556,7 @@ public class CraftingTask implements ICraftingTask {
             if (previewStack == null) {
                 previewStack = new CraftingPreviewElementItemStack(stack);
             }
-            previewStack.addToCraft(stack.stackSize);
+            previewStack.addToCraft(stack.getCount());
             map.put(hash, previewStack);
         }
 
@@ -564,7 +567,7 @@ public class CraftingTask implements ICraftingTask {
                 previewStack = new CraftingPreviewElementItemStack(stack);
             }
             previewStack.setMissing(true);
-            previewStack.addToCraft(stack.stackSize);
+            previewStack.addToCraft(stack.getCount());
             map.put(hash, previewStack);
         }
 
@@ -574,7 +577,7 @@ public class CraftingTask implements ICraftingTask {
             if (previewStack == null) {
                 previewStack = new CraftingPreviewElementItemStack(stack);
             }
-            previewStack.addAvailable(stack.stackSize);
+            previewStack.addAvailable(stack.getCount());
             map.put(hash, previewStack);
         }
 

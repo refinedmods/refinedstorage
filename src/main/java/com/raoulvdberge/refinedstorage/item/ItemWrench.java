@@ -66,10 +66,12 @@ public class ItemWrench extends ItemBase {
     }
 
     @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         if (world.isRemote || !player.isSneaking()) {
             return EnumActionResult.PASS;
         }
+
+        ItemStack stack = player.getHeldItem(hand);
 
         WrenchMode mode = WrenchMode.readFromNBT(stack.getTagCompound());
 
@@ -119,8 +121,10 @@ public class ItemWrench extends ItemBase {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
         if (!world.isRemote && !player.isSneaking()) {
+            ItemStack stack = player.getHeldItem(hand);
+
             WrenchMode mode = WrenchMode.readFromNBT(stack.getTagCompound());
 
             stack.setTagCompound(new NBTTagCompound());
@@ -135,7 +139,7 @@ public class ItemWrench extends ItemBase {
             ));
         }
 
-        return super.onItemRightClick(stack, world, player, hand);
+        return super.onItemRightClick(world, player, hand);
     }
 
     @Override

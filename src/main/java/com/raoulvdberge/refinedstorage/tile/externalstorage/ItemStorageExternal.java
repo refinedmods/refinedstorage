@@ -33,7 +33,7 @@ public abstract class ItemStorageExternal implements IItemStorage {
             // If we exceed the cache size, than that means this items is added
             if (i >= cache.size()) {
                 if (actual != null) {
-                    network.getItemStorageCache().add(actual, actual.stackSize, false);
+                    network.getItemStorageCache().add(actual, actual.getCount(), false);
                 }
 
                 continue;
@@ -43,18 +43,18 @@ public abstract class ItemStorageExternal implements IItemStorage {
 
             if (cached != null && actual == null) {
                 // If the cached is not null but the actual is, we remove this item
-                network.getItemStorageCache().remove(cached, cached.stackSize);
+                network.getItemStorageCache().remove(cached, cached.getCount());
             } else if (cached == null && actual != null) {
                 // If the cached is null and the actual isn't, we added this item
-                network.getItemStorageCache().add(actual, actual.stackSize, false);
+                network.getItemStorageCache().add(actual, actual.getCount(), false);
             } else if (cached == null && actual == null) {
                 // If they're both null, nothing happens
             } else if (!API.instance().getComparer().isEqualNoQuantity(cached, actual)) {
                 // If both items mismatch, remove the old and add the new
-                network.getItemStorageCache().remove(cached, cached.stackSize);
-                network.getItemStorageCache().add(actual, actual.stackSize, false);
-            } else if (cached.stackSize != actual.stackSize) {
-                int delta = actual.stackSize - cached.stackSize;
+                network.getItemStorageCache().remove(cached, cached.getCount());
+                network.getItemStorageCache().add(actual, actual.getCount(), false);
+            } else if (cached.getCount() != actual.getCount()) {
+                int delta = actual.getCount() - cached.getCount();
 
                 if (delta > 0) {
                     network.getItemStorageCache().add(actual, delta, false);
@@ -69,7 +69,7 @@ public abstract class ItemStorageExternal implements IItemStorage {
         if (cache.size() > newStacks.size()) {
             for (int i = newStacks.size(); i < cache.size(); ++i) {
                 if (cache.get(i) != null) {
-                    network.getItemStorageCache().remove(cache.get(i), cache.get(i).stackSize);
+                    network.getItemStorageCache().remove(cache.get(i), cache.get(i).getCount());
                 }
             }
         }

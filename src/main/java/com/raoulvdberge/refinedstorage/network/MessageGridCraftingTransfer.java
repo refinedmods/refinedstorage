@@ -48,7 +48,7 @@ public class MessageGridCraftingTransfer extends MessageHandlerPlayerToServer<Me
                         actualRecipe[x] = new ItemStack[list.tagCount()];
 
                         for (int y = 0; y < list.tagCount(); y++) {
-                            actualRecipe[x][y] = ItemStack.loadItemStackFromNBT(list.getCompoundTagAt(y));
+                            actualRecipe[x][y] = new ItemStack(list.getCompoundTagAt(y));
                         }
                     }
                 }

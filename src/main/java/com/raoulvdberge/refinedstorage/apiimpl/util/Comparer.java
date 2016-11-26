@@ -44,7 +44,7 @@ public class Comparer implements IComparer {
         }
 
         if ((flags & COMPARE_QUANTITY) == COMPARE_QUANTITY) {
-            if (left.stackSize != right.stackSize) {
+            if (left.getCount() != right.getCount()) {
                 return false;
             }
         }

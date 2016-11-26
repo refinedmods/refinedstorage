@@ -61,9 +61,9 @@ public class CraftingTaskFactory implements ICraftingTaskFactory {
             Deque<ItemStack> toInsert = new ArrayDeque<>();
 
             for (int i = 0; i < toInsertList.tagCount(); ++i) {
-                ItemStack insertStack = ItemStack.loadItemStackFromNBT(toInsertList.getCompoundTagAt(i));
+                ItemStack insertStack = new ItemStack(toInsertList.getCompoundTagAt(i));
 
-                if (insertStack != null) {
+                if (!insertStack.isEmpty()) {
                     toInsert.add(insertStack);
                 }
             }

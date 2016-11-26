@@ -3,8 +3,7 @@ package com.raoulvdberge.refinedstorage.item;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-
-import java.util.List;
+import net.minecraft.util.NonNullList;
 
 public class ItemFluidStoragePart extends ItemBase {
     public static final int TYPE_64K = 0;
@@ -20,7 +19,7 @@ public class ItemFluidStoragePart extends ItemBase {
     }
 
     @Override
-    public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
+    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
         for (int i = 0; i <= 3; ++i) {
             list.add(new ItemStack(item, 1, i));
         }

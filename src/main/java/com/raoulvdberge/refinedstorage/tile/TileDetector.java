@@ -132,10 +132,10 @@ public class TileDetector extends TileNode implements IComparable, IType {
                     } else {
                         ItemStack stack = network.getItemStorageCache().getList().get(slot, compare);
 
-                        powered = isPowered(stack == null ? null : stack.stackSize);
+                        powered = isPowered(stack == null ? null : stack.getCount());
                     }
                 } else {
-                    powered = mode == MODE_AUTOCRAFTING ? !network.getCraftingTasks().isEmpty() : isPowered(network.getItemStorageCache().getList().getStacks().stream().map(s -> s.stackSize).mapToInt(Number::intValue).sum());
+                    powered = mode == MODE_AUTOCRAFTING ? !network.getCraftingTasks().isEmpty() : isPowered(network.getItemStorageCache().getList().getStacks().stream().map(s -> s.getCount()).mapToInt(Number::intValue).sum());
                 }
             } else if (type == IType.FLUIDS) {
                 FluidStack slot = fluidFilters.getFluidStackInSlot(0);
@@ -156,7 +156,7 @@ public class TileDetector extends TileNode implements IComparable, IType {
         if (powered != wasPowered) {
             wasPowered = powered;
 
-            getWorld().notifyNeighborsOfStateChange(pos, RSBlocks.DETECTOR);
+            getWorld().notifyNeighborsOfStateChange(pos, RSBlocks.DETECTOR, true);
 
             updateBlock();
         }

@@ -14,13 +14,6 @@ public class RecipeHandlerSolderer implements IRecipeHandler<RecipeWrapperSolder
 
     @Override
     @Nonnull
-    @SuppressWarnings("deprecation")
-    public String getRecipeCategoryUid() {
-        return RecipeCategorySolderer.ID;
-    }
-
-    @Override
-    @Nonnull
     public String getRecipeCategoryUid(@Nonnull RecipeWrapperSolderer recipe) {
         return RecipeCategorySolderer.ID;
     }

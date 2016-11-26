@@ -4,10 +4,8 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.tile.TileWriter;
-import mcmultipart.microblock.MicroblockContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -29,7 +27,7 @@ public class BlockWriter extends BlockCable {
     }
 
     @Override
-    public boolean onBlockActivatedDefault(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (hitCablePart(state, world, pos, hitX, hitY, hitZ)) {
             return false;
         }
@@ -50,7 +48,7 @@ public class BlockWriter extends BlockCable {
 
     @Override
     @SuppressWarnings("deprecation")
-    public int getWeakPowerDefault(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side, MicroblockContainer partContainer) {
+    public int getWeakPower(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
         TileWriter writer = (TileWriter) world.getTileEntity(pos);
 
         return side == writer.getDirection().getOpposite() ? writer.getRedstoneStrength() : 0;
@@ -58,8 +56,8 @@ public class BlockWriter extends BlockCable {
 
     @Override
     @SuppressWarnings("deprecation")
-    public int getStrongPowerDefault(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side, MicroblockContainer partContainer) {
-        return getWeakPowerDefault(state, world, pos, side, partContainer);
+    public int getStrongPower(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
+        return getWeakPower(state, world, pos, side);
     }
 
     @Override
@@ -68,7 +66,7 @@ public class BlockWriter extends BlockCable {
     }
 
     @Override
-    public boolean canConnectRedstoneDefault(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side, MicroblockContainer partContainer) {
+    public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
         return side == ((TileWriter) world.getTileEntity(pos)).getDirection().getOpposite();
     }
 

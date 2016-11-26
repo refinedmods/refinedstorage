@@ -62,11 +62,11 @@ public abstract class ContainerBase extends Container {
                 if (clickType == ClickType.QUICK_MOVE) {
                     slot.putStack(null);
                 } else if (player.inventory.getItemStack() != null) {
-                    int amount = player.inventory.getItemStack().stackSize;
+                    int amount = player.inventory.getItemStack().getCount();
 
                     slot.putStack(ItemHandlerHelper.copyStackWithSize(player.inventory.getItemStack(), amount));
                 } else if (slot.getHasStack()) {
-                    int amount = slot.getStack().stackSize;
+                    int amount = slot.getStack().getCount();
 
                     if (dragType == 0) {
                         amount = Math.max(1, amount - 1);
@@ -74,7 +74,7 @@ public abstract class ContainerBase extends Container {
                         amount = Math.min(64, amount + 1);
                     }
 
-                    slot.getStack().stackSize = amount;
+                    slot.getStack().setCount(amount);
                 }
             } else if (player.inventory.getItemStack() == null) {
                 slot.putStack(null);

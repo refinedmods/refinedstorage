@@ -11,7 +11,6 @@ import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-import mcmultipart.microblock.IMicroblock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -22,7 +21,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class TileImporter extends TileMultipartNode implements IComparable, IFilterable, IType {
+public class TileImporter extends TileNode implements IComparable, IFilterable, IType {
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
     public static final TileDataParameter<Integer> TYPE = IType.createParameter();
@@ -49,11 +48,6 @@ public class TileImporter extends TileMultipartNode implements IComparable, IFil
     }
 
     @Override
-    public boolean canAddMicroblock(IMicroblock microblock) {
-        return !isBlockingMicroblock(microblock, getDirection());
-    }
-
-    @Override
     public int getEnergyUsage() {
         return RS.INSTANCE.config.importerUsage + upgrades.getEnergyUsage();
     }
@@ -77,12 +71,12 @@ public class TileImporter extends TileMultipartNode implements IComparable, IFil
                 if (stack == null || !IFilterable.canTake(itemFilters, mode, compare, stack)) {
                     currentSlot++;
                 } else if (ticks % upgrades.getSpeed() == 0) {
-                    ItemStack result = handler.extractItem(currentSlot, upgrades.getInteractStackSize(), true);
+                    ItemStack result = handler.extractItem(currentSlot, upgrades.getItemInteractCount(), true);
 
-                    if (result != null && network.insertItem(result, result.stackSize, true) == null) {
-                        network.insertItem(result, result.stackSize, false);
+                    if (result != null && network.insertItem(result, result.getCount(), true) == null) {
+                        network.insertItem(result, result.getCount(), false);
 
-                        handler.extractItem(currentSlot, upgrades.getInteractStackSize(), false);
+                        handler.extractItem(currentSlot, upgrades.getItemInteractCount(), false);
                     } else {
                         currentSlot++;
                     }
@@ -95,7 +89,7 @@ public class TileImporter extends TileMultipartNode implements IComparable, IFil
                 FluidStack stack = handler.drain(Fluid.BUCKET_VOLUME, false);
 
                 if (stack != null && IFilterable.canTakeFluids(fluidFilters, mode, compare, stack) && network.insertFluid(stack, stack.amount, true) == null) {
-                    FluidStack toDrain = handler.drain(Fluid.BUCKET_VOLUME * upgrades.getInteractStackSize(), false);
+                    FluidStack toDrain = handler.drain(Fluid.BUCKET_VOLUME * upgrades.getItemInteractCount(), false);
 
                     if (toDrain != null) {
                         FluidStack remainder = network.insertFluid(toDrain, toDrain.amount, false);

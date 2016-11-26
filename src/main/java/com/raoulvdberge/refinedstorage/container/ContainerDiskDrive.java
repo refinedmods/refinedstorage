@@ -42,7 +42,7 @@ public class ContainerDiskDrive extends ContainerBase {
                 return mergeItemStackToSpecimen(stack, 8, 8 + 9);
             }
 
-            if (stack.stackSize == 0) {
+            if (stack.getCount() == 0) {
                 slot.putStack(null);
             } else {
                 slot.onSlotChanged();

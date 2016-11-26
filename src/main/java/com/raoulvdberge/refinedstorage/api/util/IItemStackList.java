@@ -26,7 +26,7 @@ public interface IItemStackList {
      * @param stack the stack
      */
     default void add(@Nonnull ItemStack stack) {
-        add(stack, stack.stackSize);
+        add(stack, stack.getCount());
     }
 
     /**
@@ -47,7 +47,7 @@ public interface IItemStackList {
      * @return whether the remove was successful for the full amount
      */
     default boolean remove(@Nonnull ItemStack stack, boolean removeIfReachedZero) {
-        return remove(stack, stack.stackSize, removeIfReachedZero);
+        return remove(stack, stack.getCount(), removeIfReachedZero);
     }
 
     /**
@@ -70,7 +70,7 @@ public interface IItemStackList {
      * @return whether the remove was successful for the full amount
      */
     default boolean trackedRemove(@Nonnull ItemStack stack, boolean removeIfReachedZero) {
-        return trackedRemove(stack, stack.stackSize, removeIfReachedZero);
+        return trackedRemove(stack, stack.getCount(), removeIfReachedZero);
     }
 
     /**

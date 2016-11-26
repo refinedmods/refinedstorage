@@ -58,7 +58,7 @@ public class ContainerProcessingPatternEncoder extends ContainerBase {
                 return null;
             }
 
-            if (stack.stackSize == 0) {
+            if (stack.getCount() == 0) {
                 slot.putStack(null);
             } else {
                 slot.onSlotChanged();

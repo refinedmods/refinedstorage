@@ -50,7 +50,7 @@ public class MessageGridCraftingClear extends MessageHandlerPlayerToServer<Messa
                         ItemStack slot = grid.getMatrix().getStackInSlot(i);
 
                         if (slot != null) {
-                            grid.getMatrix().setInventorySlotContents(i, grid.getNetwork().insertItem(slot, slot.stackSize, false));
+                            grid.getMatrix().setInventorySlotContents(i, grid.getNetwork().insertItem(slot, slot.getCount(), false));
                         }
                     }
                 } else if (grid.getType() == EnumGridType.PATTERN) {

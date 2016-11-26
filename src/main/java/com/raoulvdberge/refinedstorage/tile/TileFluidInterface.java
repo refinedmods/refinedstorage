@@ -101,7 +101,7 @@ public class TileFluidInterface extends TileNode implements IComparable {
         }
 
         if (ticks % upgrades.getSpeed() == 0) {
-            FluidStack drained = tankIn.drainInternal(Fluid.BUCKET_VOLUME * upgrades.getInteractStackSize(), true);
+            FluidStack drained = tankIn.drainInternal(Fluid.BUCKET_VOLUME * upgrades.getItemInteractCount(), true);
 
             // Drain in tank
             if (drained != null) {
@@ -118,7 +118,7 @@ public class TileFluidInterface extends TileNode implements IComparable {
 
             // If our out fluid doesn't match the new fluid, empty it first
             if (tankOut.getFluid() != null && (stack == null || (tankOut.getFluid().getFluid() != stack.getFluid()))) {
-                FluidStack remainder = tankOut.drainInternal(Fluid.BUCKET_VOLUME * upgrades.getInteractStackSize(), true);
+                FluidStack remainder = tankOut.drainInternal(Fluid.BUCKET_VOLUME * upgrades.getItemInteractCount(), true);
 
                 if (remainder != null) {
                     network.insertFluid(remainder, remainder.amount, false);
@@ -128,7 +128,7 @@ public class TileFluidInterface extends TileNode implements IComparable {
                 FluidStack stackInStorage = network.getFluidStorageCache().getList().get(stack, compare);
 
                 if (stackInStorage != null) {
-                    int toExtract = Math.min(Fluid.BUCKET_VOLUME * upgrades.getInteractStackSize(), stackInStorage.amount);
+                    int toExtract = Math.min(Fluid.BUCKET_VOLUME * upgrades.getItemInteractCount(), stackInStorage.amount);
 
                     FluidStack took = network.extractFluid(stack, toExtract, compare, true);
 

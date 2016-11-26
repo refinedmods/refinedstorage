@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
@@ -13,7 +12,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -107,7 +105,7 @@ public class CraftingStepCraft extends CraftingStep {
                 NBTTagList toInsertList = tag.getTagList(NBT_TO_INSERT, Constants.NBT.TAG_COMPOUND);
                 toInsert = new ArrayList<>(toInsertList.tagCount());
                 for (int i = 0; i < toInsertList.tagCount(); ++i) {
-                    toInsert.add(ItemStack.loadItemStackFromNBT(toInsertList.getCompoundTagAt(i)));
+                    toInsert.add(new ItemStack(toInsertList.getCompoundTagAt(i)));
                 }
             }
 

@@ -55,7 +55,7 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
 
             if (voidExcess && result != null) {
                 // Simulate should not matter as the items are voided anyway
-                result.stackSize = -result.stackSize;
+                result.setCount(-result.getCount());
             }
 
             return result;

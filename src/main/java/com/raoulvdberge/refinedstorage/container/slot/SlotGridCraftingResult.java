@@ -19,7 +19,7 @@ public class SlotGridCraftingResult extends SlotCrafting {
     }
 
     @Override
-    public void onPickupFromSlot(EntityPlayer player, ItemStack stack) {
+    public ItemStack onTake(EntityPlayer player, ItemStack stack) {
         FMLCommonHandler.instance().firePlayerCraftingEvent(player, stack, grid.getMatrix());
 
         onCrafting(stack);
@@ -29,5 +29,7 @@ public class SlotGridCraftingResult extends SlotCrafting {
 
             container.sendCraftingSlots();
         }
+
+        return null;
     }
 }

@@ -14,12 +14,10 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.tile.IStorageGui;
-import com.raoulvdberge.refinedstorage.tile.TileMultipartNode;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
 import com.raoulvdberge.refinedstorage.tile.config.*;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-import mcmultipart.microblock.IMicroblock;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.tileentity.TileEntity;
@@ -31,7 +29,7 @@ import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileExternalStorage extends TileMultipartNode implements IItemStorageProvider, IFluidStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IType, IAccessType {
+public class TileExternalStorage extends TileNode implements IItemStorageProvider, IFluidStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IType, IAccessType {
     public static final TileDataParameter<Integer> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
@@ -97,11 +95,6 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
         dataManager.addWatchedParameter(CAPACITY);
         dataManager.addWatchedParameter(TYPE);
         dataManager.addWatchedParameter(ACCESS_TYPE);
-    }
-
-    @Override
-    public boolean canAddMicroblock(IMicroblock microblock) {
-        return !isBlockingMicroblock(microblock, getDirection());
     }
 
     @Override

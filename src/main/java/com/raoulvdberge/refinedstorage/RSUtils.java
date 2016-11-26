@@ -16,14 +16,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidContainerItem;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.wrappers.FluidHandlerWrapper;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -35,6 +34,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.List;
 import java.util.Locale;
 import java.util.function.Function;
 
@@ -53,7 +53,7 @@ public final class RSUtils {
 
     public static void writeItemStack(ByteBuf buf, INetworkMaster network, ItemStack stack) {
         buf.writeInt(Item.getIdFromItem(stack.getItem()));
-        buf.writeInt(stack.stackSize);
+        buf.writeInt(stack.getCount());
         buf.writeInt(stack.getItemDamage());
         ByteBufUtils.writeTag(buf, stack.getItem().getNBTShareTag(stack));
         buf.writeInt(API.instance().getItemStackHashCode(stack));
@@ -84,6 +84,18 @@ public final class RSUtils {
         }
     }
 
+    public static NonNullList<ItemStack> toNonNullList(List<ItemStack> list) {
+        NonNullList<ItemStack> other = NonNullList.create();
+
+        for (ItemStack item : list) {
+            if (item != null) {
+                other.add(item);
+            }
+        }
+
+        return other;
+    }
+
     public static void writeItems(IItemHandler handler, int id, NBTTagCompound tag) {
         NBTTagList tagList = new NBTTagList();
 
@@ -111,10 +123,8 @@ public final class RSUtils {
             for (int i = 0; i < tagList.tagCount(); i++) {
                 int slot = tagList.getCompoundTagAt(i).getInteger(NBT_SLOT);
 
-                ItemStack stack = ItemStack.loadItemStackFromNBT(tagList.getCompoundTagAt(i));
-
                 if (slot >= 0 && slot < handler.getSlots()) {
-                    handler.setStackInSlot(slot, stack);
+                    handler.setStackInSlot(slot, new ItemStack(tagList.getCompoundTagAt(i)));
                 }
             }
         }
@@ -147,9 +157,11 @@ public final class RSUtils {
             for (int i = 0; i < tagList.tagCount(); i++) {
                 int slot = tagList.getCompoundTagAt(i).getInteger(NBT_SLOT);
 
-                ItemStack stack = ItemStack.loadItemStackFromNBT(tagList.getCompoundTagAt(i));
+                ItemStack stack = new ItemStack(tagList.getCompoundTagAt(i));
 
-                inventory.setInventorySlotContents(slot, stack);
+                if (!stack.isEmpty()) {
+                    inventory.setInventorySlotContents(slot, stack);
+                }
             }
         }
     }
@@ -220,23 +232,17 @@ public final class RSUtils {
             return null;
         }
 
-        IFluidHandler handler = null;
-
-        if (tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)) {
-            handler = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side);
-        } else if (tile instanceof net.minecraftforge.fluids.IFluidHandler) {
-            handler = new FluidHandlerWrapper((net.minecraftforge.fluids.IFluidHandler) tile, side);
+        if (!tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)) {
+            return null;
         }
 
-        return handler;
+        return tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side);
     }
 
     @SuppressWarnings("deprecation")
     public static FluidStack getFluidFromStack(ItemStack stack, boolean simulate) {
         if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
             return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).drain(Fluid.BUCKET_VOLUME, !simulate);
-        } else if (stack.getItem() instanceof IFluidContainerItem) {
-            return ((IFluidContainerItem) stack.getItem()).drain(stack, Fluid.BUCKET_VOLUME, !simulate);
         }
 
         return null;

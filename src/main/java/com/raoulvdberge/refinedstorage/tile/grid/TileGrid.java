@@ -29,6 +29,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -268,16 +269,16 @@ public class TileGrid extends TileNode implements IGrid {
     }
 
     public void onCrafted(EntityPlayer player) {
-        ItemStack[] remainder = CraftingManager.getInstance().getRemainingItems(matrix, getWorld());
+        NonNullList<ItemStack> remainder = CraftingManager.getInstance().getRemainingItems(matrix, getWorld());
 
         for (int i = 0; i < matrix.getSizeInventory(); ++i) {
             ItemStack slot = matrix.getStackInSlot(i);
 
-            if (i < remainder.length && remainder[i] != null) {
+            if (i < remainder.size() && !remainder.get(i).isEmpty()) {
                 // If there is no space for the remainder, dump it in the player inventory
-                if (slot != null && slot.stackSize > 1) {
-                    if (!player.inventory.addItemStackToInventory(remainder[i].copy())) {
-                        ItemStack remainderStack = network.insertItem(remainder[i].copy(), remainder[i].stackSize, false);
+                if (slot != null && slot.getCount() > 1) {
+                    if (!player.inventory.addItemStackToInventory(remainder.get(i).copy())) {
+                        ItemStack remainderStack = network.insertItem(remainder.get(i).copy(), remainder.get(i).getCount(), false);
 
                         if (remainderStack != null) {
                             InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), remainderStack);
@@ -286,10 +287,10 @@ public class TileGrid extends TileNode implements IGrid {
 
                     matrix.decrStackSize(i, 1);
                 } else {
-                    matrix.setInventorySlotContents(i, remainder[i].copy());
+                    matrix.setInventorySlotContents(i, remainder.get(i).copy());
                 }
             } else if (slot != null) {
-                if (slot.stackSize == 1 && isConnected()) {
+                if (slot.getCount() == 1 && isConnected()) {
                     matrix.setInventorySlotContents(i, network.extractItem(slot, 1, false));
                 } else {
                     matrix.decrStackSize(i, 1);
@@ -310,16 +311,16 @@ public class TileGrid extends TileNode implements IGrid {
 
             craftedItemsList.add(crafted.copy());
 
-            craftedItems += crafted.stackSize;
+            craftedItems += crafted.getCount();
 
-            if (!API.instance().getComparer().isEqual(crafted, result.getStackInSlot(0)) || craftedItems + crafted.stackSize > crafted.getMaxStackSize()) {
+            if (!API.instance().getComparer().isEqual(crafted, result.getStackInSlot(0)) || craftedItems + crafted.getCount() > crafted.getMaxStackSize()) {
                 break;
             }
         }
 
         for (ItemStack craftedItem : craftedItemsList) {
             if (!player.inventory.addItemStackToInventory(craftedItem.copy())) {
-                ItemStack remainder = network.insertItem(craftedItem, craftedItem.stackSize, false);
+                ItemStack remainder = network.insertItem(craftedItem, craftedItem.getCount(), false);
                 if (remainder != null) {
                     InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), remainder);
                 }
@@ -364,10 +365,10 @@ public class TileGrid extends TileNode implements IGrid {
                 if (getType() == EnumGridType.CRAFTING) {
                     // If we are connected, try to insert into network. If it fails, stop.
                     if (isConnected()) {
-                        if (network.insertItem(slot, slot.stackSize, true) != null) {
+                        if (network.insertItem(slot, slot.getCount(), true) != null) {
                             return;
                         } else {
-                            network.insertItem(slot, slot.stackSize, false);
+                            network.insertItem(slot, slot.getCount(), false);
                         }
                     } else {
                         // If we aren't connected, try to insert into player inventory. If it fails, stop.

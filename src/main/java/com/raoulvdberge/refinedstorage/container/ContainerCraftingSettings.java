@@ -21,6 +21,11 @@ public class ContainerCraftingSettings extends ContainerBase {
                 return 1;
             }
 
+            @Override
+            public boolean isEmpty() {
+                return true;
+            }
+
             @Nullable
             @Override
             public ItemStack getStackInSlot(int index) {

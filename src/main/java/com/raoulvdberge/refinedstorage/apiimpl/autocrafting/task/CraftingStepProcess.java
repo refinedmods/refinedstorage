@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
@@ -49,9 +48,9 @@ public class CraftingStepProcess extends CraftingStep {
                 AvailableType type = isItemAvailable(items, fluids, stack, actualStack, compare);
 
                 if (type == AvailableType.ITEM) {
-                    toInsert.add(ItemHandlerHelper.copyStackWithSize(actualStack, stack.stackSize));
+                    toInsert.add(ItemHandlerHelper.copyStackWithSize(actualStack, stack.getCount()));
                 } else if (type == AvailableType.FLUID) {
-                    toInsert.add(ItemHandlerHelper.copyStackWithSize(stack, stack.stackSize));
+                    toInsert.add(ItemHandlerHelper.copyStackWithSize(stack, stack.getCount()));
                 } else {
                     items.undo();
                     fluids.undo();
@@ -105,14 +104,14 @@ public class CraftingStepProcess extends CraftingStep {
             ItemStack remainder = null;
             for (Integer slot : availableSlots) {
                 remainder = dest.insertItem(slot, current, true);
-                if (remainder == null || current.stackSize != remainder.stackSize) {
+                if (remainder == null || current.getCount() != remainder.getCount()) {
                     availableSlots.remove(slot);
                     break;
                 }
             }
-            if (remainder == null || remainder.stackSize <= 0) {
+            if (remainder == null || remainder.getCount() <= 0) {
                 current = stacks.poll();
-            } else if (current.stackSize == remainder.stackSize) {
+            } else if (current.getCount() == remainder.getCount()) {
                 break; // Can't be inserted
             } else {
                 current = remainder;

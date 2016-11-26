@@ -14,6 +14,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -40,7 +41,7 @@ public class ItemFluidStorageDisk extends ItemBase {
     }
 
     @Override
-    public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
+    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
         for (int i = 0; i < 5; ++i) {
             list.add(FluidStorageNBT.createStackWithNBT(new ItemStack(item, 1, i)));
         }
@@ -81,7 +82,9 @@ public class ItemFluidStorageDisk extends ItemBase {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack disk, World world, EntityPlayer player, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+        ItemStack disk = player.getHeldItem(hand);
+
         if (!world.isRemote && player.isSneaking() && FluidStorageNBT.isValid(disk) && FluidStorageNBT.getStoredFromNBT(disk.getTagCompound()) <= 0 && disk.getMetadata() != TYPE_CREATIVE) {
             ItemStack storagePart = new ItemStack(RSItems.FLUID_STORAGE_PART, 1, disk.getMetadata());
 

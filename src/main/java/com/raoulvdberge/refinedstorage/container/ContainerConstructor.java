@@ -37,7 +37,7 @@ public class ContainerConstructor extends ContainerBase {
                 return mergeItemStackToSpecimen(stack, 4, 4 + 1);
             }
 
-            if (stack.stackSize == 0) {
+            if (stack.getCount() == 0) {
                 slot.putStack(null);
             } else {
                 slot.onSlotChanged();

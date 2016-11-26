@@ -27,11 +27,11 @@ public class ItemNetworkCard extends ItemBase {
     }
 
     @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         Block block = world.getBlockState(pos).getBlock();
 
         if (block == RSBlocks.NETWORK_RECEIVER) {
-            setReceiver(stack, pos, world.provider.getDimension());
+            setReceiver(player.getHeldItem(hand), pos, world.provider.getDimension());
 
             return EnumActionResult.SUCCESS;
         }

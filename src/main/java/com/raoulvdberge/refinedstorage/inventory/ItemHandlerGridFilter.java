@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.inventory;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class ItemHandlerGridFilter extends ItemStackHandler {
@@ -29,7 +30,7 @@ public class ItemHandlerGridFilter extends ItemStackHandler {
         RSUtils.writeItems(this, 0, stack.getTagCompound());
     }
 
-    public ItemStack[] getFilteredItems() {
+    public NonNullList<ItemStack> getFilteredItems() {
         return stacks;
     }
 }

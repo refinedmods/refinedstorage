@@ -67,7 +67,7 @@ public interface ICraftingStep {
 
     /**
      * @param stack the output to check
-     * @return true if we received the given output (based upon item and stacksize), false otherwise
+     * @return true if we received the given output (based upon item and getCount()), false otherwise
      */
     boolean hasReceivedOutput(ItemStack stack);
 

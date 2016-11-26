@@ -35,7 +35,7 @@ public class SoldererRegistry implements ISoldererRegistry {
                 ItemStack row = recipe.getRow(i);
 
                 if (rows.getStackInSlot(i) != null && row != null) {
-                    if (rows.getStackInSlot(i).stackSize < row.stackSize) {
+                    if (rows.getStackInSlot(i).getCount() < row.getCount()) {
                         found = false;
                     }
                 }

@@ -65,10 +65,10 @@ public class ItemStorageItemHandler extends ItemStorageExternal {
                     if (received == null) {
                         received = got;
                     } else {
-                        received.stackSize += got.stackSize;
+                        received.grow(got.getCount());
                     }
 
-                    remaining -= got.stackSize;
+                    remaining -= got.getCount();
 
                     if (remaining == 0) {
                         break;
@@ -86,7 +86,7 @@ public class ItemStorageItemHandler extends ItemStorageExternal {
 
         for (int i = 0; i < handler.getSlots(); ++i) {
             if (handler.getStackInSlot(i) != null) {
-                size += handler.getStackInSlot(i).stackSize;
+                size += handler.getStackInSlot(i).getCount();
             }
         }
 

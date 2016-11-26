@@ -70,10 +70,10 @@ public class ItemStorageDrawerGroup extends ItemStorageExternal {
             if (drawers.isDrawerEnabled(i)) {
                 remainder = ItemStorageDrawer.insertItem(externalStorage, drawers.getDrawer(i), stack, size, simulate);
 
-                if (remainder == null || remainder.stackSize <= 0) {
+                if (remainder == null || remainder.getCount() <= 0) {
                     break;
                 } else {
-                    size = remainder.stackSize;
+                    size = remainder.getCount();
                 }
             }
         }
@@ -96,10 +96,10 @@ public class ItemStorageDrawerGroup extends ItemStorageExternal {
                     if (result == null) {
                         result = extracted;
                     } else {
-                        result.stackSize += extracted.stackSize;
+                        result.grow(extracted.getCount());
                     }
 
-                    toExtract -= extracted.stackSize;
+                    toExtract -= extracted.getCount();
                 }
 
                 if (toExtract == 0) {

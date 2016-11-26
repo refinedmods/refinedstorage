@@ -3,8 +3,7 @@ package com.raoulvdberge.refinedstorage.item;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-
-import java.util.List;
+import net.minecraft.util.NonNullList;
 
 public class ItemProcessor extends ItemBase {
     public static final int TYPE_PRINTED_BASIC = 0;
@@ -23,7 +22,7 @@ public class ItemProcessor extends ItemBase {
     }
 
     @Override
-    public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
+    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
         for (int i = 0; i <= 6; ++i) {
             list.add(new ItemStack(item, 1, i));
         }

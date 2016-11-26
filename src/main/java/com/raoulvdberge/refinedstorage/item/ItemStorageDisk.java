@@ -14,9 +14,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -39,7 +39,7 @@ public class ItemStorageDisk extends ItemBase {
     }
 
     @Override
-    public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
+    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
         for (int i = 0; i < 5; ++i) {
             list.add(ItemStorageNBT.createStackWithNBT(new ItemStack(item, 1, i)));
         }
@@ -75,7 +75,7 @@ public class ItemStorageDisk extends ItemBase {
                 Item item = it.next();
 
                 if (item != RSItems.STORAGE_DISK) {
-                    List<ItemStack> stacks = new ArrayList<>();
+                    NonNullList<ItemStack> stacks = NonNullList.create();
 
                     item.getSubItems(item, CreativeTabs.INVENTORY, stacks);
 
@@ -105,7 +105,9 @@ public class ItemStorageDisk extends ItemBase {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack disk, World world, EntityPlayer player, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+        ItemStack disk = player.getHeldItem(hand);
+
         if (!world.isRemote && player.isSneaking() && ItemStorageNBT.isValid(disk) && ItemStorageNBT.getStoredFromNBT(disk.getTagCompound()) <= 0 && disk.getMetadata() != TYPE_CREATIVE) {
             ItemStack storagePart = new ItemStack(RSItems.STORAGE_PART, 1, disk.getMetadata());
 

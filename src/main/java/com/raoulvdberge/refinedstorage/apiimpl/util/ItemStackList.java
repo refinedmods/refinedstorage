@@ -23,10 +23,10 @@ public class ItemStackList implements IItemStackList {
     public void add(@Nonnull ItemStack stack, int size) {
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
             if (API.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
-                if ((long) otherStack.stackSize + (long) size > Integer.MAX_VALUE) {
-                    otherStack.stackSize = Integer.MAX_VALUE;
+                if ((long) otherStack.getCount() + (long) size > Integer.MAX_VALUE) {
+                    otherStack.setCount(Integer.MAX_VALUE);
                 } else {
-                    otherStack.stackSize += size;
+                    otherStack.grow(size);
                 }
 
                 return;
@@ -39,11 +39,12 @@ public class ItemStackList implements IItemStackList {
     @Override
     public boolean remove(@Nonnull ItemStack stack, int size, boolean removeIfReachedZero) {
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
-            if (otherStack.stackSize > 0 && API.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
-                otherStack.stackSize -= size;
-                boolean success = otherStack.stackSize >= 0;
+            if (otherStack.getCount() > 0 && API.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
+                otherStack.shrink(size);
 
-                if (otherStack.stackSize <= 0 && removeIfReachedZero) {
+                boolean success = otherStack.getCount() >= 0;
+
+                if (otherStack.getCount() <= 0 && removeIfReachedZero) {
                     stacks.remove(otherStack.getItem(), otherStack);
                 }
 
@@ -57,13 +58,15 @@ public class ItemStackList implements IItemStackList {
     @Override
     public boolean trackedRemove(@Nonnull ItemStack stack, int size, boolean removeIfReachedZero) {
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
-            if (otherStack.stackSize > 0 && API.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
-                ItemStack removed = ItemHandlerHelper.copyStackWithSize(otherStack, Math.min(size, otherStack.stackSize));
+            if (otherStack.getCount() > 0 && API.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
+                ItemStack removed = ItemHandlerHelper.copyStackWithSize(otherStack, Math.min(size, otherStack.getCount()));
                 this.removeTracker.add(removed);
-                otherStack.stackSize -= size;
-                boolean success = otherStack.stackSize >= 0;
 
-                if (otherStack.stackSize <= 0 && removeIfReachedZero) {
+                otherStack.shrink(size);
+
+                boolean success = otherStack.getCount() >= 0;
+
+                if (otherStack.getCount() <= 0 && removeIfReachedZero) {
                     stacks.remove(otherStack.getItem(), otherStack);
                 }
 
@@ -90,7 +93,7 @@ public class ItemStackList implements IItemStackList {
     public ItemStack get(@Nonnull ItemStack stack, int flags) {
         // When the oredict flag is set all stacks need to be checked not just the ones matching the item
         for (ItemStack otherStack : (flags & IComparer.COMPARE_OREDICT) == IComparer.COMPARE_OREDICT ? stacks.values() : stacks.get(stack.getItem())) {
-            if (otherStack.stackSize > 0 && API.instance().getComparer().isEqual(otherStack, stack, flags)) {
+            if (otherStack.getCount() > 0 && API.instance().getComparer().isEqual(otherStack, stack, flags)) {
                 return otherStack;
             }
         }
@@ -118,7 +121,7 @@ public class ItemStackList implements IItemStackList {
     @Override
     public void clean() {
         List<ItemStack> toRemove = stacks.values().stream()
-            .filter(stack -> stack.stackSize <= 0)
+            .filter(stack -> stack.getCount() <= 0)
             .collect(Collectors.toList());
 
         toRemove.forEach(stack -> stacks.remove(stack.getItem(), stack));
@@ -170,7 +173,7 @@ public class ItemStackList implements IItemStackList {
                     compare |= IComparer.COMPARE_DAMAGE;
                 }
                 ItemStack actualInput = list.get(input, compare);
-                ItemStack taken = ItemHandlerHelper.copyStackWithSize(actualInput, input.stackSize);
+                ItemStack taken = ItemHandlerHelper.copyStackWithSize(actualInput, input.getCount());
                 took[i] = taken;
                 list.remove(taken, true);
             }

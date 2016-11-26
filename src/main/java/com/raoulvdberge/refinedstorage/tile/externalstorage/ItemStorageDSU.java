@@ -27,7 +27,7 @@ public class ItemStorageDSU extends ItemStorageExternal {
 
     @Override
     public List<ItemStack> getStacks() {
-        if (unit.getStoredItemType() != null && unit.getStoredItemType().stackSize > 0) {
+        if (unit.getStoredItemType() != null && unit.getStoredItemType().getCount() > 0) {
             return Collections.singletonList(unit.getStoredItemType().copy());
         }
 
@@ -47,13 +47,13 @@ public class ItemStorageDSU extends ItemStorageExternal {
                         }
 
                         if (!simulate) {
-                            unit.setStoredItemCount(unit.getStoredItemType().stackSize + remainingSpace);
+                            unit.setStoredItemCount(unit.getStoredItemType().getCount() + remainingSpace);
                         }
 
                         return ItemHandlerHelper.copyStackWithSize(stack, size - remainingSpace);
                     } else {
                         if (!simulate) {
-                            unit.setStoredItemCount(unit.getStoredItemType().stackSize + size);
+                            unit.setStoredItemCount(unit.getStoredItemType().getCount() + size);
                         }
 
                         return null;
@@ -88,14 +88,14 @@ public class ItemStorageDSU extends ItemStorageExternal {
     @Override
     public ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
         if (API.instance().getComparer().isEqual(stack, unit.getStoredItemType(), flags)) {
-            if (size > unit.getStoredItemType().stackSize) {
-                size = unit.getStoredItemType().stackSize;
+            if (size > unit.getStoredItemType().getCount()) {
+                size = unit.getStoredItemType().getCount();
             }
 
             ItemStack stored = unit.getStoredItemType();
 
             if (!simulate) {
-                unit.setStoredItemCount(stored.stackSize - size);
+                unit.setStoredItemCount(stored.getCount() - size);
             }
 
             return ItemHandlerHelper.copyStackWithSize(stored, size);
@@ -106,7 +106,7 @@ public class ItemStorageDSU extends ItemStorageExternal {
 
     @Override
     public int getStored() {
-        return unit.getStoredItemType() != null ? unit.getStoredItemType().stackSize : 0;
+        return unit.getStoredItemType() != null ? unit.getStoredItemType().getCount() : 0;
     }
 
     @Override

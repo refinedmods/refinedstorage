@@ -14,10 +14,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import java.util.List;
 
 public class BlockGrid extends BlockNode {
     public static final PropertyEnum TYPE = PropertyEnum.create("type", EnumGridType.class);
@@ -32,7 +31,7 @@ public class BlockGrid extends BlockNode {
     }
 
     @Override
-    public void getSubBlocks(Item item, CreativeTabs tab, List<ItemStack> subItems) {
+    public void getSubBlocks(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
         for (int i = 0; i <= 3; i++) {
             subItems.add(new ItemStack(item, 1, i));
         }
@@ -56,7 +55,7 @@ public class BlockGrid extends BlockNode {
     }
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
             player.openGui(RS.INSTANCE, RSGui.GRID, world, pos.getX(), pos.getY(), pos.getZ());
 

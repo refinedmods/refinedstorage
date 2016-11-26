@@ -3,7 +3,6 @@ package com.raoulvdberge.refinedstorage.block;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.tile.TileWirelessTransmitter;
-import mcmultipart.block.BlockCoverable;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
@@ -35,7 +34,7 @@ public class BlockWirelessTransmitter extends BlockNode {
     }
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
             player.openGui(RS.INSTANCE, RSGui.WIRELESS_TRANSMITTER, world, pos.getX(), pos.getY(), pos.getZ());
         }
@@ -45,7 +44,7 @@ public class BlockWirelessTransmitter extends BlockNode {
 
     @Override
     @SuppressWarnings("deprecation")
-    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block) {
+    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
         if (!canPlaceBlockAt(world, pos) && world.getBlockState(pos).getBlock() == this) {
             dropBlockAsItem(world, pos, state, 0);
 
@@ -73,7 +72,7 @@ public class BlockWirelessTransmitter extends BlockNode {
 
     @Override
     public boolean canPlaceBlockAt(World world, BlockPos pos) {
-        return world.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock() instanceof BlockCoverable;
+        return world.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock() instanceof BlockCable;
     }
 
     @Override

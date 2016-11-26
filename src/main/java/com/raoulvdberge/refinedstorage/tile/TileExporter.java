@@ -10,7 +10,6 @@ import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-import mcmultipart.microblock.IMicroblock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -22,7 +21,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-public class TileExporter extends TileMultipartNode implements IComparable, IType {
+public class TileExporter extends TileNode implements IComparable, IType {
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> TYPE = IType.createParameter();
 
@@ -43,11 +42,6 @@ public class TileExporter extends TileMultipartNode implements IComparable, ITyp
     }
 
     @Override
-    public boolean canAddMicroblock(IMicroblock microblock) {
-        return !isBlockingMicroblock(microblock, getDirection());
-    }
-
-    @Override
     public int getEnergyUsage() {
         return RS.INSTANCE.config.exporterUsage + upgrades.getEnergyUsage();
     }
@@ -63,14 +57,14 @@ public class TileExporter extends TileMultipartNode implements IComparable, ITyp
                         ItemStack slot = itemFilters.getStackInSlot(i);
 
                         if (slot != null) {
-                            ItemStack took = network.extractItem(slot, upgrades.getInteractStackSize(), compare, true);
+                            ItemStack took = network.extractItem(slot, upgrades.getItemInteractCount(), compare, true);
 
                             if (took == null) {
                                 if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
                                     network.scheduleCraftingTask(slot, 1, compare);
                                 }
                             } else if (ItemHandlerHelper.insertItem(handler, took, true) == null) {
-                                took = network.extractItem(slot, upgrades.getInteractStackSize(), compare, false);
+                                took = network.extractItem(slot, upgrades.getItemInteractCount(), compare, false);
 
                                 ItemHandlerHelper.insertItem(handler, took, false);
                             }
@@ -86,7 +80,7 @@ public class TileExporter extends TileMultipartNode implements IComparable, ITyp
                             FluidStack stackInStorage = network.getFluidStorageCache().getList().get(stack, compare);
 
                             if (stackInStorage != null) {
-                                int toExtract = Math.min(Fluid.BUCKET_VOLUME * upgrades.getInteractStackSize(), stackInStorage.amount);
+                                int toExtract = Math.min(Fluid.BUCKET_VOLUME * upgrades.getItemInteractCount(), stackInStorage.amount);
 
                                 FluidStack took = network.extractFluid(stack, toExtract, compare, true);
 

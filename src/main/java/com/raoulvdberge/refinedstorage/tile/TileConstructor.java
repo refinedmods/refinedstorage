@@ -14,7 +14,6 @@ import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataConsumer;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-import mcmultipart.microblock.IMicroblock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSkull;
 import net.minecraft.block.SoundType;
@@ -44,7 +43,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class TileConstructor extends TileMultipartNode implements IComparable, IType {
+public class TileConstructor extends TileNode implements IComparable, IType {
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> TYPE = IType.createParameter();
     public static final TileDataParameter<Boolean> DROP = new TileDataParameter<>(DataSerializers.BOOLEAN, false, new ITileDataProducer<Boolean, TileConstructor>() {
@@ -92,11 +91,6 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(TYPE);
         dataManager.addWatchedParameter(DROP);
-    }
-
-    @Override
-    public boolean canAddMicroblock(IMicroblock microblock) {
-        return !isBlockingMicroblock(microblock, getDirection());
     }
 
     @Override

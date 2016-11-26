@@ -28,11 +28,6 @@ public class RecipeTransferHandlerGrid implements IRecipeTransferHandler {
     }
 
     @Override
-    public String getRecipeCategoryUid() {
-        return "minecraft.crafting";
-    }
-
-    @Override
     public IRecipeTransferError transferRecipe(Container container, IRecipeLayout recipeLayout, EntityPlayer player, boolean maxTransfer, boolean doTransfer) {
         if (doTransfer) {
             Map<Integer, ? extends IGuiIngredient<ItemStack>> inputs = recipeLayout.getItemStacks().getGuiIngredients();

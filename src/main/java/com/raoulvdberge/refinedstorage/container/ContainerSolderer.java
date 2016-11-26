@@ -55,7 +55,7 @@ public class ContainerSolderer extends ContainerBase {
                 }
             }
 
-            if (stack.stackSize == 0) {
+            if (stack.getCount() == 0) {
                 slot.putStack(null);
             } else {
                 slot.onSlotChanged();

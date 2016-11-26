@@ -92,7 +92,7 @@ public class TileSolderer extends TileNode {
             } else if (newRecipe != recipe) {
                 boolean sameItem = result.getStackInSlot(0) != null && API.instance().getComparer().isEqualNoQuantity(result.getStackInSlot(0), newRecipe.getResult());
 
-                if (result.getStackInSlot(0) == null || (sameItem && ((result.getStackInSlot(0).stackSize + newRecipe.getResult().stackSize) <= result.getStackInSlot(0).getMaxStackSize()))) {
+                if (result.getStackInSlot(0) == null || (sameItem && ((result.getStackInSlot(0).getCount() + newRecipe.getResult().getCount()) <= result.getStackInSlot(0).getMaxStackSize()))) {
                     recipe = newRecipe;
                     progress = 0;
                     working = true;
@@ -104,14 +104,14 @@ public class TileSolderer extends TileNode {
 
                 if (progress >= recipe.getDuration()) {
                     if (result.getStackInSlot(0) != null) {
-                        result.getStackInSlot(0).stackSize += recipe.getResult().stackSize;
+                        result.getStackInSlot(0).grow(recipe.getResult().getCount());
                     } else {
                         result.setStackInSlot(0, recipe.getResult().copy());
                     }
 
                     for (int i = 0; i < 3; ++i) {
                         if (recipe.getRow(i) != null) {
-                            items.extractItem(i, recipe.getRow(i).stackSize, false);
+                            items.extractItem(i, recipe.getRow(i).getCount(), false);
                         }
                     }
 

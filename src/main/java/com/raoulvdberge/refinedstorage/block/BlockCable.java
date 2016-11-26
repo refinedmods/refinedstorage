@@ -1,24 +1,12 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.TileCable;
-import com.raoulvdberge.refinedstorage.tile.TileMultipartNode;
-import com.raoulvdberge.refinedstorage.tile.TileNode;
-import mcmultipart.block.BlockCoverable;
-import mcmultipart.block.BlockMultipartContainer;
-import mcmultipart.raytrace.RayTraceUtils;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
@@ -28,15 +16,12 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.items.IItemHandler;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class BlockCable extends BlockCoverable {
-    protected static final PropertyDirection DIRECTION = PropertyDirection.create("direction");
-
+public class BlockCable extends BlockNode {
     protected static AxisAlignedBB createAABB(int fromX, int fromY, int fromZ, int toX, int toY, int toZ) {
         return new AxisAlignedBB((float) fromX / 16F, (float) fromY / 16F, (float) fromZ / 16F, (float) toX / 16F, (float) toY / 16F, (float) toZ / 16F);
     }
@@ -55,41 +40,13 @@ public class BlockCable extends BlockCoverable {
     protected static final PropertyBool WEST = PropertyBool.create("west");
     protected static final PropertyBool UP = PropertyBool.create("up");
     protected static final PropertyBool DOWN = PropertyBool.create("down");
-    protected static final PropertyBool CONNECTED = PropertyBool.create("connected");
-
-    private String name;
 
     public BlockCable(String name) {
-        super(Material.ROCK);
-
-        this.name = name;
-
-        setHardness(0.6F);
-        setRegistryName(RS.ID, name);
-        setCreativeTab(RS.INSTANCE.tab);
+        super(name);
     }
 
     public BlockCable() {
         this("cable");
-    }
-
-    @Override
-    public String getUnlocalizedName() {
-        return "block." + RS.ID + ":" + name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public boolean canProvidePower(IBlockState state) {
-        return false;
-    }
-
-    @Override
-    public boolean hasTileEntity(IBlockState state) {
-        return true;
     }
 
     @Override
@@ -103,22 +60,17 @@ public class BlockCable extends BlockCoverable {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        BlockStateContainer.Builder builder = new BlockStateContainer.Builder(this);
+        BlockStateContainer.Builder builder = super.createBlockStateBuilder();
 
         builder.add(NORTH)
             .add(EAST)
             .add(SOUTH)
             .add(WEST)
             .add(UP)
-            .add(DOWN)
-            .add(BlockMultipartContainer.PROPERTY_MULTIPART_CONTAINER);
+            .add(DOWN);
 
         if (getPlacementType() != null) {
             builder.add(DIRECTION);
-        }
-
-        if (hasConnectivityState()) {
-            builder.add(CONNECTED);
         }
 
         return builder.build();
@@ -127,43 +79,19 @@ public class BlockCable extends BlockCoverable {
     @Override
     @SuppressWarnings("deprecation")
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
-        state = super.getActualState(state, world, pos)
+        return super.getActualState(state, world, pos)
             .withProperty(NORTH, hasConnectionWith(world, pos, EnumFacing.NORTH))
             .withProperty(EAST, hasConnectionWith(world, pos, EnumFacing.EAST))
             .withProperty(SOUTH, hasConnectionWith(world, pos, EnumFacing.SOUTH))
             .withProperty(WEST, hasConnectionWith(world, pos, EnumFacing.WEST))
             .withProperty(UP, hasConnectionWith(world, pos, EnumFacing.UP))
             .withProperty(DOWN, hasConnectionWith(world, pos, EnumFacing.DOWN));
-
-        TileNode tile = (TileNode) world.getTileEntity(pos);
-        if (tile != null) {
-            if (getPlacementType() != null) {
-                state = state.withProperty(DIRECTION, tile.getDirection());
-            }
-
-            if (hasConnectivityState()) {
-                state = state.withProperty(CONNECTED, tile.isConnected());
-            }
-        }
-
-        return state;
     }
 
     private boolean hasConnectionWith(IBlockAccess world, BlockPos pos, EnumFacing direction) {
         TileEntity facing = world.getTileEntity(pos.offset(direction));
 
-        boolean isConnectable = API.instance().getConnectableConditions().stream().anyMatch(p -> p.test(facing));
-        if (isConnectable) {
-            // Do not render a cable extension where our cable "head" is (e.g. importer, exporter, external storage heads).
-            TileMultipartNode multipartNode = ((TileMultipartNode) world.getTileEntity(pos));
-            if (getPlacementType() != null && multipartNode != null && multipartNode.getFacingTile() == facing) {
-                return false;
-            }
-
-            return !TileMultipartNode.hasBlockingMicroblock(world, pos, direction) && !TileMultipartNode.hasBlockingMicroblock(world, pos.offset(direction), direction.getOpposite());
-        }
-
-        return false;
+        return API.instance().getConnectableConditions().stream().anyMatch(p -> p.test(facing));
     }
 
     private boolean isInAABB(AxisAlignedBB aabb, float hitX, float hitY, float hitZ) {
@@ -228,17 +156,20 @@ public class BlockCable extends BlockCoverable {
     }
 
     @Override
-    public void addCollisionBoxToListDefault(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entityIn) {
+    public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entityIn) {
         for (AxisAlignedBB aabb : getCollisionBoxes(this.getActualState(state, world, pos))) {
             addCollisionBoxToList(pos, entityBox, collidingBoxes, aabb);
         }
     }
 
     @Override
-    public RayTraceResult collisionRayTraceDefault(IBlockState state, World world, BlockPos pos, Vec3d start, Vec3d end) {
-        RayTraceUtils.AdvancedRayTraceResult result = RayTraceUtils.collisionRayTrace(world, pos, start, end, getCollisionBoxes(this.getActualState(state, world, pos)));
+    public RayTraceResult collisionRayTrace(IBlockState state, World world, BlockPos pos, Vec3d start, Vec3d end) {
+        // @TODO
+        /*RayTraceUtils.AdvancedRayTraceResult result = RayTraceUtils.collisionRayTrace(world, pos, start, end, getCollisionBoxes(this.getActualState(state, world, pos)));
 
         return result != null ? result.hit : null;
+        */
+        return null;
     }
 
     @Override
@@ -251,10 +182,6 @@ public class BlockCable extends BlockCoverable {
         return false;
     }
 
-    public EnumPlacementType getPlacementType() {
-        return null;
-    }
-
     @Override
     @SuppressWarnings("deprecation")
     public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase entity) {
@@ -265,96 +192,6 @@ public class BlockCable extends BlockCoverable {
         }
 
         return state;
-    }
-
-    @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack stack) {
-        super.onBlockPlacedBy(world, pos, state, player, stack);
-
-        if (getPlacementType() != null) {
-            ((TileBase) world.getTileEntity(pos)).setDirection(state.getValue(DIRECTION));
-        }
-
-        attemptConnect(world, pos);
-    }
-
-    public void attemptConnect(World world, BlockPos pos) {
-        if (!world.isRemote) {
-            for (EnumFacing facing : EnumFacing.VALUES) {
-                TileEntity tile = world.getTileEntity(pos.offset(facing));
-
-                if (tile instanceof TileNode && ((TileNode) tile).isConnected()) {
-                    ((TileNode) tile).getNetwork().getNodeGraph().rebuild();
-
-                    break;
-                }
-            }
-        }
-    }
-
-    @Override
-    public void breakBlock(World world, BlockPos pos, IBlockState state) {
-        INetworkMaster network = null;
-
-        if (!world.isRemote) {
-            TileEntity tile = world.getTileEntity(pos);
-
-            if (tile instanceof TileNode) {
-                network = ((TileNode) tile).getNetwork();
-            }
-
-            if (tile instanceof TileBase && ((TileBase) tile).getDrops() != null) {
-                IItemHandler handler = ((TileBase) tile).getDrops();
-
-                for (int i = 0; i < handler.getSlots(); ++i) {
-                    if (handler.getStackInSlot(i) != null) {
-                        InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), handler.getStackInSlot(i));
-                    }
-                }
-            }
-        }
-
-        super.breakBlock(world, pos, state);
-
-        if (network != null) {
-            network.getNodeGraph().rebuild();
-        }
-    }
-
-    @Override
-    public List<ItemStack> getDropsDefault(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
-        List<ItemStack> drops = new ArrayList<>();
-
-        drops.add(new ItemStack(this, 1, getMetaFromState(state)));
-
-        TileEntity tile = world.getTileEntity(pos);
-
-        if (tile instanceof TileBase && ((TileBase) tile).getDrops() != null) {
-            IItemHandler handler = ((TileBase) tile).getDrops();
-
-            for (int i = 0; i < handler.getSlots(); ++i) {
-                if (handler.getStackInSlot(i) != null) {
-                    drops.add(handler.getStackInSlot(i));
-                }
-            }
-        }
-
-        return drops;
-    }
-
-    @Override
-    public boolean rotateBlock(World world, BlockPos pos, EnumFacing axis) {
-        if (!world.isRemote && getPlacementType() != null) {
-            TileBase tile = (TileBase) world.getTileEntity(pos);
-
-            tile.setDirection(getPlacementType().cycle(tile.getDirection()));
-
-            tile.updateBlock();
-
-            return true;
-        }
-
-        return false;
     }
 
     @Override

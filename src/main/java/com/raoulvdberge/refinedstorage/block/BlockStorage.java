@@ -17,6 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -34,7 +35,7 @@ public class BlockStorage extends BlockNode {
     }
 
     @Override
-    public void getSubBlocks(Item item, CreativeTabs tab, List<ItemStack> subItems) {
+    public void getSubBlocks(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
         for (int i = 0; i <= 4; ++i) {
             subItems.add(ItemBlockStorage.initNBT(new ItemStack(item, 1, i)));
         }
@@ -63,7 +64,7 @@ public class BlockStorage extends BlockNode {
     }
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
             player.openGui(RS.INSTANCE, RSGui.STORAGE, world, pos.getX(), pos.getY(), pos.getZ());
         }

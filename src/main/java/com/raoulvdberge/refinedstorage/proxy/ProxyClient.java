@@ -12,13 +12,9 @@ import com.raoulvdberge.refinedstorage.render.BakedModelPattern;
 import com.raoulvdberge.refinedstorage.render.ModelDiskDrive;
 import com.raoulvdberge.refinedstorage.render.ModelDiskManipulator;
 import com.raoulvdberge.refinedstorage.tile.TileController;
-import mcmultipart.client.multipart.ModelMultipartContainer;
-import mcmultipart.raytrace.PartMOP;
-import mcmultipart.raytrace.RayTraceUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.ModelBakery;
@@ -45,9 +41,6 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import org.lwjgl.opengl.GL11;
-
-import java.util.List;
 
 public class ProxyClient extends ProxyCommon {
     @Override
@@ -273,12 +266,6 @@ public class ProxyClient extends ProxyCommon {
     @SubscribeEvent
     public void onModelBake(ModelBakeEvent e) {
         for (ModelResourceLocation model : e.getModelRegistry().getKeys()) {
-            for (BlockCable cable : cableTypes) {
-                if (model.getResourceDomain().equals(RS.ID) && model.getResourcePath().equals(cable.getName()) && !model.getVariant().equals("inventory")) {
-                    e.getModelRegistry().putObject(model, ModelMultipartContainer.fromBlock(e.getModelRegistry().getObject(model), cable));
-                }
-            }
-
             if (model.getResourceDomain().equals(RS.ID) && model.getResourcePath().equals("pattern")) {
                 e.getModelRegistry().putObject(model, new BakedModelPattern(e.getModelRegistry().getObject(model)));
             }
@@ -303,11 +290,13 @@ public class ProxyClient extends ProxyCommon {
 
         state = ((BlockCable) state.getBlock()).getActualState(state, player.getEntityWorld(), pos);
 
-        if (((BlockCable) state.getBlock()).collisionRayTrace(state, player.getEntityWorld(), pos, RayTraceUtils.getStart(player), RayTraceUtils.getEnd(player)) instanceof PartMOP) {
+        // @TODO
+        /*if (((BlockCable) state.getBlock()).collisionRayTrace(state, player.getEntityWorld(), pos, RayTraceUtils.getStart(player), RayTraceUtils.getEnd(player)) instanceof PartMOP) {
             return;
-        }
+        }*/
+        return;
 
-        List<AxisAlignedBB> unionized = ((BlockCable) state.getBlock()).getUnionizedCollisionBoxes(state);
+        /*List<AxisAlignedBB> unionized = ((BlockCable) state.getBlock()).getUnionizedCollisionBoxes(state);
         List<AxisAlignedBB> nonUnionized = ((BlockCable) state.getBlock()).getNonUnionizedCollisionBoxes(state);
 
         e.setCanceled(true);
@@ -337,7 +326,7 @@ public class ProxyClient extends ProxyCommon {
 
         GlStateManager.depthMask(true);
         GlStateManager.enableTexture2D();
-        GlStateManager.disableBlend();
+        GlStateManager.disableBlend();*/
     }
 
     private void drawSelectionBoundingBox(AxisAlignedBB aabb) {

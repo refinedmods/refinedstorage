@@ -42,10 +42,6 @@ import com.raoulvdberge.refinedstorage.container.ContainerCraftingMonitor;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.container.ContainerReaderWriter;
 import com.raoulvdberge.refinedstorage.integration.forgeenergy.ControllerEnergyForge;
-import com.raoulvdberge.refinedstorage.integration.ic2.ControllerEnergyIC2;
-import com.raoulvdberge.refinedstorage.integration.ic2.ControllerEnergyIC2None;
-import com.raoulvdberge.refinedstorage.integration.ic2.IControllerEnergyIC2;
-import com.raoulvdberge.refinedstorage.integration.ic2.IntegrationIC2;
 import com.raoulvdberge.refinedstorage.integration.tesla.ControllerEnergyTesla;
 import com.raoulvdberge.refinedstorage.integration.tesla.IntegrationTesla;
 import com.raoulvdberge.refinedstorage.network.*;
@@ -182,7 +178,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     private EnergyStorage energy = new EnergyStorage(RS.INSTANCE.config.controllerCapacity);
     private ControllerEnergyForge energyForge = new ControllerEnergyForge(this);
-    private IControllerEnergyIC2 energyEU;
     private ControllerEnergyTesla energyTesla;
 
     private int lastEnergyDisplay;
@@ -201,12 +196,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         dataManager.addWatchedParameter(ENERGY_STORED);
         dataManager.addParameter(ENERGY_CAPACITY);
         dataManager.addParameter(NODES);
-
-        if (IntegrationIC2.isLoaded()) {
-            this.energyEU = new ControllerEnergyIC2(this);
-        } else {
-            this.energyEU = new ControllerEnergyIC2None();
-        }
 
         if (IntegrationTesla.isLoaded()) {
             this.energyTesla = new ControllerEnergyTesla(energy);
@@ -236,8 +225,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public void update() {
         if (!getWorld().isRemote) {
-            energyEU.update();
-
             if (!craftingTasksToRead.isEmpty()) {
                 for (NBTTagCompound tag : craftingTasksToRead) {
                     ICraftingTask task = readCraftingTask(getWorld(), this, tag);
@@ -333,13 +320,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     }
 
     @Override
-    public void invalidate() {
-        super.invalidate();
-
-        energyEU.invalidate();
-    }
-
-    @Override
     public IItemGridHandler getItemGridHandler() {
         return itemGridHandler;
     }
@@ -352,13 +332,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public INetworkItemHandler getNetworkItemHandler() {
         return networkItemHandler;
-    }
-
-    @Override
-    public void onChunkUnload() {
-        super.onChunkUnload();
-
-        energyEU.onChunkUnload();
     }
 
     public void onDestroyed() {
@@ -435,7 +408,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 if (input != null) {
                     ItemStack stored = itemList.get(input, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT | (patterns.get(i).isOredict() ? IComparer.COMPARE_OREDICT : 0));
 
-                    score += stored != null ? stored.stackSize : 0;
+                    score += stored != null ? stored.getCount() : 0;
                 }
             }
 
@@ -453,7 +426,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         for (ICraftingTask task : getCraftingTasks()) {
             for (ItemStack output : task.getPattern().getOutputs()) {
                 if (API.instance().getComparer().isEqual(output, stack, compare)) {
-                    toSchedule -= output.stackSize * task.getQuantity();
+                    toSchedule -= output.getCount() * task.getQuantity();
                 }
             }
         }
@@ -622,11 +595,11 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
                 // if this storage is in insert-only mode, we can disregard this item from the cache
                 if (storage.getAccessType() == AccessType.INSERT && !simulate) {
-                    insertOnlyInserted += size - (remainder != null ? remainder.stackSize : 0);
+                    insertOnlyInserted += size - (remainder != null ? remainder.getCount() : 0);
                 }
             }
 
-            if (remainder == null || remainder.stackSize <= 0) {
+            if (remainder == null || remainder.getCount() <= 0) {
                 if (storage instanceof ItemStorageExternal && !simulate) {
                     ((ItemStorageExternal) storage).detectChanges(this);
                     // the external storage will send the change, we don't need to anymore
@@ -635,26 +608,26 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
                 break;
             } else {
-                if (size != remainder.stackSize && storage instanceof ItemStorageExternal && !simulate) {
+                if (size != remainder.getCount() && storage instanceof ItemStorageExternal && !simulate) {
                     ((ItemStorageExternal) storage).detectChanges(this);
                     // the external storage will send the change, we don't need to anymore
-                    externalStorageInserted += size - remainder.stackSize;
+                    externalStorageInserted += size - remainder.getCount();
                 }
 
-                size = remainder.stackSize;
+                size = remainder.getCount();
             }
         }
 
-        // If the stack size of the remainder is negative, it means of the original size abs(remainder.stackSize) items have been voided
+        // If the stack size of the remainder is negative, it means of the original size abs(remainder.getCount()) items have been voided
         int inserted;
 
         if (remainder == null) {
             inserted = orginalSize;
-        } else if (remainder.stackSize < 0) {
-            inserted = orginalSize + remainder.stackSize;
+        } else if (remainder.getCount() < 0) {
+            inserted = orginalSize + remainder.getCount();
             remainder = null;
         } else {
-            inserted = orginalSize - remainder.stackSize;
+            inserted = orginalSize - remainder.getCount();
         }
 
         if (!simulate) {
@@ -696,16 +669,16 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 if (storage instanceof ItemStorageExternal && !simulate) {
                     ((ItemStorageExternal) storage).detectChanges(this);
                     // the external storage will send the change, we don't need to anymore
-                    externalStorageExtracted += took.stackSize;
+                    externalStorageExtracted += took.getCount();
                 }
 
                 if (newStack == null) {
                     newStack = took;
                 } else {
-                    newStack.stackSize += took.stackSize;
+                    newStack.grow(took.getCount());
                 }
 
-                received += took.stackSize;
+                received += took.getCount();
             }
 
             if (requested == received) {
@@ -713,8 +686,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             }
         }
 
-        if (newStack != null && newStack.stackSize - externalStorageExtracted > 0 && !simulate) {
-            itemStorage.remove(newStack, newStack.stackSize - externalStorageExtracted);
+        if (newStack != null && newStack.getCount() - externalStorageExtracted > 0 && !simulate) {
+            itemStorage.remove(newStack, newStack.getCount() - externalStorageExtracted);
         }
 
         return newStack;
@@ -814,9 +787,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     }
 
     private static ICraftingTask readCraftingTask(World world, INetworkMaster network, NBTTagCompound tag) {
-        ItemStack stack = ItemStack.loadItemStackFromNBT(tag.getCompoundTag(ICraftingTask.NBT_PATTERN_STACK));
+        ItemStack stack = new ItemStack(tag.getCompoundTag(ICraftingTask.NBT_PATTERN_STACK));
 
-        if (stack != null && stack.getItem() instanceof ICraftingPatternProvider) {
+        if (!stack.isEmpty() && stack.getItem() instanceof ICraftingPatternProvider) {
             TileEntity container = world.getTileEntity(BlockPos.fromLong(tag.getLong(ICraftingTask.NBT_PATTERN_CONTAINER)));
 
             if (container instanceof ICraftingPatternContainer) {
@@ -825,7 +798,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 ICraftingTaskFactory factory = API.instance().getCraftingTaskRegistry().getFactory(tag.getString(ICraftingTask.NBT_PATTERN_ID));
 
                 if (factory != null) {
-                    return factory.create(world, network, tag.hasKey(ICraftingTask.NBT_REQUESTED) ? ItemStack.loadItemStackFromNBT(tag.getCompoundTag(ICraftingTask.NBT_REQUESTED)) : null, pattern, tag.getInteger(ICraftingTask.NBT_QUANTITY), tag);
+                    return factory.create(world, network, tag.hasKey(ICraftingTask.NBT_REQUESTED) ? new ItemStack(tag.getCompoundTag(ICraftingTask.NBT_REQUESTED)) : null, pattern, tag.getInteger(ICraftingTask.NBT_QUANTITY), tag);
                 }
             }
         }
