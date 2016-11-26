@@ -38,7 +38,7 @@ public interface IFilterable {
             for (int i = 0; i < filters.getSlots(); ++i) {
                 ItemStack slot = filters.getStackInSlot(i);
 
-                if (slot != null) {
+                if (!slot.isEmpty()) {
                     slots++;
 
                     if (API.instance().getComparer().isEqual(slot, stack, compare)) {
@@ -52,7 +52,7 @@ public interface IFilterable {
             for (int i = 0; i < filters.getSlots(); ++i) {
                 ItemStack slot = filters.getStackInSlot(i);
 
-                if (slot != null && API.instance().getComparer().isEqual(slot, stack, compare)) {
+                if (!slot.isEmpty() && API.instance().getComparer().isEqual(slot, stack, compare)) {
                     return false;
                 }
             }

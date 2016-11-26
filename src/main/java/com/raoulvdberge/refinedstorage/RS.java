@@ -35,7 +35,7 @@ public final class RS {
     public final CreativeTabs tab = new CreativeTabs(ID) {
         @Override
         public ItemStack getTabIconItem() {
-            return getIconItemStack();
+            return new ItemStack(RSItems.STORAGE_HOUSING);
         }
     };
 

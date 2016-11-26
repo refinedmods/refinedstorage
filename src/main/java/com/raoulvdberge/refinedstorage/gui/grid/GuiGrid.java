@@ -361,12 +361,12 @@ public class GuiGrid extends GuiBase {
 
             ItemStack held = container.getPlayer().inventory.getItemStack();
 
-            if (isOverSlotArea(mouseX - guiLeft, mouseY - guiTop) && held != null && (clickedButton == 0 || clickedButton == 1)) {
+            if (isOverSlotArea(mouseX - guiLeft, mouseY - guiTop) && !held.isEmpty() && (clickedButton == 0 || clickedButton == 1)) {
                 RS.INSTANCE.network.sendToServer(grid.getType() == EnumGridType.FLUID ? new MessageGridFluidInsertHeld() : new MessageGridItemInsertHeld(clickedButton == 1));
             }
 
             if (isOverSlotWithItem()) {
-                if (grid.getType() != EnumGridType.FLUID && (held == null || (held != null && clickedButton == 2))) {
+                if (grid.getType() != EnumGridType.FLUID && (held.isEmpty() || (!held.isEmpty() && clickedButton == 2))) {
                     ClientStackItem stack = (ClientStackItem) STACKS.get(slotNumber);
 
                     if (stack.isCraftable() && (stack.getQuantity() == 0 || (GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown()))) {
@@ -388,7 +388,7 @@ public class GuiGrid extends GuiBase {
 
                         RS.INSTANCE.network.sendToServer(new MessageGridItemPull(stack.getHash(), flags));
                     }
-                } else if (grid.getType() == EnumGridType.FLUID && held == null) {
+                } else if (grid.getType() == EnumGridType.FLUID && held.isEmpty()) {
                     RS.INSTANCE.network.sendToServer(new MessageGridFluidPull(STACKS.get(slotNumber).getHash(), GuiScreen.isShiftKeyDown()));
                 }
             }

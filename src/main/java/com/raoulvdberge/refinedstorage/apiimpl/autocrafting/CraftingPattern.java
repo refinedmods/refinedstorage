@@ -42,8 +42,12 @@ public class CraftingPattern implements ICraftingPattern {
 
         for (int i = 0; i < 9; ++i) {
             ItemStack slot = ItemPattern.getSlot(stack, i);
+
             inputs.add(slot);
-            inv.setInventorySlotContents(i, slot);
+
+            if (slot != null) {
+                inv.setInventorySlotContents(i, slot);
+            }
         }
 
         if (!ItemPattern.isProcessing(stack)) {
@@ -88,7 +92,7 @@ public class CraftingPattern implements ICraftingPattern {
                                 List<ItemStack> cleaned = new LinkedList<>();
                                 for (ItemStack in : (List<ItemStack>) input) {
                                     ItemStack stripped = in.copy();
-                                    if (mekanism && stripped.hasTagCompound()){
+                                    if (mekanism && stripped.hasTagCompound()) {
                                         stripped.getTagCompound().removeTag("mekData");
                                     }
                                     if (stripped.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
@@ -125,17 +129,17 @@ public class CraftingPattern implements ICraftingPattern {
                         if (ids == null || ids.length == 0) {
                             oreInputs.add(Collections.singletonList(input));
                         } else {
-                            oreInputs.add(
-                                Arrays.stream(ids)
-                                    .mapToObj(OreDictionary::getOreName)
-                                    .map(OreDictionary::getOres)
-                                    .flatMap(List::stream)
-                                    .map(ItemStack::copy)
-                                    .map(s -> {
-                                        s.setCount(input.getCount());
-                                        return s;
-                                    })
-                                    .collect(Collectors.toList()));
+                            oreInputs.add(Arrays.stream(ids)
+                                .mapToObj(OreDictionary::getOreName)
+                                .map(OreDictionary::getOres)
+                                .flatMap(List::stream)
+                                .map(ItemStack::copy)
+                                .map(s -> {
+                                    s.setCount(input.getCount());
+                                    return s;
+                                })
+                                .collect(Collectors.toList())
+                            );
                         }
                     }
                 }

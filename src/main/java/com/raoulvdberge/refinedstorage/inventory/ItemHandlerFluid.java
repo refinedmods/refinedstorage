@@ -21,7 +21,7 @@ public class ItemHandlerFluid extends ItemHandlerBasic {
 
         ItemStack stack = getStackInSlot(slot);
 
-        if (stack == null) {
+        if (stack.isEmpty()) {
             fluids[slot] = null;
         } else {
             fluids[slot] = RSUtils.getFluidFromStack(ItemHandlerHelper.copyStackWithSize(stack, 1), true);

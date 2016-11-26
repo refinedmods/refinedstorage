@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.container;
 
+import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.block.EnumGridType;
 import com.raoulvdberge.refinedstorage.container.slot.*;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
@@ -109,9 +110,9 @@ public class ContainerGrid extends ContainerBase {
                     ((TileGrid) grid).onCraftedShift(this, player);
                 } else if (slot != patternResultSlot && !(slot instanceof SlotSpecimenLegacy)) {
                     if (grid.getType() != EnumGridType.FLUID && grid.getItemHandler() != null) {
-                        slot.putStack(grid.getItemHandler().onInsert((EntityPlayerMP) player, slot.getStack()));
+                        slot.putStack(RSUtils.getStack(grid.getItemHandler().onInsert((EntityPlayerMP) player, slot.getStack())));
                     } else if (grid.getType() == EnumGridType.FLUID && grid.getFluidHandler() != null) {
-                        slot.putStack(grid.getFluidHandler().onInsert(slot.getStack()));
+                        slot.putStack(RSUtils.getStack(grid.getFluidHandler().onInsert(slot.getStack())));
                     }
 
                     detectAndSendChanges();
@@ -119,6 +120,6 @@ public class ContainerGrid extends ContainerBase {
             }
         }
 
-        return null;
+        return ItemStack.EMPTY;
     }
 }

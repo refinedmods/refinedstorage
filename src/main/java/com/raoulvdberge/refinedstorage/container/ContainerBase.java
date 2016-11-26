@@ -60,8 +60,8 @@ public abstract class ContainerBase extends Container {
         if (slot instanceof SlotSpecimen) {
             if (((SlotSpecimen) slot).isWithSize()) {
                 if (clickType == ClickType.QUICK_MOVE) {
-                    slot.putStack(null);
-                } else if (player.inventory.getItemStack() != null) {
+                    slot.putStack(ItemStack.EMPTY);
+                } else if (!player.inventory.getItemStack().isEmpty()) {
                     int amount = player.inventory.getItemStack().getCount();
 
                     slot.putStack(ItemHandlerHelper.copyStackWithSize(player.inventory.getItemStack(), amount));
@@ -76,16 +76,16 @@ public abstract class ContainerBase extends Container {
 
                     slot.getStack().setCount(amount);
                 }
-            } else if (player.inventory.getItemStack() == null) {
-                slot.putStack(null);
+            } else if (player.inventory.getItemStack().isEmpty()) {
+                slot.putStack(ItemStack.EMPTY);
             } else if (slot.isItemValid(player.inventory.getItemStack())) {
                 slot.putStack(player.inventory.getItemStack().copy());
             }
 
             return player.inventory.getItemStack();
         } else if (slot instanceof SlotSpecimenLegacy) {
-            if (player.inventory.getItemStack() == null) {
-                slot.putStack(null);
+            if (player.inventory.getItemStack().isEmpty()) {
+                slot.putStack(ItemStack.EMPTY);
             } else if (slot.isItemValid(player.inventory.getItemStack())) {
                 slot.putStack(player.inventory.getItemStack().copy());
             }
@@ -100,7 +100,7 @@ public abstract class ContainerBase extends Container {
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) {
-        return null;
+        return ItemStack.EMPTY;
     }
 
     protected ItemStack mergeItemStackToSpecimen(ItemStack stack, int begin, int end) {

@@ -31,8 +31,6 @@ public class MessageGridItemDelta implements IMessage, IMessageHandler<MessageGr
     public void fromBytes(ByteBuf buf) {
         clientStack = new ClientStackItem(buf);
         delta = buf.readInt();
-
-        clientStack.getStack().setCount(delta);
     }
 
     @Override
@@ -58,6 +56,8 @@ public class MessageGridItemDelta implements IMessage, IMessageHandler<MessageGr
                 return null;
             }
         }
+
+        message.clientStack.getStack().setCount(message.delta);
 
         GuiGrid.ITEMS.put(item, message.clientStack);
         GuiGrid.markForSorting();

@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.grid;
 
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
@@ -40,10 +41,10 @@ public class ItemGridHandler implements IItemGridHandler {
         ItemStack held = player.inventory.getItemStack();
 
         if (single) {
-            if (held != null && (!API.instance().getComparer().isEqualNoQuantity(item, held) || held.getCount() + 1 > held.getMaxStackSize())) {
+            if (!held.isEmpty() && (!API.instance().getComparer().isEqualNoQuantity(item, held) || held.getCount() + 1 > held.getMaxStackSize())) {
                 return;
             }
-        } else if (player.inventory.getItemStack() != null) {
+        } else if (!player.inventory.getItemStack().isEmpty()) {
             return;
         }
 
@@ -69,7 +70,7 @@ public class ItemGridHandler implements IItemGridHandler {
             if ((flags & EXTRACT_SHIFT) == EXTRACT_SHIFT) {
                 IItemHandler playerInventory = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
 
-                if (ItemHandlerHelper.insertItem(playerInventory, took, true) == null) {
+                if (ItemHandlerHelper.insertItem(playerInventory, took, true).isEmpty()) {
                     took = network.extractItem(item, size, false);
 
                     ItemHandlerHelper.insertItem(playerInventory, took, false);
@@ -77,7 +78,7 @@ public class ItemGridHandler implements IItemGridHandler {
             } else {
                 took = network.extractItem(item, size, false);
 
-                if (single && held != null) {
+                if (single && !held.isEmpty()) {
                     held.grow(1);
                 } else {
                     player.inventory.setItemStack(took);
@@ -109,7 +110,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
     @Override
     public void onInsertHeldItem(EntityPlayerMP player, boolean single) {
-        if (player.inventory.getItemStack() == null) {
+        if (player.inventory.getItemStack().isEmpty()) {
             return;
         }
 
@@ -123,11 +124,11 @@ public class ItemGridHandler implements IItemGridHandler {
                 stack.shrink(size);
 
                 if (stack.getCount() == 0) {
-                    player.inventory.setItemStack(null);
+                    player.inventory.setItemStack(ItemStack.EMPTY);
                 }
             }
         } else {
-            player.inventory.setItemStack(network.insertItem(stack, size, false));
+            player.inventory.setItemStack(RSUtils.getStack(network.insertItem(stack, size, false)));
         }
 
         player.updateHeldItem();
@@ -168,6 +169,7 @@ public class ItemGridHandler implements IItemGridHandler {
             ICraftingTask task = new CraftingTask(network, stack, network.getPattern(stack), quantity);
 
             task.calculate();
+
             task.getMissing().clear();
 
             network.addCraftingTask(task);

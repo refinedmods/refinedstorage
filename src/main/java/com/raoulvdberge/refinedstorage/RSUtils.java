@@ -31,6 +31,7 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import org.apache.commons.lang3.tuple.Pair;
 
+import javax.annotation.Nullable;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -84,6 +85,10 @@ public final class RSUtils {
         }
     }
 
+    public static ItemStack getStack(@Nullable ItemStack stack) {
+        return stack == null ? ItemStack.EMPTY : stack;
+    }
+
     public static NonNullList<ItemStack> toNonNullList(List<ItemStack> list) {
         NonNullList<ItemStack> other = NonNullList.create();
 
@@ -100,7 +105,7 @@ public final class RSUtils {
         NBTTagList tagList = new NBTTagList();
 
         for (int i = 0; i < handler.getSlots(); i++) {
-            if (handler.getStackInSlot(i) != null) {
+            if (!handler.getStackInSlot(i).isEmpty()) {
                 NBTTagCompound stackTag = new NBTTagCompound();
 
                 stackTag.setInteger(NBT_SLOT, i);
@@ -134,7 +139,7 @@ public final class RSUtils {
         NBTTagList tagList = new NBTTagList();
 
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
-            if (inventory.getStackInSlot(i) != null) {
+            if (!inventory.getStackInSlot(i).isEmpty()) {
                 NBTTagCompound stackTag = new NBTTagCompound();
 
                 stackTag.setInteger(NBT_SLOT, i);

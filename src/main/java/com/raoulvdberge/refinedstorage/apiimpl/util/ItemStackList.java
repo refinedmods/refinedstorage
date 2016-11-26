@@ -40,15 +40,13 @@ public class ItemStackList implements IItemStackList {
     public boolean remove(@Nonnull ItemStack stack, int size, boolean removeIfReachedZero) {
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
             if (otherStack.getCount() > 0 && API.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
-                otherStack.shrink(size);
-
-                boolean success = otherStack.getCount() >= 0;
-
-                if (otherStack.getCount() <= 0 && removeIfReachedZero) {
+                if (otherStack.getCount() - size <= 0 && removeIfReachedZero) {
                     stacks.remove(otherStack.getItem(), otherStack);
+                } else {
+                    otherStack.shrink(size);
                 }
 
-                return success;
+                return true;
             }
         }
 
