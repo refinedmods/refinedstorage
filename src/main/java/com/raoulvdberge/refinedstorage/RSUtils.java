@@ -71,7 +71,7 @@ public final class RSUtils {
         return Pair.of(buf.readInt(), new FluidStack(FluidRegistry.getFluid(ByteBufUtils.readUTF8String(buf)), buf.readInt(), ByteBufUtils.readTag(buf)));
     }
 
-    public static void constructFromDrive(ItemStack disk, int slot, ItemStorageNBT[] itemStorages, FluidStorageNBT[] fluidStorages, Function<ItemStack, ItemStorageNBT> itemStorageSupplier, Function<ItemStack, FluidStorageNBT> fluidStorageNBTSupplier) {
+    public static void createStorages(ItemStack disk, int slot, ItemStorageNBT[] itemStorages, FluidStorageNBT[] fluidStorages, Function<ItemStack, ItemStorageNBT> itemStorageSupplier, Function<ItemStack, FluidStorageNBT> fluidStorageNBTSupplier) {
         if (disk == null) {
             itemStorages[slot] = null;
             fluidStorages[slot] = null;
@@ -84,29 +84,29 @@ public final class RSUtils {
         }
     }
 
-    public static void writeItems(IItemHandler handler, int id, NBTTagCompound nbt) {
+    public static void writeItems(IItemHandler handler, int id, NBTTagCompound tag) {
         NBTTagList tagList = new NBTTagList();
 
         for (int i = 0; i < handler.getSlots(); i++) {
             if (handler.getStackInSlot(i) != null) {
-                NBTTagCompound compoundTag = new NBTTagCompound();
+                NBTTagCompound stackTag = new NBTTagCompound();
 
-                compoundTag.setInteger(NBT_SLOT, i);
+                stackTag.setInteger(NBT_SLOT, i);
 
-                handler.getStackInSlot(i).writeToNBT(compoundTag);
+                handler.getStackInSlot(i).writeToNBT(stackTag);
 
-                tagList.appendTag(compoundTag);
+                tagList.appendTag(stackTag);
             }
         }
 
-        nbt.setTag(String.format(NBT_INVENTORY, id), tagList);
+        tag.setTag(String.format(NBT_INVENTORY, id), tagList);
     }
 
-    public static void readItems(IItemHandlerModifiable handler, int id, NBTTagCompound nbt) {
+    public static void readItems(IItemHandlerModifiable handler, int id, NBTTagCompound tag) {
         String name = String.format(NBT_INVENTORY, id);
 
-        if (nbt.hasKey(name)) {
-            NBTTagList tagList = nbt.getTagList(name, Constants.NBT.TAG_COMPOUND);
+        if (tag.hasKey(name)) {
+            NBTTagList tagList = tag.getTagList(name, Constants.NBT.TAG_COMPOUND);
 
             for (int i = 0; i < tagList.tagCount(); i++) {
                 int slot = tagList.getCompoundTagAt(i).getInteger(NBT_SLOT);
@@ -120,29 +120,29 @@ public final class RSUtils {
         }
     }
 
-    public static void writeItemsLegacy(IInventory inventory, int id, NBTTagCompound nbt) {
+    public static void writeItemsLegacy(IInventory inventory, int id, NBTTagCompound tag) {
         NBTTagList tagList = new NBTTagList();
 
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
             if (inventory.getStackInSlot(i) != null) {
-                NBTTagCompound compoundTag = new NBTTagCompound();
+                NBTTagCompound stackTag = new NBTTagCompound();
 
-                compoundTag.setInteger(NBT_SLOT, i);
+                stackTag.setInteger(NBT_SLOT, i);
 
-                inventory.getStackInSlot(i).writeToNBT(compoundTag);
+                inventory.getStackInSlot(i).writeToNBT(stackTag);
 
-                tagList.appendTag(compoundTag);
+                tagList.appendTag(stackTag);
             }
         }
 
-        nbt.setTag(String.format(NBT_INVENTORY, id), tagList);
+        tag.setTag(String.format(NBT_INVENTORY, id), tagList);
     }
 
-    public static void readItemsLegacy(IInventory inventory, int id, NBTTagCompound nbt) {
+    public static void readItemsLegacy(IInventory inventory, int id, NBTTagCompound tag) {
         String name = String.format(NBT_INVENTORY, id);
 
-        if (nbt.hasKey(name)) {
-            NBTTagList tagList = nbt.getTagList(name, Constants.NBT.TAG_COMPOUND);
+        if (tag.hasKey(name)) {
+            NBTTagList tagList = tag.getTagList(name, Constants.NBT.TAG_COMPOUND);
 
             for (int i = 0; i < tagList.tagCount(); i++) {
                 int slot = tagList.getCompoundTagAt(i).getInteger(NBT_SLOT);
@@ -258,9 +258,9 @@ public final class RSUtils {
 
     public static String formatQuantity(int qty) {
         if (qty >= 1000000) {
-            return RSUtils.QUANTITY_FORMATTER.format((float) qty / 1000000F) + "M";
+            return QUANTITY_FORMATTER.format((float) qty / 1000000F) + "M";
         } else if (qty >= 1000) {
-            return RSUtils.QUANTITY_FORMATTER.format((float) qty / 1000F) + "K";
+            return QUANTITY_FORMATTER.format((float) qty / 1000F) + "K";
         }
 
         return String.valueOf(qty);

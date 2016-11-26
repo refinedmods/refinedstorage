@@ -157,7 +157,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
             super.onContentsChanged(slot);
 
             if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
-                RSUtils.constructFromDrive(getStackInSlot(slot), slot, itemStorages, fluidStorages, s -> new ItemStorage(s), s -> new FluidStorage(s));
+                RSUtils.createStorages(getStackInSlot(slot), slot, itemStorages, fluidStorages, s -> new ItemStorage(s), s -> new FluidStorage(s));
 
                 if (network != null) {
                     network.getItemStorageCache().invalidate();
