@@ -2,7 +2,6 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.item;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSGui;
-import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
@@ -12,6 +11,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 
 public class NetworkItemWirelessGrid implements INetworkItem {
     private INetworkItemHandler handler;
@@ -31,7 +32,7 @@ public class NetworkItemWirelessGrid implements INetworkItem {
 
     @Override
     public boolean onOpen(INetworkMaster network, EntityPlayer player, World controllerWorld, EnumHand hand) {
-        if (RS.INSTANCE.config.wirelessGridUsesEnergy && stack.getItemDamage() != ItemWirelessGrid.TYPE_CREATIVE && RSItems.WIRELESS_GRID.getEnergyStored(stack) <= RS.INSTANCE.config.wirelessGridOpenUsage) {
+        if (RS.INSTANCE.config.wirelessGridUsesEnergy && stack.getItemDamage() != ItemWirelessGrid.TYPE_CREATIVE && stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored() <= RS.INSTANCE.config.wirelessGridOpenUsage) {
             return false;
         }
 
@@ -46,11 +47,11 @@ public class NetworkItemWirelessGrid implements INetworkItem {
 
     public void drainEnergy(int energy) {
         if (RS.INSTANCE.config.wirelessGridUsesEnergy && stack.getItemDamage() != ItemWirelessGrid.TYPE_CREATIVE) {
-            ItemWirelessGrid item = RSItems.WIRELESS_GRID;
+            IEnergyStorage energyStorage = stack.getCapability(CapabilityEnergy.ENERGY, null);
 
-            item.extractEnergy(stack, energy, false);
+            energyStorage.extractEnergy(energy, false);
 
-            if (item.getEnergyStored(stack) <= 0) {
+            if (energyStorage.getEnergyStored() <= 0) {
                 handler.onClose(player);
 
                 player.closeScreen();

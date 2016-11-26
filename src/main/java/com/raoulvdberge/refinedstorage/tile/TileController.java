@@ -1,7 +1,5 @@
 package com.raoulvdberge.refinedstorage.tile;
 
-import cofh.api.energy.EnergyStorage;
-import cofh.api.energy.IEnergyReceiver;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSUtils;
@@ -76,7 +74,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class TileController extends TileBase implements INetworkMaster, IEnergyReceiver, IRedstoneConfigurable {
+public class TileController extends TileBase implements INetworkMaster, IRedstoneConfigurable {
     public static final TileDataParameter<Integer> REDSTONE_MODE = RedstoneMode.createParameter();
 
     public static final TileDataParameter<Integer> ENERGY_USAGE = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileController>() {
@@ -89,14 +87,14 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     public static final TileDataParameter<Integer> ENERGY_STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileController>() {
         @Override
         public Integer getValue(TileController tile) {
-            return tile.getEnergy().getEnergyStored();
+            return tile.energy.getEnergyStored();
         }
     });
 
     public static final TileDataParameter<Integer> ENERGY_CAPACITY = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileController>() {
         @Override
         public Integer getValue(TileController tile) {
-            return tile.getEnergy().getMaxEnergyStored();
+            return tile.energy.getMaxEnergyStored();
         }
     });
 
@@ -176,8 +174,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     private List<ICraftingTask> craftingTasksToCancel = new ArrayList<>();
     private List<NBTTagCompound> craftingTasksToRead = new ArrayList<>();
 
-    private EnergyStorage energy = new EnergyStorage(RS.INSTANCE.config.controllerCapacity);
-    private ControllerEnergyForge energyForge = new ControllerEnergyForge(this);
+    private ControllerEnergyForge energy = new ControllerEnergyForge();
     private ControllerEnergyTesla energyTesla;
 
     private int lastEnergyDisplay;
@@ -202,14 +199,13 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         }
     }
 
-    @Override
-    public BlockPos getPosition() {
-        return pos;
+    public ControllerEnergyForge getEnergy() {
+        return energy;
     }
 
     @Override
-    public EnergyStorage getEnergy() {
-        return energy;
+    public BlockPos getPosition() {
+        return pos;
     }
 
     @Override
@@ -810,7 +806,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
 
-        energy.readFromNBT(tag);
+        if (tag.hasKey(NBT_ENERGY)) {
+            energy.setEnergyStored(tag.getInteger(NBT_ENERGY));
+        }
 
         redstoneMode = RedstoneMode.read(tag);
 
@@ -843,7 +841,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
 
-        energy.writeToNBT(tag);
+        tag.setInteger(NBT_ENERGY, energy.getEnergyStored());
 
         redstoneMode.write(tag);
 
@@ -882,20 +880,10 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public void readUpdate(NBTTagCompound tag) {
-        energy.setCapacity(tag.getInteger(NBT_ENERGY_CAPACITY));
+        energy.setMaxEnergyStored(tag.getInteger(NBT_ENERGY_CAPACITY));
         energy.setEnergyStored(tag.getInteger(NBT_ENERGY));
 
         super.readUpdate(tag);
-    }
-
-    @Override
-    public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
-        return energy.receiveEnergy(maxReceive, simulate);
-    }
-
-    @Override
-    public int getEnergyStored(EnumFacing from) {
-        return energy.getEnergyStored();
     }
 
     public static int getEnergyScaled(int stored, int capacity, int scale) {
@@ -904,16 +892,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     public int getEnergyScaledForDisplay() {
         return getEnergyScaled(energy.getEnergyStored(), energy.getMaxEnergyStored(), 7);
-    }
-
-    @Override
-    public int getMaxEnergyStored(EnumFacing from) {
-        return energy.getMaxEnergyStored();
-    }
-
-    @Override
-    public boolean canConnectEnergy(EnumFacing from) {
-        return true;
     }
 
     @Override
@@ -952,7 +930,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     @Override
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
         if (capability == CapabilityEnergy.ENERGY) {
-            return (T) energyForge;
+            return (T) energy;
         }
 
         if (energyTesla != null && (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER)) {

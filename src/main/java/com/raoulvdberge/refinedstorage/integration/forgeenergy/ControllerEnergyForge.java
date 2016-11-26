@@ -1,42 +1,18 @@
 package com.raoulvdberge.refinedstorage.integration.forgeenergy;
 
-import com.raoulvdberge.refinedstorage.tile.TileController;
-import net.minecraftforge.energy.IEnergyStorage;
+import com.raoulvdberge.refinedstorage.RS;
+import net.minecraftforge.energy.EnergyStorage;
 
-public class ControllerEnergyForge implements IEnergyStorage {
-    private TileController controller;
-
-    public ControllerEnergyForge(TileController controller) {
-        this.controller = controller;
+public class ControllerEnergyForge extends EnergyStorage {
+    public ControllerEnergyForge() {
+        super(RS.INSTANCE.config.controllerCapacity, Integer.MAX_VALUE, 0);
     }
 
-    @Override
-    public int receiveEnergy(int maxReceive, boolean simulate) {
-        return controller.getEnergy().receiveEnergy(maxReceive, simulate);
+    public void setMaxEnergyStored(int capacity) {
+        this.capacity = capacity;
     }
 
-    @Override
-    public int extractEnergy(int maxExtract, boolean simulate) {
-        return controller.getEnergy().extractEnergy(maxExtract, simulate);
-    }
-
-    @Override
-    public int getEnergyStored() {
-        return controller.getEnergy().getEnergyStored();
-    }
-
-    @Override
-    public int getMaxEnergyStored() {
-        return controller.getEnergy().getMaxEnergyStored();
-    }
-
-    @Override
-    public boolean canExtract() {
-        return false;
-    }
-
-    @Override
-    public boolean canReceive() {
-        return true;
+    public void setEnergyStored(int energy) {
+        this.energy = energy;
     }
 }

@@ -1,43 +1,47 @@
 package com.raoulvdberge.refinedstorage.integration.forgeenergy;
 
-import com.raoulvdberge.refinedstorage.RSItems;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.energy.EnergyStorage;
 
-public class NetworkItemEnergyForge implements IEnergyStorage {
+public class NetworkItemEnergyForge extends EnergyStorage {
+    private static final String NBT_ENERGY = "Energy";
+
     private ItemStack stack;
 
-    public NetworkItemEnergyForge(ItemStack stack) {
+    public NetworkItemEnergyForge(ItemStack stack, int capacity) {
+        super(capacity, Integer.MAX_VALUE, Integer.MAX_VALUE);
+
         this.stack = stack;
     }
 
     @Override
     public int receiveEnergy(int maxReceive, boolean simulate) {
-        return RSItems.WIRELESS_GRID.receiveEnergy(stack, maxReceive, simulate);
+        int received = super.receiveEnergy(maxReceive, simulate);
+
+        if (received > 0 && !simulate) {
+            if (!stack.hasTagCompound()) {
+                stack.setTagCompound(new NBTTagCompound());
+            }
+
+            stack.getTagCompound().setInteger(NBT_ENERGY, getEnergyStored());
+        }
+
+        return received;
     }
 
     @Override
     public int extractEnergy(int maxExtract, boolean simulate) {
-        return RSItems.WIRELESS_GRID.extractEnergy(stack, maxExtract, simulate);
-    }
+        int extracted = super.extractEnergy(maxExtract, simulate);
 
-    @Override
-    public int getEnergyStored() {
-        return RSItems.WIRELESS_GRID.getEnergyStored(stack);
-    }
+        if (extracted > 0 && !simulate) {
+            if (!stack.hasTagCompound()) {
+                stack.setTagCompound(new NBTTagCompound());
+            }
 
-    @Override
-    public int getMaxEnergyStored() {
-        return RSItems.WIRELESS_GRID.getMaxEnergyStored(stack);
-    }
+            stack.getTagCompound().setInteger(NBT_ENERGY, getEnergyStored());
+        }
 
-    @Override
-    public boolean canExtract() {
-        return true;
-    }
-
-    @Override
-    public boolean canReceive() {
-        return true;
+        return extracted;
     }
 }

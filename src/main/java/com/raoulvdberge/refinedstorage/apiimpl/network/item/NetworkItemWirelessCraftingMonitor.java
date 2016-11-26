@@ -2,17 +2,17 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.item;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSGui;
-import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessCraftingMonitor;
-import com.raoulvdberge.refinedstorage.item.ItemWirelessGrid;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 
 public class NetworkItemWirelessCraftingMonitor implements INetworkItem {
     private INetworkItemHandler handler;
@@ -32,7 +32,7 @@ public class NetworkItemWirelessCraftingMonitor implements INetworkItem {
 
     @Override
     public boolean onOpen(INetworkMaster network, EntityPlayer player, World controllerWorld, EnumHand hand) {
-        if (RS.INSTANCE.config.wirelessCraftingMonitorUsesEnergy && stack.getItemDamage() != ItemWirelessCraftingMonitor.TYPE_CREATIVE && RSItems.WIRELESS_CRAFTING_MONITOR.getEnergyStored(stack) <= RS.INSTANCE.config.wirelessCraftingMonitorOpenUsage) {
+        if (RS.INSTANCE.config.wirelessCraftingMonitorUsesEnergy && stack.getItemDamage() != ItemWirelessCraftingMonitor.TYPE_CREATIVE && stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored() <= RS.INSTANCE.config.wirelessCraftingMonitorOpenUsage) {
             return false;
         }
 
@@ -47,11 +47,11 @@ public class NetworkItemWirelessCraftingMonitor implements INetworkItem {
 
     public void drainEnergy(int energy) {
         if (RS.INSTANCE.config.wirelessCraftingMonitorUsesEnergy && stack.getItemDamage() != ItemWirelessCraftingMonitor.TYPE_CREATIVE) {
-            ItemWirelessGrid item = RSItems.WIRELESS_GRID;
+            IEnergyStorage energyStorage = stack.getCapability(CapabilityEnergy.ENERGY, null);
 
-            item.extractEnergy(stack, energy, false);
+            energyStorage.extractEnergy(energy, false);
 
-            if (item.getEnergyStored(stack) <= 0) {
+            if (energyStorage.getEnergyStored() <= 0) {
                 handler.onClose(player);
 
                 player.closeScreen();

@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.api.network;
 
-import cofh.api.energy.EnergyStorage;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
@@ -25,11 +24,6 @@ import java.util.List;
  * Represents a network master, usually is a controller.
  */
 public interface INetworkMaster {
-    /**
-     * @return the energy storage of this network
-     */
-    EnergyStorage getEnergy();
-
     /**
      * @return the energy usage per tick of this network
      */

@@ -1,7 +1,5 @@
 package com.raoulvdberge.refinedstorage.item;
 
-import cofh.api.energy.ItemEnergyContainer;
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemProvider;
 import com.raoulvdberge.refinedstorage.integration.forgeenergy.NetworkItemEnergyForge;
@@ -25,11 +23,12 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public abstract class ItemNetworkItem extends ItemEnergyContainer implements INetworkItemProvider {
+public abstract class ItemNetworkItem extends ItemBase implements INetworkItemProvider {
     public static final int TYPE_NORMAL = 0;
     public static final int TYPE_CREATIVE = 1;
 
@@ -39,13 +38,12 @@ public abstract class ItemNetworkItem extends ItemEnergyContainer implements INe
     private static final String NBT_DIMENSION_ID = "DimensionID";
 
     public ItemNetworkItem(String name) {
-        super(3200);
+        super(name);
 
-        setRegistryName(RS.ID, name);
         setMaxDamage(3200);
         setMaxStackSize(1);
         setHasSubtypes(true);
-        setCreativeTab(RS.INSTANCE.tab);
+
         addPropertyOverride(new ResourceLocation("connected"), (stack, world, entity) -> (entity != null && isValid(stack)) ? 1.0f : 0.0f);
     }
 
@@ -89,7 +87,9 @@ public abstract class ItemNetworkItem extends ItemEnergyContainer implements INe
 
     @Override
     public double getDurabilityForDisplay(ItemStack stack) {
-        return 1D - ((double) getEnergyStored(stack) / (double) getMaxEnergyStored(stack));
+        IEnergyStorage energy = stack.getCapability(CapabilityEnergy.ENERGY, null);
+
+        return 1D - ((double) energy.getEnergyStored() / (double) energy.getMaxEnergyStored());
     }
 
     @Override
@@ -107,7 +107,10 @@ public abstract class ItemNetworkItem extends ItemEnergyContainer implements INe
         list.add(new ItemStack(item, 1, TYPE_NORMAL));
 
         ItemStack fullyCharged = new ItemStack(item, 1, TYPE_NORMAL);
-        receiveEnergy(fullyCharged, getMaxEnergyStored(fullyCharged), false);
+
+        IEnergyStorage energy = fullyCharged.getCapability(CapabilityEnergy.ENERGY, null);
+        energy.receiveEnergy(energy.getMaxEnergyStored(), false);
+
         list.add(fullyCharged);
 
         list.add(new ItemStack(item, 1, TYPE_CREATIVE));
@@ -118,7 +121,9 @@ public abstract class ItemNetworkItem extends ItemEnergyContainer implements INe
         super.addInformation(stack, player, tooltip, advanced);
 
         if (stack.getItemDamage() != TYPE_CREATIVE) {
-            tooltip.add(I18n.format("misc.refinedstorage:energy_stored", getEnergyStored(stack), getMaxEnergyStored(stack)));
+            IEnergyStorage energy = stack.getCapability(CapabilityEnergy.ENERGY, null);
+
+            tooltip.add(I18n.format("misc.refinedstorage:energy_stored", energy.getEnergyStored(), energy.getMaxEnergyStored()));
         }
 
         if (isValid(stack)) {
@@ -187,16 +192,6 @@ public abstract class ItemNetworkItem extends ItemEnergyContainer implements INe
         return super.shouldCauseReequipAnimation(oldStack, newStack, slotChanged);
     }
 
-    @Override
-    public String getUnlocalizedName() {
-        return "item." + RS.ID + ":" + getRegistryName().getResourcePath();
-    }
-
-    @Override
-    public String getUnlocalizedName(ItemStack stack) {
-        return getUnlocalizedName() + "." + stack.getItemDamage();
-    }
-
     public boolean isValid(ItemStack stack) {
         return stack.hasTagCompound()
             && stack.getTagCompound().hasKey(NBT_CONTROLLER_X)
@@ -221,7 +216,7 @@ public abstract class ItemNetworkItem extends ItemEnergyContainer implements INe
         @Override
         public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
             if (capability == CapabilityEnergy.ENERGY) {
-                return (T) new NetworkItemEnergyForge(stack);
+                return (T) new NetworkItemEnergyForge(stack, 3200);
             }
 
             if (IntegrationTesla.isLoaded() && (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER)) {

@@ -94,7 +94,7 @@ public class BlockController extends BlockBase {
             NBTTagCompound tag = stack.getTagCompound();
 
             if (tag != null && tag.hasKey(TileController.NBT_ENERGY)) {
-                controller.getEnergy().receiveEnergy(tag.getInteger(TileController.NBT_ENERGY), false);
+                controller.getEnergy().setEnergyStored(tag.getInteger(TileController.NBT_ENERGY));
             }
         }
 
