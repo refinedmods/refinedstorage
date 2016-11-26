@@ -158,7 +158,9 @@ public abstract class CraftingStep implements ICraftingStep {
         return tag;
     }
 
-    protected enum AvailableType { ITEM, FLUID }
+    enum AvailableType {
+        ITEM, FLUID
+    }
 
     protected AvailableType isItemAvailable(IItemStackList items, IFluidStackList fluids, ItemStack stack, ItemStack actualStack, int compare) {
         if (actualStack == null || actualStack.stackSize == 0 || !items.trackedRemove(actualStack, stack.stackSize, true)) {
@@ -200,7 +202,7 @@ public abstract class CraftingStep implements ICraftingStep {
                     }
                 }
 
-                if (abort){
+                if (abort) {
                     // Abort task re-insert taken stacks and reset state
                     toInsertItems.addAll(actualInputs.getStacks());
                     startedProcessing = false;

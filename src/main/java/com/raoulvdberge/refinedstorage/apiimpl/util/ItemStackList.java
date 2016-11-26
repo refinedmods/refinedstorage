@@ -158,7 +158,6 @@ public class ItemStackList implements IItemStackList {
         return stacks.toString();
     }
 
-
     public static ItemStack[] toCraftingGrid(IItemStackList list, List<ItemStack> grid, int compare) {
         ItemStack[] took = new ItemStack[9];
         for (int i = 0; i < grid.size(); i++) {
