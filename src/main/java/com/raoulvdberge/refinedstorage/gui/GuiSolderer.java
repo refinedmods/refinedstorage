@@ -33,12 +33,6 @@ public class GuiSolderer extends GuiBase {
     public void drawForeground(int mouseX, int mouseY) {
         drawString(7, 7, t("gui.refinedstorage:solderer"));
         drawString(7, 77, t("container.inventory"));
-
-        if (TileSolderer.WORKING.getValue()) {
-            String t = getProgressScaled(100) + "%";
-
-            drawString(83 + (22 - fontRendererObj.getStringWidth(t)) / 2, 59, t);
-        }
     }
 
     private int getProgressScaled(int scale) {
