@@ -150,13 +150,14 @@ public class BlockCable extends BlockCoverable {
     }
 
     private boolean hasConnectionWith(IBlockAccess world, BlockPos pos, EnumFacing direction) {
-        TileEntity facing = world.getTileEntity(pos.offset(direction));
+        TileEntity otherTile = world.getTileEntity(pos.offset(direction));
+        EnumFacing otherTileSide = direction.getOpposite();
 
-        boolean isConnectable = API.instance().getConnectableConditions().stream().anyMatch(p -> p.test(facing));
+        boolean isConnectable = API.instance().getConnectableConditions().stream().anyMatch(p -> p.test(otherTile, otherTileSide));
         if (isConnectable) {
             // Do not render a cable extension where our cable "head" is (e.g. importer, exporter, external storage heads).
             TileMultipartNode multipartNode = ((TileMultipartNode) world.getTileEntity(pos));
-            if (getPlacementType() != null && multipartNode != null && multipartNode.getFacingTile() == facing) {
+            if (getPlacementType() != null && multipartNode != null && multipartNode.getFacingTile() == otherTile) {
                 return false;
             }
 
