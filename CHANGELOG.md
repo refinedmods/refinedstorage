@@ -1,5 +1,11 @@
 # Refined Storage Changelog
 
+### 1.3
+- Port to Minecraft 1.11 (raoulvdberge, way2muchnoise)
+- Removed RF support (raoulvdberge)
+- Removed MCMultiPart support (will be re-added as soon as MCMultiPart for MC 1.11 is available) (raoulvdberge)
+- Removed IC2 support (will be re-added as soon as IC2 for MC 1.11 is available) (raoulvdberge)
+
 ### 1.2.6
 - Processing patterns can now insert buckets (way2muchnoise)
 - Fixed crash with Exporters in fluid mode (raoulvdberge)
