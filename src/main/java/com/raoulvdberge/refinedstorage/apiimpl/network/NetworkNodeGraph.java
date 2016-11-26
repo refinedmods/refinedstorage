@@ -190,7 +190,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
         nodes.clear();
 
         for (INetworkNode node : oldNodes) {
-            if (node.isConnected()) {
+            if (node.getNetwork() == controller) {
                 node.onDisconnected(controller);
             }
         }

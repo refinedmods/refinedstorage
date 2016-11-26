@@ -567,7 +567,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {
         super.writeUpdate(tag);
 
-        TileDiskDrive.writeDiskState(tag, 6, connected, itemStorages, fluidStorages);
+        TileDiskDrive.writeDiskState(tag, 6, hasNetwork(), itemStorages, fluidStorages);
 
         return tag;
     }

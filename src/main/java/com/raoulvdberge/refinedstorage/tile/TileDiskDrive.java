@@ -345,7 +345,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {
         super.writeUpdate(tag);
 
-        writeDiskState(tag, 8, connected, itemStorages, fluidStorages);
+        writeDiskState(tag, 8, hasNetwork(), itemStorages, fluidStorages);
 
         return tag;
     }
