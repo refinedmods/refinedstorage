@@ -1,16 +1,19 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
+import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IFluidStackList;
 import com.raoulvdberge.refinedstorage.api.util.IItemStackList;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
+import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,18 +34,33 @@ public class CraftingStepProcess extends CraftingStep {
     @Override
     public boolean canStartProcessing(IItemStackList items, IFluidStackList fluids) {
         IItemHandler inventory = getPattern().getContainer().getFacingInventory();
+        int compare = CraftingTask.DEFAULT_COMPARE | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0);
         if (inventory != null) {
             Deque<ItemStack> toInsert = new LinkedList<>();
             for (ItemStack stack : getToInsert()) {
-                ItemStack actualStack = items.get(stack, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0));
-                ItemStack removeStack = ItemHandlerHelper.copyStackWithSize(actualStack, stack.stackSize);
-                if (actualStack == null || actualStack.stackSize == 0 || !items.trackedRemove(removeStack, true)) {
+                // This will be a tool, like a hammer
+                if (stack.isItemStackDamageable()) {
+                    compare &= ~IComparer.COMPARE_DAMAGE;
+                } else {
+                    compare |= IComparer.COMPARE_DAMAGE;
+                }
+
+                ItemStack actualStack = items.get(stack, compare);
+                AvailableType type = isItemAvailable(items, fluids, stack, actualStack, compare);
+
+                if (type == AvailableType.ITEM) {
+                    toInsert.add(ItemHandlerHelper.copyStackWithSize(actualStack, stack.stackSize));
+                } else if (type == AvailableType.FLUID) {
+                    toInsert.add(ItemHandlerHelper.copyStackWithSize(stack, stack.stackSize));
+                } else {
                     items.undo();
+                    fluids.undo();
                     return false;
                 }
-                toInsert.add(removeStack.copy());
             }
+
             items.undo();
+            fluids.undo();
             return insertSimulation(inventory, toInsert);
         }
         return false;
@@ -56,11 +74,13 @@ public class CraftingStepProcess extends CraftingStep {
 
     @Override
     public void execute(Deque<ItemStack> toInsertItems, Deque<FluidStack> toInsertFluids) {
-        IItemHandler inventory = getPattern().getContainer().getFacingInventory();
+        IItemStackList actualInputs = API.instance().createItemStackList();
         int compare = CraftingTask.DEFAULT_COMPARE | (getPattern().isOredict() ? IComparer.COMPARE_OREDICT : 0);
-        for (ItemStack insertStack : getToInsert()) {
-            ItemStack tookStack = network.extractItem(insertStack, insertStack.stackSize, compare, false);
-            ItemHandlerHelper.insertItem(inventory, tookStack, false);
+        if (extractItems(actualInputs, compare, toInsertItems)) {
+            IItemHandler inventory = getPattern().getContainer().getFacingInventory();
+            if (insertSimulation(inventory, new ArrayDeque<>(actualInputs.getStacks()))) {
+                actualInputs.getStacks().forEach(stack -> ItemHandlerHelper.insertItem(inventory, stack, false));
+            }
         }
     }
 

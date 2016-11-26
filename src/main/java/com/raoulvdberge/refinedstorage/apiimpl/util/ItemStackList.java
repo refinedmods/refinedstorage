@@ -157,4 +157,25 @@ public class ItemStackList implements IItemStackList {
     public String toString() {
         return stacks.toString();
     }
+
+
+    public static ItemStack[] toCraftingGrid(IItemStackList list, List<ItemStack> grid, int compare) {
+        ItemStack[] took = new ItemStack[9];
+        for (int i = 0; i < grid.size(); i++) {
+            ItemStack input = grid.get(i);
+            if (input != null) {
+                // This will be a tool, like a hammer
+                if (input.isItemStackDamageable()) {
+                    compare &= ~IComparer.COMPARE_DAMAGE;
+                } else {
+                    compare |= IComparer.COMPARE_DAMAGE;
+                }
+                ItemStack actualInput = list.get(input, compare);
+                ItemStack taken = ItemHandlerHelper.copyStackWithSize(actualInput, input.stackSize);
+                took[i] = taken;
+                list.remove(taken, true);
+            }
+        }
+        return took;
+    }
 }

@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IFluidStackList;
 import com.raoulvdberge.refinedstorage.api.util.IItemStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.util.ItemStackList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -50,17 +51,7 @@ public class CraftingStepCraft extends CraftingStep {
             }
 
             ItemStack actualStack = items.get(stack, compare);
-
-            if (actualStack == null || actualStack.stackSize == 0 || !items.trackedRemove(actualStack, stack.stackSize, true)) {
-                FluidStack fluidInItem = RSUtils.getFluidFromStack(stack, true);
-
-                if (fluidInItem != null && RSUtils.hasFluidBucket(fluidInItem)) {
-                    FluidStack fluidStack = fluids.get(fluidInItem, compare);
-                    ItemStack bucket = items.get(RSUtils.EMPTY_BUCKET, compare);
-                    if (bucket != null && fluidStack != null && fluids.trackedRemove(fluidStack, fluidInItem.amount, true) && items.trackedRemove(bucket, 1, true)) {
-                        continue;
-                    }
-                }
+            if (isItemAvailable(items, fluids, stack, actualStack, compare) == null) {
                 items.undo();
                 fluids.undo();
                 return false;
@@ -75,58 +66,20 @@ public class CraftingStepCraft extends CraftingStep {
     public void execute(Deque<ItemStack> toInsertItems, Deque<FluidStack> toInsertFluids) {
         IItemStackList actualInputs = API.instance().createItemStackList();
         int compare = CraftingTask.DEFAULT_COMPARE | (getPattern().isOredict() ? IComparer.COMPARE_OREDICT : 0);
-        for (ItemStack insertStack : getToInsert()) {
-            // This will be a tool, like a hammer
-            if (insertStack.isItemStackDamageable()) {
-                compare &= ~IComparer.COMPARE_DAMAGE;
-            } else {
-                compare |= IComparer.COMPARE_DAMAGE;
-            }
+        if (extractItems(actualInputs, compare, toInsertItems)) {
 
-            FluidStack fluidInItem = RSUtils.getFluidFromStack(insertStack, true);
-            if (fluidInItem != null) {
-                network.extractFluid(fluidInItem, fluidInItem.amount, compare, false);
-                network.extractItem(RSUtils.EMPTY_BUCKET, 1, compare, false);
-                actualInputs.add(insertStack.copy());
-            } else {
-                ItemStack input = network.extractItem(insertStack, insertStack.stackSize, compare, false);
-                if (input != null) {
-                    actualInputs.add(input);
-                } else {
-                    // Abort task re-insert taken stacks and reset state
-                    toInsertItems.addAll(actualInputs.getStacks());
-                    startedProcessing = false;
-                    return;
+            ItemStack[] took = ItemStackList.toCraftingGrid(actualInputs, toInsert, compare);
+
+            for (ItemStack byproduct : (pattern.isOredict() ? pattern.getByproducts(took) : pattern.getByproducts())) {
+                if (byproduct != null) {
+                    toInsertItems.add(byproduct.copy());
                 }
             }
-        }
 
-        ItemStack[] took = new ItemStack[9];
-        for (int i = 0; i < toInsert.size(); i++) {
-            ItemStack input = toInsert.get(i);
-            if (input != null) {
-                // This will be a tool, like a hammer
-                if (input.isItemStackDamageable()) {
-                    compare &= ~IComparer.COMPARE_DAMAGE;
-                } else {
-                    compare |= IComparer.COMPARE_DAMAGE;
+            for (ItemStack output : (pattern.isOredict() ? pattern.getOutputs(took) : pattern.getOutputs())) {
+                if (output != null) {
+                    toInsertItems.add(output.copy());
                 }
-                ItemStack actualInput = actualInputs.get(input, compare);
-                ItemStack taken = ItemHandlerHelper.copyStackWithSize(actualInput, input.stackSize);
-                took[i] = taken;
-                actualInputs.remove(taken, true);
-            }
-        }
-
-        for (ItemStack byproduct : (pattern.isOredict() ? pattern.getByproducts(took) : pattern.getByproducts())) {
-            if (byproduct != null) {
-                toInsertItems.add(byproduct.copy());
-            }
-        }
-
-        for (ItemStack output : (pattern.isOredict() ? pattern.getOutputs(took) : pattern.getOutputs())) {
-            if (output != null) {
-                toInsertItems.add(output.copy());
             }
         }
     }

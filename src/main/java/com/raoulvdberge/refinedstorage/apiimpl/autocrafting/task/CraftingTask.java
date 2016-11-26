@@ -16,6 +16,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.*;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementFluidStack;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementItemStack;
+import com.raoulvdberge.refinedstorage.apiimpl.util.ItemStackList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -216,24 +217,10 @@ public class CraftingTask implements ICraftingTask {
             steps.add(new CraftingStepCraft(network, pattern, usedStacks));
         }
 
-        ItemStack[] took = new ItemStack[9];
+        ItemStack[] took = null;
         if (missing.isEmpty()) {
             if (!pattern.isProcessing()) {
-                for (int i = 0; i < usedStacks.size(); i++) {
-                    ItemStack input = usedStacks.get(i);
-                    if (input != null) {
-                        // This will be a tool, like a hammer
-                        if (input.isItemStackDamageable()) {
-                            compare &= ~IComparer.COMPARE_DAMAGE;
-                        } else {
-                            compare |= IComparer.COMPARE_DAMAGE;
-                        }
-                        ItemStack actualInput = actualInputs.get(input, compare);
-                        ItemStack taken = ItemHandlerHelper.copyStackWithSize(actualInput, input.stackSize);
-                        took[i] = taken;
-                        actualInputs.remove(taken, true);
-                    }
-                }
+                took = ItemStackList.toCraftingGrid(actualInputs, usedStacks, compare);
             }
         }
 

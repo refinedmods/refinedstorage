@@ -1,21 +1,22 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
+import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.api.util.IFluidStackList;
+import com.raoulvdberge.refinedstorage.api.util.IItemStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fluids.FluidStack;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public abstract class CraftingStep implements ICraftingStep {
@@ -155,5 +156,59 @@ public abstract class CraftingStep implements ICraftingStep {
         tag.setBoolean(NBT_STARTED_PROCESSING, startedProcessing);
 
         return tag;
+    }
+
+    protected enum AvailableType { ITEM, FLUID }
+
+    protected AvailableType isItemAvailable(IItemStackList items, IFluidStackList fluids, ItemStack stack, ItemStack actualStack, int compare) {
+        if (actualStack == null || actualStack.stackSize == 0 || !items.trackedRemove(actualStack, stack.stackSize, true)) {
+            FluidStack fluidInItem = RSUtils.getFluidFromStack(stack, true);
+
+            if (fluidInItem != null && RSUtils.hasFluidBucket(fluidInItem)) {
+                FluidStack fluidStack = fluids.get(fluidInItem, compare);
+                ItemStack bucket = items.get(RSUtils.EMPTY_BUCKET, compare);
+                if (bucket != null && fluidStack != null && fluids.trackedRemove(fluidStack, fluidInItem.amount, true) && items.trackedRemove(bucket, 1, true)) {
+                    return AvailableType.FLUID;
+                }
+            }
+            return null;
+        }
+        return AvailableType.ITEM;
+    }
+
+    protected boolean extractItems(IItemStackList actualInputs, int compare, Deque<ItemStack> toInsertItems) {
+        for (ItemStack insertStack : getToInsert()) {
+            // This will be a tool, like a hammer
+            if (insertStack.isItemStackDamageable()) {
+                compare &= ~IComparer.COMPARE_DAMAGE;
+            } else {
+                compare |= IComparer.COMPARE_DAMAGE;
+            }
+
+            ItemStack input = network.extractItem(insertStack, insertStack.stackSize, compare, false);
+            if (input != null) {
+                actualInputs.add(input);
+            } else {
+                boolean abort = true;
+                FluidStack fluidInItem = RSUtils.getFluidFromStack(insertStack, true);
+                if (fluidInItem != null) {
+                    FluidStack fluidStack = network.extractFluid(fluidInItem, fluidInItem.amount, compare, false);
+                    ItemStack bucketStack = network.extractItem(RSUtils.EMPTY_BUCKET, 1, compare, false);
+                    if (fluidStack != null && fluidStack.amount == fluidInItem.amount && bucketStack != null) {
+                        abort = false;
+                        actualInputs.add(insertStack.copy());
+                    }
+                }
+
+                if (abort){
+                    // Abort task re-insert taken stacks and reset state
+                    toInsertItems.addAll(actualInputs.getStacks());
+                    startedProcessing = false;
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }
