@@ -17,6 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
@@ -90,6 +91,13 @@ public abstract class ItemNetworkItem extends ItemBase implements INetworkItemPr
         IEnergyStorage energy = stack.getCapability(CapabilityEnergy.ENERGY, null);
 
         return 1D - ((double) energy.getEnergyStored() / (double) energy.getMaxEnergyStored());
+    }
+
+    @Override
+    public int getRGBDurabilityForDisplay(ItemStack stack) {
+        IEnergyStorage energy = stack.getCapability(CapabilityEnergy.ENERGY, null);
+
+        return MathHelper.hsvToRGB(Math.max(0.0F, (float) energy.getEnergyStored() / (float) energy.getMaxEnergyStored()) / 3.0F, 1.0F, 1.0F);
     }
 
     @Override
