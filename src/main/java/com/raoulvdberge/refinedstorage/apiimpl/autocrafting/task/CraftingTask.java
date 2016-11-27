@@ -163,7 +163,7 @@ public class CraftingTask implements ICraftingTask {
                     if (!inputStack.isItemStackDamageable() || !inputStack.isItemDamaged()) {
                         toCraft.add(inputStack);
                     }
-                    toInsert.remove(inputStack, true);
+                    toInsert.remove(inputStack);
                     if (input.getCount() > 0) {
                         extraStack = toInsert.get(input, compare);
                     }
@@ -173,7 +173,7 @@ public class CraftingTask implements ICraftingTask {
                     toTake.add(inputStack.copy());
                     actualInputs.add(inputStack.copy());
                     input.shrink(takeQuantity);
-                    networkList.remove(inputStack, true);
+                    networkList.remove(inputStack);
                     if (input.getCount() > 0) {
                         networkStack = networkList.get(inputStack, compare);
                     }
@@ -194,7 +194,7 @@ public class CraftingTask implements ICraftingTask {
                             // Calculate added all the crafted outputs toInsert
                             // So we remove the ones we use from toInsert
                             ItemStack inserted = toInsert.get(inputCrafted, compare);
-                            toInsert.remove(inserted, craftQuantity, true);
+                            toInsert.remove(inserted, craftQuantity);
                         }
                     } else {
                         // Fluid checks are with a stack size of one
@@ -250,12 +250,12 @@ public class CraftingTask implements ICraftingTask {
                 ItemStack bucket = toInsert.get(RSUtils.EMPTY_BUCKET);
                 boolean hasBucket = false;
                 if (bucket != null && bucket.getCount() > 0) {
-                    hasBucket = toInsert.remove(RSUtils.EMPTY_BUCKET, 1, false);
+                    hasBucket = toInsert.remove(RSUtils.EMPTY_BUCKET, 1);
                 }
                 if (!hasBucket) {
                     bucket = networkList.get(RSUtils.EMPTY_BUCKET);
                     if (bucket != null && bucket.getCount() > 0) {
-                        hasBucket = networkList.remove(RSUtils.EMPTY_BUCKET, 1, false);
+                        hasBucket = networkList.remove(RSUtils.EMPTY_BUCKET, 1);
                     }
                 }
 
@@ -267,7 +267,7 @@ public class CraftingTask implements ICraftingTask {
                     } else {
                         toCraft.add(RSUtils.EMPTY_BUCKET.copy());
                         calculate(networkList, networkFluidList, bucketPattern, toInsert);
-                        toInsert.remove(RSUtils.EMPTY_BUCKET, 1, false);
+                        toInsert.remove(RSUtils.EMPTY_BUCKET, 1);
                     }
                 }
 
@@ -311,7 +311,7 @@ public class CraftingTask implements ICraftingTask {
 
         if (!missing.isEmpty()) {
             for (ItemStack missing : this.missing.getStacks()) {
-                if (!oreDictPrepped.trackedRemove(missing, true)) {
+                if (!oreDictPrepped.trackedRemove(missing)) {
                     oreDictPrepped.undo();
                     return false;
                 }

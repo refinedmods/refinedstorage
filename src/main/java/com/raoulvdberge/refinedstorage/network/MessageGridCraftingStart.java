@@ -5,29 +5,31 @@ import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class MessageGridCraftingStart extends MessageHandlerPlayerToServer<MessageGridCraftingStart> implements IMessage {
-    private int hash;
+    private ItemStack stack;
     private int quantity;
 
     public MessageGridCraftingStart() {
     }
 
-    public MessageGridCraftingStart(int hash, int quantity) {
-        this.hash = hash;
+    public MessageGridCraftingStart(ItemStack stack, int quantity) {
+        this.stack = stack;
         this.quantity = quantity;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        hash = buf.readInt();
+        stack = ByteBufUtils.readItemStack(buf);
         quantity = buf.readInt();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(hash);
+        ByteBufUtils.writeItemStack(buf, stack);
         buf.writeInt(quantity);
     }
 
@@ -39,7 +41,7 @@ public class MessageGridCraftingStart extends MessageHandlerPlayerToServer<Messa
             IItemGridHandler handler = ((ContainerGrid) container).getGrid().getItemHandler();
 
             if (handler != null) {
-                handler.onCraftingRequested(message.hash, message.quantity);
+                handler.onCraftingRequested(message.stack, message.quantity);
             }
         }
     }

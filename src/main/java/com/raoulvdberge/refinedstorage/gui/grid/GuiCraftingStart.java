@@ -176,7 +176,7 @@ public class GuiCraftingStart extends GuiBase {
         Integer quantity = Ints.tryParse(amountField.getText());
 
         if (quantity != null && quantity > 0) {
-            RS.INSTANCE.network.sendToServer(new MessageGridCraftingPreview(stack.getHash(), quantity));
+            RS.INSTANCE.network.sendToServer(new MessageGridCraftingPreview(stack.getStack(), quantity));
 
             startButton.enabled = false;
         }

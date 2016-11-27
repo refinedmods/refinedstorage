@@ -163,13 +163,13 @@ public abstract class CraftingStep implements ICraftingStep {
     }
 
     protected AvailableType isItemAvailable(IItemStackList items, IFluidStackList fluids, ItemStack stack, ItemStack actualStack, int compare) {
-        if (actualStack == null || actualStack.getCount() == 0 || !items.trackedRemove(actualStack, stack.getCount(), true)) {
+        if (actualStack == null || actualStack.getCount() == 0 || !items.trackedRemove(actualStack, stack.getCount())) {
             FluidStack fluidInItem = RSUtils.getFluidFromStack(stack, true).getValue();
 
             if (fluidInItem != null && RSUtils.hasFluidBucket(fluidInItem)) {
                 FluidStack fluidStack = fluids.get(fluidInItem, compare);
                 ItemStack bucket = items.get(RSUtils.EMPTY_BUCKET, compare);
-                if (bucket != null && fluidStack != null && fluids.trackedRemove(fluidStack, fluidInItem.amount, true) && items.trackedRemove(bucket, 1, true)) {
+                if (bucket != null && fluidStack != null && fluids.trackedRemove(fluidStack, fluidInItem.amount, true) && items.trackedRemove(bucket, 1)) {
                     return AvailableType.FLUID;
                 }
             }

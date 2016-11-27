@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreview
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.proxy.ProxyClient;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -14,21 +15,21 @@ import java.util.List;
 
 public class MessageGridCraftingPreviewResponse implements IMessage, IMessageHandler<MessageGridCraftingPreviewResponse, IMessage> {
     public List<ICraftingPreviewElement> stacks;
-    public int hash;
+    public ItemStack stack;
     public int quantity;
 
     public MessageGridCraftingPreviewResponse() {
     }
 
-    public MessageGridCraftingPreviewResponse(List<ICraftingPreviewElement> stacks, int hash, int quantity) {
+    public MessageGridCraftingPreviewResponse(List<ICraftingPreviewElement> stacks, ItemStack stack, int quantity) {
         this.stacks = stacks;
-        this.hash = hash;
+        this.stack = stack;
         this.quantity = quantity;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        this.hash = buf.readInt();
+        this.stack = ByteBufUtils.readItemStack(buf);
         this.quantity = buf.readInt();
 
         this.stacks = new LinkedList<>();
@@ -42,7 +43,7 @@ public class MessageGridCraftingPreviewResponse implements IMessage, IMessageHan
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(this.hash);
+        ByteBufUtils.writeItemStack(buf, this.stack);
         buf.writeInt(this.quantity);
 
         buf.writeInt(stacks.size());

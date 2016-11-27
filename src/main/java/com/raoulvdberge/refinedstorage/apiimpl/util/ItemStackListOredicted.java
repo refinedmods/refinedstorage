@@ -14,13 +14,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ItemStackListOredicted implements IItemStackList {
-    private IItemStackList underlyingList;
+    private ItemStackList underlyingList;
     private ArrayListMultimap<Integer, ItemStack> stacks = ArrayListMultimap.create();
 
     private ItemStackListOredicted() {
     }
 
-    public ItemStackListOredicted(IItemStackList list) {
+    public ItemStackListOredicted(ItemStackList list) {
         this.underlyingList = list;
         initOreDict();
     }
@@ -45,19 +45,19 @@ public class ItemStackListOredicted implements IItemStackList {
     }
 
     @Override
-    public boolean remove(@Nonnull ItemStack stack, int size, boolean removeIfReachedZero) {
-        boolean rvalue = underlyingList.remove(stack, size, removeIfReachedZero);
-        if (removeIfReachedZero) {
-            localClean();
+    public boolean remove(@Nonnull ItemStack stack, int size) {
+        boolean rvalue = underlyingList.remove(stack, size);
+        if (underlyingList.needsCleanup) {
+            clean();
         }
         return rvalue;
     }
 
     @Override
-    public boolean trackedRemove(@Nonnull ItemStack stack, int size, boolean removeIfReachedZero) {
-        boolean rvalue = underlyingList.trackedRemove(stack, size, removeIfReachedZero);
-        if (removeIfReachedZero) {
-            localClean();
+    public boolean trackedRemove(@Nonnull ItemStack stack, int size) {
+        boolean rvalue = underlyingList.trackedRemove(stack, size);
+        if (underlyingList.needsCleanup) {
+            clean();
         }
         return rvalue;
     }
@@ -139,7 +139,7 @@ public class ItemStackListOredicted implements IItemStackList {
     @Override
     public IItemStackList copy() {
         ItemStackListOredicted newList = new ItemStackListOredicted();
-        newList.underlyingList = this.underlyingList.copy();
+        newList.underlyingList = (ItemStackList) this.underlyingList.copy();
         for (Map.Entry<Integer, ItemStack> entry : this.stacks.entries()) {
             newList.stacks.put(entry.getKey(), entry.getValue());
         }

@@ -42,7 +42,7 @@ public class GuiCraftingPreview extends GuiBase {
     private List<ICraftingPreviewElement> stacks;
     private GuiScreen parent;
 
-    private int hash;
+    private ItemStack stack;
     private int quantity;
 
     private GuiButton startButton;
@@ -50,7 +50,7 @@ public class GuiCraftingPreview extends GuiBase {
 
     private IElementDrawers drawers = new CraftingPreviewElementDrawers();
 
-    public GuiCraftingPreview(GuiScreen parent, List<ICraftingPreviewElement> stacks, int hash, int quantity) {
+    public GuiCraftingPreview(GuiScreen parent, List<ICraftingPreviewElement> stacks, ItemStack stack, int quantity) {
         super(new Container() {
             @Override
             public boolean canInteractWith(EntityPlayer player) {
@@ -61,7 +61,7 @@ public class GuiCraftingPreview extends GuiBase {
         this.stacks = new ArrayList<>(stacks);
         this.parent = parent;
 
-        this.hash = hash;
+        this.stack = stack;
         this.quantity = quantity;
 
         this.scrollbar = new Scrollbar(149, 20, 12, 119);
@@ -180,7 +180,7 @@ public class GuiCraftingPreview extends GuiBase {
     }
 
     private void startRequest() {
-        RS.INSTANCE.network.sendToServer(new MessageGridCraftingStart(hash, quantity));
+        RS.INSTANCE.network.sendToServer(new MessageGridCraftingStart(stack, quantity));
 
         close();
     }

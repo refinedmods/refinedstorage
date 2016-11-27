@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 public class ItemStackList implements IItemStackList {
     private ArrayListMultimap<Item, ItemStack> stacks = ArrayListMultimap.create();
     private List<ItemStack> removeTracker = new LinkedList<>();
+    protected boolean needsCleanup = false;
 
     @Override
     public void add(@Nonnull ItemStack stack, int size) {
@@ -37,16 +39,18 @@ public class ItemStackList implements IItemStackList {
     }
 
     @Override
-    public boolean remove(@Nonnull ItemStack stack, int size, boolean removeIfReachedZero) {
+    public boolean remove(@Nonnull ItemStack stack, int size) {
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
             if (API.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
-                if (otherStack.getCount() - size <= 0 && removeIfReachedZero) {
-                    stacks.remove(otherStack.getItem(), otherStack);
-                } else {
-                    otherStack.shrink(size);
+
+                boolean success = otherStack.getCount() - size >= 0;
+                otherStack.shrink(size);
+
+                if (otherStack.isEmpty()) {
+                    needsCleanup = true;
                 }
 
-                return true;
+                return success;
             }
         }
 
@@ -54,18 +58,17 @@ public class ItemStackList implements IItemStackList {
     }
 
     @Override
-    public boolean trackedRemove(@Nonnull ItemStack stack, int size, boolean removeIfReachedZero) {
+    public boolean trackedRemove(@Nonnull ItemStack stack, int size) {
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
             if (API.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
                 ItemStack removed = ItemHandlerHelper.copyStackWithSize(otherStack, Math.min(size, otherStack.getCount()));
                 this.removeTracker.add(removed);
 
+                boolean success = otherStack.getCount() - size  >= 0;
                 otherStack.shrink(size);
 
-                boolean success = otherStack.getCount() >= 0;
-
-                if (otherStack.getCount() <= 0 && removeIfReachedZero) {
-                    stacks.remove(otherStack.getItem(), otherStack);
+                if (otherStack.isEmpty()) {
+                    needsCleanup = true;
                 }
 
                 return success;
@@ -102,6 +105,10 @@ public class ItemStackList implements IItemStackList {
     @Override
     @Nullable
     public ItemStack get(int hash) {
+        if (needsCleanup) {
+            clean();
+        }
+
         for (ItemStack stack : this.stacks.values()) {
             if (API.instance().getItemStackHashCode(stack) == hash) {
                 return stack;
@@ -118,11 +125,14 @@ public class ItemStackList implements IItemStackList {
 
     @Override
     public void clean() {
-        List<ItemStack> toRemove = stacks.values().stream()
-            .filter(stack -> stack.getCount() <= 0)
+        List<Pair<Item, ItemStack>> toRemove = stacks.asMap().entrySet().stream()
+            .flatMap(entry -> entry.getValue().stream().map(value -> Pair.of(entry.getKey(), value)))
+            .filter(pair -> pair.getValue().getCount() <= 0)
             .collect(Collectors.toList());
 
-        toRemove.forEach(stack -> stacks.remove(stack.getItem(), stack));
+        toRemove.forEach(pair -> stacks.remove(pair.getLeft(), pair.getRight()));
+
+        needsCleanup = false;
     }
 
     @Override
@@ -133,6 +143,9 @@ public class ItemStackList implements IItemStackList {
     @Nonnull
     @Override
     public Collection<ItemStack> getStacks() {
+        if (needsCleanup) {
+            clean();
+        }
         return stacks.values();
     }
 
@@ -140,6 +153,10 @@ public class ItemStackList implements IItemStackList {
     @Nonnull
     public IItemStackList copy() {
         ItemStackList list = new ItemStackList();
+
+        if (needsCleanup) {
+            clean();
+        }
 
         for (ItemStack stack : stacks.values()) {
             list.stacks.put(stack.getItem(), stack.copy());
@@ -151,6 +168,9 @@ public class ItemStackList implements IItemStackList {
     @Nonnull
     @Override
     public IItemStackList getOredicted() {
+        if (needsCleanup) {
+            clean();
+        }
         return new ItemStackListOredicted(this);
     }
 
@@ -173,7 +193,7 @@ public class ItemStackList implements IItemStackList {
                 ItemStack actualInput = list.get(input, compare);
                 ItemStack taken = ItemHandlerHelper.copyStackWithSize(actualInput, input.getCount());
                 took[i] = taken;
-                list.remove(taken, true);
+                list.remove(taken);
             }
         }
         return took;

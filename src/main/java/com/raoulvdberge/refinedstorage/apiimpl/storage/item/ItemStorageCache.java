@@ -58,7 +58,7 @@ public class ItemStorageCache implements IItemStorageCache {
 
     @Override
     public synchronized void remove(@Nonnull ItemStack stack, int size) {
-        if (list.remove(stack, size, true)) {
+        if (list.remove(stack, size)) {
             network.sendItemStorageDeltaToClient(stack, -size);
         }
     }

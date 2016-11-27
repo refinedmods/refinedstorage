@@ -204,7 +204,9 @@ public class CraftingPattern implements ICraftingPattern {
         }, 3, 3);
 
         for (int i = 0; i < 9; ++i) {
-            inv.setInventorySlotContents(i, took[i]);
+            if (took[i] != null) {
+                inv.setInventorySlotContents(i, took[i]);
+            }
         }
 
         ItemStack cleaned = recipe.getCraftingResult(inv).copy();
@@ -233,7 +235,9 @@ public class CraftingPattern implements ICraftingPattern {
         }, 3, 3);
 
         for (int i = 0; i < 9; ++i) {
-            inv.setInventorySlotContents(i, took[i]);
+            if (took[i] != null) {
+                inv.setInventorySlotContents(i, took[i]);
+            }
         }
 
         for (ItemStack remaining : recipe.getRemainingItems(inv)) {

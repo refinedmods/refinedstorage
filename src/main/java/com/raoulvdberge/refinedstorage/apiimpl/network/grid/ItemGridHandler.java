@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.grid;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
+import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
@@ -141,16 +142,14 @@ public class ItemGridHandler implements IItemGridHandler {
     }
 
     @Override
-    public void onCraftingPreviewRequested(EntityPlayerMP player, int hash, int quantity) {
-        ItemStack stack = network.getItemStorageCache().getList().get(hash);
-
+    public void onCraftingPreviewRequested(EntityPlayerMP player, ItemStack stack, int quantity) {
         if (stack != null) {
             Thread calculationThread = new Thread(() -> {
                 ICraftingTask task = new CraftingTask(network, stack, network.getPattern(stack), quantity);
 
                 task.calculate();
 
-                RS.INSTANCE.network.sendTo(new MessageGridCraftingPreviewResponse(task.getPreviewStacks(), hash, quantity), player);
+                RS.INSTANCE.network.sendTo(new MessageGridCraftingPreviewResponse(task.getPreviewStacks(), stack, quantity), player);
             }, "RS crafting calculation");
 
             calculationThread.start();
@@ -158,12 +157,10 @@ public class ItemGridHandler implements IItemGridHandler {
     }
 
     @Override
-    public void onCraftingRequested(int hash, int quantity) {
+    public void onCraftingRequested(ItemStack stack, int quantity) {
         if (quantity <= 0) {
             return;
         }
-
-        ItemStack stack = network.getItemStorageCache().getList().get(hash);
 
         if (stack != null) {
             ICraftingTask task = new CraftingTask(network, stack, network.getPattern(stack), quantity);
