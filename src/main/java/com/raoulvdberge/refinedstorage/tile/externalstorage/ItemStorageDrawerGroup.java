@@ -2,11 +2,10 @@ package com.raoulvdberge.refinedstorage.tile.externalstorage;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ItemStorageDrawerGroup extends ItemStorageExternal {
     private TileExternalStorage externalStorage;
@@ -18,8 +17,8 @@ public class ItemStorageDrawerGroup extends ItemStorageExternal {
     }
 
     @Override
-    public List<ItemStack> getStacks() {
-        List<ItemStack> stacks = new ArrayList<>();
+    public NonNullList<ItemStack> getStacks() {
+        NonNullList<ItemStack> stacks = NonNullList.create();
 
         for (int i = 0; i < drawers.getDrawerCount(); ++i) {
             if (drawers.isDrawerEnabled(i)) {

@@ -2,14 +2,13 @@ package com.raoulvdberge.refinedstorage.tile.externalstorage;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
+import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.ItemHandlerHelper;
-
-import java.util.Collections;
-import java.util.List;
 
 public class ItemStorageDrawer extends ItemStorageExternal {
     private TileExternalStorage externalStorage;
@@ -26,7 +25,7 @@ public class ItemStorageDrawer extends ItemStorageExternal {
     }
 
     @Override
-    public List<ItemStack> getStacks() {
+    public NonNullList<ItemStack> getStacks() {
         return getStacks(drawer);
     }
 
@@ -55,12 +54,12 @@ public class ItemStorageDrawer extends ItemStorageExternal {
         return externalStorage.getAccessType();
     }
 
-    public static List<ItemStack> getStacks(IDrawer drawer) {
+    public static NonNullList<ItemStack> getStacks(IDrawer drawer) {
         if (!drawer.isEmpty() && drawer.getStoredItemCount() > 0) {
-            return Collections.singletonList(drawer.getStoredItemCopy());
+            return NonNullList.withSize(1, drawer.getStoredItemCopy());
         }
 
-        return Collections.emptyList();
+        return RSUtils.emptyNonNullList();
     }
 
     public static ItemStack insertItem(TileExternalStorage externalStorage, IDrawer drawer, ItemStack stack, int size, boolean simulate) {

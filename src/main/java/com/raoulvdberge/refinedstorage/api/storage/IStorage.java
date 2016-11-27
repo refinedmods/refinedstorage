@@ -1,12 +1,12 @@
 package com.raoulvdberge.refinedstorage.api.storage;
 
-import java.util.List;
+import net.minecraft.util.NonNullList;
 
 public interface IStorage<T> {
     /**
      * @return stacks stored in this storage
      */
-    List<T> getStacks();
+    NonNullList<T> getStacks();
 
     /**
      * @return the amount of fluids stored in this storage

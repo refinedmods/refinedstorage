@@ -21,9 +21,8 @@ public interface INetworkItemHandler {
      * @param player          the player that opened the network item
      * @param controllerWorld the world of the controller
      * @param hand            the hand the player opened it with
-     * @return true if the opening was successful, false otherwise
      */
-    boolean onOpen(EntityPlayer player, World controllerWorld, EnumHand hand);
+    void onOpen(EntityPlayer player, World controllerWorld, EnumHand hand);
 
     /**
      * Called when the player closes a network item.

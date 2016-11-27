@@ -7,12 +7,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A implementation of {@link IItemStorage} that stores storage items in NBT.
@@ -39,7 +38,7 @@ public abstract class ItemStorageNBT implements IItemStorage {
     private int capacity;
     private TileEntity tile;
 
-    private List<ItemStack> stacks = new ArrayList<>();
+    private NonNullList<ItemStack> stacks = NonNullList.create();
 
     /**
      * @param tag      The NBT tag we are reading from and writing the amount stored to, has to be initialized with {@link ItemStorageNBT#createNBT()} if it doesn't exist yet
@@ -111,7 +110,7 @@ public abstract class ItemStorageNBT implements IItemStorage {
     }
 
     @Override
-    public List<ItemStack> getStacks() {
+    public NonNullList<ItemStack> getStacks() {
         return stacks;
     }
 

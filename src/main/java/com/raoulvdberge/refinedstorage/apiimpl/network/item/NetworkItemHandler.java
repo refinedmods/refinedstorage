@@ -7,8 +7,8 @@ import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemProvider;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public class NetworkItemHandler implements INetworkItemHandler {
     }
 
     @Override
-    public boolean onOpen(EntityPlayer player, World controllerWorld, EnumHand hand) {
+    public void onOpen(EntityPlayer player, World controllerWorld, EnumHand hand) {
         boolean inRange = false;
 
         for (INetworkNode node : network.getNodeGraph().all()) {
@@ -50,20 +50,16 @@ public class NetworkItemHandler implements INetworkItemHandler {
         }
 
         if (!inRange) {
-            return false;
+            player.sendMessage(new TextComponentTranslation("misc.refinedstorage:network_item.out_of_range"));
+
+            return;
         }
 
-        ItemStack stack = player.getHeldItem(hand);
-
-        INetworkItem item = ((INetworkItemProvider) stack.getItem()).provide(this, player, stack);
+        INetworkItem item = ((INetworkItemProvider) player.getHeldItem(hand).getItem()).provide(this, player, player.getHeldItem(hand));
 
         if (item.onOpen(network, player, controllerWorld, hand)) {
             items.add(item);
-
-            return true;
         }
-
-        return false;
     }
 
     @Override

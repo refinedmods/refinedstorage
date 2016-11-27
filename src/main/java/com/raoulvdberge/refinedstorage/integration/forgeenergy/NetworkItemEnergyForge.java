@@ -13,6 +13,7 @@ public class NetworkItemEnergyForge extends EnergyStorage {
         super(capacity, Integer.MAX_VALUE, Integer.MAX_VALUE);
 
         this.stack = stack;
+        this.energy = stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_ENERGY) ? stack.getTagCompound().getInteger(NBT_ENERGY) : 0;
     }
 
     @Override

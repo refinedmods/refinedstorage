@@ -7,11 +7,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A implementation of {@link IFluidStorage} that stores storage fluids in NBT.
@@ -32,7 +31,7 @@ public abstract class FluidStorageNBT implements IFluidStorage {
     private int capacity;
     private TileEntity tile;
 
-    private List<FluidStack> stacks = new ArrayList<>();
+    private NonNullList<FluidStack> stacks = NonNullList.create();
 
     /**
      * @param tag      The NBT tag we are reading from and writing the amount stored to, has to be initialized with {@link FluidStorageNBT#createNBT()} if it doesn't exist yet
@@ -74,7 +73,7 @@ public abstract class FluidStorageNBT implements IFluidStorage {
     }
 
     @Override
-    public List<FluidStack> getStacks() {
+    public NonNullList<FluidStack> getStacks() {
         return stacks;
     }
 

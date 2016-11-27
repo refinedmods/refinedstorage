@@ -43,11 +43,19 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Function;
 
 public final class RSUtils {
+    private static final NonNullList EMPTY_NON_NULL_LIST = new NonNullList<Object>(Collections.emptyList(), null) {
+    };
+
+    public static <T> NonNullList<T> emptyNonNullList() {
+        return (NonNullList<T>) EMPTY_NON_NULL_LIST;
+    }
+
     public static final ItemStack EMPTY_BUCKET = new ItemStack(Items.BUCKET);
 
     public static final DecimalFormat QUANTITY_FORMATTER = new DecimalFormat("####0.#", DecimalFormatSymbols.getInstance(Locale.US));
@@ -266,7 +274,7 @@ public final class RSUtils {
         return copy;
     }
 
-    public static FluidStack copyStack(FluidStack stack) {
+    public static FluidStack copyStack(@Nullable FluidStack stack) {
         return stack == null ? null : stack.copy();
     }
 

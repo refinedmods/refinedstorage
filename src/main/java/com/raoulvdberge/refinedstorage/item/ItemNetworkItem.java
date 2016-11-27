@@ -51,19 +51,19 @@ public abstract class ItemNetworkItem extends ItemBase implements INetworkItemPr
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
         ItemStack stack = player.getHeldItem(hand);
 
-        if (!world.isRemote && isValid(stack)) {
-            World controllerWorld = DimensionManager.getWorld(getDimensionId(stack));
-
-            TileEntity controller;
-
-            if (controllerWorld != null && ((controller = controllerWorld.getTileEntity(new BlockPos(getX(stack), getY(stack), getZ(stack)))) instanceof TileController)) {
-                if (((TileController) controller).getNetworkItemHandler().onOpen(player, controllerWorld, hand)) {
-                    return new ActionResult<>(EnumActionResult.SUCCESS, stack);
-                } else {
-                    player.sendMessage(new TextComponentTranslation("misc.refinedstorage:network_item.out_of_range"));
-                }
-            } else {
+        if (!world.isRemote) {
+            if (!isValid(stack)) {
                 player.sendMessage(new TextComponentTranslation("misc.refinedstorage:network_item.not_found"));
+            } else {
+                World controllerWorld = DimensionManager.getWorld(getDimensionId(stack));
+
+                TileEntity controller;
+
+                if (controllerWorld != null && ((controller = controllerWorld.getTileEntity(new BlockPos(getX(stack), getY(stack), getZ(stack)))) instanceof TileController)) {
+                    ((TileController) controller).getNetworkItemHandler().onOpen(player, controllerWorld, hand);
+                } else {
+                    player.sendMessage(new TextComponentTranslation("misc.refinedstorage:network_item.not_found"));
+                }
             }
         }
 

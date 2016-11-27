@@ -1,15 +1,15 @@
 package com.raoulvdberge.refinedstorage.tile.externalstorage;
 
+import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.ItemHandlerHelper;
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
-import java.util.List;
 
 public class ItemStorageDSU extends ItemStorageExternal {
     private TileExternalStorage externalStorage;
@@ -26,12 +26,12 @@ public class ItemStorageDSU extends ItemStorageExternal {
     }
 
     @Override
-    public List<ItemStack> getStacks() {
+    public NonNullList<ItemStack> getStacks() {
         if (unit.getStoredItemType() != null && unit.getStoredItemType().getCount() > 0) {
-            return Collections.singletonList(unit.getStoredItemType().copy());
+            return NonNullList.withSize(1, unit.getStoredItemType().copy());
         }
 
-        return Collections.emptyList();
+        return RSUtils.emptyNonNullList();
     }
 
     @Override

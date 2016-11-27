@@ -4,12 +4,11 @@ import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ItemStorageItemHandler extends ItemStorageExternal {
     private TileExternalStorage externalStorage;
@@ -31,14 +30,14 @@ public class ItemStorageItemHandler extends ItemStorageExternal {
     }
 
     @Override
-    public List<ItemStack> getStacks() {
-        List<ItemStack> items = new ArrayList<>();
+    public NonNullList<ItemStack> getStacks() {
+        NonNullList<ItemStack> stacks = NonNullList.withSize(handler.getSlots(), ItemStack.EMPTY);
 
         for (int i = 0; i < handler.getSlots(); ++i) {
-            items.add(!handler.getStackInSlot(i).isEmpty() ? handler.getStackInSlot(i).copy() : null);
+            stacks.set(i, handler.getStackInSlot(i).copy());
         }
 
-        return items;
+        return stacks;
     }
 
     @Override

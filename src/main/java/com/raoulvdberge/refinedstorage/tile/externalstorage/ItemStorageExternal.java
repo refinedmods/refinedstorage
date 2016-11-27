@@ -41,13 +41,13 @@ public abstract class ItemStorageExternal implements IItemStorage {
 
             ItemStack cached = cache.get(i);
 
-            if (cached != ItemStack.EMPTY && actual == ItemStack.EMPTY) {
+            if (!cached.isEmpty() && actual.isEmpty()) {
                 // If the cached is not empty but the actual is, we remove this item
                 network.getItemStorageCache().remove(cached, cached.getCount());
-            } else if (cached == ItemStack.EMPTY && actual != ItemStack.EMPTY) {
+            } else if (cached.isEmpty() && !actual.isEmpty()) {
                 // If the cached is empty and the actual isn't, we added this item
                 network.getItemStorageCache().add(actual, actual.getCount(), false);
-            } else if (cached == ItemStack.EMPTY && actual == ItemStack.EMPTY) {
+            } else if (cached.isEmpty() && actual.isEmpty()) {
                 // If they're both empty, nothing happens
             } else if (!API.instance().getComparer().isEqualNoQuantity(cached, actual)) {
                 // If both items mismatch, remove the old and add the new
