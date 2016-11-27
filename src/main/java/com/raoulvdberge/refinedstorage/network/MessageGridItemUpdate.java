@@ -30,14 +30,24 @@ public class MessageGridItemUpdate implements IMessage, IMessageHandler<MessageG
     public void fromBytes(ByteBuf buf) {
         int items = buf.readInt();
 
-        for (int i = 0; i < items + 1; ++i) {
+        for (int i = 0; i < items; ++i) {
             this.stacks.add(new ClientStackItem(buf));
         }
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(network.getItemStorageCache().getList().getStacks().size());
+        int size = network.getItemStorageCache().getList().getStacks().size();
+
+        for (ICraftingPattern pattern : network.getPatterns()) {
+            for (ItemStack output : pattern.getOutputs()) {
+                if (output != null) {
+                    size++;
+                }
+            }
+        }
+
+        buf.writeInt(size);
 
         for (ItemStack stack : network.getItemStorageCache().getList().getStacks()) {
             RSUtils.writeItemStack(buf, network, stack, false);

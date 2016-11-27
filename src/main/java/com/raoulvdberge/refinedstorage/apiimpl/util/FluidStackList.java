@@ -51,7 +51,7 @@ public class FluidStackList implements IFluidStackList {
     @Override
     public boolean trackedRemove(@Nonnull FluidStack stack, int size, boolean removeIfReachedZero) {
         for (FluidStack otherStack : stacks.get(stack.getFluid())) {
-            if (otherStack.amount > 0 && stack.isFluidEqual(otherStack)) {
+            if (stack.isFluidEqual(otherStack)) {
                 FluidStack removed = new FluidStack(otherStack.getFluid(), Math.min(size, otherStack.amount));
                 this.removeTracker.add(removed);
                 otherStack.amount -= size;
