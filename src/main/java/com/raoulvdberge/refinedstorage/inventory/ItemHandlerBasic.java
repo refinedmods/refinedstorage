@@ -24,7 +24,7 @@ public class ItemHandlerBasic extends ItemStackHandler {
 
     @Override
     @Nonnull
-    public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+    public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
         if (validators.length > 0) {
             for (IItemValidator validator : validators) {
                 if (validator.isValid(stack)) {
