@@ -11,6 +11,8 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 
+import javax.annotation.Nonnull;
+
 public abstract class ContainerBase extends Container {
     private TileBase tile;
     private EntityPlayer player;
@@ -58,7 +60,7 @@ public abstract class ContainerBase extends Container {
         Slot slot = id >= 0 ? getSlot(id) : null;
 
         if (slot instanceof SlotFilter) {
-            if (((SlotFilter) slot).isWithSize()) {
+            if (((SlotFilter) slot).allowsSize()) {
                 if (clickType == ClickType.QUICK_MOVE) {
                     slot.putStack(ItemStack.EMPTY);
                 } else if (!player.inventory.getItemStack().isEmpty()) {
@@ -106,14 +108,14 @@ public abstract class ContainerBase extends Container {
     protected ItemStack mergeItemStackToSpecimen(ItemStack stack, int begin, int end) {
         for (int i = begin; i < end; ++i) {
             if (API.instance().getComparer().isEqualNoQuantity(getStackFromSlot(getSlot(i)), stack)) {
-                return null;
+                return ItemStack.EMPTY;
             }
         }
 
         for (int i = begin; i < end; ++i) {
             Slot slot = getSlot(i);
 
-            if (getStackFromSlot(slot) == null && slot.isItemValid(stack)) {
+            if (getStackFromSlot(slot).isEmpty() && slot.isItemValid(stack)) {
                 slot.putStack(ItemHandlerHelper.copyStackWithSize(stack, 1));
                 slot.onSlotChanged();
 
@@ -124,6 +126,7 @@ public abstract class ContainerBase extends Container {
         return ItemStack.EMPTY;
     }
 
+    @Nonnull
     private ItemStack getStackFromSlot(Slot slot) {
         ItemStack stackInSlot = slot.getStack();
 

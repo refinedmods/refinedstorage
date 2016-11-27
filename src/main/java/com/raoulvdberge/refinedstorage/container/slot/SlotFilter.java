@@ -15,8 +15,8 @@ import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 
 public class SlotFilter extends SlotItemHandler {
-    public static final int SPECIMEN_SIZE = 1;
-    public static final int SPECIMEN_BLOCK = 2;
+    public static final int FILTER_ALLOW_SIZE = 1;
+    public static final int FILTER_ALLOW_BLOCKS = 2;
 
     private int flags = 0;
 
@@ -38,7 +38,7 @@ public class SlotFilter extends SlotItemHandler {
     @Override
     public boolean isItemValid(@Nonnull ItemStack stack) {
         if (super.isItemValid(stack)) {
-            if (isBlockOnly()) {
+            if (allowsBlocks()) {
                 return stack.getItem() instanceof ItemBlock || stack.getItem() instanceof ItemBlockSpecial || stack.getItem() instanceof IPlantable || stack.getItem() instanceof ItemSkull;
             }
 
@@ -50,19 +50,19 @@ public class SlotFilter extends SlotItemHandler {
 
     @Override
     public void putStack(@Nonnull ItemStack stack) {
-        if (!stack.isEmpty() && !isWithSize()) {
+        if (!stack.isEmpty() && !allowsSize()) {
             stack.setCount(1);
         }
 
         super.putStack(stack);
     }
 
-    public boolean isWithSize() {
-        return (flags & SPECIMEN_SIZE) == SPECIMEN_SIZE;
+    public boolean allowsSize() {
+        return (flags & FILTER_ALLOW_SIZE) == FILTER_ALLOW_SIZE;
     }
 
-    public boolean isBlockOnly() {
-        return (flags & SPECIMEN_BLOCK) == SPECIMEN_BLOCK;
+    public boolean allowsBlocks() {
+        return (flags & FILTER_ALLOW_BLOCKS) == FILTER_ALLOW_BLOCKS;
     }
 
     public static IBlockState getBlockState(IBlockAccess world, BlockPos pos, ItemStack stack) {

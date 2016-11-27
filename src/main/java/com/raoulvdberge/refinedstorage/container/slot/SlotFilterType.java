@@ -26,13 +26,13 @@ public class SlotFilterType extends SlotFilter {
     }
 
     @Override
-    public boolean isWithSize() {
-        return super.isWithSize() && type.getType() != IType.FLUIDS;
+    public boolean allowsSize() {
+        return super.allowsSize() && type.getType() != IType.FLUIDS;
     }
 
     @Override
-    public boolean isBlockOnly() {
-        return super.isBlockOnly() && type.getType() == IType.ITEMS;
+    public boolean allowsBlocks() {
+        return super.allowsBlocks() && type.getType() == IType.ITEMS;
     }
 
     @Override

@@ -22,7 +22,7 @@ public class ContainerProcessingPatternEncoder extends ContainerBase {
         int y = 20;
 
         for (int i = 0; i < 9 * 2; ++i) {
-            addSlotToContainer(new SlotFilter(encoder.getConfiguration(), i, x, y, SlotFilter.SPECIMEN_SIZE));
+            addSlotToContainer(new SlotFilter(encoder.getConfiguration(), i, x, y, SlotFilter.FILTER_ALLOW_SIZE));
 
             x += 18;
 
