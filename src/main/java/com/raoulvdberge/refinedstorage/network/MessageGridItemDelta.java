@@ -47,13 +47,18 @@ public class MessageGridItemDelta implements IMessage, IMessageHandler<MessageGr
             if (stack.equals(message.clientStack)) {
                 if (stack.getStack().getCount() + message.delta == 0) {
                     if (message.clientStack.isCraftable()) {
-                        stack.setOutputFromPattern(true);
+                        stack.setDisplayCraftText(true);
                     } else {
                         GuiGrid.ITEMS.remove(item, stack);
                     }
                 } else {
-                    stack.getStack().grow(message.delta - (stack.isOutputFromPattern() ? 1 : 0));
-                    stack.setOutputFromPattern(false);
+                    if (stack.doesDisplayCraftText()) {
+                        stack.setDisplayCraftText(false);
+
+                        stack.getStack().setCount(message.delta);
+                    } else {
+                        stack.getStack().grow(message.delta);
+                    }
                 }
 
                 GuiGrid.markForSorting();

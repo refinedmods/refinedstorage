@@ -65,7 +65,7 @@ public class MessageGridItemUpdate implements IMessage, IMessageHandler<MessageG
         for (ClientStackItem item : message.stacks) {
             boolean canAdd = true;
 
-            if (item.isOutputFromPattern()) {
+            if (item.doesDisplayCraftText()) {
                 // This is an output from a pattern being sent. Only add it if it hasn't been added before.
                 for (ClientStackItem otherItem : GuiGrid.ITEMS.get(item.getStack().getItem())) {
                     if (API.instance().getComparer().isEqualNoQuantity(item.getStack(), otherItem.getStack())) {

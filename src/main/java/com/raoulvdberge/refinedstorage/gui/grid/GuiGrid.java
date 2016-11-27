@@ -369,7 +369,7 @@ public class GuiGrid extends GuiBase {
                 if (grid.getType() != EnumGridType.FLUID && (held.isEmpty() || (!held.isEmpty() && clickedButton == 2))) {
                     ClientStackItem stack = (ClientStackItem) STACKS.get(slotNumber);
 
-                    if (stack.isCraftable() && (stack.isOutputFromPattern() || (GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown()))) {
+                    if (stack.isCraftable() && (stack.doesDisplayCraftText() || (GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown()))) {
                         FMLCommonHandler.instance().showGuiScreen(new GuiCraftingStart(this, container.getPlayer(), stack));
                     } else {
                         int flags = 0;
