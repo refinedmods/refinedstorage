@@ -40,11 +40,7 @@ public class MessageGridItemUpdate implements IMessage, IMessageHandler<MessageG
         int size = network.getItemStorageCache().getList().getStacks().size();
 
         for (ICraftingPattern pattern : network.getPatterns()) {
-            for (ItemStack output : pattern.getOutputs()) {
-                if (output != null) {
-                    size++;
-                }
-            }
+            size += pattern.getOutputs().stream().filter(o -> o != null).count();
         }
 
         buf.writeInt(size);
