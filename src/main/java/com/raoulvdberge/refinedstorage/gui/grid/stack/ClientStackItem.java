@@ -17,12 +17,14 @@ public class ClientStackItem implements IClientStack {
     private int hash;
     private ItemStack stack;
     private boolean craftable;
+    private boolean outputFromPattern;
 
     public ClientStackItem(ByteBuf buf) {
         stack = new ItemStack(Item.getItemById(buf.readInt()), buf.readInt(), buf.readInt());
         stack.setTagCompound(ByteBufUtils.readTag(buf));
         hash = buf.readInt();
         craftable = buf.readBoolean();
+        setOutputFromPattern(buf.readBoolean());
     }
 
     public ItemStack getStack() {
@@ -31,6 +33,18 @@ public class ClientStackItem implements IClientStack {
 
     public boolean isCraftable() {
         return craftable;
+    }
+
+    public boolean isOutputFromPattern() {
+        return outputFromPattern;
+    }
+
+    public void setOutputFromPattern(boolean outputFromPattern) {
+        this.outputFromPattern = outputFromPattern;
+
+        if (outputFromPattern) {
+            stack.setCount(1);
+        }
     }
 
     @Override
@@ -72,12 +86,12 @@ public class ClientStackItem implements IClientStack {
     private String getQuantityForDisplay(boolean advanced) {
         int qty = stack.getCount();
 
-        if (advanced && qty > 1) {
+        if (outputFromPattern) {
+            return I18n.format("gui.refinedstorage:grid.craft");
+        } else if (advanced && qty > 1) {
             return String.valueOf(qty);
         } else if (qty == 1) {
             return null;
-        } else if (qty == 0) {
-            return I18n.format("gui.refinedstorage:grid.craft");
         }
 
         return RSUtils.formatQuantity(qty);

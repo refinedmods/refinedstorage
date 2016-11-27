@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.apiimpl.storage.item;
 
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.item.IItemStorage;
@@ -39,17 +38,9 @@ public class ItemStorageCache implements IItemStorageCache {
             }
 
             for (ItemStack stack : storage.getStacks()) {
-                if (stack != null) {
+                if (!stack.isEmpty()) {
                     add(stack, stack.getCount(), true);
                 }
-            }
-        }
-
-        for (ICraftingPattern pattern : network.getPatterns()) {
-            for (ItemStack output : pattern.getOutputs()) {
-                ItemStack patternStack = output.copy();
-                patternStack.setCount(0);
-                add(patternStack, patternStack.getCount(), true);
             }
         }
 
@@ -67,7 +58,7 @@ public class ItemStorageCache implements IItemStorageCache {
 
     @Override
     public synchronized void remove(@Nonnull ItemStack stack, int size) {
-        if (list.remove(stack, size, !network.hasPattern(stack))) {
+        if (list.remove(stack, size, true)) {
             network.sendItemStorageDeltaToClient(stack, -size);
         }
     }

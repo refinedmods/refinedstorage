@@ -35,7 +35,7 @@ public class MessageGridItemDelta implements IMessage, IMessageHandler<MessageGr
 
     @Override
     public void toBytes(ByteBuf buf) {
-        RSUtils.writeItemStack(buf, network, stack);
+        RSUtils.writeItemStack(buf, network, stack, false);
         buf.writeInt(delta);
     }
 
@@ -45,10 +45,15 @@ public class MessageGridItemDelta implements IMessage, IMessageHandler<MessageGr
 
         for (ClientStackItem stack : GuiGrid.ITEMS.get(item)) {
             if (stack.equals(message.clientStack)) {
-                if (stack.getStack().getCount() + message.delta == 0 && !message.clientStack.isCraftable()) {
-                    GuiGrid.ITEMS.remove(item, stack);
+                if (stack.getStack().getCount() + message.delta == 0) {
+                    if (message.clientStack.isCraftable()) {
+                        stack.setOutputFromPattern(true);
+                    } else {
+                        GuiGrid.ITEMS.remove(item, stack);
+                    }
                 } else {
-                    stack.getStack().grow(message.delta);
+                    stack.getStack().grow(message.delta - (stack.isOutputFromPattern() ? 1 : 0));
+                    stack.setOutputFromPattern(false);
                 }
 
                 GuiGrid.markForSorting();

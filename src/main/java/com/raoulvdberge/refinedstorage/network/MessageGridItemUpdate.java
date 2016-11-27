@@ -1,7 +1,9 @@
 package com.raoulvdberge.refinedstorage.network;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
+import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.ClientStackItem;
 import io.netty.buffer.ByteBuf;
@@ -28,7 +30,7 @@ public class MessageGridItemUpdate implements IMessage, IMessageHandler<MessageG
     public void fromBytes(ByteBuf buf) {
         int items = buf.readInt();
 
-        for (int i = 0; i < items; ++i) {
+        for (int i = 0; i < items + 1; ++i) {
             this.stacks.add(new ClientStackItem(buf));
         }
     }
@@ -38,7 +40,15 @@ public class MessageGridItemUpdate implements IMessage, IMessageHandler<MessageG
         buf.writeInt(network.getItemStorageCache().getList().getStacks().size());
 
         for (ItemStack stack : network.getItemStorageCache().getList().getStacks()) {
-            RSUtils.writeItemStack(buf, network, stack);
+            RSUtils.writeItemStack(buf, network, stack, false);
+        }
+
+        for (ICraftingPattern pattern : network.getPatterns()) {
+            for (ItemStack output : pattern.getOutputs()) {
+                if (output != null) {
+                    RSUtils.writeItemStack(buf, network, output, true);
+                }
+            }
         }
     }
 
@@ -47,7 +57,22 @@ public class MessageGridItemUpdate implements IMessage, IMessageHandler<MessageG
         GuiGrid.ITEMS.clear();
 
         for (ClientStackItem item : message.stacks) {
-            GuiGrid.ITEMS.put(item.getStack().getItem(), item);
+            boolean canAdd = true;
+
+            if (item.isOutputFromPattern()) {
+                // This is an output from a pattern being sent. Only add it if it hasn't been added before.
+                for (ClientStackItem otherItem : GuiGrid.ITEMS.get(item.getStack().getItem())) {
+                    if (API.instance().getComparer().isEqualNoQuantity(item.getStack(), otherItem.getStack())) {
+                        canAdd = false;
+
+                        break;
+                    }
+                }
+            }
+
+            if (canAdd) {
+                GuiGrid.ITEMS.put(item.getStack().getItem(), item);
+            }
         }
 
         GuiGrid.markForSorting();

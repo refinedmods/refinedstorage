@@ -39,7 +39,7 @@ public class ItemStackList implements IItemStackList {
     @Override
     public boolean remove(@Nonnull ItemStack stack, int size, boolean removeIfReachedZero) {
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
-            if (otherStack.getCount() > 0 && API.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
+            if (API.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
                 if (otherStack.getCount() - size <= 0 && removeIfReachedZero) {
                     stacks.remove(otherStack.getItem(), otherStack);
                 } else {
@@ -56,7 +56,7 @@ public class ItemStackList implements IItemStackList {
     @Override
     public boolean trackedRemove(@Nonnull ItemStack stack, int size, boolean removeIfReachedZero) {
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
-            if (otherStack.getCount() > 0 && API.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
+            if (API.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
                 ItemStack removed = ItemHandlerHelper.copyStackWithSize(otherStack, Math.min(size, otherStack.getCount()));
                 this.removeTracker.add(removed);
 
@@ -91,7 +91,7 @@ public class ItemStackList implements IItemStackList {
     public ItemStack get(@Nonnull ItemStack stack, int flags) {
         // When the oredict flag is set all stacks need to be checked not just the ones matching the item
         for (ItemStack otherStack : (flags & IComparer.COMPARE_OREDICT) == IComparer.COMPARE_OREDICT ? stacks.values() : stacks.get(stack.getItem())) {
-            if (otherStack.getCount() > 0 && API.instance().getComparer().isEqual(otherStack, stack, flags)) {
+            if (API.instance().getComparer().isEqual(otherStack, stack, flags)) {
                 return otherStack;
             }
         }

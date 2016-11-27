@@ -59,13 +59,14 @@ public final class RSUtils {
         QUANTITY_FORMATTER.setRoundingMode(RoundingMode.DOWN);
     }
 
-    public static void writeItemStack(ByteBuf buf, INetworkMaster network, ItemStack stack) {
+    public static void writeItemStack(ByteBuf buf, INetworkMaster network, ItemStack stack, boolean outputFromPattern) {
         buf.writeInt(Item.getIdFromItem(stack.getItem()));
         buf.writeInt(stack.getCount());
         buf.writeInt(stack.getItemDamage());
         ByteBufUtils.writeTag(buf, stack.getItem().getNBTShareTag(stack));
         buf.writeInt(API.instance().getItemStackHashCode(stack));
         buf.writeBoolean(network.hasPattern(stack));
+        buf.writeBoolean(outputFromPattern);
     }
 
     public static void writeFluidStack(ByteBuf buf, FluidStack stack) {
