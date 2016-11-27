@@ -291,7 +291,7 @@ public class TileGrid extends TileNode implements IGrid {
                 }
             } else if (!slot.isEmpty()) {
                 if (slot.getCount() == 1 && isConnected()) {
-                    matrix.setInventorySlotContents(i, network.extractItem(slot, 1, false));
+                    matrix.setInventorySlotContents(i, RSUtils.getStack(network.extractItem(slot, 1, false)));
                 } else {
                     matrix.decrStackSize(i, 1);
                 }
@@ -352,7 +352,7 @@ public class TileGrid extends TileNode implements IGrid {
     }
 
     public boolean canCreatePattern() {
-        return !result.getStackInSlot(0).isEmpty() && patterns.getStackInSlot(1).isEmpty() && patterns.getStackInSlot(0) != null;
+        return !result.getStackInSlot(0).isEmpty() && patterns.getStackInSlot(1).isEmpty() && !patterns.getStackInSlot(0).isEmpty();
     }
 
     public void onRecipeTransfer(EntityPlayer player, ItemStack[][] recipe) {

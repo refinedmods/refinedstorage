@@ -9,6 +9,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.items.ItemHandlerHelper;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,17 +69,10 @@ public abstract class ItemStorageNBT implements IItemStorage {
 
             stack.setTagCompound(tag.hasKey(NBT_ITEM_NBT) ? tag.getCompoundTag(NBT_ITEM_NBT) : null);
 
-            if (stack.getItem() != null) {
+            if (!stack.isEmpty()) {
                 stacks.add(stack);
             }
         }
-    }
-
-    // ItemHandlerHelper#copyStackWithSize is not null-safe!
-    private ItemStack safeCopy(ItemStack stack, int size) {
-        ItemStack newStack = stack.copy();
-        newStack.setCount(size);
-        return newStack;
     }
 
     /**
@@ -122,7 +116,7 @@ public abstract class ItemStorageNBT implements IItemStorage {
     }
 
     @Override
-    public synchronized ItemStack insertItem(ItemStack stack, int size, boolean simulate) {
+    public synchronized ItemStack insertItem(@Nonnull ItemStack stack, int size, boolean simulate) {
         for (ItemStack otherStack : stacks) {
             if (API.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
                 if (getCapacity() != -1 && getStored() + size > getCapacity()) {
@@ -165,7 +159,7 @@ public abstract class ItemStorageNBT implements IItemStorage {
             if (!simulate) {
                 tag.setInteger(NBT_STORED, getStored() + remainingSpace);
 
-                stacks.add(safeCopy(stack, remainingSpace));
+                stacks.add(ItemHandlerHelper.copyStackWithSize(stack, remainingSpace));
 
                 onStorageChanged();
             }
@@ -175,7 +169,7 @@ public abstract class ItemStorageNBT implements IItemStorage {
             if (!simulate) {
                 tag.setInteger(NBT_STORED, getStored() + size);
 
-                stacks.add(safeCopy(stack, size));
+                stacks.add(ItemHandlerHelper.copyStackWithSize(stack, size));
 
                 onStorageChanged();
             }
@@ -185,7 +179,7 @@ public abstract class ItemStorageNBT implements IItemStorage {
     }
 
     @Override
-    public synchronized ItemStack extractItem(ItemStack stack, int size, int flags, boolean simulate) {
+    public synchronized ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
         for (ItemStack otherStack : stacks) {
             if (API.instance().getComparer().isEqual(otherStack, stack, flags)) {
                 if (size > otherStack.getCount()) {
@@ -196,7 +190,7 @@ public abstract class ItemStorageNBT implements IItemStorage {
                     if (otherStack.getCount() - size == 0) {
                         stacks.remove(otherStack);
                     } else {
-                        otherStack.grow(size);
+                        otherStack.shrink(size);
                     }
 
                     tag.setInteger(NBT_STORED, getStored() - size);

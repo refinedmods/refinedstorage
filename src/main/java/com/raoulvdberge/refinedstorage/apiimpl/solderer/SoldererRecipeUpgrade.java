@@ -5,36 +5,34 @@ import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRecipe;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class SoldererRecipeUpgrade implements ISoldererRecipe {
-    private ItemStack[] rows;
     private ItemStack result;
+    private NonNullList<ItemStack> rows = NonNullList.create();
 
     public SoldererRecipeUpgrade(int type) {
         this.result = new ItemStack(RSItems.UPGRADE, 1, type);
-        this.rows = new ItemStack[]{
-            ItemUpgrade.getRequirement(result),
-            new ItemStack(RSItems.UPGRADE, 1, 0),
-            new ItemStack(Items.REDSTONE)
-        };
+
+        this.rows.add(ItemUpgrade.getRequirement(result));
+        this.rows.add(new ItemStack(RSItems.UPGRADE, 1, 0));
+        this.rows.add(new ItemStack(Items.REDSTONE));
     }
 
     public SoldererRecipeUpgrade(ItemStack result) {
         this.result = result;
-        this.rows = new ItemStack[]{
-            ItemUpgrade.getRequirement(result),
-            new ItemStack(RSItems.UPGRADE, 1, 0),
-            new ItemStack(Items.REDSTONE)
-        };
+
+        this.rows.add(ItemUpgrade.getRequirement(result));
+        this.rows.add(new ItemStack(RSItems.UPGRADE, 1, 0));
+        this.rows.add(new ItemStack(Items.REDSTONE));
     }
 
     @Override
-    @Nullable
+    @Nonnull
     public ItemStack getRow(int row) {
-        return rows[row];
+        return rows.get(row);
     }
 
     @Override

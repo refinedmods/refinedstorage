@@ -37,7 +37,7 @@ public interface ISoldererRegistry {
      *
      * @param result   the result
      * @param duration the duration in ticks
-     * @param rows     the rows of this recipe, has to be 3 rows (null for an empty row)
+     * @param rows     the rows of this recipe, has to be 3 rows (empty item stack for empty row)
      * @return a solderer recipe
      */
     @Nonnull

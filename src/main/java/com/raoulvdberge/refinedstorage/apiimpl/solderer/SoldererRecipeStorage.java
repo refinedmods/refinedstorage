@@ -7,27 +7,26 @@ import com.raoulvdberge.refinedstorage.block.EnumItemStorageType;
 import com.raoulvdberge.refinedstorage.item.ItemBlockStorage;
 import com.raoulvdberge.refinedstorage.item.ItemProcessor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class SoldererRecipeStorage implements ISoldererRecipe {
     private EnumItemStorageType type;
-    private ItemStack[] rows;
+    private NonNullList<ItemStack> rows = NonNullList.create();
 
     public SoldererRecipeStorage(EnumItemStorageType type, int storagePart) {
         this.type = type;
-        this.rows = new ItemStack[]{
-            new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
-            new ItemStack(RSBlocks.MACHINE_CASING),
-            new ItemStack(RSItems.STORAGE_PART, 1, storagePart)
-        };
+
+        this.rows.add(new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC));
+        this.rows.add(new ItemStack(RSBlocks.MACHINE_CASING));
+        this.rows.add(new ItemStack(RSItems.STORAGE_PART, 1, storagePart));
     }
 
     @Override
-    @Nullable
+    @Nonnull
     public ItemStack getRow(int row) {
-        return rows[row];
+        return rows.get(row);
     }
 
     @Override

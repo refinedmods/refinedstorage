@@ -3,7 +3,6 @@ package com.raoulvdberge.refinedstorage.api.solderer;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Represents a recipe in the solderer.
@@ -11,9 +10,9 @@ import javax.annotation.Nullable;
 public interface ISoldererRecipe {
     /**
      * @param row the row in the solderer that we want the stack for (between 0 - 2)
-     * @return a stack for the given row, or null for no stack
+     * @return a stack for the given row, or empty stack for no stack
      */
-    @Nullable
+    @Nonnull
     ItemStack getRow(int row);
 
     /**

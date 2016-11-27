@@ -3,6 +3,8 @@ package com.raoulvdberge.refinedstorage.api.util;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
+import javax.annotation.Nullable;
+
 /**
  * Utilities for comparing item and fluid stacks.
  */
@@ -20,7 +22,7 @@ public interface IComparer {
      * @param flags the flags to compare with
      * @return true if the left and right stack are the same, false otherwise
      */
-    boolean isEqual(ItemStack left, ItemStack right, int flags);
+    boolean isEqual(@Nullable ItemStack left, @Nullable ItemStack right, int flags);
 
     /**
      * Compares two stacks by NBT, damage and quantity.
@@ -29,7 +31,7 @@ public interface IComparer {
      * @param right the right stack
      * @return true if the left and right stack are the same, false otherwise
      */
-    default boolean isEqual(ItemStack left, ItemStack right) {
+    default boolean isEqual(@Nullable ItemStack left, @Nullable ItemStack right) {
         return isEqual(left, right, COMPARE_NBT | COMPARE_DAMAGE | COMPARE_QUANTITY);
     }
 
@@ -40,7 +42,7 @@ public interface IComparer {
      * @param right the right stack
      * @return true if the left and right stack are the same, false otherwise
      */
-    default boolean isEqualNoQuantity(ItemStack left, ItemStack right) {
+    default boolean isEqualNoQuantity(@Nullable ItemStack left, @Nullable ItemStack right) {
         return isEqual(left, right, COMPARE_NBT | COMPARE_DAMAGE);
     }
 
@@ -52,7 +54,7 @@ public interface IComparer {
      * @param flags the flags to compare with
      * @return true if the left and right stack are the same, false otherwise
      */
-    boolean isEqual(FluidStack left, FluidStack right, int flags);
+    boolean isEqual(@Nullable FluidStack left, @Nullable FluidStack right, int flags);
 
     /**
      * Compares the NBT tags of two stacks.
@@ -61,7 +63,7 @@ public interface IComparer {
      * @param right the right stack
      * @return true if the NBT tags of the two stacks are the same, false otherwise
      */
-    boolean isEqualNBT(ItemStack left, ItemStack right);
+    boolean isEqualNBT(@Nullable ItemStack left, @Nullable ItemStack right);
 
     /**
      * Compares two stacks and checks if they share the same ore dictionary entry.
@@ -70,5 +72,5 @@ public interface IComparer {
      * @param right the right stack
      * @return true if the two stacks share the same ore dictionary entry
      */
-    boolean isEqualOredict(ItemStack left, ItemStack right);
+    boolean isEqualOredict(@Nullable ItemStack left, @Nullable ItemStack right);
 }

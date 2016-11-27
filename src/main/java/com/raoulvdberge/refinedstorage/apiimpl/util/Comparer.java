@@ -3,22 +3,24 @@ package com.raoulvdberge.refinedstorage.apiimpl.util;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumActionResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.ArrayUtils;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Comparer implements IComparer {
-    @Override
-    public boolean isEqual(ItemStack left, ItemStack right, int flags) {
-        if (left == null && right == null) {
-            return true;
-        }
+    private Map<Integer, Boolean> oredictCache = new HashMap<>();
 
-        if ((left == null && right != null) || (left != null && right == null)) {
-            return false;
+    @Override
+    public boolean isEqual(@Nullable ItemStack left, @Nullable ItemStack right, int flags) {
+        EnumActionResult validity = validityCheck(left, right);
+
+        if (validity == EnumActionResult.FAIL || validity == EnumActionResult.SUCCESS) {
+            return validity == EnumActionResult.SUCCESS;
         }
 
         if ((flags & COMPARE_OREDICT) == COMPARE_OREDICT) {
@@ -53,7 +55,7 @@ public class Comparer implements IComparer {
     }
 
     @Override
-    public boolean isEqual(FluidStack left, FluidStack right, int flags) {
+    public boolean isEqual(@Nullable FluidStack left, @Nullable FluidStack right, int flags) {
         if (left == null && right == null) {
             return true;
         }
@@ -82,7 +84,13 @@ public class Comparer implements IComparer {
     }
 
     @Override
-    public boolean isEqualNBT(ItemStack left, ItemStack right) {
+    public boolean isEqualNBT(@Nullable ItemStack left, @Nullable ItemStack right) {
+        EnumActionResult validity = validityCheck(left, right);
+
+        if (validity == EnumActionResult.FAIL || validity == EnumActionResult.SUCCESS) {
+            return validity == EnumActionResult.SUCCESS;
+        }
+
         if (!ItemStack.areItemStackTagsEqual(left, right)) {
             if (left.hasTagCompound() && !right.hasTagCompound() && left.getTagCompound().hasNoTags()) {
                 return true;
@@ -96,16 +104,12 @@ public class Comparer implements IComparer {
         return true;
     }
 
-    private Map<Integer, Boolean> oredictCache = new HashMap<>();
-
     @Override
-    public boolean isEqualOredict(ItemStack left, ItemStack right) {
-        if (left == null && right == null) {
-            return true;
-        }
+    public boolean isEqualOredict(@Nullable ItemStack left, @Nullable ItemStack right) {
+        EnumActionResult validity = validityCheck(left, right);
 
-        if ((left == null && right != null) || (left != null && right == null)) {
-            return false;
+        if (validity == EnumActionResult.FAIL || validity == EnumActionResult.SUCCESS) {
+            return validity == EnumActionResult.SUCCESS;
         }
 
         int code = API.instance().getItemStackHashCode(left);
@@ -129,5 +133,25 @@ public class Comparer implements IComparer {
         oredictCache.put(code, false);
 
         return false;
+    }
+
+    private EnumActionResult validityCheck(@Nullable ItemStack left, @Nullable ItemStack right) {
+        if (left == null && right == null) {
+            return EnumActionResult.SUCCESS;
+        }
+
+        if ((left == null && right != null) || (left != null && right == null)) {
+            return EnumActionResult.FAIL;
+        }
+
+        if (left.isEmpty() && right.isEmpty()) {
+            return EnumActionResult.SUCCESS;
+        }
+
+        if ((left.isEmpty() && !right.isEmpty()) || (!left.isEmpty() && right.isEmpty())) {
+            return EnumActionResult.FAIL;
+        }
+
+        return EnumActionResult.PASS;
     }
 }

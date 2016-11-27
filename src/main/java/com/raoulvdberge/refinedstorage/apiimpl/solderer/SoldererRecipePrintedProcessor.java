@@ -7,12 +7,11 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class SoldererRecipePrintedProcessor implements ISoldererRecipe {
     private int type;
-    private ItemStack requirement;
     private ItemStack result;
+    private ItemStack requirement;
 
     public SoldererRecipePrintedProcessor(int type) {
         this.type = type;
@@ -35,13 +34,9 @@ public class SoldererRecipePrintedProcessor implements ISoldererRecipe {
     }
 
     @Override
-    @Nullable
+    @Nonnull
     public ItemStack getRow(int row) {
-        if (row == 1) {
-            return requirement;
-        }
-
-        return null;
+        return row == 1 ? requirement : ItemStack.EMPTY;
     }
 
     @Override

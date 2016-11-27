@@ -5,44 +5,42 @@ import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRecipe;
 import com.raoulvdberge.refinedstorage.item.ItemProcessor;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class SoldererRecipeProcessor implements ISoldererRecipe {
     private int type;
-    private ItemStack[] rows;
     private ItemStack result;
+    private NonNullList<ItemStack> rows = NonNullList.create();
 
     public SoldererRecipeProcessor(int type) {
         this.type = type;
 
-        ItemStack printedProcessor = null;
+        this.result = new ItemStack(RSItems.PROCESSOR, 1, type);
 
+        this.rows.add(createPrintedProcessor());
+        this.rows.add(new ItemStack(Items.REDSTONE));
+        this.rows.add(new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_PRINTED_SILICON));
+    }
+
+    private ItemStack createPrintedProcessor() {
         switch (type) {
             case ItemProcessor.TYPE_BASIC:
-                printedProcessor = new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_PRINTED_BASIC);
-                break;
+                return new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_PRINTED_BASIC);
             case ItemProcessor.TYPE_IMPROVED:
-                printedProcessor = new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_PRINTED_IMPROVED);
-                break;
+                return new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_PRINTED_IMPROVED);
             case ItemProcessor.TYPE_ADVANCED:
-                printedProcessor = new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_PRINTED_ADVANCED);
-                break;
+                return new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_PRINTED_ADVANCED);
+            default:
+                return ItemStack.EMPTY;
         }
-
-        this.result = new ItemStack(RSItems.PROCESSOR, 1, type);
-        this.rows = new ItemStack[]{
-            printedProcessor,
-            new ItemStack(Items.REDSTONE),
-            new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_PRINTED_SILICON)
-        };
     }
 
     @Override
-    @Nullable
+    @Nonnull
     public ItemStack getRow(int row) {
-        return rows[row];
+        return rows.get(row);
     }
 
     @Override

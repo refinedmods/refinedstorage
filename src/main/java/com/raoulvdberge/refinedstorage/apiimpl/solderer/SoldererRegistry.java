@@ -34,10 +34,8 @@ public class SoldererRegistry implements ISoldererRegistry {
 
                 ItemStack row = recipe.getRow(i);
 
-                if (rows.getStackInSlot(i) != null && row != null) {
-                    if (rows.getStackInSlot(i).getCount() < row.getCount()) {
-                        found = false;
-                    }
+                if (rows.getStackInSlot(i).getCount() < row.getCount()) {
+                    found = false;
                 }
             }
 
@@ -61,8 +59,14 @@ public class SoldererRegistry implements ISoldererRegistry {
             throw new IllegalArgumentException("Solderer recipe expects 3 rows, got " + rows.length + " rows");
         }
 
+        for (ItemStack row : rows) {
+            if (row == null) {
+                throw new IllegalArgumentException("Found a null item stack in recipe creation!");
+            }
+        }
+
         return new ISoldererRecipe() {
-            @Nullable
+            @Nonnull
             @Override
             public ItemStack getRow(int row) {
                 return rows[row];
@@ -102,7 +106,7 @@ public class SoldererRegistry implements ISoldererRegistry {
 
     private boolean compareRows(ISoldererRecipe recipe, ItemStack[] rows) {
         for (int i = 0; i < 3; ++i) {
-            if(!API.instance().getComparer().isEqualNoQuantity(recipe.getRow(i), rows[i])) {
+            if (!API.instance().getComparer().isEqualNoQuantity(recipe.getRow(i), rows[i])) {
                 return false;
             }
         }
