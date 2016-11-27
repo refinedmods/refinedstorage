@@ -164,7 +164,7 @@ public abstract class CraftingStep implements ICraftingStep {
 
     protected AvailableType isItemAvailable(IItemStackList items, IFluidStackList fluids, ItemStack stack, ItemStack actualStack, int compare) {
         if (actualStack == null || actualStack.getCount() == 0 || !items.trackedRemove(actualStack, stack.getCount(), true)) {
-            FluidStack fluidInItem = RSUtils.getFluidFromStack(stack, true);
+            FluidStack fluidInItem = RSUtils.getFluidFromStack(stack, true).getValue();
 
             if (fluidInItem != null && RSUtils.hasFluidBucket(fluidInItem)) {
                 FluidStack fluidStack = fluids.get(fluidInItem, compare);
@@ -192,7 +192,7 @@ public abstract class CraftingStep implements ICraftingStep {
                 actualInputs.add(input);
             } else {
                 boolean abort = true;
-                FluidStack fluidInItem = RSUtils.getFluidFromStack(insertStack, true);
+                FluidStack fluidInItem = RSUtils.getFluidFromStack(insertStack, true).getValue();
                 if (fluidInItem != null) {
                     FluidStack fluidStack = network.extractFluid(fluidInItem, fluidInItem.amount, compare, false);
                     ItemStack bucketStack = network.extractItem(RSUtils.EMPTY_BUCKET, 1, compare, false);

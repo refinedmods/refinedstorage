@@ -239,7 +239,7 @@ public class CraftingTask implements ICraftingTask {
     }
 
     private boolean doFluidCalculation(IItemStackList networkList, IFluidStackList networkFluidList, ItemStack input, IItemStackList toInsert) {
-        FluidStack fluidInItem = RSUtils.getFluidFromStack(input, true);
+        FluidStack fluidInItem = RSUtils.getFluidFromStack(input, true).getValue();
 
         if (fluidInItem != null && RSUtils.hasFluidBucket(fluidInItem)) {
             FluidStack fluidInStorage = networkFluidList.get(fluidInItem);

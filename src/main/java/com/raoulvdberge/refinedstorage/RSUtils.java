@@ -29,6 +29,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -81,7 +82,7 @@ public final class RSUtils {
     }
 
     public static void createStorages(ItemStack disk, int slot, ItemStorageNBT[] itemStorages, FluidStorageNBT[] fluidStorages, Function<ItemStack, ItemStorageNBT> itemStorageSupplier, Function<ItemStack, FluidStorageNBT> fluidStorageNBTSupplier) {
-        if (disk == null) {
+        if (disk.isEmpty()) {
             itemStorages[slot] = null;
             fluidStorages[slot] = null;
         } else {
@@ -239,26 +240,20 @@ public final class RSUtils {
         return handler;
     }
 
-    @SuppressWarnings("deprecation")
     public static IFluidHandler getFluidHandler(TileEntity tile, EnumFacing side) {
-        if (tile == null) {
-            return null;
-        }
-
-        if (!tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)) {
-            return null;
-        }
-
-        return tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side);
+        return (tile != null && tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)) ? tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side) : null;
     }
 
-    @SuppressWarnings("deprecation")
-    public static FluidStack getFluidFromStack(ItemStack stack, boolean simulate) {
-        if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
-            return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).drain(Fluid.BUCKET_VOLUME, !simulate);
+    public static Pair<ItemStack, FluidStack> getFluidFromStack(ItemStack stack, boolean simulate) {
+        if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
+            IFluidHandlerItem fluidHandler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
+
+            FluidStack result = fluidHandler.drain(Fluid.BUCKET_VOLUME, !simulate);
+
+            return Pair.of(fluidHandler.getContainer(), result);
         }
 
-        return null;
+        return Pair.of(null, null);
     }
 
     public static boolean hasFluidBucket(FluidStack stack) {

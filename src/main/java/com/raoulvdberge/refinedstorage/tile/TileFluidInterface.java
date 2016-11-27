@@ -19,6 +19,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import org.apache.commons.lang3.tuple.Pair;
 
 public class TileFluidInterface extends TileNode implements IComparable {
     public static final int TANK_CAPACITY = 16000;
@@ -93,10 +94,14 @@ public class TileFluidInterface extends TileNode implements IComparable {
         ItemStack container = in.getStackInSlot(0);
 
         if (!container.isEmpty()) {
-            FluidStack fluid = RSUtils.getFluidFromStack(container, true);
+            Pair<ItemStack, FluidStack> result = RSUtils.getFluidFromStack(container, true);
 
-            if (fluid != null && tankIn.fillInternal(fluid, false) == fluid.amount) {
-                tankIn.fillInternal(RSUtils.getFluidFromStack(container, false), true);
+            if (result.getValue() != null && tankIn.fillInternal(result.getValue(), false) == result.getValue().amount) {
+                result = RSUtils.getFluidFromStack(container, false);
+
+                tankIn.fillInternal(result.getValue(), true);
+
+                in.setStackInSlot(0, result.getLeft());
             }
         }
 

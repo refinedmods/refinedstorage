@@ -10,7 +10,7 @@ public class ItemHandlerFluid extends ItemHandlerBasic {
     private FluidStack[] fluids;
 
     public ItemHandlerFluid(int size, TileEntity tile) {
-        super(size, tile, s -> RSUtils.getFluidFromStack(ItemHandlerHelper.copyStackWithSize(s, 1), true) != null);
+        super(size, tile, s -> RSUtils.getFluidFromStack(ItemHandlerHelper.copyStackWithSize(s, 1), true).getValue() != null);
 
         this.fluids = new FluidStack[size];
     }
@@ -24,7 +24,7 @@ public class ItemHandlerFluid extends ItemHandlerBasic {
         if (stack.isEmpty()) {
             fluids[slot] = null;
         } else {
-            fluids[slot] = RSUtils.getFluidFromStack(ItemHandlerHelper.copyStackWithSize(stack, 1), true);
+            fluids[slot] = RSUtils.getFluidFromStack(ItemHandlerHelper.copyStackWithSize(stack, 1), true).getValue();
         }
     }
 

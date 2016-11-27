@@ -10,6 +10,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 
@@ -46,14 +48,16 @@ public class FluidGridHandler implements IFluidGridHandler {
             }
 
             if (bucket != null) {
-                bucket.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).fill(network.extractFluid(stack, Fluid.BUCKET_VOLUME, false), true);
+                IFluidHandlerItem fluidHandler = bucket.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
+
+                fluidHandler.fill(network.extractFluid(stack, Fluid.BUCKET_VOLUME, false), true);
 
                 if (shift) {
-                    if (!player.inventory.addItemStackToInventory(bucket.copy())) {
-                        InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), bucket);
+                    if (!player.inventory.addItemStackToInventory(fluidHandler.getContainer().copy())) {
+                        InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), fluidHandler.getContainer());
                     }
                 } else {
-                    player.inventory.setItemStack(bucket);
+                    player.inventory.setItemStack(fluidHandler.getContainer());
                     player.updateHeldItem();
                 }
             }
@@ -63,12 +67,14 @@ public class FluidGridHandler implements IFluidGridHandler {
     @Nullable
     @Override
     public ItemStack onInsert(ItemStack container) {
-        FluidStack stack = RSUtils.getFluidFromStack(container, true);
+        Pair<ItemStack, FluidStack> result = RSUtils.getFluidFromStack(container, true);
 
-        if (stack != null && network.insertFluid(stack, stack.amount, true) == null) {
-            FluidStack drained = RSUtils.getFluidFromStack(container, false);
+        if (result.getValue() != null && network.insertFluid(result.getValue(), result.getValue().amount, true) == null) {
+            result = RSUtils.getFluidFromStack(container, false);
 
-            network.insertFluid(drained, drained.amount, false);
+            network.insertFluid(result.getValue(), result.getValue().amount, false);
+
+            return result.getLeft();
         }
 
         return container;

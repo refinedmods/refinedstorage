@@ -395,7 +395,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     public static int getDiskState(int stored, int capacity) {
         if (stored == capacity) {
             return DISK_STATE_FULL;
-        } else if ((int) ((float) stored / (float) capacity * 100F) > 85) {
+        } else if ((int) ((float) stored / (float) capacity * 100F) >= 85) {
             return DISK_STATE_NEAR_CAPACITY;
         } else {
             return DISK_STATE_NORMAL;
