@@ -127,7 +127,7 @@ public class ItemStackList implements IItemStackList {
     public void clean() {
         List<Pair<Item, ItemStack>> toRemove = stacks.asMap().entrySet().stream()
             .flatMap(entry -> entry.getValue().stream().map(value -> Pair.of(entry.getKey(), value)))
-            .filter(pair -> pair.getValue().getCount() <= 0)
+            .filter(pair -> pair.getValue().isEmpty())
             .collect(Collectors.toList());
 
         toRemove.forEach(pair -> stacks.remove(pair.getLeft(), pair.getRight()));

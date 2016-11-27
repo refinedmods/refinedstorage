@@ -86,10 +86,10 @@ public class ItemStackListOredicted implements IItemStackList {
                     if (stacks != null && !stacks.isEmpty()) {
                         int i = 0;
                         ItemStack returnStack = stacks.get(i++);
-                        while (returnStack.getCount() == 0 && i < stacks.size()) {
+                        while (returnStack.isEmpty() && i < stacks.size()) {
                             returnStack = stacks.get(i++);
                         }
-                        if (returnStack.getCount() != 0) {
+                        if (!returnStack.isEmpty()) {
                             return returnStack;
                         }
                     }
@@ -102,17 +102,21 @@ public class ItemStackListOredicted implements IItemStackList {
     @Nullable
     @Override
     public ItemStack get(int hash) {
+        if (underlyingList.needsCleanup) {
+            clean();
+        }
         return underlyingList.get(hash);
     }
 
     @Override
     public void clear() {
+        stacks.clear();
         underlyingList.clear();
     }
 
     private void localClean() {
         List<Map.Entry<Integer, ItemStack>> toRemove = stacks.entries().stream()
-            .filter(entry -> entry.getValue().getCount() <= 0)
+            .filter(entry -> entry.getValue().isEmpty())
             .collect(Collectors.toList());
 
         toRemove.forEach(entry -> stacks.remove(entry.getKey(), entry.getValue()));
