@@ -47,6 +47,7 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
 
         @Override
         public ItemStack insertItem(ItemStack stack, int size, boolean simulate) {
+            // @todo: this doesn't work with the item voiding system!
             if (!IFilterable.canTake(filters, mode, compare, stack)) {
                 return ItemHandlerHelper.copyStackWithSize(stack, size);
             }

@@ -689,19 +689,27 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
     @Nullable
     @Override
     public FluidStack insertFluid(@Nonnull FluidStack stack, int size, boolean simulate) {
-        if (stack == null || fluidStorage.getStorages().isEmpty()) {
+        if (fluidStorage.getStorages().isEmpty()) {
             return RSUtils.copyStackWithSize(stack, size);
         }
 
-        int orginalSize = size;
+        int originalSize = size;
         AccessType accessType = AccessType.INSERT_EXTRACT;
         FluidStack remainder = stack;
+
+        int insertedToIgnore = 0;
 
         for (IFluidStorage storage : this.fluidStorage.getStorages()) {
             accessType = storage.getAccessType();
 
             if (accessType != AccessType.EXTRACT) {
                 remainder = storage.insertFluid(remainder, size, simulate);
+
+                if (remainder != null && storage.isVoiding() && !simulate) {
+                    insertedToIgnore += remainder.amount;
+
+                    remainder = null;
+                }
             }
 
             if (storage instanceof FluidStorageExternal && !simulate) {
@@ -715,20 +723,14 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
             }
         }
 
-        // If the stack size of the remainder is negative, it means of the original size abs(remainder.amount) fluids have been voided
-        int inserted;
+        if (!simulate) {
+            int inserted = remainder == null ? originalSize : (originalSize - remainder.amount);
 
-        if (remainder == null) {
-            inserted = orginalSize;
-        } else if (remainder.amount < 0) {
-            inserted = orginalSize + remainder.amount;
-            remainder = null;
-        } else {
-            inserted = orginalSize - remainder.amount;
-        }
+            inserted -= insertedToIgnore;
 
-        if (!simulate && inserted > 0 && accessType != AccessType.INSERT) {
-            fluidStorage.add(RSUtils.copyStackWithSize(stack, inserted), false);
+            if (inserted > 0 && accessType != AccessType.INSERT) {
+                fluidStorage.add(RSUtils.copyStackWithSize(stack, inserted), false);
+            }
         }
 
         return remainder;
