@@ -235,7 +235,7 @@ public abstract class ItemStorageNBT implements IItemStorage {
         NBTTagCompound otherTag = new NBTTagCompound();
 
         otherTag.setInteger(NBT_STORED, getStoredFromNBT(tag));
-        otherTag.setTag(NBT_ITEMS, new NBTTagList()); // To circumvent not being able to insert stack (see ItemStorageNBT#isValid(ItemStack)).
+        otherTag.setTag(NBT_ITEMS, new NBTTagList()); // To circumvent not being able to insert disks in Disk Drives (see ItemStorageNBT#isValid(ItemStack)).
 
         return otherTag;
     }
