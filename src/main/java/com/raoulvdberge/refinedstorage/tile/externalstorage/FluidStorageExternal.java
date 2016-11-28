@@ -84,6 +84,11 @@ public class FluidStorageExternal implements IFluidStorage {
         return externalStorage.getAccessType();
     }
 
+    @Override
+    public boolean isVoiding() {
+        return false;
+    }
+
     public boolean updateCache() {
         FluidStack stack = getContents();
 

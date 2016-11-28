@@ -580,26 +580,33 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
             return ItemHandlerHelper.copyStackWithSize(stack, size);
         }
 
-        int orginalSize = size;
+        int originalSize = size;
+
         ItemStack remainder = stack;
-        int externalStorageInserted = 0;
-        int insertOnlyInserted = 0;
+
+        int insertedExternally = 0;
+        int insertedToIgnore = 0;
 
         for (IItemStorage storage : this.itemStorage.getStorages()) {
             if (storage.getAccessType() != AccessType.EXTRACT) {
                 remainder = storage.insertItem(remainder, size, simulate);
 
-                // if this storage is in insert-only mode, we can disregard this item from the cache
-                if (storage.getAccessType() == AccessType.INSERT && !simulate) {
-                    insertOnlyInserted += size - (remainder != null ? remainder.getCount() : 0);
+                if (!simulate) {
+                    if (remainder != null && storage.isVoiding()) {
+                        insertedToIgnore += remainder.getCount();
+
+                        remainder = null;
+                    } else if (storage.getAccessType() == AccessType.INSERT) {
+                        insertedToIgnore += size - (remainder != null ? remainder.getCount() : 0);
+                    }
                 }
             }
 
-            if (remainder == null || remainder.getCount() <= 0) {
+            if (remainder == null) {
                 if (storage instanceof ItemStorageExternal && !simulate) {
                     ((ItemStorageExternal) storage).detectChanges(this);
                     // the external storage will send the change, we don't need to anymore
-                    externalStorageInserted += size;
+                    insertedExternally += size;
                 }
 
                 break;
@@ -607,32 +614,22 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
                 if (size != remainder.getCount() && storage instanceof ItemStorageExternal && !simulate) {
                     ((ItemStorageExternal) storage).detectChanges(this);
                     // the external storage will send the change, we don't need to anymore
-                    externalStorageInserted += size - remainder.getCount();
+                    insertedExternally += size - remainder.getCount();
                 }
 
                 size = remainder.getCount();
             }
         }
 
-        // If the stack size of the remainder is negative, it means of the original size abs(remainder.getCount()) items have been voided
-        int inserted;
-
-        if (remainder == null) {
-            inserted = orginalSize;
-        } else if (remainder.getCount() < 0) {
-            inserted = orginalSize + remainder.getCount();
-            remainder = null;
-        } else {
-            inserted = orginalSize - remainder.getCount();
-        }
-
         if (!simulate) {
-            if (inserted - externalStorageInserted - insertOnlyInserted > 0) {
-                itemStorage.add(stack, inserted - externalStorageInserted - insertOnlyInserted, false);
+            int inserted = remainder == null ? originalSize : (originalSize - remainder.getCount());
+
+            if (inserted - insertedExternally - insertedToIgnore > 0) {
+                itemStorage.add(stack, inserted - insertedExternally - insertedToIgnore, false);
             }
 
-            if (inserted - insertOnlyInserted > 0) {
-                ItemStack checkSteps = ItemHandlerHelper.copyStackWithSize(stack, inserted - insertOnlyInserted);
+            if (inserted - insertedToIgnore > 0) {
+                ItemStack checkSteps = ItemHandlerHelper.copyStackWithSize(stack, inserted - insertedToIgnore);
 
                 for (ICraftingTask task : craftingTasks) {
                     for (ICraftingStep processable : task.getSteps()) {

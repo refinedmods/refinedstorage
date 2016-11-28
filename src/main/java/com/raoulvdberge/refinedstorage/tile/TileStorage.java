@@ -51,19 +51,17 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
                 return ItemHandlerHelper.copyStackWithSize(stack, size);
             }
 
-            ItemStack result = super.insertItem(stack, size, simulate);
-
-            if (voidExcess && result != null) {
-                // Simulate should not matter as the items are voided anyway
-                result.setCount(-result.getCount());
-            }
-
-            return result;
+            return super.insertItem(stack, size, simulate);
         }
 
         @Override
         public AccessType getAccessType() {
             return accessType;
+        }
+
+        @Override
+        public boolean isVoiding() {
+            return voidExcess;
         }
     }
 

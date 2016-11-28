@@ -56,6 +56,11 @@ public class ItemFluidStorageDisk extends ItemBase {
                 public int getPriority() {
                     return 0;
                 }
+
+                @Override
+                public boolean isVoiding() {
+                    return false;
+                }
             };
 
             for (Fluid fluid : FluidRegistry.getRegisteredFluids().values()) {

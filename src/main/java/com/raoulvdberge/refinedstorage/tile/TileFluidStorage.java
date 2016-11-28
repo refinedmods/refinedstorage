@@ -50,19 +50,17 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
                 return RSUtils.copyStackWithSize(stack, size);
             }
 
-            FluidStack result = super.insertFluid(stack, size, simulate);
-
-            if (voidExcess && result != null) {
-                // Simulate should not matter as the fluids are voided anyway
-                result.amount = -result.amount;
-            }
-
-            return result;
+            return super.insertFluid(stack, size, simulate);
         }
 
         @Override
         public AccessType getAccessType() {
             return accessType;
+        }
+
+        @Override
+        public boolean isVoiding() {
+            return voidExcess;
         }
     }
 

@@ -127,6 +127,11 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         }
 
         @Override
+        public boolean isVoiding() {
+            return false;
+        }
+
+        @Override
         public ItemStack insertItem(ItemStack stack, int size, boolean simulate) {
             if (!IFilterable.canTake(itemFilters, mode, getCompare(), stack)) {
                 return ItemHandlerHelper.copyStackWithSize(stack, size);
@@ -170,6 +175,11 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         @Override
         public int getPriority() {
             return 0;
+        }
+
+        @Override
+        public boolean isVoiding() {
+            return false;
         }
 
         @Override

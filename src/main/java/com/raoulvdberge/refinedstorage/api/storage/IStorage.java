@@ -24,4 +24,9 @@ public interface IStorage<T> {
     default AccessType getAccessType() {
         return AccessType.INSERT_EXTRACT;
     }
+
+    /**
+     * @return true if this storage voids incoming items or fluids
+     */
+    boolean isVoiding();
 }

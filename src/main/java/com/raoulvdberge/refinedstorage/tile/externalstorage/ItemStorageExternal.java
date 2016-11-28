@@ -76,4 +76,9 @@ public abstract class ItemStorageExternal implements IItemStorage {
 
         this.cache = newStacks;
     }
+
+    @Override
+    public boolean isVoiding() {
+        return false;
+    }
 }
