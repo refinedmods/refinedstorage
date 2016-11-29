@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.2.7
+- Updated German translation (LHS_Buster)
+
 ### 1.2.6
 - Processing patterns can now insert buckets (way2muchnoise)
 - Fixed crash with Exporters in fluid mode (raoulvdberge)
