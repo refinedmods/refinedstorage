@@ -2,6 +2,7 @@
 
 ### 1.2.7
 - Updated German translation (LHS_Buster)
+- Fixed not being able to place disks in Disk Drives on servers (raoulvdberge)
 
 ### 1.2.6
 - Processing patterns can now insert buckets (way2muchnoise)

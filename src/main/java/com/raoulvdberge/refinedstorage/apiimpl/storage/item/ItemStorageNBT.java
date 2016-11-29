@@ -242,6 +242,7 @@ public abstract class ItemStorageNBT implements IItemStorage {
         NBTTagCompound otherTag = new NBTTagCompound();
 
         otherTag.setInteger(NBT_STORED, getStoredFromNBT(tag));
+        otherTag.setTag(NBT_ITEMS, new NBTTagList());
 
         return otherTag;
     }
