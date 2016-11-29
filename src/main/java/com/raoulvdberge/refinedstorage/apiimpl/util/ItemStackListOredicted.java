@@ -107,6 +107,7 @@ public class ItemStackListOredicted implements IItemStackList {
 
     @Override
     public void clear() {
+        stacks.clear();
         underlyingList.clear();
     }
 
