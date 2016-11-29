@@ -175,10 +175,13 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
             if (node instanceof INetworkNeighborhoodAware) {
                 ((INetworkNeighborhoodAware) node).walkNeighborhood(operator);
             } else {
-
-                INetworkNode nodeOnSide = NETWORK_NODE_CAPABILITY.cast(tile.getCapability(NETWORK_NODE_CAPABILITY, side));
-                if (nodeOnSide == node) {
-                    operator.apply(world, pos.offset(side), side.getOpposite());
+                for (EnumFacing checkSide : EnumFacing.values()) {
+                    if (checkSide != side) { // Avoid going backward
+                        INetworkNode nodeOnSide = NETWORK_NODE_CAPABILITY.cast(tile.getCapability(NETWORK_NODE_CAPABILITY, checkSide));
+                        if (nodeOnSide == node) {
+                            operator.apply(world, pos.offset(checkSide), checkSide.getOpposite());
+                        }
+                    }
                 }
             }
         }

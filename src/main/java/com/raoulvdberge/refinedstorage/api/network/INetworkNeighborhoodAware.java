@@ -14,5 +14,4 @@ public interface INetworkNeighborhoodAware {
     interface Operator {
         void apply(World world, BlockPos pos, EnumFacing side);
     }
-
 }
