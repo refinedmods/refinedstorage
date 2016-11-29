@@ -64,7 +64,7 @@ public class ItemStorageDrawer extends ItemStorageExternal {
     }
 
     public static boolean isVoidable(IDrawer drawer) {
-        return drawer instanceof IVoidable & ((IVoidable) drawer).isVoid();
+        return drawer instanceof IVoidable && ((IVoidable) drawer).isVoid();
     }
 
     public static ItemStack insertItem(TileExternalStorage externalStorage, IDrawer drawer, ItemStack stack, int size, boolean simulate) {
