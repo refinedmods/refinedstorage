@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.2.8
+- Fixed autocrafting bugs (way2muchnoise)
+
 ### 1.2.7
 - Updated German translation (LHS_Buster)
 - Fixed not being able to place disks in Disk Drives on servers (raoulvdberge)
