@@ -11,6 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fluids.FluidStack;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -79,7 +80,7 @@ public abstract class FluidStorageNBT implements IFluidStorage {
     }
 
     @Override
-    public synchronized FluidStack insertFluid(FluidStack stack, int size, boolean simulate) {
+    public synchronized FluidStack insertFluid(@Nonnull FluidStack stack, int size, boolean simulate) {
         for (FluidStack otherStack : stacks) {
             if (otherStack.isFluidEqual(stack)) {
                 if (getCapacity() != -1 && getStored() + size > getCapacity()) {
@@ -150,7 +151,7 @@ public abstract class FluidStorageNBT implements IFluidStorage {
     }
 
     @Override
-    public synchronized FluidStack extractFluid(FluidStack stack, int size, int flags, boolean simulate) {
+    public synchronized FluidStack extractFluid(@Nonnull FluidStack stack, int size, int flags, boolean simulate) {
         for (FluidStack otherStack : stacks) {
             if (API.instance().getComparer().isEqual(otherStack, stack, flags)) {
                 if (size > otherStack.amount) {

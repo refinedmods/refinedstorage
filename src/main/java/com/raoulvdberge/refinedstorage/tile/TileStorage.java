@@ -20,6 +20,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraftforge.items.ItemHandlerHelper;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class TileStorage extends TileNode implements IItemStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IExcessVoidable, IAccessType {
@@ -46,8 +47,7 @@ public class TileStorage extends TileNode implements IItemStorageProvider, IStor
         }
 
         @Override
-        public ItemStack insertItem(ItemStack stack, int size, boolean simulate) {
-            // @todo: this doesn't work with the item voiding system!
+        public ItemStack insertItem(@Nonnull ItemStack stack, int size, boolean simulate) {
             if (!IFilterable.canTake(filters, mode, compare, stack)) {
                 return ItemHandlerHelper.copyStackWithSize(stack, size);
             }

@@ -17,6 +17,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class TileInterface extends TileNode implements IComparable {
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
@@ -29,7 +30,7 @@ public class TileInterface extends TileNode implements IComparable {
     private ItemHandlerBasic exportItems = new ItemHandlerBasic(9, this) {
         @Override
         @Nonnull
-        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+        public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
             return stack;
         }
     };
@@ -190,7 +191,7 @@ public class TileInterface extends TileNode implements IComparable {
     }
 
     @Override
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return facing == EnumFacing.DOWN ? (T) exportItems : (T) importItems;
         }
@@ -199,7 +200,7 @@ public class TileInterface extends TileNode implements IComparable {
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
         return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
     }
 }

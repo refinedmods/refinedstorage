@@ -17,6 +17,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 
+import javax.annotation.Nullable;
+
 public class TileReader extends TileNode implements IReader {
     private static final String NBT_CHANNEL = "Channel";
 
@@ -89,7 +91,7 @@ public class TileReader extends TileNode implements IReader {
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
         if (super.hasCapability(capability, facing)) {
             return true;
         }
@@ -114,7 +116,7 @@ public class TileReader extends TileNode implements IReader {
     }
 
     @Override
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         T foundCapability = super.getCapability(capability, facing);
 
         if (foundCapability == null) {

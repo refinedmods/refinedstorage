@@ -30,6 +30,8 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFluidStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IType, IExcessVoidable, IAccessType {
@@ -55,7 +57,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
         }
 
         @Override
-        public ItemStack insertItem(ItemStack stack, int size, boolean simulate) {
+        public ItemStack insertItem(@Nonnull ItemStack stack, int size, boolean simulate) {
             if (!IFilterable.canTake(itemFilters, mode, getCompare(), stack)) {
                 return ItemHandlerHelper.copyStackWithSize(stack, size);
             }
@@ -571,7 +573,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     }
 
     @Override
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return (T) disks;
         }
@@ -580,7 +582,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
         return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
     }
 }

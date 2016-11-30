@@ -10,6 +10,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.ItemHandlerHelper;
 
+import javax.annotation.Nonnull;
+
 public class ItemStorageDrawer extends ItemStorageExternal {
     private TileExternalStorage externalStorage;
     private IDrawer drawer;
@@ -30,12 +32,12 @@ public class ItemStorageDrawer extends ItemStorageExternal {
     }
 
     @Override
-    public ItemStack insertItem(ItemStack stack, int size, boolean simulate) {
+    public ItemStack insertItem(@Nonnull ItemStack stack, int size, boolean simulate) {
         return insertItem(externalStorage, drawer, stack, size, simulate);
     }
 
     @Override
-    public ItemStack extractItem(ItemStack stack, int size, int flags, boolean simulate) {
+    public ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
         return extractItem(drawer, stack, size, flags, simulate);
     }
 
@@ -62,7 +64,7 @@ public class ItemStorageDrawer extends ItemStorageExternal {
         return RSUtils.emptyNonNullList();
     }
 
-    public static ItemStack insertItem(TileExternalStorage externalStorage, IDrawer drawer, ItemStack stack, int size, boolean simulate) {
+    public static ItemStack insertItem(TileExternalStorage externalStorage, IDrawer drawer, @Nonnull ItemStack stack, int size, boolean simulate) {
         if (IFilterable.canTake(externalStorage.getItemFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack) && drawer.canItemBeStored(stack)) {
             int stored = drawer.getStoredItemCount();
             int remainingSpace = drawer.getMaxCapacity(stack) - stored;
@@ -93,7 +95,7 @@ public class ItemStorageDrawer extends ItemStorageExternal {
         return ItemHandlerHelper.copyStackWithSize(stack, size);
     }
 
-    public static ItemStack extractItem(IDrawer drawer, ItemStack stack, int size, int flags, boolean simulate) {
+    public static ItemStack extractItem(IDrawer drawer, @Nonnull ItemStack stack, int size, int flags, boolean simulate) {
         if (API.instance().getComparer().isEqual(stack, drawer.getStoredItemPrototype(), flags) && drawer.canItemBeExtracted(stack)) {
             if (size > drawer.getStoredItemCount()) {
                 size = drawer.getStoredItemCount();

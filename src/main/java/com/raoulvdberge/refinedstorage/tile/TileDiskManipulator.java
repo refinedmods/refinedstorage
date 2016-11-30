@@ -32,6 +32,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 public class TileDiskManipulator extends TileNode implements IComparable, IFilterable, IType {
@@ -132,7 +133,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         }
 
         @Override
-        public ItemStack insertItem(ItemStack stack, int size, boolean simulate) {
+        public ItemStack insertItem(@Nonnull ItemStack stack, int size, boolean simulate) {
             if (!IFilterable.canTake(itemFilters, mode, getCompare(), stack)) {
                 return ItemHandlerHelper.copyStackWithSize(stack, size);
             }
@@ -141,7 +142,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         }
 
         @Override
-        public ItemStack extractItem(ItemStack stack, int size, int flags, boolean simulate) {
+        public ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
             if (!IFilterable.canTake(itemFilters, mode, getCompare(), stack)) {
                 return null;
             }
@@ -599,7 +600,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
     }
 
     @Override
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return facing == EnumFacing.DOWN ? (T) outputDisks : (T) inputDisks;
         }
@@ -608,7 +609,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
         return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
     }
 

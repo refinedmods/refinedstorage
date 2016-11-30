@@ -97,7 +97,7 @@ public interface IFilterable {
 
     static boolean isEmpty(IItemHandler filter) {
         for (int i = 0; i < filter.getSlots(); i++) {
-            if (filter.getStackInSlot(i) != null) {
+            if (!filter.getStackInSlot(i).isEmpty()) {
                 return false;
             }
         }

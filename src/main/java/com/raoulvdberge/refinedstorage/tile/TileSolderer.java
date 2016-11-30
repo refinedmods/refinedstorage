@@ -20,6 +20,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class TileSolderer extends TileNode {
     public static final TileDataParameter<Integer> DURATION = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileSolderer>() {
@@ -49,7 +50,7 @@ public class TileSolderer extends TileNode {
     private ItemHandlerBasic items = new ItemHandlerBasic(3, this) {
         @Override
         @Nonnull
-        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+        public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
             for (ISoldererRecipe recipe : API.instance().getSoldererRegistry().getRecipes()) {
                 if (API.instance().getComparer().isEqualNoQuantity(recipe.getRow(slot), stack) || API.instance().getComparer().isEqualOredict(recipe.getRow(slot), stack)) {
                     return super.insertItem(slot, stack, simulate);
@@ -62,7 +63,7 @@ public class TileSolderer extends TileNode {
     private ItemHandlerBasic result = new ItemHandlerBasic(1, this) {
         @Override
         @Nonnull
-        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+        public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
             return stack;
         }
     };
@@ -197,7 +198,7 @@ public class TileSolderer extends TileNode {
     }
 
     @Override
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return facing == EnumFacing.DOWN ? (T) result : (T) items;
         }
@@ -206,7 +207,7 @@ public class TileSolderer extends TileNode {
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
         return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
     }
 }

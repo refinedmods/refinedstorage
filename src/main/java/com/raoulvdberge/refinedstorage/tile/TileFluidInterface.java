@@ -21,6 +21,8 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import org.apache.commons.lang3.tuple.Pair;
 
+import javax.annotation.Nullable;
+
 public class TileFluidInterface extends TileNode implements IComparable {
     public static final int TANK_CAPACITY = 16000;
 
@@ -231,12 +233,12 @@ public class TileFluidInterface extends TileNode implements IComparable {
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
         return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
     }
 
     @Override
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
             return facing == EnumFacing.DOWN ? (T) tankOut : (T) tankIn;
         }

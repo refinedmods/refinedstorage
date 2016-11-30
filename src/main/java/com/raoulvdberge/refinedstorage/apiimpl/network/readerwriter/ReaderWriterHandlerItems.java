@@ -13,6 +13,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class ReaderWriterHandlerItems implements IReaderWriterHandler {
@@ -87,18 +88,21 @@ public class ReaderWriterHandlerItems implements IReaderWriterHandler {
         }
 
         @Override
+        @Nonnull
         public ItemStack getStackInSlot(int slot) {
             return parent.getStackInSlot(slot);
         }
 
         @Override
-        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+        @Nonnull
+        public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
             return canInsert ? parent.insertItem(slot, stack, simulate) : stack;
         }
 
         @Override
+        @Nonnull
         public ItemStack extractItem(int slot, int amount, boolean simulate) {
-            return canExtract ? parent.extractItem(slot, amount, simulate) : null;
+            return canExtract ? parent.extractItem(slot, amount, simulate) : ItemStack.EMPTY;
         }
     }
 }

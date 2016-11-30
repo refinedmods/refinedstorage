@@ -12,6 +12,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 
+import javax.annotation.Nullable;
+
 public class TileWriter extends TileNode implements IWriter {
     private static final String NBT_CHANNEL = "Channel";
 
@@ -111,7 +113,7 @@ public class TileWriter extends TileNode implements IWriter {
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
         if (super.hasCapability(capability, facing)) {
             return true;
         }
@@ -136,7 +138,7 @@ public class TileWriter extends TileNode implements IWriter {
     }
 
     @Override
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         T foundCapability = super.getCapability(capability, facing);
 
         if (foundCapability == null) {
