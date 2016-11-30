@@ -137,9 +137,4 @@ public class API implements IRSAPI {
     public int getFluidStackHashCode(FluidStack stack) {
         return stack.getFluid().hashCode() * (stack.tag != null ? stack.tag.hashCode() : 1);
     }
-
-    @Override
-    public Set<BiPredicate<TileEntity, EnumFacing>> getConnectableConditions() {
-        return connectableConditions;
-    }
 }

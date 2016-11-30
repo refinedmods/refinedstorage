@@ -11,13 +11,9 @@ import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRegistry;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
-import java.util.Set;
-import java.util.function.BiPredicate;
 
 /**
  * Represents a Refined Storage API implementation.
@@ -92,9 +88,4 @@ public interface IRSAPI {
      * @return a hashcode for the given stack
      */
     int getFluidStackHashCode(FluidStack stack);
-
-    /**
-     * @return a set with the predicates to check if a block is connectable
-     */
-    Set<BiPredicate<TileEntity, EnumFacing>> getConnectableConditions();
 }

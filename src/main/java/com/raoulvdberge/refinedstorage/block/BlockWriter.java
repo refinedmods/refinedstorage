@@ -61,6 +61,7 @@ public class BlockWriter extends BlockCable {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean canProvidePower(IBlockState state) {
         return true;
     }

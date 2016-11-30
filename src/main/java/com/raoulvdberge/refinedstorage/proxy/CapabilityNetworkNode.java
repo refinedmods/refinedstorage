@@ -24,7 +24,7 @@ public class CapabilityNetworkNode {
             }
 
             public void readNBT(Capability<INetworkNode> capability, INetworkNode instance, EnumFacing side, NBTBase base) {
-                // no-op
+                // NO OP
             }
         }, () -> new INetworkNode() {
             private INetworkMaster network;

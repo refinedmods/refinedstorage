@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
-import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.TileCable;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
@@ -93,7 +93,7 @@ public class BlockCable extends BlockNode {
         TileEntity otherTile = world.getTileEntity(pos.offset(direction));
         EnumFacing otherTileSide = direction.getOpposite();
 
-        return API.instance().getConnectableConditions().stream().anyMatch(p -> p.test(otherTile, otherTileSide));
+        return otherTile.hasCapability(CapabilityNetworkNode.NETWORK_NODE_CAPABILITY, otherTileSide);
     }
 
     private boolean isInAABB(AxisAlignedBB aabb, float hitX, float hitY, float hitZ) {
@@ -158,6 +158,7 @@ public class BlockCable extends BlockNode {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entityIn) {
         for (AxisAlignedBB aabb : getCollisionBoxes(this.getActualState(state, world, pos))) {
             addCollisionBoxToList(pos, entityBox, collidingBoxes, aabb);
@@ -165,6 +166,7 @@ public class BlockCable extends BlockNode {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public RayTraceResult collisionRayTrace(IBlockState state, World world, BlockPos pos, Vec3d start, Vec3d end) {
         RSUtils.AdvancedRayTraceResult result = RSUtils.collisionRayTrace(pos, start, end, getCollisionBoxes(this.getActualState(state, world, pos)));
 
@@ -172,11 +174,13 @@ public class BlockCable extends BlockNode {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean isFullCube(IBlockState state) {
         return false;
     }
