@@ -52,22 +52,18 @@ public final class RSUtils {
         QUANTITY_FORMATTER.setRoundingMode(RoundingMode.DOWN);
     }
 
-    public static void writeItemStack(ByteBuf buf, ItemStack stack, INetworkMaster network) {
-        writeItemStack(buf, stack, true, network);
-    }
-
     public static void writeItemStack(ByteBuf buf, ItemStack stack) {
-        writeItemStack(buf, stack, false, null);
+        writeItemStack(buf, stack, null);
     }
 
-    private static void writeItemStack(ByteBuf buf, ItemStack stack, boolean toClient, @Nullable INetworkMaster network) {
+    public static void writeItemStack(ByteBuf buf, ItemStack stack, @Nullable INetworkMaster network) {
         buf.writeInt(Item.getIdFromItem(stack.getItem()));
         buf.writeInt(stack.stackSize);
         buf.writeInt(stack.getItemDamage());
-        if (toClient) {
+        if (network != null) {
             ByteBufUtils.writeTag(buf, stack.getItem().getNBTShareTag(stack));
             buf.writeInt(API.instance().getItemStackHashCode(stack));
-            buf.writeBoolean(network != null && network.hasPattern(stack));
+            buf.writeBoolean(network.hasPattern(stack));
         } else {
             ByteBufUtils.writeTag(buf, stack.getTagCompound());
         }
