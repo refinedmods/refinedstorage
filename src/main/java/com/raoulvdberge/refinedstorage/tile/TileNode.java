@@ -145,7 +145,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
     public ItemStack getItemStack() {
         IBlockState state = getWorld().getBlockState(pos);
         Item item = Item.getItemFromBlock(state.getBlock());
-        return item != null ? new ItemStack(item, 1, state.getBlock().getMetaFromState(state)) : null;
+        return new ItemStack(item, 1, state.getBlock().getMetaFromState(state));
     }
 
     @Override
