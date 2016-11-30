@@ -93,7 +93,7 @@ public class BlockCable extends BlockNode {
         TileEntity otherTile = world.getTileEntity(pos.offset(direction));
         EnumFacing otherTileSide = direction.getOpposite();
 
-        return otherTile.hasCapability(CapabilityNetworkNode.NETWORK_NODE_CAPABILITY, otherTileSide);
+        return otherTile != null && otherTile.hasCapability(CapabilityNetworkNode.NETWORK_NODE_CAPABILITY, otherTileSide);
     }
 
     private boolean isInAABB(AxisAlignedBB aabb, float hitX, float hitY, float hitZ) {

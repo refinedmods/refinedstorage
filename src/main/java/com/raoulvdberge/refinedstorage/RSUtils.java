@@ -80,7 +80,7 @@ public final class RSUtils {
         buf.writeInt(Item.getIdFromItem(stack.getItem()));
         buf.writeInt(stack.getCount());
         buf.writeInt(stack.getItemDamage());
-        ByteBufUtils.writeTag(buf, stack.getItem().getNBTShareTag(stack));
+        ByteBufUtils.writeTag(buf, stack.getTagCompound());
         buf.writeInt(API.instance().getItemStackHashCode(stack));
         buf.writeBoolean(network.hasPattern(stack));
         buf.writeBoolean(displayCraftText);
