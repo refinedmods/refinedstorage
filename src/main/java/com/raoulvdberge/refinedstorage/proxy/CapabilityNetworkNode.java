@@ -11,7 +11,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
 public class CapabilityNetworkNode {
     @CapabilityInject(INetworkNode.class)
@@ -34,10 +34,10 @@ public class CapabilityNetworkNode {
                 return 0;
             }
 
-            @Nullable
+            @Nonnull
             @Override
             public ItemStack getItemStack() {
-                return null;
+                return ItemStack.EMPTY;
             }
 
             @Override

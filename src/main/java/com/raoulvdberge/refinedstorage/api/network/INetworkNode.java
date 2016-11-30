@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.api.network;
 
 import net.minecraft.item.ItemStack;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * Represents a node in the network.
@@ -16,7 +16,7 @@ public interface INetworkNode {
     /**
      * @return the item of the node
      */
-    @Nullable
+    @Nonnull
     ItemStack getItemStack();
 
     /**

@@ -17,6 +17,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public abstract class TileNode extends TileBase implements INetworkNode, IRedstoneConfigurable, IWrenchable, INetworkNeighborhoodAware {
@@ -140,7 +141,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
         return network != null;
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public ItemStack getItemStack() {
         IBlockState state = getWorld().getBlockState(pos);

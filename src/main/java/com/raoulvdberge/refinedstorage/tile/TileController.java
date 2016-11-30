@@ -109,7 +109,7 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
             for (INetworkNode node : tile.nodeGraph.all()) {
                 if (node.canUpdate()) {
                     ItemStack itemStack = node.getItemStack();
-                    if (itemStack == null) {
+                    if (itemStack.isEmpty()) {
                         continue;
                     }
 
@@ -921,7 +921,7 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
         return usage;
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public ItemStack getItemStack() {
         IBlockState state = getWorld().getBlockState(pos);
