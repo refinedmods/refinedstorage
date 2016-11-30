@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.network;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.ClientStackItem;
 import io.netty.buffer.ByteBuf;
@@ -67,7 +68,7 @@ public class MessageGridItemUpdate implements IMessage, IMessageHandler<MessageG
             if (item.doesDisplayCraftText()) {
                 // This is an output from a pattern being sent. Only add it if it hasn't been added before.
                 for (ClientStackItem otherItem : GuiGrid.ITEMS.get(item.getStack().getItem())) {
-                    if (item.getHash() == otherItem.getHash()) {
+                    if (API.instance().getComparer().isEqualNoQuantity(item.getStack(), otherItem.getStack())) {
                         canAdd = false;
 
                         break;
