@@ -15,7 +15,7 @@ public abstract class ItemStorageExternal implements IItemStorage {
     public abstract int getCapacity();
 
     public void detectChanges(INetworkMaster network) {
-        // if we are insert-only, we don't care about sending changes
+        // If we are insert only, we don't care about sending changes
         if (getAccessType() == AccessType.INSERT) {
             return;
         }

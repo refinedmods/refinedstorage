@@ -86,6 +86,10 @@ public class FluidStorageExternal implements IFluidStorage {
 
     @Override
     public int getCacheDelta(int storedPreInsertion, int size, @Nullable FluidStack remainder) {
+        if (getAccessType() == AccessType.INSERT) {
+            return 0;
+        }
+        
         return remainder == null ? size : (size - remainder.amount);
     }
 
