@@ -32,6 +32,7 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import org.apache.commons.lang3.tuple.Pair;
 
+import javax.annotation.Nullable;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -51,13 +52,31 @@ public final class RSUtils {
         QUANTITY_FORMATTER.setRoundingMode(RoundingMode.DOWN);
     }
 
-    public static void writeItemStack(ByteBuf buf, INetworkMaster network, ItemStack stack) {
+    public static void writeItemStack(ByteBuf buf, ItemStack stack, INetworkMaster network) {
+        writeItemStack(buf, stack, true, network);
+    }
+
+    public static void writeItemStack(ByteBuf buf, ItemStack stack) {
+        writeItemStack(buf, stack, false, null);
+    }
+
+    private static void writeItemStack(ByteBuf buf, ItemStack stack, boolean toClient, @Nullable INetworkMaster network) {
         buf.writeInt(Item.getIdFromItem(stack.getItem()));
         buf.writeInt(stack.stackSize);
         buf.writeInt(stack.getItemDamage());
-        ByteBufUtils.writeTag(buf, stack.getItem().getNBTShareTag(stack));
-        buf.writeInt(API.instance().getItemStackHashCode(stack));
-        buf.writeBoolean(network.hasPattern(stack));
+        if (toClient) {
+            ByteBufUtils.writeTag(buf, stack.getItem().getNBTShareTag(stack));
+            buf.writeInt(API.instance().getItemStackHashCode(stack));
+            buf.writeBoolean(network != null && network.hasPattern(stack));
+        } else {
+            ByteBufUtils.writeTag(buf, stack.getTagCompound());
+        }
+    }
+
+    public static ItemStack readItemStack(ByteBuf buf) {
+        ItemStack stack = new ItemStack(Item.getItemById(buf.readInt()), buf.readInt(), buf.readInt());
+        stack.setTagCompound(ByteBufUtils.readTag(buf));
+        return stack;
     }
 
     public static void writeFluidStack(ByteBuf buf, FluidStack stack) {
