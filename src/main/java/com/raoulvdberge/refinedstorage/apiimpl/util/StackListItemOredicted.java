@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.util;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.api.util.IItemStackList;
+import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -13,14 +13,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class ItemStackListOredicted implements IItemStackList {
-    private ItemStackList underlyingList;
+public class StackListItemOredicted implements IStackList<ItemStack> {
+    private StackListItem underlyingList;
     private ArrayListMultimap<Integer, ItemStack> stacks = ArrayListMultimap.create();
 
-    private ItemStackListOredicted() {
+    private StackListItemOredicted() {
     }
 
-    public ItemStackListOredicted(ItemStackList list) {
+    public StackListItemOredicted(StackListItem list) {
         this.underlyingList = list;
         initOreDict();
     }
@@ -69,7 +69,7 @@ public class ItemStackListOredicted implements IItemStackList {
 
     @Override
     public void undo() {
-        underlyingList.getRemoveTracker().forEach(this::add);
+        underlyingList.getRemoveTracker().forEach(s -> add(s, s.getCount()));
         underlyingList.getRemoveTracker().clear();
     }
 
@@ -133,6 +133,11 @@ public class ItemStackListOredicted implements IItemStackList {
         return underlyingList.isEmpty();
     }
 
+    @Override
+    public int getSizeFromStack(ItemStack stack) {
+        return underlyingList.getSizeFromStack(stack);
+    }
+
     @Nonnull
     @Override
     public Collection<ItemStack> getStacks() {
@@ -141,18 +146,17 @@ public class ItemStackListOredicted implements IItemStackList {
 
     @Nonnull
     @Override
-    public IItemStackList copy() {
-        ItemStackListOredicted newList = new ItemStackListOredicted();
-        newList.underlyingList = (ItemStackList) this.underlyingList.copy();
+    public IStackList<ItemStack> copy() {
+        StackListItemOredicted newList = new StackListItemOredicted();
+        newList.underlyingList = (StackListItem) this.underlyingList.copy();
         for (Map.Entry<Integer, ItemStack> entry : this.stacks.entries()) {
             newList.stacks.put(entry.getKey(), entry.getValue());
         }
         return newList;
     }
 
-    @Nonnull
     @Override
-    public IItemStackList getOredicted() {
+    public IStackList<ItemStack> getOredicted() {
         return this;
     }
 }

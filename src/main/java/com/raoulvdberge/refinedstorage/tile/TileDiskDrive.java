@@ -5,13 +5,11 @@ import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
-import com.raoulvdberge.refinedstorage.api.storage.fluid.IFluidStorage;
-import com.raoulvdberge.refinedstorage.api.storage.fluid.IFluidStorageProvider;
-import com.raoulvdberge.refinedstorage.api.storage.item.IItemStorage;
-import com.raoulvdberge.refinedstorage.api.storage.item.IItemStorageProvider;
+import com.raoulvdberge.refinedstorage.api.storage.IStorage;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.item.ItemStorageNBT;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageFluidNBT;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageItemNBT;
 import com.raoulvdberge.refinedstorage.block.EnumFluidStorageType;
 import com.raoulvdberge.refinedstorage.block.EnumItemStorageType;
 import com.raoulvdberge.refinedstorage.inventory.IItemValidator;
@@ -34,7 +32,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFluidStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IType, IExcessVoidable, IAccessType {
+public class TileDiskDrive extends TileNode implements IStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IType, IExcessVoidable, IAccessType {
     public static final TileDataParameter<Integer> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
@@ -42,7 +40,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     public static final TileDataParameter<Boolean> VOID_EXCESS = IExcessVoidable.createParameter();
     public static final TileDataParameter<AccessType> ACCESS_TYPE = IAccessType.createParameter();
 
-    public class ItemStorage extends ItemStorageNBT {
+    public class ItemStorage extends StorageItemNBT {
         private int lastState;
 
         public ItemStorage(ItemStack disk) {
@@ -57,12 +55,12 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
         }
 
         @Override
-        public ItemStack insertItem(@Nonnull ItemStack stack, int size, boolean simulate) {
+        public ItemStack insert(@Nonnull ItemStack stack, int size, boolean simulate) {
             if (!IFilterable.canTake(itemFilters, mode, getCompare(), stack)) {
                 return ItemHandlerHelper.copyStackWithSize(stack, size);
             }
 
-            return super.insertItem(stack, size, simulate);
+            return super.insert(stack, size, simulate);
         }
 
         @Override
@@ -89,7 +87,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
         }
     }
 
-    public class FluidStorage extends FluidStorageNBT {
+    public class FluidStorage extends StorageFluidNBT {
         private int lastState;
 
         public FluidStorage(ItemStack disk) {
@@ -104,12 +102,12 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
         }
 
         @Override
-        public FluidStack insertFluid(FluidStack stack, int size, boolean simulate) {
+        public FluidStack insert(FluidStack stack, int size, boolean simulate) {
             if (!IFilterable.canTakeFluids(fluidFilters, mode, getCompare(), stack)) {
                 return RSUtils.copyStackWithSize(stack, size);
             }
 
-            return super.insertFluid(stack, size, simulate);
+            return super.insert(stack, size, simulate);
         }
 
         @Override
@@ -248,8 +246,8 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     }
 
     @Override
-    public void addItemStorages(List<IItemStorage> storages) {
-        for (IItemStorage storage : this.itemStorages) {
+    public void addItemStorages(List<IStorage<ItemStack>> storages) {
+        for (IStorage<ItemStack> storage : this.itemStorages) {
             if (storage != null) {
                 storages.add(storage);
             }
@@ -257,8 +255,8 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
     }
 
     @Override
-    public void addFluidStorages(List<IFluidStorage> storages) {
-        for (IFluidStorage storage : this.fluidStorages) {
+    public void addFluidStorages(List<IStorage<FluidStack>> storages) {
+        for (IStorage<FluidStack> storage : this.fluidStorages) {
             if (storage != null) {
                 storages.add(storage);
             }
@@ -359,7 +357,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
         return diskState;
     }
 
-    public static void writeDiskState(NBTTagCompound tag, int disks, boolean connected, ItemStorageNBT[] itemStorages, FluidStorageNBT[] fluidStorages) {
+    public static void writeDiskState(NBTTagCompound tag, int disks, boolean connected, StorageItemNBT[] itemStorages, StorageFluidNBT[] fluidStorages) {
         for (int i = 0; i < disks; ++i) {
             int state = DISK_STATE_NONE;
 
@@ -506,7 +504,7 @@ public class TileDiskDrive extends TileNode implements IItemStorageProvider, IFl
             ItemStack disk = disks.getStackInSlot(i);
 
             if (!disk.isEmpty()) {
-                stored += disk.getItem() == RSItems.STORAGE_DISK ? ItemStorageNBT.getStoredFromNBT(disk.getTagCompound()) : FluidStorageNBT.getStoredFromNBT(disk.getTagCompound());
+                stored += disk.getItem() == RSItems.STORAGE_DISK ? StorageItemNBT.getStoredFromNBT(disk.getTagCompound()) : StorageFluidNBT.getStoredFromNBT(disk.getTagCompound());
             }
         }
 

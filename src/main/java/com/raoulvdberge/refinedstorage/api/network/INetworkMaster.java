@@ -6,8 +6,7 @@ import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
-import com.raoulvdberge.refinedstorage.api.storage.fluid.IFluidStorageCache;
-import com.raoulvdberge.refinedstorage.api.storage.item.IItemStorageCache;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -60,14 +59,14 @@ public interface INetworkMaster {
     INetworkItemHandler getNetworkItemHandler();
 
     /**
-     * @return the {@link IItemStorageCache} of this network
+     * @return the {@link IStorageCache<ItemStack>} of this network
      */
-    IItemStorageCache getItemStorageCache();
+    IStorageCache<ItemStack> getItemStorageCache();
 
     /**
-     * @return the {@link IFluidStorageCache} of this network
+     * @return the {@link IStorageCache<FluidStack>} of this network
      */
-    IFluidStorageCache getFluidStorageCache();
+    IStorageCache<FluidStack> getFluidStorageCache();
 
     /**
      * @return the crafting tasks in this network, do NOT modify this list

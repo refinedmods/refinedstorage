@@ -41,7 +41,7 @@ public class ItemStorageItemHandler extends ItemStorageExternal {
     }
 
     @Override
-    public ItemStack insertItem(@Nonnull ItemStack stack, int size, boolean simulate) {
+    public ItemStack insert(@Nonnull ItemStack stack, int size, boolean simulate) {
         if (IFilterable.canTake(externalStorage.getItemFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack)) {
             return ItemHandlerHelper.insertItem(handler, ItemHandlerHelper.copyStackWithSize(stack, size), simulate);
         }
@@ -50,7 +50,7 @@ public class ItemStorageItemHandler extends ItemStorageExternal {
     }
 
     @Override
-    public ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
+    public ItemStack extract(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
         int remaining = size;
 
         ItemStack received = null;

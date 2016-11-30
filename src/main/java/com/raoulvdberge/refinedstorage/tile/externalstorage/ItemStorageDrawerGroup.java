@@ -62,12 +62,12 @@ public class ItemStorageDrawerGroup extends ItemStorageExternal {
 
     @Nullable
     @Override
-    public ItemStack insertItem(@Nonnull ItemStack stack, int size, boolean simulate) {
+    public ItemStack insert(@Nonnull ItemStack stack, int size, boolean simulate) {
         ItemStack remainder = stack;
 
         for (int i = 0; i < drawers.getDrawerCount(); ++i) {
             if (drawers.isDrawerEnabled(i)) {
-                remainder = ItemStorageDrawer.insertItem(externalStorage, drawers.getDrawer(i), stack, size, simulate);
+                remainder = ItemStorageDrawer.insert(externalStorage, drawers.getDrawer(i), stack, size, simulate);
 
                 if (remainder == null || remainder.getCount() <= 0) {
                     break;
@@ -82,14 +82,14 @@ public class ItemStorageDrawerGroup extends ItemStorageExternal {
 
     @Nullable
     @Override
-    public ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
+    public ItemStack extract(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
         int toExtract = size;
 
         ItemStack result = null;
 
         for (int i = 0; i < drawers.getDrawerCount(); ++i) {
             if (drawers.isDrawerEnabled(i)) {
-                ItemStack extracted = ItemStorageDrawer.extractItem(drawers.getDrawer(i), stack, toExtract, flags, simulate);
+                ItemStack extracted = ItemStorageDrawer.extract(drawers.getDrawer(i), stack, toExtract, flags, simulate);
 
                 if (extracted != null) {
                     if (result == null) {

@@ -3,10 +3,9 @@ package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.api.util.IFluidStackList;
-import com.raoulvdberge.refinedstorage.api.util.IItemStackList;
+import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.apiimpl.util.ItemStackList;
+import com.raoulvdberge.refinedstorage.apiimpl.util.StackListItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -38,7 +37,7 @@ public class CraftingStepCraft extends CraftingStep {
     }
 
     @Override
-    public boolean canStartProcessing(IItemStackList items, IFluidStackList fluids) {
+    public boolean canStartProcessing(IStackList<ItemStack> items, IStackList<FluidStack> fluids) {
         int compare = CraftingTask.DEFAULT_COMPARE | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0);
         for (ItemStack stack : getToInsert()) {
             // This will be a tool, like a hammer
@@ -62,11 +61,11 @@ public class CraftingStepCraft extends CraftingStep {
 
     @Override
     public void execute(Deque<ItemStack> toInsertItems, Deque<FluidStack> toInsertFluids) {
-        IItemStackList actualInputs = API.instance().createItemStackList();
+        IStackList<ItemStack> actualInputs = API.instance().createItemStackList();
         int compare = CraftingTask.DEFAULT_COMPARE | (getPattern().isOredict() ? IComparer.COMPARE_OREDICT : 0);
         if (extractItems(actualInputs, compare, toInsertItems)) {
 
-            ItemStack[] took = ItemStackList.toCraftingGrid(actualInputs, toInsert, compare);
+            ItemStack[] took = StackListItem.toCraftingGrid(actualInputs, toInsert, compare);
 
             for (ItemStack byproduct : (pattern.isOredict() ? pattern.getByproducts(took) : pattern.getByproducts())) {
                 if (byproduct != null) {

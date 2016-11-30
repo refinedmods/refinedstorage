@@ -10,8 +10,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.api.util.IFluidStackList;
-import com.raoulvdberge.refinedstorage.api.util.IItemStackList;
+import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementError;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementInfo;
@@ -19,7 +18,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.Craf
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementText;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementFluidStack;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementItemStack;
-import com.raoulvdberge.refinedstorage.apiimpl.util.ItemStackList;
+import com.raoulvdberge.refinedstorage.apiimpl.util.StackListItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -44,14 +43,14 @@ public class CraftingTask implements ICraftingTask {
     private ICraftingPattern pattern;
     private int quantity;
     private List<ICraftingStep> steps = new ArrayList<>();
-    private IItemStackList toTake = API.instance().createItemStackList();
-    private IItemStackList toCraft = API.instance().createItemStackList();
-    private IItemStackList missing = API.instance().createItemStackList();
+    private IStackList<ItemStack> toTake = API.instance().createItemStackList();
+    private IStackList<ItemStack> toCraft = API.instance().createItemStackList();
+    private IStackList<ItemStack> missing = API.instance().createItemStackList();
     private Set<ICraftingPattern> usedPatterns = new HashSet<>();
     private boolean recurseFound = false;
     private Deque<ItemStack> toInsertItems = new ArrayDeque<>();
     private Deque<FluidStack> toInsertFluids = new ArrayDeque<>();
-    private IFluidStackList toTakeFluids = API.instance().createFluidStackList();
+    private IStackList<FluidStack> toTakeFluids = API.instance().createFluidStackList();
 
     public CraftingTask(INetworkMaster network, @Nullable ItemStack requested, ICraftingPattern pattern, int quantity) {
         this.network = network;
@@ -60,7 +59,7 @@ public class CraftingTask implements ICraftingTask {
         this.quantity = quantity;
     }
 
-    public CraftingTask(INetworkMaster network, @Nullable ItemStack requested, ICraftingPattern pattern, int quantity, List<ICraftingStep> steps, Deque<ItemStack> toInsertItems, IFluidStackList toTakeFluids, Deque<FluidStack> toInsertFluids) {
+    public CraftingTask(INetworkMaster network, @Nullable ItemStack requested, ICraftingPattern pattern, int quantity, List<ICraftingStep> steps, Deque<ItemStack> toInsertItems, IStackList<FluidStack> toTakeFluids, Deque<FluidStack> toInsertFluids) {
         this(network, requested, pattern, quantity);
         this.steps = steps;
         this.toInsertItems = toInsertItems;
@@ -71,11 +70,11 @@ public class CraftingTask implements ICraftingTask {
     @Override
     public void calculate() {
         // Copy here might be expensive but since it is only executed once it isn't a big impact
-        IItemStackList networkList = network.getItemStorageCache().getList().copy();
+        IStackList<ItemStack> networkList = network.getItemStorageCache().getList().copy();
         networkList.clean(); // Remove the zero stacks
         networkList = networkList.getOredicted();
-        IFluidStackList networkFluidList = network.getFluidStorageCache().getList().copy();
-        IItemStackList toInsert = API.instance().createItemStackList();
+        IStackList<FluidStack> networkFluidList = network.getFluidStorageCache().getList().copy();
+        IStackList<ItemStack> toInsert = API.instance().createItemStackList();
 
         ItemStack requested = this.requested != null ? this.requested : pattern.getOutputs().get(0);
         toCraft.add(ItemHandlerHelper.copyStackWithSize(requested, quantity));
@@ -90,7 +89,7 @@ public class CraftingTask implements ICraftingTask {
         usedPatterns.clear();
     }
 
-    private void calculate(IItemStackList networkList, IFluidStackList networkFluidList, ICraftingPattern pattern, IItemStackList toInsert) {
+    private void calculate(IStackList<ItemStack> networkList, IStackList<FluidStack> networkFluidList, ICraftingPattern pattern, IStackList<ItemStack> toInsert) {
         recurseFound |= !usedPatterns.add(pattern);
         if (recurseFound) {
             return;
@@ -98,8 +97,8 @@ public class CraftingTask implements ICraftingTask {
 
         int compare = DEFAULT_COMPARE | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0);
 
-        IItemStackList inputs = API.instance().createItemStackList();
-        IItemStackList actualInputs = API.instance().createItemStackList();
+        IStackList<ItemStack> inputs = API.instance().createItemStackList();
+        IStackList<ItemStack> actualInputs = API.instance().createItemStackList();
         List<ItemStack> usedStacks = new LinkedList<>();
 
         for (List<ItemStack> oreInputs : pattern.getOreInputs()) {
@@ -223,7 +222,7 @@ public class CraftingTask implements ICraftingTask {
         ItemStack[] took = null;
         if (missing.isEmpty()) {
             if (!pattern.isProcessing()) {
-                took = ItemStackList.toCraftingGrid(actualInputs, usedStacks, compare);
+                took = StackListItem.toCraftingGrid(actualInputs, usedStacks, compare);
             }
         }
 
@@ -238,7 +237,7 @@ public class CraftingTask implements ICraftingTask {
         usedPatterns.remove(pattern);
     }
 
-    private boolean doFluidCalculation(IItemStackList networkList, IFluidStackList networkFluidList, ItemStack input, IItemStackList toInsert) {
+    private boolean doFluidCalculation(IStackList<ItemStack> networkList, IStackList<FluidStack> networkFluidList, ItemStack input, IStackList<ItemStack> toInsert) {
         FluidStack fluidInItem = RSUtils.getFluidFromStack(input, true).getValue();
 
         if (fluidInItem != null && RSUtils.hasFluidBucket(fluidInItem)) {
@@ -273,7 +272,7 @@ public class CraftingTask implements ICraftingTask {
 
                 if (hasBucket || bucketPattern != null) {
                     toTakeFluids.add(fluidInItem.copy());
-                    networkFluidList.remove(fluidInItem, false);
+                    networkFluidList.remove(fluidInItem);
                 }
             }
 
@@ -306,8 +305,8 @@ public class CraftingTask implements ICraftingTask {
 
     @Override
     public boolean update(Map<ICraftingPatternContainer, Integer> usedContainers) {
-        IItemStackList oreDictPrepped = network.getItemStorageCache().getList().getOredicted();
-        IFluidStackList networkFluids = network.getFluidStorageCache().getList();
+        IStackList<ItemStack> oreDictPrepped = network.getItemStorageCache().getList().getOredicted();
+        IStackList<FluidStack> networkFluids = network.getFluidStorageCache().getList();
 
         if (!missing.isEmpty()) {
             for (ItemStack missing : this.missing.getStacks()) {
@@ -471,8 +470,8 @@ public class CraftingTask implements ICraftingTask {
             if (steps.stream().filter(s -> !s.getPattern().isProcessing()).count() > 0) {
                 elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_crafting", 16));
 
-                IItemStackList oreDictPrepped = network.getItemStorageCache().getList().getOredicted();
-                IFluidStackList networkFluids = network.getFluidStorageCache().getList();
+                IStackList<ItemStack> oreDictPrepped = network.getItemStorageCache().getList().getOredicted();
+                IStackList<FluidStack> networkFluids = network.getFluidStorageCache().getList();
 
                 for (ICraftingStep step : steps.stream().filter(s -> !s.getPattern().isProcessing()).collect(Collectors.toList())) {
                     for (int i = 0; i < step.getPattern().getOutputs().size(); ++i) {
@@ -538,7 +537,7 @@ public class CraftingTask implements ICraftingTask {
     }
 
     @Override
-    public IItemStackList getMissing() {
+    public IStackList<ItemStack> getMissing() {
         return missing;
     }
 

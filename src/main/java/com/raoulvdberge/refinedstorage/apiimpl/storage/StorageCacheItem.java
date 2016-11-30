@@ -1,11 +1,11 @@
-package com.raoulvdberge.refinedstorage.apiimpl.storage.item;
+package com.raoulvdberge.refinedstorage.apiimpl.storage;
 
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
-import com.raoulvdberge.refinedstorage.api.storage.item.IItemStorage;
-import com.raoulvdberge.refinedstorage.api.storage.item.IItemStorageCache;
-import com.raoulvdberge.refinedstorage.api.storage.item.IItemStorageProvider;
-import com.raoulvdberge.refinedstorage.api.util.IItemStackList;
+import com.raoulvdberge.refinedstorage.api.storage.IStorage;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
+import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
 
@@ -13,12 +13,12 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemStorageCache implements IItemStorageCache {
+public class StorageCacheItem implements IStorageCache<ItemStack> {
     private INetworkMaster network;
-    private List<IItemStorage> storages = new ArrayList<>();
-    private IItemStackList list = API.instance().createItemStackList();
+    private List<IStorage<ItemStack>> storages = new ArrayList<>();
+    private IStackList<ItemStack> list = API.instance().createItemStackList();
 
-    public ItemStorageCache(INetworkMaster network) {
+    public StorageCacheItem(INetworkMaster network) {
         this.network = network;
     }
 
@@ -27,12 +27,12 @@ public class ItemStorageCache implements IItemStorageCache {
         storages.clear();
 
         network.getNodeGraph().all().stream()
-            .filter(node -> node.canUpdate() && node instanceof IItemStorageProvider)
-            .forEach(node -> ((IItemStorageProvider) node).addItemStorages(storages));
+            .filter(node -> node.canUpdate() && node instanceof IStorageProvider)
+            .forEach(node -> ((IStorageProvider) node).addItemStorages(storages));
 
         list.clear();
 
-        for (IItemStorage storage : storages) {
+        for (IStorage<ItemStack> storage : storages) {
             if (storage.getAccessType() == AccessType.INSERT) {
                 continue;
             }
@@ -64,12 +64,12 @@ public class ItemStorageCache implements IItemStorageCache {
     }
 
     @Override
-    public IItemStackList getList() {
+    public IStackList<ItemStack> getList() {
         return list;
     }
 
     @Override
-    public List<IItemStorage> getStorages() {
+    public List<IStorage<ItemStack>> getStorages() {
         return storages;
     }
 }

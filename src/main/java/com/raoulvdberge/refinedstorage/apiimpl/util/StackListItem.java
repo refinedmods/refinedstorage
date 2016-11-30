@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.util;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.api.util.IItemStackList;
+import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -16,7 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ItemStackList implements IItemStackList {
+public class StackListItem implements IStackList<ItemStack> {
     private ArrayListMultimap<Item, ItemStack> stacks = ArrayListMultimap.create();
     private List<ItemStack> removeTracker = new LinkedList<>();
     protected boolean needsCleanup = false;
@@ -85,7 +85,7 @@ public class ItemStackList implements IItemStackList {
 
     @Override
     public void undo() {
-        removeTracker.forEach(this::add);
+        removeTracker.forEach(s -> add(s, s.getCount()));
         removeTracker.clear();
     }
 
@@ -140,6 +140,11 @@ public class ItemStackList implements IItemStackList {
         return stacks.isEmpty();
     }
 
+    @Override
+    public int getSizeFromStack(ItemStack stack) {
+        return stack.getCount();
+    }
+
     @Nonnull
     @Override
     public Collection<ItemStack> getStacks() {
@@ -151,8 +156,8 @@ public class ItemStackList implements IItemStackList {
 
     @Override
     @Nonnull
-    public IItemStackList copy() {
-        ItemStackList list = new ItemStackList();
+    public IStackList<ItemStack> copy() {
+        StackListItem list = new StackListItem();
 
         if (needsCleanup) {
             clean();
@@ -166,12 +171,12 @@ public class ItemStackList implements IItemStackList {
     }
 
     @Nonnull
-    @Override
-    public IItemStackList getOredicted() {
+    public StackListItemOredicted getOredicted() {
         if (needsCleanup) {
             clean();
         }
-        return new ItemStackListOredicted(this);
+
+        return new StackListItemOredicted(this);
     }
 
     @Override
@@ -179,7 +184,7 @@ public class ItemStackList implements IItemStackList {
         return stacks.toString();
     }
 
-    public static ItemStack[] toCraftingGrid(IItemStackList list, List<ItemStack> grid, int compare) {
+    public static ItemStack[] toCraftingGrid(IStackList<ItemStack> list, List<ItemStack> grid, int compare) {
         ItemStack[] took = new ItemStack[9];
         for (int i = 0; i < grid.size(); i++) {
             ItemStack input = grid.get(i);
@@ -193,7 +198,7 @@ public class ItemStackList implements IItemStackList {
                 ItemStack actualInput = list.get(input, compare);
                 ItemStack taken = ItemHandlerHelper.copyStackWithSize(actualInput, input.getCount());
                 took[i] = taken;
-                list.remove(taken);
+                list.remove(taken, taken.getCount());
             }
         }
         return took;

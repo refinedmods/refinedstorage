@@ -4,8 +4,7 @@ import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeGraph;
-import com.raoulvdberge.refinedstorage.api.storage.fluid.IFluidStorageProvider;
-import com.raoulvdberge.refinedstorage.api.storage.item.IItemStorageProvider;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
 import com.raoulvdberge.refinedstorage.item.ItemBlockController;
 import com.raoulvdberge.refinedstorage.tile.TileController;
 import com.raoulvdberge.refinedstorage.tile.TileNetworkTransmitter;
@@ -171,11 +170,8 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
             controller.rebuildPatterns();
         }
 
-        if (node instanceof IItemStorageProvider) {
+        if (node instanceof IStorageProvider) {
             controller.getItemStorageCache().invalidate();
-        }
-
-        if (node instanceof IFluidStorageProvider) {
             controller.getFluidStorageCache().invalidate();
         }
 

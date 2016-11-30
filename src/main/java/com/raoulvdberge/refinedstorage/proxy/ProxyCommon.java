@@ -15,8 +15,8 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriter
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerItems;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerRedstone;
 import com.raoulvdberge.refinedstorage.apiimpl.solderer.*;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.item.ItemStorageNBT;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageFluidNBT;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageItemNBT;
 import com.raoulvdberge.refinedstorage.block.*;
 import com.raoulvdberge.refinedstorage.gui.GuiHandler;
 import com.raoulvdberge.refinedstorage.integration.craftingtweaks.IntegrationCraftingTweaks;
@@ -548,7 +548,7 @@ public class ProxyCommon {
 
         // Storage Disks
         for (int type = 0; type <= 3; ++type) {
-            ItemStack disk = ItemStorageNBT.createStackWithNBT(new ItemStack(RSItems.STORAGE_DISK, 1, type));
+            ItemStack disk = StorageItemNBT.createStackWithNBT(new ItemStack(RSItems.STORAGE_DISK, 1, type));
 
             GameRegistry.addRecipe(new ShapedOreRecipe(disk,
                 "GRG",
@@ -568,7 +568,7 @@ public class ProxyCommon {
 
         // Fluid Storage Disks
         for (int type = 0; type <= 3; ++type) {
-            ItemStack disk = FluidStorageNBT.createStackWithNBT(new ItemStack(RSItems.FLUID_STORAGE_DISK, 1, type));
+            ItemStack disk = StorageFluidNBT.createStackWithNBT(new ItemStack(RSItems.FLUID_STORAGE_DISK, 1, type));
 
             GameRegistry.addRecipe(new ShapedOreRecipe(disk,
                 "GRG",

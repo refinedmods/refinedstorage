@@ -1,8 +1,7 @@
 package com.raoulvdberge.refinedstorage.api.autocrafting.task;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
-import com.raoulvdberge.refinedstorage.api.util.IFluidStackList;
-import com.raoulvdberge.refinedstorage.api.util.IItemStackList;
+import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
@@ -31,7 +30,7 @@ public interface ICraftingStep {
      * @param fluids a list to compare the needed {@link FluidStack} inputs against (eg. a bucket, machine insert)
      * @return true if processing can start
      */
-    boolean canStartProcessing(IItemStackList items, IFluidStackList fluids);
+    boolean canStartProcessing(IStackList<ItemStack> items, IStackList<FluidStack> fluids);
 
     /**
      * Check if the processing can start.

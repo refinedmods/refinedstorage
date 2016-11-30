@@ -3,8 +3,8 @@ package com.raoulvdberge.refinedstorage.tile;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.item.ItemStorageNBT;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageFluidNBT;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageItemNBT;
 import com.raoulvdberge.refinedstorage.block.EnumFluidStorageType;
 import com.raoulvdberge.refinedstorage.block.EnumItemStorageType;
 import com.raoulvdberge.refinedstorage.inventory.IItemValidator;
@@ -113,7 +113,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         }
     };
 
-    public class ItemStorage extends ItemStorageNBT {
+    public class ItemStorage extends StorageItemNBT {
         private int lastState;
 
         public ItemStorage(ItemStack disk) {
@@ -133,21 +133,21 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         }
 
         @Override
-        public ItemStack insertItem(@Nonnull ItemStack stack, int size, boolean simulate) {
+        public ItemStack insert(@Nonnull ItemStack stack, int size, boolean simulate) {
             if (!IFilterable.canTake(itemFilters, mode, getCompare(), stack)) {
                 return ItemHandlerHelper.copyStackWithSize(stack, size);
             }
 
-            return super.insertItem(stack, size, simulate);
+            return super.insert(stack, size, simulate);
         }
 
         @Override
-        public ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
+        public ItemStack extract(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
             if (!IFilterable.canTake(itemFilters, mode, getCompare(), stack)) {
                 return null;
             }
 
-            return super.extractItem(stack, size, flags, simulate);
+            return super.extract(stack, size, flags, simulate);
         }
 
         @Override
@@ -164,7 +164,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         }
     }
 
-    public class FluidStorage extends FluidStorageNBT {
+    public class FluidStorage extends StorageFluidNBT {
         private int lastState;
 
         public FluidStorage(ItemStack disk) {
@@ -184,21 +184,21 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         }
 
         @Override
-        public FluidStack insertFluid(FluidStack stack, int size, boolean simulate) {
+        public FluidStack insert(FluidStack stack, int size, boolean simulate) {
             if (!IFilterable.canTakeFluids(fluidFilters, mode, getCompare(), stack)) {
                 return RSUtils.copyStackWithSize(stack, size);
             }
 
-            return super.insertFluid(stack, size, simulate);
+            return super.insert(stack, size, simulate);
         }
 
         @Override
-        public FluidStack extractFluid(FluidStack stack, int size, int flags, boolean simulate) {
+        public FluidStack extract(FluidStack stack, int size, int flags, boolean simulate) {
             if (!IFilterable.canTakeFluids(fluidFilters, mode, getCompare(), stack)) {
                 return null;
             }
 
-            return super.extractFluid(stack, size, flags, simulate);
+            return super.extract(stack, size, flags, simulate);
         }
 
         @Override
@@ -290,7 +290,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
                 continue;
             }
 
-            ItemStack extracted = storage.extractItem(stack, upgrades.getItemInteractCount(), compare, false);
+            ItemStack extracted = storage.extract(stack, upgrades.getItemInteractCount(), compare, false);
             if (extracted == null) {
                 continue;
             }
@@ -301,7 +301,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             }
 
             // We need to check if the stack was inserted
-            storage.insertItem(((extracted == remainder) ? remainder.copy() : remainder), remainder.getCount(), false);
+            storage.insert(((extracted == remainder) ? remainder.copy() : remainder), remainder.getCount(), false);
         }
 
         if (storage.getStacks().size() == 0) {
@@ -350,7 +350,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             return;
         }
 
-        ItemStack remainder = storage.insertItem(extracted, extracted.getCount(), false);
+        ItemStack remainder = storage.insert(extracted, extracted.getCount(), false);
 
         if (remainder != null) {
             network.insertItem(remainder, remainder.getCount(), false);
@@ -374,7 +374,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             }
 
             if (stack != null) {
-                extracted = storage.extractFluid(stack, upgrades.getItemInteractCount(), compare, false);
+                extracted = storage.extract(stack, upgrades.getItemInteractCount(), compare, false);
             }
         } while (extracted == null && storage.getStacks().size() > i);
 
@@ -386,7 +386,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         FluidStack remainder = network.insertFluid(extracted, extracted.amount, false);
 
         if (remainder != null) {
-            storage.insertFluid(remainder, remainder.amount, false);
+            storage.insert(remainder, remainder.amount, false);
         }
     }
 
@@ -431,7 +431,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             return;
         }
 
-        FluidStack remainder = storage.insertFluid(extracted, extracted.amount, false);
+        FluidStack remainder = storage.insert(extracted, extracted.amount, false);
 
         if (remainder != null) {
             network.insertFluid(remainder, remainder.amount, false);

@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSItems;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.item.ItemStorageNBT;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageItemNBT;
 import com.raoulvdberge.refinedstorage.block.EnumItemStorageType;
 import com.raoulvdberge.refinedstorage.tile.TileStorage;
 import net.minecraft.client.resources.I18n;
@@ -31,9 +31,9 @@ public class ItemBlockStorage extends ItemBlockBase {
             NBTTagCompound tag = stack.getTagCompound().getCompoundTag(TileStorage.NBT_STORAGE);
 
             if (type == EnumItemStorageType.TYPE_CREATIVE) {
-                tooltip.add(I18n.format("misc.refinedstorage:storage.stored", ItemStorageNBT.getStoredFromNBT(tag)));
+                tooltip.add(I18n.format("misc.refinedstorage:storage.stored", StorageItemNBT.getStoredFromNBT(tag)));
             } else {
-                tooltip.add(I18n.format("misc.refinedstorage:storage.stored_capacity", ItemStorageNBT.getStoredFromNBT(tag), type.getCapacity()));
+                tooltip.add(I18n.format("misc.refinedstorage:storage.stored_capacity", StorageItemNBT.getStoredFromNBT(tag), type.getCapacity()));
             }
         }
     }
@@ -44,7 +44,7 @@ public class ItemBlockStorage extends ItemBlockBase {
 
         EnumItemStorageType type = EnumItemStorageType.getById(stack.getMetadata());
 
-        if (type != null && stack.getCount() == 1 && isValid(stack) && ItemStorageNBT.getStoredFromNBT(stack.getTagCompound().getCompoundTag(TileStorage.NBT_STORAGE)) <= 0 && stack.getMetadata() != ItemStorageDisk.TYPE_CREATIVE && !world.isRemote && player.isSneaking()) {
+        if (type != null && stack.getCount() == 1 && isValid(stack) && StorageItemNBT.getStoredFromNBT(stack.getTagCompound().getCompoundTag(TileStorage.NBT_STORAGE)) <= 0 && stack.getMetadata() != ItemStorageDisk.TYPE_CREATIVE && !world.isRemote && player.isSneaking()) {
             ItemStack storagePart = new ItemStack(RSItems.STORAGE_PART, 1, stack.getMetadata());
 
             if (!player.inventory.addItemStackToInventory(storagePart.copy())) {
@@ -90,12 +90,12 @@ public class ItemBlockStorage extends ItemBlockBase {
 
     @Override
     public NBTTagCompound getNBTShareTag(ItemStack stack) {
-        return !isValid(stack) ? super.getNBTShareTag(stack) : ItemStorageNBT.getNBTShareTag(stack.getTagCompound().getCompoundTag(TileStorage.NBT_STORAGE));
+        return !isValid(stack) ? super.getNBTShareTag(stack) : StorageItemNBT.getNBTShareTag(stack.getTagCompound().getCompoundTag(TileStorage.NBT_STORAGE));
     }
 
     public static ItemStack initNBT(ItemStack stack) {
         NBTTagCompound tag = new NBTTagCompound();
-        tag.setTag(TileStorage.NBT_STORAGE, ItemStorageNBT.createNBT());
+        tag.setTag(TileStorage.NBT_STORAGE, StorageItemNBT.createNBT());
         stack.setTagCompound(tag);
         return stack;
     }

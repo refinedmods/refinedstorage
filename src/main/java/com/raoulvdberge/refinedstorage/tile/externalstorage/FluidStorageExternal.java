@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.tile.externalstorage;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
-import com.raoulvdberge.refinedstorage.api.storage.fluid.IFluidStorage;
+import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
@@ -14,7 +14,7 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class FluidStorageExternal implements IFluidStorage {
+public class FluidStorageExternal implements IStorage<FluidStack> {
     private FluidStack cache;
 
     private TileExternalStorage externalStorage;
@@ -40,7 +40,7 @@ public class FluidStorageExternal implements IFluidStorage {
 
     @Nullable
     @Override
-    public FluidStack insertFluid(@Nonnull FluidStack stack, int size, boolean simulate) {
+    public FluidStack insert(@Nonnull FluidStack stack, int size, boolean simulate) {
         if (getProperties() != null && IFilterable.canTakeFluids(externalStorage.getFluidFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack) && getProperties().canFillFluidType(stack)) {
             int filled = handler.fill(RSUtils.copyStackWithSize(stack, size), !simulate);
 
@@ -56,7 +56,7 @@ public class FluidStorageExternal implements IFluidStorage {
 
     @Nullable
     @Override
-    public FluidStack extractFluid(@Nonnull FluidStack stack, int size, int flags, boolean simulate) {
+    public FluidStack extract(@Nonnull FluidStack stack, int size, int flags, boolean simulate) {
         FluidStack toDrain = RSUtils.copyStackWithSize(stack, size);
 
         if (API.instance().getComparer().isEqual(getContents(), toDrain, flags)) {

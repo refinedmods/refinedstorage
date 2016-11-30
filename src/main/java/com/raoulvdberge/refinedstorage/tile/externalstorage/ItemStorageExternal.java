@@ -2,14 +2,14 @@ package com.raoulvdberge.refinedstorage.tile.externalstorage;
 
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
-import com.raoulvdberge.refinedstorage.api.storage.item.IItemStorage;
+import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public abstract class ItemStorageExternal implements IItemStorage {
+public abstract class ItemStorageExternal implements IStorage<ItemStack> {
     private List<ItemStack> cache;
 
     public abstract int getCapacity();

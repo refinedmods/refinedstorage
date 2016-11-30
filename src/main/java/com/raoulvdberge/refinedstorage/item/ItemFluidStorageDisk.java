@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RSItems;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageFluidNBT;
 import com.raoulvdberge.refinedstorage.block.EnumFluidStorageType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
@@ -43,15 +43,15 @@ public class ItemFluidStorageDisk extends ItemBase {
     @Override
     public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
         for (int i = 0; i < 5; ++i) {
-            subItems.add(FluidStorageNBT.createStackWithNBT(new ItemStack(item, 1, i)));
+            subItems.add(StorageFluidNBT.createStackWithNBT(new ItemStack(item, 1, i)));
         }
     }
 
     private void applyDebugDiskData(ItemStack stack) {
         if (debugDiskTag == null) {
-            debugDiskTag = FluidStorageNBT.createNBT();
+            debugDiskTag = StorageFluidNBT.createNBT();
 
-            FluidStorageNBT storage = new FluidStorageNBT(debugDiskTag, -1, null) {
+            StorageFluidNBT storage = new StorageFluidNBT(debugDiskTag, -1, null) {
                 @Override
                 public int getPriority() {
                     return 0;
@@ -64,7 +64,7 @@ public class ItemFluidStorageDisk extends ItemBase {
             };
 
             for (Fluid fluid : FluidRegistry.getRegisteredFluids().values()) {
-                storage.insertFluid(new FluidStack(fluid, 0), Fluid.BUCKET_VOLUME * 1000, false);
+                storage.insert(new FluidStack(fluid, 0), Fluid.BUCKET_VOLUME * 1000, false);
             }
 
             storage.writeToNBT();
@@ -81,7 +81,7 @@ public class ItemFluidStorageDisk extends ItemBase {
             if (stack.getMetadata() == TYPE_DEBUG) {
                 applyDebugDiskData(stack);
             } else {
-                FluidStorageNBT.createStackWithNBT(stack);
+                StorageFluidNBT.createStackWithNBT(stack);
             }
         }
     }
@@ -90,7 +90,7 @@ public class ItemFluidStorageDisk extends ItemBase {
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
         ItemStack disk = player.getHeldItem(hand);
 
-        if (!world.isRemote && player.isSneaking() && FluidStorageNBT.isValid(disk) && FluidStorageNBT.getStoredFromNBT(disk.getTagCompound()) <= 0 && disk.getMetadata() != TYPE_CREATIVE) {
+        if (!world.isRemote && player.isSneaking() && StorageFluidNBT.isValid(disk) && StorageFluidNBT.getStoredFromNBT(disk.getTagCompound()) <= 0 && disk.getMetadata() != TYPE_CREATIVE) {
             ItemStack storagePart = new ItemStack(RSItems.FLUID_STORAGE_PART, 1, disk.getMetadata());
 
             if (!player.inventory.addItemStackToInventory(storagePart.copy())) {
@@ -105,13 +105,13 @@ public class ItemFluidStorageDisk extends ItemBase {
 
     @Override
     public void addInformation(ItemStack disk, EntityPlayer player, List<String> tooltip, boolean advanced) {
-        if (FluidStorageNBT.isValid(disk)) {
+        if (StorageFluidNBT.isValid(disk)) {
             int capacity = EnumFluidStorageType.getById(disk.getItemDamage()).getCapacity();
 
             if (capacity == -1) {
-                tooltip.add(I18n.format("misc.refinedstorage:storage.stored", FluidStorageNBT.getStoredFromNBT(disk.getTagCompound())));
+                tooltip.add(I18n.format("misc.refinedstorage:storage.stored", StorageFluidNBT.getStoredFromNBT(disk.getTagCompound())));
             } else {
-                tooltip.add(I18n.format("misc.refinedstorage:storage.stored_capacity", FluidStorageNBT.getStoredFromNBT(disk.getTagCompound()), capacity));
+                tooltip.add(I18n.format("misc.refinedstorage:storage.stored_capacity", StorageFluidNBT.getStoredFromNBT(disk.getTagCompound()), capacity));
             }
         }
     }
@@ -120,7 +120,7 @@ public class ItemFluidStorageDisk extends ItemBase {
     public void onCreated(ItemStack stack, World world, EntityPlayer player) {
         super.onCreated(stack, world, player);
 
-        FluidStorageNBT.createStackWithNBT(stack);
+        StorageFluidNBT.createStackWithNBT(stack);
     }
 
     @Override
@@ -130,6 +130,6 @@ public class ItemFluidStorageDisk extends ItemBase {
 
     @Override
     public NBTTagCompound getNBTShareTag(ItemStack stack) {
-        return FluidStorageNBT.getNBTShareTag(stack.getTagCompound());
+        return StorageFluidNBT.getNBTShareTag(stack.getTagCompound());
     }
 }

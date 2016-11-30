@@ -35,7 +35,7 @@ public class ItemStorageDSU extends ItemStorageExternal {
     }
 
     @Override
-    public ItemStack insertItem(@Nonnull ItemStack stack, int size, boolean simulate) {
+    public ItemStack insert(@Nonnull ItemStack stack, int size, boolean simulate) {
         if (IFilterable.canTake(externalStorage.getItemFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack)) {
             if (unit.getStoredItemType() != null) {
                 if (API.instance().getComparer().isEqualNoQuantity(unit.getStoredItemType(), stack)) {
@@ -86,7 +86,7 @@ public class ItemStorageDSU extends ItemStorageExternal {
     }
 
     @Override
-    public ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
+    public ItemStack extract(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
         if (API.instance().getComparer().isEqual(stack, unit.getStoredItemType(), flags)) {
             if (size > unit.getStoredItemType().getCount()) {
                 size = unit.getStoredItemType().getCount();

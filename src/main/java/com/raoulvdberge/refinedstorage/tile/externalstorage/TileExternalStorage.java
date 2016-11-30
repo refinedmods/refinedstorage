@@ -6,10 +6,8 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
-import com.raoulvdberge.refinedstorage.api.storage.fluid.IFluidStorage;
-import com.raoulvdberge.refinedstorage.api.storage.fluid.IFluidStorageProvider;
-import com.raoulvdberge.refinedstorage.api.storage.item.IItemStorage;
-import com.raoulvdberge.refinedstorage.api.storage.item.IItemStorageProvider;
+import com.raoulvdberge.refinedstorage.api.storage.IStorage;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
@@ -18,9 +16,11 @@ import com.raoulvdberge.refinedstorage.tile.TileNode;
 import com.raoulvdberge.refinedstorage.tile.config.*;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.IItemHandler;
@@ -29,7 +29,7 @@ import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileExternalStorage extends TileNode implements IItemStorageProvider, IFluidStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IType, IAccessType {
+public class TileExternalStorage extends TileNode implements IStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IType, IAccessType {
     public static final TileDataParameter<Integer> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
@@ -261,12 +261,12 @@ public class TileExternalStorage extends TileNode implements IItemStorageProvide
     }
 
     @Override
-    public void addItemStorages(List<IItemStorage> storages) {
+    public void addItemStorages(List<IStorage<ItemStack>> storages) {
         storages.addAll(this.itemStorages);
     }
 
     @Override
-    public void addFluidStorages(List<IFluidStorage> storages) {
+    public void addFluidStorages(List<IStorage<FluidStack>> storages) {
         storages.addAll(this.fluidStorages);
     }
 

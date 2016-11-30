@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider;
-import com.raoulvdberge.refinedstorage.api.util.IItemStackList;
+import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPattern;
 import net.minecraft.client.gui.GuiScreen;
@@ -136,7 +136,7 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
             return null;
         }
 
-        IItemStackList outputs = API.instance().createItemStackList();
+        IStackList<ItemStack> outputs = API.instance().createItemStackList();
 
         NBTTagList outputsTag = pattern.getTagCompound().getTagList(NBT_OUTPUTS, Constants.NBT.TAG_COMPOUND);
 

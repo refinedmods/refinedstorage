@@ -1,9 +1,9 @@
 package com.raoulvdberge.refinedstorage.gui;
 
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawer;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.fluid.FluidRenderer;
 import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButton;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import net.minecraft.client.gui.GuiButton;
@@ -28,7 +28,7 @@ import java.util.Map;
 public abstract class GuiBase extends GuiContainer {
     private static final Map<String, ResourceLocation> TEXTURE_CACHE = new HashMap<>();
 
-    public static final FluidRenderer FLUID_RENDERER = new FluidRenderer(-1, 16, 16);
+    public static final RSUtils.FluidRenderer FLUID_RENDERER = new RSUtils.FluidRenderer(-1, 16, 16);
 
     public class ElementDrawers implements IElementDrawers {
         private IElementDrawer<FluidStack> fluidDrawer = (x, y, element) -> FLUID_RENDERER.draw(GuiBase.this.mc, x, y, element);

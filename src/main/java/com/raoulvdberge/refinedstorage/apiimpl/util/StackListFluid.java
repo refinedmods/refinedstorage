@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.util;
 
 import com.google.common.collect.ArrayListMultimap;
-import com.raoulvdberge.refinedstorage.api.util.IFluidStackList;
+import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -13,15 +13,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FluidStackList implements IFluidStackList {
+public class StackListFluid implements IStackList<FluidStack> {
     private ArrayListMultimap<Fluid, FluidStack> stacks = ArrayListMultimap.create();
     private List<FluidStack> removeTracker = new LinkedList<>();
 
     @Override
-    public void add(FluidStack stack) {
+    public void add(FluidStack stack, int size) {
         for (FluidStack otherStack : stacks.get(stack.getFluid())) {
             if (stack.isFluidEqual(otherStack)) {
-                otherStack.amount += stack.amount;
+                otherStack.amount += size;
 
                 return;
             }
@@ -31,13 +31,14 @@ public class FluidStackList implements IFluidStackList {
     }
 
     @Override
-    public boolean remove(@Nonnull FluidStack stack, int size, boolean removeIfReachedZero) {
+    public boolean remove(@Nonnull FluidStack stack, int size) {
         for (FluidStack otherStack : stacks.get(stack.getFluid())) {
             if (stack.isFluidEqual(otherStack)) {
                 otherStack.amount -= size;
+
                 boolean success = otherStack.amount >= 0;
 
-                if (otherStack.amount <= 0 && removeIfReachedZero) {
+                if (otherStack.amount <= 0) {
                     stacks.remove(otherStack.getFluid(), otherStack);
                 }
 
@@ -49,7 +50,7 @@ public class FluidStackList implements IFluidStackList {
     }
 
     @Override
-    public boolean trackedRemove(@Nonnull FluidStack stack, int size, boolean removeIfReachedZero) {
+    public boolean trackedRemove(@Nonnull FluidStack stack, int size) {
         for (FluidStack otherStack : stacks.get(stack.getFluid())) {
             if (stack.isFluidEqual(otherStack)) {
                 FluidStack removed = new FluidStack(otherStack.getFluid(), Math.min(size, otherStack.amount));
@@ -57,7 +58,7 @@ public class FluidStackList implements IFluidStackList {
                 otherStack.amount -= size;
                 boolean success = otherStack.amount >= 0;
 
-                if (otherStack.amount <= 0 && removeIfReachedZero) {
+                if (otherStack.amount <= 0) {
                     stacks.remove(otherStack.getFluid(), otherStack);
                 }
 
@@ -70,8 +71,13 @@ public class FluidStackList implements IFluidStackList {
 
     @Override
     public void undo() {
-        removeTracker.forEach(this::add);
+        removeTracker.forEach(s -> add(s, s.amount));
         removeTracker.clear();
+    }
+
+    @Override
+    public List<FluidStack> getRemoveTracker() {
+        return removeTracker;
     }
 
     @Override
@@ -117,6 +123,11 @@ public class FluidStackList implements IFluidStackList {
         return stacks.isEmpty();
     }
 
+    @Override
+    public int getSizeFromStack(FluidStack stack) {
+        return stack.amount;
+    }
+
     @Nonnull
     @Override
     public Collection<FluidStack> getStacks() {
@@ -125,14 +136,19 @@ public class FluidStackList implements IFluidStackList {
 
     @Override
     @Nonnull
-    public IFluidStackList copy() {
-        FluidStackList list = new FluidStackList();
+    public IStackList<FluidStack> copy() {
+        StackListFluid list = new StackListFluid();
 
         for (FluidStack stack : stacks.values()) {
             list.stacks.put(stack.getFluid(), stack.copy());
         }
 
         return list;
+    }
+
+    @Override
+    public IStackList<FluidStack> getOredicted() {
+        throw new IllegalAccessError("Fluid lists have no oredicted version!");
     }
 
     @Override

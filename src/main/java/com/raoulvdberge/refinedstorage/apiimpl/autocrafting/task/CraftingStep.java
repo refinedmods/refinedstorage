@@ -7,8 +7,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.api.util.IFluidStackList;
-import com.raoulvdberge.refinedstorage.api.util.IItemStackList;
+import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -162,14 +161,14 @@ public abstract class CraftingStep implements ICraftingStep {
         ITEM, FLUID
     }
 
-    protected AvailableType isItemAvailable(IItemStackList items, IFluidStackList fluids, ItemStack stack, ItemStack actualStack, int compare) {
+    protected AvailableType isItemAvailable(IStackList<ItemStack> items, IStackList<FluidStack> fluids, ItemStack stack, ItemStack actualStack, int compare) {
         if (actualStack == null || actualStack.getCount() == 0 || !items.trackedRemove(actualStack, stack.getCount())) {
             FluidStack fluidInItem = RSUtils.getFluidFromStack(stack, true).getValue();
 
             if (fluidInItem != null && RSUtils.hasFluidBucket(fluidInItem)) {
                 FluidStack fluidStack = fluids.get(fluidInItem, compare);
                 ItemStack bucket = items.get(RSUtils.EMPTY_BUCKET, compare);
-                if (bucket != null && fluidStack != null && fluids.trackedRemove(fluidStack, fluidInItem.amount, true) && items.trackedRemove(bucket, 1)) {
+                if (bucket != null && fluidStack != null && fluids.trackedRemove(fluidStack, fluidInItem.amount) && items.trackedRemove(bucket, 1)) {
                     return AvailableType.FLUID;
                 }
             }
@@ -178,7 +177,7 @@ public abstract class CraftingStep implements ICraftingStep {
         return AvailableType.ITEM;
     }
 
-    protected boolean extractItems(IItemStackList actualInputs, int compare, Deque<ItemStack> toInsertItems) {
+    protected boolean extractItems(IStackList<ItemStack> actualInputs, int compare, Deque<ItemStack> toInsertItems) {
         for (ItemStack insertStack : getToInsert()) {
             // This will be a tool, like a hammer
             if (insertStack.isItemStackDamageable()) {

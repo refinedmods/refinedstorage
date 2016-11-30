@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RSItems;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.item.ItemStorageNBT;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageItemNBT;
 import com.raoulvdberge.refinedstorage.block.EnumItemStorageType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
@@ -41,7 +41,7 @@ public class ItemStorageDisk extends ItemBase {
     @Override
     public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
         for (int i = 0; i < 5; ++i) {
-            subItems.add(ItemStorageNBT.createStackWithNBT(new ItemStack(item, 1, i)));
+            subItems.add(StorageItemNBT.createStackWithNBT(new ItemStack(item, 1, i)));
         }
     }
 
@@ -53,16 +53,16 @@ public class ItemStorageDisk extends ItemBase {
             if (stack.getItemDamage() == TYPE_DEBUG) {
                 applyDebugDiskData(stack);
             } else {
-                ItemStorageNBT.createStackWithNBT(stack);
+                StorageItemNBT.createStackWithNBT(stack);
             }
         }
     }
 
     private void applyDebugDiskData(ItemStack stack) {
         if (debugDiskTag == null) {
-            debugDiskTag = ItemStorageNBT.createNBT();
+            debugDiskTag = StorageItemNBT.createNBT();
 
-            ItemStorageNBT storage = new ItemStorageNBT(debugDiskTag, -1, null) {
+            StorageItemNBT storage = new StorageItemNBT(debugDiskTag, -1, null) {
                 @Override
                 public int getPriority() {
                     return 0;
@@ -85,7 +85,7 @@ public class ItemStorageDisk extends ItemBase {
                     item.getSubItems(item, CreativeTabs.INVENTORY, stacks);
 
                     for (ItemStack itemStack : stacks) {
-                        storage.insertItem(itemStack, 1000, false);
+                        storage.insert(itemStack, 1000, false);
                     }
                 }
             }
@@ -98,13 +98,13 @@ public class ItemStorageDisk extends ItemBase {
 
     @Override
     public void addInformation(ItemStack disk, EntityPlayer player, List<String> tooltip, boolean advanced) {
-        if (ItemStorageNBT.isValid(disk)) {
+        if (StorageItemNBT.isValid(disk)) {
             int capacity = EnumItemStorageType.getById(disk.getItemDamage()).getCapacity();
 
             if (capacity == -1) {
-                tooltip.add(I18n.format("misc.refinedstorage:storage.stored", ItemStorageNBT.getStoredFromNBT(disk.getTagCompound())));
+                tooltip.add(I18n.format("misc.refinedstorage:storage.stored", StorageItemNBT.getStoredFromNBT(disk.getTagCompound())));
             } else {
-                tooltip.add(I18n.format("misc.refinedstorage:storage.stored_capacity", ItemStorageNBT.getStoredFromNBT(disk.getTagCompound()), capacity));
+                tooltip.add(I18n.format("misc.refinedstorage:storage.stored_capacity", StorageItemNBT.getStoredFromNBT(disk.getTagCompound()), capacity));
             }
         }
     }
@@ -113,7 +113,7 @@ public class ItemStorageDisk extends ItemBase {
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
         ItemStack disk = player.getHeldItem(hand);
 
-        if (!world.isRemote && player.isSneaking() && ItemStorageNBT.isValid(disk) && ItemStorageNBT.getStoredFromNBT(disk.getTagCompound()) <= 0 && disk.getMetadata() != TYPE_CREATIVE) {
+        if (!world.isRemote && player.isSneaking() && StorageItemNBT.isValid(disk) && StorageItemNBT.getStoredFromNBT(disk.getTagCompound()) <= 0 && disk.getMetadata() != TYPE_CREATIVE) {
             ItemStack storagePart = new ItemStack(RSItems.STORAGE_PART, 1, disk.getMetadata());
 
             if (!player.inventory.addItemStackToInventory(storagePart.copy())) {
@@ -130,7 +130,7 @@ public class ItemStorageDisk extends ItemBase {
     public void onCreated(ItemStack stack, World world, EntityPlayer player) {
         super.onCreated(stack, world, player);
 
-        ItemStorageNBT.createStackWithNBT(stack);
+        StorageItemNBT.createStackWithNBT(stack);
     }
 
     @Override
@@ -140,6 +140,6 @@ public class ItemStorageDisk extends ItemBase {
 
     @Override
     public NBTTagCompound getNBTShareTag(ItemStack stack) {
-        return ItemStorageNBT.getNBTShareTag(stack.getTagCompound());
+        return StorageItemNBT.getNBTShareTag(stack.getTagCompound());
     }
 }

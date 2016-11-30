@@ -11,8 +11,7 @@ import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterCha
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRegistry;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.api.util.IFluidStackList;
-import com.raoulvdberge.refinedstorage.api.util.IItemStackList;
+import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementList;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementRegistry;
@@ -21,8 +20,8 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriter
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.solderer.SoldererRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.util.Comparer;
-import com.raoulvdberge.refinedstorage.apiimpl.util.FluidStackList;
-import com.raoulvdberge.refinedstorage.apiimpl.util.ItemStackList;
+import com.raoulvdberge.refinedstorage.apiimpl.util.StackListFluid;
+import com.raoulvdberge.refinedstorage.apiimpl.util.StackListItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
@@ -89,14 +88,14 @@ public class API implements IRSAPI {
 
     @Nonnull
     @Override
-    public IItemStackList createItemStackList() {
-        return new ItemStackList();
+    public IStackList<ItemStack> createItemStackList() {
+        return new StackListItem();
     }
 
     @Override
     @Nonnull
-    public IFluidStackList createFluidStackList() {
-        return new FluidStackList();
+    public IStackList<FluidStack> createFluidStackList() {
+        return new StackListFluid();
     }
 
     @Override

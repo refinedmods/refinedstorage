@@ -9,8 +9,7 @@ import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterCha
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRegistry;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.api.util.IFluidStackList;
-import com.raoulvdberge.refinedstorage.api.util.IItemStackList;
+import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
@@ -70,13 +69,13 @@ public interface IRSAPI {
      * @return an empty item stack list
      */
     @Nonnull
-    IItemStackList createItemStackList();
+    IStackList<ItemStack> createItemStackList();
 
     /**
      * @return an empty fluid stack list
      */
     @Nonnull
-    IFluidStackList createFluidStackList();
+    IStackList<FluidStack> createFluidStackList();
 
     @Nonnull
     ICraftingMonitorElementList createCraftingMonitorElementList();

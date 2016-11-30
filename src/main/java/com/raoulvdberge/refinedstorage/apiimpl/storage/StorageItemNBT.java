@@ -1,7 +1,7 @@
-package com.raoulvdberge.refinedstorage.apiimpl.storage.item;
+package com.raoulvdberge.refinedstorage.apiimpl.storage;
 
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
-import com.raoulvdberge.refinedstorage.api.storage.item.IItemStorage;
+import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -15,11 +15,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * A implementation of {@link IItemStorage} that stores storage items in NBT.
+ * A implementation of {@link IStorage<ItemStack>} that stores storage items in NBT.
  */
-public abstract class ItemStorageNBT implements IItemStorage {
+public abstract class StorageItemNBT implements IStorage<ItemStack> {
     /**
-     * The current save protocol that is used. It's set to every {@link ItemStorageNBT} to allow for
+     * The current save protocol that is used. It's set to every {@link StorageItemNBT} to allow for
      * safe backwards compatibility breaks.
      */
     private static final int PROTOCOL = 1;
@@ -42,11 +42,11 @@ public abstract class ItemStorageNBT implements IItemStorage {
     private NonNullList<ItemStack> stacks = NonNullList.create();
 
     /**
-     * @param tag      The NBT tag we are reading from and writing the amount stored to, has to be initialized with {@link ItemStorageNBT#createNBT()} if it doesn't exist yet
+     * @param tag      The NBT tag we are reading from and writing the amount stored to, has to be initialized with {@link StorageItemNBT#createNBT()} if it doesn't exist yet
      * @param capacity The capacity of this storage, -1 for infinite capacity
      * @param tile     A {@link TileEntity} that the NBT storage is in, will be marked dirty when the storage changes
      */
-    public ItemStorageNBT(NBTTagCompound tag, int capacity, @Nullable TileEntity tile) {
+    public StorageItemNBT(NBTTagCompound tag, int capacity, @Nullable TileEntity tile) {
         this.tag = tag;
         this.capacity = capacity;
         this.tile = tile;
@@ -116,7 +116,7 @@ public abstract class ItemStorageNBT implements IItemStorage {
     }
 
     @Override
-    public synchronized ItemStack insertItem(@Nonnull ItemStack stack, int size, boolean simulate) {
+    public synchronized ItemStack insert(@Nonnull ItemStack stack, int size, boolean simulate) {
         for (ItemStack otherStack : stacks) {
             if (API.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
                 if (getCapacity() != -1 && getStored() + size > getCapacity()) {
@@ -187,7 +187,7 @@ public abstract class ItemStorageNBT implements IItemStorage {
     }
 
     @Override
-    public synchronized ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
+    public synchronized ItemStack extract(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
         for (ItemStack otherStack : stacks) {
             if (API.instance().getComparer().isEqual(otherStack, stack, flags)) {
                 if (size > otherStack.getCount()) {
@@ -282,8 +282,8 @@ public abstract class ItemStorageNBT implements IItemStorage {
     }
 
     /**
-     * @param stack The {@link ItemStack} to populate with the NBT tags from {@link ItemStorageNBT#createNBT()}
-     * @return The provided {@link ItemStack} with NBT tags from {@link ItemStorageNBT#createNBT()}
+     * @param stack The {@link ItemStack} to populate with the NBT tags from {@link StorageItemNBT#createNBT()}
+     * @return The provided {@link ItemStack} with NBT tags from {@link StorageItemNBT#createNBT()}
      */
     public static ItemStack createStackWithNBT(ItemStack stack) {
         stack.setTagCompound(createNBT());

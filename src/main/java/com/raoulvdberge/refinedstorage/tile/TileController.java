@@ -20,19 +20,16 @@ import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterCha
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
-import com.raoulvdberge.refinedstorage.api.storage.fluid.IFluidStorage;
-import com.raoulvdberge.refinedstorage.api.storage.fluid.IFluidStorageCache;
-import com.raoulvdberge.refinedstorage.api.storage.item.IItemStorage;
-import com.raoulvdberge.refinedstorage.api.storage.item.IItemStorageCache;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.api.util.IItemStackList;
+import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeGraph;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.FluidGridHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.ItemGridHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemHandler;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.fluid.FluidStorageCache;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.item.ItemStorageCache;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheFluid;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItem;
 import com.raoulvdberge.refinedstorage.block.BlockController;
 import com.raoulvdberge.refinedstorage.block.EnumControllerType;
 import com.raoulvdberge.refinedstorage.block.EnumGridType;
@@ -162,8 +159,8 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
 
     private INetworkNodeGraph nodeGraph = new NetworkNodeGraph(this);
 
-    private IItemStorageCache itemStorage = new ItemStorageCache(this);
-    private IFluidStorageCache fluidStorage = new FluidStorageCache(this);
+    private IStorageCache<ItemStack> itemStorage = new StorageCacheItem(this);
+    private IStorageCache<FluidStack> fluidStorage = new StorageCacheFluid(this);
 
     private Map<String, IReaderWriterChannel> readerWriterChannels = new HashMap<>();
 
@@ -334,12 +331,13 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
         nodeGraph.disconnectAll();
     }
 
-    public IItemStorageCache getItemStorageCache() {
+    @Override
+    public IStorageCache<ItemStack> getItemStorageCache() {
         return itemStorage;
     }
 
     @Override
-    public IFluidStorageCache getFluidStorageCache() {
+    public IStorageCache<FluidStack> getFluidStorageCache() {
         return fluidStorage;
     }
 
@@ -395,7 +393,7 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
         int highestScore = 0;
         int highestPattern = 0;
 
-        IItemStackList itemList = itemStorage.getList().getOredicted();
+        IStackList<ItemStack> itemList = itemStorage.getList().getOredicted();
 
         for (int i = 0; i < patterns.size(); ++i) {
             int score = 0;
@@ -585,10 +583,10 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
         int inserted = 0;
         int insertedExternally = 0;
 
-        for (IItemStorage storage : this.itemStorage.getStorages()) {
+        for (IStorage<ItemStack> storage : this.itemStorage.getStorages()) {
             int storedPre = storage.getStored();
 
-            remainder = storage.insertItem(remainder, size, simulate);
+            remainder = storage.insert(remainder, size, simulate);
 
             if (!simulate) {
                 inserted += storage.getCacheDelta(storedPre, size, remainder);
@@ -645,11 +643,11 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
 
         ItemStack newStack = null;
 
-        for (IItemStorage storage : this.itemStorage.getStorages()) {
+        for (IStorage<ItemStack> storage : this.itemStorage.getStorages()) {
             ItemStack took = null;
 
             if (storage.getAccessType() != AccessType.INSERT) {
-                took = storage.extractItem(stack, requested - received, flags, simulate);
+                took = storage.extract(stack, requested - received, flags, simulate);
             }
 
             if (took != null) {
@@ -692,10 +690,10 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
 
         int inserted = 0;
 
-        for (IFluidStorage storage : this.fluidStorage.getStorages()) {
+        for (IStorage<FluidStack> storage : this.fluidStorage.getStorages()) {
             int storedPre = storage.getStored();
 
-            remainder = storage.insertFluid(remainder, size, simulate);
+            remainder = storage.insert(remainder, size, simulate);
 
             if (!simulate) {
                 inserted += storage.getCacheDelta(storedPre, size, remainder);
@@ -713,7 +711,7 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
         }
 
         if (inserted > 0) {
-            fluidStorage.add(RSUtils.copyStackWithSize(stack, inserted), false);
+            fluidStorage.add(stack, inserted, false);
         }
 
         return remainder;
@@ -727,11 +725,11 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
 
         FluidStack newStack = null;
 
-        for (IFluidStorage storage : this.fluidStorage.getStorages()) {
+        for (IStorage<FluidStack> storage : this.fluidStorage.getStorages()) {
             FluidStack took = null;
 
             if (storage.getAccessType() != AccessType.INSERT) {
-                took = storage.extractFluid(stack, requested - received, flags, simulate);
+                took = storage.extract(stack, requested - received, flags, simulate);
             }
 
             if (took != null) {
@@ -754,7 +752,7 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
         }
 
         if (newStack != null && !simulate) {
-            fluidStorage.remove(newStack);
+            fluidStorage.remove(newStack, newStack.amount);
         }
 
         return newStack;

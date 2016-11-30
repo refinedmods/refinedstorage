@@ -5,23 +5,24 @@ import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
-import com.raoulvdberge.refinedstorage.api.storage.fluid.IFluidStorage;
-import com.raoulvdberge.refinedstorage.api.storage.fluid.IFluidStorageProvider;
+import com.raoulvdberge.refinedstorage.api.storage.IStorage;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.fluid.FluidStorageNBT;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageFluidNBT;
 import com.raoulvdberge.refinedstorage.block.BlockFluidStorage;
 import com.raoulvdberge.refinedstorage.block.EnumFluidStorageType;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.tile.config.*;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
 
-public class TileFluidStorage extends TileNode implements IFluidStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IExcessVoidable, IAccessType {
+public class TileFluidStorage extends TileNode implements IStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IExcessVoidable, IAccessType {
     public static final TileDataParameter<Integer> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Boolean> VOID_EXCESS = IExcessVoidable.createParameter();
@@ -30,11 +31,11 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
     public static final TileDataParameter<Integer> STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileFluidStorage>() {
         @Override
         public Integer getValue(TileFluidStorage tile) {
-            return FluidStorageNBT.getStoredFromNBT(tile.storageTag);
+            return StorageFluidNBT.getStoredFromNBT(tile.storageTag);
         }
     });
 
-    class FluidStorage extends FluidStorageNBT {
+    class FluidStorage extends StorageFluidNBT {
         public FluidStorage() {
             super(TileFluidStorage.this.getStorageTag(), TileFluidStorage.this.getCapacity(), TileFluidStorage.this);
         }
@@ -45,12 +46,12 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
         }
 
         @Override
-        public FluidStack insertFluid(FluidStack stack, int size, boolean simulate) {
+        public FluidStack insert(FluidStack stack, int size, boolean simulate) {
             if (!IFilterable.canTakeFluids(filters, mode, compare, stack)) {
                 return RSUtils.copyStackWithSize(stack, size);
             }
 
-            return super.insertFluid(stack, size, simulate);
+            return super.insert(stack, size, simulate);
         }
 
         @Override
@@ -73,7 +74,7 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
 
     private ItemHandlerFluid filters = new ItemHandlerFluid(9, this);
 
-    private NBTTagCompound storageTag = FluidStorageNBT.createNBT();
+    private NBTTagCompound storageTag = StorageFluidNBT.createNBT();
 
     private FluidStorage storage;
 
@@ -130,7 +131,12 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
     }
 
     @Override
-    public void addFluidStorages(List<IFluidStorage> storages) {
+    public void addItemStorages(List<IStorage<ItemStack>> storages) {
+        // NO OP
+    }
+
+    @Override
+    public void addFluidStorages(List<IStorage<FluidStack>> storages) {
         if (storage != null) {
             storages.add(storage);
         }
@@ -284,7 +290,7 @@ public class TileFluidStorage extends TileNode implements IFluidStorageProvider,
         this.storageTag = storageTag;
     }
 
-    public FluidStorageNBT getStorage() {
+    public StorageFluidNBT getStorage() {
         return storage;
     }
 

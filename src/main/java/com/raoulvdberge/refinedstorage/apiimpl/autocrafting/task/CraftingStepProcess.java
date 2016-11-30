@@ -3,8 +3,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.api.util.IFluidStackList;
-import com.raoulvdberge.refinedstorage.api.util.IItemStackList;
+import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,7 +30,7 @@ public class CraftingStepProcess extends CraftingStep {
     }
 
     @Override
-    public boolean canStartProcessing(IItemStackList items, IFluidStackList fluids) {
+    public boolean canStartProcessing(IStackList<ItemStack> items, IStackList<FluidStack> fluids) {
         IItemHandler inventory = getPattern().getContainer().getFacingInventory();
         int compare = CraftingTask.DEFAULT_COMPARE | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0);
         if (inventory != null) {
@@ -73,7 +72,7 @@ public class CraftingStepProcess extends CraftingStep {
 
     @Override
     public void execute(Deque<ItemStack> toInsertItems, Deque<FluidStack> toInsertFluids) {
-        IItemStackList actualInputs = API.instance().createItemStackList();
+        IStackList<ItemStack> actualInputs = API.instance().createItemStackList();
         int compare = CraftingTask.DEFAULT_COMPARE | (getPattern().isOredict() ? IComparer.COMPARE_OREDICT : 0);
         if (extractItems(actualInputs, compare, toInsertItems)) {
             IItemHandler inventory = getPattern().getContainer().getFacingInventory();
