@@ -1,21 +1,29 @@
 package com.raoulvdberge.refinedstorage.tile;
 
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetworkNeighborhoodAware;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.util.IWrenchable;
+import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
 
-public abstract class TileNode extends TileBase implements INetworkNode, IRedstoneConfigurable, IWrenchable {
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+public abstract class TileNode extends TileBase implements INetworkNode, IRedstoneConfigurable, IWrenchable, INetworkNeighborhoodAware {
     public static final TileDataParameter<Integer> REDSTONE_MODE = RedstoneMode.createParameter();
 
-    private static final String NBT_CONNECTED = "Connected";
+    private static final String NBT_ACTIVE = "Connected";
     private static final String NBT_NETWORK = "Network";
 
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
@@ -24,7 +32,6 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
 
     private BlockPos networkPos;
 
-    protected boolean connected;
     protected INetworkMaster network;
 
     protected boolean rebuildOnUpdateChange;
@@ -39,7 +46,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
     }
 
     public boolean isActive() {
-        return isConnected() && canUpdate();
+        return active;
     }
 
     public abstract void updateNode();
@@ -69,13 +76,13 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
                 }
             }
 
-            if (active != isActive() && hasConnectivityState()) {
+            boolean wasActive = active;
+            active = hasNetwork() && canUpdate();
+            if (active != wasActive && hasConnectivityState()) {
                 updateBlock();
-
-                active = isActive();
             }
 
-            if (isActive()) {
+            if (active) {
                 updateNode();
             }
         }
@@ -85,7 +92,6 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
 
     @Override
     public void onConnected(INetworkMaster network) {
-        this.connected = true;
         this.network = network;
 
         onConnectionChange(network, true);
@@ -97,7 +103,6 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
     public void onDisconnected(INetworkMaster network) {
         onConnectionChange(network, false);
 
-        this.connected = false;
         this.network = null;
 
         markDirty();
@@ -107,9 +112,24 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
         // NO OP
     }
 
-    @Override
-    public boolean canConduct(EnumFacing direction) {
+    public boolean canConduct(@Nullable EnumFacing direction) {
         return true;
+    }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing side) {
+        if (capability == CapabilityNetworkNode.NETWORK_NODE_CAPABILITY && canConduct(side)) {
+            return true;
+        }
+        return super.hasCapability(capability, side);
+    }
+
+    @Override
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing side) {
+        if (capability == CapabilityNetworkNode.NETWORK_NODE_CAPABILITY && canConduct(side)) {
+            return CapabilityNetworkNode.NETWORK_NODE_CAPABILITY.cast(this);
+        }
+        return super.getCapability(capability, side);
     }
 
     @Override
@@ -117,19 +137,16 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
         return network;
     }
 
-    @Override
-    public World getNodeWorld() {
-        return getWorld();
+    public boolean hasNetwork() {
+        return network != null;
     }
 
+    @Nonnull
     @Override
-    public BlockPos getPosition() {
-        return pos;
-    }
-
-    @Override
-    public boolean isConnected() {
-        return connected;
+    public ItemStack getItemStack() {
+        IBlockState state = getWorld().getBlockState(pos);
+        Item item = Item.getItemFromBlock(state.getBlock());
+        return new ItemStack(item, 1, state.getBlock().getMetaFromState(state));
     }
 
     @Override
@@ -184,7 +201,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
         super.writeUpdate(tag);
 
         if (hasConnectivityState()) {
-            tag.setBoolean(NBT_CONNECTED, isActive());
+            tag.setBoolean(NBT_ACTIVE, active);
         }
 
         return tag;
@@ -192,7 +209,7 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
 
     public void readUpdate(NBTTagCompound tag) {
         if (hasConnectivityState()) {
-            connected = tag.getBoolean(NBT_CONNECTED);
+            active = tag.getBoolean(NBT_ACTIVE);
         }
 
         super.readUpdate(tag);
@@ -200,5 +217,12 @@ public abstract class TileNode extends TileBase implements INetworkNode, IRedsto
 
     public boolean hasConnectivityState() {
         return false;
+    }
+
+    @Override
+    public void walkNeighborhood(Operator operator) {
+        for (EnumFacing facing : EnumFacing.VALUES) {
+            operator.apply(getWorld(), pos.offset(facing), facing.getOpposite());
+        }
     }
 }

@@ -1,8 +1,8 @@
 package com.raoulvdberge.refinedstorage.api.network;
 
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.item.ItemStack;
+
+import javax.annotation.Nonnull;
 
 /**
  * Represents a node in the network.
@@ -14,9 +14,10 @@ public interface INetworkNode {
     int getEnergyUsage();
 
     /**
-     * @return the position of this node in the world
+     * @return the item of the node
      */
-    BlockPos getPosition();
+    @Nonnull
+    ItemStack getItemStack();
 
     /**
      * Called when this node is connected to a network.
@@ -33,28 +34,12 @@ public interface INetworkNode {
     void onDisconnected(INetworkMaster network);
 
     /**
-     * @return true if this is node is connected to a network, or false otherwise
-     */
-    boolean isConnected();
-
-    /**
      * @return true if this node can be treated as active, typically checks the redstone configuration
      */
     boolean canUpdate();
 
     /**
-     * @param direction the direction to do a conduction check
-     * @return true if this node can conduct a connection to the given direction, false otherwise
-     */
-    boolean canConduct(EnumFacing direction);
-
-    /**
      * @return the network
      */
     INetworkMaster getNetwork();
-
-    /**
-     * @return the world where this node is in
-     */
-    World getNodeWorld();
 }

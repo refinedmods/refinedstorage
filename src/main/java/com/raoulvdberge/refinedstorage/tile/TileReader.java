@@ -161,7 +161,7 @@ public class TileReader extends TileNode implements IReader {
     }
 
     public void onOpened(EntityPlayer entity) {
-        if (isConnected()) {
+        if (hasNetwork()) {
             network.sendReaderWriterChannelUpdate((EntityPlayerMP) entity);
         }
     }

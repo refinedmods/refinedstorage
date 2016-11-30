@@ -17,6 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -185,6 +186,11 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
     @Override
     public List<ICraftingPattern> getPatterns() {
         return actualPatterns;
+    }
+
+    @Override
+    public BlockPos getPosition() {
+        return pos;
     }
 
     public IItemHandler getPatternItems() {

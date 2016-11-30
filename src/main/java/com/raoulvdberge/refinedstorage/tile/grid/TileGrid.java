@@ -36,6 +36,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -210,13 +211,14 @@ public class TileGrid extends TileNode implements IGrid {
         return type == null ? EnumGridType.NORMAL : type;
     }
 
+    @Nullable
     @Override
     public BlockPos getNetworkPosition() {
         return network != null ? network.getPosition() : null;
     }
 
     public void onOpened(EntityPlayer player) {
-        if (isConnected()) {
+        if (hasNetwork()) {
             if (getType() == EnumGridType.FLUID) {
                 network.sendFluidStorageToClient((EntityPlayerMP) player);
             } else {
@@ -227,12 +229,12 @@ public class TileGrid extends TileNode implements IGrid {
 
     @Override
     public IItemGridHandler getItemHandler() {
-        return connected ? network.getItemGridHandler() : null;
+        return hasNetwork() ? network.getItemGridHandler() : null;
     }
 
     @Override
     public IFluidGridHandler getFluidHandler() {
-        return connected ? network.getFluidGridHandler() : null;
+        return hasNetwork() ? network.getFluidGridHandler() : null;
     }
 
     @Override
@@ -290,7 +292,7 @@ public class TileGrid extends TileNode implements IGrid {
                     matrix.setInventorySlotContents(i, remainder.get(i).copy());
                 }
             } else if (!slot.isEmpty()) {
-                if (slot.getCount() == 1 && isConnected()) {
+                if (slot.getCount() == 1 && hasNetwork()) {
                     matrix.setInventorySlotContents(i, RSUtils.getStack(network.extractItem(slot, 1, false)));
                 } else {
                     matrix.decrStackSize(i, 1);
@@ -364,7 +366,7 @@ public class TileGrid extends TileNode implements IGrid {
                 // Only if we are a crafting grid. Pattern grids can just be emptied.
                 if (getType() == EnumGridType.CRAFTING) {
                     // If we are connected, try to insert into network. If it fails, stop.
-                    if (isConnected()) {
+                    if (hasNetwork()) {
                         if (network.insertItem(slot, slot.getCount(), true) != null) {
                             return;
                         } else {
@@ -392,7 +394,7 @@ public class TileGrid extends TileNode implements IGrid {
                     boolean found = false;
 
                     // If we are connected, first try to get the possibilities from the network
-                    if (isConnected()) {
+                    if (hasNetwork()) {
                         for (ItemStack possibility : possibilities) {
                             ItemStack took = network.extractItem(possibility, 1, false);
 

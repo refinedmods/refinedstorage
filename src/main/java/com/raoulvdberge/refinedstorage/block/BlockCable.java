@@ -90,9 +90,10 @@ public class BlockCable extends BlockNode {
     }
 
     private boolean hasConnectionWith(IBlockAccess world, BlockPos pos, EnumFacing direction) {
-        TileEntity facing = world.getTileEntity(pos.offset(direction));
+        TileEntity otherTile = world.getTileEntity(pos.offset(direction));
+        EnumFacing otherTileSide = direction.getOpposite();
 
-        return API.instance().getConnectableConditions().stream().anyMatch(p -> p.test(facing));
+        return API.instance().getConnectableConditions().stream().anyMatch(p -> p.test(otherTile, otherTileSide));
     }
 
     private boolean isInAABB(AxisAlignedBB aabb, float hitX, float hitY, float hitZ) {

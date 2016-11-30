@@ -38,11 +38,6 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
         return controller;
     }
 
-    @Override
-    public boolean isConnected() {
-        return true;
-    }
-
     private TileController getController() {
         World world = DimensionManager.getWorld(controllerDimension);
 
@@ -53,5 +48,10 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
         }
 
         return null;
+    }
+
+    @Override
+    public boolean isActive() {
+        return true;
     }
 }

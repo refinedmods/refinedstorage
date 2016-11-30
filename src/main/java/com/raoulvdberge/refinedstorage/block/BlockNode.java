@@ -44,7 +44,7 @@ public abstract class BlockNode extends BlockBase {
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
         if (hasConnectivityState()) {
-            return super.getActualState(state, world, pos).withProperty(CONNECTED, ((TileNode) world.getTileEntity(pos)).isConnected());
+            return super.getActualState(state, world, pos).withProperty(CONNECTED, ((TileNode) world.getTileEntity(pos)).isActive());
         }
 
         return super.getActualState(state, world, pos);
@@ -58,7 +58,7 @@ public abstract class BlockNode extends BlockBase {
             for (EnumFacing facing : EnumFacing.VALUES) {
                 TileEntity tile = world.getTileEntity(pos.offset(facing));
 
-                if (tile instanceof TileNode && ((TileNode) tile).isConnected()) {
+                if (tile instanceof TileNode && ((TileNode) tile).hasNetwork()) {
                     ((TileNode) tile).getNetwork().getNodeGraph().rebuild();
 
                     break;

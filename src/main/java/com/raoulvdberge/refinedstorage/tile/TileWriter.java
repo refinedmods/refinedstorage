@@ -51,7 +51,7 @@ public class TileWriter extends TileNode implements IWriter {
 
     @Override
     public int getRedstoneStrength() {
-        return connected ? redstoneStrength : 0;
+        return network != null ? redstoneStrength : 0;
     }
 
     @Override
@@ -172,7 +172,7 @@ public class TileWriter extends TileNode implements IWriter {
     }
 
     public void onOpened(EntityPlayer entity) {
-        if (isConnected()) {
+        if (hasNetwork()) {
             network.sendReaderWriterChannelUpdate((EntityPlayerMP) entity);
         }
     }

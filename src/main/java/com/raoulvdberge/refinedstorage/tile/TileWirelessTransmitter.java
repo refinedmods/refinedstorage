@@ -67,6 +67,11 @@ public class TileWirelessTransmitter extends TileNode implements IWirelessTransm
         return pos;
     }
 
+    @Override
+    public int getDimension() {
+        return getWorld().provider.getDimension();
+    }
+
     public ItemHandlerBasic getUpgrades() {
         return upgrades;
     }
@@ -77,8 +82,8 @@ public class TileWirelessTransmitter extends TileNode implements IWirelessTransm
     }
 
     @Override
-    public boolean canConduct(EnumFacing direction) {
-        return false;
+    public boolean canConduct(@Nullable EnumFacing direction) {
+        return direction != null && EnumFacing.DOWN.equals(direction);
     }
 
     @Override
@@ -98,5 +103,10 @@ public class TileWirelessTransmitter extends TileNode implements IWirelessTransm
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
         return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+    }
+
+    @Override
+    public void walkNeighborhood(Operator operator) {
+        operator.apply(getWorld(), pos.offset(EnumFacing.DOWN), EnumFacing.UP);
     }
 }
