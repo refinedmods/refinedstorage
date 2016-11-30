@@ -580,40 +580,34 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
             return ItemHandlerHelper.copyStackWithSize(stack, size);
         }
 
-        int originalSize = size;
-
         ItemStack remainder = stack;
 
+        int inserted = 0;
         int insertedExternally = 0;
-        int insertedToIgnore = 0;
 
         for (IItemStorage storage : this.itemStorage.getStorages()) {
-            if (storage.getAccessType() != AccessType.EXTRACT) {
-                remainder = storage.insertItem(remainder, size, simulate);
+            int storedPre = storage.getStored();
 
-                if (!simulate) {
-                    if (remainder != null && storage.isVoiding()) {
-                        insertedToIgnore += remainder.getCount();
+            remainder = storage.insertItem(remainder, size, simulate);
 
-                        remainder = null;
-                    } else if (storage.getAccessType() == AccessType.INSERT) {
-                        insertedToIgnore += size - (remainder != null ? remainder.getCount() : 0);
-                    }
-                }
+            if (!simulate) {
+                inserted += storage.getCacheDelta(storedPre, size, remainder);
             }
 
             if (remainder == null) {
+                // The external storage is responsible for sending changes, we don't need to anymore
                 if (storage instanceof ItemStorageExternal && !simulate) {
                     ((ItemStorageExternal) storage).detectChanges(this);
-                    // the external storage will send the change, we don't need to anymore
+
                     insertedExternally += size;
                 }
 
                 break;
             } else {
+                // The external storage is responsible for sending changes, we don't need to anymore
                 if (size != remainder.getCount() && storage instanceof ItemStorageExternal && !simulate) {
                     ((ItemStorageExternal) storage).detectChanges(this);
-                    // the external storage will send the change, we don't need to anymore
+
                     insertedExternally += size - remainder.getCount();
                 }
 
@@ -622,14 +616,12 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
         }
 
         if (!simulate) {
-            int inserted = remainder == null ? originalSize : (originalSize - remainder.getCount());
-
-            if (inserted - insertedExternally - insertedToIgnore > 0) {
-                itemStorage.add(stack, inserted - insertedExternally - insertedToIgnore, false);
+            if (inserted - insertedExternally > 0) {
+                itemStorage.add(stack, inserted - insertedExternally, false);
             }
 
-            if (inserted - insertedToIgnore > 0) {
-                ItemStack checkSteps = ItemHandlerHelper.copyStackWithSize(stack, inserted - insertedToIgnore);
+            if (inserted > 0) {
+                ItemStack checkSteps = ItemHandlerHelper.copyStackWithSize(stack, inserted);
 
                 for (ICraftingTask task : craftingTasks) {
                     for (ICraftingStep processable : task.getSteps()) {
@@ -648,7 +640,9 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
     public ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
         int requested = size;
         int received = 0;
-        int externalStorageExtracted = 0;
+
+        int extractedExternally = 0;
+
         ItemStack newStack = null;
 
         for (IItemStorage storage : this.itemStorage.getStorages()) {
@@ -659,10 +653,11 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
             }
 
             if (took != null) {
+                // The external storage is responsible for sending changes, we don't need to anymore
                 if (storage instanceof ItemStorageExternal && !simulate) {
                     ((ItemStorageExternal) storage).detectChanges(this);
-                    // the external storage will send the change, we don't need to anymore
-                    externalStorageExtracted += took.getCount();
+
+                    extractedExternally += took.getCount();
                 }
 
                 if (newStack == null) {
@@ -679,8 +674,8 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
             }
         }
 
-        if (newStack != null && newStack.getCount() - externalStorageExtracted > 0 && !simulate) {
-            itemStorage.remove(newStack, newStack.getCount() - externalStorageExtracted);
+        if (newStack != null && newStack.getCount() - extractedExternally > 0 && !simulate) {
+            itemStorage.remove(newStack, newStack.getCount() - extractedExternally);
         }
 
         return newStack;
@@ -693,23 +688,17 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
             return RSUtils.copyStackWithSize(stack, size);
         }
 
-        int originalSize = size;
-        AccessType accessType = AccessType.INSERT_EXTRACT;
         FluidStack remainder = stack;
 
-        int insertedToIgnore = 0;
+        int inserted = 0;
 
         for (IFluidStorage storage : this.fluidStorage.getStorages()) {
-            accessType = storage.getAccessType();
+            int storedPre = storage.getStored();
 
-            if (accessType != AccessType.EXTRACT) {
-                remainder = storage.insertFluid(remainder, size, simulate);
+            remainder = storage.insertFluid(remainder, size, simulate);
 
-                if (remainder != null && storage.isVoiding() && !simulate) {
-                    insertedToIgnore += remainder.amount;
-
-                    remainder = null;
-                }
+            if (!simulate) {
+                inserted += storage.getCacheDelta(storedPre, size, remainder);
             }
 
             if (storage instanceof FluidStorageExternal && !simulate) {
@@ -723,14 +712,8 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
             }
         }
 
-        if (!simulate) {
-            int inserted = remainder == null ? originalSize : (originalSize - remainder.amount);
-
-            inserted -= insertedToIgnore;
-
-            if (inserted > 0 && accessType != AccessType.INSERT) {
-                fluidStorage.add(RSUtils.copyStackWithSize(stack, inserted), false);
-            }
+        if (inserted > 0) {
+            fluidStorage.add(RSUtils.copyStackWithSize(stack, inserted), false);
         }
 
         return remainder;
@@ -741,6 +724,7 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
     public FluidStack extractFluid(@Nonnull FluidStack stack, int size, int flags, boolean simulate) {
         int requested = size;
         int received = 0;
+
         FluidStack newStack = null;
 
         for (IFluidStorage storage : this.fluidStorage.getStorages()) {

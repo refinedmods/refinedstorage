@@ -85,8 +85,8 @@ public class FluidStorageExternal implements IFluidStorage {
     }
 
     @Override
-    public boolean isVoiding() {
-        return false;
+    public int getCacheDelta(int storedPreInsertion, int size, @Nullable FluidStack remainder) {
+        return remainder == null ? size : (size - remainder.amount);
     }
 
     public boolean updateCache() {

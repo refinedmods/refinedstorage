@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.storage.item;
 
+import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.item.IItemStorage;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.Item;
@@ -122,6 +123,10 @@ public abstract class ItemStorageNBT implements IItemStorage {
                     int remainingSpace = getCapacity() - getStored();
 
                     if (remainingSpace <= 0) {
+                        if (isVoiding()) {
+                            return null;
+                        }
+
                         return ItemHandlerHelper.copyStackWithSize(stack, size);
                     }
 
@@ -133,7 +138,7 @@ public abstract class ItemStorageNBT implements IItemStorage {
                         onStorageChanged();
                     }
 
-                    return ItemHandlerHelper.copyStackWithSize(otherStack, size - remainingSpace);
+                    return isVoiding() ? null : ItemHandlerHelper.copyStackWithSize(otherStack, size - remainingSpace);
                 } else {
                     if (!simulate) {
                         tag.setInteger(NBT_STORED, getStored() + size);
@@ -152,6 +157,10 @@ public abstract class ItemStorageNBT implements IItemStorage {
             int remainingSpace = getCapacity() - getStored();
 
             if (remainingSpace <= 0) {
+                if (isVoiding()) {
+                    return null;
+                }
+
                 return ItemHandlerHelper.copyStackWithSize(stack, size);
             }
 
@@ -163,7 +172,7 @@ public abstract class ItemStorageNBT implements IItemStorage {
                 onStorageChanged();
             }
 
-            return ItemHandlerHelper.copyStackWithSize(stack, size - remainingSpace);
+            return isVoiding() ? null : ItemHandlerHelper.copyStackWithSize(stack, size - remainingSpace);
         } else {
             if (!simulate) {
                 tag.setInteger(NBT_STORED, getStored() + size);
@@ -219,8 +228,23 @@ public abstract class ItemStorageNBT implements IItemStorage {
         return capacity;
     }
 
-    public boolean isFull() {
-        return getStored() == getCapacity();
+    protected boolean isVoiding() {
+        return false;
+    }
+
+    @Override
+    public int getCacheDelta(int storedPreInsertion, int size, @Nullable ItemStack remainder) {
+        if (getAccessType() == AccessType.INSERT) {
+            return 0;
+        }
+
+        int inserted = remainder == null ? size : (size - remainder.getCount());
+
+        if (isVoiding() && storedPreInsertion + inserted > getCapacity()) {
+            inserted = getCapacity() - storedPreInsertion;
+        }
+
+        return inserted;
     }
 
     public NBTTagCompound getTag() {

@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.storage.fluid;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
+import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.fluid.IFluidStorage;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
@@ -85,6 +86,10 @@ public abstract class FluidStorageNBT implements IFluidStorage {
                     int remainingSpace = getCapacity() - getStored();
 
                     if (remainingSpace <= 0) {
+                        if (isVoiding()) {
+                            return null;
+                        }
+
                         return RSUtils.copyStackWithSize(stack, size);
                     }
 
@@ -96,7 +101,7 @@ public abstract class FluidStorageNBT implements IFluidStorage {
                         onStorageChanged();
                     }
 
-                    return RSUtils.copyStackWithSize(otherStack, size - remainingSpace);
+                    return isVoiding() ? null : RSUtils.copyStackWithSize(otherStack, size - remainingSpace);
                 } else {
                     if (!simulate) {
                         tag.setInteger(NBT_STORED, getStored() + size);
@@ -115,6 +120,10 @@ public abstract class FluidStorageNBT implements IFluidStorage {
             int remainingSpace = getCapacity() - getStored();
 
             if (remainingSpace <= 0) {
+                if (isVoiding()) {
+                    return null;
+                }
+
                 return RSUtils.copyStackWithSize(stack, size);
             }
 
@@ -126,7 +135,7 @@ public abstract class FluidStorageNBT implements IFluidStorage {
                 onStorageChanged();
             }
 
-            return RSUtils.copyStackWithSize(stack, size - remainingSpace);
+            return isVoiding() ? null : RSUtils.copyStackWithSize(stack, size - remainingSpace);
         } else {
             if (!simulate) {
                 tag.setInteger(NBT_STORED, getStored() + size);
@@ -182,8 +191,23 @@ public abstract class FluidStorageNBT implements IFluidStorage {
         return capacity;
     }
 
-    public boolean isFull() {
-        return getStored() == getCapacity();
+    protected boolean isVoiding() {
+        return false;
+    }
+
+    @Override
+    public int getCacheDelta(int storedPreInsertion, int size, @Nullable FluidStack remainder) {
+        if (getAccessType() == AccessType.INSERT) {
+            return 0;
+        }
+
+        int inserted = remainder == null ? size : (size - remainder.amount);
+
+        if (isVoiding() && storedPreInsertion + inserted > getCapacity()) {
+            inserted = getCapacity() - storedPreInsertion;
+        }
+
+        return inserted;
     }
 
     public NBTTagCompound getTag() {
