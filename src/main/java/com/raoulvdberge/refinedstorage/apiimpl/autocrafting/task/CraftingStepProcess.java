@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
@@ -13,10 +12,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -74,12 +70,12 @@ public class CraftingStepProcess extends CraftingStep {
 
     @Override
     public void execute(Deque<ItemStack> toInsertItems, Deque<FluidStack> toInsertFluids) {
-        IItemStackList actualInputs = API.instance().createItemStackList();
+        List<ItemStack> actualInputs = new LinkedList<>();
         int compare = CraftingTask.DEFAULT_COMPARE | (getPattern().isOredict() ? IComparer.COMPARE_OREDICT : 0);
         if (extractItems(actualInputs, compare, toInsertItems)) {
             IItemHandler inventory = getPattern().getContainer().getFacingInventory();
-            if (insertSimulation(inventory, new ArrayDeque<>(actualInputs.getStacks()))) {
-                actualInputs.getStacks().forEach(stack -> ItemHandlerHelper.insertItem(inventory, stack, false));
+            if (insertSimulation(inventory, new ArrayDeque<>(actualInputs))) {
+                actualInputs.forEach(stack -> ItemHandlerHelper.insertItem(inventory, stack, false));
             }
         }
     }

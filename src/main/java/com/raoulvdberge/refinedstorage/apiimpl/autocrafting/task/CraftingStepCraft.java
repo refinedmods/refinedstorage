@@ -64,11 +64,13 @@ public class CraftingStepCraft extends CraftingStep {
 
     @Override
     public void execute(Deque<ItemStack> toInsertItems, Deque<FluidStack> toInsertFluids) {
-        IItemStackList actualInputs = API.instance().createItemStackList();
+        List<ItemStack> actualInputs = new LinkedList<>();
         int compare = CraftingTask.DEFAULT_COMPARE | (getPattern().isOredict() ? IComparer.COMPARE_OREDICT : 0);
         if (extractItems(actualInputs, compare, toInsertItems)) {
+            IItemStackList stackList = API.instance().createItemStackList();
+            actualInputs.forEach(stackList::add);
 
-            ItemStack[] took = ItemStackList.toCraftingGrid(actualInputs, toInsert, compare);
+            ItemStack[] took = ItemStackList.toCraftingGrid(stackList, toInsert, compare);
 
             for (ItemStack byproduct : (pattern.isOredict() ? pattern.getByproducts(took) : pattern.getByproducts())) {
                 if (byproduct != null) {
