@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.api.autocrafting;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -46,8 +47,9 @@ public interface ICraftingPattern {
 
     /**
      * @param took the items took
-     * @return the outputs based on the items took
+     * @return the outputs based on the items took, null when failed
      */
+    @Nullable
     List<ItemStack> getOutputs(ItemStack[] took);
 
     /**

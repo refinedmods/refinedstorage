@@ -72,15 +72,23 @@ public class CraftingStepCraft extends CraftingStep {
 
             ItemStack[] took = ItemStackList.toCraftingGrid(stackList, toInsert, compare);
 
-            for (ItemStack byproduct : (pattern.isOredict() ? pattern.getByproducts(took) : pattern.getByproducts())) {
-                if (byproduct != null) {
-                    toInsertItems.add(byproduct.copy());
+            List<ItemStack> outputs = pattern.isOredict() ? pattern.getOutputs(took) : pattern.getOutputs();
+
+            // Something went wrong here, redo!
+            if (outputs == null) {
+                toInsertItems.addAll(actualInputs);
+                return;
+            }
+
+            for (ItemStack output : outputs) {
+                if (output != null) {
+                    toInsertItems.add(output.copy());
                 }
             }
 
-            for (ItemStack output : (pattern.isOredict() ? pattern.getOutputs(took) : pattern.getOutputs())) {
-                if (output != null) {
-                    toInsertItems.add(output.copy());
+            for (ItemStack byproduct : (pattern.isOredict() ? pattern.getByproducts(took) : pattern.getByproducts())) {
+                if (byproduct != null) {
+                    toInsertItems.add(byproduct.copy());
                 }
             }
         }
