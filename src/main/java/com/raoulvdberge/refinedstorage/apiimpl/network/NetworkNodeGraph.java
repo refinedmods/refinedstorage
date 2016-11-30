@@ -141,16 +141,18 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
     private void removeOtherControler(World world, BlockPos otherControllerPos) {
         if (!controller.getPos().equals(otherControllerPos)) {
-            world.setBlockToAir(otherControllerPos);
-
             IBlockState state = world.getBlockState(otherControllerPos);
+
+            ItemStack itemStackToSpawn = ItemBlockController.createStackWithNBT(new ItemStack(RSBlocks.CONTROLLER, 1, state.getBlock().getMetaFromState(state)));
+
+            world.setBlockToAir(otherControllerPos);
 
             InventoryHelper.spawnItemStack(
                     world,
                     otherControllerPos.getX(),
                     otherControllerPos.getY(),
                     otherControllerPos.getZ(),
-                    ItemBlockController.createStackWithNBT(new ItemStack(RSBlocks.CONTROLLER, 1, state.getBlock().getMetaFromState(state)))
+                    itemStackToSpawn
             );
         }
     }
