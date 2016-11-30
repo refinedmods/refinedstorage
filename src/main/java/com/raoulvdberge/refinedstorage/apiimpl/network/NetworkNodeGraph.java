@@ -177,7 +177,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
             if (node instanceof INetworkNeighborhoodAware) {
                 ((INetworkNeighborhoodAware) node).walkNeighborhood(operator);
             } else {
-                for (EnumFacing checkSide : EnumFacing.values()) {
+                for (EnumFacing checkSide : EnumFacing.VALUES) {
                     if (checkSide != side) { // Avoid going backward
                         INetworkNode nodeOnSide = NETWORK_NODE_CAPABILITY.cast(tile.getCapability(NETWORK_NODE_CAPABILITY, checkSide));
                         if (nodeOnSide == node) {
