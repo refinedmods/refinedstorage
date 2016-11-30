@@ -30,6 +30,8 @@ public class CapabilityNetworkNode {
                 // no-op
             }
         }, () -> new INetworkNode() {
+            private INetworkMaster network;
+
             @Override
             public int getEnergyUsage() {
                 return 0;
@@ -48,6 +50,7 @@ public class CapabilityNetworkNode {
 
             @Override
             public void onConnected(INetworkMaster network) {
+                this.network = network;
             }
 
             @Override
@@ -66,7 +69,7 @@ public class CapabilityNetworkNode {
 
             @Override
             public INetworkMaster getNetwork() {
-                return null;
+                return network;
             }
 
             @Override

@@ -57,10 +57,10 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
             }
         };
 
-        BlockPos controlerPos = controller.getPos();
+        BlockPos controllerPos = controller.getPos();
         World controlerWorld = controller.getWorld();
         for (EnumFacing facing : EnumFacing.VALUES) {
-            BlockPos pos = controlerPos.offset(facing);
+            BlockPos pos = controllerPos.offset(facing);
             operator.apply(controlerWorld, pos, facing.getOpposite());
         }
 
