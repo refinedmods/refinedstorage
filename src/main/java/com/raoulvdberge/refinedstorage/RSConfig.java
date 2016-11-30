@@ -46,7 +46,6 @@ public final class RSConfig {
     public int diskManipulatorUsage;
     public int readerUsage;
     public int writerUsage;
-    public int euConversion;
     //endregion
 
     //region Controller
@@ -145,7 +144,6 @@ public final class RSConfig {
         diskManipulatorUsage = config.getInt("diskManipulator", ENERGY, 3, 0, Integer.MAX_VALUE, "The energy used by Disk Manipulators");
         readerUsage = config.getInt("reader", ENERGY, 2, 0, Integer.MAX_VALUE, "The energy used by Readers");
         writerUsage = config.getInt("writer", ENERGY, 2, 0, Integer.MAX_VALUE, "The energy used by Writers");
-        euConversion = config.getInt("euConversion", ENERGY, 8, 1, Integer.MAX_VALUE, "The amount of RS that equals 1 EU");
         //endregion
 
         //region Controller
