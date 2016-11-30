@@ -10,12 +10,12 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
 
-public class ItemStorageItemHandler extends ItemStorageExternal {
+public class StorageItemItemHandler extends StorageItemExternal {
     private TileExternalStorage externalStorage;
     private IItemHandler handler;
     private AccessType lockedAccessType = AccessType.INSERT_EXTRACT;
 
-    public ItemStorageItemHandler(TileExternalStorage externalStorage, IItemHandler handler) {
+    public StorageItemItemHandler(TileExternalStorage externalStorage, IItemHandler handler) {
         this.externalStorage = externalStorage;
         this.handler = handler;
 

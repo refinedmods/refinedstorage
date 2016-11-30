@@ -11,11 +11,11 @@ import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 
 import javax.annotation.Nonnull;
 
-public class ItemStorageDSU extends ItemStorageExternal {
+public class StorageItemDSU extends StorageItemExternal {
     private TileExternalStorage externalStorage;
     private IDeepStorageUnit unit;
 
-    public ItemStorageDSU(TileExternalStorage externalStorage, IDeepStorageUnit unit) {
+    public StorageItemDSU(TileExternalStorage externalStorage, IDeepStorageUnit unit) {
         this.externalStorage = externalStorage;
         this.unit = unit;
     }

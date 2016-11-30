@@ -7,11 +7,11 @@ import net.minecraft.util.NonNullList;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class ItemStorageDrawerGroup extends ItemStorageExternal {
+public class StorageItemDrawerGroup extends StorageItemExternal {
     private TileExternalStorage externalStorage;
     private IDrawerGroup drawers;
 
-    public ItemStorageDrawerGroup(TileExternalStorage externalStorage, IDrawerGroup drawers) {
+    public StorageItemDrawerGroup(TileExternalStorage externalStorage, IDrawerGroup drawers) {
         this.externalStorage = externalStorage;
         this.drawers = drawers;
     }
@@ -22,7 +22,7 @@ public class ItemStorageDrawerGroup extends ItemStorageExternal {
 
         for (int i = 0; i < drawers.getDrawerCount(); ++i) {
             if (drawers.isDrawerEnabled(i)) {
-                stacks.addAll(ItemStorageDrawer.getStacks(drawers.getDrawer(i)));
+                stacks.addAll(StorageItemDrawer.getStacks(drawers.getDrawer(i)));
             }
         }
 
@@ -67,7 +67,7 @@ public class ItemStorageDrawerGroup extends ItemStorageExternal {
 
         for (int i = 0; i < drawers.getDrawerCount(); ++i) {
             if (drawers.isDrawerEnabled(i)) {
-                remainder = ItemStorageDrawer.insert(externalStorage, drawers.getDrawer(i), stack, size, simulate);
+                remainder = StorageItemDrawer.insert(externalStorage, drawers.getDrawer(i), stack, size, simulate);
 
                 if (remainder == null || remainder.getCount() <= 0) {
                     break;
@@ -89,7 +89,7 @@ public class ItemStorageDrawerGroup extends ItemStorageExternal {
 
         for (int i = 0; i < drawers.getDrawerCount(); ++i) {
             if (drawers.isDrawerEnabled(i)) {
-                ItemStack extracted = ItemStorageDrawer.extract(drawers.getDrawer(i), stack, toExtract, flags, simulate);
+                ItemStack extracted = StorageItemDrawer.extract(drawers.getDrawer(i), stack, toExtract, flags, simulate);
 
                 if (extracted != null) {
                     if (result == null) {

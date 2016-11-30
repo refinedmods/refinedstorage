@@ -37,8 +37,8 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
     });
     public static final TileDataParameter<Boolean> VOID_EXCESS = IExcessVoidable.createParameter();
 
-    class ItemStorage extends StorageItemNBT {
-        public ItemStorage() {
+    class StorageItem extends StorageItemNBT {
+        public StorageItem() {
             super(TileStorage.this.getStorageTag(), TileStorage.this.getCapacity(), TileStorage.this);
         }
 
@@ -78,7 +78,7 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
 
     private NBTTagCompound storageTag = StorageItemNBT.createNBT();
 
-    private ItemStorage storage;
+    private StorageItem storage;
 
     private EnumItemStorageType type;
 
@@ -111,7 +111,7 @@ public class TileStorage extends TileNode implements IStorageProvider, IStorageG
         super.update();
 
         if (storage == null && storageTag != null) {
-            storage = new ItemStorage();
+            storage = new StorageItem();
 
             if (network != null) {
                 network.getItemStorageCache().invalidate();

@@ -40,10 +40,10 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
     public static final TileDataParameter<Boolean> VOID_EXCESS = IExcessVoidable.createParameter();
     public static final TileDataParameter<AccessType> ACCESS_TYPE = IAccessType.createParameter();
 
-    public class ItemStorage extends StorageItemNBT {
+    public class StorageItem extends StorageItemNBT {
         private int lastState;
 
-        public ItemStorage(ItemStack disk) {
+        public StorageItem(ItemStack disk) {
             super(disk.getTagCompound(), EnumItemStorageType.getById(disk.getItemDamage()).getCapacity(), TileDiskDrive.this);
 
             lastState = getDiskState(getStored(), getCapacity());
@@ -87,10 +87,10 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
         }
     }
 
-    public class FluidStorage extends StorageFluidNBT {
+    public class StorageFluid extends StorageFluidNBT {
         private int lastState;
 
-        public FluidStorage(ItemStack disk) {
+        public StorageFluid(ItemStack disk) {
             super(disk.getTagCompound(), EnumFluidStorageType.getById(disk.getItemDamage()).getCapacity(), TileDiskDrive.this);
 
             lastState = getDiskState(getStored(), getCapacity());
@@ -153,7 +153,7 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
             super.onContentsChanged(slot);
 
             if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
-                RSUtils.createStorages(getStackInSlot(slot), slot, itemStorages, fluidStorages, s -> new ItemStorage(s), s -> new FluidStorage(s));
+                RSUtils.createStorages(getStackInSlot(slot), slot, itemStorages, fluidStorages, s -> new StorageItem(s), s -> new StorageFluid(s));
 
                 if (network != null) {
                     network.getItemStorageCache().invalidate();
@@ -181,8 +181,8 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
     private ItemHandlerBasic itemFilters = new ItemHandlerBasic(9, this);
     private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(9, this);
 
-    private ItemStorage itemStorages[] = new ItemStorage[8];
-    private FluidStorage fluidStorages[] = new FluidStorage[8];
+    private StorageItem itemStorages[] = new StorageItem[8];
+    private StorageFluid fluidStorages[] = new StorageFluid[8];
 
     private AccessType accessType = AccessType.INSERT_EXTRACT;
     private int priority = 0;
@@ -222,13 +222,13 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
     }
 
     public void onBreak() {
-        for (ItemStorage storage : this.itemStorages) {
+        for (StorageItem storage : this.itemStorages) {
             if (storage != null) {
                 storage.writeToNBT();
             }
         }
 
-        for (FluidStorage storage : this.fluidStorages) {
+        for (StorageFluid storage : this.fluidStorages) {
             if (storage != null) {
                 storage.writeToNBT();
             }

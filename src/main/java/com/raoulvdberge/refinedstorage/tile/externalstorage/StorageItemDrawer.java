@@ -12,11 +12,11 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
 
-public class ItemStorageDrawer extends ItemStorageExternal {
+public class StorageItemDrawer extends StorageItemExternal {
     private TileExternalStorage externalStorage;
     private IDrawer drawer;
 
-    public ItemStorageDrawer(TileExternalStorage externalStorage, IDrawer drawer) {
+    public StorageItemDrawer(TileExternalStorage externalStorage, IDrawer drawer) {
         this.externalStorage = externalStorage;
         this.drawer = drawer;
     }

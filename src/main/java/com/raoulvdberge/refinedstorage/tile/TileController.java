@@ -47,8 +47,8 @@ import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.RSSerializers;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-import com.raoulvdberge.refinedstorage.tile.externalstorage.FluidStorageExternal;
-import com.raoulvdberge.refinedstorage.tile.externalstorage.ItemStorageExternal;
+import com.raoulvdberge.refinedstorage.tile.externalstorage.StorageFluidExternal;
+import com.raoulvdberge.refinedstorage.tile.externalstorage.StorageItemExternal;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
 import net.darkhax.tesla.capability.TeslaCapabilities;
 import net.minecraft.block.state.IBlockState;
@@ -596,8 +596,8 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
 
             if (remainder == null) {
                 // The external storage is responsible for sending changes, we don't need to anymore
-                if (storage instanceof ItemStorageExternal && !simulate) {
-                    ((ItemStorageExternal) storage).detectChanges(this);
+                if (storage instanceof StorageItemExternal && !simulate) {
+                    ((StorageItemExternal) storage).detectChanges(this);
 
                     insertedExternally += size;
                 }
@@ -605,8 +605,8 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
                 break;
             } else {
                 // The external storage is responsible for sending changes, we don't need to anymore
-                if (size != remainder.getCount() && storage instanceof ItemStorageExternal && !simulate) {
-                    ((ItemStorageExternal) storage).detectChanges(this);
+                if (size != remainder.getCount() && storage instanceof StorageItemExternal && !simulate) {
+                    ((StorageItemExternal) storage).detectChanges(this);
 
                     insertedExternally += size - remainder.getCount();
                 }
@@ -654,8 +654,8 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
 
             if (took != null) {
                 // The external storage is responsible for sending changes, we don't need to anymore
-                if (storage instanceof ItemStorageExternal && !simulate) {
-                    ((ItemStorageExternal) storage).detectChanges(this);
+                if (storage instanceof StorageItemExternal && !simulate) {
+                    ((StorageItemExternal) storage).detectChanges(this);
 
                     extractedExternally += took.getCount();
                 }
@@ -701,8 +701,8 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
                 inserted += storage.getCacheDelta(storedPre, size, remainder);
             }
 
-            if (storage instanceof FluidStorageExternal && !simulate) {
-                ((FluidStorageExternal) storage).updateCacheForcefully();
+            if (storage instanceof StorageFluidExternal && !simulate) {
+                ((StorageFluidExternal) storage).updateCacheForcefully();
             }
 
             if (remainder == null) {
@@ -735,8 +735,8 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
             }
 
             if (took != null) {
-                if (storage instanceof FluidStorageExternal && !simulate) {
-                    ((FluidStorageExternal) storage).updateCacheForcefully();
+                if (storage instanceof StorageFluidExternal && !simulate) {
+                    ((StorageFluidExternal) storage).updateCacheForcefully();
                 }
 
                 if (newStack == null) {

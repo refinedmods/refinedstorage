@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public abstract class ItemStorageExternal implements IStorage<ItemStack> {
+public abstract class StorageItemExternal implements IStorage<ItemStack> {
     private List<ItemStack> cache;
 
     public abstract int getCapacity();

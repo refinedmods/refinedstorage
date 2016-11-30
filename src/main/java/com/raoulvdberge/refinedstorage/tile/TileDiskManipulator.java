@@ -66,8 +66,8 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
     private int type = IType.ITEMS;
     private int ioMode = IO_MODE_INSERT;
 
-    private ItemStorage[] itemStorages = new ItemStorage[6];
-    private FluidStorage[] fluidStorages = new FluidStorage[6];
+    private StorageItem[] itemStorages = new StorageItem[6];
+    private StorageFluid[] fluidStorages = new StorageFluid[6];
 
     private Integer[] diskState = new Integer[6];
 
@@ -79,7 +79,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             super.onContentsChanged(slot);
 
             if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
-                RSUtils.createStorages(getStackInSlot(slot), slot, itemStorages, fluidStorages, s -> new ItemStorage(s), s -> new FluidStorage(s));
+                RSUtils.createStorages(getStackInSlot(slot), slot, itemStorages, fluidStorages, s -> new StorageItem(s), s -> new StorageFluid(s));
 
                 updateBlock();
             }
@@ -106,17 +106,17 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             super.onContentsChanged(slot);
 
             if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
-                RSUtils.createStorages(getStackInSlot(slot), 3 + slot, itemStorages, fluidStorages, s -> new ItemStorage(s), s -> new FluidStorage(s));
+                RSUtils.createStorages(getStackInSlot(slot), 3 + slot, itemStorages, fluidStorages, s -> new StorageItem(s), s -> new StorageFluid(s));
 
                 updateBlock();
             }
         }
     };
 
-    public class ItemStorage extends StorageItemNBT {
+    public class StorageItem extends StorageItemNBT {
         private int lastState;
 
-        public ItemStorage(ItemStack disk) {
+        public StorageItem(ItemStack disk) {
             super(disk.getTagCompound(), EnumItemStorageType.getById(disk.getItemDamage()).getCapacity(), TileDiskManipulator.this);
 
             lastState = TileDiskDrive.getDiskState(getStored(), getCapacity());
@@ -164,10 +164,10 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         }
     }
 
-    public class FluidStorage extends StorageFluidNBT {
+    public class StorageFluid extends StorageFluidNBT {
         private int lastState;
 
-        public FluidStorage(ItemStack disk) {
+        public StorageFluid(ItemStack disk) {
             super(disk.getTagCompound(), EnumFluidStorageType.getById(disk.getItemDamage()).getCapacity(), TileDiskManipulator.this);
 
             lastState = TileDiskDrive.getDiskState(getStored(), getCapacity());
@@ -252,7 +252,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
                 return;
             }
 
-            ItemStorage storage = itemStorages[slot];
+            StorageItem storage = itemStorages[slot];
 
             if (ioMode == IO_MODE_INSERT) {
                 insertIntoNetwork(storage, slot);
@@ -268,7 +268,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
                 return;
             }
 
-            FluidStorage storage = fluidStorages[slot];
+            StorageFluid storage = fluidStorages[slot];
 
             if (ioMode == IO_MODE_INSERT) {
                 insertIntoNetwork(storage, slot);
@@ -278,7 +278,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         }
     }
 
-    private void insertIntoNetwork(ItemStorage storage, int slot) {
+    private void insertIntoNetwork(StorageItem storage, int slot) {
         if (storage.getStored() == 0) {
             moveDriveToOutput(slot);
             return;
@@ -309,7 +309,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         }
     }
 
-    private void extractFromNetwork(ItemStorage storage, int slot) {
+    private void extractFromNetwork(StorageItem storage, int slot) {
         if (storage.getStored() == storage.getCapacity()) {
             moveDriveToOutput(slot);
             return;
@@ -357,7 +357,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         }
     }
 
-    private void insertIntoNetwork(FluidStorage storage, int slot) {
+    private void insertIntoNetwork(StorageFluid storage, int slot) {
         if (storage.getStored() == 0) {
             moveDriveToOutput(slot);
             return;
@@ -390,7 +390,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         }
     }
 
-    private void extractFromNetwork(FluidStorage storage, int slot) {
+    private void extractFromNetwork(StorageFluid storage, int slot) {
         if (storage.getStored() == storage.getCapacity()) {
             moveDriveToOutput(slot);
             return;
@@ -614,13 +614,13 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
     }
 
     public void onBreak() {
-        for (ItemStorage storage : itemStorages) {
+        for (StorageItem storage : itemStorages) {
             if (storage != null) {
                 storage.writeToNBT();
             }
         }
 
-        for (FluidStorage storage : fluidStorages) {
+        for (StorageFluid storage : fluidStorages) {
             if (storage != null) {
                 storage.writeToNBT();
             }

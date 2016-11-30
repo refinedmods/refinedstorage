@@ -14,13 +14,13 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class FluidStorageExternal implements IStorage<FluidStack> {
+public class StorageFluidExternal implements IStorage<FluidStack> {
     private FluidStack cache;
 
     private TileExternalStorage externalStorage;
     private IFluidHandler handler;
 
-    public FluidStorageExternal(TileExternalStorage externalStorage, IFluidHandler handler, IFluidTankProperties properties) {
+    public StorageFluidExternal(TileExternalStorage externalStorage, IFluidHandler handler, IFluidTankProperties properties) {
         this.externalStorage = externalStorage;
         this.handler = handler;
     }

@@ -41,11 +41,11 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
         public Integer getValue(TileExternalStorage tile) {
             int stored = 0;
 
-            for (ItemStorageExternal storage : tile.itemStorages) {
+            for (StorageItemExternal storage : tile.itemStorages) {
                 stored += storage.getStored();
             }
 
-            for (FluidStorageExternal storage : tile.fluidStorages) {
+            for (StorageFluidExternal storage : tile.fluidStorages) {
                 stored += storage.getStored();
             }
 
@@ -58,11 +58,11 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
         public Integer getValue(TileExternalStorage tile) {
             int capacity = 0;
 
-            for (ItemStorageExternal storage : tile.itemStorages) {
+            for (StorageItemExternal storage : tile.itemStorages) {
                 capacity += storage.getCapacity();
             }
 
-            for (FluidStorageExternal storage : tile.fluidStorages) {
+            for (StorageFluidExternal storage : tile.fluidStorages) {
                 capacity += storage.getCapacity();
             }
 
@@ -84,8 +84,8 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
     private int type = IType.ITEMS;
     private AccessType accessType = AccessType.INSERT_EXTRACT;
 
-    private List<ItemStorageExternal> itemStorages = new ArrayList<>();
-    private List<FluidStorageExternal> fluidStorages = new ArrayList<>();
+    private List<StorageItemExternal> itemStorages = new ArrayList<>();
+    private List<StorageFluidExternal> fluidStorages = new ArrayList<>();
 
     public TileExternalStorage() {
         dataManager.addWatchedParameter(PRIORITY);
@@ -127,13 +127,13 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
                 return;
             }
 
-            for (ItemStorageExternal storage : itemStorages) {
+            for (StorageItemExternal storage : itemStorages) {
                 storage.detectChanges(network);
             }
 
             boolean fluidChangeDetected = false;
 
-            for (FluidStorageExternal storage : fluidStorages) {
+            for (StorageFluidExternal storage : fluidStorages) {
                 if (storage.updateCache()) {
                     fluidChangeDetected = true;
                 }
@@ -234,16 +234,16 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
 
         if (type == IType.ITEMS) {
             if (facing instanceof IDrawerGroup) {
-                itemStorages.add(new ItemStorageDrawerGroup(this, (IDrawerGroup) facing));
+                itemStorages.add(new StorageItemDrawerGroup(this, (IDrawerGroup) facing));
             } else if (facing instanceof IDrawer) {
-                itemStorages.add(new ItemStorageDrawer(this, (IDrawer) facing));
+                itemStorages.add(new StorageItemDrawer(this, (IDrawer) facing));
             } else if (facing instanceof IDeepStorageUnit) {
-                itemStorages.add(new ItemStorageDSU(this, (IDeepStorageUnit) facing));
+                itemStorages.add(new StorageItemDSU(this, (IDeepStorageUnit) facing));
             } else if (!(facing instanceof TileNode)) {
                 IItemHandler itemHandler = RSUtils.getItemHandler(facing, getDirection().getOpposite());
 
                 if (itemHandler != null) {
-                    itemStorages.add(new ItemStorageItemHandler(this, itemHandler));
+                    itemStorages.add(new StorageItemItemHandler(this, itemHandler));
                 }
             }
         } else if (type == IType.FLUIDS) {
@@ -251,7 +251,7 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
 
             if (fluidHandler != null) {
                 for (IFluidTankProperties property : fluidHandler.getTankProperties()) {
-                    fluidStorages.add(new FluidStorageExternal(this, fluidHandler, property));
+                    fluidStorages.add(new StorageFluidExternal(this, fluidHandler, property));
                 }
             }
         }

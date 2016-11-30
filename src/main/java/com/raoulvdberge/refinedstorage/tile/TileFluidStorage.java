@@ -35,8 +35,8 @@ public class TileFluidStorage extends TileNode implements IStorageProvider, ISto
         }
     });
 
-    class FluidStorage extends StorageFluidNBT {
-        public FluidStorage() {
+    class StorageFluid extends StorageFluidNBT {
+        public StorageFluid() {
             super(TileFluidStorage.this.getStorageTag(), TileFluidStorage.this.getCapacity(), TileFluidStorage.this);
         }
 
@@ -76,7 +76,7 @@ public class TileFluidStorage extends TileNode implements IStorageProvider, ISto
 
     private NBTTagCompound storageTag = StorageFluidNBT.createNBT();
 
-    private FluidStorage storage;
+    private StorageFluid storage;
 
     private EnumFluidStorageType type;
 
@@ -109,7 +109,7 @@ public class TileFluidStorage extends TileNode implements IStorageProvider, ISto
         super.update();
 
         if (storage == null && storageTag != null) {
-            storage = new FluidStorage();
+            storage = new StorageFluid();
 
             if (network != null) {
                 network.getFluidStorageCache().invalidate();
