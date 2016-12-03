@@ -455,8 +455,6 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
                 patterns.addAll(((ICraftingPatternContainer) node).getPatterns());
             }
         }
-
-        itemStorage.invalidate();
     }
 
     @Override

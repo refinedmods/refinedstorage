@@ -2,7 +2,6 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.grid;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
@@ -142,7 +141,9 @@ public class ItemGridHandler implements IItemGridHandler {
     }
 
     @Override
-    public void onCraftingPreviewRequested(EntityPlayerMP player, ItemStack stack, int quantity) {
+    public void onCraftingPreviewRequested(EntityPlayerMP player, int hash, int quantity) {
+        ItemStack stack = network.getItemStorageCache().getList().get(hash);
+
         if (stack != null) {
             Thread calculationThread = new Thread(() -> {
                 ICraftingTask task = new CraftingTask(network, stack, network.getPattern(stack), quantity);
