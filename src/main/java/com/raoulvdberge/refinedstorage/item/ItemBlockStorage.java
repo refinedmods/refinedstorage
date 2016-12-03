@@ -90,7 +90,13 @@ public class ItemBlockStorage extends ItemBlockBase {
 
     @Override
     public NBTTagCompound getNBTShareTag(ItemStack stack) {
-        return !isValid(stack) ? super.getNBTShareTag(stack) : StorageItemNBT.getNBTShareTag(stack.getTagCompound().getCompoundTag(TileStorage.NBT_STORAGE));
+        if (!isValid(stack)) {
+            return super.getNBTShareTag(stack);
+        } else {
+            NBTTagCompound shareTag = new NBTTagCompound();
+            shareTag.setTag(TileStorage.NBT_STORAGE, StorageItemNBT.getNBTShareTag(stack.getTagCompound().getCompoundTag(TileStorage.NBT_STORAGE)));
+            return shareTag;
+        }
     }
 
     public static ItemStack initNBT(ItemStack stack) {

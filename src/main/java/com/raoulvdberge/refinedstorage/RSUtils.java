@@ -76,14 +76,26 @@ public final class RSUtils {
         QUANTITY_FORMATTER.setRoundingMode(RoundingMode.DOWN);
     }
 
-    public static void writeItemStack(ByteBuf buf, INetworkMaster network, ItemStack stack, boolean displayCraftText) {
+    public static void writeItemStack(ByteBuf buf, ItemStack stack) {
+        writeItemStack(buf, stack, null, false);
+    }
+
+    public static void writeItemStack(ByteBuf buf, ItemStack stack, INetworkMaster network, boolean displayCraftText) {
         buf.writeInt(Item.getIdFromItem(stack.getItem()));
         buf.writeInt(stack.getCount());
         buf.writeInt(stack.getItemDamage());
-        ByteBufUtils.writeTag(buf, stack.getItem().getNBTShareTag(stack));
-        buf.writeInt(API.instance().getItemStackHashCode(stack));
-        buf.writeBoolean(network.hasPattern(stack));
-        buf.writeBoolean(displayCraftText);
+        if (network != null) {
+            ByteBufUtils.writeTag(buf, stack.getItem().getNBTShareTag(stack));
+            buf.writeInt(API.instance().getItemStackHashCode(stack));
+            buf.writeBoolean(network.hasPattern(stack));
+            buf.writeBoolean(displayCraftText);
+        }
+    }
+
+    public static ItemStack readItemStack(ByteBuf buf) {
+        ItemStack stack = new ItemStack(Item.getItemById(buf.readInt()), buf.readInt(), buf.readInt());
+        stack.setTagCompound(ByteBufUtils.readTag(buf));
+        return stack;
     }
 
     public static void writeFluidStack(ByteBuf buf, FluidStack stack) {

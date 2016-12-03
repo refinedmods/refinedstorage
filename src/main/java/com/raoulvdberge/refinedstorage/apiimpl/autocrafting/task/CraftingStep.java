@@ -177,7 +177,7 @@ public abstract class CraftingStep implements ICraftingStep {
         return AvailableType.ITEM;
     }
 
-    protected boolean extractItems(IStackList<ItemStack> actualInputs, int compare, Deque<ItemStack> toInsertItems) {
+    protected boolean extractItems(List<ItemStack> actualInputs, int compare, Deque<ItemStack> toInsertItems) {
         for (ItemStack insertStack : getToInsert()) {
             // This will be a tool, like a hammer
             if (insertStack.isItemStackDamageable()) {
@@ -203,7 +203,7 @@ public abstract class CraftingStep implements ICraftingStep {
 
                 if (abort) {
                     // Abort task re-insert taken stacks and reset state
-                    toInsertItems.addAll(actualInputs.getStacks());
+                    toInsertItems.addAll(actualInputs);
                     startedProcessing = false;
                     return false;
                 }

@@ -61,21 +61,30 @@ public class CraftingStepCraft extends CraftingStep {
 
     @Override
     public void execute(Deque<ItemStack> toInsertItems, Deque<FluidStack> toInsertFluids) {
-        IStackList<ItemStack> actualInputs = API.instance().createItemStackList();
+        List<ItemStack> actualInputs = new LinkedList<>();
         int compare = CraftingTask.DEFAULT_COMPARE | (getPattern().isOredict() ? IComparer.COMPARE_OREDICT : 0);
         if (extractItems(actualInputs, compare, toInsertItems)) {
+            IStackList<ItemStack> stackList = API.instance().createItemStackList();
+            actualInputs.forEach(stackList::add);
 
-            ItemStack[] took = StackListItem.toCraftingGrid(actualInputs, toInsert, compare);
+            ItemStack[] took = StackListItem.toCraftingGrid(stackList, toInsert, compare);
+
+            List<ItemStack> outputs = pattern.isOredict() ? pattern.getOutputs(took) : pattern.getOutputs();
+            if (outputs == null) {
+                toInsertItems.addAll(actualInputs);
+                startedProcessing = false;
+                return;
+            }
+
+            for (ItemStack output : outputs) {
+                if (output != null) {
+                    toInsertItems.add(output.copy());
+                }
+            }
 
             for (ItemStack byproduct : (pattern.isOredict() ? pattern.getByproducts(took) : pattern.getByproducts())) {
                 if (byproduct != null) {
                     toInsertItems.add(byproduct.copy());
-                }
-            }
-
-            for (ItemStack output : (pattern.isOredict() ? pattern.getOutputs(took) : pattern.getOutputs())) {
-                if (output != null) {
-                    toInsertItems.add(output.copy());
                 }
             }
         }

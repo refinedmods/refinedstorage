@@ -1,10 +1,10 @@
 package com.raoulvdberge.refinedstorage.network;
 
+import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.container.ContainerProcessingPatternEncoder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class MessageProcessingPatternEncoderTransfer extends MessageHandlerPlaye
         this.inputs = new ArrayList<>(size);
 
         for (int i = 0; i < size; i++) {
-            this.inputs.add(ByteBufUtils.readItemStack(buf));
+            this.inputs.add(RSUtils.readItemStack(buf));
         }
 
         size = buf.readInt();
@@ -37,7 +37,7 @@ public class MessageProcessingPatternEncoderTransfer extends MessageHandlerPlaye
         this.outputs = new ArrayList<>(size);
 
         for (int i = 0; i < size; i++) {
-            this.outputs.add(ByteBufUtils.readItemStack(buf));
+            this.outputs.add(RSUtils.readItemStack(buf));
         }
     }
 
@@ -46,13 +46,13 @@ public class MessageProcessingPatternEncoderTransfer extends MessageHandlerPlaye
         buf.writeInt(inputs.size());
 
         for (ItemStack stack : inputs) {
-            ByteBufUtils.writeItemStack(buf, stack);
+            RSUtils.writeItemStack(buf, stack);
         }
 
         buf.writeInt(outputs.size());
 
         for (ItemStack stack : outputs) {
-            ByteBufUtils.writeItemStack(buf, stack);
+            RSUtils.writeItemStack(buf, stack);
         }
     }
 

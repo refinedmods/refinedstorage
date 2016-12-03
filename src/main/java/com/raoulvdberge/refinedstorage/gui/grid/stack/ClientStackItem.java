@@ -20,8 +20,7 @@ public class ClientStackItem implements IClientStack {
     private boolean displayCraftText;
 
     public ClientStackItem(ByteBuf buf) {
-        stack = new ItemStack(Item.getItemById(buf.readInt()), buf.readInt(), buf.readInt());
-        stack.setTagCompound(ByteBufUtils.readTag(buf));
+        stack = RSUtils.readItemStack(buf);
         hash = buf.readInt();
         craftable = buf.readBoolean();
 

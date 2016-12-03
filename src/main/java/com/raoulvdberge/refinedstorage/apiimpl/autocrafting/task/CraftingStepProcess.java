@@ -72,12 +72,12 @@ public class CraftingStepProcess extends CraftingStep {
 
     @Override
     public void execute(Deque<ItemStack> toInsertItems, Deque<FluidStack> toInsertFluids) {
-        IStackList<ItemStack> actualInputs = API.instance().createItemStackList();
+        List<ItemStack> actualInputs = new LinkedList<>();
         int compare = CraftingTask.DEFAULT_COMPARE | (getPattern().isOredict() ? IComparer.COMPARE_OREDICT : 0);
         if (extractItems(actualInputs, compare, toInsertItems)) {
             IItemHandler inventory = getPattern().getContainer().getFacingInventory();
-            if (insertSimulation(inventory, new ArrayDeque<>(actualInputs.getStacks()))) {
-                actualInputs.getStacks().forEach(stack -> ItemHandlerHelper.insertItem(inventory, stack, false));
+            if (insertSimulation(inventory, new ArrayDeque<>(actualInputs))) {
+                actualInputs.forEach(stack -> ItemHandlerHelper.insertItem(inventory, stack, false));
             }
         }
     }

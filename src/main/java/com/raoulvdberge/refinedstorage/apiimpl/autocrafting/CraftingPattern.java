@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -193,6 +194,7 @@ public class CraftingPattern implements ICraftingPattern {
     }
 
     @Override
+    @Nullable
     public List<ItemStack> getOutputs(ItemStack[] took) {
         List<ItemStack> outputs = new ArrayList<>();
 
@@ -209,7 +211,11 @@ public class CraftingPattern implements ICraftingPattern {
             }
         }
 
-        ItemStack cleaned = recipe.getCraftingResult(inv).copy();
+        ItemStack cleaned = recipe.getCraftingResult(inv);
+        if (cleaned.isEmpty()) {
+            return null;
+        }
+        cleaned = cleaned.copy();
         if (mekanism && cleaned.hasTagCompound()) {
             cleaned.getTagCompound().removeTag("mekData");
         }

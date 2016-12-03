@@ -226,12 +226,17 @@ public class CraftingTask implements ICraftingTask {
             }
         }
 
-        for (ItemStack byproduct : (!pattern.isProcessing() && pattern.isOredict() && missing.isEmpty() ? pattern.getByproducts(took) : pattern.getByproducts())) {
-            toInsert.add(byproduct.copy());
+        List<ItemStack> outputs = !pattern.isProcessing() && pattern.isOredict() && missing.isEmpty() ? pattern.getOutputs(took) : pattern.getOutputs();
+        if (outputs == null) { // Bla Bla what evs
+            outputs = pattern.getOutputs();
         }
 
-        for (ItemStack output : (!pattern.isProcessing() && pattern.isOredict() && missing.isEmpty() ? pattern.getOutputs(took) : pattern.getOutputs())) {
+        for (ItemStack output : outputs) {
             toInsert.add(output.copy());
+        }
+
+        for (ItemStack byproduct : (!pattern.isProcessing() && pattern.isOredict() && missing.isEmpty() ? pattern.getByproducts(took) : pattern.getByproducts())) {
+            toInsert.add(byproduct.copy());
         }
 
         usedPatterns.remove(pattern);
