@@ -23,6 +23,15 @@ public class ItemHandlerBasic extends ItemStackHandler {
     }
 
     @Override
+    public void setStackInSlot(int slot, @Nonnull ItemStack stack) {
+        validateSlotIndex(slot);
+
+        stacks.set(slot, stack);
+
+        onContentsChanged(slot);
+    }
+
+    @Override
     @Nonnull
     public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
         if (validators.length > 0) {

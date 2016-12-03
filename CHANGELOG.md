@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 1.3.1
+- Updated Forge to 2180 (raoulvdberge)
+- Fixed Disk Drive not noticing a Storage Disk being shift clicked out of the GUI (raoulvdberge)
+
 ### 1.3
 - Port to Minecraft 1.11 (raoulvdberge, way2muchnoise)
 - Removed RF support, use Forge Energy instead (raoulvdberge)

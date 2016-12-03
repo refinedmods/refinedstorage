@@ -104,5 +104,10 @@ public class ReaderWriterHandlerItems implements IReaderWriterHandler {
         public ItemStack extractItem(int slot, int amount, boolean simulate) {
             return canExtract ? parent.extractItem(slot, amount, simulate) : ItemStack.EMPTY;
         }
+
+        @Override
+        public int getSlotLimit(int slot) {
+            return parent.getSlotLimit(slot);
+        }
     }
 }
