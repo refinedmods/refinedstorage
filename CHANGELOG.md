@@ -2,7 +2,7 @@
 
 ### 1.3
 - Port to Minecraft 1.11 (raoulvdberge, way2muchnoise)
-- Removed RF support (raoulvdberge)
+- Removed RF support, use Forge Energy instead (raoulvdberge)
 - Removed IC2 support (raoulvdberge)
 - Removed MCMultiPart support (will be re-added as soon as MCMultiPart for MC 1.11 is available) (raoulvdberge)
 

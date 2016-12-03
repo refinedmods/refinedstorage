@@ -58,7 +58,7 @@ public class StorageItemDrawer extends StorageItemExternal {
 
     public static NonNullList<ItemStack> getStacks(IDrawer drawer) {
         if (!drawer.isEmpty() && drawer.getStoredItemCount() > 0) {
-            return NonNullList.withSize(1, drawer.getStoredItemCopy());
+            return NonNullList.withSize(1, ItemHandlerHelper.copyStackWithSize(drawer.getStoredItemPrototype(), drawer.getStoredItemCount()));
         }
 
         return RSUtils.emptyNonNullList();
@@ -73,7 +73,7 @@ public class StorageItemDrawer extends StorageItemExternal {
 
             if (!simulate && remainingSpace > 0) {
                 if (drawer.isEmpty()) {
-                    drawer.setStoredItemRedir(stack, inserted);
+                    drawer.setStoredItem(stack, inserted);
                 } else {
                     drawer.setStoredItemCount(stored + inserted);
                 }

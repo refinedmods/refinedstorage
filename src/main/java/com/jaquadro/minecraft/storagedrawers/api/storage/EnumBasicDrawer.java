@@ -2,6 +2,8 @@ package com.jaquadro.minecraft.storagedrawers.api.storage;
 
 import net.minecraft.util.IStringSerializable;
 
+import javax.annotation.Nonnull;
+
 public enum EnumBasicDrawer implements IDrawerGeometry, IStringSerializable {
     FULL1(0, 1, false, "full1", "fulldrawers1"),
     FULL2(1, 2, false, "full2", "fulldrawers2"),
@@ -55,6 +57,7 @@ public enum EnumBasicDrawer implements IDrawerGeometry, IStringSerializable {
     }
 
     @Override
+    @Nonnull
     public String getName() {
         return name;
     }
