@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.api.network;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Represents a node in the network.
@@ -41,5 +42,6 @@ public interface INetworkNode {
     /**
      * @return the network
      */
+    @Nullable
     INetworkMaster getNetwork();
 }

@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
+import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
@@ -26,6 +27,25 @@ public abstract class BlockNode extends BlockBase {
     }
 
     @Override
+    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+        super.onBlockPlacedBy(world, pos, state, placer, stack);
+
+        for (EnumFacing facing : EnumFacing.VALUES) {
+            TileEntity tile = world.getTileEntity(pos.offset(facing));
+
+            if (tile != null && tile.hasCapability(CapabilityNetworkNode.NETWORK_NODE_CAPABILITY, facing.getOpposite())) {
+                INetworkNode node = tile.getCapability(CapabilityNetworkNode.NETWORK_NODE_CAPABILITY, facing.getOpposite());
+
+                if (node.getNetwork() != null) {
+                    node.getNetwork().getNodeGraph().rebuild();
+
+                    break;
+                }
+            }
+        }
+    }
+
+    @Override
     protected BlockStateContainer.Builder createBlockStateBuilder() {
         BlockStateContainer.Builder builder = super.createBlockStateBuilder();
 
@@ -48,42 +68,6 @@ public abstract class BlockNode extends BlockBase {
         }
 
         return super.getActualState(state, world, pos);
-    }
-
-    @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack stack) {
-        super.onBlockPlacedBy(world, pos, state, player, stack);
-
-        if (!world.isRemote) {
-            for (EnumFacing facing : EnumFacing.VALUES) {
-                TileEntity tile = world.getTileEntity(pos.offset(facing));
-
-                if (tile instanceof TileNode && ((TileNode) tile).hasNetwork()) {
-                    ((TileNode) tile).getNetwork().getNodeGraph().rebuild();
-
-                    break;
-                }
-            }
-        }
-    }
-
-    @Override
-    public void breakBlock(World world, BlockPos pos, IBlockState state) {
-        INetworkMaster network = null;
-
-        if (!world.isRemote) {
-            TileEntity tile = world.getTileEntity(pos);
-
-            if (tile instanceof TileNode) {
-                network = ((TileNode) tile).getNetwork();
-            }
-        }
-
-        super.breakBlock(world, pos, state);
-
-        if (network != null) {
-            network.getNodeGraph().rebuild();
-        }
     }
 
     public boolean hasConnectivityState() {

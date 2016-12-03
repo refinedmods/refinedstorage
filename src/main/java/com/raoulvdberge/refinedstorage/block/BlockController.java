@@ -5,7 +5,6 @@ import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.item.ItemBlockController;
 import com.raoulvdberge.refinedstorage.tile.TileController;
-import net.minecraft.block.Block;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
@@ -99,25 +98,6 @@ public class BlockController extends BlockBase {
         }
 
         super.onBlockPlacedBy(world, pos, state, player, stack);
-    }
-
-    @Override
-    public void breakBlock(World world, BlockPos pos, IBlockState state) {
-        if (!world.isRemote) {
-            ((TileController) world.getTileEntity(pos)).onDestroyed();
-        }
-
-        super.breakBlock(world, pos, state);
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos fromPos) {
-        super.neighborChanged(state, world, pos, block, fromPos);
-
-        if (!world.isRemote) {
-            ((TileController) world.getTileEntity(pos)).getNodeGraph().rebuild();
-        }
     }
 
     @Override

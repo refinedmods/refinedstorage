@@ -44,7 +44,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
         INetworkNeighborhoodAware.Operator operator = (world, pos, side) -> {
             TileEntity tile = world.getTileEntity(pos);
-            if (tile != null) {
+            if (tile != null && !tile.isInvalid()) {
                 if (tile instanceof TileController) {
                     removeOtherControler(world, pos);
                 } else {
@@ -57,10 +57,11 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
         };
 
         BlockPos controllerPos = controller.getPos();
-        World controlerWorld = controller.getWorld();
+        World controllerWorld = controller.getWorld();
+
         for (EnumFacing facing : EnumFacing.VALUES) {
             BlockPos pos = controllerPos.offset(facing);
-            operator.apply(controlerWorld, pos, facing.getOpposite());
+            operator.apply(controllerWorld, pos, facing.getOpposite());
         }
 
         NodeToCheck currentNodeToCheck;
@@ -139,16 +140,16 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
         if (!controller.getPos().equals(otherControllerPos)) {
             IBlockState state = world.getBlockState(otherControllerPos);
 
-            ItemStack itemStackToSpawn = ItemBlockController.createStackWithNBT(new ItemStack(RSBlocks.CONTROLLER, 1, state.getBlock().getMetaFromState(state)));
+            ItemStack stackToSpawn = ItemBlockController.createStackWithNBT(new ItemStack(RSBlocks.CONTROLLER, 1, state.getBlock().getMetaFromState(state)));
 
             world.setBlockToAir(otherControllerPos);
 
             InventoryHelper.spawnItemStack(
-                    world,
-                    otherControllerPos.getX(),
-                    otherControllerPos.getY(),
-                    otherControllerPos.getZ(),
-                    itemStackToSpawn
+                world,
+                otherControllerPos.getX(),
+                otherControllerPos.getY(),
+                otherControllerPos.getZ(),
+                stackToSpawn
             );
         }
     }

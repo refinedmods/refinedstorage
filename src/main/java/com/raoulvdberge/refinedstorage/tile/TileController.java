@@ -111,9 +111,9 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
                     }
 
                     ClientNode clientNode = new ClientNode(
-                            itemStack,
-                            1,
-                            node.getEnergyUsage()
+                        itemStack,
+                        1,
+                        node.getEnergyUsage()
                     );
 
                     if (nodes.contains(clientNode)) {
@@ -329,7 +329,10 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
         return networkItemHandler;
     }
 
-    public void onDestroyed() {
+    @Override
+    public void invalidate() {
+        super.invalidate();
+
         nodeGraph.disconnectAll();
     }
 

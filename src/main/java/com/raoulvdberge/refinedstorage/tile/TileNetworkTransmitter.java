@@ -165,7 +165,9 @@ public class TileNetworkTransmitter extends TileNode {
         if (canTransmit()) {
             if (!isSameDimension()) {
                 final World dimensionWorld = DimensionManager.getWorld(receiverDimension);
-                operator.apply(dimensionWorld, receiver, null);
+                if (dimensionWorld != null) {
+                    operator.apply(dimensionWorld, receiver, null);
+                }
             } else {
                 operator.apply(getWorld(), receiver, null);
             }
