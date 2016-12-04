@@ -127,7 +127,12 @@ public class ItemWrench extends ItemBase {
 
             WrenchMode mode = WrenchMode.readFromNBT(stack.getTagCompound());
 
-            stack.setTagCompound(new NBTTagCompound());
+            if (stack.hasTagCompound()) {
+                stack.getTagCompound().removeTag(NBT_WRENCHED_TILE);
+                stack.getTagCompound().removeTag(NBT_WRENCHED_DATA);
+            } else {
+                stack.setTagCompound(new NBTTagCompound());
+            }
 
             WrenchMode next = mode.cycle();
 
