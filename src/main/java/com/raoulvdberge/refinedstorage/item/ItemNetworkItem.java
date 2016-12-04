@@ -224,11 +224,17 @@ public abstract class ItemNetworkItem extends ItemBase implements INetworkItemPr
         @Override
         public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
             if (capability == CapabilityEnergy.ENERGY) {
-                return (T) new NetworkItemEnergyForge(stack, 3200);
+                return CapabilityEnergy.ENERGY.cast(new NetworkItemEnergyForge(stack, 3200));
             }
 
-            if (IntegrationTesla.isLoaded() && (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER)) {
-                return (T) new NetworkItemEnergyTesla(stack);
+            if (IntegrationTesla.isLoaded()) {
+                if (capability == TeslaCapabilities.CAPABILITY_HOLDER) {
+                    return TeslaCapabilities.CAPABILITY_HOLDER.cast(new NetworkItemEnergyTesla(stack));
+                }
+
+                if (capability == TeslaCapabilities.CAPABILITY_CONSUMER) {
+                    return TeslaCapabilities.CAPABILITY_CONSUMER.cast(new NetworkItemEnergyTesla(stack));
+                }
             }
 
             return null;
