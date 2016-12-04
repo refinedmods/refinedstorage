@@ -214,7 +214,7 @@ public class TileCrafter extends TileNode implements ICraftingPatternContainer {
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing != getDirection()) {
-            return (T) patterns;
+            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(patterns);
         }
 
         return super.getCapability(capability, facing);

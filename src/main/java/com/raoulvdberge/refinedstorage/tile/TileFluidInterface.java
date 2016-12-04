@@ -240,7 +240,7 @@ public class TileFluidInterface extends TileNode implements IComparable {
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            return facing == EnumFacing.DOWN ? (T) tankOut : (T) tankIn;
+            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(facing == EnumFacing.DOWN ? tankOut : tankIn);
         }
 
         return super.getCapability(capability, facing);

@@ -193,7 +193,7 @@ public class TileInterface extends TileNode implements IComparable {
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return facing == EnumFacing.DOWN ? (T) exportItems : (T) importItems;
+            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(facing == EnumFacing.DOWN ? exportItems : importItems);
         }
 
         return super.getCapability(capability, facing);

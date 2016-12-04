@@ -39,7 +39,7 @@ public class ContainerDiskDrive extends ContainerBase {
                     return ItemStack.EMPTY;
                 }
             } else if (!mergeItemStack(stack, 0, 8, false)) {
-                return mergeItemStackToSpecimen(stack, 8, 8 + 9);
+                return mergeItemStackToFilters(stack, 8, 8 + 9);
             }
 
             if (stack.getCount() == 0) {

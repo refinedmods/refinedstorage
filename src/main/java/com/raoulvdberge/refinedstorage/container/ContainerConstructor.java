@@ -34,7 +34,7 @@ public class ContainerConstructor extends ContainerBase {
                     return ItemStack.EMPTY;
                 }
             } else if (!mergeItemStack(stack, 0, 4, false)) {
-                return mergeItemStackToSpecimen(stack, 4, 4 + 1);
+                return mergeItemStackToFilters(stack, 4, 4 + 1);
             }
 
             if (stack.getCount() == 0) {

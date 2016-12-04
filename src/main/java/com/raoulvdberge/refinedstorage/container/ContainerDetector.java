@@ -20,7 +20,7 @@ public class ContainerDetector extends ContainerBase {
         Slot slot = getSlot(index);
 
         if (slot.getHasStack() && index > 0) {
-            return mergeItemStackToSpecimen(slot.getStack(), 0, 1);
+            return mergeItemStackToFilters(slot.getStack(), 0, 1);
         }
 
         return null;

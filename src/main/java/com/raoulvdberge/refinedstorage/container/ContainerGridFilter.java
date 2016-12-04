@@ -37,7 +37,7 @@ public class ContainerGridFilter extends ContainerBase {
             stack = slot.getStack();
 
             if (index > 9 - 1) {
-                return mergeItemStackToSpecimen(stack, 0, 9);
+                return mergeItemStackToFilters(stack, 0, 9);
             }
 
             return ItemStack.EMPTY;

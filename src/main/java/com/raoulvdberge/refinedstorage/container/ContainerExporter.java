@@ -36,7 +36,7 @@ public class ContainerExporter extends ContainerBase {
                     return ItemStack.EMPTY;
                 }
             } else if (!mergeItemStack(stack, 0, 4, false)) {
-                return mergeItemStackToSpecimen(stack, 4, 4 + 9);
+                return mergeItemStackToFilters(stack, 4, 4 + 9);
             }
 
             if (stack.getCount() == 0) {

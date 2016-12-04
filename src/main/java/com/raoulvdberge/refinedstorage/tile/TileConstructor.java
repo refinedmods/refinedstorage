@@ -330,7 +330,7 @@ public class TileConstructor extends TileNode implements IComparable, IType {
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return (T) upgrades;
+            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(upgrades);
         }
 
         return super.getCapability(capability, facing);

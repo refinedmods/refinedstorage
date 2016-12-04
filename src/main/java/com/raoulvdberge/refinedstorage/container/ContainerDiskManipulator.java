@@ -44,7 +44,7 @@ public class ContainerDiskManipulator extends ContainerBase {
                     return ItemStack.EMPTY;
                 }
             } else if (!mergeItemStack(stack, 0, 4 + 3, false)) {
-                return mergeItemStackToSpecimen(stack, 4 + 6, 4 + 6 + 9);
+                return mergeItemStackToFilters(stack, 4 + 6, 4 + 6 + 9);
             }
 
             if (stack.getCount() == 0) {

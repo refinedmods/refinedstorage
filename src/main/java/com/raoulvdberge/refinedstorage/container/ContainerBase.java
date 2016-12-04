@@ -195,7 +195,7 @@ public abstract class ContainerBase extends Container {
         return ItemStack.EMPTY;
     }
 
-    protected ItemStack mergeItemStackToSpecimen(ItemStack stack, int begin, int end) {
+    protected ItemStack mergeItemStackToFilters(ItemStack stack, int begin, int end) {
         for (int i = begin; i < end; ++i) {
             if (API.instance().getComparer().isEqualNoQuantity(getStackFromSlot(getSlot(i)), stack)) {
                 return ItemStack.EMPTY;

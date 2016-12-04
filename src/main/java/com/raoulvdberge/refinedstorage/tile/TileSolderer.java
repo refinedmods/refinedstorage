@@ -200,7 +200,7 @@ public class TileSolderer extends TileNode {
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return facing == EnumFacing.DOWN ? (T) result : (T) items;
+            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(facing == EnumFacing.DOWN ? result : items);
         }
 
         return super.getCapability(capability, facing);

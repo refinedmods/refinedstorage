@@ -22,7 +22,7 @@ public class ContainerStorage extends ContainerBase {
         Slot slot = getSlot(index);
 
         if (slot.getHasStack() && index >= 8) {
-            return mergeItemStackToSpecimen(slot.getStack(), 0, 9);
+            return mergeItemStackToFilters(slot.getStack(), 0, 9);
         }
 
         return ItemStack.EMPTY;

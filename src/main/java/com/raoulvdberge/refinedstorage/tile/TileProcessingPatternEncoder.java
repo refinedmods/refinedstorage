@@ -129,7 +129,7 @@ public class TileProcessingPatternEncoder extends TileBase {
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return (T) patterns;
+            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(patterns);
         }
 
         return super.getCapability(capability, facing);

@@ -573,7 +573,7 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return (T) disks;
+            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(disks);
         }
 
         return super.getCapability(capability, facing);

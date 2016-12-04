@@ -35,7 +35,7 @@ public class ContainerFluidInterface extends ContainerBase {
                     return ItemStack.EMPTY;
                 }
             } else if (!mergeItemStack(stack, 0, 4 + 1, false)) {
-                return mergeItemStackToSpecimen(stack, 5, 6);
+                return mergeItemStackToFilters(stack, 5, 6);
             }
 
             if (stack.getCount() == 0) {

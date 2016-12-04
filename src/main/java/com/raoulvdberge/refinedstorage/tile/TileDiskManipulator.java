@@ -602,7 +602,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return facing == EnumFacing.DOWN ? (T) outputDisks : (T) inputDisks;
+            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(facing == EnumFacing.DOWN ? outputDisks : inputDisks);
         }
 
         return super.getCapability(capability, facing);
