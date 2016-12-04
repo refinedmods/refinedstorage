@@ -30,16 +30,18 @@ public abstract class BlockNode extends BlockBase {
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
         super.onBlockPlacedBy(world, pos, state, placer, stack);
 
-        for (EnumFacing facing : EnumFacing.VALUES) {
-            TileEntity tile = world.getTileEntity(pos.offset(facing));
+        if (!world.isRemote) {
+            for (EnumFacing facing : EnumFacing.VALUES) {
+                TileEntity tile = world.getTileEntity(pos.offset(facing));
 
-            if (tile != null && tile.hasCapability(CapabilityNetworkNode.NETWORK_NODE_CAPABILITY, facing.getOpposite())) {
-                INetworkNode node = tile.getCapability(CapabilityNetworkNode.NETWORK_NODE_CAPABILITY, facing.getOpposite());
+                if (tile != null && tile.hasCapability(CapabilityNetworkNode.NETWORK_NODE_CAPABILITY, facing.getOpposite())) {
+                    INetworkNode node = tile.getCapability(CapabilityNetworkNode.NETWORK_NODE_CAPABILITY, facing.getOpposite());
 
-                if (node.getNetwork() != null) {
-                    node.getNetwork().getNodeGraph().rebuild();
+                    if (node.getNetwork() != null) {
+                        node.getNetwork().getNodeGraph().rebuild();
 
-                    break;
+                        break;
+                    }
                 }
             }
         }

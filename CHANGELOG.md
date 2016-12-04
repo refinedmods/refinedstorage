@@ -3,6 +3,7 @@
 ### 1.3.2
 - Fixed being able to exceed max stack size while shift clicking (raoulvdberge)
 - Fixed Wrench clearing NBT data when reset causing problems with Morph O Tool (raoulvdberge)
+- Fixed client crash when placing network blocks (raoulvdberge)
 
 ### 1.3.1
 - Updated Forge to 2180 (raoulvdberge)
