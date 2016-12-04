@@ -9,12 +9,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 
-public class SlotFilter extends SlotItemHandler {
+public class SlotFilter extends SlotBase {
     public static final int FILTER_ALLOW_SIZE = 1;
     public static final int FILTER_ALLOW_BLOCKS = 2;
 

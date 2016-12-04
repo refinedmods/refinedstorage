@@ -12,7 +12,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerGrid extends ContainerBase {
     private IGrid grid;
@@ -60,13 +59,13 @@ public class ContainerGrid extends ContainerBase {
 
             addSlotToContainer(patternResultSlot = new SlotDisabled(((TileGrid) grid).getResult(), 0, 112 + 4, 110 + 4));
 
-            addSlotToContainer(new SlotItemHandler(((TileGrid) grid).getPatterns(), 0, 152, 96));
+            addSlotToContainer(new SlotBase(((TileGrid) grid).getPatterns(), 0, 152, 96));
             addSlotToContainer(new SlotOutput(((TileGrid) grid).getPatterns(), 1, 152, 132));
         }
 
         if (grid.getType() != EnumGridType.FLUID) {
             for (int i = 0; i < 4; ++i) {
-                addSlotToContainer(new SlotItemHandler(grid.getFilter(), i, 204, 6 + (18 * i)));
+                addSlotToContainer(new SlotBase(grid.getFilter(), i, 204, 6 + (18 * i)));
             }
         }
     }

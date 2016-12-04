@@ -34,7 +34,6 @@ public class ItemUpgrade extends ItemBase {
 
         setHasSubtypes(true);
         setMaxDamage(0);
-        setMaxStackSize(1);
     }
 
     @Override

@@ -30,6 +30,95 @@ public abstract class ContainerBase extends Container {
         return tile;
     }
 
+    // @todo Forge issue #3498
+    @Override
+    protected boolean mergeItemStack(ItemStack stack, int startIndex, int endIndex, boolean reverseDirection) {
+        boolean flag = false;
+        int i = startIndex;
+
+        if (reverseDirection) {
+            i = endIndex - 1;
+        }
+
+        if (stack.isStackable()) {
+            while (!stack.isEmpty()) {
+                if (reverseDirection) {
+                    if (i < startIndex) {
+                        break;
+                    }
+                } else if (i >= endIndex) {
+                    break;
+                }
+
+                Slot slot = (Slot) this.inventorySlots.get(i);
+                ItemStack itemstack = slot.getStack();
+
+                if (!itemstack.isEmpty() && itemstack.getItem() == stack.getItem() && (!stack.getHasSubtypes() || stack.getMetadata() == itemstack.getMetadata()) && ItemStack.areItemStackTagsEqual(stack, itemstack)) {
+                    int j = itemstack.getCount() + stack.getCount();
+
+                    if (j <= slot.getSlotStackLimit()) {
+                        stack.setCount(0);
+                        itemstack.setCount(j);
+                        slot.onSlotChanged();
+                        flag = true;
+                    } else if (itemstack.getCount() < slot.getSlotStackLimit()) {
+                        stack.shrink(slot.getSlotStackLimit() - itemstack.getCount());
+                        itemstack.setCount(slot.getSlotStackLimit());
+                        slot.onSlotChanged();
+                        flag = true;
+                    }
+                }
+
+                if (reverseDirection) {
+                    --i;
+                } else {
+                    ++i;
+                }
+            }
+        }
+
+        if (!stack.isEmpty()) {
+            if (reverseDirection) {
+                i = endIndex - 1;
+            } else {
+                i = startIndex;
+            }
+
+            while (true) {
+                if (reverseDirection) {
+                    if (i < startIndex) {
+                        break;
+                    }
+                } else if (i >= endIndex) {
+                    break;
+                }
+
+                Slot slot1 = (Slot) this.inventorySlots.get(i);
+                ItemStack itemstack1 = slot1.getStack();
+
+                if (itemstack1.isEmpty() && slot1.isItemValid(stack)) {
+                    if (stack.getCount() > slot1.getSlotStackLimit()) {
+                        slot1.putStack(stack.splitStack(slot1.getSlotStackLimit()));
+                    } else {
+                        slot1.putStack(stack.splitStack(stack.getCount()));
+                    }
+
+                    slot1.onSlotChanged();
+                    flag = true;
+                    break;
+                }
+
+                if (reverseDirection) {
+                    --i;
+                } else {
+                    ++i;
+                }
+            }
+        }
+
+        return flag;
+    }
+
     protected void addPlayerInventory(int xInventory, int yInventory) {
         int id = 0;
 

@@ -1,26 +1,26 @@
 package com.raoulvdberge.refinedstorage.container;
 
+import com.raoulvdberge.refinedstorage.container.slot.SlotBase;
 import com.raoulvdberge.refinedstorage.container.slot.SlotFilterType;
 import com.raoulvdberge.refinedstorage.tile.TileDiskManipulator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerDiskManipulator extends ContainerBase {
     public ContainerDiskManipulator(TileDiskManipulator manipulator, EntityPlayer player) {
         super(manipulator, player);
 
         for (int i = 0; i < 4; ++i) {
-            addSlotToContainer(new SlotItemHandler(manipulator.getUpgrades(), i, 187, 6 + (i * 18)));
+            addSlotToContainer(new SlotBase(manipulator.getUpgrades(), i, 187, 6 + (i * 18)));
         }
 
         for (int i = 0; i < 3; ++i) {
-            addSlotToContainer(new SlotItemHandler(manipulator.getInputDisks(), i, 44, 57 + (i * 18)));
+            addSlotToContainer(new SlotBase(manipulator.getInputDisks(), i, 44, 57 + (i * 18)));
         }
 
         for (int i = 0; i < 3; ++i) {
-            addSlotToContainer(new SlotItemHandler(manipulator.getOutputDisks(), i, 116, 57 + (i * 18)));
+            addSlotToContainer(new SlotBase(manipulator.getOutputDisks(), i, 116, 57 + (i * 18)));
         }
 
         for (int i = 0; i < 9; ++i) {

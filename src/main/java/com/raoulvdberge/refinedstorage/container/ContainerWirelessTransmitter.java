@@ -1,17 +1,17 @@
 package com.raoulvdberge.refinedstorage.container;
 
+import com.raoulvdberge.refinedstorage.container.slot.SlotBase;
 import com.raoulvdberge.refinedstorage.tile.TileWirelessTransmitter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerWirelessTransmitter extends ContainerBase {
     public ContainerWirelessTransmitter(TileWirelessTransmitter wirelessTransmitter, EntityPlayer player) {
         super(wirelessTransmitter, player);
 
         for (int i = 0; i < 4; ++i) {
-            addSlotToContainer(new SlotItemHandler(wirelessTransmitter.getUpgrades(), i, 187, 6 + (i * 18)));
+            addSlotToContainer(new SlotBase(wirelessTransmitter.getUpgrades(), i, 187, 6 + (i * 18)));
         }
 
         addPlayerInventory(8, 55);
@@ -23,7 +23,7 @@ public class ContainerWirelessTransmitter extends ContainerBase {
 
         Slot slot = getSlot(index);
 
-        if (slot != null && slot.getHasStack()) {
+        if (slot.getHasStack()) {
             stack = slot.getStack();
 
             if (index < 4) {

@@ -2,6 +2,7 @@
 
 ### 1.3.1
 - Updated Forge to 2180 (raoulvdberge)
+- Made Upgrades stackable (raoulvdberge)
 - Fixed Disk Drive not noticing a Storage Disk being shift clicked out of the GUI (raoulvdberge)
 
 ### 1.3

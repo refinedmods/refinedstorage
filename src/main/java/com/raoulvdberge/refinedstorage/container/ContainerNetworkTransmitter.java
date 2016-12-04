@@ -1,18 +1,18 @@
 package com.raoulvdberge.refinedstorage.container;
 
+import com.raoulvdberge.refinedstorage.container.slot.SlotBase;
 import com.raoulvdberge.refinedstorage.tile.TileNetworkTransmitter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerNetworkTransmitter extends ContainerBase {
     public ContainerNetworkTransmitter(TileNetworkTransmitter networkTransmitter, EntityPlayer player) {
         super(networkTransmitter, player);
 
-        addSlotToContainer(new SlotItemHandler(networkTransmitter.getNetworkCard(), 0, 8, 20));
+        addSlotToContainer(new SlotBase(networkTransmitter.getNetworkCard(), 0, 8, 20));
 
-        addSlotToContainer(new SlotItemHandler(networkTransmitter.getUpgrades(), 0, 187, 6));
+        addSlotToContainer(new SlotBase(networkTransmitter.getUpgrades(), 0, 187, 6));
 
         addPlayerInventory(8, 55);
     }

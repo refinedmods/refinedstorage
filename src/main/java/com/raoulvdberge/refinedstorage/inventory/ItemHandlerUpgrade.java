@@ -65,6 +65,11 @@ public class ItemHandlerUpgrade extends ItemHandlerBasic {
         return 0;
     }
 
+    @Override
+    public int getSlotLimit(int slot) {
+        return 1;
+    }
+
     public int getItemInteractCount() {
         return hasUpgrade(ItemUpgrade.TYPE_STACK) ? 64 : 1;
     }

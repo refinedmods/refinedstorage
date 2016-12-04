@@ -1,18 +1,18 @@
 package com.raoulvdberge.refinedstorage.container;
 
+import com.raoulvdberge.refinedstorage.container.slot.SlotBase;
 import com.raoulvdberge.refinedstorage.container.slot.SlotFilterType;
 import com.raoulvdberge.refinedstorage.tile.TileImporter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerImporter extends ContainerBase {
     public ContainerImporter(TileImporter importer, EntityPlayer player) {
         super(importer, player);
 
         for (int i = 0; i < 4; ++i) {
-            addSlotToContainer(new SlotItemHandler(importer.getUpgrades(), i, 187, 6 + (i * 18)));
+            addSlotToContainer(new SlotBase(importer.getUpgrades(), i, 187, 6 + (i * 18)));
         }
 
         for (int i = 0; i < 9; ++i) {
