@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.3.2
+- Fixed being able to exceed max stack size while shift clicking (raoulvdberge)
+
 ### 1.3.1
 - Updated Forge to 2180 (raoulvdberge)
 - Made Upgrades stackable (raoulvdberge)

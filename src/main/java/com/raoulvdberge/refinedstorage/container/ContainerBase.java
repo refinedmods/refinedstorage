@@ -55,15 +55,16 @@ public abstract class ContainerBase extends Container {
 
                 if (!itemstack.isEmpty() && itemstack.getItem() == stack.getItem() && (!stack.getHasSubtypes() || stack.getMetadata() == itemstack.getMetadata()) && ItemStack.areItemStackTagsEqual(stack, itemstack)) {
                     int j = itemstack.getCount() + stack.getCount();
+                    int max = Math.min(slot.getSlotStackLimit(), stack.getMaxStackSize());
 
-                    if (j <= slot.getSlotStackLimit()) {
+                    if (j <= max) {
                         stack.setCount(0);
                         itemstack.setCount(j);
                         slot.onSlotChanged();
                         flag = true;
-                    } else if (itemstack.getCount() < slot.getSlotStackLimit()) {
-                        stack.shrink(slot.getSlotStackLimit() - itemstack.getCount());
-                        itemstack.setCount(slot.getSlotStackLimit());
+                    } else if (itemstack.getCount() < max) {
+                        stack.shrink(max - itemstack.getCount());
+                        itemstack.setCount(max);
                         slot.onSlotChanged();
                         flag = true;
                     }
