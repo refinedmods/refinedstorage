@@ -144,9 +144,8 @@ public class ItemGridHandler implements IItemGridHandler {
 
     @Override
     public void onCraftingPreviewRequested(EntityPlayerMP player, int hash, int quantity) {
-        IStackList<ItemStack> cache = network.getItemStorageCache().getList().copy();
+        IStackList<ItemStack> cache = API.instance().createItemStackList();
 
-        // Since patterns aren't in the cache by default anymore, we add them here manually again
         for (ICraftingPattern pattern : network.getPatterns()) {
             for (ItemStack output : pattern.getOutputs()) {
                 if (output != null) {
