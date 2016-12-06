@@ -2,10 +2,12 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.grid;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
+import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
+import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.CraftingTask;
 import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemWirelessCraftingMonitor;
@@ -142,7 +144,18 @@ public class ItemGridHandler implements IItemGridHandler {
 
     @Override
     public void onCraftingPreviewRequested(EntityPlayerMP player, int hash, int quantity) {
-        ItemStack stack = network.getItemStorageCache().getList().get(hash);
+        IStackList<ItemStack> cache = network.getItemStorageCache().getList().copy();
+
+        // Since patterns aren't in the cache by default anymore, we add them here manually again
+        for (ICraftingPattern pattern : network.getPatterns()) {
+            for (ItemStack output : pattern.getOutputs()) {
+                if (output != null) {
+                    cache.add(output);
+                }
+            }
+        }
+
+        ItemStack stack = cache.get(hash);
 
         if (stack != null) {
             Thread calculationThread = new Thread(() -> {

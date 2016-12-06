@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 1.3.3
+- Updated Forge to 2188 (raoulvdberge)
+- Fixed not being able to start a crafting task (raoulvdberge)
+
 ### 1.3.2
 - Fixed being able to exceed max stack size while shift clicking (raoulvdberge)
 - Fixed Wrench clearing NBT data when reset causing problems with Morph O Tool (raoulvdberge)
