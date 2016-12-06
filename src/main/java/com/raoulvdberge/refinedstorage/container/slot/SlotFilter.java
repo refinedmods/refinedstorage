@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.container.slot;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -9,11 +8,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nonnull;
-import java.lang.reflect.Field;
 
-public class SlotFilter extends SlotBase {
+public class SlotFilter extends SlotItemHandler {
     public static final int FILTER_ALLOW_SIZE = 1;
     public static final int FILTER_ALLOW_BLOCKS = 2;
 
@@ -69,13 +68,7 @@ public class SlotFilter extends SlotBase {
             Item item = stack.getItem();
 
             if (item instanceof ItemBlockSpecial) {
-                try {
-                    Field f = ((ItemBlockSpecial) item).getClass().getDeclaredField("block");
-                    f.setAccessible(true);
-                    return ((Block) f.get(item)).getDefaultState();
-                } catch (IllegalAccessException | NoSuchFieldException e) {
-                    // NO OP
-                }
+                return ((ItemBlockSpecial) item).getBlock().getDefaultState();
             } else if (item instanceof ItemBlock) {
                 return (((ItemBlock) item).getBlock()).getDefaultState();
             } else if (item instanceof IPlantable) {

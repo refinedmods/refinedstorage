@@ -1,12 +1,12 @@
 package com.raoulvdberge.refinedstorage.container;
 
-import com.raoulvdberge.refinedstorage.container.slot.SlotBase;
 import com.raoulvdberge.refinedstorage.container.slot.SlotFilter;
 import com.raoulvdberge.refinedstorage.container.slot.SlotOutput;
 import com.raoulvdberge.refinedstorage.tile.TileProcessingPatternEncoder;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.SlotItemHandler;
 
 import java.util.Collection;
 
@@ -14,7 +14,7 @@ public class ContainerProcessingPatternEncoder extends ContainerBase {
     public ContainerProcessingPatternEncoder(TileProcessingPatternEncoder encoder, EntityPlayer player) {
         super(encoder, player);
 
-        addSlotToContainer(new SlotBase(encoder.getPatterns(), 0, 152, 18));
+        addSlotToContainer(new SlotItemHandler(encoder.getPatterns(), 0, 152, 18));
         addSlotToContainer(new SlotOutput(encoder.getPatterns(), 1, 152, 58));
 
         int ox = 8;

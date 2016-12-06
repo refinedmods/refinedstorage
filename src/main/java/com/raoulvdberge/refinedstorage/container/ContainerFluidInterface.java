@@ -1,21 +1,21 @@
 package com.raoulvdberge.refinedstorage.container;
 
-import com.raoulvdberge.refinedstorage.container.slot.SlotBase;
 import com.raoulvdberge.refinedstorage.container.slot.SlotFilterFluid;
 import com.raoulvdberge.refinedstorage.tile.TileFluidInterface;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerFluidInterface extends ContainerBase {
     public ContainerFluidInterface(TileFluidInterface fluidInterface, EntityPlayer player) {
         super(fluidInterface, player);
 
         for (int i = 0; i < 4; ++i) {
-            addSlotToContainer(new SlotBase(fluidInterface.getUpgrades(), i, 187, 6 + (i * 18)));
+            addSlotToContainer(new SlotItemHandler(fluidInterface.getUpgrades(), i, 187, 6 + (i * 18)));
         }
 
-        addSlotToContainer(new SlotBase(fluidInterface.getIn(), 0, 44, 32));
+        addSlotToContainer(new SlotItemHandler(fluidInterface.getIn(), 0, 44, 32));
         addSlotToContainer(new SlotFilterFluid(!fluidInterface.getWorld().isRemote, fluidInterface.getOut(), 0, 116, 32));
 
         addPlayerInventory(8, 122);

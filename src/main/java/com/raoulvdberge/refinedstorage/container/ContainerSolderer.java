@@ -1,12 +1,12 @@
 package com.raoulvdberge.refinedstorage.container;
 
 import com.raoulvdberge.refinedstorage.RSItems;
-import com.raoulvdberge.refinedstorage.container.slot.SlotBase;
 import com.raoulvdberge.refinedstorage.container.slot.SlotOutput;
 import com.raoulvdberge.refinedstorage.tile.TileSolderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerSolderer extends ContainerBase {
     public ContainerSolderer(TileSolderer solderer, EntityPlayer player) {
@@ -16,7 +16,7 @@ public class ContainerSolderer extends ContainerBase {
         int y = 20;
 
         for (int i = 0; i < 3; ++i) {
-            addSlotToContainer(new SlotBase(solderer.getItems(), i, x, y));
+            addSlotToContainer(new SlotItemHandler(solderer.getItems(), i, x, y));
 
             y += 18;
         }
@@ -24,7 +24,7 @@ public class ContainerSolderer extends ContainerBase {
         addSlotToContainer(new SlotOutput(solderer.getResult(), 0, 127, 38));
 
         for (int i = 0; i < 4; ++i) {
-            addSlotToContainer(new SlotBase(solderer.getUpgrades(), i, 187, 6 + (i * 18)));
+            addSlotToContainer(new SlotItemHandler(solderer.getUpgrades(), i, 187, 6 + (i * 18)));
         }
 
         addPlayerInventory(8, 89);
