@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.container.slot;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -10,8 +9,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
-
-import java.lang.reflect.Field;
 
 public class SlotSpecimen extends SlotItemHandler {
     public static final int SPECIMEN_SIZE = 1;
@@ -69,13 +66,7 @@ public class SlotSpecimen extends SlotItemHandler {
             Item item = stack.getItem();
 
             if (item instanceof ItemBlockSpecial) {
-                try {
-                    Field f = ((ItemBlockSpecial) item).getClass().getDeclaredField("block");
-                    f.setAccessible(true);
-                    return ((Block) f.get(item)).getDefaultState();
-                } catch (IllegalAccessException | NoSuchFieldException e) {
-                    // NO OP
-                }
+                return ((ItemBlockSpecial) item).getBlock().getDefaultState();
             } else if (item instanceof ItemBlock) {
                 return (((ItemBlock) item).getBlock()).getDefaultState();
             } else if (item instanceof IPlantable) {

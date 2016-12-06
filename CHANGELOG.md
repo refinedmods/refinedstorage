@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 1.2.9
+- Updated Forge to 2185 (raoulvdberge)
+- Fixed Wrench clearing NBT data when reset causing problems with Morph O Tool (raoulvdberge)
+
 ### 1.2.8
 - Fixed autocrafting bugs (way2muchnoise)
 

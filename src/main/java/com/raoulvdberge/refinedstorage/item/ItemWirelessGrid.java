@@ -19,7 +19,7 @@ public class ItemWirelessGrid extends ItemNetworkItem {
 
         tag.setInteger(TileGrid.NBT_VIEW_TYPE, TileGrid.VIEW_TYPE_NORMAL);
         tag.setInteger(TileGrid.NBT_SORTING_DIRECTION, TileGrid.SORTING_DIRECTION_DESCENDING);
-        tag.setInteger(TileGrid.NBT_SORTING_TYPE, TileGrid.SORTING_TYPE_NAME);
+        tag.setInteger(TileGrid.NBT_SORTING_TYPE, TileGrid.SORTING_TYPE_QUANTITY);
         tag.setInteger(TileGrid.NBT_SEARCH_BOX_MODE, TileGrid.SEARCH_BOX_MODE_NORMAL);
     }
 
