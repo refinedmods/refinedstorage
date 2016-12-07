@@ -14,15 +14,17 @@ public class MessageWirelessGridSettingsUpdate extends MessageHandlerPlayerToSer
     private int sortingDirection;
     private int sortingType;
     private int searchBoxMode;
+    private int tabSelected;
 
     public MessageWirelessGridSettingsUpdate() {
     }
 
-    public MessageWirelessGridSettingsUpdate(int viewType, int sortingDirection, int sortingType, int searchBoxMode) {
+    public MessageWirelessGridSettingsUpdate(int viewType, int sortingDirection, int sortingType, int searchBoxMode, int tabSelected) {
         this.viewType = viewType;
         this.sortingDirection = sortingDirection;
         this.sortingType = sortingType;
         this.searchBoxMode = searchBoxMode;
+        this.tabSelected = tabSelected;
     }
 
     @Override
@@ -31,6 +33,7 @@ public class MessageWirelessGridSettingsUpdate extends MessageHandlerPlayerToSer
         sortingDirection = buf.readInt();
         sortingType = buf.readInt();
         searchBoxMode = buf.readInt();
+        tabSelected = buf.readInt();
     }
 
     @Override
@@ -39,6 +42,7 @@ public class MessageWirelessGridSettingsUpdate extends MessageHandlerPlayerToSer
         buf.writeInt(sortingDirection);
         buf.writeInt(sortingType);
         buf.writeInt(searchBoxMode);
+        buf.writeInt(tabSelected);
     }
 
     @Override
@@ -64,6 +68,8 @@ public class MessageWirelessGridSettingsUpdate extends MessageHandlerPlayerToSer
                 if (TileGrid.isValidSearchBoxMode(message.searchBoxMode)) {
                     stack.getTagCompound().setInteger(TileGrid.NBT_SEARCH_BOX_MODE, message.searchBoxMode);
                 }
+
+                stack.getTagCompound().setInteger(TileGrid.NBT_TAB_SELECTED, message.tabSelected);
             }
         }
     }

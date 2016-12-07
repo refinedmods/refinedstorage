@@ -62,7 +62,6 @@ public class GuiGrid extends GuiBase {
     private IGrid grid;
 
     private boolean hadTabs = false;
-    private int tabSelected = -1;
     private int tabHovering = -1;
 
     private int slotNumber;
@@ -88,12 +87,11 @@ public class GuiGrid extends GuiBase {
     }
 
     public GuiGrid(ContainerGrid container, IGrid grid) {
-        super(container, grid.getType() == EnumGridType.FLUID ? 193 : 227, ((grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 247 : 208) + (!grid.getTabs().isEmpty() ? ContainerGrid.TAB_HEIGHT : 0));
+        super(container, grid.getType() == EnumGridType.FLUID ? 193 : 227, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 247 : 208);
 
         this.container = container;
         this.grid = grid;
         this.wasConnected = this.grid.isActive();
-        this.hadTabs = !grid.getTabs().isEmpty();
 
         this.konamiOffsetsX = new int[9 * getVisibleRows()];
         this.konamiOffsetsY = new int[9 * getVisibleRows()];
@@ -152,7 +150,11 @@ public class GuiGrid extends GuiBase {
         if (grid.isActive()) {
             stacks.addAll(grid.getType() == EnumGridType.FLUID ? FLUIDS.values() : ITEMS.values());
 
-            List<IGridFilter> filters = GridFilterParser.getFilters(grid, searchField.getText(), (tabSelected >= 0 && tabSelected < grid.getTabs().size()) ? grid.getTabs().get(tabSelected).getFilters() : grid.getFilteredItems());
+            List<IGridFilter> filters = GridFilterParser.getFilters(
+                grid,
+                searchField.getText(),
+                (grid.getTabSelected() >= 0 && grid.getTabSelected() < grid.getTabs().size()) ? grid.getTabs().get(grid.getTabSelected()).getFilters() : grid.getFilteredItems()
+            );
 
             Iterator<IClientStack> t = stacks.iterator();
 
@@ -210,12 +212,13 @@ public class GuiGrid extends GuiBase {
         if (hadTabs != hasTabs) {
             hadTabs = hasTabs;
 
-            height = (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 247 : 208;
-            ySize = height;
+            ySize = (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 247 : 208;
 
             if (hasTabs) {
-                height += ContainerGrid.TAB_HEIGHT;
+                ySize += ContainerGrid.TAB_HEIGHT;
             }
+
+            this.height = ySize;
 
             initGui();
 
@@ -264,13 +267,13 @@ public class GuiGrid extends GuiBase {
 
     private void renderTab(GridTab tab, boolean foregroundLayer, int x, int y, int mouseX, int mouseY) {
         int i = grid.getTabs().indexOf(tab);
-        boolean selected = i == tabSelected;
+        boolean selected = i == grid.getTabSelected();
 
         if ((foregroundLayer && !selected) || (!foregroundLayer && selected)) {
             return;
         }
 
-        int tx = x + ((ContainerGrid.TAB_WIDTH + 2) * i);
+        int tx = x + ((ContainerGrid.TAB_WIDTH + 1) * i);
         int ty = y;
 
         bindTexture("icons.png");
@@ -301,7 +304,7 @@ public class GuiGrid extends GuiBase {
 
         RenderHelper.enableGUIStandardItemLighting();
 
-        drawItem(otx + 6, ty + 8 - (!selected ? 3 : 0), tab.getIcon());
+        drawItem(otx + 6, ty + 8 - (!selected ? 2 : 0), tab.getIcon());
 
         if (inBounds(tx, ty, ContainerGrid.TAB_WIDTH, ContainerGrid.TAB_HEIGHT, mouseX, mouseY)) {
             tabHovering = i;
@@ -430,9 +433,7 @@ public class GuiGrid extends GuiBase {
         searchField.mouseClicked(mouseX, mouseY, clickedButton);
 
         if (tabHovering >= 0 && tabHovering < grid.getTabs().size()) {
-            tabSelected = tabSelected == tabHovering ? -1 : tabHovering;
-
-            sortItems();
+            grid.onTabSelectionChanged(tabHovering);
         }
 
         if (clickedButton == 1 && inBounds(79, 5 + getTabDelta(), 90, 12, mouseX - guiLeft, mouseY - guiTop)) {

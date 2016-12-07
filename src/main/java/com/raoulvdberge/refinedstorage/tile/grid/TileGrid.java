@@ -110,6 +110,24 @@ public class TileGrid extends TileNode implements IGrid {
         }
     });
 
+    public static final TileDataParameter<Integer> TAB_SELECTED = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileGrid>() {
+        @Override
+        public Integer getValue(TileGrid tile) {
+            return tile.tabSelected;
+        }
+    }, new ITileDataConsumer<Integer, TileGrid>() {
+        @Override
+        public void setValue(TileGrid tile, Integer value) {
+            tile.tabSelected = value == tile.tabSelected ? -1 : value;
+
+            tile.markDirty();
+        }
+    }, parameter -> {
+        if (Minecraft.getMinecraft().currentScreen instanceof GuiGrid) {
+            ((GuiGrid) Minecraft.getMinecraft().currentScreen).markForSorting();
+        }
+    });
+
     public static final TileDataParameter<Boolean> OREDICT_PATTERN = new TileDataParameter<>(DataSerializers.BOOLEAN, false, new ITileDataProducer<Boolean, TileGrid>() {
         @Override
         public Boolean getValue(TileGrid tile) {
@@ -133,6 +151,7 @@ public class TileGrid extends TileNode implements IGrid {
     public static final String NBT_SORTING_TYPE = "SortingType";
     public static final String NBT_SEARCH_BOX_MODE = "SearchBoxMode";
     public static final String NBT_OREDICT_PATTERN = "OredictPattern";
+    public static final String NBT_TAB_SELECTED = "TabSelected";
 
     public static final int SORTING_DIRECTION_ASCENDING = 0;
     public static final int SORTING_DIRECTION_DESCENDING = 1;
@@ -175,6 +194,8 @@ public class TileGrid extends TileNode implements IGrid {
     private int sortingType = SORTING_TYPE_QUANTITY;
     private int searchBoxMode = SEARCH_BOX_MODE_NORMAL;
 
+    private int tabSelected = -1;
+
     private boolean oredictPattern = false;
 
     public TileGrid() {
@@ -182,6 +203,7 @@ public class TileGrid extends TileNode implements IGrid {
         dataManager.addWatchedParameter(SORTING_DIRECTION);
         dataManager.addWatchedParameter(SORTING_TYPE);
         dataManager.addWatchedParameter(SEARCH_BOX_MODE);
+        dataManager.addWatchedParameter(TAB_SELECTED);
         dataManager.addWatchedParameter(OREDICT_PATTERN);
     }
 
@@ -464,6 +486,11 @@ public class TileGrid extends TileNode implements IGrid {
     }
 
     @Override
+    public int getTabSelected() {
+        return getWorld().isRemote ? TAB_SELECTED.getValue() : tabSelected;
+    }
+
+    @Override
     public void onViewTypeChanged(int type) {
         TileDataManager.setParameter(VIEW_TYPE, type);
     }
@@ -484,6 +511,11 @@ public class TileGrid extends TileNode implements IGrid {
     }
 
     @Override
+    public void onTabSelectionChanged(int tab) {
+        TileDataManager.setParameter(TAB_SELECTED, tab);
+    }
+
+    @Override
     public TileDataParameter<Integer> getRedstoneModeConfig() {
         return REDSTONE_MODE;
     }
@@ -500,6 +532,10 @@ public class TileGrid extends TileNode implements IGrid {
         RSUtils.readItemsLegacy(matrix, 0, tag);
         RSUtils.readItems(patterns, 1, tag);
         RSUtils.readItems(filter, 2, tag);
+
+        if (tag.hasKey(NBT_TAB_SELECTED)) {
+            tabSelected = tag.getInteger(NBT_TAB_SELECTED);
+        }
     }
 
     @Override
@@ -509,6 +545,8 @@ public class TileGrid extends TileNode implements IGrid {
         RSUtils.writeItemsLegacy(matrix, 0, tag);
         RSUtils.writeItems(patterns, 1, tag);
         RSUtils.writeItems(filter, 2, tag);
+
+        tag.setInteger(NBT_TAB_SELECTED, tabSelected);
 
         return tag;
     }

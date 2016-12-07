@@ -32,6 +32,8 @@ public interface IGrid {
 
     int getSearchBoxMode();
 
+    int getTabSelected();
+
     void onViewTypeChanged(int type);
 
     void onSortingTypeChanged(int type);
@@ -39,6 +41,8 @@ public interface IGrid {
     void onSortingDirectionChanged(int direction);
 
     void onSearchBoxModeChanged(int searchBoxMode);
+
+    void onTabSelectionChanged(int tab);
 
     List<GridFilteredItem> getFilteredItems();
 

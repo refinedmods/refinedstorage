@@ -37,6 +37,7 @@ public class WirelessGrid implements IGrid {
     private int sortingType;
     private int sortingDirection;
     private int searchBoxMode;
+    private int tabSelected;
 
     private List<GridFilteredItem> filteredItems = new ArrayList<>();
     private List<GridTab> tabs = new ArrayList<>();
@@ -65,6 +66,7 @@ public class WirelessGrid implements IGrid {
         this.sortingType = ItemWirelessGrid.getSortingType(stack);
         this.sortingDirection = ItemWirelessGrid.getSortingDirection(stack);
         this.searchBoxMode = ItemWirelessGrid.getSearchBoxMode(stack);
+        this.tabSelected = ItemWirelessGrid.getTabSelected(stack);
 
         if (stack.hasTagCompound()) {
             for (int i = 0; i < 4; ++i) {
@@ -125,8 +127,13 @@ public class WirelessGrid implements IGrid {
     }
 
     @Override
+    public int getTabSelected() {
+        return tabSelected;
+    }
+
+    @Override
     public void onViewTypeChanged(int type) {
-        RS.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(type, getSortingDirection(), getSortingType(), getSearchBoxMode()));
+        RS.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(type, getSortingDirection(), getSortingType(), getSearchBoxMode(), tabSelected));
 
         this.viewType = type;
 
@@ -135,7 +142,7 @@ public class WirelessGrid implements IGrid {
 
     @Override
     public void onSortingTypeChanged(int type) {
-        RS.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(getViewType(), getSortingDirection(), type, getSearchBoxMode()));
+        RS.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(getViewType(), getSortingDirection(), type, getSearchBoxMode(), tabSelected));
 
         this.sortingType = type;
 
@@ -144,7 +151,7 @@ public class WirelessGrid implements IGrid {
 
     @Override
     public void onSortingDirectionChanged(int direction) {
-        RS.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(getViewType(), direction, getSortingType(), getSearchBoxMode()));
+        RS.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(getViewType(), direction, getSortingType(), getSearchBoxMode(), tabSelected));
 
         this.sortingDirection = direction;
 
@@ -153,9 +160,18 @@ public class WirelessGrid implements IGrid {
 
     @Override
     public void onSearchBoxModeChanged(int searchBoxMode) {
-        RS.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), searchBoxMode));
+        RS.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), searchBoxMode, tabSelected));
 
         this.searchBoxMode = searchBoxMode;
+    }
+
+    @Override
+    public void onTabSelectionChanged(int tab) {
+        RS.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), searchBoxMode, tab));
+
+        this.tabSelected = tab;
+
+        GuiGrid.markForSorting();
     }
 
     @Override
