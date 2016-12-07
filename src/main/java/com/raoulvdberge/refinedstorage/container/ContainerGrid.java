@@ -20,6 +20,8 @@ public class ContainerGrid extends ContainerBase {
 
     private IGrid grid;
 
+    private boolean hadTabs;
+
     private SlotGridCraftingResult craftingResultSlot;
     private SlotDisabled patternResultSlot;
 
@@ -27,6 +29,8 @@ public class ContainerGrid extends ContainerBase {
         super(grid instanceof TileBase ? (TileBase) grid : null, player);
 
         this.grid = grid;
+
+        this.hadTabs = !getGrid().getTabs().isEmpty();
 
         addPlayerInventory(8, ((grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 165 : 126) + getTabDelta());
 
@@ -70,6 +74,25 @@ public class ContainerGrid extends ContainerBase {
         if (grid.getType() != EnumGridType.FLUID) {
             for (int i = 0; i < 4; ++i) {
                 addSlotToContainer(new SlotItemHandler(grid.getFilter(), i, 204, 6 + (18 * i) + getTabDelta()));
+            }
+        }
+    }
+
+    @Override
+    public void detectAndSendChanges() {
+        updateSlotsAccordingToTabs();
+
+        super.detectAndSendChanges();
+    }
+
+    public void updateSlotsAccordingToTabs() {
+        boolean hasTabs = !getGrid().getTabs().isEmpty();
+
+        if (hadTabs != hasTabs) {
+            hadTabs = hasTabs;
+
+            for (Slot slot : this.inventorySlots) {
+                slot.yPos += (TAB_HEIGHT - 4) * (hasTabs ? 1 : -1);
             }
         }
     }

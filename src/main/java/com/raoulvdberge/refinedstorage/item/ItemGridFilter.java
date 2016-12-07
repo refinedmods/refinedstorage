@@ -51,6 +51,17 @@ public class ItemGridFilter extends ItemBase {
     }
 
     @Override
+    public String getItemStackDisplayName(ItemStack stack) {
+        String name = getName(stack);
+
+        if (!name.equalsIgnoreCase("")) {
+            return name;
+        }
+
+        return super.getItemStackDisplayName(stack);
+    }
+
+    @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
         super.addInformation(stack, player, tooltip, advanced);
 

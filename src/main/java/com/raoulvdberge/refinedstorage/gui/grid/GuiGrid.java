@@ -61,6 +61,7 @@ public class GuiGrid extends GuiBase {
     private ContainerGrid container;
     private IGrid grid;
 
+    private boolean hadTabs = false;
     private int tabSelected = -1;
     private int tabHovering = -1;
 
@@ -92,12 +93,7 @@ public class GuiGrid extends GuiBase {
         this.container = container;
         this.grid = grid;
         this.wasConnected = this.grid.isActive();
-
-        this.scrollbar = new Scrollbar(174, 20 + getTabDelta(), 12, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN || grid.getType() == EnumGridType.FLUID) ? 70 : 88);
-
-        if (!grid.getTabs().isEmpty()) {
-            sideButtonYStart += ContainerGrid.TAB_HEIGHT - 3;
-        }
+        this.hadTabs = !grid.getTabs().isEmpty();
 
         this.konamiOffsetsX = new int[9 * getVisibleRows()];
         this.konamiOffsetsY = new int[9 * getVisibleRows()];
@@ -105,6 +101,8 @@ public class GuiGrid extends GuiBase {
 
     @Override
     public void init(int x, int y) {
+        this.scrollbar = new Scrollbar(174, 20 + getTabDelta(), 12, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN || grid.getType() == EnumGridType.FLUID) ? 70 : 88);
+
         if (grid.getRedstoneModeConfig() != null) {
             addSideButton(new SideButtonRedstoneMode(this, grid.getRedstoneModeConfig()));
         }
@@ -137,6 +135,11 @@ public class GuiGrid extends GuiBase {
         addSideButton(new SideButtonGridSearchBoxMode(this));
 
         sortItems();
+    }
+
+    @Override
+    protected int getSideButtonYStart() {
+        return super.getSideButtonYStart() + (!grid.getTabs().isEmpty() ? ContainerGrid.TAB_HEIGHT - 3 : 0);
     }
 
     public IGrid getGrid() {
@@ -201,6 +204,23 @@ public class GuiGrid extends GuiBase {
 
             sortItems();
         }
+
+        boolean hasTabs = !getGrid().getTabs().isEmpty();
+
+        if (hadTabs != hasTabs) {
+            hadTabs = hasTabs;
+
+            height = (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 247 : 208;
+            ySize = height;
+
+            if (hasTabs) {
+                height += ContainerGrid.TAB_HEIGHT;
+            }
+
+            initGui();
+
+            container.updateSlotsAccordingToTabs();
+        }
     }
 
     private int getRows() {
@@ -259,7 +279,8 @@ public class GuiGrid extends GuiBase {
             ty += 3;
         }
 
-        int uvx = 0, uvy = 225;
+        int uvx = 0;
+        int uvy = 225;
         int tbw = ContainerGrid.TAB_WIDTH;
         int otx = tx;
 
@@ -388,7 +409,7 @@ public class GuiGrid extends GuiBase {
             drawTooltip(mouseX, mouseY, t("gui.refinedstorage:grid.pattern_create"));
         }
 
-        if (tabHovering >= 0 && tabHovering < grid.getTabs().size()) {
+        if (tabHovering >= 0 && tabHovering < grid.getTabs().size() && !grid.getTabs().get(tabHovering).getName().equalsIgnoreCase("")) {
             drawTooltip(mouseX, mouseY, grid.getTabs().get(tabHovering).getName());
         }
     }
@@ -408,7 +429,7 @@ public class GuiGrid extends GuiBase {
 
         searchField.mouseClicked(mouseX, mouseY, clickedButton);
 
-        if (tabHovering != -1) {
+        if (tabHovering >= 0 && tabHovering < grid.getTabs().size()) {
             tabSelected = tabSelected == tabHovering ? -1 : tabHovering;
 
             sortItems();
