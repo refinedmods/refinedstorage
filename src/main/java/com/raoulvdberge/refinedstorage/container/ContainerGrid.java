@@ -15,6 +15,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerGrid extends ContainerBase {
+    public static final int TAB_WIDTH = 28;
+    public static final int TAB_HEIGHT = 31;
+
     private IGrid grid;
 
     private SlotGridCraftingResult craftingResultSlot;
@@ -25,11 +28,11 @@ public class ContainerGrid extends ContainerBase {
 
         this.grid = grid;
 
-        addPlayerInventory(8, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 165 : 126);
+        addPlayerInventory(8, ((grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 165 : 126) + getTabDelta());
 
         if (grid.getType() == EnumGridType.CRAFTING) {
             int x = 26;
-            int y = 96;
+            int y = 96 + getTabDelta();
 
             for (int i = 0; i < 9; ++i) {
                 addSlotToContainer(new SlotGridCrafting(((TileGrid) grid).getMatrix(), i, x, y));
@@ -42,10 +45,10 @@ public class ContainerGrid extends ContainerBase {
                 }
             }
 
-            addSlotToContainer(craftingResultSlot = new SlotGridCraftingResult(this, player, (TileGrid) grid, 0, 130 + 4, 110 + 4));
+            addSlotToContainer(craftingResultSlot = new SlotGridCraftingResult(this, player, (TileGrid) grid, 0, 130 + 4, 110 + 4 + getTabDelta()));
         } else if (grid.getType() == EnumGridType.PATTERN) {
             int x = 8;
-            int y = 96;
+            int y = 96 + getTabDelta();
 
             for (int i = 0; i < 9; ++i) {
                 addSlotToContainer(new SlotFilterLegacy(((TileGrid) grid).getMatrix(), i, x, y));
@@ -58,17 +61,21 @@ public class ContainerGrid extends ContainerBase {
                 }
             }
 
-            addSlotToContainer(patternResultSlot = new SlotDisabled(((TileGrid) grid).getResult(), 0, 112 + 4, 110 + 4));
+            addSlotToContainer(patternResultSlot = new SlotDisabled(((TileGrid) grid).getResult(), 0, 112 + 4, 110 + 4 + getTabDelta()));
 
-            addSlotToContainer(new SlotItemHandler(((TileGrid) grid).getPatterns(), 0, 152, 96));
-            addSlotToContainer(new SlotOutput(((TileGrid) grid).getPatterns(), 1, 152, 132));
+            addSlotToContainer(new SlotItemHandler(((TileGrid) grid).getPatterns(), 0, 152, 96 + getTabDelta()));
+            addSlotToContainer(new SlotOutput(((TileGrid) grid).getPatterns(), 1, 152, 132 + getTabDelta()));
         }
 
         if (grid.getType() != EnumGridType.FLUID) {
             for (int i = 0; i < 4; ++i) {
-                addSlotToContainer(new SlotItemHandler(grid.getFilter(), i, 204, 6 + (18 * i)));
+                addSlotToContainer(new SlotItemHandler(grid.getFilter(), i, 204, 6 + (18 * i) + getTabDelta()));
             }
         }
+    }
+
+    private int getTabDelta() {
+        return !grid.getTabs().isEmpty() ? TAB_HEIGHT - 4 : 0;
     }
 
     public IGrid getGrid() {

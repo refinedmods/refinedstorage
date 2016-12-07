@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.gui.grid.filtering;
 
+import com.raoulvdberge.refinedstorage.gui.grid.GridFilteredItem;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 
@@ -7,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class GridFilterParser {
-    public static List<IGridFilter> getFilters(IGrid grid, String query) {
+    public static List<IGridFilter> getFilters(IGrid grid, String query, List<GridFilteredItem> itemFilters) {
         List<IGridFilter> filters = new LinkedList<>();
 
         for (String part : query.toLowerCase().trim().split(" ")) {
@@ -26,8 +27,8 @@ public class GridFilterParser {
             filters.add(new GridFilterCraftable(true));
         }
 
-        if (!grid.getFilteredItems().isEmpty()) {
-            filters.add(new GridFilterFilteredItems(grid.getFilteredItems()));
+        if (!itemFilters.isEmpty()) {
+            filters.add(new GridFilterFilteredItems(itemFilters));
         }
 
         return filters;

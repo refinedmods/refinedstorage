@@ -49,8 +49,9 @@ public abstract class GuiBase extends GuiContainer {
         }
     }
 
+    protected int sideButtonYStart = 6;
     private int lastButtonId;
-    private int lastSideButtonY = 6;
+    private int lastSideButtonY = sideButtonYStart;
 
     protected int width;
     protected int height;
@@ -75,7 +76,7 @@ public abstract class GuiBase extends GuiContainer {
         super.initGui();
 
         lastButtonId = 0;
-        lastSideButtonY = 6;
+        lastSideButtonY = sideButtonYStart;
 
         init(guiLeft, guiTop);
     }

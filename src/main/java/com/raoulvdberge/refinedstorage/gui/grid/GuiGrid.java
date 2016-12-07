@@ -61,6 +61,9 @@ public class GuiGrid extends GuiBase {
     private ContainerGrid container;
     private IGrid grid;
 
+    private int tabSelected = -1;
+    private int tabHovering = -1;
+
     private int slotNumber;
 
     private Deque<Integer> konami = new ArrayDeque<>(Arrays.asList(
@@ -84,13 +87,17 @@ public class GuiGrid extends GuiBase {
     }
 
     public GuiGrid(ContainerGrid container, IGrid grid) {
-        super(container, grid.getType() == EnumGridType.FLUID ? 193 : 227, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 247 : 208);
+        super(container, grid.getType() == EnumGridType.FLUID ? 193 : 227, ((grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 247 : 208) + (!grid.getTabs().isEmpty() ? ContainerGrid.TAB_HEIGHT : 0));
 
         this.container = container;
         this.grid = grid;
         this.wasConnected = this.grid.isActive();
 
-        this.scrollbar = new Scrollbar(174, 20, 12, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN || grid.getType() == EnumGridType.FLUID) ? 70 : 88);
+        this.scrollbar = new Scrollbar(174, 20 + getTabDelta(), 12, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN || grid.getType() == EnumGridType.FLUID) ? 70 : 88);
+
+        if (!grid.getTabs().isEmpty()) {
+            sideButtonYStart += ContainerGrid.TAB_HEIGHT - 3;
+        }
 
         this.konamiOffsetsX = new int[9 * getVisibleRows()];
         this.konamiOffsetsY = new int[9 * getVisibleRows()];
@@ -103,7 +110,7 @@ public class GuiGrid extends GuiBase {
         }
 
         int sx = x + 80 + 1;
-        int sy = y + 6 + 1;
+        int sy = y + 6 + 1 + getTabDelta();
 
         if (searchField == null) {
             searchField = new GuiTextField(0, fontRendererObj, sx, sy, 88 - 6, fontRendererObj.FONT_HEIGHT);
@@ -118,7 +125,7 @@ public class GuiGrid extends GuiBase {
         }
 
         if (grid.getType() == EnumGridType.PATTERN) {
-            oredictPattern = addCheckBox(x + 64, y + 138, t("misc.refinedstorage:oredict"), TileGrid.OREDICT_PATTERN.getValue());
+            oredictPattern = addCheckBox(x + 64, y + 138 + getTabDelta(), t("misc.refinedstorage:oredict"), TileGrid.OREDICT_PATTERN.getValue());
         }
 
         if (grid.getType() != EnumGridType.FLUID) {
@@ -142,7 +149,7 @@ public class GuiGrid extends GuiBase {
         if (grid.isActive()) {
             stacks.addAll(grid.getType() == EnumGridType.FLUID ? FLUIDS.values() : ITEMS.values());
 
-            List<IGridFilter> filters = GridFilterParser.getFilters(grid, searchField.getText());
+            List<IGridFilter> filters = GridFilterParser.getFilters(grid, searchField.getText(), (tabSelected >= 0 && tabSelected < grid.getTabs().size()) ? grid.getTabs().get(tabSelected).getFilters() : grid.getFilteredItems());
 
             Iterator<IClientStack> t = stacks.iterator();
 
@@ -209,7 +216,7 @@ public class GuiGrid extends GuiBase {
     }
 
     public boolean isOverSlotArea(int mouseX, int mouseY) {
-        return inBounds(7, 19, 162, 18 * getVisibleRows(), mouseX, mouseY);
+        return inBounds(7, 19 + getTabDelta(), 162, 18 * getVisibleRows(), mouseX, mouseY);
     }
 
     private int getVisibleRows() {
@@ -219,20 +226,75 @@ public class GuiGrid extends GuiBase {
     private boolean isOverClear(int mouseX, int mouseY) {
         switch (grid.getType()) {
             case CRAFTING:
-                return inBounds(82, 95, 7, 7, mouseX, mouseY);
+                return inBounds(82, 95 + getTabDelta(), 7, 7, mouseX, mouseY);
             case PATTERN:
-                return inBounds(64, 95, 7, 7, mouseX, mouseY);
+                return inBounds(64, 95 + getTabDelta(), 7, 7, mouseX, mouseY);
             default:
                 return false;
         }
     }
 
     private boolean isOverCreatePattern(int mouseX, int mouseY) {
-        return grid.getType() == EnumGridType.PATTERN && inBounds(152, 114, 16, 16, mouseX, mouseY) && ((TileGrid) grid).canCreatePattern();
+        return grid.getType() == EnumGridType.PATTERN && inBounds(152, 114 + getTabDelta(), 16, 16, mouseX, mouseY) && ((TileGrid) grid).canCreatePattern();
+    }
+
+    private int getTabDelta() {
+        return !grid.getTabs().isEmpty() ? ContainerGrid.TAB_HEIGHT - 4 : 0;
+    }
+
+    private void renderTab(GridTab tab, boolean foregroundLayer, int x, int y, int mouseX, int mouseY) {
+        int i = grid.getTabs().indexOf(tab);
+        boolean selected = i == tabSelected;
+
+        if ((foregroundLayer && !selected) || (!foregroundLayer && selected)) {
+            return;
+        }
+
+        int tx = x + ((ContainerGrid.TAB_WIDTH + 2) * i);
+        int ty = y;
+
+        bindTexture("icons.png");
+
+        if (!selected) {
+            ty += 3;
+        }
+
+        int uvx = 0, uvy = 225;
+        int tbw = ContainerGrid.TAB_WIDTH;
+        int otx = tx;
+
+        if (selected) {
+            uvx = 227;
+
+            if (i > 0) {
+                uvx = 226;
+                uvy = 194;
+                tbw++;
+                tx--;
+            }
+        } else {
+            uvx = 199;
+        }
+
+        drawTexture(tx, ty, uvx, uvy, tbw, ContainerGrid.TAB_HEIGHT);
+
+        RenderHelper.enableGUIStandardItemLighting();
+
+        drawItem(otx + 6, ty + 8 - (!selected ? 3 : 0), tab.getIcon());
+
+        if (inBounds(tx, ty, ContainerGrid.TAB_WIDTH, ContainerGrid.TAB_HEIGHT, mouseX, mouseY)) {
+            tabHovering = i;
+        }
     }
 
     @Override
     public void drawBackground(int x, int y, int mouseX, int mouseY) {
+        tabHovering = -1;
+
+        for (GridTab tab : grid.getTabs()) {
+            renderTab(tab, false, x, y, mouseX, mouseY);
+        }
+
         if (grid.getType() == EnumGridType.CRAFTING) {
             bindTexture("gui/crafting_grid.png");
         } else if (grid.getType() == EnumGridType.PATTERN) {
@@ -241,7 +303,11 @@ public class GuiGrid extends GuiBase {
             bindTexture("gui/grid.png");
         }
 
-        drawTexture(x, y, 0, 0, width, height);
+        drawTexture(x, y + getTabDelta(), 0, 0, width, height - (!grid.getTabs().isEmpty() ? ContainerGrid.TAB_HEIGHT : 0));
+
+        for (GridTab tab : grid.getTabs()) {
+            renderTab(tab, true, x, y, mouseX, mouseY);
+        }
 
         if (grid.getType() == EnumGridType.PATTERN) {
             int ty = 0;
@@ -254,7 +320,7 @@ public class GuiGrid extends GuiBase {
                 ty = 2;
             }
 
-            drawTexture(x + 152, y + 114, 240, ty * 16, 16, 16);
+            drawTexture(x + 152, y + 114 + getTabDelta(), 240, ty * 16, 16, 16);
         }
 
         searchField.drawTextBox();
@@ -262,11 +328,11 @@ public class GuiGrid extends GuiBase {
 
     @Override
     public void drawForeground(int mouseX, int mouseY) {
-        drawString(7, 7, t(grid.getGuiTitle()));
-        drawString(7, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 153 : 114, t("container.inventory"));
+        drawString(7, 7 + getTabDelta(), t(grid.getGuiTitle()));
+        drawString(7, ((grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 153 : 114) + getTabDelta(), t("container.inventory"));
 
         int x = 8;
-        int y = 20;
+        int y = 20 + getTabDelta();
 
         this.slotNumber = -1;
 
@@ -321,6 +387,10 @@ public class GuiGrid extends GuiBase {
         if (isOverCreatePattern(mouseX, mouseY)) {
             drawTooltip(mouseX, mouseY, t("gui.refinedstorage:grid.pattern_create"));
         }
+
+        if (tabHovering >= 0 && tabHovering < grid.getTabs().size()) {
+            drawTooltip(mouseX, mouseY, grid.getTabs().get(tabHovering).getName());
+        }
     }
 
     @Override
@@ -338,7 +408,13 @@ public class GuiGrid extends GuiBase {
 
         searchField.mouseClicked(mouseX, mouseY, clickedButton);
 
-        if (clickedButton == 1 && inBounds(79, 5, 90, 12, mouseX - guiLeft, mouseY - guiTop)) {
+        if (tabHovering != -1) {
+            tabSelected = tabSelected == tabHovering ? -1 : tabHovering;
+
+            sortItems();
+        }
+
+        if (clickedButton == 1 && inBounds(79, 5 + getTabDelta(), 90, 12, mouseX - guiLeft, mouseY - guiTop)) {
             searchField.setText("");
             searchField.setFocused(true);
 
@@ -347,8 +423,8 @@ public class GuiGrid extends GuiBase {
             updateJEI();
         }
 
-        boolean clickedClear = clickedButton == 0 && isOverClear(mouseX - guiLeft, mouseY - guiTop);
-        boolean clickedCreatePattern = clickedButton == 0 && isOverCreatePattern(mouseX - guiLeft, mouseY - guiTop);
+        boolean clickedClear = clickedButton == 0 && isOverClear(mouseX - guiLeft, mouseY - guiTop + getTabDelta());
+        boolean clickedCreatePattern = clickedButton == 0 && isOverCreatePattern(mouseX - guiLeft, mouseY - guiTop + getTabDelta());
 
         if (clickedCreatePattern) {
             BlockPos gridPos = ((TileGrid) grid).getPos();

@@ -2,21 +2,25 @@ package com.raoulvdberge.refinedstorage.inventory;
 
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.gui.grid.GridFilteredItem;
+import com.raoulvdberge.refinedstorage.gui.grid.GridTab;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.item.ItemGridFilter;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ItemHandlerGridFilterInGrid extends ItemHandlerBasic {
     private List<GridFilteredItem> filteredItems;
+    private List<GridTab> tabs;
 
-    public ItemHandlerGridFilterInGrid(List<GridFilteredItem> filteredItems) {
+    public ItemHandlerGridFilterInGrid(List<GridFilteredItem> filteredItems, List<GridTab> tabs) {
         super(4, new ItemValidatorBasic(RSItems.GRID_FILTER));
 
         this.filteredItems = filteredItems;
+        this.tabs = tabs;
     }
 
     @Override
@@ -24,6 +28,7 @@ public class ItemHandlerGridFilterInGrid extends ItemHandlerBasic {
         super.onContentsChanged(slot);
 
         filteredItems.clear();
+        tabs.clear();
 
         for (int i = 0; i < getSlots(); ++i) {
             ItemStack filter = getStackInSlot(i);
@@ -35,10 +40,20 @@ public class ItemHandlerGridFilterInGrid extends ItemHandlerBasic {
 
                 ItemHandlerGridFilter items = new ItemHandlerGridFilter(filter);
 
+                List<GridFilteredItem> filters = new ArrayList<>();
+
                 for (ItemStack item : items.getFilteredItems()) {
                     if (!item.isEmpty()) {
-                        filteredItems.add(new GridFilteredItem(item, compare, mode, modFilter));
+                        filters.add(new GridFilteredItem(item, compare, mode, modFilter));
                     }
+                }
+
+                ItemStack icon = ItemGridFilter.getIcon(filter);
+
+                if (icon.isEmpty()) {
+                    filteredItems.addAll(filters);
+                } else {
+                    tabs.add(new GridTab(filters, ItemGridFilter.getName(filter), icon));
                 }
             }
         }
