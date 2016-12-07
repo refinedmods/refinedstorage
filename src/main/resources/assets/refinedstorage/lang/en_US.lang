@@ -38,6 +38,7 @@ gui.refinedstorage:grid_filter=Grid Filter
 gui.refinedstorage:grid_filter.compare_damage=Damage
 gui.refinedstorage:grid_filter.compare_nbt=NBT
 gui.refinedstorage:grid_filter.compare_oredict=Oredict
+gui.refinedstorage:grid_filter.mod_filter=Mod filter
 gui.refinedstorage:network_transmitter=Network Transmitter
 gui.refinedstorage:network_transmitter.distance=%d blocks
 gui.refinedstorage:network_transmitter.dimension=Dimension %d

@@ -1,5 +1,10 @@
 # Refined Storage Changelog
 
+### 1.3.4
+- Added option to check for oredict in the Grid Filter (raoulvdberge)
+- Added option to use a mod filter in the Grid Filter (raoulvdberge)
+- Added option to use a whitelist or blacklist in the Grid Filter (raoulvdberge)
+
 ### 1.3.3
 - Updated Forge to 2188 (raoulvdberge)
 - Fixed not being able to start a crafting task (raoulvdberge)

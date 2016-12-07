@@ -5,12 +5,14 @@ import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerGridFilter;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -21,6 +23,7 @@ public class ItemGridFilter extends ItemBase {
 
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
+    private static final String NBT_MOD_FILTER = "ModFilter";
 
     public ItemGridFilter() {
         super("grid_filter");
@@ -49,6 +52,12 @@ public class ItemGridFilter extends ItemBase {
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
         super.addInformation(stack, player, tooltip, advanced);
 
+        tooltip.add(TextFormatting.YELLOW + I18n.format("sidebutton.refinedstorage:mode." + (getMode(stack) == MODE_WHITELIST ? "whitelist" : "blacklist")) + TextFormatting.RESET);
+
+        if (isModFilter(stack)) {
+            tooltip.add(TextFormatting.BLUE + I18n.format("gui.refinedstorage:grid_filter.mod_filter") + TextFormatting.RESET);
+        }
+
         ItemHandlerGridFilter items = new ItemHandlerGridFilter(stack);
 
         ItemPattern.combineItems(tooltip, false, items.getFilteredItems());
@@ -76,5 +85,17 @@ public class ItemGridFilter extends ItemBase {
         }
 
         stack.getTagCompound().setInteger(NBT_MODE, mode);
+    }
+
+    public static boolean isModFilter(ItemStack stack) {
+        return stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_MOD_FILTER) && stack.getTagCompound().getBoolean(NBT_MOD_FILTER);
+    }
+
+    public static void setModFilter(ItemStack stack, boolean modFilter) {
+        if (!stack.hasTagCompound()) {
+            stack.setTagCompound(new NBTTagCompound());
+        }
+
+        stack.getTagCompound().setBoolean(NBT_MOD_FILTER, modFilter);
     }
 }

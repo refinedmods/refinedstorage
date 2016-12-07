@@ -6,11 +6,13 @@ public class GridFilteredItem {
     private ItemStack stack;
     private int compare;
     private int mode;
+    private boolean modFilter;
 
-    public GridFilteredItem(ItemStack stack, int compare, int mode) {
+    public GridFilteredItem(ItemStack stack, int compare, int mode, boolean modFilter) {
         this.stack = stack;
         this.compare = compare;
         this.mode = mode;
+        this.modFilter = modFilter;
     }
 
     public ItemStack getStack() {
@@ -23,5 +25,9 @@ public class GridFilteredItem {
 
     public int getMode() {
         return mode;
+    }
+
+    public boolean isModFilter() {
+        return modFilter;
     }
 }

@@ -31,12 +31,13 @@ public class ItemHandlerGridFilterInGrid extends ItemHandlerBasic {
             if (!filter.isEmpty()) {
                 int compare = ItemGridFilter.getCompare(filter);
                 int mode = ItemGridFilter.getMode(filter);
+                boolean modFilter = ItemGridFilter.isModFilter(filter);
 
                 ItemHandlerGridFilter items = new ItemHandlerGridFilter(filter);
 
                 for (ItemStack item : items.getFilteredItems()) {
                     if (!item.isEmpty()) {
-                        filteredItems.add(new GridFilteredItem(item, compare, mode));
+                        filteredItems.add(new GridFilteredItem(item, compare, mode, modFilter));
                     }
                 }
             }

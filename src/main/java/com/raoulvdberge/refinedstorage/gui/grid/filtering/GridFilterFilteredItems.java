@@ -20,11 +20,15 @@ public class GridFilterFilteredItems implements IGridFilter {
         int lastMode = ItemGridFilter.MODE_WHITELIST;
 
         for (GridFilteredItem filteredItem : filteredItems) {
-            if (API.instance().getComparer().isEqual(((ClientStackItem) stack).getStack(), filteredItem.getStack(), filteredItem.getCompare())) {
+            lastMode = filteredItem.getMode();
+
+            if (filteredItem.isModFilter()) {
+                if (filteredItem.getStack().getItem().getRegistryName().getResourceDomain().equalsIgnoreCase(stack.getModId())) {
+                    return filteredItem.getMode() == ItemGridFilter.MODE_WHITELIST;
+                }
+            } else if (API.instance().getComparer().isEqual(((ClientStackItem) stack).getStack(), filteredItem.getStack(), filteredItem.getCompare())) {
                 return filteredItem.getMode() == ItemGridFilter.MODE_WHITELIST;
             }
-
-            lastMode = filteredItem.getMode();
         }
 
         return lastMode != ItemGridFilter.MODE_WHITELIST;
