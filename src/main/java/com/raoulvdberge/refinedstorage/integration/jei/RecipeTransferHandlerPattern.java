@@ -13,6 +13,8 @@ import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class RecipeTransferHandlerPattern implements IRecipeTransferHandler<ContainerProcessingPatternEncoder> {
@@ -30,32 +32,21 @@ public class RecipeTransferHandlerPattern implements IRecipeTransferHandler<Cont
     @Override
     public IRecipeTransferError transferRecipe(ContainerProcessingPatternEncoder container, IRecipeLayout recipeLayout, EntityPlayer player, boolean maxTransfer, boolean doTransfer) {
         if (doTransfer) {
-            Map<Integer, ItemStack> inputs = new LinkedHashMap<>();
-            Map<Integer, ItemStack> outputs = new LinkedHashMap<>();
+            List<ItemStack> inputs = new LinkedList<>();
+            List<ItemStack> outputs = new LinkedList<>();
 
             for (IGuiIngredient<ItemStack> guiIngredient : recipeLayout.getItemStacks().getGuiIngredients().values()) {
                 if (guiIngredient != null && guiIngredient.getDisplayedIngredient() != null) {
                     ItemStack ingredient = guiIngredient.getDisplayedIngredient().copy();
-
-                    int hash = API.instance().getItemStackHashCode(ingredient);
-
                     if (guiIngredient.isInput()) {
-                        if (inputs.containsKey(hash)) {
-                            inputs.get(hash).stackSize++;
-                        } else {
-                            inputs.put(hash, ingredient);
-                        }
+                        inputs.add(ingredient);
                     } else {
-                        if (outputs.containsKey(hash)) {
-                            outputs.get(hash).stackSize++;
-                        } else {
-                            outputs.put(hash, ingredient);
-                        }
+                        outputs.add(ingredient);
                     }
                 }
             }
 
-            RS.INSTANCE.network.sendToServer(new MessageProcessingPatternEncoderTransfer(inputs.values(), outputs.values()));
+            RS.INSTANCE.network.sendToServer(new MessageProcessingPatternEncoderTransfer(inputs, outputs));
         }
 
         return null;
