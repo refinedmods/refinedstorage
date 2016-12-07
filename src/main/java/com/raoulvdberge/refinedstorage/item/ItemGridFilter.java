@@ -24,6 +24,8 @@ public class ItemGridFilter extends ItemBase {
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
     private static final String NBT_MOD_FILTER = "ModFilter";
+    private static final String NBT_NAME = "Name";
+    private static final String NBT_ICON = "Icon";
 
     public ItemGridFilter() {
         super("grid_filter");
@@ -97,5 +99,29 @@ public class ItemGridFilter extends ItemBase {
         }
 
         stack.getTagCompound().setBoolean(NBT_MOD_FILTER, modFilter);
+    }
+
+    public static String getName(ItemStack stack) {
+        return stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_NAME) ? stack.getTagCompound().getString(NBT_NAME) : "";
+    }
+
+    public static void setName(ItemStack stack, String name) {
+        if (!stack.hasTagCompound()) {
+            stack.setTagCompound(new NBTTagCompound());
+        }
+
+        stack.getTagCompound().setString(NBT_NAME, name);
+    }
+
+    public static ItemStack getIcon(ItemStack stack) {
+        return stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_ICON) ? new ItemStack(stack.getTagCompound().getCompoundTag(NBT_ICON)) : ItemStack.EMPTY;
+    }
+
+    public static void setIcon(ItemStack stack, ItemStack icon) {
+        if (!stack.hasTagCompound()) {
+            stack.setTagCompound(new NBTTagCompound());
+        }
+
+        stack.getTagCompound().setTag(NBT_ICON, icon.serializeNBT());
     }
 }

@@ -6,6 +6,7 @@ import com.raoulvdberge.refinedstorage.container.ContainerGridFilter;
 import com.raoulvdberge.refinedstorage.item.ItemGridFilter;
 import com.raoulvdberge.refinedstorage.network.MessageGridFilterUpdate;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 
 import java.io.IOException;
@@ -14,19 +15,22 @@ public class GuiGridFilter extends GuiBase {
     private int compare;
     private int mode;
     private boolean modFilter;
+    private String name;
 
     private GuiCheckBox compareDamage;
     private GuiCheckBox compareNBT;
     private GuiCheckBox compareOredict;
     private GuiCheckBox toggleModFilter;
     private GuiButton toggleMode;
+    private GuiTextField nameField;
 
     public GuiGridFilter(ContainerGridFilter container) {
-        super(container, 176, 208);
+        super(container, 176, 231);
 
         this.compare = ItemGridFilter.getCompare(container.getStack());
         this.mode = ItemGridFilter.getMode(container.getStack());
         this.modFilter = ItemGridFilter.isModFilter(container.getStack());
+        this.name = ItemGridFilter.getName(container.getStack());
     }
 
     @Override
@@ -37,6 +41,13 @@ public class GuiGridFilter extends GuiBase {
         toggleModFilter = addCheckBox(0, y + 71 + 25, t("gui.refinedstorage:grid_filter.mod_filter"), modFilter);
         toggleMode = addButton(x + 7, y + 71 + 21, 0, 20, "");
         updateModeButton(mode);
+        nameField = new GuiTextField(0, fontRendererObj, x + 34, y + 121, 137 - 6, fontRendererObj.FONT_HEIGHT);
+        nameField.setText(name);
+        nameField.setEnableBackgroundDrawing(false);
+        nameField.setVisible(true);
+        nameField.setCanLoseFocus(true);
+        nameField.setFocused(false);
+        nameField.setTextColor(16777215);
     }
 
     private void updateModeButton(int mode) {
@@ -55,12 +66,30 @@ public class GuiGridFilter extends GuiBase {
         bindTexture("gui/grid_filter.png");
 
         drawTexture(x, y, 0, 0, width, height);
+
+        nameField.drawTextBox();
     }
 
     @Override
     public void drawForeground(int mouseX, int mouseY) {
         drawString(7, 7, t("gui.refinedstorage:grid_filter"));
-        drawString(7, 115, t("container.inventory"));
+        drawString(7, 137, t("container.inventory"));
+    }
+
+    @Override
+    protected void keyTyped(char character, int keyCode) throws IOException {
+        if (!checkHotbarKeys(keyCode) && nameField.textboxKeyTyped(character, keyCode)) {
+            sendUpdate();
+        } else {
+            super.keyTyped(character, keyCode);
+        }
+    }
+
+    @Override
+    public void mouseClicked(int mouseX, int mouseY, int clickedButton) throws IOException {
+        super.mouseClicked(mouseX, mouseY, clickedButton);
+
+        nameField.mouseClicked(mouseX, mouseY, clickedButton);
     }
 
     @Override
@@ -80,6 +109,10 @@ public class GuiGridFilter extends GuiBase {
             modFilter = !modFilter;
         }
 
-        RS.INSTANCE.network.sendToServer(new MessageGridFilterUpdate(compare, mode, modFilter));
+        sendUpdate();
+    }
+
+    private void sendUpdate() {
+        RS.INSTANCE.network.sendToServer(new MessageGridFilterUpdate(compare, mode, modFilter, nameField.getText()));
     }
 }

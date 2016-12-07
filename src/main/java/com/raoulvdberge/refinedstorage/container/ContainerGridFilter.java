@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.container;
 
 import com.raoulvdberge.refinedstorage.container.slot.SlotFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerGridFilter;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerGridFilterIcon;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -30,7 +31,9 @@ public class ContainerGridFilter extends ContainerBase {
             }
         }
 
-        addPlayerInventory(8, 126);
+        addSlotToContainer(new SlotFilter(new ItemHandlerGridFilterIcon(stack), 0, 8, 117));
+
+        addPlayerInventory(8, 149);
     }
 
     public ItemStack getStack() {
