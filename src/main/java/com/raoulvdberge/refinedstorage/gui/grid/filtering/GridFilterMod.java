@@ -30,9 +30,4 @@ public class GridFilterMod implements IGridFilter {
 
         return true;
     }
-
-    @Override
-    public boolean isStrong() {
-        return true;
-    }
 }

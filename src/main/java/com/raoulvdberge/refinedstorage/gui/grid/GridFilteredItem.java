@@ -5,10 +5,12 @@ import net.minecraft.item.ItemStack;
 public class GridFilteredItem {
     private ItemStack stack;
     private int compare;
+    private int mode;
 
-    public GridFilteredItem(ItemStack stack, int compare) {
+    public GridFilteredItem(ItemStack stack, int compare, int mode) {
         this.stack = stack;
         this.compare = compare;
+        this.mode = mode;
     }
 
     public ItemStack getStack() {
@@ -17,5 +19,9 @@ public class GridFilteredItem {
 
     public int getCompare() {
         return compare;
+    }
+
+    public int getMode() {
+        return mode;
     }
 }

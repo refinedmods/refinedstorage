@@ -13,9 +13,4 @@ public class GridFilterName implements IGridFilter {
     public boolean accepts(IClientStack stack) {
         return stack.getName().toLowerCase().contains(name);
     }
-
-    @Override
-    public boolean isStrong() {
-        return false;
-    }
 }

@@ -16,11 +16,21 @@ public class ContainerGridFilter extends ContainerBase {
         this.stack = stack;
         this.filter = new ItemHandlerGridFilter(stack);
 
-        for (int i = 0; i < 9; ++i) {
-            addSlotToContainer(new SlotFilter(filter, i, 8 + (i * 18), 20));
+        int y = 20;
+        int x = 8;
+
+        for (int i = 0; i < 27; ++i) {
+            addSlotToContainer(new SlotFilter(filter, i, x, y));
+
+            if ((i + 1) % 9 == 0) {
+                x = 8;
+                y += 18;
+            } else {
+                x += 18;
+            }
         }
 
-        addPlayerInventory(8, 70);
+        addPlayerInventory(8, 126);
     }
 
     public ItemStack getStack() {
@@ -36,8 +46,8 @@ public class ContainerGridFilter extends ContainerBase {
         if (slot.getHasStack()) {
             stack = slot.getStack();
 
-            if (index > 9 - 1) {
-                return mergeItemStackToFilters(stack, 0, 9);
+            if (index > 27 - 1) {
+                return mergeItemStackToFilters(stack, 0, 27);
             }
 
             return ItemStack.EMPTY;

@@ -16,7 +16,11 @@ import net.minecraft.world.World;
 import java.util.List;
 
 public class ItemGridFilter extends ItemBase {
+    public static final int MODE_WHITELIST = 0;
+    public static final int MODE_BLACKLIST = 1;
+
     private static final String NBT_COMPARE = "Compare";
+    private static final String NBT_MODE = "Mode";
 
     public ItemGridFilter() {
         super("grid_filter");
@@ -60,5 +64,17 @@ public class ItemGridFilter extends ItemBase {
         }
 
         stack.getTagCompound().setInteger(NBT_COMPARE, compare);
+    }
+
+    public static int getMode(ItemStack stack) {
+        return (stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_MODE)) ? stack.getTagCompound().getInteger(NBT_MODE) : MODE_WHITELIST;
+    }
+
+    public static void setMode(ItemStack stack, int mode) {
+        if (!stack.hasTagCompound()) {
+            stack.setTagCompound(new NBTTagCompound());
+        }
+
+        stack.getTagCompound().setInteger(NBT_MODE, mode);
     }
 }

@@ -21,9 +21,4 @@ public class GridFilterTooltip implements IGridFilter {
 
         return otherTooltip.contains(tooltip);
     }
-
-    @Override
-    public boolean isStrong() {
-        return false;
-    }
 }

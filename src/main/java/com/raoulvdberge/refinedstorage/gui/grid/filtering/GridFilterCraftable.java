@@ -14,9 +14,4 @@ public class GridFilterCraftable implements IGridFilter {
     public boolean accepts(IClientStack stack) {
         return stack instanceof ClientStackItem && ((ClientStackItem) stack).isCraftable() == craftable;
     }
-
-    @Override
-    public boolean isStrong() {
-        return true;
-    }
 }

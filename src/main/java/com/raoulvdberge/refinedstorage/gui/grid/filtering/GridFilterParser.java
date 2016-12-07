@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.gui.grid.filtering;
 
-import com.raoulvdberge.refinedstorage.gui.grid.GridFilteredItem;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 
@@ -27,8 +26,8 @@ public class GridFilterParser {
             filters.add(new GridFilterCraftable(true));
         }
 
-        for (GridFilteredItem filteredItem : grid.getFilteredItems()) {
-            filters.add(new GridFilterFilteredItem(filteredItem));
+        if (!grid.getFilteredItems().isEmpty()) {
+            filters.add(new GridFilterFilteredItems(grid.getFilteredItems()));
         }
 
         return filters;
