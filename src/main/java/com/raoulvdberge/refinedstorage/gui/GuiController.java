@@ -42,7 +42,7 @@ public class GuiController extends GuiBase {
     public void drawBackground(int x, int y, int mouseX, int mouseY) {
         bindTexture("gui/controller.png");
 
-        drawTexture(x, y, 0, 0, width, height);
+        drawTexture(x, y, 0, 0, screenWidth, screenHeight);
 
         int barHeightNew = TileController.getEnergyScaled(TileController.ENERGY_STORED.getValue(), TileController.ENERGY_CAPACITY.getValue(), barHeight);
 

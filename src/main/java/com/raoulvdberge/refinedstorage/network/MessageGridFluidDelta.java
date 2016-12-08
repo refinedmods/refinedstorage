@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.network;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
-import com.raoulvdberge.refinedstorage.gui.grid.stack.ClientStackFluid;
+import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackFluid;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -14,7 +14,7 @@ public class MessageGridFluidDelta implements IMessage, IMessageHandler<MessageG
     private FluidStack stack;
     private int delta;
 
-    private ClientStackFluid clientStack;
+    private GridStackFluid clientStack;
 
     public MessageGridFluidDelta() {
     }
@@ -26,7 +26,7 @@ public class MessageGridFluidDelta implements IMessage, IMessageHandler<MessageG
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        clientStack = new ClientStackFluid(RSUtils.readFluidStack(buf));
+        clientStack = new GridStackFluid(RSUtils.readFluidStack(buf));
         delta = buf.readInt();
     }
 
@@ -40,7 +40,7 @@ public class MessageGridFluidDelta implements IMessage, IMessageHandler<MessageG
     public IMessage onMessage(MessageGridFluidDelta message, MessageContext ctx) {
         Fluid fluid = message.clientStack.getStack().getFluid();
 
-        for (ClientStackFluid stack : GuiGrid.FLUIDS.get(fluid)) {
+        for (GridStackFluid stack : GuiGrid.FLUIDS.get(fluid)) {
             if (stack.equals(message.clientStack)) {
                 if (stack.getStack().amount + message.delta == 0) {
                     GuiGrid.FLUIDS.remove(fluid, stack);

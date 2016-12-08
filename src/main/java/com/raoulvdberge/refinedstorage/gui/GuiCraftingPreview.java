@@ -88,7 +88,7 @@ public class GuiCraftingPreview extends GuiBase {
     public void drawBackground(int x, int y, int mouseX, int mouseY) {
         bindTexture("gui/crafting_preview.png");
 
-        drawTexture(x, y, 0, 0, width, height);
+        drawTexture(x, y, 0, 0, screenWidth, screenHeight);
 
         if (stacks.isEmpty()) {
             drawRect(x + 7, y + 20, x + 142, y + 139, 0xFFDBDBDB);

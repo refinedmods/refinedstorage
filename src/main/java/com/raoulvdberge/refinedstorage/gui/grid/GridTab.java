@@ -5,17 +5,17 @@ import net.minecraft.item.ItemStack;
 import java.util.List;
 
 public class GridTab {
-    private List<GridFilteredItem> filters;
+    private List<GridFilter> filters;
     private String name;
     private ItemStack icon;
 
-    public GridTab(List<GridFilteredItem> filters, String name, ItemStack icon) {
+    public GridTab(List<GridFilter> filters, String name, ItemStack icon) {
         this.filters = filters;
         this.name = name;
         this.icon = icon;
     }
 
-    public List<GridFilteredItem> getFilters() {
+    public List<GridFilter> getFilters() {
         return filters;
     }
 

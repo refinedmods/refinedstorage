@@ -4,6 +4,8 @@
 - Added option to check for oredict in the Grid Filter (raoulvdberge)
 - Added option to use a mod filter in the Grid Filter (raoulvdberge)
 - Added option to use a whitelist or blacklist in the Grid Filter (raoulvdberge)
+- Added Grid tabs using Grid Filters (raoulvdberge)
+- The Grid now resizes based on screen size (raoulvdberge)
 
 ### 1.3.3
 - Updated Forge to 2188 (raoulvdberge)

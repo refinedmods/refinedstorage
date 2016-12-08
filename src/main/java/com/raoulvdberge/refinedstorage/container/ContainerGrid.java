@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.container;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.block.EnumGridType;
 import com.raoulvdberge.refinedstorage.container.slot.*;
+import com.raoulvdberge.refinedstorage.gui.grid.IGridDisplay;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
@@ -19,24 +20,31 @@ public class ContainerGrid extends ContainerBase {
     public static final int TAB_HEIGHT = 31;
 
     private IGrid grid;
-
-    private boolean hadTabs;
+    private IGridDisplay display;
 
     private SlotGridCraftingResult craftingResultSlot;
     private SlotDisabled patternResultSlot;
 
-    public ContainerGrid(IGrid grid, EntityPlayer player) {
+    public ContainerGrid(IGrid grid, IGridDisplay display, EntityPlayer player) {
         super(grid instanceof TileBase ? (TileBase) grid : null, player);
 
         this.grid = grid;
+        this.display = display;
 
-        this.hadTabs = !getGrid().getTabs().isEmpty();
+        initSlots();
+    }
 
-        addPlayerInventory(8, ((grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 165 : 126) + getTabDelta());
+    public void initSlots() {
+        this.inventorySlots.clear();
+        this.inventoryItemStacks.clear();
+
+        int headerAndSlots = getTabDelta() + display.getHeader() + (display.getVisibleRows() * 18);
+
+        addPlayerInventory(8, display.getYPlayerInventory());
 
         if (grid.getType() == EnumGridType.CRAFTING) {
             int x = 26;
-            int y = 96 + getTabDelta();
+            int y = headerAndSlots + 4;
 
             for (int i = 0; i < 9; ++i) {
                 addSlotToContainer(new SlotGridCrafting(((TileGrid) grid).getMatrix(), i, x, y));
@@ -49,10 +57,10 @@ public class ContainerGrid extends ContainerBase {
                 }
             }
 
-            addSlotToContainer(craftingResultSlot = new SlotGridCraftingResult(this, player, (TileGrid) grid, 0, 130 + 4, 110 + 4 + getTabDelta()));
+            addSlotToContainer(craftingResultSlot = new SlotGridCraftingResult(this, getPlayer(), (TileGrid) grid, 0, 130 + 4, headerAndSlots + 22));
         } else if (grid.getType() == EnumGridType.PATTERN) {
             int x = 8;
-            int y = 96 + getTabDelta();
+            int y = headerAndSlots + 4;
 
             for (int i = 0; i < 9; ++i) {
                 addSlotToContainer(new SlotFilterLegacy(((TileGrid) grid).getMatrix(), i, x, y));
@@ -65,34 +73,15 @@ public class ContainerGrid extends ContainerBase {
                 }
             }
 
-            addSlotToContainer(patternResultSlot = new SlotDisabled(((TileGrid) grid).getResult(), 0, 112 + 4, 110 + 4 + getTabDelta()));
+            addSlotToContainer(patternResultSlot = new SlotDisabled(((TileGrid) grid).getResult(), 0, 112 + 4, headerAndSlots + 22));
 
-            addSlotToContainer(new SlotItemHandler(((TileGrid) grid).getPatterns(), 0, 152, 96 + getTabDelta()));
-            addSlotToContainer(new SlotOutput(((TileGrid) grid).getPatterns(), 1, 152, 132 + getTabDelta()));
+            addSlotToContainer(new SlotItemHandler(((TileGrid) grid).getPatterns(), 0, 152, headerAndSlots + 4));
+            addSlotToContainer(new SlotOutput(((TileGrid) grid).getPatterns(), 1, 152, headerAndSlots + 40));
         }
 
         if (grid.getType() != EnumGridType.FLUID) {
             for (int i = 0; i < 4; ++i) {
                 addSlotToContainer(new SlotItemHandler(grid.getFilter(), i, 204, 6 + (18 * i) + getTabDelta()));
-            }
-        }
-    }
-
-    @Override
-    public void detectAndSendChanges() {
-        updateSlotsAccordingToTabs();
-
-        super.detectAndSendChanges();
-    }
-
-    public void updateSlotsAccordingToTabs() {
-        boolean hasTabs = !getGrid().getTabs().isEmpty();
-
-        if (hadTabs != hasTabs) {
-            hadTabs = hasTabs;
-
-            for (Slot slot : this.inventorySlots) {
-                slot.yPos += (TAB_HEIGHT - 4) * (hasTabs ? 1 : -1);
             }
         }
     }

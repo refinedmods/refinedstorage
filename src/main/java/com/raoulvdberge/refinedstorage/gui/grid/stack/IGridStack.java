@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.gui.grid.stack;
 
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 
-public interface IClientStack {
+public interface IGridStack {
     int getHash();
 
     String getName();

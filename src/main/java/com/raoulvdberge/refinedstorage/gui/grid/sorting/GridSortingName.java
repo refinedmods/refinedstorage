@@ -1,11 +1,11 @@
 package com.raoulvdberge.refinedstorage.gui.grid.sorting;
 
-import com.raoulvdberge.refinedstorage.gui.grid.stack.IClientStack;
+import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 
 public class GridSortingName extends GridSorting {
     @Override
-    public int compare(IClientStack left, IClientStack right) {
+    public int compare(IGridStack left, IGridStack right) {
         String leftName = left.getName();
         String rightName = right.getName();
 

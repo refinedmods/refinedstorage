@@ -72,7 +72,7 @@ public class GuiReaderWriter extends GuiBase {
     public void drawBackground(int x, int y, int mouseX, int mouseY) {
         bindTexture("gui/readerwriter.png");
 
-        drawTexture(x, y, 0, 0, width, height);
+        drawTexture(x, y, 0, 0, screenWidth, screenHeight);
 
         if (itemSelectedX != -1 &&
             itemSelectedY != -1 &&

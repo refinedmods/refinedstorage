@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.network;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
-import com.raoulvdberge.refinedstorage.gui.grid.stack.ClientStackFluid;
+import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackFluid;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -15,7 +15,7 @@ import java.util.List;
 
 public class MessageGridFluidUpdate implements IMessage, IMessageHandler<MessageGridFluidUpdate, IMessage> {
     private INetworkMaster network;
-    private List<ClientStackFluid> stacks = new ArrayList<>();
+    private List<GridStackFluid> stacks = new ArrayList<>();
 
     public MessageGridFluidUpdate() {
     }
@@ -29,7 +29,7 @@ public class MessageGridFluidUpdate implements IMessage, IMessageHandler<Message
         int items = buf.readInt();
 
         for (int i = 0; i < items; ++i) {
-            this.stacks.add(new ClientStackFluid(RSUtils.readFluidStack(buf)));
+            this.stacks.add(new GridStackFluid(RSUtils.readFluidStack(buf)));
         }
     }
 
@@ -46,7 +46,7 @@ public class MessageGridFluidUpdate implements IMessage, IMessageHandler<Message
     public IMessage onMessage(MessageGridFluidUpdate message, MessageContext ctx) {
         GuiGrid.FLUIDS.clear();
 
-        for (ClientStackFluid item : message.stacks) {
+        for (GridStackFluid item : message.stacks) {
             GuiGrid.FLUIDS.put(item.getStack().getFluid(), item);
         }
 

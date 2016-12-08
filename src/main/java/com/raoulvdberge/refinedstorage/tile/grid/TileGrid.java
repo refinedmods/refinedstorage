@@ -10,7 +10,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.block.BlockGrid;
 import com.raoulvdberge.refinedstorage.block.EnumGridType;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
-import com.raoulvdberge.refinedstorage.gui.grid.GridFilteredItem;
+import com.raoulvdberge.refinedstorage.gui.grid.GridFilter;
 import com.raoulvdberge.refinedstorage.gui.grid.GridTab;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
@@ -183,7 +183,7 @@ public class TileGrid extends TileNode implements IGrid {
     private InventoryCraftResult result = new InventoryCraftResult();
 
     private ItemHandlerBasic patterns = new ItemHandlerBasic(2, this, new ItemValidatorBasic(RSItems.PATTERN));
-    private List<GridFilteredItem> filteredItems = new ArrayList<>();
+    private List<GridFilter> filteredItems = new ArrayList<>();
     private List<GridTab> tabs = new ArrayList<>();
     private ItemHandlerGridFilterInGrid filter = new ItemHandlerGridFilterInGrid(filteredItems, tabs);
 
@@ -284,7 +284,7 @@ public class TileGrid extends TileNode implements IGrid {
     }
 
     @Override
-    public List<GridFilteredItem> getFilteredItems() {
+    public List<GridFilter> getFilteredItems() {
         return filteredItems;
     }
 

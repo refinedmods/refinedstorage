@@ -1,15 +1,17 @@
 package com.raoulvdberge.refinedstorage.gui.grid.filtering;
 
-import com.raoulvdberge.refinedstorage.gui.grid.GridFilteredItem;
+import com.raoulvdberge.refinedstorage.gui.grid.GridFilter;
+import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class GridFilterParser {
-    public static List<IGridFilter> getFilters(IGrid grid, String query, List<GridFilteredItem> itemFilters) {
-        List<IGridFilter> filters = new LinkedList<>();
+    public static List<Predicate<IGridStack>> getFilters(IGrid grid, String query, List<GridFilter> filteredItems) {
+        List<Predicate<IGridStack>> filters = new LinkedList<>();
 
         for (String part : query.toLowerCase().trim().split(" ")) {
             if (part.startsWith("@")) {
@@ -27,8 +29,8 @@ public class GridFilterParser {
             filters.add(new GridFilterCraftable(true));
         }
 
-        if (!itemFilters.isEmpty()) {
-            filters.add(new GridFilterFilteredItems(itemFilters));
+        if (!filteredItems.isEmpty()) {
+            filters.add(new GridFilterFilteredItems(filteredItems));
         }
 
         return filters;

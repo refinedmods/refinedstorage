@@ -52,18 +52,18 @@ public abstract class GuiBase extends GuiContainer {
     private int lastButtonId;
     private int lastSideButtonY;
 
-    protected int width;
-    protected int height;
+    protected int screenWidth;
+    protected int screenHeight;
 
     protected Scrollbar scrollbar;
 
-    public GuiBase(Container container, int width, int height) {
+    public GuiBase(Container container, int screenWidth, int screenHeight) {
         super(container);
 
-        this.width = width;
-        this.height = height;
-        this.xSize = width;
-        this.ySize = height;
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenHeight;
+        this.xSize = screenWidth;
+        this.ySize = screenHeight;
     }
 
     public Scrollbar getScrollbar() {
@@ -72,6 +72,8 @@ public abstract class GuiBase extends GuiContainer {
 
     @Override
     public void initGui() {
+        calcHeight();
+
         super.initGui();
 
         buttonList.clear();
@@ -80,6 +82,9 @@ public abstract class GuiBase extends GuiContainer {
         lastSideButtonY = getSideButtonYStart();
 
         init(guiLeft, guiTop);
+    }
+
+    protected void calcHeight() {
     }
 
     protected int getSideButtonYStart() {

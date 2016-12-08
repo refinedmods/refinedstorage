@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.inventory;
 
 import com.raoulvdberge.refinedstorage.RSItems;
-import com.raoulvdberge.refinedstorage.gui.grid.GridFilteredItem;
+import com.raoulvdberge.refinedstorage.gui.grid.GridFilter;
 import com.raoulvdberge.refinedstorage.gui.grid.GridTab;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.item.ItemGridFilter;
@@ -13,10 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemHandlerGridFilterInGrid extends ItemHandlerBasic {
-    private List<GridFilteredItem> filteredItems;
+    private List<GridFilter> filteredItems;
     private List<GridTab> tabs;
 
-    public ItemHandlerGridFilterInGrid(List<GridFilteredItem> filteredItems, List<GridTab> tabs) {
+    public ItemHandlerGridFilterInGrid(List<GridFilter> filteredItems, List<GridTab> tabs) {
         super(4, new ItemValidatorBasic(RSItems.GRID_FILTER));
 
         this.filteredItems = filteredItems;
@@ -40,11 +40,11 @@ public class ItemHandlerGridFilterInGrid extends ItemHandlerBasic {
 
                 ItemHandlerGridFilter items = new ItemHandlerGridFilter(filter);
 
-                List<GridFilteredItem> filters = new ArrayList<>();
+                List<GridFilter> filters = new ArrayList<>();
 
                 for (ItemStack item : items.getFilteredItems()) {
                     if (!item.isEmpty()) {
-                        filters.add(new GridFilteredItem(item, compare, mode, modFilter));
+                        filters.add(new GridFilter(item, compare, mode, modFilter));
                     }
                 }
 

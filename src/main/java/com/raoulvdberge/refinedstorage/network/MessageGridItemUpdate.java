@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
-import com.raoulvdberge.refinedstorage.gui.grid.stack.ClientStackItem;
+import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackItem;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -17,7 +17,7 @@ import java.util.List;
 
 public class MessageGridItemUpdate implements IMessage, IMessageHandler<MessageGridItemUpdate, IMessage> {
     private INetworkMaster network;
-    private List<ClientStackItem> stacks = new ArrayList<>();
+    private List<GridStackItem> stacks = new ArrayList<>();
 
     public MessageGridItemUpdate() {
     }
@@ -31,7 +31,7 @@ public class MessageGridItemUpdate implements IMessage, IMessageHandler<MessageG
         int items = buf.readInt();
 
         for (int i = 0; i < items; ++i) {
-            this.stacks.add(new ClientStackItem(buf));
+            this.stacks.add(new GridStackItem(buf));
         }
     }
 
@@ -62,12 +62,12 @@ public class MessageGridItemUpdate implements IMessage, IMessageHandler<MessageG
     public IMessage onMessage(MessageGridItemUpdate message, MessageContext ctx) {
         GuiGrid.ITEMS.clear();
 
-        for (ClientStackItem item : message.stacks) {
+        for (GridStackItem item : message.stacks) {
             boolean canAdd = true;
 
             if (item.doesDisplayCraftText()) {
                 // This is an output from a pattern being sent. Only add it if it hasn't been added before.
-                for (ClientStackItem otherItem : GuiGrid.ITEMS.get(item.getStack().getItem())) {
+                for (GridStackItem otherItem : GuiGrid.ITEMS.get(item.getStack().getItem())) {
                     if (API.instance().getComparer().isEqualNoQuantity(item.getStack(), otherItem.getStack())) {
                         canAdd = false;
 

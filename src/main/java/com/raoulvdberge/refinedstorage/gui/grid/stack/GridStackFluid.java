@@ -5,11 +5,11 @@ import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import net.minecraftforge.fluids.FluidStack;
 import org.apache.commons.lang3.tuple.Pair;
 
-public class ClientStackFluid implements IClientStack {
+public class GridStackFluid implements IGridStack {
     private int hash;
     private FluidStack stack;
 
-    public ClientStackFluid(Pair<Integer, FluidStack> data) {
+    public GridStackFluid(Pair<Integer, FluidStack> data) {
         this.hash = data.getLeft();
         this.stack = data.getRight();
     }
@@ -57,6 +57,6 @@ public class ClientStackFluid implements IClientStack {
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof ClientStackFluid && ((ClientStackFluid) obj).getStack().isFluidEqual(stack);
+        return obj instanceof GridStackFluid && ((GridStackFluid) obj).getStack().isFluidEqual(stack);
     }
 }

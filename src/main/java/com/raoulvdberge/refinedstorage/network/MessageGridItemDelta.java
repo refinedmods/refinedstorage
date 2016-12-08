@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.network;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
-import com.raoulvdberge.refinedstorage.gui.grid.stack.ClientStackItem;
+import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackItem;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -16,7 +16,7 @@ public class MessageGridItemDelta implements IMessage, IMessageHandler<MessageGr
     private ItemStack stack;
     private int delta;
 
-    private ClientStackItem clientStack;
+    private GridStackItem clientStack;
 
     public MessageGridItemDelta() {
     }
@@ -29,7 +29,7 @@ public class MessageGridItemDelta implements IMessage, IMessageHandler<MessageGr
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        clientStack = new ClientStackItem(buf);
+        clientStack = new GridStackItem(buf);
         delta = buf.readInt();
     }
 
@@ -43,7 +43,7 @@ public class MessageGridItemDelta implements IMessage, IMessageHandler<MessageGr
     public IMessage onMessage(MessageGridItemDelta message, MessageContext ctx) {
         Item item = message.clientStack.getStack().getItem();
 
-        for (ClientStackItem stack : GuiGrid.ITEMS.get(item)) {
+        for (GridStackItem stack : GuiGrid.ITEMS.get(item)) {
             if (stack.equals(message.clientStack)) {
                 if (stack.getStack().getCount() + message.delta == 0) {
                     if (message.clientStack.isCraftable()) {

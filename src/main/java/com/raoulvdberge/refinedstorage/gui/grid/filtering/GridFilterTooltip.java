@@ -1,8 +1,10 @@
 package com.raoulvdberge.refinedstorage.gui.grid.filtering;
 
-import com.raoulvdberge.refinedstorage.gui.grid.stack.IClientStack;
+import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
 
-public class GridFilterTooltip implements IGridFilter {
+import java.util.function.Predicate;
+
+public class GridFilterTooltip implements Predicate<IGridStack> {
     private String tooltip;
 
     public GridFilterTooltip(String tooltip) {
@@ -10,7 +12,7 @@ public class GridFilterTooltip implements IGridFilter {
     }
 
     @Override
-    public boolean accepts(IClientStack stack) {
+    public boolean test(IGridStack stack) {
         String otherTooltip = stack.getTooltip().trim().toLowerCase();
 
         if (!otherTooltip.contains("\n")) {
