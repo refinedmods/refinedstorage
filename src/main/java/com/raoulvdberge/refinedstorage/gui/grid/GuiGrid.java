@@ -295,7 +295,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         return !grid.getTabs().isEmpty() ? ContainerGrid.TAB_HEIGHT - 4 : 0;
     }
 
-    private void renderTab(GridTab tab, boolean foregroundLayer, int x, int y, int mouseX, int mouseY) {
+    private void drawTab(GridTab tab, boolean foregroundLayer, int x, int y, int mouseX, int mouseY) {
         int i = grid.getTabs().indexOf(tab);
         boolean selected = i == grid.getTabSelected();
 
@@ -312,7 +312,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             ty += 3;
         }
 
-        int uvx = 0;
+        int uvx;
         int uvy = 225;
         int tbw = ContainerGrid.TAB_WIDTH;
         int otx = tx;
@@ -346,7 +346,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         tabHovering = -1;
 
         for (GridTab tab : grid.getTabs()) {
-            renderTab(tab, false, x, y, mouseX, mouseY);
+            drawTab(tab, false, x, y, mouseX, mouseY);
         }
 
         if (grid.getType() == EnumGridType.CRAFTING) {
@@ -359,21 +359,26 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
         int yy = y + getTabDelta();
 
-        drawTexture(x, yy, 0, 0, screenWidth, getHeader());
-        int r = getVisibleRows();
+        drawTexture(x, yy, 0, 0, screenWidth - (grid.getType() != EnumGridType.FLUID ? 34 : 0), getHeader());
 
-        for (int i = 0; i < r; ++i) {
+        if (grid.getType() != EnumGridType.FLUID) {
+            drawTexture(x + screenWidth - 34 + 4, y + getTabDelta(), 197, 0, 30, 82);
+        }
+
+        int rows = getVisibleRows();
+
+        for (int i = 0; i < rows; ++i) {
             yy += 18;
 
-            drawTexture(x, yy, 0, getHeader() + (i > 0 ? (i == r - 1 ? 18 * 2 : 18) : 0), screenWidth, 18);
+            drawTexture(x, yy, 0, getHeader() + (i > 0 ? (i == rows - 1 ? 18 * 2 : 18) : 0), screenWidth - (grid.getType() != EnumGridType.FLUID ? 34 : 0), 18);
         }
 
         yy += 18;
 
-        drawTexture(x, yy, 0, getHeader() + (18 * 3), screenWidth, getFooter());
+        drawTexture(x, yy, 0, getHeader() + (18 * 3), screenWidth - (grid.getType() != EnumGridType.FLUID ? 34 : 0), getFooter());
 
         for (GridTab tab : grid.getTabs()) {
-            renderTab(tab, true, x, y, mouseX, mouseY);
+            drawTab(tab, true, x, y, mouseX, mouseY);
         }
 
         if (grid.getType() == EnumGridType.PATTERN) {
