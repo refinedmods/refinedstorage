@@ -31,8 +31,14 @@ public class BlockSolderer extends BlockNode {
         super.addInformation(stack, player, tooltip, advanced);
 
         tooltip.add(I18n.format(
-            "block.refinedstorage:solderer.tooltip",
-            TextFormatting.WHITE + I18n.format("block.refinedstorage:controller.0.name") + TextFormatting.GRAY,
+            "block.refinedstorage:solderer.tooltip.0",
+            TextFormatting.WHITE + I18n.format("block.refinedstorage:controller.0.name") + TextFormatting.GRAY
+        ));
+
+        tooltip.add(I18n.format("block.refinedstorage:solderer.tooltip.1"));
+
+        tooltip.add(I18n.format(
+            "block.refinedstorage:solderer.tooltip.2",
             TextFormatting.WHITE + I18n.format("block.refinedstorage:cable.name") + TextFormatting.GRAY
         ));
     }
