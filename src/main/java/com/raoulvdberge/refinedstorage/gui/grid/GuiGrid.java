@@ -10,7 +10,6 @@ import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.Scrollbar;
 import com.raoulvdberge.refinedstorage.gui.grid.filtering.GridFilterParser;
-import com.raoulvdberge.refinedstorage.gui.grid.filtering.IGridFilter;
 import com.raoulvdberge.refinedstorage.gui.grid.sorting.GridSortingName;
 import com.raoulvdberge.refinedstorage.gui.grid.sorting.GridSortingQuantity;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackFluid;
@@ -41,6 +40,7 @@ import org.lwjgl.input.Keyboard;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Predicate;
 
 public class GuiGrid extends GuiBase implements IGridDisplay {
     private static final GridSortingQuantity SORTING_QUANTITY = new GridSortingQuantity();
@@ -161,7 +161,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         if (grid.isActive()) {
             stacks.addAll(grid.getType() == EnumGridType.FLUID ? FLUIDS.values() : ITEMS.values());
 
-            List<IGridFilter> filters = GridFilterParser.getFilters(
+            List<Predicate<IGridStack>> filters = GridFilterParser.getFilters(
                 grid,
                 searchField.getText(),
                 (grid.getTabSelected() >= 0 && grid.getTabSelected() < grid.getTabs().size()) ? grid.getTabs().get(grid.getTabSelected()).getFilters() : grid.getFilteredItems()
@@ -172,8 +172,8 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             while (t.hasNext()) {
                 IGridStack stack = t.next();
 
-                for (IGridFilter filter : filters) {
-                    if (!filter.accepts(stack)) {
+                for (Predicate<IGridStack> filter : filters) {
+                    if (!filter.test(stack)) {
                         t.remove();
 
                         break;
@@ -259,7 +259,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     public int getVisibleRows() {
         int screenSpaceAvailable = height - getHeader() - getFooter() - (hadTabs ? ContainerGrid.TAB_HEIGHT : 0);
 
-        return Math.max(3, (screenSpaceAvailable / 18) - 3);
+        return Math.max(3, Math.min((screenSpaceAvailable / 18) - 3, RS.INSTANCE.config.maxRows));
     }
 
     private boolean isOverSlotWithItem() {

@@ -256,10 +256,12 @@ public abstract class GuiBase extends GuiContainer {
     }
 
     public void drawQuantity(int x, int y, String qty) {
+        boolean large = fontRendererObj.getUnicodeFlag() || RS.INSTANCE.config.largeFont;
+
         GlStateManager.pushMatrix();
         GlStateManager.translate(x, y, 1);
 
-        if (!fontRendererObj.getUnicodeFlag()) {
+        if (!large) {
             GlStateManager.scale(0.5f, 0.5f, 1);
         }
 
@@ -270,7 +272,7 @@ public abstract class GuiBase extends GuiContainer {
         GlStateManager.blendFunc(770, 771);
         GlStateManager.disableDepth();
 
-        fontRendererObj.drawStringWithShadow(qty, (fontRendererObj.getUnicodeFlag() ? 16 : 30) - fontRendererObj.getStringWidth(qty), fontRendererObj.getUnicodeFlag() ? 8 : 22, 16777215);
+        fontRendererObj.drawStringWithShadow(qty, (large ? 16 : 30) - fontRendererObj.getStringWidth(qty), large ? 8 : 22, 16777215);
 
         GlStateManager.enableDepth();
         GlStateManager.enableTexture2D();
