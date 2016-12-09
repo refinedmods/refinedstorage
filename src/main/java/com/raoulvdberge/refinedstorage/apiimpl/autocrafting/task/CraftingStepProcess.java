@@ -57,7 +57,7 @@ public class CraftingStepProcess extends CraftingStep {
 
             items.undo();
             fluids.undo();
-            return insertSimulation(inventory, toInsert);
+            return insert(inventory, toInsert, true);
         }
         return false;
     }
@@ -65,17 +65,17 @@ public class CraftingStepProcess extends CraftingStep {
     @Override
     public boolean canStartProcessing() {
         IItemHandler inventory = getPattern().getContainer().getFacingInventory();
-        return inventory != null && insertSimulation(inventory, new LinkedList<>(getToInsert()));
+        return inventory != null && insert(inventory, new LinkedList<>(getToInsert()), true);
     }
 
     @Override
     public void execute(Deque<ItemStack> toInsertItems, Deque<FluidStack> toInsertFluids) {
-        List<ItemStack> actualInputs = new LinkedList<>();
+        LinkedList<ItemStack> actualInputs = new LinkedList<>();
         int compare = CraftingTask.DEFAULT_COMPARE | (getPattern().isOredict() ? IComparer.COMPARE_OREDICT : 0);
         if (extractItems(actualInputs, compare, toInsertItems)) {
             IItemHandler inventory = getPattern().getContainer().getFacingInventory();
-            if (insertSimulation(inventory, new ArrayDeque<>(actualInputs))) {
-                actualInputs.forEach(stack -> ItemHandlerHelper.insertItem(inventory, stack, false));
+            if (insert(inventory, new ArrayDeque<>(actualInputs), true)) {
+                insert(inventory, actualInputs, false);
             }
         }
     }
@@ -88,19 +88,20 @@ public class CraftingStepProcess extends CraftingStep {
     }
 
     /**
-     * Checks whether all stacks can be inserted or not
+     * Insert or simulate insertion of {@link ItemStack}s into an {@link IItemHandler}
      *
      * @param dest   target {@link IItemHandler}
      * @param stacks a {@link Deque} of {@link ItemStack}s
+     * @param simulate simulate or actually insert the {@link ItemStack}s
      * @return true when all can be inserted, false otherwise
      */
-    private static boolean insertSimulation(IItemHandler dest, Deque<ItemStack> stacks) {
+    private static boolean insert(IItemHandler dest, Deque<ItemStack> stacks, boolean simulate) {
         ItemStack current = stacks.poll();
         List<Integer> availableSlots = IntStream.range(0, dest.getSlots()).boxed().collect(Collectors.toList());
         while (current != null && !availableSlots.isEmpty()) {
             ItemStack remainder = null;
             for (Integer slot : availableSlots) {
-                remainder = dest.insertItem(slot, current, true);
+                remainder = dest.insertItem(slot, current, simulate);
                 if (remainder == null || current.stackSize != remainder.stackSize) {
                     availableSlots.remove(slot);
                     break;
