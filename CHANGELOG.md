@@ -10,6 +10,8 @@
 - Made Solderer tooltip less big (raoulvdberge)
 - Fixed bug with opening a network item with food in offhand (raoulvdberge)
 - Fixed not respecting "Extract only" option for storages (raoulvdberge)
+- Fixed a few autocrafting bugs (way2muchnoise)
+- Fixed a crash with the Disk Manipulator (way2muchnoise)
 
 ### 1.3.3
 - Updated Forge to 2188 (raoulvdberge)
@@ -30,6 +32,20 @@
 - Removed RF support, use Forge Energy instead (raoulvdberge)
 - Removed IC2 support (raoulvdberge)
 - Removed MCMultiPart support (will be re-added as soon as MCMultiPart for MC 1.11 is available) (raoulvdberge)
+
+### 1.2.10
+- A few autocrafting bugfixes (way2muchnoise)
+- Fixed a crash with the Disk Manipulator (way2muchnoise)
+- Fixed not respecting "Extract only" option for storages (raoulvdberge)
+- Fixed bug with opening a network item with food in offhand (raoulvdberge)
+- Made Solderer tooltip less big (raoulvdberge)
+
+### 1.2.9
+- Updated Forge to 2185 (raoulvdberge)
+- Fixed Wrench clearing NBT data when reset causing problems with Morph O Tool (raoulvdberge)
+
+### 1.2.8
+- Fixed autocrafting bugs (way2muchnoise)
 
 ### 1.2.7
 - Updated German translation (LHS_Buster)
