@@ -587,6 +587,10 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
         int insertedExternally = 0;
 
         for (IStorage<ItemStack> storage : this.itemStorage.getStorages()) {
+            if (storage.getAccessType() == AccessType.EXTRACT) {
+                continue;
+            }
+
             int storedPre = storage.getStored();
 
             remainder = storage.insert(remainder, size, simulate);
@@ -694,6 +698,10 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
         int inserted = 0;
 
         for (IStorage<FluidStack> storage : this.fluidStorage.getStorages()) {
+            if (storage.getAccessType() == AccessType.EXTRACT) {
+                continue;
+            }
+
             int storedPre = storage.getStored();
 
             remainder = storage.insert(remainder, size, simulate);

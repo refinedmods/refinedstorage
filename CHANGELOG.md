@@ -9,6 +9,7 @@
 - Added configuration option to enable large fonts in Grid (raoulvdberge)
 - Made Solderer tooltip less big (raoulvdberge)
 - Fixed bug with opening a network item with food in offhand (raoulvdberge)
+- Fixed not respecting "Extract only" option for storages (raoulvdberge)
 
 ### 1.3.3
 - Updated Forge to 2188 (raoulvdberge)
