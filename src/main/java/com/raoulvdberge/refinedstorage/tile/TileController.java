@@ -742,7 +742,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 ((FluidStorageExternal) storage).updateCacheForcefully();
             }
 
-            if (remainder == null) {
+            if (remainder == null || remainder.amount <= 0) {
                 break;
             } else {
                 size = remainder.amount;
