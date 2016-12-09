@@ -366,7 +366,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
         FluidStack extracted = null;
         int i = 0;
 
-        do {
+        while (extracted == null && storage.getStacks().size() > i) {
             FluidStack stack = storage.getStacks().get(i);
 
             while (stack == null && storage.getStacks().size() > i) {
@@ -376,7 +376,7 @@ public class TileDiskManipulator extends TileNode implements IComparable, IFilte
             if (stack != null) {
                 extracted = storage.extract(stack, upgrades.getItemInteractCount(), compare, false);
             }
-        } while (extracted == null && storage.getStacks().size() > i);
+        }
 
         if (extracted == null) {
             moveDriveToOutput(slot);
