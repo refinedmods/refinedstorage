@@ -21,8 +21,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,13 +44,11 @@ public class WirelessGrid implements IGrid {
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            if (FMLCommonHandler.instance().getSide() == Side.SERVER) {
-                if (!stack.hasTagCompound()) {
-                    stack.setTagCompound(new NBTTagCompound());
-                }
-
-                RSUtils.writeItems(this, slot, stack.getTagCompound());
+            if (!stack.hasTagCompound()) {
+                stack.setTagCompound(new NBTTagCompound());
             }
+
+            RSUtils.writeItems(this, slot, stack.getTagCompound());
         }
     };
 
@@ -167,9 +163,9 @@ public class WirelessGrid implements IGrid {
 
     @Override
     public void onTabSelectionChanged(int tab) {
-        RS.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), searchBoxMode, tab));
+        this.tabSelected = tab == tabSelected ? -1 : tab;
 
-        this.tabSelected = tab;
+        RS.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), searchBoxMode, tabSelected));
 
         GuiGrid.markForSorting();
     }
