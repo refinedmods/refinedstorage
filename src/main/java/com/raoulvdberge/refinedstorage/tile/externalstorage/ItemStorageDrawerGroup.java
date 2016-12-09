@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.tile.externalstorage;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
@@ -109,5 +110,10 @@ public class ItemStorageDrawerGroup extends ItemStorageExternal {
         }
 
         return result;
+    }
+
+    @Override
+    public AccessType getAccessType() {
+        return externalStorage.getAccessType();
     }
 }

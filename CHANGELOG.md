@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 1.2.10
+- A few autocrafting bugfixes (way2muchnoise)
+- Fixed not respecting "Extract only" option for storages (raoulvdberge)
+
 ### 1.2.9
 - Updated Forge to 2185 (raoulvdberge)
 - Fixed Wrench clearing NBT data when reset causing problems with Morph O Tool (raoulvdberge)
