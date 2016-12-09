@@ -76,7 +76,7 @@ public abstract class ItemNetworkItem extends ItemEnergyContainer implements INe
             }
         }
 
-        return super.onItemRightClick(stack, world, player, hand);
+        return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
     }
 
     @Override
