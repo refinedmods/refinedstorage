@@ -8,6 +8,7 @@
 - The Grid now resizes based on screen size (max rows can be configured) (raoulvdberge)
 - Added configuration option to enable large fonts in Grid (raoulvdberge)
 - Made Solderer tooltip less big (raoulvdberge)
+- Fixed bug with opening a network item with food in offhand (raoulvdberge)
 
 ### 1.3.3
 - Updated Forge to 2188 (raoulvdberge)

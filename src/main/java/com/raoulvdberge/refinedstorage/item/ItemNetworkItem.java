@@ -68,7 +68,7 @@ public abstract class ItemNetworkItem extends ItemBase implements INetworkItemPr
             }
         }
 
-        return super.onItemRightClick(world, player, hand);
+        return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
     }
 
     @Override
