@@ -4,6 +4,7 @@
 - A few autocrafting bugfixes (way2muchnoise)
 - Fixed not respecting "Extract only" option for storages (raoulvdberge)
 - Fixed bug with opening a network item with food in offhand (raoulvdberge)
+- Made Solderer tooltip less big (raoulvdberge)
 
 ### 1.2.9
 - Updated Forge to 2185 (raoulvdberge)
