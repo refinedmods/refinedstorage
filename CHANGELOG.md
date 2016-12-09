@@ -38,6 +38,7 @@
 - Fixed a crash with the Disk Manipulator (way2muchnoise)
 - Fixed not respecting "Extract only" option for storages (raoulvdberge)
 - Fixed bug with opening a network item with food in offhand (raoulvdberge)
+- Fixed other fluid storages going negative when using void excess fluids option (raoulvdberge)
 - Made Solderer tooltip less big (raoulvdberge)
 
 ### 1.2.9
