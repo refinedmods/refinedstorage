@@ -54,6 +54,11 @@ public final class RSConfig {
     public boolean controllerUsesEnergy;
     //endregion
 
+    //region Grid
+    public int maxRows;
+    public boolean largeFont;
+    //endregion
+
     //region Wireless Transmitter
     public int wirelessTransmitterBaseRange;
     public int wirelessTransmitterRangePerUpgrade;
@@ -86,11 +91,11 @@ public final class RSConfig {
     //region Categories
     private static final String ENERGY = "energy";
     private static final String CONTROLLER = "controller";
+    private static final String GRID = "grid";
     private static final String WIRELESS_TRANSMITTER = "wirelessTransmitter";
     private static final String WIRELESS_GRID = "wirelessGrid";
     private static final String WIRELESS_CRAFTING_MONITOR = "wirelessCraftingMonitor";
     private static final String UPGRADES = "upgrades";
-    private static final String MISC = "misc";
     //endregion
 
     public RSConfig(File configFile) {
@@ -153,6 +158,11 @@ public final class RSConfig {
         controllerUsesEnergy = config.getBoolean("usesEnergy", CONTROLLER, true, "Whether the Controller uses energy");
         //endregion
 
+        //region Grid
+        maxRows = config.getInt("maxRows", GRID, Integer.MAX_VALUE, 3, Integer.MAX_VALUE, "The maximum amount of rows that the Grid can show");
+        largeFont = config.getBoolean("largeFont", GRID, false, "Whether the controller should use a large font for stack quantity display");
+        //endregion
+
         //region Wireless Transmitter
         wirelessTransmitterBaseRange = config.getInt("range", WIRELESS_TRANSMITTER, 16, 0, Integer.MAX_VALUE, "The base range of the Wireless Transmitter");
         wirelessTransmitterRangePerUpgrade = config.getInt("rangePerUpgrade", WIRELESS_TRANSMITTER, 8, 0, Integer.MAX_VALUE, "The additional range per Range Upgrade in the Wireless Transmitter");
@@ -196,7 +206,7 @@ public final class RSConfig {
         list.addAll(new ConfigElement(config.getCategory(UPGRADES)).getChildElements());
         list.addAll(new ConfigElement(config.getCategory(WIRELESS_TRANSMITTER)).getChildElements());
         list.addAll(new ConfigElement(config.getCategory(WIRELESS_GRID)).getChildElements());
-        list.addAll(new ConfigElement(config.getCategory(MISC)).getChildElements());
+        list.addAll(new ConfigElement(config.getCategory(GRID)).getChildElements());
 
         return list;
     }

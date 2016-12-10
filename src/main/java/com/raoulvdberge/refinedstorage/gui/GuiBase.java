@@ -52,18 +52,18 @@ public abstract class GuiBase extends GuiContainer {
     private int lastButtonId;
     private int lastSideButtonY = 6;
 
-    protected int width;
-    protected int height;
+    protected int screenWidth;
+    protected int screenHeight;
 
     protected Scrollbar scrollbar;
 
-    public GuiBase(Container container, int width, int height) {
+    public GuiBase(Container container, int screenWidth, int screenHeight) {
         super(container);
 
-        this.width = width;
-        this.height = height;
-        this.xSize = width;
-        this.ySize = height;
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenHeight;
+        this.xSize = screenWidth;
+        this.ySize = screenHeight;
     }
 
     public Scrollbar getScrollbar() {
@@ -72,12 +72,17 @@ public abstract class GuiBase extends GuiContainer {
 
     @Override
     public void initGui() {
+        calcHeight();
+
         super.initGui();
 
         lastButtonId = 0;
         lastSideButtonY = 6;
 
         init(guiLeft, guiTop);
+    }
+
+    protected void calcHeight() {
     }
 
     @Override
@@ -245,10 +250,12 @@ public abstract class GuiBase extends GuiContainer {
     }
 
     public void drawQuantity(int x, int y, String qty) {
+        boolean large = fontRendererObj.getUnicodeFlag() || RS.INSTANCE.config.largeFont;
+
         GlStateManager.pushMatrix();
         GlStateManager.translate(x, y, 1);
 
-        if (!fontRendererObj.getUnicodeFlag()) {
+        if (!large) {
             GlStateManager.scale(0.5f, 0.5f, 1);
         }
 
@@ -259,7 +266,7 @@ public abstract class GuiBase extends GuiContainer {
         GlStateManager.blendFunc(770, 771);
         GlStateManager.disableDepth();
 
-        fontRendererObj.drawStringWithShadow(qty, (fontRendererObj.getUnicodeFlag() ? 16 : 30) - fontRendererObj.getStringWidth(qty), fontRendererObj.getUnicodeFlag() ? 8 : 22, 16777215);
+        fontRendererObj.drawStringWithShadow(qty, (large ? 16 : 30) - fontRendererObj.getStringWidth(qty), large ? 8 : 22, 16777215);
 
         GlStateManager.enableDepth();
         GlStateManager.enableTexture2D();

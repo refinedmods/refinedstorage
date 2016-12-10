@@ -114,7 +114,7 @@ public class GuiCraftingStart extends GuiBase {
     public void drawBackground(int x, int y, int mouseX, int mouseY) {
         bindTexture(getTexture());
 
-        drawTexture(x, y, 0, 0, width, height);
+        drawTexture(x, y, 0, 0, screenWidth, screenHeight);
 
         amountField.drawTextBox();
     }

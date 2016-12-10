@@ -46,7 +46,7 @@ public class GuiDetector extends GuiBase {
     public void drawBackground(int x, int y, int mouseX, int mouseY) {
         bindTexture("gui/detector.png");
 
-        drawTexture(x, y, 0, 0, width, height);
+        drawTexture(x, y, 0, 0, screenWidth, screenHeight);
 
         AMOUNT.drawTextBox();
     }

@@ -22,7 +22,7 @@ public class GuiSolderer extends GuiBase {
     public void drawBackground(int x, int y, int mouseX, int mouseY) {
         bindTexture("gui/solderer.png");
 
-        drawTexture(x, y, 0, 0, width, height);
+        drawTexture(x, y, 0, 0, screenWidth, screenHeight);
 
         if (TileSolderer.WORKING.getValue()) {
             drawTexture(x + 83, y + 38 - 1, 212, 0, getProgressScaled(22), 15);

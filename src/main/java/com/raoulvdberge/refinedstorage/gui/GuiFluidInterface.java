@@ -29,7 +29,7 @@ public class GuiFluidInterface extends GuiBase {
     public void drawBackground(int x, int y, int mouseX, int mouseY) {
         bindTexture("gui/fluid_interface.png");
 
-        drawTexture(x, y, 0, 0, width, height);
+        drawTexture(x, y, 0, 0, screenWidth, screenHeight);
 
         if (TileFluidInterface.TANK_IN.getValue() != null) {
             TANK_RENDERER.draw(mc, x + 46, y + 56, TileFluidInterface.TANK_IN.getValue());

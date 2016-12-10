@@ -42,7 +42,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class GuiGrid extends GuiBase {
+public class GuiGrid extends GuiBase implements IGridDisplay {
     private static final GridSortingQuantity SORTING_QUANTITY = new GridSortingQuantity();
     private static final GridSortingName SORTING_NAME = new GridSortingName();
 
@@ -58,7 +58,6 @@ public class GuiGrid extends GuiBase {
     private GuiTextField searchField;
     private GuiCheckBox oredictPattern;
 
-    private ContainerGrid container;
     private IGrid grid;
 
     private int slotNumber;
@@ -84,9 +83,8 @@ public class GuiGrid extends GuiBase {
     }
 
     public GuiGrid(ContainerGrid container, IGrid grid) {
-        super(container, grid.getType() == EnumGridType.FLUID ? 193 : 227, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 247 : 208);
+        super(container, grid.getType() == EnumGridType.FLUID ? 193 : 227, 0);
 
-        this.container = container;
         this.grid = grid;
         this.wasConnected = grid.isConnected();
 
@@ -97,7 +95,17 @@ public class GuiGrid extends GuiBase {
     }
 
     @Override
+    protected void calcHeight() {
+        this.ySize = getHeader() + getFooter() + (getVisibleRows() * 18);
+        this.screenHeight = ySize;
+    }
+
+    @Override
     public void init(int x, int y) {
+        ((ContainerGrid) this.inventorySlots).initSlots();
+
+        this.scrollbar = new Scrollbar(174, getHeader(), 12, (getVisibleRows() * 18) - 2);
+
         if (grid.getRedstoneModeConfig() != null) {
             addSideButton(new SideButtonRedstoneMode(this, grid.getRedstoneModeConfig()));
         }
@@ -118,7 +126,7 @@ public class GuiGrid extends GuiBase {
         }
 
         if (grid.getType() == EnumGridType.PATTERN) {
-            oredictPattern = addCheckBox(x + 64, y + 138, t("misc.refinedstorage:oredict"), TileGrid.OREDICT_PATTERN.getValue());
+            oredictPattern = addCheckBox(x + 64, getHeader() + (getVisibleRows() * 18) + 78, t("misc.refinedstorage:oredict"), TileGrid.OREDICT_PATTERN.getValue());
         }
 
         if (grid.getType() != EnumGridType.FLUID) {
@@ -196,8 +204,39 @@ public class GuiGrid extends GuiBase {
         }
     }
 
-    private int getRows() {
+    @Override
+    public int getHeader() {
+        return 19;
+    }
+
+    @Override
+    public int getFooter() {
+        return (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 156 : 99;
+    }
+
+    @Override
+    public int getYPlayerInventory() {
+        int yp = getHeader() + (getVisibleRows() * 18);
+
+        if (grid.getType() == EnumGridType.NORMAL || grid.getType() == EnumGridType.FLUID) {
+            yp += 16;
+        } else if (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) {
+            yp += 73;
+        }
+
+        return yp;
+    }
+
+    @Override
+    public int getRows() {
         return Math.max(0, (int) Math.ceil((float) STACKS.size() / 9F));
+    }
+
+    @Override
+    public int getVisibleRows() {
+        int screenSpaceAvailable = height - getHeader() - getFooter();
+
+        return Math.max(3, Math.min((screenSpaceAvailable / 18) - 3, RS.INSTANCE.config.maxRows));
     }
 
     private boolean isOverSlotWithItem() {
@@ -212,23 +251,21 @@ public class GuiGrid extends GuiBase {
         return inBounds(7, 19, 162, 18 * getVisibleRows(), mouseX, mouseY);
     }
 
-    private int getVisibleRows() {
-        return (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 4 : 5;
-    }
-
     private boolean isOverClear(int mouseX, int mouseY) {
+        int y = getHeader() + (getVisibleRows() * 18) + 4;
+
         switch (grid.getType()) {
             case CRAFTING:
-                return inBounds(82, 95, 7, 7, mouseX, mouseY);
+                return inBounds(82, y, 7, 7, mouseX, mouseY);
             case PATTERN:
-                return inBounds(64, 95, 7, 7, mouseX, mouseY);
+                return inBounds(64, y, 7, 7, mouseX, mouseY);
             default:
                 return false;
         }
     }
 
     private boolean isOverCreatePattern(int mouseX, int mouseY) {
-        return grid.getType() == EnumGridType.PATTERN && inBounds(152, 114, 16, 16, mouseX, mouseY) && ((TileGrid) grid).canCreatePattern();
+        return grid.getType() == EnumGridType.PATTERN && inBounds(152, getHeader() + (getVisibleRows() * 18) + 22, 16, 16, mouseX, mouseY) && ((TileGrid) grid).canCreatePattern();
     }
 
     @Override
@@ -241,7 +278,25 @@ public class GuiGrid extends GuiBase {
             bindTexture("gui/grid.png");
         }
 
-        drawTexture(x, y, 0, 0, width, height);
+        int yy = y;
+
+        drawTexture(x, yy, 0, 0, screenWidth - (grid.getType() != EnumGridType.FLUID ? 34 : 0), getHeader());
+
+        if (grid.getType() != EnumGridType.FLUID) {
+            drawTexture(x + screenWidth - 34 + 4, y, 197, 0, 30, 82);
+        }
+
+        int rows = getVisibleRows();
+
+        for (int i = 0; i < rows; ++i) {
+            yy += 18;
+
+            drawTexture(x, yy, 0, getHeader() + (i > 0 ? (i == rows - 1 ? 18 * 2 : 18) : 0), screenWidth - (grid.getType() != EnumGridType.FLUID ? 34 : 0), 18);
+        }
+
+        yy += 18;
+
+        drawTexture(x, yy, 0, getHeader() + (18 * 3), screenWidth - (grid.getType() != EnumGridType.FLUID ? 34 : 0), getFooter());
 
         if (grid.getType() == EnumGridType.PATTERN) {
             int ty = 0;
@@ -254,7 +309,7 @@ public class GuiGrid extends GuiBase {
                 ty = 2;
             }
 
-            drawTexture(x + 152, y + 114, 240, ty * 16, 16, 16);
+            drawTexture(x + 152, y + getHeader() + (getVisibleRows() * 18) + 22, 240, ty * 16, 16, 16);
         }
 
         searchField.drawTextBox();
@@ -263,10 +318,10 @@ public class GuiGrid extends GuiBase {
     @Override
     public void drawForeground(int mouseX, int mouseY) {
         drawString(7, 7, t(grid.getGuiTitle()));
-        drawString(7, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 153 : 114, t("container.inventory"));
+        drawString(7, getYPlayerInventory() - 12, t("container.inventory"));
 
         int x = 8;
-        int y = 20;
+        int y = 19;
 
         this.slotNumber = -1;
 
@@ -359,7 +414,7 @@ public class GuiGrid extends GuiBase {
                 RS.INSTANCE.network.sendToServer(new MessageGridCraftingClear((TileGrid) grid));
             }
 
-            ItemStack held = container.getPlayer().inventory.getItemStack();
+            ItemStack held = ((ContainerGrid) this.inventorySlots).getPlayer().inventory.getItemStack();
 
             if (isOverSlotArea(mouseX - guiLeft, mouseY - guiTop) && held != null && (clickedButton == 0 || clickedButton == 1)) {
                 RS.INSTANCE.network.sendToServer(grid.getType() == EnumGridType.FLUID ? new MessageGridFluidInsertHeld() : new MessageGridItemInsertHeld(clickedButton == 1));
@@ -370,7 +425,7 @@ public class GuiGrid extends GuiBase {
                     ClientStackItem stack = (ClientStackItem) STACKS.get(slotNumber);
 
                     if (stack.isCraftable() && (stack.getQuantity() == 0 || (GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown()))) {
-                        FMLCommonHandler.instance().showGuiScreen(new GuiCraftingStart(this, container.getPlayer(), stack));
+                        FMLCommonHandler.instance().showGuiScreen(new GuiCraftingStart(this, ((ContainerGrid) this.inventorySlots).getPlayer(), stack));
                     } else {
                         int flags = 0;
 
