@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerInterface;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
@@ -24,12 +25,9 @@ public class TileInterface extends TileNode implements IComparable {
     private ItemHandlerBasic importItems = new ItemHandlerBasic(9, this);
 
     private ItemHandlerBasic exportSpecimenItems = new ItemHandlerBasic(9, this);
-    private ItemHandlerBasic exportItems = new ItemHandlerBasic(9, this) {
-        @Override
-        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-            return stack;
-        }
-    };
+    private ItemHandlerBasic exportItems = new ItemHandlerBasic(9, this);
+
+    private ItemHandlerInterface items = new ItemHandlerInterface(importItems, exportItems);
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK, ItemUpgrade.TYPE_CRAFTING);
 
@@ -188,7 +186,7 @@ public class TileInterface extends TileNode implements IComparable {
     @Override
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return facing == EnumFacing.DOWN ? (T) exportItems : (T) importItems;
+            return (T) items;
         }
 
         return super.getCapability(capability, facing);

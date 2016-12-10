@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.2.11
+- Made the Interface sideless, you can just insert or extract from any side (raoulvdberge)
+
 ### 1.2.10
 - A few autocrafting bugfixes (way2muchnoise)
 - Fixed a crash with the Disk Manipulator (way2muchnoise)
