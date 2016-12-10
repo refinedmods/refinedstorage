@@ -10,6 +10,7 @@
 - Made Solderer tooltip less big (raoulvdberge)
 - Fixed bug with opening a network item with food in offhand (raoulvdberge)
 - Fixed not respecting "Extract only" option for storages (raoulvdberge)
+- Made the Interface sideless, you can just insert or extract from any side (raoulvdberge)
 - Fixed a few autocrafting bugs (way2muchnoise)
 - Fixed a crash with the Disk Manipulator (way2muchnoise)
 
