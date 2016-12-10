@@ -22,23 +22,23 @@ public class ItemHandlerInterface implements IItemHandler {
     @Nonnull
     @Override
     public ItemStack getStackInSlot(int slot) {
-        return slot < 9 ? importItems.getStackInSlot(slot) : exportItems.getStackInSlot(slot - 9);
+        return slot < importItems.getSlots() ? importItems.getStackInSlot(slot) : exportItems.getStackInSlot(slot - importItems.getSlots());
     }
 
     @Nonnull
     @Override
     public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-        return slot < 9 ? importItems.insertItem(slot, stack, simulate) : stack;
+        return slot < importItems.getSlots() ? importItems.insertItem(slot, stack, simulate) : stack;
     }
 
     @Nonnull
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
-        return slot >= 9 ? exportItems.extractItem(slot - 9, amount, simulate) : ItemStack.EMPTY;
+        return slot >= importItems.getSlots() ? exportItems.extractItem(slot - importItems.getSlots(), amount, simulate) : ItemStack.EMPTY;
     }
 
     @Override
     public int getSlotLimit(int slot) {
-        return slot < 9 ? importItems.getSlotLimit(slot) : exportItems.getSlotLimit(slot - 9);
+        return slot < importItems.getSlots() ? importItems.getSlotLimit(slot) : exportItems.getSlotLimit(slot - importItems.getSlots());
     }
 }
