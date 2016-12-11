@@ -216,6 +216,10 @@ public class TileConstructor extends TileNode implements IComparable, IType {
 
         if (took != null) {
             BehaviorDefaultDispenseItem.doDispense(getWorld(), took, 6, getDirection(), new PositionImpl(getDispensePositionX(), getDispensePositionY(), getDispensePositionZ()));
+        } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
+            ItemStack craft = itemFilters.getStackInSlot(0);
+
+            network.scheduleCraftingTask(craft, 1, compare);
         }
     }
 
