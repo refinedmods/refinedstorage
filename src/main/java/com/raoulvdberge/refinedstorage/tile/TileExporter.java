@@ -12,7 +12,6 @@ import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataConsumer;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-import com.sun.org.apache.regexp.internal.RE;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataSerializers;
@@ -95,8 +94,10 @@ public class TileExporter extends TileNode implements IComparable, IType {
 
                             ItemStack took = network.extractItem(slot, stackSize, compare, true);
 
-                            if (took == null || upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
-                                network.scheduleCraftingTask(slot, 1, compare);
+                            if (took == null) {
+                                if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
+                                    network.scheduleCraftingTask(slot, 1, compare);
+                                }
                             } else if (ItemHandlerHelper.insertItem(handler, took, true).isEmpty()) {
                                 took = network.extractItem(slot, upgrades.getItemInteractCount(), compare, false);
 
