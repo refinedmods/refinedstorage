@@ -9,9 +9,13 @@ import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
+import com.raoulvdberge.refinedstorage.tile.data.ITileDataConsumer;
+import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
+import com.sun.org.apache.regexp.internal.RE;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
@@ -26,9 +30,23 @@ import javax.annotation.Nullable;
 public class TileExporter extends TileNode implements IComparable, IType {
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> TYPE = IType.createParameter();
+    public static final TileDataParameter<Boolean> REGULATOR = new TileDataParameter<>(DataSerializers.BOOLEAN, false, new ITileDataProducer<Boolean, TileExporter>() {
+        @Override
+        public Boolean getValue(TileExporter tile) {
+            return tile.regulator;
+        }
+    }, new ITileDataConsumer<Boolean, TileExporter>() {
+        @Override
+        public void setValue(TileExporter tile, Boolean value) {
+            tile.regulator = value;
+
+            tile.markDirty();
+        }
+    });
 
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_TYPE = "Type";
+    private static final String NBT_REGULATOR = "Regulator";
 
     private ItemHandlerBasic itemFilters = new ItemHandlerBasic(9, this);
     private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(9, this);
@@ -37,10 +55,12 @@ public class TileExporter extends TileNode implements IComparable, IType {
 
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int type = IType.ITEMS;
+    private boolean regulator = false;
 
     public TileExporter() {
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(TYPE);
+        dataManager.addWatchedParameter(REGULATOR);
     }
 
     @Override
@@ -59,12 +79,24 @@ public class TileExporter extends TileNode implements IComparable, IType {
                         ItemStack slot = itemFilters.getStackInSlot(i);
 
                         if (!slot.isEmpty()) {
-                            ItemStack took = network.extractItem(slot, upgrades.getItemInteractCount(), compare, true);
+                            int stackSize = upgrades.getItemInteractCount();
 
-                            if (took == null) {
-                                if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
-                                    network.scheduleCraftingTask(slot, 1, compare);
+                            if (regulator) {
+                                for(int index = 0; i< handler.getSlots(); i++) {
+                                    if (slot.isItemEqual(handler.getStackInSlot(index))) {
+                                        if (handler.getStackInSlot(index).getCount() >= slot.getCount()) {
+                                            return;
+                                        } else {
+                                            stackSize = upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK) ? slot.getCount() - handler.getStackInSlot(index).getCount() : 1;
+                                        }
+                                    }
                                 }
+                            }
+
+                            ItemStack took = network.extractItem(slot, stackSize, compare, true);
+
+                            if (took == null || upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
+                                network.scheduleCraftingTask(slot, 1, compare);
                             } else if (ItemHandlerHelper.insertItem(handler, took, true).isEmpty()) {
                                 took = network.extractItem(slot, upgrades.getItemInteractCount(), compare, false);
 
@@ -139,6 +171,7 @@ public class TileExporter extends TileNode implements IComparable, IType {
 
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_TYPE, type);
+        tag.setBoolean(NBT_REGULATOR, regulator);
 
         RSUtils.writeItems(itemFilters, 0, tag);
         RSUtils.writeItems(fluidFilters, 2, tag);
@@ -156,6 +189,10 @@ public class TileExporter extends TileNode implements IComparable, IType {
 
         if (tag.hasKey(NBT_TYPE)) {
             type = tag.getInteger(NBT_TYPE);
+        }
+
+        if (tag.hasKey(NBT_REGULATOR)) {
+            regulator = tag.getBoolean(NBT_REGULATOR);
         }
 
         RSUtils.readItems(itemFilters, 0, tag);
@@ -181,6 +218,10 @@ public class TileExporter extends TileNode implements IComparable, IType {
         this.type = type;
 
         markDirty();
+    }
+
+    public boolean isRegulated() {
+        return this.regulator;
     }
 
     @Override
