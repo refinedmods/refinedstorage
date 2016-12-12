@@ -96,7 +96,7 @@ public class TileExporter extends TileNode implements IComparable, IType {
                             }
 
                             if (skipSlot) {
-                                break;
+                                continue;
                             }
 
                             ItemStack took = network.extractItem(slot, stackSize, compare, true);
@@ -140,7 +140,7 @@ public class TileExporter extends TileNode implements IComparable, IType {
                                 }
 
                                 if (skipSlot) {
-                                    break;
+                                    continue;
                                 }
 
                                 FluidStack took = network.extractFluid(stack, toExtract, compare, true);
