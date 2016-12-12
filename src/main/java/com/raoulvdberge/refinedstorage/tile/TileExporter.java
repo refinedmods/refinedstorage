@@ -21,6 +21,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -118,6 +119,19 @@ public class TileExporter extends TileNode implements IComparable, IType {
 
                             if (stackInStorage != null) {
                                 int toExtract = Math.min(Fluid.BUCKET_VOLUME * upgrades.getItemInteractCount(), stackInStorage.amount);
+                                if (regulator) {
+                                    for (IFluidTankProperties tankProperty : handler.getTankProperties()) {
+                                        FluidStack fluidStack = tankProperty.getContents();
+                                        if (API.instance().getComparer().isEqual(stackInStorage, fluidStack, compare)) {
+                                            if (fluidStack.amount >= stack.amount * Fluid.BUCKET_VOLUME) {
+                                                return;
+                                            } else {
+                                                toExtract = upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK) ? stack.amount * Fluid.BUCKET_VOLUME - fluidStack.amount : Fluid.BUCKET_VOLUME;
+                                                toExtract = Math.min(toExtract, stackInStorage.amount);
+                                            }
+                                        }
+                                    }
+                                }
 
                                 FluidStack took = network.extractFluid(stack, toExtract, compare, true);
 
