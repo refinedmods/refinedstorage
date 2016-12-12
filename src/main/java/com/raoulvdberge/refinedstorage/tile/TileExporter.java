@@ -81,18 +81,22 @@ public class TileExporter extends TileNode implements IComparable, IType {
 
                         if (!slot.isEmpty()) {
                             int stackSize = upgrades.getItemInteractCount();
-
+                            boolean skipSlot = false;
                             if (regulator) {
-                                for (int index = 0; i < handler.getSlots(); i++) {
+                                for (int index = 0; i < handler.getSlots() && !skipSlot; i++) {
                                     ItemStack handlerStack = handler.getStackInSlot(index);
-                                    if (API.instance().getComparer().isEqualNoQuantity(slot, handlerStack)) {
+                                    if (API.instance().getComparer().isEqual(slot, handlerStack, compare)) {
                                         if (handlerStack.getCount() >= slot.getCount()) {
-                                            return;
+                                            skipSlot = true;
                                         } else {
                                             stackSize = upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK) ? slot.getCount() - handlerStack.getCount() : 1;
                                         }
                                     }
                                 }
+                            }
+
+                            if (skipSlot) {
+                                break;
                             }
 
                             ItemStack took = network.extractItem(slot, stackSize, compare, true);
@@ -119,18 +123,24 @@ public class TileExporter extends TileNode implements IComparable, IType {
 
                             if (stackInStorage != null) {
                                 int toExtract = Math.min(Fluid.BUCKET_VOLUME * upgrades.getItemInteractCount(), stackInStorage.amount);
+                                boolean skipSlot = false;
                                 if (regulator) {
                                     for (IFluidTankProperties tankProperty : handler.getTankProperties()) {
                                         FluidStack fluidStack = tankProperty.getContents();
-                                        if (stackInStorage.isFluidEqual(fluidStack)) {
+                                        if (API.instance().getComparer().isEqual(stackInStorage, fluidStack, compare)) {
                                             if (fluidStack.amount >= stack.amount * Fluid.BUCKET_VOLUME) {
-                                                return;
+                                                skipSlot = true;
+                                                break;
                                             } else {
                                                 toExtract = upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK) ? stack.amount * Fluid.BUCKET_VOLUME - fluidStack.amount : Fluid.BUCKET_VOLUME;
                                                 toExtract = Math.min(toExtract, stackInStorage.amount);
                                             }
                                         }
                                     }
+                                }
+
+                                if (skipSlot) {
+                                    break;
                                 }
 
                                 FluidStack took = network.extractFluid(stack, toExtract, compare, true);
