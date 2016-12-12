@@ -122,7 +122,7 @@ public class TileExporter extends TileNode implements IComparable, IType {
                                 if (regulator) {
                                     for (IFluidTankProperties tankProperty : handler.getTankProperties()) {
                                         FluidStack fluidStack = tankProperty.getContents();
-                                        if (API.instance().getComparer().isEqual(stackInStorage, fluidStack, compare)) {
+                                        if (stackInStorage.isFluidEqual(fluidStack)) {
                                             if (fluidStack.amount >= stack.amount * Fluid.BUCKET_VOLUME) {
                                                 return;
                                             } else {
