@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.container;
 
+import com.raoulvdberge.refinedstorage.container.slot.SlotFilter;
 import com.raoulvdberge.refinedstorage.container.slot.SlotFilterType;
 import com.raoulvdberge.refinedstorage.tile.TileExporter;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,7 +17,7 @@ public class ContainerExporter extends ContainerBase {
         }
 
         for (int i = 0; i < 9; ++i) {
-            addSlotToContainer(new SlotFilterType(exporter, i, 8 + (18 * i), 20));
+            addSlotToContainer(new SlotFilterType(exporter, i, 8 + (18 * i), 20, TileExporter.REGULATOR.getValue() ? SlotFilter.FILTER_ALLOW_SIZE : 0));
         }
 
         addPlayerInventory(8, 55);
