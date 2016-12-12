@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.tile;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
@@ -81,12 +82,13 @@ public class TileExporter extends TileNode implements IComparable, IType {
                             int stackSize = upgrades.getItemInteractCount();
 
                             if (regulator) {
-                                for(int index = 0; i< handler.getSlots(); i++) {
-                                    if (slot.isItemEqual(handler.getStackInSlot(index))) {
-                                        if (handler.getStackInSlot(index).getCount() >= slot.getCount()) {
+                                for (int index = 0; i < handler.getSlots(); i++) {
+                                    ItemStack handlerStack = handler.getStackInSlot(index);
+                                    if (API.instance().getComparer().isEqualNoQuantity(slot, handlerStack)) {
+                                        if (handlerStack.getCount() >= slot.getCount()) {
                                             return;
                                         } else {
-                                            stackSize = upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK) ? slot.getCount() - handler.getStackInSlot(index).getCount() : 1;
+                                            stackSize = upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK) ? slot.getCount() - handlerStack.getCount() : 1;
                                         }
                                     }
                                 }

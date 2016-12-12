@@ -6,7 +6,6 @@ import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import net.minecraft.util.text.TextFormatting;
 
 public class SideButtonRegulator extends SideButton {
-
     public SideButtonRegulator(GuiBase gui) {
         super(gui);
     }
