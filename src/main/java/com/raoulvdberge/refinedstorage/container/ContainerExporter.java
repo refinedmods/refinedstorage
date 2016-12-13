@@ -9,15 +9,26 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerExporter extends ContainerBase {
+    private TileExporter exporter;
+
     public ContainerExporter(TileExporter exporter, EntityPlayer player) {
         super(exporter, player);
 
+        this.exporter = exporter;
+
+        initSlots();
+    }
+
+    public void initSlots() {
+        this.inventorySlots.clear();
+        this.inventoryItemStacks.clear();
+        
         for (int i = 0; i < 4; ++i) {
             addSlotToContainer(new SlotItemHandler(exporter.getUpgrades(), i, 187, 6 + (i * 18)));
         }
 
         for (int i = 0; i < 9; ++i) {
-            addSlotToContainer(new SlotFilterType(exporter, i, 8 + (18 * i), 20, TileExporter.REGULATOR.getValue() ? SlotFilter.FILTER_ALLOW_SIZE : 0));
+            addSlotToContainer(new SlotFilterType(exporter, i, 8 + (18 * i), 20, exporter.isRegulator() ? SlotFilter.FILTER_ALLOW_SIZE : 0));
         }
 
         addPlayerInventory(8, 55);

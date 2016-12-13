@@ -4,6 +4,8 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.container.ContainerExporter;
+import com.raoulvdberge.refinedstorage.gui.GuiExporter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
@@ -11,8 +13,10 @@ import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataConsumer;
+import com.raoulvdberge.refinedstorage.tile.data.ITileDataListener;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataSerializers;
@@ -39,9 +43,34 @@ public class TileExporter extends TileNode implements IComparable, IType {
     }, new ITileDataConsumer<Boolean, TileExporter>() {
         @Override
         public void setValue(TileExporter tile, Boolean value) {
+            if (!value && tile.regulator) {
+                for (int i = 0; i < tile.itemFilters.getSlots() + tile.fluidFilters.getSlots(); ++i) {
+                    ItemStack slot = i >= tile.itemFilters.getSlots() ? tile.fluidFilters.getStackInSlot(i - tile.itemFilters.getSlots()) : tile.itemFilters.getStackInSlot(i);
+
+                    if (!slot.isEmpty()) {
+                        slot.setCount(1);
+                    }
+                }
+            }
+
             tile.regulator = value;
 
             tile.markDirty();
+
+            tile.getWorld().getMinecraftServer().getPlayerList().getPlayers().stream()
+                .filter(player -> player.openContainer instanceof ContainerExporter && ((ContainerExporter) player.openContainer).getTile().getPos().equals(tile.getPos()))
+                .forEach(player -> {
+                    ((ContainerExporter) player.openContainer).initSlots();
+
+                    player.openContainer.detectAndSendChanges();
+                });
+        }
+    }, new ITileDataListener<Boolean>() {
+        @Override
+        public void onChanged(TileDataParameter<Boolean> parameter) {
+            if (Minecraft.getMinecraft().currentScreen instanceof GuiExporter) {
+                ((ContainerExporter) ((GuiExporter) Minecraft.getMinecraft().currentScreen).inventorySlots).initSlots();
+            }
         }
     });
 
@@ -81,15 +110,18 @@ public class TileExporter extends TileNode implements IComparable, IType {
 
                         if (!slot.isEmpty()) {
                             int stackSize = upgrades.getItemInteractCount();
+
                             boolean skipSlot = false;
+
                             if (regulator) {
                                 for (int index = 0; i < handler.getSlots() && !skipSlot; i++) {
-                                    ItemStack handlerStack = handler.getStackInSlot(index);
-                                    if (API.instance().getComparer().isEqual(slot, handlerStack, compare)) {
-                                        if (handlerStack.getCount() >= slot.getCount()) {
+                                    ItemStack exporterStack = handler.getStackInSlot(index);
+
+                                    if (API.instance().getComparer().isEqual(slot, exporterStack, compare)) {
+                                        if (exporterStack.getCount() >= slot.getCount()) {
                                             skipSlot = true;
                                         } else {
-                                            stackSize = upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK) ? slot.getCount() - handlerStack.getCount() : 1;
+                                            stackSize = upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK) ? slot.getCount() - exporterStack.getCount() : 1;
                                         }
                                     }
                                 }
@@ -123,16 +155,20 @@ public class TileExporter extends TileNode implements IComparable, IType {
 
                             if (stackInStorage != null) {
                                 int toExtract = Math.min(Fluid.BUCKET_VOLUME * upgrades.getItemInteractCount(), stackInStorage.amount);
+
                                 boolean skipSlot = false;
+
                                 if (regulator) {
                                     for (IFluidTankProperties tankProperty : handler.getTankProperties()) {
-                                        FluidStack fluidStack = tankProperty.getContents();
-                                        if (API.instance().getComparer().isEqual(stackInStorage, fluidStack, compare)) {
-                                            if (fluidStack.amount >= stack.amount * Fluid.BUCKET_VOLUME) {
+                                        FluidStack exporterStack = tankProperty.getContents();
+
+                                        if (API.instance().getComparer().isEqual(stackInStorage, exporterStack, compare)) {
+                                            if (exporterStack.amount >= stack.amount * Fluid.BUCKET_VOLUME) {
                                                 skipSlot = true;
+
                                                 break;
                                             } else {
-                                                toExtract = upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK) ? stack.amount * Fluid.BUCKET_VOLUME - fluidStack.amount : Fluid.BUCKET_VOLUME;
+                                                toExtract = upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK) ? stack.amount * Fluid.BUCKET_VOLUME - exporterStack.amount : Fluid.BUCKET_VOLUME;
                                                 toExtract = Math.min(toExtract, stackInStorage.amount);
                                             }
                                         }
@@ -247,8 +283,8 @@ public class TileExporter extends TileNode implements IComparable, IType {
         markDirty();
     }
 
-    public boolean isRegulated() {
-        return this.regulator;
+    public boolean isRegulator() {
+        return !getWorld().isRemote ? regulator : REGULATOR.getValue();
     }
 
     @Override

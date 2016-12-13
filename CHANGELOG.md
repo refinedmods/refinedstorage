@@ -2,6 +2,7 @@
 
 ### 1.3.5
 - Fixed Controller not using energy (raoulvdberge)
+- Added regulator mode to Exporter (InusualZ)
 
 ### 1.3.4
 - Added option to check for oredict in the Grid Filter (raoulvdberge)
