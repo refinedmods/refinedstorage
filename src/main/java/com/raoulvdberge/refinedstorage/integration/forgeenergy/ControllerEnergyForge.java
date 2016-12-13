@@ -8,6 +8,16 @@ public class ControllerEnergyForge extends EnergyStorage {
         super(RS.INSTANCE.config.controllerCapacity, Integer.MAX_VALUE, 0);
     }
 
+    public int extractEnergyInternal(int maxExtract, boolean simulate) {
+        int energyExtracted = Math.min(energy, maxExtract);
+
+        if (!simulate) {
+            energy -= energyExtracted;
+        }
+
+        return energyExtracted;
+    }
+
     public void setMaxEnergyStored(int capacity) {
         this.capacity = capacity;
     }

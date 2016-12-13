@@ -290,7 +290,7 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
                 if (!RS.INSTANCE.config.controllerUsesEnergy) {
                     energy.setEnergyStored(energy.getMaxEnergyStored());
                 } else if (energy.getEnergyStored() - getEnergyUsage() >= 0) {
-                    energy.extractEnergy(getEnergyUsage(), false);
+                    energy.extractEnergyInternal(getEnergyUsage(), false);
                 } else {
                     energy.setEnergyStored(0);
                 }
