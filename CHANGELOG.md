@@ -2,6 +2,7 @@
 
 ### 1.3.5
 - Fixed Controller not using energy (raoulvdberge)
+- Fixed dupe bug when inserting bucket in Fluid Grid (raoulvdberge)
 - Added regulator mode to Exporter (InusualZ)
 
 ### 1.3.4

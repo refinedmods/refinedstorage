@@ -82,8 +82,7 @@ public class FluidGridHandler implements IFluidGridHandler {
 
     @Override
     public void onInsertHeldContainer(EntityPlayerMP player) {
-        onInsert(player.inventory.getItemStack());
-
+        player.inventory.setItemStack(RSUtils.getStack(onInsert(player.inventory.getItemStack())));
         player.updateHeldItem();
     }
 }
