@@ -4,6 +4,7 @@
 - Fixed Controller not using energy (raoulvdberge)
 - Fixed dupe bug when inserting bucket in Fluid Grid (raoulvdberge)
 - Fixed not being able to start autocrafting for storage disks (raoulvdberge)
+- Fixed oredict button not having the correct position on a small resolution (raoulvdberge)
 - Added regulator mode to Exporter (InusualZ)
 
 ### 1.3.4

@@ -132,7 +132,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         }
 
         if (grid.getType() == EnumGridType.PATTERN) {
-            oredictPattern = addCheckBox(x + 64, getTabDelta() + getHeader() + (getVisibleRows() * 18) + 78, t("misc.refinedstorage:oredict"), TileGrid.OREDICT_PATTERN.getValue());
+            oredictPattern = addCheckBox(x + 64, y + getTabDelta() + getHeader() + (getVisibleRows() * 18) + 46, t("misc.refinedstorage:oredict"), TileGrid.OREDICT_PATTERN.getValue());
         }
 
         if (grid.getType() != EnumGridType.FLUID) {
