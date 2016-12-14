@@ -200,6 +200,7 @@ public abstract class FluidStorageNBT implements IFluidStorage {
 
         otherTag.setInteger(NBT_STORED, getStoredFromNBT(tag));
         otherTag.setTag(NBT_FLUIDS, new NBTTagList());
+        otherTag.setInteger(NBT_PROTOCOL, PROTOCOL);
 
         return otherTag;
     }
