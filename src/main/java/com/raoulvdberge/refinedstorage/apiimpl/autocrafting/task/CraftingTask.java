@@ -30,7 +30,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class CraftingTask implements ICraftingTask {
-    protected static final int DEFAULT_COMPARE = IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT;
+    protected static final int DEFAULT_COMPARE = IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT | IComparer.COMPARE_STRIP_NBT;
 
     public static final String NBT_STEPS = "Steps";
     public static final String NBT_TO_TAKE_FLUIDS = "ToTakeFluids";
@@ -105,7 +105,7 @@ public class CraftingTask implements ICraftingTask {
         for (List<ItemStack> oreInputs : pattern.getOreInputs()) {
             boolean added = false;
             for (ItemStack input : oreInputs) {
-                int oreCompare = IComparer.COMPARE_NBT | (input.isItemStackDamageable() ? 0 : IComparer.COMPARE_DAMAGE);
+                int oreCompare = IComparer.COMPARE_NBT | IComparer.COMPARE_STRIP_NBT | (input.isItemStackDamageable() ? 0 : IComparer.COMPARE_DAMAGE);
                 if (network.getItemStorageCache().getList().get(input, oreCompare) != null) {
                     usedStacks.add(input.copy());
                     inputs.add(input.copy());

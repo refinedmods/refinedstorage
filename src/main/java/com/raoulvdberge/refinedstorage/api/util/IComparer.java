@@ -13,6 +13,7 @@ public interface IComparer {
     int COMPARE_NBT = 2;
     int COMPARE_QUANTITY = 4;
     int COMPARE_OREDICT = 8;
+    int COMPARE_STRIP_NBT = 16;
 
     /**
      * Compares two stacks by the given flags.

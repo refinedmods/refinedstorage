@@ -9,6 +9,7 @@ import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.util.Comparer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -142,6 +143,7 @@ public abstract class CraftingStep implements ICraftingStep {
 
     @Override
     public boolean onReceiveOutput(ItemStack stack) {
+        stack = Comparer.stripTags(stack.copy());
         for (ItemStack output : pattern.getOutputs()) {
             int hashcode = API.instance().getItemStackHashCode(output);
             Integer received = satisfied.get(hashcode);

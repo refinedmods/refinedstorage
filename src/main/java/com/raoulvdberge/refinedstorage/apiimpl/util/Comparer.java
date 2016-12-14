@@ -40,6 +40,10 @@ public class Comparer implements IComparer {
         }
 
         if ((flags & COMPARE_NBT) == COMPARE_NBT) {
+            if ((flags & COMPARE_STRIP_NBT) == COMPARE_STRIP_NBT) {
+                left = stripTags(left.copy());
+                right = stripTags(right.copy());
+            }
             if (!isEqualNBT(left, right)) {
                 return false;
             }
@@ -153,5 +157,25 @@ public class Comparer implements IComparer {
         }
 
         return EnumActionResult.PASS;
+    }
+
+    public static ItemStack stripTags(ItemStack stack) {
+        if (stack != null && stack.hasTagCompound()) {
+            switch (stack.getItem().getRegistryName().getResourceDomain()) {
+                case "mekanism":
+                    stack.getTagCompound().removeTag("mekData");
+                    break;
+                case "enderio":
+                    // Soul vials
+                    stack.getTagCompound().removeTag("entity");
+                    stack.getTagCompound().removeTag("isStub");
+                    // Capacitors
+                    stack.getTagCompound().removeTag("Energy");
+                default:
+                    break;
+            }
+        }
+
+        return stack;
     }
 }

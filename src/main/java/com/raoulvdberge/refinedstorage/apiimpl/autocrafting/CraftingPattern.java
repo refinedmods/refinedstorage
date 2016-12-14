@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactory;
+import com.raoulvdberge.refinedstorage.apiimpl.util.Comparer;
 import com.raoulvdberge.refinedstorage.item.ItemPattern;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -32,7 +33,7 @@ public class CraftingPattern implements ICraftingPattern {
 
     public CraftingPattern(World world, ICraftingPatternContainer container, ItemStack stack) {
         this.container = container;
-        this.stack = stripTags(stack);
+        this.stack = Comparer.stripTags(stack);
 
         InventoryCrafting inv = new InventoryCrafting(new Container() {
             @Override
@@ -44,7 +45,7 @@ public class CraftingPattern implements ICraftingPattern {
         for (int i = 0; i < 9; ++i) {
             ItemStack slot = ItemPattern.getSlot(stack, i);
 
-            inputs.add(stripTags(slot));
+            inputs.add(Comparer.stripTags(slot));
 
             if (slot != null) {
                 inv.setInventorySlotContents(i, slot);
@@ -60,8 +61,7 @@ public class CraftingPattern implements ICraftingPattern {
                     // It is a dirty fix, but hey someone has to do it. ~ way2muchnoise 2016 "bite me"
                     mekanism = recipe.getClass().getName().equals("mekanism.common.recipe.ShapedMekanismRecipe");
 
-                    ItemStack out = stripTags(output.copy());
-                    outputs.add(out);
+                    outputs.add(Comparer.stripTags(output.copy()));
 
                     if ((isOredict() && shapedOre) || mekanism) {
                         Object[] inputs = new Object[0];
@@ -78,7 +78,7 @@ public class CraftingPattern implements ICraftingPattern {
                             if (input == null) {
                                 oreInputs.add(Collections.emptyList());
                             } else if (input instanceof ItemStack) {
-                                ItemStack stripped = stripTags(((ItemStack) input).copy());
+                                ItemStack stripped = Comparer.stripTags(((ItemStack) input).copy());
                                 if (stripped.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
                                     stripped.setItemDamage(0);
                                 }
@@ -86,7 +86,7 @@ public class CraftingPattern implements ICraftingPattern {
                             } else {
                                 List<ItemStack> cleaned = new LinkedList<>();
                                 for (ItemStack in : (List<ItemStack>) input) {
-                                    ItemStack stripped = stripTags(in.copy());
+                                    ItemStack stripped = Comparer.stripTags(in.copy());
                                     if (stripped.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
                                         stripped.setItemDamage(0);
                                     }
@@ -99,14 +99,14 @@ public class CraftingPattern implements ICraftingPattern {
 
                     for (ItemStack remaining : recipe.getRemainingItems(inv)) {
                         if (remaining != null) {
-                            ItemStack cleaned = stripTags(remaining.copy());
+                            ItemStack cleaned = Comparer.stripTags(remaining.copy());
                             byproducts.add(cleaned);
                         }
                     }
                 }
             }
         } else {
-            outputs = ItemPattern.getOutputs(stack).stream().map(CraftingPattern::stripTags).collect(Collectors.toList());
+            outputs = ItemPattern.getOutputs(stack).stream().map(Comparer::stripTags).collect(Collectors.toList());
 
             if (isOredict()) {
                 for (ItemStack input : inputs) {
@@ -116,14 +116,14 @@ public class CraftingPattern implements ICraftingPattern {
                     } else {
                         int[] ids = OreDictionary.getOreIDs(input);
                         if (ids == null || ids.length == 0) {
-                            oreInputs.add(Collections.singletonList(stripTags(input)));
+                            oreInputs.add(Collections.singletonList(Comparer.stripTags(input)));
                         } else {
                             oreInputs.add(Arrays.stream(ids)
                                 .mapToObj(OreDictionary::getOreName)
                                 .map(OreDictionary::getOres)
                                 .flatMap(List::stream)
                                 .map(ItemStack::copy)
-                                .map(CraftingPattern::stripTags)
+                                .map(Comparer::stripTags)
                                 .map(s -> {
                                     s.setCount(input.getCount());
                                     return s;
@@ -141,7 +141,7 @@ public class CraftingPattern implements ICraftingPattern {
                 if (input == null) {
                     oreInputs.add(Collections.emptyList());
                 } else {
-                    oreInputs.add(Collections.singletonList(stripTags(input)));
+                    oreInputs.add(Collections.singletonList(Comparer.stripTags(input)));
                 }
             }
         }
@@ -204,7 +204,7 @@ public class CraftingPattern implements ICraftingPattern {
         if (cleaned.isEmpty()) {
             return null;
         }
-        outputs.add(stripTags(cleaned.copy()));
+        outputs.add(Comparer.stripTags(cleaned.copy()));
 
         return outputs;
     }
@@ -233,7 +233,7 @@ public class CraftingPattern implements ICraftingPattern {
 
         for (ItemStack remaining : recipe.getRemainingItems(inv)) {
             if (remaining != null) {
-                byproducts.add(stripTags(remaining.copy()));
+                byproducts.add(Comparer.stripTags(remaining.copy()));
             }
         }
 
@@ -253,7 +253,7 @@ public class CraftingPattern implements ICraftingPattern {
     @Override
     public int getQuantityPerRequest(ItemStack requested, int compare) {
         int quantity = 0;
-        requested = stripTags(requested);
+        requested = Comparer.stripTags(requested.copy());
         for (ItemStack output : outputs) {
             if (API.instance().getComparer().isEqual(requested, output, compare)) {
                 quantity += output.getCount();
@@ -269,7 +269,7 @@ public class CraftingPattern implements ICraftingPattern {
 
     @Override
     public ItemStack getActualOutput(ItemStack requested, int compare) {
-        requested = stripTags(requested);
+        requested = Comparer.stripTags(requested.copy());
         for (ItemStack output : outputs) {
             if (API.instance().getComparer().isEqual(requested, output, compare)) {
                 return output.copy();
@@ -287,21 +287,5 @@ public class CraftingPattern implements ICraftingPattern {
             ", outputs=" + outputs +
             ", byproducts=" + byproducts +
             '}';
-    }
-
-    private static ItemStack stripTags(ItemStack stack) {
-        if (stack != null && !stack.isEmpty() && stack.hasTagCompound()) {
-            switch (stack.getItem().getRegistryName().getResourceDomain()) {
-                case "mekanism":
-                    stack.getTagCompound().removeTag("mekData");
-                    break;
-                case "enderio":
-                    stack.getTagCompound().removeTag("entity");
-                default:
-                    break;
-            }
-        }
-
-        return stack;
     }
 }
