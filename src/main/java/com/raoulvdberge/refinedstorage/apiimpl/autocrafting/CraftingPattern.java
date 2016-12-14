@@ -290,7 +290,7 @@ public class CraftingPattern implements ICraftingPattern {
     }
 
     private static ItemStack stripTags(ItemStack stack) {
-        if (stack.hasTagCompound()) {
+        if (stack != null && !stack.isEmpty() && stack.hasTagCompound()) {
             switch (stack.getItem().getRegistryName().getResourceDomain()) {
                 case "mekanism":
                     stack.getTagCompound().removeTag("mekData");
