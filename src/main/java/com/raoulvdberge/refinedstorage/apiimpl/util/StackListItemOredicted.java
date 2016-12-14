@@ -27,8 +27,10 @@ public class StackListItemOredicted implements IStackList<ItemStack> {
 
     private void initOreDict() {
         for (ItemStack stack : underlyingList.getStacks()) {
-            for (int id : OreDictionary.getOreIDs(stack)) {
-                stacks.put(id, stack);
+            if (!stack.isEmpty()) {
+                for (int id : OreDictionary.getOreIDs(stack)) {
+                    stacks.put(id, stack);
+                }
             }
         }
     }
