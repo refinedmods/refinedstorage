@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.2.12
+- Updated French translation (Leventovitch)
+
 ### 1.2.11
 - Made the Interface sideless, you can just insert or extract from any side (raoulvdberge)
 - The Grid now resizes based on screen size (max rows can be configured) (raoulvdberge, way2muchnoise)
