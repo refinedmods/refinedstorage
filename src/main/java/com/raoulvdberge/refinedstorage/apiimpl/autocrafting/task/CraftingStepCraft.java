@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IFluidStackList;
@@ -22,8 +23,8 @@ public class CraftingStepCraft extends CraftingStep {
 
     private List<ItemStack> toInsert;
 
-    public CraftingStepCraft(INetworkMaster network, ICraftingPattern pattern, List<ItemStack> toInsert) {
-        super(network, pattern);
+    public CraftingStepCraft(INetworkMaster network, ICraftingPattern pattern, List<ItemStack> toInsert, List<ICraftingStep> preliminarySteps) {
+        super(network, pattern, preliminarySteps);
         this.toInsert = new LinkedList<>();
         toInsert.forEach(stack -> this.toInsert.add(stack == null ? null : stack.copy()));
     }
@@ -39,6 +40,9 @@ public class CraftingStepCraft extends CraftingStep {
 
     @Override
     public boolean canStartProcessing(IItemStackList items, IFluidStackList fluids) {
+        if (!super.canStartProcessing()) {
+            return false;
+        }
         int compare = CraftingTask.DEFAULT_COMPARE | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0);
         for (ItemStack stack : getToInsert()) {
             // This will be a tool, like a hammer
