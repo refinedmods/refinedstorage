@@ -224,6 +224,7 @@ public abstract class StorageFluidNBT implements IStorage<FluidStack> {
 
         otherTag.setInteger(NBT_STORED, getStoredFromNBT(tag));
         otherTag.setTag(NBT_FLUIDS, new NBTTagList()); // To circumvent not being able to insert disks in Disk Drives (see FluidStorageNBT#isValid(ItemStack)).
+        otherTag.setInteger(NBT_PROTOCOL, PROTOCOL);
 
         return otherTag;
     }

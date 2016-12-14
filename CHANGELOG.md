@@ -3,6 +3,7 @@
 ### 1.3.5
 - Fixed Controller not using energy (raoulvdberge)
 - Fixed dupe bug when inserting bucket in Fluid Grid (raoulvdberge)
+- Fixed not being able to start autocrafting for storage disks (raoulvdberge)
 - Added regulator mode to Exporter (InusualZ)
 
 ### 1.3.4

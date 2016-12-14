@@ -260,6 +260,7 @@ public abstract class StorageItemNBT implements IStorage<ItemStack> {
 
         otherTag.setInteger(NBT_STORED, getStoredFromNBT(tag));
         otherTag.setTag(NBT_ITEMS, new NBTTagList()); // To circumvent not being able to insert disks in Disk Drives (see ItemStorageNBT#isValid(ItemStack)).
+        otherTag.setInteger(NBT_PROTOCOL, PROTOCOL);
 
         return otherTag;
     }
