@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
@@ -21,8 +22,8 @@ public class CraftingStepCraft extends CraftingStep {
 
     private List<ItemStack> toInsert;
 
-    public CraftingStepCraft(INetworkMaster network, ICraftingPattern pattern, List<ItemStack> toInsert) {
-        super(network, pattern);
+    public CraftingStepCraft(INetworkMaster network, ICraftingPattern pattern, List<ItemStack> toInsert, List<ICraftingStep> preliminarySteps) {
+        super(network, pattern, preliminarySteps);
         this.toInsert = new LinkedList<>();
         toInsert.forEach(stack -> this.toInsert.add(stack == null ? null : stack.copy()));
     }
@@ -38,6 +39,9 @@ public class CraftingStepCraft extends CraftingStep {
 
     @Override
     public boolean canStartProcessing(IStackList<ItemStack> items, IStackList<FluidStack> fluids) {
+        if (!super.canStartProcessing()) {
+            return false;
+        }
         int compare = CraftingTask.DEFAULT_COMPARE | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0);
         for (ItemStack stack : getToInsert()) {
             // This will be a tool, like a hammer
@@ -77,13 +81,13 @@ public class CraftingStepCraft extends CraftingStep {
             }
 
             for (ItemStack output : outputs) {
-                if (output != null) {
+                if (output != null && !output.isEmpty()) {
                     toInsertItems.add(output.copy());
                 }
             }
 
             for (ItemStack byproduct : (pattern.isOredict() ? pattern.getByproducts(took) : pattern.getByproducts())) {
-                if (byproduct != null) {
+                if (byproduct != null && !byproduct.isEmpty()) {
                     toInsertItems.add(byproduct.copy());
                 }
             }
@@ -113,7 +117,12 @@ public class CraftingStepCraft extends CraftingStep {
                 NBTTagList toInsertList = tag.getTagList(NBT_TO_INSERT, Constants.NBT.TAG_COMPOUND);
                 toInsert = new ArrayList<>(toInsertList.tagCount());
                 for (int i = 0; i < toInsertList.tagCount(); ++i) {
-                    toInsert.add(new ItemStack(toInsertList.getCompoundTagAt(i)));
+                    ItemStack stack = new ItemStack(toInsertList.getCompoundTagAt(i));
+                    if (stack.isEmpty()) {
+                        toInsert.add(null);
+                    } else {
+                        toInsert.add(stack);
+                    }
                 }
             }
 

@@ -42,7 +42,7 @@ public class CraftingTask implements ICraftingTask {
     private ItemStack requested;
     private ICraftingPattern pattern;
     private int quantity;
-    private List<ICraftingStep> steps = new ArrayList<>();
+    private List<ICraftingStep> mainSteps = new LinkedList<>();
     private IStackList<ItemStack> toTake = API.instance().createItemStackList();
     private IStackList<ItemStack> toCraft = API.instance().createItemStackList();
     private IStackList<ItemStack> missing = API.instance().createItemStackList();
@@ -59,9 +59,9 @@ public class CraftingTask implements ICraftingTask {
         this.quantity = quantity;
     }
 
-    public CraftingTask(INetworkMaster network, @Nullable ItemStack requested, ICraftingPattern pattern, int quantity, List<ICraftingStep> steps, Deque<ItemStack> toInsertItems, IStackList<FluidStack> toTakeFluids, Deque<FluidStack> toInsertFluids) {
+    public CraftingTask(INetworkMaster network, @Nullable ItemStack requested, ICraftingPattern pattern, int quantity, List<ICraftingStep> mainSteps, Deque<ItemStack> toInsertItems, IStackList<FluidStack> toTakeFluids, Deque<FluidStack> toInsertFluids) {
         this(network, requested, pattern, quantity);
-        this.steps = steps;
+        this.mainSteps = mainSteps;
         this.toInsertItems = toInsertItems;
         this.toTakeFluids = toTakeFluids;
         this.toInsertFluids = toInsertFluids;
@@ -82,17 +82,17 @@ public class CraftingTask implements ICraftingTask {
         int quantity = this.quantity;
 
         while (quantity > 0 && !recurseFound) {
-            calculate(networkList, networkFluidList, pattern, toInsert);
+            mainSteps.add(calculate(networkList, networkFluidList, pattern, toInsert));
             quantity -= pattern.getQuantityPerRequest(requested);
         }
 
         usedPatterns.clear();
     }
 
-    private void calculate(IStackList<ItemStack> networkList, IStackList<FluidStack> networkFluidList, ICraftingPattern pattern, IStackList<ItemStack> toInsert) {
+    private ICraftingStep calculate(IStackList<ItemStack> networkList, IStackList<FluidStack> networkFluidList, ICraftingPattern pattern, IStackList<ItemStack> toInsert) {
         recurseFound |= !usedPatterns.add(pattern);
         if (recurseFound) {
-            return;
+            return null;
         }
 
         int compare = DEFAULT_COMPARE | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0);
@@ -100,6 +100,7 @@ public class CraftingTask implements ICraftingTask {
         IStackList<ItemStack> inputs = API.instance().createItemStackList();
         IStackList<ItemStack> actualInputs = API.instance().createItemStackList();
         List<ItemStack> usedStacks = new LinkedList<>();
+        List<ICraftingStep> previousSteps = new LinkedList<>();
 
         for (List<ItemStack> oreInputs : pattern.getOreInputs()) {
             boolean added = false;
@@ -145,7 +146,7 @@ public class CraftingTask implements ICraftingTask {
                         // The needed amount is the actual needed amount of extraStacks + the needed input (twice so you can keep repeating it)
                         long needed = (networkStack == null ? 0 : -networkStack.getCount()) + input.getCount() + inputPattern.getInputs().stream().filter(s -> API.instance().getComparer().isEqual(s, input, lambdaCompare)).count() * 2;
                         do {
-                            calculate(networkList, networkFluidList, inputPattern, toInsert);
+                            previousSteps.add(calculate(networkList, networkFluidList, inputPattern, toInsert));
                             toCraft.add(ItemHandlerHelper.copyStackWithSize(input, craftQuantity));
                             extraStack = toInsert.get(input, compare);
                         } while (extraStack != null && extraStack.getCount() < needed);
@@ -187,7 +188,7 @@ public class CraftingTask implements ICraftingTask {
                         ItemStack inputCrafted = ItemHandlerHelper.copyStackWithSize(actualCraft, craftQuantity);
                         toCraft.add(inputCrafted.copy());
                         actualInputs.add(inputCrafted.copy());
-                        calculate(networkList, networkFluidList, inputPattern, toInsert);
+                        previousSteps.add(calculate(networkList, networkFluidList, inputPattern, toInsert));
                         input.shrink(craftQuantity);
                         if (!recurseFound) {
                             // Calculate added all the crafted outputs toInsert
@@ -198,7 +199,7 @@ public class CraftingTask implements ICraftingTask {
                     } else {
                         // Fluid checks are with a stack size of one
                         ItemStack fluidCheck = ItemHandlerHelper.copyStackWithSize(input, 1);
-                        while (input.getCount() > 0 && doFluidCalculation(networkList, networkFluidList, fluidCheck, toInsert)) {
+                        while (input.getCount() > 0 && doFluidCalculation(networkList, networkFluidList, fluidCheck, toInsert, previousSteps)) {
                             actualInputs.add(fluidCheck);
                             input.shrink(1);
                         }
@@ -211,12 +212,6 @@ public class CraftingTask implements ICraftingTask {
                     }
                 }
             }
-        }
-
-        if (pattern.isProcessing()) {
-            steps.add(new CraftingStepProcess(network, pattern));
-        } else {
-            steps.add(new CraftingStepCraft(network, pattern, usedStacks));
         }
 
         ItemStack[] took = null;
@@ -232,17 +227,23 @@ public class CraftingTask implements ICraftingTask {
         }
 
         for (ItemStack output : outputs) {
-            toInsert.add(output.copy());
+            if (output != null && !output.isEmpty()) {
+                toInsert.add(output.copy());
+            }
         }
 
         for (ItemStack byproduct : (!pattern.isProcessing() && pattern.isOredict() && missing.isEmpty() ? pattern.getByproducts(took) : pattern.getByproducts())) {
-            toInsert.add(byproduct.copy());
+            if (byproduct != null && !byproduct.isEmpty()) {
+                toInsert.add(byproduct.copy());
+            }
         }
 
         usedPatterns.remove(pattern);
+
+        return pattern.isProcessing() ? new CraftingStepProcess(network, pattern, previousSteps) : new CraftingStepCraft(network, pattern, usedStacks, previousSteps);
     }
 
-    private boolean doFluidCalculation(IStackList<ItemStack> networkList, IStackList<FluidStack> networkFluidList, ItemStack input, IStackList<ItemStack> toInsert) {
+    private boolean doFluidCalculation(IStackList<ItemStack> networkList, IStackList<FluidStack> networkFluidList, ItemStack input, IStackList<ItemStack> toInsert, List<ICraftingStep> previousSteps) {
         FluidStack fluidInItem = RSUtils.getFluidFromStack(input, true).getValue();
 
         if (fluidInItem != null && RSUtils.hasFluidBucket(fluidInItem)) {
@@ -270,7 +271,7 @@ public class CraftingTask implements ICraftingTask {
                         missing.add(RSUtils.EMPTY_BUCKET.copy());
                     } else {
                         toCraft.add(RSUtils.EMPTY_BUCKET.copy());
-                        calculate(networkList, networkFluidList, bucketPattern, toInsert);
+                        previousSteps.add(calculate(networkList, networkFluidList, bucketPattern, toInsert));
                         toInsert.remove(RSUtils.EMPTY_BUCKET, 1);
                     }
                 }
@@ -304,7 +305,7 @@ public class CraftingTask implements ICraftingTask {
             "\n, toCraft=" + toCraft +
             "\n, toInsertItems=" + toInsertItems +
             "\n, toInsertFluids=" + toInsertFluids +
-            "\n, steps=" + steps +
+            "\n, mainSteps=" + mainSteps +
             '}';
     }
 
@@ -325,7 +326,20 @@ public class CraftingTask implements ICraftingTask {
             return false;
         }
 
-        for (ICraftingStep step : steps) {
+        // Collect all leaf steps
+        List<ICraftingStep> leafSteps = new LinkedList<>();
+        Queue<ICraftingStep> steps = new LinkedList<>();
+        steps.addAll(mainSteps);
+        while (steps.size() > 0) {
+            ICraftingStep step = steps.poll();
+            if (step.getPreliminarySteps().size() > 0) {
+                steps.addAll(step.getPreliminarySteps());
+            } else {
+                leafSteps.add(step);
+            }
+        }
+
+        for (ICraftingStep step : leafSteps) {
             ICraftingPatternContainer container = step.getPattern().getContainer();
             Integer timesUsed = usedContainers.get(container);
 
@@ -356,23 +370,30 @@ public class CraftingTask implements ICraftingTask {
             }
         }
 
-        if (steps.stream().filter(ICraftingStep::hasStartedProcessing).count() == 0) {
+        if (getSteps().stream().filter(ICraftingStep::hasStartedProcessing).count() == 0) {
             // When there is no started processes, restart the task.
             reschedule();
         }
 
         // Remove finished tasks
-        steps.removeIf(ICraftingStep::hasReceivedOutputs);
+        steps.clear(); // Re use Queue from earlier
+        mainSteps.removeIf(ICraftingStep::hasReceivedOutputs);
+        steps.addAll(mainSteps);
+        while (steps.size() > 0) {
+            ICraftingStep step = steps.poll();
+            step.getPreliminarySteps().removeIf(ICraftingStep::hasReceivedOutputs);
+            steps.addAll(step.getPreliminarySteps());
+        }
 
         return isFinished();
     }
 
     @Override
     public void reschedule() {
-        List<ICraftingStep> mainSteps = steps.stream().filter(s -> s.getPattern() == pattern).collect(Collectors.toList());
+        List<ICraftingStep> mainSteps = this.mainSteps.stream().filter(s -> s.getPattern() == pattern).collect(Collectors.toList());
         missing.clear();
-        steps.clear();
-        // if the list of main steps is empty there is no point in rescheduling
+        this.mainSteps.clear();
+        // if the list of main mainSteps is empty there is no point in rescheduling
         if (!mainSteps.isEmpty()) {
             quantity = 0;
             int quantityPerRequest = pattern.getQuantityPerRequest(requested);
@@ -403,7 +424,7 @@ public class CraftingTask implements ICraftingTask {
 
         NBTTagList stepsList = new NBTTagList();
 
-        for (ICraftingStep step : steps) {
+        for (ICraftingStep step : mainSteps) {
             stepsList.appendTag(step.writeToNBT(new NBTTagCompound()));
         }
 
@@ -472,13 +493,13 @@ public class CraftingTask implements ICraftingTask {
         }
 
         if (!isFinished()) {
-            if (steps.stream().filter(s -> !s.getPattern().isProcessing()).count() > 0) {
+            if (getSteps().stream().filter(s -> !s.getPattern().isProcessing()).count() > 0) {
                 elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_crafting", 16));
 
                 IStackList<ItemStack> oreDictPrepped = network.getItemStorageCache().getList().getOredicted();
                 IStackList<FluidStack> networkFluids = network.getFluidStorageCache().getList();
 
-                for (ICraftingStep step : steps.stream().filter(s -> !s.getPattern().isProcessing()).collect(Collectors.toList())) {
+                for (ICraftingStep step : getSteps().stream().filter(s -> !s.getPattern().isProcessing()).collect(Collectors.toList())) {
                     for (int i = 0; i < step.getPattern().getOutputs().size(); ++i) {
                         ICraftingMonitorElement element = new CraftingMonitorElementItemRender(
                             -1,
@@ -498,10 +519,10 @@ public class CraftingTask implements ICraftingTask {
                 elements.commit();
             }
 
-            if (steps.stream().filter(s -> s.getPattern().isProcessing()).count() > 0) {
+            if (getSteps().stream().filter(s -> s.getPattern().isProcessing()).count() > 0) {
                 elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_processing", 16));
 
-                for (ICraftingStep step : steps.stream().filter(s -> s.getPattern().isProcessing()).collect(Collectors.toList())) {
+                for (ICraftingStep step : getSteps().stream().filter(s -> s.getPattern().isProcessing()).collect(Collectors.toList())) {
                     for (int i = 0; i < step.getPattern().getOutputs().size(); ++i) {
                         ICraftingMonitorElement element = new CraftingMonitorElementItemRender(
                             -1,
@@ -533,7 +554,15 @@ public class CraftingTask implements ICraftingTask {
     }
 
     public List<ICraftingStep> getSteps() {
-        return steps;
+        List<ICraftingStep> allSteps = new LinkedList<>();
+        Queue<ICraftingStep> steps = new LinkedList<>();
+        steps.addAll(mainSteps);
+        while (steps.size() > 0) {
+            ICraftingStep step = steps.poll();
+            allSteps.add(step);
+            steps.addAll(step.getPreliminarySteps());
+        }
+        return allSteps;
     }
 
     @Override
@@ -593,6 +622,6 @@ public class CraftingTask implements ICraftingTask {
     }
 
     private boolean isFinished() {
-        return steps.stream().allMatch(ICraftingStep::hasReceivedOutputs);
+        return mainSteps.stream().allMatch(ICraftingStep::hasReceivedOutputs);
     }
 }

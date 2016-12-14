@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
@@ -21,8 +22,8 @@ import java.util.stream.IntStream;
 public class CraftingStepProcess extends CraftingStep {
     public static final String ID = "process";
 
-    public CraftingStepProcess(INetworkMaster network, ICraftingPattern pattern) {
-        super(network, pattern);
+    public CraftingStepProcess(INetworkMaster network, ICraftingPattern pattern, List<ICraftingStep> preliminarySteps) {
+        super(network, pattern, preliminarySteps);
     }
 
     public CraftingStepProcess(INetworkMaster network) {
@@ -31,6 +32,9 @@ public class CraftingStepProcess extends CraftingStep {
 
     @Override
     public boolean canStartProcessing(IStackList<ItemStack> items, IStackList<FluidStack> fluids) {
+        if (!super.canStartProcessing()) {
+            return false;
+        }
         IItemHandler inventory = getPattern().getContainer().getFacingInventory();
         int compare = CraftingTask.DEFAULT_COMPARE | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0);
         if (inventory != null) {
@@ -66,6 +70,9 @@ public class CraftingStepProcess extends CraftingStep {
 
     @Override
     public boolean canStartProcessing() {
+        if (!super.canStartProcessing()) {
+            return false;
+        }
         IItemHandler inventory = getPattern().getContainer().getFacingInventory();
         return inventory != null && insert(inventory, new LinkedList<>(getToInsert()), true);
     }

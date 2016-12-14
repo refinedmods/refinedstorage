@@ -11,8 +11,10 @@ import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.*;
@@ -24,16 +26,19 @@ public abstract class CraftingStep implements ICraftingStep {
     private static final String NBT_PATTERN = "Pattern";
     private static final String NBT_PATTERN_CONTAINER = "PatternContainer";
     private static final String NBT_STARTED_PROCESSING = "StartedProcessing";
+    private static final String NBT_PRELIMINARY_STEPS = "PreliminarySteps";
 
     protected INetworkMaster network;
     protected ICraftingPattern pattern;
     protected Map<Integer, Integer> satisfied;
     protected boolean startedProcessing;
+    protected List<ICraftingStep> preliminarySteps;
 
-    public CraftingStep(INetworkMaster network, ICraftingPattern pattern) {
+    public CraftingStep(INetworkMaster network, ICraftingPattern pattern, List<ICraftingStep> preliminarySteps) {
         this.network = network;
         this.pattern = pattern;
         this.satisfied = new HashMap<>(getPattern().getOutputs().size());
+        this.preliminarySteps = new ArrayList<>(preliminarySteps);
     }
 
     public CraftingStep(INetworkMaster network) {
@@ -61,6 +66,18 @@ public abstract class CraftingStep implements ICraftingStep {
 
                 this.startedProcessing = tag.getBoolean(NBT_STARTED_PROCESSING);
 
+                NBTTagList preliminaryTagList = tag.getTagList(NBT_PRELIMINARY_STEPS, Constants.NBT.TAG_COMPOUND);
+                this.preliminarySteps = new LinkedList<>();
+                for (int i = 0; i < preliminaryTagList.tagCount(); i++) {
+                    NBTTagCompound stepTag = preliminaryTagList.getCompoundTagAt(i);
+
+                    ICraftingStep step = CraftingStep.toCraftingStep(stepTag, network);
+
+                    if (step != null) {
+                        this.preliminarySteps.add(step);
+                    }
+                }
+
                 return true;
             }
         }
@@ -79,8 +96,13 @@ public abstract class CraftingStep implements ICraftingStep {
     }
 
     @Override
+    public List<ICraftingStep> getPreliminarySteps() {
+        return preliminarySteps;
+    }
+
+    @Override
     public boolean canStartProcessing() {
-        return true;
+        return getPreliminarySteps().size() == 0;
     }
 
 
@@ -154,6 +176,14 @@ public abstract class CraftingStep implements ICraftingStep {
         tag.setLong(NBT_PATTERN_CONTAINER, pattern.getContainer().getPosition().toLong());
         tag.setBoolean(NBT_STARTED_PROCESSING, startedProcessing);
 
+
+        NBTTagList preliminaryTagList = new NBTTagList();
+        for (ICraftingStep step : preliminarySteps) {
+            preliminaryTagList.appendTag(step.writeToNBT(new NBTTagCompound()));
+        }
+
+        tag.setTag(NBT_PRELIMINARY_STEPS, preliminaryTagList);
+
         return tag;
     }
 
@@ -211,5 +241,24 @@ public abstract class CraftingStep implements ICraftingStep {
         }
 
         return true;
+    }
+
+    public static ICraftingStep toCraftingStep(NBTTagCompound compound, INetworkMaster network) {
+        CraftingStep step = null;
+
+        switch (compound.getString(CraftingStep.NBT_CRAFTING_STEP_TYPE)) {
+            case CraftingStepCraft.ID:
+                step = new CraftingStepCraft(network);
+                break;
+            case CraftingStepProcess.ID:
+                step = new CraftingStepProcess(network);
+                break;
+        }
+
+        if (step != null && step.readFromNBT(compound)) {
+            return step;
+        }
+
+        return null;
     }
 }

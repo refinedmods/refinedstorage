@@ -39,18 +39,9 @@ public class CraftingTaskFactory implements ICraftingTaskFactory {
             for (int i = 0; i < stepsList.tagCount(); ++i) {
                 NBTTagCompound stepTag = stepsList.getCompoundTagAt(i);
 
-                CraftingStep step = null;
+                ICraftingStep step = CraftingStep.toCraftingStep(stepTag, network);
 
-                switch (stepTag.getString(CraftingStep.NBT_CRAFTING_STEP_TYPE)) {
-                    case CraftingStepCraft.ID:
-                        step = new CraftingStepCraft(network);
-                        break;
-                    case CraftingStepProcess.ID:
-                        step = new CraftingStepProcess(network);
-                        break;
-                }
-
-                if (step != null && step.readFromNBT(stepTag)) {
+                if (step != null) {
                     steps.add(step);
                 }
             }
