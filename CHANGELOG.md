@@ -3,6 +3,7 @@
 ### 1.3.5
 - Fixed TPS lag on very large crafting tasks (way2muchnoise)
 - Fixed not being able to use autocrafting on some EnderIO items (way2muchnoise)
+- Fixed server crash with ore dictionary checks (way2muchnoise)
 - Fixed Controller not using energy (raoulvdberge)
 - Fixed dupe bug when inserting bucket in Fluid Grid (raoulvdberge)
 - Fixed not being able to start autocrafting for storage disks (raoulvdberge)
