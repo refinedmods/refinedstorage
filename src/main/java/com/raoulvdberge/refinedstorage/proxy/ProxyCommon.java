@@ -202,6 +202,7 @@ public class ProxyCommon {
         registerItem(RSItems.NETWORK_CARD);
         registerItem(RSItems.WRENCH);
         registerItem(RSItems.WIRELESS_CRAFTING_MONITOR);
+        registerItem(RSItems.SECURITY_CARD);
 
         OreDictionary.registerOre("itemSilicon", RSItems.SILICON);
 
