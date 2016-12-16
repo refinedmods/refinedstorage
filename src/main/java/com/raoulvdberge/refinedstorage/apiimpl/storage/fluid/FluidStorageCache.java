@@ -23,7 +23,7 @@ public class FluidStorageCache implements IFluidStorageCache {
     }
 
     @Override
-    public synchronized void invalidate() {
+    public void invalidate() {
         storages.clear();
 
         network.getNodeGraph().all().stream()
@@ -46,7 +46,7 @@ public class FluidStorageCache implements IFluidStorageCache {
     }
 
     @Override
-    public synchronized void add(@Nonnull FluidStack stack, boolean rebuilding) {
+    public void add(@Nonnull FluidStack stack, boolean rebuilding) {
         list.add(stack);
 
         if (!rebuilding) {
@@ -55,7 +55,7 @@ public class FluidStorageCache implements IFluidStorageCache {
     }
 
     @Override
-    public synchronized void remove(@Nonnull FluidStack stack) {
+    public void remove(@Nonnull FluidStack stack) {
         if (list.remove(stack, true)) {
             network.sendFluidStorageDeltaToClient(stack, -stack.amount);
         }

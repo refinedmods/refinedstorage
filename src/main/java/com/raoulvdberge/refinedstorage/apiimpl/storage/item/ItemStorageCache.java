@@ -24,7 +24,7 @@ public class ItemStorageCache implements IItemStorageCache {
     }
 
     @Override
-    public synchronized void invalidate() {
+    public void invalidate() {
         storages.clear();
 
         network.getNodeGraph().all().stream()
@@ -57,7 +57,7 @@ public class ItemStorageCache implements IItemStorageCache {
     }
 
     @Override
-    public synchronized void add(@Nonnull ItemStack stack, int size, boolean rebuilding) {
+    public void add(@Nonnull ItemStack stack, int size, boolean rebuilding) {
         list.add(stack, size);
 
         if (!rebuilding) {
@@ -66,7 +66,7 @@ public class ItemStorageCache implements IItemStorageCache {
     }
 
     @Override
-    public synchronized void remove(@Nonnull ItemStack stack, int size) {
+    public void remove(@Nonnull ItemStack stack, int size) {
         if (list.remove(stack, size, !network.hasPattern(stack))) {
             network.sendItemStorageDeltaToClient(stack, -size);
         }
