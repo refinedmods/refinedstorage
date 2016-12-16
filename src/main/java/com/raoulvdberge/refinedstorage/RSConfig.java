@@ -46,6 +46,8 @@ public final class RSConfig {
     public int diskManipulatorUsage;
     public int readerUsage;
     public int writerUsage;
+    public int securityManagerUsage;
+    public int securityManagerPerSecurityCardUsage;
     //endregion
 
     //region Controller
@@ -149,6 +151,8 @@ public final class RSConfig {
         diskManipulatorUsage = config.getInt("diskManipulator", ENERGY, 3, 0, Integer.MAX_VALUE, "The energy used by Disk Manipulators");
         readerUsage = config.getInt("reader", ENERGY, 2, 0, Integer.MAX_VALUE, "The energy used by Readers");
         writerUsage = config.getInt("writer", ENERGY, 2, 0, Integer.MAX_VALUE, "The energy used by Writers");
+        securityManagerUsage = config.getInt("securityManager", ENERGY, 4, 0, Integer.MAX_VALUE, "The base energy used by Security Managers");
+        securityManagerPerSecurityCardUsage = config.getInt("securityManagerPerSecurityCard", ENERGY, 10, 0, Integer.MAX_VALUE, "The additional energy used by Security Cards in Security Managers");
         //endregion
 
         //region Controller

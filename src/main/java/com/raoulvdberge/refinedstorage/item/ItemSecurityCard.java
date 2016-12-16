@@ -21,6 +21,8 @@ public class ItemSecurityCard extends ItemBase {
 
     public ItemSecurityCard() {
         super("security_card");
+
+        setMaxStackSize(1);
     }
 
     @Override
