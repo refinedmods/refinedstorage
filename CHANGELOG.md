@@ -46,6 +46,14 @@
 - Removed IC2 support (raoulvdberge)
 - Removed MCMultiPart support (will be re-added as soon as MCMultiPart for MC 1.11 is available) (raoulvdberge)
 
+### 1.2.12
+- Fixed TPS lag on very large crafting tasks (way2muchnoise)
+- Fixed not being able to use autocrafting on some EnderIO items (way2muchnoise)
+- Fixed not being able to start autocrafting for storage disks (raoulvdberge)
+- Fixed oredict button not having the correct position on a small resolution (raoulvdberge)
+- Fixed Constructor not using Crafting Upgrade when in item dropping mode (InusualZ)
+- Updated French translation (Leventovitch)
+
 ### 1.2.11
 - Made the Interface sideless, you can just insert or extract from any side (raoulvdberge)
 - The Grid now resizes based on screen size (max rows can be configured) (raoulvdberge, way2muchnoise)
