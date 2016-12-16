@@ -8,6 +8,7 @@
 - Fixed dupe bug when inserting bucket in Fluid Grid (raoulvdberge)
 - Fixed not being able to start autocrafting for storage disks (raoulvdberge)
 - Fixed oredict button not having the correct position on a small resolution (raoulvdberge)
+- Fixed Constructor not using Crafting Upgrade when in item dropping mode (InusualZ)
 - Updated French translation (Leventovitch)
 - Added regulator mode to Exporter (InusualZ)
 
