@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.tile.TileRelay;
 import net.minecraft.block.state.IBlockState;
@@ -24,7 +23,7 @@ public class BlockRelay extends BlockNode {
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
-            player.openGui(RS.INSTANCE, RSGui.RELAY, world, pos.getX(), pos.getY(), pos.getZ());
+            tryOpenNetworkGui(RSGui.RELAY, player, world, pos, side);
         }
 
         return true;

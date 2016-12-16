@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.item.ItemBlockBase;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
@@ -56,9 +55,7 @@ public class BlockGrid extends BlockNode {
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (!world.isRemote) {
-            player.openGui(RS.INSTANCE, RSGui.GRID, world, pos.getX(), pos.getY(), pos.getZ());
-
+        if (!world.isRemote && tryOpenNetworkGui(RSGui.GRID, player, world, pos, side)) {
             ((TileGrid) world.getTileEntity(pos)).onOpened(player);
         }
 

@@ -9,6 +9,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.*;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementFluidStack;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementItemStack;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactory;
+import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkListener;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerFluids;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerItems;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerRedstone;
@@ -123,6 +124,7 @@ public class ProxyCommon {
         NetworkRegistry.INSTANCE.registerGuiHandler(RS.INSTANCE, new GuiHandler());
 
         MinecraftForge.EVENT_BUS.register(new ContainerListener());
+        MinecraftForge.EVENT_BUS.register(new NetworkListener());
 
         registerTile(TileController.class, "controller");
         registerTile(TileGrid.class, "grid");

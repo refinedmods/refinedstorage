@@ -9,6 +9,7 @@ import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterCha
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -37,6 +38,13 @@ public interface INetworkMaster {
      * @return if this network is able to run (usually corresponds to the redstone configuration)
      */
     boolean canRun();
+
+    /**
+     * @param permission the permission to check for
+     * @param player     the player to check that permission for
+     * @return whether the player has the given permission
+     */
+    boolean hasPermission(Permission permission, EntityPlayer player);
 
     /**
      * @return a graph of connected nodes to this network

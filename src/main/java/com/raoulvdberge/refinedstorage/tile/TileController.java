@@ -14,6 +14,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeGraph;
+import com.raoulvdberge.refinedstorage.api.network.Permission;
 import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
@@ -210,6 +211,11 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
     @Override
     public boolean canRun() {
         return energy.getEnergyStored() > 0 && redstoneMode.isEnabled(getWorld(), pos);
+    }
+
+    @Override
+    public boolean hasPermission(Permission permission, EntityPlayer player) {
+        return true;
     }
 
     @Override
@@ -466,7 +472,7 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
 
     @Override
     public void sendItemStorageToClient(EntityPlayerMP player) {
-        RS.INSTANCE.network.sendTo(new MessageGridItemUpdate(this), player);
+        RS.INSTANCE.network.sendTo(new MessageGridItemUpdate(this, hasPermission(Permission.AUTOCRAFT, player)), player);
     }
 
     @Override
@@ -485,7 +491,7 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
 
     @Override
     public void sendFluidStorageToClient(EntityPlayerMP player) {
-        RS.INSTANCE.network.sendTo(new MessageGridFluidUpdate(this), player);
+        RS.INSTANCE.network.sendTo(new MessageGridFluidUpdate(this, hasPermission(Permission.AUTOCRAFT, player)), player);
     }
 
     @Override

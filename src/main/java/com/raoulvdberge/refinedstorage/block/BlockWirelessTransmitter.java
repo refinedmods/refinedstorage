@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.tile.TileWirelessTransmitter;
 import net.minecraft.block.Block;
@@ -36,7 +35,7 @@ public class BlockWirelessTransmitter extends BlockNode {
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
-            player.openGui(RS.INSTANCE, RSGui.WIRELESS_TRANSMITTER, world, pos.getX(), pos.getY(), pos.getZ());
+            tryOpenNetworkGui(RSGui.WIRELESS_TRANSMITTER, player, world, pos, side);
         }
 
         return true;

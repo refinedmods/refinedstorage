@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.tile.TileImporter;
 import net.minecraft.block.state.IBlockState;
@@ -91,7 +90,7 @@ public class BlockImporter extends BlockCable {
         }
 
         if (!world.isRemote) {
-            player.openGui(RS.INSTANCE, RSGui.IMPORTER, world, pos.getX(), pos.getY(), pos.getZ());
+            tryOpenNetworkGui(RSGui.IMPORTER, player, world, pos, side);
         }
 
         return true;

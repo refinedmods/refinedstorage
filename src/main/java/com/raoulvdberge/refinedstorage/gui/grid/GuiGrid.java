@@ -50,6 +50,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     public static final ListMultimap<Fluid, GridStackFluid> FLUIDS = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
 
     public static List<IGridStack> STACKS = new ArrayList<>();
+    public static boolean CAN_CRAFT;
 
     private static boolean markedForSorting;
 
@@ -515,7 +516,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
                 if (grid.getType() != EnumGridType.FLUID && (held.isEmpty() || (!held.isEmpty() && clickedButton == 2))) {
                     GridStackItem stack = (GridStackItem) STACKS.get(slotNumber);
 
-                    if (stack.isCraftable() && (stack.doesDisplayCraftText() || (GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown()))) {
+                    if (stack.isCraftable() && (stack.doesDisplayCraftText() || (GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown())) && CAN_CRAFT) {
                         FMLCommonHandler.instance().showGuiScreen(new GuiCraftingStart(this, ((ContainerGrid) this.inventorySlots).getPlayer(), stack));
                     } else {
                         int flags = 0;

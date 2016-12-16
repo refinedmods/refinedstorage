@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.Permission;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
@@ -31,7 +32,7 @@ public class ItemGridHandler implements IItemGridHandler {
     public void onExtract(int hash, int flags, EntityPlayerMP player) {
         ItemStack item = network.getItemStorageCache().getList().get(hash);
 
-        if (item == null) {
+        if (item == null || !network.hasPermission(Permission.EXTRACT, player)) {
             return;
         }
 
@@ -99,6 +100,10 @@ public class ItemGridHandler implements IItemGridHandler {
 
     @Override
     public ItemStack onInsert(EntityPlayerMP player, ItemStack stack) {
+        if (!network.hasPermission(Permission.INSERT, player)) {
+            return stack;
+        }
+
         ItemStack remainder = network.insertItem(stack, stack.getCount(), false);
 
         INetworkItem networkItem = network.getNetworkItemHandler().getItem(player);
@@ -112,7 +117,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
     @Override
     public void onInsertHeldItem(EntityPlayerMP player, boolean single) {
-        if (player.inventory.getItemStack().isEmpty()) {
+        if (player.inventory.getItemStack().isEmpty() || !network.hasPermission(Permission.INSERT, player)) {
             return;
         }
 
@@ -144,6 +149,10 @@ public class ItemGridHandler implements IItemGridHandler {
 
     @Override
     public void onCraftingPreviewRequested(EntityPlayerMP player, int hash, int quantity) {
+        if (!network.hasPermission(Permission.AUTOCRAFT, player)) {
+            return;
+        }
+
         IStackList<ItemStack> cache = API.instance().createItemStackList();
 
         for (ICraftingPattern pattern : network.getPatterns()) {
@@ -170,8 +179,8 @@ public class ItemGridHandler implements IItemGridHandler {
     }
 
     @Override
-    public void onCraftingRequested(ItemStack stack, int quantity) {
-        if (quantity <= 0) {
+    public void onCraftingRequested(EntityPlayerMP player, ItemStack stack, int quantity) {
+        if (quantity <= 0 || !network.hasPermission(Permission.AUTOCRAFT, player)) {
             return;
         }
 
@@ -188,6 +197,10 @@ public class ItemGridHandler implements IItemGridHandler {
 
     @Override
     public void onCraftingCancelRequested(EntityPlayerMP player, int id) {
+        if (!network.hasPermission(Permission.AUTOCRAFT, player)) {
+            return;
+        }
+
         if (id >= 0 && id < network.getCraftingTasks().size()) {
             network.cancelCraftingTask(network.getCraftingTasks().get(id));
         } else if (id == -1) {

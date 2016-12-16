@@ -15,17 +15,21 @@ import java.util.List;
 
 public class MessageGridFluidUpdate implements IMessage, IMessageHandler<MessageGridFluidUpdate, IMessage> {
     private INetworkMaster network;
+    private boolean canCraft;
     private List<GridStackFluid> stacks = new ArrayList<>();
 
     public MessageGridFluidUpdate() {
     }
 
-    public MessageGridFluidUpdate(INetworkMaster network) {
+    public MessageGridFluidUpdate(INetworkMaster network, boolean canCraft) {
         this.network = network;
+        this.canCraft = canCraft;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
+        canCraft = buf.readBoolean();
+
         int items = buf.readInt();
 
         for (int i = 0; i < items; ++i) {
@@ -35,6 +39,8 @@ public class MessageGridFluidUpdate implements IMessage, IMessageHandler<Message
 
     @Override
     public void toBytes(ByteBuf buf) {
+        buf.writeBoolean(canCraft);
+
         buf.writeInt(network.getFluidStorageCache().getList().getStacks().size());
 
         for (FluidStack stack : network.getFluidStorageCache().getList().getStacks()) {
@@ -44,6 +50,8 @@ public class MessageGridFluidUpdate implements IMessage, IMessageHandler<Message
 
     @Override
     public IMessage onMessage(MessageGridFluidUpdate message, MessageContext ctx) {
+        GuiGrid.CAN_CRAFT = message.canCraft;
+
         GuiGrid.FLUIDS.clear();
 
         for (GridStackFluid item : message.stacks) {

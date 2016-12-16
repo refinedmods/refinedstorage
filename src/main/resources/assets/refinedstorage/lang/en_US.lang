@@ -78,6 +78,8 @@ misc.refinedstorage:pattern.outputs=Outputs
 misc.refinedstorage:pattern.invalid=Invalid pattern
 misc.refinedstorage:pattern.oredict=Uses ore dictionary
 
+misc.refinedstorage:security.no_permission=You have no permission to perform that action.
+
 misc.refinedstorage:start=Start
 misc.refinedstorage:clear=Clear
 misc.refinedstorage:set=Set

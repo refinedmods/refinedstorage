@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.item.ItemBlockController;
@@ -79,7 +78,7 @@ public class BlockController extends BlockBase {
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
-            player.openGui(RS.INSTANCE, RSGui.CONTROLLER, world, pos.getX(), pos.getY(), pos.getZ());
+            tryOpenNetworkGui(RSGui.CONTROLLER, player, world, pos, side);
         }
 
         return true;

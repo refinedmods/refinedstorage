@@ -31,6 +31,9 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -297,6 +300,10 @@ public final class RSUtils {
 
     public static FluidStack copyStack(@Nullable FluidStack stack) {
         return stack == null ? null : stack.copy();
+    }
+
+    public static void sendNoPermissionMessage(EntityPlayer player) {
+        player.sendMessage(new TextComponentTranslation("misc.refinedstorage:security.no_permission").setStyle(new Style().setColor(TextFormatting.RED)));
     }
 
     public static String formatQuantity(int qty) {

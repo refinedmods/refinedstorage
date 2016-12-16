@@ -1,7 +1,11 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.RSUtils;
+import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
+import com.raoulvdberge.refinedstorage.api.network.Permission;
 import com.raoulvdberge.refinedstorage.item.ItemBlockBase;
+import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -126,6 +130,32 @@ public abstract class BlockBase extends Block {
         super.harvestBlock(world, player, pos, state, tile, stack);
 
         world.setBlockToAir(pos);
+    }
+
+    protected boolean tryOpenNetworkGui(int guiId, EntityPlayer player, World world, BlockPos pos, EnumFacing facing) {
+        return tryOpenNetworkGui(guiId, player, world, pos, facing, Permission.MODIFY);
+    }
+
+    protected boolean tryOpenNetworkGui(int guiId, EntityPlayer player, World world, BlockPos pos, EnumFacing facing, Permission... permissions) {
+        TileEntity tile = world.getTileEntity(pos);
+
+        if (tile != null && tile.hasCapability(CapabilityNetworkNode.NETWORK_NODE_CAPABILITY, facing)) {
+            INetworkNode node = CapabilityNetworkNode.NETWORK_NODE_CAPABILITY.cast(tile.getCapability(CapabilityNetworkNode.NETWORK_NODE_CAPABILITY, facing));
+
+            if (node.getNetwork() != null) {
+                for (Permission permission : permissions) {
+                    if (!node.getNetwork().hasPermission(permission, player)) {
+                        RSUtils.sendNoPermissionMessage(player);
+
+                        return false;
+                    }
+                }
+            }
+        }
+
+        player.openGui(RS.INSTANCE, guiId, world, pos.getX(), pos.getY(), pos.getZ());
+
+        return true;
     }
 
     public EnumPlacementType getPlacementType() {

@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.tile.TileConstructor;
 import net.minecraft.block.state.IBlockState;
@@ -80,7 +79,7 @@ public class BlockConstructor extends BlockCable {
         }
 
         if (!world.isRemote) {
-            player.openGui(RS.INSTANCE, RSGui.CONSTRUCTOR, world, pos.getX(), pos.getY(), pos.getZ());
+            tryOpenNetworkGui(RSGui.CONSTRUCTOR, player, world, pos, side);
         }
 
         return true;

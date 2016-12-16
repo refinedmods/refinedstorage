@@ -17,17 +17,21 @@ import java.util.List;
 
 public class MessageGridItemUpdate implements IMessage, IMessageHandler<MessageGridItemUpdate, IMessage> {
     private INetworkMaster network;
+    private boolean canCraft;
     private List<GridStackItem> stacks = new ArrayList<>();
 
     public MessageGridItemUpdate() {
     }
 
-    public MessageGridItemUpdate(INetworkMaster network) {
+    public MessageGridItemUpdate(INetworkMaster network, boolean canCraft) {
         this.network = network;
+        this.canCraft = canCraft;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
+        canCraft = buf.readBoolean();
+
         int items = buf.readInt();
 
         for (int i = 0; i < items; ++i) {
@@ -37,6 +41,8 @@ public class MessageGridItemUpdate implements IMessage, IMessageHandler<MessageG
 
     @Override
     public void toBytes(ByteBuf buf) {
+        buf.writeBoolean(canCraft);
+
         int size = network.getItemStorageCache().getList().getStacks().size();
 
         for (ICraftingPattern pattern : network.getPatterns()) {
@@ -60,6 +66,8 @@ public class MessageGridItemUpdate implements IMessage, IMessageHandler<MessageG
 
     @Override
     public IMessage onMessage(MessageGridItemUpdate message, MessageContext ctx) {
+        GuiGrid.CAN_CRAFT = message.canCraft;
+
         GuiGrid.ITEMS.clear();
 
         for (GridStackItem item : message.stacks) {

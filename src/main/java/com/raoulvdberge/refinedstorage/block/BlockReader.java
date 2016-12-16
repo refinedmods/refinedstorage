@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.tile.TileReader;
@@ -32,9 +31,7 @@ public class BlockReader extends BlockCable {
             return false;
         }
 
-        if (!world.isRemote) {
-            player.openGui(RS.INSTANCE, RSGui.READER_WRITER, world, pos.getX(), pos.getY(), pos.getZ());
-
+        if (!world.isRemote && tryOpenNetworkGui(RSGui.READER_WRITER, player, world, pos, side)) {
             ((TileReader) world.getTileEntity(pos)).onOpened(player);
         }
 

@@ -2,7 +2,9 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.item;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSGui;
+import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.Permission;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessCraftingMonitor;
@@ -33,6 +35,12 @@ public class NetworkItemWirelessCraftingMonitor implements INetworkItem {
     @Override
     public boolean onOpen(INetworkMaster network, EntityPlayer player, World controllerWorld, EnumHand hand) {
         if (RS.INSTANCE.config.wirelessCraftingMonitorUsesEnergy && stack.getItemDamage() != ItemWirelessCraftingMonitor.TYPE_CREATIVE && stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored() <= RS.INSTANCE.config.wirelessCraftingMonitorOpenUsage) {
+            return false;
+        }
+
+        if (!network.hasPermission(Permission.AUTOCRAFT, player)) {
+            RSUtils.sendNoPermissionMessage(player);
+
             return false;
         }
 

@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.RSUtils;
+import com.raoulvdberge.refinedstorage.api.network.Permission;
 import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -387,6 +388,10 @@ public class TileGrid extends TileNode implements IGrid {
     }
 
     public void onRecipeTransfer(EntityPlayer player, ItemStack[][] recipe) {
+        if (hasNetwork() && getType() == EnumGridType.CRAFTING && !network.hasPermission(Permission.EXTRACT, player)) {
+            return;
+        }
+
         // First try to empty the crafting matrix
         for (int i = 0; i < matrix.getSizeInventory(); ++i) {
             ItemStack slot = matrix.getStackInSlot(i);

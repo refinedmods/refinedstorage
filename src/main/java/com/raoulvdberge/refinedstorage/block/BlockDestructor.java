@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.tile.TileDestructor;
@@ -37,7 +36,7 @@ public class BlockDestructor extends BlockCable {
         }
 
         if (!world.isRemote) {
-            player.openGui(RS.INSTANCE, RSGui.DESTRUCTOR, world, pos.getX(), pos.getY(), pos.getZ());
+            tryOpenNetworkGui(RSGui.DESTRUCTOR, player, world, pos, side);
         }
 
         return true;

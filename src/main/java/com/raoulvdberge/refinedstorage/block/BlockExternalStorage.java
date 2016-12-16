@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.tile.externalstorage.TileExternalStorage;
 import net.minecraft.block.Block;
@@ -74,7 +73,7 @@ public class BlockExternalStorage extends BlockCable {
         }
 
         if (!world.isRemote) {
-            player.openGui(RS.INSTANCE, RSGui.EXTERNAL_STORAGE, world, pos.getX(), pos.getY(), pos.getZ());
+            tryOpenNetworkGui(RSGui.EXTERNAL_STORAGE, player, world, pos, side);
         }
 
         return true;

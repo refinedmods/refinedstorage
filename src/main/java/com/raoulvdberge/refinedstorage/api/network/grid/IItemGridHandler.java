@@ -52,10 +52,11 @@ public interface IItemGridHandler {
     /**
      * Called when a player requested crafting for an item.
      *
+     * @param player   the player that is requesting the crafting
      * @param stack    the {@link ItemStack} to request a craft for
      * @param quantity the amount of that item that has to be crafted
      */
-    void onCraftingRequested(ItemStack stack, int quantity);
+    void onCraftingRequested(EntityPlayerMP player, ItemStack stack, int quantity);
 
     /**
      * Called when a player wants to cancel a crafting task.

@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.tile.TileCrafter;
 import net.minecraft.block.state.IBlockState;
@@ -24,7 +23,7 @@ public class BlockCrafter extends BlockNode {
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
-            player.openGui(RS.INSTANCE, RSGui.CRAFTER, world, pos.getX(), pos.getY(), pos.getZ());
+            tryOpenNetworkGui(RSGui.CRAFTER, player, world, pos, side);
         }
 
         return true;

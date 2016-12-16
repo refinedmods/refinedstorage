@@ -10,7 +10,7 @@ public interface INetworkItemProvider {
     /**
      * Creates a network item for the given item stack.
      *
-     * @param handler the network item handlelr
+     * @param handler the network item handler
      * @param player  the player
      * @param stack   the stack
      * @return the network item
