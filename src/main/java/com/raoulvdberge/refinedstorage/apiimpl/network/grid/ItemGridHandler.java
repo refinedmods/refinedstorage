@@ -29,7 +29,7 @@ public class ItemGridHandler implements IItemGridHandler {
     }
 
     @Override
-    public void onExtract(int hash, int flags, EntityPlayerMP player) {
+    public void onExtract(EntityPlayerMP player, int hash, int flags) {
         ItemStack item = network.getItemStorageCache().getList().get(hash);
 
         if (item == null || !network.hasPermission(Permission.EXTRACT, player)) {

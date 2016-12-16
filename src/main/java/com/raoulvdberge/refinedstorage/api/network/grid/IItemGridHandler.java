@@ -17,11 +17,11 @@ public interface IItemGridHandler {
     /**
      * Called when a player tries to extract an item from the grid.
      *
+     * @param player the player that is attempting the extraction
      * @param hash   the hash of the item we're trying to extract, see {@link IRSAPI#getItemStackHashCode(ItemStack)}
      * @param flags  how we are extracting
-     * @param player the player that is attempting the extraction
      */
-    void onExtract(int hash, int flags, EntityPlayerMP player);
+    void onExtract(EntityPlayerMP player, int hash, int flags);
 
     /**
      * Called when a player tries to insert an item in the grid.

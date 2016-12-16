@@ -39,7 +39,7 @@ public class MessageGridFluidPull extends MessageHandlerPlayerToServer<MessageGr
             IFluidGridHandler handler = ((ContainerGrid) container).getGrid().getFluidHandler();
 
             if (handler != null) {
-                handler.onExtract(message.hash, message.shift, player);
+                handler.onExtract(player, message.hash, message.shift);
             }
         }
     }
