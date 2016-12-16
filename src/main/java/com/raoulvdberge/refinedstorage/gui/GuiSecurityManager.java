@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.gui;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.api.network.Permission;
+import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.container.ContainerSecurityManager;
 import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.item.ItemSecurityCard;
@@ -33,8 +33,9 @@ public class GuiSecurityManager extends GuiBase {
         permissions[0] = addCheckBox(x + 7, y + 93, I18n.format("gui.refinedstorage:security_manager.permission.0"), false);
         permissions[1] = addCheckBox(permissions[0].xPosition, permissions[0].yPosition + padding, I18n.format("gui.refinedstorage:security_manager.permission.1"), false);
         permissions[2] = addCheckBox(permissions[1].xPosition, permissions[1].yPosition + padding, I18n.format("gui.refinedstorage:security_manager.permission.2"), false);
-        permissions[3] = addCheckBox(permissions[0].xPosition + 80, permissions[0].yPosition, I18n.format("gui.refinedstorage:security_manager.permission.3"), false);
+        permissions[3] = addCheckBox(permissions[0].xPosition + 90, permissions[0].yPosition, I18n.format("gui.refinedstorage:security_manager.permission.3"), false);
         permissions[4] = addCheckBox(permissions[3].xPosition, permissions[3].yPosition + padding, I18n.format("gui.refinedstorage:security_manager.permission.4"), false);
+        permissions[5] = addCheckBox(permissions[4].xPosition, permissions[4].yPosition + padding, I18n.format("gui.refinedstorage:security_manager.permission.5"), false);
     }
 
     @Override

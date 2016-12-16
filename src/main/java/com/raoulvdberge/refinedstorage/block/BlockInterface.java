@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSGui;
-import com.raoulvdberge.refinedstorage.api.network.Permission;
+import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.tile.TileInterface;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;

@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.block;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
-import com.raoulvdberge.refinedstorage.api.network.Permission;
+import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.item.ItemBlockBase;
 import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
@@ -144,7 +144,7 @@ public abstract class BlockBase extends Block {
 
             if (node.getNetwork() != null) {
                 for (Permission permission : permissions) {
-                    if (!node.getNetwork().hasPermission(permission, player)) {
+                    if (!node.getNetwork().getSecurityManager().hasPermission(permission, player)) {
                         RSUtils.sendNoPermissionMessage(player);
 
                         return false;

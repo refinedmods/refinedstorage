@@ -6,10 +6,10 @@ import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
+import com.raoulvdberge.refinedstorage.api.network.security.ISecurityManager;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -40,16 +40,14 @@ public interface INetworkMaster {
     boolean canRun();
 
     /**
-     * @param permission the permission to check for
-     * @param player     the player to check that permission for
-     * @return whether the player has the given permission
-     */
-    boolean hasPermission(Permission permission, EntityPlayer player);
-
-    /**
      * @return a graph of connected nodes to this network
      */
     INetworkNodeGraph getNodeGraph();
+
+    /**
+     * @return the {@link ISecurityManager} of this network
+     */
+    ISecurityManager getSecurityManager();
 
     /**
      * @return the {@link IItemGridHandler} of this network

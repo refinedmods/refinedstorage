@@ -5,9 +5,9 @@ import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
-import com.raoulvdberge.refinedstorage.api.network.Permission;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
+import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.CraftingTask;
@@ -32,7 +32,7 @@ public class ItemGridHandler implements IItemGridHandler {
     public void onExtract(EntityPlayerMP player, int hash, int flags) {
         ItemStack item = network.getItemStorageCache().getList().get(hash);
 
-        if (item == null || !network.hasPermission(Permission.EXTRACT, player)) {
+        if (item == null || !network.getSecurityManager().hasPermission(Permission.EXTRACT, player)) {
             return;
         }
 
@@ -100,7 +100,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
     @Override
     public ItemStack onInsert(EntityPlayerMP player, ItemStack stack) {
-        if (!network.hasPermission(Permission.INSERT, player)) {
+        if (!network.getSecurityManager().hasPermission(Permission.INSERT, player)) {
             return stack;
         }
 
@@ -117,7 +117,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
     @Override
     public void onInsertHeldItem(EntityPlayerMP player, boolean single) {
-        if (player.inventory.getItemStack().isEmpty() || !network.hasPermission(Permission.INSERT, player)) {
+        if (player.inventory.getItemStack().isEmpty() || !network.getSecurityManager().hasPermission(Permission.INSERT, player)) {
             return;
         }
 
@@ -149,7 +149,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
     @Override
     public void onCraftingPreviewRequested(EntityPlayerMP player, int hash, int quantity) {
-        if (!network.hasPermission(Permission.AUTOCRAFT, player)) {
+        if (!network.getSecurityManager().hasPermission(Permission.AUTOCRAFTING, player)) {
             return;
         }
 
@@ -180,7 +180,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
     @Override
     public void onCraftingRequested(EntityPlayerMP player, ItemStack stack, int quantity) {
-        if (quantity <= 0 || !network.hasPermission(Permission.AUTOCRAFT, player)) {
+        if (quantity <= 0 || !network.getSecurityManager().hasPermission(Permission.AUTOCRAFTING, player)) {
             return;
         }
 
@@ -197,7 +197,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
     @Override
     public void onCraftingCancelRequested(EntityPlayerMP player, int id) {
-        if (!network.hasPermission(Permission.AUTOCRAFT, player)) {
+        if (!network.getSecurityManager().hasPermission(Permission.AUTOCRAFTING, player)) {
             return;
         }
 

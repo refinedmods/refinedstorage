@@ -14,7 +14,7 @@ public class ContainerSecurityManager extends ContainerBase {
         int y = 20;
 
         for (int i = 0; i < 9 * 2; ++i) {
-            addSlotToContainer(new SlotItemHandler(tile.getCards(), i, x, y));
+            addSlotToContainer(new SlotItemHandler(tile.getCardsItems(), i, x, y));
 
             if (((i + 1) % 9) == 0) {
                 x = 8;

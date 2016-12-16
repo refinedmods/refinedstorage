@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.api.network;
+package com.raoulvdberge.refinedstorage.api.network.security;
 
 /**
  * The various permissions a player can have in a network.
@@ -15,15 +15,19 @@ public enum Permission {
     /**
      * Whether the player can start, cancel or view an autocrafting task.
      */
-    AUTOCRAFT(2),
+    AUTOCRAFTING(2),
     /**
-     * Whether the player can open network GUIs and can place or break network blocks.
+     * Whether the player can open network GUIs.
      */
     MODIFY(3),
     /**
+     * Whether the player can add or remove network blocks.
+     */
+    BUILD(4),
+    /**
      * Whether the player can manage the security options for a network.
      */
-    SECURITY(4);
+    SECURITY(5);
 
     private final int id;
 

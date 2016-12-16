@@ -2,8 +2,8 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.grid;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
-import com.raoulvdberge.refinedstorage.api.network.Permission;
 import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
+import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryHelper;
@@ -27,7 +27,7 @@ public class FluidGridHandler implements IFluidGridHandler {
     public void onExtract(EntityPlayerMP player, int hash, boolean shift) {
         FluidStack stack = network.getFluidStorageCache().getList().get(hash);
 
-        if (stack == null || stack.amount < Fluid.BUCKET_VOLUME || !network.hasPermission(Permission.EXTRACT, player)) {
+        if (stack == null || stack.amount < Fluid.BUCKET_VOLUME || !network.getSecurityManager().hasPermission(Permission.EXTRACT, player)) {
             return;
         }
 
@@ -68,7 +68,7 @@ public class FluidGridHandler implements IFluidGridHandler {
     @Nullable
     @Override
     public ItemStack onInsert(EntityPlayerMP player, ItemStack container) {
-        if (!network.hasPermission(Permission.INSERT, player)) {
+        if (!network.getSecurityManager().hasPermission(Permission.INSERT, player)) {
             return container;
         }
 

@@ -14,12 +14,13 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeGraph;
-import com.raoulvdberge.refinedstorage.api.network.Permission;
 import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
+import com.raoulvdberge.refinedstorage.api.network.security.ISecurityManager;
+import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
@@ -30,6 +31,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeGraph;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.FluidGridHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.ItemGridHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemHandler;
+import com.raoulvdberge.refinedstorage.apiimpl.network.security.SecurityManager;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItem;
 import com.raoulvdberge.refinedstorage.block.BlockController;
@@ -162,6 +164,8 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
 
     private INetworkNodeGraph nodeGraph = new NetworkNodeGraph(this);
 
+    private ISecurityManager securityManager = new SecurityManager(this);
+
     private IStorageCache<ItemStack> itemStorage = new StorageCacheItem(this);
     private IStorageCache<FluidStack> fluidStorage = new StorageCacheFluid(this);
 
@@ -214,13 +218,13 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
     }
 
     @Override
-    public boolean hasPermission(Permission permission, EntityPlayer player) {
-        return true;
+    public INetworkNodeGraph getNodeGraph() {
+        return nodeGraph;
     }
 
     @Override
-    public INetworkNodeGraph getNodeGraph() {
-        return nodeGraph;
+    public ISecurityManager getSecurityManager() {
+        return securityManager;
     }
 
     @Override
@@ -308,6 +312,7 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
                 couldRun = canRun();
 
                 nodeGraph.rebuild();
+                securityManager.rebuild();
             }
 
             if (getEnergyScaledForDisplay() != lastEnergyDisplay) {
@@ -472,7 +477,7 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
 
     @Override
     public void sendItemStorageToClient(EntityPlayerMP player) {
-        RS.INSTANCE.network.sendTo(new MessageGridItemUpdate(this, hasPermission(Permission.AUTOCRAFT, player)), player);
+        RS.INSTANCE.network.sendTo(new MessageGridItemUpdate(this, securityManager.hasPermission(Permission.AUTOCRAFTING, player)), player);
     }
 
     @Override
@@ -491,7 +496,7 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
 
     @Override
     public void sendFluidStorageToClient(EntityPlayerMP player) {
-        RS.INSTANCE.network.sendTo(new MessageGridFluidUpdate(this, hasPermission(Permission.AUTOCRAFT, player)), player);
+        RS.INSTANCE.network.sendTo(new MessageGridFluidUpdate(this, securityManager.hasPermission(Permission.AUTOCRAFTING, player)), player);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSGui;
-import com.raoulvdberge.refinedstorage.api.network.Permission;
+import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,7 +23,7 @@ public class BlockCraftingMonitor extends BlockNode {
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (!world.isRemote && tryOpenNetworkGui(RSGui.CRAFTING_MONITOR, player, world, pos, side, Permission.MODIFY, Permission.AUTOCRAFT)) {
+        if (!world.isRemote && tryOpenNetworkGui(RSGui.CRAFTING_MONITOR, player, world, pos, side, Permission.MODIFY, Permission.AUTOCRAFTING)) {
             ((TileCraftingMonitor) world.getTileEntity(pos)).onOpened(player);
         }
 

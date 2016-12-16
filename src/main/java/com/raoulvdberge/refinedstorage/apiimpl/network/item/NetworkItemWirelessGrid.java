@@ -4,9 +4,9 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
-import com.raoulvdberge.refinedstorage.api.network.Permission;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
+import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessGrid;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -38,7 +38,7 @@ public class NetworkItemWirelessGrid implements INetworkItem {
             return false;
         }
 
-        if (!network.hasPermission(Permission.MODIFY, player)) {
+        if (!network.getSecurityManager().hasPermission(Permission.MODIFY, player)) {
             RSUtils.sendNoPermissionMessage(player);
 
             return false;
