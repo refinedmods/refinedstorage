@@ -26,7 +26,7 @@ public class ContainerSecurityManager extends ContainerBase {
 
         addSlotToContainer(new SlotItemHandler(tile.getEditCard(), 0, 80, 70));
 
-        addPlayerInventory(8, 127);
+        addPlayerInventory(8, 152);
     }
 
     @Override

@@ -58,6 +58,16 @@ gui.refinedstorage:reader=Reader
 gui.refinedstorage:writer=Writer
 gui.refinedstorage:security_manager=Security Manager
 gui.refinedstorage:security_manager.configure=Configure
+gui.refinedstorage:security_manager.permission.0=Insert
+gui.refinedstorage:security_manager.permission.0.tooltip=Inserting items to the network
+gui.refinedstorage:security_manager.permission.1=Extract
+gui.refinedstorage:security_manager.permission.1.tooltip=Extracting items from the network
+gui.refinedstorage:security_manager.permission.2=Autocraft
+gui.refinedstorage:security_manager.permission.2.tooltip=Starting and cancelling crafting tasks
+gui.refinedstorage:security_manager.permission.3=Modify
+gui.refinedstorage:security_manager.permission.3.tooltip=Opening GUIs, adding or removing blocks from the network
+gui.refinedstorage:security_manager.permission.4=Security
+gui.refinedstorage:security_manager.permission.4.tooltip=Ability to change security options
 
 misc.refinedstorage:energy_stored=%d / %d RS
 misc.refinedstorage:energy_usage=Usage: %d RS/t

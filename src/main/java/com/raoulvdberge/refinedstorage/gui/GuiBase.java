@@ -16,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
+import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.items.SlotItemHandler;
 import org.lwjgl.input.Mouse;
 
@@ -298,7 +299,7 @@ public abstract class GuiBase extends GuiContainer {
 
     public void drawTooltip(int x, int y, List<String> lines) {
         GlStateManager.disableLighting();
-        drawHoveringText(lines, x, y);
+        GuiUtils.drawHoveringText(null, lines, x, y, width - guiLeft, height, -1, fontRendererObj);
         GlStateManager.enableLighting();
     }
 
