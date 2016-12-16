@@ -143,7 +143,7 @@ public class GuiHandler implements IGuiHandler {
             case RSGui.READER_WRITER:
                 return new GuiReaderWriter((ContainerReaderWriter) getContainer(ID, player, tile), (IReaderWriter) tile);
             case RSGui.SECURITY_MANAGER:
-                return new GuiSecurityManager((ContainerSecurityManager) getContainer(ID, player, tile));
+                return new GuiSecurityManager((ContainerSecurityManager) getContainer(ID, player, tile), (TileSecurityManager) tile);
             default:
                 return null;
         }
