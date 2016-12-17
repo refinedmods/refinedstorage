@@ -83,7 +83,7 @@ public interface IRSAPI {
     ICraftingMonitorElementList createCraftingMonitorElementList();
 
     /**
-     * Let's the neighbors of a node know that there is a node placed at the given position.
+     * Notifies the neighbors of a node that there is a node placed at the given position.
      *
      * @param world the world
      * @param pos   the position of the node
