@@ -11,6 +11,8 @@ import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRegistry;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
@@ -74,8 +76,19 @@ public interface IRSAPI {
     @Nonnull
     IStackList<FluidStack> createFluidStackList();
 
+    /**
+     * @return an empty crafting monitor element list
+     */
     @Nonnull
     ICraftingMonitorElementList createCraftingMonitorElementList();
+
+    /**
+     * Let's the neighbors of a node know that there is a node placed at the given position.
+     *
+     * @param world the world
+     * @param pos   the position of the node
+     */
+    void discoverNode(World world, BlockPos pos);
 
     /**
      * @param stack the stack

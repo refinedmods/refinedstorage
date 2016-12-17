@@ -1,15 +1,12 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
-import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNode;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -31,19 +28,7 @@ public abstract class BlockNode extends BlockBase {
         super.onBlockPlacedBy(world, pos, state, placer, stack);
 
         if (!world.isRemote) {
-            for (EnumFacing facing : EnumFacing.VALUES) {
-                TileEntity tile = world.getTileEntity(pos.offset(facing));
-
-                if (tile != null && tile.hasCapability(CapabilityNetworkNode.NETWORK_NODE_CAPABILITY, facing.getOpposite())) {
-                    INetworkNode node = tile.getCapability(CapabilityNetworkNode.NETWORK_NODE_CAPABILITY, facing.getOpposite());
-
-                    if (node.getNetwork() != null) {
-                        node.getNetwork().getNodeGraph().rebuild();
-
-                        break;
-                    }
-                }
-            }
+            API.instance().discoverNode(world, pos);
         }
     }
 

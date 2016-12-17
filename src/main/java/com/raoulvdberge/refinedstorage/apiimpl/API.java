@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftin
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElementRegistry;
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRegistry;
@@ -22,9 +23,12 @@ import com.raoulvdberge.refinedstorage.apiimpl.solderer.SoldererRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.util.Comparer;
 import com.raoulvdberge.refinedstorage.apiimpl.util.StackListFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.util.StackListItem;
+import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNode;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 
@@ -126,6 +130,23 @@ public class API implements IRSAPI {
     @Nonnull
     public ICraftingMonitorElementList createCraftingMonitorElementList() {
         return new CraftingMonitorElementList();
+    }
+
+    @Override
+    public void discoverNode(World world, BlockPos pos) {
+        for (EnumFacing facing : EnumFacing.VALUES) {
+            TileEntity tile = world.getTileEntity(pos.offset(facing));
+
+            if (tile != null && tile.hasCapability(CapabilityNetworkNode.NETWORK_NODE_CAPABILITY, facing.getOpposite())) {
+                INetworkNode node = tile.getCapability(CapabilityNetworkNode.NETWORK_NODE_CAPABILITY, facing.getOpposite());
+
+                if (node.getNetwork() != null) {
+                    node.getNetwork().getNodeGraph().rebuild();
+
+                    return;
+                }
+            }
+        }
     }
 
     @Override
