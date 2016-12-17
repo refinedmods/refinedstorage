@@ -5,7 +5,6 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
-import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
@@ -99,8 +98,8 @@ public class CraftingStepProcess extends CraftingStep {
     /**
      * Insert or simulate insertion of {@link ItemStack}s into an {@link IItemHandler}
      *
-     * @param dest   target {@link IItemHandler}
-     * @param stacks a {@link Deque} of {@link ItemStack}s
+     * @param dest     target {@link IItemHandler}
+     * @param stacks   a {@link Deque} of {@link ItemStack}s
      * @param simulate simulate or actually insert the {@link ItemStack}s
      * @return true when all can be inserted, false otherwise
      */

@@ -52,12 +52,12 @@ public class ModelDiskManipulator implements IModel {
         }
 
         return new BakedModelDiskManipulator(
-                baseModelConnected.bake(state, format, bakedTextureGetter),
-                baseModelDisconnected.bake(state, format, bakedTextureGetter),
-                diskModel.bake(state, format, bakedTextureGetter),
-                diskModelNearCapacity.bake(state, format, bakedTextureGetter),
-                diskModelFull.bake(state, format, bakedTextureGetter),
-                diskModelDisconnected.bake(state, format, bakedTextureGetter)
+            baseModelConnected.bake(state, format, bakedTextureGetter),
+            baseModelDisconnected.bake(state, format, bakedTextureGetter),
+            diskModel.bake(state, format, bakedTextureGetter),
+            diskModelNearCapacity.bake(state, format, bakedTextureGetter),
+            diskModelFull.bake(state, format, bakedTextureGetter),
+            diskModelDisconnected.bake(state, format, bakedTextureGetter)
         );
     }
 

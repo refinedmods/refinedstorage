@@ -89,7 +89,7 @@ public class StorageFluidExternal implements IStorage<FluidStack> {
         if (getAccessType() == AccessType.INSERT) {
             return 0;
         }
-        
+
         return remainder == null ? size : (size - remainder.amount);
     }
 

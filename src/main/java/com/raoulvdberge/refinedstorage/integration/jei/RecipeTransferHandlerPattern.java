@@ -31,7 +31,7 @@ public class RecipeTransferHandlerPattern implements IRecipeTransferHandler<Cont
                 if (guiIngredient != null && guiIngredient.getDisplayedIngredient() != null) {
                     ItemStack ingredient = guiIngredient.getDisplayedIngredient().copy();
                     if (guiIngredient.isInput()) {
-                       inputs.add(ingredient);
+                        inputs.add(ingredient);
                     } else {
                         outputs.add(ingredient);
                     }

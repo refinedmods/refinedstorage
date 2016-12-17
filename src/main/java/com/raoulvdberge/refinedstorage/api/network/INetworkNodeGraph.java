@@ -7,7 +7,6 @@ import java.util.List;
  */
 public interface INetworkNodeGraph {
     /**
-    /**
      * Rebuilds the network graph.
      */
     void rebuild();
@@ -16,13 +15,6 @@ public interface INetworkNodeGraph {
      * @return a list of all connected nodes
      */
     List<INetworkNode> all();
-
-    /**
-     * Replaces an old node with a new one.
-     *
-     * @param node the node to replace
-     */
-    void replace(INetworkNode node);
 
     /**
      * Disconnects and notifies all connected nodes.

@@ -1,11 +1,9 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network;
 
 import com.raoulvdberge.refinedstorage.RSBlocks;
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNeighborhoodAware;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeGraph;
-import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
 import com.raoulvdberge.refinedstorage.item.ItemBlockController;
 import com.raoulvdberge.refinedstorage.tile.TileController;
 import net.minecraft.block.state.IBlockState;
@@ -98,23 +96,6 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
     @Override
     public List<INetworkNode> all() {
         return nodes;
-    }
-
-    @Override
-    public void replace(INetworkNode node) {
-        nodes.remove(node);
-        nodes.add(node);
-
-        if (node instanceof ICraftingPatternContainer) {
-            controller.rebuildPatterns();
-        }
-
-        if (node instanceof IStorageProvider) {
-            controller.getItemStorageCache().invalidate();
-            controller.getFluidStorageCache().invalidate();
-        }
-
-        controller.getDataManager().sendParameterToWatchers(TileController.NODES);
     }
 
     @Override

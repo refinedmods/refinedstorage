@@ -22,7 +22,7 @@ public class ContainerExporter extends ContainerBase {
     public void initSlots() {
         this.inventorySlots.clear();
         this.inventoryItemStacks.clear();
-        
+
         for (int i = 0; i < 4; ++i) {
             addSlotToContainer(new SlotItemHandler(exporter.getUpgrades(), i, 187, 6 + (i * 18)));
         }

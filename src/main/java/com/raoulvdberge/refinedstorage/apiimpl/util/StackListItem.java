@@ -64,7 +64,7 @@ public class StackListItem implements IStackList<ItemStack> {
                 ItemStack removed = ItemHandlerHelper.copyStackWithSize(otherStack, Math.min(size, otherStack.getCount()));
                 this.removeTracker.add(removed);
 
-                boolean success = otherStack.getCount() - size  >= 0;
+                boolean success = otherStack.getCount() - size >= 0;
                 otherStack.shrink(size);
 
                 if (otherStack.isEmpty()) {
