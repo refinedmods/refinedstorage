@@ -45,4 +45,9 @@ public class BlockSecurityManager extends BlockNode {
 
         return true;
     }
+
+    @Override
+    public boolean hasConnectivityState() {
+        return true;
+    }
 }

@@ -3,7 +3,7 @@
   "defaults": {
     "model": "cube_all",
     "textures": {
-      "all": "refinedstorage:blocks/casing"
+      "all": "refinedstorage:blocks/machine_casing"
     }
   },
   "variants": {

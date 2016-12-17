@@ -163,4 +163,9 @@ public class TileSecurityManager extends TileNode implements ISecurityCardContai
     public IItemHandler getDrops() {
         return new CombinedInvWrapper(cards, editCard);
     }
+
+    @Override
+    public boolean hasConnectivityState() {
+        return true;
+    }
 }

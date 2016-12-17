@@ -12,6 +12,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
@@ -156,6 +157,25 @@ public abstract class BlockBase extends Block {
         player.openGui(RS.INSTANCE, guiId, world, pos.getX(), pos.getY(), pos.getZ());
 
         return true;
+    }
+
+    @Override
+    public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity) {
+        TileEntity tile = world.getTileEntity(pos);
+
+        if (tile != null && tile.hasCapability(CapabilityNetworkNode.NETWORK_NODE_CAPABILITY, null)) {
+            INetworkNode node = tile.getCapability(CapabilityNetworkNode.NETWORK_NODE_CAPABILITY, null);
+
+            if (node.getNetwork() != null) {
+                if (!(entity instanceof EntityPlayer)) {
+                    return false;
+                }
+
+                return node.getNetwork().getSecurityManager().hasPermission(Permission.BUILD, (EntityPlayer) entity);
+            }
+        }
+
+        return super.canEntityDestroy(state, world, pos, entity);
     }
 
     public EnumPlacementType getPlacementType() {
