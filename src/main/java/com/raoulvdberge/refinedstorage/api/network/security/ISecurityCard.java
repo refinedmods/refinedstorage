@@ -7,9 +7,9 @@ import java.util.UUID;
  */
 public interface ISecurityCard {
     /**
-     * @return the UUID that this security card is bound to
+     * @return the owner of this card
      */
-    UUID getBound();
+    UUID getOwner();
 
     /**
      * @param permission the permission to check for

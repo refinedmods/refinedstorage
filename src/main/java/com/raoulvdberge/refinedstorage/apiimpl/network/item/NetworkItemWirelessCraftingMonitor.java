@@ -38,7 +38,7 @@ public class NetworkItemWirelessCraftingMonitor implements INetworkItem {
             return false;
         }
 
-        if (!network.getSecurityManager().hasPermission(Permission.AUTOCRAFTING, player)) {
+        if (!network.getSecurityManager().hasPermission(Permission.MODIFY, player) || !network.getSecurityManager().hasPermission(Permission.AUTOCRAFTING, player)) {
             RSUtils.sendNoPermissionMessage(player);
 
             return false;

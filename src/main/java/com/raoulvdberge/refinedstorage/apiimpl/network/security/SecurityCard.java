@@ -8,11 +8,11 @@ import java.util.Map;
 import java.util.UUID;
 
 public class SecurityCard implements ISecurityCard {
-    private UUID bound;
+    private UUID owner;
     private Map<Permission, Boolean> permissions = new HashMap<>();
 
-    public SecurityCard(UUID bound) {
-        this.bound = bound;
+    public SecurityCard(UUID owner) {
+        this.owner = owner;
     }
 
     public Map<Permission, Boolean> getPermissions() {
@@ -20,8 +20,8 @@ public class SecurityCard implements ISecurityCard {
     }
 
     @Override
-    public UUID getBound() {
-        return bound;
+    public UUID getOwner() {
+        return owner;
     }
 
     @Override

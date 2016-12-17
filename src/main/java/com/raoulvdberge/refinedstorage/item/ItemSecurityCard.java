@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class ItemSecurityCard extends ItemBase {
-    private static final String NBT_BOUND = "Bound";
-    private static final String NBT_BOUND_NAME = "BoundName";
+    private static final String NBT_OWNER = "Owner";
+    private static final String NBT_OWNER_NAME = "OwnerName";
     private static final String NBT_PERMISSION = "Permission_%d";
 
     public ItemSecurityCard() {
@@ -32,17 +32,17 @@ public class ItemSecurityCard extends ItemBase {
         if (!world.isRemote) {
             stack.setTagCompound(new NBTTagCompound());
 
-            stack.getTagCompound().setString(NBT_BOUND, player.getGameProfile().getId().toString());
-            stack.getTagCompound().setString(NBT_BOUND_NAME, player.getGameProfile().getName());
+            stack.getTagCompound().setString(NBT_OWNER, player.getGameProfile().getId().toString());
+            stack.getTagCompound().setString(NBT_OWNER_NAME, player.getGameProfile().getName());
         }
 
         return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
     }
 
     @Nullable
-    public static UUID getBound(ItemStack stack) {
-        if (stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_BOUND)) {
-            return UUID.fromString(stack.getTagCompound().getString(NBT_BOUND));
+    public static UUID getOwner(ItemStack stack) {
+        if (stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_OWNER)) {
+            return UUID.fromString(stack.getTagCompound().getString(NBT_OWNER));
         }
 
         return null;
@@ -70,8 +70,8 @@ public class ItemSecurityCard extends ItemBase {
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
         super.addInformation(stack, player, tooltip, advanced);
 
-        if (stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_BOUND_NAME)) {
-            tooltip.add(I18n.format("item.refinedstorage:security_card.bound", stack.getTagCompound().getString(NBT_BOUND_NAME)));
+        if (stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_OWNER_NAME)) {
+            tooltip.add(I18n.format("item.refinedstorage:security_card.owner", stack.getTagCompound().getString(NBT_OWNER_NAME)));
         }
     }
 }

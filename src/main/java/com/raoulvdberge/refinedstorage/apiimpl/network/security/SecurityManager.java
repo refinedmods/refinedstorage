@@ -40,9 +40,9 @@ public class SecurityManager implements ISecurityManager {
         cards.clear();
 
         for (INetworkNode node : network.getNodeGraph().all()) {
-            if (node instanceof ISecurityCardContainer) {
+            if (node instanceof ISecurityCardContainer && node.canUpdate()) {
                 for (ISecurityCard card : ((ISecurityCardContainer) node).getCards()) {
-                    cards.put(card.getBound(), card);
+                    cards.put(card.getOwner(), card);
                 }
             }
         }
