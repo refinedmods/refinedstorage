@@ -92,7 +92,7 @@ public class ProxyCommon {
         if (IntegrationTesla.isLoaded()) {
             API.instance().getReaderWriterHandlerRegistry().add(ReaderWriterHandlerTesla.ID, ReaderWriterHandlerTesla::new);
         }
-        
+
         int id = 0;
 
         RS.INSTANCE.network.registerMessage(MessageTileDataParameter.class, MessageTileDataParameter.class, id++, Side.CLIENT);
@@ -731,6 +731,27 @@ public class ProxyCommon {
             " E ",
             'E', new ItemStack(RSItems.QUARTZ_ENRICHED_IRON),
             'P', new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC)
+        );
+
+        // Security Manager
+        GameRegistry.addShapedRecipe(new ItemStack(RSBlocks.SECURITY_MANAGER),
+            "ECE",
+            "CMC",
+            "ECE",
+            'E', new ItemStack(RSItems.QUARTZ_ENRICHED_IRON),
+            'P', new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
+            'M', new ItemStack(RSBlocks.MACHINE_CASING),
+            'C', new ItemStack(RSItems.NETWORK_CARD)
+        );
+
+        // Security Card
+        GameRegistry.addShapedRecipe(new ItemStack(RSItems.SECURITY_CARD),
+            "EEE",
+            "CAC",
+            "EEE",
+            'E', new ItemStack(RSItems.QUARTZ_ENRICHED_IRON),
+            'C', new ItemStack(RSItems.NETWORK_CARD),
+            'A', new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)
         );
     }
 
