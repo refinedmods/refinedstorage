@@ -89,9 +89,6 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         this.wasConnected = grid.isConnected();
 
         this.scrollbar = new Scrollbar(174, 20, 12, (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN || grid.getType() == EnumGridType.FLUID) ? 70 : 88);
-
-        this.konamiOffsetsX = new int[9 * getVisibleRows()];
-        this.konamiOffsetsY = new int[9 * getVisibleRows()];
     }
 
     @Override
@@ -109,6 +106,9 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         if (grid.getRedstoneModeConfig() != null) {
             addSideButton(new SideButtonRedstoneMode(this, grid.getRedstoneModeConfig()));
         }
+
+        this.konamiOffsetsX = new int[9 * getVisibleRows()];
+        this.konamiOffsetsY = new int[9 * getVisibleRows()];
 
         int sx = x + 80 + 1;
         int sy = y + 6 + 1;
