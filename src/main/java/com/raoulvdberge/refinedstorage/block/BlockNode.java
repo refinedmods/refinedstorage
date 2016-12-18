@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.tile.TileController;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
@@ -60,6 +61,10 @@ public abstract class BlockNode extends BlockBase {
 
                 if (tile instanceof TileNode && ((TileNode) tile).isConnected()) {
                     ((TileNode) tile).getNetwork().getNodeGraph().rebuild();
+
+                    break;
+                } else if (tile instanceof TileController) {
+                    ((TileController) tile).getNodeGraph().rebuild();
 
                     break;
                 }
