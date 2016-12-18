@@ -20,6 +20,11 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
     }
 
     @Override
+    public String getGuiTitle() {
+        return "gui.refinedstorage:wireless_crafting_monitor";
+    }
+
+    @Override
     public void onCancelled(EntityPlayerMP player, int id) {
         TileController controller = getController();
 

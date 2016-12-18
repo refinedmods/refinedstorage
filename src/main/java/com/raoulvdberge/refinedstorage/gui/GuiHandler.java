@@ -1,6 +1,8 @@
 package com.raoulvdberge.refinedstorage.gui;
 
 import com.raoulvdberge.refinedstorage.RSGui;
+import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemWirelessFluidGrid;
+import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemWirelessGrid;
 import com.raoulvdberge.refinedstorage.container.*;
 import com.raoulvdberge.refinedstorage.gui.grid.GridDisplayDummy;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
@@ -8,10 +10,13 @@ import com.raoulvdberge.refinedstorage.tile.*;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.WirelessCraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.externalstorage.TileExternalStorage;
+import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.WirelessFluidGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.WirelessGrid;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -75,7 +80,7 @@ public class GuiHandler implements IGuiHandler {
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         if (ID == RSGui.WIRELESS_GRID) {
-            return getWirelessGridContainer(player, x, y);
+            return getWirelessGridContainer(player, x, y, z);
         } else if (ID == RSGui.GRID_FILTER) {
             return getGridFilterContainer(player, x);
         } else if (ID == RSGui.WIRELESS_CRAFTING_MONITOR) {
@@ -97,7 +102,7 @@ public class GuiHandler implements IGuiHandler {
                 gui.inventorySlots = new ContainerGrid((TileGrid) tile, gui, player);
                 return gui;
             case RSGui.WIRELESS_GRID:
-                return getWirelessGridGui(player, x, y);
+                return getWirelessGridGui(player, x, y, z);
             case RSGui.DISK_DRIVE:
                 return new GuiStorage((ContainerDiskDrive) getContainer(ID, player, tile), (IStorageGui) tile, "gui/disk_drive.png");
             case RSGui.IMPORTER:
@@ -149,20 +154,29 @@ public class GuiHandler implements IGuiHandler {
         }
     }
 
-    private WirelessGrid getWirelessGrid(EntityPlayer player, int hand, int controllerDimension) {
-        return new WirelessGrid(controllerDimension, player.getHeldItem(EnumHand.values()[hand]));
+    private IGrid getWirelessGrid(EntityPlayer player, int hand, int controllerDimension, int type) {
+        ItemStack stack = player.getHeldItem(EnumHand.values()[hand]);
+
+        switch (type) {
+            case NetworkItemWirelessGrid.GRID_TYPE:
+                return new WirelessGrid(controllerDimension, stack);
+            case NetworkItemWirelessFluidGrid.GRID_TYPE:
+                return new WirelessFluidGrid(controllerDimension, stack);
+            default:
+                return null;
+        }
     }
 
-    private GuiGrid getWirelessGridGui(EntityPlayer player, int hand, int controllerDimension) {
-        WirelessGrid grid = getWirelessGrid(player, hand, controllerDimension);
+    private GuiGrid getWirelessGridGui(EntityPlayer player, int hand, int controllerDimension, int type) {
+        IGrid grid = getWirelessGrid(player, hand, controllerDimension, type);
 
         GuiGrid gui = new GuiGrid(null, grid);
         gui.inventorySlots = new ContainerGrid(grid, gui, player);
         return gui;
     }
 
-    private ContainerGrid getWirelessGridContainer(EntityPlayer player, int hand, int controllerDimension) {
-        return new ContainerGrid(getWirelessGrid(player, hand, controllerDimension), new GridDisplayDummy(), player);
+    private ContainerGrid getWirelessGridContainer(EntityPlayer player, int hand, int controllerDimension, int type) {
+        return new ContainerGrid(getWirelessGrid(player, hand, controllerDimension, type), new GridDisplayDummy(), player);
     }
 
     private WirelessCraftingMonitor getWirelessCraftingMonitor(EntityPlayer player, int hand, int controllerDimension) {

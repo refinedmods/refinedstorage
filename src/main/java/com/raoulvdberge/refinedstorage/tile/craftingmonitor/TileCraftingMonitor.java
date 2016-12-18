@@ -25,6 +25,11 @@ public class TileCraftingMonitor extends TileNode implements ICraftingMonitor {
     }
 
     @Override
+    public String getGuiTitle() {
+        return "gui.refinedstorage:crafting_monitor";
+    }
+
+    @Override
     public void onCancelled(EntityPlayerMP player, int id) {
         if (hasNetwork()) {
             network.getItemGridHandler().onCraftingCancelRequested(player, id);

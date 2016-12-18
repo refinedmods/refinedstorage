@@ -121,6 +121,7 @@ public class ProxyCommon {
         RS.INSTANCE.network.registerMessage(MessageReaderWriterChannelAdd.class, MessageReaderWriterChannelAdd.class, id++, Side.SERVER);
         RS.INSTANCE.network.registerMessage(MessageReaderWriterChannelRemove.class, MessageReaderWriterChannelRemove.class, id++, Side.SERVER);
         RS.INSTANCE.network.registerMessage(MessageSecurityManagerUpdate.class, MessageSecurityManagerUpdate.class, id++, Side.SERVER);
+        RS.INSTANCE.network.registerMessage(MessageWirelessFluidGridSettingsUpdate.class, MessageWirelessFluidGridSettingsUpdate.class, id++, Side.SERVER);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(RS.INSTANCE, new GuiHandler());
 
@@ -197,6 +198,8 @@ public class ProxyCommon {
         registerItem(RSItems.STORAGE_PART);
         registerItem(RSItems.FLUID_STORAGE_PART);
         registerItem(RSItems.WIRELESS_GRID);
+        registerItem(RSItems.WIRELESS_FLUID_GRID);
+        registerItem(RSItems.WIRELESS_CRAFTING_MONITOR);
         registerItem(RSItems.PROCESSOR);
         registerItem(RSItems.CORE);
         registerItem(RSItems.SILICON);
@@ -204,7 +207,6 @@ public class ProxyCommon {
         registerItem(RSItems.GRID_FILTER);
         registerItem(RSItems.NETWORK_CARD);
         registerItem(RSItems.WRENCH);
-        registerItem(RSItems.WIRELESS_CRAFTING_MONITOR);
         registerItem(RSItems.SECURITY_CARD);
 
         OreDictionary.registerOre("itemSilicon", RSItems.SILICON);
@@ -357,6 +359,17 @@ public class ProxyCommon {
             'E', new ItemStack(RSItems.QUARTZ_ENRICHED_IRON),
             'P', new ItemStack(Items.ENDER_PEARL),
             'G', new ItemStack(RSBlocks.GRID, 1, EnumGridType.NORMAL.getId()),
+            'A', new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)
+        );
+
+        // Wireless Fluid Grid
+        GameRegistry.addRecipe(new ItemStack(RSItems.WIRELESS_FLUID_GRID, 1, ItemWirelessFluidGrid.TYPE_NORMAL),
+            "EPE",
+            "EGE",
+            "EAE",
+            'E', new ItemStack(RSItems.QUARTZ_ENRICHED_IRON),
+            'P', new ItemStack(Items.ENDER_PEARL),
+            'G', new ItemStack(RSBlocks.GRID, 1, EnumGridType.FLUID.getId()),
             'A', new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)
         );
 

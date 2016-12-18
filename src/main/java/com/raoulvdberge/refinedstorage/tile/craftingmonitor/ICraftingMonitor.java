@@ -7,6 +7,8 @@ import net.minecraft.util.math.BlockPos;
 import javax.annotation.Nullable;
 
 public interface ICraftingMonitor {
+    String getGuiTitle();
+
     void onCancelled(EntityPlayerMP player, int id);
 
     TileDataParameter<Integer> getRedstoneModeParameter();

@@ -16,14 +16,14 @@ import net.minecraft.world.World;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
-public class NetworkItemWirelessGrid implements INetworkItem {
-    public static final int GRID_TYPE = 0;
+public class NetworkItemWirelessFluidGrid implements INetworkItem {
+    public static final int GRID_TYPE = 1;
 
     private INetworkItemHandler handler;
     private EntityPlayer player;
     private ItemStack stack;
 
-    public NetworkItemWirelessGrid(INetworkItemHandler handler, EntityPlayer player, ItemStack stack) {
+    public NetworkItemWirelessFluidGrid(INetworkItemHandler handler, EntityPlayer player, ItemStack stack) {
         this.handler = handler;
         this.player = player;
         this.stack = stack;
@@ -36,7 +36,7 @@ public class NetworkItemWirelessGrid implements INetworkItem {
 
     @Override
     public boolean onOpen(INetworkMaster network, EntityPlayer player, World controllerWorld, EnumHand hand) {
-        if (RS.INSTANCE.config.wirelessGridUsesEnergy && stack.getItemDamage() != ItemNetworkItem.TYPE_CREATIVE && stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored() <= RS.INSTANCE.config.wirelessGridOpenUsage) {
+        if (RS.INSTANCE.config.wirelessFluidGridUsesEnergy && stack.getItemDamage() != ItemNetworkItem.TYPE_CREATIVE && stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored() <= RS.INSTANCE.config.wirelessFluidGridOpenUsage) {
             return false;
         }
 
@@ -48,15 +48,15 @@ public class NetworkItemWirelessGrid implements INetworkItem {
 
         player.openGui(RS.INSTANCE, RSGui.WIRELESS_GRID, player.getEntityWorld(), hand.ordinal(), controllerWorld.provider.getDimension(), GRID_TYPE);
 
-        network.sendItemStorageToClient((EntityPlayerMP) player);
+        network.sendFluidStorageToClient((EntityPlayerMP) player);
 
-        drainEnergy(RS.INSTANCE.config.wirelessGridOpenUsage);
+        drainEnergy(RS.INSTANCE.config.wirelessFluidGridOpenUsage);
 
         return true;
     }
 
     public void drainEnergy(int energy) {
-        if (RS.INSTANCE.config.wirelessGridUsesEnergy && stack.getItemDamage() != ItemNetworkItem.TYPE_CREATIVE) {
+        if (RS.INSTANCE.config.wirelessFluidGridUsesEnergy && stack.getItemDamage() != ItemNetworkItem.TYPE_CREATIVE) {
             IEnergyStorage energyStorage = stack.getCapability(CapabilityEnergy.ENERGY, null);
 
             energyStorage.extractEnergy(energy, false);

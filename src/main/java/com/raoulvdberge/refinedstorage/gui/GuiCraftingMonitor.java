@@ -107,7 +107,7 @@ public class GuiCraftingMonitor extends GuiBase {
 
     @Override
     public void drawForeground(int mouseX, int mouseY) {
-        drawString(7, 7, t("gui.refinedstorage:crafting_monitor"));
+        drawString(7, 7, t(craftingMonitor.getGuiTitle()));
         drawString(7, 137, t("container.inventory"));
 
         int item = scrollbar.getOffset();

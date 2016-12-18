@@ -72,6 +72,13 @@ public final class RSConfig {
     public int wirelessGridInsertUsage;
     //endregion
 
+    //region Wireless Fluid Grid
+    public boolean wirelessFluidGridUsesEnergy;
+    public int wirelessFluidGridOpenUsage;
+    public int wirelessFluidGridExtractUsage;
+    public int wirelessFluidGridInsertUsage;
+    //endregion
+
     //region Wireless Crafting Monitor
     public boolean wirelessCraftingMonitorUsesEnergy;
     public int wirelessCraftingMonitorOpenUsage;
@@ -95,6 +102,7 @@ public final class RSConfig {
     private static final String GRID = "grid";
     private static final String WIRELESS_TRANSMITTER = "wirelessTransmitter";
     private static final String WIRELESS_GRID = "wirelessGrid";
+    private static final String WIRELESS_FLUID_GRID = "wirelessFluidGrid";
     private static final String WIRELESS_CRAFTING_MONITOR = "wirelessCraftingMonitor";
     private static final String UPGRADES = "upgrades";
     //endregion
@@ -175,6 +183,13 @@ public final class RSConfig {
         wirelessGridOpenUsage = config.getInt("open", WIRELESS_GRID, 30, 0, Integer.MAX_VALUE, "The energy used by the Wireless Grid to open");
         wirelessGridInsertUsage = config.getInt("insert", WIRELESS_GRID, 3, 0, Integer.MAX_VALUE, "The energy used by the Wireless Grid to insert items");
         wirelessGridExtractUsage = config.getInt("extract", WIRELESS_GRID, 3, 0, Integer.MAX_VALUE, "The energy used by the Wireless Grid to extract items");
+        //endregion
+
+        //region Wireless Grid
+        wirelessFluidGridUsesEnergy = config.getBoolean("usesEnergy", WIRELESS_FLUID_GRID, true, "Whether the Fluid Wireless Grid uses energy");
+        wirelessFluidGridOpenUsage = config.getInt("open", WIRELESS_FLUID_GRID, 30, 0, Integer.MAX_VALUE, "The energy used by the Fluid Wireless Grid to open");
+        wirelessFluidGridInsertUsage = config.getInt("insert", WIRELESS_FLUID_GRID, 3, 0, Integer.MAX_VALUE, "The energy used by the Wireless Fluid Grid to insert items");
+        wirelessFluidGridExtractUsage = config.getInt("extract", WIRELESS_FLUID_GRID, 3, 0, Integer.MAX_VALUE, "The energy used by the Wireless Fluid Grid to extract items");
         //endregion
 
         //region Wireless Crafting Monitor
