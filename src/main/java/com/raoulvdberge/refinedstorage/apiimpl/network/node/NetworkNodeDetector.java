@@ -8,8 +8,8 @@ import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerChangeListenerNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.INetworkNodeHolder;
 import com.raoulvdberge.refinedstorage.tile.TileDetector;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
@@ -33,8 +33,8 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
     private static final String NBT_AMOUNT = "Amount";
     private static final String NBT_TYPE = "Type";
 
-    private ItemHandlerBasic itemFilters = new ItemHandlerBasic(1, new ItemHandlerChangeListenerNode(this));
-    private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(1, new ItemHandlerChangeListenerNode(this));
+    private ItemHandlerBasic itemFilters = new ItemHandlerBasic(1, new ItemHandlerListenerNetworkNode(this));
+    private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(1, new ItemHandlerListenerNetworkNode(this));
 
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int type = IType.ITEMS;

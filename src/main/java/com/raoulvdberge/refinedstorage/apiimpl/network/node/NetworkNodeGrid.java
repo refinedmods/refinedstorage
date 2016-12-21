@@ -14,8 +14,8 @@ import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.gui.grid.GridFilter;
 import com.raoulvdberge.refinedstorage.gui.grid.GridTab;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerChangeListenerNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerGridFilterInGrid;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemValidatorBasic;
 import com.raoulvdberge.refinedstorage.item.ItemPattern;
 import com.raoulvdberge.refinedstorage.tile.INetworkNodeHolder;
@@ -77,7 +77,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     private InventoryCrafting matrix = new InventoryCrafting(craftingContainer, 3, 3);
     private InventoryCraftResult result = new InventoryCraftResult();
 
-    private ItemHandlerBasic patterns = new ItemHandlerBasic(2, new ItemHandlerChangeListenerNode(this), new ItemValidatorBasic(RSItems.PATTERN));
+    private ItemHandlerBasic patterns = new ItemHandlerBasic(2, new ItemHandlerListenerNetworkNode(this), new ItemValidatorBasic(RSItems.PATTERN));
     private List<GridFilter> filteredItems = new ArrayList<>();
     private List<GridTab> tabs = new ArrayList<>();
     private ItemHandlerGridFilterInGrid filter = new ItemHandlerGridFilterInGrid(filteredItems, tabs);
@@ -436,11 +436,6 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     @Override
     public TileDataParameter<Integer> getRedstoneModeConfig() {
         return TileGrid.REDSTONE_MODE;
-    }
-
-    @Override
-    public boolean isActive() {
-        return ((TileGrid) holder.world().getTileEntity(holder.pos())).isActive();
     }
 
     @Override

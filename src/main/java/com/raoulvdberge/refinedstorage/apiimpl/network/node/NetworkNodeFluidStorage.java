@@ -11,8 +11,8 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageFluidNBT;
 import com.raoulvdberge.refinedstorage.block.BlockFluidStorage;
 import com.raoulvdberge.refinedstorage.block.EnumFluidStorageType;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerChangeListenerNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.INetworkNodeHolder;
 import com.raoulvdberge.refinedstorage.tile.IStorageGui;
 import com.raoulvdberge.refinedstorage.tile.TileFluidStorage;
@@ -62,7 +62,7 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IStorageGui,
     private static final String NBT_MODE = "Mode";
     private static final String NBT_VOID_EXCESS = "VoidExcess";
 
-    private ItemHandlerFluid filters = new ItemHandlerFluid(9, new ItemHandlerChangeListenerNode(this));
+    private ItemHandlerFluid filters = new ItemHandlerFluid(9, new ItemHandlerListenerNetworkNode(this));
 
     private NBTTagCompound storageTag = StorageFluidNBT.createNBT();
 

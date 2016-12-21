@@ -1,5 +1,5 @@
 package com.raoulvdberge.refinedstorage.inventory;
 
-public interface IItemHandlerChangeListener {
+public interface IItemHandlerListener {
     void onChanged(int slot);
 }

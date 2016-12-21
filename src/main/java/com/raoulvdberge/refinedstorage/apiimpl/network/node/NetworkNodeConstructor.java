@@ -6,8 +6,8 @@ import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.container.slot.SlotFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerChangeListenerNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 import com.raoulvdberge.refinedstorage.tile.INetworkNodeHolder;
@@ -47,7 +47,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
 
     private static final int BASE_SPEED = 20;
 
-    private ItemHandlerBasic itemFilters = new ItemHandlerBasic(1, new ItemHandlerChangeListenerNode(this)) {
+    private ItemHandlerBasic itemFilters = new ItemHandlerBasic(1, new ItemHandlerListenerNetworkNode(this)) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -57,9 +57,9 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
         }
     };
 
-    private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(1, new ItemHandlerChangeListenerNode(this));
+    private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(1, new ItemHandlerListenerNetworkNode(this));
 
-    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerChangeListenerNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_CRAFTING);
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_CRAFTING);
 
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int type = IType.ITEMS;

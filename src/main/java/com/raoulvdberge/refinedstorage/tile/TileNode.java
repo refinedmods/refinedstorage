@@ -2,6 +2,8 @@ package com.raoulvdberge.refinedstorage.tile;
 
 import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeProxy;
+import com.raoulvdberge.refinedstorage.api.network.INetworkNodeRegistry;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
@@ -12,8 +14,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
@@ -23,8 +23,6 @@ public abstract class TileNode extends TileBase implements INetworkNodeProxy, IN
 
     private static final String NBT_ACTIVE = "Active";
 
-    private boolean active;
-
     public TileNode() {
         dataManager.addWatchedParameter(REDSTONE_MODE);
     }
@@ -33,7 +31,24 @@ public abstract class TileNode extends TileBase implements INetworkNodeProxy, IN
     public void update() {
         super.update();
 
-        getNode().update();
+        if (!getWorld().isRemote) {
+            getNode().update();
+        }
+    }
+
+    @Override
+    public void invalidate() {
+        super.invalidate();
+
+        if (getWorld() != null && !getWorld().isRemote) {
+            INetworkNode node = getNode();
+
+            API.instance().getNetworkNodeRegistry(getWorld().provider.getDimension()).removeNode(pos);
+
+            if (node.getNetwork() != null) {
+                node.getNetwork().getNodeGraph().rebuild();
+            }
+        }
     }
 
     @Override
@@ -75,17 +90,13 @@ public abstract class TileNode extends TileBase implements INetworkNodeProxy, IN
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {
         super.writeUpdate(tag);
 
-        if (((NetworkNode) getNode()).hasConnectivityState()) {
-            tag.setBoolean(NBT_ACTIVE, getNode().getNetwork() != null && getNode().canUpdate());
-        }
+        tag.setBoolean(NBT_ACTIVE, getNode().getNetwork() != null && getNode().canUpdate());
 
         return tag;
     }
 
     public void readUpdate(NBTTagCompound tag) {
-        if (((NetworkNode) getNode()).hasConnectivityState()) {
-            active = tag.getBoolean(NBT_ACTIVE);
-        }
+        ((NetworkNode) getNode()).setActive(tag.getBoolean(NBT_ACTIVE));
 
         super.readUpdate(tag);
     }
@@ -94,17 +105,17 @@ public abstract class TileNode extends TileBase implements INetworkNodeProxy, IN
         return ((NetworkNode) getNode()).getDrops();
     }
 
-    // @TODO
-    private INetworkNode node;
-
     @Override
     public INetworkNode getNode() {
-        return node == null ? (node = createNode()) : node;
-    }
+        INetworkNodeRegistry registry = API.instance().getNetworkNodeRegistry(getWorld().provider.getDimension());
 
-    @SideOnly(Side.CLIENT)
-    public boolean isActive() {
-        return active;
+        INetworkNode node = registry.getNode(pos);
+
+        if (node == null) {
+            registry.setNode(pos, node = createNode());
+        }
+
+        return node;
     }
 
     @Override

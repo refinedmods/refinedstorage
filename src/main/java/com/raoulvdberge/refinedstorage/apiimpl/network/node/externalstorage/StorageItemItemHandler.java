@@ -19,11 +19,9 @@ public class StorageItemItemHandler extends StorageItemExternal {
         this.externalStorage = externalStorage;
         this.handler = handler;
 
-        // @todo
-        /*
         if (externalStorage.getFacingTile().getBlockType().getUnlocalizedName().equals("tile.ExtraUtils2:TrashCan")) {
             lockedAccessType = AccessType.INSERT;
-        }*/
+        }
     }
 
     @Override

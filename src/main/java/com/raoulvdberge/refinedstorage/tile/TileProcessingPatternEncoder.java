@@ -4,7 +4,7 @@ import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.gui.GuiProcessingPatternEncoder;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerChangeListenerTile;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerTile;
 import com.raoulvdberge.refinedstorage.inventory.ItemValidatorBasic;
 import com.raoulvdberge.refinedstorage.item.ItemPattern;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataConsumer;
@@ -42,8 +42,8 @@ public class TileProcessingPatternEncoder extends TileBase {
         }
     });
 
-    private ItemHandlerBasic patterns = new ItemHandlerBasic(2, new ItemHandlerChangeListenerTile(this), new ItemValidatorBasic(RSItems.PATTERN));
-    private ItemHandlerBasic configuration = new ItemHandlerBasic(9 * 2, new ItemHandlerChangeListenerTile(this));
+    private ItemHandlerBasic patterns = new ItemHandlerBasic(2, new ItemHandlerListenerTile(this), new ItemValidatorBasic(RSItems.PATTERN));
+    private ItemHandlerBasic configuration = new ItemHandlerBasic(9 * 2, new ItemHandlerListenerTile(this));
 
     private boolean oredictPattern;
 

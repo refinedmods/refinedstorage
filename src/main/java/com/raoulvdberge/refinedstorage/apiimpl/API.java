@@ -9,6 +9,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskRe
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeProxy;
+import com.raoulvdberge.refinedstorage.api.network.INetworkNodeRegistry;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRegistry;
@@ -18,6 +19,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.Craf
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTaskRegistry;
+import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.solderer.SoldererRegistry;
@@ -31,11 +33,15 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
+import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.BiPredicate;
 
@@ -43,6 +49,8 @@ public class API implements IRSAPI {
     private static final IRSAPI INSTANCE = new API();
 
     private IComparer comparer = new Comparer();
+    private Map<Integer, INetworkNodeRegistry> networkNodeRegistryServer = new HashMap<>();
+    private Map<Integer, INetworkNodeRegistry> networkNodeRegistryClient = new HashMap<>();
     private ISoldererRegistry soldererRegistry = new SoldererRegistry();
     private ICraftingTaskRegistry craftingTaskRegistry = new CraftingTaskRegistry();
     private ICraftingMonitorElementRegistry craftingMonitorElementRegistry = new CraftingMonitorElementRegistry();
@@ -77,6 +85,13 @@ public class API implements IRSAPI {
     @Override
     public IComparer getComparer() {
         return comparer;
+    }
+
+    @Override
+    public INetworkNodeRegistry getNetworkNodeRegistry(int dimension) {
+        Map<Integer, INetworkNodeRegistry> registry = FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT ? networkNodeRegistryClient : networkNodeRegistryServer;
+
+        return registry.computeIfAbsent(dimension, r -> new NetworkNodeRegistry());
     }
 
     @Override

@@ -6,7 +6,7 @@ import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRecipe;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerChangeListenerNode;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 import com.raoulvdberge.refinedstorage.tile.INetworkNodeHolder;
@@ -21,7 +21,7 @@ public class NetworkNodeSolderer extends NetworkNode {
     private static final String NBT_WORKING = "Working";
     private static final String NBT_PROGRESS = "Progress";
 
-    private ItemHandlerBasic items = new ItemHandlerBasic(3, new ItemHandlerChangeListenerNode(this)) {
+    private ItemHandlerBasic items = new ItemHandlerBasic(3, new ItemHandlerListenerNetworkNode(this)) {
         @Override
         @Nonnull
         public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
@@ -34,14 +34,14 @@ public class NetworkNodeSolderer extends NetworkNode {
             return stack;
         }
     };
-    private ItemHandlerBasic result = new ItemHandlerBasic(1, new ItemHandlerChangeListenerNode(this)) {
+    private ItemHandlerBasic result = new ItemHandlerBasic(1, new ItemHandlerListenerNetworkNode(this)) {
         @Override
         @Nonnull
         public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
             return stack;
         }
     };
-    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerChangeListenerNode(this), ItemUpgrade.TYPE_SPEED);
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED);
 
     private ISoldererRecipe recipe;
 

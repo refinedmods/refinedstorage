@@ -51,10 +51,9 @@ public class NetworkNodeWriter extends NetworkNode implements IWriter {
         redstoneStrength = strength;
     }
 
-    // @todo
     @Override
     public EnumFacing getDirection() {
-        return null;
+        return holder.getDirection();
     }
 
     @Override
@@ -109,15 +108,6 @@ public class NetworkNodeWriter extends NetworkNode implements IWriter {
 
         return tag;
     }
-
-    // @todo
-    /*
-    @Override
-    public void setDirection(EnumFacing direction) {
-        super.setDirection(direction);
-
-        world.notifyNeighborsOfStateChange(pos, RSBlocks.WRITER, true);
-    }*/
 
     public void onOpened(EntityPlayer entity) {
         if (network != null) {

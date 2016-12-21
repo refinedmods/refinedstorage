@@ -49,11 +49,6 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
         return network != null ? network.getPosition() : null;
     }
 
-    @Override
-    public boolean isActive() {
-        return ((TileCraftingMonitor) holder.world().getTileEntity(holder.pos())).isActive();
-    }
-
     public void onOpened(EntityPlayer player) {
         if (network != null) {
             network.sendCraftingMonitorUpdate((EntityPlayerMP) player);

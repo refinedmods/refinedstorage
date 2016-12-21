@@ -2,10 +2,10 @@ package com.raoulvdberge.refinedstorage.inventory;
 
 import net.minecraft.tileentity.TileEntity;
 
-public class ItemHandlerChangeListenerTile implements IItemHandlerChangeListener {
+public class ItemHandlerListenerTile implements IItemHandlerListener {
     private TileEntity tile;
 
-    public ItemHandlerChangeListenerTile(TileEntity tile) {
+    public ItemHandlerListenerTile(TileEntity tile) {
         this.tile = tile;
     }
 

@@ -2,10 +2,10 @@ package com.raoulvdberge.refinedstorage.inventory;
 
 import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 
-public class ItemHandlerChangeListenerNode implements IItemHandlerChangeListener {
+public class ItemHandlerListenerNetworkNode implements IItemHandlerListener {
     private INetworkNode node;
 
-    public ItemHandlerChangeListenerNode(INetworkNode node) {
+    public ItemHandlerListenerNetworkNode(INetworkNode node) {
         this.node = node;
     }
 

@@ -14,8 +14,8 @@ import com.raoulvdberge.refinedstorage.block.EnumFluidStorageType;
 import com.raoulvdberge.refinedstorage.block.EnumItemStorageType;
 import com.raoulvdberge.refinedstorage.inventory.IItemValidator;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerChangeListenerNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.INetworkNodeHolder;
 import com.raoulvdberge.refinedstorage.tile.IStorageGui;
 import com.raoulvdberge.refinedstorage.tile.TileDiskDrive;
@@ -133,7 +133,7 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IStorageGui, IS
     private static final String NBT_TYPE = "Type";
     private static final String NBT_VOID_EXCESS = "VoidExcess";
 
-    private ItemHandlerBasic disks = new ItemHandlerBasic(8, new ItemHandlerChangeListenerNode(this), IItemValidator.STORAGE_DISK) {
+    private ItemHandlerBasic disks = new ItemHandlerBasic(8, new ItemHandlerListenerNetworkNode(this), IItemValidator.STORAGE_DISK) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -164,8 +164,8 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IStorageGui, IS
         }
     };
 
-    private ItemHandlerBasic itemFilters = new ItemHandlerBasic(9, new ItemHandlerChangeListenerNode(this));
-    private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(9, new ItemHandlerChangeListenerNode(this));
+    private ItemHandlerBasic itemFilters = new ItemHandlerBasic(9, new ItemHandlerListenerNetworkNode(this));
+    private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(9, new ItemHandlerListenerNetworkNode(this));
 
     private StorageItem itemStorages[] = new StorageItem[8];
     private StorageFluid fluidStorages[] = new StorageFluid[8];

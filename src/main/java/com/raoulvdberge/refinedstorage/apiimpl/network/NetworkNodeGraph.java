@@ -161,7 +161,8 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
             } else {
                 for (EnumFacing checkSide : EnumFacing.VALUES) {
                     if (checkSide != side) { // Avoid going backward
-                        INetworkNode nodeOnSide = NETWORK_NODE_PROXY_CAPABILITY.cast(tile.getCapability(NETWORK_NODE_PROXY_CAPABILITY, checkSide));
+                        INetworkNodeProxy nodeOnSideProxy = NETWORK_NODE_PROXY_CAPABILITY.cast(tile.getCapability(NETWORK_NODE_PROXY_CAPABILITY, checkSide));
+                        INetworkNode nodeOnSide = nodeOnSideProxy.getNode();
                         if (nodeOnSide == node) {
                             operator.apply(world, pos.offset(checkSide), checkSide.getOpposite());
                         }

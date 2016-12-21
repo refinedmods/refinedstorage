@@ -4,7 +4,7 @@ import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 
 public class ItemHandlerUpgrade extends ItemHandlerBasic {
-    public ItemHandlerUpgrade(int size, IItemHandlerChangeListener listener, int... supportedUpgrades) {
+    public ItemHandlerUpgrade(int size, IItemHandlerListener listener, int... supportedUpgrades) {
         super(size, listener, new IItemValidator[supportedUpgrades.length]);
 
         for (int i = 0; i < supportedUpgrades.length; ++i) {

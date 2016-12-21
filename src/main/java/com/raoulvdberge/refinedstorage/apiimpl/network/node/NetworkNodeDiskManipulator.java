@@ -43,9 +43,9 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     private StorageItem[] itemStorages = new StorageItem[6];
     private StorageFluid[] fluidStorages = new StorageFluid[6];
 
-    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerChangeListenerNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK);
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK);
 
-    private ItemHandlerBasic inputDisks = new ItemHandlerBasic(3, new ItemHandlerChangeListenerNode(this), IItemValidator.STORAGE_DISK) {
+    private ItemHandlerBasic inputDisks = new ItemHandlerBasic(3, new ItemHandlerListenerNetworkNode(this), IItemValidator.STORAGE_DISK) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -72,7 +72,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         }
     };
 
-    private ItemHandlerBasic outputDisks = new ItemHandlerBasic(3, new ItemHandlerChangeListenerNode(this), IItemValidator.STORAGE_DISK) {
+    private ItemHandlerBasic outputDisks = new ItemHandlerBasic(3, new ItemHandlerListenerNetworkNode(this), IItemValidator.STORAGE_DISK) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -191,8 +191,8 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         }
     }
 
-    private ItemHandlerBasic itemFilters = new ItemHandlerBasic(9, new ItemHandlerChangeListenerNode(this));
-    private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(9, new ItemHandlerChangeListenerNode(this));
+    private ItemHandlerBasic itemFilters = new ItemHandlerBasic(9, new ItemHandlerListenerNetworkNode(this));
+    private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(9, new ItemHandlerListenerNetworkNode(this));
 
     @Override
     public int getEnergyUsage() {

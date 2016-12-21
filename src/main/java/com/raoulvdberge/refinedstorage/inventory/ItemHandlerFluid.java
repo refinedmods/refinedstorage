@@ -8,7 +8,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 public class ItemHandlerFluid extends ItemHandlerBasic {
     private FluidStack[] fluids;
 
-    public ItemHandlerFluid(int size, IItemHandlerChangeListener listener) {
+    public ItemHandlerFluid(int size, IItemHandlerListener listener) {
         super(size, listener, s -> RSUtils.getFluidFromStack(ItemHandlerHelper.copyStackWithSize(s, 1), true).getValue() != null);
 
         this.fluids = new FluidStack[size];

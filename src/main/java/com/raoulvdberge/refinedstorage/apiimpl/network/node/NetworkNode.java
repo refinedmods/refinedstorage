@@ -11,6 +11,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.IItemHandler;
@@ -26,6 +27,8 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
     private boolean couldUpdate;
     protected int ticks;
     protected INetworkNodeHolder holder;
+
+    private boolean active;
 
     public NetworkNode(INetworkNodeHolder holder) {
         this.holder = holder;
@@ -64,9 +67,6 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
     }
 
     protected void onConnectedStateChange(INetworkMaster network, boolean state) {
-        if (hasConnectivityState()) {
-            RSUtils.updateBlock(holder.world(), holder.pos());
-        }
     }
 
     @Override
@@ -83,8 +83,14 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
     public void update() {
         ++ticks;
 
-        if (couldUpdate != canUpdate()) {
-            couldUpdate = canUpdate();
+        boolean canUpdate = getNetwork() != null && canUpdate();
+
+        if (couldUpdate != canUpdate) {
+            couldUpdate = canUpdate;
+
+            if (hasConnectivityState()) {
+                RSUtils.updateBlock(holder.world(), holder.pos());
+            }
 
             if (network != null) {
                 onConnectedStateChange(network, couldUpdate);
@@ -141,11 +147,37 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
         }
     }
 
+    public TileEntity getFacingTile() {
+        return holder.world().getTileEntity(holder.pos().offset(holder.getDirection()));
+    }
+
     public IItemHandler getDrops() {
         return null;
     }
 
     public boolean hasConnectivityState() {
         return false;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof NetworkNode
+                && holder.pos().equals(((NetworkNode) o).holder.pos())
+                && holder.world().provider.getDimension() == ((NetworkNode) o).holder.world().provider.getDimension();
+    }
+
+    @Override
+    public int hashCode() {
+        int result = holder.pos().hashCode();
+        result = 31 * result + holder.world().provider.getDimension();
+        return result;
     }
 }

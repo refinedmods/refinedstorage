@@ -4,8 +4,8 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerChangeListenerNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerInterface;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 import com.raoulvdberge.refinedstorage.tile.INetworkNodeHolder;
@@ -18,14 +18,14 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 public class NetworkNodeInterface extends NetworkNode implements IComparable {
     private static final String NBT_COMPARE = "Compare";
 
-    private ItemHandlerBasic importItems = new ItemHandlerBasic(9, new ItemHandlerChangeListenerNode(this));
+    private ItemHandlerBasic importItems = new ItemHandlerBasic(9, new ItemHandlerListenerNetworkNode(this));
 
-    private ItemHandlerBasic exportSpecimenItems = new ItemHandlerBasic(9, new ItemHandlerChangeListenerNode(this));
-    private ItemHandlerBasic exportItems = new ItemHandlerBasic(9, new ItemHandlerChangeListenerNode(this));
+    private ItemHandlerBasic exportSpecimenItems = new ItemHandlerBasic(9, new ItemHandlerListenerNetworkNode(this));
+    private ItemHandlerBasic exportItems = new ItemHandlerBasic(9, new ItemHandlerListenerNetworkNode(this));
 
     private ItemHandlerInterface items = new ItemHandlerInterface(importItems, exportItems);
 
-    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerChangeListenerNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK, ItemUpgrade.TYPE_CRAFTING);
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK, ItemUpgrade.TYPE_CRAFTING);
 
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
 

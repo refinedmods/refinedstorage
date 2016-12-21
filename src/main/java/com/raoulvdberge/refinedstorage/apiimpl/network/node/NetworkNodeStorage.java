@@ -12,7 +12,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageItemNBT;
 import com.raoulvdberge.refinedstorage.block.BlockStorage;
 import com.raoulvdberge.refinedstorage.block.EnumItemStorageType;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerChangeListenerNode;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.INetworkNodeHolder;
 import com.raoulvdberge.refinedstorage.tile.IStorageGui;
 import com.raoulvdberge.refinedstorage.tile.TileStorage;
@@ -64,7 +64,7 @@ public class NetworkNodeStorage extends NetworkNode implements IStorageGui, ISto
     private static final String NBT_MODE = "Mode";
     private static final String NBT_VOID_EXCESS = "VoidExcess";
 
-    private ItemHandlerBasic filters = new ItemHandlerBasic(9, new ItemHandlerChangeListenerNode(this));
+    private ItemHandlerBasic filters = new ItemHandlerBasic(9, new ItemHandlerListenerNetworkNode(this));
 
     private NBTTagCompound storageTag = StorageItemNBT.createNBT();
 

@@ -9,7 +9,7 @@ import com.raoulvdberge.refinedstorage.api.network.security.ISecurityCardContain
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.apiimpl.network.security.SecurityCard;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerChangeListenerNode;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemValidatorBasic;
 import com.raoulvdberge.refinedstorage.item.ItemSecurityCard;
 import com.raoulvdberge.refinedstorage.tile.INetworkNodeHolder;
@@ -28,7 +28,7 @@ public class NetworkNodeSecurityManager extends NetworkNode implements ISecurity
 
     private List<ISecurityCard> actualCards = new ArrayList<>();
 
-    private ItemHandlerBasic cards = new ItemHandlerBasic(9 * 2, new ItemHandlerChangeListenerNode(this), new ItemValidatorBasic(RSItems.SECURITY_CARD)) {
+    private ItemHandlerBasic cards = new ItemHandlerBasic(9 * 2, new ItemHandlerListenerNetworkNode(this), new ItemValidatorBasic(RSItems.SECURITY_CARD)) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -42,7 +42,7 @@ public class NetworkNodeSecurityManager extends NetworkNode implements ISecurity
             }
         }
     };
-    private ItemHandlerBasic editCard = new ItemHandlerBasic(1, new ItemHandlerChangeListenerNode(this), new ItemValidatorBasic(RSItems.SECURITY_CARD));
+    private ItemHandlerBasic editCard = new ItemHandlerBasic(1, new ItemHandlerListenerNetworkNode(this), new ItemValidatorBasic(RSItems.SECURITY_CARD));
 
     @Nullable
     private UUID owner;

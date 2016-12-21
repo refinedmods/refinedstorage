@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
@@ -51,7 +52,7 @@ public abstract class BlockNode extends BlockBase {
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
         if (hasConnectivityState()) {
-            return super.getActualState(state, world, pos).withProperty(CONNECTED, ((TileNode) world.getTileEntity(pos)).isActive());
+            return super.getActualState(state, world, pos).withProperty(CONNECTED, ((NetworkNode) ((TileNode) world.getTileEntity(pos)).getNode()).isActive());
         }
 
         return super.getActualState(state, world, pos);

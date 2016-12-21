@@ -8,13 +8,12 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerChangeListenerNode;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 import com.raoulvdberge.refinedstorage.tile.INetworkNodeHolder;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
@@ -25,7 +24,7 @@ import java.util.List;
 public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternContainer {
     private static final String NBT_TRIGGERED_AUTOCRAFTING = "TriggeredAutocrafting";
 
-    private ItemHandlerBasic patterns = new ItemHandlerBasic(9, new ItemHandlerChangeListenerNode(this), s -> {
+    private ItemHandlerBasic patterns = new ItemHandlerBasic(9, new ItemHandlerListenerNetworkNode(this), s -> {
         // We can only validate the crafting pattern if the world exists.
         // If the world doesn't exist, this is probably called while reading and in that case it doesn't matter.
         if (holder.world() != null) {
@@ -50,7 +49,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
     private List<ICraftingPattern> actualPatterns = new ArrayList<>();
 
-    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerChangeListenerNode(this), ItemUpgrade.TYPE_SPEED);
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED);
 
     private boolean triggeredAutocrafting = false;
 
@@ -161,11 +160,6 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     @Override
     public IItemHandler getFacingInventory() {
         return RSUtils.getItemHandler(getFacingTile(), holder.getDirection().getOpposite());
-    }
-
-    @Override
-    public TileEntity getFacingTile() {
-        return holder.world().getTileEntity(holder.pos().offset(holder.getDirection()));
     }
 
     @Override

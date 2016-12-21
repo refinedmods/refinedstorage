@@ -4,7 +4,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerChangeListenerNode;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.inventory.ItemValidatorBasic;
 import com.raoulvdberge.refinedstorage.item.ItemNetworkCard;
@@ -21,7 +21,7 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import javax.annotation.Nullable;
 
 public class NetworkNodeNetworkTransmitter extends NetworkNode {
-    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(1, new ItemHandlerChangeListenerNode(this), ItemUpgrade.TYPE_INTERDIMENSIONAL) {
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(1, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_INTERDIMENSIONAL) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -32,7 +32,7 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
         }
     };
 
-    private ItemHandlerBasic networkCard = new ItemHandlerBasic(1, new ItemHandlerChangeListenerNode(this), new ItemValidatorBasic(RSItems.NETWORK_CARD)) {
+    private ItemHandlerBasic networkCard = new ItemHandlerBasic(1, new ItemHandlerListenerNetworkNode(this), new ItemValidatorBasic(RSItems.NETWORK_CARD)) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);

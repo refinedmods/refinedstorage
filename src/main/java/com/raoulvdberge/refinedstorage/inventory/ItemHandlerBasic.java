@@ -6,11 +6,11 @@ import net.minecraftforge.items.ItemStackHandler;
 import javax.annotation.Nonnull;
 
 public class ItemHandlerBasic extends ItemStackHandler {
-    private IItemHandlerChangeListener listener;
+    private IItemHandlerListener listener;
 
     protected IItemValidator[] validators;
 
-    public ItemHandlerBasic(int size, IItemHandlerChangeListener listener, IItemValidator... validators) {
+    public ItemHandlerBasic(int size, IItemHandlerListener listener, IItemValidator... validators) {
         super(size);
 
         this.listener = listener;

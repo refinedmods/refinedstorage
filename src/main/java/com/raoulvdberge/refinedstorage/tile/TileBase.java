@@ -35,6 +35,8 @@ public abstract class TileBase extends TileEntity implements ITickable {
     public void setDirection(EnumFacing direction) {
         this.direction = direction;
 
+        world.notifyNeighborsOfStateChange(pos, getWorld().getBlockState(pos).getBlock(), true);
+
         markDirty();
     }
 

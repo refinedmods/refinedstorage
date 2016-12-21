@@ -346,7 +346,9 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
     public void invalidate() {
         super.invalidate();
 
-        nodeGraph.disconnectAll();
+        if (getWorld() != null && !getWorld().isRemote) {
+            nodeGraph.disconnectAll();
+        }
     }
 
     @Override
@@ -928,7 +930,9 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
     @Override
     public ItemStack getItemStack() {
         IBlockState state = getWorld().getBlockState(pos);
+
         Item item = Item.getItemFromBlock(state.getBlock());
+
         return new ItemStack(item, 1, state.getBlock().getMetaFromState(state));
     }
 
