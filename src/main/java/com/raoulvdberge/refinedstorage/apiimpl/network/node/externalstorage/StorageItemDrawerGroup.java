@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.tile.externalstorage;
+package com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
@@ -9,10 +9,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class StorageItemDrawerGroup extends StorageItemExternal {
-    private TileExternalStorage externalStorage;
+    private NetworkNodeExternalStorage externalStorage;
     private IDrawerGroup drawers;
 
-    public StorageItemDrawerGroup(TileExternalStorage externalStorage, IDrawerGroup drawers) {
+    public StorageItemDrawerGroup(NetworkNodeExternalStorage externalStorage, IDrawerGroup drawers) {
         this.externalStorage = externalStorage;
         this.drawers = drawers;
     }

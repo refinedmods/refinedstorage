@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.container;
 
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeSecurityManager;
 import com.raoulvdberge.refinedstorage.tile.TileSecurityManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
@@ -14,7 +15,7 @@ public class ContainerSecurityManager extends ContainerBase {
         int y = 20;
 
         for (int i = 0; i < 9 * 2; ++i) {
-            addSlotToContainer(new SlotItemHandler(tile.getCardsItems(), i, x, y));
+            addSlotToContainer(new SlotItemHandler(((NetworkNodeSecurityManager) tile.getNode()).getCardsItems(), i, x, y));
 
             if (((i + 1) % 9) == 0) {
                 x = 8;
@@ -24,7 +25,7 @@ public class ContainerSecurityManager extends ContainerBase {
             }
         }
 
-        addSlotToContainer(new SlotItemHandler(tile.getEditCard(), 0, 80, 70));
+        addSlotToContainer(new SlotItemHandler(((NetworkNodeSecurityManager) tile.getNode()).getEditCard(), 0, 80, 70));
 
         addPlayerInventory(8, 152);
     }

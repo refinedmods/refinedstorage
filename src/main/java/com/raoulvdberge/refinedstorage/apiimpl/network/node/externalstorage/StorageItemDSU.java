@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.tile.externalstorage;
+package com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
@@ -12,10 +12,10 @@ import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 import javax.annotation.Nonnull;
 
 public class StorageItemDSU extends StorageItemExternal {
-    private TileExternalStorage externalStorage;
+    private NetworkNodeExternalStorage externalStorage;
     private IDeepStorageUnit unit;
 
-    public StorageItemDSU(TileExternalStorage externalStorage, IDeepStorageUnit unit) {
+    public StorageItemDSU(NetworkNodeExternalStorage externalStorage, IDeepStorageUnit unit) {
         this.externalStorage = externalStorage;
         this.unit = unit;
     }

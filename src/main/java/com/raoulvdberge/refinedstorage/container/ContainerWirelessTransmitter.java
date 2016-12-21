@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.container;
 
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeWirelessTransmitter;
 import com.raoulvdberge.refinedstorage.tile.TileWirelessTransmitter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
@@ -11,7 +12,7 @@ public class ContainerWirelessTransmitter extends ContainerBase {
         super(wirelessTransmitter, player);
 
         for (int i = 0; i < 4; ++i) {
-            addSlotToContainer(new SlotItemHandler(wirelessTransmitter.getUpgrades(), i, 187, 6 + (i * 18)));
+            addSlotToContainer(new SlotItemHandler(((NetworkNodeWirelessTransmitter) wirelessTransmitter.getNode()).getUpgrades(), i, 187, 6 + (i * 18)));
         }
 
         addPlayerInventory(8, 55);

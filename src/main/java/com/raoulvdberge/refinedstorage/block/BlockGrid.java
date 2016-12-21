@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSGui;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.item.ItemBlockBase;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import net.minecraft.block.properties.PropertyEnum;
@@ -56,7 +57,7 @@ public class BlockGrid extends BlockNode {
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!world.isRemote && tryOpenNetworkGui(RSGui.GRID, player, world, pos, side)) {
-            ((TileGrid) world.getTileEntity(pos)).onOpened(player);
+            ((NetworkNodeGrid) ((TileGrid) world.getTileEntity(pos)).getNode()).onOpened(player);
         }
 
         return true;

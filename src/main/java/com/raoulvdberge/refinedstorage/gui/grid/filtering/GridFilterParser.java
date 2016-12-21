@@ -1,9 +1,9 @@
 package com.raoulvdberge.refinedstorage.gui.grid.filtering;
 
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.gui.grid.GridFilter;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
-import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,9 +23,9 @@ public class GridFilterParser {
             }
         }
 
-        if (grid.getViewType() == TileGrid.VIEW_TYPE_NON_CRAFTABLES) {
+        if (grid.getViewType() == NetworkNodeGrid.VIEW_TYPE_NON_CRAFTABLES) {
             filters.add(new GridFilterCraftable(false));
-        } else if (grid.getViewType() == TileGrid.VIEW_TYPE_CRAFTABLES) {
+        } else if (grid.getViewType() == NetworkNodeGrid.VIEW_TYPE_CRAFTABLES) {
             filters.add(new GridFilterCraftable(true));
         }
 

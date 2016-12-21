@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.tile.externalstorage;
+package com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
@@ -17,10 +17,10 @@ import javax.annotation.Nullable;
 public class StorageFluidExternal implements IStorage<FluidStack> {
     private FluidStack cache;
 
-    private TileExternalStorage externalStorage;
+    private NetworkNodeExternalStorage externalStorage;
     private IFluidHandler handler;
 
-    public StorageFluidExternal(TileExternalStorage externalStorage, IFluidHandler handler, IFluidTankProperties properties) {
+    public StorageFluidExternal(NetworkNodeExternalStorage externalStorage, IFluidHandler handler, IFluidTankProperties properties) {
         this.externalStorage = externalStorage;
         this.handler = handler;
     }

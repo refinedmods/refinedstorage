@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
-import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNode;
+import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.tile.TileCable;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
@@ -93,7 +93,7 @@ public class BlockCable extends BlockNode {
         TileEntity otherTile = world.getTileEntity(pos.offset(direction));
         EnumFacing otherTileSide = direction.getOpposite();
 
-        return otherTile != null && otherTile.hasCapability(CapabilityNetworkNode.NETWORK_NODE_CAPABILITY, otherTileSide);
+        return otherTile != null && otherTile.hasCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, otherTileSide);
     }
 
     private boolean isInAABB(AxisAlignedBB aabb, float hitX, float hitY, float hitZ) {

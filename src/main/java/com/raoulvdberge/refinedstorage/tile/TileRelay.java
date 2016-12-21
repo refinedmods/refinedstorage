@@ -1,34 +1,11 @@
 package com.raoulvdberge.refinedstorage.tile;
 
-import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
-import net.minecraft.util.EnumFacing;
-
-import javax.annotation.Nullable;
+import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeRelay;
 
 public class TileRelay extends TileNode {
-    public TileRelay() {
-        setRedstoneMode(RedstoneMode.LOW);
-
-        rebuildOnUpdateChange = true;
-    }
-
     @Override
-    public int getEnergyUsage() {
-        return getRedstoneMode() == RedstoneMode.IGNORE ? 0 : RS.INSTANCE.config.relayUsage;
-    }
-
-    @Override
-    public void updateNode() {
-    }
-
-    @Override
-    public boolean canConduct(@Nullable EnumFacing direction) {
-        return canUpdate();
-    }
-
-    @Override
-    public boolean hasConnectivityState() {
-        return true;
+    public INetworkNode createNode() {
+        return new NetworkNodeRelay(this);
     }
 }

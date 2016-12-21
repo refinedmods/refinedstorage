@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.block;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeSecurityManager;
 import com.raoulvdberge.refinedstorage.tile.TileSecurityManager;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -29,14 +30,14 @@ public class BlockSecurityManager extends BlockNode {
         super.onBlockPlacedBy(world, pos, state, placer, stack);
 
         if (!world.isRemote && placer instanceof EntityPlayer) {
-            ((TileSecurityManager) world.getTileEntity(pos)).setOwner(((EntityPlayer) placer).getGameProfile().getId());
+            ((NetworkNodeSecurityManager) ((TileSecurityManager) world.getTileEntity(pos)).getNode()).setOwner(((EntityPlayer) placer).getGameProfile().getId());
         }
     }
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
-            if (player.getGameProfile().getId().equals(((TileSecurityManager) world.getTileEntity(pos)).getOwner())) {
+            if (player.getGameProfile().getId().equals(((NetworkNodeSecurityManager) ((TileSecurityManager) world.getTileEntity(pos)).getNode()).getOwner())) {
                 player.openGui(RS.INSTANCE, RSGui.SECURITY_MANAGER, world, pos.getX(), pos.getY(), pos.getZ());
             } else {
                 tryOpenNetworkGui(RSGui.SECURITY_MANAGER, player, world, pos, side, Permission.MODIFY, Permission.SECURITY);

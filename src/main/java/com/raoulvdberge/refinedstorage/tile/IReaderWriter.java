@@ -13,8 +13,6 @@ public interface IReaderWriter extends INetworkNode {
 
     TileDataParameter<String> getChannelParameter();
 
-    boolean isActive();
-
     default void onAdd(String name) {
         INetworkMaster network = getNetwork();
 

@@ -1,6 +1,8 @@
 package com.raoulvdberge.refinedstorage.api.network;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,4 +46,14 @@ public interface INetworkNode {
      */
     @Nullable
     INetworkMaster getNetwork();
+
+    void update();
+
+    NBTTagCompound write(NBTTagCompound tag);
+
+    void read(NBTTagCompound tag);
+
+    BlockPos getPos();
+
+    void markDirty();
 }

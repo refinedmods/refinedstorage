@@ -1,8 +1,8 @@
 package com.raoulvdberge.refinedstorage.gui.sidebutton;
 
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
-import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import net.minecraft.util.text.TextFormatting;
 
 public class SideButtonGridSortingDirection extends SideButton {
@@ -28,10 +28,10 @@ public class SideButtonGridSortingDirection extends SideButton {
     public void actionPerformed() {
         int dir = grid.getSortingDirection();
 
-        if (dir == TileGrid.SORTING_DIRECTION_ASCENDING) {
-            dir = TileGrid.SORTING_DIRECTION_DESCENDING;
-        } else if (dir == TileGrid.SORTING_DIRECTION_DESCENDING) {
-            dir = TileGrid.SORTING_DIRECTION_ASCENDING;
+        if (dir == NetworkNodeGrid.SORTING_DIRECTION_ASCENDING) {
+            dir = NetworkNodeGrid.SORTING_DIRECTION_DESCENDING;
+        } else if (dir == NetworkNodeGrid.SORTING_DIRECTION_DESCENDING) {
+            dir = NetworkNodeGrid.SORTING_DIRECTION_ASCENDING;
         }
 
         grid.onSortingDirectionChanged(dir);

@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.container;
 
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeDetector;
 import com.raoulvdberge.refinedstorage.container.slot.SlotFilterType;
 import com.raoulvdberge.refinedstorage.tile.TileDetector;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,7 +11,7 @@ public class ContainerDetector extends ContainerBase {
     public ContainerDetector(TileDetector detector, EntityPlayer player) {
         super(detector, player);
 
-        addSlotToContainer(new SlotFilterType(detector, 0, 107, 20));
+        addSlotToContainer(new SlotFilterType((NetworkNodeDetector) detector.getNode(), 0, 107, 20));
 
         addPlayerInventory(8, 55);
     }

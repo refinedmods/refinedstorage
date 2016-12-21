@@ -34,6 +34,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -252,6 +253,12 @@ public final class RSUtils {
         }
 
         return AccessType.INSERT_EXTRACT;
+    }
+
+    public static void updateBlock(World world, BlockPos pos) {
+        if (world != null) {
+            world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 1 | 2);
+        }
     }
 
     public static IItemHandler getItemHandler(TileEntity tile, EnumFacing side) {

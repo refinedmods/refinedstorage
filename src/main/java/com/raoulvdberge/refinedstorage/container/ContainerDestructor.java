@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.container;
 
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeDestructor;
 import com.raoulvdberge.refinedstorage.container.slot.SlotFilterType;
 import com.raoulvdberge.refinedstorage.tile.TileDestructor;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,11 +13,11 @@ public class ContainerDestructor extends ContainerBase {
         super(destructor, player);
 
         for (int i = 0; i < 4; ++i) {
-            addSlotToContainer(new SlotItemHandler(destructor.getUpgrades(), i, 187, 6 + (i * 18)));
+            addSlotToContainer(new SlotItemHandler(((NetworkNodeDestructor) destructor.getNode()).getUpgrades(), i, 187, 6 + (i * 18)));
         }
 
         for (int i = 0; i < 9; ++i) {
-            addSlotToContainer(new SlotFilterType(destructor, i, 8 + (18 * i), 20));
+            addSlotToContainer(new SlotFilterType((NetworkNodeDestructor) destructor.getNode(), i, 8 + (18 * i), 20));
         }
 
         addPlayerInventory(8, 55);

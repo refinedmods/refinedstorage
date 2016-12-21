@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.tile.config;
 
+import com.raoulvdberge.refinedstorage.api.network.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataConsumer;
@@ -15,17 +16,17 @@ public interface IFilterable {
     int WHITELIST = 0;
     int BLACKLIST = 1;
 
-    static <T extends TileEntity & IFilterable> TileDataParameter<Integer> createParameter() {
+    static <T extends TileEntity & INetworkNodeProxy> TileDataParameter<Integer> createParameter() {
         return new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, T>() {
             @Override
             public Integer getValue(T tile) {
-                return tile.getMode();
+                return ((IFilterable) tile.getNode()).getMode();
             }
         }, new ITileDataConsumer<Integer, T>() {
             @Override
             public void setValue(T tile, Integer value) {
                 if (value == WHITELIST || value == BLACKLIST) {
-                    tile.setMode(value);
+                    ((IFilterable) tile.getNode()).setMode(value);
                 }
             }
         });

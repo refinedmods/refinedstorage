@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.container;
 
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeExporter;
 import com.raoulvdberge.refinedstorage.container.slot.SlotFilter;
 import com.raoulvdberge.refinedstorage.container.slot.SlotFilterType;
 import com.raoulvdberge.refinedstorage.tile.TileExporter;
@@ -24,11 +25,11 @@ public class ContainerExporter extends ContainerBase {
         this.inventoryItemStacks.clear();
 
         for (int i = 0; i < 4; ++i) {
-            addSlotToContainer(new SlotItemHandler(exporter.getUpgrades(), i, 187, 6 + (i * 18)));
+            addSlotToContainer(new SlotItemHandler(((NetworkNodeExporter) exporter.getNode()).getUpgrades(), i, 187, 6 + (i * 18)));
         }
 
         for (int i = 0; i < 9; ++i) {
-            addSlotToContainer(new SlotFilterType(exporter, i, 8 + (18 * i), 20, exporter.isRegulator() ? SlotFilter.FILTER_ALLOW_SIZE : 0));
+            addSlotToContainer(new SlotFilterType((NetworkNodeExporter) exporter.getNode(), i, 8 + (18 * i), 20, ((NetworkNodeExporter) exporter.getNode()).isRegulator() ? SlotFilter.FILTER_ALLOW_SIZE : 0));
         }
 
         addPlayerInventory(8, 55);

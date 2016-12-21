@@ -1,25 +1,12 @@
 package com.raoulvdberge.refinedstorage.tile;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
+import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeBasic;
 
 public class TileNetworkReceiver extends TileNode {
     @Override
-    public void updateNode() {
-    }
-
-    @Override
-    public int getEnergyUsage() {
-        return RS.INSTANCE.config.networkReceiverUsage;
-    }
-
-    @Override
-    public void setRedstoneMode(RedstoneMode mode) {
-        // NO OP
-    }
-
-    @Override
-    public boolean hasConnectivityState() {
-        return true;
+    public INetworkNode createNode() {
+        return new NetworkNodeBasic(this, RS.INSTANCE.config.networkReceiverUsage, true);
     }
 }

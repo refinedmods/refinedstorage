@@ -6,7 +6,6 @@ gui.refinedstorage:grid=Grid
 gui.refinedstorage:grid.craft=Craft
 gui.refinedstorage:grid.pattern_create=Create Pattern
 gui.refinedstorage:wireless_grid=Wireless Grid
-gui.refinedstorage:wireless_fluid_grid=Wireless Fluid Grid
 gui.refinedstorage:fluid_grid=Fluid Grid
 gui.refinedstorage:disk_drive=Drive
 gui.refinedstorage:disk_drive.disks=Disks

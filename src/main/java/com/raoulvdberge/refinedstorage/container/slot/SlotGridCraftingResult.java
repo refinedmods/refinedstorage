@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.container.slot;
 
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,7 +15,7 @@ public class SlotGridCraftingResult extends SlotCrafting {
     private TileGrid grid;
 
     public SlotGridCraftingResult(ContainerGrid container, EntityPlayer player, TileGrid grid, int id, int x, int y) {
-        super(player, grid.getMatrix(), grid.getResult(), id, x, y);
+        super(player, ((NetworkNodeGrid) grid.getNode()).getMatrix(), ((NetworkNodeGrid) grid.getNode()).getResult(), id, x, y);
 
         this.container = container;
         this.grid = grid;
@@ -23,12 +24,12 @@ public class SlotGridCraftingResult extends SlotCrafting {
     @Override
     @Nonnull
     public ItemStack onTake(EntityPlayer player, @Nonnull ItemStack stack) {
-        FMLCommonHandler.instance().firePlayerCraftingEvent(player, stack, grid.getMatrix());
+        FMLCommonHandler.instance().firePlayerCraftingEvent(player, stack, ((NetworkNodeGrid) grid.getNode()).getMatrix());
 
         onCrafting(stack);
 
         if (!player.getEntityWorld().isRemote) {
-            grid.onCrafted(player);
+            ((NetworkNodeGrid) grid.getNode()).onCrafted(player);
 
             container.sendCraftingSlots();
         }

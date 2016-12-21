@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.container;
 
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeFluidInterface;
 import com.raoulvdberge.refinedstorage.container.slot.SlotFilterFluid;
 import com.raoulvdberge.refinedstorage.tile.TileFluidInterface;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,11 +13,11 @@ public class ContainerFluidInterface extends ContainerBase {
         super(fluidInterface, player);
 
         for (int i = 0; i < 4; ++i) {
-            addSlotToContainer(new SlotItemHandler(fluidInterface.getUpgrades(), i, 187, 6 + (i * 18)));
+            addSlotToContainer(new SlotItemHandler(((NetworkNodeFluidInterface) fluidInterface.getNode()).getUpgrades(), i, 187, 6 + (i * 18)));
         }
 
-        addSlotToContainer(new SlotItemHandler(fluidInterface.getIn(), 0, 44, 32));
-        addSlotToContainer(new SlotFilterFluid(!fluidInterface.getWorld().isRemote, fluidInterface.getOut(), 0, 116, 32));
+        addSlotToContainer(new SlotItemHandler(((NetworkNodeFluidInterface) fluidInterface.getNode()).getIn(), 0, 44, 32));
+        addSlotToContainer(new SlotFilterFluid(!fluidInterface.getWorld().isRemote, ((NetworkNodeFluidInterface) fluidInterface.getNode()).getOut(), 0, 116, 32));
 
         addPlayerInventory(8, 122);
     }

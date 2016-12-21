@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.tile.externalstorage;
+package com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage;
 
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;

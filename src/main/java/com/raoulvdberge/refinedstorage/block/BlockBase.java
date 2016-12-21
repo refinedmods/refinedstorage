@@ -3,9 +3,10 @@ package com.raoulvdberge.refinedstorage.block;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
+import com.raoulvdberge.refinedstorage.api.network.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.item.ItemBlockBase;
-import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNode;
+import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -96,7 +97,7 @@ public abstract class BlockBase extends Block {
 
             tile.setDirection(getPlacementType().cycle(tile.getDirection()));
 
-            tile.updateBlock();
+            RSUtils.updateBlock(world, pos);
 
             return true;
         }
@@ -140,8 +141,9 @@ public abstract class BlockBase extends Block {
     protected boolean tryOpenNetworkGui(int guiId, EntityPlayer player, World world, BlockPos pos, EnumFacing facing, Permission... permissions) {
         TileEntity tile = world.getTileEntity(pos);
 
-        if (tile != null && tile.hasCapability(CapabilityNetworkNode.NETWORK_NODE_CAPABILITY, facing)) {
-            INetworkNode node = CapabilityNetworkNode.NETWORK_NODE_CAPABILITY.cast(tile.getCapability(CapabilityNetworkNode.NETWORK_NODE_CAPABILITY, facing));
+        if (tile != null && tile.hasCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, facing)) {
+            INetworkNodeProxy nodeProxy = CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY.cast(tile.getCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, facing));
+            INetworkNode node = nodeProxy.getNode();
 
             if (node.getNetwork() != null) {
                 for (Permission permission : permissions) {
@@ -163,8 +165,9 @@ public abstract class BlockBase extends Block {
     public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity) {
         TileEntity tile = world.getTileEntity(pos);
 
-        if (tile != null && tile.hasCapability(CapabilityNetworkNode.NETWORK_NODE_CAPABILITY, null)) {
-            INetworkNode node = tile.getCapability(CapabilityNetworkNode.NETWORK_NODE_CAPABILITY, null);
+        if (tile != null && tile.hasCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, null)) {
+            INetworkNodeProxy nodeProxy = tile.getCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, null);
+            INetworkNode node = nodeProxy.getNode();
 
             if (node.getNetwork() != null) {
                 if (!(entity instanceof EntityPlayer)) {

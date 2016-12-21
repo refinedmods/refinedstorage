@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.network;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.block.EnumGridType;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import io.netty.buffer.ByteBuf;
@@ -44,9 +45,9 @@ public class MessageGridCraftingClear extends MessageHandlerPlayerToServer<Messa
         TileEntity tile = player.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
 
         if (tile instanceof TileGrid) {
-            TileGrid grid = (TileGrid) tile;
+            NetworkNodeGrid grid = (NetworkNodeGrid) ((TileGrid) tile).getNode();
 
-            if (grid.hasNetwork()) {
+            if (grid.getNetwork() != null) {
                 if (grid.getType() == EnumGridType.CRAFTING && grid.getNetwork().getSecurityManager().hasPermission(Permission.INSERT, player)) {
                     for (int i = 0; i < grid.getMatrix().getSizeInventory(); ++i) {
                         ItemStack slot = grid.getMatrix().getStackInSlot(i);

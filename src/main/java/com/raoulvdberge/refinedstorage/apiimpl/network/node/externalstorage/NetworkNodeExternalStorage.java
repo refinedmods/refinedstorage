@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.tile.externalstorage;
+package com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
@@ -9,16 +9,18 @@ import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerChangeListenerNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
+import com.raoulvdberge.refinedstorage.tile.INetworkNodeHolder;
 import com.raoulvdberge.refinedstorage.tile.IStorageGui;
+import com.raoulvdberge.refinedstorage.tile.TileExternalStorage;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
 import com.raoulvdberge.refinedstorage.tile.config.*;
-import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -29,72 +31,27 @@ import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileExternalStorage extends TileNode implements IStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IType, IAccessType {
-    public static final TileDataParameter<Integer> PRIORITY = IPrioritizable.createParameter();
-    public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
-    public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
-    public static final TileDataParameter<Integer> TYPE = IType.createParameter();
-    public static final TileDataParameter<AccessType> ACCESS_TYPE = IAccessType.createParameter();
-
-    public static final TileDataParameter<Integer> STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileExternalStorage>() {
-        @Override
-        public Integer getValue(TileExternalStorage tile) {
-            int stored = 0;
-
-            for (StorageItemExternal storage : tile.itemStorages) {
-                stored += storage.getStored();
-            }
-
-            for (StorageFluidExternal storage : tile.fluidStorages) {
-                stored += storage.getStored();
-            }
-
-            return stored;
-        }
-    });
-
-    public static final TileDataParameter<Integer> CAPACITY = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileExternalStorage>() {
-        @Override
-        public Integer getValue(TileExternalStorage tile) {
-            int capacity = 0;
-
-            for (StorageItemExternal storage : tile.itemStorages) {
-                capacity += storage.getCapacity();
-            }
-
-            for (StorageFluidExternal storage : tile.fluidStorages) {
-                capacity += storage.getCapacity();
-            }
-
-            return capacity;
-        }
-    });
-
+public class NetworkNodeExternalStorage extends NetworkNode implements IStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IType, IAccessType {
     private static final String NBT_PRIORITY = "Priority";
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
     private static final String NBT_TYPE = "Type";
 
-    private ItemHandlerBasic itemFilters = new ItemHandlerBasic(9, this);
-    private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(9, this);
+    private ItemHandlerBasic itemFilters = new ItemHandlerBasic(9, new ItemHandlerChangeListenerNode(this));
+    private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(9, new ItemHandlerChangeListenerNode(this));
 
     private int priority = 0;
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int mode = IFilterable.WHITELIST;
     private int type = IType.ITEMS;
     private AccessType accessType = AccessType.INSERT_EXTRACT;
+    private int networkTicks;
 
     private List<StorageItemExternal> itemStorages = new ArrayList<>();
     private List<StorageFluidExternal> fluidStorages = new ArrayList<>();
 
-    public TileExternalStorage() {
-        dataManager.addWatchedParameter(PRIORITY);
-        dataManager.addWatchedParameter(COMPARE);
-        dataManager.addWatchedParameter(MODE);
-        dataManager.addWatchedParameter(STORED);
-        dataManager.addWatchedParameter(CAPACITY);
-        dataManager.addWatchedParameter(TYPE);
-        dataManager.addWatchedParameter(ACCESS_TYPE);
+    public NetworkNodeExternalStorage(INetworkNodeHolder holder) {
+        super(holder);
     }
 
     @Override
@@ -103,12 +60,8 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
     }
 
     @Override
-    public void updateNode() {
-    }
-
-    @Override
-    public void onConnectionChange(INetworkMaster network, boolean state) {
-        super.onConnectionChange(network, state);
+    public void onConnectedStateChange(INetworkMaster network, boolean state) {
+        super.onConnectedStateChange(network, state);
 
         updateStorage(network);
 
@@ -116,11 +69,11 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
         network.getFluidStorageCache().invalidate();
     }
 
-    private int networkTicks;
-
     @Override
     public void update() {
-        if (!getWorld().isRemote && network != null) {
+        super.update();
+
+        if (network != null) {
             if (networkTicks++ == 0) {
                 updateStorage(network);
 
@@ -143,8 +96,6 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
                 network.getFluidStorageCache().invalidate();
             }
         }
-
-        super.update();
     }
 
     @Override
@@ -230,7 +181,7 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
         itemStorages.clear();
         fluidStorages.clear();
 
-        TileEntity facing = getFacingTile();
+        TileEntity facing = holder.world().getTileEntity(holder.pos().offset(holder.getDirection()));
 
         if (type == IType.ITEMS) {
             if (facing instanceof IDrawerGroup) {
@@ -240,14 +191,14 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
             } else if (facing instanceof IDeepStorageUnit) {
                 itemStorages.add(new StorageItemDSU(this, (IDeepStorageUnit) facing));
             } else if (!(facing instanceof TileNode)) {
-                IItemHandler itemHandler = RSUtils.getItemHandler(facing, getDirection().getOpposite());
+                IItemHandler itemHandler = RSUtils.getItemHandler(facing, holder.getDirection().getOpposite());
 
                 if (itemHandler != null) {
                     itemStorages.add(new StorageItemItemHandler(this, itemHandler));
                 }
             }
         } else if (type == IType.FLUIDS) {
-            IFluidHandler fluidHandler = RSUtils.getFluidHandler(facing, getDirection().getOpposite());
+            IFluidHandler fluidHandler = RSUtils.getFluidHandler(facing, holder.getDirection().getOpposite());
 
             if (fluidHandler != null) {
                 for (IFluidTankProperties property : fluidHandler.getTankProperties()) {
@@ -277,22 +228,22 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
 
     @Override
     public TileDataParameter<Integer> getRedstoneModeParameter() {
-        return REDSTONE_MODE;
+        return TileExternalStorage.REDSTONE_MODE;
     }
 
     @Override
     public TileDataParameter<Integer> getCompareParameter() {
-        return COMPARE;
+        return TileExternalStorage.COMPARE;
     }
 
     @Override
     public TileDataParameter<Integer> getFilterParameter() {
-        return MODE;
+        return TileExternalStorage.MODE;
     }
 
     @Override
     public TileDataParameter<Integer> getPriorityParameter() {
-        return PRIORITY;
+        return TileExternalStorage.PRIORITY;
     }
 
     @Override
@@ -302,7 +253,7 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
 
     @Override
     public TileDataParameter<AccessType> getAccessTypeParameter() {
-        return ACCESS_TYPE;
+        return TileExternalStorage.ACCESS_TYPE;
     }
 
     @Override
@@ -312,12 +263,12 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
 
     @Override
     public int getStored() {
-        return STORED.getValue();
+        return TileExternalStorage.STORED.getValue();
     }
 
     @Override
     public int getCapacity() {
-        return CAPACITY.getValue();
+        return TileExternalStorage.CAPACITY.getValue();
     }
 
     @Override
@@ -339,12 +290,12 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
 
     @Override
     public TileDataParameter<Integer> getTypeParameter() {
-        return TYPE;
+        return TileExternalStorage.TYPE;
     }
 
     @Override
     public int getType() {
-        return getWorld().isRemote ? TYPE.getValue() : type;
+        return holder.world().isRemote ? TileExternalStorage.TYPE.getValue() : type;
     }
 
     @Override
@@ -369,5 +320,13 @@ public class TileExternalStorage extends TileNode implements IStorageProvider, I
 
     public ItemHandlerFluid getFluidFilters() {
         return fluidFilters;
+    }
+
+    public List<StorageItemExternal> getItemStorages() {
+        return itemStorages;
+    }
+
+    public List<StorageFluidExternal> getFluidStorages() {
+        return fluidStorages;
     }
 }

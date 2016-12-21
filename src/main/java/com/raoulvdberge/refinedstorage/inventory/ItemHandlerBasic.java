@@ -1,20 +1,19 @@
 package com.raoulvdberge.refinedstorage.inventory;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 
 public class ItemHandlerBasic extends ItemStackHandler {
-    private TileEntity tile;
+    private IItemHandlerChangeListener listener;
 
     protected IItemValidator[] validators;
 
-    public ItemHandlerBasic(int size, TileEntity tile, IItemValidator... validators) {
+    public ItemHandlerBasic(int size, IItemHandlerChangeListener listener, IItemValidator... validators) {
         super(size);
 
-        this.tile = tile;
+        this.listener = listener;
         this.validators = validators;
     }
 
@@ -51,8 +50,8 @@ public class ItemHandlerBasic extends ItemStackHandler {
     protected void onContentsChanged(int slot) {
         super.onContentsChanged(slot);
 
-        if (tile != null) {
-            tile.markDirty();
+        if (listener != null) {
+            listener.onChanged(slot);
         }
     }
 

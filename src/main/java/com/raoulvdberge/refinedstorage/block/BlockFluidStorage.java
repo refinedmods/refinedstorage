@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSGui;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeFluidStorage;
 import com.raoulvdberge.refinedstorage.item.ItemBlockFluidStorage;
 import com.raoulvdberge.refinedstorage.tile.TileFluidStorage;
 import net.minecraft.block.properties.PropertyEnum;
@@ -75,14 +76,14 @@ public class BlockFluidStorage extends BlockNode {
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack stack) {
         super.onBlockPlacedBy(world, pos, state, player, stack);
 
-        if (!world.isRemote && stack.hasTagCompound() && stack.getTagCompound().hasKey(TileFluidStorage.NBT_STORAGE)) {
-            ((TileFluidStorage) world.getTileEntity(pos)).setStorageTag(stack.getTagCompound().getCompoundTag(TileFluidStorage.NBT_STORAGE));
+        if (!world.isRemote && stack.hasTagCompound() && stack.getTagCompound().hasKey(NetworkNodeFluidStorage.NBT_STORAGE)) {
+            ((NetworkNodeFluidStorage) ((TileFluidStorage) world.getTileEntity(pos)).getNode()).setStorageTag(stack.getTagCompound().getCompoundTag(NetworkNodeFluidStorage.NBT_STORAGE));
         }
     }
 
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
-        ((TileFluidStorage) world.getTileEntity(pos)).onBreak();
+        ((NetworkNodeFluidStorage) ((TileFluidStorage) world.getTileEntity(pos)).getNode()).onBreak();
 
         super.breakBlock(world, pos, state);
     }
@@ -95,7 +96,7 @@ public class BlockFluidStorage extends BlockNode {
 
         ItemStack stack = new ItemStack(RSBlocks.FLUID_STORAGE, 1, getMetaFromState(state));
         stack.setTagCompound(new NBTTagCompound());
-        stack.getTagCompound().setTag(TileFluidStorage.NBT_STORAGE, storage.getStorageTag());
+        stack.getTagCompound().setTag(NetworkNodeFluidStorage.NBT_STORAGE, ((NetworkNodeFluidStorage) ((TileFluidStorage) world.getTileEntity(pos)).getNode()).getStorageTag());
 
         drops.add(stack);
 

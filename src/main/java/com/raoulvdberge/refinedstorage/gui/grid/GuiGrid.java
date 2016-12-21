@@ -5,6 +5,7 @@ import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimaps;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.block.EnumGridType;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
@@ -187,7 +188,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
             Collections.sort(stacks, SORTING_NAME);
 
-            if (grid.getSortingType() == TileGrid.SORTING_TYPE_QUANTITY) {
+            if (grid.getSortingType() == NetworkNodeGrid.SORTING_TYPE_QUANTITY) {
                 Collections.sort(stacks, SORTING_QUANTITY);
             }
         }
@@ -289,7 +290,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     }
 
     private boolean isOverCreatePattern(int mouseX, int mouseY) {
-        return grid.getType() == EnumGridType.PATTERN && inBounds(152, getTabDelta() + getHeader() + (getVisibleRows() * 18) + 22, 16, 16, mouseX, mouseY) && ((TileGrid) grid).canCreatePattern();
+        return grid.getType() == EnumGridType.PATTERN && inBounds(152, getTabDelta() + getHeader() + (getVisibleRows() * 18) + 22, 16, 16, mouseX, mouseY) && ((NetworkNodeGrid) ((TileGrid) grid).getNode()).canCreatePattern();
     }
 
     private int getTabDelta() {
@@ -389,7 +390,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
                 ty = 1;
             }
 
-            if (!((TileGrid) grid).canCreatePattern()) {
+            if (!((NetworkNodeGrid) ((TileGrid) grid).getNode()).canCreatePattern()) {
                 ty = 2;
             }
 
@@ -564,15 +565,15 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     }
 
     private void updateJEI() {
-        if (IntegrationJEI.isLoaded() && (grid.getSearchBoxMode() == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED || grid.getSearchBoxMode() == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED)) {
+        if (IntegrationJEI.isLoaded() && (grid.getSearchBoxMode() == NetworkNodeGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED || grid.getSearchBoxMode() == NetworkNodeGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED)) {
             RSJEIPlugin.INSTANCE.getRuntime().getItemListOverlay().setFilterText(searchField.getText());
         }
     }
 
     public void updateSearchFieldFocus(int mode) {
         if (searchField != null) {
-            searchField.setCanLoseFocus(!TileGrid.isSearchBoxModeWithAutoselection(mode));
-            searchField.setFocused(TileGrid.isSearchBoxModeWithAutoselection(mode));
+            searchField.setCanLoseFocus(!NetworkNodeGrid.isSearchBoxModeWithAutoselection(mode));
+            searchField.setFocused(NetworkNodeGrid.isSearchBoxModeWithAutoselection(mode));
         }
     }
 

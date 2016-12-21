@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.item;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemWirelessGrid;
-import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -17,20 +17,20 @@ public class ItemWirelessGrid extends ItemNetworkItem {
     public void initializeDefaults(NBTTagCompound tag) {
         super.initializeDefaults(tag);
 
-        tag.setInteger(TileGrid.NBT_VIEW_TYPE, TileGrid.VIEW_TYPE_NORMAL);
-        tag.setInteger(TileGrid.NBT_SORTING_DIRECTION, TileGrid.SORTING_DIRECTION_DESCENDING);
-        tag.setInteger(TileGrid.NBT_SORTING_TYPE, TileGrid.SORTING_TYPE_QUANTITY);
-        tag.setInteger(TileGrid.NBT_SEARCH_BOX_MODE, TileGrid.SEARCH_BOX_MODE_NORMAL);
-        tag.setInteger(TileGrid.NBT_TAB_SELECTED, -1);
+        tag.setInteger(NetworkNodeGrid.NBT_VIEW_TYPE, NetworkNodeGrid.VIEW_TYPE_NORMAL);
+        tag.setInteger(NetworkNodeGrid.NBT_SORTING_DIRECTION, NetworkNodeGrid.SORTING_DIRECTION_DESCENDING);
+        tag.setInteger(NetworkNodeGrid.NBT_SORTING_TYPE, NetworkNodeGrid.SORTING_TYPE_QUANTITY);
+        tag.setInteger(NetworkNodeGrid.NBT_SEARCH_BOX_MODE, NetworkNodeGrid.SEARCH_BOX_MODE_NORMAL);
+        tag.setInteger(NetworkNodeGrid.NBT_TAB_SELECTED, -1);
     }
 
     @Override
     public boolean isValid(ItemStack stack) {
         return super.isValid(stack)
-            && stack.getTagCompound().hasKey(TileGrid.NBT_VIEW_TYPE)
-            && stack.getTagCompound().hasKey(TileGrid.NBT_SORTING_DIRECTION)
-            && stack.getTagCompound().hasKey(TileGrid.NBT_SORTING_TYPE)
-            && stack.getTagCompound().hasKey(TileGrid.NBT_SEARCH_BOX_MODE);
+                && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_VIEW_TYPE)
+                && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_SORTING_DIRECTION)
+                && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_SORTING_TYPE)
+                && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_SEARCH_BOX_MODE);
     }
 
     @Override
@@ -39,22 +39,22 @@ public class ItemWirelessGrid extends ItemNetworkItem {
     }
 
     public static int getViewType(ItemStack stack) {
-        return stack.getTagCompound().getInteger(TileGrid.NBT_VIEW_TYPE);
+        return stack.getTagCompound().getInteger(NetworkNodeGrid.NBT_VIEW_TYPE);
     }
 
     public static int getSortingType(ItemStack stack) {
-        return stack.getTagCompound().getInteger(TileGrid.NBT_SORTING_TYPE);
+        return stack.getTagCompound().getInteger(NetworkNodeGrid.NBT_SORTING_TYPE);
     }
 
     public static int getSortingDirection(ItemStack stack) {
-        return stack.getTagCompound().getInteger(TileGrid.NBT_SORTING_DIRECTION);
+        return stack.getTagCompound().getInteger(NetworkNodeGrid.NBT_SORTING_DIRECTION);
     }
 
     public static int getSearchBoxMode(ItemStack stack) {
-        return stack.getTagCompound().getInteger(TileGrid.NBT_SEARCH_BOX_MODE);
+        return stack.getTagCompound().getInteger(NetworkNodeGrid.NBT_SEARCH_BOX_MODE);
     }
 
     public static int getTabSelected(ItemStack stack) {
-        return (stack.hasTagCompound() && stack.getTagCompound().hasKey(TileGrid.NBT_TAB_SELECTED)) ? stack.getTagCompound().getInteger(TileGrid.NBT_TAB_SELECTED) : -1;
+        return (stack.hasTagCompound() && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_TAB_SELECTED)) ? stack.getTagCompound().getInteger(NetworkNodeGrid.NBT_TAB_SELECTED) : -1;
     }
 }

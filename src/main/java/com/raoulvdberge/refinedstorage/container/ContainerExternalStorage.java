@@ -1,7 +1,8 @@
 package com.raoulvdberge.refinedstorage.container;
 
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage.NetworkNodeExternalStorage;
 import com.raoulvdberge.refinedstorage.container.slot.SlotFilterType;
-import com.raoulvdberge.refinedstorage.tile.externalstorage.TileExternalStorage;
+import com.raoulvdberge.refinedstorage.tile.TileExternalStorage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -11,7 +12,7 @@ public class ContainerExternalStorage extends ContainerBase {
         super(tile, player);
 
         for (int i = 0; i < 9; ++i) {
-            addSlotToContainer(new SlotFilterType(tile, i, 8 + (18 * i), 20));
+            addSlotToContainer(new SlotFilterType((NetworkNodeExternalStorage) tile.getNode(), i, 8 + (18 * i), 20));
         }
 
         addPlayerInventory(8, 141);

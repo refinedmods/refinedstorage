@@ -28,7 +28,6 @@ import com.raoulvdberge.refinedstorage.tile.*;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.data.ContainerListener;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
-import com.raoulvdberge.refinedstorage.tile.externalstorage.TileExternalStorage;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -59,7 +58,7 @@ public class ProxyCommon {
             IntegrationCraftingTweaks.register();
         }
 
-        CapabilityNetworkNode.register();
+        CapabilityNetworkNodeProxy.register();
 
         API.deliver(e.getAsmData());
 

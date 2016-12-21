@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSGui;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeStorage;
 import com.raoulvdberge.refinedstorage.item.ItemBlockStorage;
 import com.raoulvdberge.refinedstorage.tile.TileStorage;
 import net.minecraft.block.properties.PropertyEnum;
@@ -75,14 +76,14 @@ public class BlockStorage extends BlockNode {
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack stack) {
         super.onBlockPlacedBy(world, pos, state, player, stack);
 
-        if (!world.isRemote && stack.hasTagCompound() && stack.getTagCompound().hasKey(TileStorage.NBT_STORAGE)) {
-            ((TileStorage) world.getTileEntity(pos)).setStorageTag(stack.getTagCompound().getCompoundTag(TileStorage.NBT_STORAGE));
+        if (!world.isRemote && stack.hasTagCompound() && stack.getTagCompound().hasKey(NetworkNodeStorage.NBT_STORAGE)) {
+            ((NetworkNodeStorage) ((TileStorage) world.getTileEntity(pos)).getNode()).setStorageTag(stack.getTagCompound().getCompoundTag(NetworkNodeStorage.NBT_STORAGE));
         }
     }
 
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
-        ((TileStorage) world.getTileEntity(pos)).onBreak();
+        ((NetworkNodeStorage) ((TileStorage) world.getTileEntity(pos)).getNode()).onBreak();
 
         super.breakBlock(world, pos, state);
     }
@@ -95,7 +96,7 @@ public class BlockStorage extends BlockNode {
 
         ItemStack stack = new ItemStack(RSBlocks.STORAGE, 1, getMetaFromState(state));
         stack.setTagCompound(new NBTTagCompound());
-        stack.getTagCompound().setTag(TileStorage.NBT_STORAGE, storage.getStorageTag());
+        stack.getTagCompound().setTag(NetworkNodeStorage.NBT_STORAGE, ((NetworkNodeStorage) ((TileStorage) world.getTileEntity(pos)).getNode()).getStorageTag());
 
         drops.add(stack);
 

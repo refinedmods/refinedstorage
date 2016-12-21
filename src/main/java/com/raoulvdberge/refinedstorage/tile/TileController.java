@@ -14,6 +14,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeGraph;
+import com.raoulvdberge.refinedstorage.api.network.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
@@ -31,6 +32,8 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeGraph;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.FluidGridHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.ItemGridHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemHandler;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage.StorageFluidExternal;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage.StorageItemExternal;
 import com.raoulvdberge.refinedstorage.apiimpl.network.security.SecurityManager;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItem;
@@ -44,14 +47,12 @@ import com.raoulvdberge.refinedstorage.integration.forgeenergy.ControllerEnergyF
 import com.raoulvdberge.refinedstorage.integration.tesla.ControllerEnergyTesla;
 import com.raoulvdberge.refinedstorage.integration.tesla.IntegrationTesla;
 import com.raoulvdberge.refinedstorage.network.*;
-import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNode;
+import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.RSSerializers;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-import com.raoulvdberge.refinedstorage.tile.externalstorage.StorageFluidExternal;
-import com.raoulvdberge.refinedstorage.tile.externalstorage.StorageItemExternal;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
 import net.darkhax.tesla.capability.TeslaCapabilities;
 import net.minecraft.block.state.IBlockState;
@@ -77,7 +78,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class TileController extends TileBase implements INetworkMaster, IRedstoneConfigurable, INetworkNode {
+public class TileController extends TileBase implements INetworkMaster, IRedstoneConfigurable, INetworkNode, INetworkNodeProxy {
     public static final TileDataParameter<Integer> REDSTONE_MODE = RedstoneMode.createParameter();
 
     public static final TileDataParameter<Integer> ENERGY_USAGE = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileController>() {
@@ -108,15 +109,16 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
 
             for (INetworkNode node : tile.nodeGraph.all()) {
                 if (node.canUpdate()) {
-                    ItemStack itemStack = node.getItemStack();
-                    if (itemStack.isEmpty()) {
+                    ItemStack stack = node.getItemStack();
+
+                    if (stack.isEmpty()) {
                         continue;
                     }
 
                     ClientNode clientNode = new ClientNode(
-                        itemStack,
-                        1,
-                        node.getEnergyUsage()
+                            stack,
+                            1,
+                            node.getEnergyUsage()
                     );
 
                     if (nodes.contains(clientNode)) {
@@ -318,7 +320,7 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
             if (getEnergyScaledForDisplay() != lastEnergyDisplay) {
                 lastEnergyDisplay = getEnergyScaledForDisplay();
 
-                updateBlock();
+                RSUtils.updateBlock(world, pos);
             }
         }
 
@@ -471,8 +473,8 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
     @Override
     public void sendItemStorageToClient() {
         getWorld().getMinecraftServer().getPlayerList().getPlayers().stream()
-            .filter(player -> isWatchingGrid(player, EnumGridType.NORMAL, EnumGridType.CRAFTING, EnumGridType.PATTERN))
-            .forEach(this::sendItemStorageToClient);
+                .filter(player -> isWatchingGrid(player, EnumGridType.NORMAL, EnumGridType.CRAFTING, EnumGridType.PATTERN))
+                .forEach(this::sendItemStorageToClient);
     }
 
     @Override
@@ -483,15 +485,15 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
     @Override
     public void sendItemStorageDeltaToClient(ItemStack stack, int delta) {
         getWorld().getMinecraftServer().getPlayerList().getPlayers().stream()
-            .filter(player -> isWatchingGrid(player, EnumGridType.NORMAL, EnumGridType.CRAFTING, EnumGridType.PATTERN))
-            .forEach(player -> RS.INSTANCE.network.sendTo(new MessageGridItemDelta(this, stack, delta), player));
+                .filter(player -> isWatchingGrid(player, EnumGridType.NORMAL, EnumGridType.CRAFTING, EnumGridType.PATTERN))
+                .forEach(player -> RS.INSTANCE.network.sendTo(new MessageGridItemDelta(this, stack, delta), player));
     }
 
     @Override
     public void sendFluidStorageToClient() {
         getWorld().getMinecraftServer().getPlayerList().getPlayers().stream()
-            .filter(player -> isWatchingGrid(player, EnumGridType.FLUID))
-            .forEach(this::sendFluidStorageToClient);
+                .filter(player -> isWatchingGrid(player, EnumGridType.FLUID))
+                .forEach(this::sendFluidStorageToClient);
     }
 
     @Override
@@ -502,8 +504,8 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
     @Override
     public void sendFluidStorageDeltaToClient(FluidStack stack, int delta) {
         getWorld().getMinecraftServer().getPlayerList().getPlayers().stream()
-            .filter(player -> isWatchingGrid(player, EnumGridType.FLUID))
-            .forEach(player -> RS.INSTANCE.network.sendTo(new MessageGridFluidDelta(stack, delta), player));
+                .filter(player -> isWatchingGrid(player, EnumGridType.FLUID))
+                .forEach(player -> RS.INSTANCE.network.sendTo(new MessageGridFluidDelta(stack, delta), player));
     }
 
     private boolean isWatchingGrid(EntityPlayer player, EnumGridType... types) {
@@ -526,8 +528,8 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
     @Override
     public void sendCraftingMonitorUpdate() {
         List<EntityPlayerMP> watchers = getWorld().getMinecraftServer().getPlayerList().getPlayers().stream()
-            .filter(player -> player.openContainer instanceof ContainerCraftingMonitor && pos.equals(((ContainerCraftingMonitor) player.openContainer).getCraftingMonitor().getNetworkPosition()))
-            .collect(Collectors.toList());
+                .filter(player -> player.openContainer instanceof ContainerCraftingMonitor && pos.equals(((ContainerCraftingMonitor) player.openContainer).getCraftingMonitor().getNetworkPosition()))
+                .collect(Collectors.toList());
 
         if (!watchers.isEmpty()) {
             List<ICraftingMonitorElement> elements = getElements();
@@ -571,10 +573,10 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
     @Override
     public void sendReaderWriterChannelUpdate() {
         getWorld().getMinecraftServer().getPlayerList().getPlayers().stream()
-            .filter(player -> player.openContainer instanceof ContainerReaderWriter &&
-                ((ContainerReaderWriter) player.openContainer).getReaderWriter().getNetwork() != null &&
-                pos.equals(((ContainerReaderWriter) player.openContainer).getReaderWriter().getNetwork().getPosition()))
-            .forEach(this::sendReaderWriterChannelUpdate);
+                .filter(player -> player.openContainer instanceof ContainerReaderWriter &&
+                        ((ContainerReaderWriter) player.openContainer).getReaderWriter().getNetwork() != null &&
+                        pos.equals(((ContainerReaderWriter) player.openContainer).getReaderWriter().getNetwork().getPosition()))
+                .forEach(this::sendReaderWriterChannelUpdate);
     }
 
     @Override
@@ -973,8 +975,8 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
             }
         }
 
-        if (capability == CapabilityNetworkNode.NETWORK_NODE_CAPABILITY) {
-            return CapabilityNetworkNode.NETWORK_NODE_CAPABILITY.cast(this);
+        if (capability == CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY) {
+            return CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY.cast(this);
         }
 
         return super.getCapability(capability, facing);
@@ -983,8 +985,18 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
         return capability == CapabilityEnergy.ENERGY
-            || (energyTesla != null && (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER))
-            || capability == CapabilityNetworkNode.NETWORK_NODE_CAPABILITY
-            || super.hasCapability(capability, facing);
+                || (energyTesla != null && (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER))
+                || capability == CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY
+                || super.hasCapability(capability, facing);
+    }
+
+    @Override
+    public INetworkNode getNode() {
+        return this;
+    }
+
+    @Override
+    public INetworkNode createNode() {
+        return this;
     }
 }

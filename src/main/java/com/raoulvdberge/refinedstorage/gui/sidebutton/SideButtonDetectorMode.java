@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.gui.sidebutton;
 
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeDetector;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.tile.TileDetector;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
@@ -24,14 +25,14 @@ public class SideButtonDetectorMode extends SideButton {
     public void actionPerformed() {
         int mode = TileDetector.MODE.getValue();
 
-        if (mode == TileDetector.MODE_EQUAL) {
-            mode = TileDetector.MODE_ABOVE;
-        } else if (mode == TileDetector.MODE_ABOVE) {
-            mode = TileDetector.MODE_UNDER;
-        } else if (mode == TileDetector.MODE_UNDER) {
-            mode = TileDetector.MODE_AUTOCRAFTING;
-        } else if (mode == TileDetector.MODE_AUTOCRAFTING) {
-            mode = TileDetector.MODE_EQUAL;
+        if (mode == NetworkNodeDetector.MODE_EQUAL) {
+            mode = NetworkNodeDetector.MODE_ABOVE;
+        } else if (mode == NetworkNodeDetector.MODE_ABOVE) {
+            mode = NetworkNodeDetector.MODE_UNDER;
+        } else if (mode == NetworkNodeDetector.MODE_UNDER) {
+            mode = NetworkNodeDetector.MODE_AUTOCRAFTING;
+        } else if (mode == NetworkNodeDetector.MODE_AUTOCRAFTING) {
+            mode = NetworkNodeDetector.MODE_EQUAL;
         }
 
         TileDataManager.setParameter(TileDetector.MODE, mode);

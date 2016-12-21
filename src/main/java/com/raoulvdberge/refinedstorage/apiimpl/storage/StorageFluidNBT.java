@@ -1,13 +1,13 @@
 package com.raoulvdberge.refinedstorage.apiimpl.storage;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
+import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -31,19 +31,19 @@ public abstract class StorageFluidNBT implements IStorage<FluidStack> {
 
     private NBTTagCompound tag;
     private int capacity;
-    private TileEntity tile;
+    private INetworkNode node;
 
     private NonNullList<FluidStack> stacks = NonNullList.create();
 
     /**
      * @param tag      The NBT tag we are reading from and writing the amount stored to, has to be initialized with {@link StorageFluidNBT#createNBT()} if it doesn't exist yet
      * @param capacity The capacity of this storage, -1 for infinite capacity
-     * @param tile     A {@link TileEntity} that the NBT storage is in, will be marked dirty when the storage changes
+     * @param node     A {@link INetworkNode} that the NBT storage is in, will be marked dirty when the storage changes
      */
-    public StorageFluidNBT(NBTTagCompound tag, int capacity, @Nullable TileEntity tile) {
+    public StorageFluidNBT(NBTTagCompound tag, int capacity, @Nullable INetworkNode node) {
         this.tag = tag;
         this.capacity = capacity;
-        this.tile = tile;
+        this.node = node;
 
         readFromNBT();
     }
@@ -178,8 +178,8 @@ public abstract class StorageFluidNBT implements IStorage<FluidStack> {
     }
 
     public void onStorageChanged() {
-        if (tile != null) {
-            tile.markDirty();
+        if (node != null) {
+            node.markDirty();
         }
     }
 

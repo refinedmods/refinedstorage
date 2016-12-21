@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.container;
 
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeInterface;
 import com.raoulvdberge.refinedstorage.container.slot.SlotFilter;
 import com.raoulvdberge.refinedstorage.container.slot.SlotOutput;
 import com.raoulvdberge.refinedstorage.tile.TileInterface;
@@ -13,19 +14,19 @@ public class ContainerInterface extends ContainerBase {
         super(tile, player);
 
         for (int i = 0; i < 9; ++i) {
-            addSlotToContainer(new SlotItemHandler(tile.getImportItems(), i, 8 + (18 * i), 20));
+            addSlotToContainer(new SlotItemHandler(((NetworkNodeInterface) tile.getNode()).getImportItems(), i, 8 + (18 * i), 20));
         }
 
         for (int i = 0; i < 9; ++i) {
-            addSlotToContainer(new SlotFilter(tile.getExportSpecimenItems(), i, 8 + (18 * i), 54, SlotFilter.FILTER_ALLOW_SIZE));
+            addSlotToContainer(new SlotFilter(((NetworkNodeInterface) tile.getNode()).getExportSpecimenItems(), i, 8 + (18 * i), 54, SlotFilter.FILTER_ALLOW_SIZE));
         }
 
         for (int i = 0; i < 9; ++i) {
-            addSlotToContainer(new SlotOutput(tile.getExportItems(), i, 8 + (18 * i), 100));
+            addSlotToContainer(new SlotOutput(((NetworkNodeInterface) tile.getNode()).getExportItems(), i, 8 + (18 * i), 100));
         }
 
         for (int i = 0; i < 4; ++i) {
-            addSlotToContainer(new SlotItemHandler(tile.getUpgrades(), i, 187, 6 + (i * 18)));
+            addSlotToContainer(new SlotItemHandler(((NetworkNodeInterface) tile.getNode()).getUpgrades(), i, 187, 6 + (i * 18)));
         }
 
         addPlayerInventory(8, 134);

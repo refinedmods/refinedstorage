@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.tile.externalstorage;
+package com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
@@ -13,10 +13,10 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import javax.annotation.Nonnull;
 
 public class StorageItemDrawer extends StorageItemExternal {
-    private TileExternalStorage externalStorage;
+    private NetworkNodeExternalStorage externalStorage;
     private IDrawer drawer;
 
-    public StorageItemDrawer(TileExternalStorage externalStorage, IDrawer drawer) {
+    public StorageItemDrawer(NetworkNodeExternalStorage externalStorage, IDrawer drawer) {
         this.externalStorage = externalStorage;
         this.drawer = drawer;
     }
@@ -64,7 +64,7 @@ public class StorageItemDrawer extends StorageItemExternal {
         return RSUtils.emptyNonNullList();
     }
 
-    public static ItemStack insert(TileExternalStorage externalStorage, IDrawer drawer, @Nonnull ItemStack stack, int size, boolean simulate) {
+    public static ItemStack insert(NetworkNodeExternalStorage externalStorage, IDrawer drawer, @Nonnull ItemStack stack, int size, boolean simulate) {
         if (IFilterable.canTake(externalStorage.getItemFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack) && drawer.canItemBeStored(stack)) {
             int stored = drawer.getStoredItemCount();
             int remainingSpace = drawer.getMaxCapacity(stack) - stored;

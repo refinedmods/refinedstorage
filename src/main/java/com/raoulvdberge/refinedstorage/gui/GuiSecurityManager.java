@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.gui;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeSecurityManager;
 import com.raoulvdberge.refinedstorage.container.ContainerSecurityManager;
 import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.item.ItemSecurityCard;
@@ -40,7 +41,7 @@ public class GuiSecurityManager extends GuiBase {
 
     @Override
     public void update(int x, int y) {
-        ItemStack card = securityManager.getEditCard().getStackInSlot(0);
+        ItemStack card = ((NetworkNodeSecurityManager) securityManager.getNode()).getEditCard().getStackInSlot(0);
 
         for (Permission permission : Permission.values()) {
             permissions[permission.getId()].setIsChecked(!card.isEmpty() && ItemSecurityCard.hasPermission(card, permission));

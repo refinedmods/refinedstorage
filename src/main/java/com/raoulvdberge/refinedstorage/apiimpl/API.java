@@ -8,6 +8,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreview
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
+import com.raoulvdberge.refinedstorage.api.network.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRegistry;
@@ -23,7 +24,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.solderer.SoldererRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.util.Comparer;
 import com.raoulvdberge.refinedstorage.apiimpl.util.StackListFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.util.StackListItem;
-import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNode;
+import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNodeProxy;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -137,8 +138,9 @@ public class API implements IRSAPI {
         for (EnumFacing facing : EnumFacing.VALUES) {
             TileEntity tile = world.getTileEntity(pos.offset(facing));
 
-            if (tile != null && tile.hasCapability(CapabilityNetworkNode.NETWORK_NODE_CAPABILITY, facing.getOpposite())) {
-                INetworkNode node = tile.getCapability(CapabilityNetworkNode.NETWORK_NODE_CAPABILITY, facing.getOpposite());
+            if (tile != null && tile.hasCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, facing.getOpposite())) {
+                INetworkNodeProxy nodeProxy = tile.getCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, facing.getOpposite());
+                INetworkNode node = nodeProxy.getNode();
 
                 if (node.getNetwork() != null) {
                     node.getNetwork().getNodeGraph().rebuild();

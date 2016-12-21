@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.tile.externalstorage;
+package com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage;
 
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -11,17 +11,19 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import javax.annotation.Nonnull;
 
 public class StorageItemItemHandler extends StorageItemExternal {
-    private TileExternalStorage externalStorage;
+    private NetworkNodeExternalStorage externalStorage;
     private IItemHandler handler;
     private AccessType lockedAccessType = AccessType.INSERT_EXTRACT;
 
-    public StorageItemItemHandler(TileExternalStorage externalStorage, IItemHandler handler) {
+    public StorageItemItemHandler(NetworkNodeExternalStorage externalStorage, IItemHandler handler) {
         this.externalStorage = externalStorage;
         this.handler = handler;
 
+        // @todo
+        /*
         if (externalStorage.getFacingTile().getBlockType().getUnlocalizedName().equals("tile.ExtraUtils2:TrashCan")) {
             lockedAccessType = AccessType.INSERT;
-        }
+        }*/
     }
 
     @Override

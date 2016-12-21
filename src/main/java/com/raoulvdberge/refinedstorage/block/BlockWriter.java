@@ -2,6 +2,8 @@ package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSGui;
+import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeWriter;
 import com.raoulvdberge.refinedstorage.tile.TileWriter;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -32,7 +34,7 @@ public class BlockWriter extends BlockCable {
         }
 
         if (!world.isRemote && tryOpenNetworkGui(RSGui.READER_WRITER, player, world, pos, side)) {
-            ((TileWriter) world.getTileEntity(pos)).onOpened(player);
+            ((NetworkNodeWriter) ((TileWriter) world.getTileEntity(pos)).getNode()).onOpened(player);
         }
 
         return true;
@@ -46,7 +48,7 @@ public class BlockWriter extends BlockCable {
     @Override
     @SuppressWarnings("deprecation")
     public int getWeakPower(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
-        TileWriter writer = (TileWriter) world.getTileEntity(pos);
+        IWriter writer = (IWriter) ((TileWriter) world.getTileEntity(pos)).getNode();
 
         return side == writer.getDirection().getOpposite() ? writer.getRedstoneStrength() : 0;
     }

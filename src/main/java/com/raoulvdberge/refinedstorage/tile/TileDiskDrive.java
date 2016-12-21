@@ -1,38 +1,20 @@
 package com.raoulvdberge.refinedstorage.tile;
 
-import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSItems;
-import com.raoulvdberge.refinedstorage.RSUtils;
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
-import com.raoulvdberge.refinedstorage.api.storage.IStorage;
-import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
-import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeDiskDrive;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageFluidNBT;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageItemNBT;
-import com.raoulvdberge.refinedstorage.block.EnumFluidStorageType;
-import com.raoulvdberge.refinedstorage.block.EnumItemStorageType;
-import com.raoulvdberge.refinedstorage.inventory.IItemValidator;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.tile.config.*;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 
-public class TileDiskDrive extends TileNode implements IStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IType, IExcessVoidable, IAccessType {
+public class TileDiskDrive extends TileNode {
     public static final TileDataParameter<Integer> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
@@ -40,105 +22,6 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
     public static final TileDataParameter<Boolean> VOID_EXCESS = IExcessVoidable.createParameter();
     public static final TileDataParameter<AccessType> ACCESS_TYPE = IAccessType.createParameter();
 
-    public class StorageItem extends StorageItemNBT {
-        private int lastState;
-
-        public StorageItem(ItemStack disk) {
-            super(disk.getTagCompound(), EnumItemStorageType.getById(disk.getItemDamage()).getCapacity(), TileDiskDrive.this);
-
-            lastState = getDiskState(getStored(), getCapacity());
-        }
-
-        @Override
-        public int getPriority() {
-            return priority;
-        }
-
-        @Override
-        public ItemStack insert(@Nonnull ItemStack stack, int size, boolean simulate) {
-            if (!IFilterable.canTake(itemFilters, mode, getCompare(), stack)) {
-                return ItemHandlerHelper.copyStackWithSize(stack, size);
-            }
-
-            return super.insert(stack, size, simulate);
-        }
-
-        @Override
-        public AccessType getAccessType() {
-            return accessType;
-        }
-
-        @Override
-        public boolean isVoiding() {
-            return voidExcess;
-        }
-
-        @Override
-        public void onStorageChanged() {
-            super.onStorageChanged();
-
-            int currentState = getDiskState(getStored(), getCapacity());
-
-            if (lastState != currentState) {
-                lastState = currentState;
-
-                updateBlock();
-            }
-        }
-    }
-
-    public class StorageFluid extends StorageFluidNBT {
-        private int lastState;
-
-        public StorageFluid(ItemStack disk) {
-            super(disk.getTagCompound(), EnumFluidStorageType.getById(disk.getItemDamage()).getCapacity(), TileDiskDrive.this);
-
-            lastState = getDiskState(getStored(), getCapacity());
-        }
-
-        @Override
-        public int getPriority() {
-            return priority;
-        }
-
-        @Override
-        public FluidStack insert(FluidStack stack, int size, boolean simulate) {
-            if (!IFilterable.canTakeFluids(fluidFilters, mode, getCompare(), stack)) {
-                return RSUtils.copyStackWithSize(stack, size);
-            }
-
-            return super.insert(stack, size, simulate);
-        }
-
-        @Override
-        public AccessType getAccessType() {
-            return accessType;
-        }
-
-        @Override
-        public boolean isVoiding() {
-            return voidExcess;
-        }
-
-        @Override
-        public void onStorageChanged() {
-            super.onStorageChanged();
-
-            int currentState = getDiskState(getStored(), getCapacity());
-
-            if (lastState != currentState) {
-                lastState = currentState;
-
-                updateBlock();
-            }
-        }
-    }
-
-    private static final String NBT_PRIORITY = "Priority";
-    private static final String NBT_COMPARE = "Compare";
-    private static final String NBT_MODE = "Mode";
-    private static final String NBT_TYPE = "Type";
-    private static final String NBT_VOID_EXCESS = "VoidExcess";
     private static final String NBT_DISK_STATE = "DiskState_%d";
 
     public static final int DISK_STATE_NORMAL = 0;
@@ -146,50 +29,6 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
     public static final int DISK_STATE_FULL = 2;
     public static final int DISK_STATE_DISCONNECTED = 3;
     public static final int DISK_STATE_NONE = 4;
-
-    private ItemHandlerBasic disks = new ItemHandlerBasic(8, this, IItemValidator.STORAGE_DISK) {
-        @Override
-        protected void onContentsChanged(int slot) {
-            super.onContentsChanged(slot);
-
-            if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
-                RSUtils.createStorages(getStackInSlot(slot), slot, itemStorages, fluidStorages, s -> new StorageItem(s), s -> new StorageFluid(s));
-
-                if (network != null) {
-                    network.getItemStorageCache().invalidate();
-                    network.getFluidStorageCache().invalidate();
-                }
-
-                updateBlock();
-            }
-        }
-
-        @Override
-        public ItemStack extractItem(int slot, int amount, boolean simulate) {
-            if (itemStorages[slot] != null) {
-                itemStorages[slot].writeToNBT();
-            }
-
-            if (fluidStorages[slot] != null) {
-                fluidStorages[slot].writeToNBT();
-            }
-
-            return super.extractItem(slot, amount, simulate);
-        }
-    };
-
-    private ItemHandlerBasic itemFilters = new ItemHandlerBasic(9, this);
-    private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(9, this);
-
-    private StorageItem itemStorages[] = new StorageItem[8];
-    private StorageFluid fluidStorages[] = new StorageFluid[8];
-
-    private AccessType accessType = AccessType.INSERT_EXTRACT;
-    private int priority = 0;
-    private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
-    private int mode = IFilterable.WHITELIST;
-    private int type = IType.ITEMS;
-    private boolean voidExcess = false;
 
     private Integer[] diskState = new Integer[8];
 
@@ -205,143 +44,10 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
     }
 
     @Override
-    public int getEnergyUsage() {
-        int usage = RS.INSTANCE.config.diskDriveUsage;
-
-        for (int i = 0; i < disks.getSlots(); ++i) {
-            if (!disks.getStackInSlot(i).isEmpty()) {
-                usage += RS.INSTANCE.config.diskDrivePerDiskUsage;
-            }
-        }
-
-        return usage;
-    }
-
-    @Override
-    public void updateNode() {
-    }
-
-    public void onBreak() {
-        for (StorageItem storage : this.itemStorages) {
-            if (storage != null) {
-                storage.writeToNBT();
-            }
-        }
-
-        for (StorageFluid storage : this.fluidStorages) {
-            if (storage != null) {
-                storage.writeToNBT();
-            }
-        }
-    }
-
-    @Override
-    public void onConnectionChange(INetworkMaster network, boolean state) {
-        super.onConnectionChange(network, state);
-
-        network.getItemStorageCache().invalidate();
-        network.getFluidStorageCache().invalidate();
-
-        updateBlock();
-    }
-
-    @Override
-    public void addItemStorages(List<IStorage<ItemStack>> storages) {
-        for (IStorage<ItemStack> storage : this.itemStorages) {
-            if (storage != null) {
-                storages.add(storage);
-            }
-        }
-    }
-
-    @Override
-    public void addFluidStorages(List<IStorage<FluidStack>> storages) {
-        for (IStorage<FluidStack> storage : this.fluidStorages) {
-            if (storage != null) {
-                storages.add(storage);
-            }
-        }
-    }
-
-    @Override
-    public void read(NBTTagCompound tag) {
-        super.read(tag);
-
-        RSUtils.readItems(disks, 0, tag);
-    }
-
-    @Override
-    public NBTTagCompound write(NBTTagCompound tag) {
-        super.write(tag);
-
-        for (int i = 0; i < disks.getSlots(); ++i) {
-            if (itemStorages[i] != null) {
-                itemStorages[i].writeToNBT();
-            }
-
-            if (fluidStorages[i] != null) {
-                fluidStorages[i].writeToNBT();
-            }
-        }
-
-        RSUtils.writeItems(disks, 0, tag);
-
-        return tag;
-    }
-
-    @Override
-    public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
-        super.writeConfiguration(tag);
-
-        RSUtils.writeItems(itemFilters, 1, tag);
-        RSUtils.writeItems(fluidFilters, 2, tag);
-
-        tag.setInteger(NBT_PRIORITY, priority);
-        tag.setInteger(NBT_COMPARE, compare);
-        tag.setInteger(NBT_MODE, mode);
-        tag.setInteger(NBT_TYPE, type);
-        tag.setBoolean(NBT_VOID_EXCESS, voidExcess);
-
-        RSUtils.writeAccessType(tag, accessType);
-
-        return tag;
-    }
-
-    @Override
-    public void readConfiguration(NBTTagCompound tag) {
-        super.readConfiguration(tag);
-
-        RSUtils.readItems(itemFilters, 1, tag);
-        RSUtils.readItems(fluidFilters, 2, tag);
-
-        if (tag.hasKey(NBT_PRIORITY)) {
-            priority = tag.getInteger(NBT_PRIORITY);
-        }
-
-        if (tag.hasKey(NBT_COMPARE)) {
-            compare = tag.getInteger(NBT_COMPARE);
-        }
-
-        if (tag.hasKey(NBT_MODE)) {
-            mode = tag.getInteger(NBT_MODE);
-        }
-
-        if (tag.hasKey(NBT_TYPE)) {
-            type = tag.getInteger(NBT_TYPE);
-        }
-
-        if (tag.hasKey(NBT_VOID_EXCESS)) {
-            voidExcess = tag.getBoolean(NBT_VOID_EXCESS);
-        }
-
-        accessType = RSUtils.readAccessType(tag);
-    }
-
-    @Override
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {
         super.writeUpdate(tag);
 
-        writeDiskState(tag, 8, hasNetwork(), itemStorages, fluidStorages);
+        writeDiskState(tag, 8, getNode().getNetwork() != null, ((NetworkNodeDiskDrive) getNode()).getItemStorages(), ((NetworkNodeDiskDrive) getNode()).getFluidStorages());
 
         return tag;
     }
@@ -366,8 +72,8 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
                     state = DISK_STATE_DISCONNECTED;
                 } else {
                     state = getDiskState(
-                        itemStorages[i] != null ? itemStorages[i].getStored() : fluidStorages[i].getStored(),
-                        itemStorages[i] != null ? itemStorages[i].getCapacity() : fluidStorages[i].getCapacity()
+                            itemStorages[i] != null ? itemStorages[i].getStored() : fluidStorages[i].getStored(),
+                            itemStorages[i] != null ? itemStorages[i].getCapacity() : fluidStorages[i].getCapacity()
                     );
                 }
             }
@@ -399,188 +105,21 @@ public class TileDiskDrive extends TileNode implements IStorageProvider, IStorag
     }
 
     @Override
-    public int getCompare() {
-        return compare;
-    }
-
-    @Override
-    public void setCompare(int compare) {
-        this.compare = compare;
-
-        markDirty();
-    }
-
-    @Override
-    public int getMode() {
-        return mode;
-    }
-
-    @Override
-    public void setMode(int mode) {
-        this.mode = mode;
-
-        markDirty();
-    }
-
-    @Override
-    public String getGuiTitle() {
-        return "block.refinedstorage:disk_drive.name";
-    }
-
-    @Override
-    public TileDataParameter<Integer> getTypeParameter() {
-        return TYPE;
-    }
-
-    @Override
-    public TileDataParameter<Integer> getRedstoneModeParameter() {
-        return REDSTONE_MODE;
-    }
-
-    @Override
-    public TileDataParameter<Integer> getCompareParameter() {
-        return COMPARE;
-    }
-
-    @Override
-    public TileDataParameter<Integer> getFilterParameter() {
-        return MODE;
-    }
-
-    @Override
-    public TileDataParameter<Integer> getPriorityParameter() {
-        return PRIORITY;
-    }
-
-    @Override
-    public TileDataParameter<Boolean> getVoidExcessParameter() {
-        return VOID_EXCESS;
-    }
-
-    @Override
-    public TileDataParameter<AccessType> getAccessTypeParameter() {
-        return ACCESS_TYPE;
-    }
-
-    @Override
-    public String getVoidExcessType() {
-        return "items_fluids";
-    }
-
-    @Override
-    public AccessType getAccessType() {
-        return accessType;
-    }
-
-    @Override
-    public void setAccessType(AccessType value) {
-        this.accessType = value;
-
-        if (network != null) {
-            network.getFluidStorageCache().invalidate();
-            network.getItemStorageCache().invalidate();
-        }
-
-        markDirty();
-    }
-
-    @Override
-    public int getPriority() {
-        return priority;
-    }
-
-    @Override
-    public void setPriority(int priority) {
-        this.priority = priority;
-
-        markDirty();
-    }
-
-    @Override
-    public int getStored() {
-        int stored = 0;
-
-        for (int i = 0; i < disks.getSlots(); ++i) {
-            ItemStack disk = disks.getStackInSlot(i);
-
-            if (!disk.isEmpty()) {
-                stored += disk.getItem() == RSItems.STORAGE_DISK ? StorageItemNBT.getStoredFromNBT(disk.getTagCompound()) : StorageFluidNBT.getStoredFromNBT(disk.getTagCompound());
-            }
-        }
-
-        return stored;
-    }
-
-    @Override
-    public int getCapacity() {
-        int capacity = 0;
-
-        for (int i = 0; i < disks.getSlots(); ++i) {
-            ItemStack disk = disks.getStackInSlot(i);
-
-            if (!disk.isEmpty()) {
-                int diskCapacity = disk.getItem() == RSItems.STORAGE_DISK ? EnumItemStorageType.getById(disk.getItemDamage()).getCapacity() : EnumFluidStorageType.getById(disk.getItemDamage()).getCapacity();
-
-                if (diskCapacity == -1) {
-                    return -1;
-                }
-
-                capacity += diskCapacity;
-            }
-        }
-
-        return capacity;
-    }
-
-    public IItemHandler getDisks() {
-        return disks;
-    }
-
-    @Override
-    public boolean getVoidExcess() {
-        return voidExcess;
-    }
-
-    @Override
-    public void setVoidExcess(boolean voidExcess) {
-        this.voidExcess = voidExcess;
-
-        markDirty();
-    }
-
-    @Override
-    public int getType() {
-        return getWorld().isRemote ? TYPE.getValue() : type;
-    }
-
-    @Override
-    public void setType(int type) {
-        this.type = type;
-
-        markDirty();
-    }
-
-    @Override
-    public IItemHandler getFilterInventory() {
-        return getType() == IType.ITEMS ? itemFilters : fluidFilters;
-    }
-
-    @Override
-    public IItemHandler getDrops() {
-        return disks;
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
     }
 
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(disks);
+            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(((NetworkNodeDiskDrive) getNode()).getDisks());
         }
 
         return super.getCapability(capability, facing);
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+    public INetworkNode createNode() {
+        return new NetworkNodeDiskDrive(this);
     }
 }

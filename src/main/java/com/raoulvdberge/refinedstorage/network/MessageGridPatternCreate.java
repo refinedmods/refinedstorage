@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.network;
 
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.block.EnumGridType;
 import com.raoulvdberge.refinedstorage.tile.TileProcessingPatternEncoder;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
@@ -41,8 +42,8 @@ public class MessageGridPatternCreate extends MessageHandlerPlayerToServer<Messa
     public void handle(MessageGridPatternCreate message, EntityPlayerMP player) {
         TileEntity tile = player.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
 
-        if (tile instanceof TileGrid && ((TileGrid) tile).getType() == EnumGridType.PATTERN) {
-            ((TileGrid) tile).onCreatePattern();
+        if (tile instanceof TileGrid && ((NetworkNodeGrid) ((TileGrid) tile).getNode()).getType() == EnumGridType.PATTERN) {
+            ((NetworkNodeGrid) ((TileGrid) tile).getNode()).onCreatePattern();
         } else if (tile instanceof TileProcessingPatternEncoder) {
             ((TileProcessingPatternEncoder) tile).onCreatePattern();
         }

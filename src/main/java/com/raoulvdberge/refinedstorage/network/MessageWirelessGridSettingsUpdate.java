@@ -1,8 +1,8 @@
 package com.raoulvdberge.refinedstorage.network;
 
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
-import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.WirelessGrid;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -53,23 +53,23 @@ public class MessageWirelessGridSettingsUpdate extends MessageHandlerPlayerToSer
             if (grid instanceof WirelessGrid) {
                 ItemStack stack = ((WirelessGrid) grid).getStack();
 
-                if (TileGrid.isValidViewType(message.viewType)) {
-                    stack.getTagCompound().setInteger(TileGrid.NBT_VIEW_TYPE, message.viewType);
+                if (NetworkNodeGrid.isValidViewType(message.viewType)) {
+                    stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_VIEW_TYPE, message.viewType);
                 }
 
-                if (TileGrid.isValidSortingDirection(message.sortingDirection)) {
-                    stack.getTagCompound().setInteger(TileGrid.NBT_SORTING_DIRECTION, message.sortingDirection);
+                if (NetworkNodeGrid.isValidSortingDirection(message.sortingDirection)) {
+                    stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_SORTING_DIRECTION, message.sortingDirection);
                 }
 
-                if (TileGrid.isValidSortingType(message.sortingType)) {
-                    stack.getTagCompound().setInteger(TileGrid.NBT_SORTING_TYPE, message.sortingType);
+                if (NetworkNodeGrid.isValidSortingType(message.sortingType)) {
+                    stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_SORTING_TYPE, message.sortingType);
                 }
 
-                if (TileGrid.isValidSearchBoxMode(message.searchBoxMode)) {
-                    stack.getTagCompound().setInteger(TileGrid.NBT_SEARCH_BOX_MODE, message.searchBoxMode);
+                if (NetworkNodeGrid.isValidSearchBoxMode(message.searchBoxMode)) {
+                    stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_SEARCH_BOX_MODE, message.searchBoxMode);
                 }
 
-                stack.getTagCompound().setInteger(TileGrid.NBT_TAB_SELECTED, message.tabSelected);
+                stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_TAB_SELECTED, message.tabSelected);
             }
         }
     }

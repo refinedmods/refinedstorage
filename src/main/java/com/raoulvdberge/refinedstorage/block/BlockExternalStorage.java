@@ -1,7 +1,8 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSGui;
-import com.raoulvdberge.refinedstorage.tile.externalstorage.TileExternalStorage;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage.NetworkNodeExternalStorage;
+import com.raoulvdberge.refinedstorage.tile.TileExternalStorage;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -85,9 +86,9 @@ public class BlockExternalStorage extends BlockCable {
         super.neighborChanged(state, world, pos, block, fromPos);
 
         if (!world.isRemote) {
-            TileExternalStorage externalStorage = (TileExternalStorage) world.getTileEntity(pos);
+            NetworkNodeExternalStorage externalStorage = (NetworkNodeExternalStorage) ((TileExternalStorage) world.getTileEntity(pos)).getNode();
 
-            if (externalStorage.hasNetwork()) {
+            if (externalStorage.getNetwork() != null) {
                 externalStorage.updateStorage(externalStorage.getNetwork());
             }
         }

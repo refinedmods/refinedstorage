@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNeighborhoodAware;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeGraph;
+import com.raoulvdberge.refinedstorage.api.network.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.item.ItemBlockController;
 import com.raoulvdberge.refinedstorage.tile.TileController;
 import net.minecraft.block.state.IBlockState;
@@ -16,7 +17,7 @@ import net.minecraft.world.World;
 
 import java.util.*;
 
-import static com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNode.NETWORK_NODE_CAPABILITY;
+import static com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY;
 
 public class NetworkNodeGraph implements INetworkNodeGraph {
     private TileController controller;
@@ -42,11 +43,14 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
         INetworkNeighborhoodAware.Operator operator = (world, pos, side) -> {
             TileEntity tile = world.getTileEntity(pos);
+
             if (tile != null && !tile.isInvalid()) {
                 if (tile instanceof TileController) {
-                    removeOtherControler(world, pos);
+                    removeOtherController(world, pos);
                 } else {
-                    INetworkNode otherNode = NETWORK_NODE_CAPABILITY.cast(tile.getCapability(NETWORK_NODE_CAPABILITY, side));
+                    INetworkNodeProxy otherNodeProxy = NETWORK_NODE_PROXY_CAPABILITY.cast(tile.getCapability(NETWORK_NODE_PROXY_CAPABILITY, side));
+                    INetworkNode otherNode = otherNodeProxy.getNode();
+
                     if (otherNode != null && newNodes.add(otherNode)) {
                         toCheck.add(new NodeToCheck(otherNode, world, pos, side, tile));
                     }
@@ -117,7 +121,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
         return controller.getWorld();
     }
 
-    private void removeOtherControler(World world, BlockPos otherControllerPos) {
+    private void removeOtherController(World world, BlockPos otherControllerPos) {
         if (!controller.getPos().equals(otherControllerPos)) {
             IBlockState state = world.getBlockState(otherControllerPos);
 
@@ -157,7 +161,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
             } else {
                 for (EnumFacing checkSide : EnumFacing.VALUES) {
                     if (checkSide != side) { // Avoid going backward
-                        INetworkNode nodeOnSide = NETWORK_NODE_CAPABILITY.cast(tile.getCapability(NETWORK_NODE_CAPABILITY, checkSide));
+                        INetworkNode nodeOnSide = NETWORK_NODE_PROXY_CAPABILITY.cast(tile.getCapability(NETWORK_NODE_PROXY_CAPABILITY, checkSide));
                         if (nodeOnSide == node) {
                             operator.apply(world, pos.offset(checkSide), checkSide.getOpposite());
                         }

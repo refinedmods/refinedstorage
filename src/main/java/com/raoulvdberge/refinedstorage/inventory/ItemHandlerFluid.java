@@ -2,15 +2,14 @@ package com.raoulvdberge.refinedstorage.inventory;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class ItemHandlerFluid extends ItemHandlerBasic {
     private FluidStack[] fluids;
 
-    public ItemHandlerFluid(int size, TileEntity tile) {
-        super(size, tile, s -> RSUtils.getFluidFromStack(ItemHandlerHelper.copyStackWithSize(s, 1), true).getValue() != null);
+    public ItemHandlerFluid(int size, IItemHandlerChangeListener listener) {
+        super(size, listener, s -> RSUtils.getFluidFromStack(ItemHandlerHelper.copyStackWithSize(s, 1), true).getValue() != null);
 
         this.fluids = new FluidStack[size];
     }

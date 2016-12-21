@@ -1,8 +1,8 @@
 package com.raoulvdberge.refinedstorage.gui.sidebutton;
 
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
-import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import net.minecraft.util.text.TextFormatting;
 
 public class SideButtonGridViewType extends SideButton {
@@ -28,12 +28,12 @@ public class SideButtonGridViewType extends SideButton {
     public void actionPerformed() {
         int type = grid.getViewType();
 
-        if (type == TileGrid.VIEW_TYPE_NORMAL) {
-            type = TileGrid.VIEW_TYPE_NON_CRAFTABLES;
-        } else if (type == TileGrid.VIEW_TYPE_NON_CRAFTABLES) {
-            type = TileGrid.VIEW_TYPE_CRAFTABLES;
-        } else if (type == TileGrid.VIEW_TYPE_CRAFTABLES) {
-            type = TileGrid.VIEW_TYPE_NORMAL;
+        if (type == NetworkNodeGrid.VIEW_TYPE_NORMAL) {
+            type = NetworkNodeGrid.VIEW_TYPE_NON_CRAFTABLES;
+        } else if (type == NetworkNodeGrid.VIEW_TYPE_NON_CRAFTABLES) {
+            type = NetworkNodeGrid.VIEW_TYPE_CRAFTABLES;
+        } else if (type == NetworkNodeGrid.VIEW_TYPE_CRAFTABLES) {
+            type = NetworkNodeGrid.VIEW_TYPE_NORMAL;
         }
 
         grid.onViewTypeChanged(type);

@@ -2,11 +2,10 @@ package com.raoulvdberge.refinedstorage.inventory;
 
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
-import net.minecraft.tileentity.TileEntity;
 
 public class ItemHandlerUpgrade extends ItemHandlerBasic {
-    public ItemHandlerUpgrade(int size, TileEntity tile, int... supportedUpgrades) {
-        super(size, tile, new IItemValidator[supportedUpgrades.length]);
+    public ItemHandlerUpgrade(int size, IItemHandlerChangeListener listener, int... supportedUpgrades) {
+        super(size, listener, new IItemValidator[supportedUpgrades.length]);
 
         for (int i = 0; i < supportedUpgrades.length; ++i) {
             this.validators[i] = new ItemValidatorBasic(RSItems.UPGRADE, supportedUpgrades[i]);

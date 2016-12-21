@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.tile;
 
+import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
@@ -25,15 +26,9 @@ public abstract class TileBase extends TileEntity implements ITickable {
     @Override
     public void update() {
         if (!getWorld().isRemote) {
-            ticks++;
+            ++ticks;
 
             dataManager.detectAndSendChanges();
-        }
-    }
-
-    public void updateBlock() {
-        if (getWorld() != null) {
-            getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 1 | 2);
         }
     }
 
@@ -70,7 +65,7 @@ public abstract class TileBase extends TileEntity implements ITickable {
     public void readUpdate(NBTTagCompound tag) {
         direction = EnumFacing.getFront(tag.getInteger(NBT_DIRECTION));
 
-        updateBlock();
+        RSUtils.updateBlock(getWorld(), pos);
     }
 
     @Override
@@ -111,10 +106,6 @@ public abstract class TileBase extends TileEntity implements ITickable {
     @Override
     public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
         return oldState.getBlock() != newState.getBlock();
-    }
-
-    public TileEntity getFacingTile() {
-        return getWorld().getTileEntity(pos.offset(direction));
     }
 
     public IItemHandler getDrops() {
