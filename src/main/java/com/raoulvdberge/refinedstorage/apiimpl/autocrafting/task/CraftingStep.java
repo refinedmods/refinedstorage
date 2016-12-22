@@ -143,14 +143,14 @@ public abstract class CraftingStep implements ICraftingStep {
 
     @Override
     public boolean onReceiveOutput(ItemStack stack) {
-        stack = Comparer.stripTags(stack.copy());
+        ItemStack compareStack = Comparer.stripTags(stack.copy());
         for (ItemStack output : pattern.getOutputs()) {
             int hashcode = API.instance().getItemStackHashCode(output);
             Integer received = satisfied.get(hashcode);
             if (received == null) {
                 received = 0;
             }
-            if (API.instance().getComparer().isEqual(stack, output, CraftingTask.DEFAULT_COMPARE | (getPattern().isOredict() ? IComparer.COMPARE_OREDICT : 0))) {
+            if (API.instance().getComparer().isEqual(compareStack, output, CraftingTask.DEFAULT_COMPARE | (getPattern().isOredict() ? IComparer.COMPARE_OREDICT : 0))) {
                 if (received < output.getCount()) {
                     int toReceive = Math.min(output.getCount() - received, stack.getCount());
                     satisfied.put(hashcode, received + toReceive);
