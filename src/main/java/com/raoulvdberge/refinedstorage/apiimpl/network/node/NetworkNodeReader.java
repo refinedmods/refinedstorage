@@ -10,6 +10,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class NetworkNodeReader extends NetworkNode implements IReader {
+    public static final String ID = "reader";
+
     private static final String NBT_CHANNEL = "Channel";
 
     private String channel = "";
@@ -60,6 +62,11 @@ public class NetworkNodeReader extends NetworkNode implements IReader {
         if (tag.hasKey(NBT_CHANNEL)) {
             channel = tag.getString(NBT_CHANNEL);
         }
+    }
+
+    @Override
+    public String getId() {
+        return ID;
     }
 
     @Override

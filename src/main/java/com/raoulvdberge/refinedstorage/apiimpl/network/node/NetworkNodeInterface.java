@@ -16,6 +16,8 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 public class NetworkNodeInterface extends NetworkNode implements IComparable {
+    public static final String ID = "interface";
+
     private static final String NBT_COMPARE = "Compare";
 
     private ItemHandlerBasic importItems = new ItemHandlerBasic(9, new ItemHandlerListenerNetworkNode(this));
@@ -123,6 +125,11 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
         RSUtils.readItems(importItems, 0, tag);
         RSUtils.readItems(exportItems, 2, tag);
         RSUtils.readItems(upgrades, 3, tag);
+    }
+
+    @Override
+    public String getId() {
+        return ID;
     }
 
     @Override

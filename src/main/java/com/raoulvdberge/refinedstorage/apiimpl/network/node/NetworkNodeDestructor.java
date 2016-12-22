@@ -41,6 +41,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class NetworkNodeDestructor extends NetworkNode implements IComparable, IFilterable, IType {
+    public static final String ID = "destructor";
+
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
     private static final String NBT_TYPE = "Type";
@@ -184,6 +186,11 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
         super.read(tag);
 
         RSUtils.readItems(upgrades, 1, tag);
+    }
+
+    @Override
+    public String getId() {
+        return ID;
     }
 
     @Override

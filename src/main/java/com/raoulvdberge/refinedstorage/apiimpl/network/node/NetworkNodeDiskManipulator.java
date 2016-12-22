@@ -27,6 +27,8 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
 public class NetworkNodeDiskManipulator extends NetworkNode implements IComparable, IFilterable, IType {
+    public static final String ID = "disk_manipulator";
+
     public static final int IO_MODE_INSERT = 0;
     public static final int IO_MODE_EXTRACT = 1;
 
@@ -504,6 +506,11 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         RSUtils.readItems(upgrades, 3, tag);
         RSUtils.readItems(inputDisks, 4, tag);
         RSUtils.readItems(outputDisks, 5, tag);
+    }
+
+    @Override
+    public String getId() {
+        return ID;
     }
 
     @Override

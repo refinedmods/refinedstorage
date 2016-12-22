@@ -23,6 +23,8 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class NetworkNodeExporter extends NetworkNode implements IComparable, IType {
+    public static final String ID = "exporter";
+
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_TYPE = "Type";
     private static final String NBT_REGULATOR = "Regulator";
@@ -164,6 +166,11 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
         super.read(tag);
 
         RSUtils.readItems(upgrades, 1, tag);
+    }
+
+    @Override
+    public String getId() {
+        return ID;
     }
 
     @Override

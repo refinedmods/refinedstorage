@@ -4,13 +4,16 @@ import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.WorldSavedDataNetworkNode;
 import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNodeProxy;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class NetworkListener {
+public class NetworkNodeListener {
     @SubscribeEvent
     public void onBlockPlace(BlockEvent.PlaceEvent e) {
         if (!e.getWorld().isRemote) {
@@ -51,5 +54,20 @@ public class NetworkListener {
                 }
             }
         }
+    }
+
+    @SubscribeEvent
+    public void onWorldSave(WorldEvent.Save e) {
+        WorldSavedDataNetworkNode.get(e.getWorld());
+    }
+
+    @SubscribeEvent
+    public void onWorldLoad(WorldEvent.Load e) {
+        WorldSavedDataNetworkNode.get(e.getWorld());
+    }
+
+    @SubscribeEvent
+    public void onWorldUnload(WorldEvent.Unload e) {
+        API.instance().getNetworkNodeProvider(e.getWorld().provider.getDimension()).clear();
     }
 }

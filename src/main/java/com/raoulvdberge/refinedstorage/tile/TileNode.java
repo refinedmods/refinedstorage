@@ -1,8 +1,8 @@
 package com.raoulvdberge.refinedstorage.tile;
 
 import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
+import com.raoulvdberge.refinedstorage.api.network.INetworkNodeProvider;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeProxy;
-import com.raoulvdberge.refinedstorage.api.network.INetworkNodeRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNodeProxy;
@@ -40,12 +40,12 @@ public abstract class TileNode extends TileBase implements INetworkNodeProxy, IN
     public void invalidate() {
         super.invalidate();
 
-        if (getWorld() != null && !getWorld().isRemote) {
+        if (getWorld() != null) {
             INetworkNode node = getNode();
 
-            API.instance().getNetworkNodeRegistry(getWorld().provider.getDimension()).removeNode(pos);
+            API.instance().getNetworkNodeProvider(getWorld().provider.getDimension()).removeNode(pos);
 
-            if (node.getNetwork() != null) {
+            if (!getWorld().isRemote && node.getNetwork() != null) {
                 node.getNetwork().getNodeGraph().rebuild();
             }
         }
@@ -107,12 +107,12 @@ public abstract class TileNode extends TileBase implements INetworkNodeProxy, IN
 
     @Override
     public INetworkNode getNode() {
-        INetworkNodeRegistry registry = API.instance().getNetworkNodeRegistry(getWorld().provider.getDimension());
+        INetworkNodeProvider provider = API.instance().getNetworkNodeProvider(getWorld().provider.getDimension());
 
-        INetworkNode node = registry.getNode(pos);
+        INetworkNode node = provider.getNode(pos);
 
         if (node == null) {
-            registry.setNode(pos, node = createNode());
+            provider.setNode(pos, node = createNode());
         }
 
         return node;

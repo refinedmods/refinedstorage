@@ -21,6 +21,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
 
 public class NetworkNodeDetector extends NetworkNode implements IComparable, IType {
+    public static final String ID = "detector";
+
     private static final int SPEED = 5;
 
     public static final int MODE_UNDER = 0;
@@ -106,6 +108,11 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
                 }
             }
         }
+    }
+
+    @Override
+    public String getId() {
+        return ID;
     }
 
     @Override

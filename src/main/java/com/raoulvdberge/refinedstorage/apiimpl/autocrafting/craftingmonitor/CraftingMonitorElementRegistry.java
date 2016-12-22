@@ -19,7 +19,7 @@ public class CraftingMonitorElementRegistry implements ICraftingMonitorElementRe
 
     @Nullable
     @Override
-    public Function<ByteBuf, ICraftingMonitorElement> getFactory(String id) {
+    public Function<ByteBuf, ICraftingMonitorElement> get(String id) {
         return registry.get(id);
     }
 }

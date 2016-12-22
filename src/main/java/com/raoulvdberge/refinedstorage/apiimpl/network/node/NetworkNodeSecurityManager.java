@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class NetworkNodeSecurityManager extends NetworkNode implements ISecurityCardContainer {
+    public static final String ID = "security_manager";
+
     private static final String NBT_OWNER = "Owner";
 
     private List<ISecurityCard> actualCards = new ArrayList<>();
@@ -118,6 +120,11 @@ public class NetworkNodeSecurityManager extends NetworkNode implements ISecurity
 
         RSUtils.readItems(cards, 0, tag);
         RSUtils.readItems(editCard, 1, tag);
+    }
+
+    @Override
+    public String getId() {
+        return ID;
     }
 
     @Override

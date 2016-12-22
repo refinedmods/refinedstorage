@@ -18,6 +18,8 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import javax.annotation.Nonnull;
 
 public class NetworkNodeSolderer extends NetworkNode {
+    public static final String ID = "solderer";
+
     private static final String NBT_WORKING = "Working";
     private static final String NBT_PROGRESS = "Progress";
 
@@ -140,6 +142,11 @@ public class NetworkNodeSolderer extends NetworkNode {
         if (tag.hasKey(NBT_PROGRESS)) {
             progress = tag.getInteger(NBT_PROGRESS);
         }
+    }
+
+    @Override
+    public String getId() {
+        return ID;
     }
 
     @Override

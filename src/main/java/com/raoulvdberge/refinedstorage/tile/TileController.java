@@ -328,6 +328,11 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
     }
 
     @Override
+    public String getId() {
+        return null;
+    }
+
+    @Override
     public IItemGridHandler getItemGridHandler() {
         return itemGridHandler;
     }
@@ -798,7 +803,7 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
             if (container instanceof ICraftingPatternContainer) {
                 ICraftingPattern pattern = ((ICraftingPatternProvider) stack.getItem()).create(world, stack, (ICraftingPatternContainer) container);
 
-                ICraftingTaskFactory factory = API.instance().getCraftingTaskRegistry().getFactory(tag.getString(ICraftingTask.NBT_PATTERN_ID));
+                ICraftingTaskFactory factory = API.instance().getCraftingTaskRegistry().get(tag.getString(ICraftingTask.NBT_PATTERN_ID));
 
                 if (factory != null) {
                     return factory.create(world, network, tag.hasKey(ICraftingTask.NBT_REQUESTED) ? new ItemStack(tag.getCompoundTag(ICraftingTask.NBT_REQUESTED)) : null, pattern, tag.getInteger(ICraftingTask.NBT_QUANTITY), tag);

@@ -20,7 +20,7 @@ public class ReaderWriterChannel implements IReaderWriterChannel {
     public ReaderWriterChannel(String name, INetworkMaster network) {
         this.name = name;
         this.network = network;
-        this.handlers.addAll(API.instance().getReaderWriterHandlerRegistry().getFactories().stream().map(f -> f.create(null)).collect(Collectors.toList()));
+        this.handlers.addAll(API.instance().getReaderWriterHandlerRegistry().all().stream().map(f -> f.create(null)).collect(Collectors.toList()));
     }
 
     @Override
@@ -59,7 +59,7 @@ public class ReaderWriterChannel implements IReaderWriterChannel {
             String id = String.format(NBT_HANDLER, handler.getId());
 
             if (tag.hasKey(id)) {
-                IReaderWriterHandlerFactory factory = API.instance().getReaderWriterHandlerRegistry().getFactory(id);
+                IReaderWriterHandlerFactory factory = API.instance().getReaderWriterHandlerRegistry().get(id);
 
                 if (factory != null) {
                     handlers.add(factory.create(tag.getCompoundTag(id)));

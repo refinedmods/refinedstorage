@@ -23,6 +23,8 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 
 public class NetworkNodeImporter extends NetworkNode implements IComparable, IFilterable, IType {
+    public static final String ID = "importer";
+
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
     private static final String NBT_TYPE = "Type";
@@ -128,6 +130,11 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
         super.read(tag);
 
         RSUtils.readItems(upgrades, 1, tag);
+    }
+
+    @Override
+    public String getId() {
+        return ID;
     }
 
     @Override

@@ -19,6 +19,8 @@ import net.minecraftforge.fluids.FluidTank;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class NetworkNodeFluidInterface extends NetworkNode implements IComparable {
+    public static final String ID = "fluid_interface";
+
     public static final int TANK_CAPACITY = 16000;
 
     private static final String NBT_COMPARE = "Compare";
@@ -168,6 +170,11 @@ public class NetworkNodeFluidInterface extends NetworkNode implements IComparabl
         if (tag.hasKey(NBT_TANK_OUT)) {
             tankOut.readFromNBT(tag.getCompoundTag(NBT_TANK_OUT));
         }
+    }
+
+    @Override
+    public String getId() {
+        return ID;
     }
 
     @Override

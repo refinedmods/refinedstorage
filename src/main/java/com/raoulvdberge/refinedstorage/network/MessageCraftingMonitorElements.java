@@ -28,7 +28,7 @@ public class MessageCraftingMonitorElements implements IMessage, IMessageHandler
         int size = buf.readInt();
 
         for (int i = 0; i < size; ++i) {
-            Function<ByteBuf, ICraftingMonitorElement> factory = API.instance().getCraftingMonitorElementRegistry().getFactory(ByteBufUtils.readUTF8String(buf));
+            Function<ByteBuf, ICraftingMonitorElement> factory = API.instance().getCraftingMonitorElementRegistry().get(ByteBufUtils.readUTF8String(buf));
 
             if (factory != null) {
                 elements.add(factory.apply(buf));

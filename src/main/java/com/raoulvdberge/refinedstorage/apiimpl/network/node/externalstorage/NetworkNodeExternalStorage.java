@@ -32,6 +32,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NetworkNodeExternalStorage extends NetworkNode implements IStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IType, IAccessType {
+    public static final String ID = "external_storage";
+
     private static final String NBT_PRIORITY = "Priority";
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
@@ -96,6 +98,11 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
                 network.getFluidStorageCache().invalidate();
             }
         }
+    }
+
+    @Override
+    public String getId() {
+        return ID;
     }
 
     @Override

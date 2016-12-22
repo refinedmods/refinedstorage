@@ -44,7 +44,6 @@ public class CraftingTaskFactory implements ICraftingTaskFactory {
                 }
             }
 
-
             NBTTagList toInsertList = tag.getTagList(CraftingTask.NBT_TO_INSERT_ITEMS, Constants.NBT.TAG_COMPOUND);
 
             Deque<ItemStack> toInsert = new ArrayDeque<>();

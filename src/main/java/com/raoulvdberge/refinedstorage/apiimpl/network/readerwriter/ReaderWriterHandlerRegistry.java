@@ -18,12 +18,12 @@ public class ReaderWriterHandlerRegistry implements IReaderWriterHandlerRegistry
 
     @Nullable
     @Override
-    public IReaderWriterHandlerFactory getFactory(String id) {
+    public IReaderWriterHandlerFactory get(String id) {
         return factories.get(id);
     }
 
     @Override
-    public Collection<IReaderWriterHandlerFactory> getFactories() {
+    public Collection<IReaderWriterHandlerFactory> all() {
         return factories.values();
     }
 }

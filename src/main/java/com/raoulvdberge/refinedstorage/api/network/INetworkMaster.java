@@ -157,7 +157,7 @@ public interface INetworkMaster {
      * @return the crafting task
      */
     default ICraftingTask createCraftingTask(@Nullable ItemStack stack, ICraftingPattern pattern, int quantity) {
-        return API.instance().getCraftingTaskRegistry().getFactory(pattern.getId()).create(getNetworkWorld(), this, stack, pattern, quantity, null);
+        return API.instance().getCraftingTaskRegistry().get(pattern.getId()).create(getNetworkWorld(), this, stack, pattern, quantity, null);
     }
 
     /**

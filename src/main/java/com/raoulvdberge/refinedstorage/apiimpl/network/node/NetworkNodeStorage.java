@@ -27,6 +27,8 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 public class NetworkNodeStorage extends NetworkNode implements IStorageGui, IStorageProvider, IComparable, IFilterable, IPrioritizable, IExcessVoidable, IAccessType {
+    public static final String ID = "storage";
+
     class StorageItem extends StorageItemNBT {
         public StorageItem() {
             super(NetworkNodeStorage.this.getStorageTag(), NetworkNodeStorage.this.getCapacity(), NetworkNodeStorage.this);
@@ -132,6 +134,11 @@ public class NetworkNodeStorage extends NetworkNode implements IStorageGui, ISto
         if (tag.hasKey(NBT_STORAGE)) {
             storageTag = tag.getCompoundTag(NBT_STORAGE);
         }
+    }
+
+    @Override
+    public String getId() {
+        return ID;
     }
 
     @Override

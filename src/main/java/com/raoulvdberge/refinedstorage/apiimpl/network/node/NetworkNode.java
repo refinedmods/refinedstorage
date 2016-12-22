@@ -30,6 +30,9 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
 
     private boolean active;
 
+    public NetworkNode() {
+    }
+
     public NetworkNode(INetworkNodeHolder holder) {
         this.holder = holder;
     }
@@ -71,7 +74,9 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
 
     @Override
     public void markDirty() {
-        // @todo
+        if (holder.world() != null) {
+            WorldSavedDataNetworkNode.get(holder.world()).markDirty();
+        }
     }
 
     @Override

@@ -19,7 +19,7 @@ public class CraftingPreviewElementRegistry implements ICraftingPreviewElementRe
 
     @Nullable
     @Override
-    public Function<ByteBuf, ICraftingPreviewElement> getFactory(String id) {
+    public Function<ByteBuf, ICraftingPreviewElement> get(String id) {
         return registry.get(id);
     }
 }

@@ -24,5 +24,5 @@ public interface ICraftingMonitorElementRegistry {
      * @return the factory, or null if no factory was found
      */
     @Nullable
-    Function<ByteBuf, ICraftingMonitorElement> getFactory(String id);
+    Function<ByteBuf, ICraftingMonitorElement> get(String id);
 }

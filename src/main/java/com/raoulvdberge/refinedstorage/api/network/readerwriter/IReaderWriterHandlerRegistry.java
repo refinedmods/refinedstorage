@@ -22,10 +22,10 @@ public interface IReaderWriterHandlerRegistry {
      * @return the factory, or null if no factory was found
      */
     @Nullable
-    IReaderWriterHandlerFactory getFactory(String id);
+    IReaderWriterHandlerFactory get(String id);
 
     /**
      * @return a list of reader writer handler factories
      */
-    Collection<IReaderWriterHandlerFactory> getFactories();
+    Collection<IReaderWriterHandlerFactory> all();
 }

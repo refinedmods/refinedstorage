@@ -12,6 +12,8 @@ import net.minecraft.util.math.BlockPos;
 import javax.annotation.Nullable;
 
 public class NetworkNodeCraftingMonitor extends NetworkNode implements ICraftingMonitor {
+    public static final String ID = "crafting_monitor";
+
     public NetworkNodeCraftingMonitor(INetworkNodeHolder holder) {
         super(holder);
     }
@@ -19,6 +21,11 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
     @Override
     public int getEnergyUsage() {
         return RS.INSTANCE.config.craftingMonitorUsage;
+    }
+
+    @Override
+    public String getId() {
+        return ID;
     }
 
     @Override

@@ -41,6 +41,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NetworkNodeGrid extends NetworkNode implements IGrid {
+    public static final String ID = "grid";
+
     public static final String NBT_VIEW_TYPE = "ViewType";
     public static final String NBT_SORTING_DIRECTION = "SortingDirection";
     public static final String NBT_SORTING_TYPE = "SortingType";
@@ -454,6 +456,11 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
         if (tag.hasKey(NBT_TAB_SELECTED)) {
             tabSelected = tag.getInteger(NBT_TAB_SELECTED);
         }
+    }
+
+    @Override
+    public String getId() {
+        return ID;
     }
 
     @Override

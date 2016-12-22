@@ -14,7 +14,7 @@ public interface ICraftingTaskRegistry {
      * @param id      the id of the factory
      * @param factory the factory
      */
-    void addFactory(String id, ICraftingTaskFactory factory);
+    void add(String id, ICraftingTaskFactory factory);
 
     /**
      * Returns the crafting task factory by factory id.
@@ -23,5 +23,5 @@ public interface ICraftingTaskRegistry {
      * @return the factory
      */
     @Nullable
-    ICraftingTaskFactory getFactory(String id);
+    ICraftingTaskFactory get(String id);
 }

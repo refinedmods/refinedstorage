@@ -24,5 +24,5 @@ public interface ICraftingPreviewElementRegistry {
      * @return the factory, or null if no factory was found
      */
     @Nullable
-    Function<ByteBuf, ICraftingPreviewElement> getFactory(String id);
+    Function<ByteBuf, ICraftingPreviewElement> get(String id);
 }

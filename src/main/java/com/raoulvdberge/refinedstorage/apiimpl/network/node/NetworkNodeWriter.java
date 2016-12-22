@@ -14,6 +14,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 
 public class NetworkNodeWriter extends NetworkNode implements IWriter {
+    public static final String ID = "writer";
+
     private static final String NBT_CHANNEL = "Channel";
 
     private String channel = "";
@@ -98,6 +100,11 @@ public class NetworkNodeWriter extends NetworkNode implements IWriter {
         if (tag.hasKey(NBT_CHANNEL)) {
             channel = tag.getString(NBT_CHANNEL);
         }
+    }
+
+    @Override
+    public String getId() {
+        return ID;
     }
 
     @Override

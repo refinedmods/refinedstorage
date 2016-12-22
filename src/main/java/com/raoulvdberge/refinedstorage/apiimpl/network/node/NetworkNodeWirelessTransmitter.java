@@ -16,6 +16,8 @@ import net.minecraftforge.items.IItemHandler;
 import javax.annotation.Nullable;
 
 public class NetworkNodeWirelessTransmitter extends NetworkNode implements IWirelessTransmitter {
+    public static final String ID = "wireless_transmitter";
+
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_RANGE);
 
     public NetworkNodeWirelessTransmitter(INetworkNodeHolder holder) {
@@ -32,6 +34,11 @@ public class NetworkNodeWirelessTransmitter extends NetworkNode implements IWire
         super.read(tag);
 
         RSUtils.readItems(upgrades, 0, tag);
+    }
+
+    @Override
+    public String getId() {
+        return ID;
     }
 
     @Override

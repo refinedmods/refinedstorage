@@ -41,6 +41,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
 
 public class NetworkNodeConstructor extends NetworkNode implements IComparable, IType {
+    public static final String ID = "constructor";
+
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_TYPE = "Type";
     private static final String NBT_DROP = "Drop";
@@ -234,6 +236,11 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
         super.read(tag);
 
         RSUtils.readItems(upgrades, 1, tag);
+    }
+
+    @Override
+    public String getId() {
+        return ID;
     }
 
     @Override

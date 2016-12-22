@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternContainer {
+    public static final String ID = "crafter";
+
     private static final String NBT_TRIGGERED_AUTOCRAFTING = "TriggeredAutocrafting";
 
     private ItemHandlerBasic patterns = new ItemHandlerBasic(9, new ItemHandlerListenerNetworkNode(this), s -> {
@@ -122,6 +124,11 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
         RSUtils.readItems(patterns, 0, tag);
         RSUtils.readItems(upgrades, 1, tag);
+    }
+
+    @Override
+    public String getId() {
+        return ID;
     }
 
     @Override

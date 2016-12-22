@@ -11,13 +11,13 @@ public class CraftingTaskRegistry implements ICraftingTaskRegistry {
     private Map<String, ICraftingTaskFactory> registry = new HashMap<>();
 
     @Override
-    public void addFactory(String id, ICraftingTaskFactory factory) {
+    public void add(String id, ICraftingTaskFactory factory) {
         registry.put(id, factory);
     }
 
     @Override
     @Nullable
-    public ICraftingTaskFactory getFactory(String id) {
+    public ICraftingTaskFactory get(String id) {
         return registry.get(id);
     }
 }

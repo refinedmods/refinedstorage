@@ -25,6 +25,8 @@ import net.minecraftforge.fluids.FluidStack;
 import java.util.List;
 
 public class NetworkNodeFluidStorage extends NetworkNode implements IStorageGui, IStorageProvider, IComparable, IFilterable, IPrioritizable, IExcessVoidable, IAccessType {
+    public static final String ID = "fluid_storage";
+
     class StorageFluid extends StorageFluidNBT {
         public StorageFluid() {
             super(NetworkNodeFluidStorage.this.getStorageTag(), NetworkNodeFluidStorage.this.getCapacity(), NetworkNodeFluidStorage.this);
@@ -130,6 +132,11 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IStorageGui,
         if (tag.hasKey(NBT_STORAGE)) {
             storageTag = tag.getCompoundTag(NBT_STORAGE);
         }
+    }
+
+    @Override
+    public String getId() {
+        return ID;
     }
 
     @Override

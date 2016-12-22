@@ -33,6 +33,8 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 public class NetworkNodeDiskDrive extends NetworkNode implements IStorageGui, IStorageProvider, IComparable, IFilterable, IPrioritizable, IType, IExcessVoidable, IAccessType {
+    public static final String ID = "disk_drive";
+
     public class StorageItem extends StorageItemNBT {
         private int lastState;
 
@@ -249,6 +251,11 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IStorageGui, IS
         super.read(tag);
 
         RSUtils.readItems(disks, 0, tag);
+    }
+
+    @Override
+    public String getId() {
+        return ID;
     }
 
     @Override

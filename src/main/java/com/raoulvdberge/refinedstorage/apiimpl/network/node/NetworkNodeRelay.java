@@ -8,6 +8,8 @@ import net.minecraft.util.EnumFacing;
 import javax.annotation.Nullable;
 
 public class NetworkNodeRelay extends NetworkNode {
+    public static final String ID = "relay";
+
     public NetworkNodeRelay(INetworkNodeHolder holder) {
         super(holder);
 
@@ -19,6 +21,11 @@ public class NetworkNodeRelay extends NetworkNode {
     @Override
     public int getEnergyUsage() {
         return getRedstoneMode() == RedstoneMode.IGNORE ? 0 : RS.INSTANCE.config.relayUsage;
+    }
+
+    @Override
+    public String getId() {
+        return ID;
     }
 
     @Override

@@ -37,7 +37,7 @@ public class MessageGridCraftingPreviewResponse implements IMessage, IMessageHan
         int size = buf.readInt();
 
         for (int i = 0; i < size; i++) {
-            this.stacks.add(API.instance().getCraftingPreviewElementRegistry().getFactory(ByteBufUtils.readUTF8String(buf)).apply(buf));
+            this.stacks.add(API.instance().getCraftingPreviewElementRegistry().get(ByteBufUtils.readUTF8String(buf)).apply(buf));
         }
     }
 

@@ -56,4 +56,6 @@ public interface INetworkNode {
     BlockPos getPos();
 
     void markDirty();
+
+    String getId();
 }

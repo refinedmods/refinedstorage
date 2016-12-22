@@ -21,6 +21,8 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import javax.annotation.Nullable;
 
 public class NetworkNodeNetworkTransmitter extends NetworkNode {
+    public static final String ID = "network_transmitter";
+
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(1, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_INTERDIMENSIONAL) {
         @Override
         protected void onContentsChanged(int slot) {
@@ -81,6 +83,11 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
 
         RSUtils.readItems(networkCard, 0, tag);
         RSUtils.readItems(upgrades, 1, tag);
+    }
+
+    @Override
+    public String getId() {
+        return ID;
     }
 
     @Override
