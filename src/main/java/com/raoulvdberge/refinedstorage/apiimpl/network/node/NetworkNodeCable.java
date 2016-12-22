@@ -1,9 +1,14 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.tile.INetworkNodeHolder;
 
 public class NetworkNodeCable extends NetworkNode {
     public static final String ID = "cable";
+
+    public NetworkNodeCable(INetworkNodeHolder holder) {
+        super(holder);
+    }
 
     @Override
     public int getEnergyUsage() {

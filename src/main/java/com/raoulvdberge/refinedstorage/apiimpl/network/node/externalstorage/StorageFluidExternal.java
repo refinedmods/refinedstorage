@@ -13,19 +13,22 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 public class StorageFluidExternal implements IStorage<FluidStack> {
     private FluidStack cache;
 
     private NetworkNodeExternalStorage externalStorage;
-    private IFluidHandler handler;
+    private Supplier<IFluidHandler> handlerSupplier;
 
-    public StorageFluidExternal(NetworkNodeExternalStorage externalStorage, IFluidHandler handler, IFluidTankProperties properties) {
+    public StorageFluidExternal(NetworkNodeExternalStorage externalStorage, Supplier<IFluidHandler> handlerSupplier) {
         this.externalStorage = externalStorage;
-        this.handler = handler;
+        this.handlerSupplier = handlerSupplier;
     }
 
     private IFluidTankProperties getProperties() {
+        IFluidHandler handler = handlerSupplier.get();
+
         return handler.getTankProperties().length != 0 ? handler.getTankProperties()[0] : null;
     }
 
@@ -42,7 +45,7 @@ public class StorageFluidExternal implements IStorage<FluidStack> {
     @Override
     public FluidStack insert(@Nonnull FluidStack stack, int size, boolean simulate) {
         if (getProperties() != null && IFilterable.canTakeFluids(externalStorage.getFluidFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack) && getProperties().canFillFluidType(stack)) {
-            int filled = handler.fill(RSUtils.copyStackWithSize(stack, size), !simulate);
+            int filled = handlerSupplier.get().fill(RSUtils.copyStackWithSize(stack, size), !simulate);
 
             if (filled == size) {
                 return null;
@@ -60,7 +63,7 @@ public class StorageFluidExternal implements IStorage<FluidStack> {
         FluidStack toDrain = RSUtils.copyStackWithSize(stack, size);
 
         if (API.instance().getComparer().isEqual(getContents(), toDrain, flags)) {
-            return handler.drain(toDrain, !simulate);
+            return handlerSupplier.get().drain(toDrain, !simulate);
         }
 
         return null;

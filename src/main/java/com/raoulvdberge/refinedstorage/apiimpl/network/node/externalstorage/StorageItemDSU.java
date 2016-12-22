@@ -10,25 +10,28 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 
 import javax.annotation.Nonnull;
+import java.util.function.Supplier;
 
 public class StorageItemDSU extends StorageItemExternal {
     private NetworkNodeExternalStorage externalStorage;
-    private IDeepStorageUnit unit;
+    private Supplier<IDeepStorageUnit> dsuSupplier;
 
-    public StorageItemDSU(NetworkNodeExternalStorage externalStorage, IDeepStorageUnit unit) {
+    public StorageItemDSU(NetworkNodeExternalStorage externalStorage, Supplier<IDeepStorageUnit> dsuSupplier) {
         this.externalStorage = externalStorage;
-        this.unit = unit;
+        this.dsuSupplier = dsuSupplier;
     }
 
     @Override
     public int getCapacity() {
-        return unit.getMaxStoredCount();
+        return dsuSupplier.get().getMaxStoredCount();
     }
 
     @Override
     public NonNullList<ItemStack> getStacks() {
-        if (unit.getStoredItemType() != null && unit.getStoredItemType().getCount() > 0) {
-            return NonNullList.withSize(1, unit.getStoredItemType().copy());
+        IDeepStorageUnit dsu = dsuSupplier.get();
+
+        if (dsu.getStoredItemType() != null && dsu.getStoredItemType().getCount() > 0) {
+            return NonNullList.withSize(1, dsu.getStoredItemType().copy());
         }
 
         return RSUtils.emptyNonNullList();
@@ -36,10 +39,12 @@ public class StorageItemDSU extends StorageItemExternal {
 
     @Override
     public ItemStack insert(@Nonnull ItemStack stack, int size, boolean simulate) {
+        IDeepStorageUnit dsu = dsuSupplier.get();
+
         if (IFilterable.canTake(externalStorage.getItemFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack)) {
-            if (unit.getStoredItemType() != null) {
-                if (API.instance().getComparer().isEqualNoQuantity(unit.getStoredItemType(), stack)) {
-                    if (getStored() + size > unit.getMaxStoredCount()) {
+            if (dsu.getStoredItemType() != null) {
+                if (API.instance().getComparer().isEqualNoQuantity(dsu.getStoredItemType(), stack)) {
+                    if (getStored() + size > dsu.getMaxStoredCount()) {
                         int remainingSpace = getCapacity() - getStored();
 
                         if (remainingSpace <= 0) {
@@ -47,20 +52,20 @@ public class StorageItemDSU extends StorageItemExternal {
                         }
 
                         if (!simulate) {
-                            unit.setStoredItemCount(unit.getStoredItemType().getCount() + remainingSpace);
+                            dsu.setStoredItemCount(dsu.getStoredItemType().getCount() + remainingSpace);
                         }
 
                         return ItemHandlerHelper.copyStackWithSize(stack, size - remainingSpace);
                     } else {
                         if (!simulate) {
-                            unit.setStoredItemCount(unit.getStoredItemType().getCount() + size);
+                            dsu.setStoredItemCount(dsu.getStoredItemType().getCount() + size);
                         }
 
                         return null;
                     }
                 }
             } else {
-                if (getStored() + size > unit.getMaxStoredCount()) {
+                if (getStored() + size > dsu.getMaxStoredCount()) {
                     int remainingSpace = getCapacity() - getStored();
 
                     if (remainingSpace <= 0) {
@@ -68,13 +73,13 @@ public class StorageItemDSU extends StorageItemExternal {
                     }
 
                     if (!simulate) {
-                        unit.setStoredItemType(stack.copy(), remainingSpace);
+                        dsu.setStoredItemType(stack.copy(), remainingSpace);
                     }
 
                     return ItemHandlerHelper.copyStackWithSize(stack, size - remainingSpace);
                 } else {
                     if (!simulate) {
-                        unit.setStoredItemType(stack.copy(), size);
+                        dsu.setStoredItemType(stack.copy(), size);
                     }
 
                     return null;
@@ -87,15 +92,17 @@ public class StorageItemDSU extends StorageItemExternal {
 
     @Override
     public ItemStack extract(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
-        if (API.instance().getComparer().isEqual(stack, unit.getStoredItemType(), flags)) {
-            if (size > unit.getStoredItemType().getCount()) {
-                size = unit.getStoredItemType().getCount();
+        IDeepStorageUnit dsu = dsuSupplier.get();
+
+        if (API.instance().getComparer().isEqual(stack, dsu.getStoredItemType(), flags)) {
+            if (size > dsu.getStoredItemType().getCount()) {
+                size = dsu.getStoredItemType().getCount();
             }
 
-            ItemStack stored = unit.getStoredItemType();
+            ItemStack stored = dsu.getStoredItemType();
 
             if (!simulate) {
-                unit.setStoredItemCount(stored.getCount() - size);
+                dsu.setStoredItemCount(stored.getCount() - size);
             }
 
             return ItemHandlerHelper.copyStackWithSize(stored, size);
@@ -106,7 +113,9 @@ public class StorageItemDSU extends StorageItemExternal {
 
     @Override
     public int getStored() {
-        return unit.getStoredItemType() != null ? unit.getStoredItemType().getCount() : 0;
+        IDeepStorageUnit dsu = dsuSupplier.get();
+
+        return dsu.getStoredItemType() != null ? dsu.getStoredItemType().getCount() : 0;
     }
 
     @Override

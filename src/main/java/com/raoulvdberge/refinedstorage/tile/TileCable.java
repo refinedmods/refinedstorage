@@ -6,6 +6,6 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCable;
 public class TileCable extends TileNode {
     @Override
     public INetworkNode createNode() {
-        return new NetworkNodeCable();
+        return new NetworkNodeCable(this);
     }
 }

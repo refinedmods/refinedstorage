@@ -30,9 +30,6 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
 
     private boolean active;
 
-    public NetworkNode() {
-    }
-
     public NetworkNode(INetworkNodeHolder holder) {
         this.holder = holder;
     }

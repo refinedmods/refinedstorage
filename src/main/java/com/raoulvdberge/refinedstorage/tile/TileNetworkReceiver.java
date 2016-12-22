@@ -6,6 +6,6 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeNetworkRe
 public class TileNetworkReceiver extends TileNode {
     @Override
     public INetworkNode createNode() {
-        return new NetworkNodeNetworkReceiver();
+        return new NetworkNodeNetworkReceiver(this);
     }
 }

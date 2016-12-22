@@ -24,7 +24,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.IItemHandler;
 import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 
@@ -188,29 +187,27 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
         itemStorages.clear();
         fluidStorages.clear();
 
-        TileEntity facing = holder.world().getTileEntity(holder.pos().offset(holder.getDirection()));
+        TileEntity facing = getFacingTile();
 
         if (type == IType.ITEMS) {
             if (facing instanceof IDrawerGroup) {
-                itemStorages.add(new StorageItemDrawerGroup(this, (IDrawerGroup) facing));
+                itemStorages.add(new StorageItemDrawerGroup(this, () -> (IDrawerGroup) getFacingTile()));
             } else if (facing instanceof IDrawer) {
-                itemStorages.add(new StorageItemDrawer(this, (IDrawer) facing));
+                itemStorages.add(new StorageItemDrawer(this, () -> (IDrawer) getFacingTile()));
             } else if (facing instanceof IDeepStorageUnit) {
-                itemStorages.add(new StorageItemDSU(this, (IDeepStorageUnit) facing));
+                itemStorages.add(new StorageItemDSU(this, () -> (IDeepStorageUnit) getFacingTile()));
             } else if (!(facing instanceof TileNode)) {
                 IItemHandler itemHandler = RSUtils.getItemHandler(facing, holder.getDirection().getOpposite());
 
                 if (itemHandler != null) {
-                    itemStorages.add(new StorageItemItemHandler(this, itemHandler));
+                    itemStorages.add(new StorageItemItemHandler(this, () -> RSUtils.getItemHandler(getFacingTile(), holder.getDirection().getOpposite())));
                 }
             }
         } else if (type == IType.FLUIDS) {
             IFluidHandler fluidHandler = RSUtils.getFluidHandler(facing, holder.getDirection().getOpposite());
 
             if (fluidHandler != null) {
-                for (IFluidTankProperties property : fluidHandler.getTankProperties()) {
-                    fluidStorages.add(new StorageFluidExternal(this, fluidHandler, property));
-                }
+                fluidStorages.add(new StorageFluidExternal(this, () -> RSUtils.getFluidHandler(getFacingTile(), holder.getDirection().getOpposite())));
             }
         }
 

@@ -9,15 +9,16 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
+import java.util.function.Supplier;
 
 public class StorageItemItemHandler extends StorageItemExternal {
     private NetworkNodeExternalStorage externalStorage;
-    private IItemHandler handler;
+    private Supplier<IItemHandler> handlerSupplier;
     private AccessType lockedAccessType = AccessType.INSERT_EXTRACT;
 
-    public StorageItemItemHandler(NetworkNodeExternalStorage externalStorage, IItemHandler handler) {
+    public StorageItemItemHandler(NetworkNodeExternalStorage externalStorage, Supplier<IItemHandler> handlerSupplier) {
         this.externalStorage = externalStorage;
-        this.handler = handler;
+        this.handlerSupplier = handlerSupplier;
 
         if (externalStorage.getFacingTile().getBlockType().getUnlocalizedName().equals("tile.ExtraUtils2:TrashCan")) {
             lockedAccessType = AccessType.INSERT;
@@ -26,11 +27,13 @@ public class StorageItemItemHandler extends StorageItemExternal {
 
     @Override
     public int getCapacity() {
-        return handler.getSlots() * 64;
+        return handlerSupplier.get().getSlots() * 64;
     }
 
     @Override
     public NonNullList<ItemStack> getStacks() {
+        IItemHandler handler = handlerSupplier.get();
+
         NonNullList<ItemStack> stacks = NonNullList.withSize(handler.getSlots(), ItemStack.EMPTY);
 
         for (int i = 0; i < handler.getSlots(); ++i) {
@@ -43,6 +46,8 @@ public class StorageItemItemHandler extends StorageItemExternal {
     @Override
     public ItemStack insert(@Nonnull ItemStack stack, int size, boolean simulate) {
         if (IFilterable.canTake(externalStorage.getItemFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack)) {
+            IItemHandler handler = handlerSupplier.get();
+
             return ItemHandlerHelper.insertItem(handler, ItemHandlerHelper.copyStackWithSize(stack, size), simulate);
         }
 
@@ -54,6 +59,8 @@ public class StorageItemItemHandler extends StorageItemExternal {
         int remaining = size;
 
         ItemStack received = null;
+
+        IItemHandler handler = handlerSupplier.get();
 
         for (int i = 0; i < handler.getSlots(); ++i) {
             ItemStack slot = handler.getStackInSlot(i);
@@ -82,6 +89,8 @@ public class StorageItemItemHandler extends StorageItemExternal {
 
     @Override
     public int getStored() {
+        IItemHandler handler = handlerSupplier.get();
+
         int size = 0;
 
         for (int i = 0; i < handler.getSlots(); ++i) {

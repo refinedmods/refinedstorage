@@ -11,39 +11,40 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
+import java.util.function.Supplier;
 
 public class StorageItemDrawer extends StorageItemExternal {
     private NetworkNodeExternalStorage externalStorage;
-    private IDrawer drawer;
+    private Supplier<IDrawer> drawerSupplier;
 
-    public StorageItemDrawer(NetworkNodeExternalStorage externalStorage, IDrawer drawer) {
+    public StorageItemDrawer(NetworkNodeExternalStorage externalStorage, Supplier<IDrawer> drawerSupplier) {
         this.externalStorage = externalStorage;
-        this.drawer = drawer;
+        this.drawerSupplier = drawerSupplier;
     }
 
     @Override
     public int getCapacity() {
-        return drawer.getMaxCapacity();
+        return drawerSupplier.get().getMaxCapacity();
     }
 
     @Override
     public NonNullList<ItemStack> getStacks() {
-        return getStacks(drawer);
+        return getStacks(drawerSupplier.get());
     }
 
     @Override
     public ItemStack insert(@Nonnull ItemStack stack, int size, boolean simulate) {
-        return insert(externalStorage, drawer, stack, size, simulate);
+        return insert(externalStorage, drawerSupplier.get(), stack, size, simulate);
     }
 
     @Override
     public ItemStack extract(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
-        return extract(drawer, stack, size, flags, simulate);
+        return extract(drawerSupplier.get(), stack, size, flags, simulate);
     }
 
     @Override
     public int getStored() {
-        return drawer.getStoredItemCount();
+        return drawerSupplier.get().getStoredItemCount();
     }
 
     @Override
