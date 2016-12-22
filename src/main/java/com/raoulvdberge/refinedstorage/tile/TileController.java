@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.tile;
 
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyReceiver;
+import com.google.common.base.Preconditions;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSUtils;
@@ -49,6 +50,7 @@ import com.raoulvdberge.refinedstorage.integration.ic2.IntegrationIC2;
 import com.raoulvdberge.refinedstorage.integration.tesla.ControllerEnergyTesla;
 import com.raoulvdberge.refinedstorage.integration.tesla.IntegrationTesla;
 import com.raoulvdberge.refinedstorage.network.*;
+import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
@@ -61,6 +63,7 @@ import net.darkhax.tesla.capability.TeslaCapabilities;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -80,7 +83,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class TileController extends TileBase implements INetworkMaster, IEnergyReceiver, IRedstoneConfigurable {
+public class TileController extends TileBase implements INetworkMaster, IEnergyReceiver, IRedstoneConfigurable, INetworkNode {
     public static final TileDataParameter<Integer> REDSTONE_MODE = RedstoneMode.createParameter();
 
     public static final TileDataParameter<Integer> ENERGY_USAGE = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileController>() {
@@ -111,17 +114,16 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
             for (INetworkNode node : tile.nodeGraph.all()) {
                 if (node.canUpdate()) {
-                    IBlockState state = tile.getWorld().getBlockState(node.getPosition());
-
-                    ClientNode clientNode = new ClientNode(
-                        new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state)),
-                        1,
-                        node.getEnergyUsage()
-                    );
-
-                    if (clientNode.getStack().getItem() == null) {
+                    ItemStack itemStack = node.getItemStack();
+                    if (itemStack.getItem() == null) {
                         continue;
                     }
+
+                    ClientNode clientNode = new ClientNode(
+                            itemStack,
+                            1,
+                            node.getEnergyUsage()
+                    );
 
                     if (nodes.contains(clientNode)) {
                         ClientNode other = nodes.get(nodes.indexOf(clientNode));
@@ -591,7 +593,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     public void sendReaderWriterChannelUpdate() {
         getWorld().getMinecraftServer().getPlayerList().getPlayers().stream()
             .filter(player -> player.openContainer instanceof ContainerReaderWriter &&
-                ((ContainerReaderWriter) player.openContainer).getReaderWriter().isConnected() &&
+                ((ContainerReaderWriter) player.openContainer).getReaderWriter().getNetwork() != null &&
                 pos.equals(((ContainerReaderWriter) player.openContainer).getReaderWriter().getNetwork().getPosition()))
             .forEach(this::sendReaderWriterChannelUpdate);
     }
@@ -968,6 +970,44 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
         return usage;
     }
 
+    @Nonnull
+    @Override
+    public ItemStack getItemStack() {
+        IBlockState state = getWorld().getBlockState(pos);
+        Item item = Item.getItemFromBlock(state.getBlock());
+        return new ItemStack(item, 1, state.getBlock().getMetaFromState(state));
+    }
+
+    @Override
+    public void onConnected(INetworkMaster network) {
+        Preconditions.checkArgument(this == network, "Should not be connected to another controller");
+    }
+
+    @Override
+    public void onDisconnected(INetworkMaster network) {
+        Preconditions.checkArgument(this == network, "Should not be connected to another controller");
+    }
+
+    @Override
+    public boolean canUpdate() {
+        return false;
+    }
+
+    @Override
+    public boolean canConduct(EnumFacing direction) {
+        return true;
+    }
+
+    @Override
+    public INetworkMaster getNetwork() {
+        return this;
+    }
+
+    @Override
+    public World getNodeWorld() {
+        return getWorld();
+    }
+
     public EnumControllerType getType() {
         if (type == null && getWorld().getBlockState(pos).getBlock() == RSBlocks.CONTROLLER) {
             this.type = (EnumControllerType) getWorld().getBlockState(pos).getValue(BlockController.TYPE);
@@ -977,22 +1017,32 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     }
 
     @Override
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityEnergy.ENERGY) {
-            return (T) energyForge;
+            return CapabilityEnergy.ENERGY.cast(energyForge);
         }
 
-        if (energyTesla != null && (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER)) {
-            return (T) energyTesla;
+        if (energyTesla != null) {
+            if (capability == TeslaCapabilities.CAPABILITY_HOLDER) {
+                return TeslaCapabilities.CAPABILITY_HOLDER.cast(energyTesla);
+            }
+            if (capability == TeslaCapabilities.CAPABILITY_CONSUMER) {
+                return TeslaCapabilities.CAPABILITY_CONSUMER.cast(energyTesla);
+            }
+        }
+
+        if (capability == CapabilityNetworkNode.NETWORK_NODE_CAPABILITY) {
+            return CapabilityNetworkNode.NETWORK_NODE_CAPABILITY.cast(this);
         }
 
         return super.getCapability(capability, facing);
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
         return capability == CapabilityEnergy.ENERGY
             || (energyTesla != null && (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER))
+            || capability == CapabilityNetworkNode.NETWORK_NODE_CAPABILITY
             || super.hasCapability(capability, facing);
     }
 }

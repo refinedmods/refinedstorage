@@ -4,6 +4,8 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import net.minecraft.util.EnumFacing;
 
+import javax.annotation.Nullable;
+
 public class TileRelay extends TileNode {
     public TileRelay() {
         setRedstoneMode(RedstoneMode.LOW);
@@ -21,7 +23,7 @@ public class TileRelay extends TileNode {
     }
 
     @Override
-    public boolean canConduct(EnumFacing direction) {
+    public boolean canConduct(@Nullable EnumFacing direction) {
         return canUpdate();
     }
 

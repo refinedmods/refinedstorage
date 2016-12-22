@@ -1,8 +1,12 @@
 package com.raoulvdberge.refinedstorage.api.network;
 
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import javax.annotation.Nonnull;
 
 /**
  * Represents a node in the network.
@@ -17,6 +21,15 @@ public interface INetworkNode {
      * @return the position of this node in the world
      */
     BlockPos getPosition();
+
+    /**
+     * @return the item of the node
+     */
+    @Nonnull
+    default ItemStack getItemStack() {
+        IBlockState state = this.getNodeWorld().getBlockState(this.getPosition());
+        return new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state));
+    }
 
     /**
      * Called when this node is connected to a network.
@@ -35,7 +48,9 @@ public interface INetworkNode {
     /**
      * @return true if this is node is connected to a network, or false otherwise
      */
-    boolean isConnected();
+    default boolean isConnected() {
+        return getNetwork() != null;
+    }
 
     /**
      * @return true if this node can be treated as active, typically checks the redstone configuration

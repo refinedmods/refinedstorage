@@ -44,7 +44,7 @@ public class MessageGridCraftingClear extends MessageHandlerPlayerToServer<Messa
         if (tile instanceof TileGrid) {
             TileGrid grid = (TileGrid) tile;
 
-            if (grid.isConnected()) {
+            if (grid.hasNetwork()) {
                 if (grid.getType() == EnumGridType.CRAFTING) {
                     for (int i = 0; i < grid.getMatrix().getSizeInventory(); ++i) {
                         ItemStack slot = grid.getMatrix().getStackInSlot(i);

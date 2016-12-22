@@ -25,6 +25,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.util.FluidStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.util.ItemStackList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 
@@ -32,7 +33,7 @@ import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Predicate;
+import java.util.function.BiPredicate;
 
 public class API implements IRSAPI {
     private static final IRSAPI INSTANCE = new API();
@@ -43,7 +44,30 @@ public class API implements IRSAPI {
     private ICraftingMonitorElementRegistry craftingMonitorElementRegistry = new CraftingMonitorElementRegistry();
     private ICraftingPreviewElementRegistry craftingPreviewElementRegistry = new CraftingPreviewElementRegistry();
     private IReaderWriterHandlerRegistry readerWriterHandlerRegistry = new ReaderWriterHandlerRegistry();
-    private Set<Predicate<TileEntity>> connectableConditions = new HashSet<>();
+    private Set<BiPredicate<TileEntity, EnumFacing>> connectableConditions = new HashSet<>();
+
+    public static IRSAPI instance() {
+        return INSTANCE;
+    }
+
+    public static void deliver(ASMDataTable asmDataTable) {
+        String annotationClassName = RSAPIInject.class.getCanonicalName();
+
+        Set<ASMDataTable.ASMData> asmDataSet = asmDataTable.getAll(annotationClassName);
+
+        for (ASMDataTable.ASMData asmData : asmDataSet) {
+            try {
+                Class clazz = Class.forName(asmData.getClassName());
+                Field field = clazz.getField(asmData.getObjectName());
+
+                if (field.getType() == IRSAPI.class) {
+                    field.set(null, INSTANCE);
+                }
+            } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
+                throw new RuntimeException("Failed to set: {}" + asmData.getClassName() + "." + asmData.getObjectName(), e);
+            }
+        }
+    }
 
     @Nonnull
     @Override
@@ -116,30 +140,7 @@ public class API implements IRSAPI {
     }
 
     @Override
-    public Set<Predicate<TileEntity>> getConnectableConditions() {
+    public Set<BiPredicate<TileEntity, EnumFacing>> getConnectableConditions() {
         return connectableConditions;
-    }
-
-    public static IRSAPI instance() {
-        return INSTANCE;
-    }
-
-    public static void deliver(ASMDataTable asmDataTable) {
-        String annotationClassName = RSAPIInject.class.getCanonicalName();
-
-        Set<ASMDataTable.ASMData> asmDataSet = asmDataTable.getAll(annotationClassName);
-
-        for (ASMDataTable.ASMData asmData : asmDataSet) {
-            try {
-                Class clazz = Class.forName(asmData.getClassName());
-                Field field = clazz.getField(asmData.getObjectName());
-
-                if (field.getType() == IRSAPI.class) {
-                    field.set(null, INSTANCE);
-                }
-            } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
-                throw new RuntimeException("Failed to set: {}" + asmData.getClassName() + "." + asmData.getObjectName(), e);
-            }
-        }
     }
 }
