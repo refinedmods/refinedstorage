@@ -12,6 +12,7 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -20,6 +21,7 @@ import javax.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class CraftingPattern implements ICraftingPattern {
     private ICraftingPatternContainer container;
@@ -80,17 +82,19 @@ public class CraftingPattern implements ICraftingPattern {
                             } else if (input instanceof ItemStack) {
                                 ItemStack stripped = Comparer.stripTags(((ItemStack) input).copy());
                                 if (stripped.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
-                                    stripped.setItemDamage(0);
+                                    oreInputs.add(getSubItems(stripped));
+                                } else {
+                                    oreInputs.add(Collections.singletonList(stripped));
                                 }
-                                oreInputs.add(Collections.singletonList(stripped));
                             } else {
                                 List<ItemStack> cleaned = new LinkedList<>();
                                 for (ItemStack in : (List<ItemStack>) input) {
                                     ItemStack stripped = Comparer.stripTags(in.copy());
                                     if (stripped.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
-                                        stripped.setItemDamage(0);
+                                        cleaned.addAll(getSubItems(stripped));
+                                    } else {
+                                        cleaned.add(stripped);
                                     }
-                                    cleaned.add(stripped);
                                 }
                                 oreInputs.add(cleaned);
                             }
@@ -118,7 +122,7 @@ public class CraftingPattern implements ICraftingPattern {
                         if (ids == null || ids.length == 0) {
                             oreInputs.add(Collections.singletonList(Comparer.stripTags(input)));
                         } else {
-                            oreInputs.add(Arrays.stream(ids)
+                            List<ItemStack> oredict = Arrays.stream(ids)
                                 .mapToObj(OreDictionary::getOreName)
                                 .map(OreDictionary::getOres)
                                 .flatMap(List::stream)
@@ -128,8 +132,11 @@ public class CraftingPattern implements ICraftingPattern {
                                     s.setCount(input.getCount());
                                     return s;
                                 })
-                                .collect(Collectors.toList())
-                            );
+                                .flatMap(this::checkOreDictWildcard)
+                                .collect(Collectors.toList());
+                            // Add original stack as first, should prevent some issues
+                            oredict.add(0, Comparer.stripTags(input.copy()));
+                            oreInputs.add(oredict);
                         }
                     }
                 }
@@ -145,6 +152,22 @@ public class CraftingPattern implements ICraftingPattern {
                 }
             }
         }
+    }
+
+    private Stream<ItemStack> checkOreDictWildcard(ItemStack stack) {
+        List<ItemStack> list = new LinkedList<>();
+        if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
+            list.addAll(getSubItems(stack));
+        } else {
+            list.add(stack);
+        }
+        return list.stream();
+    }
+
+    private List<ItemStack> getSubItems(ItemStack stack) {
+        NonNullList<ItemStack> subItems = NonNullList.create();
+        stack.getItem().getSubItems(stack.getItem(), stack.getItem().getCreativeTab(), subItems);
+        return subItems.stream().map(Comparer::stripTags).collect(Collectors.toList());
     }
 
     @Override
