@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.solderer;
 
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRecipe;
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRegistry;
+import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
@@ -28,7 +29,7 @@ public class SoldererRegistry implements ISoldererRegistry {
             boolean found = true;
 
             for (int i = 0; i < 3; ++i) {
-                if (!API.instance().getComparer().isEqualNoQuantity(recipe.getRow(i), rows.getStackInSlot(i)) && !API.instance().getComparer().isEqualOredict(recipe.getRow(i), rows.getStackInSlot(i))) {
+                if (!API.instance().getComparer().isEqual(recipe.getRow(i), rows.getStackInSlot(i), IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT | IComparer.COMPARE_OREDICT | IComparer.COMPARE_STRIP_NBT)) {
                     found = false;
                 }
 
@@ -102,7 +103,7 @@ public class SoldererRegistry implements ISoldererRegistry {
 
     private boolean compareRows(ISoldererRecipe recipe, ItemStack[] rows) {
         for (int i = 0; i < 3; ++i) {
-            if(!API.instance().getComparer().isEqualNoQuantity(recipe.getRow(i), rows[i])) {
+            if (!API.instance().getComparer().isEqualNoQuantity(recipe.getRow(i), rows[i])) {
                 return false;
             }
         }

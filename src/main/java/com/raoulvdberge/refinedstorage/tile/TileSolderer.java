@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRecipe;
+import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
@@ -48,7 +49,7 @@ public class TileSolderer extends TileNode {
         @Override
         public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
             for (ISoldererRecipe recipe : API.instance().getSoldererRegistry().getRecipes()) {
-                if (API.instance().getComparer().isEqualNoQuantity(recipe.getRow(slot), stack) || API.instance().getComparer().isEqualOredict(recipe.getRow(slot), stack)) {
+                if (API.instance().getComparer().isEqual(recipe.getRow(slot), stack, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT | IComparer.COMPARE_OREDICT | IComparer.COMPARE_STRIP_NBT)) {
                     return super.insertItem(slot, stack, simulate);
                 }
             }
