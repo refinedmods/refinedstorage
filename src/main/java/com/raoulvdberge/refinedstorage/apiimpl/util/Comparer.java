@@ -175,6 +175,10 @@ public class Comparer implements IComparer {
                 case "minecraft":
                     stack.getTagCompound().removeTag("RepairCost");
                     break;
+                case "simplyjetpacks":
+                    stack.getTagCompound().removeTag("sjData");
+                    stack.getTagCompound().removeTag("PackOn");
+                    break;
             }
         }
 
