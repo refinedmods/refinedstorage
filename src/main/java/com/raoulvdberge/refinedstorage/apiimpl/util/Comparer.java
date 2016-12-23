@@ -147,7 +147,12 @@ public class Comparer implements IComparer {
                     stack.getTagCompound().removeTag("isStub");
                     // Capacitors
                     stack.getTagCompound().removeTag("Energy");
-                default:
+                case "simplyjetpacks":
+                    stack.getTagCompound().removeTag("sjData");
+                    stack.getTagCompound().removeTag("PackOn");
+                    break;
+                case "minecraft":
+                    stack.getTagCompound().removeTag("RepairCost");
                     break;
             }
         }
