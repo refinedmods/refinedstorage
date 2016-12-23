@@ -1,8 +1,11 @@
 package com.raoulvdberge.refinedstorage.integration.ic2;
 
 import com.raoulvdberge.refinedstorage.tile.TileController;
+import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.prefab.BasicSink;
+import ic2.api.info.Info;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.MinecraftForge;
 
 public class ControllerEnergyIC2 implements IControllerEnergyIC2 {
     private BasicSink sink;
@@ -19,6 +22,16 @@ public class ControllerEnergyIC2 implements IControllerEnergyIC2 {
                 controller.getEnergy().setEnergyStored(controller.getEnergy().getEnergyStored() + IntegrationIC2.toRS(amount));
 
                 return 0.0D;
+            }
+
+            @Override
+            public void onLoaded() {
+                if(!this.addedToEnet && !this.parent.getWorld().isRemote && Info.isIc2Available()) {
+                    this.world = this.parent.getWorld();
+                    this.pos = this.parent.getPos();
+                    MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
+                    this.addedToEnet = true;
+                }
             }
         };
     }
