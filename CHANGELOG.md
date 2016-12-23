@@ -1,5 +1,13 @@
 # Refined Storage Changelog
 
+### 1.2.13
+- Fixed memes not working (raoulvdberge)
+- Fixed controller causing network rebuild on every neighbor change (raoulvdberge)
+- Autocrafting bugfixes (way2muchnoise)
+- Fixed Wireless Transmitter working even if it was disabled with redstone mode (raoulvdberge)
+- Fixed Solderer not accepting books created in an Anvil (raoulvdberge)
+- Made sure External Storage always has the correct inventory in world (raoulvdberge)
+
 ### 1.2.12
 - Fixed TPS lag on very large crafting tasks (way2muchnoise)
 - Fixed not being able to use autocrafting on some EnderIO items (way2muchnoise)
