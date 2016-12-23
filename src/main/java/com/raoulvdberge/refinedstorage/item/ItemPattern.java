@@ -96,6 +96,11 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
     }
 
     public static void setSlot(ItemStack pattern, int slot, ItemStack stack) {
+        // Safety against bad stacks
+        if (stack.stackSize < 0) {
+            stack.stackSize = 1;
+        }
+
         if (!pattern.hasTagCompound()) {
             pattern.setTagCompound(new NBTTagCompound());
         }
