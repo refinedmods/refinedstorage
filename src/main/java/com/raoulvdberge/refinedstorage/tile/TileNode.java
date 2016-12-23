@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.tile;
 
 import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
+import com.raoulvdberge.refinedstorage.api.network.INetworkNodeHolder;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeProvider;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -21,6 +22,7 @@ import javax.annotation.Nullable;
 public abstract class TileNode extends TileBase implements INetworkNodeProxy, INetworkNodeHolder, IRedstoneConfigurable {
     public static final TileDataParameter<Integer> REDSTONE_MODE = RedstoneMode.createParameter();
 
+    private NBTTagCompound legacyTagToRead;
     private static final String NBT_ACTIVE = "Active";
 
     public TileNode() {
@@ -29,10 +31,25 @@ public abstract class TileNode extends TileBase implements INetworkNodeProxy, IN
 
     @Override
     public void update() {
-        super.update();
-
         if (!getWorld().isRemote) {
+            if (legacyTagToRead != null) {
+                getNode().read(legacyTagToRead);
+
+                legacyTagToRead = null;
+            }
+
             getNode().update();
+        }
+
+        super.update();
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+
+        if (getNode().getHolder().world() == null) {
+            getNode().setHolder(this);
         }
     }
 
@@ -75,16 +92,10 @@ public abstract class TileNode extends TileBase implements INetworkNodeProxy, IN
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        getNode().read(tag);
-    }
-
-    @Override
-    public NBTTagCompound write(NBTTagCompound tag) {
-        super.write(tag);
-
-        getNode().write(tag);
-
-        return tag;
+        // When we have more than the direction stored, this is a legacy tag
+        if (tag.getSize() > 1) {
+            legacyTagToRead = tag;
+        }
     }
 
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {

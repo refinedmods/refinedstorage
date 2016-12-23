@@ -290,7 +290,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     }
 
     private boolean isOverCreatePattern(int mouseX, int mouseY) {
-        return grid.getType() == EnumGridType.PATTERN && inBounds(152, getTabDelta() + getHeader() + (getVisibleRows() * 18) + 22, 16, 16, mouseX, mouseY) && ((NetworkNodeGrid) ((TileGrid) grid).getNode()).canCreatePattern();
+        return grid.getType() == EnumGridType.PATTERN && inBounds(152, getTabDelta() + getHeader() + (getVisibleRows() * 18) + 22, 16, 16, mouseX, mouseY) && ((NetworkNodeGrid) grid).canCreatePattern();
     }
 
     private int getTabDelta() {
@@ -390,7 +390,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
                 ty = 1;
             }
 
-            if (!((NetworkNodeGrid) ((TileGrid) grid).getNode()).canCreatePattern()) {
+            if (!((NetworkNodeGrid) grid).canCreatePattern()) {
                 ty = 2;
             }
 
@@ -499,12 +499,12 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         boolean clickedCreatePattern = clickedButton == 0 && isOverCreatePattern(mouseX - guiLeft, mouseY - guiTop + getTabDelta());
 
         if (clickedCreatePattern) {
-            BlockPos gridPos = ((TileGrid) grid).getPos();
+            BlockPos gridPos = ((NetworkNodeGrid) grid).getPos();
 
             RS.INSTANCE.network.sendToServer(new MessageGridPatternCreate(gridPos.getX(), gridPos.getY(), gridPos.getZ()));
         } else if (grid.isActive()) {
             if (clickedClear) {
-                RS.INSTANCE.network.sendToServer(new MessageGridCraftingClear((TileGrid) grid));
+                RS.INSTANCE.network.sendToServer(new MessageGridCraftingClear((NetworkNodeGrid) grid));
             }
 
             ItemStack held = ((ContainerGrid) this.inventorySlots).getPlayer().inventory.getItemStack();

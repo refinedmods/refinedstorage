@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.tile;
+package com.raoulvdberge.refinedstorage.api.network;
 
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;

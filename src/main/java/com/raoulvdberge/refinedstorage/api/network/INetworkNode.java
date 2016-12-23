@@ -47,6 +47,11 @@ public interface INetworkNode {
     @Nullable
     INetworkMaster getNetwork();
 
+    @Nullable
+    INetworkNodeHolder getHolder();
+
+    void setHolder(INetworkNodeHolder holder);
+
     void update();
 
     NBTTagCompound write(NBTTagCompound tag);

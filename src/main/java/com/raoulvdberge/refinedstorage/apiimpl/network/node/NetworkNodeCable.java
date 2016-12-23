@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.tile.INetworkNodeHolder;
+import com.raoulvdberge.refinedstorage.api.network.INetworkNodeHolder;
 
 public class NetworkNodeCable extends NetworkNode {
     public static final String ID = "cable";

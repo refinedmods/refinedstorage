@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.tile.INetworkNodeHolder;
+import com.raoulvdberge.refinedstorage.api.network.INetworkNodeHolder;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import net.minecraft.util.EnumFacing;
 

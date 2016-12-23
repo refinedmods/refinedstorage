@@ -20,7 +20,7 @@ public class MessageGridCraftingClear extends MessageHandlerPlayerToServer<Messa
     public MessageGridCraftingClear() {
     }
 
-    public MessageGridCraftingClear(TileGrid grid) {
+    public MessageGridCraftingClear(NetworkNodeGrid grid) {
         this.x = grid.getPos().getX();
         this.y = grid.getPos().getY();
         this.z = grid.getPos().getZ();

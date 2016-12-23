@@ -33,7 +33,7 @@ public class GuiHandler implements IGuiHandler {
             case RSGui.CONTROLLER:
                 return new ContainerController((TileController) tile, player);
             case RSGui.GRID:
-                return new ContainerGrid((NetworkNodeGrid) ((TileGrid) tile).getNode(), new GridDisplayDummy(), player);
+                return new ContainerGrid((NetworkNodeGrid) ((TileGrid) tile).getNode(), new GridDisplayDummy(), (TileGrid) tile, player);
             case RSGui.DISK_DRIVE:
                 return new ContainerDiskDrive((TileDiskDrive) tile, player);
             case RSGui.IMPORTER:
@@ -104,7 +104,7 @@ public class GuiHandler implements IGuiHandler {
             case RSGui.GRID:
                 IGrid grid = (NetworkNodeGrid) ((TileGrid) tile).getNode();
                 GuiGrid gui = new GuiGrid(null, grid);
-                gui.inventorySlots = new ContainerGrid(grid, gui, player);
+                gui.inventorySlots = new ContainerGrid(grid, gui, null, player);
                 return gui;
             case RSGui.WIRELESS_GRID:
                 return getWirelessGridGui(player, x, y, z);
@@ -176,12 +176,12 @@ public class GuiHandler implements IGuiHandler {
         IGrid grid = getWirelessGrid(player, hand, controllerDimension, type);
 
         GuiGrid gui = new GuiGrid(null, grid);
-        gui.inventorySlots = new ContainerGrid(grid, gui, player);
+        gui.inventorySlots = new ContainerGrid(grid, gui, null, player);
         return gui;
     }
 
     private ContainerGrid getWirelessGridContainer(EntityPlayer player, int hand, int controllerDimension, int type) {
-        return new ContainerGrid(getWirelessGrid(player, hand, controllerDimension, type), new GridDisplayDummy(), player);
+        return new ContainerGrid(getWirelessGrid(player, hand, controllerDimension, type), new GridDisplayDummy(), null, player);
     }
 
     private WirelessCraftingMonitor getWirelessCraftingMonitor(EntityPlayer player, int hand, int controllerDimension) {

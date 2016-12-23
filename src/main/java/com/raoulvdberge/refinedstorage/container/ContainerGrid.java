@@ -5,7 +5,6 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.block.EnumGridType;
 import com.raoulvdberge.refinedstorage.container.slot.*;
 import com.raoulvdberge.refinedstorage.gui.grid.IGridDisplay;
-import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.WirelessGrid;
@@ -26,8 +25,8 @@ public class ContainerGrid extends ContainerBase {
     private SlotGridCraftingResult craftingResultSlot;
     private SlotDisabled patternResultSlot;
 
-    public ContainerGrid(IGrid grid, IGridDisplay display, EntityPlayer player) {
-        super(grid instanceof TileBase ? (TileBase) grid : null, player);
+    public ContainerGrid(IGrid grid, IGridDisplay display, TileGrid gridTile, EntityPlayer player) {
+        super(gridTile, player);
 
         this.grid = grid;
         this.display = display;
@@ -49,7 +48,7 @@ public class ContainerGrid extends ContainerBase {
             int y = headerAndSlots + 4;
 
             for (int i = 0; i < 9; ++i) {
-                addSlotToContainer(new SlotGridCrafting(((NetworkNodeGrid) ((TileGrid) grid).getNode()).getMatrix(), i, x, y));
+                addSlotToContainer(new SlotGridCrafting(((NetworkNodeGrid) grid).getMatrix(), i, x, y));
 
                 x += 18;
 
@@ -59,13 +58,13 @@ public class ContainerGrid extends ContainerBase {
                 }
             }
 
-            addSlotToContainer(craftingResultSlot = new SlotGridCraftingResult(this, getPlayer(), (TileGrid) grid, 0, 130 + 4, headerAndSlots + 22));
+            addSlotToContainer(craftingResultSlot = new SlotGridCraftingResult(this, getPlayer(), (NetworkNodeGrid) grid, 0, 130 + 4, headerAndSlots + 22));
         } else if (grid.getType() == EnumGridType.PATTERN) {
             int x = 8;
             int y = headerAndSlots + 4;
 
             for (int i = 0; i < 9; ++i) {
-                addSlotToContainer(new SlotFilterLegacy(((NetworkNodeGrid) ((TileGrid) grid).getNode()).getMatrix(), i, x, y));
+                addSlotToContainer(new SlotFilterLegacy(((NetworkNodeGrid) grid).getMatrix(), i, x, y));
 
                 x += 18;
 
@@ -75,10 +74,10 @@ public class ContainerGrid extends ContainerBase {
                 }
             }
 
-            addSlotToContainer(patternResultSlot = new SlotDisabled(((NetworkNodeGrid) ((TileGrid) grid).getNode()).getResult(), 0, 112 + 4, headerAndSlots + 22));
+            addSlotToContainer(patternResultSlot = new SlotDisabled(((NetworkNodeGrid) grid).getResult(), 0, 112 + 4, headerAndSlots + 22));
 
-            addSlotToContainer(new SlotItemHandler(((NetworkNodeGrid) ((TileGrid) grid).getNode()).getPatterns(), 0, 152, headerAndSlots + 4));
-            addSlotToContainer(new SlotOutput(((NetworkNodeGrid) ((TileGrid) grid).getNode()).getPatterns(), 1, 152, headerAndSlots + 40));
+            addSlotToContainer(new SlotItemHandler(((NetworkNodeGrid) grid).getPatterns(), 0, 152, headerAndSlots + 4));
+            addSlotToContainer(new SlotOutput(((NetworkNodeGrid) grid).getPatterns(), 1, 152, headerAndSlots + 40));
         }
 
         if (grid.getType() != EnumGridType.FLUID) {
@@ -129,7 +128,7 @@ public class ContainerGrid extends ContainerBase {
 
             if (slot.getHasStack()) {
                 if (slot == craftingResultSlot) {
-                    ((NetworkNodeGrid) ((TileGrid) grid).getNode()).onCraftedShift(this, player);
+                    ((NetworkNodeGrid) grid).onCraftedShift(this, player);
                 } else if (slot != patternResultSlot && !(slot instanceof SlotFilterLegacy)) {
                     if (grid.getType() != EnumGridType.FLUID && grid.getItemHandler() != null) {
                         slot.putStack(RSUtils.getStack(grid.getItemHandler().onInsert((EntityPlayerMP) player, slot.getStack())));

@@ -4,8 +4,8 @@ import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNeighborhoodAware;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
+import com.raoulvdberge.refinedstorage.api.network.INetworkNodeHolder;
 import com.raoulvdberge.refinedstorage.api.util.IWrenchable;
-import com.raoulvdberge.refinedstorage.tile.INetworkNodeHolder;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
@@ -42,6 +42,17 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
         this.redstoneMode = redstoneMode;
     }
 
+    @Override
+    @Nullable
+    public INetworkNodeHolder getHolder() {
+        return holder;
+    }
+
+    @Override
+    public void setHolder(INetworkNodeHolder holder) {
+        this.holder = holder;
+    }
+
     @Nonnull
     @Override
     public ItemStack getItemStack() {
@@ -67,6 +78,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
     }
 
     protected void onConnectedStateChange(INetworkMaster network, boolean state) {
+        // NO OP
     }
 
     @Override

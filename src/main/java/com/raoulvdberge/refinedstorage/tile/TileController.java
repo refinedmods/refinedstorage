@@ -11,10 +11,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftin
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskFactory;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
-import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
-import com.raoulvdberge.refinedstorage.api.network.INetworkNodeGraph;
-import com.raoulvdberge.refinedstorage.api.network.INetworkNodeProxy;
+import com.raoulvdberge.refinedstorage.api.network.*;
 import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
@@ -959,6 +956,17 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
     @Override
     public INetworkMaster getNetwork() {
         return this;
+    }
+
+    @Nullable
+    @Override
+    public INetworkNodeHolder getHolder() {
+        return null;
+    }
+
+    @Override
+    public void setHolder(INetworkNodeHolder holder) {
+        // NO OP
     }
 
     public EnumControllerType getType() {
