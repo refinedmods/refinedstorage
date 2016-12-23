@@ -43,7 +43,7 @@ public class CraftingStepCraft extends CraftingStep {
         if (!super.canStartProcessing()) {
             return false;
         }
-        int compare = CraftingTask.DEFAULT_COMPARE | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0);
+        int compare = CraftingTask.DEFAULT_COMPARE;
         for (ItemStack stack : getToInsert()) {
             // This will be a tool, like a hammer
             if (stack.isItemStackDamageable()) {
@@ -67,12 +67,11 @@ public class CraftingStepCraft extends CraftingStep {
     @Override
     public void execute(Deque<ItemStack> toInsertItems, Deque<FluidStack> toInsertFluids) {
         List<ItemStack> actualInputs = new LinkedList<>();
-        int compare = CraftingTask.DEFAULT_COMPARE | (getPattern().isOredict() ? IComparer.COMPARE_OREDICT : 0);
-        if (extractItems(actualInputs, compare, toInsertItems)) {
+        if (extractItems(actualInputs, CraftingTask.DEFAULT_COMPARE, toInsertItems)) {
             IItemStackList stackList = API.instance().createItemStackList();
             actualInputs.forEach(stackList::add);
 
-            ItemStack[] took = ItemStackList.toCraftingGrid(stackList, toInsert, compare);
+            ItemStack[] took = ItemStackList.toCraftingGrid(stackList, toInsert, CraftingTask.DEFAULT_COMPARE);
 
             List<ItemStack> outputs = pattern.isOredict() ? pattern.getOutputs(took) : pattern.getOutputs();
 

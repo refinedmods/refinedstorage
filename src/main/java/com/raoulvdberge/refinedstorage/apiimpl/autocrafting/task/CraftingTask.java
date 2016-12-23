@@ -93,7 +93,7 @@ public class CraftingTask implements ICraftingTask {
             return null;
         }
 
-        int compare = DEFAULT_COMPARE | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0);
+        int compare = DEFAULT_COMPARE;
 
         IItemStackList inputs = API.instance().createItemStackList();
         IItemStackList actualInputs = API.instance().createItemStackList();
