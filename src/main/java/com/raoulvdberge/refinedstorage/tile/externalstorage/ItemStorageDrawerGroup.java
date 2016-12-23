@@ -8,23 +8,26 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class ItemStorageDrawerGroup extends ItemStorageExternal {
     private TileExternalStorage externalStorage;
-    private IDrawerGroup drawers;
+    private Supplier<IDrawerGroup> groupSupplier;
 
-    public ItemStorageDrawerGroup(TileExternalStorage externalStorage, IDrawerGroup drawers) {
+    public ItemStorageDrawerGroup(TileExternalStorage externalStorage, Supplier<IDrawerGroup> groupSupplier) {
         this.externalStorage = externalStorage;
-        this.drawers = drawers;
+        this.groupSupplier = groupSupplier;
     }
 
     @Override
     public List<ItemStack> getStacks() {
+        IDrawerGroup group = groupSupplier.get();
+
         List<ItemStack> stacks = new ArrayList<>();
 
-        for (int i = 0; i < drawers.getDrawerCount(); ++i) {
-            if (drawers.isDrawerEnabled(i)) {
-                stacks.addAll(ItemStorageDrawer.getStacks(drawers.getDrawer(i)));
+        for (int i = 0; i < group.getDrawerCount(); ++i) {
+            if (group.isDrawerEnabled(i)) {
+                stacks.addAll(ItemStorageDrawer.getStacks(group.getDrawer(i)));
             }
         }
 
@@ -33,11 +36,13 @@ public class ItemStorageDrawerGroup extends ItemStorageExternal {
 
     @Override
     public int getStored() {
+        IDrawerGroup group = groupSupplier.get();
+
         int stored = 0;
 
-        for (int i = 0; i < drawers.getDrawerCount(); ++i) {
-            if (drawers.isDrawerEnabled(i)) {
-                stored += drawers.getDrawer(i).getStoredItemCount();
+        for (int i = 0; i < group.getDrawerCount(); ++i) {
+            if (group.isDrawerEnabled(i)) {
+                stored += group.getDrawer(i).getStoredItemCount();
             }
         }
 
@@ -51,11 +56,13 @@ public class ItemStorageDrawerGroup extends ItemStorageExternal {
 
     @Override
     public int getCapacity() {
+        IDrawerGroup group = groupSupplier.get();
+
         int capacity = 0;
 
-        for (int i = 0; i < drawers.getDrawerCount(); ++i) {
-            if (drawers.isDrawerEnabled(i)) {
-                capacity += drawers.getDrawer(i).getMaxCapacity();
+        for (int i = 0; i < group.getDrawerCount(); ++i) {
+            if (group.isDrawerEnabled(i)) {
+                capacity += group.getDrawer(i).getMaxCapacity();
             }
         }
 
@@ -65,11 +72,13 @@ public class ItemStorageDrawerGroup extends ItemStorageExternal {
     @Nullable
     @Override
     public ItemStack insertItem(@Nonnull ItemStack stack, int size, boolean simulate) {
+        IDrawerGroup group = groupSupplier.get();
+
         ItemStack remainder = stack;
 
-        for (int i = 0; i < drawers.getDrawerCount(); ++i) {
-            if (drawers.isDrawerEnabled(i)) {
-                remainder = ItemStorageDrawer.insertItem(externalStorage, drawers.getDrawer(i), stack, size, simulate);
+        for (int i = 0; i < group.getDrawerCount(); ++i) {
+            if (group.isDrawerEnabled(i)) {
+                remainder = ItemStorageDrawer.insertItem(externalStorage, group.getDrawer(i), stack, size, simulate);
 
                 if (remainder == null || remainder.stackSize <= 0) {
                     break;
@@ -85,13 +94,15 @@ public class ItemStorageDrawerGroup extends ItemStorageExternal {
     @Nullable
     @Override
     public ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
+        IDrawerGroup group = groupSupplier.get();
+
         int toExtract = size;
 
         ItemStack result = null;
 
-        for (int i = 0; i < drawers.getDrawerCount(); ++i) {
-            if (drawers.isDrawerEnabled(i)) {
-                ItemStack extracted = ItemStorageDrawer.extractItem(drawers.getDrawer(i), stack, toExtract, flags, simulate);
+        for (int i = 0; i < group.getDrawerCount(); ++i) {
+            if (group.isDrawerEnabled(i)) {
+                ItemStack extracted = ItemStorageDrawer.extractItem(group.getDrawer(i), stack, toExtract, flags, simulate);
 
                 if (extracted != null) {
                     if (result == null) {

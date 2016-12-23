@@ -14,19 +14,22 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class FluidStorageExternal implements IFluidStorage {
     private FluidStack cache;
 
     private TileExternalStorage externalStorage;
-    private IFluidHandler handler;
+    private Supplier<IFluidHandler> handlerSupplier;
 
-    public FluidStorageExternal(TileExternalStorage externalStorage, IFluidHandler handler, IFluidTankProperties properties) {
+    public FluidStorageExternal(TileExternalStorage externalStorage, Supplier<IFluidHandler> handlerSupplier) {
         this.externalStorage = externalStorage;
-        this.handler = handler;
+        this.handlerSupplier = handlerSupplier;
     }
 
     private IFluidTankProperties getProperties() {
+        IFluidHandler handler = handlerSupplier.get();
+
         return handler.getTankProperties().length != 0 ? handler.getTankProperties()[0] : null;
     }
 
@@ -43,7 +46,7 @@ public class FluidStorageExternal implements IFluidStorage {
     @Override
     public FluidStack insertFluid(@Nonnull FluidStack stack, int size, boolean simulate) {
         if (getProperties() != null && IFilterable.canTakeFluids(externalStorage.getFluidFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack) && getProperties().canFillFluidType(stack)) {
-            int filled = handler.fill(RSUtils.copyStackWithSize(stack, size), !simulate);
+            int filled = handlerSupplier.get().fill(RSUtils.copyStackWithSize(stack, size), !simulate);
 
             if (filled == size) {
                 return null;
@@ -61,7 +64,7 @@ public class FluidStorageExternal implements IFluidStorage {
         FluidStack toDrain = RSUtils.copyStackWithSize(stack, size);
 
         if (API.instance().getComparer().isEqual(getContents(), toDrain, flags)) {
-            return handler.drain(toDrain, !simulate);
+            return handlerSupplier.get().drain(toDrain, !simulate);
         }
 
         return null;

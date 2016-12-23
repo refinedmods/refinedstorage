@@ -10,39 +10,42 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class ItemStorageDrawer extends ItemStorageExternal {
     private TileExternalStorage externalStorage;
-    private IDrawer drawer;
+    private Supplier<IDrawer> drawerSupplier;
 
-    public ItemStorageDrawer(TileExternalStorage externalStorage, IDrawer drawer) {
+    public ItemStorageDrawer(TileExternalStorage externalStorage, Supplier<IDrawer> drawerSupplier) {
         this.externalStorage = externalStorage;
-        this.drawer = drawer;
+        this.drawerSupplier = drawerSupplier;
     }
 
     @Override
     public int getCapacity() {
+        IDrawer drawer = drawerSupplier.get();
+
         return drawer.getMaxCapacity();
     }
 
     @Override
     public List<ItemStack> getStacks() {
-        return getStacks(drawer);
+        return getStacks(drawerSupplier.get());
     }
 
     @Override
     public ItemStack insertItem(ItemStack stack, int size, boolean simulate) {
-        return insertItem(externalStorage, drawer, stack, size, simulate);
+        return insertItem(externalStorage, drawerSupplier.get(), stack, size, simulate);
     }
 
     @Override
     public ItemStack extractItem(ItemStack stack, int size, int flags, boolean simulate) {
-        return extractItem(drawer, stack, size, flags, simulate);
+        return extractItem(drawerSupplier.get(), stack, size, flags, simulate);
     }
 
     @Override
     public int getStored() {
-        return drawer.getStoredItemCount();
+        return drawerSupplier.get().getStoredItemCount();
     }
 
     @Override
