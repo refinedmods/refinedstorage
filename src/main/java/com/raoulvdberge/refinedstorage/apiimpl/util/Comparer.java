@@ -31,7 +31,7 @@ public class Comparer implements IComparer {
             return false;
         }
 
-        if ((flags & COMPARE_DAMAGE) == COMPARE_DAMAGE) {
+        if ((flags & COMPARE_DAMAGE) == COMPARE_DAMAGE && left.getItemDamage() != OreDictionary.WILDCARD_VALUE && right.getItemDamage() != OreDictionary.WILDCARD_VALUE) {
             if (left.getItemDamage() != right.getItemDamage()) {
                 return false;
             }
