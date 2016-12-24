@@ -80,21 +80,11 @@ public class CraftingPattern implements ICraftingPattern {
                             if (input == null) {
                                 oreInputs.add(Collections.emptyList());
                             } else if (input instanceof ItemStack) {
-                                ItemStack stripped = Comparer.stripTags(((ItemStack) input).copy());
-                                if (stripped.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
-                                    oreInputs.add(getSubItems(stripped));
-                                } else {
-                                    oreInputs.add(Collections.singletonList(stripped));
-                                }
+                                oreInputs.add(Collections.singletonList(Comparer.stripTags(((ItemStack) input).copy())));
                             } else {
                                 List<ItemStack> cleaned = new LinkedList<>();
                                 for (ItemStack in : (List<ItemStack>) input) {
-                                    ItemStack stripped = Comparer.stripTags(in.copy());
-                                    if (stripped.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
-                                        cleaned.addAll(getSubItems(stripped));
-                                    } else {
-                                        cleaned.add(stripped);
-                                    }
+                                    cleaned.add(Comparer.stripTags(in.copy()));
                                 }
                                 oreInputs.add(cleaned);
                             }
@@ -132,7 +122,6 @@ public class CraftingPattern implements ICraftingPattern {
                                     s.setCount(input.getCount());
                                     return s;
                                 })
-                                .flatMap(this::checkOreDictWildcard)
                                 .collect(Collectors.toList());
                             // Add original stack as first, should prevent some issues
                             oredict.add(0, Comparer.stripTags(input.copy()));
@@ -152,22 +141,6 @@ public class CraftingPattern implements ICraftingPattern {
                 }
             }
         }
-    }
-
-    private Stream<ItemStack> checkOreDictWildcard(ItemStack stack) {
-        List<ItemStack> list = new LinkedList<>();
-        if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
-            list.addAll(getSubItems(stack));
-        } else {
-            list.add(stack);
-        }
-        return list.stream();
-    }
-
-    private List<ItemStack> getSubItems(ItemStack stack) {
-        NonNullList<ItemStack> subItems = NonNullList.create();
-        stack.getItem().getSubItems(stack.getItem(), stack.getItem().getCreativeTab(), subItems);
-        return subItems.stream().map(Comparer::stripTags).collect(Collectors.toList());
     }
 
     @Override
