@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.2.14
+- Fixed server crash (way2muchnoise)
+
 ### 1.2.13
 - Fixed memes not working (raoulvdberge)
 - Fixed controller causing network rebuild on every neighbor change (raoulvdberge)
