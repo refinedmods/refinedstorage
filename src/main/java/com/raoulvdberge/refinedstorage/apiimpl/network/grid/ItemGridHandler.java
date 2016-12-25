@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.grid;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
+import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
@@ -155,7 +156,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
         IStackList<ItemStack> cache = API.instance().createItemStackList();
 
-        for (ICraftingPattern pattern : network.getPatterns()) {
+        for (ICraftingPattern pattern : network.getCraftingManager().getPatterns()) {
             for (ItemStack output : pattern.getOutputs()) {
                 if (output != null) {
                     cache.add(output);
@@ -167,7 +168,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
         if (stack != null) {
             Thread calculationThread = new Thread(() -> {
-                ICraftingTask task = new CraftingTask(network, stack, network.getPattern(stack), quantity);
+                ICraftingTask task = new CraftingTask(network, stack, network.getCraftingManager().getPattern(stack), quantity);
 
                 task.calculate();
 
@@ -185,13 +186,13 @@ public class ItemGridHandler implements IItemGridHandler {
         }
 
         if (stack != null) {
-            ICraftingTask task = new CraftingTask(network, stack, network.getPattern(stack), quantity);
+            ICraftingTask task = new CraftingTask(network, stack, network.getCraftingManager().getPattern(stack), quantity);
 
             task.calculate();
 
             task.getMissing().clear();
 
-            network.addCraftingTask(task);
+            network.getCraftingManager().add(task);
         }
     }
 
@@ -201,11 +202,13 @@ public class ItemGridHandler implements IItemGridHandler {
             return;
         }
 
-        if (id >= 0 && id < network.getCraftingTasks().size()) {
-            network.cancelCraftingTask(network.getCraftingTasks().get(id));
+        ICraftingManager manager = network.getCraftingManager();
+
+        if (id >= 0 && id < manager.getTasks().size()) {
+            manager.cancel(manager.getTasks().get(id));
         } else if (id == -1) {
-            for (ICraftingTask task : network.getCraftingTasks()) {
-                network.cancelCraftingTask(task);
+            for (ICraftingTask task : manager.getTasks()) {
+                manager.cancel(task);
             }
         }
 

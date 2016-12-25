@@ -139,7 +139,7 @@ public class CraftingTask implements ICraftingTask {
             ICraftingPattern inputPattern = null;
             int available = (extraStack == null ? 0 : extraStack.getCount()) + (networkStack == null ? 0 : networkStack.getCount());
             if (available < input.getCount()) {
-                inputPattern = network.getPattern(input, compare);
+                inputPattern = network.getCraftingManager().getPattern(input, compare);
                 if (inputPattern != null) {
                     if (inputPattern.getInputs().stream().anyMatch(s -> API.instance().getComparer().isEqual(s, input, lambdaCompare))) {
                         int craftQuantity = inputPattern.getQuantityPerRequest(input, compare);
@@ -179,7 +179,7 @@ public class CraftingTask implements ICraftingTask {
                     }
                 } else {
                     if (inputPattern == null) {
-                        inputPattern = network.getPattern(input, compare);
+                        inputPattern = network.getCraftingManager().getPattern(input, compare);
                     }
 
                     if (inputPattern != null) {
@@ -264,7 +264,7 @@ public class CraftingTask implements ICraftingTask {
                     }
                 }
 
-                ICraftingPattern bucketPattern = network.getPattern(RSUtils.EMPTY_BUCKET);
+                ICraftingPattern bucketPattern = network.getCraftingManager().getPattern(RSUtils.EMPTY_BUCKET);
 
                 if (!hasBucket) {
                     if (bucketPattern == null) {
@@ -456,7 +456,7 @@ public class CraftingTask implements ICraftingTask {
         ICraftingMonitorElementList elements = API.instance().createCraftingMonitorElementList();
 
         elements.directAdd(new CraftingMonitorElementItemRender(
-                network.getCraftingTasks().indexOf(this),
+                network.getCraftingManager().getTasks().indexOf(this),
                 requested != null ? requested : pattern.getOutputs().get(0),
                 quantity,
                 0

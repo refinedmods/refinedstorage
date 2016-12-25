@@ -4,13 +4,8 @@ import com.google.common.base.Preconditions;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSUtils;
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider;
+import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
-import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskFactory;
-import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep;
-import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.*;
 import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
@@ -22,9 +17,8 @@ import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
-import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingManager;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeGraph;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.FluidGridHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.ItemGridHandler;
@@ -60,7 +54,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -137,8 +130,6 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
     public static final String NBT_ENERGY = "Energy";
     public static final String NBT_ENERGY_CAPACITY = "EnergyCapacity";
 
-    private static final String NBT_CRAFTING_TASKS = "CraftingTasks";
-
     private static final String NBT_READER_WRITER_CHANNELS = "ReaderWriterChannels";
     private static final String NBT_READER_WRITER_NAME = "Name";
 
@@ -163,19 +154,14 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
 
     private INetworkNodeGraph nodeGraph = new NetworkNodeGraph(this);
 
+    private ICraftingManager craftingManager = new CraftingManager(this);
+
     private ISecurityManager securityManager = new SecurityManager(this);
 
     private IStorageCache<ItemStack> itemStorage = new StorageCacheItem(this);
     private IStorageCache<FluidStack> fluidStorage = new StorageCacheFluid(this);
 
     private Map<String, IReaderWriterChannel> readerWriterChannels = new HashMap<>();
-
-    private List<ICraftingPattern> patterns = new ArrayList<>();
-
-    private List<ICraftingTask> craftingTasks = new ArrayList<>();
-    private List<ICraftingTask> craftingTasksToAdd = new ArrayList<>();
-    private List<ICraftingTask> craftingTasksToCancel = new ArrayList<>();
-    private List<NBTTagCompound> craftingTasksToRead = new ArrayList<>();
 
     private ControllerEnergyForge energy = new ControllerEnergyForge();
     private ControllerEnergyTesla energyTesla;
@@ -227,54 +213,18 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
     }
 
     @Override
+    public ICraftingManager getCraftingManager() {
+        return craftingManager;
+    }
+
+    @Override
     public void update() {
         if (!getWorld().isRemote) {
-            if (!craftingTasksToRead.isEmpty()) {
-                for (NBTTagCompound tag : craftingTasksToRead) {
-                    ICraftingTask task = readCraftingTask(getWorld(), this, tag);
-
-                    if (task != null) {
-                        addCraftingTask(task);
-                    }
-                }
-
-                craftingTasksToRead.clear();
-            }
-
             if (canRun()) {
                 Collections.sort(itemStorage.getStorages(), STORAGE_COMPARATOR);
                 Collections.sort(fluidStorage.getStorages(), STORAGE_COMPARATOR);
 
-                boolean craftingTasksChanged = !craftingTasksToAdd.isEmpty() || !craftingTasksToCancel.isEmpty();
-
-                craftingTasksToCancel.forEach(ICraftingTask::onCancelled);
-                craftingTasks.removeAll(craftingTasksToCancel);
-                craftingTasksToCancel.clear();
-
-                craftingTasksToAdd.stream().filter(ICraftingTask::isValid).forEach(craftingTasks::add);
-                craftingTasksToAdd.clear();
-
-                // Only run task updates every 5 ticks
-                if (ticks % 5 == 0) {
-                    Iterator<ICraftingTask> craftingTaskIterator = craftingTasks.iterator();
-                    Map<ICraftingPatternContainer, Integer> usedCrafters = new HashMap<>();
-
-                    while (craftingTaskIterator.hasNext()) {
-                        ICraftingTask task = craftingTaskIterator.next();
-
-                        if (task.update(usedCrafters)) {
-                            craftingTaskIterator.remove();
-
-                            craftingTasksChanged = true;
-                        } else if (!task.getMissing().isEmpty() && ticks % 100 == 0 && Math.random() > 0.5) {
-                            task.getMissing().clear();
-                        }
-                    }
-
-                    if (craftingTasksChanged) {
-                        craftingMonitorUpdateRequested = true;
-                    }
-                }
+                craftingManager.update();
 
                 for (IReaderWriterChannel channel : readerWriterChannels.values()) {
                     for (IReaderWriterHandler handler : channel.getHandlers()) {
@@ -282,7 +232,7 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
                     }
                 }
 
-                if (!craftingTasks.isEmpty() || !readerWriterChannels.isEmpty()) {
+                if (!craftingManager.getTasks().isEmpty() || !readerWriterChannels.isEmpty()) {
                     markDirty();
                 }
 
@@ -364,121 +314,6 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
     }
 
     @Override
-    public List<ICraftingTask> getCraftingTasks() {
-        return craftingTasks;
-    }
-
-    @Override
-    public void addCraftingTask(@Nonnull ICraftingTask task) {
-        craftingTasksToAdd.add(task);
-
-        markDirty();
-    }
-
-    @Override
-    public void cancelCraftingTask(@Nonnull ICraftingTask task) {
-        craftingTasksToCancel.add(task);
-
-        markDirty();
-    }
-
-    @Override
-    public List<ICraftingPattern> getPatterns() {
-        return patterns;
-    }
-
-    @Override
-    public List<ICraftingPattern> getPatterns(ItemStack pattern, int flags) {
-        List<ICraftingPattern> patterns = new ArrayList<>();
-
-        for (ICraftingPattern craftingPattern : getPatterns()) {
-            for (ItemStack output : craftingPattern.getOutputs()) {
-                if (API.instance().getComparer().isEqual(output, pattern, flags)) {
-                    patterns.add(craftingPattern);
-                }
-            }
-        }
-
-        return patterns;
-    }
-
-    @Override
-    public ICraftingPattern getPattern(ItemStack pattern, int flags) {
-        List<ICraftingPattern> patterns = getPatterns(pattern, flags);
-
-        if (patterns.isEmpty()) {
-            return null;
-        } else if (patterns.size() == 1) {
-            return patterns.get(0);
-        }
-
-        int highestScore = 0;
-        int highestPattern = 0;
-
-        IStackList<ItemStack> itemList = itemStorage.getList().getOredicted();
-
-        for (int i = 0; i < patterns.size(); ++i) {
-            int score = 0;
-
-            for (ItemStack input : patterns.get(i).getInputs()) {
-                if (input != null) {
-                    ItemStack stored = itemList.get(input, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT | (patterns.get(i).isOredict() ? IComparer.COMPARE_OREDICT : 0));
-
-                    score += stored != null ? stored.getCount() : 0;
-                }
-            }
-
-            if (score > highestScore) {
-                highestScore = score;
-                highestPattern = i;
-            }
-        }
-
-        return patterns.get(highestPattern);
-    }
-
-    @Override
-    public ICraftingTask scheduleCraftingTask(ItemStack stack, int toSchedule, int compare) {
-        for (ICraftingTask task : getCraftingTasks()) {
-            for (ItemStack output : task.getPattern().getOutputs()) {
-                if (API.instance().getComparer().isEqual(output, stack, compare)) {
-                    toSchedule -= output.getCount() * task.getQuantity();
-                }
-            }
-        }
-
-        if (toSchedule > 0) {
-            ICraftingPattern pattern = getPattern(stack, compare);
-
-            if (pattern != null) {
-                ICraftingTask task = createCraftingTask(stack, pattern, toSchedule);
-
-                task.calculate();
-                task.getMissing().clear();
-
-                addCraftingTask(task);
-
-                markCraftingMonitorForUpdate();
-
-                return task;
-            }
-        }
-
-        return null;
-    }
-
-    @Override
-    public void rebuildPatterns() {
-        patterns.clear();
-
-        for (INetworkNode node : nodeGraph.all()) {
-            if (node instanceof ICraftingPatternContainer && node.canUpdate()) {
-                patterns.addAll(((ICraftingPatternContainer) node).getPatterns());
-            }
-        }
-    }
-
-    @Override
     public void sendItemStorageToClient() {
         getWorld().getMinecraftServer().getPlayerList().getPlayers().stream()
                 .filter(player -> isWatchingGrid(player, EnumGridType.NORMAL, EnumGridType.CRAFTING, EnumGridType.PATTERN))
@@ -540,7 +375,7 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
                 .collect(Collectors.toList());
 
         if (!watchers.isEmpty()) {
-            List<ICraftingMonitorElement> elements = getElements();
+            List<ICraftingMonitorElement> elements = craftingManager.getTasks().stream().flatMap(t -> t.getCraftingMonitorElements().stream()).collect(Collectors.toList());
 
             watchers.forEach(player -> RS.INSTANCE.network.sendTo(new MessageCraftingMonitorElements(elements), player));
         }
@@ -548,7 +383,7 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
 
     @Override
     public void sendCraftingMonitorUpdate(EntityPlayerMP player) {
-        RS.INSTANCE.network.sendTo(new MessageCraftingMonitorElements(getElements()), player);
+        RS.INSTANCE.network.sendTo(new MessageCraftingMonitorElements(craftingManager.getTasks().stream().flatMap(t -> t.getCraftingMonitorElements().stream()).collect(Collectors.toList())), player);
     }
 
     @Nullable
@@ -590,10 +425,6 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
     @Override
     public void sendReaderWriterChannelUpdate(EntityPlayerMP player) {
         RS.INSTANCE.network.sendTo(new MessageReaderWriterUpdate(readerWriterChannels.keySet()), player);
-    }
-
-    private List<ICraftingMonitorElement> getElements() {
-        return craftingTasks.stream().flatMap(t -> t.getCraftingMonitorElements().stream()).collect(Collectors.toList());
     }
 
     @Override
@@ -641,22 +472,8 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
             }
         }
 
-        if (!simulate) {
-            if (inserted - insertedExternally > 0) {
-                itemStorage.add(stack, inserted - insertedExternally, false);
-            }
-
-            if (inserted > 0) {
-                ItemStack checkSteps = ItemHandlerHelper.copyStackWithSize(stack, inserted);
-
-                for (ICraftingTask task : craftingTasks) {
-                    for (ICraftingStep processable : task.getSteps()) {
-                        if (processable.onReceiveOutput(checkSteps)) {
-                            return remainder; // All done
-                        }
-                    }
-                }
-            }
+        if (!simulate && inserted - insertedExternally > 0) {
+            itemStorage.add(stack, inserted - insertedExternally, false);
         }
 
         return remainder;
@@ -795,26 +612,6 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
         return getWorld();
     }
 
-    private static ICraftingTask readCraftingTask(World world, INetworkMaster network, NBTTagCompound tag) {
-        ItemStack stack = new ItemStack(tag.getCompoundTag(ICraftingTask.NBT_PATTERN_STACK));
-
-        if (!stack.isEmpty() && stack.getItem() instanceof ICraftingPatternProvider) {
-            TileEntity container = world.getTileEntity(BlockPos.fromLong(tag.getLong(ICraftingTask.NBT_PATTERN_CONTAINER)));
-
-            if (container instanceof ICraftingPatternContainer) {
-                ICraftingPattern pattern = ((ICraftingPatternProvider) stack.getItem()).create(world, stack, (ICraftingPatternContainer) container);
-
-                ICraftingTaskFactory factory = API.instance().getCraftingTaskRegistry().get(tag.getString(ICraftingTask.NBT_PATTERN_ID));
-
-                if (factory != null) {
-                    return factory.create(world, network, tag.hasKey(ICraftingTask.NBT_REQUESTED) ? new ItemStack(tag.getCompoundTag(ICraftingTask.NBT_REQUESTED)) : null, pattern, tag.getInteger(ICraftingTask.NBT_QUANTITY), tag);
-                }
-            }
-        }
-
-        return null;
-    }
-
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
@@ -825,13 +622,7 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
 
         redstoneMode = RedstoneMode.read(tag);
 
-        if (tag.hasKey(NBT_CRAFTING_TASKS)) {
-            NBTTagList taskList = tag.getTagList(NBT_CRAFTING_TASKS, Constants.NBT.TAG_COMPOUND);
-
-            for (int i = 0; i < taskList.tagCount(); ++i) {
-                craftingTasksToRead.add(taskList.getCompoundTagAt(i));
-            }
-        }
+        craftingManager.readFromNBT(tag);
 
         if (tag.hasKey(NBT_READER_WRITER_CHANNELS)) {
             NBTTagList readerWriterChannelsList = tag.getTagList(NBT_READER_WRITER_CHANNELS, Constants.NBT.TAG_COMPOUND);
@@ -858,13 +649,7 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
 
         redstoneMode.write(tag);
 
-        NBTTagList craftingTaskList = new NBTTagList();
-
-        for (ICraftingTask task : craftingTasks) {
-            craftingTaskList.appendTag(task.writeToNBT(new NBTTagCompound()));
-        }
-
-        tag.setTag(NBT_CRAFTING_TASKS, craftingTaskList);
+        craftingManager.writeToNBT(tag);
 
         NBTTagList readerWriterChannelsList = new NBTTagList();
 

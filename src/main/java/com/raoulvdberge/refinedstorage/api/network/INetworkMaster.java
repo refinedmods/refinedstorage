@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.api.network;
 
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
-import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
+import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
@@ -9,7 +8,6 @@ import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterCha
 import com.raoulvdberge.refinedstorage.api.network.security.ISecurityManager;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -18,7 +16,6 @@ import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 
 /**
  * Represents a network master, usually is a controller.
@@ -50,6 +47,11 @@ public interface INetworkMaster {
     ISecurityManager getSecurityManager();
 
     /**
+     * @return the {@link ICraftingManager} of this network
+     */
+    ICraftingManager getCraftingManager();
+
+    /**
      * @return the {@link IItemGridHandler} of this network
      */
     IItemGridHandler getItemGridHandler();
@@ -73,103 +75,6 @@ public interface INetworkMaster {
      * @return the {@link IStorageCache<FluidStack>} of this network
      */
     IStorageCache<FluidStack> getFluidStorageCache();
-
-    /**
-     * @return the crafting tasks in this network, do NOT modify this list
-     */
-    List<ICraftingTask> getCraftingTasks();
-
-    /**
-     * Adds a crafting task.
-     *
-     * @param task the task to add
-     */
-    void addCraftingTask(@Nonnull ICraftingTask task);
-
-    /**
-     * Cancels a crafting task.
-     *
-     * @param task the task to cancel
-     */
-    void cancelCraftingTask(@Nonnull ICraftingTask task);
-
-    /**
-     * @return a list of crafting patterns in this network, do NOT modify this list
-     */
-    List<ICraftingPattern> getPatterns();
-
-    /**
-     * Rebuilds the pattern list.
-     */
-    void rebuildPatterns();
-
-    /**
-     * Returns crafting patterns from an item stack.
-     *
-     * @param pattern the stack to get a pattern for
-     * @param flags   the flags to compare on, see {@link IComparer}
-     * @return a list of crafting patterns where the given pattern is one of the outputs
-     */
-    List<ICraftingPattern> getPatterns(ItemStack pattern, int flags);
-
-    /**
-     * Returns a crafting pattern for an item stack.
-     * This returns a single crafting pattern, as opposed to {@link INetworkMaster#getPatterns(ItemStack, int)}.
-     * Internally, this makes a selection out of the available patterns.
-     * It makes this selection based on the item count of the pattern outputs in the system.
-     *
-     * @param pattern the stack to get a pattern for
-     * @param flags   the flags to compare on, see {@link IComparer}
-     * @return the pattern, or null if the pattern is not found
-     */
-    @Nullable
-    ICraftingPattern getPattern(ItemStack pattern, int flags);
-
-    /**
-     * Returns a crafting pattern for an item stack.
-     * This returns a single crafting pattern, as opposed to {@link INetworkMaster#getPatterns(ItemStack, int)}.
-     * Internally, this makes a selection out of the available patterns.
-     * It makes this selection based on the item count of the pattern outputs in the system.
-     *
-     * @param pattern the stack to get a pattern for
-     * @return the pattern, or null if the pattern is not found
-     */
-    default ICraftingPattern getPattern(ItemStack pattern) {
-        return getPattern(pattern, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);
-    }
-
-    /**
-     * Returns if there is a pattern with a given stack as output.
-     *
-     * @param stack the stack
-     * @return true if there is a pattern, false otherwise
-     */
-    default boolean hasPattern(ItemStack stack) {
-        return getPattern(stack) != null;
-    }
-
-    /**
-     * Creates a crafting task.
-     *
-     * @param stack    the stack to create a task for
-     * @param pattern  the pattern
-     * @param quantity the quantity
-     * @return the crafting task
-     */
-    default ICraftingTask createCraftingTask(@Nullable ItemStack stack, ICraftingPattern pattern, int quantity) {
-        return API.instance().getCraftingTaskRegistry().get(pattern.getId()).create(getNetworkWorld(), this, stack, pattern, quantity, null);
-    }
-
-    /**
-     * Schedules a crafting task if the task isn't scheduled yet.
-     *
-     * @param stack      the stack
-     * @param toSchedule the amount of tasks to schedule
-     * @param compare    the compare value to find patterns
-     * @return the crafting task created, or null if no task is created
-     */
-    @Nullable
-    ICraftingTask scheduleCraftingTask(ItemStack stack, int toSchedule, int compare);
 
     /**
      * Sends a grid update packet with all the items to all clients that are watching a grid connected to this network.
@@ -270,6 +175,16 @@ public interface INetworkMaster {
      */
     @Nullable
     ItemStack insertItem(@Nonnull ItemStack stack, int size, boolean simulate);
+
+    default ItemStack insertItemTracked(@Nonnull ItemStack stack, int size) {
+        ItemStack remainder = insertItem(stack, size, false);
+
+        int inserted = remainder == null ? size : (size - remainder.getCount());
+
+        getCraftingManager().track(stack, inserted);
+
+        return remainder;
+    }
 
     /**
      * Extracts an item from this network.

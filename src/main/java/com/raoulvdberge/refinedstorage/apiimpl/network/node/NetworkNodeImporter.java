@@ -72,7 +72,7 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
                     ItemStack result = handler.extractItem(currentSlot, upgrades.getItemInteractCount(), true);
 
                     if (!result.isEmpty() && network.insertItem(result, result.getCount(), true) == null) {
-                        network.insertItem(result, result.getCount(), false);
+                        network.insertItemTracked(result, result.getCount());
 
                         handler.extractItem(currentSlot, upgrades.getItemInteractCount(), false);
                     } else {

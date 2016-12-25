@@ -59,7 +59,7 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
         } else if (ticks % upgrades.getSpeed() == 0) {
             int size = Math.min(slot.getCount(), upgrades.getItemInteractCount());
 
-            ItemStack remainder = network.insertItem(slot, size, false);
+            ItemStack remainder = network.insertItemTracked(slot, size);
 
             if (remainder == null) {
                 importItems.extractItemInternal(currentSlot, size, false);
@@ -76,7 +76,7 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
 
             if (wanted.isEmpty()) {
                 if (!got.isEmpty()) {
-                    exportItems.setStackInSlot(i, RSUtils.getStack(network.insertItem(got, got.getCount(), false)));
+                    exportItems.setStackInSlot(i, RSUtils.getStack(network.insertItemTracked(got, got.getCount())));
                 }
             } else {
                 int delta = got.isEmpty() ? wanted.getCount() : (wanted.getCount() - got.getCount());
@@ -91,10 +91,10 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
                             exportItems.getStackInSlot(i).grow(result.getCount());
                         }
                     } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
-                        network.scheduleCraftingTask(wanted, delta, compare);
+                        network.getCraftingManager().schedule(wanted, delta, compare);
                     }
                 } else if (delta < 0) {
-                    ItemStack remainder = network.insertItem(got, Math.abs(delta), false);
+                    ItemStack remainder = network.insertItemTracked(got, Math.abs(delta));
 
                     if (remainder == null) {
                         exportItems.extractItem(i, Math.abs(delta), false);

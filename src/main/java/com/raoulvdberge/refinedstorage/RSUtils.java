@@ -92,7 +92,7 @@ public final class RSUtils {
 
         if (network != null) {
             buf.writeInt(API.instance().getItemStackHashCode(stack));
-            buf.writeBoolean(network.hasPattern(stack));
+            buf.writeBoolean(network.getCraftingManager().hasPattern(stack));
             buf.writeBoolean(displayCraftText);
         }
     }

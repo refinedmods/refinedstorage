@@ -44,7 +44,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
             }
 
             if (network != null) {
-                network.rebuildPatterns();
+                network.getCraftingManager().rebuild();
             }
         }
     };
@@ -99,7 +99,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
         if (network != null && triggeredAutocrafting && holder.world().isBlockPowered(holder.pos())) {
             for (ICraftingPattern pattern : actualPatterns) {
                 for (ItemStack output : pattern.getOutputs()) {
-                    network.scheduleCraftingTask(output, 1, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);
+                    network.getCraftingManager().schedule(output, 1, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);
                 }
             }
         }
@@ -110,12 +110,12 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
         super.onConnectedStateChange(network, state);
 
         if (!state) {
-            network.getCraftingTasks().stream()
+            network.getCraftingManager().getTasks().stream()
                     .filter(task -> task.getPattern().getContainer().getPosition().equals(holder.pos()))
-                    .forEach(network::cancelCraftingTask);
+                    .forEach(task -> network.getCraftingManager().cancel(task));
         }
 
-        network.rebuildPatterns();
+        network.getCraftingManager().rebuild();
     }
 
     @Override

@@ -85,7 +85,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
                         ItemStack droppedItem = ((EntityItem) entity).getEntityItem();
 
                         if (IFilterable.canTake(itemFilters, mode, compare, droppedItem) && network.insertItem(droppedItem, droppedItem.getCount(), true) == null) {
-                            network.insertItem(droppedItem.copy(), droppedItem.getCount(), false);
+                            network.insertItemTracked(droppedItem.copy(), droppedItem.getCount());
 
                             holder.world().removeEntity(entity);
 
@@ -127,7 +127,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
                                 if (network == null) {
                                     InventoryHelper.spawnItemStack(holder.world(), front.getX(), front.getY(), front.getZ(), drop);
                                 } else {
-                                    network.insertItem(drop, drop.getCount(), false);
+                                    network.insertItemTracked(drop, drop.getCount());
                                 }
                             }
                         }

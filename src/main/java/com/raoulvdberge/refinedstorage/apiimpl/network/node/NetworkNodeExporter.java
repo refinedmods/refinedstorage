@@ -68,7 +68,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
 
                         if (craftOnly) {
                             if (craftOnlyTask[i] == null) {
-                                craftOnlyTask[i] = network.scheduleCraftingTask(slot, upgrades.getItemInteractCount(), compare);
+                                craftOnlyTask[i] = network.getCraftingManager().schedule(slot, upgrades.getItemInteractCount(), compare);
 
                                 if (craftOnlyTask[i] != null) {
                                     craftOnlyToExtract[i] = craftOnlyTask[i].getPattern().getQuantityPerRequest(slot, compare);
@@ -90,7 +90,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
                                         craftOnlyTask[i] = null;
                                     }
                                 }
-                            } else if (!network.getCraftingTasks().contains(craftOnlyTask[i])) {
+                            } else if (!network.getCraftingManager().getTasks().contains(craftOnlyTask[i])) {
                                 craftOnlyTask[i] = null;
                             }
                         } else {
@@ -120,7 +120,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
 
                             if (took == null) {
                                 if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
-                                    network.scheduleCraftingTask(slot, 1, compare);
+                                    network.getCraftingManager().schedule(slot, 1, compare);
                                 }
                             } else if (ItemHandlerHelper.insertItem(handler, took, true).isEmpty()) {
                                 took = network.extractItem(slot, upgrades.getItemInteractCount(), compare, false);

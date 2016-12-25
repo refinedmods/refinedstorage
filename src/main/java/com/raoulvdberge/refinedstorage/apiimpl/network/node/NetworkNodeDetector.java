@@ -73,7 +73,7 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
                     if (mode == MODE_AUTOCRAFTING) {
                         boolean found = false;
 
-                        for (ICraftingTask task : network.getCraftingTasks()) {
+                        for (ICraftingTask task : network.getCraftingManager().getTasks()) {
                             for (ItemStack output : task.getPattern().getOutputs()) {
                                 if (API.instance().getComparer().isEqualNoQuantity(slot, output)) {
                                     found = true;
@@ -94,7 +94,7 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
                         powered = isPowered(stack == null ? null : stack.getCount());
                     }
                 } else {
-                    powered = mode == MODE_AUTOCRAFTING ? !network.getCraftingTasks().isEmpty() : isPowered(network.getItemStorageCache().getList().getStacks().stream().map(s -> s.getCount()).mapToInt(Number::intValue).sum());
+                    powered = mode == MODE_AUTOCRAFTING ? !network.getCraftingManager().getTasks().isEmpty() : isPowered(network.getItemStorageCache().getList().getStacks().stream().map(s -> s.getCount()).mapToInt(Number::intValue).sum());
                 }
             } else if (type == IType.FLUIDS) {
                 FluidStack slot = fluidFilters.getFluidStackInSlot(0);
