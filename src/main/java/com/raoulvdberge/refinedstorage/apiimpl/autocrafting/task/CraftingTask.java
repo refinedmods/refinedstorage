@@ -291,7 +291,7 @@ public class CraftingTask implements ICraftingTask {
     @Override
     public void onCancelled() {
         for (ItemStack stack : toInsertItems) {
-            network.insertItem(stack, stack.getCount(), false);
+            network.insertItemTracked(stack, stack.getCount());
         }
 
         network.markCraftingMonitorForUpdate();
@@ -362,7 +362,7 @@ public class CraftingTask implements ICraftingTask {
         for (int i = 0; i < times; i++) {
             ItemStack insert = toInsertItems.poll();
             if (insert != null) {
-                ItemStack remainder = network.insertItem(insert, insert.getCount(), false);
+                ItemStack remainder = network.insertItemTracked(insert, insert.getCount());
 
                 if (remainder != null) {
                     toInsertItems.add(remainder);
