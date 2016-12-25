@@ -438,7 +438,7 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
     }
 
     @Override
-    public void scheduleCraftingTask(ItemStack stack, int toSchedule, int compare) {
+    public ICraftingTask scheduleCraftingTask(ItemStack stack, int toSchedule, int compare) {
         for (ICraftingTask task : getCraftingTasks()) {
             for (ItemStack output : task.getPattern().getOutputs()) {
                 if (API.instance().getComparer().isEqual(output, stack, compare)) {
@@ -459,8 +459,12 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
                 addCraftingTask(task);
 
                 markCraftingMonitorForUpdate();
+
+                return task;
             }
         }
+
+        return null;
     }
 
     @Override

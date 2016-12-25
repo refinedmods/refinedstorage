@@ -166,8 +166,10 @@ public interface INetworkMaster {
      * @param stack      the stack
      * @param toSchedule the amount of tasks to schedule
      * @param compare    the compare value to find patterns
+     * @return the crafting task created, or null if no task is created
      */
-    void scheduleCraftingTask(ItemStack stack, int toSchedule, int compare);
+    @Nullable
+    ICraftingTask scheduleCraftingTask(ItemStack stack, int toSchedule, int compare);
 
     /**
      * Sends a grid update packet with all the items to all clients that are watching a grid connected to this network.

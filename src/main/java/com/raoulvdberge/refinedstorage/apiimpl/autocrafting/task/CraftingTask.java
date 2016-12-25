@@ -300,13 +300,13 @@ public class CraftingTask implements ICraftingTask {
     @Override
     public String toString() {
         return "\nCraftingTask{quantity=" + quantity +
-            "\n, toTake=" + toTake +
-            "\n, toTakeFluids=" + toTakeFluids +
-            "\n, toCraft=" + toCraft +
-            "\n, toInsertItems=" + toInsertItems +
-            "\n, toInsertFluids=" + toInsertFluids +
-            "\n, mainSteps=" + mainSteps +
-            '}';
+                "\n, toTake=" + toTake +
+                "\n, toTakeFluids=" + toTakeFluids +
+                "\n, toCraft=" + toCraft +
+                "\n, toInsertItems=" + toInsertItems +
+                "\n, toInsertFluids=" + toInsertFluids +
+                "\n, mainSteps=" + mainSteps +
+                '}';
     }
 
     @Override
@@ -456,23 +456,23 @@ public class CraftingTask implements ICraftingTask {
         ICraftingMonitorElementList elements = API.instance().createCraftingMonitorElementList();
 
         elements.directAdd(new CraftingMonitorElementItemRender(
-            network.getCraftingTasks().indexOf(this),
-            requested != null ? requested : pattern.getOutputs().get(0),
-            quantity,
-            0
+                network.getCraftingTasks().indexOf(this),
+                requested != null ? requested : pattern.getOutputs().get(0),
+                quantity,
+                0
         ));
 
         if (!missing.isEmpty()) {
             elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_missing", 16));
 
             missing.getStacks().stream()
-                .map(stack -> new CraftingMonitorElementError(new CraftingMonitorElementItemRender(
-                    -1,
-                    stack,
-                    stack.getCount(),
-                    32
-                ), ""))
-                .forEach(elements::add);
+                    .map(stack -> new CraftingMonitorElementError(new CraftingMonitorElementItemRender(
+                            -1,
+                            stack,
+                            stack.getCount(),
+                            32
+                    ), ""))
+                    .forEach(elements::add);
 
             elements.commit();
         }
@@ -481,13 +481,13 @@ public class CraftingTask implements ICraftingTask {
             elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_inserting", 16));
 
             toInsertItems.stream()
-                .map(stack -> new CraftingMonitorElementItemRender(
-                    -1,
-                    stack,
-                    stack.getCount(),
-                    32
-                ))
-                .forEach(elements::add);
+                    .map(stack -> new CraftingMonitorElementItemRender(
+                            -1,
+                            stack,
+                            stack.getCount(),
+                            32
+                    ))
+                    .forEach(elements::add);
 
             elements.commit();
         }
@@ -502,10 +502,10 @@ public class CraftingTask implements ICraftingTask {
                 for (ICraftingStep step : getSteps().stream().filter(s -> !s.getPattern().isProcessing()).collect(Collectors.toList())) {
                     for (int i = 0; i < step.getPattern().getOutputs().size(); ++i) {
                         ICraftingMonitorElement element = new CraftingMonitorElementItemRender(
-                            -1,
-                            step.getPattern().getOutputs().get(i),
-                            step.getPattern().getOutputs().get(i).getCount(),
-                            32
+                                -1,
+                                step.getPattern().getOutputs().get(i),
+                                step.getPattern().getOutputs().get(i).getCount(),
+                                32
                         );
 
                         if (!step.hasStartedProcessing() && !step.canStartProcessing(oreDictPrepped, networkFluids)) {
@@ -525,10 +525,10 @@ public class CraftingTask implements ICraftingTask {
                 for (ICraftingStep step : getSteps().stream().filter(s -> s.getPattern().isProcessing()).collect(Collectors.toList())) {
                     for (int i = 0; i < step.getPattern().getOutputs().size(); ++i) {
                         ICraftingMonitorElement element = new CraftingMonitorElementItemRender(
-                            -1,
-                            step.getPattern().getOutputs().get(i),
-                            step.getPattern().getOutputs().get(i).getCount(),
-                            32
+                                -1,
+                                step.getPattern().getOutputs().get(i),
+                                step.getPattern().getOutputs().get(i).getCount(),
+                                32
                         );
 
                         if (step.getPattern().getContainer().getFacingTile() == null) {
@@ -621,7 +621,8 @@ public class CraftingTask implements ICraftingTask {
         return elements;
     }
 
-    private boolean isFinished() {
+    @Override
+    public boolean isFinished() {
         return mainSteps.stream().allMatch(ICraftingStep::hasReceivedOutputs);
     }
 }

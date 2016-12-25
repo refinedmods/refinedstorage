@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeHolder;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -28,6 +29,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_TYPE = "Type";
     private static final String NBT_REGULATOR = "Regulator";
+    private static final String NBT_CRAFT_ONLY = "CraftOnly";
 
     private ItemHandlerBasic itemFilters = new ItemHandlerBasic(9, new ItemHandlerListenerNetworkNode(this));
     private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(9, new ItemHandlerListenerNetworkNode(this));
@@ -37,6 +39,9 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int type = IType.ITEMS;
     private boolean regulator = false;
+    private boolean craftOnly = false;
+    private ICraftingTask[] craftOnlyTask = new ICraftingTask[9];
+    private Integer[] craftOnlyToExtract = new Integer[9];
 
     public NetworkNodeExporter(INetworkNodeHolder holder) {
         super(holder);
@@ -57,7 +62,38 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
                     for (int i = 0; i < itemFilters.getSlots(); ++i) {
                         ItemStack slot = itemFilters.getStackInSlot(i);
 
-                        if (!slot.isEmpty()) {
+                        if (slot.isEmpty()) {
+                            continue;
+                        }
+
+                        if (craftOnly) {
+                            if (craftOnlyTask[i] == null) {
+                                craftOnlyTask[i] = network.scheduleCraftingTask(slot, upgrades.getItemInteractCount(), compare);
+
+                                if (craftOnlyTask[i] != null) {
+                                    craftOnlyToExtract[i] = craftOnlyTask[i].getPattern().getQuantityPerRequest(slot, compare);
+                                }
+                            } else if (craftOnlyTask[i].isFinished() && craftOnlyTask[i].getMissing().isEmpty()) {
+                                int toExtract = Math.min(upgrades.getItemInteractCount(), craftOnlyToExtract[i]);
+
+                                ItemStack took = network.extractItem(slot, toExtract, compare, true);
+
+                                if (took != null && ItemHandlerHelper.insertItem(handler, took, true).isEmpty()) {
+                                    took = network.extractItem(slot, toExtract, compare, false);
+
+                                    ItemHandlerHelper.insertItem(handler, took, false);
+
+                                    craftOnlyToExtract[i] -= toExtract;
+
+                                    if (craftOnlyToExtract[i] <= 0) {
+                                        craftOnlyToExtract[i] = null;
+                                        craftOnlyTask[i] = null;
+                                    }
+                                }
+                            } else if (!network.getCraftingTasks().contains(craftOnlyTask[i])) {
+                                craftOnlyTask[i] = null;
+                            }
+                        } else {
                             int stackSize = upgrades.getItemInteractCount();
 
                             boolean skipSlot = false;
@@ -189,6 +225,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_TYPE, type);
         tag.setBoolean(NBT_REGULATOR, regulator);
+        tag.setBoolean(NBT_CRAFT_ONLY, craftOnly);
 
         RSUtils.writeItems(itemFilters, 0, tag);
         RSUtils.writeItems(fluidFilters, 2, tag);
@@ -210,6 +247,10 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
 
         if (tag.hasKey(NBT_REGULATOR)) {
             regulator = tag.getBoolean(NBT_REGULATOR);
+        }
+
+        if (tag.hasKey(NBT_CRAFT_ONLY)) {
+            craftOnly = tag.getBoolean(NBT_CRAFT_ONLY);
         }
 
         RSUtils.readItems(itemFilters, 0, tag);
@@ -256,5 +297,13 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
     @Override
     public IItemHandler getFilterInventory() {
         return getType() == IType.ITEMS ? itemFilters : fluidFilters;
+    }
+
+    public boolean isCraftOnly() {
+        return craftOnly;
+    }
+
+    public void setCraftOnly(boolean craftOnly) {
+        this.craftOnly = craftOnly;
     }
 }

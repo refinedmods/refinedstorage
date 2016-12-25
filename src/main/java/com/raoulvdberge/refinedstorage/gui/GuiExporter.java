@@ -2,10 +2,7 @@ package com.raoulvdberge.refinedstorage.gui;
 
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.container.ContainerExporter;
-import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonCompare;
-import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
-import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonRegulator;
-import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonType;
+import com.raoulvdberge.refinedstorage.gui.sidebutton.*;
 import com.raoulvdberge.refinedstorage.tile.TileExporter;
 
 public class GuiExporter extends GuiBase {
@@ -23,7 +20,8 @@ public class GuiExporter extends GuiBase {
         addSideButton(new SideButtonCompare(this, TileExporter.COMPARE, IComparer.COMPARE_NBT));
         addSideButton(new SideButtonCompare(this, TileExporter.COMPARE, IComparer.COMPARE_OREDICT));
 
-        addSideButton(new SideButtonRegulator(this));
+        addSideButton(new SideButtonExporterRegulator(this));
+        addSideButton(new SideButtonExporterCraftOnly(this));
     }
 
     @Override

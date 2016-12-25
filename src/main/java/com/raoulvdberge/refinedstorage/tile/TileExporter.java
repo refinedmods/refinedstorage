@@ -55,10 +55,24 @@ public class TileExporter extends TileNode {
         }
     });
 
+    public static final TileDataParameter<Boolean> CRAFT_ONLY = new TileDataParameter<Boolean>(DataSerializers.BOOLEAN, false, new ITileDataProducer<Boolean, TileExporter>() {
+        @Override
+        public Boolean getValue(TileExporter tile) {
+            return ((NetworkNodeExporter) tile.getNode()).isCraftOnly();
+        }
+    }, new ITileDataConsumer<Boolean, TileExporter>() {
+        @Override
+        public void setValue(TileExporter tile, Boolean value) {
+            ((NetworkNodeExporter) tile.getNode()).setCraftOnly(value);
+            tile.getNode().markDirty();
+        }
+    });
+
     public TileExporter() {
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(TYPE);
         dataManager.addWatchedParameter(REGULATOR);
+        dataManager.addWatchedParameter(CRAFT_ONLY);
     }
 
     @Override

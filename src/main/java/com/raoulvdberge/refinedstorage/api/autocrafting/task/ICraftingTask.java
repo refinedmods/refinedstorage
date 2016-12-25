@@ -112,6 +112,11 @@ public interface ICraftingTask {
     boolean isValid();
 
     /**
+     * @return whether the task is finished
+     */
+    boolean isFinished();
+
+    /**
      * @return the missing items
      */
     IStackList<ItemStack> getMissing();

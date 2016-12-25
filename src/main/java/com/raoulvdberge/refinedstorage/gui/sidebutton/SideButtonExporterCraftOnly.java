@@ -5,8 +5,8 @@ import com.raoulvdberge.refinedstorage.tile.TileExporter;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import net.minecraft.util.text.TextFormatting;
 
-public class SideButtonRegulator extends SideButton {
-    public SideButtonRegulator(GuiBase gui) {
+public class SideButtonExporterCraftOnly extends SideButton {
+    public SideButtonExporterCraftOnly(GuiBase gui) {
         super(gui);
     }
 
@@ -17,11 +17,11 @@ public class SideButtonRegulator extends SideButton {
 
     @Override
     public String getTooltip() {
-        return TextFormatting.GREEN + GuiBase.t("sidebutton.refinedstorage:exporter.regulator") + TextFormatting.RESET + "\n" + GuiBase.t(TileExporter.REGULATOR.getValue() ? "gui.yes" : "gui.no");
+        return TextFormatting.GREEN + GuiBase.t("sidebutton.refinedstorage:exporter.craft_only") + TextFormatting.RESET + "\n" + GuiBase.t(TileExporter.CRAFT_ONLY.getValue() ? "gui.yes" : "gui.no");
     }
 
     @Override
     public void actionPerformed() {
-        TileDataManager.setParameter(TileExporter.REGULATOR, !TileExporter.REGULATOR.getValue());
+        TileDataManager.setParameter(TileExporter.CRAFT_ONLY, !TileExporter.CRAFT_ONLY.getValue());
     }
 }

@@ -161,6 +161,7 @@ sidebutton.refinedstorage:access_type.1=Insert only
 sidebutton.refinedstorage:access_type.2=Extract only
 
 sidebutton.refinedstorage:exporter.regulator=Regulator Mode
+sidebutton.refinedstorage:exporter.craft_only=Craft-only Mode
 
 block.refinedstorage:controller.0.name=Controller
 block.refinedstorage:controller.1.name=Creative Controller
