@@ -53,15 +53,6 @@ public class CraftingManager implements ICraftingManager {
     public void add(@Nonnull ICraftingTask task) {
         craftingTasksToAdd.add(task);
 
-        if (task.getPattern().isBlockingPattern()) {
-            for (ICraftingTask liveTask : craftingTasks) {
-                if (liveTask.canBeBlockedBy(task)) {
-                    task.setBlocked(true);
-                    break;
-                }
-            }
-        }
-
         network.markDirty();
     }
 
@@ -164,32 +155,10 @@ public class CraftingManager implements ICraftingManager {
                 while (craftingTaskIterator.hasNext()) {
                     ICraftingTask task = craftingTaskIterator.next();
 
-                    if (task.isBlocked()) {
-                        continue;
-                    }
-
                     if (task.update(usedCrafters)) {
                         craftingTaskIterator.remove();
 
                         craftingTasksChanged = true;
-
-                        if (task.getPattern().isBlockingPattern()) {
-                            for (ICraftingTask liveTask : craftingTasks) {
-                                if (liveTask.isBlocked()) {
-                                    if (liveTask.canBeBlockedBy(task)) {
-                                        liveTask.setBlocked(false);
-                                        break;
-                                    } else {
-                                        for (ItemStack liveTaskInput : liveTask.getPattern().getInputs()) {
-                                            if (API.instance().getComparer().isEqualNoQuantity(liveTaskInput, task.getPattern().getStack())) {
-                                                liveTask.setBlocked(false);
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
                     } else if (!task.getMissing().isEmpty() && ticks % 100 == 0 && Math.random() > 0.5) {
                         task.getMissing().clear();
                     }
@@ -238,6 +207,7 @@ public class CraftingManager implements ICraftingManager {
 
         if (toSchedule > 0) {
             ICraftingPattern pattern = getPattern(stack, compare);
+
             if (pattern != null) {
                 ICraftingTask task = create(stack, pattern, toSchedule);
 

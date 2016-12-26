@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
@@ -34,6 +35,7 @@ public abstract class CraftingStep implements ICraftingStep {
     protected Map<Integer, Integer> satisfied;
     protected boolean startedProcessing;
     protected List<ICraftingStep> preliminarySteps;
+    protected boolean blocked = false;
 
     public CraftingStep(INetworkMaster network, ICraftingPattern pattern, List<ICraftingStep> preliminarySteps) {
         this.network = network;
@@ -103,6 +105,25 @@ public abstract class CraftingStep implements ICraftingStep {
 
     @Override
     public boolean canStartProcessing() {
+        if (pattern.isBlockingPattern()) {
+            for (ICraftingTask task : network.getCraftingManager().getTasks()) {
+                for (ICraftingStep step : task.getSteps()) {
+                    if (step == this) {
+                        break;
+                    }
+
+                    if (step.getPattern().isBlockingPattern() && API.instance().getComparer().isEqualNoQuantity(step.getPattern().getStack(), this.getPattern().getStack())) {
+                        blocked = true;
+                        return false;
+                    }
+                }
+            }
+        }
+
+        if (blocked) {
+            blocked = false;
+        }
+
         return getPreliminarySteps().size() == 0;
     }
 
@@ -262,5 +283,10 @@ public abstract class CraftingStep implements ICraftingStep {
         }
 
         return null;
+    }
+
+    @Override
+    public boolean isBlocked() {
+        return blocked;
     }
 }

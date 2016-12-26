@@ -170,7 +170,7 @@ public class CraftingPattern implements ICraftingPattern {
 
     @Override
     public boolean isBlockingPattern() {
-        return ItemPattern.isBlockingTask(stack);
+        return ItemPattern.isBlocking(stack);
     }
 
     @Override

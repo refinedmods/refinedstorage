@@ -127,22 +127,4 @@ public interface ICraftingTask {
      * @return get a list of {@link ICraftingPreviewElement}s
      */
     List<ICraftingPreviewElement> getPreviewStacks();
-
-    /**
-     * @return weather the task can be executed or not
-     */
-    boolean isBlocked();
-
-    /**
-     * TODO: Find better description
-     * @param task that task
-     * @return weather that task can block this
-     */
-    boolean canBeBlockedBy(ICraftingTask task);
-
-    /**
-     * TODO: find better description
-     * @param value
-     */
-    void setBlocked(boolean value);
 }

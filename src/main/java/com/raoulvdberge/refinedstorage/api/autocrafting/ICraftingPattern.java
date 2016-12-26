@@ -36,7 +36,7 @@ public interface ICraftingPattern {
     boolean isOredict();
 
     /**
-     * TODO
+     * @return true if the crafting pattern may block crafting step
      */
     boolean isBlockingPattern();
 

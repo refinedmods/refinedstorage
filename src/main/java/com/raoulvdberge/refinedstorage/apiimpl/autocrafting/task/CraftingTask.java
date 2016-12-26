@@ -51,7 +51,6 @@ public class CraftingTask implements ICraftingTask {
     private Deque<ItemStack> toInsertItems = new ArrayDeque<>();
     private Deque<FluidStack> toInsertFluids = new ArrayDeque<>();
     private IStackList<FluidStack> toTakeFluids = API.instance().createFluidStackList();
-    private boolean blocked = false;
 
     public CraftingTask(INetworkMaster network, @Nullable ItemStack requested, ICraftingPattern pattern, int quantity) {
         this.network = network;
@@ -463,11 +462,6 @@ public class CraftingTask implements ICraftingTask {
                 0
         ));
 
-        if (isBlocked()) {
-            elements.directAdd(new CraftingMonitorElementError(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.blocked_task", 16), ""));
-            return elements.getElements();
-        }
-
         if (!missing.isEmpty()) {
             elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_missing", 16));
 
@@ -540,7 +534,7 @@ public class CraftingTask implements ICraftingTask {
                         if (step.getPattern().getContainer().getFacingTile() == null) {
                             element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.machine_none");
                         } else if (!step.hasStartedProcessing() && !step.canStartProcessing()) {
-                            element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.machine_in_use");
+                            element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor." + (step.isBlocked() ? "blocked" : "machine_in_use"));
                         }
 
                         elements.add(element);
@@ -630,20 +624,5 @@ public class CraftingTask implements ICraftingTask {
     @Override
     public boolean isFinished() {
         return mainSteps.stream().allMatch(ICraftingStep::hasReceivedOutputs);
-    }
-
-    @Override
-    public boolean isBlocked() {
-        return blocked;
-    }
-
-    @Override
-    public boolean canBeBlockedBy(ICraftingTask task) {
-        return API.instance().getComparer().isEqualNoQuantity(pattern.getStack(), task.getPattern().getStack());
-    }
-
-    @Override
-    public void setBlocked(boolean value) {
-        blocked = value;
     }
 }

@@ -2,18 +2,15 @@ package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep;
-import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
-import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-import javax.annotation.Nullable;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.LinkedList;
@@ -37,19 +34,6 @@ public class CraftingStepProcess extends CraftingStep {
         if (!super.canStartProcessing()) {
             return false;
         }
-
-        if (getPattern().isBlockingPattern()) {
-            for (ICraftingTask task : network.getCraftingManager().getTasks()) {
-                if (task.getSteps().stream().anyMatch(step -> step == this)) {
-                    continue;
-                }
-
-                if (task.getPattern().isBlockingPattern() && API.instance().getComparer().isEqualNoQuantity(task.getPattern().getStack(), getPattern().getStack())) {
-                    return false;
-                }
-            }
-        }
-
         IItemHandler inventory = getPattern().getContainer().getFacingInventory();
         int compare = CraftingTask.DEFAULT_COMPARE | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0);
         if (inventory != null) {

@@ -106,7 +106,7 @@ public class TileProcessingPatternEncoder extends TileBase {
             ItemStack pattern = new ItemStack(RSItems.PATTERN);
 
             ItemPattern.setOredict(pattern, oredictPattern);
-            ItemPattern.setBlockingTask(pattern, blockingTask);
+            ItemPattern.setBlocking(pattern, blockingTask);
 
             for (int i = 0; i < 18; ++i) {
                 if (!configuration.getStackInSlot(i).isEmpty()) {

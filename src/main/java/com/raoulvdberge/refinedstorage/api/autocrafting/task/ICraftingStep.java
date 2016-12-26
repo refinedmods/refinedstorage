@@ -6,7 +6,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 
-import javax.annotation.Nullable;
 import java.util.Deque;
 import java.util.List;
 
@@ -98,4 +97,9 @@ public interface ICraftingStep {
      * @return the written tag
      */
     NBTTagCompound writeToNBT(NBTTagCompound tag);
+
+    /**
+     * @return true if the step is currently blocked by another crafting task
+     */
+    boolean isBlocked();
 }
