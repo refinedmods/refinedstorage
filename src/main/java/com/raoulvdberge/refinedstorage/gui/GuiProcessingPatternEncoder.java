@@ -6,6 +6,7 @@ import com.raoulvdberge.refinedstorage.network.MessageGridPatternCreate;
 import com.raoulvdberge.refinedstorage.network.MessageProcessingPatternEncoderClear;
 import com.raoulvdberge.refinedstorage.tile.TileProcessingPatternEncoder;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
+import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
@@ -18,6 +19,7 @@ public class GuiProcessingPatternEncoder extends GuiBase {
     private TileProcessingPatternEncoder encoder;
 
     private GuiCheckBox oredictPattern;
+    private GuiCheckBox blockingPattern;
 
     public GuiProcessingPatternEncoder(ContainerProcessingPatternEncoder container, TileProcessingPatternEncoder encoder) {
         super(container, 176, 183);
@@ -28,6 +30,7 @@ public class GuiProcessingPatternEncoder extends GuiBase {
     @Override
     public void init(int x, int y) {
         oredictPattern = addCheckBox(x + 7, y + 76, I18n.format("misc.refinedstorage:oredict"), TileProcessingPatternEncoder.OREDICT_PATTERN.getValue());
+        blockingPattern = addCheckBox(x + 60, y + 76, I18n.format("misc.refinedstorage:blocking_task"), TileProcessingPatternEncoder.BLOCKING_TASK_PATTERN.getValue());
     }
 
     @Override
@@ -81,6 +84,8 @@ public class GuiProcessingPatternEncoder extends GuiBase {
 
         if (button == oredictPattern) {
             TileDataManager.setParameter(TileProcessingPatternEncoder.OREDICT_PATTERN, oredictPattern.isChecked());
+        } else if (button == blockingPattern) {
+            TileDataManager.setParameter(TileProcessingPatternEncoder.BLOCKING_TASK_PATTERN, blockingPattern.isChecked());
         }
     }
 
@@ -102,6 +107,12 @@ public class GuiProcessingPatternEncoder extends GuiBase {
     public void updateOredictPattern(boolean checked) {
         if (oredictPattern != null) {
             oredictPattern.setIsChecked(checked);
+        }
+    }
+
+    public void updateBlockingPattern(boolean checked) {
+        if (blockingPattern != null) {
+            blockingPattern.setIsChecked(checked);
         }
     }
 }

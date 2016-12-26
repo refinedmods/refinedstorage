@@ -35,6 +35,7 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
     private static final String NBT_SLOT = "Slot_%d";
     private static final String NBT_OUTPUTS = "Outputs";
     private static final String NBT_OREDICT = "Oredict";
+    private static final String NBT_BLOCKING_TASK = "BlockingTask";
 
     public ItemPattern() {
         super("pattern");
@@ -69,6 +70,10 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
 
             if (isOredict(stack)) {
                 tooltip.add(TextFormatting.BLUE + I18n.format("misc.refinedstorage:pattern.oredict") + TextFormatting.RESET);
+            }
+
+            if (isBlockingTask(stack)) {
+                tooltip.add(TextFormatting.BLUE + I18n.format("misc.refinedstorage:pattern.blocking") + TextFormatting.RESET);
             }
         } else {
             tooltip.add(TextFormatting.RED + I18n.format("misc.refinedstorage:pattern.invalid") + TextFormatting.RESET);
@@ -159,12 +164,24 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
         return pattern.hasTagCompound() && pattern.getTagCompound().hasKey(NBT_OREDICT) && pattern.getTagCompound().getBoolean(NBT_OREDICT);
     }
 
+    public static boolean isBlockingTask(ItemStack pattern) {
+        return pattern.hasTagCompound() && pattern.getTagCompound().hasKey(NBT_BLOCKING_TASK) && pattern.getTagCompound().getBoolean(NBT_BLOCKING_TASK);
+    }
+
     public static void setOredict(ItemStack pattern, boolean oredict) {
         if (!pattern.hasTagCompound()) {
             pattern.setTagCompound(new NBTTagCompound());
         }
 
         pattern.getTagCompound().setBoolean(NBT_OREDICT, oredict);
+    }
+
+    public static void setBlockingTask(ItemStack pattern, boolean blockingTask) {
+        if (!pattern.hasTagCompound()) {
+            pattern.setTagCompound(new NBTTagCompound());
+        }
+
+        pattern.getTagCompound().setBoolean(NBT_BLOCKING_TASK, blockingTask);
     }
 
     public static void combineItems(List<String> tooltip, boolean displayAmount, NonNullList<ItemStack> stacks) {

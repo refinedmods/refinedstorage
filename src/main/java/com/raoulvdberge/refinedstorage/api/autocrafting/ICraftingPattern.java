@@ -36,6 +36,11 @@ public interface ICraftingPattern {
     boolean isOredict();
 
     /**
+     * TODO
+     */
+    boolean isBlockingTask();
+
+    /**
      * @return the inputs, can contain nulls
      */
     List<ItemStack> getInputs();

@@ -200,6 +200,9 @@ public class CraftingManager implements ICraftingManager {
         for (ICraftingTask task : getTasks()) {
             for (ItemStack output : task.getPattern().getOutputs()) {
                 if (API.instance().getComparer().isEqual(output, stack, compare)) {
+                    if (task.getPattern().isBlockingTask()) {
+                        return null;
+                    }
                     toSchedule -= output.getCount() * task.getQuantity();
                 }
             }
@@ -207,7 +210,6 @@ public class CraftingManager implements ICraftingManager {
 
         if (toSchedule > 0) {
             ICraftingPattern pattern = getPattern(stack, compare);
-
             if (pattern != null) {
                 ICraftingTask task = create(stack, pattern, toSchedule);
 

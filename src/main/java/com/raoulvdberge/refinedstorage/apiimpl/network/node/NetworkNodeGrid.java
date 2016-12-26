@@ -48,6 +48,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     public static final String NBT_SORTING_TYPE = "SortingType";
     public static final String NBT_SEARCH_BOX_MODE = "SearchBoxMode";
     public static final String NBT_OREDICT_PATTERN = "OredictPattern";
+    public static final String NBT_BLOCKING_PATTERN = "BlockingPattern";
     public static final String NBT_TAB_SELECTED = "TabSelected";
 
     public static final int SORTING_DIRECTION_ASCENDING = 0;
@@ -94,6 +95,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     private int tabSelected = -1;
 
     private boolean oredictPattern = false;
+    private boolean blockingPattern = false;
 
     public NetworkNodeGrid(INetworkNodeHolder holder) {
         super(holder);
@@ -141,6 +143,14 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
     public void setOredictPattern(boolean oredictPattern) {
         this.oredictPattern = oredictPattern;
+    }
+
+    public boolean isBlockingPattern() {
+        return blockingPattern;
+    }
+
+    public void setBlockingPattern(boolean blockingPattern) {
+        this.blockingPattern = blockingPattern;
     }
 
     public EnumGridType getType() {
@@ -285,6 +295,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
             ItemStack pattern = new ItemStack(RSItems.PATTERN);
 
             ItemPattern.setOredict(pattern, oredictPattern);
+            ItemPattern.setBlockingTask(pattern, blockingPattern);
 
             for (int i = 0; i < 9; ++i) {
                 ItemStack ingredient = matrix.getStackInSlot(i);
@@ -486,6 +497,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
         tag.setInteger(NBT_SEARCH_BOX_MODE, searchBoxMode);
 
         tag.setBoolean(NBT_OREDICT_PATTERN, oredictPattern);
+        tag.setBoolean(NBT_BLOCKING_PATTERN, blockingPattern);
 
         return tag;
     }
@@ -512,6 +524,10 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
         if (tag.hasKey(NBT_OREDICT_PATTERN)) {
             oredictPattern = tag.getBoolean(NBT_OREDICT_PATTERN);
+        }
+
+        if (tag.hasKey(NBT_BLOCKING_PATTERN)) {
+            blockingPattern = tag.getBoolean(NBT_BLOCKING_PATTERN);
         }
     }
 

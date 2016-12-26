@@ -121,6 +121,25 @@ public class TileGrid extends TileNode {
         }
     });
 
+    public static final TileDataParameter<Boolean> BLOCKING_PATTERN = new TileDataParameter<>(DataSerializers.BOOLEAN, false, new ITileDataProducer<Boolean, TileGrid>() {
+        @Override
+        public Boolean getValue(TileGrid tile) {
+            return ((NetworkNodeGrid) tile.getNode()).isBlockingPattern();
+        }
+    }, new ITileDataConsumer<Boolean, TileGrid>() {
+        @Override
+        public void setValue(TileGrid tile, Boolean value) {
+            NetworkNodeGrid grid = (NetworkNodeGrid) tile.getNode();
+
+            grid.setBlockingPattern(value);
+            grid.markDirty();
+        }
+    }, parameter -> {
+        if (Minecraft.getMinecraft().currentScreen instanceof GuiGrid) {
+            ((GuiGrid) Minecraft.getMinecraft().currentScreen).updateBlockingPattern(parameter.getValue());
+        }
+    });
+
     public TileGrid() {
         dataManager.addWatchedParameter(VIEW_TYPE);
         dataManager.addWatchedParameter(SORTING_DIRECTION);
@@ -128,6 +147,7 @@ public class TileGrid extends TileNode {
         dataManager.addWatchedParameter(SEARCH_BOX_MODE);
         dataManager.addWatchedParameter(TAB_SELECTED);
         dataManager.addWatchedParameter(OREDICT_PATTERN);
+        dataManager.addWatchedParameter(BLOCKING_PATTERN);
     }
 
     @Override
