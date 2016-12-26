@@ -68,22 +68,20 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
 
                         if (craftOnly) {
                             if (craftOnlyTask[i] == null) {
-                                craftOnlyTask[i] = network.getCraftingManager().schedule(slot, upgrades.getItemInteractCount(), compare);
+                                craftOnlyTask[i] = network.getCraftingManager().schedule(slot, 1, compare);
 
                                 if (craftOnlyTask[i] != null) {
                                     craftOnlyToExtract[i] = craftOnlyTask[i].getPattern().getQuantityPerRequest(slot, compare);
                                 }
                             } else if (craftOnlyTask[i].isFinished() && craftOnlyTask[i].getMissing().isEmpty()) {
-                                int toExtract = Math.min(upgrades.getItemInteractCount(), craftOnlyToExtract[i]);
-
-                                ItemStack took = network.extractItem(slot, toExtract, compare, true);
+                                ItemStack took = network.extractItem(slot, 1, compare, true);
 
                                 if (took != null && ItemHandlerHelper.insertItem(handler, took, true).isEmpty()) {
-                                    took = network.extractItem(slot, toExtract, compare, false);
+                                    took = network.extractItem(slot, 1, compare, false);
 
                                     ItemHandlerHelper.insertItem(handler, took, false);
 
-                                    craftOnlyToExtract[i] -= toExtract;
+                                    craftOnlyToExtract[i]--;
 
                                     if (craftOnlyToExtract[i] <= 0) {
                                         craftOnlyToExtract[i] = null;
