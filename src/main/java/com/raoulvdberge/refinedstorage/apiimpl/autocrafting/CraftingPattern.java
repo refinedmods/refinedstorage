@@ -169,6 +169,11 @@ public class CraftingPattern implements ICraftingPattern {
     }
 
     @Override
+    public boolean isBlockingPattern() {
+        return ItemPattern.isBlocking(stack);
+    }
+
+    @Override
     public List<ItemStack> getInputs() {
         return inputs;
     }

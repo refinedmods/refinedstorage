@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
@@ -34,6 +35,8 @@ public abstract class CraftingStep implements ICraftingStep {
     protected Map<Integer, Integer> satisfied;
     protected boolean startedProcessing;
     protected List<ICraftingStep> preliminarySteps;
+
+    private boolean blocked = true;
 
     public CraftingStep(INetworkMaster network, ICraftingPattern pattern, List<ICraftingStep> preliminarySteps) {
         this.network = network;
@@ -109,7 +112,12 @@ public abstract class CraftingStep implements ICraftingStep {
 
     @Override
     public void setStartedProcessing() {
+        if (getPattern().isBlockingPattern()) {
+            getPattern().getContainer().setBlocked(true);
+        }
+
         startedProcessing = true;
+        blocked = false;
     }
 
     @Override
@@ -125,6 +133,8 @@ public abstract class CraftingStep implements ICraftingStep {
                 return false;
             }
         }
+
+        getPattern().getContainer().setBlocked(false);
 
         return true;
     }
@@ -243,6 +253,11 @@ public abstract class CraftingStep implements ICraftingStep {
         }
 
         return true;
+    }
+
+    @Override
+    public boolean isBlocked() {
+        return blocked;
     }
 
     public static ICraftingStep toCraftingStep(NBTTagCompound compound, INetworkMaster network) {

@@ -29,6 +29,7 @@ gui.refinedstorage:crafting_monitor.items_missing=Items missing
 gui.refinedstorage:crafting_monitor.machine_in_use=Machine is in use
 gui.refinedstorage:crafting_monitor.machine_none=No machine found
 gui.refinedstorage:crafting_monitor.waiting_for_items=Waiting for items
+gui.refinedstorage:crafting_monitor.blocked=Blocked, waiting on other task
 gui.refinedstorage:wireless_transmitter=Wireless Transmitter
 gui.refinedstorage:wireless_transmitter.distance=%d blocks
 gui.refinedstorage:crafter=Crafter
@@ -101,6 +102,7 @@ misc.refinedstorage:set=Set
 misc.refinedstorage:cancel_all=Cancel All
 misc.refinedstorage:priority=Priority
 misc.refinedstorage:oredict=Oredict
+misc.refinedstorage:blocking=Blocking
 
 sidebutton.refinedstorage:compare.1=Compare damage
 sidebutton.refinedstorage:compare.2=Compare NBT
