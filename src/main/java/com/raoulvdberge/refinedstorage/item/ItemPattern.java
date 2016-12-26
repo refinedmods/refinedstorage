@@ -73,7 +73,7 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
             }
 
             if (isBlockingTask(stack)) {
-                tooltip.add(TextFormatting.BLUE + I18n.format("misc.refinedstorage:pattern.blocking") + TextFormatting.RESET);
+                tooltip.add(TextFormatting.BLUE + I18n.format("misc.refinedstorage:blocking") + TextFormatting.RESET);
             }
         } else {
             tooltip.add(TextFormatting.RED + I18n.format("misc.refinedstorage:pattern.invalid") + TextFormatting.RESET);

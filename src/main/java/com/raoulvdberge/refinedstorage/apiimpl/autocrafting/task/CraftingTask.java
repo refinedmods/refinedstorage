@@ -51,6 +51,7 @@ public class CraftingTask implements ICraftingTask {
     private Deque<ItemStack> toInsertItems = new ArrayDeque<>();
     private Deque<FluidStack> toInsertFluids = new ArrayDeque<>();
     private IStackList<FluidStack> toTakeFluids = API.instance().createFluidStackList();
+    private boolean blocked = false;
 
     public CraftingTask(INetworkMaster network, @Nullable ItemStack requested, ICraftingPattern pattern, int quantity) {
         this.network = network;
@@ -462,6 +463,11 @@ public class CraftingTask implements ICraftingTask {
                 0
         ));
 
+        if (isBlocked()) {
+            elements.directAdd(new CraftingMonitorElementError(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.blocked_task", 16), ""));
+            return elements.getElements();
+        }
+
         if (!missing.isEmpty()) {
             elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_missing", 16));
 
@@ -624,5 +630,20 @@ public class CraftingTask implements ICraftingTask {
     @Override
     public boolean isFinished() {
         return mainSteps.stream().allMatch(ICraftingStep::hasReceivedOutputs);
+    }
+
+    @Override
+    public boolean isBlocked() {
+        return pattern.isBlockingTask() && blocked;
+    }
+
+    @Override
+    public boolean canBeBlockedBy(ICraftingTask task) {
+        return API.instance().getComparer().isEqualNoQuantity(pattern.getStack(), task.getPattern().getStack());
+    }
+
+    @Override
+    public void setBlocked(boolean value) {
+        blocked = value;
     }
 }

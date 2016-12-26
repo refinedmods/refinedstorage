@@ -6,7 +6,6 @@ import com.raoulvdberge.refinedstorage.network.MessageGridPatternCreate;
 import com.raoulvdberge.refinedstorage.network.MessageProcessingPatternEncoderClear;
 import com.raoulvdberge.refinedstorage.tile.TileProcessingPatternEncoder;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
-import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
@@ -30,7 +29,7 @@ public class GuiProcessingPatternEncoder extends GuiBase {
     @Override
     public void init(int x, int y) {
         oredictPattern = addCheckBox(x + 7, y + 76, I18n.format("misc.refinedstorage:oredict"), TileProcessingPatternEncoder.OREDICT_PATTERN.getValue());
-        blockingPattern = addCheckBox(x + 60, y + 76, I18n.format("misc.refinedstorage:blocking_task"), TileProcessingPatternEncoder.BLOCKING_TASK_PATTERN.getValue());
+        blockingPattern = addCheckBox(x + 60, y + 76, I18n.format("misc.refinedstorage:blocking"), TileProcessingPatternEncoder.BLOCKING_TASK_PATTERN.getValue());
     }
 
     @Override

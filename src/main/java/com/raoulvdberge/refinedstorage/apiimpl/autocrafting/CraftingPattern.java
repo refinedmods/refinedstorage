@@ -32,7 +32,6 @@ public class CraftingPattern implements ICraftingPattern {
     private List<ItemStack> outputs = new ArrayList<>();
     private List<ItemStack> byproducts = new ArrayList<>();
     private boolean mekanism = false; // Cause they are special in so many ways ¯\_(ツ)_/¯
-    private boolean blockingTask = false;
 
     public CraftingPattern(World world, ICraftingPatternContainer container, ItemStack stack) {
         this.container = container;

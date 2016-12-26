@@ -53,6 +53,15 @@ public class CraftingManager implements ICraftingManager {
     public void add(@Nonnull ICraftingTask task) {
         craftingTasksToAdd.add(task);
 
+        if (task.getPattern().isBlockingTask()) {
+            for (ICraftingTask liveTask : craftingTasks) {
+                if (liveTask.canBeBlockedBy(task)) {
+                    task.setBlocked(true);
+                    break;
+                }
+            }
+        }
+
         network.markDirty();
     }
 
@@ -155,10 +164,23 @@ public class CraftingManager implements ICraftingManager {
                 while (craftingTaskIterator.hasNext()) {
                     ICraftingTask task = craftingTaskIterator.next();
 
+                    if (task.isBlocked()) {
+                        continue;
+                    }
+
                     if (task.update(usedCrafters)) {
                         craftingTaskIterator.remove();
 
                         craftingTasksChanged = true;
+
+                        if (task.getPattern().isBlockingTask()) {
+                            for (ICraftingTask liveTask : craftingTasks) {
+                                if (liveTask.isBlocked() && liveTask.canBeBlockedBy(task)) {
+                                    liveTask.setBlocked(false);
+                                    break;
+                                }
+                            }
+                        }
                     } else if (!task.getMissing().isEmpty() && ticks % 100 == 0 && Math.random() > 0.5) {
                         task.getMissing().clear();
                     }
@@ -200,9 +222,6 @@ public class CraftingManager implements ICraftingManager {
         for (ICraftingTask task : getTasks()) {
             for (ItemStack output : task.getPattern().getOutputs()) {
                 if (API.instance().getComparer().isEqual(output, stack, compare)) {
-                    if (task.getPattern().isBlockingTask()) {
-                        return null;
-                    }
                     toSchedule -= output.getCount() * task.getQuantity();
                 }
             }
