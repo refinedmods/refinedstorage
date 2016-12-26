@@ -23,6 +23,7 @@ import net.minecraft.dispenser.PositionImpl;
 import net.minecraft.entity.item.EntityFireworkRocket;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
@@ -122,12 +123,22 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
                                 state = Blocks.FLOWING_LAVA.getDefaultState();
                             }
 
+                            if (!canPlace(front, state)) {
+                                return;
+                            }
+
                             holder.world().setBlockState(front, state, 1 | 2);
                         }
                     }
                 }
             }
         }
+    }
+
+    private boolean canPlace(BlockPos pos, IBlockState state) {
+        BlockEvent.PlaceEvent e = new BlockEvent.PlaceEvent(new BlockSnapshot(holder.world(), pos, state), holder.world().getBlockState(holder.pos()), FakePlayerFactory.getMinecraft((WorldServer) holder.world()), null);
+
+        return !MinecraftForge.EVENT_BUS.post(e);
     }
 
     private void placeBlock() {
@@ -140,15 +151,29 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
                 @SuppressWarnings("deprecation")
                 IBlockState state = block.getBlock().getStateFromMeta(took.getMetadata());
 
-                BlockEvent.PlaceEvent e = new BlockEvent.PlaceEvent(new BlockSnapshot(holder.world(), front, state), holder.world().getBlockState(holder.pos()), FakePlayerFactory.getMinecraft((WorldServer) holder.world()), null);
-
-                if (MinecraftForge.EVENT_BUS.post(e)) {
+                if (!canPlace(front, state)) {
                     return;
                 }
 
                 network.extractItem(itemFilters.getStackInSlot(0), 1, compare, false);
 
-                holder.world().setBlockState(front, state, 1 | 2);
+                if (item.getItem() instanceof ItemBlock) {
+                    ((ItemBlock) item.getItem()).placeBlockAt(
+                            took,
+                            FakePlayerFactory.getMinecraft((WorldServer) holder.world()),
+                            holder.world(),
+                            front,
+                            holder.getDirection(),
+                            0,
+                            0,
+                            0,
+                            state
+                    );
+                } else {
+                    holder.world().setBlockState(front, state, 1 | 2);
+
+                    state.getBlock().onBlockPlacedBy(holder.world(), front, state, FakePlayerFactory.getMinecraft((WorldServer) holder.world()), took);
+                }
 
                 // From ItemBlock#onItemUse
                 SoundType blockSound = block.getBlock().getSoundType(state, holder.world(), holder.pos(), null);
