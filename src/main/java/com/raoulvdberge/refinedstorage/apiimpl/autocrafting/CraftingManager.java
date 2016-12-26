@@ -53,7 +53,7 @@ public class CraftingManager implements ICraftingManager {
     public void add(@Nonnull ICraftingTask task) {
         craftingTasksToAdd.add(task);
 
-        if (task.getPattern().isBlockingTask()) {
+        if (task.getPattern().isBlockingPattern()) {
             for (ICraftingTask liveTask : craftingTasks) {
                 if (liveTask.canBeBlockedBy(task)) {
                     task.setBlocked(true);
@@ -173,11 +173,20 @@ public class CraftingManager implements ICraftingManager {
 
                         craftingTasksChanged = true;
 
-                        if (task.getPattern().isBlockingTask()) {
+                        if (task.getPattern().isBlockingPattern()) {
                             for (ICraftingTask liveTask : craftingTasks) {
-                                if (liveTask.isBlocked() && liveTask.canBeBlockedBy(task)) {
-                                    liveTask.setBlocked(false);
-                                    break;
+                                if (liveTask.isBlocked()) {
+                                    if (liveTask.canBeBlockedBy(task)) {
+                                        liveTask.setBlocked(false);
+                                        break;
+                                    } else {
+                                        for (ItemStack liveTaskInput : liveTask.getPattern().getInputs()) {
+                                            if (API.instance().getComparer().isEqualNoQuantity(liveTaskInput, task.getPattern().getStack())) {
+                                                liveTask.setBlocked(false);
+                                                break;
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }

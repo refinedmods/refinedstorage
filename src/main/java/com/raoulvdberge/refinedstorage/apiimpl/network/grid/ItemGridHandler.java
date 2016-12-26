@@ -186,20 +186,7 @@ public class ItemGridHandler implements IItemGridHandler {
         }
 
         if (stack != null) {
-            ICraftingPattern pattern = network.getCraftingManager().getPattern(stack);
-            if (pattern.isBlockingTask()) {
-                for (ICraftingTask task : network.getCraftingManager().getTasks()) {
-                    if (task.getPattern().isBlockingTask()) {
-                        for (ItemStack output : task.getPattern().getOutputs()) {
-                            if (API.instance().getComparer().isEqualNoQuantity(output, stack)) {
-                                return;
-                            }
-                        }
-                    }
-                }
-            }
-
-            ICraftingTask task = new CraftingTask(network, stack, pattern, quantity);
+            ICraftingTask task = new CraftingTask(network, stack, network.getCraftingManager().getPattern(stack), quantity);
 
             task.calculate();
 

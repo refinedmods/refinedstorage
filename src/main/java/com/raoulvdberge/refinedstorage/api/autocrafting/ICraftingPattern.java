@@ -38,7 +38,7 @@ public interface ICraftingPattern {
     /**
      * TODO
      */
-    boolean isBlockingTask();
+    boolean isBlockingPattern();
 
     /**
      * @return the inputs, can contain nulls

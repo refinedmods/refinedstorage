@@ -59,7 +59,6 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
     private GuiTextField searchField;
     private GuiCheckBox oredictPattern;
-    private GuiCheckBox blockingPattern;
 
     private IGrid grid;
 
@@ -136,7 +135,6 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
         if (grid.getType() == EnumGridType.PATTERN) {
             oredictPattern = addCheckBox(x + 64, y + getTabDelta() + getHeader() + (getVisibleRows() * 18) + 46, t("misc.refinedstorage:oredict"), TileGrid.OREDICT_PATTERN.getValue());
-            blockingPattern = addCheckBox(x + 72, y + getTabDelta() + getHeader() + (getVisibleRows() * 18) + 2, t("misc.refinedstorage:blocking"), TileGrid.BLOCKING_PATTERN.getValue());
         }
 
         if (grid.getType() != EnumGridType.FLUID) {
@@ -475,8 +473,6 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
         if (button == oredictPattern) {
             TileDataManager.setParameter(TileGrid.OREDICT_PATTERN, oredictPattern.isChecked());
-        } else if (button == blockingPattern) {
-            TileDataManager.setParameter(TileGrid.BLOCKING_PATTERN, blockingPattern.isChecked());
         }
     }
 
@@ -588,12 +584,6 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     public void updateOredictPattern(boolean checked) {
         if (oredictPattern != null) {
             oredictPattern.setIsChecked(checked);
-        }
-    }
-
-    public void updateBlockingPattern(boolean checked) {
-        if (blockingPattern != null) {
-            blockingPattern.setIsChecked(checked);
         }
     }
 }

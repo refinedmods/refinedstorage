@@ -349,7 +349,7 @@ public class CraftingTask implements ICraftingTask {
             }
 
             if (timesUsed++ <= container.getSpeedUpdateCount()) {
-                if (!step.hasStartedProcessing() && step.canStartProcessing(oreDictPrepped, networkFluids)) {
+                if (!step.hasStartedProcessing() && step.canStartProcessing(oreDictPrepped, networkFluids, null)) {
                     step.setStartedProcessing();
                     step.execute(toInsertItems, toInsertFluids);
                     usedContainers.put(container, timesUsed);
@@ -514,7 +514,7 @@ public class CraftingTask implements ICraftingTask {
                                 32
                         );
 
-                        if (!step.hasStartedProcessing() && !step.canStartProcessing(oreDictPrepped, networkFluids)) {
+                        if (!step.hasStartedProcessing() && !step.canStartProcessing(oreDictPrepped, networkFluids, null)) {
                             element = new CraftingMonitorElementInfo(element, "gui.refinedstorage:crafting_monitor.waiting_for_items");
                         }
 
@@ -634,7 +634,7 @@ public class CraftingTask implements ICraftingTask {
 
     @Override
     public boolean isBlocked() {
-        return pattern.isBlockingTask() && blocked;
+        return blocked;
     }
 
     @Override
