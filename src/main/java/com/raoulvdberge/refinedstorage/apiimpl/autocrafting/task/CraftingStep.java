@@ -35,7 +35,8 @@ public abstract class CraftingStep implements ICraftingStep {
     protected Map<Integer, Integer> satisfied;
     protected boolean startedProcessing;
     protected List<ICraftingStep> preliminarySteps;
-    protected boolean blocked = false;
+
+    private boolean blocked = true;
 
     public CraftingStep(INetworkMaster network, ICraftingPattern pattern, List<ICraftingStep> preliminarySteps) {
         this.network = network;
@@ -105,25 +106,6 @@ public abstract class CraftingStep implements ICraftingStep {
 
     @Override
     public boolean canStartProcessing() {
-        if (pattern.isBlockingPattern()) {
-            for (ICraftingTask task : network.getCraftingManager().getTasks()) {
-                for (ICraftingStep step : task.getSteps()) {
-                    if (step == this) {
-                        break;
-                    }
-
-                    if (step.getPattern().isBlockingPattern() && API.instance().getComparer().isEqualNoQuantity(step.getPattern().getStack(), this.getPattern().getStack())) {
-                        blocked = true;
-                        return false;
-                    }
-                }
-            }
-        }
-
-        if (blocked) {
-            blocked = false;
-        }
-
         return getPreliminarySteps().size() == 0;
     }
 
@@ -131,6 +113,7 @@ public abstract class CraftingStep implements ICraftingStep {
     @Override
     public void setStartedProcessing() {
         startedProcessing = true;
+        blocked = false;
     }
 
     @Override
@@ -146,6 +129,8 @@ public abstract class CraftingStep implements ICraftingStep {
                 return false;
             }
         }
+
+        getPattern().getContainer().setBlocked(false);
 
         return true;
     }
@@ -266,6 +251,11 @@ public abstract class CraftingStep implements ICraftingStep {
         return true;
     }
 
+    @Override
+    public boolean isBlocked() {
+        return blocked;
+    }
+
     public static ICraftingStep toCraftingStep(NBTTagCompound compound, INetworkMaster network) {
         CraftingStep step = null;
 
@@ -283,10 +273,5 @@ public abstract class CraftingStep implements ICraftingStep {
         }
 
         return null;
-    }
-
-    @Override
-    public boolean isBlocked() {
-        return blocked;
     }
 }

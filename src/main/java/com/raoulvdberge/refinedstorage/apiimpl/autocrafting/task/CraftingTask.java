@@ -294,6 +294,12 @@ public class CraftingTask implements ICraftingTask {
             network.insertItemTracked(stack, stack.getCount());
         }
 
+        for (ICraftingStep step : getSteps()) {
+            if (step.getPattern().isBlockingPattern()) {
+                step.getPattern().getContainer().setBlocked(false);
+            }
+        }
+
         network.markCraftingMonitorForUpdate();
     }
 
@@ -347,8 +353,12 @@ public class CraftingTask implements ICraftingTask {
                 timesUsed = 0;
             }
 
-            if (timesUsed++ <= container.getSpeedUpdateCount()) {
+            if (timesUsed++ <= container.getSpeedUpdateCount() && !container.isBlocked()) {
                 if (!step.hasStartedProcessing() && step.canStartProcessing(oreDictPrepped, networkFluids)) {
+                    if (step.getPattern().isBlockingPattern()) {
+                        step.getPattern().getContainer().setBlocked(true);
+                    }
+
                     step.setStartedProcessing();
                     step.execute(toInsertItems, toInsertFluids);
                     usedContainers.put(container, timesUsed);
@@ -534,7 +544,9 @@ public class CraftingTask implements ICraftingTask {
                         if (step.getPattern().getContainer().getFacingTile() == null) {
                             element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.machine_none");
                         } else if (!step.hasStartedProcessing() && !step.canStartProcessing()) {
-                            element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor." + (step.isBlocked() ? "blocked" : "machine_in_use"));
+                            element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.machine_in_use");
+                        } else if (!step.hasStartedProcessing() && step.isBlocked()) {
+                            element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.blocked");
                         }
 
                         elements.add(element);
