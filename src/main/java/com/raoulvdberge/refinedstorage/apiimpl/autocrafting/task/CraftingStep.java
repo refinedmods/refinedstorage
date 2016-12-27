@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
@@ -109,6 +110,10 @@ public abstract class CraftingStep implements ICraftingStep {
 
     @Override
     public void setStartedProcessing() {
+        if (getPattern().isBlocking()) {
+            getPattern().getContainer().setBlocked(true);
+        }
+
         startedProcessing = true;
     }
 
@@ -124,6 +129,10 @@ public abstract class CraftingStep implements ICraftingStep {
             if (received == null || stack.getCount() > received) {
                 return false;
             }
+        }
+
+        if (getPattern().isBlocking()) {
+            getPattern().getContainer().setBlocked(false);
         }
 
         return true;

@@ -294,6 +294,12 @@ public class CraftingTask implements ICraftingTask {
             network.insertItemTracked(stack, stack.getCount());
         }
 
+        for (ICraftingStep step : getSteps()) {
+            if (step.getPattern().isBlocking()) {
+                step.getPattern().getContainer().setBlocked(false);
+            }
+        }
+
         network.markCraftingMonitorForUpdate();
     }
 
@@ -348,11 +354,13 @@ public class CraftingTask implements ICraftingTask {
             }
 
             if (timesUsed++ <= container.getSpeedUpdateCount()) {
-                if (!step.hasStartedProcessing() && step.canStartProcessing(oreDictPrepped, networkFluids)) {
-                    step.setStartedProcessing();
-                    step.execute(toInsertItems, toInsertFluids);
-                    usedContainers.put(container, timesUsed);
-                    network.markCraftingMonitorForUpdate();
+                if (!step.getPattern().isProcessing() || !container.isBlocked()) {
+                    if (!step.hasStartedProcessing() && step.canStartProcessing(oreDictPrepped, networkFluids)) {
+                        step.setStartedProcessing();
+                        step.execute(toInsertItems, toInsertFluids);
+                        usedContainers.put(container, timesUsed);
+                        network.markCraftingMonitorForUpdate();
+                    }
                 }
             }
         }
@@ -535,6 +543,8 @@ public class CraftingTask implements ICraftingTask {
                             element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.machine_none");
                         } else if (!step.hasStartedProcessing() && !step.canStartProcessing()) {
                             element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.machine_in_use");
+                        } else if (!step.hasStartedProcessing() && step.getPattern().getContainer().isBlocked()) {
+                            element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.blocked");
                         }
 
                         elements.add(element);

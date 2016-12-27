@@ -25,6 +25,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     public static final String ID = "crafter";
 
     private static final String NBT_TRIGGERED_AUTOCRAFTING = "TriggeredAutocrafting";
+    private static final String NBT_BLOCKED = "Blocked";
 
     private ItemHandlerBasic patterns = new ItemHandlerBasic(9, new ItemHandlerListenerNetworkNode(this), s -> {
         // We can only validate the crafting pattern if the world exists.
@@ -54,6 +55,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED);
 
     private boolean triggeredAutocrafting = false;
+    private boolean blocked = false;
 
     public NetworkNodeCrafter(INetworkNodeHolder holder) {
         super(holder);
@@ -124,6 +126,10 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
         RSUtils.readItems(patterns, 0, tag);
         RSUtils.readItems(upgrades, 1, tag);
+
+        if (tag.hasKey(NBT_BLOCKED)) {
+            blocked = tag.getBoolean(NBT_BLOCKED);
+        }
     }
 
     @Override
@@ -137,6 +143,8 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
         RSUtils.writeItems(patterns, 0, tag);
         RSUtils.writeItems(upgrades, 1, tag);
+
+        tag.setBoolean(NBT_BLOCKED, blocked);
 
         return tag;
     }
@@ -203,5 +211,17 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     @Override
     public boolean hasConnectivityState() {
         return true;
+    }
+
+    @Override
+    public boolean isBlocked() {
+        return blocked;
+    }
+
+    @Override
+    public void setBlocked(boolean value) {
+        blocked = value;
+
+        markDirty();
     }
 }
