@@ -99,7 +99,7 @@ public interface ICraftingStep {
     NBTTagCompound writeToNBT(NBTTagCompound tag);
 
     /**
-     * @return true if the step is currently blocked by another crafting task
+     * @return true weather if this step is blocked by another task
      */
     boolean isBlocked();
 }

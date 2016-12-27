@@ -353,16 +353,18 @@ public class CraftingTask implements ICraftingTask {
                 timesUsed = 0;
             }
 
-            if (timesUsed++ <= container.getSpeedUpdateCount() && !container.isBlocked()) {
-                if (!step.hasStartedProcessing() && step.canStartProcessing(oreDictPrepped, networkFluids)) {
-                    if (step.getPattern().isBlockingPattern()) {
-                        step.getPattern().getContainer().setBlocked(true);
-                    }
+            if (timesUsed++ <= container.getSpeedUpdateCount()) {
+                if ((container.isBlocked() && !step.getPattern().isProcessing()) || !container.isBlocked()) {
+                    if (!step.hasStartedProcessing() && step.canStartProcessing(oreDictPrepped, networkFluids)) {
+                        if (step.getPattern().isBlockingPattern()) {
+                            step.getPattern().getContainer().setBlocked(true);
+                        }
 
-                    step.setStartedProcessing();
-                    step.execute(toInsertItems, toInsertFluids);
-                    usedContainers.put(container, timesUsed);
-                    network.markCraftingMonitorForUpdate();
+                        step.setStartedProcessing();
+                        step.execute(toInsertItems, toInsertFluids);
+                        usedContainers.put(container, timesUsed);
+                        network.markCraftingMonitorForUpdate();
+                    }
                 }
             }
         }
