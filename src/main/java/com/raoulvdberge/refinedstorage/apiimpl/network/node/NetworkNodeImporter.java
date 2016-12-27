@@ -51,6 +51,10 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
 
     @Override
     public void update() {
+        if (network == null) {
+            return;
+        }
+        
         if (type == IType.ITEMS) {
             TileEntity tile = holder.world().getTileEntity(holder.pos().offset(holder.getDirection()));
             IItemHandler handler = RSUtils.getItemHandler(tile, holder.getDirection().getOpposite());

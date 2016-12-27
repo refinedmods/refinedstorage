@@ -97,12 +97,13 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
                             boolean skipSlot = false;
 
                             if (regulator) {
-                                for (int index = 0; i < handler.getSlots() && !skipSlot; i++) {
+                                for (int index = 0; index < handler.getSlots(); index++) {
                                     ItemStack exporterStack = handler.getStackInSlot(index);
 
                                     if (API.instance().getComparer().isEqual(slot, exporterStack, compare)) {
                                         if (exporterStack.getCount() >= slot.getCount()) {
                                             skipSlot = true;
+                                            break;
                                         } else {
                                             stackSize = upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK) ? slot.getCount() - exporterStack.getCount() : 1;
                                         }
