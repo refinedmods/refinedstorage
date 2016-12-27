@@ -112,6 +112,10 @@ public abstract class CraftingStep implements ICraftingStep {
 
     @Override
     public void setStartedProcessing() {
+        if (getPattern().isBlockingPattern()) {
+            getPattern().getContainer().setBlocked(true);
+        }
+
         startedProcessing = true;
         blocked = false;
     }
