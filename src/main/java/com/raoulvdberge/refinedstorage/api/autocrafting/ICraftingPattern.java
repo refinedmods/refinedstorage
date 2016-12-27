@@ -38,7 +38,7 @@ public interface ICraftingPattern {
     /**
      * @return true if the crafting pattern may block crafting step
      */
-    boolean isBlockingPattern();
+    boolean isBlocking();
 
     /**
      * @return the inputs, can contain nulls

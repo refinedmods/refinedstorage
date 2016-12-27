@@ -97,9 +97,4 @@ public interface ICraftingStep {
      * @return the written tag
      */
     NBTTagCompound writeToNBT(NBTTagCompound tag);
-
-    /**
-     * @return true weather if this step is blocked by another task
-     */
-    boolean isBlocked();
 }

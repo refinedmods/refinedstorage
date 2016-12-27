@@ -295,7 +295,7 @@ public class CraftingTask implements ICraftingTask {
         }
 
         for (ICraftingStep step : getSteps()) {
-            if (step.getPattern().isBlockingPattern()) {
+            if (step.getPattern().isBlocking()) {
                 step.getPattern().getContainer().setBlocked(false);
             }
         }
@@ -354,7 +354,7 @@ public class CraftingTask implements ICraftingTask {
             }
 
             if (timesUsed++ <= container.getSpeedUpdateCount()) {
-                if ((container.isBlocked() && !step.getPattern().isProcessing()) || !container.isBlocked()) {
+                if (!step.getPattern().isProcessing() || !container.isBlocked()) {
                     if (!step.hasStartedProcessing() && step.canStartProcessing(oreDictPrepped, networkFluids)) {
                         step.setStartedProcessing();
                         step.execute(toInsertItems, toInsertFluids);
@@ -543,7 +543,7 @@ public class CraftingTask implements ICraftingTask {
                             element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.machine_none");
                         } else if (!step.hasStartedProcessing() && !step.canStartProcessing()) {
                             element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.machine_in_use");
-                        } else if (!step.hasStartedProcessing() && step.isBlocked()) {
+                        } else if (!step.hasStartedProcessing() && step.getPattern().getContainer().isBlocked()) {
                             element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.blocked");
                         }
 

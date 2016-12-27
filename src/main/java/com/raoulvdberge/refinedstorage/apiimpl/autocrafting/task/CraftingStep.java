@@ -36,8 +36,6 @@ public abstract class CraftingStep implements ICraftingStep {
     protected boolean startedProcessing;
     protected List<ICraftingStep> preliminarySteps;
 
-    private boolean blocked = true;
-
     public CraftingStep(INetworkMaster network, ICraftingPattern pattern, List<ICraftingStep> preliminarySteps) {
         this.network = network;
         this.pattern = pattern;
@@ -112,12 +110,11 @@ public abstract class CraftingStep implements ICraftingStep {
 
     @Override
     public void setStartedProcessing() {
-        if (getPattern().isBlockingPattern()) {
+        if (getPattern().isBlocking()) {
             getPattern().getContainer().setBlocked(true);
         }
 
         startedProcessing = true;
-        blocked = false;
     }
 
     @Override
@@ -134,7 +131,9 @@ public abstract class CraftingStep implements ICraftingStep {
             }
         }
 
-        getPattern().getContainer().setBlocked(false);
+        if (getPattern().isBlocking()) {
+            getPattern().getContainer().setBlocked(false);
+        }
 
         return true;
     }
@@ -253,11 +252,6 @@ public abstract class CraftingStep implements ICraftingStep {
         }
 
         return true;
-    }
-
-    @Override
-    public boolean isBlocked() {
-        return blocked;
     }
 
     public static ICraftingStep toCraftingStep(NBTTagCompound compound, INetworkMaster network) {

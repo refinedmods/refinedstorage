@@ -221,5 +221,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     @Override
     public void setBlocked(boolean value) {
         blocked = value;
+
+        markDirty();
     }
 }
