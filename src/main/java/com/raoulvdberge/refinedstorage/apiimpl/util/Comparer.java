@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.util;
 
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.block.BlockNode;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
 import net.minecraftforge.fluids.FluidStack;
@@ -178,6 +179,9 @@ public class Comparer implements IComparer {
                 case "simplyjetpacks":
                     stack.getTagCompound().removeTag("sjData");
                     stack.getTagCompound().removeTag("PackOn");
+                    break;
+                case "refinedstorage":
+                    stack.getTagCompound().removeTag(BlockNode.NBT_REFINED_STORAGE_DATA);
                     break;
             }
         }

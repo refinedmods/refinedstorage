@@ -1,9 +1,13 @@
 package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.api.util.IWrenchable;
+import com.raoulvdberge.refinedstorage.block.BlockNode;
+import com.raoulvdberge.refinedstorage.tile.TileNode;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -22,7 +26,8 @@ import java.util.List;
 public class ItemWrench extends ItemBase {
     private enum WrenchMode {
         ROTATION(0),
-        CONFIGURATION(1);
+        CONFIGURATION(1),
+        DISMANTLING(2);
 
         private final int id;
 
@@ -31,7 +36,7 @@ public class ItemWrench extends ItemBase {
         }
 
         public WrenchMode cycle() {
-            return this == ROTATION ? CONFIGURATION : ROTATION;
+            return this == ROTATION ? CONFIGURATION : (this == CONFIGURATION ? DISMANTLING : ROTATION);
         }
 
         public NBTTagCompound writeToNBT(NBTTagCompound tag) {
@@ -115,6 +120,28 @@ public class ItemWrench extends ItemBase {
 
                 return EnumActionResult.SUCCESS;
             }
+        } else if (mode == WrenchMode.DISMANTLING) {
+            TileEntity tile = world.getTileEntity(pos);
+            IBlockState state = world.getBlockState(pos);
+
+            if (tile instanceof TileNode) {
+                NBTTagCompound data = new NBTTagCompound();
+
+                ((TileNode) tile).writeConfiguration(data);
+
+                ItemStack tileStack = new ItemStack(
+                    state.getBlock(),
+                    1,
+                    state.getBlock().getMetaFromState(state)
+                );
+
+                tileStack.setTagCompound(new NBTTagCompound());
+                tileStack.getTagCompound().setTag(BlockNode.NBT_REFINED_STORAGE_DATA, data);
+
+                world.setBlockToAir(pos);
+
+                InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tileStack);
+            }
         }
 
         return EnumActionResult.PASS;
@@ -139,8 +166,8 @@ public class ItemWrench extends ItemBase {
             next.writeToNBT(stack.getTagCompound());
 
             player.sendMessage(new TextComponentTranslation(
-                    "item.refinedstorage:wrench.mode",
-                    new TextComponentTranslation("item.refinedstorage:wrench.mode." + next.id).setStyle(new Style().setColor(TextFormatting.YELLOW))
+                "item.refinedstorage:wrench.mode",
+                new TextComponentTranslation("item.refinedstorage:wrench.mode." + next.id).setStyle(new Style().setColor(TextFormatting.YELLOW))
             ));
         }
 

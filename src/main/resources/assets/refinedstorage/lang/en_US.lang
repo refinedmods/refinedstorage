@@ -271,5 +271,6 @@ item.refinedstorage:wrench.read=Configuration read.
 item.refinedstorage:wrench.mode=Mode: %s
 item.refinedstorage:wrench.mode.0=Rotation
 item.refinedstorage:wrench.mode.1=Configuration
+item.refinedstorage:wrench.mode.2=Dismantling
 item.refinedstorage:security_card.name=Security Card
 item.refinedstorage:security_card.owner=Bound to: %s
