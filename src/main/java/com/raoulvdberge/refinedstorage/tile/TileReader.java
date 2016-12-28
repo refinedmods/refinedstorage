@@ -10,7 +10,6 @@ import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 
@@ -18,18 +17,18 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class TileReader extends TileNode<NetworkNodeReader> {
-    static <T extends TileEntity & IReaderWriter> TileDataParameter<String> createChannelParameter() {
+    static <T extends TileNode> TileDataParameter<String> createChannelParameter() {
         return new TileDataParameter<>(DataSerializers.STRING, "", new ITileDataProducer<String, T>() {
             @Override
             public String getValue(T tile) {
-                return tile.getChannel();
+                return ((IReaderWriter) tile.getNode()).getChannel();
             }
         }, new ITileDataConsumer<String, T>() {
             @Override
             public void setValue(T tile, String value) {
-                tile.setChannel(value);
+                ((IReaderWriter) tile.getNode()).setChannel(value);
 
-                tile.markDirty();
+                tile.getNode().markDirty();
             }
         }, parameter -> {
             if (Minecraft.getMinecraft().currentScreen instanceof GuiReaderWriter) {

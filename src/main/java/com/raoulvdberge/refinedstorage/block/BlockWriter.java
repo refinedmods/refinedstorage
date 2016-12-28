@@ -66,7 +66,9 @@ public class BlockWriter extends BlockCable {
 
     @Override
     public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
-        return side == ((TileWriter) world.getTileEntity(pos)).getDirection().getOpposite();
+        TileEntity tile = world.getTileEntity(pos);
+
+        return tile instanceof TileWriter && side == ((TileWriter) tile).getDirection().getOpposite();
     }
 
     @Override

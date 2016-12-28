@@ -7,8 +7,8 @@ import net.minecraft.entity.player.EntityPlayer;
 public class ContainerReaderWriter extends ContainerBase {
     private IReaderWriter readerWriter;
 
-    public ContainerReaderWriter(IReaderWriter readerWriter, EntityPlayer player) {
-        super((TileBase) readerWriter, player);
+    public ContainerReaderWriter(IReaderWriter readerWriter, TileBase tile, EntityPlayer player) {
+        super(tile, player);
 
         this.readerWriter = readerWriter;
 

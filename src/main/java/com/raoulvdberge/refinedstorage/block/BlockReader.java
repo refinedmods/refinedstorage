@@ -40,7 +40,9 @@ public class BlockReader extends BlockCable {
 
     @Override
     public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
-        return side == ((TileReader) world.getTileEntity(pos)).getDirection().getOpposite();
+        TileEntity tile = world.getTileEntity(pos);
+
+        return tile instanceof TileReader && side == ((TileReader) tile).getDirection().getOpposite();
     }
 
     @Override
