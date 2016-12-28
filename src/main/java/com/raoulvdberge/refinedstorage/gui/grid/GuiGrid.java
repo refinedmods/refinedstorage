@@ -504,7 +504,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             RS.INSTANCE.network.sendToServer(new MessageGridPatternCreate(gridPos.getX(), gridPos.getY(), gridPos.getZ()));
         } else if (grid.isActive()) {
             if (clickedClear) {
-                RS.INSTANCE.network.sendToServer(new MessageGridCraftingClear((NetworkNodeGrid) grid));
+                RS.INSTANCE.network.sendToServer(new MessageGridCraftingClear());
             }
 
             ItemStack held = ((ContainerGrid) this.inventorySlots).getPlayer().inventory.getItemStack();

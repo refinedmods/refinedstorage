@@ -5,13 +5,10 @@ import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeHolder;
-import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
-import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.block.BlockGrid;
 import com.raoulvdberge.refinedstorage.block.EnumGridType;
-import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.gui.grid.GridFilter;
 import com.raoulvdberge.refinedstorage.gui.grid.GridTab;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
@@ -30,13 +27,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -151,12 +146,6 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
         return type == null ? EnumGridType.NORMAL : type;
     }
 
-    @Nullable
-    @Override
-    public BlockPos getNetworkPosition() {
-        return network != null ? network.getPosition() : null;
-    }
-
     public void onOpened(EntityPlayer player) {
         if (network != null) {
             if (getType() == EnumGridType.FLUID) {
@@ -168,26 +157,8 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     }
 
     @Override
-    public IItemGridHandler getItemHandler() {
-        return network != null ? network.getItemGridHandler() : null;
-    }
-
-    @Override
-    public IFluidGridHandler getFluidHandler() {
-        return network != null ? network.getFluidGridHandler() : null;
-    }
-
-    @Override
     public String getGuiTitle() {
         return getType() == EnumGridType.FLUID ? "gui.refinedstorage:fluid_grid" : "gui.refinedstorage:grid";
-    }
-
-    public InventoryCrafting getMatrix() {
-        return matrix;
-    }
-
-    public InventoryCraftResult getResult() {
-        return result;
     }
 
     public IItemHandler getPatterns() {
@@ -209,99 +180,24 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
         return tabs;
     }
 
+    @Override
+    public InventoryCrafting getCraftingMatrix() {
+        return matrix;
+    }
+
+    @Override
+    public InventoryCraftResult getCraftingResult() {
+        return result;
+    }
+
+    @Override
     public void onCraftingMatrixChanged() {
-        markDirty();
-
         result.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(matrix, holder.world()));
+
+        markDirty();
     }
 
-    public void onCrafted(EntityPlayer player) {
-        NonNullList<ItemStack> remainder = CraftingManager.getInstance().getRemainingItems(matrix, holder.world());
-
-        for (int i = 0; i < matrix.getSizeInventory(); ++i) {
-            ItemStack slot = matrix.getStackInSlot(i);
-
-            if (i < remainder.size() && !remainder.get(i).isEmpty()) {
-                // If there is no space for the remainder, dump it in the player inventory
-                if (!slot.isEmpty() && slot.getCount() > 1) {
-                    if (!player.inventory.addItemStackToInventory(remainder.get(i).copy())) {
-                        ItemStack remainderStack = network.insertItem(remainder.get(i).copy(), remainder.get(i).getCount(), false);
-
-                        if (remainderStack != null) {
-                            InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), remainderStack);
-                        }
-                    }
-
-                    matrix.decrStackSize(i, 1);
-                } else {
-                    matrix.setInventorySlotContents(i, remainder.get(i).copy());
-                }
-            } else if (!slot.isEmpty()) {
-                if (slot.getCount() == 1 && network != null) {
-                    matrix.setInventorySlotContents(i, RSUtils.getStack(network.extractItem(slot, 1, false)));
-                } else {
-                    matrix.decrStackSize(i, 1);
-                }
-            }
-        }
-
-        onCraftingMatrixChanged();
-    }
-
-    public void onCraftedShift(ContainerGrid container, EntityPlayer player) {
-        List<ItemStack> craftedItemsList = new ArrayList<>();
-        int craftedItems = 0;
-        ItemStack crafted = result.getStackInSlot(0);
-
-        while (true) {
-            onCrafted(player);
-
-            craftedItemsList.add(crafted.copy());
-
-            craftedItems += crafted.getCount();
-
-            if (!API.instance().getComparer().isEqual(crafted, result.getStackInSlot(0)) || craftedItems + crafted.getCount() > crafted.getMaxStackSize()) {
-                break;
-            }
-        }
-
-        for (ItemStack craftedItem : craftedItemsList) {
-            if (!player.inventory.addItemStackToInventory(craftedItem.copy())) {
-                ItemStack remainder = network.insertItem(craftedItem, craftedItem.getCount(), false);
-                if (remainder != null) {
-                    InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), remainder);
-                }
-            }
-        }
-
-        container.sendCraftingSlots();
-        container.detectAndSendChanges();
-    }
-
-    public void onCreatePattern() {
-        if (canCreatePattern()) {
-            patterns.extractItem(0, 1, false);
-
-            ItemStack pattern = new ItemStack(RSItems.PATTERN);
-
-            ItemPattern.setOredict(pattern, oredictPattern);
-
-            for (int i = 0; i < 9; ++i) {
-                ItemStack ingredient = matrix.getStackInSlot(i);
-
-                if (!ingredient.isEmpty()) {
-                    ItemPattern.setSlot(pattern, i, ingredient);
-                }
-            }
-
-            patterns.setStackInSlot(1, pattern);
-        }
-    }
-
-    public boolean canCreatePattern() {
-        return !result.getStackInSlot(0).isEmpty() && patterns.getStackInSlot(1).isEmpty() && !patterns.getStackInSlot(0).isEmpty();
-    }
-
+    @Override
     public void onRecipeTransfer(EntityPlayer player, ItemStack[][] recipe) {
         if (network != null && getType() == EnumGridType.CRAFTING && !network.getSecurityManager().hasPermission(Permission.EXTRACT, player)) {
             return;
@@ -383,6 +279,98 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
                 }
             }
         }
+    }
+
+    @Override
+    public void onClosed(EntityPlayer player) {
+        // NO OP
+    }
+
+    @Override
+    public void onCrafted(EntityPlayer player) {
+        NonNullList<ItemStack> remainder = CraftingManager.getInstance().getRemainingItems(matrix, holder.world());
+
+        for (int i = 0; i < matrix.getSizeInventory(); ++i) {
+            ItemStack slot = matrix.getStackInSlot(i);
+
+            if (i < remainder.size() && !remainder.get(i).isEmpty()) {
+                // If there is no space for the remainder, dump it in the player inventory
+                if (!slot.isEmpty() && slot.getCount() > 1) {
+                    if (!player.inventory.addItemStackToInventory(remainder.get(i).copy())) {
+                        ItemStack remainderStack = network == null ? remainder.get(i).copy() : network.insertItem(remainder.get(i).copy(), remainder.get(i).getCount(), false);
+
+                        if (remainderStack != null) {
+                            InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), remainderStack);
+                        }
+                    }
+
+                    matrix.decrStackSize(i, 1);
+                } else {
+                    matrix.setInventorySlotContents(i, remainder.get(i).copy());
+                }
+            } else if (!slot.isEmpty()) {
+                if (slot.getCount() == 1 && network != null) {
+                    matrix.setInventorySlotContents(i, RSUtils.getStack(network.extractItem(slot, 1, false)));
+                } else {
+                    matrix.decrStackSize(i, 1);
+                }
+            }
+        }
+
+        onCraftingMatrixChanged();
+    }
+
+    @Override
+    public void onCraftedShift(EntityPlayer player) {
+        List<ItemStack> craftedItemsList = new ArrayList<>();
+        int craftedItems = 0;
+        ItemStack crafted = result.getStackInSlot(0);
+
+        while (true) {
+            onCrafted(player);
+
+            craftedItemsList.add(crafted.copy());
+
+            craftedItems += crafted.getCount();
+
+            if (!API.instance().getComparer().isEqual(crafted, result.getStackInSlot(0)) || craftedItems + crafted.getCount() > crafted.getMaxStackSize()) {
+                break;
+            }
+        }
+
+        for (ItemStack craftedItem : craftedItemsList) {
+            if (!player.inventory.addItemStackToInventory(craftedItem.copy())) {
+                ItemStack remainder = network == null ? craftedItem : network.insertItem(craftedItem, craftedItem.getCount(), false);
+
+                if (remainder != null) {
+                    InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), remainder);
+                }
+            }
+        }
+    }
+
+    public void onCreatePattern() {
+        if (canCreatePattern()) {
+            patterns.extractItem(0, 1, false);
+
+            ItemStack pattern = new ItemStack(RSItems.PATTERN);
+
+            ItemPattern.setOredict(pattern, oredictPattern);
+
+            for (int i = 0; i < 9; ++i) {
+                ItemStack ingredient = matrix.getStackInSlot(i);
+
+                if (!ingredient.isEmpty()) {
+                    ItemPattern.setSlot(pattern, i, ingredient);
+                }
+            }
+
+            patterns.setStackInSlot(1, pattern);
+        }
+    }
+
+    public boolean canCreatePattern() {
+        return !result.getStackInSlot(0).isEmpty() && patterns.getStackInSlot(1).isEmpty() && !patterns.getStackInSlot(0).isEmpty();
     }
 
     @Override

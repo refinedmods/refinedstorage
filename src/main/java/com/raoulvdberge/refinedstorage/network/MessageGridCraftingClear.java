@@ -2,64 +2,50 @@ package com.raoulvdberge.refinedstorage.network;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.block.EnumGridType;
-import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
+import com.raoulvdberge.refinedstorage.container.ContainerGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class MessageGridCraftingClear extends MessageHandlerPlayerToServer<MessageGridCraftingClear> implements IMessage {
-    private int x;
-    private int y;
-    private int z;
-
     public MessageGridCraftingClear() {
-    }
-
-    public MessageGridCraftingClear(NetworkNodeGrid grid) {
-        this.x = grid.getPos().getX();
-        this.y = grid.getPos().getY();
-        this.z = grid.getPos().getZ();
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        x = buf.readInt();
-        y = buf.readInt();
-        z = buf.readInt();
+        // NO OP
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(x);
-        buf.writeInt(y);
-        buf.writeInt(z);
+        // NO OP
     }
 
     @Override
     public void handle(MessageGridCraftingClear message, EntityPlayerMP player) {
-        TileEntity tile = player.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
+        Container container = player.openContainer;
 
-        if (tile instanceof TileGrid) {
-            NetworkNodeGrid grid = ((TileGrid) tile).getNode();
+        if (container instanceof ContainerGrid) {
+            IGrid grid = ((ContainerGrid) container).getGrid();
 
-            if (grid.getNetwork() != null) {
-                if (grid.getType() == EnumGridType.CRAFTING && grid.getNetwork().getSecurityManager().hasPermission(Permission.INSERT, player)) {
-                    for (int i = 0; i < grid.getMatrix().getSizeInventory(); ++i) {
-                        ItemStack slot = grid.getMatrix().getStackInSlot(i);
+            InventoryCrafting matrix = grid.getCraftingMatrix();
 
-                        if (!slot.isEmpty()) {
-                            grid.getMatrix().setInventorySlotContents(i, RSUtils.getStack(grid.getNetwork().insertItem(slot, slot.getCount(), false)));
-                        }
+            if (grid.getType() == EnumGridType.CRAFTING && grid.getNetwork() != null && grid.getNetwork().getSecurityManager().hasPermission(Permission.INSERT, player)) {
+                for (int i = 0; i < matrix.getSizeInventory(); ++i) {
+                    ItemStack slot = matrix.getStackInSlot(i);
+
+                    if (!slot.isEmpty()) {
+                        matrix.setInventorySlotContents(i, RSUtils.getStack(grid.getNetwork().insertItem(slot, slot.getCount(), false)));
                     }
-                } else if (grid.getType() == EnumGridType.PATTERN) {
-                    for (int i = 0; i < grid.getMatrix().getSizeInventory(); ++i) {
-                        grid.getMatrix().setInventorySlotContents(i, ItemStack.EMPTY);
-                    }
+                }
+            } else if (grid.getType() == EnumGridType.PATTERN) {
+                for (int i = 0; i < matrix.getSizeInventory(); ++i) {
+                    matrix.setInventorySlotContents(i, ItemStack.EMPTY);
                 }
             }
         }

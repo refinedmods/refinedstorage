@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.network;
 
-import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
@@ -38,10 +38,10 @@ public class MessageGridCraftingStart extends MessageHandlerPlayerToServer<Messa
         Container container = player.openContainer;
 
         if (container instanceof ContainerGrid) {
-            IItemGridHandler handler = ((ContainerGrid) container).getGrid().getItemHandler();
+            IGrid grid = ((ContainerGrid) container).getGrid();
 
-            if (handler != null) {
-                handler.onCraftingRequested(player, message.stack, message.quantity);
+            if (grid.getNetwork() != null) {
+                grid.getNetwork().getItemGridHandler().onCraftingRequested(player, message.stack, message.quantity);
             }
         }
     }

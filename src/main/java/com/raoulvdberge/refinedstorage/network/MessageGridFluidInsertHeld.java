@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.network;
 
-import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
@@ -24,10 +24,10 @@ public class MessageGridFluidInsertHeld extends MessageHandlerPlayerToServer<Mes
         Container container = player.openContainer;
 
         if (container instanceof ContainerGrid) {
-            IFluidGridHandler handler = ((ContainerGrid) container).getGrid().getFluidHandler();
+            IGrid grid = ((ContainerGrid) container).getGrid();
 
-            if (handler != null) {
-                handler.onInsertHeldContainer(player);
+            if (grid.getNetwork() != null) {
+                grid.getNetwork().getFluidGridHandler().onInsertHeldContainer(player);
             }
         }
     }

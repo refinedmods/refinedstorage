@@ -355,7 +355,7 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
         if (player.openContainer.getClass() == ContainerGrid.class) {
             IGrid grid = ((ContainerGrid) player.openContainer).getGrid();
 
-            if (pos.equals(grid.getNetworkPosition())) {
+            if (grid.getNetwork() != null && pos.equals(grid.getNetwork().getPosition())) {
                 return Arrays.asList(types).contains(grid.getType());
             }
         }

@@ -2,8 +2,7 @@
 package com.raoulvdberge.refinedstorage.tile.grid;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
-import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
+import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.block.EnumGridType;
 import com.raoulvdberge.refinedstorage.gui.grid.GridFilter;
 import com.raoulvdberge.refinedstorage.gui.grid.GridTab;
@@ -11,15 +10,17 @@ import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessFluidGrid;
 import com.raoulvdberge.refinedstorage.network.MessageWirelessFluidGridSettingsUpdate;
-import com.raoulvdberge.refinedstorage.tile.TileController;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.InventoryCraftResult;
+import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -54,20 +55,17 @@ public class WirelessFluidGrid implements IGrid {
     }
 
     @Override
-    public BlockPos getNetworkPosition() {
-        return controller;
-    }
+    @Nullable
+    public INetworkMaster getNetwork() {
+        World world = DimensionManager.getWorld(controllerDimension);
 
-    @Override
-    public IItemGridHandler getItemHandler() {
+        if (world != null) {
+            TileEntity tile = world.getTileEntity(controller);
+
+            return tile instanceof INetworkMaster ? (INetworkMaster) tile : null;
+        }
+
         return null;
-    }
-
-    @Override
-    public IFluidGridHandler getFluidHandler() {
-        TileController controller = getController();
-
-        return controller != null ? controller.getFluidGridHandler() : null;
     }
 
     @Override
@@ -156,27 +154,46 @@ public class WirelessFluidGrid implements IGrid {
     }
 
     @Override
+    public InventoryCrafting getCraftingMatrix() {
+        return null;
+    }
+
+    @Override
+    public InventoryCraftResult getCraftingResult() {
+        return null;
+    }
+
+    @Override
+    public void onCraftingMatrixChanged() {
+        // NO OP
+    }
+
+    @Override
+    public void onCrafted(EntityPlayer player) {
+        // NO OP
+    }
+
+    @Override
+    public void onCraftedShift(EntityPlayer player) {
+        // NO OP
+    }
+
+    @Override
+    public void onRecipeTransfer(EntityPlayer player, ItemStack[][] recipe) {
+        // NO OP
+    }
+
+    @Override
     public boolean isActive() {
         return true;
     }
 
-    public void onClose(EntityPlayer player) {
-        TileController controller = getController();
+    @Override
+    public void onClosed(EntityPlayer player) {
+        INetworkMaster network = getNetwork();
 
-        if (controller != null) {
-            controller.getNetworkItemHandler().onClose(player);
+        if (network != null) {
+            network.getNetworkItemHandler().onClose(player);
         }
-    }
-
-    private TileController getController() {
-        World world = DimensionManager.getWorld(controllerDimension);
-
-        if (world != null) {
-            TileEntity tile = world.getTileEntity(controller);
-
-            return tile instanceof TileController ? (TileController) tile : null;
-        }
-
-        return null;
     }
 }

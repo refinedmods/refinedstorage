@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.network;
 
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
@@ -35,7 +36,11 @@ public class MessageGridCraftingPreview extends MessageHandlerPlayerToServer<Mes
         Container container = player.openContainer;
 
         if (container instanceof ContainerGrid) {
-            ((ContainerGrid) container).getGrid().getItemHandler().onCraftingPreviewRequested(player, message.hash, message.quantity);
+            IGrid grid = ((ContainerGrid) container).getGrid();
+
+            if (grid.getNetwork() != null) {
+                grid.getNetwork().getItemGridHandler().onCraftingPreviewRequested(player, message.hash, message.quantity);
+            }
         }
     }
 }
