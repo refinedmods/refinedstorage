@@ -13,11 +13,11 @@ public class ContainerFluidInterface extends ContainerBase {
         super(fluidInterface, player);
 
         for (int i = 0; i < 4; ++i) {
-            addSlotToContainer(new SlotItemHandler(((NetworkNodeFluidInterface) fluidInterface.getNode()).getUpgrades(), i, 187, 6 + (i * 18)));
+            addSlotToContainer(new SlotItemHandler(fluidInterface.getNode().getUpgrades(), i, 187, 6 + (i * 18)));
         }
 
-        addSlotToContainer(new SlotItemHandler(((NetworkNodeFluidInterface) fluidInterface.getNode()).getIn(), 0, 44, 32));
-        addSlotToContainer(new SlotFilterFluid(!fluidInterface.getWorld().isRemote, ((NetworkNodeFluidInterface) fluidInterface.getNode()).getOut(), 0, 116, 32));
+        addSlotToContainer(new SlotItemHandler(fluidInterface.getNode().getIn(), 0, 44, 32));
+        addSlotToContainer(new SlotFilterFluid(!fluidInterface.getWorld().isRemote, fluidInterface.getNode().getOut(), 0, 116, 32));
 
         addPlayerInventory(8, 122);
     }

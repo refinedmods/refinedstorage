@@ -51,12 +51,14 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
 
     @Override
     public void update() {
+        super.update();
+
         if (network == null) {
             return;
         }
         
         if (type == IType.ITEMS) {
-            TileEntity tile = holder.world().getTileEntity(holder.pos().offset(holder.getDirection()));
+            TileEntity tile = getFacingTile();
             IItemHandler handler = RSUtils.getItemHandler(tile, holder.getDirection().getOpposite());
 
             if (handler == null || tile instanceof TileDiskDrive) {
@@ -85,7 +87,7 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
                 }
             }
         } else if (type == IType.FLUIDS && ticks % upgrades.getSpeed() == 0) {
-            IFluidHandler handler = RSUtils.getFluidHandler(holder.world().getTileEntity(holder.pos().offset(holder.getDirection())), holder.getDirection().getOpposite());
+            IFluidHandler handler = RSUtils.getFluidHandler(getFacingTile(), holder.getDirection().getOpposite());
 
             if (handler != null) {
                 FluidStack stack = handler.drain(Fluid.BUCKET_VOLUME, false);

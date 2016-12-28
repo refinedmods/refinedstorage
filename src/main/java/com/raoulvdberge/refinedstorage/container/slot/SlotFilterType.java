@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.container.slot;
 
+import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -38,7 +39,7 @@ public class SlotFilterType extends SlotFilter {
     @Override
     @Nonnull
     public ItemStack getStack() {
-        return (type.getType() == IType.ITEMS || !((TileEntity) type).getWorld().isRemote) ? super.getStack() : ItemStack.EMPTY;
+        return (type.getType() == IType.ITEMS || !((INetworkNode) type).getHolder().world().isRemote) ? super.getStack() : ItemStack.EMPTY;
     }
 
     public ItemStack getRealStack() {

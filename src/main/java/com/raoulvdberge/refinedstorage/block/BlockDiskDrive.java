@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSGui;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeDiskDrive;
 import com.raoulvdberge.refinedstorage.render.PropertyObject;
 import com.raoulvdberge.refinedstorage.tile.TileDiskDrive;
 import net.minecraft.block.state.BlockStateContainer;
@@ -48,7 +47,7 @@ public class BlockDiskDrive extends BlockNode {
 
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
-        ((NetworkNodeDiskDrive) ((TileDiskDrive) world.getTileEntity(pos)).getNode()).onBreak();
+        ((TileDiskDrive) world.getTileEntity(pos)).getNode().onBreak();
 
         super.breakBlock(world, pos, state);
     }

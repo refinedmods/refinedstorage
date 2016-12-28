@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.tile;
 
-import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeExporter;
 import com.raoulvdberge.refinedstorage.container.ContainerExporter;
 import com.raoulvdberge.refinedstorage.gui.GuiExporter;
@@ -14,18 +13,20 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.DataSerializers;
 
-public class TileExporter extends TileNode {
+import javax.annotation.Nonnull;
+
+public class TileExporter extends TileNode<NetworkNodeExporter> {
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> TYPE = IType.createParameter();
     public static final TileDataParameter<Boolean> REGULATOR = new TileDataParameter<>(DataSerializers.BOOLEAN, false, new ITileDataProducer<Boolean, TileExporter>() {
         @Override
         public Boolean getValue(TileExporter tile) {
-            return ((NetworkNodeExporter) tile.getNode()).isRegulator();
+            return tile.getNode().isRegulator();
         }
     }, new ITileDataConsumer<Boolean, TileExporter>() {
         @Override
         public void setValue(TileExporter tile, Boolean value) {
-            NetworkNodeExporter exporter = (NetworkNodeExporter) tile.getNode();
+            NetworkNodeExporter exporter = tile.getNode();
 
             for (int i = 0; i < exporter.getItemFilters().getSlots() + exporter.getFluidFilters().getSlots(); ++i) {
                 ItemStack slot = i >= exporter.getItemFilters().getSlots() ? exporter.getFluidFilters().getStackInSlot(i - exporter.getItemFilters().getSlots()) : exporter.getItemFilters().getStackInSlot(i);
@@ -58,12 +59,12 @@ public class TileExporter extends TileNode {
     public static final TileDataParameter<Boolean> CRAFT_ONLY = new TileDataParameter<Boolean>(DataSerializers.BOOLEAN, false, new ITileDataProducer<Boolean, TileExporter>() {
         @Override
         public Boolean getValue(TileExporter tile) {
-            return ((NetworkNodeExporter) tile.getNode()).isCraftOnly();
+            return tile.getNode().isCraftOnly();
         }
     }, new ITileDataConsumer<Boolean, TileExporter>() {
         @Override
         public void setValue(TileExporter tile, Boolean value) {
-            ((NetworkNodeExporter) tile.getNode()).setCraftOnly(value);
+            tile.getNode().setCraftOnly(value);
             tile.getNode().markDirty();
         }
     });
@@ -76,7 +77,8 @@ public class TileExporter extends TileNode {
     }
 
     @Override
-    public INetworkNode createNode() {
+    @Nonnull
+    public NetworkNodeExporter createNode() {
         return new NetworkNodeExporter(this);
     }
 }

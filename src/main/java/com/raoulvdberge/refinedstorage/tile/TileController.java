@@ -68,7 +68,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class TileController extends TileBase implements INetworkMaster, IRedstoneConfigurable, INetworkNode, INetworkNodeProxy {
+public class TileController extends TileBase implements INetworkMaster, IRedstoneConfigurable, INetworkNode, INetworkNodeProxy<TileController> {
     public static final TileDataParameter<Integer> REDSTONE_MODE = RedstoneMode.createParameter();
 
     public static final TileDataParameter<Integer> ENERGY_USAGE = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileController>() {
@@ -797,12 +797,8 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
     }
 
     @Override
-    public INetworkNode getNode() {
-        return this;
-    }
-
-    @Override
-    public INetworkNode createNode() {
+    @Nonnull
+    public TileController getNode() {
         return this;
     }
 }

@@ -10,6 +10,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 
+import javax.annotation.Nonnull;
+
 public class CapabilityNetworkNodeProxy {
     @CapabilityInject(INetworkNodeProxy.class)
     public static Capability<INetworkNodeProxy> NETWORK_NODE_PROXY_CAPABILITY = null;
@@ -25,12 +27,8 @@ public class CapabilityNetworkNodeProxy {
             }
         }, () -> new INetworkNodeProxy() {
             @Override
+            @Nonnull
             public INetworkNode getNode() {
-                return null;
-            }
-
-            @Override
-            public INetworkNode createNode() {
                 return null;
             }
         });

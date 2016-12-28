@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.tile;
 
-import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeDetector;
 import com.raoulvdberge.refinedstorage.gui.GuiDetector;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
@@ -15,7 +14,9 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class TileDetector extends TileNode {
+import javax.annotation.Nonnull;
+
+public class TileDetector extends TileNode<NetworkNodeDetector> {
     private static final String NBT_POWERED = "Powered";
 
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
@@ -24,13 +25,13 @@ public class TileDetector extends TileNode {
     public static final TileDataParameter<Integer> MODE = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileDetector>() {
         @Override
         public Integer getValue(TileDetector tile) {
-            return ((NetworkNodeDetector) tile.getNode()).getMode();
+            return tile.getNode().getMode();
         }
     }, new ITileDataConsumer<Integer, TileDetector>() {
         @Override
         public void setValue(TileDetector tile, Integer value) {
             if (value == NetworkNodeDetector.MODE_UNDER || value == NetworkNodeDetector.MODE_EQUAL || value == NetworkNodeDetector.MODE_ABOVE || value == NetworkNodeDetector.MODE_AUTOCRAFTING) {
-                ((NetworkNodeDetector) tile.getNode()).setMode(value);
+                tile.getNode().setMode(value);
                 tile.getNode().markDirty();
             }
         }
@@ -39,12 +40,12 @@ public class TileDetector extends TileNode {
     public static final TileDataParameter<Integer> AMOUNT = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileDetector>() {
         @Override
         public Integer getValue(TileDetector tile) {
-            return ((NetworkNodeDetector) tile.getNode()).getAmount();
+            return tile.getNode().getAmount();
         }
     }, new ITileDataConsumer<Integer, TileDetector>() {
         @Override
         public void setValue(TileDetector tile, Integer value) {
-            ((NetworkNodeDetector) tile.getNode()).setAmount(value);
+            tile.getNode().setAmount(value);
             tile.getNode().markDirty();
         }
     }, parameter -> {
@@ -57,8 +58,6 @@ public class TileDetector extends TileNode {
         }
     });
 
-    private boolean powered;
-
     public TileDetector() {
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(TYPE);
@@ -69,7 +68,7 @@ public class TileDetector extends TileNode {
 
     @Override
     public void readUpdate(NBTTagCompound tag) {
-        powered = tag.getBoolean(NBT_POWERED);
+        getNode().setPowered(tag.getBoolean(NBT_POWERED));
 
         super.readUpdate(tag);
     }
@@ -78,17 +77,14 @@ public class TileDetector extends TileNode {
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {
         super.writeUpdate(tag);
 
-        tag.setBoolean(NBT_POWERED, powered);
+        tag.setBoolean(NBT_POWERED, getNode().isPowered());
 
         return tag;
     }
 
-    public boolean isPowered() {
-        return world.isRemote ? powered : ((NetworkNodeDetector) getNode()).isPowered();
-    }
-
     @Override
-    public INetworkNode createNode() {
+    @Nonnull
+    public NetworkNodeDetector createNode() {
         return new NetworkNodeDetector(this);
     }
 }

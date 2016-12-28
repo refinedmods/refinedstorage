@@ -6,11 +6,13 @@ import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 
-public class TileWirelessTransmitter extends TileNode {
+import javax.annotation.Nonnull;
+
+public class TileWirelessTransmitter extends TileNode<NetworkNodeWirelessTransmitter> {
     public static final TileDataParameter<Integer> RANGE = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileWirelessTransmitter>() {
         @Override
         public Integer getValue(TileWirelessTransmitter tile) {
-            return ((NetworkNodeWirelessTransmitter) tile.getNode()).getRange();
+            return tile.getNode().getRange();
         }
     });
 
@@ -19,7 +21,8 @@ public class TileWirelessTransmitter extends TileNode {
     }
 
     @Override
-    public INetworkNode createNode() {
+    @Nonnull
+    public NetworkNodeWirelessTransmitter createNode() {
         return new NetworkNodeWirelessTransmitter(this);
     }
 }

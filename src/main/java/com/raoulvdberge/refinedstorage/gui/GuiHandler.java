@@ -3,11 +3,6 @@ package com.raoulvdberge.refinedstorage.gui;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemWirelessFluidGrid;
 import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemWirelessGrid;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCraftingMonitor;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeFluidStorage;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeStorage;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage.NetworkNodeExternalStorage;
 import com.raoulvdberge.refinedstorage.container.*;
 import com.raoulvdberge.refinedstorage.gui.grid.GridDisplayDummy;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
@@ -33,7 +28,7 @@ public class GuiHandler implements IGuiHandler {
             case RSGui.CONTROLLER:
                 return new ContainerController((TileController) tile, player);
             case RSGui.GRID:
-                return new ContainerGrid((NetworkNodeGrid) ((TileGrid) tile).getNode(), new GridDisplayDummy(), (TileGrid) tile, player);
+                return new ContainerGrid(((TileGrid) tile).getNode(), new GridDisplayDummy(), (TileGrid) tile, player);
             case RSGui.DISK_DRIVE:
                 return new ContainerDiskDrive((TileDiskDrive) tile, player);
             case RSGui.IMPORTER:
@@ -57,7 +52,7 @@ public class GuiHandler implements IGuiHandler {
             case RSGui.INTERFACE:
                 return new ContainerInterface((TileInterface) tile, player);
             case RSGui.CRAFTING_MONITOR:
-                return new ContainerCraftingMonitor((NetworkNodeCraftingMonitor) ((TileCraftingMonitor) tile).getNode(), player);
+                return new ContainerCraftingMonitor(((TileCraftingMonitor) tile).getNode(), player);
             case RSGui.WIRELESS_TRANSMITTER:
                 return new ContainerWirelessTransmitter((TileWirelessTransmitter) tile, player);
             case RSGui.CRAFTER:
@@ -102,14 +97,14 @@ public class GuiHandler implements IGuiHandler {
             case RSGui.CONTROLLER:
                 return new GuiController((ContainerController) getContainer(ID, player, tile), (TileController) tile);
             case RSGui.GRID:
-                IGrid grid = (NetworkNodeGrid) ((TileGrid) tile).getNode();
+                IGrid grid = ((TileGrid) tile).getNode();
                 GuiGrid gui = new GuiGrid(null, grid);
                 gui.inventorySlots = new ContainerGrid(grid, gui, null, player);
                 return gui;
             case RSGui.WIRELESS_GRID:
                 return getWirelessGridGui(player, x, y, z);
             case RSGui.DISK_DRIVE:
-                return new GuiStorage((ContainerDiskDrive) getContainer(ID, player, tile), (IStorageGui) tile, "gui/disk_drive.png");
+                return new GuiStorage((ContainerDiskDrive) getContainer(ID, player, tile), ((TileDiskDrive) tile).getNode(), "gui/disk_drive.png");
             case RSGui.IMPORTER:
                 return new GuiImporter((ContainerImporter) getContainer(ID, player, tile));
             case RSGui.EXPORTER:
@@ -123,15 +118,15 @@ public class GuiHandler implements IGuiHandler {
             case RSGui.CONSTRUCTOR:
                 return new GuiConstructor((ContainerConstructor) getContainer(ID, player, tile));
             case RSGui.STORAGE:
-                return new GuiStorage((ContainerStorage) getContainer(ID, player, tile), (NetworkNodeStorage) ((TileStorage) tile).getNode());
+                return new GuiStorage((ContainerStorage) getContainer(ID, player, tile), ((TileStorage) tile).getNode());
             case RSGui.EXTERNAL_STORAGE:
-                return new GuiStorage((ContainerExternalStorage) getContainer(ID, player, tile), (NetworkNodeExternalStorage) ((TileExternalStorage) tile).getNode());
+                return new GuiStorage((ContainerExternalStorage) getContainer(ID, player, tile), ((TileExternalStorage) tile).getNode());
             case RSGui.RELAY:
                 return new GuiRelay((ContainerRelay) getContainer(ID, player, tile));
             case RSGui.INTERFACE:
                 return new GuiInterface((ContainerInterface) getContainer(ID, player, tile));
             case RSGui.CRAFTING_MONITOR:
-                return new GuiCraftingMonitor((ContainerCraftingMonitor) getContainer(ID, player, tile), (NetworkNodeCraftingMonitor) ((TileCraftingMonitor) tile).getNode());
+                return new GuiCraftingMonitor((ContainerCraftingMonitor) getContainer(ID, player, tile), ((TileCraftingMonitor) tile).getNode());
             case RSGui.WIRELESS_TRANSMITTER:
                 return new GuiWirelessTransmitter((ContainerWirelessTransmitter) getContainer(ID, player, tile));
             case RSGui.CRAFTER:
@@ -145,7 +140,7 @@ public class GuiHandler implements IGuiHandler {
             case RSGui.FLUID_INTERFACE:
                 return new GuiFluidInterface((ContainerFluidInterface) getContainer(ID, player, tile));
             case RSGui.FLUID_STORAGE:
-                return new GuiStorage((ContainerFluidStorage) getContainer(ID, player, tile), (NetworkNodeFluidStorage) ((TileFluidStorage) tile).getNode());
+                return new GuiStorage((ContainerFluidStorage) getContainer(ID, player, tile), ((TileFluidStorage) tile).getNode());
             case RSGui.DISK_MANIPULATOR:
                 return new GuiDiskManipulator((ContainerDiskManipulator) getContainer(ID, player, tile));
             case RSGui.WIRELESS_CRAFTING_MONITOR:

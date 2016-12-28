@@ -77,13 +77,13 @@ public class BlockFluidStorage extends BlockNode {
         super.onBlockPlacedBy(world, pos, state, player, stack);
 
         if (!world.isRemote && stack.hasTagCompound() && stack.getTagCompound().hasKey(NetworkNodeFluidStorage.NBT_STORAGE)) {
-            ((NetworkNodeFluidStorage) ((TileFluidStorage) world.getTileEntity(pos)).getNode()).setStorageTag(stack.getTagCompound().getCompoundTag(NetworkNodeFluidStorage.NBT_STORAGE));
+            ((TileFluidStorage) world.getTileEntity(pos)).getNode().setStorageTag(stack.getTagCompound().getCompoundTag(NetworkNodeFluidStorage.NBT_STORAGE));
         }
     }
 
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
-        ((NetworkNodeFluidStorage) ((TileFluidStorage) world.getTileEntity(pos)).getNode()).onBreak();
+        ((TileFluidStorage) world.getTileEntity(pos)).getNode().onBreak();
 
         super.breakBlock(world, pos, state);
     }
@@ -96,7 +96,7 @@ public class BlockFluidStorage extends BlockNode {
 
         ItemStack stack = new ItemStack(RSBlocks.FLUID_STORAGE, 1, getMetaFromState(state));
         stack.setTagCompound(new NBTTagCompound());
-        stack.getTagCompound().setTag(NetworkNodeFluidStorage.NBT_STORAGE, ((NetworkNodeFluidStorage) ((TileFluidStorage) world.getTileEntity(pos)).getNode()).getStorageTag());
+        stack.getTagCompound().setTag(NetworkNodeFluidStorage.NBT_STORAGE, ((TileFluidStorage) world.getTileEntity(pos)).getNode().getStorageTag());
 
         drops.add(stack);
 

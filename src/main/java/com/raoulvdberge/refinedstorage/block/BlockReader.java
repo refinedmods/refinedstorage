@@ -2,7 +2,6 @@ package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSGui;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeReader;
 import com.raoulvdberge.refinedstorage.tile.TileReader;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -33,7 +32,7 @@ public class BlockReader extends BlockCable {
         }
 
         if (!world.isRemote && tryOpenNetworkGui(RSGui.READER_WRITER, player, world, pos, side)) {
-            ((NetworkNodeReader) ((TileReader) world.getTileEntity(pos)).getNode()).onOpened(player);
+            ((TileReader) world.getTileEntity(pos)).getNode().onOpened(player);
         }
 
         return true;

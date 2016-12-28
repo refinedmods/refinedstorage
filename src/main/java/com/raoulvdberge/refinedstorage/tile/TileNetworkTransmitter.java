@@ -6,11 +6,13 @@ import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 
-public class TileNetworkTransmitter extends TileNode {
+import javax.annotation.Nonnull;
+
+public class TileNetworkTransmitter extends TileNode<NetworkNodeNetworkTransmitter> {
     public static final TileDataParameter<Integer> DISTANCE = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileNetworkTransmitter>() {
         @Override
         public Integer getValue(TileNetworkTransmitter tile) {
-            NetworkNodeNetworkTransmitter transmitter = (NetworkNodeNetworkTransmitter) tile.getNode();
+            NetworkNodeNetworkTransmitter transmitter = tile.getNode();
 
             return (transmitter.getReceiver() != null && transmitter.isSameDimension()) ? transmitter.getDistance() : -1;
         }
@@ -19,14 +21,14 @@ public class TileNetworkTransmitter extends TileNode {
     public static final TileDataParameter<Integer> RECEIVER_DIMENSION = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileNetworkTransmitter>() {
         @Override
         public Integer getValue(TileNetworkTransmitter tile) {
-            return ((NetworkNodeNetworkTransmitter) tile.getNode()).getReceiverDimension();
+            return tile.getNode().getReceiverDimension();
         }
     });
 
     public static final TileDataParameter<Boolean> RECEIVER_DIMENSION_SUPPORTED = new TileDataParameter<>(DataSerializers.BOOLEAN, false, new ITileDataProducer<Boolean, TileNetworkTransmitter>() {
         @Override
         public Boolean getValue(TileNetworkTransmitter tile) {
-            return ((NetworkNodeNetworkTransmitter) tile.getNode()).isDimensionSupported();
+            return tile.getNode().isDimensionSupported();
         }
     });
 
@@ -37,7 +39,8 @@ public class TileNetworkTransmitter extends TileNode {
     }
 
     @Override
-    public INetworkNode createNode() {
+    @Nonnull
+    public NetworkNodeNetworkTransmitter createNode() {
         return new NetworkNodeNetworkTransmitter(this);
     }
 }

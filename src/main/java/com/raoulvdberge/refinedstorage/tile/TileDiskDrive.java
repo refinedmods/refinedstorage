@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.tile;
 
-import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeDiskDrive;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageFluidNBT;
@@ -12,9 +11,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileDiskDrive extends TileNode {
+public class TileDiskDrive extends TileNode<NetworkNodeDiskDrive> {
     public static final TileDataParameter<Integer> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
@@ -47,7 +47,7 @@ public class TileDiskDrive extends TileNode {
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {
         super.writeUpdate(tag);
 
-        writeDiskState(tag, 8, getNode().getNetwork() != null, ((NetworkNodeDiskDrive) getNode()).getItemStorages(), ((NetworkNodeDiskDrive) getNode()).getFluidStorages());
+        writeDiskState(tag, 8, getNode().getNetwork() != null, getNode().getItemStorages(), getNode().getFluidStorages());
 
         return tag;
     }
@@ -112,14 +112,15 @@ public class TileDiskDrive extends TileNode {
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(((NetworkNodeDiskDrive) getNode()).getDisks());
+            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(getNode().getDisks());
         }
 
         return super.getCapability(capability, facing);
     }
 
     @Override
-    public INetworkNode createNode() {
+    @Nonnull
+    public NetworkNodeDiskDrive createNode() {
         return new NetworkNodeDiskDrive(this);
     }
 }

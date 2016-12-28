@@ -40,7 +40,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            if (network != null && !holder.world().isRemote) {
+            if (!holder.world().isRemote) {
                 rebuildPatterns();
             }
 

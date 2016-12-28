@@ -10,20 +10,20 @@ import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.datasync.DataSerializers;
 
-public class TileGrid extends TileNode {
+import javax.annotation.Nonnull;
+
+public class TileGrid extends TileNode<NetworkNodeGrid> {
     public static final TileDataParameter<Integer> VIEW_TYPE = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileGrid>() {
         @Override
         public Integer getValue(TileGrid tile) {
-            return ((NetworkNodeGrid) tile.getNode()).getViewType();
+            return tile.getNode().getViewType();
         }
     }, new ITileDataConsumer<Integer, TileGrid>() {
         @Override
         public void setValue(TileGrid tile, Integer value) {
             if (NetworkNodeGrid.isValidViewType(value)) {
-                NetworkNodeGrid grid = (NetworkNodeGrid) tile.getNode();
-
-                grid.setViewType(value);
-                grid.markDirty();
+                tile.getNode().setViewType(value);
+                tile.getNode().markDirty();
             }
         }
     }, parameter -> GuiGrid.markForSorting());
@@ -31,16 +31,14 @@ public class TileGrid extends TileNode {
     public static final TileDataParameter<Integer> SORTING_DIRECTION = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileGrid>() {
         @Override
         public Integer getValue(TileGrid tile) {
-            return ((NetworkNodeGrid) tile.getNode()).getSortingDirection();
+            return tile.getNode().getSortingDirection();
         }
     }, new ITileDataConsumer<Integer, TileGrid>() {
         @Override
         public void setValue(TileGrid tile, Integer value) {
             if (NetworkNodeGrid.isValidSortingDirection(value)) {
-                NetworkNodeGrid grid = (NetworkNodeGrid) tile.getNode();
-
-                grid.setSortingDirection(value);
-                grid.markDirty();
+                tile.getNode().setSortingDirection(value);
+                tile.getNode().markDirty();
             }
         }
     }, parameter -> GuiGrid.markForSorting());
@@ -48,16 +46,14 @@ public class TileGrid extends TileNode {
     public static final TileDataParameter<Integer> SORTING_TYPE = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileGrid>() {
         @Override
         public Integer getValue(TileGrid tile) {
-            return ((NetworkNodeGrid) tile.getNode()).getSortingType();
+            return tile.getNode().getSortingType();
         }
     }, new ITileDataConsumer<Integer, TileGrid>() {
         @Override
         public void setValue(TileGrid tile, Integer value) {
             if (NetworkNodeGrid.isValidSortingType(value)) {
-                NetworkNodeGrid grid = (NetworkNodeGrid) tile.getNode();
-
-                grid.setSortingType(value);
-                grid.markDirty();
+                tile.getNode().setSortingType(value);
+                tile.getNode().markDirty();
             }
         }
     }, parameter -> GuiGrid.markForSorting());
@@ -65,16 +61,14 @@ public class TileGrid extends TileNode {
     public static final TileDataParameter<Integer> SEARCH_BOX_MODE = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileGrid>() {
         @Override
         public Integer getValue(TileGrid tile) {
-            return ((NetworkNodeGrid) tile.getNode()).getSearchBoxMode();
+            return tile.getNode().getSearchBoxMode();
         }
     }, new ITileDataConsumer<Integer, TileGrid>() {
         @Override
         public void setValue(TileGrid tile, Integer value) {
             if (NetworkNodeGrid.isValidSearchBoxMode(value)) {
-                NetworkNodeGrid grid = (NetworkNodeGrid) tile.getNode();
-
-                grid.setSearchBoxMode(value);
-                grid.markDirty();
+                tile.getNode().setSearchBoxMode(value);
+                tile.getNode().markDirty();
             }
         }
     }, parameter -> {
@@ -86,15 +80,13 @@ public class TileGrid extends TileNode {
     public static final TileDataParameter<Integer> TAB_SELECTED = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileGrid>() {
         @Override
         public Integer getValue(TileGrid tile) {
-            return ((NetworkNodeGrid) tile.getNode()).getTabSelected();
+            return tile.getNode().getTabSelected();
         }
     }, new ITileDataConsumer<Integer, TileGrid>() {
         @Override
         public void setValue(TileGrid tile, Integer value) {
-            NetworkNodeGrid grid = (NetworkNodeGrid) tile.getNode();
-
-            grid.setTabSelected(value == grid.getTabSelected() ? -1 : value);
-            grid.markDirty();
+            tile.getNode().setTabSelected(value == tile.getNode().getTabSelected() ? -1 : value);
+            tile.getNode().markDirty();
         }
     }, parameter -> {
         if (Minecraft.getMinecraft().currentScreen instanceof GuiGrid) {
@@ -105,15 +97,13 @@ public class TileGrid extends TileNode {
     public static final TileDataParameter<Boolean> OREDICT_PATTERN = new TileDataParameter<>(DataSerializers.BOOLEAN, false, new ITileDataProducer<Boolean, TileGrid>() {
         @Override
         public Boolean getValue(TileGrid tile) {
-            return ((NetworkNodeGrid) tile.getNode()).isOredictPattern();
+            return tile.getNode().isOredictPattern();
         }
     }, new ITileDataConsumer<Boolean, TileGrid>() {
         @Override
         public void setValue(TileGrid tile, Boolean value) {
-            NetworkNodeGrid grid = (NetworkNodeGrid) tile.getNode();
-
-            grid.setOredictPattern(value);
-            grid.markDirty();
+            tile.getNode().setOredictPattern(value);
+            tile.getNode().markDirty();
         }
     }, parameter -> {
         if (Minecraft.getMinecraft().currentScreen instanceof GuiGrid) {
@@ -131,7 +121,8 @@ public class TileGrid extends TileNode {
     }
 
     @Override
-    public INetworkNode createNode() {
+    @Nonnull
+    public NetworkNodeGrid createNode() {
         return new NetworkNodeGrid(this);
     }
 }

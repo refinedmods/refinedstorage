@@ -4,9 +4,12 @@ import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
 
-public class TileCraftingMonitor extends TileNode {
+import javax.annotation.Nonnull;
+
+public class TileCraftingMonitor extends TileNode<NetworkNodeCraftingMonitor> {
     @Override
-    public INetworkNode createNode() {
+    @Nonnull
+    public NetworkNodeCraftingMonitor createNode() {
         return new NetworkNodeCraftingMonitor(this);
     }
 }

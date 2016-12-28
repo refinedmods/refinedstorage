@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.tile;
 
-import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeFluidStorage;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageFluidNBT;
@@ -9,7 +8,9 @@ import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 
-public class TileFluidStorage extends TileNode {
+import javax.annotation.Nonnull;
+
+public class TileFluidStorage extends TileNode<NetworkNodeFluidStorage> {
     public static final TileDataParameter<Integer> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Boolean> VOID_EXCESS = IExcessVoidable.createParameter();
@@ -18,7 +19,7 @@ public class TileFluidStorage extends TileNode {
     public static final TileDataParameter<Integer> STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileFluidStorage>() {
         @Override
         public Integer getValue(TileFluidStorage tile) {
-            return StorageFluidNBT.getStoredFromNBT(((NetworkNodeFluidStorage) tile.getNode()).getStorageTag());
+            return StorageFluidNBT.getStoredFromNBT(tile.getNode().getStorageTag());
         }
     });
 
@@ -32,7 +33,8 @@ public class TileFluidStorage extends TileNode {
     }
 
     @Override
-    public INetworkNode createNode() {
+    @Nonnull
+    public NetworkNodeFluidStorage createNode() {
         return new NetworkNodeFluidStorage(this);
     }
 }

@@ -20,13 +20,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodAware, IWrenchable {
-    protected boolean rebuildOnUpdateChange;
-    private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
     @Nullable
     protected INetworkMaster network;
-    private boolean couldUpdate;
-    protected int ticks;
     protected INetworkNodeHolder holder;
+    protected int ticks;
+
+    private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
+
+    private boolean couldUpdate;
 
     private boolean active;
 
@@ -40,6 +41,8 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
 
     public void setRedstoneMode(RedstoneMode redstoneMode) {
         this.redstoneMode = redstoneMode;
+
+        markDirty();
     }
 
     @Override
@@ -109,7 +112,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
             if (network != null) {
                 onConnectedStateChange(network, couldUpdate);
 
-                if (rebuildOnUpdateChange) {
+                if (shouldRebuildGraphOnChange()) {
                     network.getNodeGraph().rebuild();
                 }
             }
@@ -167,6 +170,10 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
 
     public IItemHandler getDrops() {
         return null;
+    }
+
+    public boolean shouldRebuildGraphOnChange() {
+        return false;
     }
 
     public boolean hasConnectivityState() {

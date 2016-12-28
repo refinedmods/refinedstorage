@@ -9,19 +9,20 @@ import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 
-public class TileConstructor extends TileNode {
+import javax.annotation.Nonnull;
+
+public class TileConstructor extends TileNode<NetworkNodeConstructor> {
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> TYPE = IType.createParameter();
     public static final TileDataParameter<Boolean> DROP = new TileDataParameter<>(DataSerializers.BOOLEAN, false, new ITileDataProducer<Boolean, TileConstructor>() {
         @Override
         public Boolean getValue(TileConstructor tile) {
-            return ((NetworkNodeConstructor) tile.getNode()).isDrop();
+            return tile.getNode().isDrop();
         }
     }, new ITileDataConsumer<Boolean, TileConstructor>() {
         @Override
         public void setValue(TileConstructor tile, Boolean value) {
-            ((NetworkNodeConstructor) tile.getNode()).setDrop(value);
-
+            tile.getNode().setDrop(value);
             tile.getNode().markDirty();
         }
     });
@@ -33,7 +34,8 @@ public class TileConstructor extends TileNode {
     }
 
     @Override
-    public INetworkNode createNode() {
+    @Nonnull
+    public NetworkNodeConstructor createNode() {
         return new NetworkNodeConstructor(this);
     }
 }

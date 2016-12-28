@@ -9,7 +9,9 @@ import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 
-public class TileStorage extends TileNode {
+import javax.annotation.Nonnull;
+
+public class TileStorage extends TileNode<NetworkNodeStorage> {
     public static final TileDataParameter<Integer> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
@@ -17,7 +19,7 @@ public class TileStorage extends TileNode {
     public static final TileDataParameter<Integer> STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileStorage>() {
         @Override
         public Integer getValue(TileStorage tile) {
-            return StorageItemNBT.getStoredFromNBT(((NetworkNodeStorage) tile.getNode()).getStorageTag());
+            return StorageItemNBT.getStoredFromNBT(tile.getNode().getStorageTag());
         }
     });
     public static final TileDataParameter<Boolean> VOID_EXCESS = IExcessVoidable.createParameter();
@@ -32,7 +34,8 @@ public class TileStorage extends TileNode {
     }
 
     @Override
-    public INetworkNode createNode() {
+    @Nonnull
+    public NetworkNodeStorage createNode() {
         return new NetworkNodeStorage(this);
     }
 }

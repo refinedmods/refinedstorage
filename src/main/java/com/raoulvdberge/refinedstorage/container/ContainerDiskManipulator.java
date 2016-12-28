@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.container;
 
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeDiskManipulator;
 import com.raoulvdberge.refinedstorage.container.slot.SlotFilterType;
 import com.raoulvdberge.refinedstorage.tile.TileDiskManipulator;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,19 +12,19 @@ public class ContainerDiskManipulator extends ContainerBase {
         super(manipulator, player);
 
         for (int i = 0; i < 4; ++i) {
-            addSlotToContainer(new SlotItemHandler(((NetworkNodeDiskManipulator) manipulator.getNode()).getUpgrades(), i, 187, 6 + (i * 18)));
+            addSlotToContainer(new SlotItemHandler(manipulator.getNode().getUpgrades(), i, 187, 6 + (i * 18)));
         }
 
         for (int i = 0; i < 3; ++i) {
-            addSlotToContainer(new SlotItemHandler(((NetworkNodeDiskManipulator) manipulator.getNode()).getInputDisks(), i, 44, 57 + (i * 18)));
+            addSlotToContainer(new SlotItemHandler(manipulator.getNode().getInputDisks(), i, 44, 57 + (i * 18)));
         }
 
         for (int i = 0; i < 3; ++i) {
-            addSlotToContainer(new SlotItemHandler(((NetworkNodeDiskManipulator) manipulator.getNode()).getOutputDisks(), i, 116, 57 + (i * 18)));
+            addSlotToContainer(new SlotItemHandler(manipulator.getNode().getOutputDisks(), i, 116, 57 + (i * 18)));
         }
 
         for (int i = 0; i < 9; ++i) {
-            addSlotToContainer(new SlotFilterType((NetworkNodeDiskManipulator) manipulator.getNode(), i, 8 + (18 * i), 20));
+            addSlotToContainer(new SlotFilterType(manipulator.getNode(), i, 8 + (18 * i), 20));
         }
 
         addPlayerInventory(8, 129);

@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.tile;
 
-import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeFluidInterface;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
@@ -11,22 +10,23 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileFluidInterface extends TileNode {
+public class TileFluidInterface extends TileNode<NetworkNodeFluidInterface> {
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
 
     public static final TileDataParameter<FluidStack> TANK_IN = new TileDataParameter<>(RSSerializers.FLUID_STACK_SERIALIZER, null, new ITileDataProducer<FluidStack, TileFluidInterface>() {
         @Override
         public FluidStack getValue(TileFluidInterface tile) {
-            return ((NetworkNodeFluidInterface) tile.getNode()).getTankIn().getFluid();
+            return tile.getNode().getTankIn().getFluid();
         }
     });
 
     public static final TileDataParameter<FluidStack> TANK_OUT = new TileDataParameter<>(RSSerializers.FLUID_STACK_SERIALIZER, null, new ITileDataProducer<FluidStack, TileFluidInterface>() {
         @Override
         public FluidStack getValue(TileFluidInterface tile) {
-            return ((NetworkNodeFluidInterface) tile.getNode()).getTankOut().getFluid();
+            return tile.getNode().getTankOut().getFluid();
         }
     });
 
@@ -44,14 +44,15 @@ public class TileFluidInterface extends TileNode {
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(facing == EnumFacing.DOWN ? ((NetworkNodeFluidInterface) getNode()).getTankOut() : ((NetworkNodeFluidInterface) getNode()).getTankIn());
+            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(facing == EnumFacing.DOWN ? getNode().getTankOut() : getNode().getTankIn());
         }
 
         return super.getCapability(capability, facing);
     }
 
     @Override
-    public INetworkNode createNode() {
+    @Nonnull
+    public NetworkNodeFluidInterface createNode() {
         return new NetworkNodeFluidInterface(this);
     }
 }

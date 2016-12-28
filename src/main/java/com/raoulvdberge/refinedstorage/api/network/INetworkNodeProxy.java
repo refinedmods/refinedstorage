@@ -1,7 +1,8 @@
 package com.raoulvdberge.refinedstorage.api.network;
 
-public interface INetworkNodeProxy {
-    INetworkNode getNode();
+import javax.annotation.Nonnull;
 
-    INetworkNode createNode();
+public interface INetworkNodeProxy<T extends INetworkNode> {
+    @Nonnull
+    T getNode();
 }

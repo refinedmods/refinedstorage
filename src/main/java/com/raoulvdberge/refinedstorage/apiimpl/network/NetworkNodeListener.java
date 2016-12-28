@@ -49,8 +49,6 @@ public class NetworkNodeListener {
                     RSUtils.sendNoPermissionMessage(e.getPlayer());
 
                     e.setCanceled(true);
-
-                    return;
                 }
             }
         }

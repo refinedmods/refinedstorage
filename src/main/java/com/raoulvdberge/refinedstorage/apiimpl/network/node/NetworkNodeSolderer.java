@@ -62,6 +62,8 @@ public class NetworkNodeSolderer extends NetworkNode {
 
     @Override
     public void update() {
+        super.update();
+
         if (network == null) {
             return;
         }

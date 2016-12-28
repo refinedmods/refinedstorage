@@ -45,7 +45,7 @@ public class MessageGridCraftingClear extends MessageHandlerPlayerToServer<Messa
         TileEntity tile = player.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
 
         if (tile instanceof TileGrid) {
-            NetworkNodeGrid grid = (NetworkNodeGrid) ((TileGrid) tile).getNode();
+            NetworkNodeGrid grid = ((TileGrid) tile).getNode();
 
             if (grid.getNetwork() != null) {
                 if (grid.getType() == EnumGridType.CRAFTING && grid.getNetwork().getSecurityManager().hasPermission(Permission.INSERT, player)) {

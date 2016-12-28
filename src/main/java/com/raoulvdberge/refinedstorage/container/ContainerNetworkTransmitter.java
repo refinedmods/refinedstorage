@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.container;
 
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeNetworkTransmitter;
 import com.raoulvdberge.refinedstorage.tile.TileNetworkTransmitter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
@@ -11,9 +10,9 @@ public class ContainerNetworkTransmitter extends ContainerBase {
     public ContainerNetworkTransmitter(TileNetworkTransmitter networkTransmitter, EntityPlayer player) {
         super(networkTransmitter, player);
 
-        addSlotToContainer(new SlotItemHandler(((NetworkNodeNetworkTransmitter) networkTransmitter.getNode()).getNetworkCard(), 0, 8, 20));
+        addSlotToContainer(new SlotItemHandler(networkTransmitter.getNode().getNetworkCard(), 0, 8, 20));
 
-        addSlotToContainer(new SlotItemHandler(((NetworkNodeNetworkTransmitter) networkTransmitter.getNode()).getUpgrades(), 0, 187, 6));
+        addSlotToContainer(new SlotItemHandler(networkTransmitter.getNode().getUpgrades(), 0, 187, 6));
 
         addPlayerInventory(8, 55);
     }

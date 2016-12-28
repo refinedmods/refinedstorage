@@ -1,11 +1,13 @@
 package com.raoulvdberge.refinedstorage.tile;
 
-import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeNetworkReceiver;
 
-public class TileNetworkReceiver extends TileNode {
+import javax.annotation.Nonnull;
+
+public class TileNetworkReceiver extends TileNode<NetworkNodeNetworkReceiver> {
     @Override
-    public INetworkNode createNode() {
+    @Nonnull
+    public NetworkNodeNetworkReceiver createNode() {
         return new NetworkNodeNetworkReceiver(this);
     }
 }

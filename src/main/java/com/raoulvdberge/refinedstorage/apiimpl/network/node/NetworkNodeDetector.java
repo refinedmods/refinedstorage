@@ -57,6 +57,8 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
 
     @Override
     public void update() {
+        super.update();
+
         if (powered != wasPowered) {
             wasPowered = powered;
 
@@ -126,6 +128,10 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
 
     public boolean isPowered() {
         return powered;
+    }
+
+    public void setPowered(boolean powered) {
+        this.powered = powered;
     }
 
     private boolean isPowered(Integer size) {

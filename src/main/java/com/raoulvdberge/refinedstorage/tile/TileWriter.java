@@ -9,9 +9,10 @@ import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileWriter extends TileNode {
+public class TileWriter extends TileNode<NetworkNodeWriter> {
     public static final TileDataParameter<String> CHANNEL = TileReader.createChannelParameter();
 
     public TileWriter() {
@@ -24,7 +25,7 @@ public class TileWriter extends TileNode {
             return true;
         }
 
-        IWriter writer = (NetworkNodeWriter) getNode();
+        IWriter writer = getNode();
 
         if (facing != getDirection() || writer.getNetwork() == null) {
             return false;
@@ -50,7 +51,7 @@ public class TileWriter extends TileNode {
         T foundCapability = super.getCapability(capability, facing);
 
         if (foundCapability == null) {
-            IWriter writer = (NetworkNodeWriter) getNode();
+            IWriter writer = getNode();
 
             if (facing != getDirection() || writer.getNetwork() == null) {
                 return null;
@@ -75,7 +76,8 @@ public class TileWriter extends TileNode {
     }
 
     @Override
-    public INetworkNode createNode() {
+    @Nonnull
+    public NetworkNodeWriter createNode() {
         return new NetworkNodeWriter(this);
     }
 }

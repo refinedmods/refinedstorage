@@ -170,11 +170,7 @@ public abstract class BlockBase extends Block {
             INetworkNode node = nodeProxy.getNode();
 
             if (node.getNetwork() != null) {
-                if (!(entity instanceof EntityPlayer)) {
-                    return false;
-                }
-
-                return node.getNetwork().getSecurityManager().hasPermission(Permission.BUILD, (EntityPlayer) entity);
+                return entity instanceof EntityPlayer && node.getNetwork().getSecurityManager().hasPermission(Permission.BUILD, (EntityPlayer) entity);
             }
         }
 

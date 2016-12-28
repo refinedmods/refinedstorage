@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.tile;
 
-import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeDiskManipulator;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
@@ -14,9 +13,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileDiskManipulator extends TileNode {
+public class TileDiskManipulator extends TileNode<NetworkNodeDiskManipulator> {
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
     public static final TileDataParameter<Integer> TYPE = IType.createParameter();
@@ -24,12 +24,12 @@ public class TileDiskManipulator extends TileNode {
     public static final TileDataParameter<Integer> IO_MODE = new TileDataParameter<>(DataSerializers.VARINT, NetworkNodeDiskManipulator.IO_MODE_INSERT, new ITileDataProducer<Integer, TileDiskManipulator>() {
         @Override
         public Integer getValue(TileDiskManipulator tile) {
-            return ((NetworkNodeDiskManipulator) tile.getNode()).getIoMode();
+            return tile.getNode().getIoMode();
         }
     }, new ITileDataConsumer<Integer, TileDiskManipulator>() {
         @Override
         public void setValue(TileDiskManipulator tile, Integer value) {
-            ((NetworkNodeDiskManipulator) tile.getNode()).setIoMode(value);
+            tile.getNode().setIoMode(value);
             tile.getNode().markDirty();
         }
     });
@@ -49,7 +49,7 @@ public class TileDiskManipulator extends TileNode {
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {
         super.writeUpdate(tag);
 
-        TileDiskDrive.writeDiskState(tag, 6, getNode().getNetwork() != null, ((NetworkNodeDiskManipulator) getNode()).getItemStorages(), ((NetworkNodeDiskManipulator) getNode()).getFluidStorages());
+        TileDiskDrive.writeDiskState(tag, 6, getNode().getNetwork() != null, getNode().getItemStorages(), getNode().getFluidStorages());
 
         return tag;
     }
@@ -68,7 +68,7 @@ public class TileDiskManipulator extends TileNode {
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(facing == EnumFacing.DOWN ? ((NetworkNodeDiskManipulator) getNode()).getOutputDisks() : ((NetworkNodeDiskManipulator) getNode()).getInputDisks());
+            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(facing == EnumFacing.DOWN ? getNode().getOutputDisks() : getNode().getInputDisks());
         }
 
         return super.getCapability(capability, facing);
@@ -80,7 +80,8 @@ public class TileDiskManipulator extends TileNode {
     }
 
     @Override
-    public INetworkNode createNode() {
+    @Nonnull
+    public NetworkNodeDiskManipulator createNode() {
         return new NetworkNodeDiskManipulator(this);
     }
 }

@@ -51,7 +51,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
                     INetworkNodeProxy otherNodeProxy = NETWORK_NODE_PROXY_CAPABILITY.cast(tile.getCapability(NETWORK_NODE_PROXY_CAPABILITY, side));
                     INetworkNode otherNode = otherNodeProxy.getNode();
 
-                    if (otherNode != null && newNodes.add(otherNode)) {
+                    if (newNodes.add(otherNode)) {
                         toCheck.add(new NodeToCheck(otherNode, world, pos, side, tile));
                     }
                 }
@@ -163,6 +163,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
                     if (checkSide != side) { // Avoid going backward
                         INetworkNodeProxy nodeOnSideProxy = NETWORK_NODE_PROXY_CAPABILITY.cast(tile.getCapability(NETWORK_NODE_PROXY_CAPABILITY, checkSide));
                         INetworkNode nodeOnSide = nodeOnSideProxy.getNode();
+
                         if (nodeOnSide == node) {
                             operator.apply(world, pos.offset(checkSide), checkSide.getOpposite());
                         }

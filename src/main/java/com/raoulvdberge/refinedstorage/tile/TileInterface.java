@@ -8,9 +8,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileInterface extends TileNode {
+public class TileInterface extends TileNode<NetworkNodeInterface> {
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
 
     public TileInterface() {
@@ -20,7 +21,7 @@ public class TileInterface extends TileNode {
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(((NetworkNodeInterface) getNode()).getItems());
+            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(getNode().getItems());
         }
 
         return super.getCapability(capability, facing);
@@ -32,7 +33,8 @@ public class TileInterface extends TileNode {
     }
 
     @Override
-    public INetworkNode createNode() {
+    @Nonnull
+    public NetworkNodeInterface createNode() {
         return new NetworkNodeInterface(this);
     }
 }

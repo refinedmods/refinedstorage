@@ -72,6 +72,8 @@ public class NetworkNodeFluidInterface extends NetworkNode implements IComparabl
 
     @Override
     public void update() {
+        super.update();
+
         ItemStack container = in.getStackInSlot(0);
 
         if (!container.isEmpty()) {

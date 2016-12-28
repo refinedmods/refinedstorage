@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.network;
 
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeSecurityManager;
 import com.raoulvdberge.refinedstorage.tile.TileSecurityManager;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -61,7 +60,7 @@ public class MessageSecurityManagerUpdate extends MessageHandlerPlayerToServer<M
         TileEntity tile = player.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
 
         if (tile instanceof TileSecurityManager) {
-            ((NetworkNodeSecurityManager) ((TileSecurityManager) tile).getNode()).updatePermission(message.permission, message.state);
+            ((TileSecurityManager) tile).getNode().updatePermission(message.permission, message.state);
         }
     }
 

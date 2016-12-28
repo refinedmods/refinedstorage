@@ -59,12 +59,6 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
 
     public NetworkNodeNetworkTransmitter(INetworkNodeHolder holder) {
         super(holder);
-
-        rebuildOnUpdateChange = true;
-    }
-
-    public boolean canTransmit() {
-        return canUpdate() && receiver != null && isDimensionSupported();
     }
 
     @Override
@@ -136,8 +130,17 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
         return isSameDimension() || upgrades.hasUpgrade(ItemUpgrade.TYPE_INTERDIMENSIONAL);
     }
 
+    private boolean canTransmit() {
+        return canUpdate() && receiver != null && isDimensionSupported();
+    }
+
     @Override
     public boolean hasConnectivityState() {
+        return true;
+    }
+
+    @Override
+    public boolean shouldRebuildGraphOnChange() {
         return true;
     }
 

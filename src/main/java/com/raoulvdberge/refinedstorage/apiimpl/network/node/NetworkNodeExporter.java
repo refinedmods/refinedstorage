@@ -54,9 +54,11 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
 
     @Override
     public void update() {
+        super.update();
+
         if (network != null && ticks % upgrades.getSpeed() == 0) {
             if (type == IType.ITEMS) {
-                IItemHandler handler = RSUtils.getItemHandler(holder.world().getTileEntity(holder.pos().offset(holder.getDirection())), holder.getDirection().getOpposite());
+                IItemHandler handler = RSUtils.getItemHandler(getFacingTile(), holder.getDirection().getOpposite());
 
                 if (handler != null) {
                     for (int i = 0; i < itemFilters.getSlots(); ++i) {
@@ -130,7 +132,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
                     }
                 }
             } else if (type == IType.FLUIDS) {
-                IFluidHandler handler = RSUtils.getFluidHandler(holder.world().getTileEntity(holder.pos().offset(holder.getDirection())), holder.getDirection().getOpposite());
+                IFluidHandler handler = RSUtils.getFluidHandler(getFacingTile(), holder.getDirection().getOpposite());
 
                 if (handler != null) {
                     for (FluidStack stack : fluidFilters.getFluids()) {

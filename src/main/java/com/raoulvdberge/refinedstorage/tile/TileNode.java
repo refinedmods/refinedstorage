@@ -17,9 +17,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.IItemHandler;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class TileNode extends TileBase implements INetworkNodeProxy, INetworkNodeHolder, IRedstoneConfigurable {
+public abstract class TileNode<T extends NetworkNode> extends TileBase implements INetworkNodeProxy<T>, INetworkNodeHolder, IRedstoneConfigurable {
     public static final TileDataParameter<Integer> REDSTONE_MODE = RedstoneMode.createParameter();
 
     private NBTTagCompound legacyTagToRead;
@@ -34,6 +35,7 @@ public abstract class TileNode extends TileBase implements INetworkNodeProxy, IN
         if (!getWorld().isRemote) {
             if (legacyTagToRead != null) {
                 getNode().read(legacyTagToRead);
+                getNode().markDirty();
 
                 legacyTagToRead = null;
             }
@@ -80,12 +82,12 @@ public abstract class TileNode extends TileBase implements INetworkNodeProxy, IN
 
     @Override
     public RedstoneMode getRedstoneMode() {
-        return ((NetworkNode) getNode()).getRedstoneMode();
+        return getNode().getRedstoneMode();
     }
 
     @Override
     public void setRedstoneMode(RedstoneMode mode) {
-        ((NetworkNode) getNode()).setRedstoneMode(mode);
+        getNode().setRedstoneMode(mode);
     }
 
     @Override
@@ -107,17 +109,19 @@ public abstract class TileNode extends TileBase implements INetworkNodeProxy, IN
     }
 
     public void readUpdate(NBTTagCompound tag) {
-        ((NetworkNode) getNode()).setActive(tag.getBoolean(NBT_ACTIVE));
+        getNode().setActive(tag.getBoolean(NBT_ACTIVE));
 
         super.readUpdate(tag);
     }
 
     public IItemHandler getDrops() {
-        return ((NetworkNode) getNode()).getDrops();
+        return getNode().getDrops();
     }
 
     @Override
-    public INetworkNode getNode() {
+    @Nonnull
+    @SuppressWarnings("unchecked")
+    public T getNode() {
         INetworkNodeProvider provider = API.instance().getNetworkNodeProvider(getWorld().provider.getDimension());
 
         INetworkNode node = provider.getNode(pos);
@@ -126,8 +130,10 @@ public abstract class TileNode extends TileBase implements INetworkNodeProxy, IN
             provider.setNode(pos, node = createNode());
         }
 
-        return node;
+        return (T) node;
     }
+
+    public abstract T createNode();
 
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing side) {

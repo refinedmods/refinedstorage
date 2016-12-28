@@ -14,8 +14,6 @@ public class NetworkNodeRelay extends NetworkNode {
         super(holder);
 
         setRedstoneMode(RedstoneMode.LOW);
-
-        rebuildOnUpdateChange = true;
     }
 
     @Override
@@ -35,6 +33,11 @@ public class NetworkNodeRelay extends NetworkNode {
 
     @Override
     public boolean hasConnectivityState() {
+        return true;
+    }
+
+    @Override
+    public boolean shouldRebuildGraphOnChange() {
         return true;
     }
 }

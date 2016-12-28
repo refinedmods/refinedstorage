@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.tile;
 
-import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReader;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
@@ -15,9 +14,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileReader extends TileNode {
+public class TileReader extends TileNode<NetworkNodeReader> {
     static <T extends TileEntity & IReaderWriter> TileDataParameter<String> createChannelParameter() {
         return new TileDataParameter<>(DataSerializers.STRING, "", new ITileDataProducer<String, T>() {
             @Override
@@ -50,7 +50,7 @@ public class TileReader extends TileNode {
             return true;
         }
 
-        IReader reader = (IReader) getNode();
+        IReader reader = getNode();
 
         if (facing != getDirection() || reader.getNetwork() == null) {
             return false;
@@ -76,7 +76,7 @@ public class TileReader extends TileNode {
         T foundCapability = super.getCapability(capability, facing);
 
         if (foundCapability == null) {
-            IReader reader = (IReader) getNode();
+            IReader reader = getNode();
 
             if (facing != getDirection() || reader.getNetwork() == null) {
                 return null;
@@ -101,7 +101,8 @@ public class TileReader extends TileNode {
     }
 
     @Override
-    public INetworkNode createNode() {
+    @Nonnull
+    public NetworkNodeReader createNode() {
         return new NetworkNodeReader(this);
     }
 }

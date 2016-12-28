@@ -13,11 +13,11 @@ public class ContainerDestructor extends ContainerBase {
         super(destructor, player);
 
         for (int i = 0; i < 4; ++i) {
-            addSlotToContainer(new SlotItemHandler(((NetworkNodeDestructor) destructor.getNode()).getUpgrades(), i, 187, 6 + (i * 18)));
+            addSlotToContainer(new SlotItemHandler(destructor.getNode().getUpgrades(), i, 187, 6 + (i * 18)));
         }
 
         for (int i = 0; i < 9; ++i) {
-            addSlotToContainer(new SlotFilterType((NetworkNodeDestructor) destructor.getNode(), i, 8 + (18 * i), 20));
+            addSlotToContainer(new SlotFilterType(destructor.getNode(), i, 8 + (18 * i), 20));
         }
 
         addPlayerInventory(8, 55);

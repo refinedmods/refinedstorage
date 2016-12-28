@@ -34,7 +34,7 @@ public class BlockDetector extends BlockNode {
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
         return super.getActualState(state, world, pos)
-            .withProperty(POWERED, ((TileDetector) world.getTileEntity(pos)).isPowered());
+                .withProperty(POWERED, ((TileDetector) world.getTileEntity(pos)).getNode().isPowered());
     }
 
     @Override
@@ -51,7 +51,7 @@ public class BlockDetector extends BlockNode {
     @Override
     @SuppressWarnings("deprecation")
     public int getWeakPower(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
-        return ((TileDetector) world.getTileEntity(pos)).isPowered() ? 15 : 0;
+        return ((TileDetector) world.getTileEntity(pos)).getNode().isPowered() ? 15 : 0;
     }
 
     @Override

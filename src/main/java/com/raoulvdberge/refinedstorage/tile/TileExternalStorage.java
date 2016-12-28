@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.tile;
 
-import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage.NetworkNodeExternalStorage;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage.StorageFluidExternal;
@@ -10,7 +9,9 @@ import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 
-public class TileExternalStorage extends TileNode {
+import javax.annotation.Nonnull;
+
+public class TileExternalStorage extends TileNode<NetworkNodeExternalStorage> {
     public static final TileDataParameter<Integer> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
@@ -22,11 +23,11 @@ public class TileExternalStorage extends TileNode {
         public Integer getValue(TileExternalStorage tile) {
             int stored = 0;
 
-            for (StorageItemExternal storage : ((NetworkNodeExternalStorage) tile.getNode()).getItemStorages()) {
+            for (StorageItemExternal storage : tile.getNode().getItemStorages()) {
                 stored += storage.getStored();
             }
 
-            for (StorageFluidExternal storage : ((NetworkNodeExternalStorage) tile.getNode()).getFluidStorages()) {
+            for (StorageFluidExternal storage : tile.getNode().getFluidStorages()) {
                 stored += storage.getStored();
             }
 
@@ -39,11 +40,11 @@ public class TileExternalStorage extends TileNode {
         public Integer getValue(TileExternalStorage tile) {
             int capacity = 0;
 
-            for (StorageItemExternal storage : ((NetworkNodeExternalStorage) tile.getNode()).getItemStorages()) {
+            for (StorageItemExternal storage : tile.getNode().getItemStorages()) {
                 capacity += storage.getCapacity();
             }
 
-            for (StorageFluidExternal storage : ((NetworkNodeExternalStorage) tile.getNode()).getFluidStorages()) {
+            for (StorageFluidExternal storage : tile.getNode().getFluidStorages()) {
                 capacity += storage.getCapacity();
             }
 
@@ -62,7 +63,8 @@ public class TileExternalStorage extends TileNode {
     }
 
     @Override
-    public INetworkNode createNode() {
+    @Nonnull
+    public NetworkNodeExternalStorage createNode() {
         return new NetworkNodeExternalStorage(this);
     }
 }

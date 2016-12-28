@@ -12,7 +12,7 @@ public class ContainerWirelessTransmitter extends ContainerBase {
         super(wirelessTransmitter, player);
 
         for (int i = 0; i < 4; ++i) {
-            addSlotToContainer(new SlotItemHandler(((NetworkNodeWirelessTransmitter) wirelessTransmitter.getNode()).getUpgrades(), i, 187, 6 + (i * 18)));
+            addSlotToContainer(new SlotItemHandler(wirelessTransmitter.getNode().getUpgrades(), i, 187, 6 + (i * 18)));
         }
 
         addPlayerInventory(8, 55);

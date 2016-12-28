@@ -52,7 +52,7 @@ public abstract class BlockNode extends BlockBase {
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
         if (hasConnectivityState()) {
-            return super.getActualState(state, world, pos).withProperty(CONNECTED, ((NetworkNode) ((TileNode) world.getTileEntity(pos)).getNode()).isActive());
+            return super.getActualState(state, world, pos).withProperty(CONNECTED, ((TileNode) world.getTileEntity(pos)).getNode().isActive());
         }
 
         return super.getActualState(state, world, pos);

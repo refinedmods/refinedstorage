@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.container;
 
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeDiskDrive;
 import com.raoulvdberge.refinedstorage.container.slot.SlotFilterType;
 import com.raoulvdberge.refinedstorage.tile.TileDiskDrive;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,11 +15,11 @@ public class ContainerDiskDrive extends ContainerBase {
         int y = 54;
 
         for (int i = 0; i < 8; ++i) {
-            addSlotToContainer(new SlotItemHandler(((NetworkNodeDiskDrive) drive.getNode()).getDisks(), i, x + ((i % 2) * 18), y + Math.floorDiv(i, 2) * 18));
+            addSlotToContainer(new SlotItemHandler(drive.getNode().getDisks(), i, x + ((i % 2) * 18), y + Math.floorDiv(i, 2) * 18));
         }
 
         for (int i = 0; i < 9; ++i) {
-            addSlotToContainer(new SlotFilterType((NetworkNodeDiskDrive) drive.getNode(), i, 8 + (18 * i), 20));
+            addSlotToContainer(new SlotFilterType(drive.getNode(), i, 8 + (18 * i), 20));
         }
 
         addPlayerInventory(8, 141);
