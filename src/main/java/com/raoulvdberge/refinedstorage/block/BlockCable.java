@@ -64,11 +64,11 @@ public class BlockCable extends BlockNode {
         BlockStateContainer.Builder builder = super.createBlockStateBuilder();
 
         builder.add(NORTH)
-                .add(EAST)
-                .add(SOUTH)
-                .add(WEST)
-                .add(UP)
-                .add(DOWN);
+            .add(EAST)
+            .add(SOUTH)
+            .add(WEST)
+            .add(UP)
+            .add(DOWN);
 
         if (getPlacementType() != null) {
             builder.add(DIRECTION);
@@ -81,12 +81,12 @@ public class BlockCable extends BlockNode {
     @SuppressWarnings("deprecation")
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
         return super.getActualState(state, world, pos)
-                .withProperty(NORTH, hasConnectionWith(world, pos, EnumFacing.NORTH))
-                .withProperty(EAST, hasConnectionWith(world, pos, EnumFacing.EAST))
-                .withProperty(SOUTH, hasConnectionWith(world, pos, EnumFacing.SOUTH))
-                .withProperty(WEST, hasConnectionWith(world, pos, EnumFacing.WEST))
-                .withProperty(UP, hasConnectionWith(world, pos, EnumFacing.UP))
-                .withProperty(DOWN, hasConnectionWith(world, pos, EnumFacing.DOWN));
+            .withProperty(NORTH, hasConnectionWith(world, pos, EnumFacing.NORTH))
+            .withProperty(EAST, hasConnectionWith(world, pos, EnumFacing.EAST))
+            .withProperty(SOUTH, hasConnectionWith(world, pos, EnumFacing.SOUTH))
+            .withProperty(WEST, hasConnectionWith(world, pos, EnumFacing.WEST))
+            .withProperty(UP, hasConnectionWith(world, pos, EnumFacing.UP))
+            .withProperty(DOWN, hasConnectionWith(world, pos, EnumFacing.DOWN));
     }
 
     private boolean hasConnectionWith(IBlockAccess world, BlockPos pos, EnumFacing direction) {
@@ -104,12 +104,12 @@ public class BlockCable extends BlockNode {
         state = getActualState(state, world, pos);
 
         return isInAABB(CORE_AABB, hitX, hitY, hitZ) ||
-                (state.getValue(NORTH) && isInAABB(NORTH_AABB, hitX, hitY, hitZ)) ||
-                (state.getValue(EAST) && isInAABB(EAST_AABB, hitX, hitY, hitZ)) ||
-                (state.getValue(SOUTH) && isInAABB(SOUTH_AABB, hitX, hitY, hitZ)) ||
-                (state.getValue(WEST) && isInAABB(WEST_AABB, hitX, hitY, hitZ)) ||
-                (state.getValue(UP) && isInAABB(UP_AABB, hitX, hitY, hitZ)) ||
-                (state.getValue(DOWN) && isInAABB(DOWN_AABB, hitX, hitY, hitZ));
+            (state.getValue(NORTH) && isInAABB(NORTH_AABB, hitX, hitY, hitZ)) ||
+            (state.getValue(EAST) && isInAABB(EAST_AABB, hitX, hitY, hitZ)) ||
+            (state.getValue(SOUTH) && isInAABB(SOUTH_AABB, hitX, hitY, hitZ)) ||
+            (state.getValue(WEST) && isInAABB(WEST_AABB, hitX, hitY, hitZ)) ||
+            (state.getValue(UP) && isInAABB(UP_AABB, hitX, hitY, hitZ)) ||
+            (state.getValue(DOWN) && isInAABB(DOWN_AABB, hitX, hitY, hitZ));
     }
 
     public List<AxisAlignedBB> getUnionizedCollisionBoxes(IBlockState state) {
