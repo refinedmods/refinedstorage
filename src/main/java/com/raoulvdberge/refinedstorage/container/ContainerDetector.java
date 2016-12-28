@@ -23,6 +23,6 @@ public class ContainerDetector extends ContainerBase {
             return mergeItemStackToFilters(slot.getStack(), 0, 1);
         }
 
-        return null;
+        return ItemStack.EMPTY;
     }
 }

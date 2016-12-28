@@ -128,6 +128,8 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
 
     @Override
     public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+        redstoneMode.write(tag);
+
         return tag;
     }
 
@@ -138,6 +140,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
 
     @Override
     public void readConfiguration(NBTTagCompound tag) {
+        redstoneMode = RedstoneMode.read(tag);
     }
 
     @Nullable

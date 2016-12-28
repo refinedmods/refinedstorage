@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeHolder;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeProvider;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeProxy;
+import com.raoulvdberge.refinedstorage.api.util.IWrenchable;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNodeProxy;
@@ -20,7 +21,7 @@ import net.minecraftforge.items.IItemHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class TileNode<N extends NetworkNode> extends TileBase implements INetworkNodeProxy<N>, INetworkNodeHolder, IRedstoneConfigurable {
+public abstract class TileNode<N extends NetworkNode> extends TileBase implements INetworkNodeProxy<N>, INetworkNodeHolder, IRedstoneConfigurable, IWrenchable {
     public static final TileDataParameter<Integer> REDSTONE_MODE = RedstoneMode.createParameter();
 
     private NBTTagCompound legacyTagToRead;
@@ -88,6 +89,16 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
     @Override
     public void setRedstoneMode(RedstoneMode mode) {
         getNode().setRedstoneMode(mode);
+    }
+
+    @Override
+    public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+        return getNode().writeConfiguration(tag);
+    }
+
+    @Override
+    public void readConfiguration(NBTTagCompound tag) {
+        getNode().readConfiguration(tag);
     }
 
     @Override
