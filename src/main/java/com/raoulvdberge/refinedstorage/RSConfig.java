@@ -56,7 +56,7 @@ public final class RSConfig {
     //endregion
 
     //region Grid
-    public int maxRows;
+    public int maxRowsStretch;
     public boolean largeFont;
     //endregion
 
@@ -169,7 +169,7 @@ public final class RSConfig {
         //endregion
 
         //region Grid
-        maxRows = config.getInt("maxRows", GRID, Integer.MAX_VALUE, 3, Integer.MAX_VALUE, "The maximum amount of rows that the Grid can show");
+        maxRowsStretch = config.getInt("maxRowsStretch", GRID, Integer.MAX_VALUE, 3, Integer.MAX_VALUE, "The maximum amount of rows that the Grid can show when stretched");
         largeFont = config.getBoolean("largeFont", GRID, false, "Whether the controller should use a large font for stack quantity display");
         //endregion
 

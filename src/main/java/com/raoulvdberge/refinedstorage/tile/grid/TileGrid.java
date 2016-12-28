@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.tile.grid;
 
-import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
@@ -77,6 +76,25 @@ public class TileGrid extends TileNode<NetworkNodeGrid> {
         }
     });
 
+    public static final TileDataParameter<Integer> SIZE = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileGrid>() {
+        @Override
+        public Integer getValue(TileGrid tile) {
+            return tile.getNode().getSize();
+        }
+    }, new ITileDataConsumer<Integer, TileGrid>() {
+        @Override
+        public void setValue(TileGrid tile, Integer value) {
+            if (NetworkNodeGrid.isValidSize(value)) {
+                tile.getNode().setSize(value);
+                tile.getNode().markDirty();
+            }
+        }
+    }, parameter -> {
+        if (Minecraft.getMinecraft().currentScreen != null) {
+            Minecraft.getMinecraft().currentScreen.initGui();
+        }
+    });
+
     public static final TileDataParameter<Integer> TAB_SELECTED = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileGrid>() {
         @Override
         public Integer getValue(TileGrid tile) {
@@ -118,6 +136,7 @@ public class TileGrid extends TileNode<NetworkNodeGrid> {
         dataManager.addWatchedParameter(SEARCH_BOX_MODE);
         dataManager.addWatchedParameter(TAB_SELECTED);
         dataManager.addWatchedParameter(OREDICT_PATTERN);
+        dataManager.addWatchedParameter(SIZE);
     }
 
     @Override

@@ -12,6 +12,7 @@ import com.raoulvdberge.refinedstorage.inventory.ItemHandlerGridFilterInGrid;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessGrid;
 import com.raoulvdberge.refinedstorage.network.MessageWirelessGridSettingsUpdate;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.InventoryCrafting;
@@ -37,6 +38,7 @@ public class WirelessGrid implements IGrid {
     private int sortingDirection;
     private int searchBoxMode;
     private int tabSelected;
+    private int size;
 
     private List<GridFilter> filteredItems = new ArrayList<>();
     private List<GridTab> tabs = new ArrayList<>();
@@ -64,6 +66,7 @@ public class WirelessGrid implements IGrid {
         this.sortingDirection = ItemWirelessGrid.getSortingDirection(stack);
         this.searchBoxMode = ItemWirelessGrid.getSearchBoxMode(stack);
         this.tabSelected = ItemWirelessGrid.getTabSelected(stack);
+        this.size = ItemWirelessGrid.getSize(stack);
 
         if (stack.hasTagCompound()) {
             for (int i = 0; i < 4; ++i) {
@@ -126,8 +129,13 @@ public class WirelessGrid implements IGrid {
     }
 
     @Override
+    public int getSize() {
+        return size;
+    }
+
+    @Override
     public void onViewTypeChanged(int type) {
-        RS.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(type, getSortingDirection(), getSortingType(), getSearchBoxMode(), tabSelected));
+        RS.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(type, getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), getTabSelected()));
 
         this.viewType = type;
 
@@ -136,7 +144,7 @@ public class WirelessGrid implements IGrid {
 
     @Override
     public void onSortingTypeChanged(int type) {
-        RS.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(getViewType(), getSortingDirection(), type, getSearchBoxMode(), tabSelected));
+        RS.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(getViewType(), getSortingDirection(), type, getSearchBoxMode(), getSize(), getTabSelected()));
 
         this.sortingType = type;
 
@@ -145,7 +153,7 @@ public class WirelessGrid implements IGrid {
 
     @Override
     public void onSortingDirectionChanged(int direction) {
-        RS.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(getViewType(), direction, getSortingType(), getSearchBoxMode(), tabSelected));
+        RS.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(getViewType(), direction, getSortingType(), getSearchBoxMode(), getSize(), getTabSelected()));
 
         this.sortingDirection = direction;
 
@@ -154,16 +162,27 @@ public class WirelessGrid implements IGrid {
 
     @Override
     public void onSearchBoxModeChanged(int searchBoxMode) {
-        RS.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), searchBoxMode, tabSelected));
+        RS.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), searchBoxMode, getSize(), getTabSelected()));
 
         this.searchBoxMode = searchBoxMode;
+    }
+
+    @Override
+    public void onSizeChanged(int size) {
+        RS.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), getSearchBoxMode(), size, getTabSelected()));
+
+        this.size = size;
+
+        if (Minecraft.getMinecraft().currentScreen != null) {
+            Minecraft.getMinecraft().currentScreen.initGui();
+        }
     }
 
     @Override
     public void onTabSelectionChanged(int tab) {
         this.tabSelected = tab == tabSelected ? -1 : tab;
 
-        RS.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), searchBoxMode, tabSelected));
+        RS.INSTANCE.network.sendToServer(new MessageWirelessGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), tabSelected));
 
         GuiGrid.markForSorting();
     }

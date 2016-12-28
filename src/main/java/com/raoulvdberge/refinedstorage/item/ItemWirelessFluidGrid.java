@@ -20,14 +20,16 @@ public class ItemWirelessFluidGrid extends ItemNetworkItem {
         tag.setInteger(NetworkNodeGrid.NBT_SORTING_DIRECTION, NetworkNodeGrid.SORTING_DIRECTION_DESCENDING);
         tag.setInteger(NetworkNodeGrid.NBT_SORTING_TYPE, NetworkNodeGrid.SORTING_TYPE_QUANTITY);
         tag.setInteger(NetworkNodeGrid.NBT_SEARCH_BOX_MODE, NetworkNodeGrid.SEARCH_BOX_MODE_NORMAL);
+        tag.setInteger(NetworkNodeGrid.NBT_SIZE, NetworkNodeGrid.SIZE_STRETCH);
     }
 
     @Override
     public boolean isValid(ItemStack stack) {
         return super.isValid(stack)
-                && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_SORTING_DIRECTION)
-                && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_SORTING_TYPE)
-                && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_SEARCH_BOX_MODE);
+            && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_SORTING_DIRECTION)
+            && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_SORTING_TYPE)
+            && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_SEARCH_BOX_MODE)
+            && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_SIZE);
     }
 
     @Override
@@ -45,5 +47,9 @@ public class ItemWirelessFluidGrid extends ItemNetworkItem {
 
     public static int getSearchBoxMode(ItemStack stack) {
         return stack.getTagCompound().getInteger(NetworkNodeGrid.NBT_SEARCH_BOX_MODE);
+    }
+
+    public static int getSize(ItemStack stack) {
+        return stack.getTagCompound().getInteger(NetworkNodeGrid.NBT_SIZE);
     }
 }

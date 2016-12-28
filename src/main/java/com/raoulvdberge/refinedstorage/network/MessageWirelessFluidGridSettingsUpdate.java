@@ -13,14 +13,16 @@ public class MessageWirelessFluidGridSettingsUpdate extends MessageHandlerPlayer
     private int sortingDirection;
     private int sortingType;
     private int searchBoxMode;
+    private int size;
 
     public MessageWirelessFluidGridSettingsUpdate() {
     }
 
-    public MessageWirelessFluidGridSettingsUpdate(int sortingDirection, int sortingType, int searchBoxMode) {
+    public MessageWirelessFluidGridSettingsUpdate(int sortingDirection, int sortingType, int searchBoxMode, int size) {
         this.sortingDirection = sortingDirection;
         this.sortingType = sortingType;
         this.searchBoxMode = searchBoxMode;
+        this.size = size;
     }
 
     @Override
@@ -28,6 +30,7 @@ public class MessageWirelessFluidGridSettingsUpdate extends MessageHandlerPlayer
         sortingDirection = buf.readInt();
         sortingType = buf.readInt();
         searchBoxMode = buf.readInt();
+        size = buf.readInt();
     }
 
     @Override
@@ -35,6 +38,7 @@ public class MessageWirelessFluidGridSettingsUpdate extends MessageHandlerPlayer
         buf.writeInt(sortingDirection);
         buf.writeInt(sortingType);
         buf.writeInt(searchBoxMode);
+        buf.writeInt(size);
     }
 
     @Override
@@ -55,6 +59,10 @@ public class MessageWirelessFluidGridSettingsUpdate extends MessageHandlerPlayer
 
                 if (NetworkNodeGrid.isValidSearchBoxMode(message.searchBoxMode)) {
                     stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_SEARCH_BOX_MODE, message.searchBoxMode);
+                }
+
+                if (NetworkNodeGrid.isValidSize(message.size)) {
+                    stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_SIZE, message.size);
                 }
             }
         }

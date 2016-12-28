@@ -144,6 +144,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         addSideButton(new SideButtonGridSortingDirection(this, grid));
         addSideButton(new SideButtonGridSortingType(this, grid));
         addSideButton(new SideButtonGridSearchBoxMode(this));
+        addSideButton(new SideButtonGridSize(this, grid));
 
         sortItems();
     }
@@ -259,9 +260,20 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
     @Override
     public int getVisibleRows() {
-        int screenSpaceAvailable = height - getHeader() - getFooter() - (hadTabs ? ContainerGrid.TAB_HEIGHT : 0);
+        switch (grid.getSize()) {
+            case NetworkNodeGrid.SIZE_STRETCH:
+                int screenSpaceAvailable = height - getHeader() - getFooter() - (hadTabs ? ContainerGrid.TAB_HEIGHT : 0);
 
-        return Math.max(3, Math.min((screenSpaceAvailable / 18) - 3, RS.INSTANCE.config.maxRows));
+                return Math.max(3, Math.min((screenSpaceAvailable / 18) - 3, RS.INSTANCE.config.maxRowsStretch));
+            case NetworkNodeGrid.SIZE_SMALL:
+                return 3;
+            case NetworkNodeGrid.SIZE_MEDIUM:
+                return 5;
+            case NetworkNodeGrid.SIZE_LARGE:
+                return 8;
+            default:
+                return 3;
+        }
     }
 
     private boolean isOverSlotWithItem() {

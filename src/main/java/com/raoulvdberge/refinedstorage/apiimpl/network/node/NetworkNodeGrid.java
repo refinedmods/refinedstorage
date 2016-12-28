@@ -44,6 +44,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     public static final String NBT_SEARCH_BOX_MODE = "SearchBoxMode";
     public static final String NBT_OREDICT_PATTERN = "OredictPattern";
     public static final String NBT_TAB_SELECTED = "TabSelected";
+    public static final String NBT_SIZE = "Size";
 
     public static final int SORTING_DIRECTION_ASCENDING = 0;
     public static final int SORTING_DIRECTION_DESCENDING = 1;
@@ -59,6 +60,11 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     public static final int VIEW_TYPE_NORMAL = 0;
     public static final int VIEW_TYPE_NON_CRAFTABLES = 1;
     public static final int VIEW_TYPE_CRAFTABLES = 2;
+
+    public static final int SIZE_STRETCH = 0;
+    public static final int SIZE_SMALL = 1;
+    public static final int SIZE_MEDIUM = 2;
+    public static final int SIZE_LARGE = 3;
 
     private Container craftingContainer = new Container() {
         @Override
@@ -85,6 +91,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     private int sortingDirection = SORTING_DIRECTION_DESCENDING;
     private int sortingType = SORTING_TYPE_QUANTITY;
     private int searchBoxMode = SEARCH_BOX_MODE_NORMAL;
+    private int size = SIZE_STRETCH;
 
     private int tabSelected = -1;
 
@@ -128,6 +135,10 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
     public void setTabSelected(int tabSelected) {
         this.tabSelected = tabSelected;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
     }
 
     public boolean isOredictPattern() {
@@ -394,6 +405,11 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     }
 
     @Override
+    public int getSize() {
+        return holder.world().isRemote ? TileGrid.SIZE.getValue() : size;
+    }
+
+    @Override
     public int getTabSelected() {
         return holder.world().isRemote ? TileGrid.TAB_SELECTED.getValue() : tabSelected;
     }
@@ -416,6 +432,11 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     @Override
     public void onSearchBoxModeChanged(int searchBoxMode) {
         TileDataManager.setParameter(TileGrid.SEARCH_BOX_MODE, searchBoxMode);
+    }
+
+    @Override
+    public void onSizeChanged(int size) {
+        TileDataManager.setParameter(TileGrid.SIZE, size);
     }
 
     @Override
@@ -472,6 +493,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
         tag.setInteger(NBT_SORTING_DIRECTION, sortingDirection);
         tag.setInteger(NBT_SORTING_TYPE, sortingType);
         tag.setInteger(NBT_SEARCH_BOX_MODE, searchBoxMode);
+        tag.setInteger(NBT_SIZE, size);
 
         tag.setBoolean(NBT_OREDICT_PATTERN, oredictPattern);
 
@@ -498,6 +520,10 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
             searchBoxMode = tag.getInteger(NBT_SEARCH_BOX_MODE);
         }
 
+        if (tag.hasKey(NBT_SIZE)) {
+            size = tag.getInteger(NBT_SIZE);
+        }
+
         if (tag.hasKey(NBT_OREDICT_PATTERN)) {
             oredictPattern = tag.getBoolean(NBT_OREDICT_PATTERN);
         }
@@ -517,15 +543,15 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
     public static boolean isValidViewType(int type) {
         return type == VIEW_TYPE_NORMAL ||
-                type == VIEW_TYPE_CRAFTABLES ||
-                type == VIEW_TYPE_NON_CRAFTABLES;
+            type == VIEW_TYPE_CRAFTABLES ||
+            type == VIEW_TYPE_NON_CRAFTABLES;
     }
 
     public static boolean isValidSearchBoxMode(int mode) {
         return mode == SEARCH_BOX_MODE_NORMAL ||
-                mode == SEARCH_BOX_MODE_NORMAL_AUTOSELECTED ||
-                mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED ||
-                mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED;
+            mode == SEARCH_BOX_MODE_NORMAL_AUTOSELECTED ||
+            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED ||
+            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED;
     }
 
     public static boolean isSearchBoxModeWithAutoselection(int mode) {
@@ -538,5 +564,12 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
     public static boolean isValidSortingDirection(int direction) {
         return direction == SORTING_DIRECTION_ASCENDING || direction == SORTING_DIRECTION_DESCENDING;
+    }
+
+    public static boolean isValidSize(int size) {
+        return size == SIZE_STRETCH ||
+            size == SIZE_SMALL ||
+            size == SIZE_MEDIUM ||
+            size == SIZE_LARGE;
     }
 }

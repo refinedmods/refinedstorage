@@ -11,6 +11,7 @@ import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessFluidGrid;
 import com.raoulvdberge.refinedstorage.network.MessageWirelessFluidGridSettingsUpdate;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.InventoryCrafting;
@@ -33,6 +34,7 @@ public class WirelessFluidGrid implements IGrid {
     private int sortingType;
     private int sortingDirection;
     private int searchBoxMode;
+    private int size;
 
     public WirelessFluidGrid(int controllerDimension, ItemStack stack) {
         this.controllerDimension = controllerDimension;
@@ -43,6 +45,7 @@ public class WirelessFluidGrid implements IGrid {
         this.sortingType = ItemWirelessFluidGrid.getSortingType(stack);
         this.sortingDirection = ItemWirelessFluidGrid.getSortingDirection(stack);
         this.searchBoxMode = ItemWirelessFluidGrid.getSearchBoxMode(stack);
+        this.size = ItemWirelessFluidGrid.getSize(stack);
     }
 
     public ItemStack getStack() {
@@ -99,13 +102,18 @@ public class WirelessFluidGrid implements IGrid {
     }
 
     @Override
+    public int getSize() {
+        return size;
+    }
+
+    @Override
     public void onViewTypeChanged(int type) {
         // NO OP
     }
 
     @Override
     public void onSortingTypeChanged(int type) {
-        RS.INSTANCE.network.sendToServer(new MessageWirelessFluidGridSettingsUpdate(getSortingDirection(), type, getSearchBoxMode()));
+        RS.INSTANCE.network.sendToServer(new MessageWirelessFluidGridSettingsUpdate(getSortingDirection(), type, getSearchBoxMode(), getSize()));
 
         this.sortingType = type;
 
@@ -114,7 +122,7 @@ public class WirelessFluidGrid implements IGrid {
 
     @Override
     public void onSortingDirectionChanged(int direction) {
-        RS.INSTANCE.network.sendToServer(new MessageWirelessFluidGridSettingsUpdate(direction, getSortingType(), getSearchBoxMode()));
+        RS.INSTANCE.network.sendToServer(new MessageWirelessFluidGridSettingsUpdate(direction, getSortingType(), getSearchBoxMode(), getSize()));
 
         this.sortingDirection = direction;
 
@@ -123,9 +131,20 @@ public class WirelessFluidGrid implements IGrid {
 
     @Override
     public void onSearchBoxModeChanged(int searchBoxMode) {
-        RS.INSTANCE.network.sendToServer(new MessageWirelessFluidGridSettingsUpdate(getSortingDirection(), getSortingType(), searchBoxMode));
+        RS.INSTANCE.network.sendToServer(new MessageWirelessFluidGridSettingsUpdate(getSortingDirection(), getSortingType(), searchBoxMode, getSize()));
 
         this.searchBoxMode = searchBoxMode;
+    }
+
+    @Override
+    public void onSizeChanged(int size) {
+        RS.INSTANCE.network.sendToServer(new MessageWirelessFluidGridSettingsUpdate(getSortingDirection(), getSortingType(), getSearchBoxMode(), size));
+
+        this.size = size;
+
+        if (Minecraft.getMinecraft().currentScreen != null) {
+            Minecraft.getMinecraft().currentScreen.initGui();
+        }
     }
 
     @Override

@@ -21,6 +21,7 @@ public class ItemWirelessGrid extends ItemNetworkItem {
         tag.setInteger(NetworkNodeGrid.NBT_SORTING_DIRECTION, NetworkNodeGrid.SORTING_DIRECTION_DESCENDING);
         tag.setInteger(NetworkNodeGrid.NBT_SORTING_TYPE, NetworkNodeGrid.SORTING_TYPE_QUANTITY);
         tag.setInteger(NetworkNodeGrid.NBT_SEARCH_BOX_MODE, NetworkNodeGrid.SEARCH_BOX_MODE_NORMAL);
+        tag.setInteger(NetworkNodeGrid.NBT_SIZE, NetworkNodeGrid.SIZE_STRETCH);
         tag.setInteger(NetworkNodeGrid.NBT_TAB_SELECTED, -1);
     }
 
@@ -56,5 +57,9 @@ public class ItemWirelessGrid extends ItemNetworkItem {
 
     public static int getTabSelected(ItemStack stack) {
         return (stack.hasTagCompound() && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_TAB_SELECTED)) ? stack.getTagCompound().getInteger(NetworkNodeGrid.NBT_TAB_SELECTED) : -1;
+    }
+
+    public static int getSize(ItemStack stack) {
+        return (stack.hasTagCompound() && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_SIZE)) ? stack.getTagCompound().getInteger(NetworkNodeGrid.NBT_SIZE) : NetworkNodeGrid.SIZE_STRETCH;
     }
 }

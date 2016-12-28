@@ -128,6 +128,11 @@ sidebutton.refinedstorage:grid.search_box_mode.0=Normal
 sidebutton.refinedstorage:grid.search_box_mode.1=Normal (autoselected)
 sidebutton.refinedstorage:grid.search_box_mode.2=JEI synchronized
 sidebutton.refinedstorage:grid.search_box_mode.3=JEI synchronized (autoselected)
+sidebutton.refinedstorage:grid.size=Size
+sidebutton.refinedstorage:grid.size.0=Stretch
+sidebutton.refinedstorage:grid.size.1=Small
+sidebutton.refinedstorage:grid.size.2=Medium
+sidebutton.refinedstorage:grid.size.3=Large
 
 sidebutton.refinedstorage:mode=Mode
 sidebutton.refinedstorage:mode.whitelist=Whitelist

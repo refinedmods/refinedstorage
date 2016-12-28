@@ -32,6 +32,8 @@ public interface IGrid {
 
     int getTabSelected();
 
+    int getSize();
+
     void onViewTypeChanged(int type);
 
     void onSortingTypeChanged(int type);
@@ -39,6 +41,8 @@ public interface IGrid {
     void onSortingDirectionChanged(int direction);
 
     void onSearchBoxModeChanged(int searchBoxMode);
+
+    void onSizeChanged(int size);
 
     void onTabSelectionChanged(int tab);
 
