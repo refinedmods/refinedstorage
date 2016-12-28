@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.tile;
 
-import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;

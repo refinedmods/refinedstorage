@@ -121,7 +121,7 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
                 }
             }
 
-            Collections.sort(nodes, CLIENT_NODE_COMPARATOR);
+            nodes.sort(CLIENT_NODE_COMPARATOR);
 
             return nodes;
         }
@@ -221,8 +221,8 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
     public void update() {
         if (!getWorld().isRemote) {
             if (canRun()) {
-                Collections.sort(itemStorage.getStorages(), STORAGE_COMPARATOR);
-                Collections.sort(fluidStorage.getStorages(), STORAGE_COMPARATOR);
+                itemStorage.getStorages().sort(STORAGE_COMPARATOR);
+                fluidStorage.getStorages().sort(STORAGE_COMPARATOR);
 
                 craftingManager.update();
 

@@ -64,6 +64,7 @@ public final class RSUtils {
     private static final NonNullList EMPTY_NON_NULL_LIST = new NonNullList<Object>(Collections.emptyList(), null) {
     };
 
+    @SuppressWarnings("unchecked")
     public static <T> NonNullList<T> emptyNonNullList() {
         return (NonNullList<T>) EMPTY_NON_NULL_LIST;
     }

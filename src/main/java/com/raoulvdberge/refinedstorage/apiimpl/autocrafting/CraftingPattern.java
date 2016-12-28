@@ -31,7 +31,6 @@ public class CraftingPattern implements ICraftingPattern {
     private List<List<ItemStack>> oreInputs = new ArrayList<>();
     private List<ItemStack> outputs = new ArrayList<>();
     private List<ItemStack> byproducts = new ArrayList<>();
-    private boolean mekanism = false; // Cause they are special in so many ways ¯\_(ツ)_/¯
 
     public CraftingPattern(World world, ICraftingPatternContainer container, ItemStack stack) {
         this.container = container;
@@ -58,10 +57,11 @@ public class CraftingPattern implements ICraftingPattern {
             recipe = CraftingManager.getInstance().getRecipeList().stream().filter(r -> r.matches(inv, world)).findFirst().orElse(null);
             if (recipe != null) {
                 ItemStack output = recipe.getCraftingResult(inv);
-                if (output != null) {
+
+                if (!output.isEmpty()) {
                     boolean shapedOre = recipe instanceof ShapedOreRecipe;
                     // It is a dirty fix, but hey someone has to do it. ~ way2muchnoise 2016 "bite me"
-                    mekanism = recipe.getClass().getName().equals("mekanism.common.recipe.ShapedMekanismRecipe");
+                    boolean mekanism = recipe.getClass().getName().equals("mekanism.common.recipe.ShapedMekanismRecipe");
 
                     outputs.add(Comparer.stripTags(output.copy()));
 

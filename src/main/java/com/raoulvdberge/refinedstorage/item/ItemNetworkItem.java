@@ -202,10 +202,10 @@ public abstract class ItemNetworkItem extends ItemBase implements INetworkItemPr
 
     public boolean isValid(ItemStack stack) {
         return stack.hasTagCompound()
-            && stack.getTagCompound().hasKey(NBT_CONTROLLER_X)
-            && stack.getTagCompound().hasKey(NBT_CONTROLLER_Y)
-            && stack.getTagCompound().hasKey(NBT_CONTROLLER_Z)
-            && stack.getTagCompound().hasKey(NBT_DIMENSION_ID);
+                && stack.getTagCompound().hasKey(NBT_CONTROLLER_X)
+                && stack.getTagCompound().hasKey(NBT_CONTROLLER_Y)
+                && stack.getTagCompound().hasKey(NBT_CONTROLLER_Z)
+                && stack.getTagCompound().hasKey(NBT_DIMENSION_ID);
     }
 
     private class NetworkItemCapabilityProvider implements ICapabilityProvider {
@@ -218,7 +218,7 @@ public abstract class ItemNetworkItem extends ItemBase implements INetworkItemPr
         @Override
         public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
             return capability == CapabilityEnergy.ENERGY ||
-                (IntegrationTesla.isLoaded() && (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER));
+                    (IntegrationTesla.isLoaded() && (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER));
         }
 
         @Override

@@ -24,6 +24,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 public class NetworkNodeDiskManipulator extends NetworkNode implements IComparable, IFilterable, IType {
@@ -162,7 +163,8 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         }
 
         @Override
-        public FluidStack insert(FluidStack stack, int size, boolean simulate) {
+        @Nullable
+        public FluidStack insert(@Nonnull FluidStack stack, int size, boolean simulate) {
             if (!IFilterable.canTakeFluids(fluidFilters, mode, getCompare(), stack)) {
                 return RSUtils.copyStackWithSize(stack, size);
             }
@@ -171,7 +173,8 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         }
 
         @Override
-        public FluidStack extract(FluidStack stack, int size, int flags, boolean simulate) {
+        @Nullable
+        public FluidStack extract(@Nonnull FluidStack stack, int size, int flags, boolean simulate) {
             if (!IFilterable.canTakeFluids(fluidFilters, mode, getCompare(), stack)) {
                 return null;
             }

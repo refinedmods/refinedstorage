@@ -51,9 +51,9 @@ public class ReaderWriterHandlerItems implements IReaderWriterHandler {
     public <T> T getCapability(IReaderWriter readerWriter, Capability<T> capability) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             if (readerWriter instanceof IReader) {
-                return (T) itemsReader;
+                return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(itemsReader);
             } else if (readerWriter instanceof IWriter) {
-                return (T) itemsWriter;
+                return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(itemsWriter);
             }
         }
 

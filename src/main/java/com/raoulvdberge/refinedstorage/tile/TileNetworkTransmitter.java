@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.tile;
 
-import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeNetworkTransmitter;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;

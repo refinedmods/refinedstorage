@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.tile;
 
-import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeStorage;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageItemNBT;

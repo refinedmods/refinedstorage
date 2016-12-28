@@ -50,9 +50,9 @@ public class ReaderWriterHandlerForgeEnergy implements IReaderWriterHandler {
     public <T> T getCapability(IReaderWriter readerWriter, Capability<T> capability) {
         if (capability == CapabilityEnergy.ENERGY) {
             if (readerWriter instanceof IReader) {
-                return (T) storageReader;
+                return CapabilityEnergy.ENERGY.cast(storageReader);
             } else if (readerWriter instanceof IWriter) {
-                return (T) storageWriter;
+                return CapabilityEnergy.ENERGY.cast(storageWriter);
             }
         }
 

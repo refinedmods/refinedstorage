@@ -49,9 +49,9 @@ public class ReaderWriterHandlerFluids implements IReaderWriterHandler {
     public <T> T getCapability(IReaderWriter readerWriter, Capability<T> capability) {
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
             if (readerWriter instanceof IReader) {
-                return (T) tankReader;
+                return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(tankReader);
             } else if (readerWriter instanceof IWriter) {
-                return (T) tankWriter;
+                return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(tankWriter);
             }
         }
 

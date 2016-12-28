@@ -197,7 +197,7 @@ public class NetworkNodeStorage extends NetworkNode implements IStorageGui, ISto
 
     public EnumItemStorageType getType() {
         if (type == null && holder.world().getBlockState(holder.pos()).getBlock() == RSBlocks.STORAGE) {
-            type = ((EnumItemStorageType) holder.world().getBlockState(holder.pos()).getValue(BlockStorage.TYPE));
+            type = (EnumItemStorageType) holder.world().getBlockState(holder.pos()).getValue(BlockStorage.TYPE);
         }
 
         return type == null ? EnumItemStorageType.TYPE_1K : type;

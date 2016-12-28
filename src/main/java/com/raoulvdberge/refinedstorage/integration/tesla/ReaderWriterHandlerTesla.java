@@ -59,11 +59,11 @@ public class ReaderWriterHandlerTesla implements IReaderWriterHandler {
     public <T> T getCapability(IReaderWriter readerWriter, Capability<T> capability) {
         if (readerWriter instanceof IReader || readerWriter instanceof IWriter) {
             if (capability == TeslaCapabilities.CAPABILITY_HOLDER) {
-                return (T) container;
+                return TeslaCapabilities.CAPABILITY_HOLDER.cast(container);
             } else if (capability == TeslaCapabilities.CAPABILITY_CONSUMER && readerWriter instanceof IReader) {
-                return (T) containerReader;
+                return TeslaCapabilities.CAPABILITY_CONSUMER.cast(containerReader);
             } else if (capability == TeslaCapabilities.CAPABILITY_PRODUCER && readerWriter instanceof IWriter) {
-                return (T) containerWriter;
+                return TeslaCapabilities.CAPABILITY_PRODUCER.cast(containerWriter);
             }
         }
 

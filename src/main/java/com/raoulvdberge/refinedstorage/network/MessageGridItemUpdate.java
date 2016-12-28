@@ -14,6 +14,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MessageGridItemUpdate implements IMessage, IMessageHandler<MessageGridItemUpdate, IMessage> {
     private INetworkMaster network;
@@ -46,7 +47,7 @@ public class MessageGridItemUpdate implements IMessage, IMessageHandler<MessageG
         int size = network.getItemStorageCache().getList().getStacks().size();
 
         for (ICraftingPattern pattern : network.getCraftingManager().getPatterns()) {
-            size += pattern.getOutputs().stream().filter(o -> o != null).count();
+            size += pattern.getOutputs().stream().filter(Objects::nonNull).count();
         }
 
         buf.writeInt(size);

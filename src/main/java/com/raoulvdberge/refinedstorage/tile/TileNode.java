@@ -20,7 +20,7 @@ import net.minecraftforge.items.IItemHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class TileNode<T extends NetworkNode> extends TileBase implements INetworkNodeProxy<T>, INetworkNodeHolder, IRedstoneConfigurable {
+public abstract class TileNode<N extends NetworkNode> extends TileBase implements INetworkNodeProxy<N>, INetworkNodeHolder, IRedstoneConfigurable {
     public static final TileDataParameter<Integer> REDSTONE_MODE = RedstoneMode.createParameter();
 
     private NBTTagCompound legacyTagToRead;
@@ -121,7 +121,7 @@ public abstract class TileNode<T extends NetworkNode> extends TileBase implement
     @Override
     @Nonnull
     @SuppressWarnings("unchecked")
-    public T getNode() {
+    public N getNode() {
         INetworkNodeProvider provider = API.instance().getNetworkNodeProvider(getWorld().provider.getDimension());
 
         INetworkNode node = provider.getNode(pos);
@@ -130,10 +130,10 @@ public abstract class TileNode<T extends NetworkNode> extends TileBase implement
             provider.setNode(pos, node = createNode());
         }
 
-        return (T) node;
+        return (N) node;
     }
 
-    public abstract T createNode();
+    public abstract N createNode();
 
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing side) {

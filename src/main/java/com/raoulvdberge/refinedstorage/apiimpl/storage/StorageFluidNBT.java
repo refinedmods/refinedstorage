@@ -80,6 +80,7 @@ public abstract class StorageFluidNBT implements IStorage<FluidStack> {
     }
 
     @Override
+    @Nullable
     public synchronized FluidStack insert(@Nonnull FluidStack stack, int size, boolean simulate) {
         for (FluidStack otherStack : stacks) {
             if (otherStack.isFluidEqual(stack)) {
@@ -151,6 +152,7 @@ public abstract class StorageFluidNBT implements IStorage<FluidStack> {
     }
 
     @Override
+    @Nullable
     public synchronized FluidStack extract(@Nonnull FluidStack stack, int size, int flags, boolean simulate) {
         for (FluidStack otherStack : stacks) {
             if (API.instance().getComparer().isEqual(otherStack, stack, flags)) {

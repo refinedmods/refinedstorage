@@ -41,8 +41,8 @@ public class StorageFluidExternal implements IStorage<FluidStack> {
         return getContents() == null ? RSUtils.emptyNonNullList() : NonNullList.withSize(1, getContents().copy());
     }
 
-    @Nullable
     @Override
+    @Nullable
     public FluidStack insert(@Nonnull FluidStack stack, int size, boolean simulate) {
         if (getProperties() != null && IFilterable.canTakeFluids(externalStorage.getFluidFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack) && getProperties().canFillFluidType(stack)) {
             int filled = handlerSupplier.get().fill(RSUtils.copyStackWithSize(stack, size), !simulate);
@@ -57,8 +57,8 @@ public class StorageFluidExternal implements IStorage<FluidStack> {
         return RSUtils.copyStackWithSize(stack, size);
     }
 
-    @Nullable
     @Override
+    @Nullable
     public FluidStack extract(@Nonnull FluidStack stack, int size, int flags, boolean simulate) {
         FluidStack toDrain = RSUtils.copyStackWithSize(stack, size);
 

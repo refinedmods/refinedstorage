@@ -44,8 +44,8 @@ public class BlockFluidStorage extends BlockNode {
     @Override
     protected BlockStateContainer createBlockState() {
         return createBlockStateBuilder()
-            .add(TYPE)
-            .build();
+                .add(TYPE)
+                .build();
     }
 
     @Override

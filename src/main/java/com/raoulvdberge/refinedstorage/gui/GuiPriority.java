@@ -65,8 +65,8 @@ public class GuiPriority extends GuiCraftingStart {
     @Override
     protected int[] getIncrements() {
         return new int[]{
-            1, 5, 10,
-            -1, -5, -10
+                1, 5, 10,
+                -1, -5, -10
         };
     }
 

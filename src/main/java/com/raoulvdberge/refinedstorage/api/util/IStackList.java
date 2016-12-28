@@ -41,8 +41,8 @@ public interface IStackList<T> {
      * @param stack the stack
      * @return whether the remove was successful for the full amount
      */
-    default void remove(@Nonnull T stack) {
-        remove(stack, getSizeFromStack(stack));
+    default boolean remove(@Nonnull T stack) {
+        return remove(stack, getSizeFromStack(stack));
     }
 
     /**

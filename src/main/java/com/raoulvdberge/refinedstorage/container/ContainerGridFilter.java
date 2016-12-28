@@ -8,17 +8,17 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 public class ContainerGridFilter extends ContainerBase {
-    private ItemHandlerGridFilter filter;
     private ItemStack stack;
 
     public ContainerGridFilter(EntityPlayer player, ItemStack stack) {
         super(null, player);
 
         this.stack = stack;
-        this.filter = new ItemHandlerGridFilter(stack);
 
         int y = 20;
         int x = 8;
+
+        ItemHandlerGridFilter filter = new ItemHandlerGridFilter(stack);
 
         for (int i = 0; i < 27; ++i) {
             addSlotToContainer(new SlotFilter(filter, i, x, y));

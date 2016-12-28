@@ -3,7 +3,6 @@ package com.raoulvdberge.refinedstorage.block;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeSecurityManager;
 import com.raoulvdberge.refinedstorage.tile.TileSecurityManager;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;

@@ -186,10 +186,10 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             SORTING_NAME.setSortingDirection(grid.getSortingDirection());
             SORTING_QUANTITY.setSortingDirection(grid.getSortingDirection());
 
-            Collections.sort(stacks, SORTING_NAME);
+            stacks.sort(SORTING_NAME);
 
             if (grid.getSortingType() == NetworkNodeGrid.SORTING_TYPE_QUANTITY) {
-                Collections.sort(stacks, SORTING_QUANTITY);
+                stacks.sort(SORTING_QUANTITY);
             }
         }
 

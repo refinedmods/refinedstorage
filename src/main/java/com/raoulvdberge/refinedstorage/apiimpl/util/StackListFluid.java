@@ -18,7 +18,8 @@ public class StackListFluid implements IStackList<FluidStack> {
     private List<FluidStack> removeTracker = new LinkedList<>();
 
     @Override
-    public void add(FluidStack stack, int size) {
+    @Nullable
+    public void add(@Nonnull FluidStack stack, int size) {
         for (FluidStack otherStack : stacks.get(stack.getFluid())) {
             if (stack.isFluidEqual(otherStack)) {
                 otherStack.amount += size;
@@ -31,6 +32,7 @@ public class StackListFluid implements IStackList<FluidStack> {
     }
 
     @Override
+    @Nullable
     public boolean remove(@Nonnull FluidStack stack, int size) {
         for (FluidStack otherStack : stacks.get(stack.getFluid())) {
             if (stack.isFluidEqual(otherStack)) {

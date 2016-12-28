@@ -44,9 +44,9 @@ public class BlockController extends BlockBase {
     @Override
     protected BlockStateContainer createBlockState() {
         return createBlockStateBuilder()
-            .add(TYPE)
-            .add(ENERGY)
-            .build();
+                .add(TYPE)
+                .add(ENERGY)
+                .build();
     }
 
     @Override
@@ -62,7 +62,7 @@ public class BlockController extends BlockBase {
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
         return super.getActualState(state, world, pos)
-            .withProperty(ENERGY, ((TileController) world.getTileEntity(pos)).getEnergyScaledForDisplay());
+                .withProperty(ENERGY, ((TileController) world.getTileEntity(pos)).getEnergyScaledForDisplay());
     }
 
     @Override

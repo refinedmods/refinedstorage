@@ -30,6 +30,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class NetworkNodeDiskDrive extends NetworkNode implements IStorageGui, IStorageProvider, IComparable, IFilterable, IPrioritizable, IType, IExcessVoidable, IAccessType {
@@ -50,6 +51,7 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IStorageGui, IS
         }
 
         @Override
+        @Nullable
         public ItemStack insert(@Nonnull ItemStack stack, int size, boolean simulate) {
             if (!IFilterable.canTake(itemFilters, mode, getCompare(), stack)) {
                 return ItemHandlerHelper.copyStackWithSize(stack, size);
@@ -97,7 +99,8 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IStorageGui, IS
         }
 
         @Override
-        public FluidStack insert(FluidStack stack, int size, boolean simulate) {
+        @Nullable
+        public FluidStack insert(@Nonnull FluidStack stack, int size, boolean simulate) {
             if (!IFilterable.canTakeFluids(fluidFilters, mode, getCompare(), stack)) {
                 return RSUtils.copyStackWithSize(stack, size);
             }

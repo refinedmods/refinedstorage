@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.gui;
 
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeNetworkTransmitter;
 import com.raoulvdberge.refinedstorage.container.ContainerNetworkTransmitter;
 import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.TileNetworkTransmitter;

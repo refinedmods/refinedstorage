@@ -1,5 +1,7 @@
 package com.raoulvdberge.refinedstorage.proxy;
 
+import javax.annotation.Nonnull;
+
 import com.google.common.base.Preconditions;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeProxy;
@@ -9,8 +11,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
-
-import javax.annotation.Nonnull;
 
 public class CapabilityNetworkNodeProxy {
     @CapabilityInject(INetworkNodeProxy.class)

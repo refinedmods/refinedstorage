@@ -75,9 +75,9 @@ public class GuiReaderWriter extends GuiBase {
         drawTexture(x, y, 0, 0, screenWidth, screenHeight);
 
         if (itemSelectedX != -1 &&
-            itemSelectedY != -1 &&
-            itemSelected >= 0 &&
-            itemSelected < getChannels().size()) {
+                itemSelectedY != -1 &&
+                itemSelected >= 0 &&
+                itemSelected < getChannels().size()) {
             drawTexture(x + itemSelectedX, y + itemSelectedY, 0, 216, ITEM_WIDTH, ITEM_HEIGHT);
         }
 

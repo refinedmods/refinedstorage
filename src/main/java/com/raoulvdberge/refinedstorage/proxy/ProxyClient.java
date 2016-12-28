@@ -55,58 +55,58 @@ public class ProxyClient extends ProxyCommon {
 
         // Item Variants
         ModelBakery.registerItemVariants(RSItems.STORAGE_DISK,
-            new ResourceLocation("refinedstorage:1k_storage_disk"),
-            new ResourceLocation("refinedstorage:4k_storage_disk"),
-            new ResourceLocation("refinedstorage:16k_storage_disk"),
-            new ResourceLocation("refinedstorage:64k_storage_disk"),
-            new ResourceLocation("refinedstorage:creative_storage_disk")
+                new ResourceLocation("refinedstorage:1k_storage_disk"),
+                new ResourceLocation("refinedstorage:4k_storage_disk"),
+                new ResourceLocation("refinedstorage:16k_storage_disk"),
+                new ResourceLocation("refinedstorage:64k_storage_disk"),
+                new ResourceLocation("refinedstorage:creative_storage_disk")
         );
 
         ModelBakery.registerItemVariants(RSItems.STORAGE_PART,
-            new ResourceLocation("refinedstorage:1k_storage_part"),
-            new ResourceLocation("refinedstorage:4k_storage_part"),
-            new ResourceLocation("refinedstorage:16k_storage_part"),
-            new ResourceLocation("refinedstorage:64k_storage_part")
+                new ResourceLocation("refinedstorage:1k_storage_part"),
+                new ResourceLocation("refinedstorage:4k_storage_part"),
+                new ResourceLocation("refinedstorage:16k_storage_part"),
+                new ResourceLocation("refinedstorage:64k_storage_part")
         );
 
         ModelBakery.registerItemVariants(RSItems.FLUID_STORAGE_DISK,
-            new ResourceLocation("refinedstorage:64k_fluid_storage_disk"),
-            new ResourceLocation("refinedstorage:128k_fluid_storage_disk"),
-            new ResourceLocation("refinedstorage:256k_fluid_storage_disk"),
-            new ResourceLocation("refinedstorage:512k_fluid_storage_disk"),
-            new ResourceLocation("refinedstorage:creative_fluid_storage_disk")
+                new ResourceLocation("refinedstorage:64k_fluid_storage_disk"),
+                new ResourceLocation("refinedstorage:128k_fluid_storage_disk"),
+                new ResourceLocation("refinedstorage:256k_fluid_storage_disk"),
+                new ResourceLocation("refinedstorage:512k_fluid_storage_disk"),
+                new ResourceLocation("refinedstorage:creative_fluid_storage_disk")
         );
 
         ModelBakery.registerItemVariants(RSItems.FLUID_STORAGE_PART,
-            new ResourceLocation("refinedstorage:64k_fluid_storage_part"),
-            new ResourceLocation("refinedstorage:128k_fluid_storage_part"),
-            new ResourceLocation("refinedstorage:256k_fluid_storage_part"),
-            new ResourceLocation("refinedstorage:512k_fluid_storage_part")
+                new ResourceLocation("refinedstorage:64k_fluid_storage_part"),
+                new ResourceLocation("refinedstorage:128k_fluid_storage_part"),
+                new ResourceLocation("refinedstorage:256k_fluid_storage_part"),
+                new ResourceLocation("refinedstorage:512k_fluid_storage_part")
         );
 
         ModelBakery.registerItemVariants(RSItems.PROCESSOR,
-            new ResourceLocation("refinedstorage:basic_printed_processor"),
-            new ResourceLocation("refinedstorage:improved_printed_processor"),
-            new ResourceLocation("refinedstorage:advanced_printed_processor"),
-            new ResourceLocation("refinedstorage:basic_processor"),
-            new ResourceLocation("refinedstorage:improved_processor"),
-            new ResourceLocation("refinedstorage:advanced_processor"),
-            new ResourceLocation("refinedstorage:printed_silicon")
+                new ResourceLocation("refinedstorage:basic_printed_processor"),
+                new ResourceLocation("refinedstorage:improved_printed_processor"),
+                new ResourceLocation("refinedstorage:advanced_printed_processor"),
+                new ResourceLocation("refinedstorage:basic_processor"),
+                new ResourceLocation("refinedstorage:improved_processor"),
+                new ResourceLocation("refinedstorage:advanced_processor"),
+                new ResourceLocation("refinedstorage:printed_silicon")
         );
 
         ModelBakery.registerItemVariants(RSItems.CORE,
-            new ResourceLocation("refinedstorage:construction_core"),
-            new ResourceLocation("refinedstorage:destruction_core")
+                new ResourceLocation("refinedstorage:construction_core"),
+                new ResourceLocation("refinedstorage:destruction_core")
         );
 
         ModelBakery.registerItemVariants(RSItems.UPGRADE,
-            new ResourceLocation("refinedstorage:upgrade"),
-            new ResourceLocation("refinedstorage:range_upgrade"),
-            new ResourceLocation("refinedstorage:speed_upgrade"),
-            new ResourceLocation("refinedstorage:stack_upgrade"),
-            new ResourceLocation("refinedstorage:interdimensional_upgrade"),
-            new ResourceLocation("refinedstorage:silk_touch_upgrade"),
-            new ResourceLocation("refinedstorage:fortune_upgrade")
+                new ResourceLocation("refinedstorage:upgrade"),
+                new ResourceLocation("refinedstorage:range_upgrade"),
+                new ResourceLocation("refinedstorage:speed_upgrade"),
+                new ResourceLocation("refinedstorage:stack_upgrade"),
+                new ResourceLocation("refinedstorage:interdimensional_upgrade"),
+                new ResourceLocation("refinedstorage:silk_touch_upgrade"),
+                new ResourceLocation("refinedstorage:fortune_upgrade")
         );
 
         // Items

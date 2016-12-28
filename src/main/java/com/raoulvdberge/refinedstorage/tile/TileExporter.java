@@ -56,7 +56,7 @@ public class TileExporter extends TileNode<NetworkNodeExporter> {
         }
     });
 
-    public static final TileDataParameter<Boolean> CRAFT_ONLY = new TileDataParameter<Boolean>(DataSerializers.BOOLEAN, false, new ITileDataProducer<Boolean, TileExporter>() {
+    public static final TileDataParameter<Boolean> CRAFT_ONLY = new TileDataParameter<>(DataSerializers.BOOLEAN, false, new ITileDataProducer<Boolean, TileExporter>() {
         @Override
         public Boolean getValue(TileExporter tile) {
             return tile.getNode().isCraftOnly();

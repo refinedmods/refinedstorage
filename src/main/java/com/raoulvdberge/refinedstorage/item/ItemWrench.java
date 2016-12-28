@@ -139,8 +139,8 @@ public class ItemWrench extends ItemBase {
             next.writeToNBT(stack.getTagCompound());
 
             player.sendMessage(new TextComponentTranslation(
-                "item.refinedstorage:wrench.mode",
-                new TextComponentTranslation("item.refinedstorage:wrench.mode." + next.id).setStyle(new Style().setColor(TextFormatting.YELLOW))
+                    "item.refinedstorage:wrench.mode",
+                    new TextComponentTranslation("item.refinedstorage:wrench.mode." + next.id).setStyle(new Style().setColor(TextFormatting.YELLOW))
             ));
         }
 

@@ -117,6 +117,7 @@ public abstract class StorageItemNBT implements IStorage<ItemStack> {
     }
 
     @Override
+    @Nullable
     public synchronized ItemStack insert(@Nonnull ItemStack stack, int size, boolean simulate) {
         for (ItemStack otherStack : stacks) {
             if (API.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
@@ -188,6 +189,7 @@ public abstract class StorageItemNBT implements IStorage<ItemStack> {
     }
 
     @Override
+    @Nullable
     public synchronized ItemStack extract(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
         for (ItemStack otherStack : stacks) {
             if (API.instance().getComparer().isEqual(otherStack, stack, flags)) {

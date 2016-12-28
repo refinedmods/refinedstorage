@@ -22,6 +22,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class NetworkNodeFluidStorage extends NetworkNode implements IStorageGui, IStorageProvider, IComparable, IFilterable, IPrioritizable, IExcessVoidable, IAccessType {
@@ -38,7 +40,8 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IStorageGui,
         }
 
         @Override
-        public FluidStack insert(FluidStack stack, int size, boolean simulate) {
+        @Nullable
+        public FluidStack insert(@Nonnull FluidStack stack, int size, boolean simulate) {
             if (!IFilterable.canTakeFluids(filters, mode, compare, stack)) {
                 return RSUtils.copyStackWithSize(stack, size);
             }
@@ -195,7 +198,7 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IStorageGui,
 
     public EnumFluidStorageType getType() {
         if (type == null && holder.world().getBlockState(holder.pos()).getBlock() == RSBlocks.FLUID_STORAGE) {
-            type = ((EnumFluidStorageType) holder.world().getBlockState(holder.pos()).getValue(BlockFluidStorage.TYPE));
+            type = (EnumFluidStorageType) holder.world().getBlockState(holder.pos()).getValue(BlockFluidStorage.TYPE);
         }
 
         return type == null ? EnumFluidStorageType.TYPE_64K : type;
