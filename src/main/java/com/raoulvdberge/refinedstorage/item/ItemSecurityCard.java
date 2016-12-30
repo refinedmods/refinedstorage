@@ -8,6 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -23,6 +24,8 @@ public class ItemSecurityCard extends ItemBase {
         super("security_card");
 
         setMaxStackSize(1);
+
+        addPropertyOverride(new ResourceLocation("active"), (stack, world, entity) -> (entity != null && isValid(stack)) ? 1.0f : 0.0f);
     }
 
     @Override
@@ -64,6 +67,10 @@ public class ItemSecurityCard extends ItemBase {
         }
 
         stack.getTagCompound().setBoolean(String.format(NBT_PERMISSION, permission.getId()), state);
+    }
+
+    public static boolean isValid(ItemStack stack) {
+        return stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_OWNER);
     }
 
     @Override
