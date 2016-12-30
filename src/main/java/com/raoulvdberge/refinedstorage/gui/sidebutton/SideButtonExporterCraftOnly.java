@@ -12,7 +12,7 @@ public class SideButtonExporterCraftOnly extends SideButton {
 
     @Override
     protected void drawButtonIcon(int x, int y) {
-
+        gui.drawTexture(x, y, 64 + (TileExporter.CRAFT_ONLY.getValue() ? 16 : 0), 32, 16, 16);
     }
 
     @Override

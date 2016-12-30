@@ -12,7 +12,7 @@ public class SideButtonExporterRegulator extends SideButton {
 
     @Override
     protected void drawButtonIcon(int x, int y) {
-
+        gui.drawTexture(x, y, 64 + (TileExporter.REGULATOR.getValue() ? 16 : 0), 48, 16, 16);
     }
 
     @Override

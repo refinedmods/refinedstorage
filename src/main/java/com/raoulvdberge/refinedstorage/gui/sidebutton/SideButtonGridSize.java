@@ -21,7 +21,21 @@ public class SideButtonGridSize extends SideButton {
 
     @Override
     protected void drawButtonIcon(int x, int y) {
+        int size = grid.getSize();
 
+        int tx = 0;
+
+        if (size == NetworkNodeGrid.SIZE_STRETCH) {
+            tx = 48;
+        } else if (size == NetworkNodeGrid.SIZE_SMALL) {
+            tx = 0;
+        } else if (size == NetworkNodeGrid.SIZE_MEDIUM) {
+            tx = 16;
+        } else if (size == NetworkNodeGrid.SIZE_LARGE) {
+            tx = 32;
+        }
+
+        gui.drawTexture(x, y, 64 + tx, 64, 16, 16);
     }
 
     @Override

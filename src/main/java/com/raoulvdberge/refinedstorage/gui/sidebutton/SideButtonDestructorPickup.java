@@ -12,7 +12,7 @@ public class SideButtonDestructorPickup extends SideButton {
 
     @Override
     protected void drawButtonIcon(int x, int y) {
-        gui.drawTexture(x, y, 80 + (!TileDestructor.PICKUP.getValue() ? 16 : 0), 0, 16, 16);
+        gui.drawTexture(x, y, 64 + (!TileDestructor.PICKUP.getValue() ? 16 : 0), 0, 16, 16);
     }
 
     @Override
