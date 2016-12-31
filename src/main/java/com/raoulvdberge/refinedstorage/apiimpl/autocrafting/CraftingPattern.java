@@ -123,7 +123,7 @@ public class CraftingPattern implements ICraftingPattern {
                         oreInputs.add(oredict);
                     }
                 } else {
-                    oreInputs.add(Collections.singletonList(input.copy()));
+                    oreInputs.add(Collections.singletonList(Comparer.stripTags(input)));
                 }
             }
         }
