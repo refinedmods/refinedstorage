@@ -22,6 +22,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -118,7 +119,10 @@ public class CraftingTask implements ICraftingTask {
 
                 extraStack = toInsert.get(input, compare);
                 networkStack = networkList.get(input, compare);
-            } while (extraStack == null && networkStack == null && ++i < inputs.size());
+            } while (extraStack == null && networkStack == null && ++i < inputs.size() && network.getPatterns(input, compare).isEmpty());
+            if (i == inputs.size()) {
+                input = inputs.get(0).copy();
+            }
             usedStacks.add(input.copy());
 
             // This handles recipes that use the output as input for the sub recipe
@@ -200,7 +204,11 @@ public class CraftingTask implements ICraftingTask {
 
                         // When it isn't a fluid or just doesn't have the needed fluids
                         if (input.stackSize > 0) {
-                            missing.add(input.copy());
+                            ItemStack copy = input.copy();
+                            if (copy.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
+                                copy.setItemDamage(0);
+                            }
+                            missing.add(copy);
                             input.stackSize = 0;
                         }
                     }
