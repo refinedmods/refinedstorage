@@ -183,6 +183,9 @@ public class Comparer implements IComparer {
                 case "refinedstorage":
                     stack.getTagCompound().removeTag(BlockNode.NBT_REFINED_STORAGE_DATA);
                     break;
+                case "storagedrawers":
+                    stack.getTagCompound().removeTag("material");
+                    break;
             }
         }
 

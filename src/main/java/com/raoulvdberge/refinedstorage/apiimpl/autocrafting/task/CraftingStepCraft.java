@@ -70,7 +70,7 @@ public class CraftingStepCraft extends CraftingStep {
             IStackList<ItemStack> stackList = API.instance().createItemStackList();
             actualInputs.forEach(stackList::add);
 
-            ItemStack[] took = StackListItem.toCraftingGrid(stackList, toInsert, CraftingTask.DEFAULT_COMPARE);
+            ItemStack[] took = StackListItem.toCraftingGrid(stackList, toInsert, CraftingTask.DEFAULT_COMPARE | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0));
 
             List<ItemStack> outputs = pattern.isOredict() ? pattern.getOutputs(took) : pattern.getOutputs();
             if (outputs == null) {

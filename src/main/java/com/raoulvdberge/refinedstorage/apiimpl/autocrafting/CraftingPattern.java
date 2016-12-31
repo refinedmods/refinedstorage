@@ -101,18 +101,18 @@ public class CraftingPattern implements ICraftingPattern {
             }
         } else {
             outputs = ItemPattern.getOutputs(stack).stream().map(Comparer::stripTags).collect(Collectors.toList());
+        }
 
-            if (isOredict()) {
-                for (ItemStack input : inputs) {
-
-                    if (input == null) {
-                        oreInputs.add(Collections.emptyList());
-                    } else {
-                        int[] ids = OreDictionary.getOreIDs(input);
-                        if (ids == null || ids.length == 0) {
-                            oreInputs.add(Collections.singletonList(Comparer.stripTags(input)));
-                        } else {
-                            List<ItemStack> oredict = Arrays.stream(ids)
+        if (oreInputs.isEmpty()) {
+            for (ItemStack input : inputs) {
+                if (input == null) {
+                    oreInputs.add(Collections.emptyList());
+                } else {
+                    int[] ids = OreDictionary.getOreIDs(input);
+                    if (ids == null || ids.length == 0) {
+                        oreInputs.add(Collections.singletonList(Comparer.stripTags(input)));
+                    } else if (isOredict()) {
+                        List<ItemStack> oredict = Arrays.stream(ids)
                                 .mapToObj(OreDictionary::getOreName)
                                 .map(OreDictionary::getOres)
                                 .flatMap(List::stream)
@@ -123,21 +123,12 @@ public class CraftingPattern implements ICraftingPattern {
                                     return s;
                                 })
                                 .collect(Collectors.toList());
-                            // Add original stack as first, should prevent some issues
-                            oredict.add(0, Comparer.stripTags(input.copy()));
-                            oreInputs.add(oredict);
-                        }
+                        // Add original stack as first, should prevent some issues
+                        oredict.add(0, Comparer.stripTags(input.copy()));
+                        oreInputs.add(oredict);
+                    } else {
+                        oreInputs.add(Collections.singletonList(Comparer.stripTags(input)));
                     }
-                }
-            }
-        }
-
-        if (oreInputs.isEmpty()) {
-            for (ItemStack input : inputs) {
-                if (input == null) {
-                    oreInputs.add(Collections.emptyList());
-                } else {
-                    oreInputs.add(Collections.singletonList(Comparer.stripTags(input)));
                 }
             }
         }
