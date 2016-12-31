@@ -211,7 +211,7 @@ public class CraftingPattern implements ICraftingPattern {
 
         for (ItemStack remaining : recipe.getRemainingItems(inv)) {
             if (remaining != null) {
-                byproducts.add(Comparer.stripTags(remaining.copy()));
+                byproducts.add(remaining.copy());
             }
         }
 

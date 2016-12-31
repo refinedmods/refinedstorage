@@ -100,6 +100,9 @@ public class CraftingTask implements ICraftingTask {
         List<ItemStack> usedStacks = new LinkedList<>();
         List<ICraftingStep> previousSteps = new LinkedList<>();
 
+        IItemStackList byproductList = API.instance().createItemStackList();
+        pattern.getByproducts().stream().filter(Objects::nonNull).forEach(byproductList::add);
+
         for (List<ItemStack> inputs : pattern.getOreInputs()) {
             if (inputs == null || inputs.isEmpty()) {
                 usedStacks.add(null);
@@ -152,7 +155,7 @@ public class CraftingTask implements ICraftingTask {
                     ItemStack inputStack = ItemHandlerHelper.copyStackWithSize(extraStack, takeQuantity);
                     actualInputs.add(inputStack.copy());
                     input.stackSize -= takeQuantity;
-                    if (!inputStack.isItemStackDamageable() || !inputStack.isItemDamaged()) {
+                    if (byproductList.get(inputStack, compare) == null) {
                         toCraft.add(inputStack);
                     }
                     toInsert.remove(inputStack, true);
