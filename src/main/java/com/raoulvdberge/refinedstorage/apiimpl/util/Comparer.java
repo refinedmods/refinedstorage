@@ -151,6 +151,8 @@ public class Comparer implements IComparer {
                     stack.getTagCompound().removeTag("sjData");
                     stack.getTagCompound().removeTag("PackOn");
                     break;
+                case "storagedrawers":
+                    stack.getTagCompound().removeTag("material");
                 case "minecraft":
                     stack.getTagCompound().removeTag("RepairCost");
                     break;

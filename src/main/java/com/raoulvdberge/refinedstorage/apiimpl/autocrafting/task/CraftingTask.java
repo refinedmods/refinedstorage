@@ -95,54 +95,44 @@ public class CraftingTask implements ICraftingTask {
 
         int compare = DEFAULT_COMPARE;
 
-        IItemStackList inputs = API.instance().createItemStackList();
         IItemStackList actualInputs = API.instance().createItemStackList();
         List<ItemStack> usedStacks = new LinkedList<>();
         List<ICraftingStep> previousSteps = new LinkedList<>();
 
-        for (List<ItemStack> oreInputs : pattern.getOreInputs()) {
-            boolean added = false;
-            for (ItemStack input : oreInputs) {
-                int oreCompare = IComparer.COMPARE_NBT | IComparer.COMPARE_STRIP_NBT | (input.isItemStackDamageable() ? 0 : IComparer.COMPARE_DAMAGE);
-                if (network.getItemStorageCache().getList().get(input, oreCompare) != null) {
-                    usedStacks.add(input.copy());
-                    inputs.add(input.copy());
-                    added = true;
-                    break;
-                }
-            }
-            if (!added) {
-                ItemStack choice = null;
-                if (!oreInputs.isEmpty()) {
-                    choice = oreInputs.get(0);
-                    inputs.add(choice);
-                }
-                usedStacks.add(choice);
-            }
-        }
-
-        for (ItemStack input : inputs.getStacks()) {
-            // This will be a tool, like a hammer
-            if (input.isItemStackDamageable()) {
-                compare &= ~IComparer.COMPARE_DAMAGE;
-            } else {
-                compare |= IComparer.COMPARE_DAMAGE;
+        for (List<ItemStack> inputs : pattern.getOreInputs()) {
+            if (inputs == null || inputs.isEmpty()) {
+                usedStacks.add(null);
+                continue;
             }
 
-            ItemStack extraStack = toInsert.get(input, compare);
-            ItemStack networkStack = networkList.get(input, compare);
+            int i = 0;
+            ItemStack input, extraStack, networkStack;
+            do {
+                input = inputs.get(i).copy();
+                // This will be a tool, like a hammer
+                if (input.isItemStackDamageable()) {
+                    compare &= ~IComparer.COMPARE_DAMAGE;
+                } else {
+                    compare |= IComparer.COMPARE_DAMAGE;
+                }
+
+                extraStack = toInsert.get(input, compare);
+                networkStack = networkList.get(input, compare);
+            } while (extraStack == null && networkStack == null && ++i < inputs.size());
+            usedStacks.add(input.copy());
 
             // This handles recipes that use the output as input for the sub recipe
             final int lambdaCompare = compare;
+            final ItemStack lambdaInput = input;
             ICraftingPattern inputPattern = null;
             int available = (extraStack == null ? 0 : extraStack.stackSize) + (networkStack == null ? 0 : networkStack.stackSize);
             if (available < input.stackSize) {
                 inputPattern = network.getPattern(input, compare);
                 if (inputPattern != null) {
-                    if (inputPattern.getInputs().stream().anyMatch(s -> API.instance().getComparer().isEqual(s, input, lambdaCompare))) {
+                    if (inputPattern.getInputs().stream().anyMatch(s -> API.instance().getComparer().isEqual(s, lambdaInput, lambdaCompare))) {
                         int craftQuantity = inputPattern.getQuantityPerRequest(input, compare);
                         // The needed amount is the actual needed amount of extraStacks + the needed input (twice so you can keep repeating it)
-                        long needed = (networkStack == null ? 0 : -networkStack.stackSize) + input.stackSize + inputPattern.getInputs().stream().filter(s -> API.instance().getComparer().isEqual(s, input, lambdaCompare)).count() * 2;
+                        long needed = (networkStack == null ? 0 : -networkStack.stackSize) + input.stackSize + inputPattern.getInputs().stream().filter(s -> API.instance().getComparer().isEqual(s, lambdaInput, lambdaCompare)).count() * 2;
                         do {
                             previousSteps.add(calculate(networkList, networkFluidList, inputPattern, toInsert));
                             toCraft.add(ItemHandlerHelper.copyStackWithSize(input, craftQuantity));
@@ -163,7 +153,10 @@ public class CraftingTask implements ICraftingTask {
                     }
                     toInsert.remove(inputStack, true);
                     if (input.stackSize > 0) {
-                        extraStack = toInsert.get(input, compare);
+                        i = 0;
+                        do {
+                            extraStack = toInsert.get(inputs.get(i), compare);
+                        } while ((extraStack == null || extraStack.stackSize == 0) && ++i < inputs.size());
                     }
                 } else if (networkStack != null && networkStack.stackSize > 0) {
                     int takeQuantity = Math.min(networkStack.stackSize, input.stackSize);
@@ -173,7 +166,10 @@ public class CraftingTask implements ICraftingTask {
                     input.stackSize -= takeQuantity;
                     networkList.remove(inputStack, true);
                     if (input.stackSize > 0) {
-                        networkStack = networkList.get(inputStack, compare);
+                        i = 0;
+                        do {
+                            networkStack = networkList.get(inputs.get(i), compare);
+                        } while ((extraStack == null || extraStack.stackSize == 0) && ++i < inputs.size());
                     }
                 } else {
                     if (inputPattern == null) {
@@ -215,7 +211,7 @@ public class CraftingTask implements ICraftingTask {
         ItemStack[] took = null;
         if (missing.isEmpty()) {
             if (!pattern.isProcessing()) {
-                took = ItemStackList.toCraftingGrid(actualInputs, usedStacks, compare);
+                took = ItemStackList.toCraftingGrid(actualInputs, usedStacks, compare | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0));
             }
         }
 
