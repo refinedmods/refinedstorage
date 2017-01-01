@@ -44,7 +44,7 @@ public class TileFluidInterface extends TileNode<NetworkNodeFluidInterface> {
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(facing == EnumFacing.DOWN ? getNode().getTankOut() : getNode().getTankIn());
+            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(getNode().getTank());
         }
 
         return super.getCapability(capability, facing);

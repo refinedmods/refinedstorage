@@ -4,10 +4,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeHolder;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
+import com.raoulvdberge.refinedstorage.inventory.*;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 import com.raoulvdberge.refinedstorage.tile.TileFluidInterface;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
@@ -54,6 +51,8 @@ public class NetworkNodeFluidInterface extends NetworkNode implements IComparabl
             markDirty();
         }
     };
+
+    private FluidHandlerFluidInterface tank = new FluidHandlerFluidInterface(tankIn, tankOut);
 
     private ItemHandlerBasic in = new ItemHandlerBasic(1, new ItemHandlerListenerNetworkNode(this));
     private ItemHandlerFluid out = new ItemHandlerFluid(1, new ItemHandlerListenerNetworkNode(this));
@@ -211,6 +210,10 @@ public class NetworkNodeFluidInterface extends NetworkNode implements IComparabl
 
     public ItemHandlerFluid getOut() {
         return out;
+    }
+
+    public FluidHandlerFluidInterface getTank() {
+        return tank;
     }
 
     public FluidTank getTankIn() {

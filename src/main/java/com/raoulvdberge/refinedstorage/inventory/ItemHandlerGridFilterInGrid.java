@@ -13,13 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemHandlerGridFilterInGrid extends ItemHandlerBasic {
-    private List<GridFilter> filteredItems;
+    private List<GridFilter> filters;
     private List<GridTab> tabs;
 
-    public ItemHandlerGridFilterInGrid(List<GridFilter> filteredItems, List<GridTab> tabs) {
+    public ItemHandlerGridFilterInGrid(List<GridFilter> filters, List<GridTab> tabs) {
         super(4, new ItemValidatorBasic(RSItems.GRID_FILTER));
 
-        this.filteredItems = filteredItems;
+        this.filters = filters;
         this.tabs = tabs;
     }
 
@@ -27,7 +27,7 @@ public class ItemHandlerGridFilterInGrid extends ItemHandlerBasic {
     protected void onContentsChanged(int slot) {
         super.onContentsChanged(slot);
 
-        filteredItems.clear();
+        filters.clear();
         tabs.clear();
 
         for (int i = 0; i < getSlots(); ++i) {
@@ -51,7 +51,7 @@ public class ItemHandlerGridFilterInGrid extends ItemHandlerBasic {
                 ItemStack icon = ItemGridFilter.getIcon(filter);
 
                 if (icon.isEmpty()) {
-                    filteredItems.addAll(filters);
+                    this.filters.addAll(filters);
                 } else {
                     tabs.add(new GridTab(filters, ItemGridFilter.getName(filter), icon));
                 }
