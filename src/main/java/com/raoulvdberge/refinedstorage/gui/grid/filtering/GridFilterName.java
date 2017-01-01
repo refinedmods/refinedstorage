@@ -1,8 +1,10 @@
 package com.raoulvdberge.refinedstorage.gui.grid.filtering;
 
-import com.raoulvdberge.refinedstorage.gui.grid.stack.IClientStack;
+import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
 
-public class GridFilterName implements IGridFilter {
+import java.util.function.Predicate;
+
+public class GridFilterName implements Predicate<IGridStack> {
     private String name;
 
     public GridFilterName(String name) {
@@ -10,12 +12,7 @@ public class GridFilterName implements IGridFilter {
     }
 
     @Override
-    public boolean accepts(IClientStack stack) {
+    public boolean test(IGridStack stack) {
         return stack.getName().toLowerCase().contains(name);
-    }
-
-    @Override
-    public boolean isStrong() {
-        return false;
     }
 }

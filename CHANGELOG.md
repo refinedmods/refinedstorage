@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 1.2.15
+- Autocrafting bugfixes (way2muchnoise)
+- Fixed Grid Filter hiding everything when 2 or more items are in it (raoulvdberge)
+
 ### 1.2.14
 - Fixed server crash (way2muchnoise)
 

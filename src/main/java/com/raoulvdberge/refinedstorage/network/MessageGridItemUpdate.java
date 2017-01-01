@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.network;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
-import com.raoulvdberge.refinedstorage.gui.grid.stack.ClientStackItem;
+import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackItem;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -15,7 +15,7 @@ import java.util.List;
 
 public class MessageGridItemUpdate implements IMessage, IMessageHandler<MessageGridItemUpdate, IMessage> {
     private INetworkMaster network;
-    private List<ClientStackItem> stacks = new ArrayList<>();
+    private List<GridStackItem> stacks = new ArrayList<>();
 
     public MessageGridItemUpdate() {
     }
@@ -29,7 +29,7 @@ public class MessageGridItemUpdate implements IMessage, IMessageHandler<MessageG
         int items = buf.readInt();
 
         for (int i = 0; i < items; ++i) {
-            this.stacks.add(new ClientStackItem(buf));
+            this.stacks.add(new GridStackItem(buf));
         }
     }
 
@@ -46,7 +46,7 @@ public class MessageGridItemUpdate implements IMessage, IMessageHandler<MessageG
     public IMessage onMessage(MessageGridItemUpdate message, MessageContext ctx) {
         GuiGrid.ITEMS.clear();
 
-        for (ClientStackItem item : message.stacks) {
+        for (GridStackItem item : message.stacks) {
             GuiGrid.ITEMS.put(item.getStack().getItem(), item);
         }
 

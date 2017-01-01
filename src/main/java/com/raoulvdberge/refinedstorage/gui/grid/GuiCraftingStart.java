@@ -4,7 +4,7 @@ import com.google.common.primitives.Ints;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.container.ContainerCraftingSettings;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
-import com.raoulvdberge.refinedstorage.gui.grid.stack.ClientStackItem;
+import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackItem;
 import com.raoulvdberge.refinedstorage.network.MessageGridCraftingPreview;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -21,19 +21,19 @@ public class GuiCraftingStart extends GuiBase {
 
     protected GuiTextField amountField;
     private GuiBase parent;
-    private ClientStackItem stack;
+    private GridStackItem stack;
     private GuiButton startButton;
     private GuiButton cancelButton;
     private GuiButton[] incrementButtons = new GuiButton[6];
 
-    public GuiCraftingStart(GuiBase parent, ClientStackItem stack, Container container, int w, int h) {
+    public GuiCraftingStart(GuiBase parent, GridStackItem stack, Container container, int w, int h) {
         super(container, w, h);
 
         this.parent = parent;
         this.stack = stack;
     }
 
-    public GuiCraftingStart(GuiGrid parent, EntityPlayer player, ClientStackItem stack) {
+    public GuiCraftingStart(GuiGrid parent, EntityPlayer player, GridStackItem stack) {
         this(parent, stack, new ContainerCraftingSettings(player, stack.getStack()), 172, 99);
     }
 

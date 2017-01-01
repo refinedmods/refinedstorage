@@ -9,16 +9,15 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import java.util.List;
 
-public class ClientStackItem implements IClientStack {
+public class GridStackItem implements IGridStack {
     private int hash;
     private ItemStack stack;
     private boolean craftable;
 
-    public ClientStackItem(ByteBuf buf) {
+    public GridStackItem(ByteBuf buf) {
         stack = RSUtils.readItemStack(buf);
         hash = buf.readInt();
         craftable = buf.readBoolean();
@@ -94,6 +93,6 @@ public class ClientStackItem implements IClientStack {
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof IClientStack && ((ClientStackItem) obj).getHash() == hash;
+        return obj instanceof IGridStack && ((GridStackItem) obj).getHash() == hash;
     }
 }

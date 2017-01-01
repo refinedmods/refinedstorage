@@ -1,10 +1,12 @@
 package com.raoulvdberge.refinedstorage.gui.grid.filtering;
 
-import com.raoulvdberge.refinedstorage.gui.grid.stack.IClientStack;
+import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 
-public class GridFilterMod implements IGridFilter {
+import java.util.function.Predicate;
+
+public class GridFilterMod implements Predicate<IGridStack> {
     private String modName;
 
     public GridFilterMod(String modName) {
@@ -21,18 +23,13 @@ public class GridFilterMod implements IGridFilter {
     }
 
     @Override
-    public boolean accepts(IClientStack stack) {
+    public boolean test(IGridStack stack) {
         String otherModId = stack.getModId().toLowerCase();
 
         if (!getModNameFromModId(otherModId).contains(modName)) {
             return stack.getModId().contains(modName);
         }
 
-        return true;
-    }
-
-    @Override
-    public boolean isStrong() {
         return true;
     }
 }

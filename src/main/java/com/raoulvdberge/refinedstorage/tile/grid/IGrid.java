@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.tile.grid;
 import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.block.EnumGridType;
-import com.raoulvdberge.refinedstorage.gui.grid.GridFilteredItem;
+import com.raoulvdberge.refinedstorage.gui.grid.GridFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.util.math.BlockPos;
@@ -37,7 +37,7 @@ public interface IGrid {
 
     void onSearchBoxModeChanged(int searchBoxMode);
 
-    List<GridFilteredItem> getFilteredItems();
+    List<GridFilter> getFilters();
 
     ItemHandlerBasic getFilter();
 

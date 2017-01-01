@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.block.EnumGridType;
-import com.raoulvdberge.refinedstorage.gui.grid.GridFilteredItem;
+import com.raoulvdberge.refinedstorage.gui.grid.GridFilter;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerGridFilterInGrid;
@@ -37,7 +37,7 @@ public class WirelessGrid implements IGrid {
     private int sortingDirection;
     private int searchBoxMode;
 
-    private List<GridFilteredItem> filteredItems = new ArrayList<>();
+    private List<GridFilter> filteredItems = new ArrayList<>();
     private ItemHandlerGridFilterInGrid filter = new ItemHandlerGridFilterInGrid(filteredItems) {
         @Override
         protected void onContentsChanged(int slot) {
@@ -157,7 +157,7 @@ public class WirelessGrid implements IGrid {
     }
 
     @Override
-    public List<GridFilteredItem> getFilteredItems() {
+    public List<GridFilter> getFilters() {
         return filteredItems;
     }
 

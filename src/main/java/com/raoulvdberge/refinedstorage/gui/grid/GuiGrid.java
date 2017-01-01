@@ -10,12 +10,11 @@ import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.Scrollbar;
 import com.raoulvdberge.refinedstorage.gui.grid.filtering.GridFilterParser;
-import com.raoulvdberge.refinedstorage.gui.grid.filtering.IGridFilter;
 import com.raoulvdberge.refinedstorage.gui.grid.sorting.GridSortingName;
 import com.raoulvdberge.refinedstorage.gui.grid.sorting.GridSortingQuantity;
-import com.raoulvdberge.refinedstorage.gui.grid.stack.ClientStackFluid;
-import com.raoulvdberge.refinedstorage.gui.grid.stack.ClientStackItem;
-import com.raoulvdberge.refinedstorage.gui.grid.stack.IClientStack;
+import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackFluid;
+import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackItem;
+import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
 import com.raoulvdberge.refinedstorage.gui.sidebutton.*;
 import com.raoulvdberge.refinedstorage.integration.jei.IntegrationJEI;
 import com.raoulvdberge.refinedstorage.integration.jei.RSJEIPlugin;
@@ -41,15 +40,16 @@ import org.lwjgl.input.Keyboard;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Predicate;
 
 public class GuiGrid extends GuiBase implements IGridDisplay {
     private static final GridSortingQuantity SORTING_QUANTITY = new GridSortingQuantity();
     private static final GridSortingName SORTING_NAME = new GridSortingName();
 
-    public static final ListMultimap<Item, ClientStackItem> ITEMS = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
-    public static final ListMultimap<Fluid, ClientStackFluid> FLUIDS = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
+    public static final ListMultimap<Item, GridStackItem> ITEMS = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
+    public static final ListMultimap<Fluid, GridStackFluid> FLUIDS = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
 
-    public static List<IClientStack> STACKS = new ArrayList<>();
+    public static List<IGridStack> STACKS = new ArrayList<>();
 
     private static boolean markedForSorting;
 
@@ -145,20 +145,20 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     }
 
     private void sortItems() {
-        List<IClientStack> stacks = new ArrayList<>();
+        List<IGridStack> stacks = new ArrayList<>();
 
         if (grid.isConnected()) {
             stacks.addAll(grid.getType() == EnumGridType.FLUID ? FLUIDS.values() : ITEMS.values());
 
-            List<IGridFilter> filters = GridFilterParser.getFilters(grid, searchField.getText());
+            List<Predicate<IGridStack>> filters = GridFilterParser.getFilters(grid, searchField.getText(), grid.getFilters());
 
-            Iterator<IClientStack> t = stacks.iterator();
+            Iterator<IGridStack> t = stacks.iterator();
 
             while (t.hasNext()) {
-                IClientStack stack = t.next();
+                IGridStack stack = t.next();
 
-                for (IGridFilter filter : filters) {
-                    if (!filter.accepts(stack)) {
+                for (Predicate<IGridStack> filter : filters) {
+                    if (!filter.test(stack)) {
                         t.remove();
 
                         break;
@@ -422,7 +422,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
             if (isOverSlotWithItem()) {
                 if (grid.getType() != EnumGridType.FLUID && (held == null || (held != null && clickedButton == 2))) {
-                    ClientStackItem stack = (ClientStackItem) STACKS.get(slotNumber);
+                    GridStackItem stack = (GridStackItem) STACKS.get(slotNumber);
 
                     if (stack.isCraftable() && (stack.getQuantity() == 0 || (GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown()))) {
                         FMLCommonHandler.instance().showGuiScreen(new GuiCraftingStart(this, ((ContainerGrid) this.inventorySlots).getPlayer(), stack));

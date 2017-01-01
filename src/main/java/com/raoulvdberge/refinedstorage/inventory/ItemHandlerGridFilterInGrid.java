@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.inventory;
 
 import com.raoulvdberge.refinedstorage.RSItems;
-import com.raoulvdberge.refinedstorage.gui.grid.GridFilteredItem;
+import com.raoulvdberge.refinedstorage.gui.grid.GridFilter;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.item.ItemGridFilter;
 import net.minecraft.item.ItemStack;
@@ -11,9 +11,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import java.util.List;
 
 public class ItemHandlerGridFilterInGrid extends ItemHandlerBasic {
-    private List<GridFilteredItem> filteredItems;
+    private List<GridFilter> filteredItems;
 
-    public ItemHandlerGridFilterInGrid(List<GridFilteredItem> filteredItems) {
+    public ItemHandlerGridFilterInGrid(List<GridFilter> filteredItems) {
         super(4, new ItemValidatorBasic(RSItems.GRID_FILTER));
 
         this.filteredItems = filteredItems;
@@ -35,7 +35,7 @@ public class ItemHandlerGridFilterInGrid extends ItemHandlerBasic {
 
                 for (ItemStack item : items.getFilteredItems()) {
                     if (item != null) {
-                        filteredItems.add(new GridFilteredItem(item, compare));
+                        filteredItems.add(new GridFilter(item, compare));
                     }
                 }
             }
