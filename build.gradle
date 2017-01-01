@@ -64,6 +64,15 @@ processResources {
     }
 }
 
+jar {
+    include "com/raoulvdberge/refinedstorage/**"
+    include "powercrystals/minefactoryreloaded/api/**"
+    include "com/jaquadro/minecraft/storagedrawers/api/**"
+    include "assets/**"
+    include "mcmod.info"
+    include "pack.mcmeta"
+}
+
 task deobfJar(type: Jar) {
     from sourceSets.main.output
     classifier 'deobf'
@@ -79,6 +88,7 @@ task apiJar(type: Jar, dependsOn: 'sourceMainJava') {
 artifacts {
     archives deobfJar
     archives apiJar
+    archives sourceJar
     archives jar
 }
 
@@ -89,6 +99,7 @@ publishing {
             artifactId = project.archivesBaseName
             version = project.version + '-' + System.getenv('TRAVIS_BUILD_NUMBER')
             artifact deobfJar
+            artifact sourceJar
             artifact apiJar
             artifact jar
         }
