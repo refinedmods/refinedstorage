@@ -81,9 +81,9 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     private InventoryCraftResult result = new InventoryCraftResult();
 
     private ItemHandlerBasic patterns = new ItemHandlerBasic(2, new ItemHandlerListenerNetworkNode(this), new ItemValidatorBasic(RSItems.PATTERN));
-    private List<GridFilter> filteredItems = new ArrayList<>();
+    private List<GridFilter> filters = new ArrayList<>();
     private List<GridTab> tabs = new ArrayList<>();
-    private ItemHandlerGridFilterInGrid filter = new ItemHandlerGridFilterInGrid(filteredItems, tabs);
+    private ItemHandlerGridFilterInGrid filter = new ItemHandlerGridFilterInGrid(filters, tabs);
 
     private EnumGridType type;
 
@@ -183,7 +183,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
     @Override
     public List<GridFilter> getFilters() {
-        return filteredItems;
+        return filters;
     }
 
     @Override
