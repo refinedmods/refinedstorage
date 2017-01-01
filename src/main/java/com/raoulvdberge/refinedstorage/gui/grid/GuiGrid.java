@@ -167,7 +167,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             List<Predicate<IGridStack>> filters = GridFilterParser.getFilters(
                 grid,
                 searchField.getText(),
-                (grid.getTabSelected() >= 0 && grid.getTabSelected() < grid.getTabs().size()) ? grid.getTabs().get(grid.getTabSelected()).getFilters() : grid.getFilteredItems()
+                (grid.getTabSelected() >= 0 && grid.getTabSelected() < grid.getTabs().size()) ? grid.getTabs().get(grid.getTabSelected()).getFilters() : grid.getFilters()
             );
 
             Iterator<IGridStack> t = stacks.iterator();

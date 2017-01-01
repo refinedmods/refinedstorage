@@ -182,7 +182,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     }
 
     @Override
-    public List<GridFilter> getFilteredItems() {
+    public List<GridFilter> getFilters() {
         return filteredItems;
     }
 

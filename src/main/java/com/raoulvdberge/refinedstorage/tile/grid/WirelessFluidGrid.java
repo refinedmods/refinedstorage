@@ -153,7 +153,7 @@ public class WirelessFluidGrid implements IGrid {
     }
 
     @Override
-    public List<GridFilter> getFilteredItems() {
+    public List<GridFilter> getFilters() {
         return Collections.emptyList();
     }
 

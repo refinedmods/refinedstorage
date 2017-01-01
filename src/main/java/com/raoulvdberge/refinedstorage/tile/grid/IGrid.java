@@ -46,7 +46,7 @@ public interface IGrid {
 
     void onTabSelectionChanged(int tab);
 
-    List<GridFilter> getFilteredItems();
+    List<GridFilter> getFilters();
 
     List<GridTab> getTabs();
 
