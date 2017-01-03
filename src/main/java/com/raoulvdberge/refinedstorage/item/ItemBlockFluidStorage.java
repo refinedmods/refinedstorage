@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.item;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeFluidStorage;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageFluidNBT;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskFluid;
 import com.raoulvdberge.refinedstorage.block.EnumFluidStorageType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
@@ -31,9 +31,9 @@ public class ItemBlockFluidStorage extends ItemBlockBase {
             NBTTagCompound tag = stack.getTagCompound().getCompoundTag(NetworkNodeFluidStorage.NBT_STORAGE);
 
             if (type == EnumFluidStorageType.TYPE_CREATIVE) {
-                tooltip.add(I18n.format("misc.refinedstorage:storage.stored", StorageFluidNBT.getStoredFromNBT(tag)));
+                tooltip.add(I18n.format("misc.refinedstorage:storage.stored", StorageDiskFluid.getStored(tag)));
             } else {
-                tooltip.add(I18n.format("misc.refinedstorage:storage.stored_capacity", StorageFluidNBT.getStoredFromNBT(tag), type.getCapacity()));
+                tooltip.add(I18n.format("misc.refinedstorage:storage.stored_capacity", StorageDiskFluid.getStored(tag), type.getCapacity()));
             }
         }
     }
@@ -44,7 +44,7 @@ public class ItemBlockFluidStorage extends ItemBlockBase {
 
         EnumFluidStorageType type = EnumFluidStorageType.getById(stack.getMetadata());
 
-        if (type != null && stack.getCount() == 1 && isValid(stack) && StorageFluidNBT.getStoredFromNBT(stack.getTagCompound().getCompoundTag(NetworkNodeFluidStorage.NBT_STORAGE)) <= 0 && stack.getMetadata() != ItemFluidStorageDisk.TYPE_CREATIVE && !world.isRemote && player.isSneaking()) {
+        if (type != null && stack.getCount() == 1 && isValid(stack) && StorageDiskFluid.getStored(stack.getTagCompound().getCompoundTag(NetworkNodeFluidStorage.NBT_STORAGE)) <= 0 && stack.getMetadata() != ItemFluidStorageDisk.TYPE_CREATIVE && !world.isRemote && player.isSneaking()) {
             ItemStack storagePart = new ItemStack(RSItems.FLUID_STORAGE_PART, 1, stack.getMetadata());
 
             if (!player.inventory.addItemStackToInventory(storagePart.copy())) {
@@ -94,14 +94,14 @@ public class ItemBlockFluidStorage extends ItemBlockBase {
             return super.getNBTShareTag(stack);
         } else {
             NBTTagCompound shareTag = new NBTTagCompound();
-            shareTag.setTag(NetworkNodeFluidStorage.NBT_STORAGE, StorageFluidNBT.getNBTShareTag(stack.getTagCompound().getCompoundTag(NetworkNodeFluidStorage.NBT_STORAGE)));
+            shareTag.setTag(NetworkNodeFluidStorage.NBT_STORAGE, StorageDiskFluid.getShareTag(stack.getTagCompound().getCompoundTag(NetworkNodeFluidStorage.NBT_STORAGE)));
             return shareTag;
         }
     }
 
     public static ItemStack initNBT(ItemStack stack) {
         NBTTagCompound tag = new NBTTagCompound();
-        tag.setTag(NetworkNodeFluidStorage.NBT_STORAGE, StorageFluidNBT.createNBT());
+        tag.setTag(NetworkNodeFluidStorage.NBT_STORAGE, StorageDiskFluid.getTag());
         stack.setTagCompound(tag);
         return stack;
     }

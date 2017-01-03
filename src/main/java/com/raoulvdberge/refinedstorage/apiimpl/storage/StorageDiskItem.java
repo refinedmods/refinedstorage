@@ -1,8 +1,9 @@
 package com.raoulvdberge.refinedstorage.apiimpl.storage;
 
-import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
+import com.raoulvdberge.refinedstorage.api.storage.StorageDiskType;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -17,11 +18,7 @@ import javax.annotation.Nullable;
 /**
  * A implementation of {@link IStorage<ItemStack>} that stores storage items in NBT.
  */
-public abstract class StorageItemNBT implements IStorage<ItemStack> {
-    /**
-     * The current save protocol that is used. It's set to every {@link StorageItemNBT} to allow for
-     * safe backwards compatibility breaks.
-     */
+public class StorageDiskItem implements IStorageDisk<ItemStack> {
     private static final int PROTOCOL = 1;
 
     private static final String NBT_PROTOCOL = "Protocol";
@@ -37,25 +34,20 @@ public abstract class StorageItemNBT implements IStorage<ItemStack> {
 
     private NBTTagCompound tag;
     private int capacity;
-    @Nullable
-    private INetworkNode node;
 
     private NonNullList<ItemStack> stacks = NonNullList.create();
 
     /**
-     * @param tag      The NBT tag we are reading from and writing the amount stored to, has to be initialized with {@link StorageItemNBT#createNBT()} if it doesn't exist yet
+     * @param tag      The NBT tag we are reading from and writing the amount stored to, has to be initialized with {@link StorageDiskItem#getTag()} if it doesn't exist yet
      * @param capacity The capacity of this storage, -1 for infinite capacity
-     * @param node     A {@link INetworkNode} that the NBT storage is in, will be marked dirty when the storage changes
      */
-    public StorageItemNBT(NBTTagCompound tag, int capacity, @Nullable INetworkNode node) {
+    public StorageDiskItem(NBTTagCompound tag, int capacity) {
         this.tag = tag;
         this.capacity = capacity;
-        this.node = node;
-
-        readFromNBT();
     }
 
-    private void readFromNBT() {
+    @Override
+    public void readFromNBT() {
         NBTTagList list = (NBTTagList) tag.getTag(NBT_ITEMS);
 
         for (int i = 0; i < list.tagCount(); ++i) {
@@ -76,9 +68,7 @@ public abstract class StorageItemNBT implements IStorage<ItemStack> {
         }
     }
 
-    /**
-     * Writes the items to the NBT tag.
-     */
+    @Override
     public void writeToNBT() {
         NBTTagList list = new NBTTagList();
 
@@ -112,6 +102,11 @@ public abstract class StorageItemNBT implements IStorage<ItemStack> {
     }
 
     @Override
+    public StorageDiskType getType() {
+        return StorageDiskType.ITEMS;
+    }
+
+    @Override
     public NonNullList<ItemStack> getStacks() {
         return stacks;
     }
@@ -137,7 +132,7 @@ public abstract class StorageItemNBT implements IStorage<ItemStack> {
 
                         otherStack.grow(remainingSpace);
 
-                        onStorageChanged();
+                        onChanged();
                     }
 
                     return isVoiding() ? null : ItemHandlerHelper.copyStackWithSize(otherStack, size - remainingSpace);
@@ -147,7 +142,7 @@ public abstract class StorageItemNBT implements IStorage<ItemStack> {
 
                         otherStack.grow(size);
 
-                        onStorageChanged();
+                        onChanged();
                     }
 
                     return null;
@@ -171,7 +166,7 @@ public abstract class StorageItemNBT implements IStorage<ItemStack> {
 
                 stacks.add(ItemHandlerHelper.copyStackWithSize(stack, remainingSpace));
 
-                onStorageChanged();
+                onChanged();
             }
 
             return isVoiding() ? null : ItemHandlerHelper.copyStackWithSize(stack, size - remainingSpace);
@@ -181,7 +176,7 @@ public abstract class StorageItemNBT implements IStorage<ItemStack> {
 
                 stacks.add(ItemHandlerHelper.copyStackWithSize(stack, size));
 
-                onStorageChanged();
+                onChanged();
             }
 
             return null;
@@ -206,7 +201,7 @@ public abstract class StorageItemNBT implements IStorage<ItemStack> {
 
                     tag.setInteger(NBT_STORED, getStored() - size);
 
-                    onStorageChanged();
+                    onChanged();
                 }
 
                 return ItemHandlerHelper.copyStackWithSize(otherStack, size);
@@ -216,23 +211,34 @@ public abstract class StorageItemNBT implements IStorage<ItemStack> {
         return null;
     }
 
-    public void onStorageChanged() {
-        if (node != null) {
-            node.markDirty();
-        }
+    @Override
+    public int getStored() {
+        return getStored(tag);
     }
 
     @Override
-    public int getStored() {
-        return getStoredFromNBT(tag);
+    public int getPriority() {
+        return 0;
     }
 
+    @Override
     public int getCapacity() {
         return capacity;
     }
 
-    protected boolean isVoiding() {
+    @Override
+    public boolean isVoiding() {
         return false;
+    }
+
+    @Override
+    public void onChanged() {
+        // NO OP
+    }
+
+    @Override
+    public boolean isValid(ItemStack stack) {
+        return stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_ITEMS) && stack.getTagCompound().hasKey(NBT_STORED);
     }
 
     @Override
@@ -250,28 +256,21 @@ public abstract class StorageItemNBT implements IStorage<ItemStack> {
         return inserted;
     }
 
-    public NBTTagCompound getTag() {
-        return tag;
-    }
-
-    public static int getStoredFromNBT(NBTTagCompound tag) {
-        return tag.getInteger(NBT_STORED);
-    }
-
-    public static NBTTagCompound getNBTShareTag(NBTTagCompound tag) {
+    public static NBTTagCompound getShareTag(NBTTagCompound tag) {
         NBTTagCompound otherTag = new NBTTagCompound();
 
-        otherTag.setInteger(NBT_STORED, getStoredFromNBT(tag));
+        otherTag.setInteger(NBT_STORED, getStored(tag));
         otherTag.setTag(NBT_ITEMS, new NBTTagList()); // To circumvent not being able to insert disks in Disk Drives (see ItemStorageNBT#isValid(ItemStack)).
         otherTag.setInteger(NBT_PROTOCOL, PROTOCOL);
 
         return otherTag;
     }
 
-    /*
-     * @return A NBT tag initialized with the fields that {@link NBTStorage} uses
-     */
-    public static NBTTagCompound createNBT() {
+    public static int getStored(NBTTagCompound tag) {
+        return tag.getInteger(NBT_STORED);
+    }
+
+    public static NBTTagCompound getTag() {
         NBTTagCompound tag = new NBTTagCompound();
 
         tag.setTag(NBT_ITEMS, new NBTTagList());
@@ -281,16 +280,8 @@ public abstract class StorageItemNBT implements IStorage<ItemStack> {
         return tag;
     }
 
-    public static boolean isValid(ItemStack stack) {
-        return stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_ITEMS) && stack.getTagCompound().hasKey(NBT_STORED);
-    }
-
-    /**
-     * @param stack The {@link ItemStack} to populate with the NBT tags from {@link StorageItemNBT#createNBT()}
-     * @return The provided {@link ItemStack} with NBT tags from {@link StorageItemNBT#createNBT()}
-     */
-    public static ItemStack createStackWithNBT(ItemStack stack) {
-        stack.setTagCompound(createNBT());
+    public static ItemStack initDisk(ItemStack stack) {
+        stack.setTagCompound(getTag());
 
         return stack;
     }

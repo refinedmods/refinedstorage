@@ -1,7 +1,11 @@
 package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RSItems;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageItemNBT;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageDiskProvider;
+import com.raoulvdberge.refinedstorage.api.storage.StorageDiskType;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskItem;
 import com.raoulvdberge.refinedstorage.block.EnumItemStorageType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
@@ -17,10 +21,11 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import java.util.Iterator;
 import java.util.List;
 
-public class ItemStorageDisk extends ItemBase {
+public class ItemStorageDisk extends ItemBase implements IStorageDiskProvider<ItemStack> {
     public static final int TYPE_1K = 0;
     public static final int TYPE_4K = 1;
     public static final int TYPE_16K = 2;
@@ -41,7 +46,7 @@ public class ItemStorageDisk extends ItemBase {
     @Override
     public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
         for (int i = 0; i < 5; ++i) {
-            subItems.add(StorageItemNBT.createStackWithNBT(new ItemStack(item, 1, i)));
+            subItems.add(API.instance().getStorageDiskBehavior().initDisk(StorageDiskType.ITEMS, new ItemStack(item, 1, i)));
         }
     }
 
@@ -53,26 +58,16 @@ public class ItemStorageDisk extends ItemBase {
             if (stack.getItemDamage() == TYPE_DEBUG) {
                 applyDebugDiskData(stack);
             } else {
-                StorageItemNBT.createStackWithNBT(stack);
+                API.instance().getStorageDiskBehavior().initDisk(StorageDiskType.ITEMS, stack);
             }
         }
     }
 
     private void applyDebugDiskData(ItemStack stack) {
         if (debugDiskTag == null) {
-            debugDiskTag = StorageItemNBT.createNBT();
+            debugDiskTag = API.instance().getStorageDiskBehavior().getTag(StorageDiskType.ITEMS);
 
-            StorageItemNBT storage = new StorageItemNBT(debugDiskTag, -1, null) {
-                @Override
-                public int getPriority() {
-                    return 0;
-                }
-
-                @Override
-                public boolean isVoiding() {
-                    return false;
-                }
-            };
+            StorageDiskItem storage = new StorageDiskItem(debugDiskTag, -1);
 
             Iterator<Item> it = REGISTRY.iterator();
 
@@ -98,13 +93,13 @@ public class ItemStorageDisk extends ItemBase {
 
     @Override
     public void addInformation(ItemStack disk, EntityPlayer player, List<String> tooltip, boolean advanced) {
-        if (StorageItemNBT.isValid(disk)) {
-            int capacity = EnumItemStorageType.getById(disk.getItemDamage()).getCapacity();
+        IStorageDisk storage = create(disk);
 
-            if (capacity == -1) {
-                tooltip.add(I18n.format("misc.refinedstorage:storage.stored", StorageItemNBT.getStoredFromNBT(disk.getTagCompound())));
+        if (storage.isValid(disk)) {
+            if (storage.getCapacity() == -1) {
+                tooltip.add(I18n.format("misc.refinedstorage:storage.stored", storage.getStored()));
             } else {
-                tooltip.add(I18n.format("misc.refinedstorage:storage.stored_capacity", StorageItemNBT.getStoredFromNBT(disk.getTagCompound()), capacity));
+                tooltip.add(I18n.format("misc.refinedstorage:storage.stored_capacity", storage.getStored(), storage.getCapacity()));
             }
         }
     }
@@ -113,7 +108,9 @@ public class ItemStorageDisk extends ItemBase {
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
         ItemStack disk = player.getHeldItem(hand);
 
-        if (!world.isRemote && player.isSneaking() && StorageItemNBT.isValid(disk) && StorageItemNBT.getStoredFromNBT(disk.getTagCompound()) <= 0 && disk.getMetadata() != TYPE_CREATIVE) {
+        IStorageDisk storage = create(disk);
+
+        if (!world.isRemote && player.isSneaking() && storage.isValid(disk) && storage.getStored() <= 0 && disk.getMetadata() != TYPE_CREATIVE) {
             ItemStack storagePart = new ItemStack(RSItems.STORAGE_PART, 1, disk.getMetadata());
 
             if (!player.inventory.addItemStackToInventory(storagePart.copy())) {
@@ -130,7 +127,7 @@ public class ItemStorageDisk extends ItemBase {
     public void onCreated(ItemStack stack, World world, EntityPlayer player) {
         super.onCreated(stack, world, player);
 
-        StorageItemNBT.createStackWithNBT(stack);
+        API.instance().getStorageDiskBehavior().initDisk(StorageDiskType.ITEMS, stack);
     }
 
     @Override
@@ -140,6 +137,12 @@ public class ItemStorageDisk extends ItemBase {
 
     @Override
     public NBTTagCompound getNBTShareTag(ItemStack stack) {
-        return StorageItemNBT.getNBTShareTag(stack.getTagCompound());
+        return API.instance().getStorageDiskBehavior().getShareTag(StorageDiskType.ITEMS, stack);
+    }
+
+    @Nonnull
+    @Override
+    public IStorageDisk<ItemStack> create(ItemStack disk) {
+        return API.instance().getStorageDiskBehavior().createItemStorage(disk.getTagCompound(), EnumItemStorageType.getById(disk.getItemDamage()).getCapacity());
     }
 }

@@ -1,9 +1,8 @@
 package com.raoulvdberge.refinedstorage.tile;
 
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeDiskDrive;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageFluidNBT;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageItemNBT;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.NetworkNodeDiskDrive;
 import com.raoulvdberge.refinedstorage.tile.config.*;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.nbt.NBTTagCompound;
@@ -63,7 +62,7 @@ public class TileDiskDrive extends TileNode<NetworkNodeDiskDrive> {
         return diskState;
     }
 
-    public static void writeDiskState(NBTTagCompound tag, int disks, boolean connected, StorageItemNBT[] itemStorages, StorageFluidNBT[] fluidStorages) {
+    public static void writeDiskState(NBTTagCompound tag, int disks, boolean connected, IStorageDisk[] itemStorages, IStorageDisk[] fluidStorages) {
         for (int i = 0; i < disks; ++i) {
             int state = DISK_STATE_NONE;
 

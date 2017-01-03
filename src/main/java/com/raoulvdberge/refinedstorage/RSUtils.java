@@ -2,10 +2,10 @@ package com.raoulvdberge.refinedstorage;
 
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageDiskProvider;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageFluidNBT;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageItemNBT;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -115,21 +115,30 @@ public final class RSUtils {
         return Pair.of(buf.readInt(), new FluidStack(FluidRegistry.getFluid(ByteBufUtils.readUTF8String(buf)), buf.readInt(), ByteBufUtils.readTag(buf)));
     }
 
-    public static void createStorages(ItemStack disk, int slot, StorageItemNBT[] itemStorages, StorageFluidNBT[] fluidStorages, Function<ItemStack, StorageItemNBT> itemStorageSupplier, Function<ItemStack, StorageFluidNBT> fluidStorageNBTSupplier) {
+    public static ItemStack getStack(@Nullable ItemStack stack) {
+        return stack == null ? ItemStack.EMPTY : stack;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static void createStorages(ItemStack disk, int slot, IStorageDisk<ItemStack>[] itemStorages, IStorageDisk<FluidStack>[] fluidStorages, Function<IStorageDisk, IStorageDisk> itemStorageWrapper, Function<IStorageDisk, IStorageDisk> fluidStorageWrapper) {
         if (disk.isEmpty()) {
             itemStorages[slot] = null;
             fluidStorages[slot] = null;
         } else {
-            if (disk.getItem() == RSItems.STORAGE_DISK) {
-                itemStorages[slot] = itemStorageSupplier.apply(disk);
-            } else if (disk.getItem() == RSItems.FLUID_STORAGE_DISK) {
-                fluidStorages[slot] = fluidStorageNBTSupplier.apply(disk);
+            IStorageDiskProvider provider = (IStorageDiskProvider) disk.getItem();
+            IStorageDisk storage = provider.create(disk);
+
+            storage.readFromNBT();
+
+            switch (storage.getType()) {
+                case ITEMS:
+                    itemStorages[slot] = itemStorageWrapper.apply(storage);
+                    break;
+                case FLUIDS:
+                    fluidStorages[slot] = fluidStorageWrapper.apply(storage);
+                    break;
             }
         }
-    }
-
-    public static ItemStack getStack(@Nullable ItemStack stack) {
-        return stack == null ? ItemStack.EMPTY : stack;
     }
 
     public static NonNullList<ItemStack> toNonNullList(List<ItemStack> list) {

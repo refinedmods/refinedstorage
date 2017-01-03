@@ -1,15 +1,13 @@
-package com.raoulvdberge.refinedstorage.apiimpl.network.node;
+package com.raoulvdberge.refinedstorage.apiimpl.network.node.diskmanipulator;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageFluidNBT;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageItemNBT;
-import com.raoulvdberge.refinedstorage.block.EnumFluidStorageType;
-import com.raoulvdberge.refinedstorage.block.EnumItemStorageType;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.INetworkNodeHolder;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.*;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
-import com.raoulvdberge.refinedstorage.tile.TileDiskDrive;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
@@ -19,11 +17,9 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 public class NetworkNodeDiskManipulator extends NetworkNode implements IComparable, IFilterable, IType {
@@ -42,8 +38,8 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     private int type = IType.ITEMS;
     private int ioMode = IO_MODE_INSERT;
 
-    private StorageItem[] itemStorages = new StorageItem[6];
-    private StorageFluid[] fluidStorages = new StorageFluid[6];
+    private IStorageDisk[] itemStorages = new IStorageDisk[8];
+    private IStorageDisk[] fluidStorages = new IStorageDisk[8];
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK);
 
@@ -53,7 +49,14 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
             super.onContentsChanged(slot);
 
             if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
-                RSUtils.createStorages(getStackInSlot(slot), slot, itemStorages, fluidStorages, s -> new StorageItem(s), s -> new StorageFluid(s));
+                RSUtils.createStorages(
+                    getStackInSlot(slot),
+                    slot,
+                    itemStorages,
+                    fluidStorages,
+                    s -> new StorageItemDiskManipulator(NetworkNodeDiskManipulator.this, s),
+                    s -> new StorageFluidDiskManipulator(NetworkNodeDiskManipulator.this, s)
+                );
 
                 RSUtils.updateBlock(holder.world(), holder.pos());
             }
@@ -80,7 +83,14 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
             super.onContentsChanged(slot);
 
             if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
-                RSUtils.createStorages(getStackInSlot(slot), 3 + slot, itemStorages, fluidStorages, s -> new StorageItem(s), s -> new StorageFluid(s));
+                RSUtils.createStorages(
+                    getStackInSlot(slot),
+                    slot,
+                    itemStorages,
+                    fluidStorages,
+                    s -> new StorageItemDiskManipulator(NetworkNodeDiskManipulator.this, s),
+                    s -> new StorageFluidDiskManipulator(NetworkNodeDiskManipulator.this, s)
+                );
 
                 RSUtils.updateBlock(holder.world(), holder.pos());
             }
@@ -89,110 +99,6 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
 
     public NetworkNodeDiskManipulator(INetworkNodeHolder holder) {
         super(holder);
-    }
-
-    public class StorageItem extends StorageItemNBT {
-        private int lastState;
-
-        public StorageItem(ItemStack disk) {
-            super(disk.getTagCompound(), EnumItemStorageType.getById(disk.getItemDamage()).getCapacity(), NetworkNodeDiskManipulator.this);
-
-            lastState = TileDiskDrive.getDiskState(getStored(), getCapacity());
-        }
-
-        @Override
-        public int getPriority() {
-            return 0;
-        }
-
-        @Override
-        public boolean isVoiding() {
-            return false;
-        }
-
-        @Override
-        public ItemStack insert(@Nonnull ItemStack stack, int size, boolean simulate) {
-            if (!IFilterable.canTake(itemFilters, mode, getCompare(), stack)) {
-                return ItemHandlerHelper.copyStackWithSize(stack, size);
-            }
-
-            return super.insert(stack, size, simulate);
-        }
-
-        @Override
-        public ItemStack extract(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
-            if (!IFilterable.canTake(itemFilters, mode, getCompare(), stack)) {
-                return null;
-            }
-
-            return super.extract(stack, size, flags, simulate);
-        }
-
-        @Override
-        public void onStorageChanged() {
-            super.onStorageChanged();
-
-            int currentState = TileDiskDrive.getDiskState(getStored(), getCapacity());
-
-            if (lastState != currentState) {
-                lastState = currentState;
-
-                RSUtils.updateBlock(holder.world(), holder.pos());
-            }
-        }
-    }
-
-    public class StorageFluid extends StorageFluidNBT {
-        private int lastState;
-
-        public StorageFluid(ItemStack disk) {
-            super(disk.getTagCompound(), EnumFluidStorageType.getById(disk.getItemDamage()).getCapacity(), NetworkNodeDiskManipulator.this);
-
-            lastState = TileDiskDrive.getDiskState(getStored(), getCapacity());
-        }
-
-        @Override
-        public int getPriority() {
-            return 0;
-        }
-
-        @Override
-        public boolean isVoiding() {
-            return false;
-        }
-
-        @Override
-        @Nullable
-        public FluidStack insert(@Nonnull FluidStack stack, int size, boolean simulate) {
-            if (!IFilterable.canTakeFluids(fluidFilters, mode, getCompare(), stack)) {
-                return RSUtils.copyStackWithSize(stack, size);
-            }
-
-            return super.insert(stack, size, simulate);
-        }
-
-        @Override
-        @Nullable
-        public FluidStack extract(@Nonnull FluidStack stack, int size, int flags, boolean simulate) {
-            if (!IFilterable.canTakeFluids(fluidFilters, mode, getCompare(), stack)) {
-                return null;
-            }
-
-            return super.extract(stack, size, flags, simulate);
-        }
-
-        @Override
-        public void onStorageChanged() {
-            super.onStorageChanged();
-
-            int currentState = TileDiskDrive.getDiskState(getStored(), getCapacity());
-
-            if (lastState != currentState) {
-                lastState = currentState;
-
-                RSUtils.updateBlock(holder.world(), holder.pos());
-            }
-        }
     }
 
     private ItemHandlerBasic itemFilters = new ItemHandlerBasic(9, new ItemHandlerListenerNetworkNode(this));
@@ -226,12 +132,12 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
                 return;
             }
 
-            StorageItem storage = itemStorages[slot];
+            IStorageDisk storage = itemStorages[slot];
 
             if (ioMode == IO_MODE_INSERT) {
-                insertIntoNetwork(storage, slot);
+                insertItemIntoNetwork(storage, slot);
             } else if (ioMode == IO_MODE_EXTRACT) {
-                extractFromNetwork(storage, slot);
+                extractItemFromNetwork(storage, slot);
             }
         } else if (type == IType.FLUIDS) {
             while (slot < 3 && fluidStorages[slot] == null) {
@@ -242,17 +148,17 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
                 return;
             }
 
-            StorageFluid storage = fluidStorages[slot];
+            IStorageDisk storage = fluidStorages[slot];
 
             if (ioMode == IO_MODE_INSERT) {
-                insertIntoNetwork(storage, slot);
+                insertFluidIntoNetwork(storage, slot);
             } else if (ioMode == IO_MODE_EXTRACT) {
-                extractFromNetwork(storage, slot);
+                extractFluidFromNetwork(storage, slot);
             }
         }
     }
 
-    private void insertIntoNetwork(StorageItem storage, int slot) {
+    private void insertItemIntoNetwork(IStorageDisk<ItemStack> storage, int slot) {
         if (storage.getStored() == 0) {
             moveDriveToOutput(slot);
             return;
@@ -260,9 +166,6 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
 
         for (int i = 0; i < storage.getStacks().size(); i++) {
             ItemStack stack = storage.getStacks().get(i);
-            if (stack == null) {
-                continue;
-            }
 
             ItemStack extracted = storage.extract(stack, upgrades.getItemInteractCount(), compare, false);
             if (extracted == null) {
@@ -283,7 +186,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         }
     }
 
-    private void extractFromNetwork(StorageItem storage, int slot) {
+    private void extractItemFromNetwork(IStorageDisk<ItemStack> storage, int slot) {
         if (storage.getStored() == storage.getCapacity()) {
             moveDriveToOutput(slot);
             return;
@@ -331,7 +234,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         }
     }
 
-    private void insertIntoNetwork(StorageFluid storage, int slot) {
+    private void insertFluidIntoNetwork(IStorageDisk<FluidStack> storage, int slot) {
         if (storage.getStored() == 0) {
             moveDriveToOutput(slot);
             return;
@@ -364,7 +267,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         }
     }
 
-    private void extractFromNetwork(StorageFluid storage, int slot) {
+    private void extractFluidFromNetwork(IStorageDisk<FluidStack> storage, int slot) {
         if (storage.getStored() == storage.getCapacity()) {
             moveDriveToOutput(slot);
             return;
@@ -491,15 +394,23 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         return outputDisks;
     }
 
+    public ItemHandlerBasic getItemFilters() {
+        return itemFilters;
+    }
+
+    public ItemHandlerFluid getFluidFilters() {
+        return fluidFilters;
+    }
+
     public IItemHandler getUpgrades() {
         return upgrades;
     }
 
-    public StorageItem[] getItemStorages() {
+    public IStorageDisk[] getItemStorages() {
         return itemStorages;
     }
 
-    public StorageFluid[] getFluidStorages() {
+    public IStorageDisk[] getFluidStorages() {
         return fluidStorages;
     }
 
@@ -570,19 +481,18 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     }
 
     public void onBreak() {
-        for (StorageItem storage : itemStorages) {
+        for (IStorageDisk storage : itemStorages) {
             if (storage != null) {
                 storage.writeToNBT();
             }
         }
 
-        for (StorageFluid storage : fluidStorages) {
+        for (IStorageDisk storage : fluidStorages) {
             if (storage != null) {
                 storage.writeToNBT();
             }
         }
     }
-
 
     @Override
     public IItemHandler getDrops() {

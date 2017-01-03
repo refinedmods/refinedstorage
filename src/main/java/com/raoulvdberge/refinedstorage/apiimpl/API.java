@@ -6,7 +6,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftin
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementRegistry;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElementRegistry;
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
-import com.raoulvdberge.refinedstorage.api.network.*;
+import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
@@ -14,6 +14,7 @@ import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeRegistry;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRegistry;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageDiskBehavior;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementList;
@@ -25,6 +26,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.solderer.SoldererRegistry;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskBehavior;
 import com.raoulvdberge.refinedstorage.apiimpl.util.Comparer;
 import com.raoulvdberge.refinedstorage.apiimpl.util.StackListFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.util.StackListItem;
@@ -54,6 +56,7 @@ public class API implements IRSAPI {
     private INetworkNodeRegistry networkNodeRegistry = new NetworkNodeRegistry();
     private Map<Integer, INetworkNodeManager> networkNodeProviderServer = new HashMap<>();
     private Map<Integer, INetworkNodeManager> networkNodeProviderClient = new HashMap<>();
+    private IStorageDiskBehavior storageDiskBehavior = new StorageDiskBehavior();
     private ISoldererRegistry soldererRegistry = new SoldererRegistry();
     private ICraftingTaskRegistry craftingTaskRegistry = new CraftingTaskRegistry();
     private ICraftingMonitorElementRegistry craftingMonitorElementRegistry = new CraftingMonitorElementRegistry();
@@ -100,6 +103,11 @@ public class API implements IRSAPI {
         Map<Integer, INetworkNodeManager> provider = FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT ? networkNodeProviderClient : networkNodeProviderServer;
 
         return provider.computeIfAbsent(dimension, r -> new NetworkNodeManager());
+    }
+
+    @Override
+    public IStorageDiskBehavior getStorageDiskBehavior() {
+        return storageDiskBehavior;
     }
 
     @Override

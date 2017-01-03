@@ -8,7 +8,7 @@ import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageItemNBT;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskItem;
 import com.raoulvdberge.refinedstorage.block.BlockStorage;
 import com.raoulvdberge.refinedstorage.block.EnumItemStorageType;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
@@ -28,9 +28,9 @@ import java.util.List;
 public class NetworkNodeStorage extends NetworkNode implements IStorageGui, IStorageProvider, IComparable, IFilterable, IPrioritizable, IExcessVoidable, IAccessType {
     public static final String ID = "storage";
 
-    class StorageItem extends StorageItemNBT {
+    class StorageItem extends StorageDiskItem {
         public StorageItem() {
-            super(NetworkNodeStorage.this.getStorageTag(), NetworkNodeStorage.this.getCapacity(), NetworkNodeStorage.this);
+            super(NetworkNodeStorage.this.getStorageTag(), NetworkNodeStorage.this.getCapacity());
         }
 
         @Override
@@ -56,6 +56,13 @@ public class NetworkNodeStorage extends NetworkNode implements IStorageGui, ISto
         public boolean isVoiding() {
             return voidExcess;
         }
+
+        @Override
+        public void onChanged() {
+            super.onChanged();
+
+            markDirty();
+        }
     }
 
     public static final String NBT_STORAGE = "Storage";
@@ -67,7 +74,7 @@ public class NetworkNodeStorage extends NetworkNode implements IStorageGui, ISto
 
     private ItemHandlerBasic filters = new ItemHandlerBasic(9, new ItemHandlerListenerNetworkNode(this));
 
-    private NBTTagCompound storageTag = StorageItemNBT.createNBT();
+    private NBTTagCompound storageTag = StorageDiskItem.getTag();
 
     private StorageItem storage;
 
@@ -246,7 +253,7 @@ public class NetworkNodeStorage extends NetworkNode implements IStorageGui, ISto
         this.storageTag = storageTag;
     }
 
-    public StorageItemNBT getStorage() {
+    public StorageDiskItem getStorage() {
         return storage;
     }
 

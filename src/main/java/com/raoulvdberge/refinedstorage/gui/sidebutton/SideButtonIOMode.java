@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.gui.sidebutton;
 
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeDiskManipulator;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskmanipulator.NetworkNodeDiskManipulator;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.tile.TileDiskManipulator;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;

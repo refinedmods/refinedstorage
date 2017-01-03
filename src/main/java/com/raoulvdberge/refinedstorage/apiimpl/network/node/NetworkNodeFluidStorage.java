@@ -8,7 +8,7 @@ import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageFluidNBT;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskFluid;
 import com.raoulvdberge.refinedstorage.block.BlockFluidStorage;
 import com.raoulvdberge.refinedstorage.block.EnumFluidStorageType;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
@@ -28,9 +28,9 @@ import java.util.List;
 public class NetworkNodeFluidStorage extends NetworkNode implements IStorageGui, IStorageProvider, IComparable, IFilterable, IPrioritizable, IExcessVoidable, IAccessType {
     public static final String ID = "fluid_storage";
 
-    class StorageFluid extends StorageFluidNBT {
+    class StorageFluid extends StorageDiskFluid {
         public StorageFluid() {
-            super(NetworkNodeFluidStorage.this.getStorageTag(), NetworkNodeFluidStorage.this.getCapacity(), NetworkNodeFluidStorage.this);
+            super(NetworkNodeFluidStorage.this.getStorageTag(), NetworkNodeFluidStorage.this.getCapacity());
         }
 
         @Override
@@ -57,6 +57,13 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IStorageGui,
         public boolean isVoiding() {
             return voidExcess;
         }
+
+        @Override
+        public void onChanged() {
+            super.onChanged();
+
+            markDirty();
+        }
     }
 
     public static final String NBT_STORAGE = "Storage";
@@ -68,7 +75,7 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IStorageGui,
 
     private ItemHandlerFluid filters = new ItemHandlerFluid(9, new ItemHandlerListenerNetworkNode(this));
 
-    private NBTTagCompound storageTag = StorageFluidNBT.createNBT();
+    private NBTTagCompound storageTag = StorageDiskFluid.getTag();
 
     private StorageFluid storage;
 
@@ -235,7 +242,7 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IStorageGui,
         this.storageTag = storageTag;
     }
 
-    public StorageFluidNBT getStorage() {
+    public StorageDiskFluid getStorage() {
         return storage;
     }
 

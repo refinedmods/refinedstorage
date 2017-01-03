@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.tile;
 
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeStorage;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageItemNBT;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskItem;
 import com.raoulvdberge.refinedstorage.tile.config.*;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
@@ -18,7 +18,7 @@ public class TileStorage extends TileNode<NetworkNodeStorage> {
     public static final TileDataParameter<Integer> STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileStorage>() {
         @Override
         public Integer getValue(TileStorage tile) {
-            return StorageItemNBT.getStoredFromNBT(tile.getNode().getStorageTag());
+            return StorageDiskItem.getStored(tile.getNode().getStorageTag());
         }
     });
     public static final TileDataParameter<Boolean> VOID_EXCESS = IExcessVoidable.createParameter();

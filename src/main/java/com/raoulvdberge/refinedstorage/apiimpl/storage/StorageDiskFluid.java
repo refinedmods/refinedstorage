@@ -1,9 +1,9 @@
 package com.raoulvdberge.refinedstorage.apiimpl.storage;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
-import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
-import com.raoulvdberge.refinedstorage.api.storage.IStorage;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
+import com.raoulvdberge.refinedstorage.api.storage.StorageDiskType;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,14 +14,7 @@ import net.minecraftforge.fluids.FluidStack;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-/**
- * A implementation of {@link IStorage<FluidStack>} that stores storage fluids in NBT.
- */
-public abstract class StorageFluidNBT implements IStorage<FluidStack> {
-    /**
-     * The current save protocol that is used. It's set to every {@link StorageFluidNBT} to allow for
-     * safe backwards compatibility breaks.
-     */
+public class StorageDiskFluid implements IStorageDisk<FluidStack> {
     private static final int PROTOCOL = 1;
 
     private static final String NBT_PROTOCOL = "Protocol";
@@ -31,24 +24,16 @@ public abstract class StorageFluidNBT implements IStorage<FluidStack> {
 
     private NBTTagCompound tag;
     private int capacity;
-    private INetworkNode node;
 
     private NonNullList<FluidStack> stacks = NonNullList.create();
 
-    /**
-     * @param tag      The NBT tag we are reading from and writing the amount stored to, has to be initialized with {@link StorageFluidNBT#createNBT()} if it doesn't exist yet
-     * @param capacity The capacity of this storage, -1 for infinite capacity
-     * @param node     A {@link INetworkNode} that the NBT storage is in, will be marked dirty when the storage changes
-     */
-    public StorageFluidNBT(NBTTagCompound tag, int capacity, @Nullable INetworkNode node) {
+    public StorageDiskFluid(NBTTagCompound tag, int capacity) {
         this.tag = tag;
         this.capacity = capacity;
-        this.node = node;
-
-        readFromNBT();
     }
 
-    private void readFromNBT() {
+    @Override
+    public void readFromNBT() {
         NBTTagList list = (NBTTagList) tag.getTag(NBT_FLUIDS);
 
         for (int i = 0; i < list.tagCount(); ++i) {
@@ -60,9 +45,7 @@ public abstract class StorageFluidNBT implements IStorage<FluidStack> {
         }
     }
 
-    /**
-     * Writes the items to the NBT tag.
-     */
+    @Override
     public void writeToNBT() {
         NBTTagList list = new NBTTagList();
 
@@ -72,6 +55,11 @@ public abstract class StorageFluidNBT implements IStorage<FluidStack> {
 
         tag.setTag(NBT_FLUIDS, list);
         tag.setInteger(NBT_PROTOCOL, PROTOCOL);
+    }
+
+    @Override
+    public StorageDiskType getType() {
+        return StorageDiskType.FLUIDS;
     }
 
     @Override
@@ -100,7 +88,7 @@ public abstract class StorageFluidNBT implements IStorage<FluidStack> {
 
                         otherStack.amount += remainingSpace;
 
-                        onStorageChanged();
+                        onChanged();
                     }
 
                     return isVoiding() ? null : RSUtils.copyStackWithSize(otherStack, size - remainingSpace);
@@ -110,7 +98,7 @@ public abstract class StorageFluidNBT implements IStorage<FluidStack> {
 
                         otherStack.amount += size;
 
-                        onStorageChanged();
+                        onChanged();
                     }
 
                     return null;
@@ -134,7 +122,7 @@ public abstract class StorageFluidNBT implements IStorage<FluidStack> {
 
                 stacks.add(RSUtils.copyStackWithSize(stack, remainingSpace));
 
-                onStorageChanged();
+                onChanged();
             }
 
             return isVoiding() ? null : RSUtils.copyStackWithSize(stack, size - remainingSpace);
@@ -144,7 +132,7 @@ public abstract class StorageFluidNBT implements IStorage<FluidStack> {
 
                 stacks.add(RSUtils.copyStackWithSize(stack, size));
 
-                onStorageChanged();
+                onChanged();
             }
 
             return null;
@@ -169,7 +157,7 @@ public abstract class StorageFluidNBT implements IStorage<FluidStack> {
 
                     tag.setInteger(NBT_STORED, getStored() - size);
 
-                    onStorageChanged();
+                    onChanged();
                 }
 
                 return RSUtils.copyStackWithSize(otherStack, size);
@@ -179,22 +167,28 @@ public abstract class StorageFluidNBT implements IStorage<FluidStack> {
         return null;
     }
 
-    public void onStorageChanged() {
-        if (node != null) {
-            node.markDirty();
-        }
+    @Override
+    public void onChanged() {
+        // NO OP
     }
 
     @Override
     public int getStored() {
-        return getStoredFromNBT(tag);
+        return getStored(tag);
     }
 
+    @Override
+    public int getPriority() {
+        return 0;
+    }
+
+    @Override
     public int getCapacity() {
         return capacity;
     }
 
-    protected boolean isVoiding() {
+    @Override
+    public boolean isVoiding() {
         return false;
     }
 
@@ -213,28 +207,26 @@ public abstract class StorageFluidNBT implements IStorage<FluidStack> {
         return inserted;
     }
 
-    public NBTTagCompound getTag() {
-        return tag;
+    @Override
+    public boolean isValid(ItemStack stack) {
+        return stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_FLUIDS) && stack.getTagCompound().hasKey(NBT_STORED);
     }
 
-    public static int getStoredFromNBT(NBTTagCompound tag) {
-        return tag.getInteger(NBT_STORED);
-    }
-
-    public static NBTTagCompound getNBTShareTag(NBTTagCompound tag) {
+    public static NBTTagCompound getShareTag(NBTTagCompound tag) {
         NBTTagCompound otherTag = new NBTTagCompound();
 
-        otherTag.setInteger(NBT_STORED, getStoredFromNBT(tag));
+        otherTag.setInteger(NBT_STORED, getStored(tag));
         otherTag.setTag(NBT_FLUIDS, new NBTTagList()); // To circumvent not being able to insert disks in Disk Drives (see FluidStorageNBT#isValid(ItemStack)).
         otherTag.setInteger(NBT_PROTOCOL, PROTOCOL);
 
         return otherTag;
     }
 
-    /*
-     * @return A NBT tag initialized with the fields that {@link NBTStorage} uses
-     */
-    public static NBTTagCompound createNBT() {
+    public static int getStored(NBTTagCompound tag) {
+        return tag.getInteger(NBT_STORED);
+    }
+
+    public static NBTTagCompound getTag() {
         NBTTagCompound tag = new NBTTagCompound();
 
         tag.setTag(NBT_FLUIDS, new NBTTagList());
@@ -244,16 +236,8 @@ public abstract class StorageFluidNBT implements IStorage<FluidStack> {
         return tag;
     }
 
-    public static boolean isValid(ItemStack stack) {
-        return stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_FLUIDS) && stack.getTagCompound().hasKey(NBT_STORED);
-    }
-
-    /**
-     * @param stack The {@link ItemStack} to populate with the NBT tags from {@link StorageFluidNBT#createNBT()}
-     * @return The provided {@link ItemStack} with NBT tags from {@link StorageFluidNBT#createNBT()}
-     */
-    public static ItemStack createStackWithNBT(ItemStack stack) {
-        stack.setTagCompound(createNBT());
+    public static ItemStack initDisk(ItemStack stack) {
+        stack.setTagCompound(getTag());
 
         return stack;
     }

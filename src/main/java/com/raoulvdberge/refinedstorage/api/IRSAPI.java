@@ -10,6 +10,7 @@ import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeRegistry;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRegistry;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageDiskBehavior;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import net.minecraft.item.ItemStack;
@@ -40,6 +41,11 @@ public interface IRSAPI {
      * @return the network node manager for the given dimension
      */
     INetworkNodeManager getNetworkNodeManager(int dimension);
+
+    /**
+     * @return the storage disk behavior
+     */
+    IStorageDiskBehavior getStorageDiskBehavior();
 
     /**
      * @return the solderer registry
