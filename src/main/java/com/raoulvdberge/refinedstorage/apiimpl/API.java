@@ -106,7 +106,7 @@ public class API implements IRSAPI {
     }
 
     @Override
-    public IStorageDiskBehavior getStorageDiskBehavior() {
+    public IStorageDiskBehavior getDefaultStorageDiskBehavior() {
         return storageDiskBehavior;
     }
 

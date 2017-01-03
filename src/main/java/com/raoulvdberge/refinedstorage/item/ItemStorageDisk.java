@@ -46,7 +46,7 @@ public class ItemStorageDisk extends ItemBase implements IStorageDiskProvider<It
     @Override
     public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
         for (int i = 0; i < 5; ++i) {
-            subItems.add(API.instance().getStorageDiskBehavior().initDisk(StorageDiskType.ITEMS, new ItemStack(item, 1, i)));
+            subItems.add(API.instance().getDefaultStorageDiskBehavior().initDisk(StorageDiskType.ITEMS, new ItemStack(item, 1, i)));
         }
     }
 
@@ -58,14 +58,14 @@ public class ItemStorageDisk extends ItemBase implements IStorageDiskProvider<It
             if (stack.getItemDamage() == TYPE_DEBUG) {
                 applyDebugDiskData(stack);
             } else {
-                API.instance().getStorageDiskBehavior().initDisk(StorageDiskType.ITEMS, stack);
+                API.instance().getDefaultStorageDiskBehavior().initDisk(StorageDiskType.ITEMS, stack);
             }
         }
     }
 
     private void applyDebugDiskData(ItemStack stack) {
         if (debugDiskTag == null) {
-            debugDiskTag = API.instance().getStorageDiskBehavior().getTag(StorageDiskType.ITEMS);
+            debugDiskTag = API.instance().getDefaultStorageDiskBehavior().getTag(StorageDiskType.ITEMS);
 
             StorageDiskItem storage = new StorageDiskItem(debugDiskTag, -1);
 
@@ -127,7 +127,7 @@ public class ItemStorageDisk extends ItemBase implements IStorageDiskProvider<It
     public void onCreated(ItemStack stack, World world, EntityPlayer player) {
         super.onCreated(stack, world, player);
 
-        API.instance().getStorageDiskBehavior().initDisk(StorageDiskType.ITEMS, stack);
+        API.instance().getDefaultStorageDiskBehavior().initDisk(StorageDiskType.ITEMS, stack);
     }
 
     @Override
@@ -137,12 +137,12 @@ public class ItemStorageDisk extends ItemBase implements IStorageDiskProvider<It
 
     @Override
     public NBTTagCompound getNBTShareTag(ItemStack stack) {
-        return API.instance().getStorageDiskBehavior().getShareTag(StorageDiskType.ITEMS, stack);
+        return API.instance().getDefaultStorageDiskBehavior().getShareTag(StorageDiskType.ITEMS, stack);
     }
 
     @Nonnull
     @Override
     public IStorageDisk<ItemStack> create(ItemStack disk) {
-        return API.instance().getStorageDiskBehavior().createItemStorage(disk.getTagCompound(), EnumItemStorageType.getById(disk.getItemDamage()).getCapacity());
+        return API.instance().getDefaultStorageDiskBehavior().createItemStorage(disk.getTagCompound(), EnumItemStorageType.getById(disk.getItemDamage()).getCapacity());
     }
 }

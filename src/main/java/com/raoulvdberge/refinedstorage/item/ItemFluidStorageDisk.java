@@ -48,13 +48,13 @@ public class ItemFluidStorageDisk extends ItemBase implements IStorageDiskProvid
     @Override
     public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
         for (int i = 0; i < 5; ++i) {
-            subItems.add(API.instance().getStorageDiskBehavior().initDisk(StorageDiskType.FLUIDS, new ItemStack(item, 1, i)));
+            subItems.add(API.instance().getDefaultStorageDiskBehavior().initDisk(StorageDiskType.FLUIDS, new ItemStack(item, 1, i)));
         }
     }
 
     private void applyDebugDiskData(ItemStack stack) {
         if (debugDiskTag == null) {
-            debugDiskTag = API.instance().getStorageDiskBehavior().getTag(StorageDiskType.FLUIDS);
+            debugDiskTag = API.instance().getDefaultStorageDiskBehavior().getTag(StorageDiskType.FLUIDS);
 
             StorageDiskFluid storage = new StorageDiskFluid(debugDiskTag, -1);
 
@@ -76,7 +76,7 @@ public class ItemFluidStorageDisk extends ItemBase implements IStorageDiskProvid
             if (stack.getMetadata() == TYPE_DEBUG) {
                 applyDebugDiskData(stack);
             } else {
-                API.instance().getStorageDiskBehavior().initDisk(StorageDiskType.FLUIDS, stack);
+                API.instance().getDefaultStorageDiskBehavior().initDisk(StorageDiskType.FLUIDS, stack);
             }
         }
     }
@@ -117,7 +117,7 @@ public class ItemFluidStorageDisk extends ItemBase implements IStorageDiskProvid
     public void onCreated(ItemStack stack, World world, EntityPlayer player) {
         super.onCreated(stack, world, player);
 
-        API.instance().getStorageDiskBehavior().initDisk(StorageDiskType.FLUIDS, stack);
+        API.instance().getDefaultStorageDiskBehavior().initDisk(StorageDiskType.FLUIDS, stack);
     }
 
     @Override
@@ -127,12 +127,12 @@ public class ItemFluidStorageDisk extends ItemBase implements IStorageDiskProvid
 
     @Override
     public NBTTagCompound getNBTShareTag(ItemStack stack) {
-        return API.instance().getStorageDiskBehavior().getShareTag(StorageDiskType.FLUIDS, stack);
+        return API.instance().getDefaultStorageDiskBehavior().getShareTag(StorageDiskType.FLUIDS, stack);
     }
 
     @Nonnull
     @Override
     public IStorageDisk<FluidStack> create(ItemStack disk) {
-        return API.instance().getStorageDiskBehavior().createFluidStorage(disk.getTagCompound(), EnumFluidStorageType.getById(disk.getItemDamage()).getCapacity());
+        return API.instance().getDefaultStorageDiskBehavior().createFluidStorage(disk.getTagCompound(), EnumFluidStorageType.getById(disk.getItemDamage()).getCapacity());
     }
 }

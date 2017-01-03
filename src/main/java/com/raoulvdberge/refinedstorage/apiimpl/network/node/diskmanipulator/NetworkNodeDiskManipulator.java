@@ -38,8 +38,8 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     private int type = IType.ITEMS;
     private int ioMode = IO_MODE_INSERT;
 
-    private IStorageDisk[] itemStorages = new IStorageDisk[8];
-    private IStorageDisk[] fluidStorages = new IStorageDisk[8];
+    private IStorageDisk[] itemStorages = new IStorageDisk[6];
+    private IStorageDisk[] fluidStorages = new IStorageDisk[6];
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK);
 
@@ -244,15 +244,8 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         int i = 0;
 
         while (extracted == null && storage.getStacks().size() > i) {
-            FluidStack stack = storage.getStacks().get(i);
-
-            while (stack == null && storage.getStacks().size() > i) {
-                i++;
-            }
-
-            if (stack != null) {
-                extracted = storage.extract(stack, upgrades.getItemInteractCount(), compare, false);
-            }
+            FluidStack stack = storage.getStacks().get(i++);
+            extracted = storage.extract(stack, upgrades.getItemInteractCount(), compare, false);
         }
 
         if (extracted == null) {

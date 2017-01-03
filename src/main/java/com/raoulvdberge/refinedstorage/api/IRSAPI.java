@@ -43,9 +43,9 @@ public interface IRSAPI {
     INetworkNodeManager getNetworkNodeManager(int dimension);
 
     /**
-     * @return the storage disk behavior
+     * @return the default storage disk behavior
      */
-    IStorageDiskBehavior getStorageDiskBehavior();
+    IStorageDiskBehavior getDefaultStorageDiskBehavior();
 
     /**
      * @return the solderer registry
