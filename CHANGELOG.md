@@ -1,5 +1,23 @@
 # Refined Storage Changelog
 
+### 1.4
+- Added Security Manager (raoulvdberge)
+- Added Security Card (raoulvdberge)
+- Added Wireless Fluid Grid (raoulvdberge)
+- Added craft-only toggle to Exporter (raoulvdberge)
+- Added blocking mode to patterns in autocrafting (InusualZ)
+- Added Grid size toggle (stretched, small, medium, large) (raoulvdberge)
+- Added dismantling mode to the Wrench (raoulvdberge)
+- Autocrafting bugfixes (way2muchnoise)
+- Fixed Regulator mode not working (InusualZ)
+- Fixed Fluid Interface still being sided (raoulvdberge)
+- Fixed Constructor not working on Botania flowers (raoulvdberge)
+- Fixed Wireless Transmitter working even if it was disabled with redstone mode (raoulvdberge)
+- Fixed Solderer not accepting books created in an Anvil (raoulvdberge)
+- Fixed bug where network machines stopped working on chunk borders (raoulvdberge)
+- Fixed memes not working (raoulvdberge)
+- Made sure External Storage always has the correct inventory in world (raoulvdberge)
+
 ### 1.3.5
 - Fixed TPS lag on very large crafting tasks (way2muchnoise)
 - Fixed not being able to use autocrafting on some EnderIO items (way2muchnoise)
@@ -45,6 +63,21 @@
 - Removed RF support, use Forge Energy instead (raoulvdberge)
 - Removed IC2 support (raoulvdberge)
 - Removed MCMultiPart support (will be re-added as soon as MCMultiPart for MC 1.11 is available) (raoulvdberge)
+
+### 1.2.15
+- Autocrafting bugfixes (way2muchnoise)
+- Fixed Grid Filter hiding everything when 2 or more items are in it (raoulvdberge)
+
+### 1.2.14
+- Fixed server crash (way2muchnoise)
+
+### 1.2.13
+- Fixed memes not working (raoulvdberge)
+- Fixed controller causing network rebuild on every neighbor change (raoulvdberge)
+- Autocrafting bugfixes (way2muchnoise)
+- Fixed Wireless Transmitter working even if it was disabled with redstone mode (raoulvdberge)
+- Fixed Solderer not accepting books created in an Anvil (raoulvdberge)
+- Made sure External Storage always has the correct inventory in world (raoulvdberge)
 
 ### 1.2.12
 - Fixed TPS lag on very large crafting tasks (way2muchnoise)
