@@ -62,7 +62,6 @@ public class API implements IRSAPI {
     private ICraftingMonitorElementRegistry craftingMonitorElementRegistry = new CraftingMonitorElementRegistry();
     private ICraftingPreviewElementRegistry craftingPreviewElementRegistry = new CraftingPreviewElementRegistry();
     private IReaderWriterHandlerRegistry readerWriterHandlerRegistry = new ReaderWriterHandlerRegistry();
-    private Set<BiPredicate<TileEntity, EnumFacing>> connectableConditions = new HashSet<>();
 
     public static IRSAPI instance() {
         return INSTANCE;
