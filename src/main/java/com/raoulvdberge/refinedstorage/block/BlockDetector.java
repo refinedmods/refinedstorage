@@ -27,14 +27,14 @@ public class BlockDetector extends BlockNode {
     @Override
     protected BlockStateContainer createBlockState() {
         return createBlockStateBuilder()
-                .add(POWERED)
-                .build();
+            .add(POWERED)
+            .build();
     }
 
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
         return super.getActualState(state, world, pos)
-                .withProperty(POWERED, ((TileDetector) world.getTileEntity(pos)).getNode().isPowered());
+            .withProperty(POWERED, ((TileDetector) world.getTileEntity(pos)).getNode().isPowered());
     }
 
     @Override

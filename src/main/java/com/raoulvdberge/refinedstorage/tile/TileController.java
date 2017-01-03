@@ -109,9 +109,9 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
                     }
 
                     ClientNode clientNode = new ClientNode(
-                            stack,
-                            1,
-                            node.getEnergyUsage()
+                        stack,
+                        1,
+                        node.getEnergyUsage()
                     );
 
                     if (nodes.contains(clientNode)) {
@@ -319,8 +319,8 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
     @Override
     public void sendItemStorageToClient() {
         getWorld().getMinecraftServer().getPlayerList().getPlayers().stream()
-                .filter(player -> isWatchingGrid(player, EnumGridType.NORMAL, EnumGridType.CRAFTING, EnumGridType.PATTERN))
-                .forEach(this::sendItemStorageToClient);
+            .filter(player -> isWatchingGrid(player, EnumGridType.NORMAL, EnumGridType.CRAFTING, EnumGridType.PATTERN))
+            .forEach(this::sendItemStorageToClient);
     }
 
     @Override
@@ -331,15 +331,15 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
     @Override
     public void sendItemStorageDeltaToClient(ItemStack stack, int delta) {
         getWorld().getMinecraftServer().getPlayerList().getPlayers().stream()
-                .filter(player -> isWatchingGrid(player, EnumGridType.NORMAL, EnumGridType.CRAFTING, EnumGridType.PATTERN))
-                .forEach(player -> RS.INSTANCE.network.sendTo(new MessageGridItemDelta(this, stack, delta), player));
+            .filter(player -> isWatchingGrid(player, EnumGridType.NORMAL, EnumGridType.CRAFTING, EnumGridType.PATTERN))
+            .forEach(player -> RS.INSTANCE.network.sendTo(new MessageGridItemDelta(this, stack, delta), player));
     }
 
     @Override
     public void sendFluidStorageToClient() {
         getWorld().getMinecraftServer().getPlayerList().getPlayers().stream()
-                .filter(player -> isWatchingGrid(player, EnumGridType.FLUID))
-                .forEach(this::sendFluidStorageToClient);
+            .filter(player -> isWatchingGrid(player, EnumGridType.FLUID))
+            .forEach(this::sendFluidStorageToClient);
     }
 
     @Override
@@ -350,8 +350,8 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
     @Override
     public void sendFluidStorageDeltaToClient(FluidStack stack, int delta) {
         getWorld().getMinecraftServer().getPlayerList().getPlayers().stream()
-                .filter(player -> isWatchingGrid(player, EnumGridType.FLUID))
-                .forEach(player -> RS.INSTANCE.network.sendTo(new MessageGridFluidDelta(stack, delta), player));
+            .filter(player -> isWatchingGrid(player, EnumGridType.FLUID))
+            .forEach(player -> RS.INSTANCE.network.sendTo(new MessageGridFluidDelta(stack, delta), player));
     }
 
     private boolean isWatchingGrid(EntityPlayer player, EnumGridType... types) {
@@ -374,8 +374,8 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
     @Override
     public void sendCraftingMonitorUpdate() {
         List<EntityPlayerMP> watchers = getWorld().getMinecraftServer().getPlayerList().getPlayers().stream()
-                .filter(player -> player.openContainer instanceof ContainerCraftingMonitor && pos.equals(((ContainerCraftingMonitor) player.openContainer).getCraftingMonitor().getNetworkPosition()))
-                .collect(Collectors.toList());
+            .filter(player -> player.openContainer instanceof ContainerCraftingMonitor && pos.equals(((ContainerCraftingMonitor) player.openContainer).getCraftingMonitor().getNetworkPosition()))
+            .collect(Collectors.toList());
 
         if (!watchers.isEmpty()) {
             List<ICraftingMonitorElement> elements = craftingManager.getTasks().stream().flatMap(t -> t.getCraftingMonitorElements().stream()).collect(Collectors.toList());
@@ -419,10 +419,10 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
     @Override
     public void sendReaderWriterChannelUpdate() {
         getWorld().getMinecraftServer().getPlayerList().getPlayers().stream()
-                .filter(player -> player.openContainer instanceof ContainerReaderWriter &&
-                        ((ContainerReaderWriter) player.openContainer).getReaderWriter().getNetwork() != null &&
-                        pos.equals(((ContainerReaderWriter) player.openContainer).getReaderWriter().getNetwork().getPosition()))
-                .forEach(this::sendReaderWriterChannelUpdate);
+            .filter(player -> player.openContainer instanceof ContainerReaderWriter &&
+                ((ContainerReaderWriter) player.openContainer).getReaderWriter().getNetwork() != null &&
+                pos.equals(((ContainerReaderWriter) player.openContainer).getReaderWriter().getNetwork().getPosition()))
+            .forEach(this::sendReaderWriterChannelUpdate);
     }
 
     @Override
@@ -783,9 +783,9 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
         return capability == CapabilityEnergy.ENERGY
-                || (energyTesla != null && (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER))
-                || capability == CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY
-                || super.hasCapability(capability, facing);
+            || (energyTesla != null && (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER))
+            || capability == CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY
+            || super.hasCapability(capability, facing);
     }
 
     @Override

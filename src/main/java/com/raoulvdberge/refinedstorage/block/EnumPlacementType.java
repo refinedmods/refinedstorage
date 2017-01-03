@@ -6,16 +6,16 @@ import net.minecraft.util.math.BlockPos;
 
 public enum EnumPlacementType {
     ANY(
-            EnumFacing.VALUES
+        EnumFacing.VALUES
     ),
     ANY_FACE_PLAYER(
-            EnumFacing.VALUES
+        EnumFacing.VALUES
     ),
     HORIZONTAL(
-            EnumFacing.NORTH,
-            EnumFacing.EAST,
-            EnumFacing.SOUTH,
-            EnumFacing.WEST
+        EnumFacing.NORTH,
+        EnumFacing.EAST,
+        EnumFacing.SOUTH,
+        EnumFacing.WEST
     );
 
     final EnumFacing[] allowed;

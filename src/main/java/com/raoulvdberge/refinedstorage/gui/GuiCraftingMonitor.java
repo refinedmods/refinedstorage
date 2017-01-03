@@ -97,10 +97,10 @@ public class GuiCraftingMonitor extends GuiBase {
         drawTexture(x, y, 0, 0, screenWidth, screenHeight);
 
         if (itemSelectedX != -1 &&
-                itemSelectedY != -1 &&
-                itemSelected >= 0 &&
-                itemSelected < getElements().size() &&
-                getElements().get(itemSelected).canDrawSelection()) {
+            itemSelectedY != -1 &&
+            itemSelected >= 0 &&
+            itemSelected < getElements().size() &&
+            getElements().get(itemSelected).canDrawSelection()) {
             drawTexture(x + itemSelectedX, y + itemSelectedY, 0, 232, ITEM_WIDTH, ITEM_HEIGHT);
         }
     }

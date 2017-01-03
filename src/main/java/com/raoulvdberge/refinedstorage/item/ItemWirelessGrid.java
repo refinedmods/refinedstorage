@@ -28,10 +28,10 @@ public class ItemWirelessGrid extends ItemNetworkItem {
     @Override
     public boolean isValid(ItemStack stack) {
         return super.isValid(stack)
-                && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_VIEW_TYPE)
-                && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_SORTING_DIRECTION)
-                && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_SORTING_TYPE)
-                && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_SEARCH_BOX_MODE);
+            && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_VIEW_TYPE)
+            && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_SORTING_DIRECTION)
+            && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_SORTING_TYPE)
+            && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_SEARCH_BOX_MODE);
     }
 
     @Override

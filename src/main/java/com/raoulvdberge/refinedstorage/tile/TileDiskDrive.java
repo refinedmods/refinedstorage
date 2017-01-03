@@ -72,8 +72,8 @@ public class TileDiskDrive extends TileNode<NetworkNodeDiskDrive> {
                     state = DISK_STATE_DISCONNECTED;
                 } else {
                     state = getDiskState(
-                            itemStorages[i] != null ? itemStorages[i].getStored() : fluidStorages[i].getStored(),
-                            itemStorages[i] != null ? itemStorages[i].getCapacity() : fluidStorages[i].getCapacity()
+                        itemStorages[i] != null ? itemStorages[i].getStored() : fluidStorages[i].getStored(),
+                        itemStorages[i] != null ? itemStorages[i].getCapacity() : fluidStorages[i].getCapacity()
                     );
                 }
             }

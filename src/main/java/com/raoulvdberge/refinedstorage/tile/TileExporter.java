@@ -40,12 +40,12 @@ public class TileExporter extends TileNode<NetworkNodeExporter> {
             exporter.markDirty();
 
             tile.getWorld().getMinecraftServer().getPlayerList().getPlayers().stream()
-                    .filter(player -> player.openContainer instanceof ContainerExporter && ((ContainerExporter) player.openContainer).getTile().getPos().equals(tile.getPos()))
-                    .forEach(player -> {
-                        ((ContainerExporter) player.openContainer).initSlots();
+                .filter(player -> player.openContainer instanceof ContainerExporter && ((ContainerExporter) player.openContainer).getTile().getPos().equals(tile.getPos()))
+                .forEach(player -> {
+                    ((ContainerExporter) player.openContainer).initSlots();
 
-                        player.openContainer.detectAndSendChanges();
-                    });
+                    player.openContainer.detectAndSendChanges();
+                });
         }
     }, new ITileDataListener<Boolean>() {
         @Override
