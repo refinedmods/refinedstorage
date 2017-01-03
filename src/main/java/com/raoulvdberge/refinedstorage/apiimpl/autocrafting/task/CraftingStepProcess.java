@@ -83,8 +83,13 @@ public class CraftingStepProcess extends CraftingStep {
             IItemHandler inventory = getPattern().getContainer().getFacingInventory();
             if (insert(inventory, new ArrayDeque<>(actualInputs), true)) {
                 insert(inventory, actualInputs, false);
+            } else {
+                // Something went wrong here, redo!
+                toInsertItems.addAll(actualInputs);
+                startedProcessing = false;
             }
         }
+
     }
 
     @Override

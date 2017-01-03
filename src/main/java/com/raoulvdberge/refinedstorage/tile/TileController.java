@@ -662,11 +662,11 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                 itemStorage.add(stack, inserted - externalStorageInserted - insertOnlyInserted, false);
             }
 
-            if (inserted - insertOnlyInserted > 0) {
-                ItemStack checkSteps = ItemHandlerHelper.copyStackWithSize(stack, inserted - insertOnlyInserted);
+            if (inserted > 0) {
+                ItemStack checkSteps = ItemHandlerHelper.copyStackWithSize(stack, inserted);
 
                 for (ICraftingTask task : craftingTasks) {
-                    for (ICraftingStep processable : task.getSteps()) {
+                    for (ICraftingStep processable : task.getSteps().stream().filter(ICraftingStep::hasStartedProcessing).collect(Collectors.toList())) {
                         if (processable.onReceiveOutput(checkSteps)) {
                             return remainder; // All done
                         }
