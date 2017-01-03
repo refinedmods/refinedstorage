@@ -8,6 +8,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -27,12 +28,18 @@ public class ItemStorageItemHandler extends ItemStorageExternal {
 
     @Override
     public int getCapacity() {
-        return handlerSupplier.get().getSlots() * 64;
+        IItemHandler handler = handlerSupplier.get();
+
+        return handler != null ? handler.getSlots() * 64 : 0;
     }
 
     @Override
     public List<ItemStack> getStacks() {
         IItemHandler handler = handlerSupplier.get();
+
+        if (handler == null) {
+            return Collections.emptyList();
+        }
 
         List<ItemStack> items = new ArrayList<>();
 
@@ -55,6 +62,10 @@ public class ItemStorageItemHandler extends ItemStorageExternal {
     @Override
     public ItemStack extractItem(ItemStack stack, int size, int flags, boolean simulate) {
         IItemHandler handler = handlerSupplier.get();
+
+        if (handler == null) {
+            return null;
+        }
 
         int remaining = size;
 
@@ -88,6 +99,10 @@ public class ItemStorageItemHandler extends ItemStorageExternal {
     @Override
     public int getStored() {
         IItemHandler handler = handlerSupplier.get();
+
+        if (handler == null) {
+            return 0;
+        }
 
         int size = 0;
 

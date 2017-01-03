@@ -23,14 +23,16 @@ public class ItemStorageDSU extends ItemStorageExternal {
 
     @Override
     public int getCapacity() {
-        return dsuSupplier.get().getMaxStoredCount();
+        IDeepStorageUnit dsu = dsuSupplier.get();
+
+        return dsu != null ? dsu.getMaxStoredCount() : 0;
     }
 
     @Override
     public List<ItemStack> getStacks() {
         IDeepStorageUnit dsu = dsuSupplier.get();
 
-        if (dsu.getStoredItemType() != null && dsu.getStoredItemType().stackSize > 0) {
+        if (dsu != null && dsu.getStoredItemType() != null && dsu.getStoredItemType().stackSize > 0) {
             return Collections.singletonList(dsu.getStoredItemType().copy());
         }
 
@@ -41,7 +43,7 @@ public class ItemStorageDSU extends ItemStorageExternal {
     public ItemStack insertItem(@Nonnull ItemStack stack, int size, boolean simulate) {
         IDeepStorageUnit dsu = dsuSupplier.get();
 
-        if (IFilterable.canTake(externalStorage.getItemFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack)) {
+        if (dsu != null && IFilterable.canTake(externalStorage.getItemFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack)) {
             if (dsu.getStoredItemType() != null) {
                 if (API.instance().getComparer().isEqualNoQuantity(dsu.getStoredItemType(), stack)) {
                     if (getStored() + size > dsu.getMaxStoredCount()) {
@@ -94,7 +96,7 @@ public class ItemStorageDSU extends ItemStorageExternal {
     public ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
         IDeepStorageUnit dsu = dsuSupplier.get();
 
-        if (API.instance().getComparer().isEqual(stack, dsu.getStoredItemType(), flags)) {
+        if (dsu != null && API.instance().getComparer().isEqual(stack, dsu.getStoredItemType(), flags)) {
             if (size > dsu.getStoredItemType().stackSize) {
                 size = dsu.getStoredItemType().stackSize;
             }
@@ -115,7 +117,7 @@ public class ItemStorageDSU extends ItemStorageExternal {
     public int getStored() {
         IDeepStorageUnit dsu = dsuSupplier.get();
 
-        return dsu.getStoredItemType() != null ? dsu.getStoredItemType().stackSize : 0;
+        return (dsu != null && dsu.getStoredItemType() != null) ? dsu.getStoredItemType().stackSize : 0;
     }
 
     @Override

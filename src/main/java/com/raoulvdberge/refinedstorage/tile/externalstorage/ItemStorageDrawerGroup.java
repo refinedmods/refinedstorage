@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -23,6 +24,10 @@ public class ItemStorageDrawerGroup extends ItemStorageExternal {
     public List<ItemStack> getStacks() {
         IDrawerGroup group = groupSupplier.get();
 
+        if (group == null) {
+            return Collections.emptyList();
+        }
+
         List<ItemStack> stacks = new ArrayList<>();
 
         for (int i = 0; i < group.getDrawerCount(); ++i) {
@@ -37,6 +42,10 @@ public class ItemStorageDrawerGroup extends ItemStorageExternal {
     @Override
     public int getStored() {
         IDrawerGroup group = groupSupplier.get();
+
+        if (group == null) {
+            return 0;
+        }
 
         int stored = 0;
 
@@ -58,6 +67,10 @@ public class ItemStorageDrawerGroup extends ItemStorageExternal {
     public int getCapacity() {
         IDrawerGroup group = groupSupplier.get();
 
+        if (group == null) {
+            return 0;
+        }
+
         int capacity = 0;
 
         for (int i = 0; i < group.getDrawerCount(); ++i) {
@@ -73,6 +86,10 @@ public class ItemStorageDrawerGroup extends ItemStorageExternal {
     @Override
     public ItemStack insertItem(@Nonnull ItemStack stack, int size, boolean simulate) {
         IDrawerGroup group = groupSupplier.get();
+
+        if (group == null) {
+            return stack;
+        }
 
         ItemStack remainder = stack;
 
@@ -95,6 +112,10 @@ public class ItemStorageDrawerGroup extends ItemStorageExternal {
     @Override
     public ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
         IDrawerGroup group = groupSupplier.get();
+
+        if (group == null) {
+            return null;
+        }
 
         int toExtract = size;
 
