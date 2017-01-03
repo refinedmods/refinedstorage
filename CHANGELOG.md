@@ -3,6 +3,7 @@
 ### 1.2.15
 - Autocrafting bugfixes (way2muchnoise)
 - Fixed Grid Filter hiding everything when 2 or more items are in it (raoulvdberge)
+- Fixed External Storage crash when breaking a connected inventory (raoulvdberge)
 
 ### 1.2.14
 - Fixed server crash (way2muchnoise)
