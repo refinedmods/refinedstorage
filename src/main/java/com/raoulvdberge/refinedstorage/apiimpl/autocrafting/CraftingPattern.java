@@ -98,7 +98,7 @@ public class CraftingPattern implements ICraftingPattern {
                 }
             }
         } else {
-            outputs = ItemPattern.getOutputs(stack).stream().map(Comparer::stripTags).collect(Collectors.toList());
+            outputs = ItemPattern.getOutputs(stack).stream().collect(Collectors.toList());
         }
 
         if (oreInputs.isEmpty()) {
@@ -194,7 +194,7 @@ public class CraftingPattern implements ICraftingPattern {
         if (cleaned.isEmpty()) {
             return null;
         }
-        outputs.add(Comparer.stripTags(cleaned.copy()));
+        outputs.add(cleaned.copy());
 
         return outputs;
     }

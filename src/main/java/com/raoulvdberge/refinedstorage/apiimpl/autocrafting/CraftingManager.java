@@ -25,6 +25,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CraftingManager implements ICraftingManager {
     private static final String NBT_CRAFTING_TASKS = "CraftingTasks";
@@ -230,7 +231,7 @@ public class CraftingManager implements ICraftingManager {
         ItemStack inserted = ItemHandlerHelper.copyStackWithSize(stack, size);
 
         for (ICraftingTask task : craftingTasks) {
-            for (ICraftingStep processable : task.getSteps()) {
+            for (ICraftingStep processable : task.getSteps().stream().filter(ICraftingStep::hasStartedProcessing).collect(Collectors.toList())) {
                 if (processable.onReceiveOutput(inserted)) {
                     return;
                 }
