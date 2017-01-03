@@ -1,5 +1,7 @@
 package com.raoulvdberge.refinedstorage.api.network;
 
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
+
 import java.util.List;
 
 /**

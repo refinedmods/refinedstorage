@@ -28,7 +28,7 @@ public interface ICraftingPreviewElement<T> {
     int getAvailable();
 
     /**
-     * @return toCraft or missing (depends on {@link #hasMissing()} amount of the {@link #getElement()}
+     * @return the amount to craft or missing (depends on {@link #hasMissing()} amount of the {@link #getElement()}
      */
     int getToCraft();
 

@@ -1,8 +1,8 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
-import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
-import com.raoulvdberge.refinedstorage.api.network.INetworkNodeProxy;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.WorldSavedDataNetworkNode;
@@ -66,6 +66,6 @@ public class NetworkNodeListener {
 
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload e) {
-        API.instance().getNetworkNodeProvider(e.getWorld().provider.getDimension()).clear();
+        API.instance().getNetworkNodeManager(e.getWorld().provider.getDimension()).clear();
     }
 }

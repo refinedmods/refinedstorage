@@ -3,8 +3,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNeighborhoodAware;
-import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
-import com.raoulvdberge.refinedstorage.api.network.INetworkNodeHolder;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.util.IWrenchable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import net.minecraft.block.state.IBlockState;
@@ -45,13 +44,11 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
         markDirty();
     }
 
-    @Override
     @Nullable
     public INetworkNodeHolder getHolder() {
         return holder;
     }
 
-    @Override
     public void setHolder(INetworkNodeHolder holder) {
         this.holder = holder;
     }
@@ -133,7 +130,6 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
         return tag;
     }
 
-    @Override
     public void read(NBTTagCompound tag) {
         readConfiguration(tag);
     }

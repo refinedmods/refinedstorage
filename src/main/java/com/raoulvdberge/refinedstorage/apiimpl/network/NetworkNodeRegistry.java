@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network;
 
-import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
-import com.raoulvdberge.refinedstorage.api.network.INetworkNodeRegistry;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeRegistry;
 import net.minecraft.nbt.NBTTagCompound;
 
 import javax.annotation.Nullable;

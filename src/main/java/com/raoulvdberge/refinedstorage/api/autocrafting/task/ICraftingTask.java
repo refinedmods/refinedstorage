@@ -23,7 +23,7 @@ public interface ICraftingTask {
     String NBT_REQUESTED = "Requested";
 
     /**
-     * Calculates what this task will do, but doesn't run the task just yet.
+     * Calculates what this task will do, but doesn't run the task yet.
      */
     void calculate();
 

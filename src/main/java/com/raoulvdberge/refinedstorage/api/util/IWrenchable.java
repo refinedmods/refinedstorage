@@ -15,7 +15,7 @@ public interface IWrenchable {
     NBTTagCompound writeConfiguration(NBTTagCompound tag);
 
     /**
-     * Reads the configurration of this tile from the wrench.
+     * Reads the configuration of this tile from the wrench.
      *
      * @param tag the tag to read
      */

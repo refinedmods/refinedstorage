@@ -18,7 +18,7 @@ public interface ICraftingMonitorElement {
     void draw(int x, int y, IElementDrawers drawers);
 
     /**
-     * @return whether the crafting monitor can draw a grey background behind the element when selected
+     * @return whether the crafting monitor can draw a selection background behind the element when selected
      */
     boolean canDrawSelection();
 

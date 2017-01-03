@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.security;
 
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
-import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.security.ISecurityCard;
 import com.raoulvdberge.refinedstorage.api.network.security.ISecurityCardContainer;
 import com.raoulvdberge.refinedstorage.api.network.security.ISecurityManager;

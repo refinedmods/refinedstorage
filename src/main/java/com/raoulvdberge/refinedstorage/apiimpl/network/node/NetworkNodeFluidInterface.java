@@ -2,7 +2,6 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
-import com.raoulvdberge.refinedstorage.api.network.INetworkNodeHolder;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.inventory.*;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
@@ -31,7 +30,7 @@ public class NetworkNodeFluidInterface extends NetworkNode implements IComparabl
         protected void onContentsChanged() {
             super.onContentsChanged();
 
-            if (!holder.world().isRemote) {
+            if (holder.world() != null && !holder.world().isRemote) {
                 ((TileFluidInterface) holder.world().getTileEntity(holder.pos())).getDataManager().sendParameterToWatchers(TileFluidInterface.TANK_IN);
             }
 
@@ -44,7 +43,7 @@ public class NetworkNodeFluidInterface extends NetworkNode implements IComparabl
         protected void onContentsChanged() {
             super.onContentsChanged();
 
-            if (!holder.world().isRemote) {
+            if (holder.world() != null && !holder.world().isRemote) {
                 ((TileFluidInterface) holder.world().getTileEntity(holder.pos())).getDataManager().sendParameterToWatchers(TileFluidInterface.TANK_OUT);
             }
 

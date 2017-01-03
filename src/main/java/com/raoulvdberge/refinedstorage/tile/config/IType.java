@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.tile.config;
 
-import com.raoulvdberge.refinedstorage.api.network.INetworkNodeProxy;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.container.ContainerBase;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataConsumer;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;

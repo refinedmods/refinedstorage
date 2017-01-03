@@ -12,7 +12,6 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -21,7 +20,6 @@ import javax.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class CraftingPattern implements ICraftingPattern {
     private ICraftingPatternContainer container;
@@ -107,7 +105,7 @@ public class CraftingPattern implements ICraftingPattern {
             for (ItemStack input : inputs) {
                 if (input == null) {
                     oreInputs.add(Collections.emptyList());
-                } else {
+                } else if (!input.isEmpty()) {
                     int[] ids = OreDictionary.getOreIDs(input);
                     if (ids == null || ids.length == 0) {
                         oreInputs.add(Collections.singletonList(Comparer.stripTags(input)));

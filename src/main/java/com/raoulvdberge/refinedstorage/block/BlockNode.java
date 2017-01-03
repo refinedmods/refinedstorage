@@ -1,5 +1,7 @@
 package com.raoulvdberge.refinedstorage.block;
 
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
 import net.minecraft.block.properties.PropertyBool;
@@ -41,6 +43,21 @@ public abstract class BlockNode extends BlockBase {
             }
 
             API.instance().discoverNode(world, pos);
+        }
+    }
+
+    @Override
+    public void breakBlock(World world, BlockPos pos, IBlockState state) {
+        super.breakBlock(world, pos, state);
+
+        INetworkNodeManager manager = API.instance().getNetworkNodeManager(world.provider.getDimension());
+
+        INetworkNode node = manager.getNode(pos);
+
+        manager.removeNode(pos);
+
+        if (!world.isRemote && node.getNetwork() != null) {
+            node.getNetwork().getNodeGraph().rebuild();
         }
     }
 

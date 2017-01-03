@@ -24,6 +24,7 @@ public interface ICraftingMonitorElementList {
     void commit();
 
     /**
+     * Gets all the elements in the list.
      * This also commits the last changes.
      *
      * @return the current list of elements

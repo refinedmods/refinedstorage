@@ -6,7 +6,6 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
-import com.raoulvdberge.refinedstorage.api.network.INetworkNodeHolder;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
@@ -40,7 +39,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            if (!holder.world().isRemote) {
+            if (holder.world() != null && !holder.world().isRemote) {
                 rebuildPatterns();
             }
 
@@ -219,8 +218,8 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     }
 
     @Override
-    public void setBlocked(boolean value) {
-        blocked = value;
+    public void setBlocked(boolean blocked) {
+        this.blocked = blocked;
 
         markDirty();
     }

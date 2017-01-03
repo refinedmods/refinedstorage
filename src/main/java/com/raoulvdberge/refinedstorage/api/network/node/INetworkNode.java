@@ -1,5 +1,7 @@
-package com.raoulvdberge.refinedstorage.api.network;
+package com.raoulvdberge.refinedstorage.api.network.node;
 
+import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.INetworkNodeHolder;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -37,7 +39,7 @@ public interface INetworkNode {
     void onDisconnected(INetworkMaster network);
 
     /**
-     * @return true if this node can be treated as active, typically checks the redstone configuration
+     * @return true if this node can be treated as updatable, typically checks the redstone configuration
      */
     boolean canUpdate();
 
@@ -47,20 +49,31 @@ public interface INetworkNode {
     @Nullable
     INetworkMaster getNetwork();
 
-    @Nullable
-    INetworkNodeHolder getHolder();
-
-    void setHolder(INetworkNodeHolder holder);
-
+    /**
+     * Updates a network node.
+     */
     void update();
 
+    /**
+     * Writes the network node data to NBT.
+     *
+     * @param tag the tag
+     * @return the written tag
+     */
     NBTTagCompound write(NBTTagCompound tag);
 
-    void read(NBTTagCompound tag);
-
+    /**
+     * @return the position of this network node
+     */
     BlockPos getPos();
 
+    /**
+     * Marks this node as dirty for saving.
+     */
     void markDirty();
 
+    /**
+     * @return the id of this node as specified in {@link INetworkNodeRegistry}
+     */
     String getId();
 }

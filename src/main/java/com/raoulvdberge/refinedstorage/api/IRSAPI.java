@@ -5,8 +5,8 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftin
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElementRegistry;
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
-import com.raoulvdberge.refinedstorage.api.network.INetworkNodeProvider;
-import com.raoulvdberge.refinedstorage.api.network.INetworkNodeRegistry;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeRegistry;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRegistry;
@@ -37,9 +37,9 @@ public interface IRSAPI {
 
     /**
      * @param dimension the dimension
-     * @return the network node provider for the given dimension
+     * @return the network node manager for the given dimension
      */
-    INetworkNodeProvider getNetworkNodeProvider(int dimension);
+    INetworkNodeManager getNetworkNodeManager(int dimension);
 
     /**
      * @return the solderer registry

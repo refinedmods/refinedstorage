@@ -33,7 +33,7 @@ public interface ICraftingStep {
      *
      * @param items  a list to compare the needed {@link ItemStack} inputs against
      * @param fluids a list to compare the needed {@link FluidStack} inputs against (eg. a bucket, machine insert)
-     * @return true if processing can start
+     * @return true if processing can start, false otherwise
      */
     boolean canStartProcessing(IStackList<ItemStack> items, IStackList<FluidStack> fluids);
 
@@ -41,7 +41,7 @@ public interface ICraftingStep {
      * Check if the processing can start.
      * Assuming you have all needed {@link ItemStack}s and {@link FluidStack}s
      *
-     * @return true if processing can start
+     * @return true if processing can start, false otherwise
      */
     boolean canStartProcessing();
 
@@ -71,7 +71,7 @@ public interface ICraftingStep {
 
     /**
      * @param stack the output to check
-     * @return true if we received the given output (based upon item and getCount()), false otherwise
+     * @return true if we received the given output (based upon item and count), false otherwise
      */
     boolean hasReceivedOutput(ItemStack stack);
 
@@ -91,7 +91,7 @@ public interface ICraftingStep {
     boolean onReceiveOutput(ItemStack stack);
 
     /**
-     * Writes the processable to NBT.
+     * Writes the crafting step to NBT.
      *
      * @param tag the tag
      * @return the written tag

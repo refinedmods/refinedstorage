@@ -1,11 +1,11 @@
 package com.raoulvdberge.refinedstorage.tile;
 
-import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
-import com.raoulvdberge.refinedstorage.api.network.INetworkNodeHolder;
-import com.raoulvdberge.refinedstorage.api.network.INetworkNodeProvider;
-import com.raoulvdberge.refinedstorage.api.network.INetworkNodeProxy;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.api.util.IWrenchable;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.INetworkNodeHolder;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
@@ -53,21 +53,6 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
 
         if (getNode().getHolder().world() == null) {
             getNode().setHolder(this);
-        }
-    }
-
-    @Override
-    public void invalidate() {
-        super.invalidate();
-
-        if (getWorld() != null) {
-            INetworkNode node = getNode();
-
-            API.instance().getNetworkNodeProvider(getWorld().provider.getDimension()).removeNode(pos);
-
-            if (!getWorld().isRemote && node.getNetwork() != null) {
-                node.getNetwork().getNodeGraph().rebuild();
-            }
         }
     }
 
@@ -133,12 +118,12 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
     @Nonnull
     @SuppressWarnings("unchecked")
     public N getNode() {
-        INetworkNodeProvider provider = API.instance().getNetworkNodeProvider(getWorld().provider.getDimension());
+        INetworkNodeManager manager = API.instance().getNetworkNodeManager(getWorld().provider.getDimension());
 
-        INetworkNode node = provider.getNode(pos);
+        INetworkNode node = manager.getNode(pos);
 
         if (node == null) {
-            provider.setNode(pos, node = createNode());
+            manager.setNode(pos, node = createNode());
         }
 
         return (N) node;

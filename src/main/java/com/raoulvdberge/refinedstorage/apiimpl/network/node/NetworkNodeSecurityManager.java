@@ -4,7 +4,6 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
-import com.raoulvdberge.refinedstorage.api.network.INetworkNodeHolder;
 import com.raoulvdberge.refinedstorage.api.network.security.ISecurityCard;
 import com.raoulvdberge.refinedstorage.api.network.security.ISecurityCardContainer;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
@@ -35,7 +34,7 @@ public class NetworkNodeSecurityManager extends NetworkNode implements ISecurity
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            if (!holder.world().isRemote) {
+            if (holder.world() != null && !holder.world().isRemote) {
                 rebuildCards();
             }
 

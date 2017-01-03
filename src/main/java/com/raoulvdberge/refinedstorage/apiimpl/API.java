@@ -7,6 +7,10 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftin
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElementRegistry;
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
 import com.raoulvdberge.refinedstorage.api.network.*;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeRegistry;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRegistry;
@@ -16,7 +20,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.Craf
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTaskRegistry;
-import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeProvider;
+import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeManager;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerRegistry;
@@ -48,8 +52,8 @@ public class API implements IRSAPI {
 
     private IComparer comparer = new Comparer();
     private INetworkNodeRegistry networkNodeRegistry = new NetworkNodeRegistry();
-    private Map<Integer, INetworkNodeProvider> networkNodeProviderServer = new HashMap<>();
-    private Map<Integer, INetworkNodeProvider> networkNodeProviderClient = new HashMap<>();
+    private Map<Integer, INetworkNodeManager> networkNodeProviderServer = new HashMap<>();
+    private Map<Integer, INetworkNodeManager> networkNodeProviderClient = new HashMap<>();
     private ISoldererRegistry soldererRegistry = new SoldererRegistry();
     private ICraftingTaskRegistry craftingTaskRegistry = new CraftingTaskRegistry();
     private ICraftingMonitorElementRegistry craftingMonitorElementRegistry = new CraftingMonitorElementRegistry();
@@ -92,10 +96,10 @@ public class API implements IRSAPI {
     }
 
     @Override
-    public INetworkNodeProvider getNetworkNodeProvider(int dimension) {
-        Map<Integer, INetworkNodeProvider> provider = FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT ? networkNodeProviderClient : networkNodeProviderServer;
+    public INetworkNodeManager getNetworkNodeManager(int dimension) {
+        Map<Integer, INetworkNodeManager> provider = FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT ? networkNodeProviderClient : networkNodeProviderServer;
 
-        return provider.computeIfAbsent(dimension, r -> new NetworkNodeProvider());
+        return provider.computeIfAbsent(dimension, r -> new NetworkNodeManager());
     }
 
     @Override

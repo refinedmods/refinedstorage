@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
-import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -50,7 +50,7 @@ public class WorldSavedDataNetworkNode extends WorldSavedData {
                 Function<NBTTagCompound, INetworkNode> factory = API.instance().getNetworkNodeRegistry().get(id);
 
                 if (factory != null) {
-                    API.instance().getNetworkNodeProvider(dimension).setNode(pos, factory.apply(data));
+                    API.instance().getNetworkNodeManager(dimension).setNode(pos, factory.apply(data));
                 }
             }
         }
@@ -60,7 +60,7 @@ public class WorldSavedDataNetworkNode extends WorldSavedData {
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         NBTTagList list = new NBTTagList();
 
-        for (INetworkNode node : API.instance().getNetworkNodeProvider(dimension).all()) {
+        for (INetworkNode node : API.instance().getNetworkNodeManager(dimension).all()) {
             NBTTagCompound nodeTag = new NBTTagCompound();
 
             nodeTag.setString(NBT_NODE_ID, node.getId());

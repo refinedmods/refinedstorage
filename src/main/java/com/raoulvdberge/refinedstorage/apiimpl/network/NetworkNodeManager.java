@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network;
 
-import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
-import com.raoulvdberge.refinedstorage.api.network.INetworkNodeProvider;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
 import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nullable;
@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NetworkNodeProvider implements INetworkNodeProvider {
+public class NetworkNodeManager implements INetworkNodeManager {
     private Map<BlockPos, INetworkNode> nodes = new HashMap<>();
 
     @Override

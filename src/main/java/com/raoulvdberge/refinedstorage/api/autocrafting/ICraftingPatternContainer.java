@@ -35,7 +35,13 @@ public interface ICraftingPatternContainer {
      */
     BlockPos getPosition();
 
+    /**
+     * @return whether this container is blocked
+     */
     boolean isBlocked();
 
-    void setBlocked(boolean value);
+    /**
+     * @param blocked whether the container is blocked
+     */
+    void setBlocked(boolean blocked);
 }

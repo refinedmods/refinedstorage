@@ -5,7 +5,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
- * Allow the network nodes to implement more optimal or non-regular discovery of neighbor nodes
+ * Allows the network nodes to implement more optimal or non-regular discovery of neighbor nodes.
  */
 public interface INetworkNeighborhoodAware {
     void walkNeighborhood(Operator operator);

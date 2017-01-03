@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.api.network.INetworkNodeHolder;
 
 public class NetworkNodeNetworkReceiver extends NetworkNode {
     public static final String ID = "network_receiver";

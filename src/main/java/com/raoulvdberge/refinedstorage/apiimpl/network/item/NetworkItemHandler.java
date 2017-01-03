@@ -1,11 +1,11 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.item;
 
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
-import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.IWirelessTransmitter;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemProvider;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextComponentTranslation;

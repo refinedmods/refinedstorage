@@ -176,6 +176,13 @@ public interface INetworkMaster {
     @Nullable
     ItemStack insertItem(@Nonnull ItemStack stack, int size, boolean simulate);
 
+    /**
+     * Inserts an item and notifies the crafting manager of the incoming item.
+     *
+     * @param stack the stack prototype to insert, do NOT modify
+     * @param size  the amount of that prototype that has to be inserted
+     * @return null if the insert was successful, or a stack with the remainder
+     */
     default ItemStack insertItemTracked(@Nonnull ItemStack stack, int size) {
         ItemStack remainder = insertItem(stack, size, false);
 
