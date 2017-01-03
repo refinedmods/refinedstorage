@@ -46,7 +46,9 @@ public class ItemStorageDrawer extends ItemStorageExternal {
 
     @Override
     public int getStored() {
-        return drawerSupplier.get().getStoredItemCount();
+        IDrawer drawer = drawerSupplier.get();
+
+        return drawer != null ? drawer.getStoredItemCount() : 0;
     }
 
     @Override
