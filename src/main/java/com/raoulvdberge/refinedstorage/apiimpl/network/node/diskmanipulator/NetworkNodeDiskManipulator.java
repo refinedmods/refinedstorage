@@ -85,7 +85,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
             if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
                 RSUtils.createStorages(
                     getStackInSlot(slot),
-                    slot,
+                    3 + slot,
                     itemStorages,
                     fluidStorages,
                     s -> new StorageItemDiskManipulator(NetworkNodeDiskManipulator.this, s),

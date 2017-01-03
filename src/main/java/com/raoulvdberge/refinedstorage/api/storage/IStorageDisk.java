@@ -13,6 +13,9 @@ public interface IStorageDisk<T> extends IStorage<T> {
      */
     int getCapacity();
 
+    /**
+     * @return whether this storage voids excess stacks
+     */
     boolean isVoiding();
 
     /**
