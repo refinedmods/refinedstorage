@@ -188,13 +188,14 @@ public class CraftingTask implements ICraftingTask {
                         } while ((extraStack == null || extraStack.getCount() == 0) && ++i < inputs.size());
                     }
                 } else {
+                    int oreDictedCompare = compare | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0);
                     if (inputPattern == null) {
-                        inputPattern = network.getCraftingManager().getPattern(input, compare);
+                        inputPattern = network.getCraftingManager().getPattern(input, oreDictedCompare);
                     }
 
                     if (inputPattern != null) {
-                        ItemStack actualCraft = inputPattern.getActualOutput(input, compare);
-                        int craftQuantity = Math.min(inputPattern.getQuantityPerRequest(input, compare), input.getCount());
+                        ItemStack actualCraft = inputPattern.getActualOutput(input, oreDictedCompare);
+                        int craftQuantity = Math.min(inputPattern.getQuantityPerRequest(input, oreDictedCompare), input.getCount());
                         ItemStack inputCrafted = ItemHandlerHelper.copyStackWithSize(actualCraft, craftQuantity);
                         toCraft.add(inputCrafted.copy());
                         actualInputs.add(inputCrafted.copy());
