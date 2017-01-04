@@ -129,7 +129,7 @@ public class CraftingTask implements ICraftingTask {
             usedStacks.add(input.copy());
 
             // This handles recipes that use the output as input for the sub recipe
-            final int lambdaCompare = compare;
+            final int lambdaCompare = compare | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0);
             final ItemStack lambdaInput = input;
             ICraftingPattern inputPattern = null;
             int available = (extraStack == null ? 0 : extraStack.stackSize) + (networkStack == null ? 0 : networkStack.stackSize);
@@ -179,13 +179,14 @@ public class CraftingTask implements ICraftingTask {
                         } while ((extraStack == null || extraStack.stackSize == 0) && ++i < inputs.size());
                     }
                 } else {
+                    int oreDictedCompare = compare | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0);
                     if (inputPattern == null) {
-                        inputPattern = network.getPattern(input, compare);
+                        inputPattern = network.getPattern(input, oreDictedCompare);
                     }
 
                     if (inputPattern != null) {
-                        ItemStack actualCraft = inputPattern.getActualOutput(input, compare);
-                        int craftQuantity = Math.min(inputPattern.getQuantityPerRequest(input, compare), input.stackSize);
+                        ItemStack actualCraft = inputPattern.getActualOutput(input, oreDictedCompare);
+                        int craftQuantity = Math.min(inputPattern.getQuantityPerRequest(input, oreDictedCompare), input.stackSize);
                         ItemStack inputCrafted = ItemHandlerHelper.copyStackWithSize(actualCraft, craftQuantity);
                         toCraft.add(inputCrafted.copy());
                         actualInputs.add(inputCrafted.copy());
