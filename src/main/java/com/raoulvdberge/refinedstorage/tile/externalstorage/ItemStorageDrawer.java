@@ -73,7 +73,7 @@ public class ItemStorageDrawer extends ItemStorageExternal {
         return drawer instanceof IVoidable && ((IVoidable) drawer).isVoid();
     }
 
-    public static ItemStack insertItem(@Nullable TileExternalStorage externalStorage, IDrawer drawer, ItemStack stack, int size, boolean simulate) {
+    public static ItemStack insertItem(TileExternalStorage externalStorage, @Nullable IDrawer drawer, ItemStack stack, int size, boolean simulate) {
         if (drawer != null && IFilterable.canTake(externalStorage.getItemFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack) && drawer.canItemBeStored(stack)) {
             int stored = drawer.getStoredItemCount();
             int remainingSpace = drawer.getMaxCapacity(stack) - stored;

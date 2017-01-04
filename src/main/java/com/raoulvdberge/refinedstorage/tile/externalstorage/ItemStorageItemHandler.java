@@ -44,7 +44,9 @@ public class ItemStorageItemHandler extends ItemStorageExternal {
         List<ItemStack> items = new ArrayList<>();
 
         for (int i = 0; i < handler.getSlots(); ++i) {
-            items.add(handler.getStackInSlot(i) != null ? handler.getStackInSlot(i).copy() : null);
+            ItemStack slot = handler.getStackInSlot(i);
+
+            items.add(slot != null ? slot.copy() : null);
         }
 
         return items;
@@ -107,8 +109,10 @@ public class ItemStorageItemHandler extends ItemStorageExternal {
         int size = 0;
 
         for (int i = 0; i < handler.getSlots(); ++i) {
-            if (handler.getStackInSlot(i) != null) {
-                size += handler.getStackInSlot(i).stackSize;
+            ItemStack slot = handler.getStackInSlot(i);
+
+            if (slot != null) {
+                size += slot.stackSize;
             }
         }
 

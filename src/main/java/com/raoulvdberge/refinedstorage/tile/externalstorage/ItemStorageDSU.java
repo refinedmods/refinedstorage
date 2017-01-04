@@ -32,8 +32,12 @@ public class ItemStorageDSU extends ItemStorageExternal {
     public List<ItemStack> getStacks() {
         IDeepStorageUnit dsu = dsuSupplier.get();
 
-        if (dsu != null && dsu.getStoredItemType() != null && dsu.getStoredItemType().stackSize > 0) {
-            return Collections.singletonList(dsu.getStoredItemType().copy());
+        if (dsu != null) {
+            ItemStack stored = dsu.getStoredItemType();
+
+            if (stored != null && stored.stackSize > 0) {
+                return Collections.singletonList(stored.copy());
+            }
         }
 
         return Collections.emptyList();
@@ -97,11 +101,11 @@ public class ItemStorageDSU extends ItemStorageExternal {
         IDeepStorageUnit dsu = dsuSupplier.get();
 
         if (dsu != null && API.instance().getComparer().isEqual(stack, dsu.getStoredItemType(), flags)) {
-            if (size > dsu.getStoredItemType().stackSize) {
-                size = dsu.getStoredItemType().stackSize;
-            }
-
             ItemStack stored = dsu.getStoredItemType();
+
+            if (size > stored.stackSize) {
+                size = stored.stackSize;
+            }
 
             if (!simulate) {
                 dsu.setStoredItemCount(stored.stackSize - size);
@@ -117,7 +121,15 @@ public class ItemStorageDSU extends ItemStorageExternal {
     public int getStored() {
         IDeepStorageUnit dsu = dsuSupplier.get();
 
-        return (dsu != null && dsu.getStoredItemType() != null) ? dsu.getStoredItemType().stackSize : 0;
+        if (dsu != null) {
+            ItemStack stored = dsu.getStoredItemType();
+
+            if (stored != null) {
+                return stored.stackSize;
+            }
+        }
+
+        return 0;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.tile.externalstorage;
 
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import net.minecraft.item.ItemStack;
@@ -31,8 +32,10 @@ public class ItemStorageDrawerGroup extends ItemStorageExternal {
         List<ItemStack> stacks = new ArrayList<>();
 
         for (int i = 0; i < group.getDrawerCount(); ++i) {
+            IDrawer drawer = group.getDrawer(i);
+
             if (group.isDrawerEnabled(i)) {
-                stacks.addAll(ItemStorageDrawer.getStacks(group.getDrawer(i)));
+                stacks.addAll(ItemStorageDrawer.getStacks(drawer));
             }
         }
 
@@ -50,8 +53,10 @@ public class ItemStorageDrawerGroup extends ItemStorageExternal {
         int stored = 0;
 
         for (int i = 0; i < group.getDrawerCount(); ++i) {
+            IDrawer drawer = group.getDrawer(i);
+
             if (group.isDrawerEnabled(i)) {
-                stored += group.getDrawer(i).getStoredItemCount();
+                stored += drawer.getStoredItemCount();
             }
         }
 
