@@ -105,4 +105,13 @@ public interface ICraftingPattern {
      * @return the actual {@link ItemStack} with quantity
      */
     ItemStack getActualOutput(ItemStack requested, int compare);
+
+    /**
+     * Compares with an other pattern if it is alike
+     * Used to balance out {@link com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep}s over alike {@link ICraftingPattern}s
+     *
+     * @param pattern the {@link ICraftingPattern} to compare against
+     * @return true if the patterns are alike
+     */
+    boolean alike(ICraftingPattern pattern);
 }

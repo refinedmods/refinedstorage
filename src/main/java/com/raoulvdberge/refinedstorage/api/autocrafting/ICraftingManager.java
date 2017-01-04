@@ -40,6 +40,16 @@ public interface ICraftingManager {
     ICraftingTask create(@Nullable ItemStack stack, ICraftingPattern pattern, int quantity);
 
     /**
+     * Creates a crafting task.
+     *
+     * @param stack        the stack to create a task for
+     * @param patternChain the pattern
+     * @param quantity     the quantity
+     * @return the crafting task
+     */
+    ICraftingTask create(@Nullable ItemStack stack, ICraftingPatternChain patternChain, int quantity);
+
+    /**
      * Schedules a crafting task if the task isn't scheduled yet.
      *
      * @param stack      the stack
@@ -87,7 +97,10 @@ public interface ICraftingManager {
      * @return the pattern, or null if the pattern is not found
      */
     @Nullable
-    ICraftingPattern getPattern(ItemStack pattern, int flags);
+    default ICraftingPattern getPattern(ItemStack pattern, int flags) {
+        ICraftingPatternChain chain = getPatternChain(pattern, flags);
+        return chain == null ? null : chain.cycle();
+    }
 
     /**
      * Returns a crafting pattern for an item stack.
@@ -98,8 +111,36 @@ public interface ICraftingManager {
      * @param pattern the stack to get a pattern for
      * @return the pattern, or null if the pattern is not found
      */
+    @Nullable
     default ICraftingPattern getPattern(ItemStack pattern) {
         return getPattern(pattern, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);
+    }
+
+    /**
+     * Returns a crafting pattern chain for an item stack.
+     * This returns a single crafting pattern, as opposed to {@link ICraftingManager#getPatterns(ItemStack, int)}.
+     * Internally, this makes a selection out of the available patterns.
+     * It makes this selection based on the item count of the pattern outputs in the system.
+     *
+     * @param pattern the stack to get a pattern for
+     * @param flags   the flags to compare on, see {@link IComparer}
+     * @return the pattern chain, or null if the pattern chain is not found
+     */
+    @Nullable
+    ICraftingPatternChain getPatternChain(ItemStack pattern, int flags);
+
+    /**
+     * Returns a crafting pattern for an item stack.
+     * This returns a single crafting pattern, as opposed to {@link ICraftingManager#getPatterns(ItemStack, int)}.
+     * Internally, this makes a selection out of the available patterns.
+     * It makes this selection based on the item count of the pattern outputs in the system.
+     *
+     * @param pattern the stack to get a pattern for
+     * @return the pattern chain, or null if the pattern chain is not found
+     */
+    @Nullable
+    default ICraftingPatternChain getPatternChain(ItemStack pattern) {
+        return getPatternChain(pattern, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);
     }
 
     /**
@@ -109,8 +150,17 @@ public interface ICraftingManager {
      * @return true if there is a pattern, false otherwise
      */
     default boolean hasPattern(ItemStack stack) {
-        return getPattern(stack) != null;
+        return hasPattern(stack, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);
     }
+
+    /**
+     * Returns if there is a pattern with a given stack as output.
+     *
+     * @param stack the stack
+     * @param flags the flags to compare on, see {@link IComparer}
+     * @return true if there is a pattern, false otherwise
+     */
+    boolean hasPattern(ItemStack stack, int flags);
 
     void update();
 

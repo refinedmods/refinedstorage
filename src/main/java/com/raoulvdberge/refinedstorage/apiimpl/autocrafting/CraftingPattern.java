@@ -278,4 +278,41 @@ public class CraftingPattern implements ICraftingPattern {
             ", byproducts=" + byproducts +
             '}';
     }
+
+    @Override
+    public boolean alike(ICraftingPattern other) {
+        if (other == this) {
+            return true;
+        }
+
+        if (other.getId().equals(this.getId())
+                && other.isOredict() == this.isOredict()
+                && other.isBlocking() == this.isBlocking()
+                && other.isProcessing() == this.isProcessing()
+                && other.getOreInputs().size() == this.getOreInputs().size()
+                && other.getOutputs().size() == this.getOutputs().size()) {
+            boolean same = true;
+            for (int i = 0; i < other.getOreInputs().size();  i++) {
+                same &= other.getOreInputs().get(i).size() == this.getOreInputs().get(i).size();
+            }
+            int j = 0;
+            while (same && j < other.getOutputs().size()) {
+                same = ItemStack.areItemStacksEqual(other.getOutputs().get(j), this.getOutputs().get(j));
+                j++;
+            }
+            int i = 0;
+            while (same && i < other.getOreInputs().size()) {
+                List<ItemStack> otherList = other.getOreInputs().get(i);
+                List<ItemStack> thisList = this.getOreInputs().get(i);
+                j = 0;
+                while (same && j < otherList.size()) {
+                    same = ItemStack.areItemStacksEqual(otherList.get(j), thisList.get(j));
+                    j++;
+                }
+                i++;
+            }
+            return same;
+        }
+        return false;
+    }
 }

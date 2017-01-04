@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
+import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternChain;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskFactory;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep;
@@ -12,7 +13,6 @@ import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.CraftingTask;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -28,7 +28,7 @@ public class CraftingTaskFactory implements ICraftingTaskFactory {
 
     @Override
     @Nonnull
-    public ICraftingTask create(World world, INetworkMaster network, @Nullable ItemStack stack, ICraftingPattern pattern, int quantity, @Nullable NBTTagCompound tag) {
+    public ICraftingTask create(INetworkMaster network, @Nullable ItemStack stack, ICraftingPattern pattern, int quantity, @Nullable NBTTagCompound tag) {
         if (tag != null) {
             NBTTagList stepsList = tag.getTagList(CraftingTask.NBT_STEPS, Constants.NBT.TAG_COMPOUND);
 
@@ -74,5 +74,11 @@ public class CraftingTaskFactory implements ICraftingTaskFactory {
         }
 
         return new CraftingTask(network, stack, pattern, quantity);
+    }
+
+    @Nonnull
+    @Override
+    public ICraftingTask create(INetworkMaster network, @Nullable ItemStack stack, ICraftingPatternChain patternChain, int quantity) {
+        return new CraftingTask(network, stack, patternChain, quantity);
     }
 }

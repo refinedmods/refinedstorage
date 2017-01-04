@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting;
 
+import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternChain;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
@@ -9,6 +10,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -18,7 +20,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -32,7 +33,7 @@ public class CraftingManager implements ICraftingManager {
 
     private TileController network;
 
-    private List<ICraftingPattern> patterns = new ArrayList<>();
+    private CraftingPatternChainList patterns = new CraftingPatternChainList();
 
     private List<ICraftingTask> craftingTasks = new ArrayList<>();
     private List<ICraftingTask> craftingTasksToAdd = new ArrayList<>();
@@ -66,37 +67,58 @@ public class CraftingManager implements ICraftingManager {
 
     @Override
     public ICraftingTask create(@Nullable ItemStack stack, ICraftingPattern pattern, int quantity) {
-        return API.instance().getCraftingTaskRegistry().get(pattern.getId()).create(network.getNetworkWorld(), network, stack, pattern, quantity, null);
+        return API.instance().getCraftingTaskRegistry().get(pattern.getId()).create(network, stack, pattern, quantity, null);
+    }
+
+    @Override
+    public ICraftingTask create(@Nullable ItemStack stack, ICraftingPatternChain patternChain, int quantity) {
+        return API.instance().getCraftingTaskRegistry().get(patternChain.getPrototype().getId()).create( network, stack, patternChain, quantity);
     }
 
     @Override
     public List<ICraftingPattern> getPatterns() {
-        return patterns;
+        return patterns.asList();
     }
 
     @Override
     public List<ICraftingPattern> getPatterns(ItemStack pattern, int flags) {
-        List<ICraftingPattern> patterns = new ArrayList<>();
+        return getPatternChains(pattern, flags).stream().flatMap(Collection::stream).collect(Collectors.toList());
+    }
 
-        for (ICraftingPattern craftingPattern : getPatterns()) {
-            for (ItemStack output : craftingPattern.getOutputs()) {
+    private List<ICraftingPatternChain> getPatternChains(ItemStack pattern, int flags) {
+        List<ICraftingPatternChain> patternChains = new LinkedList<>();
+
+        for (CraftingPatternChainList.CraftingPatternChain chain : this.patterns) {
+            for (ItemStack output : chain.getPrototype().getOutputs()) {
                 if (API.instance().getComparer().isEqual(output, pattern, flags)) {
-                    patterns.add(craftingPattern);
+                    patternChains.add(chain);
                 }
             }
         }
 
-        return patterns;
+        return patternChains;
     }
 
     @Override
-    public ICraftingPattern getPattern(ItemStack pattern, int flags) {
-        List<ICraftingPattern> patterns = getPatterns(pattern, flags);
+    public boolean hasPattern(ItemStack stack, int flags) {
+        for (CraftingPatternChainList.CraftingPatternChain chain : this.patterns) {
+            for (ItemStack output : chain.getPrototype().getOutputs()) {
+                if (API.instance().getComparer().isEqual(output, stack, flags)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
-        if (patterns.isEmpty()) {
+    @Override
+    public ICraftingPatternChain getPatternChain(ItemStack pattern, int flags) {
+        List<ICraftingPatternChain> patternChains = getPatternChains(pattern, flags);
+
+        if (patternChains.isEmpty()) {
             return null;
-        } else if (patterns.size() == 1) {
-            return patterns.get(0);
+        } else if (patternChains.size() == 1) {
+            return patternChains.get(0);
         }
 
         int highestScore = 0;
@@ -104,12 +126,12 @@ public class CraftingManager implements ICraftingManager {
 
         IStackList<ItemStack> itemList = network.getItemStorageCache().getList().getOredicted();
 
-        for (int i = 0; i < patterns.size(); ++i) {
+        for (int i = 0; i < patternChains.size(); ++i) {
             int score = 0;
 
-            for (ItemStack input : patterns.get(i).getInputs()) {
+            for (ItemStack input : patternChains.get(i).getPrototype().getInputs()) {
                 if (input != null) {
-                    ItemStack stored = itemList.get(input, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT | (patterns.get(i).isOredict() ? IComparer.COMPARE_OREDICT : 0));
+                    ItemStack stored = itemList.get(input, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT | (patternChains.get(i).getPrototype().isOredict() ? IComparer.COMPARE_OREDICT : 0));
 
                     score += stored != null ? stored.getCount() : 0;
                 }
@@ -121,14 +143,14 @@ public class CraftingManager implements ICraftingManager {
             }
         }
 
-        return patterns.get(highestPattern);
+        return patternChains.get(highestPattern);
     }
 
     @Override
     public void update() {
         if (!craftingTasksToRead.isEmpty()) {
             for (NBTTagCompound tag : craftingTasksToRead) {
-                ICraftingTask task = readCraftingTask(network.getNetworkWorld(), network, tag);
+                ICraftingTask task = readCraftingTask(network, tag);
 
                 if (task != null) {
                     add(task);
@@ -207,10 +229,10 @@ public class CraftingManager implements ICraftingManager {
         }
 
         if (toSchedule > 0) {
-            ICraftingPattern pattern = getPattern(stack, compare);
+            ICraftingPatternChain patternChain = getPatternChain(stack, compare);
 
-            if (pattern != null) {
-                ICraftingTask task = create(stack, pattern, toSchedule);
+            if (patternChain != null) {
+                ICraftingTask task = create(stack, patternChain, toSchedule);
 
                 task.calculate();
                 task.getMissing().clear();
@@ -245,24 +267,26 @@ public class CraftingManager implements ICraftingManager {
 
         for (INetworkNode node : network.getNodeGraph().all()) {
             if (node instanceof ICraftingPatternContainer && node.canUpdate()) {
-                patterns.addAll(((ICraftingPatternContainer) node).getPatterns());
+                patterns.addAll((((ICraftingPatternContainer) node).getPatterns()));
             }
         }
     }
 
-    private static ICraftingTask readCraftingTask(World world, INetworkMaster network, NBTTagCompound tag) {
+    private static ICraftingTask readCraftingTask(INetworkMaster network, NBTTagCompound tag) {
         ItemStack stack = new ItemStack(tag.getCompoundTag(ICraftingTask.NBT_PATTERN_STACK));
 
         if (!stack.isEmpty() && stack.getItem() instanceof ICraftingPatternProvider) {
-            TileEntity container = world.getTileEntity(BlockPos.fromLong(tag.getLong(ICraftingTask.NBT_PATTERN_CONTAINER)));
+            TileEntity container = network.getNetworkWorld().getTileEntity(BlockPos.fromLong(tag.getLong(ICraftingTask.NBT_PATTERN_CONTAINER)));
 
-            if (container instanceof ICraftingPatternContainer) {
-                ICraftingPattern pattern = ((ICraftingPatternProvider) stack.getItem()).create(world, stack, (ICraftingPatternContainer) container);
+            if (container instanceof INetworkNodeProxy) {
+                INetworkNodeProxy proxy = (INetworkNodeProxy) container;
+                if (proxy.getNode() instanceof ICraftingPatternContainer) {
+                    ICraftingPattern pattern = ((ICraftingPatternProvider) stack.getItem()).create(network.getNetworkWorld(), stack, (ICraftingPatternContainer) proxy.getNode());
 
-                ICraftingTaskFactory factory = API.instance().getCraftingTaskRegistry().get(tag.getString(ICraftingTask.NBT_PATTERN_ID));
-
-                if (factory != null) {
-                    return factory.create(world, network, tag.hasKey(ICraftingTask.NBT_REQUESTED) ? new ItemStack(tag.getCompoundTag(ICraftingTask.NBT_REQUESTED)) : null, pattern, tag.getInteger(ICraftingTask.NBT_QUANTITY), tag);
+                    ICraftingTaskFactory factory = API.instance().getCraftingTaskRegistry().get(tag.getString(ICraftingTask.NBT_PATTERN_ID));
+                    if (factory != null) {
+                        return factory.create(network, tag.hasKey(ICraftingTask.NBT_REQUESTED) ? new ItemStack(tag.getCompoundTag(ICraftingTask.NBT_REQUESTED)) : null, pattern, tag.getInteger(ICraftingTask.NBT_QUANTITY), tag);
+                    }
                 }
             }
         }

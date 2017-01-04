@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
+import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternChain;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
@@ -42,6 +43,7 @@ public class CraftingTask implements ICraftingTask {
     @Nullable
     private ItemStack requested;
     private ICraftingPattern pattern;
+    private ICraftingPatternChain chain;
     private int quantity;
     private List<ICraftingStep> mainSteps = new LinkedList<>();
     private IStackList<ItemStack> toTake = API.instance().createItemStackList();
@@ -58,6 +60,11 @@ public class CraftingTask implements ICraftingTask {
         this.requested = requested;
         this.pattern = pattern;
         this.quantity = quantity;
+    }
+
+    public CraftingTask(INetworkMaster network, @Nullable ItemStack requested, ICraftingPatternChain chain, int quantity) {
+        this(network, requested, chain.getPrototype(), quantity);
+        this.chain = chain;
     }
 
     public CraftingTask(INetworkMaster network, @Nullable ItemStack requested, ICraftingPattern pattern, int quantity, List<ICraftingStep> mainSteps, Deque<ItemStack> toInsertItems, IStackList<FluidStack> toTakeFluids, Deque<FluidStack> toInsertFluids) {
@@ -82,9 +89,11 @@ public class CraftingTask implements ICraftingTask {
 
         int quantity = this.quantity;
 
+        ICraftingPattern currentPattern;
         while (quantity > 0 && !recurseFound) {
-            mainSteps.add(calculate(networkList, networkFluidList, pattern, toInsert));
-            quantity -= pattern.getQuantityPerRequest(requested);
+            currentPattern = this.chain == null ? this.pattern : this.chain.cycle();
+            mainSteps.add(calculate(networkList, networkFluidList, currentPattern, toInsert));
+            quantity -= currentPattern.getQuantityPerRequest(requested);
         }
 
         usedPatterns.clear();
@@ -124,7 +133,7 @@ public class CraftingTask implements ICraftingTask {
 
                 extraStack = toInsert.get(input, compare);
                 networkStack = networkList.get(input, compare);
-            } while (extraStack == null && networkStack == null && ++i < inputs.size() && network.getCraftingManager().getPatterns(input, compare).isEmpty());
+            } while (extraStack == null && networkStack == null && ++i < inputs.size() && network.getCraftingManager().hasPattern(input, compare));
             if (i == inputs.size()) {
                 input = inputs.get(0).copy();
             }

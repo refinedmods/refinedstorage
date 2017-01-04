@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -53,34 +54,37 @@ public abstract class CraftingStep implements ICraftingStep {
         if (!patternStack.isEmpty()) {
             TileEntity container = network.getNetworkWorld().getTileEntity(BlockPos.fromLong(tag.getLong(NBT_PATTERN_CONTAINER)));
 
-            if (container instanceof ICraftingPatternContainer) {
-                this.pattern = ((ICraftingPatternProvider) patternStack.getItem()).create(network.getNetworkWorld(), patternStack, (ICraftingPatternContainer) container);
-                this.satisfied = new HashMap<>(pattern.getOutputs().size());
+            if (container instanceof INetworkNodeProxy) {
+                INetworkNodeProxy proxy = (INetworkNodeProxy) container;
+                if (proxy.getNode() instanceof ICraftingPatternContainer) {
+                    this.pattern = ((ICraftingPatternProvider) patternStack.getItem()).create(network.getNetworkWorld(), patternStack, (ICraftingPatternContainer) proxy.getNode());
+                    this.satisfied = new HashMap<>(pattern.getOutputs().size());
 
-                for (ItemStack stack : pattern.getOutputs()) {
-                    int hashcode = API.instance().getItemStackHashCode(stack);
-                    String id = String.format(NBT_SATISFIED, hashcode);
+                    for (ItemStack stack : pattern.getOutputs()) {
+                        int hashcode = API.instance().getItemStackHashCode(stack);
+                        String id = String.format(NBT_SATISFIED, hashcode);
 
-                    if (tag.hasKey(id)) {
-                        this.satisfied.put(hashcode, tag.getInteger(id));
+                        if (tag.hasKey(id)) {
+                            this.satisfied.put(hashcode, tag.getInteger(id));
+                        }
                     }
-                }
 
-                this.startedProcessing = tag.getBoolean(NBT_STARTED_PROCESSING);
+                    this.startedProcessing = tag.getBoolean(NBT_STARTED_PROCESSING);
 
-                NBTTagList preliminaryTagList = tag.getTagList(NBT_PRELIMINARY_STEPS, Constants.NBT.TAG_COMPOUND);
-                this.preliminarySteps = new LinkedList<>();
-                for (int i = 0; i < preliminaryTagList.tagCount(); i++) {
-                    NBTTagCompound stepTag = preliminaryTagList.getCompoundTagAt(i);
+                    NBTTagList preliminaryTagList = tag.getTagList(NBT_PRELIMINARY_STEPS, Constants.NBT.TAG_COMPOUND);
+                    this.preliminarySteps = new LinkedList<>();
+                    for (int i = 0; i < preliminaryTagList.tagCount(); i++) {
+                        NBTTagCompound stepTag = preliminaryTagList.getCompoundTagAt(i);
 
-                    ICraftingStep step = CraftingStep.toCraftingStep(stepTag, network);
+                        ICraftingStep step = CraftingStep.toCraftingStep(stepTag, network);
 
-                    if (step != null) {
-                        this.preliminarySteps.add(step);
+                        if (step != null) {
+                            this.preliminarySteps.add(step);
+                        }
                     }
-                }
 
-                return true;
+                    return true;
+                }
             }
         }
 
