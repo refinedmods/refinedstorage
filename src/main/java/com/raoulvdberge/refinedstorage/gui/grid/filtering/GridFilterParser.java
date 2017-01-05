@@ -18,6 +18,8 @@ public class GridFilterParser {
                 filters.add(new GridFilterMod(part.substring(1)));
             } else if (part.startsWith("#")) {
                 filters.add(new GridFilterTooltip(part.substring(1)));
+            } else if (part.startsWith("$")) {
+                filters.add(new GridFilterOreDict(part.substring(1)));
             } else {
                 filters.add(new GridFilterName(part));
             }

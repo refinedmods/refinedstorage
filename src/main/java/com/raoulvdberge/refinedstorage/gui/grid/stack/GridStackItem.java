@@ -9,19 +9,24 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.oredict.OreDictionary;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GridStackItem implements IGridStack {
     private int hash;
     private ItemStack stack;
     private boolean craftable;
     private boolean displayCraftText;
+    private String[] oreIds;
 
     public GridStackItem(ByteBuf buf) {
         stack = RSUtils.readItemStack(buf);
         hash = buf.readInt();
         craftable = buf.readBoolean();
+        oreIds = null;
 
         setDisplayCraftText(buf.readBoolean());
     }
@@ -59,6 +64,14 @@ public class GridStackItem implements IGridStack {
     @Override
     public String getModId() {
         return Item.REGISTRY.getNameForObject(stack.getItem()).getResourceDomain();
+    }
+
+    @Override
+    public String[] getOreIds() {
+        if (oreIds == null) {
+            oreIds = Arrays.stream(OreDictionary.getOreIDs(stack)).mapToObj(OreDictionary::getOreName).collect(Collectors.toList()).toArray(new String[0]);
+        }
+        return oreIds;
     }
 
     @Override
