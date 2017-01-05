@@ -9,6 +9,8 @@ public interface IGridStack {
 
     String getModId();
 
+    String[] getOreIds();
+
     String getTooltip();
 
     int getQuantity();
