@@ -14,6 +14,6 @@ public class GridFilterOreDict implements Predicate<IGridStack> {
 
     @Override
     public boolean test(IGridStack stack) {
-        return Arrays.stream(stack.getOreIds()).anyMatch(oreName -> oreName.toLowerCase().startsWith(this.oreName));
+        return Arrays.stream(stack.getOreIds()).anyMatch(oreName -> oreName.toLowerCase().contains(this.oreName));
     }
 }
