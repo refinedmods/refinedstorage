@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.tile;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.inventory.FluidHandlerFluidInterface;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
@@ -70,6 +71,8 @@ public class TileFluidInterface extends TileNode implements IComparable {
             markDirty();
         }
     };
+
+    private FluidHandlerFluidInterface tank = new FluidHandlerFluidInterface(tankIn, tankOut);
 
     private ItemHandlerBasic in = new ItemHandlerBasic(1, this);
     private ItemHandlerFluid out = new ItemHandlerFluid(1, this);
@@ -233,7 +236,7 @@ public class TileFluidInterface extends TileNode implements IComparable {
     @Override
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            return facing == EnumFacing.DOWN ? (T) tankOut : (T) tankIn;
+            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(tank);
         }
 
         return super.getCapability(capability, facing);
