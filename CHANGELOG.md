@@ -1,5 +1,11 @@
 # Refined Storage Changelog
 
+### 1.2.17
+- Ignore damage for damageable items when transferring into crafting grid (way2muchnoise)
+- Ignore tags from given items when transferring into crafting grid (way2muchnoise)
+- Remove sidedness from fluid interface (way2muchnoise)
+- Add Ore Dictionary grid filter (use $ as prefix like in JEI) (way2muchnoise)
+
 ### 1.2.16
 - Fixed an autocrafting regression (way2muchnoise)
 - Fixed crash with External Storage (raoulvdberge)
