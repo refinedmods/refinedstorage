@@ -6,6 +6,7 @@ import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
+import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.block.BlockGrid;
 import com.raoulvdberge.refinedstorage.block.EnumGridType;
@@ -393,7 +394,7 @@ public class TileGrid extends TileNode implements IGrid {
                     // If we are connected, first try to get the possibilities from the network
                     if (isConnected()) {
                         for (ItemStack possibility : possibilities) {
-                            ItemStack took = network.extractItem(possibility, 1, false);
+                            ItemStack took = network.extractItem(possibility, 1, IComparer.COMPARE_NBT | (possibility.getItem().isDamageable() ? 0 : IComparer.COMPARE_DAMAGE), false);
 
                             if (took != null) {
                                 matrix.setInventorySlotContents(i, took);
