@@ -164,6 +164,8 @@ public class Comparer implements IComparer {
         if (stack != null && stack.hasTagCompound()) {
             switch (stack.getItem().getRegistryName().getResourceDomain()) {
                 case "mekanism":
+                case "mekanismgenerators":
+                case "mekanismtools":
                     stack.getTagCompound().removeTag("mekData");
                     break;
                 case "enderio":
