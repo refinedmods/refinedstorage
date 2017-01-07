@@ -128,24 +128,28 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
             } else if (type == IType.FLUIDS) {
                 FluidStack stack = fluidFilters.getFluidStackInSlot(0);
 
-                if (stack != null && stack.getFluid().canBePlacedInWorld() && stack.amount >= Fluid.BUCKET_VOLUME) {
+                if (stack != null && stack.getFluid().canBePlacedInWorld()) {
                     BlockPos front = pos.offset(getDirection());
 
                     Block block = stack.getFluid().getBlock();
 
                     if (getWorld().isAirBlock(front) && block.canPlaceBlockAt(getWorld(), front)) {
-                        FluidStack took = network.extractFluid(stack, Fluid.BUCKET_VOLUME, compare, false);
+                        FluidStack stored = network.getFluidStorageCache().getList().get(stack, compare);
 
-                        if (took != null) {
-                            IBlockState state = block.getDefaultState();
+                        if (stored != null && stored.amount >= Fluid.BUCKET_VOLUME) {
+                            FluidStack took = network.extractFluid(stack, Fluid.BUCKET_VOLUME, compare, false);
 
-                            if (state.getBlock() == Blocks.WATER) {
-                                state = Blocks.FLOWING_WATER.getDefaultState();
-                            } else if (state.getBlock() == Blocks.LAVA) {
-                                state = Blocks.FLOWING_LAVA.getDefaultState();
+                            if (took != null) {
+                                IBlockState state = block.getDefaultState();
+
+                                if (state.getBlock() == Blocks.WATER) {
+                                    state = Blocks.FLOWING_WATER.getDefaultState();
+                                } else if (state.getBlock() == Blocks.LAVA) {
+                                    state = Blocks.FLOWING_LAVA.getDefaultState();
+                                }
+
+                                getWorld().setBlockState(front, state, 1 | 2);
                             }
-
-                            getWorld().setBlockState(front, state, 1 | 2);
                         }
                     }
                 }
