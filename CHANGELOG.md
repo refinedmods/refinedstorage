@@ -8,6 +8,7 @@
 - Added blocking mode to patterns in autocrafting (InusualZ)
 - Added Grid size toggle (stretched, small, medium, large) (raoulvdberge)
 - Added dismantling mode to the Wrench (raoulvdberge)
+- You can now bind multiple crafters with the same pattern to machines, to spread or balance out autocrafting (way2muchnoise)
 - Autocrafting bugfixes (way2muchnoise)
 - Fixed Regulator mode not working (InusualZ)
 - Fixed Fluid Interface still being sided (raoulvdberge)
@@ -16,6 +17,12 @@
 - Fixed Solderer not accepting books created in an Anvil (raoulvdberge)
 - Fixed bug where network machines stopped working on chunk borders (raoulvdberge)
 - Fixed memes not working (raoulvdberge)
+- Fixed External Storage crashes (raoulvdberge)
+- Fixed Constructor in liquid mode being able to place fluids <1000 mB (raoulvdberge)
+- Fixed Solderer recipe conflicts, allowing for easier automation (raoulvdberge)
+- Ignore damage for damageable items when transferring into crafting grid (way2muchnoise)
+- Ignore tags from given items when transferring into crafting grid (way2muchnoise)
+- Add Ore Dictionary grid filter (use $ as prefix like in JEI) (way2muchnoise)
 - Made sure External Storage always has the correct inventory in world (raoulvdberge)
 
 ### 1.3.5
