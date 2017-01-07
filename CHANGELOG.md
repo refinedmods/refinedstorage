@@ -5,6 +5,8 @@
 - Ignore tags from given items when transferring into crafting grid (way2muchnoise)
 - Remove sidedness from fluid interface (way2muchnoise)
 - Add Ore Dictionary grid filter (use $ as prefix like in JEI) (way2muchnoise)
+- Fixed Constructor in liquid mode being able to place fluids <1000 mB (raoulvdberge)
+- Fixed Solderer recipe conflicts, allowing for easier automation (raoulvdberge)
 
 ### 1.2.16
 - Fixed an autocrafting regression (way2muchnoise)
