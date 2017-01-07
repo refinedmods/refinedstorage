@@ -286,9 +286,9 @@ public class ProxyCommon {
         API.instance().getSoldererRegistry().addRecipe(API.instance().getSoldererRegistry().createSimpleRecipe(
             new ItemStack(RSBlocks.DISK_DRIVE),
             500,
+            new ItemStack(Blocks.CHEST),
             new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
-            new ItemStack(RSBlocks.MACHINE_CASING),
-            new ItemStack(Blocks.CHEST)
+            new ItemStack(RSBlocks.MACHINE_CASING)
         ));
 
         // Cable
