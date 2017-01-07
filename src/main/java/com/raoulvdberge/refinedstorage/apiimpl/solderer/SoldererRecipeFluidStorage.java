@@ -19,8 +19,8 @@ public class SoldererRecipeFluidStorage implements ISoldererRecipe {
         this.type = type;
         this.rows = new ItemStack[]{
             new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
-            new ItemStack(RSItems.FLUID_STORAGE_PART, 1, storagePart)
-            new ItemStack(RSBlocks.MACHINE_CASING),
+            new ItemStack(RSItems.FLUID_STORAGE_PART, 1, storagePart),
+            new ItemStack(RSBlocks.MACHINE_CASING)
         };
     }
 
