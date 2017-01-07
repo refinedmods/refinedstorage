@@ -105,28 +105,32 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
             } else if (type == IType.FLUIDS) {
                 FluidStack stack = fluidFilters.getFluidStackInSlot(0);
 
-                if (stack != null && stack.getFluid().canBePlacedInWorld() && stack.amount >= Fluid.BUCKET_VOLUME) {
+                if (stack != null && stack.getFluid().canBePlacedInWorld()) {
                     BlockPos front = holder.pos().offset(holder.getDirection());
 
                     Block block = stack.getFluid().getBlock();
 
                     if (holder.world().isAirBlock(front) && block.canPlaceBlockAt(holder.world(), front)) {
-                        FluidStack took = network.extractFluid(stack, Fluid.BUCKET_VOLUME, compare, false);
+                        FluidStack stored = network.getFluidStorageCache().getList().get(stack, compare);
 
-                        if (took != null) {
-                            IBlockState state = block.getDefaultState();
+                        if (stored != null && stored.amount >= Fluid.BUCKET_VOLUME) {
+                            FluidStack took = network.extractFluid(stack, Fluid.BUCKET_VOLUME, compare, false);
 
-                            if (state.getBlock() == Blocks.WATER) {
-                                state = Blocks.FLOWING_WATER.getDefaultState();
-                            } else if (state.getBlock() == Blocks.LAVA) {
-                                state = Blocks.FLOWING_LAVA.getDefaultState();
+                            if (took != null) {
+                                IBlockState state = block.getDefaultState();
+
+                                if (state.getBlock() == Blocks.WATER) {
+                                    state = Blocks.FLOWING_WATER.getDefaultState();
+                                } else if (state.getBlock() == Blocks.LAVA) {
+                                    state = Blocks.FLOWING_LAVA.getDefaultState();
+                                }
+
+                                if (!canPlace(front, state)) {
+                                    return;
+                                }
+
+                                holder.world().setBlockState(front, state, 1 | 2);
                             }
-
-                            if (!canPlace(front, state)) {
-                                return;
-                            }
-
-                            holder.world().setBlockState(front, state, 1 | 2);
                         }
                     }
                 }
