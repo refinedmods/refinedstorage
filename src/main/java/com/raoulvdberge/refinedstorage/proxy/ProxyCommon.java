@@ -93,7 +93,7 @@ public class ProxyCommon {
         if (IntegrationTesla.isLoaded()) {
             API.instance().getReaderWriterHandlerRegistry().add(ReaderWriterHandlerTesla.ID, ReaderWriterHandlerTesla::new);
         }
-        
+
         int id = 0;
 
         RS.INSTANCE.network.registerMessage(MessageTileDataParameter.class, MessageTileDataParameter.class, id++, Side.CLIENT);
@@ -319,27 +319,27 @@ public class ProxyCommon {
         API.instance().getSoldererRegistry().addRecipe(API.instance().getSoldererRegistry().createSimpleRecipe(
             new ItemStack(RSBlocks.GRID, 1, EnumGridType.CRAFTING.getId()),
             500,
+            new ItemStack(Blocks.CRAFTING_TABLE),
             new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
-            new ItemStack(RSBlocks.GRID, 1, EnumGridType.NORMAL.getId()),
-            new ItemStack(Blocks.CRAFTING_TABLE)
+            new ItemStack(RSBlocks.GRID, 1, EnumGridType.NORMAL.getId())
         ));
 
         // Pattern Grid
         API.instance().getSoldererRegistry().addRecipe(API.instance().getSoldererRegistry().createSimpleRecipe(
             new ItemStack(RSBlocks.GRID, 1, EnumGridType.PATTERN.getId()),
             500,
+            new ItemStack(RSItems.PATTERN),
             new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
-            new ItemStack(RSBlocks.GRID, 1, EnumGridType.NORMAL.getId()),
-            new ItemStack(RSItems.PATTERN)
+            new ItemStack(RSBlocks.GRID, 1, EnumGridType.NORMAL.getId())
         ));
 
         // Fluid Grid
         API.instance().getSoldererRegistry().addRecipe(API.instance().getSoldererRegistry().createSimpleRecipe(
             new ItemStack(RSBlocks.GRID, 1, EnumGridType.FLUID.getId()),
             500,
+            new ItemStack(Items.BUCKET),
             new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
-            new ItemStack(RSBlocks.GRID, 1, EnumGridType.NORMAL.getId()),
-            new ItemStack(Items.BUCKET)
+            new ItemStack(RSBlocks.GRID, 1, EnumGridType.NORMAL.getId())
         ));
 
         // Wireless Grid
@@ -647,8 +647,8 @@ public class ProxyCommon {
         API.instance().getSoldererRegistry().addRecipe(API.instance().getSoldererRegistry().createSimpleRecipe(
             new ItemStack(RSBlocks.INTERFACE),
             200,
-            new ItemStack(RSBlocks.IMPORTER),
             new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
+            new ItemStack(RSBlocks.IMPORTER),
             new ItemStack(RSBlocks.EXPORTER)
         ));
 
@@ -657,8 +657,8 @@ public class ProxyCommon {
             new ItemStack(RSBlocks.FLUID_INTERFACE),
             200,
             new ItemStack(Items.BUCKET),
-            new ItemStack(RSBlocks.INTERFACE),
-            new ItemStack(Items.BUCKET)
+            new ItemStack(Items.REDSTONE),
+            new ItemStack(RSBlocks.INTERFACE)
         ));
 
         // Grid Filter
