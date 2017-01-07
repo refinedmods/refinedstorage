@@ -1,6 +1,8 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage;
 
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
@@ -20,13 +22,19 @@ public class StorageItemDrawerGroup extends StorageItemExternal {
 
     @Override
     public NonNullList<ItemStack> getStacks() {
+        IDrawerGroup group = groupSupplier.get();
+
+        if (group == null) {
+            return RSUtils.emptyNonNullList();
+        }
+
         NonNullList<ItemStack> stacks = NonNullList.create();
 
-        IDrawerGroup drawers = groupSupplier.get();
+        for (int i = 0; i < group.getDrawerCount(); ++i) {
+            IDrawer drawer = group.getDrawer(i);
 
-        for (int i = 0; i < drawers.getDrawerCount(); ++i) {
-            if (drawers.isDrawerEnabled(i)) {
-                stacks.addAll(StorageItemDrawer.getStacks(drawers.getDrawer(i)));
+            if (group.isDrawerEnabled(i)) {
+                stacks.addAll(StorageItemDrawer.getStacks(drawer));
             }
         }
 
@@ -37,11 +45,17 @@ public class StorageItemDrawerGroup extends StorageItemExternal {
     public int getStored() {
         int stored = 0;
 
-        IDrawerGroup drawers = groupSupplier.get();
+        IDrawerGroup group = groupSupplier.get();
 
-        for (int i = 0; i < drawers.getDrawerCount(); ++i) {
-            if (drawers.isDrawerEnabled(i)) {
-                stored += drawers.getDrawer(i).getStoredItemCount();
+        if (group == null) {
+            return 0;
+        }
+
+        for (int i = 0; i < group.getDrawerCount(); ++i) {
+            IDrawer drawer = group.getDrawer(i);
+
+            if (group.isDrawerEnabled(i)) {
+                stored += drawer.getStoredItemCount();
             }
         }
 
@@ -57,11 +71,15 @@ public class StorageItemDrawerGroup extends StorageItemExternal {
     public int getCapacity() {
         int capacity = 0;
 
-        IDrawerGroup drawers = groupSupplier.get();
+        IDrawerGroup group = groupSupplier.get();
 
-        for (int i = 0; i < drawers.getDrawerCount(); ++i) {
-            if (drawers.isDrawerEnabled(i)) {
-                capacity += drawers.getDrawer(i).getMaxCapacity();
+        if (group == null) {
+            return 0;
+        }
+
+        for (int i = 0; i < group.getDrawerCount(); ++i) {
+            if (group.isDrawerEnabled(i)) {
+                capacity += group.getDrawer(i).getMaxCapacity();
             }
         }
 
@@ -73,11 +91,15 @@ public class StorageItemDrawerGroup extends StorageItemExternal {
     public ItemStack insert(@Nonnull ItemStack stack, int size, boolean simulate) {
         ItemStack remainder = stack;
 
-        IDrawerGroup drawers = groupSupplier.get();
+        IDrawerGroup group = groupSupplier.get();
 
-        for (int i = 0; i < drawers.getDrawerCount(); ++i) {
-            if (drawers.isDrawerEnabled(i)) {
-                remainder = StorageItemDrawer.insert(externalStorage, drawers.getDrawer(i), stack, size, simulate);
+        if (group == null) {
+            return stack;
+        }
+
+        for (int i = 0; i < group.getDrawerCount(); ++i) {
+            if (group.isDrawerEnabled(i)) {
+                remainder = StorageItemDrawer.insert(externalStorage, group.getDrawer(i), stack, size, simulate);
 
                 if (remainder == null || remainder.getCount() <= 0) {
                     break;
@@ -95,13 +117,17 @@ public class StorageItemDrawerGroup extends StorageItemExternal {
     public ItemStack extract(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
         int toExtract = size;
 
-        IDrawerGroup drawers = groupSupplier.get();
+        IDrawerGroup group = groupSupplier.get();
+
+        if (group == null) {
+            return null;
+        }
 
         ItemStack result = null;
 
-        for (int i = 0; i < drawers.getDrawerCount(); ++i) {
-            if (drawers.isDrawerEnabled(i)) {
-                ItemStack extracted = StorageItemDrawer.extract(drawers.getDrawer(i), stack, toExtract, flags, simulate);
+        for (int i = 0; i < group.getDrawerCount(); ++i) {
+            if (group.isDrawerEnabled(i)) {
+                ItemStack extracted = StorageItemDrawer.extract(group.getDrawer(i), stack, toExtract, flags, simulate);
 
                 if (extracted != null) {
                     if (result == null) {

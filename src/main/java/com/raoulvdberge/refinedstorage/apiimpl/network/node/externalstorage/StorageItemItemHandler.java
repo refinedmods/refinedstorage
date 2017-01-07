@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage;
 
+import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
@@ -27,12 +28,18 @@ public class StorageItemItemHandler extends StorageItemExternal {
 
     @Override
     public int getCapacity() {
-        return handlerSupplier.get().getSlots() * 64;
+        IItemHandler handler = handlerSupplier.get();
+
+        return handler != null ? handler.getSlots() * 64 : 0;
     }
 
     @Override
     public NonNullList<ItemStack> getStacks() {
         IItemHandler handler = handlerSupplier.get();
+
+        if (handler == null) {
+            return RSUtils.emptyNonNullList();
+        }
 
         NonNullList<ItemStack> stacks = NonNullList.withSize(handler.getSlots(), ItemStack.EMPTY);
 
@@ -45,9 +52,9 @@ public class StorageItemItemHandler extends StorageItemExternal {
 
     @Override
     public ItemStack insert(@Nonnull ItemStack stack, int size, boolean simulate) {
-        if (IFilterable.canTake(externalStorage.getItemFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack)) {
-            IItemHandler handler = handlerSupplier.get();
+        IItemHandler handler = handlerSupplier.get();
 
+        if (handler != null && IFilterable.canTake(externalStorage.getItemFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack)) {
             return ItemHandlerHelper.insertItem(handler, ItemHandlerHelper.copyStackWithSize(stack, size), simulate);
         }
 
@@ -61,6 +68,10 @@ public class StorageItemItemHandler extends StorageItemExternal {
         ItemStack received = null;
 
         IItemHandler handler = handlerSupplier.get();
+
+        if (handler == null) {
+            return null;
+        }
 
         for (int i = 0; i < handler.getSlots(); ++i) {
             ItemStack slot = handler.getStackInSlot(i);
@@ -90,6 +101,10 @@ public class StorageItemItemHandler extends StorageItemExternal {
     @Override
     public int getStored() {
         IItemHandler handler = handlerSupplier.get();
+
+        if (handler == null) {
+            return 0;
+        }
 
         int size = 0;
 

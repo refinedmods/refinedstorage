@@ -23,15 +23,21 @@ public class StorageItemDSU extends StorageItemExternal {
 
     @Override
     public int getCapacity() {
-        return dsuSupplier.get().getMaxStoredCount();
+        IDeepStorageUnit dsu = dsuSupplier.get();
+
+        return dsu != null ? dsu.getMaxStoredCount() : 0;
     }
 
     @Override
     public NonNullList<ItemStack> getStacks() {
         IDeepStorageUnit dsu = dsuSupplier.get();
 
-        if (dsu.getStoredItemType() != null && dsu.getStoredItemType().getCount() > 0) {
-            return NonNullList.withSize(1, dsu.getStoredItemType().copy());
+        if (dsu != null) {
+            ItemStack stored = dsu.getStoredItemType();
+
+            if (stored != null && stored.getCount() > 0) {
+                return NonNullList.withSize(1, stored.copy());
+            }
         }
 
         return RSUtils.emptyNonNullList();
@@ -41,7 +47,7 @@ public class StorageItemDSU extends StorageItemExternal {
     public ItemStack insert(@Nonnull ItemStack stack, int size, boolean simulate) {
         IDeepStorageUnit dsu = dsuSupplier.get();
 
-        if (IFilterable.canTake(externalStorage.getItemFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack)) {
+        if (dsu != null && IFilterable.canTake(externalStorage.getItemFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack)) {
             if (dsu.getStoredItemType() != null) {
                 if (API.instance().getComparer().isEqualNoQuantity(dsu.getStoredItemType(), stack)) {
                     if (getStored() + size > dsu.getMaxStoredCount()) {
@@ -94,12 +100,12 @@ public class StorageItemDSU extends StorageItemExternal {
     public ItemStack extract(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
         IDeepStorageUnit dsu = dsuSupplier.get();
 
-        if (API.instance().getComparer().isEqual(stack, dsu.getStoredItemType(), flags)) {
-            if (size > dsu.getStoredItemType().getCount()) {
-                size = dsu.getStoredItemType().getCount();
-            }
-
+        if (dsu != null && API.instance().getComparer().isEqual(stack, dsu.getStoredItemType(), flags)) {
             ItemStack stored = dsu.getStoredItemType();
+
+            if (size > stored.getCount()) {
+                size = stored.getCount();
+            }
 
             if (!simulate) {
                 dsu.setStoredItemCount(stored.getCount() - size);
@@ -115,7 +121,15 @@ public class StorageItemDSU extends StorageItemExternal {
     public int getStored() {
         IDeepStorageUnit dsu = dsuSupplier.get();
 
-        return dsu.getStoredItemType() != null ? dsu.getStoredItemType().getCount() : 0;
+        if (dsu != null) {
+            ItemStack stored = dsu.getStoredItemType();
+
+            if (stored != null) {
+                return stored.getCount();
+            }
+        }
+
+        return 0;
     }
 
     @Override

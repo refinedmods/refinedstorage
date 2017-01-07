@@ -11,6 +11,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 public class StorageItemDrawer extends StorageItemExternal {
@@ -24,7 +25,9 @@ public class StorageItemDrawer extends StorageItemExternal {
 
     @Override
     public int getCapacity() {
-        return drawerSupplier.get().getMaxCapacity();
+        IDrawer drawer = drawerSupplier.get();
+
+        return drawer != null ? drawer.getMaxCapacity() : 0;
     }
 
     @Override
@@ -44,7 +47,9 @@ public class StorageItemDrawer extends StorageItemExternal {
 
     @Override
     public int getStored() {
-        return drawerSupplier.get().getStoredItemCount();
+        IDrawer drawer = drawerSupplier.get();
+
+        return drawer != null ? drawer.getStoredItemCount() : 0;
     }
 
     @Override
@@ -57,16 +62,16 @@ public class StorageItemDrawer extends StorageItemExternal {
         return externalStorage.getAccessType();
     }
 
-    public static NonNullList<ItemStack> getStacks(IDrawer drawer) {
-        if (!drawer.isEmpty() && drawer.getStoredItemCount() > 0) {
+    public static NonNullList<ItemStack> getStacks(@Nullable IDrawer drawer) {
+        if (drawer != null && !drawer.isEmpty() && drawer.getStoredItemCount() > 0) {
             return NonNullList.withSize(1, ItemHandlerHelper.copyStackWithSize(drawer.getStoredItemPrototype(), drawer.getStoredItemCount()));
         }
 
         return RSUtils.emptyNonNullList();
     }
 
-    public static ItemStack insert(NetworkNodeExternalStorage externalStorage, IDrawer drawer, @Nonnull ItemStack stack, int size, boolean simulate) {
-        if (IFilterable.canTake(externalStorage.getItemFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack) && drawer.canItemBeStored(stack)) {
+    public static ItemStack insert(NetworkNodeExternalStorage externalStorage, @Nullable IDrawer drawer, @Nonnull ItemStack stack, int size, boolean simulate) {
+        if (drawer != null && IFilterable.canTake(externalStorage.getItemFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack) && drawer.canItemBeStored(stack)) {
             int stored = drawer.getStoredItemCount();
             int remainingSpace = drawer.getMaxCapacity(stack) - stored;
 
@@ -96,8 +101,8 @@ public class StorageItemDrawer extends StorageItemExternal {
         return ItemHandlerHelper.copyStackWithSize(stack, size);
     }
 
-    public static ItemStack extract(IDrawer drawer, @Nonnull ItemStack stack, int size, int flags, boolean simulate) {
-        if (API.instance().getComparer().isEqual(stack, drawer.getStoredItemPrototype(), flags) && drawer.canItemBeExtracted(stack)) {
+    public static ItemStack extract(@Nullable IDrawer drawer, @Nonnull ItemStack stack, int size, int flags, boolean simulate) {
+        if (drawer != null && API.instance().getComparer().isEqual(stack, drawer.getStoredItemPrototype(), flags) && drawer.canItemBeExtracted(stack)) {
             if (size > drawer.getStoredItemCount()) {
                 size = drawer.getStoredItemCount();
             }

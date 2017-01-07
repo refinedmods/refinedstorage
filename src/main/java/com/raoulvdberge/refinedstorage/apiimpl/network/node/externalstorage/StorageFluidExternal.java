@@ -29,7 +29,7 @@ public class StorageFluidExternal implements IStorage<FluidStack> {
     private IFluidTankProperties getProperties() {
         IFluidHandler handler = handlerSupplier.get();
 
-        return handler.getTankProperties().length != 0 ? handler.getTankProperties()[0] : null;
+        return (handler != null && handler.getTankProperties().length != 0) ? handler.getTankProperties()[0] : null;
     }
 
     private FluidStack getContents() {
@@ -60,10 +60,16 @@ public class StorageFluidExternal implements IStorage<FluidStack> {
     @Override
     @Nullable
     public FluidStack extract(@Nonnull FluidStack stack, int size, int flags, boolean simulate) {
+        IFluidHandler handler = handlerSupplier.get();
+
+        if (handler == null) {
+            return null;
+        }
+
         FluidStack toDrain = RSUtils.copyStackWithSize(stack, size);
 
         if (API.instance().getComparer().isEqual(getContents(), toDrain, flags)) {
-            return handlerSupplier.get().drain(toDrain, !simulate);
+            return handler.drain(toDrain, !simulate);
         }
 
         return null;
