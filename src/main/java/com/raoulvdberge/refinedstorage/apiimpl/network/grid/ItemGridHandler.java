@@ -15,6 +15,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.CraftingTask;
 import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemWirelessCraftingMonitor;
 import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemWirelessGrid;
 import com.raoulvdberge.refinedstorage.network.MessageGridCraftingPreviewResponse;
+import com.raoulvdberge.refinedstorage.network.MessageGridCraftingStartResponse;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -149,7 +150,7 @@ public class ItemGridHandler implements IItemGridHandler {
     }
 
     @Override
-    public void onCraftingPreviewRequested(EntityPlayerMP player, int hash, int quantity) {
+    public void onCraftingPreviewRequested(EntityPlayerMP player, int hash, int quantity, boolean noPreview) {
         if (!network.getSecurityManager().hasPermission(Permission.AUTOCRAFTING, player)) {
             return;
         }
@@ -172,7 +173,13 @@ public class ItemGridHandler implements IItemGridHandler {
 
                 task.calculate();
 
-                RS.INSTANCE.network.sendTo(new MessageGridCraftingPreviewResponse(task.getPreviewStacks(), stack, quantity), player);
+                if (noPreview && task.getMissing().isEmpty()) {
+                    network.getCraftingManager().add(task);
+
+                    RS.INSTANCE.network.sendTo(new MessageGridCraftingStartResponse(), player);
+                } else {
+                    RS.INSTANCE.network.sendTo(new MessageGridCraftingPreviewResponse(task.getPreviewStacks(), stack, quantity), player);
+                }
             }, "RS crafting calculation");
 
             calculationThread.start();

@@ -130,7 +130,7 @@ public class GuiCraftingStart extends GuiBase {
             // NO OP
         } else {
             if (keyCode == Keyboard.KEY_RETURN) {
-                startRequest();
+                startRequest(isShiftKeyDown());
             } else if (keyCode == Keyboard.KEY_ESCAPE) {
                 close();
             } else {
@@ -144,7 +144,7 @@ public class GuiCraftingStart extends GuiBase {
         super.actionPerformed(button);
 
         if (button.id == startButton.id) {
-            startRequest();
+            startRequest(isShiftKeyDown());
         } else if (button.id == cancelButton.id) {
             close();
         } else {
@@ -172,17 +172,17 @@ public class GuiCraftingStart extends GuiBase {
         }
     }
 
-    protected void startRequest() {
+    protected void startRequest(boolean noPreview) {
         Integer quantity = Ints.tryParse(amountField.getText());
 
         if (quantity != null && quantity > 0) {
-            RS.INSTANCE.network.sendToServer(new MessageGridCraftingPreview(stack.getHash(), quantity));
+            RS.INSTANCE.network.sendToServer(new MessageGridCraftingPreview(stack.getHash(), quantity, noPreview));
 
             startButton.enabled = false;
         }
     }
 
-    protected void close() {
+    public void close() {
         FMLClientHandler.instance().showGuiScreen(parent);
     }
 

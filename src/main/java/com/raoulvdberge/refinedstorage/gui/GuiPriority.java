@@ -71,7 +71,7 @@ public class GuiPriority extends GuiCraftingStart {
     }
 
     @Override
-    protected void startRequest() {
+    protected void startRequest(boolean noPreview) {
         Integer amount = Ints.tryParse(amountField.getText());
 
         if (amount != null) {

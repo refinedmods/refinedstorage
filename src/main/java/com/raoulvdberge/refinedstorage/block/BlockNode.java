@@ -1,8 +1,10 @@
 package com.raoulvdberge.refinedstorage.block;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.network.MessageNodeRemove;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
@@ -56,9 +58,12 @@ public abstract class BlockNode extends BlockBase {
 
         manager.removeNode(pos);
 
-        if (!world.isRemote && node.getNetwork() != null) {
+        if (node.getNetwork() != null) {
             node.getNetwork().getNodeGraph().rebuild();
         }
+
+        // Since Block#breakBlock is only called on the server and we can't trust TileEntity#invalidate:
+        RS.INSTANCE.network.sendToAll(new MessageNodeRemove(world.provider.getDimension(), pos));
     }
 
     @Override

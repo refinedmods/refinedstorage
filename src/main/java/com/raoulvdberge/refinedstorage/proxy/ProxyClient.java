@@ -29,8 +29,6 @@ import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.ICustomModelLoader;
@@ -42,7 +40,6 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 import java.util.List;
 
@@ -261,13 +258,14 @@ public class ProxyClient extends ProxyCommon {
         });
     }
 
-    @SubscribeEvent
-    public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent e) {
-        if (RS.VERSION.contains("beta")) {
-            e.player.sendMessage(new TextComponentString("" + TextFormatting.RED + TextFormatting.BOLD + "WARNING: You are playing on a beta version of Refined Storage (" + RS.VERSION + ")!" + TextFormatting.RESET));
-            e.player.sendMessage(new TextComponentString("Literally anything can happen: world breaking bugs, item duplication bugs, etc. So, make sure you make backups."));
-            e.player.sendMessage(new TextComponentString("If you encounter a bug, please report it on the GitHub issue tracker."));
-        }
+    public static void onReceiveCraftingStartResponse() {
+        Minecraft.getMinecraft().addScheduledTask(() -> {
+            GuiScreen screen = Minecraft.getMinecraft().currentScreen;
+
+            if (screen instanceof GuiCraftingStart) {
+                ((GuiCraftingStart) screen).close();
+            }
+        });
     }
 
     @SubscribeEvent

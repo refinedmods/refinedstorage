@@ -44,10 +44,11 @@ public interface IItemGridHandler {
     /**
      * Called when a player requests the crafting preview window to be opened.
      *
-     * @param hash     the item stack hash
-     * @param quantity the amount of that item that we need a preview for
+     * @param hash      the item stack hash
+     * @param quantity  the amount of that item that we need a preview for
+     * @param noPreview whether the preview should show
      */
-    void onCraftingPreviewRequested(EntityPlayerMP player, int hash, int quantity);
+    void onCraftingPreviewRequested(EntityPlayerMP player, int hash, int quantity, boolean noPreview);
 
     /**
      * Called when a player requested crafting for an item.
