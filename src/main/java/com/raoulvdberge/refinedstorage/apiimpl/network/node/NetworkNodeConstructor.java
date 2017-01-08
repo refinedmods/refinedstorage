@@ -61,7 +61,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
 
     private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(1, new ItemHandlerListenerNetworkNode(this));
 
-    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_CRAFTING);
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_CRAFTING, ItemUpgrade.TYPE_STACK);
 
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int type = IType.ITEMS;
@@ -221,7 +221,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
     }
 
     private void dropItem() {
-        ItemStack took = network.extractItem(item, 1, false);
+        ItemStack took = network.extractItem(item, upgrades.getItemInteractCount(), false);
 
         if (took != null) {
             BehaviorDefaultDispenseItem.doDispense(holder.world(), took, 6, holder.getDirection(), new PositionImpl(getDispensePositionX(), getDispensePositionY(), getDispensePositionZ()));
