@@ -113,6 +113,11 @@ public class CraftingManager implements ICraftingManager {
 
     @Override
     public ICraftingPatternChain getPatternChain(ItemStack pattern, int flags) {
+        return getPatternChain(pattern, flags, network.getItemStorageCache().getList().getOredicted());
+    }
+
+    @Override
+    public ICraftingPatternChain getPatternChain(ItemStack pattern, int flags, IStackList<ItemStack> itemList) {
         List<ICraftingPatternChain> patternChains = getPatternChains(pattern, flags);
 
         if (patternChains.isEmpty()) {
@@ -123,8 +128,6 @@ public class CraftingManager implements ICraftingManager {
 
         int highestScore = 0;
         int highestPattern = 0;
-
-        IStackList<ItemStack> itemList = network.getItemStorageCache().getList().getOredicted();
 
         for (int i = 0; i < patternChains.size(); ++i) {
             int score = 0;

@@ -152,7 +152,7 @@ public class CraftingTask implements ICraftingTask {
             ICraftingPattern inputPattern = null;
             int available = (extraStack == null ? 0 : extraStack.getCount()) + (networkStack == null ? 0 : networkStack.getCount());
             if (available < input.getCount()) {
-                inputPattern = network.getCraftingManager().getPattern(input, compare);
+                inputPattern = network.getCraftingManager().getPattern(input, compare, networkList);
                 if (inputPattern != null) {
                     if (inputPattern.getInputs().stream().anyMatch(s -> API.instance().getComparer().isEqual(s, lambdaInput, lambdaCompare))) {
                         int craftQuantity = inputPattern.getQuantityPerRequest(input, compare);
@@ -199,7 +199,7 @@ public class CraftingTask implements ICraftingTask {
                 } else {
                     int oreDictedCompare = compare | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0);
                     if (inputPattern == null) {
-                        inputPattern = network.getCraftingManager().getPattern(input, oreDictedCompare);
+                        inputPattern = network.getCraftingManager().getPattern(input, oreDictedCompare, networkList);
                     }
 
                     if (inputPattern != null) {

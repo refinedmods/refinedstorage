@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.api.autocrafting;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -106,6 +107,23 @@ public interface ICraftingManager {
      * Returns a crafting pattern for an item stack.
      * This returns a single crafting pattern, as opposed to {@link ICraftingManager#getPatterns(ItemStack, int)}.
      * Internally, this makes a selection out of the available patterns.
+     * It makes this selection based on the item count of the pattern outputs in the {@link IStackList<ItemStack>} provided.
+     *
+     * @param pattern the stack to get a pattern for
+     * @param flags   the flags to compare on, see {@link IComparer}
+     * @param itemList the {@link IStackList<ItemStack>} used to calculate the best fitting pattern
+     * @return the pattern, or null if the pattern is not found
+     */
+    @Nullable
+    default ICraftingPattern getPattern(ItemStack pattern, int flags, IStackList<ItemStack> itemList) {
+        ICraftingPatternChain chain = getPatternChain(pattern, flags, itemList);
+        return chain == null ? null : chain.cycle();
+    }
+
+    /**
+     * Returns a crafting pattern for an item stack.
+     * This returns a single crafting pattern, as opposed to {@link ICraftingManager#getPatterns(ItemStack, int)}.
+     * Internally, this makes a selection out of the available patterns.
      * It makes this selection based on the item count of the pattern outputs in the system.
      *
      * @param pattern the stack to get a pattern for
@@ -128,6 +146,20 @@ public interface ICraftingManager {
      */
     @Nullable
     ICraftingPatternChain getPatternChain(ItemStack pattern, int flags);
+
+    /**
+     * Returns a crafting pattern chain for an item stack.
+     * This returns a single crafting pattern, as opposed to {@link ICraftingManager#getPatterns(ItemStack, int)}.
+     * Internally, this makes a selection out of the available patterns.
+     * It makes this selection based on the item count of the pattern outputs in the {@link IStackList<ItemStack>} provided.
+     *
+     * @param pattern the stack to get a pattern for
+     * @param flags   the flags to compare on, see {@link IComparer}
+     * @param itemList the {@link IStackList<ItemStack>} used to calculate the best fitting pattern
+     * @return the pattern chain, or null if the pattern chain is not found
+     */
+    @Nullable
+    ICraftingPatternChain getPatternChain(ItemStack pattern, int flags, IStackList<ItemStack> itemList);
 
     /**
      * Returns a crafting pattern for an item stack.
