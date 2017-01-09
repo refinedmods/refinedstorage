@@ -415,6 +415,11 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
     @Override
     public ICraftingPattern getPattern(ItemStack pattern, int flags) {
+        return getPattern(pattern, flags, itemStorage.getList().getOredicted());
+    }
+
+    @Override
+    public ICraftingPattern getPattern(ItemStack pattern, int flags, IItemStackList itemList) {
         List<ICraftingPattern> patterns = getPatterns(pattern, flags);
 
         if (patterns.isEmpty()) {
@@ -425,8 +430,6 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
         int highestScore = 0;
         int highestPattern = 0;
-
-        IItemStackList itemList = itemStorage.getList().getOredicted();
 
         for (int i = 0; i < patterns.size(); ++i) {
             int score = 0;

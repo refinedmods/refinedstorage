@@ -10,6 +10,7 @@ import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterCha
 import com.raoulvdberge.refinedstorage.api.storage.fluid.IFluidStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.item.IItemStorageCache;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.api.util.IItemStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -125,6 +126,20 @@ public interface INetworkMaster {
      */
     @Nullable
     ICraftingPattern getPattern(ItemStack pattern, int flags);
+
+    /**
+     * Returns a crafting pattern for an item stack.
+     * This returns a single crafting pattern, as opposed to {@link INetworkMaster#getPatterns(ItemStack, int)}.
+     * Internally, this makes a selection out of the available patterns.
+     * It makes this selection based on the item count of the pattern outputs in the {@link IItemStackList} provided.
+     *
+     * @param pattern  the stack to get a pattern for
+     * @param flags    the flags to compare on, see {@link IComparer}
+     * @param itemList the {@link IItemStackList} used to calculate the best fitting pattern
+     * @return the pattern, or null if the pattern is not found
+     */
+    @Nullable
+    ICraftingPattern getPattern(ItemStack pattern, int flags, IItemStackList itemList);
 
     /**
      * Returns a crafting pattern for an item stack.
