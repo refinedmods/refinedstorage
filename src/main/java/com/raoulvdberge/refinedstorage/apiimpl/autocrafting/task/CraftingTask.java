@@ -370,20 +370,22 @@ public class CraftingTask implements ICraftingTask {
         }
 
         for (ICraftingStep step : leafSteps) {
-            ICraftingPatternContainer container = step.getPattern().getContainer();
-            Integer timesUsed = usedContainers.get(container);
+            if (!step.hasStartedProcessing()) {
+                ICraftingPatternContainer container = step.getPattern().getContainer();
+                Integer timesUsed = usedContainers.get(container);
 
-            if (timesUsed == null) {
-                timesUsed = 0;
-            }
+                if (timesUsed == null) {
+                    timesUsed = 0;
+                }
 
-            if (timesUsed++ <= container.getSpeedUpdateCount()) {
-                if (!step.getPattern().isProcessing() || !container.isBlocked()) {
-                    if (!step.hasStartedProcessing() && step.canStartProcessing(oreDictPrepped, networkFluids)) {
-                        step.setStartedProcessing();
-                        step.execute(toInsertItems, toInsertFluids);
-                        usedContainers.put(container, timesUsed);
-                        network.markCraftingMonitorForUpdate();
+                if (timesUsed++ <= container.getSpeedUpdateCount()) {
+                    if (!step.getPattern().isProcessing() || !container.isBlocked()) {
+                        if (step.canStartProcessing(oreDictPrepped, networkFluids)){
+                            step.setStartedProcessing();
+                            step.execute(toInsertItems, toInsertFluids);
+                            usedContainers.put(container, timesUsed);
+                            network.markCraftingMonitorForUpdate();
+                        }
                     }
                 }
             }
