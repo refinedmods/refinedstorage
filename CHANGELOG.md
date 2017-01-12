@@ -6,6 +6,7 @@
 - Remove sidedness from fluid interface (way2muchnoise)
 - Using tab in a grid that isn't in autoselected mode will focus on the search box (raoulvdberge)
 - Add Ore Dictionary grid filter (use $ as prefix like in JEI) (way2muchnoise)
+- The Stack Upgrade in a Constructor in item dropping mode will drop stacks of items at a time (raoulvdberge)
 - Fixed Constructor in liquid mode being able to place fluids <1000 mB (raoulvdberge)
 - Fixed Solderer recipe conflicts, allowing for easier automation (raoulvdberge)
 - Fixed machines not connecting with cable after Controller (raoulvdberge)

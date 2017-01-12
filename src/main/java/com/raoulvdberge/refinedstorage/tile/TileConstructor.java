@@ -79,7 +79,7 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
 
     private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(1, this);
 
-    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_CRAFTING);
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, this, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_CRAFTING, ItemUpgrade.TYPE_STACK);
 
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int type = IType.ITEMS;
@@ -220,7 +220,7 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
     }
 
     private void dropItem() {
-        ItemStack took = network.extractItem(item, 1, false);
+        ItemStack took = network.extractItem(item, upgrades.getInteractStackSize(), false);
 
         if (took != null) {
             BehaviorDefaultDispenseItem.doDispense(getWorld(), took, 6, getDirection(), new PositionImpl(getDispensePositionX(), getDispensePositionY(), getDispensePositionZ()));
