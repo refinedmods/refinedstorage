@@ -24,6 +24,7 @@
 - Ignore tags from given items when transferring into crafting grid (way2muchnoise)
 - Add Ore Dictionary grid filter (use $ as prefix like in JEI) (way2muchnoise)
 - Made sure External Storage always has the correct inventory in world (raoulvdberge)
+- Using tab in a grid that isn't in autoselected mode will focus on the search box (raoulvdberge)
 
 ### 1.3.5
 - Fixed TPS lag on very large crafting tasks (way2muchnoise)
@@ -71,9 +72,24 @@
 - Removed IC2 support (raoulvdberge)
 - Removed MCMultiPart support (will be re-added as soon as MCMultiPart for MC 1.11 is available) (raoulvdberge)
 
+### 1.2.17
+- Ignore damage for damageable items when transferring into crafting grid (way2muchnoise)
+- Ignore tags from given items when transferring into crafting grid (way2muchnoise)
+- Remove sidedness from fluid interface (way2muchnoise)
+- Using tab in a grid that isn't in autoselected mode will focus on the search box (raoulvdberge)
+- Add Ore Dictionary grid filter (use $ as prefix like in JEI) (way2muchnoise)
+- Fixed Constructor in liquid mode being able to place fluids <1000 mB (raoulvdberge)
+- Fixed Solderer recipe conflicts, allowing for easier automation (raoulvdberge)
+- Fixed machines not connecting with cable after Controller (raoulvdberge)
+
+### 1.2.16
+- Fixed an autocrafting regression (way2muchnoise)
+- Fixed crash with External Storage (raoulvdberge)
+
 ### 1.2.15
 - Autocrafting bugfixes (way2muchnoise)
 - Fixed Grid Filter hiding everything when 2 or more items are in it (raoulvdberge)
+- Fixed External Storage crash when breaking a connected inventory (raoulvdberge)
 
 ### 1.2.14
 - Fixed server crash (way2muchnoise)
