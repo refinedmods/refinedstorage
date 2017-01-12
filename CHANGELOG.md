@@ -7,6 +7,7 @@
 - Add Ore Dictionary grid filter (use $ as prefix like in JEI) (way2muchnoise)
 - Fixed Constructor in liquid mode being able to place fluids <1000 mB (raoulvdberge)
 - Fixed Solderer recipe conflicts, allowing for easier automation (raoulvdberge)
+- Fixed machines not connecting with cable after Controller (raoulvdberge)
 
 ### 1.2.16
 - Fixed an autocrafting regression (way2muchnoise)

@@ -3,10 +3,7 @@ package com.raoulvdberge.refinedstorage.block;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.tile.TileBase;
-import com.raoulvdberge.refinedstorage.tile.TileCable;
-import com.raoulvdberge.refinedstorage.tile.TileMultipartNode;
-import com.raoulvdberge.refinedstorage.tile.TileNode;
+import com.raoulvdberge.refinedstorage.tile.*;
 import mcmultipart.block.BlockCoverable;
 import mcmultipart.block.BlockMultipartContainer;
 import mcmultipart.raytrace.RayTraceUtils;
@@ -285,6 +282,10 @@ public class BlockCable extends BlockCoverable {
 
                 if (tile instanceof TileNode && ((TileNode) tile).isConnected()) {
                     ((TileNode) tile).getNetwork().getNodeGraph().rebuild();
+
+                    break;
+                } else if (tile instanceof TileController) {
+                    ((TileController) tile).getNodeGraph().rebuild();
 
                     break;
                 }
