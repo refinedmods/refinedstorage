@@ -8,9 +8,7 @@ import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ItemStackListOredicted implements IItemStackList {
@@ -48,7 +46,8 @@ public class ItemStackListOredicted implements IItemStackList {
     public boolean remove(@Nonnull ItemStack stack, int size, boolean removeIfReachedZero) {
         boolean rvalue = underlyingList.remove(stack, size, removeIfReachedZero);
         if (removeIfReachedZero) {
-            localClean();
+            Set<Integer> ids = Arrays.stream(OreDictionary.getOreIDs(stack)).boxed().collect(Collectors.toSet());
+            localClean(stacks.entries().stream().filter(entry -> ids.contains(entry.getKey())).collect(Collectors.toList()));
         }
         return rvalue;
     }
@@ -57,7 +56,8 @@ public class ItemStackListOredicted implements IItemStackList {
     public boolean trackedRemove(@Nonnull ItemStack stack, int size, boolean removeIfReachedZero) {
         boolean rvalue = underlyingList.trackedRemove(stack, size, removeIfReachedZero);
         if (removeIfReachedZero) {
-            localClean();
+            Set<Integer> ids = Arrays.stream(OreDictionary.getOreIDs(stack)).boxed().collect(Collectors.toSet());
+            localClean(stacks.entries().stream().filter(entry -> ids.contains(entry.getKey())).collect(Collectors.toList()));
         }
         return rvalue;
     }
@@ -111,8 +111,8 @@ public class ItemStackListOredicted implements IItemStackList {
         underlyingList.clear();
     }
 
-    private void localClean() {
-        List<Map.Entry<Integer, ItemStack>> toRemove = stacks.entries().stream()
+    private void localClean(Collection<Map.Entry<Integer, ItemStack>> entries) {
+        List<Map.Entry<Integer, ItemStack>> toRemove = entries.stream()
             .filter(entry -> entry.getValue().stackSize <= 0)
             .collect(Collectors.toList());
 
@@ -121,7 +121,7 @@ public class ItemStackListOredicted implements IItemStackList {
 
     @Override
     public void clean() {
-        localClean();
+        localClean(stacks.entries());
         underlyingList.clean();
     }
 
