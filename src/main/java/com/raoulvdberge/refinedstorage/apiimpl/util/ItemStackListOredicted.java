@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IItemStackList;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -47,7 +48,7 @@ public class ItemStackListOredicted implements IItemStackList {
         boolean rvalue = underlyingList.remove(stack, size, removeIfReachedZero);
         if (removeIfReachedZero) {
             Set<Integer> ids = Arrays.stream(OreDictionary.getOreIDs(stack)).boxed().collect(Collectors.toSet());
-            localClean(stacks.entries().stream().filter(entry -> ids.contains(entry.getKey())).collect(Collectors.toList()));
+            localClean(ids.stream().flatMap(id -> stacks.get(id).stream().map(s -> Pair.of(id, s))).collect(Collectors.toList()));
         }
         return rvalue;
     }
@@ -57,7 +58,7 @@ public class ItemStackListOredicted implements IItemStackList {
         boolean rvalue = underlyingList.trackedRemove(stack, size, removeIfReachedZero);
         if (removeIfReachedZero) {
             Set<Integer> ids = Arrays.stream(OreDictionary.getOreIDs(stack)).boxed().collect(Collectors.toSet());
-            localClean(stacks.entries().stream().filter(entry -> ids.contains(entry.getKey())).collect(Collectors.toList()));
+            localClean(ids.stream().flatMap(id -> stacks.get(id).stream().map(s -> Pair.of(id, s))).collect(Collectors.toList()));
         }
         return rvalue;
     }
