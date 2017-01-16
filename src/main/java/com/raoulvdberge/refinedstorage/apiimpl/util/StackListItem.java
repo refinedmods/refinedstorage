@@ -11,15 +11,14 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class StackListItem implements IStackList<ItemStack> {
     private ArrayListMultimap<Item, ItemStack> stacks = ArrayListMultimap.create();
     private List<ItemStack> removeTracker = new LinkedList<>();
     protected boolean needsCleanup = false;
+    private Set<Item> touchedItems = new HashSet<>();
 
     @Override
     public void add(@Nonnull ItemStack stack, int size) {
@@ -47,6 +46,7 @@ public class StackListItem implements IStackList<ItemStack> {
                 otherStack.shrink(size);
 
                 if (otherStack.isEmpty()) {
+                    touchedItems.add(stack.getItem());
                     needsCleanup = true;
                 }
 
@@ -68,6 +68,7 @@ public class StackListItem implements IStackList<ItemStack> {
                 otherStack.shrink(size);
 
                 if (otherStack.isEmpty()) {
+                    touchedItems.add(stack.getItem());
                     needsCleanup = true;
                 }
 
@@ -125,13 +126,14 @@ public class StackListItem implements IStackList<ItemStack> {
 
     @Override
     public void clean() {
-        List<Pair<Item, ItemStack>> toRemove = stacks.asMap().entrySet().stream()
-            .flatMap(entry -> entry.getValue().stream().map(value -> Pair.of(entry.getKey(), value)))
+        List<Pair<Item, ItemStack>> toRemove = touchedItems.stream()
+            .flatMap(item -> stacks.get(item).stream().map(stack -> Pair.of(item, stack)))
             .filter(pair -> pair.getValue().isEmpty())
             .collect(Collectors.toList());
 
         toRemove.forEach(pair -> stacks.remove(pair.getLeft(), pair.getRight()));
 
+        touchedItems.clear();
         needsCleanup = false;
     }
 
