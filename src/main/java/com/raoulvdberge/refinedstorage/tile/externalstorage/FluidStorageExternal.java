@@ -30,7 +30,7 @@ public class FluidStorageExternal implements IFluidStorage {
     private IFluidTankProperties getProperties() {
         IFluidHandler handler = handlerSupplier.get();
 
-        return (handler != null && handler.getTankProperties().length != 0) ? handler.getTankProperties()[0] : null;
+        return (handler != null && handler.getTankProperties() != null && handler.getTankProperties().length != 0) ? handler.getTankProperties()[0] : null;
     }
 
     private FluidStack getContents() {

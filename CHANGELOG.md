@@ -4,6 +4,7 @@
 - Performance improvements with oredict autocrafting (way2muchnoise)
 - Fixed client side crash with cable (raoulvdberge)
 - Fixed client side crash with disk drive (raoulvdberge)
+- Fixed crash with external storage in fluid mode (raoulvdberge)
 
 ### 1.2.17
 - Ignore damage for damageable items when transferring into crafting grid (way2muchnoise)
