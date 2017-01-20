@@ -32,20 +32,22 @@ public class FluidGridHandler implements IFluidGridHandler {
         }
 
         if (RSUtils.hasFluidBucket(stack)) {
-            ItemStack bucket = network.extractItem(RSUtils.EMPTY_BUCKET, 1, false);
+            ItemStack bucket = null;
+
+            for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
+                ItemStack slot = player.inventory.getStackInSlot(i);
+
+                if (API.instance().getComparer().isEqualNoQuantity(RSUtils.EMPTY_BUCKET, slot)) {
+                    bucket = RSUtils.EMPTY_BUCKET.copy();
+
+                    player.inventory.decrStackSize(i, 1);
+
+                    break;
+                }
+            }
 
             if (bucket == null) {
-                for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
-                    ItemStack slot = player.inventory.getStackInSlot(i);
-
-                    if (API.instance().getComparer().isEqualNoQuantity(RSUtils.EMPTY_BUCKET, slot)) {
-                        bucket = RSUtils.EMPTY_BUCKET.copy();
-
-                        player.inventory.decrStackSize(i, 1);
-
-                        break;
-                    }
-                }
+                bucket = network.extractItem(RSUtils.EMPTY_BUCKET, 1, false);
             }
 
             if (bucket != null) {
