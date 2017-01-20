@@ -1,5 +1,10 @@
 # Refined Storage Changelog
 
+### 1.2.18
+- Performance improvements with oredict autocrafting (way2muchnoise)
+- Fixed client side crash with cable (raoulvdberge)
+- Fixed client side crash with disk drive (raoulvdberge)
+
 ### 1.2.17
 - Ignore damage for damageable items when transferring into crafting grid (way2muchnoise)
 - Ignore tags from given items when transferring into crafting grid (way2muchnoise)

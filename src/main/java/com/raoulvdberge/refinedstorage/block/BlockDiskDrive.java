@@ -44,7 +44,15 @@ public class BlockDiskDrive extends BlockNode {
 
     @Override
     public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
-        return ((IExtendedBlockState) super.getExtendedState(state, world, pos)).withProperty(DISK_STATE, ((TileDiskDrive) world.getTileEntity(pos)).getDiskState());
+        IBlockState s = super.getExtendedState(state, world, pos);
+
+        TileEntity tile = world.getTileEntity(pos);
+
+        if (tile instanceof TileDiskDrive) {
+            s = ((IExtendedBlockState) s).withProperty(DISK_STATE, ((TileDiskDrive) tile).getDiskState());
+        }
+
+        return s;
     }
 
     @Override
