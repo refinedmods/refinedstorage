@@ -65,41 +65,6 @@ public class ItemStorageItemHandler extends ItemStorageExternal {
     public ItemStack extractItem(ItemStack stack, int size, int flags, boolean simulate) {
         IItemHandler handler = handlerSupplier.get();
 
-       return extractItem(handler, stack, size, flags, simulate);
-    }
-
-    @Override
-    public int getStored() {
-        IItemHandler handler = handlerSupplier.get();
-
-        if (handler == null) {
-            return 0;
-        }
-
-        int size = 0;
-
-        for (int i = 0; i < handler.getSlots(); ++i) {
-            ItemStack slot = handler.getStackInSlot(i);
-
-            if (slot != null) {
-                size += slot.stackSize;
-            }
-        }
-
-        return size;
-    }
-
-    @Override
-    public int getPriority() {
-        return externalStorage.getPriority();
-    }
-
-    @Override
-    public AccessType getAccessType() {
-        return ((lockedAccessType != AccessType.INSERT_EXTRACT) ? lockedAccessType : externalStorage.getAccessType());
-    }
-
-    protected static ItemStack extractItem(IItemHandler handler, ItemStack stack, int size, int flags, boolean simulate) {
         if (handler == null) {
             return null;
         }
@@ -131,5 +96,36 @@ public class ItemStorageItemHandler extends ItemStorageExternal {
         }
 
         return received;
+    }
+
+    @Override
+    public int getStored() {
+        IItemHandler handler = handlerSupplier.get();
+
+        if (handler == null) {
+            return 0;
+        }
+
+        int size = 0;
+
+        for (int i = 0; i < handler.getSlots(); ++i) {
+            ItemStack slot = handler.getStackInSlot(i);
+
+            if (slot != null) {
+                size += slot.stackSize;
+            }
+        }
+
+        return size;
+    }
+
+    @Override
+    public int getPriority() {
+        return externalStorage.getPriority();
+    }
+
+    @Override
+    public AccessType getAccessType() {
+        return ((lockedAccessType != AccessType.INSERT_EXTRACT) ? lockedAccessType : externalStorage.getAccessType());
     }
 }

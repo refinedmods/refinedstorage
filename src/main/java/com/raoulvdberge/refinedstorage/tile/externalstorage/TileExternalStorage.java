@@ -246,7 +246,7 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
                 itemStorages.add(new ItemStorageDrawer(this, () -> (IDrawer) getFacingTile()));
             } else if (facing instanceof IDeepStorageUnit) {
                 itemStorages.add(new ItemStorageDSU(this, () -> (IDeepStorageUnit) getFacingTile()));
-            } else if (IntegrationCyclopsCore.isLoaded() && ItemStorageCyclops.isValid(facing)) {
+            } else if (IntegrationCyclopsCore.isLoaded() && ItemStorageCyclops.isValid(facing, getDirection().getOpposite())) {
                 itemStorages.add(new ItemStorageCyclops(this));
             } else if (!(facing instanceof TileNode)) {
                 IItemHandler itemHandler = RSUtils.getItemHandler(facing, getDirection().getOpposite());
