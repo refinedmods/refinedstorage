@@ -65,37 +65,7 @@ public class ItemStorageItemHandler extends ItemStorageExternal {
     public ItemStack extractItem(ItemStack stack, int size, int flags, boolean simulate) {
         IItemHandler handler = handlerSupplier.get();
 
-        if (handler == null) {
-            return null;
-        }
-
-        int remaining = size;
-
-        ItemStack received = null;
-
-        for (int i = 0; i < handler.getSlots(); ++i) {
-            ItemStack slot = handler.getStackInSlot(i);
-
-            if (slot != null && API.instance().getComparer().isEqual(slot, stack, flags)) {
-                ItemStack got = handler.extractItem(i, remaining, simulate);
-
-                if (got != null) {
-                    if (received == null) {
-                        received = got;
-                    } else {
-                        received.stackSize += got.stackSize;
-                    }
-
-                    remaining -= got.stackSize;
-
-                    if (remaining == 0) {
-                        break;
-                    }
-                }
-            }
-        }
-
-        return received;
+       return extractItem(handler, stack, size, flags, simulate);
     }
 
     @Override
@@ -127,5 +97,39 @@ public class ItemStorageItemHandler extends ItemStorageExternal {
     @Override
     public AccessType getAccessType() {
         return ((lockedAccessType != AccessType.INSERT_EXTRACT) ? lockedAccessType : externalStorage.getAccessType());
+    }
+
+    protected static ItemStack extractItem(IItemHandler handler, ItemStack stack, int size, int flags, boolean simulate) {
+        if (handler == null) {
+            return null;
+        }
+
+        int remaining = size;
+
+        ItemStack received = null;
+
+        for (int i = 0; i < handler.getSlots(); ++i) {
+            ItemStack slot = handler.getStackInSlot(i);
+
+            if (slot != null && API.instance().getComparer().isEqual(slot, stack, flags)) {
+                ItemStack got = handler.extractItem(i, remaining, simulate);
+
+                if (got != null) {
+                    if (received == null) {
+                        received = got;
+                    } else {
+                        received.stackSize += got.stackSize;
+                    }
+
+                    remaining -= got.stackSize;
+
+                    if (remaining == 0) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return received;
     }
 }

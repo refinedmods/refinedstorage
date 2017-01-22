@@ -11,6 +11,7 @@ import com.raoulvdberge.refinedstorage.api.storage.fluid.IFluidStorageProvider;
 import com.raoulvdberge.refinedstorage.api.storage.item.IItemStorage;
 import com.raoulvdberge.refinedstorage.api.storage.item.IItemStorageProvider;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.integration.cyclopscore.IntegrationCyclopsCore;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.tile.IStorageGui;
@@ -245,6 +246,8 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
                 itemStorages.add(new ItemStorageDrawer(this, () -> (IDrawer) getFacingTile()));
             } else if (facing instanceof IDeepStorageUnit) {
                 itemStorages.add(new ItemStorageDSU(this, () -> (IDeepStorageUnit) getFacingTile()));
+            } else if (IntegrationCyclopsCore.isLoaded() && ItemStorageCyclops.isValid(facing)) {
+                itemStorages.add(new ItemStorageCyclops(this));
             } else if (!(facing instanceof TileNode)) {
                 IItemHandler itemHandler = RSUtils.getItemHandler(facing, getDirection().getOpposite());
 
