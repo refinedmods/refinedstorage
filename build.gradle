@@ -49,6 +49,7 @@ repositories {
         url "http://maven.amadornes.com/"
     }
     maven {
+        name "Cyclops Repo"
         url  "https://dl.bintray.com/cyclopsmc/dev/"
     }
 }
@@ -57,10 +58,12 @@ dependencies {
     deobfCompile "mezz.jei:jei_1.10.2:3.13.6.387:api"
     runtime "mezz.jei:jei_1.10.2:3.13.6.387"
     deobfCompile "net.darkhax.tesla:Tesla:1.10.2-1.2.1.50"
-    deobfCompile "org.cyclops.commoncapabilities:CommonCapabilities:1.9.4-1.2.2-74"
-    deobfCompile "org.cyclops.cyclopscore:CyclopsCore:1.9.4-0.9.0-470"
     deobfCompile "net.industrial-craft:industrialcraft-2:2.6.128-ex110:api"
     deobfCompile "MCMultiPart:MCMultiPart:1.3.0:universal"
+    compile "org.cyclops.cyclopscore:CyclopsCore:1.9.4-0.9.1-473:deobf"
+    deobfCompile("org.cyclops.commoncapabilities:CommonCapabilities:1.9.4-1.3.0-76") {
+        exclude group: 'org.cyclops.cyclopscore', module: 'CyclopsCore'
+    }
 }
 
 processResources {

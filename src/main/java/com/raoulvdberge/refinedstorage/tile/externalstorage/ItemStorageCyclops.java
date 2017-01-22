@@ -21,7 +21,7 @@ public class ItemStorageCyclops extends ItemStorageExternal {
     private TileExternalStorage externalStorage;
     private EnumFacing opposite;
     private Supplier<InventoryTileEntity> cyclopsInv;
-    private int oldInvetoryHash = -1;
+    private int oldInventoryHash = -1;
 
     public ItemStorageCyclops(TileExternalStorage externalStorage) {
         this.externalStorage = externalStorage;
@@ -34,9 +34,9 @@ public class ItemStorageCyclops extends ItemStorageExternal {
         InventoryTileEntity inv = cyclopsInv.get();
         if (inv != null) {
             int inventoryHash = inv.getInventoryHash();
-            if (inventoryHash != oldInvetoryHash) {
+            if (inventoryHash != oldInventoryHash) {
                 super.detectChanges(network);
-                oldInvetoryHash = inventoryHash;
+                oldInventoryHash = inventoryHash;
             }
         }
     }
