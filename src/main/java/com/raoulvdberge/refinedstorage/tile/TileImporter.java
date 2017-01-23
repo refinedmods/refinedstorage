@@ -3,6 +3,8 @@ package com.raoulvdberge.refinedstorage.tile;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.integration.cyclopscore.IntegrationCyclopsCore;
+import com.raoulvdberge.refinedstorage.integration.cyclopscore.SlotlessItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
@@ -61,32 +63,10 @@ public class TileImporter extends TileMultipartNode implements IComparable, IFil
     @Override
     public void updateNode() {
         if (type == IType.ITEMS) {
-            IItemHandler handler = RSUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
-
-            if (getFacingTile() instanceof TileDiskDrive || handler == null) {
-                return;
-            }
-
-            if (currentSlot >= handler.getSlots()) {
-                currentSlot = 0;
-            }
-
-            if (handler.getSlots() > 0) {
-                ItemStack stack = handler.getStackInSlot(currentSlot);
-
-                if (stack == null || !IFilterable.canTake(itemFilters, mode, compare, stack)) {
-                    currentSlot++;
-                } else if (ticks % upgrades.getSpeed() == 0) {
-                    ItemStack result = handler.extractItem(currentSlot, upgrades.getInteractStackSize(), true);
-
-                    if (result != null && network.insertItem(result, result.stackSize, true) == null) {
-                        network.insertItem(result, result.stackSize, false);
-
-                        handler.extractItem(currentSlot, upgrades.getInteractStackSize(), false);
-                    } else {
-                        currentSlot++;
-                    }
-                }
+            if (IntegrationCyclopsCore.isLoaded() && SlotlessItemHandler.isSlotless(getFacingTile(), getDirection().getOpposite())) {
+                doImportISlotlessItemHandler();
+            } else {
+                doImportIItemHandler();
             }
         } else if (type == IType.FLUIDS && ticks % upgrades.getSpeed() == 0) {
             IFluidHandler handler = RSUtils.getFluidHandler(getFacingTile(), getDirection().getOpposite());
@@ -222,5 +202,49 @@ public class TileImporter extends TileMultipartNode implements IComparable, IFil
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
         return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+    }
+
+    private void doImportIItemHandler() {
+        IItemHandler handler = RSUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
+
+        if (getFacingTile() instanceof TileDiskDrive || handler == null) {
+            return;
+        }
+
+        if (currentSlot >= handler.getSlots()) {
+            currentSlot = 0;
+        }
+
+        if (handler.getSlots() > 0) {
+            ItemStack stack = handler.getStackInSlot(currentSlot);
+
+            if (stack == null || !IFilterable.canTake(itemFilters, mode, compare, stack)) {
+                currentSlot++;
+            } else if (ticks % upgrades.getSpeed() == 0) {
+                ItemStack result = handler.extractItem(currentSlot, upgrades.getInteractStackSize(), true);
+
+                if (result != null && network.insertItem(result, result.stackSize, true) == null) {
+                    network.insertItem(result, result.stackSize, false);
+
+                    handler.extractItem(currentSlot, upgrades.getInteractStackSize(), false);
+                } else {
+                    currentSlot++;
+                }
+            }
+        }
+    }
+
+    private void doImportISlotlessItemHandler() {
+        if (IFilterable.isEmpty(itemFilters)) {
+            if (ticks % upgrades.getSpeed() == 0) {
+                ItemStack result = SlotlessItemHandler.extractItem(getFacingTile(), getDirection().getOpposite(), upgrades.getInteractStackSize(), true);
+                if (result != null &&  network.insertItem(result, result.stackSize, true) == null) {
+                    network.insertItem(result, result.stackSize, false);
+                    SlotlessItemHandler.extractItem(getFacingTile(), getDirection().getOpposite(), result.copy(), upgrades.getInteractStackSize(), false);
+                }
+            }
+        } else {
+            // TODO: black and white list handling, as there is no way to just try stacks
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.tile.externalstorage;
 
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.integration.cyclopscore.CyclopsComparer;
+import com.raoulvdberge.refinedstorage.integration.cyclopscore.SlotlessItemHandler;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -71,14 +72,7 @@ public class ItemStorageCyclops extends ItemStorageExternal {
         InventoryTileEntityBase inv = cyclopsInv.get();
 
         if (IFilterable.canTake(externalStorage.getItemFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack)) {
-            ISlotlessItemHandler slotlessItemHandler = inv.getCapability(SlotlessItemHandlerConfig.CAPABILITY, opposite);
-            ItemStack remainder = slotlessItemHandler.insertItem(ItemHandlerHelper.copyStackWithSize(stack, size), simulate);
-            int remainderCount = -1;
-            if (remainder != null && remainder.stackSize != remainderCount) {
-                remainderCount = remainder.stackSize;
-                remainder = slotlessItemHandler.insertItem(remainder.copy(), simulate);
-            }
-            return remainder;
+            return SlotlessItemHandler.insertItem(inv, opposite, stack, size, simulate);
         }
 
         return ItemHandlerHelper.copyStackWithSize(stack, size);
@@ -88,19 +82,7 @@ public class ItemStorageCyclops extends ItemStorageExternal {
     @Override
     public ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
         InventoryTileEntityBase inv = cyclopsInv.get();
-
-        ISlotlessItemHandler slotlessItemHandler = inv.getCapability(SlotlessItemHandlerConfig.CAPABILITY, opposite);
-        ItemStack extracted = slotlessItemHandler.extractItem(ItemHandlerHelper.copyStackWithSize(stack, size), CyclopsComparer.comparerFlagsToItemMatch(flags), simulate);
-        while (extracted.stackSize < size) {
-            ItemStack extraExtract = slotlessItemHandler.extractItem(ItemHandlerHelper.copyStackWithSize(extracted, size - extracted.stackSize), CyclopsComparer.comparerFlagsToItemMatch(flags), simulate);
-            if (extraExtract != null) {
-                extracted.stackSize += extraExtract.stackSize;
-            } else {
-                // Nothing more to extract
-                break;
-            }
-        }
-        return extracted;
+        return SlotlessItemHandler.extractItem(inv, opposite, stack, size, flags, simulate);
     }
 
     private List<ItemStack> getStacks(@Nullable InventoryTileEntityBase inv) {
@@ -118,7 +100,7 @@ public class ItemStorageCyclops extends ItemStorageExternal {
 
     public static boolean isValid(TileEntity facingTE, EnumFacing facing) {
         return facingTE instanceof InventoryTileEntityBase
-                && (facingTE.hasCapability(SlotlessItemHandlerConfig.CAPABILITY, facing)
+                && (SlotlessItemHandler.isSlotless(facingTE, facing)
                     || ((InventoryTileEntityBase) facingTE).getInventory() instanceof SimpleInventory);
     }
 }
