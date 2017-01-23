@@ -50,8 +50,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProxyCommon {
-    protected static final boolean READER_WRITER_ENABLED = true;
-
     protected List<BlockCable> cableTypes = new ArrayList<>();
 
     public void preInit(FMLPreInitializationEvent e) {
@@ -176,11 +174,8 @@ public class ProxyCommon {
         registerBlock(RSBlocks.CONSTRUCTOR);
         registerBlock(RSBlocks.DESTRUCTOR);
         registerBlock(RSBlocks.SECURITY_MANAGER);
-
-        if (READER_WRITER_ENABLED) {
-            registerBlock(RSBlocks.READER);
-            registerBlock(RSBlocks.WRITER);
-        }
+        registerBlock(RSBlocks.READER);
+        registerBlock(RSBlocks.WRITER);
 
         registerBlock(RSBlocks.DETECTOR);
         registerBlock(RSBlocks.RELAY);
