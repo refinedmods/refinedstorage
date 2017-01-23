@@ -99,7 +99,7 @@ public abstract class CraftingStep implements ICraftingStep {
 
     @Override
     public List<ICraftingStep> getPreliminarySteps() {
-        return preliminarySteps;
+        return preliminarySteps != null ? preliminarySteps : Collections.emptyList();
     }
 
     @Override
