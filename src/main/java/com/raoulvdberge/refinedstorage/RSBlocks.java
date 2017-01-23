@@ -30,4 +30,5 @@ public final class RSBlocks {
     public static final BlockReader READER = new BlockReader();
     public static final BlockWriter WRITER = new BlockWriter();
     public static final BlockSecurityManager SECURITY_MANAGER = new BlockSecurityManager();
+    public static final BlockQuartzEnrichedIron QUARTZ_ENRICHED_IRON = new BlockQuartzEnrichedIron();
 }

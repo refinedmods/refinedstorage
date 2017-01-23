@@ -188,6 +188,7 @@ public class ProxyCommon {
         registerBlock(RSBlocks.FLUID_INTERFACE);
         registerBlock(RSBlocks.WIRELESS_TRANSMITTER);
         registerBlock(RSBlocks.MACHINE_CASING);
+        registerBlock(RSBlocks.QUARTZ_ENRICHED_IRON);
         registerBlock(RSBlocks.NETWORK_TRANSMITTER);
         registerBlock(RSBlocks.NETWORK_RECEIVER);
         registerBlock(RSBlocks.DISK_MANIPULATOR);
@@ -235,6 +236,16 @@ public class ProxyCommon {
             "IQ",
             'I', new ItemStack(Items.IRON_INGOT),
             'Q', new ItemStack(Items.QUARTZ)
+        );
+
+        GameRegistry.addShapelessRecipe(new ItemStack(RSItems.QUARTZ_ENRICHED_IRON, 9), new ItemStack(RSBlocks.QUARTZ_ENRICHED_IRON));
+
+        // Block of Quartz Enriched Iron
+        GameRegistry.addShapedRecipe(new ItemStack(RSBlocks.QUARTZ_ENRICHED_IRON),
+            "EEE",
+            "EEE",
+            "EEE",
+            'E', new ItemStack(RSItems.QUARTZ_ENRICHED_IRON)
         );
 
         // Machine Casing

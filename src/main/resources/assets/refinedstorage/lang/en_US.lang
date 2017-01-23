@@ -215,6 +215,7 @@ block.refinedstorage:fluid_storage.4.name=Creative Fluid Storage Block
 block.refinedstorage:reader.name=Reader
 block.refinedstorage:writer.name=Writer
 block.refinedstorage:security_manager.name=Security Manager
+block.refinedstorage:quartz_enriched_iron_block.name=Block of Quartz Enriched Iron
 
 item.refinedstorage:storage_disk.0.name=1k Storage Disk
 item.refinedstorage:storage_disk.1.name=4k Storage Disk

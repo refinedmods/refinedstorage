@@ -19,6 +19,9 @@
     ],
     "connected": {
       "true": {
+        "textures": {
+          "front": "refinedstorage:blocks/writer_connected"
+        }
       },
       "false": {
       }

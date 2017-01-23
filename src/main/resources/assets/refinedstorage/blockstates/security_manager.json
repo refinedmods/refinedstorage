@@ -1,9 +1,15 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "cube_all",
+    "model": "cube",
     "textures": {
-      "all": "refinedstorage:blocks/machine_casing"
+      "particle": "refinedstorage:blocks/security_manager_front_disconnected",
+      "down": "refinedstorage:blocks/security_manager_bottom",
+      "up": "refinedstorage:blocks/security_manager_top_disconnected",
+      "north": "refinedstorage:blocks/security_manager_front_disconnected",
+      "east": "refinedstorage:blocks/security_manager_left_disconnected",
+      "south": "refinedstorage:blocks/security_manager_back_disconnected",
+      "west": "refinedstorage:blocks/security_manager_right_disconnected"
     }
   },
   "variants": {
@@ -14,6 +20,13 @@
     ],
     "connected": {
       "true": {
+        "textures": {
+          "up": "refinedstorage:blocks/security_manager_top_connected",
+          "north": "refinedstorage:blocks/security_manager_front_connected",
+          "east": "refinedstorage:blocks/security_manager_left_connected",
+          "south": "refinedstorage:blocks/security_manager_back_connected",
+          "west": "refinedstorage:blocks/security_manager_right_connected"
+        }
       },
       "false": {
       }
