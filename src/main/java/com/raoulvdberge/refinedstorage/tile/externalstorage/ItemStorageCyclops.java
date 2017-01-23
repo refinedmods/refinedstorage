@@ -1,15 +1,12 @@
 package com.raoulvdberge.refinedstorage.tile.externalstorage;
 
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
-import com.raoulvdberge.refinedstorage.integration.cyclopscore.CyclopsComparer;
 import com.raoulvdberge.refinedstorage.integration.cyclopscore.SlotlessItemHandler;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.items.ItemHandlerHelper;
-import org.cyclops.commoncapabilities.api.capability.itemhandler.ISlotlessItemHandler;
-import org.cyclops.commoncapabilities.capability.itemhandler.SlotlessItemHandlerConfig;
 import org.cyclops.cyclopscore.inventory.IndexedSlotlessItemHandlerWrapper;
 import org.cyclops.cyclopscore.inventory.SimpleInventory;
 import org.cyclops.cyclopscore.tileentity.InventoryTileEntityBase;
