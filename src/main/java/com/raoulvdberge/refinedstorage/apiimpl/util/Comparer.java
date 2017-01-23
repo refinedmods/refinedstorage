@@ -174,9 +174,19 @@ public class Comparer implements IComparer {
                     stack.getTagCompound().removeTag("isStub");
                     // Capacitors
                     stack.getTagCompound().removeTag("Energy");
-                    break;
-                case "minecraft":
-                    stack.getTagCompound().removeTag("RepairCost");
+                    // Painted
+                    stack.getTagCompound().removeTag("paintSource__null");
+                    stack.getTagCompound().removeTag("paintSource");
+                    // Sided config
+                    stack.getTagCompound().removeTag("faceModes__null");
+                    stack.getTagCompound().removeTag("faceModes");
+                    // Tank
+                    stack.getTagCompound().removeTag("tank");
+                    stack.getTagCompound().removeTag("voidMode");
+                    stack.getTagCompound().removeTag("inventory");
+                    // Name
+                    stack.getTagCompound().removeTag("display");
+                    stack.getTagCompound().removeTag("eio.abstractMachine");
                     break;
                 case "simplyjetpacks":
                     stack.getTagCompound().removeTag("sjData");
@@ -191,6 +201,13 @@ public class Comparer implements IComparer {
                     break;
                 case "storagedrawers":
                     stack.getTagCompound().removeTag("material");
+                    break;
+                case "fluxnetworks":
+                    stack.getTagCompound().removeTag("dropped");
+                    stack.getTagCompound().removeTag("energy");
+                    break;
+                case "minecraft":
+                    stack.getTagCompound().removeTag("RepairCost");
                     break;
             }
         }
