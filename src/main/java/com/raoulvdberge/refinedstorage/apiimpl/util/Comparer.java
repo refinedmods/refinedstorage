@@ -149,6 +149,19 @@ public class Comparer implements IComparer {
                     stack.getTagCompound().removeTag("isStub");
                     // Capacitors
                     stack.getTagCompound().removeTag("Energy");
+                    // Painted
+                    stack.getTagCompound().removeTag("paintSource__null");
+                    stack.getTagCompound().removeTag("paintSource");
+                    // Sided config
+                    stack.getTagCompound().removeTag("faceModes__null");
+                    stack.getTagCompound().removeTag("faceModes");
+                    // Tank
+                    stack.getTagCompound().removeTag("tank");
+                    stack.getTagCompound().removeTag("voidMode");
+                    stack.getTagCompound().removeTag("inventory");
+                    // Name
+                    stack.getTagCompound().removeTag("display");
+                    stack.getTagCompound().removeTag("eio.abstractMachine");
                     break;
                 case "simplyjetpacks":
                     stack.getTagCompound().removeTag("sjData");
