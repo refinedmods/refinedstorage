@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.tile.externalstorage;
 
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
-import com.raoulvdberge.refinedstorage.integration.cyclopscore.IntegrationCyclopsCore;
+import com.raoulvdberge.refinedstorage.integration.cyclopscore.CyclopsComparer;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -90,9 +90,9 @@ public class ItemStorageCyclops extends ItemStorageExternal {
         InventoryTileEntityBase inv = cyclopsInv.get();
 
         ISlotlessItemHandler slotlessItemHandler = inv.getCapability(SlotlessItemHandlerConfig.CAPABILITY, opposite);
-        ItemStack extracted = slotlessItemHandler.extractItem(ItemHandlerHelper.copyStackWithSize(stack, size), IntegrationCyclopsCore.comparerFlagsToItemMatch(flags), simulate);
+        ItemStack extracted = slotlessItemHandler.extractItem(ItemHandlerHelper.copyStackWithSize(stack, size), CyclopsComparer.comparerFlagsToItemMatch(flags), simulate);
         while (extracted.stackSize < size) {
-            ItemStack extraExtract = slotlessItemHandler.extractItem(ItemHandlerHelper.copyStackWithSize(extracted, size - extracted.stackSize), IntegrationCyclopsCore.comparerFlagsToItemMatch(flags), simulate);
+            ItemStack extraExtract = slotlessItemHandler.extractItem(ItemHandlerHelper.copyStackWithSize(extracted, size - extracted.stackSize), CyclopsComparer.comparerFlagsToItemMatch(flags), simulate);
             if (extraExtract != null) {
                 extracted.stackSize += extraExtract.stackSize;
             } else {
