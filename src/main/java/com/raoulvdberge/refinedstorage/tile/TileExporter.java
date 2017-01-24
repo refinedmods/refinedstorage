@@ -65,7 +65,7 @@ public class TileExporter extends TileMultipartNode implements IComparable, ITyp
                         ItemStack slot = itemFilters.getStackInSlot(i);
 
                         if (slot != null) {
-                            ItemStack took = network.extractItem(slot, upgrades.getInteractStackSize(), compare, true);
+                            ItemStack took = network.extractItem(slot, Math.min(slot.getMaxStackSize(), upgrades.getInteractStackSize()), compare, true);
 
                             if (took == null) {
                                 if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
