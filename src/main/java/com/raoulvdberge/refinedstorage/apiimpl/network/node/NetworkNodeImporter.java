@@ -3,19 +3,16 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
+import com.raoulvdberge.refinedstorage.integration.cyclopscore.ImportingBehaviorCyclops;
+import com.raoulvdberge.refinedstorage.integration.cyclopscore.IntegrationCyclopsCore;
+import com.raoulvdberge.refinedstorage.integration.cyclopscore.SlotlessItemHandlerHelper;
+import com.raoulvdberge.refinedstorage.inventory.*;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
-import com.raoulvdberge.refinedstorage.tile.TileDiskDrive;
 import com.raoulvdberge.refinedstorage.tile.TileImporter;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -57,34 +54,11 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
         }
         
         if (type == IType.ITEMS) {
-            TileEntity tile = getFacingTile();
-            IItemHandler handler = RSUtils.getItemHandler(tile, holder.getDirection().getOpposite());
-
-            if (handler == null || tile instanceof TileDiskDrive) {
-                return;
+            IImportingBehavior behavior = ImportingBehaviorItemHandler.INSTANCE;
+            if (IntegrationCyclopsCore.isLoaded() && SlotlessItemHandlerHelper.isSlotless(getFacingTile(), holder.getDirection().getOpposite())) {
+                behavior = ImportingBehaviorCyclops.INSTANCE;
             }
-
-            if (currentSlot >= handler.getSlots()) {
-                currentSlot = 0;
-            }
-
-            if (handler.getSlots() > 0) {
-                ItemStack stack = handler.getStackInSlot(currentSlot);
-
-                if (stack.isEmpty() || !IFilterable.canTake(itemFilters, mode, compare, stack)) {
-                    currentSlot++;
-                } else if (ticks % upgrades.getSpeed() == 0) {
-                    ItemStack result = handler.extractItem(currentSlot, upgrades.getItemInteractCount(), true);
-
-                    if (!result.isEmpty() && network.insertItem(result, result.getCount(), true) == null) {
-                        network.insertItemTracked(result, result.getCount());
-
-                        handler.extractItem(currentSlot, upgrades.getItemInteractCount(), false);
-                    } else {
-                        currentSlot++;
-                    }
-                }
-            }
+            currentSlot = behavior.doImport(getFacingTile(), holder.getDirection().getOpposite(), currentSlot, itemFilters, mode, compare, ticks, upgrades, network);
         } else if (type == IType.FLUIDS && ticks % upgrades.getSpeed() == 0) {
             IFluidHandler handler = RSUtils.getFluidHandler(getFacingTile(), holder.getDirection().getOpposite());
 

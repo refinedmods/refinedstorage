@@ -54,11 +54,12 @@ import javax.annotation.Nullable;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collector;
 
 public final class RSUtils {
     private static final NonNullList EMPTY_NON_NULL_LIST = new NonNullList<Object>(Collections.emptyList(), null) {
@@ -526,5 +527,43 @@ public final class RSUtils {
         vertexBuffer.pos(xCoord + 16 - maskRight, yCoord + maskTop, zLevel).tex(uMax, vMin).endVertex();
         vertexBuffer.pos(xCoord, yCoord + maskTop, zLevel).tex(uMin, vMin).endVertex();
         tessellator.draw();
+    }
+
+    public static <T> Collector<T, ?, NonNullList<T>> toNonNullList() {
+        return new Collector<T, NonNullList<T>, NonNullList<T>>() {
+            @Override
+            public Supplier<NonNullList<T>> supplier() {
+                return NonNullList::create;
+            }
+
+            @Override
+            public BiConsumer<NonNullList<T>, T> accumulator() {
+                return (list, item) -> {
+                    if (item != null) {
+                        list.add(item);
+                    }
+                };
+            }
+
+            @Override
+            public BinaryOperator<NonNullList<T>> combiner() {
+                return (a, b) -> {
+                    NonNullList<T> list = NonNullList.create();
+                    a.forEach(list::add);
+                    b.forEach(list::add);
+                    return list;
+                };
+            }
+
+            @Override
+            public Function<NonNullList<T>, NonNullList<T>> finisher() {
+                return (list) -> list;
+            }
+
+            @Override
+            public Set<Characteristics> characteristics() {
+                return EnumSet.of(Characteristics.IDENTITY_FINISH);
+            }
+        };
     }
 }

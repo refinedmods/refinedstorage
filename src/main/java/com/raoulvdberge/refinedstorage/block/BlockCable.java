@@ -159,7 +159,7 @@ public class BlockCable extends BlockNode {
 
     @Override
     @SuppressWarnings("deprecation")
-    public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entityIn) {
+    public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entityIn, boolean p_185477_7_) {
         for (AxisAlignedBB aabb : getCollisionBoxes(this.getActualState(state, world, pos))) {
             addCollisionBoxToList(pos, entityBox, collidingBoxes, aabb);
         }

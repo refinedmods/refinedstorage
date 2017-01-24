@@ -5,6 +5,8 @@ import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.integration.cyclopscore.IntegrationCyclopsCore;
+import com.raoulvdberge.refinedstorage.integration.cyclopscore.SlotlessItemHandlerHelper;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
@@ -116,16 +118,24 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
                                 continue;
                             }
 
-                            ItemStack took = network.extractItem(slot, stackSize, compare, true);
+                            ItemStack took = network.extractItem(slot, Math.min(slot.getMaxStackSize(), stackSize), compare, true);
 
                             if (took == null) {
                                 if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
                                     network.getCraftingManager().schedule(slot, 1, compare);
                                 }
-                            } else if (ItemHandlerHelper.insertItem(handler, took, true).isEmpty()) {
-                                took = network.extractItem(slot, upgrades.getItemInteractCount(), compare, false);
+                            } else {
+                                if (IntegrationCyclopsCore.isLoaded()
+                                        && SlotlessItemHandlerHelper.isSlotless(getFacingTile(), holder.getDirection().getOpposite())
+                                        && SlotlessItemHandlerHelper.insertItem(getFacingTile(), holder.getDirection().getOpposite(), took, true).isEmpty()) {
+                                    took = network.extractItem(slot, upgrades.getItemInteractCount(), compare, false);
 
-                                ItemHandlerHelper.insertItem(handler, took, false);
+                                    SlotlessItemHandlerHelper.insertItem(getFacingTile(), holder.getDirection().getOpposite(), took, false);
+                                } else if (ItemHandlerHelper.insertItem(handler, took, true).isEmpty()) {
+                                    took = network.extractItem(slot, upgrades.getItemInteractCount(), compare, false);
+
+                                    ItemHandlerHelper.insertItem(handler, took, false);
+                                }
                             }
                         }
                     }

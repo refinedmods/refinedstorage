@@ -11,6 +11,7 @@ import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
+import com.raoulvdberge.refinedstorage.integration.cyclopscore.IntegrationCyclopsCore;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
@@ -196,6 +197,8 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
                 itemStorages.add(new StorageItemDrawer(this, () -> (IDrawer) getFacingTile()));
             } else if (facing instanceof IDeepStorageUnit) {
                 itemStorages.add(new StorageItemDSU(this, () -> (IDeepStorageUnit) getFacingTile()));
+            } else if (IntegrationCyclopsCore.isLoaded() && StorageItemCyclops.isValid(facing, holder.getDirection().getOpposite())) {
+                itemStorages.add(new StorageItemCyclops(this));
             } else if (!(facing instanceof TileNode)) {
                 IItemHandler itemHandler = RSUtils.getItemHandler(facing, holder.getDirection().getOpposite());
 
