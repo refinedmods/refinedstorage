@@ -4,7 +4,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.integration.cyclopscore.IntegrationCyclopsCore;
-import com.raoulvdberge.refinedstorage.integration.cyclopscore.SlotlessItemHandler;
+import com.raoulvdberge.refinedstorage.integration.cyclopscore.SlotlessItemHandlerHelper;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
@@ -60,7 +60,7 @@ public class TileExporter extends TileMultipartNode implements IComparable, ITyp
             if (type == IType.ITEMS) {
                 IItemHandler handler = RSUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
 
-                if (handler != null || (IntegrationCyclopsCore.isLoaded() && SlotlessItemHandler.isSlotless(getFacingTile(), getDirection().getOpposite()))) {
+                if (handler != null || (IntegrationCyclopsCore.isLoaded() && SlotlessItemHandlerHelper.isSlotless(getFacingTile(), getDirection().getOpposite()))) {
                     for (int i = 0; i < itemFilters.getSlots(); ++i) {
                         ItemStack slot = itemFilters.getStackInSlot(i);
 
@@ -73,11 +73,11 @@ public class TileExporter extends TileMultipartNode implements IComparable, ITyp
                                 }
                             } else {
                                 if (IntegrationCyclopsCore.isLoaded()
-                                        && SlotlessItemHandler.isSlotless(getFacingTile(), getDirection().getOpposite())
-                                        && SlotlessItemHandler.insertItem(getFacingTile(), getDirection().getOpposite(), took, true) == null) {
+                                        && SlotlessItemHandlerHelper.isSlotless(getFacingTile(), getDirection().getOpposite())
+                                        && SlotlessItemHandlerHelper.insertItem(getFacingTile(), getDirection().getOpposite(), took, true) == null) {
                                     took = network.extractItem(slot, upgrades.getInteractStackSize(), compare, false);
 
-                                    SlotlessItemHandler.insertItem(getFacingTile(), getDirection().getOpposite(), took, false);
+                                    SlotlessItemHandlerHelper.insertItem(getFacingTile(), getDirection().getOpposite(), took, false);
                                     break;
                                 } else if (handler != null && ItemHandlerHelper.insertItem(handler, took, true) == null) {
                                     took = network.extractItem(slot, upgrades.getInteractStackSize(), compare, false);

@@ -10,7 +10,7 @@ import org.cyclops.commoncapabilities.capability.itemhandler.SlotlessItemHandler
 
 import javax.annotation.Nonnull;
 
-public class SlotlessItemHandler {
+public class SlotlessItemHandlerHelper {
     public static boolean isSlotless(TileEntity entity, EnumFacing facing) {
         return entity.hasCapability(SlotlessItemHandlerConfig.CAPABILITY, facing);
     }

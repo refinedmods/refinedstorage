@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.tile.externalstorage;
 
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
-import com.raoulvdberge.refinedstorage.integration.cyclopscore.SlotlessItemHandler;
+import com.raoulvdberge.refinedstorage.integration.cyclopscore.SlotlessItemHandlerHelper;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -69,7 +69,7 @@ public class ItemStorageCyclops extends ItemStorageExternal {
         InventoryTileEntityBase inv = cyclopsInv.get();
 
         if (IFilterable.canTake(externalStorage.getItemFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack)) {
-            return SlotlessItemHandler.insertItem(inv, opposite, stack, size, simulate);
+            return SlotlessItemHandlerHelper.insertItem(inv, opposite, stack, size, simulate);
         }
 
         return ItemHandlerHelper.copyStackWithSize(stack, size);
@@ -79,7 +79,7 @@ public class ItemStorageCyclops extends ItemStorageExternal {
     @Override
     public ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
         InventoryTileEntityBase inv = cyclopsInv.get();
-        return SlotlessItemHandler.extractItem(inv, opposite, stack, size, flags, simulate);
+        return SlotlessItemHandlerHelper.extractItem(inv, opposite, stack, size, flags, simulate);
     }
 
     private List<ItemStack> getStacks(@Nullable InventoryTileEntityBase inv) {
@@ -97,7 +97,7 @@ public class ItemStorageCyclops extends ItemStorageExternal {
 
     public static boolean isValid(TileEntity facingTE, EnumFacing facing) {
         return facingTE instanceof InventoryTileEntityBase
-                && (SlotlessItemHandler.isSlotless(facingTE, facing)
+                && (SlotlessItemHandlerHelper.isSlotless(facingTE, facing)
                     || ((InventoryTileEntityBase) facingTE).getInventory() instanceof SimpleInventory);
     }
 }
