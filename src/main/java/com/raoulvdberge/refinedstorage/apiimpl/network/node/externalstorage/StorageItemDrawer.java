@@ -102,7 +102,7 @@ public class StorageItemDrawer extends StorageItemExternal {
     }
 
     public static ItemStack extract(@Nullable IDrawer drawer, @Nonnull ItemStack stack, int size, int flags, boolean simulate) {
-        if (drawer != null && API.instance().getComparer().isEqual(stack, drawer.getStoredItemPrototype(), flags) && drawer.canItemBeExtracted(stack)) {
+        if (drawer != null && API.instance().getComparer().isEqual(stack, drawer.getStoredItemPrototype(), flags)) {
             if (size > drawer.getStoredItemCount()) {
                 size = drawer.getStoredItemCount();
             }
