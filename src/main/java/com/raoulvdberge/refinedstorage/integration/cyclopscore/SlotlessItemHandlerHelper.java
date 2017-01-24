@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
 
 public class SlotlessItemHandlerHelper {
     public static boolean isSlotless(TileEntity entity, EnumFacing facing) {
-        return entity.hasCapability(SlotlessItemHandlerConfig.CAPABILITY, facing);
+        return entity != null && entity.hasCapability(SlotlessItemHandlerConfig.CAPABILITY, facing);
     }
 
     public static ISlotlessItemHandler getSlotlessHandler(TileEntity entity, EnumFacing facing) {
@@ -52,7 +52,7 @@ public class SlotlessItemHandlerHelper {
 
     public static ItemStack extractItem(ISlotlessItemHandler slotlessItemHandler, @Nonnull ItemStack stack, int size, int flags, boolean simulate) {
         ItemStack extracted = slotlessItemHandler.extractItem(ItemHandlerHelper.copyStackWithSize(stack, size), CyclopsComparer.comparerFlagsToItemMatch(flags), simulate);
-        while (extracted.stackSize < size) {
+        while (extracted != null && extracted.stackSize < size) {
             ItemStack extraExtract = slotlessItemHandler.extractItem(ItemHandlerHelper.copyStackWithSize(extracted, size - extracted.stackSize), CyclopsComparer.comparerFlagsToItemMatch(flags), simulate);
             if (extraExtract != null) {
                 extracted.stackSize += extraExtract.stackSize;
